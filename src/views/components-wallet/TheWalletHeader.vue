@@ -1,40 +1,53 @@
 <template>
-  <v-app-bar class="pl-6" elevation="0" color="walletBg" app>
-    <div class="d-flex align-center">
-      <img class="mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
-      <div>
-        <div class="font-weight-bold">MEWtopia</div>
-        <div>
-          Find out what Crypto Wallets is and learn to use MEW securly by using
-          many different mobile wallets.
-          <a href="#">Read...</a>
-        </div>
-      </div>
-    </div>
-    <div class="ml-auto d-flex align-center">
-      <!-- <div class="mr-4">
-        <mobile-status v-if="isMewConnect">
-          <div v-if="isMewConnect" class="d-flex align-center cursor--pointer">
-            <img src="@/assets/images/icons/icon-mew-connect.svg" />
-            <div class="mew-connect-text ml-1">
-              <div>MEWconnect</div>
-              <div>Connected...</div>
-            </div>
-          </div>
-        </mobile-status>
-      </div> -->
+  <v-app-bar
+    elevation="0"
+    color="walletBg"
+    height="70px"
+    class="px-0"
+    inset
+    app
+    absolute
+  >
+    <v-container
+      class="d-flex align-center pt-4 pb-0 px-0 px-md-3 wallet-content-container"
+      fluid
+    >
       <div class="d-flex align-center">
-        <v-btn icon @click="openNotifications = true">
-          <img src="@/assets/images/icons/icon-notifications.svg" />
-        </v-btn>
-        <div
-          class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
-          @click="openNotifications = true"
-        >
-          3
+        <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
+        <div>
+          <div class="font-weight-bold">MEWtopia</div>
+          <div>
+            Find out what Crypto Wallets is and learn to use MEW securly by
+            using many different mobile wallets.
+            <a href="#">Read...</a>
+          </div>
         </div>
       </div>
-    </div>
+      <div class="ml-auto d-flex align-center">
+        <!-- <div class="mr-4">
+            <mobile-status v-if="isMewConnect">
+              <div v-if="isMewConnect" class="d-flex align-center cursor--pointer">
+                <img src="@/assets/images/icons/icon-mew-connect.svg" />
+                <div class="mew-connect-text ml-1">
+                  <div>MEWconnect</div>
+                  <div>Connected...</div>
+                </div>
+              </div>
+            </mobile-status>
+          </div> -->
+        <div class="d-flex align-center">
+          <v-btn icon @click="openNotifications = true">
+            <img src="@/assets/images/icons/icon-notifications.svg" />
+          </v-btn>
+          <div
+            class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
+            @click="openNotifications = true"
+          >
+            3
+          </div>
+        </div>
+      </div>
+    </v-container>
     <notification-overlay
       :open="openNotifications"
       @close="openNotifications = false"
@@ -95,3 +108,5 @@ a {
   color: var(--v-primary-base);
 }
 </style>
+
+<style lang="scss"></style>

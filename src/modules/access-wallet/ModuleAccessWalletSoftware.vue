@@ -26,7 +26,7 @@
               :title="btn.label"
               :subtitle="btn.description"
               :right-icon="btn.icon"
-              icon-type="img"
+              right-icon-type="mew"
               color-theme="basic"
               @click.native="btn.fn"
             />
@@ -121,7 +121,7 @@ export default {
         {
           label: 'Keystore',
           description: 'Access via Keystore',
-          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
+          icon: 'keystore',
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
           }
@@ -130,7 +130,7 @@ export default {
         {
           label: 'Mnemonic Phrase',
           description: 'Access via Mnemonic Phrase',
-          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
+          icon: 'mnemonic',
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
           }
@@ -139,7 +139,7 @@ export default {
         {
           label: 'Private Key',
           description: 'Access via Private Key',
-          icon: require('@/assets/images/icons/icon-private-key-grey.svg'),
+          icon: 'privateKey',
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
           }

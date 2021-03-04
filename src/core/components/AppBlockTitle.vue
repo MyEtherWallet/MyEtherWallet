@@ -7,7 +7,7 @@
       !noPageTitle ? 'page-title' : ''
     ]"
   >
-    <div v-if="!noPageTitle" class="py-10 d-none d-lg-block"></div>
+    <div v-if="!noPageTitle" class="py-7 d-none d-lg-block"></div>
     <div v-if="!noPageTitle" class="py-4 d-block d-lg-none"></div>
 
     <div

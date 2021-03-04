@@ -1,13 +1,18 @@
 <template>
-  <v-sheet height="100%" color="walletBg">
+  <div class="wallet-main">
     <the-wallet-side-menu />
     <the-wallet-header />
-    <v-container class="align-center d-flex" fluid>
-      <module-confirmation />
-      <router-view :owners-tokens="ownersTokens" />
-    </v-container>
+    <v-main>
+      <v-container
+        class="pa-3 pa-md-5 align-center wallet-content-container"
+        fluid
+      >
+        <module-confirmation />
+        <router-view :owners-tokens="ownersTokens" />
+      </v-container>
+    </v-main>
     <the-wallet-footer />
-  </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -120,5 +125,9 @@ export default {
 <style lang="scss" scoped>
 .box-shadow {
   box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+}
+.wallet-main {
+  background-color: var(--v-walletBg-base);
+  height: 100%;
 }
 </style>

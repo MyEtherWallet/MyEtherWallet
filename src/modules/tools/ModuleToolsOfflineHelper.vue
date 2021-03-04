@@ -5,14 +5,14 @@
         <h3 class="font-weight-bold mb-5 text-center">Transction status</h3>
         <div class="tableHeader pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
-          <ellipsis-block
-            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          <mew-transform-hash
+            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
           />
         </div>
         <div class="tableHeader pa-5">
           <div class="font-weight-bold">Transaction receipt</div>
-          <ellipsis-block
-            text="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          <mew-transform-hash
+            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
           />
         </div>
         <div class="text-center">
@@ -48,35 +48,28 @@
 
     <div v-if="currentStep === 1">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <border-block
-          md-shadow
-          md-border-radius
-          class="px-7"
-          max-height="300px"
-        >
-          <v-radio-group v-model="networkSelected">
-            <div v-for="(item, i) in networks" :key="i">
-              <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
-                {{ item.label }}
-              </div>
-
-              <v-row no-gutters>
-                <v-col
-                  v-for="button in item.buttons"
-                  :key="button.value"
-                  cols="12"
-                  md="6"
-                  class="mt-2"
-                >
-                  <v-radio :label="button.name" :value="button.value"></v-radio>
-                </v-col>
-              </v-row>
-
-              <div>{{ item.id }}</div>
-              <v-divider v-if="networks.length != i + 1" class="my-5" />
+        <v-radio-group v-model="networkSelected" class="pa-7 radio-group">
+          <div v-for="(item, i) in networks" :key="i">
+            <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
+              {{ item.label }}
             </div>
-          </v-radio-group>
-        </border-block>
+
+            <v-row no-gutters>
+              <v-col
+                v-for="button in item.buttons"
+                :key="button.value"
+                cols="12"
+                md="6"
+                class="mt-2"
+              >
+                <v-radio :label="button.name" :value="button.value"></v-radio>
+              </v-col>
+            </v-row>
+
+            <div>{{ item.id }}</div>
+            <v-divider v-if="networks.length != i + 1" class="my-5" />
+          </div>
+        </v-radio-group>
       </v-sheet>
       <mew-button
         btn-size="xlarge"
@@ -103,7 +96,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
         </mew-expand-panel>
@@ -148,7 +141,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
           <template #panelBody2>
@@ -159,7 +152,7 @@
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <ellipsis-block v-if="d.address" :text="d.address" />
+              <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
         </mew-expand-panel>
@@ -191,13 +184,11 @@
 </template>
 
 <script>
-import ellipsisBlock from '@/components/ellipsisBlock/EllipsisBlock';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-import borderBlock from '@/components/border-block/BorderBlock.vue';
 
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { ellipsisBlock, AppBlockTitle, borderBlock },
+  components: { AppBlockTitle },
   data: () => ({
     dialog: false,
     currentStep: 3,
@@ -289,4 +280,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.radio-group {
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 10px;
+  box-shadow: 0 10px 15px var(--v-boxShadow-base) !important;
+}
+</style>

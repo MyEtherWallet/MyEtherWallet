@@ -43,8 +43,8 @@
     />
 
     <div v-if="isAvailable" class="font-weight-bold text-center">
-      {{ $t('ens.request.estimated-price') }}: {{ estimatedPrice.eth }}
-      {{ $t('common.currency.eth') }} (${{ estimatedPrice.usd }})
+      {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
+      {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
     <div class="d-flex justify-center my-6">
       <mew-button :title="btnTitle" btn-size="xlarge" @click.native="onClick" />
@@ -53,12 +53,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-
 export default {
   components: {},
   props: {
+    getRentPrice: {
+      default: function () {
+        return {};
+      },
+      type: Function
+    },
     isAvailable: {
       default: false,
       type: Boolean
@@ -78,11 +81,12 @@ export default {
   },
   data() {
     return {
-      duration: '1'
+      duration: 0,
+      rentPriceETH: '',
+      rentPriceUSD: ''
     };
   },
   computed: {
-    ...mapState('wallet', ['currency']),
     btnTitle() {
       return this.isAvailable
         ? this.$t('ens.request.request-registr')
@@ -96,41 +100,35 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year' });
+        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
       }
       return items;
-    },
-    // double check how this works
-    pricingByLength() {
-      if (this.hostName.length === 3) {
-        return 640;
-      } else if (this.hostName.length === 4) {
-        return 160;
-      }
-
-      return 5;
-    },
-    estimatedPrice() {
-      const eth = new BigNumber(this.pricingByLength)
-        .dividedBy(this.currency.value)
-        .times(this.duration)
-        .toFixed(2);
-
-      const usd = new BigNumber(this.pricingByLength)
-        .times(this.duration)
-        .toFixed(2);
-      return {
-        usd: usd,
-        eth: eth
-      };
     }
   },
+  watch: {
+    duration() {
+      this.rentPrice();
+    }
+  },
+  mounted() {
+    this.rentPrice();
+  },
   methods: {
+    rentPrice() {
+      if (this.duration > 0) {
+        return this.getRentPrice(this.duration).then(resp => {
+          if (resp) {
+            this.rentPriceETH = resp.eth;
+            this.rentPriceUSD = resp.usd;
+          }
+        });
+      }
+    },
     onClick() {
       this.$emit('onRequest', this.duration);
     },
-    setDuration(val) {
-      this.duration = val.name.substr(0, val.name.indexOf(' '));
+    setDuration(item) {
+      this.duration = item.value;
     }
   }
 };
