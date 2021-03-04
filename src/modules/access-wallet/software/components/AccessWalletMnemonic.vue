@@ -87,14 +87,17 @@
              Next Button
             =====================================================================================
             -->
-            <div class="d-flex justify-center mt-6">
-              <mew-button
-                title="Next"
-                btn-size="xlarge"
-                :disabled="!isValidMnemonic"
-                @click.native="unlockBtn"
-              />
-            </div>
+            <v-row dense class="align-center justify-center pt-4">
+              <v-col cols="12" sm="4">
+                <mew-button
+                  has-full-width
+                  title="Next"
+                  btn-size="xlarge"
+                  :disabled="!isValidMnemonic"
+                  @click.native="unlockBtn"
+                />
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
       </v-sheet>

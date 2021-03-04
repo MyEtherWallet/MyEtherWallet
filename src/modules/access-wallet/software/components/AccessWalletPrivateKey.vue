@@ -25,12 +25,17 @@
           :link="link"
           class="justify-center"
         />
-        <mew-button
-          title="Access my wallet"
-          btn-size="xlarge"
-          :disabled="!disableBtn"
-          @click.native="unlockBtn"
-        />
+        <v-row dense class="align-center justify-center pt-4">
+          <v-col cols="12" sm="4">
+            <mew-button
+              has-full-width
+              title="Access Wallet"
+              btn-size="xlarge"
+              :disabled="!disableBtn"
+              @click.native="unlockBtn"
+            />
+          </v-col>
+        </v-row>
       </div>
     </mew6-white-sheet>
   </div>
