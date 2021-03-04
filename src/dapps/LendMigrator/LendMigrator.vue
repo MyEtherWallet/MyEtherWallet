@@ -64,6 +64,7 @@ export default {
       amount: 0,
       hasEnoughRatio: false,
       lendMigratorContract: '',
+      amountAsHex: '',
       loading: false
     };
   },
@@ -92,13 +93,17 @@ export default {
   methods: {
     async checkAllowance() {
       const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
+      const estimatedAmount = new BigNumber(this.amount)
+        .times(new BigNumber(10).pow(18))
+        .toFixed();
+      this.amountAsHex = this.web3.utils.numberToHex(estimatedAmount);
       const allowance = await lendContract.methods
         .allowance(this.account.address, LEND_MIGRATOR_PROXY_ADDRESS)
         .call();
       this.loading = true;
       if (
         allowance !== '0' &&
-        new BigNumber(allowance).lt(new BigNumber(this.amount))
+        new BigNumber(allowance).lt(new BigNumber(this.amountAsHex))
       ) {
         const lendApproveData = await lendContract.methods
           .approve(LEND_MIGRATOR_PROXY_ADDRESS, 0)
@@ -123,15 +128,11 @@ export default {
       }
     },
     async migrate(lendContract) {
-      const estimatedAmount = new BigNumber(this.amount)
-        .times(new BigNumber(10).pow(18))
-        .toFixed();
-      const amountAsHex = this.web3.utils.numberToHex(estimatedAmount);
       const lendApproveData = await lendContract.methods
-        .approve(LEND_MIGRATOR_PROXY_ADDRESS, amountAsHex)
+        .approve(LEND_MIGRATOR_PROXY_ADDRESS, this.amountAsHex)
         .encodeABI();
       const lendMigrateData = await this.lendMigratorContract.methods
-        .migrateFromLEND(amountAsHex)
+        .migrateFromLEND(this.amountAsHex)
         .encodeABI();
       this.loading = true;
       this.web3.mew
