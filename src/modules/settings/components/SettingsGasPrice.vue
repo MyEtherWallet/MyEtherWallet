@@ -85,7 +85,7 @@ export default {
       type: Array,
       default: () => []
     },
-    currentGasPrice: {
+    gasPrice: {
       type: String,
       default: '0'
     },
@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.currentGasPrice : '0'
+        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
     };
   }
 };

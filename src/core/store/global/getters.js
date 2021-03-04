@@ -1,7 +1,7 @@
 import nodeList from '@/utils/networks';
 import { ETH } from '@/utils/networks/types';
 import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper';
-import web3Utils from 'web3-utils';
+
 const Networks = function () {
   return nodeList;
 };
@@ -21,11 +21,8 @@ const network = function (state) {
   return network;
 };
 
-const currentGasPrice = function (state) {
-  return web3Utils.fromWei(
-    getGasBasedOnType(state.gasPrice, state.gasPriceType),
-    'gwei'
-  );
+const gasPrice = function (state) {
+  return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
 };
 
 const isEthNetwork = function (state) {
@@ -35,6 +32,6 @@ const isEthNetwork = function (state) {
 export default {
   Networks,
   network,
-  currentGasPrice,
+  gasPrice,
   isEthNetwork
 };

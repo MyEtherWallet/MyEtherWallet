@@ -1,5 +1,10 @@
 <template>
   <v-sheet class="pa-10 mt-5" width="700" :rounded="true">
+    <!--
+  =====================================================================================
+    Address Book - add address mode
+  =====================================================================================
+  -->
     <mew-input
       v-if="addMode"
       :show-blockie="true"
@@ -10,6 +15,11 @@
       :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
+    <!--
+  =====================================================================================
+    Address Book - edit mode
+  =====================================================================================
+  -->
     <div v-if="editMode" class="full-width d-flex align-center mb-7">
       <mew-blockie
         class="mr-3"
@@ -29,6 +39,11 @@
         </div>
       </div>
     </div>
+    <!--
+  =====================================================================================
+    Address Book - add/edit nickname
+  =====================================================================================
+  -->
     <mew-input
       class="mt-2"
       :label="$t('interface.address-book.nickname')"
@@ -39,6 +54,11 @@
       :rules="nicknameRules"
       @input="setNickname"
     />
+    <!--
+  =====================================================================================
+    Address Book - save
+  =====================================================================================
+  -->
     <div class="text-center mt-4">
       <mew-button
         :disabled="disabled"
@@ -51,6 +71,11 @@
         @click.native="editMode ? update() : add()"
       />
     </div>
+    <!--
+  =====================================================================================
+    Address Book - remove address
+  =====================================================================================
+  -->
     <div
       v-if="editMode"
       class="text-center mt-6 error--text cursor-pointer"
@@ -85,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['addressBook', 'network']),
+    ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
@@ -164,6 +189,11 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setAddressBook']),
+    reset() {
+      this.address = '';
+      this.nickname = '';
+      this.resolvedAddr = '';
+    },
     async resolveName() {
       if (this.nameResolver) {
         await this.nameResolver
@@ -172,7 +202,7 @@ export default {
             this.resolvedAddr = addr;
           })
           .catch(() => {
-            this.invalidName = true;
+            this.resolvedAddr = '';
           });
       }
     },
@@ -191,24 +221,21 @@ export default {
     remove() {
       this.addressBook.splice(this.currentIdx, 1);
       this.setAddressBook(this.addressBook);
+      this.reset();
       this.$emit('back', 3);
     },
     add() {
       if (this.alreadyExists) {
-        this.contactAddress = '';
-        this.contactNickname = '';
-        this.hexAddress = '';
+        this.reset();
         return;
       }
       this.addressBook.push({
         address: this.address,
         resolvedAddr: this.resolvedAddr,
-        // currency: 'ETH',
         nickname: this.nickname || (this.addressBook.length + 1).toString()
       });
       this.setAddressBook(this.addressBook);
-      this.address = '';
-      this.nickname = '';
+      this.reset();
       this.$emit('back', 3);
     }
   }
