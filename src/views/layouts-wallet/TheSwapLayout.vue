@@ -255,8 +255,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('global', ['gasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'gasPrice']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },

@@ -24,7 +24,10 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
-import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper.js';
 
 export default {
   components: {
@@ -66,7 +69,6 @@ export default {
     ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
-    ...mapState('global', ['gasPriceType']),
     getTokens() {
       if (this.isEthNetwork) {
         const tokensList = new TokenCalls(this.$apollo);
@@ -101,7 +103,7 @@ export default {
         });
       }
       this.web3.eth.getGasPrice().then(res => {
-        this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
+        this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
       });
     },
     subscribeToBlockNumber() {
