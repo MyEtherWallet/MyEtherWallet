@@ -1,15 +1,11 @@
-/* Set maximum size for "v-container" */
+/* Set maximum size for "wallet-container" */
+
 @media (min-width: 1904px) {
-  .container {
-    max-width: 1185px !important;
+  .wallet-content-container {
+    max-width: 1603px !important;
   }
 }
 
-@media (max-width: 959px) {
-  .container {
-    padding: 0 1.5rem !important;
-  }
-}
 @media (max-width: 1263px) {
   html {
     font-size: 14px !important;

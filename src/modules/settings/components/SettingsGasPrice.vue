@@ -11,13 +11,15 @@
         <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
           <div
             class="text-center group-button pb-5 pt-2"
-            :class="selected === key + 1 ? 'active' : ''"
-            @click="selected = key + 1"
+            :class="selected === b.title ? 'active' : ''"
+            @click="setSelected(b.title)"
           >
             <mew-icon :icon-name="b.icon" :img-height="80" />
-            <h5 class="font-weight-bold mb-2">{{ b.title }}</h5>
-            <div class="font-weight-bold mb-2">{{ b.gas }}</div>
-            <div>{{ b.usd }} ({{ b.time }})</div>
+            <h5 class="font-weight-bold mb-2">{{ b.title | capitalize }}</h5>
+            <div class="font-weight-bold mb-2">
+              ~ {{ b.gas | twoDecimalPoint }} Gwei
+            </div>
+            <div>{{ b.usd }} {{ b.time }}</div>
           </div>
         </v-col>
       </v-row>
@@ -38,47 +40,64 @@
       -->
       <v-row align="start" class="px-3">
         <mew-input
+          v-model="customGasPrice"
           label="Customize"
           placeholder=" "
-          right-label="$0.00 (- min)"
+          right-label="Gwei"
           class="mr-3"
         />
-        <mew-button title="Confirm" btn-size="xlarge" class="my-1" />
+        <mew-button
+          title="Confirm"
+          btn-size="xlarge"
+          @click.native="setCustomGasPrice(customGasPrice)"
+        />
       </v-row>
     </v-sheet>
   </div>
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 export default {
   name: 'SettingsGasPrice',
-  props: {},
+  filters: {
+    capitalize: function (value) {
+      if (!value) return '';
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    },
+    twoDecimalPoint: function (value) {
+      if (value.includes('.')) return BigNumber(value).toFixed(2);
+      return value;
+    }
+  },
+  props: {
+    selected: {
+      type: String,
+      default: gasPriceTypes.ECONOMY
+    },
+    setSelected: {
+      type: Function,
+      default: () => {}
+    },
+    buttons: {
+      type: Array,
+      default: () => []
+    },
+    currentGasPrice: {
+      type: String,
+      default: '0'
+    },
+    setCustomGasPrice: {
+      type: Function,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      selected: 1,
-      buttons: [
-        {
-          icon: 'bicycle',
-          title: 'Economic',
-          gas: '1 Gwei',
-          usd: '$0.004',
-          time: '< 30 min'
-        },
-        {
-          icon: 'car',
-          title: 'Regular',
-          gas: '2 Gwei',
-          usd: '$0.008',
-          time: '< 10 min'
-        },
-        {
-          icon: 'rocket',
-          title: 'Fast',
-          gas: '3 Gwei',
-          usd: '$0.012',
-          time: '< 5 min'
-        }
-      ]
+      customGasPrice:
+        this.selected === gasPriceTypes.STORED ? this.currentGasPrice : '0'
     };
   }
 };

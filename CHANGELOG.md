@@ -2,6 +2,11 @@
 
 ### Devop
 
+* notifications [#2860](https://github.com/MyEtherWallet/MyEtherWallet/pull/2860)
+* Created Core wallet layout, fixes for header and footer [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
+* Fix sentry [#2858](https://github.com/MyEtherWallet/MyEtherWallet/pull/2858)
+* Fix wallet layouts [#2848](https://github.com/MyEtherWallet/MyEtherWallet/pull/2848)
+* add commitlint and husky for branch names [#2845](https://github.com/MyEtherWallet/MyEtherWallet/pull/2845)
 * Send TX changes [#2797](https://github.com/MyEtherWallet/MyEtherWallet/pull/2797)
 * Vuex changes [#2787](https://github.com/MyEtherWallet/MyEtherWallet/pull/2787)
 * Add SWAP feature [#2774](https://github.com/MyEtherWallet/MyEtherWallet/pull/2774)
