@@ -1,0 +1,96 @@
+import vuexStore from '@/core/store';
+import { mapActions } from 'vuex';
+import { toWei, _ } from 'web3-utils';
+import xss from 'xss';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
+const VALID_FIELDS = [
+  'addressBook',
+  'Errors',
+  'online',
+  'linkQuery',
+  'locale',
+  'stateVersion',
+  'gasLimitWarning',
+  'gasPrice',
+  'gasPriceType',
+  'currentNetwork',
+  'preferredCurrency'
+];
+export default class Settings {
+  constructor() {
+    this.$store = vuexStore;
+    Object.assign(this, mapActions('global', ['setImportedState']));
+  }
+
+  // Receives object from file read in module
+  // Returns a promise so the module can react accordingly
+  importStore(file) {
+    return new Promise((resolve, reject) => {
+      const _this = this;
+      try {
+        const reader = new FileReader();
+        reader.onloadend = evt => {
+          const file = evt.target.result;
+          const obj = JSON.parse(file);
+          const parsedObj = _this._validateImportObject(obj);
+
+          // sets the imported state to the store
+          _this.setImportedState(parsedObj).then(() => {
+            resolve();
+          });
+        };
+        reader.readAsBinaryString(file);
+        reader.onerror(e => {
+          Toast(e.message, {}, ERROR);
+        });
+      } catch (e) {
+        reject(e.message);
+      }
+    });
+  }
+
+  exportStore() {
+    const body = document.body;
+    const time = new Date();
+    const filename = `Store-Export-${time.getTime()}.json`;
+    const newObj = Object.assign({}, this.$store.state.global);
+    const stringifiedGasPrice = newObj.gasPrice.toString();
+    delete newObj['localStore'];
+    delete newObj['gasPrice'];
+    newObj['gasPrice'] = stringifiedGasPrice;
+    const el = document.createElement('a');
+    el.setAttribute(
+      'href',
+      `data:text/plain;charset=utf-8,${encodeURIComponent(
+        JSON.stringify(newObj)
+      )}`
+    );
+    el.setAttribute('download', filename);
+    body.appendChild(el);
+    el.click();
+    body.removeChild(el);
+  }
+
+  // Validates the passed object for import
+  // strips strings and only accepts certain keys
+  _validateImportObject(obj) {
+    const newObj = {};
+    _.keys(obj).forEach(item => {
+      if (!_.contains(VALID_FIELDS, item)) {
+        // might actually not need to do this, just strip off the ones that aren't valid
+        throw new Error(`Found invalid key! ${item}`);
+      } else {
+        if (item === 'gasPrice') {
+          // converts gasPrice back to BN instance
+          // this is assuming that when exporting, it gets converted to string
+          newObj[item] = toWei(item);
+        } else {
+          // strip tags for string, otherwise return item
+          newObj[item] = _.isString(obj[item]) ? xss(obj[item]) : obj[item];
+        }
+      }
+    });
+    return newObj;
+  }
+}

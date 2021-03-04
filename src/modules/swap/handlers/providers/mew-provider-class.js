@@ -40,7 +40,11 @@ class MEWPClass {
         params: {
           fromContractAddress: fromT.contract_address,
           toContractAddress: toT.contract_address,
-          amount: queryAmount.toFixed(fromT.decimals)
+          amount: queryAmount.toFixed(fromT.decimals),
+          exexcludeDexes:
+            this.provider === MEWPClass.supportedDexes.DEX_AG
+              ? MEWPClass.supportedDexes.ONE_INCH
+              : MEWPClass.supportedDexes.DEX_AG
         }
       })
       .then(response => {
@@ -94,11 +98,16 @@ class MEWPClass {
           .sendTransaction(
             Object.assign(tradeObj.transactions[0], {
               from,
-              gasPrice
+              gasPrice,
+              handleNotification: false
             })
           )
           .on('transactionHash', hash => {
-            return resolve({ hashes: [hash] });
+            return resolve({
+              provider: this.provider,
+              statusObj: { hashes: [hash] },
+              hashes: [hash]
+            });
           })
           .catch(reject);
       });
@@ -121,7 +130,11 @@ class MEWPClass {
               hashes.push(hash);
               counter++;
               if (counter === promises.length)
-                resolve({ hashes, statusObj: { hashes } });
+                resolve({
+                  provider: this.provider,
+                  hashes,
+                  statusObj: { hashes }
+                });
             });
           });
         })
@@ -131,16 +144,16 @@ class MEWPClass {
   getStatus(statusObj) {
     let isSuccess = true;
     let isPending = false;
-    const hashes = statusObj.hashes;
+    const hashes = statusObj.statusObj.hashes;
     const promises = [];
     hashes.forEach(h => {
       promises.push(
         this.web3.eth.getTransactionReceipt(h).then(receipt => {
-          if (!receipt.blockNumber) {
+          if (!receipt || (receipt && !receipt.blockNumber)) {
             isPending = true;
             return;
           }
-          if (!receipt.status) {
+          if (receipt && !receipt.status) {
             isSuccess = false;
           }
         })
@@ -154,4 +167,8 @@ class MEWPClass {
     });
   }
 }
+MEWPClass.supportedDexes = {
+  DEX_AG: 'DEX_AG',
+  ONE_INCH: 'ONE_INCH'
+};
 export default MEWPClass;

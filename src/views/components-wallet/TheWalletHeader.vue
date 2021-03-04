@@ -36,22 +36,10 @@
             </mobile-status>
           </div> -->
         <div class="d-flex align-center">
-          <v-btn icon @click="openNotifications = true">
-            <img src="@/assets/images/icons/icon-notifications.svg" />
-          </v-btn>
-          <div
-            class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
-            @click="openNotifications = true"
-          >
-            3
-          </div>
+          <notification-overlay />
         </div>
       </div>
     </v-container>
-    <notification-overlay
-      :open="openNotifications"
-      @close="openNotifications = false"
-    />
   </v-app-bar>
 </template>
 
@@ -72,9 +60,6 @@ export default {
       default: false
     }
   },
-  data() {
-    return { openNotifications: false };
-  },
   computed: {
     ...mapState('wallet', ['identifier']),
     isMewConnect() {
@@ -89,16 +74,6 @@ a {
   text-decoration: none;
   color: var(--v-primary-base) !important;
   font-weight: 500;
-}
-
-.notification-count {
-  top: 0;
-  border-radius: 100%;
-  margin-bottom: 20px;
-  margin-left: -10px;
-  width: 18px;
-  height: 18px;
-  font-size: 12px;
 }
 
 .mew-connect-text > div {

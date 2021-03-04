@@ -5,17 +5,23 @@
       later use.
     </v-sheet>
     <div class="d-flex justify-center mt-5">
-      <mew-button title="Export" button-size="xlarge" />
+      <mew-button
+        title="Export"
+        button-size="xlarge"
+        @click.native="exportConfig"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
-  props: {},
-  data() {
-    return {};
+  name: 'SettingsExportConfig',
+  props: {
+    exportConfig: {
+      type: Function,
+      default: () => {}
+    }
   }
 };
 </script>

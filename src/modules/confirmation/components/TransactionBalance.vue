@@ -29,7 +29,7 @@
             currency
           }}</span></v-col
         >
-        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="3">
+        <v-col v-if="isEthNetwork" class="py-0 my-0 text-right" cols="3">
           <span> - {{ valueUsd }} </span>
         </v-col>
       </v-row>
@@ -41,9 +41,11 @@
         </v-col>
         <v-col class="py-0 my-0 text-right" cols="5">
           <span> - {{ txFee }} </span>
-          <span class="searchText--text font-weight-medium">ETH</span></v-col
+          <span class="searchText--text font-weight-medium">{{
+            currency
+          }}</span></v-col
         >
-        <v-col v-if="isEth" class="py-0 my-0 text-right" cols="3">
+        <v-col v-if="isEthNetwork" class="py-0 my-0 text-right" cols="3">
           <span> - {{ formattedTx }} </span>
         </v-col>
       </v-row>
@@ -60,7 +62,7 @@
           }}</span></v-col
         >
         <v-col
-          v-if="isEth"
+          v-if="isEthNetwork"
           class="py-0 my-0 text-right font-weight-medium"
           cols="3"
         >
@@ -74,7 +76,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { ETH } from '@/utils/networks/types';
 export default {
   props: {
     txFee: {
@@ -96,18 +97,15 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('external', ['ETHUSDValue']),
-    ...mapGetters('global', ['network']),
-    isEth() {
-      return this.network.type.name === ETH.name;
-    },
+    ...mapGetters('global', ['network', 'isEthNetwork']),
     balanceUsd() {
-      const value = this.isEth
+      const value = this.isEthNetwork
         ? BigNumber(this.balanceInETH).times(this.ETHUSDValue.value).toFixed(2)
         : this.balanceInETH;
       return `$ ${value}`;
     },
     valueUsd() {
-      const value = this.isEth
+      const value = this.isEthNetwork
         ? BigNumber(this.value).times(this.ETHUSDValue.value).toFixed(2)
         : this.value;
       return `$ ${value}`;
@@ -119,7 +117,7 @@ export default {
       return BigNumber(this.value).plus(this.txFee).toFixed();
     },
     totalUsd() {
-      const value = this.isEth
+      const value = this.isEthNetwork
         ? BigNumber(this.total).times(this.ETHUSDValue.value).toFixed(2)
         : 0;
       return `$ ${value}`;
