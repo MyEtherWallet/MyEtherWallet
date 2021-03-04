@@ -259,7 +259,7 @@ export default {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },
     gasPriceGwei() {
-      return this.web3.utils.fromWei(this.gasPrice);
+      return fromWei(this.gasPrice, 'gwei');
     },
     totalGasLimit() {
       if (this.currentTrade) {
