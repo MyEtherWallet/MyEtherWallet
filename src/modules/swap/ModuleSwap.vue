@@ -23,9 +23,14 @@
         title="Swap"
       >
         <template #moduleBody>
-          <div class="d-flex flex-column pa-10">
-            <div class="mt-6 d-flex justify-space-between">
-              <div>
+          <v-container class="pa-3 pa-md-10" fluid>
+            <!--
+            =====================================================================================
+              From / Amount to Swap / To / Amount to Recieve
+            =====================================================================================
+            -->
+            <v-row class="align-center justify-space-between">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
                 <mew-select
                   :value="fromTokenType"
                   :items="fromTokens"
@@ -39,11 +44,13 @@
                   type="number"
                   @input="setTokenInValue"
                 />
-              </div>
-              <div class="px-6 mb-8 d-flex align-center">
-                <img :src="swapIcon" height="35" />
-              </div>
-              <div>
+              </v-col>
+              <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
+                <div class="d-flex align-center justify-center">
+                  <img :src="swapIcon" height="35" />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="5">
                 <mew-select
                   ref="toToken"
                   :value="toTokenType"
@@ -58,15 +65,16 @@
                   disabled
                   :value="tokenOutValue"
                 />
-              </div>
-            </div>
-
+              </v-col>
+            </v-row>
+            <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+            -->
             <module-address-book @setAddress="setToAddress" />
-
             <div class="mt-5">
               <div class="mew-heading-3 mb-5">Select a provider</div>
-
-              <!-- Dummy skeleton loader for provider list -->
               <v-row v-if="step == 0">
                 <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
                   <v-card
@@ -87,8 +95,6 @@
                   </v-card>
                 </v-col>
               </v-row>
-
-              <!-- Real provider list -->
               <v-item-group v-show="step >= 1" mandatory>
                 <v-row>
                   <v-col
@@ -165,7 +171,7 @@
                 @click.native="showConfirm()"
               />
             </div>
-          </div>
+          </v-container>
         </template>
       </mew-module>
     </mew6-white-sheet>
