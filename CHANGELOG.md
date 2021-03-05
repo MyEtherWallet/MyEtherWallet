@@ -2,7 +2,7 @@
 
 ### Feature
 
-* Add link to ethplorer.io in Success modal
+* Add link to ethplorer.io in Success modal [#2880](https://github.com/MyEtherWallet/MyEtherWallet/pull/2880)
 
 ### Release v5.7.22
 
