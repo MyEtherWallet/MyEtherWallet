@@ -1,3 +1,9 @@
+### Release v5.7.23
+
+### Feature
+
+* Add link to ethplorer.io in Success modal
+
 ### Release v5.7.22
 
 ### Bug
