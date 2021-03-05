@@ -223,8 +223,7 @@ export default {
     close() {
       try {
         this.$router.push({
-          params: null,
-          query: null
+          name: 'AccessWallet'
         });
       } catch (e) {
         Toast(e, {}, ERROR);
