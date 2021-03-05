@@ -14,7 +14,6 @@
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
     />
-    <module-network v-if="$vuetify.breakpoint.smAndDown" class="pa-2 pa-md-3" />
 
     <mew6-white-sheet>
       <mew-module
@@ -182,7 +181,6 @@ import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from './handlers/handlerSwap';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -193,8 +191,7 @@ export default {
   name: 'ModuleSwapRates',
   components: {
     ModuleAddressBook,
-    SwapConfirmation,
-    ModuleNetwork
+    SwapConfirmation
   },
   props: {
     fromToken: {
