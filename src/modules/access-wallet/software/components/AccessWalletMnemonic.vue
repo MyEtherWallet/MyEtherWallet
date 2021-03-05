@@ -163,7 +163,7 @@
             <v-row class="align-center justify-center mb-5">
               <mew-button
                 btn-size="small"
-                title="Add Path"
+                title="Add Path to List"
                 btn-style="outline"
                 :disable="!selectedPath"
                 @click.native="saveCustomPath"
@@ -481,7 +481,7 @@ export default {
       return [
         {
           name: 'Do you have an extra word?',
-          subtext: this.extraWord && this.extraWord !== '' ? 'Yes' : 'No'
+          subtext: 'Add your word'
         }
       ];
     },

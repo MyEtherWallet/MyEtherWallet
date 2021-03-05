@@ -158,7 +158,7 @@ export default {
     backBtnText() {
       return this.walletType === SOFTWARE_WALLET_TYPES.OVERVIEW
         ? ''
-        : 'Select Another Software';
+        : 'Select Software';
     },
     /**
      * @returns correct title of the overlay according to the wallet type selected
