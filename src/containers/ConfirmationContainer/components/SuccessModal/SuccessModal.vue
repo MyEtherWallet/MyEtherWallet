@@ -30,7 +30,10 @@
           :click-function="goToEthVm"
         />
         <standard-button
-          v-show="(network.type.name === 'ETH' || network.type.name === 'KOV') && txHashExlporrer"
+          v-show="
+            (network.type.name === 'ETH' || network.type.name === 'KOV') &&
+            txHashExlporrer
+          "
           :options="buttonCheckEthplorer"
           :click-function="goToEthplorer"
         />
