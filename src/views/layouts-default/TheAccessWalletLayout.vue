@@ -158,7 +158,7 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            this.open(ACCESS_VALID_OVERLAYS.HARDWARE);
+            this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
           }
         },
         /* Mobile Apps */
@@ -190,7 +190,7 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'warning--text text--darken-1',
           fn: () => {
-            this.open(ACCESS_VALID_OVERLAYS.SOFTWARE);
+            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
         }
       ],
@@ -234,7 +234,7 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    open(type) {
+    openOverlay(type) {
       try {
         this.$router.push({
           name: 'AccessWallet',
