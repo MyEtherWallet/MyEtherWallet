@@ -181,7 +181,7 @@ import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
 import Changelly from '@/assets/images/icons/icon-changelly.png';
 import Simplex from '@/assets/images/icons/icon-simplex.png';
 import Bity from '@/assets/images/icons/icon-bity.png';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
+import Swapper from './handlers/handlerSwap';
 import ModuleNetwork from '@/modules/network/ModuleNetwork';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
@@ -190,6 +190,7 @@ const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
 export default {
+  name: 'ModuleSwapRates',
   components: {
     ModuleAddressBook,
     SwapConfirmation,
