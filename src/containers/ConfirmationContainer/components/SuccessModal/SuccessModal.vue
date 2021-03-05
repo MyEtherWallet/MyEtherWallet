@@ -29,6 +29,11 @@
           :options="buttonCheckEthVm"
           :click-function="goToEthVm"
         />
+        <standard-button
+          v-show="(network.type.name === 'ETH' || network.type.name === 'KOV') && txHashExlporrer"
+          :options="buttonCheckEthplorer"
+          :click-function="goToEthplorer"
+        />
         <standard-button :options="buttonOk" :click-function="hideModal" />
       </div>
     </div>
@@ -89,6 +94,16 @@ export default {
         fullWidth: true
       };
     },
+    buttonCheckEthplorer() {
+      return {
+        // eslint-disable-next-line
+        title: this.$t('sendTx.success.button-check-explorer', {
+          explorrerName: 'Ethplorer.io'
+        }),
+        buttonStyle: 'green-border',
+        fullWidth: true
+      };
+    },
     buttonOk() {
       return {
         title:
@@ -113,6 +128,14 @@ export default {
       );
       // eslint-disable-next-line
       window.open(ethVmLink, '_blank');
+    },
+    goToEthplorer() {
+      const ethplorerLink = this.txHashExlporrer.replace(
+        'etherscan.io',
+        'ethplorer.io'
+      );
+      // eslint-disable-next-line
+      window.open(ethplorerLink, '_blank');
     },
     hideModal() {
       if (this.linkTo !== '/') {
