@@ -2,10 +2,8 @@ import localStore from 'store';
 import Configs from '../configs';
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
-    const savedStore = JSON.parse(
-      localStore.get(Configs.LOCAL_STORAGE_KEYS.global)
-    );
-    if (savedStore.stateVersion === Configs.stateVersion) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
+    if (savedStore.stateVersion === Configs.VERSION.global) {
       Object.assign(state, savedStore);
     }
   }
@@ -19,7 +17,7 @@ const SET_LOCALE = function (state, { locale }) {
 };
 
 const SET_GAS_PRICE = function (state, val) {
-  state.gasPrice = val;
+  state.baseGasPrice = val;
 };
 
 const SET_ADDRESS_BOOK = function (state, val) {
@@ -40,7 +38,6 @@ const SET_GAS_PRICE_TYPE = function (state, type) {
 const ADD_CUSTOM_PATH = function (state, path) {
   state.customPaths.push(path);
 };
-
 const DELETE_CUSTOM_PATH = function (state, customPaths) {
   const idx = state.customPaths.findIndex(item => {
     if (item.path === customPaths.path) {
@@ -52,7 +49,11 @@ const DELETE_CUSTOM_PATH = function (state, customPaths) {
     state.customPaths.splice(idx, 1);
   }
 };
-
+const SET_IMPORTED_STATE = function (currentState, newState) {
+  Object.keys(newState).forEach(item => {
+    currentState[item] = newState[item];
+  });
+};
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -62,5 +63,6 @@ export default {
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
   ADD_CUSTOM_PATH,
-  DELETE_CUSTOM_PATH
+  DELETE_CUSTOM_PATH,
+  SET_IMPORTED_STATE
 };

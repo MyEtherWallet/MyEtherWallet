@@ -1,4 +1,7 @@
 import nodeList from '@/utils/networks';
+import { ETH } from '@/utils/networks/types';
+import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper';
+
 const Networks = function () {
   return nodeList;
 };
@@ -17,7 +20,18 @@ const network = function (state) {
   }
   return network;
 };
+
+const gasPrice = function (state) {
+  return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
+};
+
+const isEthNetwork = function (state) {
+  return state.currentNetwork.type.name === ETH.name;
+};
+
 export default {
   Networks,
-  network
+  network,
+  gasPrice,
+  isEthNetwork
 };

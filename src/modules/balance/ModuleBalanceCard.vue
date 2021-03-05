@@ -96,6 +96,7 @@ export default {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('wallet', ['address', 'isHardware']),
     ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
     canSwitch() {
       return this.isHardware;
     },
@@ -106,10 +107,15 @@ export default {
       );
     },
     convertedBalance() {
-      const balance = BigNumber(this.balanceInETH).times(
-        this.ETHUSDValue.value
-      );
-      return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+      if (this.isEthNetwork) {
+        const balance = BigNumber(this.balanceInETH).times(
+          this.ETHUSDValue.value
+        );
+        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+      }
+      return `${BigNumber(this.balanceInETH).toFixed(2)} ${
+        this.network.type.currencyName
+      }`;
     }
   },
   methods: {

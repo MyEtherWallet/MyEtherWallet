@@ -11,14 +11,20 @@ const setGasPrice = function ({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setGasPriceType = function ({ commit }, type) {
+  commit('SET_GAS_PRICE_TYPE', type);
+};
+
 const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
-const setEthGasPrice = function ({ commit }, val) {
-  commit('SET_ETH_GASPRICE', val);
+
+const setImportedState = function ({ commit }, stateObj) {
+  stateObj['localStore'] = true;
+  commit('SET_IMPORTED_STATE', stateObj);
 };
 const addCustomPath = function ({ commit }, val) {
   commit('ADD_CUSTOM_PATH', val);
@@ -33,8 +39,9 @@ export default {
   setLocale,
   setNetwork,
   setGasPrice,
+  setGasPriceType,
   setAddressBook,
-  setEthGasPrice,
+  setImportedState,
   addCustomPath,
   deleteCustomPath
 };
