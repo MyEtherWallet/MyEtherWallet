@@ -86,7 +86,7 @@ import AccessWalletPrivateKey from './software/components/AccessWalletPrivateKey
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
-import hadlerAccessWalletSoftware from './software/handlers/hadlerAccessWalletSoftware';
+import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -181,7 +181,7 @@ export default {
    * Lifecucle hooks to create and destroy access wallet handler
    */
   mounted() {
-    this.accessHandler = new hadlerAccessWalletSoftware();
+    this.accessHandler = new handlerAccessWalletSoftware();
   },
   destroyed() {
     this.accessHandler = {};
