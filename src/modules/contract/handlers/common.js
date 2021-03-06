@@ -88,6 +88,11 @@ export function parseABI(json) {
     }
     return JSON.parse(json);
   } catch (e) {
+    if (Array.isArray(json)) {
+      if (json.length > 0) {
+        return json;
+      }
+    }
     return false;
   }
 }
@@ -102,4 +107,32 @@ export function parseJSON(json) {
     }
     return false;
   }
+}
+
+export function createTypeValidatingProxy(item) {
+  return new Proxy(item, {
+    set: (obj, prop, value) => {
+      if (prop === 'value' && value !== null) {
+        if (isContractArgValid(value, getType(obj.type).solidityType)) {
+          obj.valid = true;
+        } else {
+          obj.valid = false;
+        }
+      } else if (prop === 'value' && value === null) {
+        obj.valid = false;
+      } else if (prop === 'clear') {
+        obj.valid = false;
+      }
+      obj[prop] = value;
+      return true;
+    },
+    get: (target, prop) => {
+      if (prop === 'clear') {
+        target.value = null;
+        target.valid = false;
+        return true;
+      }
+      return target[prop];
+    }
+  });
 }

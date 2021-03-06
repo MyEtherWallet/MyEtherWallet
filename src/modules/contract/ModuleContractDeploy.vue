@@ -14,7 +14,6 @@
         />
 
         <v-textarea
-          no-resize
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
@@ -163,7 +162,8 @@ export default {
       }
     },
     getInputs() {
-      this.inputs = this.activeContract.constructorInputs;
+      this.inputs = this.activeContract.constructorInputs
+      this.canDeploy = this.activeContract.canDeploy;
     },
     valueInput(name, value) {
       this.activeContract.setDeployArg(name, value);
@@ -176,7 +176,7 @@ export default {
       this.contractName = name;
     },
     getType() {
-      return Contracts.getType.apply(this, arguments);
+      return Contracts.utils().getType.apply(this, arguments);
     }
   }
 };

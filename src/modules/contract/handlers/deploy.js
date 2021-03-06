@@ -4,12 +4,12 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
-import { isContractArgValid, getType, validateABI } from './common';
+import { isContractArgValid, createTypeValidatingProxy, validateABI } from './common';
 
 export default class Deploy {
   constructor(abi, txByteCode, address, web3, gasPrice) {
     this.userAddress = address;
-    this.address = '';
+    this._address = '';
     this.web3 = web3;
     this.gasPrice = gasPrice;
     this.ABI = abi;
@@ -18,10 +18,10 @@ export default class Deploy {
     this.txByteCode = txByteCode;
     this.contractsDeployed = [];
     this.noConstructorInputs = false;
-    this.abiConstructor();
+    this._abiConstructor();
   }
 
-  clear() {
+  _clear() {
     this.constructorABI = null;
     this._constructorInputs = {};
     this.txByteCode = null;
@@ -32,23 +32,23 @@ export default class Deploy {
   }
 
   reset() {
-    this.clear();
-    this.address = '';
+    this._clear();
+    this._address = '';
   }
 
   _updateGasPrice(gasPrice) {
     this.gasPrice = gasPrice;
   }
 
-  get hasABI() {
+  get _hasABI() {
     return validateABI(this.ABI);
   }
 
-  get abiValid() {
-    return this.hasABI && typeof this.ABI === 'object';
+  get _abiValid() {
+    return this._hasABI && typeof this.ABI === 'object';
   }
 
-  get byteCodeValid() {
+  get _byteCodeValid() {
     try {
       return this.txByteCode && this.txByteCode.substring(0, 2) === '0x';
     } catch (e) {
@@ -67,7 +67,7 @@ export default class Deploy {
 
   get _canDeploy() {
     return (
-      this.hasABI &&
+      this._hasABI &&
       this._hasConstructorABI &&
       this.txByteCode !== null &&
       ((Object.values(this._constructorInputs).every(item => {
@@ -89,10 +89,10 @@ export default class Deploy {
     this._constructorInputs[name].value = value;
   }
 
-  abiConstructor() {
+  _abiConstructor() {
     try {
       this._constructorInputs = {};
-      if (this.hasABI && this.byteCodeValid) {
+      if (this._hasABI && this._byteCodeValid) {
         this.ABI.forEach(item => {
           if (item.type === 'constructor') {
             this.constructorABI = item;
@@ -103,7 +103,7 @@ export default class Deploy {
           this.constructorABI.hasOwnProperty('inputs')
         ) {
           this.constructorABI.inputs.forEach(item => {
-            const itemProxy = this.createTypeValidatingProxy(item);
+            const itemProxy = createTypeValidatingProxy(item);
             itemProxy.value = null;
             this._constructorInputs[item.name] = itemProxy;
           });
@@ -138,7 +138,7 @@ export default class Deploy {
       }
     });
   }
-  get deployArgs() {
+  get _deployArgs() {
     const _deployArgs = [];
     if (this.constructorABI) {
       this.constructorABI.inputs.forEach(item => {
@@ -159,19 +159,19 @@ export default class Deploy {
   txData() {
     if (this._canDeploy) {
       return new this.web3.eth.Contract(this.ABI)
-        .deploy({ data: this.txByteCode, arguments: this.deployArgs })
+        .deploy({ data: this.txByteCode, arguments: this._deployArgs })
         .encodeABI();
     }
 
     return '0x';
   }
-  async estimateGas(params) {
+  async _estimateGas(params) {
     return this.web3.eth.estimateGas(params);
   }
-  async getNonce(address) {
+  async _getNonce(address) {
     return this.web3.eth.getTransactionCount(address);
   }
-  getGasPrice() {
+  _getGasPrice() {
     return sanitizeHex(ethUnit.toWei(this.gasPrice, 'gwei').toString(16));
   }
   sendTransaction(tx, contractName) {
@@ -181,8 +181,8 @@ export default class Deploy {
       .then(() => {
         coinbase = this.userAddress;
         return Promise.all([
-          this.estimateGas({ from: coinbase, ...tx }),
-          this.getNonce(coinbase)
+          this._estimateGas({ from: coinbase, ...tx }),
+          this._getNonce(coinbase)
         ]);
       })
 
@@ -190,7 +190,7 @@ export default class Deploy {
         const _tx = new Transaction({
           from: coinbase,
           nonce: results[1],
-          gasPrice: this.getGasPrice(),
+          gasPrice: this._getGasPrice(),
           gasLimit: sanitizeHex(new BigNumber(results[0]).toString(16)),
           ...tx
         });
@@ -200,39 +200,13 @@ export default class Deploy {
         const contractAddr = bufferToHex(
           generateAddress(toBuffer(coinbase), toBuffer(results[1]))
         );
-        this.address = contractAddr;
-        this.pushContractToStore(contractAddr, contractName); // TODO remove for new structure
+        this._address = contractAddr;
+        // this.pushContractToStore(contractAddr, contractName); // TODO remove for new structure
         this.contractsDeployed.push(contractAddr);
-        this.clear();
+        this._clear();
         return this.web3.eth.sendTransaction(json);
       });
   }
 
-  createTypeValidatingProxy(item) {
-    return new Proxy(item, {
-      set: (obj, prop, value) => {
-        if (prop === 'value' && value !== null) {
-          if (isContractArgValid(value, getType(obj.type).solidityType)) {
-            obj.valid = true;
-          } else {
-            obj.valid = false;
-          }
-        } else if (prop === 'value' && value === null) {
-          obj.valid = false;
-        } else if (prop === 'clear') {
-          obj.valid = false;
-        }
-        obj[prop] = value;
-        return true;
-      },
-      get: (target, prop) => {
-        if (prop === 'clear') {
-          target.value = null;
-          target.valid = false;
-          return true;
-        }
-        return target[prop];
-      }
-    });
-  }
+
 }

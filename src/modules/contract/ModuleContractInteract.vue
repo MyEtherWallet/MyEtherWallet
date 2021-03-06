@@ -288,14 +288,14 @@ export default {
     },
 
     isValidInput() {
-      return Contracts.isContractArgValid.apply(this, arguments);
+      return Contracts.utils().isContractArgValid.apply(this, arguments);
     },
     getType() {
-      return Contracts.getType.apply(this, arguments);
+      return Contracts.utils().getType.apply(this, arguments);
     },
 
     formatInput() {
-      return Contracts.formatInput.apply(this, arguments);
+      return Contracts.utils().formatInput.apply(this, arguments);
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

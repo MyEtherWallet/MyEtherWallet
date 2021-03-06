@@ -1,31 +1,23 @@
 import BigNumber from 'bignumber.js';
 import * as sanitizeHex from '@/core/helpers/addressUtils';
 import * as ethUnit from 'ethjs-unit';
-import { isContractArgValid, getType, formatInput } from './common';
-
-
+import { formatInput, createTypeValidatingProxy } from './common';
 
 export default class Method {
   constructor(abi, contractAddress, address, web3, gasPrice) {
-    try {
-      this.userAddress = address;
-      this.address = contractAddress;
-      this.name = abi.name;
-      this.constant = abi.constant || abi.stateMutability === 'view';
-      this.inputs = {};
-      this.outputs = {};
-      this.web3 = web3;
-      this.gasPrice = gasPrice;
-      this.ABI = abi;
+    this.userAddress = address;
+    this.address = contractAddress;
+    this.name = abi.name;
+    this.constant = abi.constant || abi.stateMutability === 'view';
+    this.inputs = {};
+    this.outputs = {};
+    this.web3 = web3;
+    this.gasPrice = gasPrice;
+    this.ABI = abi;
 
-      this.contractMethods = [];
-      this.selectedMethod = abi;
-      this.noInputs = false;
-      // ===========
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
+    this.contractMethods = [];
+    this.selectedMethod = abi;
+    this.noInputs = false;
   }
 
   static _create(abi, contractAddress, address, web3, gasPrice, storeHandler) {
@@ -39,7 +31,7 @@ export default class Method {
         storeHandler
       );
       method
-        .selectedFunction(abi)
+        ._selectedFunction(abi)
         .then(() => {
           resolve(method);
         })
@@ -65,7 +57,7 @@ export default class Method {
     this.outputs = {};
   }
 
-  updateGasPrice(gasPrice) {
+  _updateGasPrice(gasPrice) {
     this.gasPrice = gasPrice;
   }
 
@@ -73,7 +65,7 @@ export default class Method {
     return this.selectedMethod.constant;
   }
 
-  get inputsValid() {
+  get _inputsValid() {
     return (
       (Object.values(this.inputs).every(item => {
         return item.value !== null && item.valid;
@@ -83,7 +75,7 @@ export default class Method {
     );
   }
 
-  get hasOutputs() {
+  get _hasOutputs() {
     try {
       return Object.keys(this.outputs).length > 0;
     } catch (e) {
@@ -100,7 +92,7 @@ export default class Method {
     this.inputs[name].value = value;
   }
 
-  selectedFunction(method) {
+  _selectedFunction(method) {
     return new Promise((resolve, reject) => {
       if (!this.address || this.address === '')
         return reject(Error(`No contract address specified`));
@@ -112,7 +104,7 @@ export default class Method {
       try {
         this.selectedMethod = method;
         this.inputs = this.selectedMethod.inputs.reduce((acc, cur, idx) => {
-          const itemProxy = this.createTypeValidatingProxy(cur);
+          const itemProxy = createTypeValidatingProxy(cur);
           itemProxy.value = null;
           itemProxy.result = null;
           if (acc[cur.name] === '' || cur.name.length === 0) {
@@ -125,7 +117,7 @@ export default class Method {
         }, {});
         this.noInputs = this.selectedMethod.inputs.length === 0;
         this.outputs = this.selectedMethod.outputs.reduce((acc, cur, idx) => {
-          const itemProxy = this.createTypeValidatingProxy(cur);
+          const itemProxy = createTypeValidatingProxy(cur);
           itemProxy.value = null;
           itemProxy.result = null;
           acc[idx.toString()] = itemProxy;
@@ -169,8 +161,6 @@ export default class Method {
             .catch(e => {
               this.loading = false;
               reject(e);
-              // eslint-disable-next-line
-              console.error(e);
             });
         } else {
           this.result = '';
@@ -181,8 +171,8 @@ export default class Method {
         }
         this.loading = false;
       } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
+        this.loading = false;
+        reject(e);
       }
     });
   }
@@ -200,7 +190,7 @@ export default class Method {
     }
     this.loading = true;
     if (this.constant === true) {
-      return contract.methods[this.name](...this.contractArgs)
+      return contract.methods[this.name](...this._contractArgs)
         .call({ from: this.userAddress.toLowerCase() })
         .then(res => {
           let result = null;
@@ -225,14 +215,14 @@ export default class Method {
         .catch(e => {
           this.loading = false;
           // eslint-disable-next-line
-          console.error(e);
+          return Promise.reject(e)
         });
     }
     const nonce = await web3.eth.getTransactionCount(
       this.userAddress.toLowerCase()
     );
     let errored = false;
-    const gasLimit = await contract.methods[this.name](...this.contractArgs)
+    const gasLimit = await contract.methods[this.name](...this._contractArgs)
       .estimateGas({
         from: this.userAddress.toLowerCase(),
         value: value
@@ -242,13 +232,12 @@ export default class Method {
       })
       .catch(e => {
         this.loading = false;
-        // eslint-disable-next-line
-        console.error(e);
         errored = true;
+        throw e;
       });
     if (!errored) {
       const data = contract.methods[this.name](
-        ...this.contractArgs
+        ...this._contractArgs
       ).encodeABI();
 
       const raw = {
@@ -262,65 +251,28 @@ export default class Method {
       };
       this.loading = false;
       this.clear();
-      return web3.eth.sendTransaction(raw).catch(err => {
-        // eslint-disable-next-line
-        console.error(err);
-        throw err;
-      });
+      return web3.eth.sendTransaction(raw);
     }
   }
 
-  get contractArgs() {
-    try {
-      // const _contractArgs = [];
-      if (this.selectedMethod) {
-        return this.selectedMethod.inputs.reduce((_contractArgs, item) => {
-          const value = this.inputs[item.name].value;
-          if (item.type.includes('[]')) {
-            const parsedItem = formatInput(value);
-            _contractArgs.push(parsedItem);
-          } else if (item.type === 'address') {
-            _contractArgs.push(value.toLowerCase().trim());
-          } else if (item.includes === 'uint') {
-            const number = new BigNumber(value.trim());
-            _contractArgs.push(number.toFixed());
-          } else {
-            _contractArgs.push(value);
-          }
-          return _contractArgs;
-        }, []);
-      }
-      return [];
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-      throw e;
+  get _contractArgs() {
+    if (this.selectedMethod) {
+      return this.selectedMethod.inputs.reduce((_contractArgs, item) => {
+        const value = this.inputs[item.name].value;
+        if (item.type.includes('[]')) {
+          const parsedItem = formatInput(value);
+          _contractArgs.push(parsedItem);
+        } else if (item.type === 'address') {
+          _contractArgs.push(value.toLowerCase().trim());
+        } else if (item.includes === 'uint') {
+          const number = new BigNumber(value.trim());
+          _contractArgs.push(number.toFixed());
+        } else {
+          _contractArgs.push(value);
+        }
+        return _contractArgs;
+      }, []);
     }
-  }
-  createTypeValidatingProxy(item) {
-    return new Proxy(item, {
-      set: (obj, prop, value) => {
-        if (prop === 'value' && value !== null) {
-          obj.valid = !!isContractArgValid(
-            value,
-            getType(obj.type).solidityType
-          );
-        } else if (prop === 'value' && value === null) {
-          obj.valid = false;
-        } else if (prop === 'clear') {
-          obj.valid = false;
-        }
-        obj[prop] = value;
-        return true;
-      },
-      get: (obj, prop) => {
-        if (prop === 'clear') {
-          obj.value = null;
-          obj.valid = false;
-          return true;
-        }
-        return obj[prop];
-      }
-    });
+    return [];
   }
 }

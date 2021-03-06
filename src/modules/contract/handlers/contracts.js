@@ -3,9 +3,7 @@ import validateHexString from '@/core/helpers/validateHexString';
 import Method from './method';
 import Deploy from './deploy';
 import Web3 from 'web3';
-import { validateABI, parseABI } from './common';
-
-console.log(utils); // todo remove dev item
+import { validateABI, parseABI, isContractArgValid, getType } from './common';
 
 export default class Contracts {
   constructor(address, web3, gasPrice, storeHandler) {
@@ -19,8 +17,14 @@ export default class Contracts {
     this.selectedMethod = { inputs: [] };
     this.storeContractAddress = storeHandler || function () {};
     this.noInputs = false;
-    this.deployer = null;
+    this._deployer = null;
     this.txByteCode = null;
+    this.helpers = {
+      validateABI,
+      parseABI,
+      isContractArgValid,
+      getType
+    };
   }
 
   clear() {
@@ -37,18 +41,34 @@ export default class Contracts {
     this.contractMethods = [];
     this.selectedMethod = { inputs: [] };
     this.contractMethodDetails = {};
-    this.deployer = null;
+    this._deployer = null;
   }
 
   updateGasPrice(gasPrice) {
-    if (this.deployer) {
-      this.deployer._updateGasPrice(gasPrice);
+    if (this._deployer) {
+      this._deployer._updateGasPrice(gasPrice);
+    }
+    if (this.selectedMethod instanceof Method) {
+      this.selectedMethod._updateGasPrice(this.gasPrice);
     }
     this.gasPrice = gasPrice;
   }
 
+  static utils() {
+    return {
+      validateABI,
+      parseABI,
+      isContractArgValid,
+      getType
+    };
+  }
+
   get hasABI() {
-    return !!parseABI(this.ABI);
+    try {
+      return !!parseABI(this.ABI);
+    } catch (e) {
+      return false;
+    }
   }
 
   get abiValid() {
@@ -60,8 +80,8 @@ export default class Contracts {
   }
 
   get constructorInputs() {
-    if (this.deployer) {
-      return this.deployer._constructorInputs;
+    if (this._deployer) {
+      return this._deployer._constructorInputs;
     }
     return {};
   }
@@ -75,29 +95,29 @@ export default class Contracts {
   }
 
   get payableConstructor() {
-    if (this.deployer) {
-      return this.deployer._payableConstructor;
+    if (this._deployer) {
+      return this._deployer._payableConstructor;
     }
     return false;
   }
 
   get canDeploy() {
-    if (this.deployer) {
-      return this.deployer._canDeploy;
+    if (this._deployer) {
+      return this._deployer._canDeploy;
     }
     return false;
   }
 
   get hasConstructorABI() {
-    if (this.deployer) {
-      return this.deployer._hasConstructorABI;
+    if (this._deployer) {
+      return this._deployer._hasConstructorABI;
     }
     return false;
   }
 
   get deployedContractAddress() {
-    if (this.deployer) {
-      return this.deployer._address;
+    if (this._deployer) {
+      return this._deployer._address;
     }
     return '';
   }
@@ -107,7 +127,7 @@ export default class Contracts {
   }
 
   get hasOutputs() {
-    return !!this.selectedMethod.hasOutputs;
+    return !!this.selectedMethod._hasOutputs;
   }
 
   get selectedMethodInputs() {
@@ -116,7 +136,7 @@ export default class Contracts {
 
   get inputsValid() {
     try {
-      return this.selectedMethod.inputsValid;
+      return this.selectedMethod._inputsValid;
     } catch (e) {
       return false;
     }
@@ -137,11 +157,15 @@ export default class Contracts {
   }
   deploy(withValue, contractName) {
     this.clear();
-    return this.deployer._deploy(withValue, contractName);
+    return this._deployer._deploy(withValue, contractName);
   }
 
   setDeployArg(name, value) {
-    this.deployer._setDeployArg(name, value);
+    if (this._deployer) {
+      this._deployer._setDeployArg(name, value);
+      return true;
+    }
+    return false;
   }
 
   async write(txValue) {
@@ -154,15 +178,13 @@ export default class Contracts {
         if (abi) {
           this.ABI = parseABI(abi);
           if (this.contractActive) {
-            this.processAbi(this.ABI)
-              .then(resolve)
-              .catch(err => {
-                this.ABI = null;
-                reject(err);
-              });
+            this._processAbi(this.ABI);
+            return resolve();
           } else if (this.byteCodeValid) {
-            this.abiConstructor();
+            this._abiConstructor();
+            resolve();
           }
+          resolve();
         } else {
           this.ABI = null;
         }
@@ -176,7 +198,7 @@ export default class Contracts {
   setContractAddress(address) {
     this.address = address;
     if (this.contractActive) {
-      return this.processAbi(this.ABI).catch(err => {
+      return this._processAbi(this.ABI).catch(err => {
         this.ABI = null;
         throw err;
       });
@@ -184,7 +206,7 @@ export default class Contracts {
     return Promise.resolve();
   }
 
-  processAbi() {
+  _processAbi() {
     if (this.ABI !== '') {
       if (Array.isArray(this.ABI)) {
         this.contractMethods = this.ABI.filter(item => {
@@ -208,7 +230,7 @@ export default class Contracts {
     return new Promise((resolve, reject) => {
       if (this.contractMethodDetails[methodName] instanceof Method) {
         this.selectedMethod = this.contractMethodDetails[methodName];
-        this.selectedMethod.updateGasPrice(this.gasPrice);
+        this.selectedMethod._updateGasPrice(this.gasPrice);
         resolve({
           inputs: this.selectedMethod.inputs,
           outputs: this.selectedMethod.outputs
@@ -233,9 +255,9 @@ export default class Contracts {
       }
     });
   }
-  abiConstructor() {
+  _abiConstructor() {
     if (this.hasABI && this.byteCodeValid) {
-      this.deployer = new Deploy(
+      this._deployer = new Deploy(
         this.ABI,
         this.txByteCode,
         this.userAddress,
@@ -263,7 +285,7 @@ export default class Contracts {
         this.txByteCode = null;
       }
       if (this.hasABI) {
-        this.abiConstructor();
+        this._abiConstructor();
       }
     } catch (e) {
       this.txByteCode = null;
