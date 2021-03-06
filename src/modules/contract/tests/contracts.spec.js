@@ -87,7 +87,7 @@ describe('Contracts Module', () => {
     done();
   });
   test('it should set ABI', async done => {
-    await contract.setAbi(erc20ABI)
+    await contract.setAbi(erc20ABI);
     expect(contract.hasABI).toBe(true);
     expect(contract.abiValid).toBe(true);
 

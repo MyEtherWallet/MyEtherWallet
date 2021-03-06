@@ -4,7 +4,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import * as ethUnit from 'ethjs-unit';
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex, generateAddress, toBuffer } from 'ethereumjs-util';
-import { isContractArgValid, createTypeValidatingProxy, validateABI } from './common';
+import { createTypeValidatingProxy, validateABI } from './common';
 
 export default class Deploy {
   constructor(abi, txByteCode, address, web3, gasPrice) {
@@ -174,7 +174,7 @@ export default class Deploy {
   _getGasPrice() {
     return sanitizeHex(ethUnit.toWei(this.gasPrice, 'gwei').toString(16));
   }
-  sendTransaction(tx, contractName) {
+  sendTransaction(tx /*, contractName*/) {
     let coinbase;
     return this.web3.eth
       .getCoinbase()
@@ -207,6 +207,4 @@ export default class Deploy {
         return this.web3.eth.sendTransaction(json);
       });
   }
-
-
 }

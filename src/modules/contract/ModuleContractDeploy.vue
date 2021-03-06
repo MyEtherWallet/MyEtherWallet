@@ -162,7 +162,7 @@ export default {
       }
     },
     getInputs() {
-      this.inputs = this.activeContract.constructorInputs
+      this.inputs = this.activeContract.constructorInputs;
       this.canDeploy = this.activeContract.canDeploy;
     },
     valueInput(name, value) {
