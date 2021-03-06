@@ -60,7 +60,7 @@ export default {
           },
           {
             label: 'Explore Dapps',
-            to: { name: 'Dapps' }
+            to: { name: 'DappsCenter' }
           },
           {
             label: 'Swap tokens',
