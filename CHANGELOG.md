@@ -1,3 +1,8 @@
+### Devop
+
+* Add unstopable contract to permit transfer of unstoppable domains [#2674](https://github.com/MyEtherWallet/MyEtherWallet/pull/2674/files)
+
+
 ### Release v5.7.22
 
 ### Bug
