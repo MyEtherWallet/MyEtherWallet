@@ -1,4 +1,6 @@
 import AKA from './AKA.js';
+import AVAX from './AVAX.js';
+import AVAXTEST from './AVAXTEST.js';
 import ATH from './ATH.js';
 import BSC from './BSC.js';
 import CLO from './CLO.js';
@@ -38,6 +40,8 @@ import EWT from './EWT.js';
 
 export {
   AKA,
+  AVAX,
+  AVAXTEST,
   ATH,
   BSC,
   CLO,
