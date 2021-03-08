@@ -75,5 +75,6 @@ module.exports = [
   'https://estimategas.mewapi.io:443',
   'https://bsc-dataseed1.binance.org:443',
   'https://staked.mewapi.io:443',
-  'https://stakedtest.mewapi.io:443'
+  'https://stakedtest.mewapi.io:443',
+  'https://api.ethvm.com:443'
 ];

@@ -42,6 +42,9 @@
       &.deposited-expanded {
         border-bottom: 1px solid $light-blue-1;
       }
+      &.exited-expanded {
+        border-bottom: 1px solid $red-9;
+      }
       .badge {
         color: $white;
         font-weight: normal;
@@ -61,6 +64,9 @@
       }
       .deposited-badge {
         background-color: $light-blue-1;
+      }
+      .exited-badge {
+        background-color: $red-9;
       }
       .right-container {
         align-items: center;
@@ -107,5 +113,10 @@
   .deposited-container {
     background-color: $light-blue-14;
     border: 1px solid $light-blue-1;
+  }
+
+  .exited-container {
+    background-color: $red-12;
+    border: 1px solid $red-9;
   }
 }
