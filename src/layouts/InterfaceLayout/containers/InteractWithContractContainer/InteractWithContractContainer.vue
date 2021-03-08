@@ -338,7 +338,10 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          if (item.type.includes('[]')) {
+          if (
+            item.type.includes('[]') ||
+            (item.type.includes('[') && item.type.includes(']'))
+          ) {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {

@@ -1,0 +1,104 @@
+@import '~@/scss/GlobalVariables';
+
+.staked-wrapper {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  margin-bottom: 10px;
+  overflow: hidden;
+  .button-container {
+    width: 100%;
+    @media all and (max-width: 730px) {
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+  .stats-wrapper {
+    @media all and (max-width: 730px) {
+      padding: 20px 25px;
+    }
+  }
+  .stats-container {
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    .staking-percent {
+      color: $mew-green;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .total-eth-percent {
+      color: $light-blue-1;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    span {
+      color: $light-grey-18;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .about-container {
+    background-color: $light-green-1;
+    border-radius: 4px;
+    color: $dark-blue-1;
+    margin-top: 10px;
+    padding: 30px;
+  }
+  .footer {
+    align-items: center;
+    color: $dark-blue-13;
+    flex-direction: column;
+    justify-content: center;
+    .learn,
+    .generate {
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+}
+
+.warning-container {
+  background-color: $light-orange-3;
+  padding: 30px;
+  text-align: left;
+  i {
+    color: $light-orange-1;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+  span {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .warning {
+    span {
+      color: $red-1;
+      font-weight: 500;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.tab-btn {
+  background-color: $light-grey-17;
+  border: 1px solid $light-grey-4;
+  border-radius: 4px;
+  color: $dark-blue-1;
+  cursor: pointer;
+  padding: 10px 25px;
+}
+
+.active-tab {
+  background-color: $dark-blue-2;
+  color: $white;
+  z-index: 1;
+}
+
+.validators-btn {
+  margin-left: -12px;
+}

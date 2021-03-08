@@ -8,6 +8,7 @@
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       static
       lazy
+      no-close-on-backdrop
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
@@ -79,14 +80,17 @@
         <p class="notice">{{ $t('swap.gas-price-source-notice') }}</p>
       </div>
       <!--<p> Exchange Rate: 0.000</p>-->
-      <div
-        :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
-        @click="sendTransaction"
-      >
-        <button-with-qrcode
-          :qrcode="qrcode"
-          :buttonname="$t('common.continue')"
-        />
+      <div class="confirm-send-container">
+        <div
+          :class="[
+            swapReady ? '' : 'disabled',
+            timerHasEnded ? 'disabled' : '',
+            'confirm-send-button submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="sendTransaction"
+        >
+          {{ $t('common.continue') }}
+        </div>
       </div>
 
       <help-center-button />
@@ -105,7 +109,6 @@ import { mapState, mapActions } from 'vuex';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
 import iconEth from '@/assets/images/currency/eth.svg';
-import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
 import {
@@ -122,7 +125,6 @@ import { Toast } from '@/helpers';
 
 export default {
   components: {
-    'button-with-qrcode': ButtonWithQrCode,
     'help-center-button': HelpCenterButton
   },
   props: {
@@ -189,6 +191,9 @@ export default {
     },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
+    },
+    timerHasEnded() {
+      return this.timeRemaining === 'expired';
     }
   },
   watch: {

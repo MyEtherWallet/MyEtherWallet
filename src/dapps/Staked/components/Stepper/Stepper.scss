@@ -1,0 +1,234 @@
+@import '~@/scss/GlobalVariables';
+
+@mixin shadow($level: 1) {
+  @if $level==1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  } @else if $level==2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  } @else if $level==3 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  } @else if $level==4 {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  } @else if $level==5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@mixin breakpoint($class) {
+  @if $class==xs {
+    @media (max-width: 767px) {
+      @content;
+    }
+  } @else if $class==sm {
+    @media (min-width: 768px) {
+      @content;
+    }
+  } @else if $class==md {
+    @media (min-width: 992px) {
+      @content;
+    }
+  } @else if $class==lg {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  } @else if $class==xxs {
+    @media (max-width: 300px) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint mixin supports: xs, sm, md, lg";
+  }
+}
+
+.stepper-box {
+  background-color: $white;
+  padding: 40px;
+  min-height: 200px;
+  @media all and (max-width: 500px) {
+    padding: 40px 0;
+  }
+  .top {
+    .stepper-button-top {
+      z-index: 20;
+      padding: 0.4rem;
+      border-radius: 100rem;
+      cursor: pointer;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &.next {
+        border: 2px solid #3383c8;
+        color: #3383c8;
+        right: 1%;
+        &.deactivated {
+          border: 2px solid #ccc !important;
+          color: #ccc;
+          cursor: not-allowed !important;
+        }
+      }
+      &.previous {
+        color: #333;
+        left: 1%;
+      }
+    }
+
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    .divider-line {
+      border-bottom: 1px solid #ccc;
+      height: 2px;
+      margin-bottom: 4px;
+      position: absolute;
+      @include breakpoint(xs) {
+        width: 90%;
+      }
+    }
+    .steps-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      width: 95%;
+      left: 0;
+      padding: 2% 4%;
+      @include breakpoint(xs) {
+        width: 90%;
+        justify-content: center;
+      }
+      .step {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        @include breakpoint(xs) {
+          width: 100% !important;
+        }
+        &.deactivated,
+        &.completed {
+          @include breakpoint(xxs) {
+            display: none;
+          }
+          .circle {
+            background: $white;
+            border-radius: 50%;
+            border: 1px solid $dark-grey-14;
+            color: $dark-grey-14;
+            height: 30px;
+            width: 30px;
+            // i {
+            //   background-color: #bbbbbb !important;
+            // }
+          }
+          .step-title {
+            opacity: 0.35;
+          }
+        }
+        &.completed {
+          .circle {
+            align-items: center;
+            background: $white;
+            border: 2px solid $mew-green;
+            border-radius: 50%;
+            color: $white;
+            display: flex;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
+            .fa {
+              color: $mew-green;
+            }
+          }
+          .step-title {
+            color: $mew-green;
+          }
+        }
+        .circle {
+          align-items: center;
+          background: $dark-blue-6;
+          border-radius: 50%;
+          color: $white;
+          display: flex;
+          justify-content: center;
+          height: 30px;
+          width: 30px;
+          // i {
+          //   background-color: #3383c8;
+          //   color: #fff;
+          //   border-radius: 100rem;
+          //   padding: 1rem;
+          // }
+        }
+        .step-title {
+          color: $dark-blue-6;
+          font-size: 12px;
+          position: absolute;
+          top: 90%;
+          width: 100%;
+          // .step-subtitle {
+          //   font-weight: lighter;
+          //   margin: 0;
+          //   color: #555555;
+          // }
+        }
+      }
+    }
+  }
+  .content {
+    overflow: hidden;
+    margin: 1.5rem 0;
+    @media all and (max-width: 500px) {
+      padding: 0 40px;
+    }
+  }
+  .button-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    @media all and (max-width: 500px) {
+      margin: 0 10px;
+    }
+    .stepper-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.next {
+        @include shadow(1);
+        &.deactivated {
+          background-color: #ccc !important;
+          cursor: not-allowed !important;
+          pointer-events: none;
+        }
+
+        margin-left: 10px;
+      }
+      &.only-next {
+        width: 60%;
+        margin-left: 0;
+      }
+      &.previous {
+        background-color: $white;
+        border: 1px solid $mew-green;
+        border-radius: 6px;
+        color: $mew-green;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        user-select: none;
+        display: inline-block;
+        text-align: center;
+        padding: 21px 25px;
+        min-width: 150px;
+      }
+    }
+  }
+}
+
+.what-is-eth2 {
+  margin-top: 15px;
+  text-align: center;
+}

@@ -1,6 +1,5 @@
 import ChangellyCurrencies from './currencies.json';
 import {
-  SUPPORTED_DEXES,
   statuses,
   notificationStatuses,
   TIME_SWAP_VALID,
@@ -15,7 +14,6 @@ import DEX_AG_WALLET_PROXY from './DexTradingWithCollection.abi';
 export {
   MARKET_IMPACT_CUTOFF,
   ChangellyCurrencies,
-  SUPPORTED_DEXES,
   statuses,
   notificationStatuses,
   TIME_SWAP_VALID,

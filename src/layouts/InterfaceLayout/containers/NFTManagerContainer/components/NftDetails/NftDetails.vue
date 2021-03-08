@@ -3,17 +3,17 @@
     <div class="crypto-kitties-details-content-container">
       <back-button style="display: inline" @click.native="goBack" />
 
-      <div class="grid-container">
+      <div class="">
         <div class="product-title-mobile mt-4">
           <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.name }}</p>
         </div>
 
-        <div class="kitty-image">
+        <div class="kitty-image mx-auto">
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <div v-if="canSend" class="product-title-desktop">
+          <div v-if="canSend" class="product-title-desktop text-center">
             <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
             <p>#{{ nft.name }}</p>
           </div>

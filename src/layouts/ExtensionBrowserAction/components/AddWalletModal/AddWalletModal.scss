@@ -202,6 +202,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .generate-wallet-form {
+    width: 100%;
+  }
 }
 
 .transition-container {
@@ -272,33 +276,4 @@
     opacity: 0;
     transform: translateX(-3000px);
   }
-}
-
-.slide-from-right-enter,
-.slide-from-right-leave-to {
-  opacity: 0;
-}
-
-.slide-from-left-enter-active,
-.slide-from-left-leave-active,
-.slide-from-right-enter-active,
-.slide-from-right-leave-active {
-  opacity: 1;
-  animation-duration: 1s;
-}
-
-.slide-from-left-enter-active {
-  animation-name: slideInLeft;
-}
-
-.slide-from-left-leave-active {
-  animation-name: slideOutRight;
-}
-
-.slide-from-right-enter-active {
-  animation-name: slideInRight;
-}
-
-.slide-from-right-leave-active {
-  animation-name: slideOutLeft;
 }

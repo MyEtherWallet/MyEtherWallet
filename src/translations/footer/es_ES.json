@@ -25,19 +25,26 @@
   "team": "Team",
   "feedback": "Feedback",
   "privacy": "Privacy",
-  "copyright": "© 2020 MyEtherWallet. All Rights reserved.",
+  "copyright": "© 2021 MyEtherWallet. All Rights reserved.",
   "pricing-p": "Pricing taken from",
   "advanced": "Advanced",
   "send-offline": "Send Offline Helper",
   "sotd": "State of the Dapps",
-  "mew-connect": "MEWconnect",
+  "mew-connect-protocol": "MEWconnect Protocol",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
+  "generate-eth2": "Generate Eth2 Address",
   "donation": {
     "desc": "MyEtherWallet is open-source and free to the community. Your donations go a long way towards making that possible.",
     "ether": "Ethereum Donation",
     "bitcoin": "Bitcoin Donation"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "View Wallet Info"
+  "view-wallet-info": "View Wallet Info",
+  "press-kit": {
+    "header": "Press Kit",
+    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
+    "medium": "Medium blog"
+  },
+  "ethvm": "EthVM"
 }

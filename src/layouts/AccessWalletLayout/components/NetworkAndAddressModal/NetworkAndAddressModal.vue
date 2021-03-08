@@ -204,15 +204,11 @@
                 </li>
                 <li class="monospace address-icon-container">
                   {{ account.account.getChecksumAddressString() | concatAddr }}
-                  <input
-                    :ref="`addrInput${account.index}`"
-                    :value="account.account.getChecksumAddressString()"
-                  />
                   <i
                     class="fa fa-files-o"
                     @click="
                       () => {
-                        copyAddress(`addrInput${account.index}`);
+                        copyAddress(account.account.getChecksumAddressString());
                       }
                     "
                   />
@@ -287,6 +283,7 @@ import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { LEDGER as LEDGER_TYPE } from '@/wallets/bip44/walletTypes';
+import clipboardCopy from 'clipboard-copy';
 
 const MAX_ADDRESSES = 5;
 export default {
@@ -363,9 +360,8 @@ export default {
       'addCustomPath',
       'decryptWallet'
     ]),
-    copyAddress(ref) {
-      this.$refs[ref][0].select();
-      document.execCommand('copy');
+    copyAddress(val) {
+      clipboardCopy(val);
       Toast.responseHandler(this.$t('common.copied'), Toast.SUCCESS);
     },
     getExplorrerLink(addr) {
@@ -482,22 +478,26 @@ export default {
         });
     },
     async setHDAccounts() {
-      if (!this.web3.eth) this.setWeb3Instance();
-      this.HDAccounts = [];
-      for (
-        let i = this.currentIndex;
-        i < this.currentIndex + MAX_ADDRESSES;
-        i++
-      ) {
-        const account = await this.hardwareWallet.getAccount(i);
-        this.HDAccounts.push({
-          index: i,
-          account: account,
-          balance: 'loading'
-        });
-        this.setBalances();
+      try {
+        if (!this.web3.eth) this.setWeb3Instance();
+        this.HDAccounts = [];
+        for (
+          let i = this.currentIndex;
+          i < this.currentIndex + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.hardwareWallet.getAccount(i);
+          this.HDAccounts.push({
+            index: i,
+            account: account,
+            balance: 'loading'
+          });
+          this.setBalances();
+        }
+        this.currentIndex += MAX_ADDRESSES;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
-      this.currentIndex += MAX_ADDRESSES;
     },
     nextAddressSet() {
       this.setHDAccounts();

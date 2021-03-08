@@ -25,19 +25,26 @@
   "team": "Команда",
   "feedback": "Отзывы",
   "privacy": "Конфиденциальность",
-  "copyright": "© 2020 MyEtherWallet. Все права защищены.",
+  "copyright": "© 2021 MyEtherWallet. Все права защищены.",
   "pricing-p": "Расценки взяты из",
-  "advanced": "Дополнительные параметры",
+  "advanced": "Расширенные параметры",
   "send-offline": "Помощник для оффлайн транзакций",
   "sotd": "State of the Dapps",
-  "mew-connect": "MEWconnect",
+  "mew-connect-protocol": "Протокол MEWconnect",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
+  "generate-eth2": "Генерировать адрес Eth2",
   "donation": {
     "desc": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашей поддержке.",
     "ether": "Поддержка в Ethereum",
     "bitcoin": "Поддержка в Bitcoin"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "Смотреть информацию о кошельке"
+  "view-wallet-info": "Смотреть информацию о кошельке",
+  "press-kit": {
+    "header": "Пресс-кит",
+    "subtext": "Объявления можно найти на нашем {mediumlink}. По вопросам прессы и медиа пожалуйста свяжитесь с: {hyperlink}",
+    "medium": "Medium блоге"
+  },
+  "ethvm": "EthVM"
 }

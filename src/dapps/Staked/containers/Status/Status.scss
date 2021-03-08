@@ -1,0 +1,122 @@
+@import '~@/scss/GlobalVariables';
+
+.staked-status {
+  .title {
+    color: $dark-blue-13;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 30px 40px 10px 40px;
+  }
+  .no-validators {
+    padding: 30px 40px 0 40px;
+  }
+  a {
+    color: $dark-blue-13 !important;
+    font-weight: normal;
+  }
+  .validator-container {
+    border-radius: 4px;
+    color: $dark-blue-13;
+    cursor: pointer;
+    flex-direction: column;
+    font-weight: 600;
+    margin: 20px 40px;
+    .top-row {
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      width: 100%;
+      .badge-container {
+        align-items: center;
+        @media all and (max-width: 625px) {
+          align-items: baseline;
+          flex-direction: column;
+        }
+      }
+      &.pending-expanded {
+        border-bottom: 1px solid $light-orange-1;
+      }
+      &.active-expanded {
+        border-bottom: 1px solid $mew-green;
+      }
+      &.deposited-expanded {
+        border-bottom: 1px solid $light-blue-1;
+      }
+      &.exited-expanded {
+        border-bottom: 1px solid $red-9;
+      }
+      .badge {
+        color: $white;
+        font-weight: normal;
+        padding: 10px;
+        text-transform: capitalize;
+        width: 100px;
+        @media all and (max-width: 625px) {
+          margin-left: 0 !important;
+          margin-top: 15px;
+        }
+      }
+      .pending-badge {
+        background-color: $light-orange-1;
+      }
+      .active-badge {
+        background-color: $mew-green;
+      }
+      .deposited-badge {
+        background-color: $light-blue-1;
+      }
+      .exited-badge {
+        background-color: $red-9;
+      }
+      .right-container {
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .more-info {
+      background: $white;
+      cursor: text;
+      flex-direction: column;
+      .queue-speed {
+        font-style: italic;
+        padding: 15px 20px;
+      }
+      .more-info-row {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 20px;
+        span {
+          width: 100%;
+        }
+        .info-text {
+          word-break: break-all;
+          font-weight: normal;
+          text-align: right;
+        }
+      }
+      .more-info-border {
+        border-bottom: 1px solid #efefef;
+      }
+    }
+  }
+
+  .pending-container {
+    border: 1px solid $light-orange-1;
+    background-color: $light-orange-3;
+  }
+
+  .active-container {
+    background-color: $light-green-1;
+    border: 1px solid $mew-green;
+  }
+
+  .deposited-container {
+    background-color: $light-blue-14;
+    border: 1px solid $light-blue-1;
+  }
+
+  .exited-container {
+    background-color: $red-12;
+    border: 1px solid $red-9;
+  }
+}

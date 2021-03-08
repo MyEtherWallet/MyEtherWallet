@@ -1,0 +1,33 @@
+@import '~@/scss/GlobalVariables';
+
+.progress-step {
+  align-items: center;
+  justify-content: center;
+
+  .content-container {
+    max-width: 650px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  h3 {
+    color: $light-violet-1 !important;
+    margin: 20px 0;
+  }
+
+  .subtitle {
+    word-wrap: break-word;
+    padding: 0 30px;
+    margin-bottom: 20px !important;
+  }
+
+  .validator-progress {
+    text-align: right;
+    width: 100%;
+    margin-top: 5px;
+  }
+  .bg-success {
+    background-color: $mew-green !important;
+  }
+}

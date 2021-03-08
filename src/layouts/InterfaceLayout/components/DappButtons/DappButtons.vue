@@ -3,7 +3,9 @@
     :class="[
       'dapps-button',
       supported ? '' : 'disabled',
-      title === dappsTitle.aave || title === dappsTitle.lendMigrator
+      title === dappsTitle.staked ||
+      title === dappsTitle.lendMigrator ||
+      title === dappsTitle.unstoppableDomains
         ? 'top-row'
         : ''
     ]"
@@ -18,15 +20,19 @@
     <img
       :src="supported ? icon : iconDisabled"
       :class="[
-        title === dappsTitle.ambrpay ? 'ambrpay-icon' : '',
+        title === dappsTitle.ambrpay
+          ? 'ambrpay-icon'
+          : title === dappsTitle.staked
+          ? 'staked-icon'
+          : '',
         'dapp-logo',
         'dapps-icon'
       ]"
       alt
     />
     <div class="title-container">
-      <h4>{{ title }}</h4>
-      <p>{{ desc }}</p>
+      <h4>{{ $t(title) }}</h4>
+      <p>{{ $t(desc) }}</p>
     </div>
   </div>
 </template>
@@ -73,7 +79,8 @@ export default {
         ambrpay: 'Ambrpay',
         aave: 'Aave',
         lendMigrator: 'LEND Migrator',
-        unstoppableDomains: 'Unstoppable Domains'
+        unstoppableDomains: 'Unstoppable Domains',
+        staked: 'Staked'
       }
     };
   },

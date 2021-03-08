@@ -90,7 +90,7 @@
                     :prices="tokenPrices"
                     :usd="ethPrice"
                     :address="wallet.address"
-                    :wallet="wallet.wallet"
+                    :keystore="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
                     @balanceUpdate="addToTotal"
@@ -130,7 +130,7 @@
                     :prices="tokenPrices"
                     :usd="ethPrice"
                     :address="wallet.address"
-                    :wallet="wallet.wallet"
+                    :keystore="wallet.wallet"
                     :nickname="wallet.nickname"
                     :wallet-type="wallet.type"
                   />
@@ -262,18 +262,18 @@ export default {
   },
   watch: {
     myWallets: {
-      handler: newVal => {
+      handler: function (newVal) {
         if (newVal.length === 0 && this.watchOnlyAddresses.length > 0) {
-          this.showMyWallets = 0;
+          this.showMyWallets = 1;
         }
         this.myWallets = newVal;
       },
       deep: true
     },
     watchOnlyAddresses: {
-      handler: newVal => {
+      handler: function (newVal) {
         if (newVal.length === 0 && this.myWallets.length > 0) {
-          this.showMyWallets = 1;
+          this.showMyWallets = 0;
         }
         this.watchOnlyAddresses = newVal;
       },

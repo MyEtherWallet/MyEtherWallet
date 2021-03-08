@@ -26,7 +26,7 @@
           'mt-3',
           disabled ? 'disabled' : ''
         ]"
-        @click="migrate"
+        @click="checkAllowance"
       >
         {{ $t('dappsAave.migrate') }}
       </button>
@@ -64,6 +64,7 @@ export default {
       amount: 0,
       hasEnoughRatio: false,
       lendMigratorContract: '',
+      amountAsHex: '',
       loading: false
     };
   },
@@ -90,18 +91,48 @@ export default {
     this.getRatio();
   },
   methods: {
-    async migrate() {
+    async checkAllowance() {
+      const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
       const estimatedAmount = new BigNumber(this.amount)
         .times(new BigNumber(10).pow(18))
-        .toString(16);
-      const amountAsHex = '0x' + estimatedAmount;
-      const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
+        .toFixed();
+      this.amountAsHex = this.web3.utils.numberToHex(estimatedAmount);
+      const allowance = await lendContract.methods
+        .allowance(this.account.address, LEND_MIGRATOR_PROXY_ADDRESS)
+        .call();
+      this.loading = true;
+      if (
+        allowance !== '0' &&
+        new BigNumber(allowance).lt(new BigNumber(this.amountAsHex))
+      ) {
+        const lendApproveData = await lendContract.methods
+          .approve(LEND_MIGRATOR_PROXY_ADDRESS, 0)
+          .encodeABI();
+        this.web3.eth
+          .sendTransaction({
+            from: this.account.address,
+            to: LEND_ADDRESS,
+            value: 0,
+            gas: 100000,
+            data: lendApproveData
+          })
+          .then(() => {
+            this.migrate(lendContract);
+          })
+          .catch(error => {
+            this.loading = false;
+            Toast.responseHandler(error, Toast.ERROR);
+          });
+      } else {
+        this.migrate(lendContract);
+      }
+    },
+    async migrate(lendContract) {
       const lendApproveData = await lendContract.methods
-        .approve(LEND_MIGRATOR_PROXY_ADDRESS, amountAsHex)
+        .approve(LEND_MIGRATOR_PROXY_ADDRESS, this.amountAsHex)
         .encodeABI();
-
       const lendMigrateData = await this.lendMigratorContract.methods
-        .migrateFromLEND(amountAsHex)
+        .migrateFromLEND(this.amountAsHex)
         .encodeABI();
       this.loading = true;
       this.web3.mew
@@ -116,7 +147,7 @@ export default {
           {
             from: this.account.address,
             to: LEND_MIGRATOR_PROXY_ADDRESS,
-            gas: 200000,
+            gas: 500000,
             value: 0,
             data: lendMigrateData
           }
