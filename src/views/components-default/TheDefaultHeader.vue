@@ -136,24 +136,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-// adding mew menu styles here for now, will apply it to mew components
-.v-application {
-  .mew-menu-content {
-    min-width: 200px !important;
-
-    .v-list {
-      padding-top: 15px !important;
-
-      .v-list-item {
-        min-height: 30px !important;
-      }
-      .v-list-item--link {
-        padding-top: 0 !important;
-        padding-bottom: 5px !important;
-      }
-    }
-  }
-}
-</style>

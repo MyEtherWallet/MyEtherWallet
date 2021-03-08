@@ -5,12 +5,13 @@
     display if the user has an eth balance > 0
   =====================================================================================
   -->
-    <!-- TODO: mew-module: need to add icon height, add full-height prop & remove auto-height class-->
+    <!-- TODO: mew-module: add full-height prop & remove auto-height class-->
     <mew-module
       v-if="!showBuyEth"
       class="auto-height pa-7"
       :subtitle="subtitle"
       :title="title"
+      :icon="network.type.icon"
       :caption="convertedBalance"
       icon-align="left"
     >

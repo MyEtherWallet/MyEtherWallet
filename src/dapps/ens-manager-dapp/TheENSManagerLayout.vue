@@ -491,18 +491,11 @@ export default {
 </script>
 <style lang="scss">
 .my-domains-panel {
-  .v-expansion-panel-content__wrap {
-    padding: 0;
-  }
-  .v-expansion-panel--active > .v-expansion-panel-header {
-    border-radius: 0 !important; //need to update mew components
-  }
   .active-border {
     .subheader-container {
       background-color: var(--v-superPrimary-base);
-      border-top: 1px solid var(--v-primary-base);
       div {
-        width: 200px;
+        max-width: 400px;
       }
     }
   }
