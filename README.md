@@ -52,7 +52,7 @@ To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](
 1. Make sure you have NodeJS >= 10, but older than version 12, and NPM version 6 or greater.
 2. Open terminal
 3. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-4. run `npm i` to install node packages.	
+4. run `npm i` to install node packages.
 5. run `npm run start:ci`
 6. App should be running in `https://localhost:8080`
 
@@ -62,11 +62,10 @@ To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
 3. run `git checkout develop`
 4. run `npm i` to install node packages.
-5. run `npm run start:ci` 
+5. run `npm run start:ci`
 6. App should be running in `https://localhost:8080`
 
 You can also use the offline version by running `npm run build` then opening the index file from the dist folder with your preferred browser
-
 
 Can't start due to an update found:
 Update the package in the `package.json` as told by the terminal error you see.
