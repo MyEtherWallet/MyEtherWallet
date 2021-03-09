@@ -78,5 +78,6 @@ module.exports = [
   'https://bsc-dataseed1.binance.org:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
-  'https://api.ethvm.com:443'
+  'https://api.ethvm.com:443',
+  'https://rpc.xdaichain.com:443'
 ];

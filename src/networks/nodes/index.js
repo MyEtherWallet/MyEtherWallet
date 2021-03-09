@@ -59,6 +59,7 @@ import ere from './ere';
 import prkl from './prkl';
 import fuse from './fuse';
 import ewt from './ewt';
+import xdai from './xdai';
 
 export {
   akaremote,
@@ -121,5 +122,6 @@ export {
   ere,
   prkl,
   fuse,
-  ewt
+  ewt,
+  xdai
 };

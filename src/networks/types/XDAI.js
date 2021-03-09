@@ -1,6 +1,4 @@
-import tokens from '@/_generated/tokens/tokens-xdai.json';
-import contracts from '@/_generated/contracts/contract-abi-xdai.json';
-import clo from '@/assets/images/networks/xdai.svg';
+import xdai from '@/assets/images/icons/network.svg';
 
 export default {
   name: 'xDai',
@@ -9,8 +7,8 @@ export default {
   blockExplorerTX: 'https://blockscout.com/poa/xdai/tx/[[txHash]]',
   blockExplorerAddr: 'https://blockscout.com/poa/xdai/address/[[address]]',
   chainID: 100,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: [],
+  contracts: [],
   icon: xdai,
   currencyName: 'xDai'
 };
