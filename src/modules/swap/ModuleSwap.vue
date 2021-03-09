@@ -83,6 +83,7 @@
               :available-quotes="availableQuotes"
               :set-provider="setProvider"
               :to-token-symbol="toTokenType.symbol"
+              :to-token-icon="toTokenType.img"
             />
 
             <mew-expand-panel
