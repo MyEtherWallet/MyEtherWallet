@@ -1,33 +1,24 @@
-/* Apollo  */
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import ApolloClient from 'apollo-client';
-import { split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
-import VueApollo from 'vue-apollo';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { HttpLink } from 'apollo-link-http';
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 import { onError } from 'apollo-link-error';
 import * as Sentry from '@sentry/vue';
-import Vue from 'vue';
+import ApolloClient from 'apollo-client';
+import Configs from './configs';
 
-import { aave } from '@/dapps/apollo-dapps.js';
-
-// Apollo (Graphql)
 const httpLink = new HttpLink({
-  uri: 'https://api.ethvm.com'
+  uri: 'https://api.thegraph.com/subgraphs/name/aave/protocol-multy-raw'
 });
 
-const subscriptionClient = new SubscriptionClient(
-  'wss://apiws.ethvm.com',
-  { lazy: true, reconnect: true },
-  null,
-  []
-);
+const subscriptionClient = new SubscriptionClient(Configs.SUBSCRIPTION_URL, {
+  reconnect: true
+});
 
-const wsLink = new WebSocketLink(subscriptionClient);
+const websocket = new WebSocketLink(subscriptionClient);
 
-// Development mode
 const onErrorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors && process.env.NODE_ENV !== 'production') {
     graphQLErrors.map(({ message, locations, path }) => {
@@ -54,23 +45,13 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
+  websocket,
   onErrorLink.concat(httpLink)
 );
 
-const cache = new InMemoryCache();
-const main = new ApolloClient({
-  link,
-  cache,
-  connectToDevTools: process.env.NODE_ENV === 'development'
+const aaveClient = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache()
 });
 
-const apolloProvider = new VueApollo({
-  clients: {
-    main,
-    aave
-  },
-  defaultClient: main
-});
-Vue.use(VueApollo);
-export default apolloProvider;
+export default aaveClient;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   depositDetails,
   borrowDetails,
@@ -7,22 +8,21 @@ import {
   withdrawDetails
 } from './graphQLHelpers.js';
 
+import vuexStore from '@/core/store';
+import { mapState } from 'vuex';
+
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 
 import moment from 'moment';
 
-const POOL_ID = '0x24a42fd28c976a61df5d00d0599c34c4f90748c8';
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default class AaveHandler {
-  constructor(web3, address, balance, tokensList) {
-    // will be changed with the new vuex store
-    this.web3 = web3;
-    this.address = address.toLowerCase();
-    this.balance = balance;
+  constructor(tokensList, apollo) {
+    this.$store = vuexStore;
+    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
     this.tokensList = tokensList;
 
-    this.poolId = POOL_ID;
     this.reservesData = [];
     this.rawReserveData = [];
     this.reservesStable = [];
