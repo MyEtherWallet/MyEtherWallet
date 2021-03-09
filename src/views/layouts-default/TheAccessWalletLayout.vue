@@ -70,7 +70,7 @@
       -->
       <div class="spacer-y-medium" />
       <browser-extension-overlay :open="showBrowser" :close="close" />
-      <mobile-access-overlay :open="showMobile" :close="close" />
+      <module-access-wallet-mobile :open="showMobile" :close="close" />
       <module-access-wallet-hardware :open="showHardware" :close="close" />
       <module-access-wallet-software
         :open="showSoftware"
@@ -85,8 +85,8 @@
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import mobileAccessOverlay from '@/modules/wallets/components/mobile-access-overlay/MobileAccessOverlay';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 export default {
@@ -95,8 +95,9 @@ export default {
     AppBlockTitle,
     browserExtensionOverlay,
     ModuleAccessWalletHardware,
-    mobileAccessOverlay,
-    ModuleAccessWalletSoftware
+
+    ModuleAccessWalletSoftware,
+    ModuleAccessWalletMobile
   },
   props: {
     overlay: {
@@ -175,8 +176,7 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showMobile');
-            this.$router.push({ name: ACCESS_VALID_OVERLAYS.MOBILE });
+            this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
           }
         },
         /* Software */
@@ -194,24 +194,30 @@ export default {
           }
         }
       ],
-      showBrowser: false,
-      showMobile: false
+      showBrowser: false
     };
   },
   computed: {
     /**
-     * Opens up software module overlay. Returns true if overlay prop from route is VALID_OVERLAYS[2]
+     * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
      * @return - boolean
      */
     showSoftware() {
       return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     },
     /**
-     * Opens up harware module overlay. Returns true if overlay prop from route is VALID_OVERLAYS[0]
+     * Opens up harware module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.HARDWARE
      * @return - boolean
      */
     showHardware() {
       return this.overlay === ACCESS_VALID_OVERLAYS.HARDWARE;
+    },
+    /**
+     * Opens up mobile module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.MOBILE
+     * @return - boolean
+     */
+    showMobile() {
+      return this.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
     }
   },
   methods: {

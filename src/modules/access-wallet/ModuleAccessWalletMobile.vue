@@ -1,41 +1,53 @@
 <template>
-  <div class="expandHeader">
-    <v-container>
-      <app-block-title :data="titleData">
-        <h5 class="white--text ma-0">
-          Select a app that you want to use to connect MEW.
-        </h5>
-      </app-block-title>
-      <v-sheet color="transparent" max-width="450px" class="mx-auto">
+  <!--
+  =====================================================================================
+    Overlay - access using software
+  =====================================================================================
+  -->
+  <mew-overlay
+    :show-overlay="open"
+    title="Access Wallet with Mobile Apps"
+    right-btn-text="Close"
+    :close="close"
+  >
+    <!--
+    =====================================================================================
+      Mobile Connection Protocol Buttons
+    =====================================================================================
+    -->
+    <template #mewOverlayBody>
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
         <v-row>
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+          <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
             <mew-super-button
-              color-theme="white"
-              btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
-              :right-icon="btn.icon"
-              right-icon-type="img"
-              font-class="mew-heading-2"
+              color-theme="basic"
               @click.native="btn.fn"
-            />
+            >
+              <template #contentSlot>
+                <v-img
+                  :src="btn.icon"
+                  max-width="90px"
+                  min-width="40px"
+                  class="px-4 px-sm-3"
+                  contain
+                />
+              </template>
+            </mew-super-button>
           </v-col>
         </v-row>
       </v-sheet>
-      <div class="spacer-y-medium" />
-    </v-container>
-  </div>
+    </template>
+  </mew-overlay>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
 import { mapActions } from 'vuex';
-
 export default {
-  name: 'MobileAccess',
-  components: { AppBlockTitle },
+  name: 'ModuleAccessWalletMobile',
   props: {
     open: {
       type: Boolean,
@@ -48,13 +60,6 @@ export default {
   },
   data() {
     return {
-      titleData: {
-        textProps: 'white--text',
-        toptitle: '',
-        title: 'Mobile apps',
-        description: '',
-        centered: true
-      },
       buttons: [
         {
           label: 'WalletConnet',
@@ -106,10 +111,9 @@ export default {
       } catch (e) {
         Toast(e.message, {}, SENTRY);
       }
-    },
-    overlayClose() {
-      this.close('showMobile');
     }
   }
 };
 </script>
+
+<style lang="scss" scoped></style>
