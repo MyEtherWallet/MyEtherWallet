@@ -1,3 +1,5 @@
+### Release v5.7.23
+
 ### Devop
 
 * consolidate node PRs [#2883](https://github.com/MyEtherWallet/MyEtherWallet/pull/2883)
