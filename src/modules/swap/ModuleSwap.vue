@@ -23,103 +23,101 @@
         title="Swap"
       >
         <template #moduleBody>
-          <v-container class="pa-3 pa-md-10" fluid>
-            <!--
+          <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-            <v-row class="align-center justify-space-between">
-              <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
-                <mew-select
-                  :value="fromTokenType"
-                  :items="fromTokens"
-                  label="From"
-                  @input="setFromToken"
-                />
-                <mew-input
-                  label="you'll send"
-                  placeholder=""
-                  :value="tokenInValue"
-                  type="number"
-                  @input="setTokenInValue"
-                />
-              </v-col>
-              <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
-                <div class="d-flex align-center justify-center">
-                  <img :src="swapIcon" height="35" />
-                </div>
-              </v-col>
-              <v-col cols="12" sm="5">
-                <mew-select
-                  ref="toToken"
-                  :value="toTokenType"
-                  :items="toTokens"
-                  label="To"
-                  @input="setToToken"
-                />
-                <mew-input
-                  label="you'll receive"
-                  placeholder=""
-                  type="number"
-                  disabled
-                  :value="tokenOutValue"
-                />
-              </v-col>
-            </v-row>
-            <!--
+          <v-row class="align-center justify-space-between">
+            <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
+              <mew-select
+                :value="fromTokenType"
+                :items="fromTokens"
+                label="From"
+                @input="setFromToken"
+              />
+              <mew-input
+                label="you'll send"
+                placeholder=""
+                :value="tokenInValue"
+                type="number"
+                @input="setTokenInValue"
+              />
+            </v-col>
+            <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
+              <div class="d-flex align-center justify-center">
+                <img :src="swapIcon" height="35" />
+              </div>
+            </v-col>
+            <v-col cols="12" sm="5">
+              <mew-select
+                ref="toToken"
+                :value="toTokenType"
+                :items="toTokens"
+                label="To"
+                @input="setToToken"
+              />
+              <mew-input
+                label="you'll receive"
+                placeholder=""
+                type="number"
+                disabled
+                :value="tokenOutValue"
+              />
+            </v-col>
+          </v-row>
+          <!--
             =====================================================================================
               Address Book
             =====================================================================================
             -->
-            <module-address-book @setAddress="setToAddress" />
-            <!--
+          <module-address-book @setAddress="setToAddress" />
+          <!--
             =====================================================================================
              Providers List
             =====================================================================================
             -->
-            <swap-providers-list
-              :step="step"
-              :available-quotes="availableQuotes"
-              :set-provider="setProvider"
-              :to-token-symbol="toTokenType.symbol"
-              :to-token-icon="toTokenType.img"
-            />
+          <swap-providers-list
+            :step="step"
+            :available-quotes="availableQuotes"
+            :set-provider="setProvider"
+            :to-token-symbol="toTokenType.symbol"
+            :to-token-icon="toTokenType.img"
+          />
 
-            <mew-expand-panel
-              v-show="step >= 2"
-              is-toggle
-              has-dividers
-              :panel-items="exPannel"
-              class="mt-4 mb-10 swap-expend"
-            >
-              <template #panelBody1>
-                <mew-input
-                  label="Gas Price"
-                  placeholder=" "
-                  right-label="Gwei"
-                  :value="gasPriceGwei"
-                  disabled
-                />
-                <mew-input
-                  label="Total Gas Limit"
-                  placeholder=" "
-                  right-label="Wei"
-                  disabled
-                  :value="totalGasLimit"
-                />
-              </template>
-            </mew-expand-panel>
-
-            <div v-show="step >= 2" class="text-center">
-              <mew-button
-                title="Swap"
-                :has-full-width="false"
-                btn-size="xlarge"
-                @click.native="showConfirm()"
+          <mew-expand-panel
+            v-show="step >= 2"
+            is-toggle
+            has-dividers
+            :panel-items="exPannel"
+            class="mt-4 mb-10 swap-expend"
+          >
+            <template #panelBody1>
+              <mew-input
+                label="Gas Price"
+                placeholder=" "
+                right-label="Gwei"
+                :value="gasPriceGwei"
+                disabled
               />
-            </div>
-          </v-container>
+              <mew-input
+                label="Total Gas Limit"
+                placeholder=" "
+                right-label="Wei"
+                disabled
+                :value="totalGasLimit"
+              />
+            </template>
+          </mew-expand-panel>
+
+          <div v-show="step >= 2" class="text-center">
+            <mew-button
+              title="Swap"
+              :has-full-width="false"
+              btn-size="xlarge"
+              @click.native="showConfirm()"
+            />
+          </div>
         </template>
       </mew-module>
     </mew6-white-sheet>
