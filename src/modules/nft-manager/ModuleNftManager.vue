@@ -10,8 +10,12 @@
             title="NFT Manager"
           >
             <template #moduleBody>
-
-              <mew-tabs :items="items" is-vertical @onTab="getActive" v-if="showContracts.length !== 0">
+              <mew-tabs
+                v-if="showContracts.length !== 0"
+                :items="items"
+                is-vertical
+                @onTab="getActive"
+              >
                 <template
                   v-for="(contract, idx) in showContracts"
                   :slot="'tabItemContent' + (idx + 1)"
@@ -172,7 +176,7 @@
 
 <script>
 import NFT from './handlers';
-import {mapGetters, mapState} from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
@@ -215,11 +219,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', [
-      'balance',
-      'web3',
-      'address'
-    ]),
+    ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
@@ -456,11 +456,12 @@ export default {
               this.showItems = [];
             }
           });
-        }).catch(e =>{
-        this.toastType = 'warning';
-        this.toastMsg = e.message;
-        this.$refs.toast.showToast();
-      })
+        })
+        .catch(e => {
+          this.toastType = 'warning';
+          this.toastMsg = e.message;
+          this.$refs.toast.showToast();
+        });
     }
   }
 };

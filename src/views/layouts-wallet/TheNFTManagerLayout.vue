@@ -1,14 +1,14 @@
 <template>
   <the-wrapper-wallet>
     <template #leftColItem1>
-<nft-module></nft-module>
+      <nft-module></nft-module>
     </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import NftModule from '@/modules/nft-manager/ModuleNftManager'
+import NftModule from '@/modules/nft-manager/ModuleNftManager';
 export default {
   components: {
     TheWrapperWallet,

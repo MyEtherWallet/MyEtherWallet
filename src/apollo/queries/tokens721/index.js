@@ -2,7 +2,7 @@ import {
   getOwnersERC721Balances,
   getOwnersERC721Tokens
 } from './tokens721.graphql';
-import { Toast, ERROR} from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 
 export default class Tokenslist {
