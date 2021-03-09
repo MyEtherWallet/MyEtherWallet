@@ -130,10 +130,6 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
-import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
-import Changelly from '@/assets/images/icons/icon-changelly.png';
-import Simplex from '@/assets/images/icons/icon-simplex.png';
-import Bity from '@/assets/images/icons/icon-bity.png';
 import Swapper from './handlers/handlerSwap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
@@ -176,8 +172,8 @@ export default {
         show: false
       },
       swapper: null,
-      toTokenType: null,
-      fromTokenType: null,
+      toTokenType: {},
+      fromTokenType: {},
       tokenInValue: this.amount,
       tokenOutValue: null,
       availableTokens: [],
@@ -198,24 +194,6 @@ export default {
         }
       ],
       swapIcon: SwapIcon,
-      kyber: KyberNetwork,
-      changelly: Changelly,
-      simplex: Simplex,
-      bity: Bity,
-      addresses: [
-        {
-          address: '0x8c08079b06f83b7e04781c290a375e9572f9a90c',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0x8c08079b06f83b7e04781c290a375e9572f9a90c'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
       fromTokens: [],
       toTokens: [],
       providersMessage: ''
@@ -229,6 +207,7 @@ export default {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },
     gasPriceGwei() {
+      if (!this.gasPrice) return '';
       return fromWei(this.gasPrice, 'gwei');
     },
     totalGasLimit() {
@@ -276,6 +255,7 @@ export default {
   },
   methods: {
     getTokenFromAddress(address) {
+      if (!this.availableTokens.toTokens) return {};
       for (const t of this.availableTokens.toTokens) {
         if (t.contract_address === address) return t;
       }
