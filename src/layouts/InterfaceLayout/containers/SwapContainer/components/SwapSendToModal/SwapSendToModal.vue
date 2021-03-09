@@ -191,18 +191,18 @@ export default {
         this.fiatCurrencies.includes(newValue.fromCurrency)
       ) {
         this.fromAddress = {
-          value: newValue.fromValue,
+          value: newValue.sendValue || newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress ? newValue.fromAddress : ''
         };
         this.toAddress = {
-          value: newValue.toValue,
+          value: newValue.providerSends || newValue.toValue,
           name: newValue.toCurrency,
           address: newValue.toAddress ? newValue.toAddress : ''
         };
       } else {
         this.fromAddress = {
-          value: newValue.fromValue,
+          value: newValue.sendValue || newValue.fromValue,
           name: newValue.fromCurrency,
           address: newValue.fromAddress
             ? newValue.refundAddress
@@ -211,7 +211,7 @@ export default {
             : ''
         };
         this.toAddress = {
-          value: newValue.toValue,
+          value: newValue.providerSends || newValue.toValue,
           name: newValue.toCurrency,
           address: newValue.toAddress
         };
