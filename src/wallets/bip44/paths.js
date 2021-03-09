@@ -151,6 +151,10 @@ const ethercore = {
   path: "m/44'/466'/0'/0",
   label: 'EtherCore'
 };
+const avalanche = {
+  path: "m/44'/9000'/0'/0",
+  label: 'Avalanche'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -189,5 +193,6 @@ export {
   dexon,
   lightstreamsNetwork,
   mintmeComCoin,
-  ethercore
+  ethercore,
+  avalanche
 };

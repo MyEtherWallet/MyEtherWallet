@@ -4,6 +4,8 @@ module.exports = [
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
   'https://apiccswap.myetherwallet.com:443',
+  'https://api.avax.network:443',
+  'https://api.avax-test.network:443',
   'https://cryptorates.mewapi.io:443',
   'https://cloudflare-dns.com:443',
   'https://ethgasstation.info:443',
@@ -76,5 +78,6 @@ module.exports = [
   'https://bsc-dataseed1.binance.org:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
-  'https://api.ethvm.com:443'
+  'https://api.ethvm.com:443',
+  'https://rpc.xdaichain.com:443'
 ];

@@ -1,5 +1,6 @@
 ### Devop
 
+* consolidate node PRs [#2883](https://github.com/MyEtherWallet/MyEtherWallet/pull/2883)
 * Address no decimals for NEO [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 
 ### Release v5.7.22
