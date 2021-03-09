@@ -16,7 +16,6 @@ module.exports = [
   'https://jsonrpc.ellaism.io:443',
   'https://api.esn.gonspool.com:443',
   'https://www.ethercluster.com:443',
-  'wss://www.ethercluster.com:443',
   'https://api.etherscan.io:443',
   'https://mainnet.infura.io:443',
   'wss://mainnet.infura.io:443',
@@ -76,5 +75,6 @@ module.exports = [
   'https://estimategas.mewapi.io:443',
   'https://bsc-dataseed1.binance.org:443',
   'https://staked.mewapi.io:443',
-  'https://stakedtest.mewapi.io:443'
+  'https://stakedtest.mewapi.io:443',
+  'https://api.ethvm.com:443'
 ];

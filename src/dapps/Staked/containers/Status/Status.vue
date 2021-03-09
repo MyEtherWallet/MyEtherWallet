@@ -28,7 +28,7 @@
               'top-row d-flex',
               getExpandedClasses(info.validator_key, info.status)
             ]"
-            @click="expand(info.validator_key)"
+            @click="expand(info.validator_key, info.status)"
           >
             <div class="badge-container d-flex">
               <span>
@@ -95,6 +95,7 @@
         </div>
       </div>
     </div>
+    <exited-popup ref="exitedPopup" />
   </div>
 </template>
 
@@ -103,9 +104,13 @@ import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import stakeConfigs from '@/dapps/Staked/configs';
 import { mapState } from 'vuex';
+import exitedPopup from '@/dapps/Staked/components/ExitedPopup';
 
-const types = ['pending', 'deposited', 'active', 'created'];
+const types = ['pending', 'deposited', 'active', 'created', 'exited'];
 export default {
+  components: {
+    exitedPopup
+  },
   props: {
     validators: {
       type: Array,
@@ -140,52 +145,22 @@ export default {
       return stakeConfigs.network[this.network.type.name].url + '0x' + key;
     },
     details(info) {
-      // pending
-      if (info.status.toLowerCase() === types[0]) {
-        return [
-          {
-            label: this.$tc('dappsStaked.validator', 1),
-            info: '0x' + info.validator_key
-          },
-          {
-            label: this.$t('dappsStaked.staked'),
-            info: info.amount + ' ' + this.$t('common.currency.eth')
-          },
-          {
-            label: this.$t('dappsStaked.estimated-activation-timestamp'),
-            info: info.queue
-              ? moment(info.estimated_activation_timestamp).format(
-                  'MM/DD/YYYY hh:mm:ss'
-                )
-              : ''
-          },
-          {
-            label: this.$t('dappsStaked.validators-infront'),
-            info: info.queue
-              ? new BigNumber(info.queue.total).minus(info.queue.position)
-              : ''
-          },
-          {
-            label: this.$t('dappsStaked.validators-back'),
-            info: info.queue
-              ? info.queue.position === 0
-                ? 0
-                : info.queue.position - 1
-              : ''
-          }
-        ];
-      }
-      // deposited
-      if (info.status.toLowerCase() === types[1]) {
-        return [
-          {
-            label: this.$tc('dappsStaked.validator', 1),
-            info: '0x' + info.validator_key
-          },
-          {
-            label: this.$t('dappsStaked.staked'),
-            info: info.amount + ' ' + this.$t('common.currency.eth')
-          },
+      const details = [
+        {
+          label: this.$tc('dappsStaked.validator', 1),
+          info: '0x' + info.validator_key
+        },
+        {
+          label: this.$t('dappsStaked.staked'),
+          info: info.amount + ' ' + this.$t('common.currency.eth')
+        }
+      ];
+      // pending && deposited
+      if (
+        info.status.toLowerCase() === types[0] ||
+        info.status.toLowerCase() === types[1]
+      ) {
+        details.push(
           {
             label: this.$t('dappsStaked.estimated-activation-timestamp'),
             info: info.queue
@@ -208,24 +183,16 @@ export default {
                 : info.queue.position - 1
               : ''
           }
-        ];
+        );
       }
       // activated
       if (info.status.toLowerCase() === types[2]) {
-        return [
-          {
-            label: this.$tc('dappsStaked.validator', 1),
-            info: '0x' + info.validator_key
-          },
+        details.push(
           {
             label: this.$t('dappsStaked.activation-timestamp'),
             info: moment(info.activation_timestamp).format(
               'MM/DD/YYYY hh:mm:ss'
             )
-          },
-          {
-            label: this.$t('dappsStaked.staked'),
-            info: info.amount + ' ' + this.$t('common.currency.eth')
           },
           {
             label: this.$t('dappsStaked.apr'),
@@ -238,8 +205,17 @@ export default {
               ' ' +
               this.$t('common.currency.eth')
           }
-        ];
+        );
       }
+      // exited
+      if (info.status.toLowerCase() === types[4]) {
+        details.push({
+          label: this.$t('dappsStaked.activation-timestamp'),
+          info: moment(info.activation_timestamp).format('MM/DD/YYYY hh:mm:ss')
+        });
+      }
+
+      return details;
     },
     getApr(info) {
       const now = moment.utc();
@@ -269,12 +245,18 @@ export default {
         if (status.toLowerCase() === types[2]) {
           return 'active-expanded';
         }
+        if (status.toLowerCase() === types[4]) {
+          return 'exited-expanded';
+        }
       }
     },
     isExpanded(idx) {
       return this.expanded === idx;
     },
-    expand(idx) {
+    expand(idx, status) {
+      if (status.toLowerCase() === types[4] && !this.isExpanded(idx)) {
+        this.$refs.exitedPopup.$refs.exitedPopup.show();
+      }
       this.expanded = this.expanded !== idx ? idx : '';
     },
     truncate(str) {
@@ -290,6 +272,9 @@ export default {
       if (status.toLowerCase() === types[2]) {
         return 'active-badge';
       }
+      if (status.toLowerCase() === types[4]) {
+        return 'exited-badge';
+      }
     },
     getContainerClass(status) {
       if (status.toLowerCase() === types[0]) {
@@ -300,6 +285,9 @@ export default {
       }
       if (status.toLowerCase() === types[2]) {
         return 'active-container';
+      }
+      if (status.toLowerCase() === types[4]) {
+        return 'exited-container';
       }
     }
   }

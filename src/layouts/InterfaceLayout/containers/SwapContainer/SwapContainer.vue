@@ -244,6 +244,28 @@
             {{ $t('swap.warning.not-enough-tx-fee') }}</span
           >
         </div>
+        <div
+          v-if="providerSelectedName === 'changelly'"
+          class="changelly-terms-container"
+        >
+          <checkbox @changeStatus="handleChangellyTerms" />
+          <i18n path="swap.notice.changelly-terms" tag="p">
+            <a
+              slot="aml"
+              href="https://changelly.com/aml-kyc"
+              target="_blank"
+              rel="noopener noreferrer"
+              >AML/KYC</a
+            >
+            <a
+              slot="terms"
+              href="https://changelly.com/terms-of-use"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Terms of Use</a
+            >
+          </i18n>
+        </div>
         <div class="submit-button-container">
           <div
             v-show="finalizingSwap"
@@ -299,6 +321,8 @@ import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 import SignatureModal from './components/SignatureModal';
 
+import CheckBox from '@/components/Buttons/CheckBox/CheckBox.vue';
+
 import {
   SwapProviders,
   providers,
@@ -325,7 +349,8 @@ export default {
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
     'swap-send-to-modal': SwapSendToModal,
-    'signature-modal': SignatureModal
+    'signature-modal': SignatureModal,
+    checkbox: CheckBox
   },
   props: {
     tokensWithBalance: {
@@ -432,7 +457,8 @@ export default {
           computeConversion: () => {},
           hasValue: false
         }
-      ]
+      ],
+      acceptChangellyTerms: false
     };
   },
   computed: {
@@ -524,14 +550,16 @@ export default {
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
           ? this.exitFromAddress !== ''
           : true;
-      return (
+      const canSwap =
         this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
-          this.selectedProvider.maxValue === 0)
-      );
+          this.selectedProvider.maxValue === 0);
+      return this.providerSelectedName === 'changelly'
+        ? canSwap && this.acceptChangellyTerms
+        : canSwap;
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -695,6 +723,9 @@ export default {
     );
   },
   methods: {
+    handleChangellyTerms(val) {
+      this.acceptChangellyTerms = val;
+    },
     getTokenAddress(currency) {
       return this.swap.getTokenAddress(currency, true);
     },
@@ -995,6 +1026,12 @@ export default {
           break;
       }
     },
+    decimalsGenerally(toCurrency) {
+      if (toCurrency.toLowerCase() === 'neo') {
+        return 0;
+      }
+      return this.fiatCurrenciesArray.includes(toCurrency) ? 2 : 6;
+    },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
         this.showWarning = this.warningCurrencies.includes(toCurrency);
@@ -1048,11 +1085,7 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: _fromValue => {
-                    const decimals = this.fiatCurrenciesArray.includes(
-                      toCurrency
-                    )
-                      ? 2
-                      : 6;
+                    const decimals = this.decimalsGenerally(toCurrency);
                     return new BigNumber(_fromValue)
                       .times(entry.rate)
                       .toFixed(decimals)

@@ -373,3 +373,14 @@ $swap-custom-mobile-colleps-width: 700px;
   margin: 4px 0;
   @extend .animated-background;
 }
+
+.changelly-terms-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  p {
+    margin-top: 5px;
+  }
+}
