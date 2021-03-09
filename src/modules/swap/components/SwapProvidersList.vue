@@ -30,7 +30,7 @@
     <v-item-group v-show="step >= 1" mandatory>
       <v-row>
         <v-col
-          v-for="(quote, idx) in availableQuotes"
+          v-for="(quote, idx) in providersList"
           :key="`quote-${idx}`"
           cols="12"
           class="mb-n3"
@@ -135,9 +135,26 @@
         </v-col>
       </v-row>
     </v-item-group>
+    <!--
+    =====================================================================================
+      Show More Providers Button
+    =====================================================================================
+    -->
+    <mew-button
+      v-if="step >= 1 && providersCut > 0"
+      :title="moreProvidersText"
+      btn-style="transparent"
+      btn-size="small"
+      :icon="moreProvidersIcon"
+      icon-type="mdi"
+      icon-align="right"
+      class="mt-5"
+      @click.native="showMore = !showMore"
+    />
   </div>
 </template>
 <script>
+const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
   props: {
@@ -162,11 +179,62 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {
+      showMore: false
+    };
+  },
   computed: {
+    /**
+     * Property returns best rate in the quotes
+     * Or null id quotes not defined.
+     * Used in best rate chip
+     */
     bestRate() {
       return this.availableQuotes.length > 0 && this.availableQuotes[0].rate
         ? this.availableQuotes[0].rate
         : null;
+    },
+    /**
+     * Property returns quotes to be displaid on the ui
+     * If more then 3 qoutes found: the list will be sliced by max_providers
+     * Used in Providers Rate Row
+     */
+    providersList() {
+      return !this.showMore && this.providersCut > 0
+        ? this.availableQuotes.slice(0, MAX_PROVIDERS)
+        : this.availableQuotes;
+    },
+    /**
+     * Property returns number of providers that was sliced on the ui
+     */
+    providersCut() {
+      return this.availableQuotes.length - MAX_PROVIDERS;
+    },
+    /**
+     * Property returns a string for show more providers button
+     * If showMore - returns "Show Less",
+     * If show less - returns "{providers cut} More Providers"
+     */
+    moreProvidersText() {
+      if (this.providersCut > 1) {
+        const single = 'More Provider';
+        const multiple = 'More Providers';
+        if (!this.showMore) {
+          return this.providersCut === MAX_PROVIDERS
+            ? `${this.providersCut} ${single}`
+            : `${this.providersCut} ${multiple}`;
+        }
+        return 'Show Less';
+      }
+      return '';
+    },
+    /**
+     * Property returns an icon for show more providers button,
+     * based on showMore property
+     */
+    moreProvidersIcon() {
+      return this.showMore ? 'mdi-arrow-up' : 'mdi-arrow-down';
     }
   }
 };
