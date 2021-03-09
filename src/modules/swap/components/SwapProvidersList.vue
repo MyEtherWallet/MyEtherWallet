@@ -231,7 +231,7 @@ export default {
         const single = 'More Provider';
         const multiple = 'More Providers';
         if (!this.showMore) {
-          return this.providersCut === MAX_PROVIDERS
+          return this.providersCut === 1
             ? `${this.providersCut} ${single}`
             : `${this.providersCut} ${multiple}`;
         }
