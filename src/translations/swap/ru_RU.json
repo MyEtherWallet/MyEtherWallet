@@ -55,7 +55,8 @@
     "retrieve-simplex-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}",
     "error-finalizing": "Ошибка при запросе окончательных данных от провайдера",
     "bity-rate-failed": "Не удалось получить курс Bity",
-    "selected-provider-cleared": "Выбранный провайдер очищен"
+    "selected-provider-cleared": "Выбранный провайдер очищен",
+    "changelly-terms": "Нажав продолжить, я соглашаюсь {aml} и {terms} Changelly"
   },
   "tag-line": {
     "bity": "Обменяйте ETH, BTC, REP, или продавайте за фиат, используя ваш телефон!",

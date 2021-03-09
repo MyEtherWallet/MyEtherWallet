@@ -62,7 +62,7 @@
     "modal": {
       "title": "通过软件访问我的钱包",
       "purchase-text": "购买硬件钱包，为您访问加密货币时获得最高的安全性。",
-      "purchase-link": "购买硬件钱包...."
+      "purchase-link": "Purchase a hardware wallet"
     }
   },
   "metamask": {

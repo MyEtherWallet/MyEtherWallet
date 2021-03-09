@@ -35,7 +35,8 @@
   "withdraw-title": "Адрес для снятия Eth2",
   "read-and-agree": "Я прочитал и согласен с {staked} {terms-of-service}",
   "terms-of-service": "Я понимаю, что MEW не имеет контроля над активами, которые я ассоциирую с этими ключами, и принимаю на себя весь риск потерь, включая те, которые могут произойти в результате сбоя протокола или ключа.",
-  "done-desc": "Ваша ставка {amt} ETH была отправлена. Завершение валидаторов может занять 24-48 часов. В дальнейшем, {staked} будет поддерживать ваш валидатор(ы).",
+  "terms-of-service-title": "условия предоставления услуг",
+  "done-desc": "Ваша ставка {amt} ETH была отправлена. Создание валидаторов может занять 24-48 часов. В дальнейшем, {staked} будет поддерживать ваш валидатор(ы).",
   "track-ethvm": "Просмотр в EthVM",
   "stake-on-eth2": "Стейкинг в Eth2",
   "stake-again": "Отправить ставку ещё",
@@ -71,5 +72,28 @@
     "generated-successfully": "Вы успешно генерировали адрес Eth2.",
     "withdrawal-address": "Адрес для снятия Eth2",
     "pw-agreement": "Я понимаю, что MEW не имеет контроля над активами, которые я ассоциирую с этими ключами, и принимаю на себя весь риск потерь, включая те, которые могут произойти в результате сбоя протокола или ключа."
+  },
+  "stake": "Ставка",
+  "my-validators": "Мои валидаторы",
+  "status": "Статус",
+  "no-validators": "В настоящее время у вас нет валидаторов.",
+  "activation-timestamp": "Дата активации",
+  "staked": "Сумма ставки",
+  "apr": "APR",
+  "earnings": "Доход",
+  "estimated-wait": "Примерное время ожидания",
+  "validators-infront": "Валидаторов впереди вас",
+  "validators-back": "Валидаторов за вами",
+  "queue-speed": "Скорость очереди",
+  "validators-per": "валидаторов в день",
+  "estimated-activation-timestamp": "Предполагаемое время активации",
+  "exited-popup": {
+    "title": "Alert with more info",
+    "desc": "There was an incident with our staking partner, Staked.us",
+    "p1": "Your funds are safe, but due to a slashing incident validators allocated to 5 MEW wallet users were stopped. Unfortunately your validator is one of these 5.",
+    "p2": "You can read the full details of what happened here {link}",
+    "p3": "Staked.us has taken corrective action and full original staking amount plus staking rewards will be deposited to your Eth2 withdrawal address once transfers are enabled on Eth2.",
+    "p4": "There is no need for you to do anything, however, if you have any further questions, you are welcome to {contact-mew}",
+    "contact-mew": "contact MEW support."
   }
 }
