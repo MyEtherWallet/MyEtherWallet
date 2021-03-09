@@ -2,6 +2,10 @@
 
 * Fix checking gas when swap from is not on ethereum [#2879](https://github.com/MyEtherWallet/MyEtherWallet/pull/2879)
 
+### Devop
+
+* Address no decimals for NEO [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+
 ### Release v5.7.22
 
 ### Bug

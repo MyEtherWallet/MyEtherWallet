@@ -333,6 +333,16 @@ export default class SwapProviders {
 
   calculateFromValue(toValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
+    if (decimals === 0) {
+      return checkInvalidOrMissingValue(
+        new BigNumber(toValue)
+          .div(new BigNumber(bestRate))
+          .integerValue(BigNumber.ROUND_DOWN)
+          .toFixed(decimals)
+          .toString(10),
+        false
+      );
+    }
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
         .div(new BigNumber(bestRate))
@@ -344,6 +354,16 @@ export default class SwapProviders {
 
   calculateToValue(fromValue, bestRate, currency) {
     const decimals = this.decimalForCalculation(currency);
+    if (decimals === 0) {
+      return checkInvalidOrMissingValue(
+        new BigNumber(fromValue)
+          .times(new BigNumber(bestRate))
+          .integerValue(BigNumber.ROUND_DOWN)
+          .toFixed(decimals)
+          .toString(10),
+        true
+      );
+    }
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
         .times(new BigNumber(bestRate))
@@ -362,6 +382,8 @@ export default class SwapProviders {
       if (decimal < 6) return decimal;
       if (this.overrideDecimals) return decimal;
       return 6;
+    } else if (currency.toLowerCase() === 'neo') {
+      return 0;
     }
     return 6;
   }
