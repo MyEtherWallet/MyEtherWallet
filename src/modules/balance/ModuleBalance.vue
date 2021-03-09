@@ -13,6 +13,7 @@
       :title="title"
       :icon="network.type.icon"
       :caption="convertedBalance"
+      :has-elevation="true"
       icon-align="left"
     >
       <template #rightHeaderContainer>

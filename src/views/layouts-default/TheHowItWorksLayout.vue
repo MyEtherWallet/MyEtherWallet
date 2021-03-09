@@ -67,7 +67,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-component--how-it-works {
   .v-slide-group__prev {
     display: none !important;
