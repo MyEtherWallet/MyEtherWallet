@@ -7,7 +7,7 @@ import {
   KeepkeyWallet,
   BCVaultWallet,
   CoolWallet
-} from './hardware';
+} from '@/modules/access-wallet/hardware/handlers/handlerAccessWalletHardware';
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet } from './software';
 import {
