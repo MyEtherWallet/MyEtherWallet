@@ -1026,6 +1026,12 @@ export default {
           break;
       }
     },
+    decimalsGenerally(toCurrency) {
+      if (toCurrency.toLowerCase() === 'neo') {
+        return 0;
+      }
+      return this.fiatCurrenciesArray.includes(toCurrency) ? 2 : 6;
+    },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
         this.showWarning = this.warningCurrencies.includes(toCurrency);
@@ -1079,11 +1085,7 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: _fromValue => {
-                    const decimals = this.fiatCurrenciesArray.includes(
-                      toCurrency
-                    )
-                      ? 2
-                      : 6;
+                    const decimals = this.decimalsGenerally(toCurrency);
                     return new BigNumber(_fromValue)
                       .times(entry.rate)
                       .toFixed(decimals)
@@ -1175,6 +1177,7 @@ export default {
 
         return enoughToContinue;
       }
+      return true;
     },
     intermediateGasCheck() {
       if (this.fromCurrency === 'ETH' && this.lastFeeEstimate.gt(0)) {

@@ -7,7 +7,7 @@
         <p>
           {{ $t('dappsAave.total-lend') }}:
           <span class="balance"
-            ><span v-if="!loading">{{ lendBalance }} </span>
+            ><span v-if="!loading">{{ balance }} </span>
             <i v-if="loading" class="fa fa-spin fa-spinner fa-lg" />
           </span>
         </p>
@@ -45,7 +45,6 @@ import { Toast } from '@/helpers';
 const LEND_MIGRATOR_PROXY_ADDRESS =
   '0x317625234562B1526Ea2FaC4030Ea499C5291de4';
 const LEND_ADDRESS = '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03';
-const LEND_SYMBOL = 'LEND';
 
 export default {
   components: {
@@ -65,21 +64,17 @@ export default {
       hasEnoughRatio: false,
       lendMigratorContract: '',
       amountAsHex: '',
-      loading: false
+      loading: false,
+      lendContract: '',
+      balance: ''
     };
   },
   computed: {
     ...mapState('main', ['web3', 'account']),
-    lendBalance() {
-      const lendToken = this.tokensWithBalance.find(item => {
-        return item.symbol === LEND_SYMBOL;
-      });
-      return lendToken ? new BigNumber(lendToken.balance).toFixed() : 0;
-    },
     disabled() {
       if (
         this.amount > 0 &&
-        this.amount <= this.lendBalance &&
+        this.amount <= this.balance &&
         this.hasEnoughRatio
       ) {
         return false;
@@ -88,16 +83,23 @@ export default {
     }
   },
   mounted() {
+    this.getLendBalance();
     this.getRatio();
   },
   methods: {
+    async getLendBalance() {
+      this.lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
+      const balance = await this.lendContract.methods
+        .balanceOf(this.account.address)
+        .call();
+      this.balance = this.web3.utils.fromWei(balance, 'ether');
+    },
     async checkAllowance() {
-      const lendContract = new this.web3.eth.Contract(ERC20, LEND_ADDRESS);
       const estimatedAmount = new BigNumber(this.amount)
         .times(new BigNumber(10).pow(18))
         .toFixed();
       this.amountAsHex = this.web3.utils.numberToHex(estimatedAmount);
-      const allowance = await lendContract.methods
+      const allowance = await this.lendContract.methods
         .allowance(this.account.address, LEND_MIGRATOR_PROXY_ADDRESS)
         .call();
       this.loading = true;
@@ -105,7 +107,7 @@ export default {
         allowance !== '0' &&
         new BigNumber(allowance).lt(new BigNumber(this.amountAsHex))
       ) {
-        const lendApproveData = await lendContract.methods
+        const lendApproveData = await this.lendContract.methods
           .approve(LEND_MIGRATOR_PROXY_ADDRESS, 0)
           .encodeABI();
         this.web3.eth
@@ -117,18 +119,18 @@ export default {
             data: lendApproveData
           })
           .then(() => {
-            this.migrate(lendContract);
+            this.migrate();
           })
           .catch(error => {
             this.loading = false;
             Toast.responseHandler(error, Toast.ERROR);
           });
       } else {
-        this.migrate(lendContract);
+        this.migrate();
       }
     },
-    async migrate(lendContract) {
-      const lendApproveData = await lendContract.methods
+    async migrate() {
+      const lendApproveData = await this.lendContract.methods
         .approve(LEND_MIGRATOR_PROXY_ADDRESS, this.amountAsHex)
         .encodeABI();
       const lendMigrateData = await this.lendMigratorContract.methods
@@ -169,16 +171,12 @@ export default {
       const lendAaveRatio = await this.lendMigratorContract.methods
         .LEND_AAVE_RATIO()
         .call();
-      this.hasEnoughRatio =
-        lendAaveRatio > 1
-          ? true
-          : Toast.responseHandler(
-              this.$t('dappAave.invalid-ratio'),
-              Toast.ERROR
-            );
+      lendAaveRatio > 1
+        ? (this.hasEnoughRatio = true)
+        : Toast.responseHandler(this.$t('dappAave.invalid-ratio'), Toast.ERROR);
     },
     setEntireBalance() {
-      this.amount = this.lendBalance;
+      this.amount = this.balance;
     }
   }
 };

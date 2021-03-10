@@ -1,5 +1,7 @@
 import akaremote from './aka-remote';
 import ath from './ath';
+import avax from './avax-c-mainnet';
+import avaxtest from './avax-c-testnet';
 import bscMainnet from './bsc-mainnet';
 import clo from './clo';
 import egem from './egem';
@@ -57,10 +59,13 @@ import ere from './ere';
 import prkl from './prkl';
 import fuse from './fuse';
 import ewt from './ewt';
+import xdai from './xdai';
 
 export {
   akaremote,
   ath,
+  avax,
+  avaxtest,
   bscMainnet,
   clo,
   egem,
@@ -117,5 +122,6 @@ export {
   ere,
   prkl,
   fuse,
-  ewt
+  ewt,
+  xdai
 };

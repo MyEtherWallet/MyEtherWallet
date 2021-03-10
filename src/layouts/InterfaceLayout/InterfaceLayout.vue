@@ -593,13 +593,21 @@ export default {
         ) {
           try {
             getAddressTokens(this.account.address).then(res => {
-              const tokens = this.network.type.tokens;
+              const tokens = [];
               const apiTokens = res.data.getOwnersERC20Tokens.owners;
               const parsedApiTokens = apiTokens.map(apiT => {
                 const newT = Object.assign(
                   {},
                   { balance: apiT.balance },
                   { address: apiT.tokenInfo.contract },
+                  {
+                    logo: {
+                      src: '',
+                      width: '',
+                      height: '',
+                      ipfs_hash: ''
+                    }
+                  },
                   apiT.tokenInfo
                 );
                 newT['balance'] = BigNumber(newT.balance)
@@ -610,31 +618,17 @@ export default {
               });
 
               parsedApiTokens.forEach(apiT => {
-                const found = tokens.findIndex(tokT => {
-                  return (
-                    tokT.address.toLowerCase() === apiT.address.toLowerCase()
-                  );
+                const found = tokens.find(item => {
+                  if (item.address === apiT.address) {
+                    return item;
+                  }
                 });
-                if (found !== -1) {
-                  tokens[found]['balance'] = apiT.balance;
-                } else {
-                  apiT.logo = {
-                    src: '',
-                    width: '',
-                    height: '',
-                    ipfs_hash: ''
-                  };
+
+                if (!found) {
                   tokens.push(apiT);
                 }
               });
 
-              tokens.map(tok => {
-                if (!tok.balance) {
-                  tok['balance'] = 0;
-                }
-
-                return tok;
-              });
               resolve(tokens);
             });
           } catch (e) {
