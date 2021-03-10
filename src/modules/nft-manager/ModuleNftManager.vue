@@ -9,7 +9,7 @@
       <template #moduleBody>
         <mew-tabs
           v-if="contracts.length !== 0"
-          :items="items"
+          :items="tabs"
           is-vertical
           @onTab="onTab"
         >
@@ -77,88 +77,6 @@
         </mew-tabs>
       </template>
     </mew-module>
-    <mew-overlay
-      title="Send NFT"
-      :show-overlay="open"
-      right-btn-text="Close"
-      :back="send"
-      :close="send"
-    >
-      <template #mewOverlayBody>
-        <img
-          height="200"
-          :src="selectedNft.image ? selectedNft.image : imageUrl(selectedNft)"
-          alt="Crypto Kitty"
-        />
-        <div class="ma-5">{{ selectedNft.name }}</div>
-
-        <!--                      <div class="d-sm-flex flex-column align-stretch">-->
-
-        <mew-address-select
-          ref="addressSelect"
-          class="full-width"
-          :value="toAddress"
-          :copy-tooltip="$t('common.copy')"
-          :save-tooltip="$t('common.save')"
-          :enable-save-address="true"
-          :label="$t('sendTx.to-addr')"
-          :items="addresses"
-          :placeholder="$t('sendTx.enter-addr')"
-          :success-toast="$t('sendTx.success.title')"
-          :is-valid-address="isValidAddress()"
-          @input="setAddress"
-        />
-        <mew-expand-panel
-          ref="expandPanel"
-          class="full-width"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <div v-show="isEth">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeInETH }}</span>
-                  <span slot="usd">{{ txFeeInUSD }}</span>
-                </i18n>
-              </div>
-            </div>
-            <div>
-              <mew-input
-                :value="customGasLimit"
-                :disabled="true"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-              />
-            </div>
-
-            <mew-input
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              :disabled="true"
-              placeholder=" "
-              class="mt-10 mb-n5"
-            />
-          </template>
-        </mew-expand-panel>
-        <mew-button
-          :has-full-width="false"
-          btn-style="outline"
-          title="Confirm & send"
-          btn-size="large"
-          :disabled="validValues"
-          @click.native="sendTx(selectedNft)"
-        />
-        <!--                    </div>-->
-      </template>
-    </mew-overlay>
-    <div class="pa-4"></div>
-    <div></div>
     <mew-toast
       ref="toast"
       :text="toastMsg"
@@ -182,7 +100,7 @@ export default {
     return {
       nft: {},
       ready: false,
-      items: [],
+      tabs: [],
       contracts: [],
       showItems: [],
       tabActive: 1,
@@ -190,12 +108,6 @@ export default {
       open: false,
       selectedNft: {},
       addresses: [],
-      expandPanel: [
-        {
-          name: this.$t('common.advanced'),
-          subtext: this.$t('sendTx.data-gas')
-        }
-      ],
       isEth: true,
       toastType: '',
       toastMsg: '',
@@ -269,6 +181,7 @@ export default {
       web3: this.web3,
       apollo: this.$apollo
     });
+    console.error("nft", this.nft)
     this.addresses = [
       {
         address: this.address,
@@ -280,9 +193,11 @@ export default {
       this.ready = true;
       const detailsRaw = this.nft.getAvailableContracts();
       this.contracts = detailsRaw;
-      this.items = detailsRaw.map(item => {
+      console.error('contracts', this.contracts)
+      this.tabs = detailsRaw.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
+      console.error('items', this.tabs)
       this.onTab(0);
     });
   },
@@ -326,7 +241,7 @@ export default {
     },
     updateValues() {
       this.tokens = this.nft.selectNftsToShow();
-      this.items = this.items.map(item => {
+      this.tabs = this.tabs.map(item => {
         if (
           item.name
             .toLowerCase()
