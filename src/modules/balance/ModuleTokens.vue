@@ -16,23 +16,22 @@
         />
       </template>
     </mew-module>
-    <v-sheet v-else class="token-empty-list mt-6 pa-12" color="white">
-      <h2 class="mb-6">My token list is empty</h2>
-      <mew-button
-        class="ml-auto ml-n3"
-        :has-full-width="false"
-        :title="'+ ' + 'Buy ERC20 tokens'"
-        btn-size="xsmall"
-        btn-style="transparent"
-        @click.native="navigateToSwap"
-      />
-    </v-sheet>
+    <!--
+    =====================================================================================
+      display if the user has no tokens
+    =====================================================================================
+    -->
+    <balance-empty-block is-tokens />
   </div>
 </template>
 <script>
 import BigNumber from 'bignumber.js';
+import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 
 export default {
+  components: {
+    BalanceEmptyBlock
+  },
   props: {
     ownersTokens: {
       type: Array,
@@ -102,22 +101,10 @@ export default {
         }, 0)
       ).toFixed(2);
     }
-  },
-  methods: {
-    navigateToSwap() {
-      this.$router.push({ name: 'Swap' });
-    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.token-empty-list {
-  background-image: url(~@/assets/images/backgrounds/bg-half-circle.png),
-    url(~@/assets/images/backgrounds/bg-small-half-circle.png);
-  background-position: right -16px bottom -26px, left -18px bottom -29px;
-  background-size: 357px, 150px;
-  border-radius: 12px;
-}
 .mew-component--my-token-value {
   .theme--dark.v-sheet {
     background-color: var(--v-mewBg-base);
