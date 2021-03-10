@@ -18,7 +18,7 @@
         <v-col cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
             <v-img
-              :class="this.$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
+              :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
               src="@/assets/images/icons/logo-mew.png"
               max-height="36"
               max-width="130"
