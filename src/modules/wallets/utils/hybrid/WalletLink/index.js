@@ -2,13 +2,13 @@ import WalletLink from 'walletlink';
 
 import store from '@/core/store';
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_LINK as walletLinkType } from '../../bip44/walletTypes';
+import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '../../utils';
+} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
@@ -19,7 +19,7 @@ const APP_NAME = 'MEW';
 const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
 class WalletLinkWallet {
   constructor() {
-    this.identifier = walletLinkType;
+    this.identifier = WALLET_TYPES.WALLET_LINK;
     this.isHardware = IS_HARDWARE;
     this.walletLink = new WalletLink({
       appName: APP_NAME,
