@@ -6,7 +6,7 @@
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row v-if="step == 0">
+    <v-row v-if="step == 0 && message == ''">
       <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
         <v-card
           flat
@@ -22,6 +22,12 @@
         </v-card>
       </v-col>
     </v-row>
+    <!--
+    =====================================================================================
+      Providers Message
+    =====================================================================================
+    -->
+    <p v-if="step == 0 && message != ''">{{ message }}</p>
     <!--
     =====================================================================================
       Provider Rate Row
@@ -177,6 +183,10 @@ export default {
     toTokenIcon: {
       type: String,
       default: ''
+    },
+    message: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -221,7 +231,7 @@ export default {
         const single = 'More Provider';
         const multiple = 'More Providers';
         if (!this.showMore) {
-          return this.providersCut === MAX_PROVIDERS
+          return this.providersCut === 1
             ? `${this.providersCut} ${single}`
             : `${this.providersCut} ${multiple}`;
         }

@@ -83,6 +83,7 @@
             :set-provider="setProvider"
             :to-token-symbol="toTokenType.symbol"
             :to-token-icon="toTokenType.img"
+            :message="providersMessage"
           />
 
           <mew-expand-panel
@@ -194,7 +195,8 @@ export default {
       ],
       swapIcon: SwapIcon,
       fromTokens: [],
-      toTokens: []
+      toTokens: [],
+      providersMessage: ''
     };
   },
   computed: {
@@ -283,6 +285,7 @@ export default {
       this.allTrades = [];
       this.step = 0;
       this.tokenInValue = value;
+      this.providersMessage = '';
       this.swapper
         .getAllQuotes({
           fromT: this.fromTokenType,
@@ -303,6 +306,9 @@ export default {
           if (quotes.length) {
             this.tokenOutValue = quotes[0].amount;
             this.step = 1;
+          } else {
+            this.providersMessage =
+              'There are no available Providers at this time, please try another pair.';
           }
         });
     }, 500),
