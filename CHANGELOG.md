@@ -2,6 +2,7 @@
 
 ### Bug
 
+* Remove tokens with no balance so users can manually add and load tokens [#2892](https://github.com/MyEtherWallet/MyEtherWallet/pull/2892)
 * Fix checking gas when swap from is not on ethereum [#2879](https://github.com/MyEtherWallet/MyEtherWallet/pull/2879)
 
 ### Devop
