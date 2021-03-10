@@ -8,7 +8,7 @@
       :save-tooltip="$t('common.save')"
       :enable-save-address="isValidAddress"
       :label="$t('sendTx.to-addr')"
-      :items="addressBook"
+      :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
@@ -69,6 +69,15 @@ export default {
     },
     address() {
       return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
+    },
+    addressBookWithMyAddress() {
+      return [
+        {
+          address: this.$store.state.wallet.address,
+          nickname: 'My Address',
+          resolverAddr: ''
+        }
+      ].concat(this.addressBook);
     }
   },
   mounted() {
