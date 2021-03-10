@@ -114,45 +114,5 @@ export default {
       },
       beforeEnter: accessRouteGuard
     }
-    // {
-    //   path: 'wallet/access/hardware-wallets',
-    //   name: 'HardwareWallets',
-    //   component: HardwareWallets,
-    //   meta: {
-    //     requiresAuth: false
-    //   }
-    // },
-    // {
-    //   path: 'wallet/access/browser-extension',
-    //   name: 'BrowserExtension',
-    //   component: BrowserExtension,
-    //   meta: {
-    //     requiresAuth: false
-    //   }
-    // },
-    // {
-    //   path: 'wallet/access/browser-extension/install',
-    //   name: 'BrowserExtensionInstall',
-    //   component: BrowserExtensionInstall,
-    //   meta: {
-    //     requiresAuth: false
-    //   }
-    // },
-    // {
-    //   path: 'wallet/access/browser-extension/access',
-    //   name: 'BrowserExtensionAccess',
-    //   component: BrowserExtensionAccess,
-    //   meta: {
-    //     requiresAuth: false
-    //   }
-    // },
-    // {
-    //   path: 'wallet/access/mobile-apps',
-    //   name: 'MobileApps',
-    //   component: MobileApps,
-    //   meta: {
-    //     requiresAuth: false
-    //   }
-    // }
   ]
 };
