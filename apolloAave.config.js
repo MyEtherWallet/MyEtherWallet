@@ -3,8 +3,7 @@ module.exports = {
       service: {
           name: 'aave',
           url: 'https://api.thegraph.com/subgraphs/name/aave/protocol-multy-raw',
-          includes: ['**/dapps/aave/**/*.graphql'],
-          excludes: ['**/apollo']
-      }
+        },
+      includes: ['src/dapps/aave-dapp/**/*.graphql']
   }
 }

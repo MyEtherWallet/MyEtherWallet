@@ -3,7 +3,7 @@ module.exports = {
       service: {
           name: 'api',
           url: 'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
-          includes: ['src/apollo']
-      }
+        },
+      includes: ['src/apollo/**/*.graphql'],
   }
 }

@@ -27,7 +27,7 @@
     "apollo": "apollo",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
     "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
-    "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave/global/globalTypes.json --target=json"
+    "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave-dapp/apollo/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave-dapp/apollo/global/globalTypes.json --target=json"
   },
   "husky": {
     "hooks": {
