@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Refactor na balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
 - Refactor access wallet, update ui to make it consistent [#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
 - Update swap provider list [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
 - Settings [#2835h](https://github.com/MyEtherWallet/MyEtherWallet/pull/2835)
