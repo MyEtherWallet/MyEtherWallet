@@ -55,7 +55,7 @@
       =============================================================
       -->
       <div
-        class="pa-3 white mew-tools-menu"
+        class="pa-6 white mew-tools-menu"
         :class="[
           $vuetify.breakpoint.md ? 'md' : '',
           $vuetify.breakpoint.sm ? 'sm' : '',
@@ -73,7 +73,7 @@
             <!-- Button with url link -->
             <a v-if="t.link" :href="t.link" target="_blank">
               <div class="tools-btn">
-                <img :src="t.img" :alt="t.label" height="40" />
+                <img :src="t.img" :alt="t.label" height="50" />
                 <h6 class="mt-1 btn-lable basic--text">{{ t.label }}</h6>
               </div>
             </a>
@@ -97,6 +97,11 @@ export default {
           link: 'https://www.myetherwallet.com/'
         },
         {
+          label: 'MEW wallet App',
+          img: require('@/assets/images/icons/icon-mew-wallet.png'),
+          link: 'https://www.mewwallet.com/'
+        },
+        {
           label: 'EthVM',
           img: require('@/assets/images/icons/icon-ethvm.png'),
           link: 'https://www.ethvm.com/'
@@ -108,16 +113,6 @@ export default {
             'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
         },
         {
-          label: 'MEW wallet App',
-          img: require('@/assets/images/icons/icon-mew-wallet.png'),
-          link: 'https://www.mewwallet.com/'
-        },
-        {
-          label: 'MEW connect protocol',
-          img: require('@/assets/images/icons/icon-mew-connect.png'),
-          link: 'https://mewconnect.myetherwallet.com/'
-        },
-        {
           label: 'MEW topia',
           img: require('@/assets/images/icons/icon-puppy-mew.svg'),
           link: 'https://www.mewtopia.com/'
@@ -126,6 +121,11 @@ export default {
           label: 'Support center',
           img: require('@/assets/images/icons/icon-customer-support.svg'),
           link: 'https://kb.myetherwallet.com/'
+        },
+        {
+          label: 'MEW connect protocol',
+          img: require('@/assets/images/icons/icon-mew-connect.png'),
+          link: 'https://mewconnect.myetherwallet.com/'
         }
       ]
     };
@@ -163,7 +163,7 @@ export default {
   }
 
   &.xs {
-    width: 170px;
+    width: 190px;
     &:after {
       right: 10px;
     }
