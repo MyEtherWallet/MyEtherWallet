@@ -257,6 +257,15 @@ export default {
       .getAllTokens()
       .then(tokens => {
         this.availableTokens = tokens;
+        /* Add Correct Values for the MewSelect*/
+        this.availableTokens.toTokens.forEach(token => {
+          token.subtext = token.symbol;
+          token.value = token.name;
+        });
+        this.availableTokens.fromTokens.forEach(token => {
+          token.subtext = token.symbol;
+          token.value = token.name;
+        });
       })
       .then(() => {
         this.setDefaults();
