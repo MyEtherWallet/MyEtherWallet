@@ -7,37 +7,58 @@
     color="white"
     max-width="100%"
   >
+    <!--
+    =====================================================================================
+      ETH Empty Block
+    =====================================================================================
+    -->
     <div v-if="!isTokens">
       <h2 class="mb-6">My {{ networkType }} balance is empty</h2>
-      <mew-button
-        :has-full-width="false"
-        title="Buy ETH with a credit card"
-        btn-size="xlarge"
-        btn-link="https://ccswap.myetherwallet.com/#/"
-      />
-      <div class="d-flex align-center mt-5">
-        <div>We accept credit card</div>
-        <img
-          v-if="!$vuetify.theme.dark"
-          class="ml-2 mr-1"
-          height="21"
-          src="@/assets/images/icons/icon-visa-dark.png"
+      <!--
+      =====================================================================================
+        Buy ETH (Visible on ETH network ONLY)
+      =====================================================================================
+       -->
+      <div v-if="isEth">
+        <mew-button
+          :has-full-width="false"
+          title="Buy ETH with a credit card"
+          btn-size="xlarge"
+          btn-link="https://ccswap.myetherwallet.com/#/"
         />
-        <img
-          v-if="$vuetify.theme.dark"
-          class="ml-2 mr-2"
-          height="13"
-          src="@/assets/images/icons/icon-visa-white.png"
-        />
-        <img height="18" src="@/assets/images/icons/icon-mastercard-mew.png" />
+        <div class="d-flex align-center mt-5">
+          <div>We accept credit card</div>
+          <img
+            v-if="!$vuetify.theme.dark"
+            class="ml-2 mr-1"
+            height="21"
+            src="@/assets/images/icons/icon-visa-dark.png"
+          />
+          <img
+            v-if="$vuetify.theme.dark"
+            class="ml-2 mr-2"
+            height="13"
+            src="@/assets/images/icons/icon-visa-white.png"
+          />
+          <img
+            height="18"
+            src="@/assets/images/icons/icon-mastercard-mew.png"
+          />
+        </div>
       </div>
       <div class="textSecondary--text mt-12">
-        Tip: You can also send your ETH from another wallet!
+        Tip: You can also send your {{ networkType }} from another wallet!
       </div>
     </div>
+    <!--
+    =====================================================================================
+      Tokens Empty Block
+    =====================================================================================
+    -->
     <div v-else>
       <h2 class="mb-6">My token list is empty</h2>
       <mew-button
+        v-if="isEth"
         class="ml-auto ml-n3"
         :has-full-width="false"
         :title="'+ ' + 'Buy ERC20 tokens'"
@@ -50,6 +71,7 @@
 </template>
 
 <script>
+import ETH from '@/utils/networks/types/index.js';
 export default {
   name: 'BalanceEmptyBlock',
   props: {
@@ -60,9 +82,17 @@ export default {
     isTokens: {
       type: Boolean,
       default: false
+    },
+    isEth: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
+    /**
+     * Method which naviagates to the swap page.
+     * Used in Empty Tokens Block
+     */
     navigateToSwap() {
       this.$router.push({ name: 'Swap' });
     }

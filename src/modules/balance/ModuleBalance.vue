@@ -64,7 +64,10 @@
       display if the user has no eth balance
     =====================================================================================
     -->
-    <balance-empty-block :network-type="network.type.name" />
+    <balance-empty-block
+      :network-type="network.type.name"
+      :is-eth="isEthNetwork"
+    />
   </div>
 </template>
 
@@ -91,6 +94,7 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
       return this.balanceInETH <= 0;
     },
