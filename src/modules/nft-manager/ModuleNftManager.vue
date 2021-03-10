@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import NFT from './handlers';
+import NFT from './handlers/handlerNftManager';
 import { mapGetters, mapState } from 'vuex';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';

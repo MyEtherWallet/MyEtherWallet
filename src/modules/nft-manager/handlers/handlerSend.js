@@ -1,5 +1,5 @@
-import ABI from './ABI';
-import configs from './config';
+import ABI from './abi/abiNft';
+import configs from './config/configNft';
 import Vue from 'vue';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';

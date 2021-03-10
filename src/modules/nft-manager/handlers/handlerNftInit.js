@@ -1,6 +1,6 @@
-import configs from './config';
-import API from './api';
-import NftCollection from './nftCollection';
+import configs from './config/configNft';
+import API from './handlerApi';
+import NftCollection from './handlerNftCollection';
 import Vue from 'vue';
 
 export default class Nft {

@@ -1,4 +1,4 @@
-import Nft from './src';
+import Nft from './handlerNftInit';
 import utils from 'web3-utils';
 
 export default class NFT {

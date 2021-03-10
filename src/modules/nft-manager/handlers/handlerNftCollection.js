@@ -1,6 +1,6 @@
-import configs from './config';
+import configs from './config/configNft';
 import utils from 'web3-utils';
-import Sender from './senders';
+import Sender from './handlerSend';
 
 export default class NftCollection {
   constructor(props) {
