@@ -1,40 +1,106 @@
 <template>
-  <div class="mew-component--wallet-menu-mobile">
-    <v-overlay :value="value" opacity="0.95">
-      <div style="overflow-y: auto">
-        <v-btn class="exit" x-large icon @click="$emit('input')">
-          <v-icon>mdi-window-close</v-icon>
-        </v-btn>
+  <div class="mew-component--landing-page-menu-mobile">
+    <mew-button
+      class="mobile-menu-button ml-n3"
+      color-theme="white"
+      btn-style="transparent"
+      icon="mdi-text"
+      icon-type="mdi"
+      icon-align="left"
+      style="border-radius: 100% !important; padding: 0"
+      @click.native="isOpen = true"
+    />
 
-        <ul class="menu-content">
-          <li v-for="(m, k) in menu" :key="k">
-            <div class="menu-divider"></div>
+    <v-navigation-drawer
+      v-model="isOpen"
+      height="100%"
+      width="100%"
+      absolute
+      temporary
+      color="expandHeader"
+    >
+      <v-card>
+        <v-toolbar flat color="expandHeader" dark>
+          <v-btn class="exit" x-large icon @click="isOpen = false">
+            <v-icon>mdi-window-close</v-icon>
+          </v-btn>
 
-            <h2 v-if="!m.to" class="text-center font-weight-bold">
-              {{ m.label }}
-            </h2>
-            <h2
-              v-else
-              class="click-effect text-center font-weight-bold"
-              @click="pushRoute(m.to)"
+          <v-img
+            src="@/assets/images/icons/logo-mew.png"
+            max-height="36"
+            max-width="130"
+          />
+        </v-toolbar>
+
+        <v-list color="expandHeader" dark>
+          <template v-for="(item, index) in menu">
+            <v-list-item :key="index">
+              <v-list-item-content>
+                <v-list-item-title>{{ item.label }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-group
+              v-if="item.sub"
+              :key="item + '2'"
+              prepend-icon=""
+              color="expandHeader"
             >
-              {{ m.label }}
-            </h2>
+              <template #activator>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="white--text font-weight-regular mew-body"
+                    v-text="item.label"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="child in item.sub"
+                :key="child.label"
+                dense
+                class="pl-4"
+                :to="child.to"
+              >
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="pl-13 white--text font-weight-regular mew-body"
+                    v-text="child.label"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </template>
+        </v-list>
+      </v-card>
+    </v-navigation-drawer>
 
-            <ul>
-              <li v-for="(s, sk) in m.sub" :key="sk" class="my-4">
-                <h5
-                  class="click-effect text-center font-weight-bold"
-                  @click="pushRoute(s.to)"
-                >
-                  {{ s.label }}
-                </h5>
-              </li>
-            </ul>
+    <ul v-if="false" class="menu-content">
+      <li v-for="(m, k) in menu" :key="k">
+        <div class="menu-divider"></div>
+
+        <h2 v-if="!m.to" class="text-center font-weight-bold">
+          {{ m.label }}
+        </h2>
+        <h2
+          v-else
+          class="click-effect text-center font-weight-bold"
+          @click="pushRoute(m.to)"
+        >
+          {{ m.label }}
+        </h2>
+
+        <ul>
+          <li v-for="(s, sk) in m.sub" :key="sk" class="my-4">
+            <h5
+              class="click-effect text-center font-weight-bold"
+              @click="pushRoute(s.to)"
+            >
+              {{ s.label }}
+            </h5>
           </li>
         </ul>
-      </div>
-    </v-overlay>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -49,6 +115,7 @@ export default {
     }
   },
   data: () => ({
+    isOpen: false,
     menu: [
       { label: 'How it works', to: { name: 'HowItWorks' } },
       {
@@ -106,47 +173,16 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.exit {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-}
-
-.menu-content {
-  li:first-child {
-    .menu-divider {
-      display: none;
-    }
-  }
-}
-
-.menu-divider {
-  width: 60px;
-  margin: 30px auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-h2.click-effect:active {
-  font-size: 30px;
-  color: yellow;
-  transition: all 0.1s ease;
-}
-
-h5.click-effect:active {
-  font-size: 20px;
-  color: yellow;
-  transition: all 0.1s ease;
-}
-</style>
+<style scoped lang="scss"></style>
 
 <style lang="scss">
-.mew-component--wallet-menu-mobile .v-overlay__content {
-  padding: 100px 0;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: auto;
+.mew-component--landing-page-menu-mobile {
+  .mobile-menu-button .v-icon.v-icon {
+    font-size: 37px;
+  }
+  .v-list-group__header,
+  .v-list-item {
+    border-top: 0 !important;
+  }
 }
 </style>

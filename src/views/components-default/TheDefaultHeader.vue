@@ -1,19 +1,9 @@
 <template>
   <div class="default-header expandHeader">
-    <menu-mobile v-model="openMobileMenu" />
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
-          <mew-button
-            class="mobile-menu-button ml-n3"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-text"
-            icon-type="mdi"
-            icon-align="left"
-            style="border-radius: 100% !important; padding: 0"
-            @click.native="openMobileMenu = true"
-          />
+          <menu-mobile />
         </v-col>
         <v-col cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
@@ -136,12 +126,6 @@ export default {
         padding-bottom: 5px !important;
       }
     }
-  }
-}
-
-.default-header {
-  .mobile-menu-button .v-icon.v-icon {
-    font-size: 37px;
   }
 }
 </style>
