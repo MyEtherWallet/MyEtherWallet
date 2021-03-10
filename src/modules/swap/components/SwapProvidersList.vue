@@ -227,7 +227,7 @@ export default {
      * If show less - returns "{providers cut} More Providers"
      */
     moreProvidersText() {
-      if (this.providersCut > 1) {
+      if (this.providersCut > 0) {
         const single = 'More Provider';
         const multiple = 'More Providers';
         if (!this.showMore) {
