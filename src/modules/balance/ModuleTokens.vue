@@ -21,7 +21,7 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block is-tokens />
+    <balance-empty-block v-else is-tokens />
   </div>
 </template>
 <script>

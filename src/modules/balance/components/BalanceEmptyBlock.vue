@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import ETH from '@/utils/networks/types/index.js';
 export default {
   name: 'BalanceEmptyBlock',
   props: {

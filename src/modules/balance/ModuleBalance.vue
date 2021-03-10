@@ -65,6 +65,7 @@
     =====================================================================================
     -->
     <balance-empty-block
+      v-else
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
