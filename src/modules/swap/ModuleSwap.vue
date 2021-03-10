@@ -71,7 +71,10 @@
               Address Book
             =====================================================================================
             -->
-          <module-address-book @setAddress="setToAddress" />
+          <module-address-book
+            v-show="showToAddress"
+            @setAddress="setToAddress"
+          />
           <!--
             =====================================================================================
              Providers List
@@ -196,7 +199,8 @@ export default {
       swapIcon: SwapIcon,
       fromTokens: [],
       toTokens: [],
-      providersMessage: ''
+      providersMessage: '',
+      addressValue: {}
     };
   },
   computed: {
@@ -217,6 +221,14 @@ export default {
         return totalGas.toString();
       }
       return '0';
+    },
+    toAddress() {
+      if (this.toTokenType.isEth) return this.address;
+      return this.addressValue.address;
+    },
+    showToAddress() {
+      if (typeof this.toTokenType.isEth === 'undefined') return false;
+      return !this.toTokenType.isEth;
     }
   },
   watch: {
@@ -334,7 +346,7 @@ export default {
       this.swapper
         .getTrade({
           fromAddress: this.address,
-          toAddress: this.addressValue.address,
+          toAddress: this.toAddress,
           provider: this.availableQuotes[idx].provider,
           fromT: this.fromTokenType,
           toT: this.toTokenType,
@@ -355,7 +367,7 @@ export default {
     showConfirm() {
       this.confirmInfo = {
         from: this.address,
-        to: this.addressValue.address,
+        to: this.toAddress,
         fromType: this.fromTokenType.symbol,
         toType: this.toTokenType.symbol,
         fromImg: this.fromTokenType.img,

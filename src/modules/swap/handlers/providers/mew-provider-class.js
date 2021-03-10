@@ -17,6 +17,7 @@ class MEWPClass {
       return data.map(d => {
         return {
           contract_address: d.contract_address.toLowerCase(),
+          isEth: true,
           decimals: parseInt(d.decimals),
           img: d.icon,
           name: d.name ? d.name : d.symbol,
