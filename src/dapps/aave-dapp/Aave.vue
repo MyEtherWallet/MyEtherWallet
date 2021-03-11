@@ -157,6 +157,7 @@ export default {
   components: { depositOverlay, borrowOverlay },
   data() {
     return {
+      handler: null,
       openDepositOverlay: false,
       openBorrowOverlay: false,
       depositsTableHeader: [
@@ -268,8 +269,7 @@ export default {
     };
   },
   mounted() {
-    const handler = new handlerAave([], this.$apollo);
-    console.log(handler);
+    this.handler = new handlerAave(this.$apollo);
   }
 };
 </script>

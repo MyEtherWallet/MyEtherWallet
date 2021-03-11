@@ -13,6 +13,7 @@ export default class AaveCalls {
   }
 
   getLiquidityRateHistoryUpdate(param, next) {
+    console.log('i got called getLiquidityRateHistoryUpdate');
     this.apollo.subscribe({
       query: LiquidityRateHistoryUpdate,
       variables: {
@@ -27,9 +28,11 @@ export default class AaveCalls {
   }
 
   getUsdPriceEth(next) {
+    console.log('i got called getUsdPriceEth');
     this.apollo.subscribe({
       query: UsdPriceEth,
       next: next,
+      client: 'aave',
       error: err => {
         Toast(err.message ? err.message : err, {}, ERROR);
       }
@@ -37,9 +40,11 @@ export default class AaveCalls {
   }
 
   getUserData(next) {
+    console.log('i got called getUserData');
     this.apollo.subscribe({
       query: UserPositionUpdateSubscription,
       next: next,
+      client: 'aave',
       error: err => {
         Toast(err.message ? err.message : err, {}, ERROR);
       }
@@ -47,9 +52,11 @@ export default class AaveCalls {
   }
 
   getReserveData(next) {
+    console.log('i got called getReserveData');
     this.apollo.subscribe({
       query: ReserveUpdateSubscription,
       next: next,
+      client: 'aave',
       variables: {
         poolId: Configs.POOL_ID
       },

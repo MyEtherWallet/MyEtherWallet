@@ -13,6 +13,8 @@ const tokensList = function (state) {
     ? tokens.map(item => {
         if (!item.hasOwnProperty('balance')) {
           item.balance = toBN(0);
+        } else {
+          item.balance = toBN(item.balance);
         }
         return item;
       })

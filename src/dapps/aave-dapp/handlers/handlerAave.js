@@ -8,7 +8,7 @@ import {
 } from './graphQLHelpers.js';
 
 import vuexStore from '@/core/store';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import {
   formatUserSummaryData,
   formatReserves,
@@ -22,11 +22,10 @@ import AaveCalls from '../apollo/queries/queries';
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default class AaveHandler {
-  constructor(tokensList, apollo) {
+  constructor(apollo) {
     this.$store = vuexStore;
-    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    this.tokensList = tokensList;
-
+    Object.assign(this, mapState('wallet', ['web3', 'address']));
+    Object.assign(this, mapGetters('wallet', ['tokensList', 'balanceInETH']));
     this.reservesData = [];
     this.rawReserveData = [];
     this.reservesStable = [];
@@ -41,7 +40,10 @@ export default class AaveHandler {
     this.compositionBorrow = [];
     this.compositionCollateral = [];
     this.percentageLeft = '';
-    this.aaveCalls = new AaveCalls(apollo, this.address);
+    this.aaveCalls = new AaveCalls(apollo, this.address());
+
+    // setup subscriptions
+    console.log('calling subscriptions');
     this.aaveCalls.getUserData(this._userDataHandler);
     this.aaveCalls.getUsdPriceEth(this._usdPriceHandler);
     this.aaveCalls.getReserveData(this._reserveDataHandler);
@@ -50,9 +52,9 @@ export default class AaveHandler {
   sendTransaction(param) {
     if (param) {
       if (param.length > 1) {
-        return this.web3.mew.sendBatchTransactions(param);
+        return this.web3().mew.sendBatchTransactions(param);
       }
-      return this.web3.sendTransaction(param[0]);
+      return this.web3().sendTransaction(param[0]);
     }
     return new Error('No Parameters sent!');
   }
@@ -166,7 +168,7 @@ export default class AaveHandler {
       this.userSummary = formatUserSummaryData(
         this.rawReserveData,
         this.userReserveData,
-        this.address.toLowerCase(),
+        this.address().toLowerCase(),
         this.usdPriceEth,
         Number(moment().format('X'))
       );
@@ -186,20 +188,20 @@ export default class AaveHandler {
   }
 
   getReserveBalances() {
-    const utils = this.web3.utils;
-    const accountBalance = utils.BN(this.balance);
+    const utils = this.web3().utils;
+    const accountBalance = utils.BN(this.balanceInETH());
     if (this.reservesData.length > 0) {
       this.reservesData.forEach(reserve => {
         reserve.tokenBalance = 0;
         reserve.user = !reserve.user ? {} : reserve.user;
         if (reserve.symbol === 'ETH') {
-          reserve.tokenBalance = this.web3.utils.fromWei(
+          reserve.tokenBalance = this.web3().utils.fromWei(
             accountBalance,
             'ether'
           );
         }
 
-        const foundReserve = this.tokensList.find(
+        const foundReserve = this.tokensList().find(
           elem => elem.symbol === reserve.symbol
         );
         if (foundReserve) {
@@ -241,18 +243,21 @@ export default class AaveHandler {
   _usdPriceHandler(res) {
     const data = res.data.userReserves;
     this.usdPriceEth = data;
+    console.log('Im getting here: _usdPriceHandler');
     this.setFormatUserSummaryData();
   }
 
   _userDataHandler(res) {
     const data = res.data.userReserves;
     this.userReservData = data;
+    console.log('Im getting here: _userDataHandler');
     this.setFormatUserSummaryData();
   }
 
   _reserveDataHandler(res) {
     const data = res.data.userReserves;
     this.rawReserveData = data;
+    console.log('Im getting here: _reserveDataHandler');
     this.reservesData = formatReserves(data).reverse();
     this.setFormatUserSummaryData();
   }
