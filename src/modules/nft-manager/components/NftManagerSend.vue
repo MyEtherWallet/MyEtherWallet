@@ -13,7 +13,8 @@
         alt="Crypto Kitty"
       />
       <div class="ma-5">{{ selectedNft.name }}</div>
-      <mew-address-select
+      <!-- TODO: use module address book -->
+      <!-- <mew-address-select
         ref="addressSelect"
         class="full-width"
         :value="toAddress"
@@ -26,7 +27,7 @@
         :success-toast="$t('sendTx.success.title')"
         :is-valid-address="isValidAddress()"
         @input="setAddress"
-      />
+      /> -->
       <mew-expand-panel
         ref="expandPanel"
         class="full-width"

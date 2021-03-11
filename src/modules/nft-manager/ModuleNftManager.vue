@@ -1,18 +1,29 @@
 <template>
+  <!--
+    =====================================================================================
+      Module Nft Manager
+    =====================================================================================
+    -->
   <div>
     <mew-module
-      class="d-flex flex-grow-1 pt-6"
+      class="text-center"
       :has-elevation="true"
       :has-indicator="true"
       title="NFT Manager"
     >
       <template #moduleBody>
-        <mew-tabs
-          v-if="contracts.length !== 0"
-          :items="tabs"
-          is-vertical
-          @onTab="onTab"
-        >
+        <!--
+    =====================================================================================
+      Loading
+    =====================================================================================
+    -->
+        <v-progress-circular v-if="!loaded" indeterminate color="primary" />
+        <!--
+    =====================================================================================
+      Display owned nft tokens
+    =====================================================================================
+    -->
+        <mew-tabs v-if="loaded" :items="tabs" is-vertical @onTab="onTab">
           <template
             v-for="(contract, idx) in contracts"
             :slot="'tabItemContent' + (idx + 1)"
@@ -24,11 +35,32 @@
                 </h5>
                 <div>Showing {{ startIndex }} to {{ endIndex }}</div>
               </div>
-              <div v-if="tokens.length === 0">Loading</div>
+              <div v-if="tokens.length === 0">Loading ...</div>
               <div v-if="tokens.length !== 0">
                 <div
+                  v-for="(token, tokenIdx) in tokens"
+                  :key="tokenIdx"
+                  class="mb-3"
+                >
+                  <!--
+    =====================================================================================
+      Nft Token Card Details
+    =====================================================================================
+    -->
+                  <nft-manager-card
+                    :send="send"
+                    :get-image-url="getImageUrl"
+                    :token="token"
+                  />
+                </div>
+                <!--
+    =====================================================================================
+      Displays pagination if there are more than > 9 tokens
+    =====================================================================================
+    -->
+                <div
                   v-if="hasPages"
-                  class="pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
+                  class="px-4 mt-3 d-flex align-center justify-space-between"
                 >
                   <mew-button
                     :has-full-width="false"
@@ -47,30 +79,6 @@
                     @click.native="nextPage"
                   />
                 </div>
-
-                <v-card
-                  v-for="(kitty, key) in tokens"
-                  :key="key"
-                  flat
-                  color="tableHeader"
-                  class="border-radius--5px pl-4 pr-6 py-0 mb-2 d-flex align-center justify-space-between"
-                >
-                  <div class="d-flex align-center">
-                    <img
-                      height="100"
-                      :src="kitty.image ? kitty.image : imageUrl(kitty)"
-                      alt="Crypto Kitty"
-                    />
-                    <div class="ml-5 pa-10">{{ kitty.name }}</div>
-                  </div>
-                  <mew-button
-                    :has-full-width="false"
-                    btn-style="outline"
-                    title="Send"
-                    btn-size="large"
-                    @click.native="send(kitty)"
-                  />
-                </v-card>
               </div>
             </div>
           </template>
@@ -93,13 +101,16 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
+import NftManagerCard from './components/NftManagerCard';
 
 export default {
-  components: {},
+  components: {
+    NftManagerCard
+  },
   data() {
     return {
       nft: {},
-      ready: false,
+      loaded: false,
       tabs: [],
       contracts: [],
       showItems: [],
@@ -130,22 +141,20 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     hasPages() {
-      this.tokens;
-      if (this.ready) {
+      if (this.loaded) {
+        console.error('haspages', this.nft.hasPages())
         return this.nft.hasPages();
       }
       return false;
     },
     hasNextPage() {
-      this.tokens;
-      if (this.ready) {
+      if (this.loaded) {
         return this.nft.hasNextPage();
       }
       return false;
     },
     hasPriorPage() {
-      this.tokens;
-      if (this.ready) {
+      if (this.loaded) {
         return this.nft.hasPriorPage();
       }
       return false;
@@ -153,12 +162,9 @@ export default {
     validValues() {
       return !(
         this.isValidAddress() &&
-        this.activeAddress !== '' &&
+        this.address !== '' &&
         this.customGasLimit !== ''
       );
-    },
-    activeAddress() {
-      return this.address;
     },
     startIndex() {
       return 1 + (this.currentPage * this.countPerPage - this.countPerPage);
@@ -177,27 +183,16 @@ export default {
   mounted() {
     this.nft = new NFT({
       network: this.network,
-      address: this.activeAddress,
+      address: this.address,
       web3: this.web3,
       apollo: this.$apollo
     });
-    console.error("nft", this.nft)
-    this.addresses = [
-      {
-        address: this.address,
-        currency: 'ETH',
-        nickname: 'My Address'
-      }
-    ];
     this.nft.init().then(() => {
-      this.ready = true;
-      const detailsRaw = this.nft.getAvailableContracts();
-      this.contracts = detailsRaw;
-      console.error('contracts', this.contracts)
-      this.tabs = detailsRaw.map(item => {
+      this.loaded = true;
+      this.contracts = this.nft.getAvailableContracts();
+      this.tabs = this.contracts.map(item => {
         return { name: `${item.name} (${item.count})` };
       });
-      console.error('items', this.tabs)
       this.onTab(0);
     });
   },
@@ -339,8 +334,8 @@ export default {
       this.currentPage = this.nft.getCurrentPage();
       this.countPerPage = this.nft.getCountPerPage();
     },
-    imageUrl(token) {
-      if (this.ready) {
+    getImageUrl(token) {
+      if (this.loaded) {
         return this.nft.getImageUrl(token.token_id, token.contract);
       }
     },
@@ -377,32 +372,28 @@ export default {
 </script>
 
 <style lang="scss">
-.mew-component--nft-manager {
-  .v-tabs {
-    .v-tabs-items {
-      background-color: transparent !important;
-    }
+.v-tab {
+  font-size: 14px !important;
+  // .v-tabs-items {
+  //   background-color: transparent !important;
+  // }
 
-    .v-slide-group {
-      border-right: 1px solid var(--v-inputBorder-base) !important;
-      margin-right: 20px;
-      padding-right: 10px;
-    }
+  // .v-slide-group {
+  //   border-right: 1px solid var(--v-inputBorder-base) !important;
+  //   margin-right: 20px;
+  //   padding-right: 10px;
+  // }
 
-    .v-tab {
-      text-align: left;
-      font-weight: 400 !important;
-      font-size: 14px !important;
-      justify-content: flex-start;
-    }
+  // .v-tab {
+  //   text-align: left;
+  //   font-weight: 400 !important;
+  //   font-size: 14px !important;
+  //   justify-content: flex-start;
+  // }
 
-    .v-tab--active {
-      font-weight: 600 !important;
-      border-left: 4px solid var(--v-primary-base) !important;
-    }
-  }
-  .full-wide {
-    min-width: 75%;
-  }
+  // .v-tab--active {
+  //   font-weight: 600 !important;
+  //   border-left: 4px solid var(--v-primary-base) !important;
+  // }
 }
 </style>
