@@ -12,7 +12,7 @@ const main = createApolloClient(
 const apolloProvider = new VueApollo({
   clients: {
     main,
-    aave
+    aave: aave
   },
   defaultClient: main
 });

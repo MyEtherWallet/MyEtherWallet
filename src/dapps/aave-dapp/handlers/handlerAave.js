@@ -37,6 +37,11 @@ export default class AaveHandler {
     this.compositionBorrow = [];
     this.compositionCollateral = [];
     this.percentageLeft = '';
+    this.aaveCalls = new AaveCalls(this.apollo, this.address);
+    this.aaveCalls.getUserData(this._userDataHandler);
+    this.aaveCalls.getUsdPriceEth(this._usdPriceHandler);
+    this.aaveCalls.getReserveData(this._reserveDataHandler);
+
   }
 
   sendTransaction(param) {
@@ -138,22 +143,14 @@ export default class AaveHandler {
     }
   }
 
+  // aave calls
+
+  getLiquidityRateHistoryUpdate(id) {
+    this.aaveCalls.getLiquidityRateHistoryUpdate(id, this._liquidityRateHandler);
+  }
+
+
   // setters (?)
-  setReserveData(data) {
-    this.rawReserveData = data;
-    this.reservesData = formatReserves(data).reverse();
-    this.getFormatUserSummaryData();
-  }
-
-  setUserReserveData(data) {
-    this.userReservData = data;
-    this.getFormatUserSummaryData();
-  }
-
-  setUsdPriceEth(data) {
-    this.usdPriceEth = data;
-    this.getFormatUserSummaryData();
-  }
 
   setFormatUserSummaryData() {
     if (
@@ -211,5 +208,47 @@ export default class AaveHandler {
         }
       });
     }
+  }
+
+  _liquidityRateHandler(res) {
+    const data = res.data.userReserves;
+    const rateHistory = { labels: [], stableRates: [], variableRates: [] };
+      const rayDecimals = 27;
+      const sortedData = data.sort((a, b) => a.timestamp - b.timestamp);
+      sortedData.forEach(item => {
+        const date = moment.unix(item.timestamp).format('MMM Do');
+        rateHistory.labels.push(date);
+        rateHistory.stableRates.push(
+          new BigNumber(normalize(item.stableBorrowRate, rayDecimals))
+            .times(100)
+            .toFixed(2)
+        );
+        rateHistory.variableRates.push(
+          new BigNumber(normalize(item.variableBorrowRate, rayDecimals))
+            .times(100)
+            .toFixed(2)
+        );
+      });
+
+      this.rateHistory = rateHistory;
+  }
+
+  _usdPriceHandler(res) {
+    const data = res.data.userReserves;
+    this.usdPriceEth = data;
+    this.setFormatUserSummaryData();
+  }
+
+  _userDataHandler(res) {
+    const data = res.data.userReserves;
+    this.userReservData = data;
+    this.setFormatUserSummaryData();
+  }
+
+  _reserveDataHandler(res) {
+    const data = res.data.userReserves;
+    this.rawReserveData = data;
+    this.reservesData = formatReserves(data).reverse();
+    this.setFormatUserSummaryData();
   }
 }
