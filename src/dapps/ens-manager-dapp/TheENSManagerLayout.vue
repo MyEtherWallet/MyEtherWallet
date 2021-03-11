@@ -314,7 +314,9 @@ export default {
     buyDomain() {
       this.activeTab = 0;
     },
-    //manage domain
+    /**
+     * Manage Domain
+     */
     manage(type, idx) {
       this.onManage = true;
       this.manageType = type;
@@ -410,9 +412,13 @@ export default {
         });
       this.closeManage();
     },
-    // register domain
+    /**
+     * Register Domain
+     */
     findDomain() {
-      //make sure there is no empty string after '.'
+      /**
+       * make sure there is no empty string after '.'
+       */
       const strLength = this.name.length;
       const name =
         this.name[strLength - 1] === '.'
@@ -450,7 +456,9 @@ export default {
       this.nameHandler.getMinimumAge().then(resp => {
         this.minimumAge = resp;
       });
-      // start timer after confirming tx
+      /**
+       * start timer after confirming tx
+       */
       EventBus.$on(EventNames.CONFIRMED_TX, () => {
         this.loadingCommit = true;
       });

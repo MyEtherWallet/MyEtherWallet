@@ -18,7 +18,7 @@
       btn-style="outline"
       title="Send"
       btn-size="large"
-      @click.native="send(token)"
+      @click.native="onClick(token)"
     />
   </v-card>
 </template>
@@ -37,7 +37,7 @@ export default {
       },
       type: Function
     },
-    send: {
+    onClick: {
       default: () => {
         return;
       },

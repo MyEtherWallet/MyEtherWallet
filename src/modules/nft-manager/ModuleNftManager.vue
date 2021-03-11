@@ -48,7 +48,7 @@
     =====================================================================================
     -->
                   <nft-manager-details
-                    :send="send"
+                    :on-click="openSendPage"
                     :get-image-url="getImageUrl"
                     :token="token"
                   />
@@ -85,13 +85,23 @@
         </mew-tabs>
       </template>
     </mew-module>
-    <mew-toast
-      ref="toast"
-      :text="toastMsg"
-      :toast-type="toastType"
-      :duration="3000"
+    <!--
+    =====================================================================================
+      Send Nft Token Overlay
+    =====================================================================================
+    -->
+    <nft-manager-send
+      :get-image-url="getImageUrl"
+      :nft="selectedNft"
+      :on-nft-send="onNftSend"
+      :send="sendTx"
+      :disabled="!isValid"
+      :set-address="setAddress"
+      :tx-details="{
+        txFeeETH: txFeeETH,
+        txFeeUSD: txFeeUSD
+      }"
     />
-    <nft-manager-send />
   </div>
 </template>
 
@@ -100,7 +110,12 @@ import NFT from './handlers/handlerNftManager';
 import { mapGetters, mapState } from 'vuex';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  SUCCESS,
+  WARNING,
+  ERROR
+} from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
@@ -119,10 +134,9 @@ export default {
       showItems: [],
       tabActive: 1,
       tokens: [],
-      open: false,
+      onNftSend: false,
       selectedNft: {},
       addresses: [],
-      isEth: true,
       toastType: '',
       toastMsg: '',
       customGasLimit: '',
@@ -143,9 +157,11 @@ export default {
     ...mapState('global', ['online']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
+    /**
+     * Pagination
+     */
     hasPages() {
       if (this.loaded) {
-        console.error('haspages', this.nft.hasPages())
         return this.nft.hasPages();
       }
       return false;
@@ -162,13 +178,6 @@ export default {
       }
       return false;
     },
-    validValues() {
-      return !(
-        this.isValidAddress() &&
-        this.address !== '' &&
-        this.customGasLimit !== ''
-      );
-    },
     startIndex() {
       return 1 + (this.currentPage * this.countPerPage - this.countPerPage);
     },
@@ -181,9 +190,22 @@ export default {
         );
       }
       return this.tokens.length < endIdx ? endIdx : this.tokens.length;
+    },
+    /**
+     * Check values
+     */
+    isValid() {
+      return (
+        this.isValidAddress() &&
+        this.address !== '' &&
+        this.customGasLimit !== ''
+      );
     }
   },
   mounted() {
+    /**
+     * Init NFT Handler
+     */
     this.nft = new NFT({
       network: this.network,
       address: this.address,
@@ -200,15 +222,15 @@ export default {
     });
   },
   methods: {
-    send(selectedNft) {
+    openSendPage(selectedNft) {
       if (selectedNft) {
         this.selectedNft = selectedNft;
         this.estimateGas();
       }
-      this.open = !this.open;
+      this.onNftSend = !this.onNftSend;
     },
     sendTx() {
-      if (this.validValues) {
+      if (this.isValid) {
         try {
           this.nft
             .send(this.toAddress, this.selectedNft.token_id)
@@ -228,12 +250,10 @@ export default {
               );
             });
           this.updateValues();
-          this.open = !this.open;
+          this.onNftSend = !this.onNftSend;
           this.selectedNft = {};
         } catch (e) {
-          this.toastType = 'warning';
-          this.toastMsg = e.message;
-          this.$refs.toast.showToast();
+          Toast(e.message, {}, WARNING);
         }
       }
     },
@@ -286,17 +306,13 @@ export default {
             this.txFeeInETH = this.txFeeETH();
             this.txFeeInUSD = this.txFeeUSD();
           })
-          .catch(err => {
+          .catch(e => {
             this.customGasLimit = '';
-            this.toastType = 'warning';
-            this.toastMsg = err.message;
-            this.$refs.toast.showToast();
+            Toast(e.message, {}, ERROR);
           });
       } catch (e) {
         this.customGasLimit = '';
-        this.toastType = 'warning';
-        this.toastMsg = e.message;
-        this.$refs.toast.showToast();
+        Toast(e.message, {}, WARNING);
       }
     },
     isValidAddress() {
@@ -365,9 +381,7 @@ export default {
           });
         })
         .catch(e => {
-          this.toastType = 'warning';
-          this.toastMsg = e.message;
-          this.$refs.toast.showToast();
+          Toast(e.message, {}, WARNING);
         });
     }
   }
@@ -375,28 +389,10 @@ export default {
 </script>
 
 <style lang="scss">
+/**
+* TODO: add to mew components
+*/
 .v-tab {
   font-size: 14px !important;
-  // .v-tabs-items {
-  //   background-color: transparent !important;
-  // }
-
-  // .v-slide-group {
-  //   border-right: 1px solid var(--v-inputBorder-base) !important;
-  //   margin-right: 20px;
-  //   padding-right: 10px;
-  // }
-
-  // .v-tab {
-  //   text-align: left;
-  //   font-weight: 400 !important;
-  //   font-size: 14px !important;
-  //   justify-content: flex-start;
-  // }
-
-  // .v-tab--active {
-  //   font-weight: 600 !important;
-  //   border-left: 4px solid var(--v-primary-base) !important;
-  // }
 }
 </style>

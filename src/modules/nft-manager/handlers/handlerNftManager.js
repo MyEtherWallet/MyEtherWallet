@@ -117,8 +117,6 @@ export default class NFT {
   }
 
   hasPages() {
-    console.error("hello", this.currentActive.countPerPage)
-
     return this.currentActive.countPerPage < this.currentActive.getTokenCount();
   }
 
