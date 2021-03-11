@@ -47,7 +47,7 @@
       Nft Token Card Details
     =====================================================================================
     -->
-                  <nft-manager-card
+                  <nft-manager-details
                     :send="send"
                     :get-image-url="getImageUrl"
                     :token="token"
@@ -91,6 +91,7 @@
       :toast-type="toastType"
       :duration="3000"
     />
+    <nft-manager-send />
   </div>
 </template>
 
@@ -101,11 +102,13 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
-import NftManagerCard from './components/NftManagerCard';
+import NftManagerDetails from './components/NftManagerDetails';
+import NftManagerSend from './components/NftManagerSend';
 
 export default {
   components: {
-    NftManagerCard
+    NftManagerDetails,
+    NftManagerSend
   },
   data() {
     return {
