@@ -178,12 +178,12 @@ const appList = [
   },
   {
     network: AVAX,
-    prefixes: ["m/44'/9000'"],
+    prefixes: ["m/44'/60'"],
     paths: [avalanche]
   },
   {
     network: AVAXTEST,
-    prefixes: ["m/44'/9000'"],
+    prefixes: ["m/44'/60'"],
     paths: [avalanche]
   }
 ];
