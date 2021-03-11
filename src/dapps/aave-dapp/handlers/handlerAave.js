@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   depositDetails,
   borrowDetails,
@@ -10,10 +9,15 @@ import {
 
 import vuexStore from '@/core/store';
 import { mapState } from 'vuex';
-
-import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
-
+import {
+  formatUserSummaryData,
+  formatReserves,
+  normalize
+} from '@aave/protocol-js';
 import moment from 'moment';
+import BigNumber from 'bignumber.js';
+
+import AaveCalls from '../apollo/queries/queries';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -37,11 +41,10 @@ export default class AaveHandler {
     this.compositionBorrow = [];
     this.compositionCollateral = [];
     this.percentageLeft = '';
-    this.aaveCalls = new AaveCalls(this.apollo, this.address);
+    this.aaveCalls = new AaveCalls(apollo, this.address);
     this.aaveCalls.getUserData(this._userDataHandler);
     this.aaveCalls.getUsdPriceEth(this._usdPriceHandler);
     this.aaveCalls.getReserveData(this._reserveDataHandler);
-
   }
 
   sendTransaction(param) {
@@ -146,9 +149,11 @@ export default class AaveHandler {
   // aave calls
 
   getLiquidityRateHistoryUpdate(id) {
-    this.aaveCalls.getLiquidityRateHistoryUpdate(id, this._liquidityRateHandler);
+    this.aaveCalls.getLiquidityRateHistoryUpdate(
+      id,
+      this._liquidityRateHandler
+    );
   }
-
 
   // setters (?)
 
@@ -213,24 +218,24 @@ export default class AaveHandler {
   _liquidityRateHandler(res) {
     const data = res.data.userReserves;
     const rateHistory = { labels: [], stableRates: [], variableRates: [] };
-      const rayDecimals = 27;
-      const sortedData = data.sort((a, b) => a.timestamp - b.timestamp);
-      sortedData.forEach(item => {
-        const date = moment.unix(item.timestamp).format('MMM Do');
-        rateHistory.labels.push(date);
-        rateHistory.stableRates.push(
-          new BigNumber(normalize(item.stableBorrowRate, rayDecimals))
-            .times(100)
-            .toFixed(2)
-        );
-        rateHistory.variableRates.push(
-          new BigNumber(normalize(item.variableBorrowRate, rayDecimals))
-            .times(100)
-            .toFixed(2)
-        );
-      });
+    const rayDecimals = 27;
+    const sortedData = data.sort((a, b) => a.timestamp - b.timestamp);
+    sortedData.forEach(item => {
+      const date = moment.unix(item.timestamp).format('MMM Do');
+      rateHistory.labels.push(date);
+      rateHistory.stableRates.push(
+        new BigNumber(normalize(item.stableBorrowRate, rayDecimals))
+          .times(100)
+          .toFixed(2)
+      );
+      rateHistory.variableRates.push(
+        new BigNumber(normalize(item.variableBorrowRate, rayDecimals))
+          .times(100)
+          .toFixed(2)
+      );
+    });
 
-      this.rateHistory = rateHistory;
+    this.rateHistory = rateHistory;
   }
 
   _usdPriceHandler(res) {

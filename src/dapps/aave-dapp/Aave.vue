@@ -151,6 +151,7 @@
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import depositOverlay from './components/AaveDepositOverlay';
 import borrowOverlay from './components/AaveBorrowOverlay';
+import handlerAave from './handlers/handlerAave';
 
 export default {
   components: { depositOverlay, borrowOverlay },
@@ -265,6 +266,10 @@ export default {
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       }
     };
+  },
+  mounted() {
+    const handler = new handlerAave([], this.$apollo);
+    console.log(handler);
   }
 };
 </script>

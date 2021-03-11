@@ -37,15 +37,16 @@
     }
   },
   "dependencies": {
+    "@aave/protocol-js": "1.0.3",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.36-beta",
+    "@myetherwallet/mew-components": "0.5.39-beta",
     "@sentry/browser": "6.2.1",
     "@sentry/integrations": "6.2.1",
-    "@sentry/vue": "6.2.1",
     "@sentry/tracing": "6.2.1",
+    "@sentry/vue": "6.2.1",
     "@unstoppabledomains/resolution": "1.20.0",
     "@vue/babel-preset-app": "4.5.11",
     "@walletconnect/browser": "1.0.0",
