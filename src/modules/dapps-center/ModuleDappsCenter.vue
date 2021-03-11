@@ -47,6 +47,15 @@ export default {
           rightIconType: 'mew',
           rightIcon: 'ensManager',
           path: 'ENSManager'
+        },
+        {
+          title: 'Aave V1',
+          subtitle:
+            'Earn passive income on your deposited assets and borrow from a wide selection of ERC20 tokens and stablecoins',
+          tag: '#DeFi',
+          rightIconType: 'mew',
+          rightIcon: 'aave',
+          path: 'Aave'
         }
       ]
     };
