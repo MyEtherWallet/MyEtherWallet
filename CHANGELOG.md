@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Move tokens to state [#2898](https://github.com/MyEtherWallet/MyEtherWallet/pull/2898)
 - Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
 - Mobile Navigation bar implementationn for wallet, repalce mdi-text icon to svg [#2895](https://github.com/MyEtherWallet/MyEtherWallet/pull/2895)
 - Refactor access wallet, update ui to make it consistent [#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)

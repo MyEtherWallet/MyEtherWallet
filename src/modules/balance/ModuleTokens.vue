@@ -26,19 +26,11 @@
 </template>
 <script>
 import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-
 export default {
   components: {
     BalanceEmptyBlock
-  },
-  props: {
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
   },
   data() {
     return {
@@ -73,8 +65,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('wallet', ['tokensList']),
     tokensData() {
-      return this.ownersTokens
+      return this.tokensList
         .filter(item => {
           if (item.price_change_24h || item.market_cap) {
             return item;
