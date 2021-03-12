@@ -10,7 +10,7 @@ import {
 import { isAddress } from '@/core/helpers/addressUtils';
 import validateHexString from '@/core/helpers/validateHexString';
 
-export function isContractArgValid(value, solidityType) {
+const isContractArgValid = (value, solidityType) => {
   try {
     if (!value) value = '';
     if (solidityType.includes('[]')) {
@@ -33,8 +33,8 @@ export function isContractArgValid(value, solidityType) {
   } catch (e) {
     return false;
   }
-}
-export function getType(inputType) {
+};
+const getType = inputType => {
   if (!inputType) inputType = '';
   if (inputType.includes('[]')) {
     return { type: 'string', solidityType: `${inputType}` };
@@ -46,8 +46,8 @@ export function getType(inputType) {
   if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
   if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
   return { type: 'text', solidityType: string };
-}
-export function formatInput(str) {
+};
+const formatInput = str => {
   if (str[0] === '[') {
     return JSON.parse(str);
   }
@@ -55,9 +55,9 @@ export function formatInput(str) {
   return newArr.map(item => {
     return item.replace(' ', '');
   });
-}
+};
 
-export function validateABI(json) {
+const validateABI = json => {
   if (json === '') return false;
   if (Array.isArray(json)) {
     if (json.length > 0) {
@@ -75,9 +75,9 @@ export function validateABI(json) {
     }
   }
   return false;
-}
+};
 
-export function parseABI(json) {
+const parseABI = json => {
   if (json === '') return false;
   try {
     const value = JSON.parse(json);
@@ -95,11 +95,10 @@ export function parseABI(json) {
     }
     return false;
   }
-}
+};
 
-export function parseJSON(json) {
+const parseJSON = json => {
   try {
-    JSON.parse(json);
     return JSON.parse(json);
   } catch (e) {
     if (Array.isArray(json)) {
@@ -107,9 +106,9 @@ export function parseJSON(json) {
     }
     return false;
   }
-}
+};
 
-export function createTypeValidatingProxy(item) {
+const createTypeValidatingProxy = item => {
   return new Proxy(item, {
     set: (obj, prop, value) => {
       if (prop === 'value' && value !== null) {
@@ -135,4 +134,13 @@ export function createTypeValidatingProxy(item) {
       return target[prop];
     }
   });
-}
+};
+export {
+  isContractArgValid,
+  parseJSON,
+  parseABI,
+  createTypeValidatingProxy,
+  validateABI,
+  formatInput,
+  getType
+};

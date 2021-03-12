@@ -7,17 +7,16 @@
   >
     <template #moduleBody>
       <div>
-        <mew-input
-          :value="contractAddress"
-          label="Contract Address"
-          placeholder=" "
-          class="mr-3 flex-grow-1"
-          @input="setContractAddress"
-        />
         <mew-select
           :items="mergedContracts"
           label="Contract Type"
           @input="selectedContract"
+        />
+        <mew-input
+          v-model="contractAddress"
+          label="Contract Address"
+          placeholder=" "
+          class="mr-3 flex-grow-1"
         />
         <v-textarea
           v-model="abi"
@@ -25,7 +24,6 @@
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
-          @change="setAbi"
         ></v-textarea>
 
         <div class="text-center mt-3">
@@ -58,14 +56,14 @@
         <template #mewOverlayBody>
           <mew-select :label="'Method'" :items="methods" @input="methodSelect">
           </mew-select>
+          <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
           <div
-            v-for="(input, idx) in inputs"
+            v-for="(input, idx) in selectedMethod.inputs"
             :key="input.name + idx"
             class="input-item-container"
           >
             <mew-input
               v-if="getType(input.type).type !== 'radio'"
-              :disabled="noInput"
               :label="`${input.name} (${input.type})`"
               :rules="[
                 value => {
@@ -97,8 +95,11 @@
             />
           </div>
           <div class="pa-4"></div>
+          <div v-show="selectedMethod.outputs.length" class="mb-10">
+            Outputs
+          </div>
           <div
-            v-for="(output, idx) in outputs"
+            v-for="(output, idx) in selectedMethod.outputs"
             v-show="noOutput"
             :key="output.name + idx"
             class="input-item-container"
@@ -127,20 +128,12 @@
 <script>
 import { mapState } from 'vuex';
 import { isAddress } from '@/core/helpers/addressUtils';
-import store from 'store';
-import * as unit from 'ethjs-unit';
-import Contracts from './handlers/contracts';
-import tempDevAbi from './tests/contractsForDeploy/Type_Demo_ABI';
-const padLeftEven = hex => {
-  hex = hex.length % 2 !== 0 ? '0' + hex : hex;
-  return hex;
-};
-
-const sanitizeHex = hex => {
-  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
-  if (hex == '') return '0x';
-  return '0x' + padLeftEven(hex);
-};
+import {
+  parseJSON,
+  parseABI,
+  getType as getInputType,
+  isContractArgValid
+} from './handlers/common';
 
 export default {
   name: 'ModuleContractInteract',
@@ -151,115 +144,83 @@ export default {
       inputsValid: false,
       activeContract: {},
       hasInputs: false,
-      outputs: {},
       abi: [],
       contractAddress: '',
-      methods: [],
-      contractType: []
+      contractType: [],
+      selectedMethod: {
+        inputs: [],
+        outputs: []
+      }
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'network']),
     ...mapState('global', ['currentNetwork', 'gasPrice']),
     mergedContracts() {
-      const customContracts = store.get('customContracts') || [];
-      const mergedContracts = this.currentNetwork.type.contracts.concat(
-        customContracts
+      return [{ name: 'select a contract', abi: '', address: '' }].concat(
+        this.currentNetwork.type.contracts
       );
-      return [
-        { name: 'select a contract', abi: '', address: '' },
-        {
-          name: 'demo',
-          abi: tempDevAbi,
-          address: '0x98FE501cc73Ec0FA702c71BAAFc3471F4f266fAD'
-        }
-      ].concat(mergedContracts);
-    },
-    isValidAbi() {
-      try {
-        JSON.parse(this.abi);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-    isValidAddress() {
-      return isAddress(this.address);
-    },
-    noInput() {
-      return false;
     },
     noOutput() {
       return (
         !this.activeContract.hasOutputs || this.activeContract.isMethodConstant
       );
     },
-    resType() {
-      return typeof this.result;
-    },
-    inputs() {
-      return this.activeContract.selectedMethodInputs;
-    },
-    txValue() {
-      return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
+    methods() {
+      if (this.canInteract) {
+        return JSON.parse(this.abi).filter(item => {
+          if (item.type !== 'constructor' && item.type !== 'event') {
+            return item;
+          }
+        });
+      }
+      return [];
     },
     canInteract() {
-      return this.activeContract.contractActive;
+      return isAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
     }
-  },
-  mounted() {
-    this.activeContract = new Contracts(this.address, this.web3, this.gasPrice);
   },
   methods: {
     resetDefaults() {
+      this.currentContract = null;
       this.abi = '';
       this.contractAddress = '';
       this.interact = false;
       this.contractMethods = [];
-      this.selectedMethod = {};
+      this.selectedMethod = {
+        inputs: [],
+        outputs: []
+      };
       this.result = '';
       this.loading = false;
       this.value = 0;
-      this.outputs = {};
+      this.outputs = [];
       this.clearCurrency = !this.clearCurrency;
-      this.activeContract.reset();
-    },
-    getOutputs() {
-      return this.outputs;
     },
     hasOutputs() {
-      return Object.values(this.outputs).every(item => item.value !== null);
+      // return Object.values(this.outputs).every(item => item.value !== null);
     },
     write() {
-      if (this.activeContract.isMethodConstant) {
-        this.activeContract.write().then(res => {
-          this.outputs = res.outputs;
-        });
-      } else {
-        this.activeContract.write();
-      }
+      // if (this.activeContract.isMethodConstant) {
+      //   this.activeContract.write().then(res => {
+      //     this.outputs = res.outputs;
+      //   });
+      // } else {
+      //   this.activeContract.write();
+      // }
     },
+    // eslint-disable-next-line no-unused-vars
     valueInput(name, value) {
-      this.activeContract.setSelectedMethodInputValue(name, value);
-      this.inputsValid = this.activeContract.inputsValid;
-    },
-    setAbi(evt) {
-      this.abi = evt;
-      this.activeContract.setAbi(this.abi);
-    },
-    setContractAddress(evt) {
-      this.contractAddress = evt;
-      this.activeContract.setContractAddress(this.contractAddress);
+      // this.activeContract.setSelectedMethodInputValue(name, value);
+      // this.inputsValid = this.activeContract.inputsValid;
     },
     selectedContract(selected) {
-      if (selected.abi === '') {
-        this.abi = '';
-      } else {
+      if (parseABI(parseJSON(selected.abi))) {
         this.abi = JSON.stringify(selected.abi);
-        this.activeContract.setAbi(this.abi);
       }
-      this.contractAddress = selected.address;
-      this.activeContract.setContractAddress(this.contractAddress);
+      if (isAddress(selected.address)) {
+        this.contractAddress = selected.address;
+      }
     },
     closeInteract() {
       this.interact = false;
@@ -268,41 +229,23 @@ export default {
     backInteract() {
       this.interact = false;
       this.resetDefaults();
-      this.activeContract.clear();
     },
     showInteract() {
       this.interact = true;
-      this.$set(this, 'methods', this.activeContract.contractMethodNames);
+      this.currentContract = new this.web3.eth.Contract(
+        JSON.parse(this.abi),
+        this.contractAddress
+      );
     },
     methodSelect(evt) {
-      this.activeContract
-        .selectedFunction(evt)
-        .then(res => {
-          this.$set(this, 'outputs', res.outputs);
-          this.hasInputs = Object.keys(res.inputs).length > 0;
-        })
-        .catch(e => {
-          // eslint-disable-next-line
-          console.error(e);
-        });
+      if (evt.inputs && evt.outputs) this.selectedMethod = evt;
     },
 
-    isValidInput() {
-      return Contracts.utils().isContractArgValid.apply(this, arguments);
+    isValidInput(value, sType) {
+      return isContractArgValid(value, sType);
     },
-    getType() {
-      return Contracts.utils().getType.apply(this, arguments);
-    },
-
-    formatInput() {
-      return Contracts.utils().formatInput.apply(this, arguments);
-    },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
-      document.execCommand('copy');
-    },
-    deleteInput(ref) {
-      this.$refs[ref].value = '';
+    getType(type) {
+      return getInputType(type);
     }
   }
 };
