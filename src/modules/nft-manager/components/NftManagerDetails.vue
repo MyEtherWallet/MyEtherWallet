@@ -1,25 +1,22 @@
 <template>
-  <v-card
-    flat
-    color="superPrimary"
-    class="rounded-lg pa-2 d-flex align-center justify-space-between"
-  >
-    <div class="d-flex align-center">
-      <img
-        height="100"
-        :src="token.image ? token.image : getImageUrl(token)"
-        alt="nft token"
-      />
-      <div class="ml-2">{{ token.name }}</div>
-    </div>
-    <mew-button
-      class="mr-5"
-      :has-full-width="false"
-      btn-style="outline"
-      title="Send"
-      btn-size="large"
-      @click.native="onClick(token)"
+  <v-card flat color="superPrimary" class="rounded-lg pa-2 d-flex align-center">
+    <img
+      height="100"
+      :src="token.image ? token.image : getImageUrl(token)"
+      alt="nft token"
     />
+    <div
+      class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
+    >
+      <span>{{ token.name }}</span>
+      <mew-button
+        :has-full-width="false"
+        btn-style="outline"
+        title="Send"
+        btn-size="large"
+        @click.native="onClick(token)"
+      />
+    </div>
   </v-card>
 </template>
 <script>

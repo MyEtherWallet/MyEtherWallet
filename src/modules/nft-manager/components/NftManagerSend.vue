@@ -1,70 +1,32 @@
 <template>
-  <mew-overlay
-    title="Send NFT"
-    :show-overlay="onNftSend"
-    right-btn-text="Close"
-    :back="send"
-    :close="send"
-  >
-    <template #mewOverlayBody>
-      <v-card
-        min-width="600"
-        class="mt-5 d-flex align-center flex-column justify-center pa-5"
-      >
-        <img
-          height="200"
-          :src="nft.image ? nft.image : getImageUrl(nft)"
-          alt="Crypto Kitty"
-        />
-        <div class="ma-5">{{ nft.name }}</div>
-        <module-address-book @setAddress="setAddress" />
-        <mew-expand-panel
-          ref="expandPanel"
-          class="full-width"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
-              </div>
-              <i18n path="sendTx.cost-eth-usd" tag="div">
-                <span slot="eth">{{ txDetails.txFeeEth }}</span>
-                <span slot="usd">{{ txDetails.txFeeUsd }}</span>
-              </i18n>
-            </div>
-            <div>
-              <mew-input
-                :value="customGasLimit"
-                :disabled="true"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-              />
-            </div>
-
-            <mew-input
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              :disabled="true"
-              placeholder=" "
-              class="mt-10 mb-n5"
-            />
-          </template>
-        </mew-expand-panel>
-        <mew-button
-          :has-full-width="false"
-          btn-style="outline"
-          title="Confirm & send"
-          btn-size="large"
-          :disabled="disabled"
-          @click.native="send(nft)"
-        />
-      </v-card>
-    </template>
-  </mew-overlay>
+  <v-sheet class="d-flex align-center flex-column justify-center">
+    <div
+      class="cursor-pointer d-flex align-center justify-start full-width mb-4"
+    >
+      <mew-button
+        class="pl-0"
+        btn-style="transparent"
+        :title="backTxt"
+        @click.native="close"
+      />
+    </div>
+    <span class="mew-heading-2">Send Your NFT </span>
+    <img
+      height="150"
+      :src="nft.image ? nft.image : getImageUrl(nft)"
+      alt="nft image"
+    />
+    <div class="mb-4">{{ nft.name }}</div>
+    <module-address-book @setAddress="setAddress" />
+    <mew-button
+      class="mt-1 mb-3"
+      :has-full-width="false"
+      title="Send"
+      btn-size="large"
+      color-theme="primary"
+      @click.native="send(nft)"
+    />
+  </v-sheet>
 </template>
 
 <script>
@@ -75,21 +37,11 @@ export default {
     ModuleAddressBook
   },
   props: {
-    txDetails: {
-      default: () => {
-        return {};
-      },
-      type: Object
-    },
     nft: {
       default: () => {
         return {};
       },
       type: Object
-    },
-    onNftSend: {
-      default: false,
-      type: Boolean
     },
     getImageUrl: {
       default: () => {
@@ -109,6 +61,12 @@ export default {
       },
       type: Function
     },
+    close: {
+      default: () => {
+        return;
+      },
+      type: Function
+    },
     disabled: {
       default: false,
       type: Boolean
@@ -118,11 +76,15 @@ export default {
     return {
       expandPanel: [
         {
-          name: this.$t('common.advanced'),
-          subtext: this.$t('sendTx.data-gas')
+          name: this.$t('common.details')
         }
       ]
     };
+  },
+  computed: {
+    backTxt() {
+      return 'Back to ' + this.nft.description;
+    }
   }
 };
 </script>
