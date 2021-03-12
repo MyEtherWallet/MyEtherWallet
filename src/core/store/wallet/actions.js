@@ -28,6 +28,9 @@ const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
 };
+const setTokens = function ({ commit }, params) {
+  commit('SET_TOKENS', params);
+};
 
 const setAccountBalance = function ({ commit }, balance) {
   commit('SET_BALANCE', balance);
@@ -124,5 +127,6 @@ export default {
   setENS,
   setWeb3Instance,
   setBlockNumber,
-  setOwnedDomains
+  setOwnedDomains,
+  setTokens
 };

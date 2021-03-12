@@ -31,16 +31,8 @@
 </template>
 <script>
 import BigNumber from 'bignumber.js';
-
+import { mapGetters } from 'vuex';
 export default {
-  props: {
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
-  },
   data() {
     return {
       tableHeaders: [
@@ -74,8 +66,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('wallet', ['tokensList']),
     tokensData() {
-      return this.ownersTokens
+      return this.tokensList
         .filter(item => {
           if (item.price_change_24h || item.market_cap) {
             return item;
