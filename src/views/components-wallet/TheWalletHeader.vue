@@ -35,7 +35,7 @@
               </div>
             </mobile-status>
           </div> -->
-        <div class="d-flex align-center">
+        <div class="align-center d-none d-lg-block">
           <notification-overlay />
         </div>
       </div>
