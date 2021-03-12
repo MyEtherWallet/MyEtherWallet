@@ -1,5 +1,5 @@
 <template>
-  <v-card flat color="superPrimary" class="rounded-lg pa-2 d-flex align-center">
+  <v-card flat color="tableHeader" class="rounded-lg pa-2 d-flex align-center">
     <img
       height="100"
       :src="token.image ? token.image : getImageUrl(token)"

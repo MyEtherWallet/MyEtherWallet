@@ -66,6 +66,7 @@ export default class NftCollection {
   }
 
   send(to, tokenId) {
+    console.error('to', to, tokenId)
     return this.sender
       .send(to, tokenId)
       .on('transactionHash', () => {

@@ -27,7 +27,6 @@
           v-if="initLoaded"
           :items="tabs"
           :has-underline="$vuetify.breakpoint.smAndDown"
-          :is-vertical="$vuetify.breakpoint.mdAndUp"
           @onTab="onTab"
         >
           <template
@@ -221,6 +220,7 @@ export default {
       this.toggleNftSend();
     },
     sendTx() {
+      console.error('hello', this.isValid)
       if (this.isValid) {
         try {
           this.nft
