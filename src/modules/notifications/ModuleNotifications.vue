@@ -2,7 +2,10 @@
   <div>
     <div class="d-flex align-center">
       <v-btn icon @click="openNotifications = true">
-        <img src="@/assets/images/icons/icon-notifications.svg" />
+        <img
+          src="@/assets/images/icons/icon-notifications.svg"
+          :class="[invertIcon ? 'make-white-svg' : '']"
+        />
       </v-btn>
       <div
         v-if="notificationCount > 0"
@@ -96,6 +99,12 @@ import Swapper from '@/modules/swap/handlers/handlerSwap';
 import timeAgo from '@/core/helpers/timeAgo';
 export default {
   name: 'ModuleNotifications',
+  props: {
+    invertIcon: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       selected: 'all',
