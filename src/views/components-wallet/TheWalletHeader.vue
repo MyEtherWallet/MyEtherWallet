@@ -35,7 +35,7 @@
               </div>
             </mobile-status>
           </div> -->
-        <div class="d-flex align-center">
+        <div class="align-center d-none d-lg-block">
           <notification-overlay />
         </div>
       </div>
@@ -47,7 +47,7 @@
 // import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import { mapState } from 'vuex';
-import { MEW_CONNECT } from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 
 export default {
   components: {
@@ -63,7 +63,7 @@ export default {
   computed: {
     ...mapState('wallet', ['identifier']),
     isMewConnect() {
-      return this.identifier === MEW_CONNECT;
+      return this.identifier === WALLET_TYPES.MEW_CONNECT;
     }
   }
 };
