@@ -26,25 +26,8 @@
 </template>
 <script>
 import BigNumber from 'bignumber.js';
-<<<<<<< HEAD
 import { mapGetters } from 'vuex';
 export default {
-=======
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-
-export default {
-  components: {
-    BalanceEmptyBlock
-  },
-  props: {
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
-  },
->>>>>>> 38ecac2cea47f6a78f8d90718a96d6ea7f8eb97a
   data() {
     return {
       tableHeaders: [
