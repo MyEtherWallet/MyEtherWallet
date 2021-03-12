@@ -70,7 +70,7 @@
                   return isValidInput(value, getType(input.type).solidityType);
                 }
               ]"
-              @input="valueInput(input.name, $event)"
+              @input="valueInput(idx, $event)"
             />
             <div
               v-if="getType(input.type).type === 'radio'"
@@ -85,13 +85,13 @@
               </div>
             </div>
           </div>
-          <div v-show="hasInputs" class="text-center mt-3">
+          <div class="text-center mt-3">
             <mew-button
-              :title="hasOutputs() ? 'Result' : 'Write'"
+              :title="isViewFunction ? 'Read' : 'Write'"
               :has-full-width="false"
               button-size="xlarge"
-              :disabled="!inputsValid"
-              @click.native="write"
+              :disabled="!inputsValid && !!selectedMethod.inputs.length"
+              @click.native="readWrite"
             />
           </div>
           <div class="pa-4"></div>
@@ -100,22 +100,22 @@
           </div>
           <div
             v-for="(output, idx) in selectedMethod.outputs"
-            v-show="noOutput"
+            v-show="selectedMethod.outputs.length"
             :key="output.name + idx"
             class="input-item-container"
           >
             <mew-input
               v-if="getType(output.type).type !== 'radio'"
+              :value="output.value"
               :disabled="true"
               :label="`${output.name} (${output.type})`"
-              :value="output.value"
               class="non-bool-input"
             />
             <mew-input
               v-if="getType(output.type).type === 'radio'"
+              :value="outputValues[idx]"
               :disabled="true"
               :label="`${output.name} (${output.type})`"
-              :value="output.value"
               class="non-bool-input"
             />
           </div>
@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapState } from 'vuex';
 import { isAddress } from '@/core/helpers/addressUtils';
 import {
@@ -150,12 +151,22 @@ export default {
       selectedMethod: {
         inputs: [],
         outputs: []
-      }
+      },
+      outputValues: []
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'network']),
     ...mapState('global', ['currentNetwork', 'gasPrice']),
+    isViewFunction() {
+      return (
+        this.selectedMethod.constant ||
+        this.selectedMethod.stateMutability === 'view'
+      );
+    },
+    isNoInputViewFunction() {
+      return this.isViewFunction && this.selectedMethod.inputs.length === 0;
+    },
     mergedContracts() {
       return [{ name: 'select a contract', abi: '', address: '' }].concat(
         this.currentNetwork.type.contracts
@@ -197,22 +208,45 @@ export default {
       this.outputs = [];
       this.clearCurrency = !this.clearCurrency;
     },
-    hasOutputs() {
-      // return Object.values(this.outputs).every(item => item.value !== null);
+    readWrite() {
+      const params = [];
+      for (const _input of this.selectedMethod.inputs)
+        params.push(_input.value);
+      const caller = this.currentContract.methods[
+        this.selectedMethod.name
+      ].apply(this, params);
+      if (this.isViewFunction) {
+        caller.call().then(result => {
+          if (this.selectedMethod.outputs.length === 1) {
+            this.selectedMethod.outputs[0].value = result;
+            Vue.set(
+              this.selectedMethod.outputs,
+              0,
+              this.selectedMethod.outputs[0]
+            );
+          } else if (this.selectedMethod.outputs.length > 1) {
+            this.selectedMethod.outputs.forEach((out, idx) => {
+              out.value = result[idx];
+              Vue.set(this.selectedMethod.outputs, idx, out);
+            });
+          }
+        });
+      } else {
+        caller.send({ from: this.address });
+      }
     },
-    write() {
-      // if (this.activeContract.isMethodConstant) {
-      //   this.activeContract.write().then(res => {
-      //     this.outputs = res.outputs;
-      //   });
-      // } else {
-      //   this.activeContract.write();
-      // }
-    },
-    // eslint-disable-next-line no-unused-vars
-    valueInput(name, value) {
-      // this.activeContract.setSelectedMethodInputValue(name, value);
-      // this.inputsValid = this.activeContract.inputsValid;
+    valueInput(idx, value) {
+      this.selectedMethod.inputs[idx].value = value;
+      this.inputsValid = true;
+      for (const _input of this.selectedMethod.inputs) {
+        if (
+          !this.isValidInput(
+            _input.value,
+            this.getType(_input.type).solidityType
+          )
+        )
+          this.inputsValid = false;
+      }
     },
     selectedContract(selected) {
       if (parseABI(parseJSON(selected.abi))) {
@@ -238,7 +272,12 @@ export default {
       );
     },
     methodSelect(evt) {
-      if (evt.inputs && evt.outputs) this.selectedMethod = evt;
+      if (evt.inputs && evt.outputs) {
+        this.selectedMethod = evt;
+        this.selectedMethod.inputs.forEach(v => (v.value = ''));
+        this.selectedMethod.outputs.forEach(v => (v.value = ''));
+        this.outputValues = [];
+      }
     },
 
     isValidInput(value, sType) {

@@ -94,7 +94,6 @@
 <script>
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
-import Contracts from './handlers/contracts';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 export default {
@@ -125,9 +124,6 @@ export default {
     payableConstructor() {
       return this.activeContract.payableConstructor;
     }
-  },
-  mounted() {
-    this.activeContract = new Contracts(this.address, this.web3, this.gasPrice);
   },
   methods: {
     showInteract() {
@@ -166,7 +162,7 @@ export default {
       this.contractName = name;
     },
     getType() {
-      return Contracts.utils().getType.apply(this, arguments);
+      // return Contracts.utils().getType.apply(this, arguments);
     }
   }
 };
