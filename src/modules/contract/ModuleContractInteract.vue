@@ -129,6 +129,7 @@
 import Vue from 'vue';
 import { mapState } from 'vuex';
 import { isAddress } from '@/core/helpers/addressUtils';
+import { stringToArray } from '@/core/helpers/common';
 import {
   parseJSON,
   parseABI,
@@ -172,11 +173,6 @@ export default {
         this.currentNetwork.type.contracts
       );
     },
-    noOutput() {
-      return (
-        !this.activeContract.hasOutputs || this.activeContract.isMethodConstant
-      );
-    },
     methods() {
       if (this.canInteract) {
         return JSON.parse(this.abi).filter(item => {
@@ -210,8 +206,11 @@ export default {
     },
     readWrite() {
       const params = [];
-      for (const _input of this.selectedMethod.inputs)
-        params.push(_input.value);
+      for (const _input of this.selectedMethod.inputs) {
+        if (_input.type.includes('[]'))
+          params.push(stringToArray(_input.value));
+        else params.push(_input.value);
+      }
       const caller = this.currentContract.methods[
         this.selectedMethod.name
       ].apply(this, params);

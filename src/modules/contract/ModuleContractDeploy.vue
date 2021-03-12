@@ -8,36 +8,51 @@
     <template #moduleBody>
       <div>
         <mew-input
-          label="Byte code"
+          v-model="byteCode"
+          label="Bytecode"
           placeholder=" "
-          @input="byteCodeInput($event)"
+          :rules="[
+            value => {
+              return isValidByteCodeInput(value);
+            }
+          ]"
         />
-
-        <v-textarea
+        <mew-input
+          v-model="abiInterface"
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
           value=""
           placeholder=" "
-          @input="abiInput($event)"
-        ></v-textarea>
+          :rules="[
+            value => {
+              return isValidABI(value);
+            }
+          ]"
+        ></mew-input>
         <mew-input
+          v-model="contractName"
           label="Contract name"
           placeholder=" "
-          @input="setContractName($event)"
         />
-        <div v-show="showInputs">
+        <div v-show="constructorInputs.length">
+          <div class="mb-10">Constructor Inputs</div>
           <div
-            v-for="(input, idx) in inputs"
+            v-for="(input, idx) in constructorInputs"
             :key="input.name + idx"
             class="input-item-container"
           >
             <mew-input
               v-if="getType(input.type).type !== 'radio'"
-              :disabled="noInput"
+              v-model="input.value"
               :label="`${input.name} (${input.type})`"
               class="non-bool-input"
-              @input="valueInput(input.name, $event)"
+              :rules="[
+                value => {
+                  return isValidInput(value, getType(input.type).solidityType);
+                }
+              ]"
+              @input="valueInput(idx, $event)"
             />
             <div
               v-if="getType(input.type).type === 'radio'"
@@ -47,7 +62,7 @@
                 <mew-switch
                   :value="input.value"
                   :label="input.name"
-                  @input="valueInput(input.name, $event)"
+                  @input="valueInput(idx, $event)"
                 />
                 <mew-checkbox
                   v-model="input.value"
@@ -67,14 +82,17 @@
                 />
               </div>
             </div>
-            <!--              <mew-input :label="`${input.name} (${input.type})`"> </mew-input>-->
           </div>
           <mew-input
-            v-if="payableConstructor"
-            :disabled="noInput"
+            v-if="isContructorPayable"
+            v-model="ethAmount"
+            :rules="[
+              value => {
+                return isETHValue(value);
+              }
+            ]"
             :label="`value (ETH)`"
             class="non-bool-input"
-            @input="ethPayable($event)"
           />
         </div>
         <div class="text-center mt-3">
@@ -92,29 +110,62 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapState } from 'vuex';
 import * as unit from 'ethjs-unit';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
-
+import validateHexString from '@/core/helpers/validateHexString';
+import {
+  parseJSON,
+  parseABI,
+  getType as getInputType,
+  isContractArgValid
+} from './handlers/common';
+import { stringToArray } from '@/core/helpers/common';
+import { toWei, toBN, toHex } from 'web3-utils';
 export default {
   name: 'ModuleContractDeploy',
   components: {},
   data() {
     return {
       contractName: '',
-      show: false,
-      activeContract: {},
-      noInput: false,
-      canDeploy: false,
-      inputs: {},
-      ethValue: 0,
-      abi: [],
-      methods: []
+      byteCode: '',
+      byteCodeHex: '',
+      abiInterface: '',
+      inputsValid: false,
+      ethAmount: '0'
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['currentNetwork', 'gasPrice']),
+
+    canDeploy() {
+      return (
+        this.byteCodeHex !== '' &&
+        this.isValidByteCodeInput(this.byteCodeHex) &&
+        this.isValidABI(this.abiInterface) &&
+        (this.getConstructor(JSON.parse(this.abiInterface)).inputs.length ===
+          0 ||
+          this.inputsValid) &&
+        (this.isContructorPayable === false || this.isETHValue(this.ethAmount))
+      );
+    },
+    constructorInputs() {
+      if (this.isValidABI(this.abiInterface)) {
+        return this.getConstructor(JSON.parse(this.abiInterface)).inputs;
+      }
+      return [];
+    },
+    isContructorPayable() {
+      if (this.isValidABI(this.abiInterface)) {
+        return (
+          this.getConstructor(JSON.parse(this.abiInterface)).stateMutability ===
+          'payable'
+        );
+      }
+      return false;
+    },
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     },
@@ -125,44 +176,88 @@ export default {
       return this.activeContract.payableConstructor;
     }
   },
+  watch: {
+    abiInterface() {
+      this.constructorInputs.forEach((i, idx) => {
+        this.constructorInputs[idx].value = '';
+        Vue.set(this.constructorInputs, idx, this.constructorInputs[idx]);
+      });
+    }
+  },
   methods: {
-    showInteract() {
-      this.show = !this.show;
+    isValidByteCodeInput(val) {
+      if (validateHexString(val)) {
+        this.byteCodeHex = sanitizeHex(val);
+        return true;
+      }
+      try {
+        const parsed = JSON.parse(val);
+        if (validateHexString('0x' + parsed.object)) {
+          this.byteCodeHex = '0x' + parsed.object;
+          return true;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+    isValidABI(val) {
+      return !!parseJSON(val) && !!parseABI(parseJSON(val));
+    },
+    getConstructor(abi) {
+      for (const method of abi) {
+        if (method.type === 'constructor') return method;
+      }
+      return false;
     },
     deploy() {
-      this.activeContract.deploy(this.ethValue, this.contractName);
-      this.activeContract.clear();
-      this.inputs = {};
-      this.canDeploy = false;
+      const contract = new this.web3.eth.Contract(
+        JSON.parse(this.abiInterface)
+      );
+      const params = [];
+      for (const _input of this.constructorInputs) {
+        if (_input.type.includes('[]'))
+          params.push(stringToArray(_input.value));
+        else params.push(_input.value);
+      }
+      contract
+        .deploy({
+          data: this.byteCodeHex,
+          arguments: params
+        })
+        .send({
+          from: this.address,
+          value: this.isContructorPayable
+            ? toHex(toBN(toWei(this.ethAmount)))
+            : '0x00'
+        });
     },
-    byteCodeInput(value) {
-      this.activeContract.setByteCode(value);
-      if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
-        this.getInputs();
+    valueInput(idx, value) {
+      this.constructorInputs[idx].value = value;
+      this.inputsValid = true;
+      for (const _input of this.constructorInputs) {
+        if (
+          !this.isValidInput(
+            _input.value,
+            this.getType(_input.type).solidityType
+          )
+        )
+          this.inputsValid = false;
       }
     },
-    abiInput(value) {
-      this.activeContract.setAbi(value);
-      if (this.activeContract.abiValid && this.activeContract.byteCodeValid) {
-        this.getInputs();
+    isETHValue(val) {
+      try {
+        toWei(val, 'ether');
+        return true;
+      } catch (e) {
+        return false;
       }
     },
-    getInputs() {
-      this.inputs = this.activeContract.constructorInputs;
-      this.canDeploy = this.activeContract.canDeploy;
+    getType(type) {
+      return getInputType(type);
     },
-    valueInput(name, value) {
-      this.activeContract.setDeployArg(name, value);
-      this.canDeploy = this.activeContract.canDeploy;
-    },
-    ethPayable(value) {
-      this.ethValue = value;
-    },
-    setContractName(name) {
-      this.contractName = name;
-    },
-    getType() {
-      // return Contracts.utils().getType.apply(this, arguments);
+    isValidInput(value, sType) {
+      return isContractArgValid(value, sType);
     }
   }
 };
