@@ -142,6 +142,7 @@ export default {
   components: {},
   data() {
     return {
+      currentContract: null,
       interact: false,
       inputsValid: false,
       activeContract: {},
@@ -190,19 +191,13 @@ export default {
   methods: {
     resetDefaults() {
       this.currentContract = null;
-      this.abi = '';
+      this.abi = [];
       this.contractAddress = '';
       this.interact = false;
-      this.contractMethods = [];
       this.selectedMethod = {
         inputs: [],
         outputs: []
       };
-      this.result = '';
-      this.loading = false;
-      this.value = 0;
-      this.outputs = [];
-      this.clearCurrency = !this.clearCurrency;
     },
     readWrite() {
       const params = [];
