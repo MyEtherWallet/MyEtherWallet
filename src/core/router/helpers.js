@@ -1,4 +1,11 @@
 import xss from 'xss';
+import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers';
+
+const ACCESS_VALID_OVERLAYS = {
+  HARDWARE: 'hardware',
+  MOBILE: 'mobile',
+  SOFTWARE: 'software'
+};
 
 const stripQuery = queryObj => {
   const newObj = {};
@@ -44,14 +51,11 @@ const createRouteGuard = (to, from, next) => {
 const accessWalletProps = route => {
   if (Object.keys(route.query).length > 0) {
     const { type } = stripQuery(route.query);
-    const walletType = type ? DocumentType : '';
-    const isSoftware =
-      route.params && route.params.overlay && route.params.overlay === 'hardw'
-        ? true
-        : false;
-
+    const walletType = type ? type : '';
+    const overlay =
+      route.params && route.params.overlay ? route.params.overlay : '';
     return {
-      showSoftwareModule: isSoftware,
+      overlay: overlay,
       type: walletType
     };
   }
@@ -61,8 +65,7 @@ const accessRouteGuard = (to, from, next) => {
   if (to.params.overlay === undefined) {
     next();
   } else {
-    const validOverlays = ['hardware', 'mobile', 'software'];
-    if (to.query.type === validOverlays[0]) {
+    if (to.params.overlay === ACCESS_VALID_OVERLAYS.HARDWARE) {
       const validTypes = [
         'overview',
         'ledger',
@@ -81,7 +84,7 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validOverlays[1]) {
+    if (to.params.overlay === ACCESS_VALID_OVERLAYS.MOBILE) {
       const validTypes = ['overview'];
       if (validTypes[0] === to.query.type) {
         next();
@@ -89,9 +92,8 @@ const accessRouteGuard = (to, from, next) => {
         next('*');
       }
     }
-    if (to.query.type === validOverlays[2]) {
-      const validTypes = ['keystore', 'mnemonic', 'private-key', 'overview'];
-      if (validTypes.includes(to.query.type)) {
+    if (to.params.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE) {
+      if (Object.values(SOFTWARE_WALLET_TYPES).includes(to.query.type)) {
         next();
       } else {
         next('*');
@@ -134,6 +136,7 @@ export {
   createRouteGuard,
   accessWalletProps,
   accessRouteGuard,
+  ACCESS_VALID_OVERLAYS,
   swapProps,
   swapRouterGuard
 };

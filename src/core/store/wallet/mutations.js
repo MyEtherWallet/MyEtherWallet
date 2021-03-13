@@ -36,6 +36,10 @@ const SET_OWNED_DOMAINS = function (state, ensDomains) {
   state.ensDomains = ensDomains;
 };
 
+const SET_TOKENS = function (state, tokens) {
+  state.tokens = tokens;
+};
+
 export default {
   REMOVE_WALLET,
   SET_WALLET,
@@ -43,5 +47,6 @@ export default {
   SET_ENS,
   SET_WEB3_INSTANCE,
   SET_BLOCK_NUMBER,
-  SET_OWNED_DOMAINS
+  SET_OWNED_DOMAINS,
+  SET_TOKENS
 };
