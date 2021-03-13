@@ -284,3 +284,9 @@ h6 {
 .preset--mobile-max-width {
   max-width: 420px;
 }
+
+/* ========== Convert SVG to white ========== */
+
+.make-white-svg {
+  filter: brightness(10);
+}

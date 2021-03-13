@@ -144,12 +144,6 @@ export default {
       type: String,
       default: ''
     },
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
     prefilledGasLimit: {
       type: String,
       default: '21000'
@@ -181,7 +175,7 @@ export default {
     ...mapState('global', ['online']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     amtRules() {
       return [
         value => !!value || "Amount can't be empty!",
@@ -258,7 +252,7 @@ export default {
         price_change_24h: null
       };
 
-      const copiedTokens = this.ownersTokens.slice();
+      const copiedTokens = this.tokensList.slice();
       copiedTokens.unshift(eth);
       return copiedTokens;
     },
@@ -293,7 +287,7 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    ownersTokens: {
+    tokensList: {
       handler: function (newVal) {
         this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
       },
@@ -370,7 +364,7 @@ export default {
     prefillForm() {
       if (this.isPrefilled) {
         const foundToken = this.tokensymbol
-          ? this.ownersTokens.find(item => {
+          ? this.tokensList.find(item => {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;

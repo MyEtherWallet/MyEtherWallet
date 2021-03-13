@@ -104,6 +104,9 @@ export default {
   methods: {
     routeTo(route) {
       this.$router.push(route);
+    },
+    openMobile() {
+      this.openMobileMenu = true;
     }
   }
 };

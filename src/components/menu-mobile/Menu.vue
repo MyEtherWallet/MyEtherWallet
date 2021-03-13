@@ -30,16 +30,22 @@
             src="@/assets/images/icons/logo-mew.png"
             max-height="36"
             max-width="130"
+            @click="pushRoute({ name: 'Home' })"
           />
         </v-toolbar>
 
         <v-list color="expandHeader" dark class="pt-12">
           <template v-for="(item, index) in menu">
             <v-list-item v-if="!item.sub" :key="index" class="mb-3">
-              <v-list-item-content v-if="item.to">
+              <v-list-item-content v-if="item.to" @click="pushRoute(item.to)">
                 <div class="mew-heading-2">{{ item.label }}</div>
               </v-list-item-content>
-              <a v-if="item.url" :href="item.url" target="_blanks">
+              <a
+                v-if="item.url"
+                :href="item.url"
+                target="_blanks"
+                @click="isOpen = false"
+              >
                 <v-list-item-content class="white--text">
                   <div class="mew-heading-2">{{ item.label }}</div>
                 </v-list-item-content>
@@ -48,7 +54,7 @@
 
             <v-list-group
               v-if="item.sub"
-              :key="item + '2'"
+              :key="index"
               prepend-icon=""
               color="expandHeader"
               class="mb-3"
@@ -59,20 +65,25 @@
                 </v-list-item-content>
               </template>
               <v-list-item
-                v-for="child in item.sub"
-                :key="child.label"
+                v-for="(child, ckey) in item.sub"
+                :key="ckey"
                 style="background-color: var(--v-expandHeader-base) !important"
                 dense
                 class="pl-4"
-                :to="child.to ? child.to : undefined"
               >
                 <v-list-item-content>
                   <v-list-item-title
                     v-if="child.to"
                     class="pl-13 white--text font-weight-regular mew-body"
+                    @click="pushRoute(child.to)"
                     v-text="child.label"
                   ></v-list-item-title>
-                  <a v-if="child.url" :href="child.url" target="_blanks">
+                  <a
+                    v-if="child.url"
+                    :href="child.url"
+                    target="_blanks"
+                    @click="isOpen = false"
+                  >
                     <v-list-item-title
                       class="pl-13 white--text font-weight-regular mew-body"
                       v-text="child.label"
@@ -177,10 +188,8 @@ export default {
   }),
   methods: {
     pushRoute(to) {
-      if (this.$route.name !== to.name) {
-        this.$router.push(to).catch(() => true);
-      }
-      this.$emit('input');
+      this.$router.push(to).catch(() => true);
+      this.isOpen = false;
     }
   }
 };
