@@ -19,25 +19,31 @@
       temporary
       color="expandHeader"
     >
-      <v-card>
-        <v-toolbar flat color="expandHeader" dark>
-          <v-btn class="exit" x-large icon @click="isOpen = false">
+      <v-card flat class="px-2" color="expandHeader">
+        <v-toolbar flat color="expandHeader" dark class="pt-7">
+          <v-btn class="exit mr-n12" x-large icon @click="isOpen = false">
             <v-icon>mdi-window-close</v-icon>
           </v-btn>
 
           <v-img
+            class="mx-auto"
             src="@/assets/images/icons/logo-mew.png"
             max-height="36"
             max-width="130"
           />
         </v-toolbar>
 
-        <v-list color="expandHeader" dark>
+        <v-list color="expandHeader" dark class="pt-12">
           <template v-for="(item, index) in menu">
-            <v-list-item :key="index">
-              <v-list-item-content>
-                <v-list-item-title>{{ item.label }}</v-list-item-title>
+            <v-list-item v-if="!item.sub" :key="index" class="mb-3">
+              <v-list-item-content v-if="item.to">
+                <div class="mew-heading-2">{{ item.label }}</div>
               </v-list-item-content>
+              <a v-if="item.url" :href="item.url" target="_blanks">
+                <v-list-item-content class="white--text">
+                  <div class="mew-heading-2">{{ item.label }}</div>
+                </v-list-item-content>
+              </a>
             </v-list-item>
 
             <v-list-group
@@ -45,27 +51,33 @@
               :key="item + '2'"
               prepend-icon=""
               color="expandHeader"
+              class="mb-3"
             >
               <template #activator>
                 <v-list-item-content>
-                  <v-list-item-title
-                    class="white--text font-weight-regular mew-body"
-                    v-text="item.label"
-                  ></v-list-item-title>
+                  <div class="mew-heading-2">{{ item.label }}</div>
                 </v-list-item-content>
               </template>
               <v-list-item
                 v-for="child in item.sub"
                 :key="child.label"
+                style="background-color: var(--v-expandHeader-base) !important"
                 dense
                 class="pl-4"
-                :to="child.to"
+                :to="child.to ? child.to : undefined"
               >
                 <v-list-item-content>
                   <v-list-item-title
+                    v-if="child.to"
                     class="pl-13 white--text font-weight-regular mew-body"
                     v-text="child.label"
                   ></v-list-item-title>
+                  <a v-if="child.url" :href="child.url" target="_blanks">
+                    <v-list-item-title
+                      class="pl-13 white--text font-weight-regular mew-body"
+                      v-text="child.label"
+                    ></v-list-item-title>
+                  </a>
                 </v-list-item-content>
               </v-list-item>
             </v-list-group>
@@ -159,7 +171,8 @@ export default {
             to: { name: 'Tools', query: { tab: '4' } }
           }
         ]
-      }
+      },
+      { label: 'Buy ETH', url: 'https://ccswap.myetherwallet.com' }
     ]
   }),
   methods: {
@@ -183,6 +196,9 @@ export default {
   .v-list-group__header,
   .v-list-item {
     border-top: 0 !important;
+  }
+  .v-list-item {
+    background-color: var(--v-expandHeader-base) !important;
   }
 }
 </style>
