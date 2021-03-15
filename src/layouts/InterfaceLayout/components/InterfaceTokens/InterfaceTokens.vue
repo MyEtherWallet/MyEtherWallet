@@ -82,7 +82,13 @@
               >
                 {{ token.balance }}
               </td>
-              <td v-else>{{ token.balance }}</td>
+              <td v-else>
+                {{ token.balance }}
+                <i
+                  class="fa fa-refresh clickable"
+                  @click="getSpecificTokenBalance(token)"
+                />
+              </td>
             </tr>
           </table>
 
