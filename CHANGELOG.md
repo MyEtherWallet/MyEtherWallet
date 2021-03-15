@@ -1,6 +1,6 @@
 ### Bug
 
-* fix send offline helper issue with bignumber [#2906](https://github.com/MyEtherWallet/MyEtherWallet/pull/2906)
+* fix send offline helper issue with bignumber [#2907](https://github.com/MyEtherWallet/MyEtherWallet/pull/2907)
 
 
 ### Release v5.7.23-hotfix.1
