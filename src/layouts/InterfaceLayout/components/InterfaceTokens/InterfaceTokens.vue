@@ -72,7 +72,12 @@
                   "
                   rel="noopener noreferrer"
                   target="_blank"
-                  >{{ token.symbol }}</a
+                >
+                  <span>{{
+                    token.symbol.length > 10
+                      ? `${token.symbol.substr(0, 15)}...`
+                      : token.symbol
+                  }}</span></a
                 >
               </td>
               <td
@@ -82,7 +87,13 @@
               >
                 {{ token.balance }}
               </td>
-              <td v-else>{{ token.balance }}</td>
+              <td v-else>
+                {{
+                  token.balance.length > 10
+                    ? `${token.balance.substr(0, 25)}...`
+                    : token.balance
+                }}
+              </td>
             </tr>
           </table>
 

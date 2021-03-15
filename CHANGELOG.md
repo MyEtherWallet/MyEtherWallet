@@ -2,9 +2,16 @@
 
 * fix send offline helper issue with bignumber [#2906](https://github.com/MyEtherWallet/MyEtherWallet/pull/2906)
 
+
+### Release v5.7.23-hotfix.1
+
+### Bug
+
+* Fix weird token issue when tokens has way too long of a symbol [#2894](https://github.com/MyEtherWallet/MyEtherWallet/pull/2894)
 ### Release v5.7.23
 
 ### Bug
+
 * Remove tokens with no balance so users can manually add and load tokens [#2892](https://github.com/MyEtherWallet/MyEtherWallet/pull/2892)
 * Fix checking gas when swap from is not on ethereum [#2879](https://github.com/MyEtherWallet/MyEtherWallet/pull/2879)
 
