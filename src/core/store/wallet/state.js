@@ -8,7 +8,8 @@ const state = {
   isHardware: false,
   instance: null,
   web3: {},
-  ensDomains: null
+  ensDomains: null,
+  tokens: []
 };
 
 export default state;

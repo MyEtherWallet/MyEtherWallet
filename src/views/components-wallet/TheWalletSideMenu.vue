@@ -1,6 +1,7 @@
 <template>
-  <div class="mew--wallet-side-menu">
+  <div>
     <v-navigation-drawer
+      v-model="navOpen"
       app
       class="wallet-sidemenu"
       :src="background"
@@ -9,13 +10,22 @@
     >
       <template #prepend>
         <div class="pa-5 pb-3">
-          <div class="mt-2 mb-4">
+          <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: 'Dashboard' }">
               <img width="120" src="@/assets/images/icons/logo-mew.png" />
             </router-link>
+            <!--
+            =====================================================================================
+             Close Navigation Bar for xs-md screens
+            =====================================================================================
+            -->
+            <v-btn icon class="d-block d-lg-none" @click="navOpen = false">
+              <v-icon color="white">mdi-close</v-icon>
+            </v-btn>
           </div>
           <balance-card />
           <mew-super-button
+            icon
             font-class="mew-body"
             class="mt-3 px-3"
             title="Buy ETH here"
@@ -145,10 +155,34 @@
       :on-settings="onSettings"
       @closeSettings="toggleSettings"
     />
+    <!--
+    =====================================================================================
+      Navigation Bar on top of the screen for xs-md screens
+      <app-btn-menu /> opens navigation drawer
+    =====================================================================================
+    -->
+    <v-system-bar
+      v-if="!$vuetify.breakpoint.lgAndUp"
+      color="#0b1a40"
+      app
+      :height="60"
+      class="d-flex d-lg-none"
+    >
+      <v-row class="pa-3 align-center justify-space-between">
+        <app-btn-menu :menu-method="openNavigation" class="mr-3" />
+        <router-link :to="{ name: 'Dashboard' }">
+          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        </router-link>
+        <v-spacer />
+        <module-notifications invert-icon />
+      </v-row>
+    </v-system-bar>
   </div>
 </template>
 
 <script>
+import AppBtnMenu from '@/core/components/AppBtnMenu';
+import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
 import send from '@/assets/images/icons/icon-send-enable.png';
@@ -164,12 +198,15 @@ import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 
 export default {
   components: {
+    AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ThemeSwitch
+    ThemeSwitch,
+    ModuleNotifications
   },
   data() {
     return {
+      navOpen: null,
       menuSelected: 0,
       version: process.env.VERSION,
       background: background,
@@ -245,6 +282,9 @@ export default {
     };
   },
   methods: {
+    openNavigation() {
+      this.navOpen = true;
+    },
     toggleSettings() {
       this.onSettings = !this.onSettings;
     },
@@ -265,6 +305,11 @@ export default {
 </script>
 
 <style lang="scss">
+.v-system-bar .v-icon {
+  font-size: 36px !important;
+  color: white !important;
+}
+
 .wallet-sidemenu {
   .v-list-item--link {
     border-top: none;
