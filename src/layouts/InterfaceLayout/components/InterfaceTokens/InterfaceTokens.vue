@@ -93,6 +93,10 @@
                     ? `${token.balance.substr(0, 25)}...`
                     : token.balance
                 }}
+                <i
+                  class="fa fa-refresh clickable"
+                  @click="getSpecificTokenBalance(token)"
+                />
               </td>
             </tr>
           </table>
