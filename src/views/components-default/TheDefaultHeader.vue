@@ -5,16 +5,7 @@
     <v-container fluid class="d-flex align-center py-2">
       <v-row align="center" no-gutters>
         <v-col class="d-flex d-md-none" cols="4">
-          <mew-button
-            class="mobile-menu-button ml-n2 mr-n1"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-text"
-            icon-type="mdi"
-            icon-align="left"
-            style="border-radius: 100% !important"
-            @click.native="openMobileMenu = true"
-          />
+          <app-btn-menu :menu-method="openMobile" />
         </v-col>
         <v-col class="pl-md-14" cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
@@ -74,10 +65,11 @@
 <script>
 import mewTools from '@/components/mewTools/MewTools';
 import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
+import AppBtnMenu from '@/core/components/AppBtnMenu';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, MenuMobile },
+  components: { mewTools, MenuMobile, AppBtnMenu },
   data: () => ({
     mewTools: false,
     openMobileMenu: false,
@@ -132,6 +124,9 @@ export default {
   methods: {
     routeTo(route) {
       this.$router.push(route);
+    },
+    openMobile() {
+      this.openMobileMenu = true;
     }
   }
 };

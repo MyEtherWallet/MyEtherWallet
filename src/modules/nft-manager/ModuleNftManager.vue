@@ -26,6 +26,7 @@
         <mew-tabs
           v-if="initLoaded"
           :items="tabs"
+          :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
           @onTab="onTab"
         >
@@ -333,13 +334,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-/**
-* TODO: add to mew components
-*/
-.v-tab {
-  font-size: 14px !important;
-  padding-right: 0 !important;
-}
-</style>
