@@ -586,14 +586,24 @@ export default {
           this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
           const asJson = tx.toJSON();
           this.to = asJson[positions.to];
-          this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toFixed();
-          this.nonce = new BigNumber(asJson[positions.nonce]).toFixed();
-          this.value = new BigNumber(asJson[positions.value]).toFixed();
+          this.gasLimit =
+            web3Utils.hexToNumber(asJson[positions.gasLimit]) > 0
+              ? new BigNumber(asJson[positions.gasLimit]).toFixed()
+              : '0';
+          this.nonce =
+            web3Utils.hexToNumber(asJson[positions.nonce]) > 0
+              ? new BigNumber(asJson[positions.nonce]).toFixed()
+              : '0';
+          this.value =
+            web3Utils.hexToNumber(asJson[positions.value]) > 0
+              ? new BigNumber(asJson[positions.value]).toFixed()
+              : '0';
           this.data = asJson[positions.data];
           this.minAccountBalance = tx.getUpfrontCost().toString();
-          this.gasPrice = new BigNumber(
-            Misc.sanitizeHex(tx.gasPrice.toString('hex'))
-          ).toFixed();
+          this.gasPrice =
+            web3Utils.hexToNumber(asJson[positions.gasPrice]) > 0
+              ? new BigNumber(asJson[positions.gasPrice]).toFixed()
+              : '0';
           this.fee = new BigNumber(this.toGwei(this.gasPrice))
             .times(this.gasLimit)
             .toFixed();
