@@ -1,8 +1,13 @@
+### Bug
+
+* Add some space for ledger paths [#2905](https://github.com/MyEtherWallet/MyEtherWallet/pull/2905)
+
 ### Release v5.7.23-hotfix.1
 
 ### Bug
 
 * Fix weird token issue when tokens has way too long of a symbol [#2894](https://github.com/MyEtherWallet/MyEtherWallet/pull/2894)
+
 ### Release v5.7.23
 
 ### Bug
