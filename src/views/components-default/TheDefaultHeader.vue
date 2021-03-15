@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import mewTools from '@/components/mew-tools/MewTools';
+import MewTools from '@/components/mew-tools/MewTools';
 import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, MenuMobile, AppBtnMenu },
+  components: { MewTools, MenuMobile, AppBtnMenu },
   data: () => ({
     mewTools: false,
     openMobileMenu: false,
