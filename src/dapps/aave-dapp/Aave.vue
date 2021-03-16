@@ -152,12 +152,15 @@ import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import depositOverlay from './components/AaveDepositOverlay';
 import borrowOverlay from './components/AaveBorrowOverlay';
 import handlerAave from './handlers/handlerAave';
+import AaveCalls from './apollo/queries/queries';
+import { mapGetters } from 'vuex';
 
 export default {
   components: { depositOverlay, borrowOverlay },
   data() {
     return {
       handler: null,
+      caller: null,
       openDepositOverlay: false,
       openBorrowOverlay: false,
       depositsTableHeader: [
@@ -268,8 +271,36 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters('global', ['isEthNetwork'])
+  },
+  watch: {
+    isEthNetwork(newVal) {
+      if (newVal) {
+        this.setCallerAndHandler();
+      } else {
+        this.handler = null;
+        this.caller = null;
+      }
+    }
+  },
   mounted() {
-    this.handler = new handlerAave(this.$apollo);
+    this.setCallerAndHandler();
+  },
+  methods: {
+    setCallerAndHandler() {
+      this.handler = new handlerAave();
+      this.caller = new AaveCalls(this.$apollo);
+      this.caller.getUserData(res => {
+        this.handler._userDataHandler(res);
+      });
+      this.caller.getUsdPriceEth(res => {
+        this.handler._usdPriceHandler(res);
+      });
+      this.caller.getReserveData(res => {
+        this.handler._reserveDataHandler(res);
+      });
+    }
   }
 };
 </script>

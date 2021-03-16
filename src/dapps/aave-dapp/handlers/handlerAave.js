@@ -17,12 +17,10 @@ import {
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
 
-import AaveCalls from '../apollo/queries/queries';
-
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default class AaveHandler {
-  constructor(apollo) {
+  constructor() {
     this.$store = vuexStore;
     Object.assign(this, mapState('wallet', ['web3', 'address']));
     Object.assign(this, mapGetters('wallet', ['tokensList', 'balanceInETH']));
@@ -40,13 +38,6 @@ export default class AaveHandler {
     this.compositionBorrow = [];
     this.compositionCollateral = [];
     this.percentageLeft = '';
-    this.aaveCalls = new AaveCalls(apollo, this.address());
-
-    // setup subscriptions
-    console.log('calling subscriptions');
-    this.aaveCalls.getUserData(this._userDataHandler);
-    this.aaveCalls.getUsdPriceEth(this._usdPriceHandler);
-    this.aaveCalls.getReserveData(this._reserveDataHandler);
   }
 
   sendTransaction(param) {
@@ -150,11 +141,8 @@ export default class AaveHandler {
 
   // aave calls
 
-  getLiquidityRateHistoryUpdate(id) {
-    this.aaveCalls.getLiquidityRateHistoryUpdate(
-      id,
-      this._liquidityRateHandler
-    );
+  getLiquidityRateHistoryUpdate(id, next) {
+    this.aaveCalls.getLiquidityRateHistoryUpdate(id, next);
   }
 
   // setters (?)
@@ -165,6 +153,15 @@ export default class AaveHandler {
       this.userReserveData &&
       this.usdPriceEth
     ) {
+      console.log(
+        formatUserSummaryData(
+          this.rawReserveData,
+          this.userReserveData,
+          this.address().toLowerCase(),
+          this.usdPriceEth,
+          Number(moment().format('X'))
+        )
+      );
       this.userSummary = formatUserSummaryData(
         this.rawReserveData,
         this.userReserveData,
@@ -241,23 +238,20 @@ export default class AaveHandler {
   }
 
   _usdPriceHandler(res) {
-    const data = res.data.userReserves;
+    const data = res.data.priceOracle;
     this.usdPriceEth = data;
-    console.log('Im getting here: _usdPriceHandler');
     this.setFormatUserSummaryData();
   }
 
   _userDataHandler(res) {
     const data = res.data.userReserves;
     this.userReservData = data;
-    console.log('Im getting here: _userDataHandler');
     this.setFormatUserSummaryData();
   }
 
   _reserveDataHandler(res) {
-    const data = res.data.userReserves;
+    const data = res.data.reserves;
     this.rawReserveData = data;
-    console.log('Im getting here: _reserveDataHandler');
     this.reservesData = formatReserves(data).reverse();
     this.setFormatUserSummaryData();
   }

@@ -27,7 +27,11 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 export default {
+  components: {
+    BalanceEmptyBlock
+  },
   data() {
     return {
       tableHeaders: [

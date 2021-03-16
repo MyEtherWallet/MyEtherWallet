@@ -1,3 +1,5 @@
+import vuexStore from '@/core/store';
+import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import {
   LiquidityRateHistoryUpdate,
@@ -7,24 +9,27 @@ import {
 } from './aave.graphql';
 import Configs from '../configs';
 export default class AaveCalls {
-  constructor(apollo, address) {
-    this.apollo = apollo.provider.clients.aave;
-    this.address = address;
+  constructor(apollo) {
+    this.apollo = apollo;
+    this.$store = vuexStore;
+    Object.assign(this, mapState('wallet', ['address']));
   }
 
   getLiquidityRateHistoryUpdate(param, next) {
     console.log('i got called getLiquidityRateHistoryUpdate');
-    this.apollo.subscribe({
+    // Create subscription
+    const connector = this.apollo.subscribe({
       query: LiquidityRateHistoryUpdate,
       variables: {
         reserveAddress: param
       },
-      next: function (res) {
-        console.log(res);
-        next(res);
-      },
+      client: 'aave'
+    });
+
+    // Subscribe
+    connector.subscribe({
+      next: next,
       error: function (err) {
-        console.log(err, 'getLiquidityRateHistoryUpdate');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -32,14 +37,16 @@ export default class AaveCalls {
 
   getUsdPriceEth(next) {
     console.log('i got called getUsdPriceEth');
-    this.apollo.subscribe({
+    // Create subscription
+    const connector = this.apollo.subscribe({
       query: UsdPriceEth,
-      next: function (res) {
-        console.log(res);
-        next(res);
-      },
+      client: 'aave'
+    });
+
+    // Subscribe
+    connector.subscribe({
+      next: next,
       error: function (err) {
-        console.log(err, 'getUsdPriceEth');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -47,14 +54,20 @@ export default class AaveCalls {
 
   getUserData(next) {
     console.log('i got called getUserData');
-    this.apollo.subscribe({
+    // Create subscription
+    const connector = this.apollo.subscribe({
       query: UserPositionUpdateSubscription,
-      next: function (res) {
-        console.log(res);
-        next(res);
-      },
+      client: 'aave',
+      variables: {
+        userAddress: this.address(),
+        poolId: Configs.POOL_ID
+      }
+    });
+
+    // Subscribe
+    connector.subscribe({
+      next: next,
       error: function (err) {
-        console.log(err, 'getUserData');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -62,17 +75,19 @@ export default class AaveCalls {
 
   getReserveData(next) {
     console.log('i got called getReserveData');
-    this.apollo.subscribe({
+    // Create subscription
+    const connector = this.apollo.subscribe({
       query: ReserveUpdateSubscription,
-      next: function (res) {
-        console.log(res);
-        next(res);
-      },
       variables: {
         poolId: Configs.POOL_ID
       },
+      client: 'aave'
+    });
+
+    // Subscribe
+    connector.subscribe({
+      next: next,
       error: function (err) {
-        console.log(err, 'getReserveData');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
