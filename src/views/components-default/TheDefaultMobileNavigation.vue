@@ -8,7 +8,7 @@
       temporary
       color="expandHeader"
     >
-      <v-list-item class="pt-8 pb-10 pl-4 pr-2">
+      <v-list-item class="pt-8 pb-10 pl-4 pr-1">
         <v-list-item-avatar>
           <v-img
             class="mx-auto"
