@@ -8,26 +8,25 @@
       temporary
       color="expandHeader"
     >
-      <v-toolbar flat color="expandHeader" dark class="pt-7">
-        <v-row no-gutters>
-          <v-col cols="6" class="d-flex align-center">
-            <v-img
-              class="mx-auto"
-              src="@/assets/images/icons/logo-mew.png"
-              max-height="36"
-              max-width="130"
-              @click="pushRoute({ name: 'Home' })"
-            />
-          </v-col>
-          <v-col cols="6" class="text-right">
-            <v-btn x-large icon light @click="isOpen = false">
-              <v-icon color="white" large>mdi-window-close</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-toolbar>
+      <v-list-item class="pt-8 pb-10 pl-4 pr-2">
+        <v-list-item-avatar>
+          <v-img
+            class="mx-auto"
+            src="@/assets/images/icons/logo-mew.png"
+            max-height="36"
+            max-width="130"
+            @click="pushRoute({ name: 'Home' })"
+          />
+        </v-list-item-avatar>
 
-      <v-list color="expandHeader" dark class="pt-12 px-4">
+        <v-spacer></v-spacer>
+
+        <v-btn x-large icon light @click="isOpen = false">
+          <v-icon color="white" large>mdi-window-close</v-icon>
+        </v-btn>
+      </v-list-item>
+
+      <v-list color="expandHeader" dark class="px-2">
         <template v-for="(item, index) in menu">
           <v-list-item v-if="!item.sub" :key="index" class="mb-3">
             <v-list-item-content v-if="item.to" @click="pushRoute(item.to)">
