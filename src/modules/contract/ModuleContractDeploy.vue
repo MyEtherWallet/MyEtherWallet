@@ -7,7 +7,7 @@
   >
     <template #moduleBody>
       <div>
-        <mew-input
+        <mew-text-area
           v-model="byteCode"
           label="Bytecode"
           placeholder=" "
@@ -17,7 +17,7 @@
             }
           ]"
         />
-        <mew-input
+        <mew-text-area
           v-model="abiInterface"
           outlined
           name="input-7-4"
@@ -29,7 +29,7 @@
               return isValidABI(value);
             }
           ]"
-        ></mew-input>
+        ></mew-text-area>
         <mew-input
           v-model="contractName"
           label="Contract name"
@@ -123,9 +123,13 @@ import {
 } from './handlers/common';
 import { stringToArray } from '@/core/helpers/common';
 import { toWei, toBN, toHex } from 'web3-utils';
+import * as mewAll from '@myetherwallet/mew-components';
+
 export default {
   name: 'ModuleContractDeploy',
-  components: {},
+  components: {
+    'mew-text-area': mewAll.default.MewTextarea
+  },
   data() {
     return {
       contractName: '',

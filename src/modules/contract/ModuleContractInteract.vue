@@ -18,13 +18,14 @@
           placeholder=" "
           class="mr-3 flex-grow-1"
         />
-        <v-textarea
+        <mew-text-area v-model="abi" label="ABI/JSON Interface" />
+        <!--        <v-textarea
           v-model="abi"
           no-resize
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
-        ></v-textarea>
+        ></v-textarea>-->
 
         <div class="text-center mt-3">
           <mew-button
@@ -136,10 +137,13 @@ import {
   getType as getInputType,
   isContractArgValid
 } from './handlers/common';
+import * as mewAll from '@myetherwallet/mew-components';
 
 export default {
   name: 'ModuleContractInteract',
-  components: {},
+  components: {
+    'mew-text-area': mewAll.default.MewTextarea
+  },
   data() {
     return {
       currentContract: null,
