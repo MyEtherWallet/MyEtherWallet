@@ -1,100 +1,92 @@
 <template>
   <div class="mew-component--landing-page-menu-mobile">
-    <mew-button
-      class="mobile-menu-button ml-n3"
-      color-theme="white"
-      btn-style="transparent"
-      icon="mdi-text"
-      icon-type="mdi"
-      icon-align="left"
-      style="border-radius: 100% !important; padding: 0"
-      @click.native="isOpen = true"
-    />
+    <app-btn-menu height="40" x-large @click.native="isOpen = true" />
 
     <v-navigation-drawer
       v-model="isOpen"
-      height="100%"
-      width="100%"
       absolute
       temporary
       color="expandHeader"
     >
-      <v-card flat class="px-2" color="expandHeader">
-        <v-toolbar flat color="expandHeader" dark class="pt-7">
-          <v-btn class="exit mr-n12" x-large icon @click="isOpen = false">
-            <v-icon>mdi-window-close</v-icon>
-          </v-btn>
+      <v-toolbar flat color="expandHeader" dark class="pt-7">
+        <v-row no-gutters>
+          <v-col cols="6" class="d-flex align-center">
+            <v-img
+              class="mx-auto"
+              src="@/assets/images/icons/logo-mew.png"
+              max-height="36"
+              max-width="130"
+              @click="pushRoute({ name: 'Home' })"
+            />
+          </v-col>
+          <v-col cols="6" class="text-right">
+            <v-btn x-large icon light @click="isOpen = false">
+              <v-icon color="white" large>mdi-window-close</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-toolbar>
 
-          <v-img
-            class="mx-auto"
-            src="@/assets/images/icons/logo-mew.png"
-            max-height="36"
-            max-width="130"
-            @click="pushRoute({ name: 'Home' })"
-          />
-        </v-toolbar>
-
-        <v-list color="expandHeader" dark class="pt-12">
-          <template v-for="(item, index) in menu">
-            <v-list-item v-if="!item.sub" :key="index" class="mb-3">
-              <v-list-item-content v-if="item.to" @click="pushRoute(item.to)">
+      <v-list color="expandHeader" dark class="pt-12 px-4">
+        <template v-for="(item, index) in menu">
+          <v-list-item v-if="!item.sub" :key="index" class="mb-3">
+            <v-list-item-content v-if="item.to" @click="pushRoute(item.to)">
+              <div class="mew-heading-2">{{ item.label }}</div>
+            </v-list-item-content>
+            <a
+              v-if="item.url"
+              :href="item.url"
+              target="_blanks"
+              @click="isOpen = false"
+            >
+              <v-list-item-content class="white--text">
                 <div class="mew-heading-2">{{ item.label }}</div>
               </v-list-item-content>
-              <a
-                v-if="item.url"
-                :href="item.url"
-                target="_blanks"
-                @click="isOpen = false"
-              >
-                <v-list-item-content class="white--text">
-                  <div class="mew-heading-2">{{ item.label }}</div>
-                </v-list-item-content>
-              </a>
-            </v-list-item>
+            </a>
+          </v-list-item>
 
-            <v-list-group
-              v-if="item.sub"
-              :key="index"
-              prepend-icon=""
-              color="expandHeader"
-              class="mb-3"
+          <v-list-group
+            v-if="item.sub"
+            :key="index"
+            prepend-icon=""
+            color="white"
+            class="mb-3"
+          >
+            <template #activator>
+              <v-list-item-content>
+                <div class="mew-heading-2">{{ item.label }}</div>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              v-for="(child, ckey) in item.sub"
+              :key="ckey"
+              style="background-color: var(--v-expandHeader-base) !important"
+              dense
+              class="pl-4"
             >
-              <template #activator>
-                <v-list-item-content>
-                  <div class="mew-heading-2">{{ item.label }}</div>
-                </v-list-item-content>
-              </template>
-              <v-list-item
-                v-for="(child, ckey) in item.sub"
-                :key="ckey"
-                style="background-color: var(--v-expandHeader-base) !important"
-                dense
-                class="pl-4"
-              >
-                <v-list-item-content>
+              <v-list-item-content>
+                <v-list-item-title
+                  v-if="child.to"
+                  class="pl-4 white--text font-weight-regular mew-body"
+                  @click="pushRoute(child.to)"
+                  v-text="child.label"
+                ></v-list-item-title>
+                <a
+                  v-if="child.url"
+                  :href="child.url"
+                  target="_blanks"
+                  @click="isOpen = false"
+                >
                   <v-list-item-title
-                    v-if="child.to"
                     class="pl-13 white--text font-weight-regular mew-body"
-                    @click="pushRoute(child.to)"
                     v-text="child.label"
                   ></v-list-item-title>
-                  <a
-                    v-if="child.url"
-                    :href="child.url"
-                    target="_blanks"
-                    @click="isOpen = false"
-                  >
-                    <v-list-item-title
-                      class="pl-13 white--text font-weight-regular mew-body"
-                      v-text="child.label"
-                    ></v-list-item-title>
-                  </a>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-group>
-          </template>
-        </v-list>
-      </v-card>
+                </a>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </template>
+      </v-list>
     </v-navigation-drawer>
 
     <ul v-if="false" class="menu-content">
@@ -128,9 +120,11 @@
 </template>
 
 <script>
+import AppBtnMenu from '@/core/components/AppBtnMenu';
+
 export default {
   name: 'MobileMenu',
-  components: {},
+  components: { AppBtnMenu },
   props: {
     value: {
       default: false,
@@ -200,14 +194,11 @@ export default {
 <style lang="scss">
 .mew-component--landing-page-menu-mobile {
   .mobile-menu-button .v-icon.v-icon {
-    font-size: 37px;
+    font-size: 43px;
   }
   .v-list-group__header,
   .v-list-item {
     border-top: 0 !important;
-  }
-  .v-list-item {
-    background-color: var(--v-expandHeader-base) !important;
   }
 }
 </style>

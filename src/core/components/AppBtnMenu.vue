@@ -1,6 +1,9 @@
 <template>
-  <v-btn icon @click="menuMethod">
-    <img src="@/assets/images/icons/icon-menu.svg" />
+  <v-btn icon :large="large" :x-large="xLarge" @click="menuMethod">
+    <img
+      src="@/assets/images/icons/icon-menu.svg"
+      :height="height ? height : ''"
+    />
   </v-btn>
 </template>
 <script>
@@ -12,6 +15,18 @@ export default {
       default: function () {
         return {};
       }
+    },
+    height: {
+      type: String,
+      default: undefined
+    },
+    large: {
+      type: Boolean,
+      default: false
+    },
+    xLarge: {
+      type: Boolean,
+      default: false
     }
   }
 };

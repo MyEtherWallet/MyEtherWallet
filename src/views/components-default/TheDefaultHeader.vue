@@ -3,7 +3,7 @@
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
-          <menu-mobile />
+          <the-default-mobile-navigation class="ml-n2" />
         </v-col>
         <v-col cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
@@ -45,11 +45,11 @@
 
 <script>
 import mewTools from '@/components/mew-tools/MewTools';
-import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
+import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, MenuMobile },
+  components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
     mewTools: false,
     openMobileMenu: false,
