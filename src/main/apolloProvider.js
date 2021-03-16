@@ -8,7 +8,6 @@ const main = createApolloClient(
   'https://api.ethvm.com',
   'wss://apiws.ethvm.com'
 );
-
 const apolloProvider = new VueApollo({
   clients: {
     main,

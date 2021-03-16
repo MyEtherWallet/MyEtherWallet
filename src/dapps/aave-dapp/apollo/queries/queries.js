@@ -8,7 +8,7 @@ import {
 import Configs from '../configs';
 export default class AaveCalls {
   constructor(apollo, address) {
-    this.apollo = apollo;
+    this.apollo = apollo.provider.clients.aave;
     this.address = address;
   }
 
@@ -19,9 +19,12 @@ export default class AaveCalls {
       variables: {
         reserveAddress: param
       },
-      client: 'aave',
-      next: next,
-      error: err => {
+      next: function (res) {
+        console.log(res);
+        next(res);
+      },
+      error: function (err) {
+        console.log(err, 'getLiquidityRateHistoryUpdate');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -31,9 +34,12 @@ export default class AaveCalls {
     console.log('i got called getUsdPriceEth');
     this.apollo.subscribe({
       query: UsdPriceEth,
-      next: next,
-      client: 'aave',
-      error: err => {
+      next: function (res) {
+        console.log(res);
+        next(res);
+      },
+      error: function (err) {
+        console.log(err, 'getUsdPriceEth');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -43,9 +49,12 @@ export default class AaveCalls {
     console.log('i got called getUserData');
     this.apollo.subscribe({
       query: UserPositionUpdateSubscription,
-      next: next,
-      client: 'aave',
-      error: err => {
+      next: function (res) {
+        console.log(res);
+        next(res);
+      },
+      error: function (err) {
+        console.log(err, 'getUserData');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });
@@ -55,12 +64,15 @@ export default class AaveCalls {
     console.log('i got called getReserveData');
     this.apollo.subscribe({
       query: ReserveUpdateSubscription,
-      next: next,
-      client: 'aave',
+      next: function (res) {
+        console.log(res);
+        next(res);
+      },
       variables: {
         poolId: Configs.POOL_ID
       },
-      error: err => {
+      error: function (err) {
+        console.log(err, 'getReserveData');
         Toast(err.message ? err.message : err, {}, ERROR);
       }
     });

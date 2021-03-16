@@ -1,6 +1,5 @@
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { HttpLink } from 'apollo-link-http';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
@@ -8,19 +7,15 @@ import { onError } from 'apollo-link-error';
 import * as Sentry from '@sentry/vue';
 import ApolloClient from 'apollo-client';
 
-export function createApolloClient(htttpsEndpoint, wsEndpont) {
+export function createApolloClient(httpsEndpoint, wsEndpoint) {
   const httpLink = new HttpLink({
-    uri: htttpsEndpoint
+    uri: httpsEndpoint
   });
 
-  const subscriptionClient = new SubscriptionClient(
-    wsEndpont,
-    { lazy: true, reconnect: true },
-    null,
-    []
-  );
-
-  const websocket = new WebSocketLink(subscriptionClient);
+  const websocket = new WebSocketLink({
+    uri: wsEndpoint,
+    options: { lazy: true, reconnect: true }
+  });
 
   const onErrorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
