@@ -1,5 +1,6 @@
 ### Bug
 
+* Add some space for ledger paths [#2905](https://github.com/MyEtherWallet/MyEtherWallet/pull/2905)
 * add loading tokens to fetch correct balance [#2904](https://github.com/MyEtherWallet/MyEtherWallet/pull/2904)
 
 ### Release v5.7.23-hotfix.1
