@@ -4,7 +4,6 @@
     "font-family-no-missing-generic-family-keyword": null,
     "selector-type-no-unknown": null,
     "at-rule-no-unknown": null,
-    "no-descending-specificity": null,
-    "named-grid-areas-no-invalid": false
+    "no-descending-specificity": null
   }
 }

@@ -24,6 +24,7 @@
 * consolidate node PRs [#2883](https://github.com/MyEtherWallet/MyEtherWallet/pull/2883)
 * Address no decimals for NEO [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
 * change the way we are checking lend balance[#2893](https://github.com/MyEtherWallet/MyEtherWallet/pull/2893)
+
 ### Release v5.7.22
 
 ### Bug
