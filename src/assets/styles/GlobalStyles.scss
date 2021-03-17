@@ -68,6 +68,27 @@
     filter: brightness(1.15);
   }
 }
+.mew-super-btn-shadow {
+  box-shadow: 0 7px 13px rgba(0, 0, 0, 0.04);
+}
+.v-application .v-input .v-label {
+  font-weight: 400 !important;
+  font-size: 0.88rem;
+  color: var(--v-titlePrimary-base) !important;
+}
+.v-application .v-btn.mew-button .v-btn__content span {
+  text-transform: initial;
+  font-size: 0.88rem !important;
+}
+.v-application .v-btn.xlarge-btn {
+  height: 3.875rem !important;
+  min-height: 3.875rem !important;
+}
+.mew-overlay-container {
+  .mew-subtitle {
+    padding: 1.8rem 0;
+  }
+}
 
 /* ========== CSS Style Reset ========== */
 .monospace {
@@ -76,13 +97,13 @@
 i {
   font-family: 'Material Icons' !important;
 }
-// div {
-//   font-size: 0.88rem;
-//   line-height: 1.3rem;
-//   font-weight: 400;
-//   padding: 0;
-//   margin: 0;
-// }
+div {
+  font-size: 0.88rem;
+  line-height: 1.3rem;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+}
 p {
   font-size: 0.88rem;
   line-height: 1.3rem;
