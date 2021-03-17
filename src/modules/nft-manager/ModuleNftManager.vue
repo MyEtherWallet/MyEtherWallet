@@ -43,7 +43,7 @@
               <div v-if="!onNftSend">
                 <div class="d-flex justify-space-between mt-3 mb-5">
                   <h5 class="font-weight-bold">
-                    {{ nft.getActiveName() }}
+                    {{ nftCategory }}
                   </h5>
                   <div>Showing {{ startIndex }} to {{ endIndex }}</div>
                 </div>
@@ -103,6 +103,7 @@
                 :close="toggleNftSend"
                 :get-image-url="getImageUrl"
                 :nft="selectedNft"
+                :nft-category="nftCategory"
                 :send="sendTx"
                 :disabled="!isValid"
                 :set-address="setAddress"
@@ -118,7 +119,12 @@
 <script>
 import NFT from './handlers/handlerNftManager';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, SUCCESS, WARNING } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  SUCCESS,
+  WARNING,
+  ERROR
+} from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
@@ -189,6 +195,9 @@ export default {
      */
     isValid() {
       return this.isValidAddress() && this.address !== '';
+    },
+    nftCategory() {
+      return this.nft.getActiveName();
     }
   },
   mounted() {
@@ -221,7 +230,6 @@ export default {
       this.toggleNftSend();
     },
     sendTx() {
-      console.error('hello', this.isValid)
       if (this.isValid) {
         try {
           this.nft
@@ -240,6 +248,9 @@ export default {
                 SUCCESS,
                 5000
               );
+            })
+            .catch(e => {
+              Toast(e.message, {}, ERROR);
             });
           this.updateValues();
           this.toggleNftSend();
@@ -252,13 +263,9 @@ export default {
     updateValues() {
       this.tokens = this.nft.selectNftsToShow();
       this.tabs = this.tabs.map(item => {
-        if (
-          item.name
-            .toLowerCase()
-            .includes(this.nft.getActiveName().toLowerCase())
-        ) {
+        if (item.name.toLowerCase().includes(this.nftCategory.toLowerCase())) {
           return {
-            name: `${this.nft.getActiveName()} (${this.nft.getTokenCount()})`
+            name: `${this.nftCategory} (${this.nft.getTokenCount()})`
           };
         }
         return item;

@@ -34,7 +34,6 @@ export default class NFT {
             return this.nft.getFirstTokenSet(selectedContract);
           })
           .then(currentActive => {
-            console.error('currentActive', currentActive)
             this.currentActive = currentActive;
             this.currentPageState = this.currentActive.getPageState();
             this.ready = true;

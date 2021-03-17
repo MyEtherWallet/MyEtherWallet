@@ -1,4 +1,9 @@
 <template>
+  <!--
+    =====================================================================================
+      Nft Manager Details Component
+    =====================================================================================
+    -->
   <v-card flat color="tableHeader" class="rounded-lg pa-2 d-flex align-center">
     <img
       height="100"

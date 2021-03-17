@@ -8,7 +8,7 @@
         fluid
       >
         <module-confirmation />
-        <router-view :owners-tokens="ownersTokens" />
+        <router-view />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -37,10 +37,7 @@ export default {
     ModuleConfirmation
   },
   data() {
-    return {
-      tokens: [],
-      ownersTokens: []
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
@@ -66,20 +63,21 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
+    ...mapActions('wallet', [
+      'setAccountBalance',
+      'setBlockNumber',
+      'setTokens'
+    ]),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
     getTokens() {
       if (this.isEthNetwork) {
         const tokensList = new TokenCalls(this.$apollo);
         tokensList.getOwnersERC20Tokens(this.address).then(res => {
-          this.ownersTokens = res.map(r => {
-            r.balance = toBN(r.balance);
-            return r;
-          });
+          this.setTokens(res);
         });
       } else {
-        this.tokens = this.network.type.tokens;
+        this.setTokens(this.network.type.tokens);
       }
     },
     getPriceAndBalance() {

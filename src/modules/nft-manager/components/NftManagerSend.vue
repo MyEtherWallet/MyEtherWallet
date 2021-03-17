@@ -1,4 +1,9 @@
 <template>
+  <!--
+    =====================================================================================
+      Nft Manager Send Component
+    =====================================================================================
+    -->
   <v-sheet class="d-flex align-center flex-column justify-center">
     <div
       class="cursor-pointer d-flex align-center justify-start full-width mb-4"
@@ -70,6 +75,10 @@ export default {
     disabled: {
       default: false,
       type: Boolean
+    },
+    nftCategory: {
+      default: '',
+      type: String
     }
   },
   data() {
@@ -83,7 +92,8 @@ export default {
   },
   computed: {
     backTxt() {
-      return 'Back to ' + this.nft.description;
+      console.error('this', this.nft)
+      return 'Back to ' + this.nftCategory;
     }
   }
 };

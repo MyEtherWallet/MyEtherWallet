@@ -66,14 +66,14 @@ export default class NftCollection {
   }
 
   send(to, tokenId) {
-    console.error('to', to, tokenId)
     return this.sender
       .send(to, tokenId)
       .on('transactionHash', () => {
         this.removeSentNft(tokenId);
       })
-      .on('error', () => {
+      .on('error', err => {
         this.resetNFT();
+        return err;
       });
   }
 
@@ -173,7 +173,7 @@ export default class NftCollection {
     }
   }
 
-  getNftDetails(contract, startIndex = -1, endIndex = -1) {
+  getNftDetails(startIndex = -1, endIndex = -1) {
     return new Promise((resolve, reject) => {
       try {
         let params;
@@ -201,6 +201,8 @@ export default class NftCollection {
               item.name = item.token_id;
             }
           }
+
+          console.error('description', item)
 
           return {
             description: item.description,
