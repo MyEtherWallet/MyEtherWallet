@@ -236,7 +236,7 @@ export default class AaveHandler {
 
   _userDataHandler(res) {
     const data = res.data.userReserves;
-    this.userReservData = data;
+    this.userReserveData = data;
     this.setFormatUserSummaryData();
   }
 
