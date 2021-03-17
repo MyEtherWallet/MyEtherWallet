@@ -70,8 +70,8 @@
   flex-flow: row wrap;
   max-height: 0;
   overflow: hidden;
-  padding: 0 30px;
-  width: 400px;
+  padding: 0 15px;
+  width: 450px;
 
   .item {
     color: $dark-grey-2;
@@ -105,9 +105,10 @@
 .shown {
   border-top: 1px solid $light-grey-3;
   border-bottom: 1px solid $light-grey-3;
-  max-height: 400px;
+  max-height: 310px;
   transition: max-height 0.5s ease-out;
   margin: 20px 0;
+  overflow-y: scroll;
 }
 
 .hide-box {

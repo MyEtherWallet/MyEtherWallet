@@ -47,6 +47,10 @@
               <td>
                 {{ token.balance }}
                 <i
+                  class="fa fa-refresh clickable pr-1"
+                  @click="getSpecificTokenBalance(token)"
+                />
+                <i
                   class="fa fa-times-circle clickable"
                   @click="removeToken(index)"
                 />
@@ -93,6 +97,10 @@
                     ? `${token.balance.substr(0, 25)}...`
                     : token.balance
                 }}
+                <i
+                  class="fa fa-refresh clickable"
+                  @click="getSpecificTokenBalance(token)"
+                />
               </td>
             </tr>
           </table>
