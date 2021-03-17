@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component-fix--aave">
-    <div class="d-flex align-center">
+    <!-- <div class="d-flex align-center">
       <deposit-overlay :open="openDepositOverlay" />
       <div
         class="cursor--pointer font-weight-bold mr-4"
@@ -16,15 +16,17 @@
       >
         Borrow Overlay
       </div>
-    </div>
+    </div> -->
     <mew6-white-sheet>
       <mew-banner :text-obj="topBanner" :banner-img="BG" />
-      <mew-tabs :items="tabs" has-underline>
+      <mew-tabs :items="tabs" hase-underline>
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="d-flex align-center justify-end">
               <div class="mr-3">Health factor</div>
-              <div class="primary--text font-weight-bold mr-3">2.45345</div>
+              <div class="primary--text font-weight-bold mr-3">
+                {{ healthFactor }}
+              </div>
               <mew-tooltip text="Health factor" />
             </div>
 
@@ -32,8 +34,8 @@
               <v-col cols="6">
                 <div class="tableHeader pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                  <h3 class="font-weight-bold">$40.00</h3>
-                  <div class="mt-2">0 ETH</div>
+                  <h3 class="font-weight-bold">$ {{ totalLiquidity.usd }}</h3>
+                  <div class="mt-2">{{ totalLiquidity.eth }} ETH</div>
 
                   <v-divider class="my-4" />
 
@@ -149,14 +151,15 @@
 
 <script>
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import depositOverlay from './components/AaveDepositOverlay';
-import borrowOverlay from './components/AaveBorrowOverlay';
+// import depositOverlay from './components/AaveDepositOverlay';
+// import borrowOverlay from './components/AaveBorrowOverlay';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
-  components: { depositOverlay, borrowOverlay },
+  // components: { depositOverlay, borrowOverlay },
   data() {
     return {
       handler: null,
@@ -272,7 +275,28 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork']),
+    healthFactor() {
+      if (!this.handler) return '-';
+      return BigNumber(this.handler.userSummary.healthFactor).gt(0)
+        ? this.handler.userSummary.healthFactor
+        : `-`;
+    },
+    totalLiquidity() {
+      const eth =
+        this.handler.userSummary.totalLiquidityETH === 'NaN'
+          ? '0'
+          : this.handler.userSummary.totalLiquidityETH;
+      const usd =
+        this.handler.userSummary.totalLiquidityUSD === 'NaN'
+          ? '0'
+          : this.handler.userSummary.totalLiquidityUSD;
+
+      return {
+        eth: this.handler ? eth : '0',
+        usd: this.handler ? usd : '0'
+      };
+    }
   },
   watch: {
     isEthNetwork(newVal) {

@@ -16,7 +16,6 @@ export default class AaveCalls {
   }
 
   getLiquidityRateHistoryUpdate(param, next) {
-    console.log('i got called getLiquidityRateHistoryUpdate');
     // Create subscription
     const connector = this.apollo.subscribe({
       query: LiquidityRateHistoryUpdate,
@@ -36,7 +35,6 @@ export default class AaveCalls {
   }
 
   getUsdPriceEth(next) {
-    console.log('i got called getUsdPriceEth');
     // Create subscription
     const connector = this.apollo.subscribe({
       query: UsdPriceEth,
@@ -53,7 +51,6 @@ export default class AaveCalls {
   }
 
   getUserData(next) {
-    console.log('i got called getUserData');
     // Create subscription
     const connector = this.apollo.subscribe({
       query: UserPositionUpdateSubscription,
@@ -74,7 +71,6 @@ export default class AaveCalls {
   }
 
   getReserveData(next) {
-    console.log('i got called getReserveData');
     // Create subscription
     const connector = this.apollo.subscribe({
       query: ReserveUpdateSubscription,

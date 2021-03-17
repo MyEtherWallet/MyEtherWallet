@@ -153,15 +153,6 @@ export default class AaveHandler {
       this.userReserveData &&
       this.usdPriceEth
     ) {
-      console.log(
-        formatUserSummaryData(
-          this.rawReserveData,
-          this.userReserveData,
-          this.address().toLowerCase(),
-          this.usdPriceEth,
-          Number(moment().format('X'))
-        )
-      );
       this.userSummary = formatUserSummaryData(
         this.rawReserveData,
         this.userReserveData,
@@ -169,6 +160,7 @@ export default class AaveHandler {
         this.usdPriceEth,
         Number(moment().format('X'))
       );
+      console.log(this.userSummary);
     }
   }
 
