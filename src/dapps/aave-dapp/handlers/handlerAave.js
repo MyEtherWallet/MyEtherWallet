@@ -160,7 +160,6 @@ export default class AaveHandler {
         this.usdPriceEth,
         Number(moment().format('X'))
       );
-      console.log(this.userSummary);
     }
   }
 
