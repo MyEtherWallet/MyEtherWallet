@@ -24,10 +24,11 @@
     =====================================================================================
     -->
         <mew-tabs
-          v-if="initLoaded"
+          v-if="initLoaded && !onNftSend"
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
+          :active-tab="activeTab"
           @onTab="onTab"
         >
           <template
@@ -40,77 +41,75 @@
       Display all owned tokens by nft
     =====================================================================================
     -->
-              <div v-if="!onNftSend">
-                <div class="d-flex justify-space-between mt-3 mb-5">
-                  <h5 class="font-weight-bold">
-                    {{ nftCategory }}
-                  </h5>
-                  <div>Showing {{ startIndex }} to {{ endIndex }}</div>
-                </div>
-                <div v-if="tokens.length === 0">Loading ...</div>
-                <div v-if="tokens.length !== 0">
-                  <div
-                    v-for="(token, tokenIdx) in tokens"
-                    :key="tokenIdx"
-                    class="mb-3"
-                  >
-                    <!--
+              <div class="d-flex justify-space-between mt-3 mb-5">
+                <h5 class="font-weight-bold">
+                  {{ nftCategory }}
+                </h5>
+                <div>Showing {{ startIndex }} to {{ endIndex }}</div>
+              </div>
+              <div v-if="tokens.length === 0">Loading ...</div>
+              <div v-if="tokens.length !== 0">
+                <div
+                  v-for="(token, tokenIdx) in tokens"
+                  :key="tokenIdx"
+                  class="mb-3"
+                >
+                  <!--
     =====================================================================================
       Nft Token Card Details
     =====================================================================================
     -->
-                    <nft-manager-details
-                      :on-click="goToSend"
-                      :get-image-url="getImageUrl"
-                      :token="token"
-                    />
-                  </div>
-                  <!--
+                  <nft-manager-details
+                    :on-click="goToSend"
+                    :get-image-url="getImageUrl"
+                    :token="token"
+                  />
+                </div>
+                <!--
     =====================================================================================
       Displays pagination if there are more than > 9 tokens
     =====================================================================================
     -->
-                  <div
-                    v-if="hasPages"
-                    class="px-4 mt-3 d-flex align-center justify-space-between"
-                  >
-                    <mew-button
-                      :has-full-width="false"
-                      btn-style="outline"
-                      title="Prior"
-                      btn-size="small"
-                      :disabled="!hasPriorPage && !contentLoading"
-                      @click.native="priorPage"
-                    />
-                    <mew-button
-                      :has-full-width="false"
-                      btn-style="outline"
-                      title="Next"
-                      btn-size="small"
-                      :disabled="!hasNextPage && !contentLoading"
-                      @click.native="nextPage"
-                    />
-                  </div>
+                <div
+                  v-if="hasPages"
+                  class="px-4 mt-3 d-flex align-center justify-space-between"
+                >
+                  <mew-button
+                    :has-full-width="false"
+                    btn-style="outline"
+                    title="Prior"
+                    btn-size="small"
+                    :disabled="!hasPriorPage && !contentLoading"
+                    @click.native="priorPage"
+                  />
+                  <mew-button
+                    :has-full-width="false"
+                    btn-style="outline"
+                    title="Next"
+                    btn-size="small"
+                    :disabled="!hasNextPage && !contentLoading"
+                    @click.native="nextPage"
+                  />
                 </div>
               </div>
-              <!--
+            </div>
+          </template>
+        </mew-tabs>
+        <!--
     =====================================================================================
       Display send token page
     =====================================================================================
     -->
-              <nft-manager-send
-                v-if="onNftSend"
-                :close="toggleNftSend"
-                :get-image-url="getImageUrl"
-                :nft="selectedNft"
-                :nft-category="nftCategory"
-                :send="sendTx"
-                :disabled="!isValid"
-                :set-address="setAddress"
-              />
-            </div>
-          </template>
-        </mew-tabs>
+        <nft-manager-send
+          v-if="onNftSend"
+          :close="toggleNftSend"
+          :get-image-url="getImageUrl"
+          :nft="selectedNft"
+          :nft-category="nftCategory"
+          :send="sendTx"
+          :disabled="!isValid"
+          :set-address="setAddress"
+        />
       </template>
     </mew-module>
   </div>
@@ -140,7 +139,7 @@ export default {
       initLoaded: false,
       tabs: [],
       contracts: [],
-      tabActive: 1,
+      activeTab: 0,
       tokens: [],
       onNftSend: false,
       selectedNft: {},
@@ -315,7 +314,7 @@ export default {
       }
     },
     onTab(val) {
-      this.tabActive = val;
+      this.activeTab = val;
       if (this.contracts.length === 0) {
         this.contracts = this.nft.getAvailableContracts();
       }

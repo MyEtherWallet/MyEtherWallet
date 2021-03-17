@@ -167,8 +167,6 @@ export default class NftCollection {
         ? this.tokens.slice(startIndex, endIndex)
         : this.tokens;
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
       return [];
     }
   }
@@ -201,8 +199,6 @@ export default class NftCollection {
               item.name = item.token_id;
             }
           }
-
-          console.error('description', item)
 
           return {
             description: item.description,
