@@ -4,7 +4,7 @@
     max-width="800px"
     color="transparent"
   >
-    <mew-stepper class="mx-n12 mx-md-0" :items="steppers" :on-step="step">
+    <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!--
       =====================================================================================
         Step 1: Write Down Words
@@ -92,6 +92,7 @@
           </div>
         </v-sheet>
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -170,6 +171,7 @@
           </div>
         </v-sheet>
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -224,7 +226,6 @@
         </v-sheet>
       </template>
     </mew-stepper>
-    <div class="spacer-y-medium" />
   </v-sheet>
 </template>
 
