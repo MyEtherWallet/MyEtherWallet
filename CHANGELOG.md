@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix create wallet nnemonic layout [#2912](https://github.com/MyEtherWallet/MyEtherWallet/pull/2912)
 * Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
 * Move tokens to state [#2898](https://github.com/MyEtherWallet/MyEtherWallet/pull/2898)
 * Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
