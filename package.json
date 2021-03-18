@@ -29,13 +29,6 @@
     "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
     "prepare": "husky install"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run test",
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "dependencies": {
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
@@ -168,7 +161,6 @@
     "handlebars": "^4.5.3",
     "axios": "^0.21.1",
     "node-fetch": "^2.6.1",
-    "elliptic": "^6.5.3",
     "cryptiles": "^4.1.2"
   },
   "license": "MIT",
