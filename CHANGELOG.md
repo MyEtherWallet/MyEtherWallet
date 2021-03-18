@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
 * Move tokens to state [#2898](https://github.com/MyEtherWallet/MyEtherWallet/pull/2898)
 * Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
 * Mobile Navigation bar implementationn for wallet, repalce mdi-text icon to svg [#2895](https://github.com/MyEtherWallet/MyEtherWallet/pull/2895)
@@ -37,3 +38,4 @@
 * Apply MEW components to dashboard [#2378](https://github.com/MyEtherWallet/MyEtherWallet/pull/2378)
 * Add MY TOKENS VALUE component for Dashboard [#2015](https://github.com/MyEtherWallet/MyEtherWallet/pull/2015)
 * Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
+
