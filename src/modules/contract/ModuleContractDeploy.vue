@@ -7,7 +7,7 @@
   >
     <template #moduleBody>
       <div>
-        <mew-input
+        <v-textarea
           v-model="byteCode"
           label="Bytecode"
           placeholder=" "
@@ -17,7 +17,7 @@
             }
           ]"
         />
-        <mew-input
+        <v-textarea
           v-model="abiInterface"
           outlined
           name="input-7-4"
@@ -29,7 +29,7 @@
               return isValidABI(value);
             }
           ]"
-        ></mew-input>
+        ></v-textarea>
         <mew-input
           v-model="contractName"
           label="Contract name"
