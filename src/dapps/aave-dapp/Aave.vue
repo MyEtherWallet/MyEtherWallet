@@ -7,23 +7,6 @@
       :tab-items="tabs"
       :active-tab="activeTab"
     >
-      <!-- <div class="d-flex align-center">
-      <deposit-overlay :open="openDepositOverlay" />
-      <div
-        class="cursor--pointer font-weight-bold mr-4"
-        @click="openDepositOverlay = true"
-      >
-        Deposit Overlay
-      </div>
-
-      <borrow-overlay :open="openBorrowOverlay" />
-      <div
-        class="cursor--pointer font-weight-bold mr-4"
-        @click="openBorrowOverlay = true"
-      >
-        Borrow Overlay
-      </div>
-    </div> -->
       <template #tabContent1>
         <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
           <div class="d-flex align-center justify-end">
@@ -52,13 +35,30 @@
               </div>
             </v-col>
             <v-col cols="6" class="pa-1">
-              <div class="tableHeader pa-5 border-radius--5px">
+              <div class="tableHeader pa-5 border-radius--5px height-100">
                 <v-row>
-                  <v-col cols="9">
+                  <v-col cols="7">
                     <h5 class="mb-2 font-weight-bold">Earnings</h5>
                   </v-col>
-                  <v-col cols="3"> blue purp </v-col>
+                  <v-col
+                    cols="5"
+                    class="d-flex align-center justify-space-between"
+                  >
+                    <div class="d-flex align-center">
+                      <div class="circle pink mr-2" />
+                      APR
+                    </div>
+                    <div class="d-flex align-center">
+                      <div class="circle lightblue mr-2" />
+                      Total
+                    </div>
+                  </v-col>
                 </v-row>
+                <div
+                  class="d-flex flex-column justify-center align-center text-center height-100"
+                >
+                  No data to show yet
+                </div>
               </div>
             </v-col>
           </v-row>
@@ -146,34 +146,32 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-// import depositOverlay from './components/AaveDepositOverlay';
-// import borrowOverlay from './components/AaveBorrowOverlay';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 const COLORS = {
-  ENJ: '#f5a623',
-  ETH: '#ffbb40',
-  ZRX: '#f9d6da',
-  KNC: '#1d89ff',
-  USDT: '#f00',
-  MKR: '#00b3db',
-  LEND: '#f9d6da',
-  AAVE: '#5a78f0',
-  DAI: '#5c74eb',
-  SUSD: '#3766aa',
-  LINK: '#c9f2ed',
-  BUSD: '#aa0087',
-  REN: '#f37240',
-  WBTC: '#00b3db',
-  UNI: '#a16bff',
-  REP: '#3a6ea7',
-  MANA: '#fece00',
-  BAT: '#4568bb',
-  YFI: '#fff',
-  TUSD: '#fff'
+  ENJ: 'expandHeader',
+  ETH: 'primary',
+  ZRX: 'secondary',
+  KNC: 'basic',
+  USDT: 'warning base',
+  MKR: 'warning darken1',
+  LEND: 'warning darken2',
+  AAVE: 'textSecondary',
+  DAI: 'tagLabel',
+  SUSD: 'inputLabel',
+  LINK: 'inputBorder',
+  BUSD: 'searchText',
+  REN: 'primaryHover',
+  WBTC: 'basicOutlineActive',
+  UNI: 'errorOutline',
+  REP: 'superPrimary base',
+  MANA: 'superPrimary darken1',
+  BAT: 'overlayBg',
+  YFI: 'white',
+  TUSD: 'black'
 };
 
 export default {
@@ -193,22 +191,44 @@ export default {
       openBorrowOverlay: false,
       depositsTableHeader: [
         {
-          text: 'Activity',
-          value: 'activity',
+          text: 'Token',
+          value: 'token',
           sortable: false,
           filterable: false,
           width: '100%'
         },
         {
-          text: 'Date',
-          value: 'date',
+          text: 'Deposited',
+          value: 'deposited',
           sortable: false,
           filterable: false,
           width: '60%'
         },
         {
-          text: 'Tx Hash',
-          value: 'txHash',
+          text: 'Earned',
+          value: 'earned',
+          sortable: false,
+          filterable: false,
+          width: '100%'
+        },
+        {
+          text: 'Use as collateral',
+          value: 'useAsColateral',
+          sortable: false,
+          filterable: false,
+          width: '100%'
+        },
+        {
+          text: '',
+          value: 'deposit',
+          sortable: false,
+          filterable: false,
+          containsLink: true,
+          width: '100%'
+        },
+        {
+          text: '',
+          value: 'withdraw',
           sortable: false,
           filterable: false,
           containsLink: true,
@@ -348,6 +368,27 @@ export default {
         data: []
       };
     }
+    // depositsTableData() {
+    //   if (!this.handler) return [];
+    //   const newArr = [];
+    //   this.handler.userReserveData.forEach(item => {
+    //     const newObj = {
+    //       token: item.reserve.symbol,
+    //       deposited: `
+    //     ${this.convertToFixed(item.reserve.principalATokenBalance)} ${
+    //         item.reserve.symbol
+    //       }
+    //     ${this.convertToFixed(item.reserve.currentUnderlyingBalanceETH)} ETH
+    //     `,
+    //       earned: '',
+    //       useAsColateral: '',
+    //       deposit: '',
+    //       withdraw: ''
+    //     };
+    //     newArr.push(newObj);
+    //   });
+    //   return newArr;
+    // }
   },
   watch: {
     isEthNetwork(newVal) {
@@ -363,6 +404,15 @@ export default {
     this.setCallerAndHandler();
   },
   methods: {
+    convertToFixed(val, num) {
+      if (!val || val == 0) {
+        return 0;
+      }
+      if (!num) {
+        num = 2;
+      }
+      return new BigNumber(val).toFixed(num).toString();
+    },
     setCallerAndHandler() {
       this.handler = new handlerAave();
       this.caller = new AaveCalls(this.$apollo);
@@ -408,5 +458,22 @@ export default {
   .v-tabs-bar {
     height: 70px;
   }
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.pink {
+  background-color: #d989c6;
+}
+.lightblue {
+  background-color: #6ad0d9;
+}
+
+.height-100 {
+  height: 100%;
 }
 </style>
