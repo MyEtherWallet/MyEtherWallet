@@ -329,6 +329,9 @@ export default {
   methods: {
     generateVerification() {
       this.generatedVerification = this.handlerCreateWallet.getVerification();
+      this.generatedVerification.sort(function (a, b) {
+        return a.itemNumber - b.itemNumber;
+      });
     },
     getOnlyKey(obj) {
       return Number(Object.keys(obj)[0]);
@@ -389,7 +392,7 @@ export default {
 }
 
 .radio-group {
-  box-shadow: 0 5px 15px var(--v-boxShadow-base) !important;
+  box-shadow: 0 0px 10px var(--v-boxShadow-base) !important;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 5px;
 }
