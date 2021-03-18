@@ -195,14 +195,14 @@ export default {
           value: 'token',
           sortable: false,
           filterable: false,
-          width: '100%'
+          width: '50%'
         },
         {
           text: 'Deposited',
           value: 'deposited',
           sortable: false,
           filterable: false,
-          width: '60%'
+          width: '100%'
         },
         {
           text: 'Earned',
@@ -216,7 +216,7 @@ export default {
           value: 'useAsColateral',
           sortable: false,
           filterable: false,
-          width: '100%'
+          width: '50%'
         },
         {
           text: '',
@@ -224,7 +224,7 @@ export default {
           sortable: false,
           filterable: false,
           containsLink: true,
-          width: '100%'
+          width: '50%'
         },
         {
           text: '',
@@ -232,24 +232,7 @@ export default {
           sortable: false,
           filterable: false,
           containsLink: true,
-          width: '100%'
-        }
-      ],
-      depositsTableData: [
-        {
-          activity: 'Deposited 0.0001 ETH into Vault',
-          date: '01/02/2020, 2:16:32 PM',
-          txHash: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          activity: 'Generated 30.0000 new Dai from Vault',
-          date: '01/02/2020, 1:25:53 PM',
-          txHash: '0xAECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          activity: 'Generated 2.0 new Dai from Vault',
-          date: '01/05/2020, 1:25:53 PM',
-          txHash: '0xAECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+          width: '50%'
         }
       ],
       borrowingsTableHeader: [
@@ -367,28 +350,29 @@ export default {
         total: 0,
         data: []
       };
+    },
+    depositsTableData() {
+      if (!this.handler) return [];
+      const newArr = [];
+      this.handler.userSummary.reservesData.forEach(item => {
+        console.log(item);
+        const newObj = {
+          token: item.reserve.symbol,
+          deposited: `
+        ${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
+            item.reserve.symbol
+          }
+          ${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH
+        `,
+          earned: '',
+          useAsColateral: '',
+          deposit: '',
+          withdraw: ''
+        };
+        newArr.push(newObj);
+      });
+      return newArr;
     }
-    // depositsTableData() {
-    //   if (!this.handler) return [];
-    //   const newArr = [];
-    //   this.handler.userReserveData.forEach(item => {
-    //     const newObj = {
-    //       token: item.reserve.symbol,
-    //       deposited: `
-    //     ${this.convertToFixed(item.reserve.principalATokenBalance)} ${
-    //         item.reserve.symbol
-    //       }
-    //     ${this.convertToFixed(item.reserve.currentUnderlyingBalanceETH)} ETH
-    //     `,
-    //       earned: '',
-    //       useAsColateral: '',
-    //       deposit: '',
-    //       withdraw: ''
-    //     };
-    //     newArr.push(newObj);
-    //   });
-    //   return newArr;
-    // }
   },
   watch: {
     isEthNetwork(newVal) {
