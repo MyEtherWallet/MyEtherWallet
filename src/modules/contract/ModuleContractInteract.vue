@@ -18,14 +18,15 @@
           placeholder=" "
           class="mr-3 flex-grow-1"
         />
-        <mew-text-area v-model="abi" label="ABI/JSON Interface" />
-        <!--        <v-textarea
+<!--  mew text area doesn't handle array as prop -->
+
+        <v-textarea
           v-model="abi"
           no-resize
           outlined
           name="input-7-4"
           label="ABI/JSON Interface"
-        ></v-textarea>-->
+        ></v-textarea>
 
         <div class="text-center mt-3">
           <mew-button
@@ -78,20 +79,34 @@
               class="bool-input-container"
             >
               <div class="bool-items">
-                <mew-switch
-                  :value="input.value"
+                <mew-checkbox
+                  v-model="input.value"
                   :label="input.name"
-                  @input="valueInput(input.name, $event)"
+                  type="radio"
+                  checked
+                  @input="valueInput(idx, $event)"
                 />
               </div>
             </div>
+          </div>
+          <div>
+            <mew-input
+              v-if="isPayableFunction"
+              label="ETH amount:"
+              :rules="[
+                value => {
+                  return hasEnough(value);
+                }
+              ]"
+              @input="payableInput($event)"
+            />
           </div>
           <div class="text-center mt-3">
             <mew-button
               :title="isViewFunction ? 'Read' : 'Write'"
               :has-full-width="false"
               button-size="xlarge"
-              :disabled="!inputsValid && !!selectedMethod.inputs.length"
+              :disabled="canProceed"
               @click.native="readWrite"
             />
           </div>
@@ -114,7 +129,11 @@
             />
             <mew-input
               v-if="getType(output.type).type === 'radio'"
-              :value="outputValues[idx]"
+              :value="
+                typeof output.value !== 'undefined'
+                  ? output.value.toString()
+                  : ''
+              "
               :disabled="true"
               :label="`${output.name} (${output.type})`"
               class="non-bool-input"
@@ -129,6 +148,7 @@
 <script>
 import Vue from 'vue';
 import { mapState } from 'vuex';
+import { toBN, toWei } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
 import {
@@ -137,44 +157,66 @@ import {
   getType as getInputType,
   isContractArgValid
 } from './handlers/common';
-import * as mewAll from '@myetherwallet/mew-components';
 
 export default {
   name: 'ModuleContractInteract',
-  components: {
-    'mew-text-area': mewAll.default.MewTextarea
-  },
   data() {
     return {
       currentContract: null,
       interact: false,
       inputsValid: false,
+      hasEnough: false,
       activeContract: {},
       hasInputs: false,
       abi: [],
+      abiInput: '',
       contractAddress: '',
       contractType: [],
       selectedMethod: {
         inputs: [],
         outputs: []
       },
-      outputValues: []
+      outputValues: [],
+      ethPayable: '0'
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'web3', 'network']),
-    ...mapState('global', ['currentNetwork', 'gasPrice']),
+    ...mapState('wallet', ['address', 'web3', 'balance']),
+    ...mapState('global', ['currentNetwork', 'gasPrice', 'localContracts']),
+    canProceed() {
+      if (this.isPayableFunction) {
+        if (!this.canPay) {
+          return true;
+        }
+        return (
+          !this.inputsValid &&
+          !!this.selectedMethod.inputs.length &&
+          this.canPay
+        );
+      }
+      return !this.inputsValid && !!this.selectedMethod.inputs.length;
+    },
     isViewFunction() {
       return (
         this.selectedMethod.constant ||
         this.selectedMethod.stateMutability === 'view'
       );
     },
+    isPayableFunction() {
+      return this.selectedMethod.stateMutability === 'payable';
+    },
+    canPay() {
+      if (this.isPayableFunction) {
+        return this.hasEnough();
+      }
+      return true;
+    },
     isNoInputViewFunction() {
       return this.isViewFunction && this.selectedMethod.inputs.length === 0;
     },
     mergedContracts() {
       return [{ name: 'select a contract', abi: '', address: '' }].concat(
+        this.localContracts[this.currentNetwork.type.name],
         this.currentNetwork.type.contracts
       );
     },
@@ -229,9 +271,26 @@ export default {
             });
           }
         });
+      } else if (this.isPayableFunction) {
+        const rawTx = {
+          to: this.contractAddress,
+          from: this.address,
+          value: this.ethPayable,
+          data: caller.encodeABI()
+        };
+
+        this.web3.eth.estimateGas(rawTx).then(gasLimit => {
+          rawTx.gas = gasLimit;
+          caller.send(rawTx);
+        });
       } else {
         caller.send({ from: this.address });
       }
+    },
+    payableInput(amount) {
+      if (!amount || amount === '') amount = 0;
+      this.ethPayable = toWei(amount, 'ether');
+      this.hasEnough = toBN(this.ethPayable).lte(this.balance);
     },
     valueInput(idx, value) {
       this.selectedMethod.inputs[idx].value = value;
@@ -248,7 +307,9 @@ export default {
     },
     selectedContract(selected) {
       if (parseABI(parseJSON(selected.abi))) {
-        this.abi = JSON.stringify(selected.abi);
+        if (typeof selected.abi !== 'string')
+          this.abi = JSON.stringify(selected.abi);
+        else this.abi = selected.abi;
       }
       if (isAddress(selected.address)) {
         this.contractAddress = selected.address;

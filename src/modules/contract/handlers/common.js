@@ -12,7 +12,7 @@ import validateHexString from '@/core/helpers/validateHexString';
 
 const isContractArgValid = (value, solidityType) => {
   try {
-    if (!value) value = '';
+    if (!value && typeof value !== 'boolean') value = '';
     if (solidityType.includes('[]')) {
       const parsedValue = Array.isArray(value) ? value : stringToArray(value);
       const type = solidityType.replace('[]', '');

@@ -41,6 +41,13 @@ const SET_IMPORTED_STATE = function (currentState, newState) {
     currentState[item] = newState[item];
   });
 };
+
+const ADD_LOCAL_CONTRACT = function (state, contract) {
+  if (!state.localContracts[state.currentNetwork.type.name])
+    state.localContracts[state.currentNetwork.type.name] = [];
+  state.localContracts[state.currentNetwork.type.name].push(contract);
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -49,5 +56,6 @@ export default {
   SET_ADDRESS_BOOK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
-  SET_IMPORTED_STATE
+  SET_IMPORTED_STATE,
+  ADD_LOCAL_CONTRACT
 };

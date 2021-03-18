@@ -32,9 +32,16 @@ const isEthNetwork = function (state) {
   return state.currentNetwork.type.name === ETH.name;
 };
 
+const localContracts = function (state) {
+  return state.localContracts[state.currentNetwork.type.name]
+    ? state.localContracts[state.currentNetwork.type.name]
+    : [];
+};
+
 export default {
   Networks,
   network,
   currentGasPrice,
-  isEthNetwork
+  isEthNetwork,
+  localContracts
 };

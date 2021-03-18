@@ -21,7 +21,9 @@ const setAddressBook = function ({ commit }, addressBook) {
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
-
+const addLocalContract = function ({ commit }, localContract) {
+  commit('ADD_LOCAL_CONTRACT', localContract);
+};
 const setImportedState = function ({ commit }, stateObj) {
   stateObj['localStore'] = true;
   commit('SET_IMPORTED_STATE', stateObj);
@@ -34,5 +36,6 @@ export default {
   setGasPrice,
   setGasPriceType,
   setAddressBook,
-  setImportedState
+  setImportedState,
+  addLocalContract
 };

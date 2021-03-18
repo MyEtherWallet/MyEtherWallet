@@ -7,7 +7,7 @@
   >
     <template #moduleBody>
       <div>
-        <mew-text-area
+        <mew-input
           v-model="byteCode"
           label="Bytecode"
           placeholder=" "
@@ -17,7 +17,7 @@
             }
           ]"
         />
-        <mew-text-area
+        <mew-input
           v-model="abiInterface"
           outlined
           name="input-7-4"
@@ -29,7 +29,7 @@
               return isValidABI(value);
             }
           ]"
-        ></mew-text-area>
+        ></mew-input>
         <mew-input
           v-model="contractName"
           label="Contract name"
@@ -59,24 +59,10 @@
               class="bool-input-container"
             >
               <div class="bool-items">
-                <mew-switch
-                  :value="input.value"
-                  :label="input.name"
-                  @input="valueInput(idx, $event)"
-                />
-                <mew-checkbox
-                  v-model="input.value"
-                  :value="false"
-                  :label="$t('contract.false')"
-                  type="radio"
-                  checked
-                />
-              </div>
-              <div class="bool-items">
                 <mew-checkbox
                   v-model="input.value"
                   :value="true"
-                  :label="$t('contract.false')"
+                  :label="`${input.name} (${input.type})`"
                   type="radio"
                   checked
                 />
@@ -111,7 +97,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import * as unit from 'ethjs-unit';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import validateHexString from '@/core/helpers/validateHexString';
@@ -123,13 +109,9 @@ import {
 } from './handlers/common';
 import { stringToArray } from '@/core/helpers/common';
 import { toWei, toBN, toHex } from 'web3-utils';
-import * as mewAll from '@myetherwallet/mew-components';
 
 export default {
   name: 'ModuleContractDeploy',
-  components: {
-    'mew-text-area': mewAll.default.MewTextarea
-  },
   data() {
     return {
       contractName: '',
@@ -172,12 +154,6 @@ export default {
     },
     txValue() {
       return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
-    },
-    showInputs() {
-      return this.activeContract.abiValid && this.activeContract.byteCodeValid;
-    },
-    payableConstructor() {
-      return this.activeContract.payableConstructor;
     }
   },
   watch: {
@@ -189,9 +165,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions('global', ['addLocalContract']),
+    resetDefaults() {
+      this.contractName = '';
+      this.byteCode = '';
+      this.byteCodeHex = '';
+      this.abiInterface = '';
+      this.inputsValid = false;
+      this.ethAmount = '0';
+    },
     isValidByteCodeInput(val) {
       if (validateHexString(val)) {
         this.byteCodeHex = sanitizeHex(val);
+        return true;
+      }
+      if (validateHexString('0x' + val)) {
+        this.byteCodeHex = '0x' + val;
         return true;
       }
       try {
@@ -212,13 +201,14 @@ export default {
       for (const method of abi) {
         if (method.type === 'constructor') return method;
       }
-      return false;
+      return { inputs: [] };
     },
     deploy() {
       const contract = new this.web3.eth.Contract(
         JSON.parse(this.abiInterface)
       );
       const params = [];
+      let details = {};
       for (const _input of this.constructorInputs) {
         if (_input.type.includes('[]'))
           params.push(stringToArray(_input.value));
@@ -234,6 +224,20 @@ export default {
           value: this.isContructorPayable
             ? toHex(toBN(toWei(this.ethAmount)))
             : '0x00'
+        })
+        .on('transactionHash', () => {
+          details = {
+            name: this.contractName,
+            abi: JSON.stringify(JSON.parse(this.abiInterface))
+          };
+          this.resetDefaults();
+        })
+        .on('receipt', result => {
+          details.address = result.contractAddress;
+          if (details.name === '') {
+            details.name = result.contractAddress;
+          }
+          this.addLocalContract(details);
         });
     },
     valueInput(idx, value) {
