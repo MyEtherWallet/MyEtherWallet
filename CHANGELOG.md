@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Merge UI fixes [#2916](https://github.com/MyEtherWallet/MyEtherWallet/pull/2916)
 * Fix create wallet nnemonic layout [#2912](https://github.com/MyEtherWallet/MyEtherWallet/pull/2912)
 * Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
 * Update wallet side menu content order [#2910](https://github.com/MyEtherWallet/MyEtherWallet/pull/2910)
