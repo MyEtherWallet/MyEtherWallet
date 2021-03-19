@@ -85,7 +85,7 @@ export default {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width: '30%'
+          width: '15%'
         }
       ],
       loading: true
