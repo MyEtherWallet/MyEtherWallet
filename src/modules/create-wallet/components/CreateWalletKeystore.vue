@@ -105,19 +105,19 @@
               </div>
             </v-col>
           </v-row>
-          <div class="d-flex justify-center mt-6">
+          <div class="d-flex flex-column flex-md-row justify-center mt-6">
             <mew-button
               title="Back"
               btn-style="outline"
               btn-size="xlarge"
-              class="mx-3"
+              class="mx-md-1 my-1"
               @click.native="updateStep(1)"
             />
             <mew-button
               title="Acknowledge & Download"
               btn-size="xlarge"
               :has-full-width="false"
-              class="mx-3"
+              class="mx-md-1 my-1"
               @click.native="downloadWallet"
             />
           </div>
@@ -130,6 +130,7 @@
           />
         </v-sheet>
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
