@@ -122,10 +122,15 @@
               hide-details
               mandatory
               row
-              class="radio-group width--full pa-5"
+              class="radio-group pa-5"
             >
               <template #label>
-                <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
+                <div
+                  class="mew-heading-3 mb-3 mb-sm-0"
+                  style="min-width: 30px; line-height: 25px"
+                >
+                  {{ getOnlyKey(item) + 1 }}.
+                </div>
               </template>
               <v-row>
                 <v-col
@@ -154,18 +159,19 @@
            Back Button & Verify Button
           =====================================================================================
           -->
-          <div class="d-flex justify-center mt-6">
+          <div class="d-flex flex-column flex-md-row justify-center mt-6">
             <mew-button
               title="Back"
               btn-size="xlarge"
               btn-style="outline"
-              class="mx-3"
+              class="mx-md-1 my-1"
               @click.native="updateStep(1)"
             />
             <mew-button
               title="Verify"
               btn-size="xlarge"
               :disabled="!canVerify"
+              class="mx-md-1 my-1"
               @click.native="verify"
             />
           </div>
