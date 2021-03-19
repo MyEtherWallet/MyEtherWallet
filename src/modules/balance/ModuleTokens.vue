@@ -5,8 +5,13 @@
   =============================================================
   -->
   <div>
+    <v-skeleton-loader
+      v-if="loading && tokensData"
+      class="mx-auto"
+      type="table"
+    />
     <mew-module
-      v-if="tokensData.length > 0"
+      v-if="!loading && tokensData.length > 0"
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
@@ -32,7 +37,7 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-else is-tokens />
+    <balance-empty-block v-if="!loading && tokensData.length === 0" is-tokens />
   </div>
 </template>
 <script>
@@ -82,7 +87,8 @@ export default {
           sortable: false,
           width: '30%'
         }
-      ]
+      ],
+      loading: true
     };
   },
   computed: {
@@ -121,19 +127,19 @@ export default {
               colorTheme: 'primary'
             }
           ];
+          this.loading = false;
           return newObj;
         });
     },
     totalTokensValue() {
       return new BigNumber(
         this.tokensList.reduce((total, currentVal) => {
-          let balance = 0;
-          if (
+          const balance =
             currentVal.usdBalance !== null &&
-            (currentVal.price_change_24h !== null || currentVal.market_cap !== 0)
-          ) {
-            balance = currentVal.usdBalance;
-          }
+            (currentVal.price_change_24h !== null ||
+              currentVal.market_cap !== 0)
+              ? currentVal.usdBalance
+              : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
