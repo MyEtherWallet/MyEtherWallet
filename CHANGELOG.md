@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
 * Update wallet side menu content order [#2910](https://github.com/MyEtherWallet/MyEtherWallet/pull/2910)
 * Update mobile menu UI [#2900](https://github.com/MyEtherWallet/MyEtherWallet/pull/2900)
 * Move tokens to state [#2898](https://github.com/MyEtherWallet/MyEtherWallet/pull/2898)

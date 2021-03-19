@@ -4,7 +4,7 @@
     max-width="800px"
     class="mx-auto mew-component--keystore"
   >
-    <mew-stepper :items="items" :on-step="step" class="mx-n12 mx-md-0">
+    <mew-stepper :items="items" :on-step="step" class="mx-md-0">
       <!--
       =====================================================================================
         Step 1: Create Password
@@ -77,6 +77,7 @@
         =====================================================================================
         -->
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
