@@ -130,7 +130,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-component--features {
   .desktop-content {
     .features-tabs-container {
