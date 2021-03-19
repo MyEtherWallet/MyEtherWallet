@@ -4,7 +4,7 @@
     max-width="800px"
     color="transparent"
   >
-    <mew-stepper class="mx-n12 mx-md-0" :items="steppers" :on-step="step">
+    <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!--
       =====================================================================================
         Step 1: Write Down Words
@@ -92,6 +92,7 @@
           </div>
         </v-sheet>
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -121,10 +122,15 @@
               hide-details
               mandatory
               row
-              class="radio-group width--full pa-5"
+              class="radio-group pa-5"
             >
               <template #label>
-                <div style="min-width: 30px">{{ getOnlyKey(item) + 1 }}.</div>
+                <div
+                  class="mew-heading-3 mb-3 mb-sm-0"
+                  style="min-width: 30px; line-height: 25px"
+                >
+                  {{ getOnlyKey(item) + 1 }}.
+                </div>
               </template>
               <v-row>
                 <v-col
@@ -153,23 +159,25 @@
            Back Button & Verify Button
           =====================================================================================
           -->
-          <div class="d-flex justify-center mt-6">
+          <div class="d-flex flex-column flex-md-row justify-center mt-6">
             <mew-button
               title="Back"
               btn-size="xlarge"
               btn-style="outline"
-              class="mx-3"
+              class="mx-md-1 my-1"
               @click.native="updateStep(1)"
             />
             <mew-button
               title="Verify"
               btn-size="xlarge"
               :disabled="!canVerify"
+              class="mx-md-1 my-1"
               @click.native="verify"
             />
           </div>
         </v-sheet>
         <mew-warning-sheet
+          class="mt-4 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -224,7 +232,6 @@
         </v-sheet>
       </template>
     </mew-stepper>
-    <div class="spacer-y-medium" />
   </v-sheet>
 </template>
 
@@ -328,6 +335,9 @@ export default {
   methods: {
     generateVerification() {
       this.generatedVerification = this.handlerCreateWallet.getVerification();
+      this.generatedVerification.sort(function (a, b) {
+        return a.itemNumber - b.itemNumber;
+      });
     },
     getOnlyKey(obj) {
       return Number(Object.keys(obj)[0]);
@@ -388,7 +398,7 @@ export default {
 }
 
 .radio-group {
-  box-shadow: 0 5px 15px var(--v-boxShadow-base) !important;
+  box-shadow: 0 0px 10px var(--v-boxShadow-base) !important;
   border: 1px solid var(--v-inputBorder-base);
   border-radius: 5px;
 }
