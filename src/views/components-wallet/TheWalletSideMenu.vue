@@ -169,7 +169,8 @@
       class="d-flex d-lg-none"
     >
       <v-row class="pa-3 align-center justify-space-between">
-        <app-btn-menu :menu-method="openNavigation" class="mr-3" />
+        <app-btn-menu class="mr-3" @click.native="openNavigation" />
+
         <router-link :to="{ name: 'Dashboard' }">
           <img width="80" src="@/assets/images/icons/logo-mew.png" />
         </router-link>
