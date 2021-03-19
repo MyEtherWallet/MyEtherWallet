@@ -26,25 +26,19 @@
     "update:swap": "node compileBaseSwapOptions.js",
     "apollo": "apollo",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
-    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run test",
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.39-beta",
-    "@sentry/browser": "6.2.1",
-    "@sentry/integrations": "6.2.1",
-    "@sentry/vue": "6.2.1",
-    "@sentry/tracing": "6.2.1",
+    "@myetherwallet/mew-components": "0.5.45-beta",
+    "@sentry/browser": "6.2.2",
+    "@sentry/integrations": "6.2.2",
+    "@sentry/vue": "6.2.2",
+    "@sentry/tracing": "6.2.2",
     "@unstoppabledomains/resolution": "1.20.0",
     "@vue/babel-preset-app": "4.5.11",
     "@walletconnect/browser": "1.0.0",
@@ -86,8 +80,6 @@
     "@ledgerhq/hw-transport-webusb": "5.45.0",
     "@mdi/font": "5.9.55",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.6",
-    "@sentry/tracing": "6.2.1",
-    "@sentry/vue": "6.2.1",
     "@vue/cli-plugin-babel": "4.5.11",
     "@vue/cli-plugin-eslint": "4.5.11",
     "@vue/cli-plugin-pwa": "4.5.11",
@@ -148,7 +140,7 @@
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
     "vue-cli-plugin-vuetify": "2.2.2",
-    "vue-i18n": "8.23.0",
+    "vue-i18n": "8.24.1",
     "vue-template-compiler": "2.6.12",
     "vuetify": "2.4.3",
     "wallet-address-validator": "0.2.4",
@@ -169,7 +161,6 @@
     "handlebars": "^4.5.3",
     "axios": "^0.21.1",
     "node-fetch": "^2.6.1",
-    "elliptic": "^6.5.3",
     "cryptiles": "^4.1.2"
   },
   "license": "MIT",
