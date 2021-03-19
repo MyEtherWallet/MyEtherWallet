@@ -3,8 +3,7 @@ const state = {
   darkList: {},
   path: '',
   forexRates: {},
-  ETHUSDValue: {},
-  test: 'abc'
+  ETHUSDValue: {}
 };
 
 export default state;

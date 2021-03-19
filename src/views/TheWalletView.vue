@@ -1,19 +1,22 @@
 <template>
-  <v-sheet height="100%" color="walletBg">
+  <div class="wallet-main">
     <the-wallet-side-menu />
-    <div>
-      <the-wallet-header />
-      <v-container class="align-center d-flex" fluid>
+    <the-wallet-header />
+    <v-main>
+      <v-container
+        class="pa-3 pa-md-5 align-center wallet-content-container"
+        fluid
+      >
         <module-confirmation />
-        <router-view :owners-tokens="ownersTokens" />
+        <router-view />
       </v-container>
-      <the-wallet-footer />
-    </div>
-  </v-sheet>
+    </v-main>
+    <the-wallet-footer />
+  </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import TokenCalls from '@/apollo/queries/tokens/index';
 import WalletCalls from '@/apollo/queries/wallets/index';
@@ -21,7 +24,10 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
-import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper.js';
 
 export default {
   components: {
@@ -31,21 +37,19 @@ export default {
     ModuleConfirmation
   },
   data() {
-    return {
-      tokens: [],
-      ownersTokens: [],
-      manualBlockFetch: () => {}
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online'])
+    ...mapState('global', ['online']),
+    ...mapGetters('global', ['isEthNetwork', 'network'])
   },
   watch: {
     web3() {
       this.web3.eth.clearSubscriptions();
-      clearInterval(this.manualBlockFetch);
       this.subscribeToBlockNumber();
+      this.getTokens();
+      this.getPriceAndBalance();
     }
   },
   mounted() {
@@ -57,41 +61,47 @@ export default {
   },
   destroyed() {
     this.web3.eth.clearSubscriptions();
-    clearInterval(this.manualBlockFetch);
   },
   methods: {
-    ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
+    ...mapActions('wallet', [
+      'setAccountBalance',
+      'setBlockNumber',
+      'setTokens'
+    ]),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
-    ...mapState('global', ['gasPriceType']),
-    getOwnDomain() {
-      fetch('');
-    },
     getTokens() {
-      const tokensList = new TokenCalls(this.$apollo);
-      tokensList.getOwnersERC20Tokens(this.address).then(res => {
-        this.ownersTokens = res.map(r => {
-          r.balance = toBN(r.balance);
-          return r;
+      if (this.isEthNetwork) {
+        const tokensList = new TokenCalls(this.$apollo);
+        tokensList.getOwnersERC20Tokens(this.address).then(res => {
+          this.setTokens(res);
         });
-      });
+      } else {
+        this.setTokens(this.network.type.tokens);
+      }
     },
     getPriceAndBalance() {
-      const walletCalls = new WalletCalls(this.$apollo);
-      walletCalls.getBalance(this.address).then(res => {
-        this.setAccountBalance(toBN(res));
-      });
-      walletCalls.getUSDPrice(this.address).then(res => {
-        const usd = {
-          value: res.current_price,
-          symbol: '$',
-          name: 'USD',
-          price_change_24h: res.price_change_24h
-        };
-        this.setETHUSDValue(usd);
-      });
+      if (this.isEthNetwork) {
+        const walletCalls = new WalletCalls(this.$apollo);
+        walletCalls.getBalance(this.address).then(res => {
+          this.setAccountBalance(toBN(res));
+        });
+        walletCalls.getUSDPrice(this.address).then(res => {
+          const usd = {
+            value: res.current_price,
+            symbol: '$',
+            name: 'USD',
+            price_change_24h: res.price_change_24h
+          };
+          this.setETHUSDValue(usd);
+        });
+      } else {
+        this.web3.eth.getBalance(this.address).then(res => {
+          this.setAccountBalance(toBN(res));
+        });
+      }
       this.web3.eth.getGasPrice().then(res => {
-        this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
+        this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
       });
     },
     subscribeToBlockNumber() {
@@ -101,19 +111,6 @@ export default {
       this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
         this.setBlockNumber(res.number);
       });
-    },
-    manualBlockSubscription() {
-      const _self = this;
-      // fetch initially
-      _self.web3.eth.getBlockNumber().then(res => {
-        _self.setBlockNumber(res);
-        // rerun in 14 secs
-        _self.manualBlockFetch = setInterval(() => {
-          _self.web3.eth.getBlockNumber().then(res => {
-            _self.setBlockNumber(res);
-          });
-        }, 14000);
-      });
     }
   }
 };
@@ -122,5 +119,9 @@ export default {
 <style lang="scss" scoped>
 .box-shadow {
   box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+}
+.wallet-main {
+  background-color: var(--v-walletBg-base);
+  height: 100%;
 }
 </style>

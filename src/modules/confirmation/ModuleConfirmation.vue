@@ -9,7 +9,6 @@
     >
       <template #mewOverlayBody>
         <confirmation-transaction
-          v-if="true"
           :to="to"
           :from="from"
           :data="data"
@@ -47,6 +46,7 @@ import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
+import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['instance', 'address', 'isHardware', 'identifier']),
+    ...mapState('wallet', ['instance', 'web3']),
     ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
@@ -107,6 +107,7 @@ export default {
   created() {
     const _self = this;
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, (tx, resolver) => {
+      this.parseRawData(tx);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
@@ -156,6 +157,29 @@ export default {
     overlayClose() {
       this.showOverlay = false;
       this.showSignOverlay = false;
+    },
+    parseRawData(tx) {
+      let tokenData = '';
+      if (tx.to && tx.data && tx.data !== '0x') {
+        tokenData = parseTokenData(
+          tx.data,
+          tx.to,
+          this.network.type.tokens,
+          this.web3
+        );
+        tx.fromTxData = {
+          currency: this.network.type.currencyName,
+          amount: tx.amount
+        };
+        tx.toTxData = {
+          currency: tokenData.tokenSymbol,
+          amount: tokenData.tokenTransferVal,
+          to: tokenData.tokenTransferTo
+        };
+      }
+      tx.type = 'OUT';
+      tx.network = this.network.type.name;
+      tx.transactionFee = this.txFee;
     },
     send() {
       this.resolver(this.signedTxObject);

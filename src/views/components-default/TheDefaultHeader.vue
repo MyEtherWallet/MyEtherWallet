@@ -1,24 +1,14 @@
 <template>
   <div class="default-header expandHeader">
-    <menu-mobile v-model="openMobileMenu" />
-    <mew-tools v-model="mewTools" />
-    <v-container fluid class="d-flex align-center py-2">
+    <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
-        <v-col class="d-flex d-md-none" cols="4">
-          <mew-button
-            class="mobile-menu-button ml-n2 mr-n1"
-            color-theme="white"
-            btn-style="transparent"
-            icon="mdi-text"
-            icon-type="mdi"
-            icon-align="left"
-            style="border-radius: 100% !important"
-            @click.native="openMobileMenu = true"
-          />
+        <v-col class="d-md-none" cols="4">
+          <the-default-mobile-navigation class="ml-n2" />
         </v-col>
-        <v-col class="pl-md-14" cols="4">
+        <v-col cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
             <v-img
+              :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
               src="@/assets/images/icons/logo-mew.png"
               max-height="36"
               max-width="130"
@@ -45,26 +35,8 @@
             Buy ETH
           </a>
         </v-col>
-        <v-col
-          cols="4"
-          :class="$vuetify.breakpoint.mdAndUp ? 'text-center' : 'text-right'"
-        >
-          <mew-button
-            class="px-2"
-            :title="$vuetify.breakpoint.mdAndUp ? 'MEW tools' : ''"
-            color-theme="white"
-            :has-full-width="false"
-            btn-size="large"
-            btn-style="outline"
-            :icon="
-              $vuetify.breakpoint.mdAndUp
-                ? 'mdi-view-module'
-                : require('@/assets/images/icons/icon-grid-dot.png')
-            "
-            :icon-type="$vuetify.breakpoint.mdAndUp ? 'mdi' : 'img'"
-            icon-align="left"
-            @click.native="mewTools = true"
-          />
+        <v-col cols="4" class="text-right">
+          <mew-tools class="ml-auto" />
         </v-col>
       </v-row>
     </v-container>
@@ -72,12 +44,12 @@
 </template>
 
 <script>
-import mewTools from '@/components/mewTools/MewTools';
-import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
+import mewTools from '@/components/mew-tools/MewTools';
+import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { mewTools, MenuMobile },
+  components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
     mewTools: false,
     openMobileMenu: false,
@@ -132,6 +104,9 @@ export default {
   methods: {
     routeTo(route) {
       this.$router.push(route);
+    },
+    openMobile() {
+      this.openMobileMenu = true;
     }
   }
 };

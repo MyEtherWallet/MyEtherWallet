@@ -1,10 +1,7 @@
 // import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import {
-  WEB3_WALLET,
-  WALLET_CONNECT
-} from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
@@ -13,23 +10,48 @@ import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 import { EventBus } from '@/core/plugins/eventBus';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 
 const setEvents = (promiObj, tx, dispatch) => {
+  // create a no reference copy specifically for notification
+  const newTxObj = utils._.clone(tx);
+  newTxObj.date = new Date().getTime();
+  const isExcempt = newTxObj.hasOwnProperty('handleNotification');
+  delete newTxObj['r'];
+  delete newTxObj['v'];
+  delete newTxObj['s'];
+  delete newTxObj['chainId'];
+
   promiObj
     .once('transactionHash', hash => {
-      dispatch('wallet/addNotification', ['Hash', tx.from, tx, hash], {
-        root: true
-      });
+      newTxObj.status = 'PENDING';
+      newTxObj.transactionHash = hash;
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/addNotification', notification, {
+          root: true
+        });
+      }
     })
-    .once('receipt', res => {
-      dispatch('wallet/addNotification', ['Receipt', tx.from, tx, res], {
-        root: true
-      });
+    .on('receipt', res => {
+      newTxObj.transactionHash = res.transactionHash;
+      newTxObj.status = 'SUCCESS';
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/updateNotification', notification, {
+          root: true
+        });
+      }
     })
     .on('error', err => {
-      dispatch('wallet/addNotification', ['Error', tx.from, tx, err], {
-        root: true
-      });
+      newTxObj.status = 'ERROR';
+      newTxObj.errMessage = err.message;
+      if (!isExcempt) {
+        const notification = new Notification(newTxObj);
+        dispatch('notifications/addNotification', notification, {
+          root: true
+        });
+      }
     });
 };
 export default async ({ payload, store, requestManager }, res, next) => {
@@ -58,8 +80,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
   getSanitizedTx(tx)
     .then(_tx => {
       if (
-        store.state.wallet.identifier === WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_CONNECT
+        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);

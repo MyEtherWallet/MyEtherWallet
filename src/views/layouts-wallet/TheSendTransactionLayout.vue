@@ -1,23 +1,19 @@
 <template>
-  <v-row>
-    <v-col cols="9">
+  <the-wrapper-wallet>
+    <template #leftColItem1>
       <module-send />
-    </v-col>
-    <v-spacer cols="1" />
-    <v-col cols="3">
-      <module-network />
-    </v-col>
-  </v-row>
+    </template>
+  </the-wrapper-wallet>
 </template>
 
 <script>
 import ModuleSend from '@/modules/send/ModuleSend';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 
 export default {
   components: {
     ModuleSend,
-    ModuleNetwork
+    TheWrapperWallet
   }
 };
 </script>

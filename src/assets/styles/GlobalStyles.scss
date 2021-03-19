@@ -1,15 +1,11 @@
-/* Set maximum size for "v-container" */
+/* Set maximum size for "wallet-container" */
+
 @media (min-width: 1904px) {
-  .container {
-    max-width: 1185px !important;
+  .wallet-content-container {
+    max-width: 1603px !important;
   }
 }
 
-@media (max-width: 959px) {
-  .container {
-    padding: 0 1.5rem !important;
-  }
-}
 @media (max-width: 1263px) {
   html {
     font-size: 14px !important;
@@ -59,10 +55,6 @@
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
 }
-.v-application .v-btn.mew-button .v-btn__content {
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-}
 .corner-btn {
   color: var(--v-primary-base);
   font-weight: 500;
@@ -96,6 +88,9 @@
   .mew-subtitle {
     padding: 1.8rem 0;
   }
+}
+.mew-subtitle {
+  line-height: 34px;
 }
 
 /* ========== CSS Style Reset ========== */
@@ -291,4 +286,10 @@ h6 {
 /* ========== Mobile ========== */
 .preset--mobile-max-width {
   max-width: 420px;
+}
+
+/* ========== Convert SVG to white ========== */
+
+.make-white-svg {
+  filter: brightness(10);
 }

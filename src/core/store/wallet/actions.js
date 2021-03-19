@@ -1,23 +1,18 @@
 import url from 'url';
 import web3 from 'web3';
 import MEWProvider from '@/utils/web3-provider';
-import {
-  MEW_CONNECT,
-  WALLET_CONNECT,
-  WALLET_LINK
-} from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import BigNumber from 'bignumber.js';
 
 import { EventBus } from '@/core/plugins/eventBus';
-
 const removeWallet = function ({ commit, state }) {
   if (
     state.instance &&
-    (state.instance.identifier === MEW_CONNECT ||
-      state.instance.identifier === WALLET_CONNECT ||
-      state.instance.identifier === WALLET_LINK)
+    (state.instance.identifier === WALLET_TYPES.MEW_CONNECT ||
+      state.instance.identifier === WALLET_TYPES.WALLET_CONNECT ||
+      state.instance.identifier === WALLET_TYPES.WALLET_LINK)
   ) {
     state.instance.getConnection().disconnect();
   }
@@ -27,6 +22,9 @@ const removeWallet = function ({ commit, state }) {
 const setWallet = function ({ commit, dispatch }, params) {
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
+};
+const setTokens = function ({ commit }, params) {
+  commit('SET_TOKENS', params);
 };
 
 const setAccountBalance = function ({ commit }, balance) {
@@ -124,5 +122,6 @@ export default {
   setENS,
   setWeb3Instance,
   setBlockNumber,
-  setOwnedDomains
+  setOwnedDomains,
+  setTokens
 };

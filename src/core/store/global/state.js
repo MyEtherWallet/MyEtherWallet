@@ -10,12 +10,13 @@ const state = {
   online: true,
   linkQuery: {},
   locale: 'en_US',
-  stateVersion: Configs.stateVersion,
+  stateVersion: Configs.VERSION.global,
   gasLimitWarning: 100,
-  gasPrice: toWei('41', 'gwei'),
+  baseGasPrice: toWei('41', 'gwei'),
   gasPriceType: gasPriceTypes.ECONOMY,
   currentNetwork: Object.assign({}, nodeList['ETH'][0]),
-  preferredCurrency: 'USD'
+  preferredCurrency: 'USD',
+  customPaths: []
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

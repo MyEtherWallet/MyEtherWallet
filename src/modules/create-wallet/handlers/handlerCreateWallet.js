@@ -69,7 +69,8 @@ export default class CreateWallet {
       ];
       const randomlySortedArray = knuthShuffle(arr);
       return {
-        [item]: randomlySortedArray
+        [item]: randomlySortedArray,
+        itemNumber: item
       };
     });
     this.verificationPhrase = output;

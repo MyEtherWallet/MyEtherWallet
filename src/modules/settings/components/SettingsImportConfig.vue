@@ -5,18 +5,54 @@
       import you configuration file from your local computer.
     </div>
     <div class="d-block d-sm-flex align-start text-center">
-      <v-file-input color="primary" label="Upload file..." filled />
-      <mew-button class="ml-3" title="Confirm & Import" button-size="xlarge" />
+      <v-file-input
+        color="primary"
+        label="Upload file..."
+        truncate-length="15"
+        filled
+        accept="application/JSON"
+        @change="handleChange"
+      />
+      <mew-button
+        class="ml-3"
+        title="Confirm & Import"
+        button-size="xlarge"
+        :disabled="file === ''"
+        @click.native="clickImport"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { SUCCESS, Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
-  components: {},
-  props: {},
+  name: 'SettingsImportConfig',
+  props: {
+    importConfig: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
-    return {};
+    return {
+      file: ''
+    };
+  },
+  methods: {
+    handleChange(e) {
+      this.file = e;
+    },
+    clickImport() {
+      this.importConfig
+        .importStore(this.file)
+        .then(() => {
+          Toast('Settings succesfully imported!', {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e.messsage, {}, ERROR);
+        });
+    }
   }
 };
 </script>
