@@ -22,7 +22,7 @@ const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 export default class AaveHandler {
   constructor() {
     this.$store = vuexStore;
-    Object.assign(this, mapState('wallet', ['web3', 'address']));
+    Object.assign(this, mapState('wallet', ['web3', 'address', 'balance']));
     Object.assign(this, mapGetters('wallet', ['tokensList', 'balanceInETH']));
     this.reservesData = [];
     this.rawReserveData = [];
@@ -160,6 +160,7 @@ export default class AaveHandler {
         this.usdPriceEth,
         Number(moment().format('X'))
       );
+      this.mergeTheReserves();
     }
   }
 
@@ -176,20 +177,17 @@ export default class AaveHandler {
   }
 
   getReserveBalances() {
-    const utils = this.web3().utils;
-    const accountBalance = utils.BN(this.balanceInETH());
+    const tokensList = this.tokensList();
+    const ethBalance = this.balanceInETH();
     if (this.reservesData.length > 0) {
       this.reservesData.forEach(reserve => {
         reserve.tokenBalance = 0;
         reserve.user = !reserve.user ? {} : reserve.user;
         if (reserve.symbol === 'ETH') {
-          reserve.tokenBalance = this.web3().utils.fromWei(
-            accountBalance,
-            'ether'
-          );
+          reserve.tokenBalance = ethBalance;
         }
 
-        const foundReserve = this.tokensList().find(
+        const foundReserve = tokensList.find(
           elem => elem.symbol === reserve.symbol
         );
         if (foundReserve) {
