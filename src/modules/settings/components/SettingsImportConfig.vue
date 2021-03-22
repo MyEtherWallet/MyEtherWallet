@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4 pb-sm-0">
+  <div class="pa-6">
     <div class="descriptions mb-7">
       Please upload the file, and click the button on the left top to open and
       import you configuration file from your local computer.
@@ -11,12 +11,13 @@
         truncate-length="15"
         filled
         accept="application/JSON"
+        height="60"
         @change="handleChange"
       />
       <mew-button
         class="ml-3"
         title="Confirm & Import"
-        button-size="xlarge"
+        btn-size="xlarge"
         :disabled="file === ''"
         @click.native="clickImport"
       />

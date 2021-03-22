@@ -17,7 +17,10 @@
       Loading
     =====================================================================================
     -->
-        <v-progress-circular v-if="!initLoaded" indeterminate color="primary" />
+        <v-skeleton-loader
+          v-if="!initLoaded"
+          type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
+        />
         <!--
     =====================================================================================
       Display owned nft tokens
