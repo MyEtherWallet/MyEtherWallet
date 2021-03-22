@@ -1,18 +1,11 @@
 <template>
-  <v-btn icon @click="menuMethod">
-    <img src="@/assets/images/icons/icon-menu.svg" />
+  <v-btn icon x-large>
+    <img src="@/assets/images/icons/icon-menu.svg" height="40" />
   </v-btn>
 </template>
 <script>
 export default {
   name: 'AppBtnMenu',
-  props: {
-    menuMethod: {
-      type: Function,
-      default: function () {
-        return {};
-      }
-    }
-  }
+  props: {}
 };
 </script>

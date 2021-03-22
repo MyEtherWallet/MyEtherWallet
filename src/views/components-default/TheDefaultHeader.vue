@@ -1,10 +1,9 @@
 <template>
   <div class="default-header expandHeader">
-    <menu-mobile v-model="openMobileMenu" />
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
-        <v-col class="d-flex d-md-none" cols="4">
-          <app-btn-menu :menu-method="openMobile" />
+        <v-col class="d-md-none" cols="4">
+          <the-default-mobile-navigation class="ml-n2" />
         </v-col>
         <v-col cols="4">
           <router-link :to="{ name: 'Home', query: {} }">
@@ -45,13 +44,12 @@
 </template>
 
 <script>
-import MewTools from '@/components/mew-tools/MewTools';
-import MenuMobile from '@/components/menu-mobile/Menu'; // will remove this after adding mobile version to mew-menu
-import AppBtnMenu from '@/core/components/AppBtnMenu';
+import mewTools from '@/components/mew-tools/MewTools';
+import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 
 export default {
   name: 'TheDefaultHeader',
-  components: { MewTools, MenuMobile, AppBtnMenu },
+  components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
     mewTools: false,
     openMobileMenu: false,
@@ -113,30 +111,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-// adding mew menu styles here for now, will apply it to mew components
-.v-application {
-  .mew-menu-content {
-    min-width: 200px !important;
-
-    .v-list {
-      padding-top: 15px !important;
-
-      .v-list-item {
-        min-height: 30px !important;
-      }
-      .v-list-item--link {
-        padding-top: 0 !important;
-        padding-bottom: 5px !important;
-      }
-    }
-  }
-}
-
-.default-header {
-  .mobile-menu-button .v-icon.v-icon {
-    font-size: 37px;
-  }
-}
-</style>

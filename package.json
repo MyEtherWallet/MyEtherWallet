@@ -26,14 +26,8 @@
     "update:swap": "node compileBaseSwapOptions.js",
     "apollo": "apollo",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
-    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run test",
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@coolwallets/eth": "0.2.0-beta.1",
@@ -107,7 +101,7 @@
     "codecov": "3.8.1",
     "commitlint": "12.0.1",
     "copy-webpack-plugin": "6.3.2",
-    "eslint": "7.21.0",
+    "eslint": "7.22.0",
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "7.7.0",
@@ -169,7 +163,6 @@
     "handlebars": "^4.5.3",
     "axios": "^0.21.1",
     "node-fetch": "^2.6.1",
-    "elliptic": "^6.5.3",
     "cryptiles": "^4.1.2"
   },
   "license": "MIT",

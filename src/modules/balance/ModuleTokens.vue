@@ -44,6 +44,8 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
+import { fromWei } from 'web3-utils';
+
 export default {
   components: {
     BalanceEmptyBlock
@@ -104,9 +106,7 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            new BigNumber(
-              this.web3.utils.fromWei(item.balance, 'ether')
-            ).toFixed(2) +
+            new BigNumber(fromWei(item.balance, 'ether')).toFixed(2) +
               ' ' +
               item.symbol,
             '$' + new BigNumber(item.usdBalance).toFixed(2)
