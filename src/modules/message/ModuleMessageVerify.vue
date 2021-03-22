@@ -15,8 +15,8 @@
         ></v-textarea>
 
         <div v-if="signResult">
-          <span v-if="didSign">Did Sign</span>
-          <span v-if="didntSign">Didn't sign</span>
+          <span v-if="didSign"> {{ signer }} Did Sign</span>
+          <span v-if="didntSign">{{ signer }} Didn't sign</span>
         </div>
         <mew-button
           title="Verify"
@@ -47,7 +47,8 @@ export default {
       didSign: false,
       didntSign: false,
       signResult: false,
-      message: ''
+      message: '',
+      signer: ''
     };
   },
   computed: {},
@@ -58,11 +59,12 @@ export default {
     verifyMessage() {
       this.signResult = true;
       const signCheck = this.signAndVerify.verifyMessage(this.message);
-      if (signCheck) {
+      if (signCheck.verified) {
         this.didSign = true;
       } else {
         this.didntSign = true;
       }
+      this.signer = '0x' + signCheck.signer;
     },
     clearAll() {
       this.didntSign = false;

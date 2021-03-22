@@ -67,7 +67,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['instance', 'web3']),
+    ...mapState('wallet', [
+      'instance',
+      'web3',
+      'address',
+      'identifier',
+      'isHardware'
+    ]),
     ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
@@ -124,9 +130,7 @@ export default {
         });
     });
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
-      _self.title = 'Transaction Confirmation';
-      // _self.tx = tx;
-      // _self.resolver = resolver;
+      _self.title = 'Message Signed';
       _self.instance
         .signMessage(msg)
         .then(res => {
@@ -144,7 +148,6 @@ export default {
           );
           _self.signedMessage = result;
           resolver(result);
-          // _self.signedTx = res.rawTransaction;
           _self.showSignOverlay = true;
         })
         .catch(e => {
