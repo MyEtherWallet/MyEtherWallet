@@ -1,7 +1,7 @@
-import web3Util from 'web3-utils';
+import { BN } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 const checkAmount = (total, amount) => {
-  if (web3Util.BN(amount).gt(web3Util.BN(total))) {
+  if (BN(amount).gt(BN(total))) {
     return true;
   }
 };
@@ -68,7 +68,6 @@ const roundNumber = val => {
   const OneBillion = 1e9;
   const OneTrillion = 1e12;
   const value = new BigNumber(val);
-  console.log('inround', value.toFixed());
 
   /* Case I: value is 0 */
   if (value.isZero()) {

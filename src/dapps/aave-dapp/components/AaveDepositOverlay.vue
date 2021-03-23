@@ -7,7 +7,7 @@
   >
     <template #mewOverlayBody>
       <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4">
-        <AaveTable />
+        <aave-table :handler="handler" />
       </v-sheet>
     </template>
   </mew-overlay>
@@ -24,6 +24,11 @@ export default {
         return {};
       },
       type: Function
+    },
+    handler: {
+      type: [Object, null],
+      validator: item => typeof item === 'object' || null,
+      default: () => {}
     }
   },
   data() {

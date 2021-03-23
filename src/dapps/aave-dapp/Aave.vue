@@ -70,7 +70,11 @@
           </v-row>
 
           <div class="d-flex justify-center mt-9">
-            <mew-button title="Deposit" btn-size="xlarge"></mew-button>
+            <mew-button
+              title="Deposit"
+              btn-size="xlarge"
+              @click.native="openDepositOverlay"
+            />
           </div>
         </v-sheet>
       </template>
@@ -135,16 +139,31 @@
           />
 
           <div class="d-flex justify-center mt-9">
-            <mew-button title="Borrow" btn-size="xlarge"></mew-button>
+            <mew-button
+              title="Borrow"
+              btn-size="xlarge"
+              @click.native="openBorrowOverlay"
+            />
           </div>
         </v-sheet>
       </template>
     </the-wrapper-dapp>
+    <aave-deposit-overlay
+      :open="showDepositOverlay"
+      :close="closeDepositOverlay"
+      :handler="handler"
+    />
+    <aave-borrow-overlay
+      :open="showBorrowOverlay"
+      :close="closeBorrowOverlay"
+    />
   </div>
 </template>
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
+import AaveBorrowOverlay from './components/AaveBorrowOverlay';
+import AaveDepositOverlay from './components/AaveDepositOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
@@ -175,11 +194,13 @@ const COLORS = {
 };
 
 export default {
-  components: { TheWrapperDapp },
+  components: { TheWrapperDapp, AaveBorrowOverlay, AaveDepositOverlay },
   data() {
     return {
       handler: null,
       caller: null,
+      showDepositOverlay: false,
+      showBorrowOverlay: false,
       activeTab: 0,
       BG: BG,
       topBanner: {
@@ -187,8 +208,6 @@ export default {
         subtext:
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
-      openDepositOverlay: false,
-      openBorrowOverlay: false,
       depositsTableHeader: [
         {
           text: 'Token',
@@ -199,7 +218,7 @@ export default {
         },
         {
           text: 'Deposited',
-          value: 'deposited',
+          value: 'balance',
           sortable: false,
           filterable: false,
           width: '100%'
@@ -354,23 +373,25 @@ export default {
     depositsTableData() {
       if (!this.handler) return [];
       const newArr = [];
-      this.handler.userSummary.reservesData.forEach(item => {
-        console.log(item);
-        const newObj = {
-          token: item.reserve.symbol,
-          deposited: `
-        ${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
-            item.reserve.symbol
-          }
-          ${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH
-        `,
-          earned: '',
-          useAsColateral: '',
-          deposit: '',
-          withdraw: ''
-        };
-        newArr.push(newObj);
-      });
+      if (this.handler.userSummary.hasOwnProperty('reservesData')) {
+        this.handler.userSummary.reservesData.forEach(item => {
+          const newObj = {
+            token: item.reserve.symbol,
+            balance: [
+              `${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
+                item.reserve.symbol
+              }`,
+              `${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH`
+            ],
+            earned: '',
+            useAsColateral: '',
+            deposit: '',
+            withdraw: '',
+            tokenImg: item.reserve.icon
+          };
+          newArr.push(newObj);
+        });
+      }
       return newArr;
     }
   },
@@ -388,6 +409,18 @@ export default {
     this.setCallerAndHandler();
   },
   methods: {
+    openDepositOverlay() {
+      this.showDepositOverlay = true;
+    },
+    closeDepositOverlay() {
+      this.showDepositOverlay = false;
+    },
+    openBorrowOverlay() {
+      this.showBorrowOverlay = true;
+    },
+    closeBorrowOverlay() {
+      this.showBorrowOverlay = false;
+    },
     convertToFixed(val, num) {
       if (!val || val == 0) {
         return 0;
@@ -413,3 +446,22 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.pink {
+  background-color: #d989c6;
+}
+.lightblue {
+  background-color: #6ad0d9;
+}
+
+.height-100 {
+  height: 100%;
+}
+</style>
