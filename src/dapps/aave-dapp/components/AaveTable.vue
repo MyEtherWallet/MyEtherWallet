@@ -46,6 +46,8 @@ import {
   roundPercentage,
   AAVE_TABLE_HEADER
 } from '@/dapps/aave-dapp/handlers/helpers';
+
+import { mapGetters } from 'vuex';
 export default {
   name: 'AaveTable',
   props: {
@@ -64,25 +66,33 @@ export default {
     hasToggle: {
       type: Boolean,
       default: true
+    },
+    handler: {
+      type: [Object, null],
+      validator: item => typeof item === 'object' || null,
+      default: () => {}
     }
   },
   data() {
     return {
       searchInput: '',
       toggleType: 0,
-      buttnDeposit: {
+      btnDeposit: {
         title: 'Deposit',
         btnStyle: 'background',
-        colorTheme: 'primary'
+        colorTheme: 'primary',
+        method: this.onDepositClick
       },
       btnSwap: {
         title: 'Swap',
         btnStyle: 'outline',
-        colorTheme: 'primary'
+        colorTheme: 'primary',
+        method: this.onSwapClick
       },
       btnBorrow: {
         btnStyle: 'background',
-        colorTheme: 'primary'
+        colorTheme: 'primary',
+        method: this.onBorrowClick
       },
       tableDepositHeader: [
         {
@@ -146,32 +156,6 @@ export default {
         }
       ],
       /* Dummy Data to display */
-      dummy: [
-        {
-          token: 'ALS',
-          available: '400000',
-          deposited: '3',
-          apr: '1200005.5%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        },
-        {
-          token: 'ABC',
-          available: '4000.00005675671',
-          deposited: '3',
-          apr: '5.55465%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        },
-        {
-          token: 'LGS',
-          available: '15.5763',
-          deposited: '3',
-          apr: '0.5763%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        }
-      ],
       dummyBorrow: [
         {
           token: 'ALS',
@@ -208,6 +192,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['network']),
     header() {
       switch (this.tableHeader) {
         case AAVE_TABLE_HEADER.DEPOSIT:
@@ -219,26 +204,66 @@ export default {
       }
     },
 
+    // List item from handler
+    // returns specific list depending on
+    // whether borrow or deposit
+
+    list() {
+      const reserves =
+        this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT
+          ? this.handler?.reservesData
+          : this.handler?.userSummary.reservesData;
+      return reserves;
+    },
+
+    reserveCoins() {
+      const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
+      const reserves = this.handler?.reservesData.filter(item => {
+        if (stableCoins.includes(item.symbol)) return item;
+      });
+      return reserves;
+    },
+
     /**
      * Returns formatted list of table data
      * Filters through search requests
      */
     listData() {
-      const list = this.dummy.map(item => {
+      const list = this.toggleType ? this.reserveCoins : this.list;
+      const filteredList = list.map(item => {
         return {
-          token: item.token,
-          available: roundNumber(item.available),
+          token: item.symbol,
+          available: roundNumber(item.availableLiquidity),
           deposited: roundNumber(item.deposited),
-          apr: roundPercentage(item.apr),
-          tokenImg: item.tokenImg,
-          callToAction: [this.buttnDeposit, this.btnSwap]
+          apr: roundPercentage(item.liquidityRate),
+          tokenImg: item.icon,
+          address: item.aToken.id,
+          callToAction: [this.btnDeposit, this.btnSwap]
         };
       });
       return this.searchInput === null || this.searchInput === ''
-        ? list
-        : list.filter(item =>
+        ? filteredList
+        : filteredList.filter(item =>
             item.token.toLowerCase().includes(this.searchInput)
           );
+    }
+  },
+  methods: {
+    onDepositClick(val) {
+      this.$emit('selectedDeposit', val);
+    },
+    onSwapClick(val) {
+      this.$router.push({
+        name: 'Swap',
+        query: {
+          fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          toT: val.address,
+          amount: '1'
+        }
+      });
+    },
+    onBorrowClick(val) {
+      console.log(val);
     }
   }
 };
