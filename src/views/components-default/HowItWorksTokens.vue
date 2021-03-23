@@ -4,14 +4,9 @@
       src="@/assets/images/backgrounds/bg-waves.svg"
       class="block-background-pattern"
     />
+    <div class="py-6 py-md-12" />
     <v-container>
-      <div class="py-7" />
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center white--text">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
-      <v-row class="align-center">
+      <v-row>
         <v-col cols="12" lg="7">
           <v-img
             src="@/assets/images/snippets/my-tokens-table.png"
@@ -63,7 +58,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div class="py-12" />
+    <div class="py-6 py-md-12" />
   </div>
 </template>
 
