@@ -28,7 +28,10 @@
         =====================================================================================
         -->
       <div v-if="step === 1">
-        <aave-summary :selected-token="selectedToken" :handler="handler" />
+        <aave-summary :selected-token="selectedToken" :handler="handler" @confirmed="handleConfirm" />
+      </div>
+      <div v-if="step === 2">
+        <aave-amount-form :selected-token="selectedToken" :handler="handler" @confirmed="handleConfirm" />
       </div>
     </template>
   </mew-overlay>
@@ -37,11 +40,15 @@
 <script>
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
+import AaveAmountForm from './AaveAmountForm.vue';
 
 export default {
-  components: { AaveTable, AaveSummary },
+  components: { AaveTable, AaveSummary, AaveAmountForm },
   props: {
-    open: { default: false, type: Boolean },
+    open: { 
+      default: false,
+      type: Boolean
+    },
     close: {
       default: function () {
         return {};
@@ -69,6 +76,9 @@ export default {
   methods: {
     handleSelectedDeposit(val) {
       this.selectedToken = val;
+      this.step += 1;
+    },
+    handleConfirm() {
       this.step += 1;
     }
   }

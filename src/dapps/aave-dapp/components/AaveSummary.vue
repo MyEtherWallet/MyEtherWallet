@@ -9,7 +9,7 @@
     rounded
     color="white"
     elevation="1"
-    width="500"
+    width="650"
   >
     <v-row
       v-for="(detail, idx) in details"
@@ -28,7 +28,7 @@
         <span :class="detail.class">{{ detail.value }}</span>
       </v-col>
     </v-row>
-    <mew-button class="mt-10" title="Confirm" btn-size="xlarge" />
+    <mew-button class="mt-10" title="Confirm" btn-size="xlarge" @click.native="confirm" />
   </v-sheet>
 </template>
 
@@ -84,6 +84,11 @@ export default {
     },
     nextHealthFactor() {
       return convertToFixed(this.currentHealthFactor);
+    }
+  },
+  methods: {
+    confirm() {
+      this.$emit('confirmed')
     }
   }
 };
