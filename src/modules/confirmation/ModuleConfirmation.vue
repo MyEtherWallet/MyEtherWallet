@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      showOverlay: true,
+      showOverlay: false,
       tx: {},
       resolver: () => {},
       title: '',
