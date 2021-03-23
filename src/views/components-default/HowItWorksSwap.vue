@@ -4,7 +4,7 @@
       src="@/assets/images/backgrounds/bg-bubbles.png"
       class="d-none d-lg-block block-background-pattern"
     />
-    <div class="py-6" />
+    <div class="py-6 py-md-12" />
     <v-container>
       <v-row>
         <v-col cols="12" lg="6">
