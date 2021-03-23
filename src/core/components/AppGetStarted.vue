@@ -24,12 +24,15 @@
 
           <div class="d-flex">
             <mew-button
+              color-theme="primary"
+              btn-style="background"
               class="mr-4"
               title="Create a new wallet"
               btn-size="xlarge"
               @click.native="$router.push({ name: 'CreateWallet' })"
             />
             <mew-button
+              color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
@@ -60,7 +63,7 @@
             </p>
           </div>
           <v-row>
-            <v-col cols="12" sm="6" class="mb-n2">
+            <v-col cols="12" sm="6" class="mr-n2 mb-n2">
               <mew-button
                 has-full-width
                 title="Create a new wallet"
@@ -68,7 +71,7 @@
                 @click.native="$router.push({ name: 'CreateWallet' })"
               />
             </v-col>
-            <v-col cols="12" sm="6">
+            <v-col cols="12" sm="6" class="mb-n2">
               <mew-button
                 has-full-width
                 btn-style="outline"
@@ -95,7 +98,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mew-component--get-started {
+.mew-component--app-get-started {
   //background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
   background-color: var(--v-expandHeader-base) !important;
 }
@@ -108,7 +111,7 @@ export default {
 </style>
 
 <style lang="scss">
-.mew-component--get-started {
+.mew-component--app-get-started {
   .desktop-content {
     .v-btn {
       box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1) !important;
