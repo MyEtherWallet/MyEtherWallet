@@ -28,7 +28,12 @@
         <span :class="detail.class">{{ detail.value }}</span>
       </v-col>
     </v-row>
-    <mew-button class="mt-10" title="Confirm" btn-size="xlarge" @click.native="confirm" />
+    <mew-button
+      class="mt-10"
+      title="Confirm"
+      btn-size="xlarge"
+      @click.native="confirm"
+    />
   </v-sheet>
 </template>
 
@@ -88,7 +93,7 @@ export default {
   },
   methods: {
     confirm() {
-      this.$emit('confirmed')
+      this.$emit('confirmed');
     }
   }
 };
