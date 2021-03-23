@@ -18,21 +18,15 @@
           Select a hardware wallet to access. Make sure <br />
           your device is connected and unlocked
         </div>
-        <v-sheet
-          :outlined="true"
-          color="transparent"
-          :rounded="true"
-          :max-width="740"
-          :min-width="475"
-          :min-height="340"
-        >
+        <v-sheet color="transparent" :max-width="740">
           <v-container>
             <v-row justify="start">
               <v-col
                 v-for="button in buttons"
                 :key="button.label"
                 class="button-container"
-                cols="6"
+                cols="12"
+                md="6"
               >
                 <mew-super-button
                   :title="button.label"
