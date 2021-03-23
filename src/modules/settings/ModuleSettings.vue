@@ -31,7 +31,9 @@
             <settings-import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <settings-export-config :export-config="settingsHandler.exportStore" />
+            <settings-export-config
+              :export-config="settingsHandler.exportStore"
+            />
           </template>
           <template #panelBody4>
             <div class="pa-6">
