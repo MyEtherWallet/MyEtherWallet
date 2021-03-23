@@ -166,6 +166,7 @@ import AaveBorrowOverlay from './components/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/AaveDepositOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
+import {convertToFixed} from './handlers/helpers';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -378,10 +379,10 @@ export default {
           const newObj = {
             token: item.reserve.symbol,
             balance: [
-              `${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
+              `${convertToFixed(item.currentUnderlyingBalance, 3)} ${
                 item.reserve.symbol
               }`,
-              `${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH`
+              `${convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH`
             ],
             earned: '',
             useAsColateral: '',
@@ -420,15 +421,6 @@ export default {
     },
     closeBorrowOverlay() {
       this.showBorrowOverlay = false;
-    },
-    convertToFixed(val, num) {
-      if (!val || val == 0) {
-        return 0;
-      }
-      if (!num) {
-        num = 2;
-      }
-      return new BigNumber(val).toFixed(num).toString();
     },
     setCallerAndHandler() {
       this.handler = new handlerAave();

@@ -81,18 +81,18 @@ export default {
         title: 'Deposit',
         btnStyle: 'background',
         colorTheme: 'primary',
-        method: this.onTableClick
+        method: this.onDepositClick
       },
       btnSwap: {
         title: 'Swap',
         btnStyle: 'outline',
         colorTheme: 'primary',
-        method: this.onTableClick
+        method: this.onSwapClick
       },
       btnBorrow: {
         btnStyle: 'background',
         colorTheme: 'primary',
-        method: this.onTableClick
+        method: this.onBorrowClick
       },
       tableDepositHeader: [
         {
@@ -237,6 +237,7 @@ export default {
           deposited: roundNumber(item.deposited),
           apr: roundPercentage(item.liquidityRate),
           tokenImg: item.icon,
+          address: item.aToken.id,
           callToAction: [this.btnDeposit, this.btnSwap]
         };
       });
@@ -248,7 +249,19 @@ export default {
     }
   },
   methods: {
-    onTableClick(val) {
+    onDepositClick(val) {
+      this.$emit('selectedDeposit', val);
+    },
+    onSwapClick(val) {
+      this.$router.push({name: 'Swap',
+      query: {
+        fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        toT: val.address,
+        amount: '1'
+      }
+      })
+    },
+    onBorrowClick(val) {
       console.log(val);
     }
   }

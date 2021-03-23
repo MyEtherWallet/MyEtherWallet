@@ -6,17 +6,32 @@
     :close="close"
   >
     <template #mewOverlayBody>
-      <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4">
-        <aave-table :handler="handler" />
+      <!--
+      =====================================================================================
+        Aave token deposit table
+      =====================================================================================
+      -->
+      <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4" v-if="step === 0">
+        <aave-table :handler="handler" @selectedDeposit="handleSelectedDeposit" />
       </v-sheet>
+      <!--
+        =====================================================================================
+          Aave Summary
+        =====================================================================================
+        -->
+        <div v-if="step === 1">
+          <aave-summary :selected-deposit="selectedToken" :handler="handler" />
+        </div>
     </template>
   </mew-overlay>
 </template>
 
 <script>
 import AaveTable from './AaveTable';
+import AaveSummary from './AaveSummary';
+
 export default {
-  components: { AaveTable },
+  components: { AaveTable, AaveSummary },
   props: {
     open: { default: false, type: Boolean },
     close: {
@@ -31,8 +46,23 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    open() {
+      this.step = 0;
+      this.selectedToken = {};
+    }
+  },
   data() {
-    return {};
+    return {
+      step: 0,
+      selectedToken: {}
+    };
+  },
+  methods: {
+    handleSelectedDeposit(val) {
+      this.selectedToken = val;
+      this.step += 1;
+    }
   }
 };
 </script>

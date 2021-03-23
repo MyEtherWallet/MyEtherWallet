@@ -33,14 +33,24 @@
 </template>
 
 <script>
-import ethImg from '@/assets/images/currencies/icon-eth-blue.png';
-
+import {convertToFixed} from '../handlers/helpers';
 export default {
+  props: {
+    handler: {
+      type: [Object, null],
+      validator: item => typeof item === 'object' || null,
+      default: () => {}
+    },
+    selectedToken: {
+      type: Object,
+      default: () => {}
+    }
+  },
   computed: {
     details() {
       /* currently using dummy data for values */
       return [
-        { title: 'Currency', value: 'Ethereum', icon: ethImg },
+        { title: 'Currency', value: this.selectedToken.token, icon: this.selectedToken.tokenImg },
         {
           title: 'Current Health Factor',
           tooltip: 'Tooltip text',
@@ -66,10 +76,10 @@ export default {
       ];
     },
     currentHealthFactor() {
-      return '2.4725';
+      return this.handler?.userSummary?.healthFactor;
     },
     nextHealthFactor() {
-      return '2.1715';
+      return convertToFixed(this.currentHealthFactor);
     }
   }
 };
