@@ -27,14 +27,8 @@
     "apollo": "apollo",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
     "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
-    "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave-dapp/apollo/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave-dapp/apollo/global/globalTypes.json --target=json"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run test",
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave-dapp/apollo/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave-dapp/apollo/global/globalTypes.json --target=json",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@aave/protocol-js": "1.0.3",
@@ -169,7 +163,6 @@
     "handlebars": "^4.5.3",
     "axios": "^0.21.1",
     "node-fetch": "^2.6.1",
-    "elliptic": "^6.5.3",
     "cryptiles": "^4.1.2"
   },
   "license": "MIT",

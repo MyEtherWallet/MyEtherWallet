@@ -141,7 +141,14 @@ export default {
           description: 'Access via Private Key',
           icon: 'privateKey',
           fn: () => {
-            this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
+            if (process.env.VUE_APP_PRIV_KEY) {
+              this.accessHandler.unlockPrivateKeyWallet(
+                process.env.VUE_APP_PRIV_KEY
+              );
+              this.unclockWallet();
+            } else {
+              this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
+            }
           }
         }
       ],

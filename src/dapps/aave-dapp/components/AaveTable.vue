@@ -30,19 +30,27 @@
       =====================================================================================
       -->
       <v-col cols="12">
-        <mew-table :has-color="false" :table-headers="header" :table-data="listData" />
+        <mew-table
+          :has-color="false"
+          :table-headers="header"
+          :table-data="listData"
+        />
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import { roundNumber, roundPercentage, AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers'
+import {
+  roundNumber,
+  roundPercentage,
+  AAVE_TABLE_HEADER
+} from '@/dapps/aave-dapp/handlers/helpers';
 export default {
-  name:'AaveTable',
+  name: 'AaveTable',
   props: {
     tableHeader: {
-      type: string,
+      type: String,
       default: AAVE_TABLE_HEADER.DEPOSIT
     },
     tableData: {
@@ -72,7 +80,7 @@ export default {
         btnStyle: 'outline',
         colorTheme: 'primary'
       },
-      btnBorrow: { 
+      btnBorrow: {
         btnStyle: 'background',
         colorTheme: 'primary'
       },
@@ -86,24 +94,24 @@ export default {
         {
           text: 'Available',
           value: 'available',
-          sortable: true,
+          sortable: true
         },
         {
           text: 'Deposited',
           value: 'deposited',
-          sortable: true,
+          sortable: true
         },
         {
           text: 'APR',
           value: 'apr',
           sortable: true,
-           width: '14%'
+          width: '14%'
         },
         {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width:'32%'
+          width: '32%'
         }
       ],
       tableBorrowHeader: [
@@ -116,29 +124,26 @@ export default {
         {
           text: 'Available',
           value: 'available',
-          sortable: true,
-        
+          sortable: true
         },
         {
           text: 'Stable APR',
           value: 'stableApr',
           sortable: true,
           width: '15%'
-          
         },
         {
           text: 'Variable APR',
           value: 'variableApr',
           sortable: true,
-           width: '15%'
+          width: '15%'
         },
-         {
+        {
           text: '',
           value: 'callToAction',
           sortable: false,
-          width:'32%'
-
-        },
+          width: '32%'
+        }
       ],
       /* Dummy Data to display */
       dummy: [
@@ -147,85 +152,94 @@ export default {
           available: '400000',
           deposited: '3',
           apr: '1200005.5%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         },
         {
           token: 'ABC',
           available: '4000.00005675671',
           deposited: '3',
           apr: '5.55465%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         },
-                {
+        {
           token: 'LGS',
           available: '15.5763',
           deposited: '3',
           apr: '0.5763%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         }
       ],
-       dummyBorrow: [
+      dummyBorrow: [
         {
           token: 'ALS',
           available: '400000',
           stableAPR: '3.7%',
           variableApr: '1200005.5%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         },
         {
           token: 'ABC',
           available: '4000.00005675671',
           stableAPR: '3.5%',
           variableApr: '5.55465%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         },
-                {
+        {
           token: 'LGS',
-         stableAPR: '6.5%',
+          stableAPR: '6.5%',
           variableApr: '5.55465%',
           apr: '0.5763%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         },
-       {
+        {
           token: 'ASD',
-         stableAPR: '76.5%',
+          stableAPR: '76.5%',
           variableApr: '3.55465%',
-          tokenImg: 'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013',
+          tokenImg:
+            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
         }
       ]
-    }
+    };
   },
   computed: {
     header() {
       switch (this.tableHeader) {
-        case AAVE_TABLE_HEADER.DEPOSIT:      
+        case AAVE_TABLE_HEADER.DEPOSIT:
           return this.tableDepositHeader;
-      case AAVE_TABLE_HEADER.BORROW: 
-      return this.tableBorrowHeader;
-      default:
-         this.tableBorrowHeader;
-    }
+        case AAVE_TABLE_HEADER.BORROW:
+          return this.tableBorrowHeader;
+        default:
+          return this.tableBorrowHeader;
+      }
     },
 
     /**
      * Returns formatted list of table data
      * Filters through search requests
      */
-   listData() {
-      const list = this.dummy.map(item =>{
-       return {
+    listData() {
+      const list = this.dummy.map(item => {
+        return {
           token: item.token,
           available: roundNumber(item.available),
           deposited: roundNumber(item.deposited),
           apr: roundPercentage(item.apr),
           tokenImg: item.tokenImg,
-          callToAction: [ this.buttnDeposit, this.btnSwap ]
-       }
-      })
-      return this.searchInput === null || this.searchInput === '' ? list : list.filter(item => item.token.toLowerCase().includes(this.searchInput))
+          callToAction: [this.buttnDeposit, this.btnSwap]
+        };
+      });
+      return this.searchInput === null || this.searchInput === ''
+        ? list
+        : list.filter(item =>
+            item.token.toLowerCase().includes(this.searchInput)
+          );
     }
   }
-
-}
+};
 </script>
-

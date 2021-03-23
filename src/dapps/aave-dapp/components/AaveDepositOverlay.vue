@@ -6,7 +6,7 @@
     :close="close"
   >
     <template #mewOverlayBody>
-      <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4 ">
+      <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4">
         <AaveTable />
       </v-sheet>
     </template>
@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import AaveTable from './AaveTable'
+import AaveTable from './AaveTable';
 export default {
-  components: { AaveTable},
+  components: { AaveTable },
   props: {
     open: { default: false, type: Boolean },
     close: {

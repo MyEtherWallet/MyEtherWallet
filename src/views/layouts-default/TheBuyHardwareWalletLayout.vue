@@ -1,38 +1,54 @@
 <template>
   <div class="expandHeader pb-12">
-    <app-block-title :data="titleData" />
+    <v-container>
+      <app-block-title :data="titleData" />
 
-    <v-sheet color="transparent" max-width="1000px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(b, key) in buttons" :key="key" cols="6">
-          <a :href="b.link" target="_blank">
-            <v-sheet color="white" class="border-radius--10px pa-10">
-              <div class="d-flex align-center justify-space-between">
-                <div class="pr-9">
-                  <img
+      <v-sheet
+        color="transparent"
+        :max-width="!$vuetify.breakpoint.smAndDown ? '900px' : '470px'"
+        class="mx-auto"
+      >
+        <v-row>
+          <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
+            <a :href="b.link" target="_blank">
+              <v-card
+                height="100%"
+                color="white"
+                class="btn-custom border-radius--10px pa-8 pa-md-10 d-flex align-center justify-space-between"
+              >
+                <div>
+                  <v-img
                     v-if="b.logoImg"
-                    height="32"
+                    max-height="30px"
+                    max-width="120px"
                     :src="b.logoImg"
-                    alt="Logo"
+                    alt="Hardware wallet"
                     class="mb-3"
                   />
                   <div
                     v-if="b.logoText"
-                    class="d-flex align-center logo-text mb-3"
+                    class="d-flex align-center mb-3"
+                    :class="
+                      !$vuetify.breakpoint.smAndDown
+                        ? 'mew-subtitle'
+                        : 'mew-heading-2'
+                    "
                   >
-                    <div>{{ b.logoText }}</div>
+                    {{ b.logoText }}
                   </div>
-                  <h6
-                    class="text-uppercase font-weight-bold primary--text text--lighten-1"
+                  <div
+                    class="mew-caption text-uppercase font-weight-bold primary--text text--lighten-1"
                   >
                     {{ b.priceNote }}
-                  </h6>
+                  </div>
 
                   <div class="d-flex">
-                    <h5 class="mr-1 font-weight-black">{{ b.currency }}</h5>
-                    <h3 class="text-uppercase font-weight-bold">
+                    <div class="mew-caption mr-1 font-weight-black">
+                      {{ b.currency }}
+                    </div>
+                    <div class="mew-heading-2 text-uppercase font-weight-bold">
                       {{ b.price }}
-                    </h3>
+                    </div>
                   </div>
                   <div>
                     {{ b.note }}
@@ -41,19 +57,22 @@
                     Learn more >
                   </div>
                 </div>
-                <div>
-                  <img
-                    class="wallet-img"
+
+                <div v-if="!$vuetify.breakpoint.xs" class="pl-4">
+                  <v-img
                     :src="b.walletImg"
                     alt="Hardware Wallet"
+                    max-width="90px"
+                    max-height="110px"
+                    contain
                   />
                 </div>
-              </div>
-            </v-sheet>
-          </a>
-        </v-col>
-      </v-row>
-    </v-sheet>
+              </v-card>
+            </a>
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </v-container>
   </div>
 </template>
 
@@ -154,16 +173,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.logo-text {
-  height: 38px;
-  div {
-    font-size: 32px;
-    font-weight: 500;
+.btn-custom {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(11, 40, 64);
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.6, 1);
   }
-}
 
-.wallet-img {
-  max-height: 140px;
-  max-width: 100px;
+  &:hover::before {
+    opacity: 0.08;
+  }
 }
 </style>
