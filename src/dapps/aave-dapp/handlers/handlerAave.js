@@ -227,7 +227,7 @@ export default class AaveHandler {
   }
 
   _usdPriceHandler(res) {
-    const data = res.data.priceOracle;
+    const data = res.data.priceOracle.usdPriceEth;
     this.usdPriceEth = data;
     this.setFormatUserSummaryData();
   }
