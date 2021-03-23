@@ -253,13 +253,14 @@ export default {
       this.$emit('selectedDeposit', val);
     },
     onSwapClick(val) {
-      this.$router.push({name: 'Swap',
-      query: {
-        fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        toT: val.address,
-        amount: '1'
-      }
-      })
+      this.$router.push({
+        name: 'Swap',
+        query: {
+          fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          toT: val.address,
+          amount: '1'
+        }
+      });
     },
     onBorrowClick(val) {
       console.log(val);

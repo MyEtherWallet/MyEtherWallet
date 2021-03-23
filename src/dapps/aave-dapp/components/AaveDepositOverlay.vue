@@ -11,17 +11,25 @@
         Aave token deposit table
       =====================================================================================
       -->
-      <v-sheet color="white" max-width="650px" class="border-radius--10px pa-4" v-if="step === 0">
-        <aave-table :handler="handler" @selectedDeposit="handleSelectedDeposit" />
+      <v-sheet
+        v-if="step === 0"
+        color="white"
+        max-width="650px"
+        class="border-radius--10px pa-4"
+      >
+        <aave-table
+          :handler="handler"
+          @selectedDeposit="handleSelectedDeposit"
+        />
       </v-sheet>
       <!--
         =====================================================================================
           Aave Summary
         =====================================================================================
         -->
-        <div v-if="step === 1">
-          <aave-summary :selected-deposit="selectedToken" :handler="handler" />
-        </div>
+      <div v-if="step === 1">
+        <aave-summary :selected-token="selectedToken" :handler="handler" />
+      </div>
     </template>
   </mew-overlay>
 </template>
@@ -46,17 +54,17 @@ export default {
       default: () => {}
     }
   },
-  watch: {
-    open() {
-      this.step = 0;
-      this.selectedToken = {};
-    }
-  },
   data() {
     return {
       step: 0,
       selectedToken: {}
     };
+  },
+  watch: {
+    open() {
+      this.step = 0;
+      this.selectedToken = {};
+    }
   },
   methods: {
     handleSelectedDeposit(val) {

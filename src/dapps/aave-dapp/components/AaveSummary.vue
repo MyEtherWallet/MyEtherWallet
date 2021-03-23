@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {convertToFixed} from '../handlers/helpers';
+import { convertToFixed } from '../handlers/helpers';
 export default {
   props: {
     handler: {
@@ -50,7 +50,11 @@ export default {
     details() {
       /* currently using dummy data for values */
       return [
-        { title: 'Currency', value: this.selectedToken.token, icon: this.selectedToken.tokenImg },
+        {
+          title: 'Currency',
+          value: this.selectedToken.token,
+          icon: this.selectedToken.tokenImg
+        },
         {
           title: 'Current Health Factor',
           tooltip: 'Tooltip text',
