@@ -276,13 +276,13 @@ export default {
                 `${roundNumber(item.currentUnderlyingBalance)} ${
                   item.reserve.symbol
                 }`,
-                `$${roundNumber(item.currentUnderlyingBalanceUS)}`
+                `$${roundNumber(item.currentUnderlyingBalanceUSD)}`
               ],
               toggle: {
-                color: 'secondary',
+                color: 'primary',
                 label: 'Label',
                 method: this.onToggleClick,
-                value: true
+                value: item.usageAsCollateralEnabledOnUser
               },
               callToAction: [this.btnDeposit, this.btnWithdraw]
             };
