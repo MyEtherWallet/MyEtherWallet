@@ -37,6 +37,7 @@
           :step="step"
           :action-type="'Deposit'"
           @confirmed="handleConfirm"
+          @makeDeposit="emitDeposit"
         />
       </div>
       <div v-if="step === 2">
@@ -46,7 +47,6 @@
           :action-type="'Deposit'"
           @cancelDeposit="handleCancel"
           @confirmDepositAmt="handleDepositAmount"
-          @makeDeposit="emitDeposit"
         />
       </div>
     </template>
