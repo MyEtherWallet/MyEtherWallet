@@ -19,6 +19,7 @@
       >
         <aave-table
           :handler="handler"
+          :action-type="'Deposit'"
           @selectedDeposit="handleSelectedDeposit"
         />
       </v-sheet>
@@ -34,6 +35,7 @@
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
+          :action-type="'Deposit'"
           @confirmed="handleConfirm"
         />
       </div>
@@ -41,6 +43,7 @@
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
+          :action-type="'Deposit'"
           @cancelDeposit="handleCancel"
           @confirmDepositAmt="handleDepositAmount"
           @makeDeposit="emitDeposit"
@@ -107,7 +110,7 @@ export default {
       this.close();
     },
     emitDeposit(e) {
-      this.$emit('makeDeposit', e);
+      this.$emit('sendDeposit', e);
       this.close();
     }
   }

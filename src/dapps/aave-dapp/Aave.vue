@@ -152,7 +152,7 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :handler="handler"
-      @makeDeposit="callDeposit"
+      @sendDeposit="callDeposit"
     />
     <aave-borrow-overlay
       :open="showBorrowOverlay"

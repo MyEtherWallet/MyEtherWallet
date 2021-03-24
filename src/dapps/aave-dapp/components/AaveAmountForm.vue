@@ -47,7 +47,6 @@
         />
       </div>
       <mew-toggle
-        :key="key"
         :button-group="group"
         button-type="percentage"
         :on-toggle-btn-idx="startingIdx"
@@ -152,28 +151,30 @@ export default {
   data() {
     return {
       group: ['25%', '50%', '75%', 'MAX'],
-      key: '50%',
       amount: '0',
       startingIdx: 1
     };
   },
   mounted() {
-    this.onToggle(this.key);
+    this.onToggle('50%');
   },
   methods: {
     onToggle(e) {
-      this.key = e;
       switch (e) {
         case this.group[0]:
+          this.startingIdx = 0;
           this.amount = this.calculatedAmt(0.25);
           break;
         case this.group[1]:
+          this.startingIdx = 1;
           this.amount = this.calculatedAmt(0.5);
           break;
         case this.group[2]:
+          this.startingIdx = 2;
           this.amount = this.calculatedAmt(0.75);
           break;
         default:
+          this.startingIdx = 2;
           this.amount = this.calculatedAmt(1);
       }
     },
