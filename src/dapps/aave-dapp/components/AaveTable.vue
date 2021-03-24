@@ -44,7 +44,8 @@
 import {
   roundNumber,
   roundPercentage,
-  AAVE_TABLE_HEADER
+  AAVE_TABLE_HEADER,
+  convertToFixed
 } from '@/dapps/aave-dapp/handlers/helpers';
 
 import { mapGetters } from 'vuex';
@@ -230,11 +231,21 @@ export default {
      */
     listData() {
       const list = this.toggleType ? this.reserveCoins : this.list;
+      const userReserves = this.handler.userSummary.reservesData;
       const filteredList = list.map(item => {
+        const userBalance = userReserves.find(uItem => {
+          if (uItem.reserve.symbol === item.symbol) {
+            return uItem;
+          }
+        });
         return {
           token: item.symbol,
           available: roundNumber(item.availableLiquidity),
-          deposited: roundNumber(item.deposited),
+          deposited: userBalance
+            ? roundNumber(
+                convertToFixed(userBalance.currentUnderlyingBalance, 3)
+              )
+            : roundNumber(0),
           apr: roundPercentage(item.liquidityRate),
           tokenImg: item.icon,
           address: item.aToken.id,
@@ -243,9 +254,12 @@ export default {
       });
       return this.searchInput === null || this.searchInput === ''
         ? filteredList
-        : filteredList.filter(item =>
-            item.token.toLowerCase().includes(this.searchInput)
-          );
+        : filteredList.filter(item => {
+            if (
+              item.token.toLowerCase().includes(this.searchInput).toLowerCase()
+            )
+              return item;
+          });
     }
   },
   methods: {

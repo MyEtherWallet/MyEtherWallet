@@ -76,9 +76,11 @@ export default {
     };
   },
   watch: {
-    open() {
-      this.step = 0;
-      this.selectedToken = {};
+    open(newVal) {
+      if (!newVal) {
+        this.step = 0;
+        this.selectedToken = {};
+      }
     }
   },
   methods: {
