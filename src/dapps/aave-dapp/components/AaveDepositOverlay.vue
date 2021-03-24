@@ -27,10 +27,13 @@
           Aave Summary
         =====================================================================================
         -->
-      <div v-if="step === 1">
+      <div v-if="step === 1 || step === 3">
         <aave-summary
           :selected-token="selectedToken"
           :handler="handler"
+          :amount="amount"
+          :amount-usd="amountUsd"
+          :step="step"
           @confirmed="handleConfirm"
         />
       </div>
@@ -38,7 +41,9 @@
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
-          @confirmed="handleConfirm"
+          @cancelDeposit="handleCancel"
+          @confirmDepositAmt="handleDepositAmount"
+          @makeDeposit="emitDeposit"
         />
       </div>
     </template>
@@ -72,7 +77,9 @@ export default {
   data() {
     return {
       step: 0,
-      selectedToken: {}
+      selectedToken: {},
+      amount: '0',
+      amountUsd: '$ 0.00'
     };
   },
   watch: {
@@ -90,6 +97,18 @@ export default {
     },
     handleConfirm() {
       this.step += 1;
+    },
+    handleDepositAmount(e) {
+      this.step += 1;
+      this.amount = e[0];
+      this.amountUsd = e[1];
+    },
+    handleCancel() {
+      this.close();
+    },
+    emitDeposit(e) {
+      this.$emit('makeDeposit', e);
+      this.close();
     }
   }
 };

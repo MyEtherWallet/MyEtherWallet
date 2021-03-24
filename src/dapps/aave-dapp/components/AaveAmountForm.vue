@@ -50,6 +50,7 @@
         :key="key"
         :button-group="group"
         button-type="percentage"
+        :on-toggle-btn-idx="startingIdx"
         @onBtnClick="onToggle"
       />
     </div>
@@ -82,6 +83,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+import { convertToFixed } from '@/dapps/aave-dapp/handlers/helpers';
 
 export default {
   name: 'AaveAmountForm',
@@ -132,14 +134,18 @@ export default {
     },
     walletBalance() {
       return {
-        title: `${this.tokenBalance} ${this.selectedToken.token}`,
-        caption: `$ ${this.tokenBalanceInUSD}`
+        title: `${convertToFixed(this.tokenBalance, 6)} ${
+          this.selectedToken.token
+        }`,
+        caption: `$ ${convertToFixed(this.tokenBalanceInUSD.toFixed())}`
       };
     },
     aaveBalance() {
       return {
-        title: `${this.depositedBalance} ${this.selectedToken.token}`,
-        caption: `$ ${this.depositedBalanceInUSD}`
+        title: `${convertToFixed(this.depositedBalance, 6)} ${
+          this.selectedToken.token
+        }`,
+        caption: `$ ${convertToFixed(this.depositedBalanceInUSD.toFixed())}`
       };
     }
   },
@@ -147,7 +153,8 @@ export default {
     return {
       group: ['25%', '50%', '75%', 'MAX'],
       key: '50%',
-      amount: '0'
+      amount: '0',
+      startingIdx: 1
     };
   },
   mounted() {
@@ -158,22 +165,27 @@ export default {
       this.key = e;
       switch (e) {
         case this.group[0]:
-          this.calculatedAmt(0.25);
+          this.amount = this.calculatedAmt(0.25);
           break;
         case this.group[1]:
-          this.calculatedAmt(0.5);
+          this.amount = this.calculatedAmt(0.5);
           break;
         case this.group[2]:
-          this.calculatedAmt(0.75);
+          this.amount = this.calculatedAmt(0.75);
           break;
         default:
-          this.calculatedAmt(1);
+          this.amount = this.calculatedAmt(1);
       }
     },
     cancelDeposit() {
       this.$emit('cancelDeposit');
     },
-    deposit() {},
+    deposit() {
+      const amtUSDvalue = BigNumber(this.selectedTokenUSDValue)
+        .times(this.amount)
+        .toFixed();
+      this.$emit('confirmDepositAmt', [this.amount, `$ ${amtUSDvalue}`]);
+    },
     calculatedAmt(per) {
       const amt = BigNumber(this.tokenBalance).times(per);
       return amt.toFixed();

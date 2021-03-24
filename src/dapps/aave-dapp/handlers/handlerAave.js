@@ -71,7 +71,6 @@ export default class AaveHandler {
   }
 
   deposit(param) {
-    param.referralCode = '14';
     try {
       return depositDetails(param).then(res => {
         const txArr = [];

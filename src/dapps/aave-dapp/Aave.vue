@@ -152,6 +152,7 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :handler="handler"
+      @makeDeposit="callDeposit"
     />
     <aave-borrow-overlay
       :open="showBorrowOverlay"
@@ -410,6 +411,10 @@ export default {
     this.setCallerAndHandler();
   },
   methods: {
+    callDeposit(e) {
+      console.log(e);
+      // this.handler.deposit(e).then().catch()
+    },
     openDepositOverlay() {
       this.showDepositOverlay = true;
     },

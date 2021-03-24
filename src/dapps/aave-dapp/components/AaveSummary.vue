@@ -12,6 +12,7 @@
     :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
   >
     <v-card
+      v-if="this.step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -21,8 +22,10 @@
           >Amount to Deposit</span
         >
         <!-- dummy data -->
-        <span class="mew-heading-1 mb-2">12.256 {{ selectedToken.token }}</span>
-        <span class="textPrimaryModule--text">$13.64</span>
+        <span class="mew-heading-1 mb-2"
+          >{{ amount }} {{ selectedToken.token }}</span
+        >
+        <span class="textPrimaryModule--text">{{ amountUsd }}</span>
       </div>
       <img
         height="80"
@@ -57,7 +60,10 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
 import { convertToFixed } from '../handlers/helpers';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+import { mapState } from 'vuex';
 export default {
   props: {
     handler: {
@@ -68,12 +74,24 @@ export default {
     selectedToken: {
       type: Object,
       default: () => {}
+    },
+    amount: {
+      type: String,
+      default: '0'
+    },
+    amountUsd: {
+      type: String,
+      default: '$ 0.00'
+    },
+    step: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
+    ...mapState('wallet', ['address']),
     details() {
-      /* currently using dummy data for values */
-      return [
+      const details = [
         {
           title: 'Current Health Factor',
           tooltip: 'Tooltip text',
@@ -86,7 +104,7 @@ export default {
         {
           title: 'Next Health Factor',
           tooltip: 'Tooltip text',
-          value: '2.1725',
+          value: this.nextHealthFactor,
           class:
             this.currentHealthFactor > this.nextHealthFactor
               ? 'error--text'
@@ -97,17 +115,60 @@ export default {
               : 'mdi-arrow-up'
         }
       ];
+      if (this.step === 1)
+        details.unshift({
+          title: 'Currency',
+          value: this.selectedToken.token,
+          icon: this.selectedToken.tokenImg
+        });
+      return details;
     },
     currentHealthFactor() {
       return this.handler?.userSummary?.healthFactor;
     },
     nextHealthFactor() {
-      return convertToFixed(this.currentHealthFactor);
+      const selectedToken = this.actualToken;
+      let nextHealthFactor = convertToFixed(this.currentHealthFactor),
+        collateralBalanceETH = this.handler?.userSummary.totalCollateralETH;
+      const totalBorrowsETH = this.handler?.userSummary.totalBorrowsETH;
+      if (selectedToken?.price && this.amount !== '0') {
+        const ethBalance = BigNumber(this.amount).times(
+          selectedToken.price.priceInEth
+        );
+        collateralBalanceETH = new BigNumber(
+          this.handler.userSummary.totalCollateralETH
+        ).plus(ethBalance);
+        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
+          collateralBalanceETH,
+          totalBorrowsETH,
+          this.handler.userSummary.totalFeesETH,
+          this.handler.userSummary.currentLiquidationThreshold
+        ).toFixed(3);
+      }
+      return nextHealthFactor;
+    },
+    actualToken() {
+      const token = this.handler?.reservesData.find(item => {
+        if (item.symbol === this.selectedToken.token) return item;
+      });
+
+      return token;
     }
   },
   methods: {
     confirm() {
-      this.$emit('confirmed');
+      if (this.step === 1) {
+        this.$emit('confirmed');
+      } else {
+        const param = {
+          symbol: this.token.symbol,
+          aavePool: 'proto',
+          userAddress: this.address,
+          amount: this.amount,
+          referralCode: '14'
+        };
+        this.$emit('makeDeposit', param);
+      }
     }
   }
 };
