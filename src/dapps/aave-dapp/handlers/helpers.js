@@ -69,9 +69,6 @@ const roundNumber = (val) => {
   const OneBillion = 1e9
   const OneTrillion = 1e12
   const value = new BigNumber(val)
-  console.log(
-    'inround', value.toFixed()
-  )
 
   /* Case I: value is 0 */
   if (value.isZero()) {
@@ -116,7 +113,8 @@ const roundNumber = (val) => {
 const AAVE_TABLE_HEADER = {
   DEPOSIT: 'DEPOSIT',
   BORROW: 'BORROW',
-  BALANCE: 'BALANCE'
+  BALANCE_DEPOSIT: 'BALANCE_DEPOSIT',
+  BALANCE_BOOROW: 'BALANCE_BORROW'
 }
 
 export {

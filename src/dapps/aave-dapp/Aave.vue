@@ -63,9 +63,11 @@
             </v-col>
           </v-row>
           <v-row class="pl-1 pr-1">
-            <mew-table
-              :table-headers="depositsTableHeader"
+            <aave-table
+              :table-header="depositsTableHeader"
               :table-data="depositsTableData"
+              :has-search="false"
+              :has-toggle="false"
             />
           </v-row>
 
@@ -150,7 +152,8 @@ import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
+import AaveTable from './components/AaveTable';
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
@@ -175,7 +178,7 @@ const COLORS = {
 };
 
 export default {
-  components: { TheWrapperDapp },
+  components: { TheWrapperDapp, AaveTable },
   data() {
     return {
       handler: null,
@@ -189,52 +192,7 @@ export default {
       },
       openDepositOverlay: false,
       openBorrowOverlay: false,
-      depositsTableHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: 'Deposited',
-          value: 'deposited',
-          sortable: false,
-          filterable: false,
-          width: '100%'
-        },
-        {
-          text: 'Earned',
-          value: 'earned',
-          sortable: false,
-          filterable: false,
-          width: '100%'
-        },
-        {
-          text: 'Use as collateral',
-          value: 'useAsColateral',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: '',
-          value: 'deposit',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '50%'
-        },
-        {
-          text: '',
-          value: 'withdraw',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '50%'
-        }
-      ],
+      depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
       borrowingsTableHeader: [
         {
           text: 'Activity',
@@ -353,25 +311,26 @@ export default {
     },
     depositsTableData() {
       if (!this.handler) return [];
-      const newArr = [];
-      this.handler.userSummary.reservesData.forEach(item => {
-        console.log(item);
-        const newObj = {
-          token: item.reserve.symbol,
-          deposited: `
-        ${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
-            item.reserve.symbol
-          }
-          ${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH
-        `,
-          earned: '',
-          useAsColateral: '',
-          deposit: '',
-          withdraw: ''
-        };
-        newArr.push(newObj);
-      });
-      return newArr;
+      return this.handler.userSummary.reservesData;
+      // const newArr = [];
+      // tforEach(item => {
+      //   console.log(item);
+      //   const newObj = {
+      //     token: item.reserve.symbol,
+      //     deposited: `
+      //   ${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
+      //       item.reserve.symbol
+      //     }
+      //     ${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH
+      //   `,
+      //     earned: '',
+      //     useAsColateral: '',
+      //     deposit: '',
+      //     withdraw: ''
+      //   };
+      //   newArr.push(newObj);
+      // });
+      // return newArr;
     }
   },
   watch: {

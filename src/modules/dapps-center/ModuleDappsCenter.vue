@@ -50,8 +50,7 @@ export default {
         },
         {
           title: 'Aave V1',
-          subtitle:
-            'Earn passive income on your deposited assets and borrow from a wide selection of ERC20 tokens and stablecoins',
+          subtitle: 'Earn passive income on your deposits and borrow assets',
           tag: '#DeFi',
           rightIconType: 'mew',
           rightIcon: 'aave',
