@@ -16,6 +16,11 @@
       type and read the info box for more information.
     </div>
     <div class="d-flex justify-center mt-12 mb-3">
+      <!--
+  =====================================================================================
+    Stable Interest card
+  =====================================================================================
+  -->
       <v-card
         :flat="onStable"
         :color="onStable ? 'boxShadow' : 'white'"
@@ -26,6 +31,11 @@
         <span class="textSecondary--text my-2">Stable</span>
         <span class="mew-heading-3 secondary--text">2.33%</span>
       </v-card>
+      <!--
+  =====================================================================================
+    Variable Interest card
+  =====================================================================================
+  -->
       <v-card
         :flat="!onStable"
         :color="!onStable ? 'boxShadow' : 'white'"
@@ -38,6 +48,11 @@
         <span class="mew-heading-3 warning--text text--darken-1">11.33%</span>
       </v-card>
     </div>
+    <!--
+  =====================================================================================
+    Continue button
+  =====================================================================================
+  -->
     <mew-button
       class="my-8"
       title="Continue"
@@ -56,6 +71,7 @@
 export default {
   data() {
     return {
+      /* currently using dummy data for values */
       onStable: true
     };
   },

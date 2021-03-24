@@ -2,6 +2,7 @@
   <!--
   =====================================================================================
     Aave Summary (includes currency and health factor)
+    used for deposit, borrow and interest details
   =====================================================================================
   -->
   <v-sheet
@@ -11,7 +12,13 @@
     elevation="1"
     :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
   >
+    <!--
+  =====================================================================================
+    Deposit/Borrow currency details card
+  =====================================================================================
+  -->
     <v-card
+      v-if="!onSelectInterest"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -30,6 +37,51 @@
         :alt="selectedToken.token"
       />
     </v-card>
+    <!--
+  =====================================================================================
+    Select interest details card
+  =====================================================================================
+  -->
+    <div class="d-flex align-center justify-space-between mb-10">
+      <v-card flat class="d-flex flex-column pa-10 text-left" color="overlayBg">
+        <span class="font-weight-bold">Current Interest Type</span>
+        <span
+          :class="[
+            'mew-heading-2 my-3',
+            getInterestTypeClass(currentInterest.type)
+          ]"
+          >{{ currentInterest.percentage }}</span
+        >
+        <span
+          :class="[
+            'font-weight-bold',
+            getInterestTypeClass(currentInterest.type)
+          ]"
+          >{{ currentInterest.type }}</span
+        >
+      </v-card>
+      <v-icon>mdi-arrow-right</v-icon>
+      <v-card flat class="d-flex flex-column pa-10 text-left" color="overlayBg">
+        <span class="font-weight-bold">Next Interest Type</span>
+        <span
+          :class="[
+            'mew-heading-2 my-3',
+            getInterestTypeClass(nextInterest.type)
+          ]"
+          >{{ nextInterest.percentage }}</span
+        >
+        <span
+          :class="['font-weight-bold', getInterestTypeClass(nextInterest.type)]"
+          >{{ nextInterest.type }}</span
+        >
+      </v-card>
+    </div>
+    <v-divider v-if="onSelectInterest" />
+    <!--
+  =====================================================================================
+    Other details (currency, health factor)
+  =====================================================================================
+  -->
     <v-row
       v-for="(detail, idx) in details"
       :key="idx"
@@ -47,6 +99,12 @@
         <span :class="detail.class">{{ detail.value }}</span>
       </v-col>
     </v-row>
+    <v-divider v-if="onSelectInterest" class="mt-5" />
+    <!--
+  =====================================================================================
+   Confirm button
+  =====================================================================================
+  -->
     <mew-button
       class="mt-10"
       title="Confirm"
@@ -58,6 +116,12 @@
 
 <script>
 import { convertToFixed } from '../handlers/helpers';
+
+const types = {
+  stable: 'stable',
+  variable: 'variable'
+};
+
 export default {
   props: {
     handler: {
@@ -68,11 +132,26 @@ export default {
     selectedToken: {
       type: Object,
       default: () => {}
+    },
+    onSelectInterest: {
+      default: false,
+      type: Boolean
     }
   },
   computed: {
     details() {
       /* currently using dummy data for values */
+      return !this.onSelectInterest
+        ? this.depositDetails
+        : [
+            {
+              title: 'Currency',
+              value: this.selectedToken.token,
+              icon: this.selectedToken.tokenImg
+            }
+          ];
+    },
+    depositDetails() {
       return [
         {
           title: 'Current Health Factor',
@@ -103,11 +182,30 @@ export default {
     },
     nextHealthFactor() {
       return convertToFixed(this.currentHealthFactor);
+    },
+    /* currently using dummy data for values */
+    currentInterest() {
+      return {
+        type: 'Variable',
+        percentage: '11.33%'
+      };
+    },
+    nextInterest() {
+      return {
+        type: 'Stable',
+        percentage: '2.837%'
+      };
     }
   },
   methods: {
     confirm() {
       this.$emit('confirmed');
+    },
+    getInterestTypeClass(type) {
+      if (type.toLowerCase() === types.stable) {
+        return 'secondary--text';
+      }
+      return 'warning--text text--darken-1';
     }
   }
 };
