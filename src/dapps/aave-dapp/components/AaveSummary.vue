@@ -9,12 +9,31 @@
     rounded
     color="white"
     elevation="1"
-    width="650"
+    :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
   >
+    <v-card
+      class="d-flex align-center justify-space-between pa-7"
+      flat
+      color="overlayBg"
+    >
+      <div class="d-flex flex-column align-start">
+        <span class="mew-heading-3 textPrimaryModule--text mb-2"
+          >Amount to Deposit</span
+        >
+        <!-- dummy data -->
+        <span class="mew-heading-1 mb-2">12.256 {{ selectedToken.token }}</span>
+        <span class="textPrimaryModule--text">$13.64</span>
+      </div>
+      <img
+        height="80"
+        :src="selectedToken.tokenImg"
+        :alt="selectedToken.token"
+      />
+    </v-card>
     <v-row
       v-for="(detail, idx) in details"
       :key="idx"
-      class="d-flex align-center"
+      class="d-flex align-center mt-5"
     >
       <v-col class="d-flex align-center" cols="6"
         ><span>{{ detail.title }}</span>
@@ -56,11 +75,6 @@ export default {
       /* currently using dummy data for values */
       return [
         {
-          title: 'Currency',
-          value: this.selectedToken.token,
-          icon: this.selectedToken.tokenImg
-        },
-        {
           title: 'Current Health Factor',
           tooltip: 'Tooltip text',
           value: this.currentHealthFactor,
@@ -76,7 +90,7 @@ export default {
           class:
             this.currentHealthFactor > this.nextHealthFactor
               ? 'error--text'
-              : 'primary-text',
+              : 'primary--text',
           indicator:
             this.currentHealthFactor > this.nextHealthFactor
               ? 'mdi-arrow-down'
