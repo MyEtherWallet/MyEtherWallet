@@ -7,6 +7,10 @@ import {
   withdrawDetails
 } from './graphQLHelpers.js';
 
+import masterFile from '@/_generated/master-file.json';
+import eth from '@/assets/images/currencies/eth.png';
+import { toChecksumAddress } from 'web3-utils';
+
 import vuexStore from '@/core/store';
 import { mapState, mapGetters } from 'vuex';
 import {
@@ -24,6 +28,7 @@ export default class AaveHandler {
     this.$store = vuexStore;
     Object.assign(this, mapState('wallet', ['web3', 'address', 'balance']));
     Object.assign(this, mapGetters('wallet', ['tokensList', 'balanceInETH']));
+    Object.assign(this, mapGetters('global', ['network']));
     this.reservesData = [];
     this.rawReserveData = [];
     this.reservesStable = [];
@@ -227,21 +232,60 @@ export default class AaveHandler {
   }
 
   _usdPriceHandler(res) {
-    const data = res.data.priceOracle;
+    const data = res.data.priceOracle.usdPriceEth;
     this.usdPriceEth = data;
     this.setFormatUserSummaryData();
   }
 
   _userDataHandler(res) {
-    const data = res.data.userReserves;
+    const data = res.data.userReserves.map(item => {
+      item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
+      return item;
+    });
     this.userReserveData = data;
     this.setFormatUserSummaryData();
   }
 
   _reserveDataHandler(res) {
-    const data = res.data.reserves;
+    const data = res.data.reserves.map(item => {
+      item['icon'] = this.getTokenIcon(item.aToken.id);
+      return item;
+    });
     this.rawReserveData = data;
     this.reservesData = formatReserves(data).reverse();
     this.setFormatUserSummaryData();
+  }
+  /**
+   * finds token from network list
+   * or masterfile and uses the icon found
+   */
+  getTokenIcon(address) {
+    const networkToken = this.network().type.tokens.find(item => {
+      if (toChecksumAddress(item.address) === toChecksumAddress(address))
+        return item;
+    });
+    const filteredMasterFile = masterFile.find(item => {
+      if (
+        toChecksumAddress(item.contract_address) === toChecksumAddress(address)
+      )
+        return item;
+    });
+    const networkIcon = networkToken
+      ? networkToken.logo.src !== ''
+        ? networkToken.logo.src
+        : ''
+      : '';
+    const masterFileIcon = filteredMasterFile
+      ? filteredMasterFile.icon !== ''
+        ? filteredMasterFile.icon
+        : filteredMasterFile.icon_png !== ''
+        ? filteredMasterFile.icon_png
+        : ''
+      : '';
+    return networkIcon !== ''
+      ? networkIcon
+      : masterFileIcon !== ''
+      ? masterFileIcon
+      : eth;
   }
 }

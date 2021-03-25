@@ -65,14 +65,21 @@
           <v-row class="pl-1 pr-1">
             <aave-table
               :table-header="depositsTableHeader"
-              :table-data="depositsTableData"
+              :handler="handler"
               :has-search="false"
               :has-toggle="false"
+              @selectedDeposit="openDepositOverlay"
+              @withdrawToken="openWithdrawOverlay"
+              @collateralChange="openCollateralOverlay"
             />
           </v-row>
 
           <div class="d-flex justify-center mt-9">
-            <mew-button title="Deposit" btn-size="xlarge"></mew-button>
+            <mew-button
+              title="Deposit"
+              btn-size="xlarge"
+              @click.native="openDepositOverlay"
+            />
           </div>
         </v-sheet>
       </template>
@@ -133,20 +140,35 @@
           <mew-table
             class="mt-3"
             :table-headers="borrowingsTableHeader"
-            :table-data="borrowingsTableData"
+            :handler="handler"
           />
 
           <div class="d-flex justify-center mt-9">
-            <mew-button title="Borrow" btn-size="xlarge"></mew-button>
+            <mew-button
+              title="Borrow"
+              btn-size="xlarge"
+              @click.native="openBorrowOverlay"
+            />
           </div>
         </v-sheet>
       </template>
     </the-wrapper-dapp>
+    <aave-deposit-overlay
+      :open="showDepositOverlay"
+      :close="closeDepositOverlay"
+      :handler="handler"
+    />
+    <aave-borrow-overlay
+      :open="showBorrowOverlay"
+      :close="closeBorrowOverlay"
+    />
   </div>
 </template>
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
+import AaveBorrowOverlay from './components/AaveBorrowOverlay';
+import AaveDepositOverlay from './components/AaveDepositOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
@@ -178,11 +200,21 @@ const COLORS = {
 };
 
 export default {
-  components: { TheWrapperDapp, AaveTable },
+  components: {
+    TheWrapperDapp,
+    AaveBorrowOverlay,
+    AaveDepositOverlay,
+    AaveTable
+  },
   data() {
     return {
       handler: null,
       caller: null,
+      showDepositOverlay: false,
+      requestDepositToken: {},
+      showBorrowOverlay: false,
+      showWithdrawOverlay: false,
+      showCollateralOverlay: false,
       activeTab: 0,
       BG: BG,
       topBanner: {
@@ -190,8 +222,6 @@ export default {
         subtext:
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
-      openDepositOverlay: false,
-      openBorrowOverlay: false,
       depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
       borrowingsTableHeader: [
         {
@@ -308,29 +338,6 @@ export default {
         total: 0,
         data: []
       };
-    },
-    depositsTableData() {
-      if (!this.handler) return [];
-      return this.handler.userSummary.reservesData;
-      // const newArr = [];
-      // tforEach(item => {
-      //   console.log(item);
-      //   const newObj = {
-      //     token: item.reserve.symbol,
-      //     deposited: `
-      //   ${this.convertToFixed(item.currentUnderlyingBalance, 3)} ${
-      //       item.reserve.symbol
-      //     }
-      //     ${this.convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH
-      //   `,
-      //     earned: '',
-      //     useAsColateral: '',
-      //     deposit: '',
-      //     withdraw: ''
-      //   };
-      //   newArr.push(newObj);
-      // });
-      // return newArr;
     }
   },
   watch: {
@@ -347,14 +354,30 @@ export default {
     this.setCallerAndHandler();
   },
   methods: {
-    convertToFixed(val, num) {
-      if (!val || val == 0) {
-        return 0;
-      }
-      if (!num) {
-        num = 2;
-      }
-      return new BigNumber(val).toFixed(num).toString();
+    openDepositOverlay(token) {
+      this.requestDepositToken = token;
+      this.showDepositOverlay = true;
+    },
+    closeDepositOverlay() {
+      this.showDepositOverlay = false;
+    },
+    openBorrowOverlay() {
+      this.showBorrowOverlay = true;
+    },
+    closeBorrowOverlay() {
+      this.showBorrowOverlay = false;
+    },
+    openWithdrawOverlay() {
+      this.showWithdrawOverlay = true;
+    },
+    closeWithdrawOverlay() {
+      this.showWithdrawOverlay = false;
+    },
+    openCollateralOverlay() {
+      this.showCollateralOverlay = true;
+    },
+    closeCollateralOverlay() {
+      this.showCollateralOverlay = false;
     },
     setCallerAndHandler() {
       this.handler = new handlerAave();
@@ -374,35 +397,6 @@ export default {
 </script>
 
 <style lang="scss">
-// Fix mew-components
-.mew-component-fix--aave {
-  .mew-banner {
-    min-height: 180px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    .exit-container {
-      display: none;
-    }
-    .banner-content {
-      > div:nth-child(2) {
-        margin-top: 9px;
-        max-width: 700px;
-        padding: 0 20px !important;
-      }
-    }
-    .mew-subtitle {
-      font-size: 36px !important;
-    }
-  }
-  .v-tab {
-    letter-spacing: -0.1px;
-  }
-  .v-tabs-bar {
-    height: 70px;
-  }
-}
-
 .circle {
   width: 10px;
   height: 10px;
