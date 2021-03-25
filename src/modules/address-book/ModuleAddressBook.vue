@@ -87,10 +87,10 @@ export default {
       }
     },
     setAddress(value) {
-      this.inputAddr = value.address ? value.address : value;
+      this.inputAddr = value && value.address ? value.address : value;
       this.resolvedAddr = '';
       this.$emit('setAddress', this.inputAddr, this.isValidAddress);
-      if (!utils.isAddress(this.inputAddr)) {
+      if (this.inputAddr && !utils.isAddress(this.inputAddr)) {
         this.resolveName();
       }
     }
