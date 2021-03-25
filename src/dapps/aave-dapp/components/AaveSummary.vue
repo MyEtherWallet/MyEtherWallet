@@ -263,11 +263,11 @@ export default {
         this.$emit('confirmed');
       } else {
         const param = {
-          symbol: this.actualToken.symbol,
           aavePool: 'proto',
           userAddress: this.address,
           amount: this.amount,
-          referralCode: '14'
+          referralCode: '14',
+          reserve: this.actualToken.underlyingAsset
         };
         this.$emit('makeDeposit', param);
       }

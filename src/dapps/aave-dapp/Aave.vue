@@ -171,6 +171,7 @@ import { convertToFixed } from './handlers/helpers';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 const COLORS = {
   ENJ: 'expandHeader',
@@ -412,8 +413,14 @@ export default {
   },
   methods: {
     callDeposit(e) {
-      console.log(e);
-      // this.handler.deposit(e).then().catch()
+      this.handler
+        .deposit(e)
+        .then(() => {
+          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
     },
     openDepositOverlay() {
       this.showDepositOverlay = true;

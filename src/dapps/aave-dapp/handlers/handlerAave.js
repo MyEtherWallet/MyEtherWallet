@@ -47,10 +47,11 @@ export default class AaveHandler {
 
   sendTransaction(param) {
     if (param) {
+      console.log(param);
       if (param.length > 1) {
         return this.web3().mew.sendBatchTransactions(param);
       }
-      return this.web3().sendTransaction(param[0]);
+      return this.web3().eth.sendTransaction(param[0]);
     }
     return new Error('No Parameters sent!');
   }
@@ -70,14 +71,15 @@ export default class AaveHandler {
     }
   }
 
-  deposit(param) {
+  async deposit(param) {
     try {
-      return depositDetails(param).then(res => {
+      return await depositDetails(param).then(res => {
+        console.log(res.data);
         const txArr = [];
         res.data.deposit.forEach(data => {
           txArr.push(data.tx);
         });
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);
