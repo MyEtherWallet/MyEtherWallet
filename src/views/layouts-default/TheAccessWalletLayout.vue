@@ -87,8 +87,11 @@ import browserExtensionOverlay from '@/modules/wallets/components/browser-extens
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
+import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { mapActions, mapState } from 'vuex';
+import Web3 from 'web3';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
@@ -144,8 +147,7 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showBrowser');
-            this.$router.push({ name: 'BrowserExtension' });
+            this.openWeb3Wallet();
           }
         },
         /* Hardware Wallet */
@@ -198,6 +200,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('external', ['path']),
     /**
      * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
      * @return - boolean
@@ -221,6 +224,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Pushes route to empty Access wallet with no props
      * Consequently closing any open overlay
@@ -251,6 +255,31 @@ export default {
         Toast(e, {}, ERROR);
       }
       this[type] = true;
+    },
+    /**
+     * Checks and open web3 wallet
+     */
+    async openWeb3Wallet() {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        try {
+          await window.ethereum.enable();
+          const acc = await web3.eth.getAccounts();
+          const wallet = new Web3Wallet(acc[0]);
+          this.setWallet([wallet, web3.currentProvider]);
+          window.ethereum.on('accountsChanged', acc => {
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          });
+          if (this.path !== '') {
+            this.$router.push({ path: this.path });
+          } else {
+            this.$router.push({ name: 'Wallets' });
+          }
+        } catch (e) {
+          Toast(e.message, {}, WARNING);
+        }
+      }
     }
   }
 };
