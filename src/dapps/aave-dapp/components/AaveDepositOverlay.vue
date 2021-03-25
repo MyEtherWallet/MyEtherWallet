@@ -19,6 +19,7 @@
       >
         <aave-table
           :handler="handler"
+          :action-type="'Deposit'"
           @selectedDeposit="handleSelectedDeposit"
         />
       </v-sheet>
@@ -27,18 +28,25 @@
           Aave Summary
         =====================================================================================
         -->
-      <div v-if="step === 1">
+      <div v-if="step === 1 || step === 3">
         <aave-summary
           :selected-token="selectedToken"
           :handler="handler"
+          :amount="amount"
+          :amount-usd="amountUsd"
+          :step="step"
+          :action-type="'Deposit'"
           @confirmed="handleConfirm"
+          @makeDeposit="emitDeposit"
         />
       </div>
       <div v-if="step === 2">
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
-          @confirmed="handleConfirm"
+          :action-type="'Deposit'"
+          @cancelDeposit="handleCancel"
+          @confirmDepositAmt="handleDepositAmount"
         />
       </div>
     </template>
@@ -72,13 +80,17 @@ export default {
   data() {
     return {
       step: 0,
-      selectedToken: {}
+      selectedToken: {},
+      amount: '0',
+      amountUsd: '$ 0.00'
     };
   },
   watch: {
-    open() {
-      this.step = 0;
-      this.selectedToken = {};
+    open(newVal) {
+      if (!newVal) {
+        this.step = 0;
+        this.selectedToken = {};
+      }
     }
   },
   methods: {
@@ -88,6 +100,18 @@ export default {
     },
     handleConfirm() {
       this.step += 1;
+    },
+    handleDepositAmount(e) {
+      this.step += 1;
+      this.amount = e[0];
+      this.amountUsd = e[1];
+    },
+    handleCancel() {
+      this.close();
+    },
+    emitDeposit(e) {
+      this.$emit('sendDeposit', e);
+      this.close();
     }
   }
 };

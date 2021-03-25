@@ -157,6 +157,7 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :handler="handler"
+      @sendDeposit="callDeposit"
     />
     <aave-borrow-overlay
       :open="showBorrowOverlay"
@@ -176,6 +177,8 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
@@ -354,8 +357,17 @@ export default {
     this.setCallerAndHandler();
   },
   methods: {
-    openDepositOverlay(token) {
-      this.requestDepositToken = token;
+    callDeposit(e) {
+      this.handler
+        .deposit(e)
+        .then(() => {
+          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
+    openDepositOverlay() {
       this.showDepositOverlay = true;
     },
     closeDepositOverlay() {

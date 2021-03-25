@@ -2,6 +2,7 @@
   <!--
   =====================================================================================
     Aave Summary (includes currency and health factor)
+    used for deposit, borrow and interest details
   =====================================================================================
   -->
   <v-sheet
@@ -11,7 +12,13 @@
     elevation="1"
     :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
   >
+    <!--
+  =====================================================================================
+    Deposit/Borrow currency details card
+  =====================================================================================
+  -->
     <v-card
+      v-if="step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -21,8 +28,10 @@
           >Amount to Deposit</span
         >
         <!-- dummy data -->
-        <span class="mew-heading-1 mb-2">12.256 {{ selectedToken.token }}</span>
-        <span class="textPrimaryModule--text">$13.64</span>
+        <span class="mew-heading-1 mb-2"
+          >{{ amount }} {{ selectedToken.token }}</span
+        >
+        <span class="textPrimaryModule--text">{{ amountUsd }}</span>
       </div>
       <img
         height="80"
@@ -30,6 +39,54 @@
         :alt="selectedToken.token"
       />
     </v-card>
+    <!--
+  =====================================================================================
+    Select interest details card
+  =====================================================================================
+  -->
+    <div
+      v-if="!onSelectInterest && !isDeposit"
+      class="d-flex align-center justify-space-between mb-10"
+    >
+      <v-card flat class="d-flex flex-column pa-10 text-left" color="overlayBg">
+        <span class="font-weight-bold">Current Interest Type</span>
+        <span
+          :class="[
+            'mew-heading-2 my-3',
+            getInterestTypeClass(currentInterest.type)
+          ]"
+          >{{ currentInterest.percentage }}</span
+        >
+        <span
+          :class="[
+            'font-weight-bold',
+            getInterestTypeClass(currentInterest.type)
+          ]"
+          >{{ currentInterest.type }}</span
+        >
+      </v-card>
+      <v-icon>mdi-arrow-right</v-icon>
+      <v-card flat class="d-flex flex-column pa-10 text-left" color="overlayBg">
+        <span class="font-weight-bold">Next Interest Type</span>
+        <span
+          :class="[
+            'mew-heading-2 my-3',
+            getInterestTypeClass(nextInterest.type)
+          ]"
+          >{{ nextInterest.percentage }}</span
+        >
+        <span
+          :class="['font-weight-bold', getInterestTypeClass(nextInterest.type)]"
+          >{{ nextInterest.type }}</span
+        >
+      </v-card>
+    </div>
+    <v-divider v-if="onSelectInterest" />
+    <!--
+  =====================================================================================
+    Other details (currency, health factor)
+  =====================================================================================
+  -->
     <v-row
       v-for="(detail, idx) in details"
       :key="idx"
@@ -47,6 +104,12 @@
         <span :class="detail.class">{{ detail.value }}</span>
       </v-col>
     </v-row>
+    <v-divider v-if="onSelectInterest" class="mt-5" />
+    <!--
+  =====================================================================================
+   Confirm button
+  =====================================================================================
+  -->
     <mew-button
       class="mt-10"
       title="Confirm"
@@ -57,9 +120,22 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
 import { convertToFixed } from '../handlers/helpers';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+import { mapState } from 'vuex';
+
+const types = {
+  stable: 'stable',
+  variable: 'variable'
+};
+
 export default {
   props: {
+    actionType: {
+      type: String,
+      default: ''
+    },
     handler: {
       type: [Object, null],
       validator: item => typeof item === 'object' || null,
@@ -68,12 +144,43 @@ export default {
     selectedToken: {
       type: Object,
       default: () => {}
+    },
+    amount: {
+      type: String,
+      default: '0'
+    },
+    amountUsd: {
+      type: String,
+      default: '$ 0.00'
+    },
+    step: {
+      type: Number,
+      default: 0
+    },
+    onSelectInterest: {
+      default: false,
+      type: Boolean
     }
   },
   computed: {
+    ...mapState('wallet', ['address']),
+    isDeposit() {
+      return this.actionType === 'Deposit';
+    },
     details() {
       /* currently using dummy data for values */
-      return [
+      return !this.onSelectInterest
+        ? this.depositDetails
+        : [
+            {
+              title: 'Currency',
+              value: this.selectedToken.token,
+              icon: this.selectedToken.tokenImg
+            }
+          ];
+    },
+    depositDetails() {
+      const details = [
         {
           title: 'Current Health Factor',
           tooltip: 'Tooltip text',
@@ -86,7 +193,7 @@ export default {
         {
           title: 'Next Health Factor',
           tooltip: 'Tooltip text',
-          value: '2.1725',
+          value: this.nextHealthFactor,
           class:
             this.currentHealthFactor > this.nextHealthFactor
               ? 'error--text'
@@ -97,17 +204,79 @@ export default {
               : 'mdi-arrow-up'
         }
       ];
+      if (this.step === 1)
+        details.unshift({
+          title: 'Currency',
+          value: this.selectedToken.token,
+          icon: this.selectedToken.tokenImg
+        });
+      return details;
     },
     currentHealthFactor() {
       return this.handler?.userSummary?.healthFactor;
     },
     nextHealthFactor() {
-      return convertToFixed(this.currentHealthFactor);
+      const selectedToken = this.actualToken;
+      let nextHealthFactor = convertToFixed(this.currentHealthFactor),
+        collateralBalanceETH = this.handler?.userSummary.totalCollateralETH;
+      const totalBorrowsETH = this.handler?.userSummary.totalBorrowsETH;
+      if (selectedToken?.price && this.amount !== '0') {
+        const ethBalance = BigNumber(this.amount).times(
+          selectedToken.price.priceInEth
+        );
+        collateralBalanceETH = new BigNumber(
+          this.handler.userSummary.totalCollateralETH
+        ).plus(ethBalance);
+        nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
+          collateralBalanceETH,
+          totalBorrowsETH,
+          this.handler.userSummary.totalFeesETH,
+          this.handler.userSummary.currentLiquidationThreshold
+        ).toFixed(3);
+      }
+      return nextHealthFactor;
+    },
+    actualToken() {
+      const token = this.handler?.reservesData.find(item => {
+        if (item.symbol === this.selectedToken.token) return item;
+      });
+
+      return token;
+    },
+    /* currently using dummy data for values */
+    currentInterest() {
+      return {
+        type: 'Variable',
+        percentage: '11.33%'
+      };
+    },
+    nextInterest() {
+      return {
+        type: 'Stable',
+        percentage: '2.837%'
+      };
     }
   },
   methods: {
     confirm() {
-      this.$emit('confirmed');
+      if (this.step === 1) {
+        this.$emit('confirmed');
+      } else {
+        const param = {
+          aavePool: 'proto',
+          userAddress: this.address,
+          amount: this.amount,
+          referralCode: '14',
+          reserve: this.actualToken.underlyingAsset
+        };
+        this.$emit('makeDeposit', param);
+      }
+    },
+    getInterestTypeClass(type) {
+      if (type.toLowerCase() === types.stable) {
+        return 'secondary--text';
+      }
+      return 'warning--text text--darken-1';
     }
   }
 };
