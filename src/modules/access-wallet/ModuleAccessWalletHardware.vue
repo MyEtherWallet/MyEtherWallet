@@ -5,6 +5,7 @@
   =====================================================================================
   -->
   <mew-overlay
+    description="Select a hardware wallet to access. Make sure your device is connected and unlocked."
     :show-overlay="open"
     :title="title"
     right-btn-text="Cancel"
@@ -14,32 +15,26 @@
   >
     <template #mewOverlayBody>
       <div v-if="step === 0">
-        <div class="text-center">
-          Select a hardware wallet to access. Make sure <br />
-          your device is connected and unlocked
-        </div>
         <v-sheet color="transparent" :max-width="740">
-          <v-container>
-            <v-row justify="start">
-              <v-col
-                v-for="button in buttons"
-                :key="button.label"
-                class="button-container"
-                cols="12"
-                md="6"
-              >
-                <mew-super-button
-                  :title="button.label"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon-type="img"
-                  :right-icon="button.icon"
-                  :right-icon-height="45"
-                  @click.native="nextStep(button.type)"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
+          <v-row justify="start">
+            <v-col
+              v-for="button in buttons"
+              :key="button.label"
+              class="button-container"
+              cols="12"
+              md="6"
+            >
+              <mew-super-button
+                :title="button.label"
+                :cols-num="6"
+                color-theme="basic"
+                right-icon-type="img"
+                :right-icon="button.icon"
+                :right-icon-height="45"
+                @click.native="nextStep(button.type)"
+              />
+            </v-col>
+          </v-row>
         </v-sheet>
       </div>
       <!--
