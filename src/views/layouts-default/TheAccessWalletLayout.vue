@@ -90,7 +90,7 @@ import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWallet
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
@@ -223,7 +223,7 @@ export default {
      */
     showMobile() {
       return this.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
-    },
+    }
   },
   methods: {
     /**
