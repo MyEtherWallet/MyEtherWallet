@@ -176,7 +176,6 @@ export default {
       this.ethAmount = '0';
     },
     isValidByteCodeInput(val) {
-      console.log(val); // todo remove dev item
       if (validateHexString(val)) {
         this.byteCodeHex = sanitizeHex(val);
         return true;
