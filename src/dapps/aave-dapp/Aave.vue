@@ -82,61 +82,60 @@
         <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
-            <div class="primary--text font-weight-bold mr-3">2.45345</div>
+            <div class="primary--text font-weight-bold mr-3">
+              {{ healthFactor }}
+            </div>
             <mew-tooltip text="Health factor" />
           </div>
 
-          <v-row>
-            <v-col cols="6">
-              <div class="tableHeader pa-5 border-radius--5px">
-                <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 class="font-weight-bold">$40.00</h3>
-                <div class="mt-2">0 ETH</div>
+          <v-row class="mb-1 mt-2">
+            <v-col cols="6" class="pa-1">
+              <div class="progressBar pa-5 border-radius--5px">
+                <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
+                <h3 class="font-weight-bold">$ {{ totalBorrow.usd }}</h3>
+                <div class="mt-2">{{ totalBorrow.eth }} ETH</div>
 
                 <v-divider class="my-4" />
 
                 <div class="d-flex justify-space-between">
                   <div class="font-weight-medium">Composition</div>
-                  <div class="d-flex align-center">
-                    <div class="blue--text font-weight-bold mr-2">100%</div>
-                    <div>Available</div>
-                  </div>
                 </div>
-                <mew-progress-bar class="mt-2" :balance-obj="balance" />
+                <mew-progress-bar
+                  class="mt-2"
+                  :balance-obj="borrowingsPercentage"
+                />
               </div>
             </v-col>
-            <v-col cols="6">
-              <div class="tableHeader pa-5 border-radius--5px">
-                <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 class="font-weight-bold">$40.00</h3>
-                <div class="mt-2">0 ETH</div>
+            <v-col cols="6" class="pa-1">
+              <div class="progressBar pa-5 border-radius--5px">
+                <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
+                <h3 class="font-weight-bold">$ {{ totalCollateral.usd }}</h3>
+                <div class="mt-2">{{ totalCollateral.eth }} ETH</div>
 
                 <v-divider class="my-4" />
 
                 <div class="d-flex justify-space-between">
                   <div class="font-weight-medium">Composition</div>
-                  <div class="d-flex align-center">
-                    <div class="blue--text font-weight-bold mr-2">100%</div>
-                    <div>Available</div>
-                  </div>
                 </div>
-                <mew-progress-bar class="mt-2" :balance-obj="balance" />
+                <mew-progress-bar
+                  class="mt-2"
+                  :balance-obj="collateralPercentage"
+                />
               </div>
             </v-col>
           </v-row>
 
-          <div
-            class="tableHeader pa-5 border-radius--5px d-flex align-center justify-space-between"
+          <v-row
+            class="mt-2 pa-2 loan-value-container progressBar"
+            align="center"
           >
-            <div class="font-weight-bold">Loan to value</div>
-            <div class="font-weight-bold">65.04%</div>
-          </div>
-
-          <mew-table
-            class="mt-3"
-            :table-headers="borrowingsTableHeader"
-            :table-data="borrowingsTableData"
-          />
+            <v-col cols="11">
+              <span class="mew-heading-3">Loan to Value</span>
+            </v-col>
+            <v-col cols="1">
+              <span class="mew-heading-3">{{ loanValue }}</span>
+            </v-col>
+          </v-row>
 
           <div class="d-flex justify-center mt-9">
             <mew-button
@@ -322,6 +321,12 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapState('external', ['ETHUSDValue']),
+    loanValue() {
+      if (!this.handler) return `0%`;
+      return `${BigNumber(this.handler.userSummary.currentLiquidationThreshold)
+        .times(100)
+        .toFixed()}%`;
+    },
     healthFactor() {
       if (!this.handler) return '-';
       return BigNumber(this.handler.userSummary.healthFactor).gt(0)
@@ -345,6 +350,36 @@ export default {
         usd: this.handler ? usd : '0'
       };
     },
+    totalCollateral() {
+      if (!this.handler)
+        return {
+          eth: `0 ETH`,
+          usd: `$ 0.00`
+        };
+
+      const eth = `${this.handler.userSummary.totalCollateralETH}`;
+      const usd = `${this.handler.userSummary.totalCollateralUSD}`;
+
+      return {
+        eth: eth,
+        usd: usd
+      };
+    },
+    totalBorrow() {
+      if (!this.handler)
+        return {
+          eth: `0 ETH`,
+          usd: `$ 0.00`
+        };
+
+      const eth = `${this.handler.userSummary.totalBorrowsETH}`;
+      const usd = `${this.handler.userSummary.totalBorrowsUSD}`;
+
+      return {
+        eth: eth,
+        usd: usd
+      };
+    },
     compositionPercentage() {
       if (
         this.handler &&
@@ -362,6 +397,87 @@ export default {
         });
         const newObj = {
           total: total,
+          data: data
+        };
+
+        return newObj;
+      }
+
+      return {
+        total: 0,
+        data: []
+      };
+    },
+    collateralPercentage() {
+      if (
+        this.handler &&
+        this.handler.userSummary &&
+        Object.keys(this.handler.userSummary).length > 0
+      ) {
+        const total = this.handler.userSummary.totalCollateralETH;
+        const data = this.handler.userSummary.reservesData.filter(item => {
+          if (
+            item.usageAsCollateralEnabledOnUser &&
+            item.currentUnderlyingBalanceETH > 0
+          ) {
+            item['percentage'] = BigNumber(item.currentUnderlyingBalance)
+              .times(100)
+              .div(total)
+              .toFixed();
+            item['color'] = COLORS[item.reserve.symbol];
+            return item;
+          }
+        });
+        const newObj = {
+          total: total,
+          data: data
+        };
+
+        return newObj;
+      }
+
+      return {
+        total: 0,
+        data: []
+      };
+    },
+    borrowingsPercentage() {
+      if (
+        this.handler &&
+        this.handler.userSummary &&
+        Object.keys(this.handler.userSummary).length > 0
+      ) {
+        const borrowLimit = BigNumber(
+          this.handler.userSummary.availableBorrowsETH
+        )
+          .plus(this.handler.userSummary.borrowLimitBorrowsETH)
+          .toFixed(4);
+        const percentageLeft = BigNumber(
+          this.handler.userSummary.availableBorrowsETH
+        )
+          .times(100)
+          .div(borrowLimit)
+          .toFixed();
+        const data = this.handler.userSummary.reservesData.filter(item => {
+          if (item.currentBorrowsETH > 0) {
+            item['percentage'] = BigNumber(item.currentBorrowsETH)
+              .times(100)
+              .div(borrowLimit)
+              .toFixed();
+            item['color'] = COLORS[item.reserve.symbol];
+            return item;
+          }
+        });
+        if (borrowLimit > 0 && percentageLeft > 0) {
+          data.push({
+            symbol: 'Available',
+            amount: '',
+            percentage: percentageLeft,
+            color: '#c7c7c7'
+          });
+        }
+        const newObj = {
+          total: borrowLimit,
           data: data
         };
 
@@ -452,6 +568,10 @@ export default {
 </script>
 
 <style lang="scss">
+.loan-value-container {
+  border-radius: 5px;
+}
+
 .circle {
   width: 10px;
   height: 10px;
