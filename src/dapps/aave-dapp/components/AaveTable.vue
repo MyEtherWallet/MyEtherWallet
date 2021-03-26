@@ -91,6 +91,7 @@ export default {
         method: this.onSwapClick
       },
       btnBorrow: {
+        title: 'Borrow',
         btnStyle: 'background',
         colorTheme: 'primary',
         method: this.onBorrowClick
@@ -155,40 +156,6 @@ export default {
           sortable: false,
           width: '32%'
         }
-      ],
-      /* Dummy Data to display */
-      dummyBorrow: [
-        {
-          token: 'ALS',
-          available: '400000',
-          stableAPR: '3.7%',
-          variableApr: '1200005.5%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        },
-        {
-          token: 'ABC',
-          available: '4000.00005675671',
-          stableAPR: '3.5%',
-          variableApr: '5.55465%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        },
-        {
-          token: 'LGS',
-          stableAPR: '6.5%',
-          variableApr: '5.55465%',
-          apr: '0.5763%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        },
-        {
-          token: 'ASD',
-          stableAPR: '76.5%',
-          variableApr: '3.55465%',
-          tokenImg:
-            'https://assets.coingecko.com/coins/images/981/large/kick.png?1568643013'
-        }
       ]
     };
   },
@@ -211,7 +178,8 @@ export default {
 
     list() {
       const reserves =
-        this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT
+        this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT ||
+        this.tableHeader === AAVE_TABLE_HEADER.BORROW
           ? this.handler?.reservesData
           : this.handler?.userSummary.reservesData;
       return reserves;
@@ -225,11 +193,7 @@ export default {
       return reserves;
     },
 
-    /**
-     * Returns formatted list of table data
-     * Filters through search requests
-     */
-    listData() {
+    depositList() {
       const list = this.toggleType ? this.reserveCoins : this.list;
       const userReserves = this.handler.userSummary.reservesData;
       const filteredList = list.map(item => {
@@ -252,6 +216,38 @@ export default {
           callToAction: [this.btnDeposit, this.btnSwap]
         };
       });
+
+      return filteredList;
+    },
+
+    borrowList() {
+      const list = this.toggleType ? this.reserveCoins : this.list;
+      const filteredList = list.map(item => {
+        return {
+          token: item.symbol,
+          available: roundNumber(item.availableLiquidity),
+          stableApr: item.stableBorrowRateEnabled
+            ? convertToFixed(item.stableBorrowRate * 100) + '%'
+            : '--',
+          variableApr: convertToFixed(item.variableBorrowRate * 100),
+          tokenImg: item.icon,
+          address: item.aToken.id,
+          callToAction: [this.btnBorrow]
+        };
+      });
+
+      return filteredList;
+    },
+
+    /**
+     * Returns formatted list of table data
+     * Filters through search requests
+     */
+    listData() {
+      const filteredList =
+        this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT
+          ? this.depositList
+          : this.borrowList;
       return this.searchInput === null || this.searchInput === ''
         ? filteredList
         : filteredList.filter(item => {
@@ -277,7 +273,7 @@ export default {
       });
     },
     onBorrowClick(val) {
-      console.log(val);
+      this.$emit('selectedBorrow', val);
     }
   }
 };

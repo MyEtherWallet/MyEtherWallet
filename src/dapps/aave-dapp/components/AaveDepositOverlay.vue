@@ -19,7 +19,7 @@
       >
         <aave-table
           :handler="handler"
-          :action-type="'Deposit'"
+          :table-header="AAVE_TABLE_HEADER"
           @selectedDeposit="handleSelectedDeposit"
         />
       </v-sheet>
@@ -57,7 +57,7 @@
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
-
+import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
   props: {
@@ -82,7 +82,8 @@ export default {
       step: 0,
       selectedToken: {},
       amount: '0',
-      amountUsd: '$ 0.00'
+      amountUsd: '$ 0.00',
+      AAVE_TABLE_HEADER: AAVE_TABLE_HEADER.DEPOSIT
     };
   },
   watch: {

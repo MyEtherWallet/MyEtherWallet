@@ -156,6 +156,7 @@
     <aave-borrow-overlay
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
+      :handler="handler"
     />
   </div>
 </template>
@@ -330,7 +331,7 @@ export default {
     healthFactor() {
       if (!this.handler) return '-';
       return BigNumber(this.handler.userSummary.healthFactor).gt(0)
-        ? this.handler.userSummary.healthFactor
+        ? BigNumber(this.handler.userSummary.healthFactor).toFixed(3)
         : `-`;
     },
     totalLiquidity() {
