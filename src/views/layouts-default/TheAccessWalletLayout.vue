@@ -87,10 +87,17 @@ import browserExtensionOverlay from '@/modules/wallets/components/browser-extens
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
-import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  ERROR,
+  WARNING,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
+import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
-import { mapActions, mapGetters } from 'vuex';
+import Web3 from 'web3';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
@@ -145,8 +152,7 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showBrowser');
-            this.$router.push({ name: 'BrowserExtension' });
+            this.openWeb3Wallet();
           }
         },
         /* Hardware Wallet */
@@ -199,6 +205,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('external', ['path']),
     /**
      * Used in the creation of a MEWconnect instance
      **/
@@ -226,6 +233,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
@@ -262,7 +270,31 @@ export default {
       this[type] = true;
     },
     /**
-     * Opens a modal to initiate a connection with a MEW mobile app.
+     * Checks and open web3 wallet
+     */
+    async openWeb3Wallet() {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        try {
+          await window.ethereum.enable();
+          const acc = await web3.eth.getAccounts();
+          const wallet = new Web3Wallet(acc[0]);
+          this.setWallet([wallet, web3.currentProvider]);
+          window.ethereum.on('accountsChanged', acc => {
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          });
+          if (this.path !== '') {
+            this.$router.push({ path: this.path });
+          } else {
+            this.$router.push({ name: 'Wallets' });
+          }
+        } catch (e) {
+          Toast(e.message, {}, WARNING);
+        }
+      }
+    },
+    /** Opens a modal to initiate a connection with a MEW mobile app.
      * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
      */
     openMEWconnect() {

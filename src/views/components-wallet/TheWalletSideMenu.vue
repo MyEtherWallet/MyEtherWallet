@@ -275,6 +275,10 @@ export default {
             {
               title: this.$t('interface.menu.sign-message'),
               route: { name: 'SignMessage' }
+            },
+            {
+              title: this.$t('interface.menu.verify-message'),
+              route: { name: 'verifyMessage' }
             }
           ]
         }
