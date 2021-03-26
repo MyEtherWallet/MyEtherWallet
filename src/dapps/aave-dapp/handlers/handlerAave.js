@@ -47,7 +47,6 @@ export default class AaveHandler {
 
   sendTransaction(param) {
     if (param) {
-      console.log(param);
       if (param.length > 1) {
         return this.web3().mew.sendBatchTransactions(param);
       }
@@ -74,7 +73,6 @@ export default class AaveHandler {
   async deposit(param) {
     try {
       return await depositDetails(param).then(res => {
-        console.log(res.data);
         const txArr = [];
         res.data.deposit.forEach(data => {
           txArr.push(data.tx);
@@ -280,13 +278,13 @@ export default class AaveHandler {
       ? filteredMasterFile.icon !== ''
         ? filteredMasterFile.icon
         : filteredMasterFile.icon_png !== ''
-        ? filteredMasterFile.icon_png
-        : ''
+          ? filteredMasterFile.icon_png
+          : ''
       : '';
     return networkIcon !== ''
       ? networkIcon
       : masterFileIcon !== ''
-      ? masterFileIcon
-      : eth;
+        ? masterFileIcon
+        : eth;
   }
 }

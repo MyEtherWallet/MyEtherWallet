@@ -334,7 +334,6 @@ export default {
           default:
             break;
         }
-        console.log(this.searchInput);
         return this.searchInput === null || this.searchInput === ''
           ? list
           : list.filter(item => {
