@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4 pb-sm-0">
+  <div class="pa-6">
     <div>Please select a default gas price for your transaction fee</div>
     <!--
     =====================================================================================

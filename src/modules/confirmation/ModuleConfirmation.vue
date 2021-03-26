@@ -4,7 +4,7 @@
       :show-overlay="showOverlay"
       :title="title ? title : 'Confirmation'"
       left-btn-text=""
-      right-btn-text="close"
+      right-btn-text="Close"
       :close="overlayClose"
     >
       <template #mewOverlayBody>

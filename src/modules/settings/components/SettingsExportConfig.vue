@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4">
+  <div class="pa-6">
     <v-sheet color="transparent" max-width="550px" class="mb-7">
       Export your configuration file and save it on your local computer for
       later use.

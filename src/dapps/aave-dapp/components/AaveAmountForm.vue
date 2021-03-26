@@ -82,7 +82,10 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
-import { convertToFixed } from '@/dapps/aave-dapp/handlers/helpers';
+import {
+  AAVE_TABLE_HEADER,
+  convertToFixed
+} from '@/dapps/aave-dapp/handlers/helpers';
 
 export default {
   name: 'AaveAmountForm',
@@ -94,6 +97,10 @@ export default {
     handler: {
       type: [Object, null],
       default: () => {}
+    },
+    actionType: {
+      type: String,
+      default: AAVE_TABLE_HEADER.DEPOSIT
     }
   },
   data() {

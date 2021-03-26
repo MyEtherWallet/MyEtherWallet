@@ -281,7 +281,32 @@ export default {
               };
             });
             break;
+          /**
+           * Case: Aave Exhisting Deposits Table
+           */
           case AAVE_TABLE_HEADER.BORROW:
+            list = list.map(item => {
+              return {
+                token: item.symbol,
+                available: roundNumber(item.availableLiquidity),
+                stableApr: item.stableBorrowRateEnabled
+                  ? roundPercentage(
+                      new BigNumber(item.stableBorrowRate)
+                        .multipliedBy(100)
+                        .toString()
+                    )
+                  : '--',
+                variableApr: roundPercentage(
+                  new BigNumber(item.variableBorrowRate)
+                    .multipliedBy(100)
+                    .toString()
+                ),
+
+                tokenImg: item.icon,
+                address: item.aToken.id,
+                callToAction: [this.btnBorrow]
+              };
+            });
             break;
           /**
            * Case: Aave Exhisting Deposits Table
