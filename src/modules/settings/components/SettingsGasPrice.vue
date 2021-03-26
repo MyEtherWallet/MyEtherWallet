@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4 pb-sm-0">
+  <div class="pa-6">
     <div>Please select a default gas price for your transaction fee</div>
     <!--
     =====================================================================================
@@ -85,7 +85,7 @@ export default {
       type: Array,
       default: () => []
     },
-    currentGasPrice: {
+    gasPrice: {
       type: String,
       default: '0'
     },
@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.currentGasPrice : '0'
+        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
     };
   }
 };

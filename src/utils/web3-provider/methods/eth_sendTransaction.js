@@ -1,10 +1,6 @@
-// import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import {
-  WEB3_WALLET,
-  WALLET_CONNECT
-} from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
@@ -60,7 +56,7 @@ const setEvents = (promiObj, tx, dispatch) => {
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = BigNumber(store.state.global.gasPrice).toFixed();
+  tx.gasPrice = BigNumber(store.state.global.baseGasPrice).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
@@ -79,12 +75,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.chainId = !tx.chainId
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
-
   getSanitizedTx(tx)
     .then(_tx => {
       if (
-        store.state.wallet.identifier === WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_CONNECT
+        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
@@ -101,7 +96,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
-
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {

@@ -28,6 +28,13 @@ const setImportedState = function ({ commit }, stateObj) {
   stateObj['localStore'] = true;
   commit('SET_IMPORTED_STATE', stateObj);
 };
+const addCustomPath = function ({ commit }, val) {
+  commit('ADD_CUSTOM_PATH', val);
+};
+
+const deleteCustomPath = function ({ commit }, val) {
+  commit('DELETE_CUSTOM_PATH', val);
+};
 
 export default {
   setOnlineStatus,
@@ -37,5 +44,7 @@ export default {
   setGasPriceType,
   setAddressBook,
   setImportedState,
-  addLocalContract
+  addLocalContract,
+  addCustomPath,
+  deleteCustomPath
 };

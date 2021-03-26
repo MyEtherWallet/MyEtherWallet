@@ -18,7 +18,7 @@
           placeholder=" "
           class="mr-3 flex-grow-1"
         />
-<!--  mew text area doesn't handle array as prop -->
+        <!--  mew text area doesn't handle array as prop -->
 
         <v-textarea
           v-model="abi"

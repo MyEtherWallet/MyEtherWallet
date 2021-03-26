@@ -2,6 +2,20 @@
 
 ### Devop
 
+* Add MEWconnect [#2934](https://github.com/MyEtherWallet/MyEtherWallet/pull/2934)
+* Fix send and sign tx [#2929](https://github.com/MyEtherWallet/MyEtherWallet/pull/2929)
+* Merge UI fixes [#2916](https://github.com/MyEtherWallet/MyEtherWallet/pull/2916)
+* Fix create wallet nnemonic layout [#2912](https://github.com/MyEtherWallet/MyEtherWallet/pull/2912)
+* Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
+* Update wallet side menu content order [#2910](https://github.com/MyEtherWallet/MyEtherWallet/pull/2910)
+* Update mobile menu UI [#2900](https://github.com/MyEtherWallet/MyEtherWallet/pull/2900)
+* Move tokens to state [#2898](https://github.com/MyEtherWallet/MyEtherWallet/pull/2898)
+* Mobile Navigation bar implementationn for wallet, repalce mdi-text icon to svg [#2895](https://github.com/MyEtherWallet/MyEtherWallet/pull/2895)
+* Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
+* Fix langing page header [#2886](https://github.com/MyEtherWallet/MyEtherWallet/pull/2886)
+* Refactor access wallet, update ui to make it consistent \[#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
+* Update swap provider list [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
+* Settings [#2835h](https://github.com/MyEtherWallet/MyEtherWallet/pull/2835)
 * notifications [#2860](https://github.com/MyEtherWallet/MyEtherWallet/pull/2860)
 * Created Core wallet layout, fixes for header and footer [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
 * Fix sentry [#2858](https://github.com/MyEtherWallet/MyEtherWallet/pull/2858)

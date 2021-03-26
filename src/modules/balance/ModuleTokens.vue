@@ -1,45 +1,54 @@
 <template>
+  <!--
+  =============================================================
+  Module Tokens
+  =============================================================
+  -->
   <div>
+    <v-skeleton-loader
+      v-if="loading && tokensData"
+      class="mx-auto"
+      type="table"
+    />
     <mew-module
-      v-if="tokensData.length > 0"
-      class="mt-6"
+      v-if="!loading && tokensData.length > 0"
       subtitle="My Tokens Value"
+      :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
       :icon="require('@/assets/images/icons/icon-token-grey.png')"
       icon-align="left"
     >
+      <!-- hiding for now until we have the ui  -->
+      <!-- <template #rightHeaderContainer>
+        <mew-button btn-style="transparent" title="All Tokens" />
+      </template> -->
       <template #moduleBody>
-        <mew-table
-          :has-color="false"
-          :table-headers="tableHeaders"
-          :table-data="tokensData"
-        />
+        <div class="my-8">
+          <mew-table
+            :has-color="false"
+            :table-headers="tableHeaders"
+            :table-data="tokensData"
+          />
+        </div>
       </template>
     </mew-module>
-    <v-sheet v-else class="token-empty-list mt-6 pa-12" color="white">
-      <h2 class="mb-6">My token list is empty</h2>
-      <mew-button
-        class="ml-auto ml-n3"
-        :has-full-width="false"
-        :title="'+ ' + 'Buy ERC20 tokens'"
-        btn-size="xsmall"
-        btn-style="transparent"
-        @click.native="navigateToSwap"
-      />
-    </v-sheet>
+    <!--
+    =====================================================================================
+      display if the user has no tokens
+    =====================================================================================
+    -->
+    <balance-empty-block v-if="!loading && tokensData.length === 0" is-tokens />
   </div>
 </template>
 <script>
 import BigNumber from 'bignumber.js';
+import { mapGetters, mapState } from 'vuex';
+import BalanceEmptyBlock from './components/BalanceEmptyBlock';
+import { fromWei } from 'web3-utils';
 
 export default {
-  props: {
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    }
+  components: {
+    BalanceEmptyBlock
   },
   data() {
     return {
@@ -47,35 +56,48 @@ export default {
         {
           text: 'Token',
           value: 'token',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
           text: 'Price',
           value: 'price',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
           text: 'Market Cap',
           value: 'cap',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
-          text: '24H Changes',
+          text: '24H',
           value: 'change',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
-          text: 'Token Value',
-          value: 'value',
-          sortable: true,
-          width: '250px'
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '20%'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          width: '15%'
         }
-      ]
+      ],
+      loading: true
     };
   },
   computed: {
+    ...mapGetters('wallet', ['tokensList', 'web3']),
+    ...mapState('wallet', ['web3']),
     tokensData() {
-      return this.ownersTokens
+      return this.tokensList
         .filter(item => {
           if (item.price_change_24h || item.market_cap) {
             return item;
@@ -83,58 +105,45 @@ export default {
         })
         .map(item => {
           const newObj = {};
-          newObj.value = `$ ${item.usdBalance}`;
+          newObj.balance = [
+            new BigNumber(fromWei(item.balance, 'ether')).toFixed(2) +
+              ' ' +
+              item.symbol,
+            '$' + new BigNumber(item.usdBalance).toFixed(2)
+          ];
           newObj.token = item.symbol;
-          newObj.cap = item.market_cap;
-          newObj.change = item.price_change_24h;
+          newObj.cap = new BigNumber(item.market_cap).toFormat();
+          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
           newObj.status = item.price_change_24h > 0 ? '+' : '-';
-          newObj.price = item.price;
+          newObj.price = '$' + new BigNumber(item.price).toFixed(2);
           newObj.tokenImg = item.img;
-          newObj.usdBalance = item.usdBalance;
-
+          newObj.callToAction = [
+            {
+              title: 'Trade',
+              method: () => {
+                this.$router.push({ name: 'Swap' });
+              },
+              btnStyle: 'outline',
+              colorTheme: 'primary'
+            }
+          ];
+          this.loading = false;
           return newObj;
         });
     },
     totalTokensValue() {
       return new BigNumber(
-        this.tokensData.reduce((acc, currentVal) => {
-          return new BigNumber(acc).plus(currentVal.usdBalance).toFixed();
+        this.tokensList.reduce((total, currentVal) => {
+          const balance =
+            currentVal.usdBalance !== null &&
+            (currentVal.price_change_24h !== null ||
+              currentVal.market_cap !== 0)
+              ? currentVal.usdBalance
+              : 0;
+          return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
-    }
-  },
-  methods: {
-    navigateToSwap() {
-      this.$router.push({ name: 'Swap' });
     }
   }
 };
 </script>
-<style lang="scss" scoped>
-.token-empty-list {
-  background-image: url(~@/assets/images/backgrounds/bg-half-circle.png),
-    url(~@/assets/images/backgrounds/bg-small-half-circle.png);
-  background-position: right -16px bottom -26px, left -18px bottom -29px;
-  background-size: 357px, 150px;
-  border-radius: 12px;
-}
-.mew-component--my-token-value {
-  .theme--dark.v-sheet {
-    background-color: var(--v-mewBg-base);
-    border-color: var(--v-mewBg-base);
-  }
-  .block-title {
-    margin-left: 10px;
-    .header-wrapper {
-      padding: 0 !important;
-    }
-    .left-wrapper {
-      padding-left: 0 !important;
-    }
-    .right-wrapper {
-      padding: 0 !important;
-      margin-right: 10px;
-    }
-  }
-}
-</style>

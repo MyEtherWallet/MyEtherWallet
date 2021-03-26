@@ -4,11 +4,11 @@
     <the-wallet-header />
     <v-main>
       <v-container
-        class="pa-3 pa-md-5 align-center wallet-content-container"
+        class="pa-3 pa-md-5 mb-10 align-center wallet-content-container"
         fluid
       >
         <module-confirmation />
-        <router-view :owners-tokens="ownersTokens" />
+        <router-view />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -24,7 +24,10 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
-import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper.js';
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper.js';
 
 export default {
   components: {
@@ -34,10 +37,7 @@ export default {
     ModuleConfirmation
   },
   data() {
-    return {
-      tokens: [],
-      ownersTokens: []
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
@@ -63,21 +63,21 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setAccountBalance', 'setBlockNumber']),
+    ...mapActions('wallet', [
+      'setAccountBalance',
+      'setBlockNumber',
+      'setTokens'
+    ]),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
-    ...mapState('global', ['gasPriceType']),
     getTokens() {
       if (this.isEthNetwork) {
         const tokensList = new TokenCalls(this.$apollo);
         tokensList.getOwnersERC20Tokens(this.address).then(res => {
-          this.ownersTokens = res.map(r => {
-            r.balance = toBN(r.balance);
-            return r;
-          });
+          this.setTokens(res);
         });
       } else {
-        this.tokens = this.network.type.tokens;
+        this.setTokens(this.network.type.tokens);
       }
     },
     getPriceAndBalance() {
@@ -101,7 +101,7 @@ export default {
         });
       }
       this.web3.eth.getGasPrice().then(res => {
-        this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
+        this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
       });
     },
     subscribeToBlockNumber() {

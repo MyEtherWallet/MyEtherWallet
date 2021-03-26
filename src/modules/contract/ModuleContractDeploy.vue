@@ -97,7 +97,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import * as unit from 'ethjs-unit';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import validateHexString from '@/core/helpers/validateHexString';
@@ -125,7 +125,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['currentNetwork', 'gasPrice']),
-
+    ...mapGetters('global', ['currentNetwork', 'gasPrice']),
     canDeploy() {
       return (
         this.byteCodeHex !== '' &&

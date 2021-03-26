@@ -144,12 +144,6 @@ export default {
       type: String,
       default: ''
     },
-    ownersTokens: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
     prefilledGasLimit: {
       type: String,
       default: '21000'
@@ -157,7 +151,6 @@ export default {
   },
   data() {
     return {
-      invalidName: false,
       addMode: false,
       toastType: '',
       toastMsg: '',
@@ -179,10 +172,10 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPrice']),
+    ...mapState('global', ['online']),
     ...mapState('external', ['ETHUSDValue']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     amtRules() {
       return [
         value => !!value || "Amount can't be empty!",
@@ -259,7 +252,7 @@ export default {
         price_change_24h: null
       };
 
-      const copiedTokens = this.ownersTokens.slice();
+      const copiedTokens = this.tokensList.slice();
       copiedTokens.unshift(eth);
       return copiedTokens;
     },
@@ -294,7 +287,7 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    ownersTokens: {
+    tokensList: {
       handler: function (newVal) {
         this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
       },
@@ -371,7 +364,7 @@ export default {
     prefillForm() {
       if (this.isPrefilled) {
         const foundToken = this.tokensymbol
-          ? this.ownersTokens.find(item => {
+          ? this.tokensList.find(item => {
               return item.name.toLowerCase() === this.tokenSymbol.toLowerCase();
             })
           : undefined;
@@ -391,7 +384,6 @@ export default {
       this.data = '';
       this.amount = '0';
       this.toAddress = '';
-      this.gasPrice = '90';
       this.$refs.expandPanel.setToggle(false);
       this.$refs.mewSelect.clear();
       this.$refs.addressSelect.clear();

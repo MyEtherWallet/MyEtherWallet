@@ -17,7 +17,7 @@ const SET_LOCALE = function (state, { locale }) {
 };
 
 const SET_GAS_PRICE = function (state, val) {
-  state.gasPrice = val;
+  state.baseGasPrice = val;
 };
 
 const SET_ADDRESS_BOOK = function (state, val) {
@@ -35,7 +35,20 @@ const SET_NETWORK = function (state, networkObj) {
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
 };
+const ADD_CUSTOM_PATH = function (state, path) {
+  state.customPaths.push(path);
+};
+const DELETE_CUSTOM_PATH = function (state, customPaths) {
+  const idx = state.customPaths.findIndex(item => {
+    if (item.path === customPaths.path) {
+      return item;
+    }
+  });
 
+  if (idx) {
+    state.customPaths.splice(idx, 1);
+  }
+};
 const SET_IMPORTED_STATE = function (currentState, newState) {
   Object.keys(newState).forEach(item => {
     currentState[item] = newState[item];
@@ -56,6 +69,8 @@ export default {
   SET_ADDRESS_BOOK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
+  ADD_CUSTOM_PATH,
+  DELETE_CUSTOM_PATH,
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT
 };

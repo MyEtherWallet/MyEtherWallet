@@ -1,6 +1,6 @@
 import unit from 'ethjs-unit';
 import EthCalls from '../web3Calls';
-import { WEB3_WALLET } from '@/modules/wallets/utils/bip44/walletTypes';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import { toPayload } from '../jsonrpc';
 import EventNames from '../events';
 import { getSanitizedTx } from './utils';
@@ -24,11 +24,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.gasPrice = !tx.gasPrice
-    ? unit.toWei(store.state.global.gasPrice, 'gwei').toString()
+    ? unit.toWei(store.state.global.baseGasPrice, 'gwei').toString()
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.wallet.identifier === WEB3_WALLET) {
+      if (store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET) {
         res(new Error('web3 wallets doesnt support eth_signTransaction'));
       } else {
         if (_tx.hasOwnProperty('generateOnly')) {
