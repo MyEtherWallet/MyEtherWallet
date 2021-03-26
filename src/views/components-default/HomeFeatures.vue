@@ -25,25 +25,13 @@
               <home-features-send class="mt-16 mb-10" />
             </template>
             <template #tabContent2>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-swap-page.png')"
-                alt="Swap"
-              />
+              <home-features-swap class="mt-16 mb-10" />
             </template>
             <template #tabContent3>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
-                alt="Dapps"
-              />
+              <home-features-dapps class="mt-16 mb-10" />
             </template>
             <template #tabContent4>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"
-                alt="tokens"
-              />
+              <home-features-tokens class="mt-16 mb-10" />
             </template>
           </mew-tabs>
         </v-container>
@@ -85,10 +73,18 @@
 
 <script>
 import HomeFeaturesSend from './HomeFeaturesSend';
+import HomeFeaturesSwap from './HomeFeaturesSwap';
+import HomeFeaturesDapps from './HomeFeaturesDapps';
+import HomeFeaturesTokens from './HomeFeaturesTokens';
 
 export default {
   name: 'HomeFeatures',
-  components: { HomeFeaturesSend },
+  components: {
+    HomeFeaturesSend,
+    HomeFeaturesSwap,
+    HomeFeaturesDapps,
+    HomeFeaturesTokens
+  },
   data: () => ({
     mobileTab: null,
     mobileItems: [
