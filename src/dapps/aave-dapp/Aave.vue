@@ -63,9 +63,14 @@
             </v-col>
           </v-row>
           <v-row class="pl-1 pr-1">
-            <mew-table
-              :table-headers="depositsTableHeader"
-              :table-data="depositsTableData"
+            <aave-table
+              :table-header="depositsTableHeader"
+              :handler="handler"
+              :has-search="false"
+              :has-toggle="false"
+              @selectedDeposit="openDepositOverlay"
+              @withdrawToken="openWithdrawOverlay"
+              @collateralChange="openCollateralOverlay"
             />
           </v-row>
 
@@ -136,7 +141,6 @@
               <span class="mew-heading-3">{{ loanValue }}</span>
             </v-col>
           </v-row>
-
           <div class="d-flex justify-center mt-9">
             <mew-button
               title="Borrow"
@@ -167,10 +171,11 @@ import AaveBorrowOverlay from './components/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/AaveDepositOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
-import { convertToFixed } from './handlers/helpers';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
+import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 const COLORS = {
@@ -197,13 +202,21 @@ const COLORS = {
 };
 
 export default {
-  components: { TheWrapperDapp, AaveBorrowOverlay, AaveDepositOverlay },
+  components: {
+    TheWrapperDapp,
+    AaveBorrowOverlay,
+    AaveDepositOverlay,
+    AaveTable
+  },
   data() {
     return {
       handler: null,
       caller: null,
       showDepositOverlay: false,
+      requestDepositToken: {},
       showBorrowOverlay: false,
+      showWithdrawOverlay: false,
+      showCollateralOverlay: false,
       activeTab: 0,
       BG: BG,
       topBanner: {
@@ -211,52 +224,7 @@ export default {
         subtext:
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
-      depositsTableHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: 'Deposited',
-          value: 'balance',
-          sortable: false,
-          filterable: false,
-          width: '100%'
-        },
-        {
-          text: 'Earned',
-          value: 'earned',
-          sortable: false,
-          filterable: false,
-          width: '100%'
-        },
-        {
-          text: 'Use as collateral',
-          value: 'useAsColateral',
-          sortable: false,
-          filterable: false,
-          width: '50%'
-        },
-        {
-          text: '',
-          value: 'deposit',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '50%'
-        },
-        {
-          text: '',
-          value: 'withdraw',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '50%'
-        }
-      ],
+      depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
       borrowingsTableHeader: [
         {
           text: 'Activity',
@@ -489,30 +457,6 @@ export default {
         total: 0,
         data: []
       };
-    },
-    depositsTableData() {
-      if (!this.handler) return [];
-      const newArr = [];
-      if (this.handler.userSummary.hasOwnProperty('reservesData')) {
-        this.handler.userSummary.reservesData.forEach(item => {
-          const newObj = {
-            token: item.reserve.symbol,
-            balance: [
-              `${convertToFixed(item.currentUnderlyingBalance, 3)} ${
-                item.reserve.symbol
-              }`,
-              `${convertToFixed(item.currentUnderlyingBalanceETH, 6)} ETH`
-            ],
-            earned: '',
-            useAsColateral: '',
-            deposit: '',
-            withdraw: '',
-            tokenImg: item.reserve.icon
-          };
-          newArr.push(newObj);
-        });
-      }
-      return newArr;
     }
   },
   watch: {
@@ -550,6 +494,18 @@ export default {
     },
     closeBorrowOverlay() {
       this.showBorrowOverlay = false;
+    },
+    openWithdrawOverlay() {
+      this.showWithdrawOverlay = true;
+    },
+    closeWithdrawOverlay() {
+      this.showWithdrawOverlay = false;
+    },
+    openCollateralOverlay() {
+      this.showCollateralOverlay = true;
+    },
+    closeCollateralOverlay() {
+      this.showCollateralOverlay = false;
     },
     setCallerAndHandler() {
       this.handler = new handlerAave();

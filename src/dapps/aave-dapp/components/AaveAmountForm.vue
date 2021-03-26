@@ -103,6 +103,13 @@ export default {
       default: AAVE_TABLE_HEADER.DEPOSIT
     }
   },
+  data() {
+    return {
+      group: ['25%', '50%', '75%', 'MAX'],
+      amount: '0',
+      startingIdx: 1
+    };
+  },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),
@@ -155,13 +162,7 @@ export default {
       };
     }
   },
-  data() {
-    return {
-      group: ['25%', '50%', '75%', 'MAX'],
-      amount: '0',
-      startingIdx: 1
-    };
-  },
+
   mounted() {
     this.onToggle('50%');
   },
