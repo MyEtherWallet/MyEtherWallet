@@ -9,6 +9,7 @@
       <div>
         <v-textarea
           v-model="byteCode"
+          outlined
           label="Bytecode"
           placeholder=" "
           :rules="[
@@ -124,8 +125,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['currentNetwork', 'gasPrice']),
-    ...mapGetters('global', ['currentNetwork', 'gasPrice']),
+    ...mapState('global', ['currentNetwork']),
+    ...mapGetters('global', ['gasPrice']),
     canDeploy() {
       return (
         this.byteCodeHex !== '' &&
@@ -175,6 +176,7 @@ export default {
       this.ethAmount = '0';
     },
     isValidByteCodeInput(val) {
+      console.log(val); // todo remove dev item
       if (validateHexString(val)) {
         this.byteCodeHex = sanitizeHex(val);
         return true;
