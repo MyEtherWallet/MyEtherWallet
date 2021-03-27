@@ -43,6 +43,7 @@ export default class AaveHandler {
     this.compositionBorrow = [];
     this.compositionCollateral = [];
     this.percentageLeft = '';
+    this.isLoading = true;
   }
 
   sendTransaction(param) {
@@ -205,6 +206,7 @@ export default class AaveHandler {
         }
       });
     }
+    this.isLoading = false;
   }
 
   _liquidityRateHandler(res) {
@@ -278,13 +280,13 @@ export default class AaveHandler {
       ? filteredMasterFile.icon !== ''
         ? filteredMasterFile.icon
         : filteredMasterFile.icon_png !== ''
-          ? filteredMasterFile.icon_png
-          : ''
+        ? filteredMasterFile.icon_png
+        : ''
       : '';
     return networkIcon !== ''
       ? networkIcon
       : masterFileIcon !== ''
-        ? masterFileIcon
-        : eth;
+      ? masterFileIcon
+      : eth;
   }
 }

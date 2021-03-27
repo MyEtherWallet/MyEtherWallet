@@ -98,6 +98,12 @@ export default {
         colorTheme: 'primary',
         method: this.onWithdrawClick
       },
+      btnRepay: {
+        title: 'Repay',
+        btnStyle: 'transparent',
+        colorTheme: 'primary',
+        method: this.onRepayClick
+      },
       tableDepositHeader: [
         {
           text: 'Token',
@@ -186,6 +192,41 @@ export default {
           containsLink: true,
           width: '32%'
         }
+      ],
+      tableBalanceBorrowHeader: [
+        {
+          text: 'Token',
+          value: 'token',
+          sortable: false,
+          filterable: false
+        },
+        {
+          text: 'Borrowed',
+          value: 'balance',
+          sortable: false,
+          filterable: false
+        },
+        {
+          text: 'APR',
+          value: 'apr',
+          sortable: false,
+          filterable: false,
+          containsLink: true
+        },
+        {
+          text: 'APR Type',
+          value: 'toggle',
+          sortable: false,
+          filterable: false
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          filterable: false,
+          containsLink: true,
+          width: '32%'
+        }
       ]
     };
   },
@@ -201,35 +242,47 @@ export default {
         case AAVE_TABLE_HEADER.BALANCE_DEPOSIT:
           return this.tableBalanceDepositHeader;
         default:
-          return this.tableBorrowHeader;
+          return this.tableBalanceBorrowHeader;
       }
     },
-
-    stableCoins() {
-      const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
-      const reserves = this.list?.filter(item => {
-        if (stableCoins.includes(item.symbol)) return item;
-      });
-      return reserves;
-    },
-
-    list() {
-      if (this.handler) {
-        const reserves =
-          this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT ||
-          this.tableHeader === AAVE_TABLE_HEADER.BORROW
-            ? this.handler.reservesData
-            : this.handler.userSummary.reservesData;
-        return reserves;
-      }
-      return undefined;
-    },
-
     /**
      * Returns true if the data has not been loaded yet
      */
     isLoading() {
-      return this.list === undefined || this.list === null;
+      return this.handler.isLoading;
+    },
+
+    stableCoins() {
+      if (!this.isLoading) {
+        const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
+        const reserves = this.list?.filter(item => {
+          if (stableCoins.includes(item.symbol)) return item;
+        });
+        return reserves;
+      }
+      return [];
+    },
+
+    list() {
+      if (!this.isLoading) {
+        if (
+          this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT ||
+          this.tableHeader === AAVE_TABLE_HEADER.BORROW
+        ) {
+          return this.handler.reservesData;
+        }
+        if (this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW) {
+          return this.handler.userSummary.reservesData.filter(item =>
+            new BigNumber(item.currentBorrows).gt(0)
+          );
+        }
+        return this.handler.userSummary.reservesData.filter(item => {
+          console.log();
+          console.log(new BigNumber(item.principalATokenBalance).toFixed());
+          return new BigNumber(item.principalATokenBalance).gt(0);
+        });
+      }
+      return undefined;
     },
 
     /**
@@ -282,7 +335,7 @@ export default {
             });
             break;
           /**
-           * Case: Aave Exhisting Deposits Table
+           * Case: Aave Borrow Table used in Overlay
            */
           case AAVE_TABLE_HEADER.BORROW:
             list = list.map(item => {
@@ -331,6 +384,39 @@ export default {
               };
             });
             break;
+          /**
+           * Case: Aave Exhisting Borrowings Table
+           */
+          case AAVE_TABLE_HEADER.BALANCE_BORROW:
+            list = list.map(item => {
+              const isVariable = item.borrowRateMode === 'Variable';
+              const reserve = this.handler.reservesData.find(reserve => {
+                return reserve.symbol === item.reserve.symbol;
+              });
+              const enableToggle = reserve
+                ? !reserve.stableBorrowRateEnabled
+                : false;
+              return {
+                token: item.reserve.symbol,
+                tokenImg: item.reserve.icon,
+                balance: [
+                  `${roundNumber(item.currentBorrows)} ${item.reserve.symbol}`,
+                  `$${roundNumber(item.currentBorrowsUSD)}`
+                ],
+                apr: roundPercentage(
+                  new BigNumber(item.borrowRate).multipliedBy(100).toString()
+                ),
+                toggle: {
+                  color: isVariable ? 'secondary' : 'primary',
+                  method: this.onToggleAprType,
+                  value: isVariable,
+                  label: isVariable ? 'variable' : 'stable',
+                  disabled: enableToggle
+                },
+                callToAction: [this.btnBorrow, this.btnRepay]
+              };
+            });
+            break;
           default:
             break;
         }
@@ -350,9 +436,13 @@ export default {
   },
   mounted() {
     /* Set Button styles to transparent for balance deposit table */
-    if (this.tableHeader === AAVE_TABLE_HEADER.BALANCE_DEPOSIT) {
+    if (
+      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_DEPOSIT ||
+      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW
+    ) {
       this.btnDeposit.btnStyle = 'transparent';
       this.btnWithdraw.btnStyle = 'transparent';
+      this.btnBorrow.btnStyle = 'transparent';
     }
   },
   methods: {
@@ -391,13 +481,26 @@ export default {
         }
       });
     },
+
     /**
-     * Methodemits to the parent to open collateral overlay
+     * Method emits to the parent to open repay overlay
+     * Used in Repay Button borrowed token within the table
+     * Within Borrow Balance table
+     */
+    onRepayClick(newVal) {
+      this.$emit('repayBorrowing', newVal);
+    },
+    /**
+     * Method emits to the parent to open collateral overlay
      * Used in Toggle Button within the table
      * Within Deposit Balance table
      */
     onToggleClick(newVal) {
       this.$emit('collateralChange', newVal);
+    },
+
+    onToggleAprType(newVal) {
+      this.$emit('changeAprType', newVal);
     }
   }
 };

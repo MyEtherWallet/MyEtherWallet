@@ -141,6 +141,17 @@
               <span class="mew-heading-3">{{ loanValue }}</span>
             </v-col>
           </v-row>
+          <v-row class="pl-1 pr-1 mt-5">
+            <aave-table
+              :table-header="borrowTableHeader"
+              :handler="handler"
+              :has-search="false"
+              :has-toggle="false"
+              @selectedBorrow="openBorrowOverlay"
+              @repayBorrowing="openRepayOverlay"
+              @changeAprType="openAprTypeOverlay"
+            />
+          </v-row>
           <div class="d-flex justify-center mt-9">
             <mew-button
               title="Borrow"
@@ -217,6 +228,8 @@ export default {
       showBorrowOverlay: false,
       showWithdrawOverlay: false,
       showCollateralOverlay: false,
+      showRepayOverlay: false,
+      showAprTypeOverlay: false,
       activeTab: 0,
       BG: BG,
       topBanner: {
@@ -225,47 +238,7 @@ export default {
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
       depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
-      borrowingsTableHeader: [
-        {
-          text: 'Activity',
-          value: 'activity',
-          sortable: false,
-          filterable: false,
-          width: '100%'
-        },
-        {
-          text: 'Date',
-          value: 'date',
-          sortable: false,
-          filterable: false,
-          width: '60%'
-        },
-        {
-          text: 'Tx Hash',
-          value: 'txHash',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '100%'
-        }
-      ],
-      borrowingsTableData: [
-        {
-          activity: 'Deposited 0.0001 ETH into Vault',
-          date: '01/02/2020, 2:16:32 PM',
-          txHash: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          activity: 'Generated 30.0000 new Dai from Vault',
-          date: '01/02/2020, 1:25:53 PM',
-          txHash: '0xAECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        },
-        {
-          activity: 'Generated 2.0 new Dai from Vault',
-          date: '01/05/2020, 1:25:53 PM',
-          txHash: '0xAECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
+      borrowTableHeader: AAVE_TABLE_HEADER.BALANCE_BORROW,
       tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }],
 
       balance: {
@@ -506,6 +479,18 @@ export default {
     },
     closeCollateralOverlay() {
       this.showCollateralOverlay = false;
+    },
+    openRepayOverlay() {
+      this.showRepayOverlay = true;
+    },
+    closeRepayOverlay() {
+      this.showRepayOverlay = false;
+    },
+    openAprTypeOverlay() {
+      this.showAprTypeOverlay = true;
+    },
+    closeAprTypeOverlay() {
+      this.showAprTypeOverlay = false;
     },
     setCallerAndHandler() {
       this.handler = new handlerAave();
