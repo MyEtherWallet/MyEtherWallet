@@ -3,65 +3,73 @@
     class="mew-component--features-send pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">Send transaction</div>
+    <div class="mew-heading-1 mb-3">Dapps center</div>
     <div>
-      MEW puts the Ethereum Blockchain at your fingertips, and use MEW to send
-      the transaction in a simple way.
+      Using the most popular Ethereum Dapps by accessing my wallet with just one
+      step.
     </div>
-    <div class="mt-10">
+    <div class="mt-6">
       <v-row>
-        <v-col cols="12" md="6">
-          <mew-select label="Type" :items="tokens" />
-        </v-col>
-        <v-col cols="12" md="6">
-          <mew-input
-            v-model="data"
-            placeholder="0x..."
-            :label="$t('sendTx.add-data')"
-          />
-        </v-col>
-        <v-col cols="12" class="mt-n5">
-          <mew-address-select />
+        <v-col v-for="(d, k) in dapps" :key="k" cols="12" lg="4" sm="6">
+          <div class="d-flex align-center">
+            <img :src="d.icon" :alt="d.label" height="80" class="mr-2" />
+            <div>{{ d.label }}</div>
+          </div>
         </v-col>
       </v-row>
-      <mew-button title="Send" btn-size="xlarge" class="mx-auto mt-3 d-block" />
+      <mew-button
+        title="Explore Dapps"
+        btn-size="xlarge"
+        class="mx-auto mt-10 d-block"
+      />
     </div>
   </mew6-white-sheet>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
-
 export default {
-  name: 'HomeFeaturesSend',
+  name: 'HomeFeaturesDapps',
   components: {},
   data: () => ({
-    data: 0
-  }),
-  computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
-    ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    tokens() {
-      const eth = {
-        name: this.network.type.name,
-        symbol: this.network.type.name,
-        subtext: this.network.type.name_long,
-        value: this.network.type.name_long,
-        balance: this.balance,
-        img: this.network.type.icon,
-        decimals: 18,
-        market_cap: null,
-        price_change_24h: null
-      };
-
-      const copiedTokens = this.tokensList.slice();
-      copiedTokens.unshift(eth);
-      return copiedTokens;
-    }
-  }
+    dapps: [
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'SafeSend transaction',
+        icon: require('@/assets/images/icons/icon-dapp-lock.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'SafeSend transaction',
+        icon: require('@/assets/images/icons/icon-dapp-lock.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      },
+      {
+        label: 'MakerDAO',
+        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+      }
+    ]
+  })
 };
 </script>
 

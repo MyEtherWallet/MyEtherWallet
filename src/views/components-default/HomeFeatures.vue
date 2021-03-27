@@ -37,6 +37,7 @@
         </v-container>
       </div>
     </div>
+
     <div class="mobile-content d-block d-lg-none">
       <div class="py-7" />
       <v-container>
@@ -44,7 +45,7 @@
           <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
             Features
           </h5>
-          <h1 class="font-weight--700">
+          <h1 class="font-weight--700 mb-10">
             All-in-one gateway to your Ethereum Blockchain service
           </h1>
 
@@ -58,8 +59,8 @@
             <v-tab-item v-for="item in mewTabs" :key="item.tab">
               <div class="mt-10 mb-5">
                 <home-features-send v-if="item.name === 'Send'" />
-                <home-features-send v-if="item.name === 'Swap'" />
-                <home-features-send v-if="item.name === 'Dapps'" />
+                <home-features-swap v-if="item.name === 'Swap'" />
+                <home-features-dapps v-if="item.name === 'Dapps'" />
                 <home-features-send v-if="item.name === 'Tokens'" />
               </div>
             </v-tab-item>

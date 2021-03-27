@@ -13,7 +13,8 @@
         <v-col
           v-for="(data, key) in swapData"
           :key="key"
-          cols="6"
+          cols="12"
+          md="6"
           style="padding: 4px !important"
         >
           <v-sheet
@@ -55,7 +56,7 @@
         </v-col>
       </v-row>
       <mew-button
-        title="Send"
+        title="Swap"
         btn-size="xlarge"
         class="mx-auto mt-10 d-block"
       />
