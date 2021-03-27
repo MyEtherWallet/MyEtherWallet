@@ -24,7 +24,12 @@
           <mew-address-select />
         </v-col>
       </v-row>
-      <mew-button title="Send" btn-size="xlarge" class="mx-auto mt-3 d-block" />
+      <mew-button
+        title="Send"
+        btn-size="xlarge"
+        class="mx-auto mt-5 d-block"
+        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
+      />
     </div>
   </mew6-white-sheet>
 </template>

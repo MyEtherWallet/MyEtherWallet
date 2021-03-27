@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet
-    class="mew-component--features-send pa-6 pa-md-10"
+    class="mew-component--features-swap pa-6 pa-md-10"
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">Swap with MEW</div>
@@ -58,7 +58,8 @@
       <mew-button
         title="Swap"
         btn-size="xlarge"
-        class="mx-auto mt-10 d-block"
+        class="mx-auto mt-12 d-block"
+        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
       />
     </div>
   </mew6-white-sheet>

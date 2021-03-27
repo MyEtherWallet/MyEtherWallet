@@ -61,7 +61,7 @@
                 <home-features-send v-if="item.name === 'Send'" />
                 <home-features-swap v-if="item.name === 'Swap'" />
                 <home-features-dapps v-if="item.name === 'Dapps'" />
-                <home-features-send v-if="item.name === 'Tokens'" />
+                <home-features-tokens v-if="item.name === 'Tokens'" />
               </div>
             </v-tab-item>
           </v-tabs-items>

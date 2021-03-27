@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet
-    class="mew-component--features-send pa-6 pa-md-10"
+    class="mew-component--features-dapps pa-6 pa-md-10"
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">Dapps center</div>
@@ -21,6 +21,7 @@
         title="Explore Dapps"
         btn-size="xlarge"
         class="mx-auto mt-10 d-block"
+        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
       />
     </div>
   </mew6-white-sheet>
