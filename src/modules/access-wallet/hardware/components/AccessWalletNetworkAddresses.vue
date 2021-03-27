@@ -6,6 +6,7 @@
     :max-width="740"
     :min-width="475"
     :min-height="340"
+    class="border-radius--10px pa-4 pa-md-10"
   >
     <v-container>
       <v-row align="center" justify="center">
@@ -36,77 +37,90 @@
                 </v-radio-group>
               </div>
             </template>
+            <!--
+            =====================================================================================
+              Panel: Select Address
+            =====================================================================================
+            -->
             <template #panelBody2>
               <div>
                 <v-radio-group v-model="selectedAddress">
-                  <table width="100%">
-                    <thead>
-                      <tr class="table-header">
-                        <th width="50%" class="align-center">Address</th>
-                        <th width="25%" class="align-center">Eth Balance</th>
-                        <th width="25%" class="align-center"># of Tokens</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-row-class">
-                      <tr
-                        v-for="acc in accounts"
-                        v-show="accounts.length > 0"
-                        :key="acc.address"
+                  <!--
+                    =====================================================================================
+                      Table - Header
+                    =====================================================================================
+                    -->
+                  <v-row dense class="table-header">
+                    <v-col offset="2">
+                      <p class="">Adddress</p>
+                    </v-col>
+                    <v-col cols="4" sm="3">
+                      <p>ETH Balance</p>
+                    </v-col>
+                  </v-row>
+                  <!--
+                    =====================================================================================
+                      Table - Address Row
+                    =====================================================================================
+                    -->
+                  <v-row
+                    v-for="acc in accounts"
+                    v-show="accounts.length > 0"
+                    :key="acc.address"
+                    dense
+                    class="table-row-class align-center justify-start py-1"
+                  >
+                    <v-col cols="2" sm="1">
+                      <v-radio label="" :value="acc.address" class="mx-2" />
+                    </v-col>
+                    <v-col cols="6" sm="8">
+                      <v-row
+                        dense
+                        class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
                       >
-                        <td>
-                          <v-row justify="space-around">
-                            <v-col cols="1">
-                              <v-radio label="" :value="acc.address" />
-                            </v-col>
-                            <v-col cols="8" class="text-truncate">
-                              <v-row justify="space-around">
-                                <mew-blockie
-                                  width="25px"
-                                  height="25px"
-                                  :address="acc.address"
-                                />
-                                <span>{{ acc.address | concatAddress }}</span>
-                              </v-row>
-                              <input
-                                :ref="acc.address"
-                                :value="acc.address"
-                                class="address-copy-input"
-                              />
-                            </v-col>
-                            <v-col cols="2">
-                              <v-row>
-                                <v-icon
-                                  small
-                                  class="cursor--pointer"
-                                  @click="copy(acc.address)"
-                                  >mdi-content-copy</v-icon
-                                >
-                                <v-icon
-                                  small
-                                  class="cursor--pointer"
-                                  @click="launchExplorrer(acc.address)"
-                                  >mdi-launch</v-icon
-                                >
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </td>
-                        <td>
-                          {{
-                            acc.balance === 'Loading..'
-                              ? acc.balance
-                              : `${acc.balance} ${network.type.name}`
-                          }}
-                        </td>
-                        <td>{{ acc.tokens }}</td>
-                      </tr>
-                      <tr v-show="accounts.length === 0">
-                        Loading...
-                      </tr>
-                    </tbody>
-                  </table>
+                        <mew-blockie
+                          width="25px"
+                          height="25px"
+                          :address="acc.address"
+                          class="mr-2"
+                        />
+                        <v-col cols="9" class="d-none d-sm-flex">
+                          <mew-transform-hash :hash="acc.address" />
+                        </v-col>
+                        <p class="d-block d-sm-none">
+                          {{ acc.address | concatAddress }}
+                        </p>
+                        <mew-copy
+                          is-small
+                          :copy-ref="acc.address"
+                          tooltip="Copy Address"
+                          :copy-value="acc.address"
+                          class="ml-2"
+                        />
+                        <v-icon
+                          small
+                          class="cursor--pointer ml-2"
+                          @click="launchExplorrer(acc.address)"
+                          >mdi-launch</v-icon
+                        >
+                      </v-row>
+                    </v-col>
+                    <v-col cols="4" sm="3">
+                      <p>
+                        {{
+                          acc.balance === 'Loading..'
+                            ? acc.balance
+                            : `${acc.balance} ${network.type.name}`
+                        }}
+                      </p>
+                    </v-col>
+                  </v-row>
                 </v-radio-group>
-                <br />
+                <!--
+                  =====================================================================================
+                   Previous / Next Buttons
+                  =====================================================================================
+                  -->
                 <v-row align="center" justify="center">
                   <div>
                     <mew-button
@@ -114,11 +128,9 @@
                       color-theme="basic"
                       icon="mdi-chevron-left"
                       icon-type="mdi"
-                      :has-full-width="false"
                       btn-size="small"
                       icon-align="left"
                       btn-style="transparent"
-                      :disabled="addressPage <= 1"
                       @click.native="previousAddressSet"
                     />
                     <mew-button
@@ -126,7 +138,6 @@
                       color-theme="basic"
                       icon="mdi-chevron-right"
                       icon-type="mdi"
-                      :has-full-width="false"
                       btn-size="small"
                       icon-align="right"
                       btn-style="transparent"
@@ -162,7 +173,164 @@
 </template>
 
 <script>
-export default {};
+import { mapActions, mapGetters } from 'vuex';
+
+export default {
+  filters: {
+    concatAddress(val) {
+      // should probably be moved globablly
+      return `${val.substring(0, 11)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    }
+  },
+  props: {
+    accounts: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    nextAddressSet: {
+      type: Function,
+      default: () => {}
+    },
+    previousAddressSet: {
+      type: Function,
+      default: () => {}
+    },
+    addressPage: {
+      type: Number,
+      default: 0
+    },
+    setHardwareWallet: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      acceptTerms: false,
+      selectedAddress: '',
+      selectedNetwork: '',
+      panelNetworkSubstring: '',
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      }
+      // panelItems: [
+      //   {
+      //     name: 'Network'
+      //   },
+      //   {
+      //     name: 'Address to interact with'
+      //   }
+      // ]
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['Networks', 'network']),
+    /**
+     * On Network Address step
+     */
+    networkTypes() {
+      const showFirst = ['ETH', 'ROP', 'RIN'];
+      const typeArr = Object.keys(this.Networks).filter(item => {
+        if (!showFirst.includes(item)) {
+          return item;
+        }
+      });
+      typeArr.unshift('ETH', 'ROP', 'RIN');
+      return typeArr;
+    },
+    /**
+     * Returns the selected address account
+     */
+    wallet() {
+      const wallet = this.accounts.find(item => {
+        return item.address === this.selectedAddress;
+      });
+      return wallet ? wallet : null;
+    },
+    /**
+     * Property returns edited version of the selected address. ie: 0x3453...3a3b
+     */
+    panelAddressSubstring() {
+      return this.selectedAddress && this.selectedAddress !== ''
+        ? `${this.selectedAddress.substring(
+            0,
+            6
+          )} ... ${this.selectedAddress.substring(
+            this.selectedAddress.length - 4,
+            this.selectedAddress.length
+          )}`
+        : '';
+    },
+    /**
+     * Property returns expand panel items for the Address and Network
+     */
+    panelItems() {
+      return [
+        {
+          name: 'Network',
+          subtext: this.panelNetworkSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        },
+        {
+          name: 'Address',
+          subtext: this.panelAddressSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        }
+      ];
+    }
+  },
+  watch: {
+    accounts: {
+      immediate: true,
+      handler: function (val) {
+        if (val.length > 0 && this.selectedAddress === '') {
+          this.selectedAddress = this.accounts[0].address;
+        }
+      }
+    },
+    /**
+     * Identifies the full network object for the selected network
+     * and sets it as the active network if it exists.
+     **/
+    selectedNetwork(newVal) {
+      Object.values(this.Networks).forEach(itm => {
+        const found = itm.find(network => {
+          return network.url === newVal;
+        });
+        if (found) {
+          this.panelNetworkSubstring = `${found.type.name} - ${found.service}`;
+          this.setNetwork(found);
+        }
+      });
+    }
+  },
+  mounted() {
+    this.selectedNetwork = this.network.url;
+    this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
+  },
+  methods: {
+    ...mapActions('global', ['setNetwork']),
+    /**
+     * Method that launches new tab to an explorer with address clicked
+     * Used in Address to interact with, Address Row
+     */
+    launchExplorrer(addr) {
+      // eslint-disable-next-line
+      window.open(
+        this.network.type.blockExplorerAddr.replace('[[address]]', addr),
+        '_blank'
+      );
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
