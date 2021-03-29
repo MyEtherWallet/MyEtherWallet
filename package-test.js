@@ -57,7 +57,7 @@ const EXCEPTIONS = [
   // look into updating this after release
   'is-ipfs',
   '@stripe/stripe-js',
-  // probably hold off on this one until next iteration
+  // probably hold off on these ones until next iteration
   '@sentry/browser',
   '@sentry/integrations',
   'sass-loader',
