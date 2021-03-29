@@ -24,7 +24,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.gasPrice = !tx.gasPrice
-    ? unit.toWei(store.state.global.baseGasPrice, 'gwei').toString()
+    ? unit.toWei(store.getters['global/gasPrice'], 'gwei').toString()
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {

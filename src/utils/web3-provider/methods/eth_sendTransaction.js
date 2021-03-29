@@ -56,7 +56,7 @@ const setEvents = (promiObj, tx, dispatch) => {
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = BigNumber(store.state.global.baseGasPrice).toFixed();
+  tx.gasPrice = BigNumber(store.getters['global/gasPrice']).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];

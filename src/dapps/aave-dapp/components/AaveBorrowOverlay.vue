@@ -3,7 +3,7 @@
     :show-overlay="open"
     title="Select Token to Borrow"
     right-btn-text="Close"
-    :close="close"
+    :close="callClose"
   >
     <template #mewOverlayBody>
       <!--
@@ -19,7 +19,7 @@
       >
         <aave-table
           :handler="handler"
-          :table-header="AAVE_TABLE_HEADER"
+          :table-header="aaveTableHandler"
           @selectedBorrow="handleSelectedBorrow"
         />
       </v-sheet>
@@ -28,14 +28,22 @@
         Aave token borrow form
       =====================================================================================
       -->
-      <div v-if="step === 2">
+      <div v-if="step === 1">
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
-          :action-type="AAVE_TABLE_HEADER"
+          :action-type="aaveTableHandler"
           @cancelDeposit="handleCancel"
-          @confirmDepositAmt="handleDepositAmount"
+          @emitValues="handleValues"
         />
+      </div>
+      <!--
+      =====================================================================================
+        Aave summary borrow
+      =====================================================================================
+      -->
+      <div v-if="step === 2">
+        <aave-select-interest :on-stable="true" :handler="handler" />
       </div>
     </template>
   </mew-overlay>
@@ -45,9 +53,10 @@
 import AaveTable from './AaveTable';
 // import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
+import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 export default {
-  components: { AaveTable, AaveAmountForm },
+  components: { AaveTable, AaveAmountForm, AaveSelectInterest },
   props: {
     open: {
       default: false,
@@ -69,13 +78,31 @@ export default {
     return {
       step: 0,
       selectedToken: {},
-      AAVE_TABLE_HEADER: AAVE_TABLE_HEADER.BORROW
+      aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
+      amount: '0',
+      amountUsd: '$ 0.00'
     };
   },
   methods: {
     handleSelectedBorrow(e) {
       this.selectedToken = e;
       this.step += 1;
+    },
+    handleValues(e) {
+      this.step += 1;
+      this.amount = e[0];
+      this.amountUsd = e[1];
+    },
+    handleCancel() {
+      this.callClose();
+    },
+    callClose() {
+      this.step = 0;
+      this.selectedToken = {};
+      this.aaveTableHandler = AAVE_TABLE_HEADER.BORROW;
+      this.amount = '0';
+      this.amountUsd = '$ 0.00';
+      this.close();
     }
   }
 };

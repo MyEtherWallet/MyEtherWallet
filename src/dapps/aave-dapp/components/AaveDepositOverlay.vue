@@ -19,7 +19,7 @@
       >
         <aave-table
           :handler="handler"
-          :table-header="AAVE_TABLE_HEADER"
+          :table-header="depositHeader"
           @selectedDeposit="handleSelectedDeposit"
         />
       </v-sheet>
@@ -35,7 +35,7 @@
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
-          :action-type="'Deposit'"
+          :action-type="depositHeader"
           @confirmed="handleConfirm"
           @makeDeposit="emitDeposit"
         />
@@ -44,9 +44,9 @@
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
-          :action-type="'Deposit'"
-          @cancelDeposit="handleCancel"
-          @confirmDepositAmt="handleDepositAmount"
+          :action-type="depositHeader"
+          @cancel="handleCancel"
+          @emitValues="handleDepositAmount"
         />
       </div>
     </template>
@@ -87,7 +87,7 @@ export default {
       selectedToken: {},
       amount: '0',
       amountUsd: '$ 0.00',
-      AAVE_TABLE_HEADER: AAVE_TABLE_HEADER.DEPOSIT
+      depositHeader: AAVE_TABLE_HEADER.DEPOSIT
     };
   },
   watch: {
