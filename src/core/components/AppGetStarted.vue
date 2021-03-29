@@ -6,13 +6,13 @@
         <div class="d-flex align-center px-6">
           <div>
             <h2 class="font-weight--700 white--text mb-3">
-              Ready? Create my wallet today.
+              Ready to explore Ethereum?
             </h2>
             <p class="white--text ma-0">
               Still don't know what MEW is?
               <a
                 class="color--inherit font-weight-medium text-decoration--underline"
-                href="https://kb.myetherwallet.com/"
+                href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >
                 Learn more
@@ -49,13 +49,13 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto px-2">
           <div class="mb-9">
             <h1 class="font-weight--700 white--text">
-              Ready? Create my wallet today.
+              Ready to explore Ethereum?
             </h1>
             <p class="white--text mt-3">
               Still don't know what MEW is?
               <a
                 class="color--inherit font-weight-medium text-decoration--underline"
-                href="https://kb.myetherwallet.com/"
+                href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >
                 Learn more
