@@ -111,7 +111,7 @@ export default {
       this.close();
     },
     emitDeposit(e) {
-      this.$emit('sendDeposit', e);
+      this.$emit('onConfirm', e);
       this.close();
     }
   }

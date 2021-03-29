@@ -166,12 +166,19 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :handler="handler"
-      @sendDeposit="callDeposit"
+      @onConfirm="callDeposit"
     />
     <aave-borrow-overlay
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
       :handler="handler"
+    />
+    <aave-collateral-overlay
+      :selected-token="selectedToken"
+      :handler="handler"
+      :open="showCollateralOverlay"
+      :close="closeCollateralOverlay"
+      @onConfirm="callSwitchCollateral"
     />
   </div>
 </template>
@@ -180,6 +187,7 @@
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/AaveDepositOverlay';
+import AaveCollateralOverlay from './components/AaveCollateralOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
@@ -217,10 +225,12 @@ export default {
     TheWrapperDapp,
     AaveBorrowOverlay,
     AaveDepositOverlay,
-    AaveTable
+    AaveTable,
+    AaveCollateralOverlay
   },
   data() {
     return {
+      selectedToken: {},
       handler: null,
       caller: null,
       showDepositOverlay: false,
@@ -456,6 +466,16 @@ export default {
           Toast(e.message, {}, ERROR);
         });
     },
+    callSwitchCollateral(e) {
+      this.handler
+        .switchCollateral(e)
+        .then(() => {
+          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
     openDepositOverlay() {
       this.showDepositOverlay = true;
     },
@@ -474,7 +494,8 @@ export default {
     closeWithdrawOverlay() {
       this.showWithdrawOverlay = false;
     },
-    openCollateralOverlay() {
+    openCollateralOverlay(token) {
+      this.selectedToken = token;
       this.showCollateralOverlay = true;
     },
     closeCollateralOverlay() {

@@ -2,7 +2,7 @@
   <!--
   =====================================================================================
     Aave Summary (includes currency and health factor)
-    used for deposit, borrow and interest details
+    used for deposit, borrow, collateral and select interest details
   =====================================================================================
   -->
   <v-sheet
@@ -18,7 +18,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="step === 3"
+      v-if="isDeposit && step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -45,7 +45,7 @@
   =====================================================================================
   -->
     <div
-      v-if="!onSelectInterest && !isDeposit"
+      v-if="isInterest"
       class="d-flex align-center justify-space-between mb-10"
     >
       <v-card flat class="d-flex flex-column pa-10 text-left" color="overlayBg">
@@ -81,7 +81,7 @@
         >
       </v-card>
     </div>
-    <v-divider v-if="onSelectInterest" />
+    <v-divider v-if="isInterest" />
     <!--
   =====================================================================================
     Other details (currency, health factor)
@@ -104,7 +104,7 @@
         <span :class="detail.class">{{ detail.value }}</span>
       </v-col>
     </v-row>
-    <v-divider v-if="onSelectInterest" class="mt-5" />
+    <v-divider v-if="isInterest" class="mt-5" />
     <!--
   =====================================================================================
    Confirm button
@@ -124,12 +124,10 @@ import BigNumber from 'bignumber.js';
 import { convertToFixed } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import { mapState } from 'vuex';
-
-const types = {
-  stable: 'stable',
-  variable: 'variable'
-};
-
+import {
+  ACTION_TYPES,
+  INTEREST_TYPES
+} from '@/dapps/aave-dapp/handlers/helpers';
 export default {
   props: {
     actionType: {
@@ -156,64 +154,67 @@ export default {
     step: {
       type: Number,
       default: 0
-    },
-    onSelectInterest: {
-      default: false,
-      type: Boolean
     }
   },
   computed: {
     ...mapState('wallet', ['address']),
     isDeposit() {
-      return this.actionType === 'Deposit';
+      return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
+    },
+    isBorrow() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.borrow;
+    },
+    isInterest() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.interest;
+    },
+    isCollateral() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.collateral;
     },
     details() {
-      /* currently using dummy data for values */
-      return !this.onSelectInterest
-        ? this.depositDetails
-        : [
-            {
-              title: 'Currency',
-              value: this.selectedToken.token,
-              icon: this.selectedToken.tokenImg
-            }
-          ];
-    },
-    depositDetails() {
-      const details = [
+      let details = [
         {
-          title: 'Current Health Factor',
-          tooltip: 'Tooltip text',
-          value: this.currentHealthFactor,
-          class:
-            this.currentHealthFactor > this.nextHealthFactor
-              ? 'primary--text'
-              : 'error-text'
-        },
-        {
-          title: 'Next Health Factor',
-          tooltip: 'Tooltip text',
-          value: this.nextHealthFactor,
-          class:
-            this.currentHealthFactor > this.nextHealthFactor
-              ? 'error--text'
-              : 'primary--text',
-          indicator:
-            this.currentHealthFactor > this.nextHealthFactor
-              ? 'mdi-arrow-down'
-              : 'mdi-arrow-up'
-        }
-      ];
-      if (this.step === 1)
-        details.unshift({
           title: 'Currency',
           value: this.selectedToken.token,
           icon: this.selectedToken.tokenImg
-        });
+        }
+      ];
+      switch (this.actionType.toLowerCase()) {
+        /**
+         * Case: Aave Deposit and Collateral Summary
+         */
+        case ACTION_TYPES.deposit:
+        case ACTION_TYPES.collateral:
+          details = this.step === 1 && this.isDeposit ? [] : details;
+          details.push(
+            {
+              title: 'Current Health Factor',
+              tooltip: 'Tooltip text',
+              value: this.currentHealthFactor,
+              class:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'primary--text'
+                  : 'error-text'
+            },
+            {
+              title: 'Next Health Factor',
+              tooltip: 'Tooltip text',
+              value: this.nextHealthFactor,
+              class:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'error--text'
+                  : 'primary--text',
+              indicator:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'mdi-arrow-down'
+                  : 'mdi-arrow-up'
+            }
+          );
+          return details;
+      }
       return details;
     },
     currentHealthFactor() {
-      return this.handler?.userSummary?.healthFactor;
+      return new BigNumber(this.handler?.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
       const selectedToken = this.actualToken;
@@ -269,11 +270,11 @@ export default {
           referralCode: '14',
           reserve: this.actualToken.underlyingAsset
         };
-        this.$emit('makeDeposit', param);
+        this.$emit('onConfirm', param);
       }
     },
     getInterestTypeClass(type) {
-      if (type.toLowerCase() === types.stable) {
+      if (type.toLowerCase() === INTEREST_TYPES.stable) {
         return 'secondary--text';
       }
       return 'warning--text text--darken-1';
