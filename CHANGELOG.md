@@ -1,3 +1,7 @@
+### Bug
+
+- fix send offline data issue with BSC [#2941](https://github.com/MyEtherWallet/MyEtherWallet/pull/2941)
+
 ### Release v5.7.25
 
 ### Bug
