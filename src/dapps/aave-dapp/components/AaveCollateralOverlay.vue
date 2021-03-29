@@ -55,7 +55,9 @@ export default {
   },
   computed: {
     title() {
-      return this.selectedToken.toggle.value
+      return Object.keys(this.selectedToken).length === 0
+        ? ''
+        : this.selectedToken?.toggle?.value
         ? 'Usage as collateral'
         : 'Disable usage as collateral';
     }

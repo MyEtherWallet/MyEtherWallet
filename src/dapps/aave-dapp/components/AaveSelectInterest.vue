@@ -15,21 +15,22 @@
       Select the type of rate for your loan. Please click on the desired rate
       type and read the info box for more information.
     </div>
-    <div class="d-flex justify-center mt-12 mb-3">
+    <div class="d-flex justify-center align-center mt-12 mb-3">
       <!--
   =====================================================================================
     Stable Interest card
   =====================================================================================
   -->
       <v-card
-        :flat="onStable"
-        :color="onStable ? 'boxShadow' : 'white'"
+        v-if="rates.stable !== '--'"
+        :flat="isStable"
+        :color="isStable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8"
-        @click.native="toggleInterestType"
+        @click.native="setTypeToStable"
       >
         <v-icon color="secondary">mdi-arrow-right-circle</v-icon>
         <span class="textSecondary--text my-2">Stable</span>
-        <span class="mew-heading-3 secondary--text">2.33%</span>
+        <span class="mew-heading-3 secondary--text">{{ rates.stable }}</span>
       </v-card>
       <!--
   =====================================================================================
@@ -37,15 +38,18 @@
   =====================================================================================
   -->
       <v-card
-        :flat="!onStable"
-        :color="!onStable ? 'boxShadow' : 'white'"
+        v-if="rates.variable !== '--'"
+        :flat="isVariable"
+        :color="isVariable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8 ml-5"
-        @click.native="toggleInterestType"
+        @click.native="setTypeToVariable"
       >
         <!-- need to update this icon once we have it -->
         <v-icon x-large color="warning darken-1">mdi-arrow-right-circle</v-icon>
         <span class="textSecondary--text my-2">Variable</span>
-        <span class="mew-heading-3 warning--text text--darken-1">11.33%</span>
+        <span class="mew-heading-3 warning--text text--darken-1">{{
+          rates.variable
+        }}</span>
       </v-card>
     </div>
     <!--
@@ -57,6 +61,7 @@
       class="my-8"
       title="Continue"
       btn-size="xlarge"
+      :disabled="type === ''"
       @click.native="onContinue"
     />
     <mew-warning-sheet
@@ -70,10 +75,6 @@
 <script>
 export default {
   props: {
-    handler: {
-      type: [Object, null],
-      default: () => {}
-    },
     selectedToken: {
       type: Object,
       default: () => {}
@@ -81,16 +82,34 @@ export default {
   },
   data() {
     return {
-      /* currently using dummy data for values */
-      onStable: true
+      type: ''
     };
   },
+  computed: {
+    rates() {
+      const stable = this.selectedToken?.stableApr;
+      const variable = this.selectedToken?.variableApr;
+      return {
+        stable,
+        variable
+      };
+    },
+    isStable() {
+      return this.type === 'Stable';
+    },
+    isVariable() {
+      return this.type === 'Variable';
+    }
+  },
   methods: {
-    toggleInterestType() {
-      this.onStable = !this.onStable;
+    setTypeToStable() {
+      this.type = 'Stable';
+    },
+    setTypeToVariable() {
+      this.type = 'Variable';
     },
     onContinue() {
-      this.$emit('continue');
+      this.$emit('continue', this.type);
     }
   }
 };

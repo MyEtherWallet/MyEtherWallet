@@ -173,6 +173,7 @@
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
       :handler="handler"
+      @onConfirm="callBorrow"
     />
     <aave-collateral-overlay
       :selected-token="selectedToken"
@@ -475,13 +476,35 @@ export default {
       this.handler
         .switchCollateral(e)
         .then(() => {
-          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
+          Toast(
+            'Success! Your collateral is being switched and will display shortly',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
+    callBorrow(e) {
+      this.handler
+        .borrow(e)
+        .then(() => {
+          Toast(
+            'Success! Your borrowed token will be displayed shortly',
+            {},
+            SUCCESS
+          );
         })
         .catch(e => {
           Toast(e.message, {}, ERROR);
         });
     },
     openDepositOverlayWithToken(token) {
+      this.requestToken = token;
+      this.showDepositOverlay = true;
+    },
+    openBorrowOverlayWithToken(token) {
       this.requestToken = token;
       this.showDepositOverlay = true;
     },
@@ -496,6 +519,7 @@ export default {
       this.showBorrowOverlay = true;
     },
     closeBorrowOverlay() {
+      this.requestToken = {};
       this.showBorrowOverlay = false;
     },
     openWithdrawOverlay() {

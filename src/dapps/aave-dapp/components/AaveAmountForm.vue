@@ -60,8 +60,8 @@
       <div class="px-12">
         <mew-input
           ref="input"
+          v-model="amount"
           label="Amount"
-          :value="amount"
           :right-label="selectedToken.token"
           :hide-clear-btn="true"
           type="number"
@@ -84,6 +84,7 @@
           btn-size="xlarge"
           class="mb-2 px-12"
           :has-full-width="true"
+          :disabled="hasAmount"
           @click.native="emitValues"
         />
         <br />
@@ -135,6 +136,9 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),
+    hasAmount() {
+      return BigNumber(this.amount).gt(0);
+    },
     isDeposit() {
       return this.actionType === AAVE_TABLE_HEADER.DEPOSIT;
     },

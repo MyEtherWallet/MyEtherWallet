@@ -39,14 +39,30 @@
       </div>
       <!--
       =====================================================================================
-        Aave summary borrow
+        Aave select interest
       =====================================================================================
       -->
       <div v-if="step === 2">
         <aave-select-interest
           :on-stable="true"
           :selected-token="selectedToken"
+          @continue="handleContinue"
+        />
+      </div>
+      <!--
+      =====================================================================================
+        Aave Summary
+      =====================================================================================
+      -->
+      <div v-if="step === 3">
+        <aave-summary
+          :selected-token="selectedToken"
           :handler="handler"
+          :amount="amount"
+          :amount-usd="amountUsd"
+          :step="step"
+          :action-type="aaveTableHandler"
+          @onConfirm="handleConfirm"
         />
       </div>
     </template>
@@ -55,12 +71,14 @@
 
 <script>
 import AaveTable from './AaveTable';
-// import AaveSummary from './AaveSummary';
+import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import { _ } from 'web3-utils';
+import { mapState } from 'vuex';
 export default {
-  components: { AaveTable, AaveAmountForm, AaveSelectInterest },
+  components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
   props: {
     open: {
       default: false,
@@ -84,16 +102,34 @@ export default {
       selectedToken: {},
       aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
       amount: '0',
-      amountUsd: '$ 0.00'
+      amountUsd: '$ 0.00',
+      type: ''
     };
+  },
+  computed: {
+    ...mapState('wallet', ['address']),
+    actualToken() {
+      if (
+        this.handler &&
+        !_.isEmpty(this.handler) &&
+        !_.isEmpty(this.selectedToken)
+      ) {
+        const token = this.handler?.reservesData.find(item => {
+          if (item.symbol === this.selectedToken.token) return item;
+        });
+
+        return token;
+      }
+      return {};
+    }
   },
   methods: {
     handleSelectedBorrow(e) {
       this.selectedToken = e;
-      this.step += 1;
+      this.step = 1;
     },
     handleValues(e) {
-      this.step += 1;
+      this.step = 2;
       this.amount = e[0];
       this.amountUsd = e[1];
     },
@@ -107,6 +143,23 @@ export default {
       this.amount = '0';
       this.amountUsd = '$ 0.00';
       this.close();
+    },
+    handleContinue(e) {
+      this.type = e;
+      this.step = 3;
+    },
+    handleConfirm() {
+      const param = {
+        aavePool: 'proto',
+        userAddress: this.address,
+        amount: this.amount,
+        referralCode: '14',
+        reserve: this.actualToken.underlyingAsset,
+        interestRateMode: this.type
+      };
+
+      this.$emit('onConfirm', param);
+      this.callClose();
     }
   }
 };

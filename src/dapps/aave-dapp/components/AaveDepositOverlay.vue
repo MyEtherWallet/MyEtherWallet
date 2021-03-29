@@ -37,7 +37,7 @@
           :step="step"
           :action-type="depositHeader"
           @confirmed="handleConfirm"
-          @makeDeposit="emitDeposit"
+          @onConfirm="emitDeposit"
         />
       </div>
       <div v-if="step === 2">
@@ -58,6 +58,8 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import { _ } from 'web3-utils';
+import { mapState } from 'vuex';
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
   props: {
@@ -90,6 +92,23 @@ export default {
       depositHeader: AAVE_TABLE_HEADER.DEPOSIT
     };
   },
+  computed: {
+    ...mapState('wallet', ['address']),
+    actualToken() {
+      if (
+        this.handler &&
+        !_.isEmpty(this.handler) &&
+        !_.isEmpty(this.selectedToken)
+      ) {
+        const token = this.handler?.reservesData.find(item => {
+          if (item.symbol === this.selectedToken.token) return item;
+        });
+
+        return token;
+      }
+      return {};
+    }
+  },
   watch: {
     open(newVal) {
       if (!newVal) {
@@ -98,7 +117,7 @@ export default {
       }
     },
     preSelectedToken(newVal) {
-      if (newVal && Object.keys(newVal).length > 0) {
+      if (newVal && !_.isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }
@@ -107,21 +126,28 @@ export default {
   methods: {
     handleSelectedDeposit(val) {
       this.selectedToken = val;
-      this.step += 1;
+      this.step = 1;
     },
     handleConfirm() {
       this.step += 1;
     },
     handleDepositAmount(e) {
-      this.step += 1;
+      this.step = 3;
       this.amount = e[0];
       this.amountUsd = e[1];
     },
     handleCancel() {
       this.close();
     },
-    emitDeposit(e) {
-      this.$emit('onConfirm', e);
+    emitDeposit() {
+      const param = {
+        aavePool: 'proto',
+        userAddress: this.address,
+        amount: this.amount,
+        referralCode: '14',
+        reserve: this.actualToken.underlyingAsset
+      };
+      this.$emit('onConfirm', param);
       this.close();
     }
   }

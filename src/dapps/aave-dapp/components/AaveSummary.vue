@@ -18,7 +18,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit && step === 3"
+      v-if="step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -123,7 +123,6 @@
 import BigNumber from 'bignumber.js';
 import { convertToFixed } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
-import { mapState } from 'vuex';
 import {
   ACTION_TYPES,
   INTEREST_TYPES
@@ -157,7 +156,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('wallet', ['address']),
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },
@@ -210,6 +208,33 @@ export default {
             }
           );
           return details;
+        case ACTION_TYPES.borrow:
+          details = this.step === 3 && !this.isDeposit ? [] : details;
+          details.push(
+            {
+              title: 'Current Health Factor',
+              tooltip: 'Tooltip text',
+              value: this.currentHealthFactor,
+              class:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'primary--text'
+                  : 'error-text'
+            },
+            {
+              title: 'Next Health Factor',
+              tooltip: 'Tooltip text',
+              value: this.nextHealthFactor,
+              class:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'error--text'
+                  : 'primary--text',
+              indicator:
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'mdi-arrow-down'
+                  : 'mdi-arrow-up'
+            }
+          );
+          return details;
       }
       return details;
     },
@@ -237,13 +262,6 @@ export default {
       }
       return nextHealthFactor;
     },
-    actualToken() {
-      const token = this.handler?.reservesData.find(item => {
-        if (item.symbol === this.selectedToken.token) return item;
-      });
-
-      return token;
-    },
     /* currently using dummy data for values */
     currentInterest() {
       return {
@@ -263,14 +281,7 @@ export default {
       if (this.step === 1) {
         this.$emit('confirmed');
       } else {
-        const param = {
-          aavePool: 'proto',
-          userAddress: this.address,
-          amount: this.amount,
-          referralCode: '14',
-          reserve: this.actualToken.underlyingAsset
-        };
-        this.$emit('onConfirm', param);
+        this.$emit('onConfirm');
       }
     },
     getInterestTypeClass(type) {
