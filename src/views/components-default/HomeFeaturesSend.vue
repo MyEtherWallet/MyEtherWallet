@@ -41,7 +41,7 @@ export default {
   name: 'HomeFeaturesSend',
   components: {},
   data: () => ({
-    data: 0
+    data: '0'
   }),
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
