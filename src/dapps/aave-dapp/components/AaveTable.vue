@@ -277,8 +277,6 @@ export default {
           );
         }
         return this.handler.userSummary.reservesData.filter(item => {
-          console.log();
-          console.log(new BigNumber(item.principalATokenBalance).toFixed());
           return new BigNumber(item.principalATokenBalance).gt(0);
         });
       }
@@ -458,7 +456,7 @@ export default {
      *  Used in deposit Button within the table
      */
     onBorrowClick(newVal) {
-      this.$mit('selectedBorrow', newVal);
+      this.$emit('selectedBorrow', newVal);
     },
     /**
      * Method emits to the parent to open withdraw token overlay
