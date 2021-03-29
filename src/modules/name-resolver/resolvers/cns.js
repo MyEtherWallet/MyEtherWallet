@@ -16,7 +16,7 @@ export default class CNS {
   }
   resolveName(name) {
     return this.resolver
-      .addressOrThrow(name, 'ETH')
+      .addr(name, 'ETH')
       .then(addr => toChecksumAddress(addr));
   }
 }
