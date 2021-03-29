@@ -1,23 +1,16 @@
 <template>
   <v-sheet max-width="600px" class="pa-8">
-    <transaction-addresses :from="from" :to="to" class="mb-2" />
-    <transaction-balance
-      :tx-fee="txFee"
-      :tx-fee-usd="txFeeUSD"
-      :value="value"
-    />
-    <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
-      <template #panelBody1>
-        <v-container fluid>
-          <v-row v-for="(detail, idx) in details" :key="idx">
-            <v-col cols="6">{{ detail.title }} </v-col>
-            <v-col cols="6" class="text-right word-break--break-all"
-              >{{ detail.value }}
-            </v-col>
-          </v-row>
-        </v-container>
-      </template>
-    </mew-expand-panel>
+    <div class="px-3">
+      <div class="d-flex justify-space-between mb-2">
+        <v-textarea
+          outlined
+          label="Signature"
+          :value="msg"
+          :auto-grow="true"
+          :readonly="true"
+        ></v-textarea>
+      </div>
+    </div>
     <div class="d-flex justify-center my-8">
       <mew-button
         btn-size="xlarge"
@@ -30,15 +23,13 @@
 </template>
 
 <script>
-import TransactionAddresses from './TransactionAddresses';
-import TransactionBalance from './TransactionBalance';
 export default {
   components: {
-    TransactionAddresses,
-    TransactionBalance
+    // TransactionAddresses,
+    // TransactionBalance
   },
   props: {
-    to: {
+    msg: {
       type: String,
       default: ''
     },
@@ -96,31 +87,14 @@ export default {
       activeTab: 0
     };
   },
-  computed: {
-    details() {
-      return [
-        {
-          title: 'Network',
-          value: this.network.type.name + ' by ' + this.network.service
-        },
-        {
-          title: 'Gas Price',
-          value: this.gasPrice + ' gwei'
-        },
-        {
-          title: 'Gas Limit',
-          value: this.gasLimit
-        },
-        {
-          title: 'Nonce',
-          value: this.nonce
-        },
-        {
-          title: 'Data',
-          value: this.data
-        }
-      ];
-    }
+  methods: {
+    close: () => {}
   }
 };
 </script>
+
+<style lang="scss">
+.v-application .warning {
+  border-radius: 10px;
+}
+</style>
