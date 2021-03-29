@@ -43,7 +43,11 @@
       =====================================================================================
       -->
       <div v-if="step === 2">
-        <aave-select-interest :on-stable="true" :handler="handler" />
+        <aave-select-interest
+          :on-stable="true"
+          :selected-token="selectedToken"
+          :handler="handler"
+        />
       </div>
     </template>
   </mew-overlay>
