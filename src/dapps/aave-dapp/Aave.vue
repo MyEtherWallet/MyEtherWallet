@@ -68,7 +68,7 @@
               :handler="handler"
               :has-search="false"
               :has-toggle="false"
-              @selectedDeposit="openDepositOverlay"
+              @selectedDeposit="openDepositOverlayWithToken"
               @withdrawToken="openWithdrawOverlay"
               @collateralChange="openCollateralOverlay"
             />
@@ -165,6 +165,7 @@
     <aave-deposit-overlay
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
+      :pre-selected-token="requestToken"
       :handler="handler"
       @sendDeposit="callDeposit"
     />
@@ -224,7 +225,7 @@ export default {
       handler: null,
       caller: null,
       showDepositOverlay: false,
-      requestDepositToken: {},
+      requestToken: {},
       showBorrowOverlay: false,
       showWithdrawOverlay: false,
       showCollateralOverlay: false,
@@ -456,10 +457,15 @@ export default {
           Toast(e.message, {}, ERROR);
         });
     },
+    openDepositOverlayWithToken(token) {
+      this.requestToken = token;
+      this.showDepositOverlay = true;
+    },
     openDepositOverlay() {
       this.showDepositOverlay = true;
     },
     closeDepositOverlay() {
+      this.requestToken = {};
       this.showDepositOverlay = false;
     },
     openBorrowOverlay() {

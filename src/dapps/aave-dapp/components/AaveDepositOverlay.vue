@@ -75,6 +75,10 @@ export default {
       type: [Object, null],
       validator: item => typeof item === 'object' || null,
       default: () => {}
+    },
+    preSelectedToken: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -92,8 +96,14 @@ export default {
         this.step = 0;
         this.selectedToken = {};
       }
+    },
+    preSelectedToken(newVal) {
+      if (newVal && Object.keys(newVal).length > 0) {
+        this.handleSelectedDeposit(this.preSelectedToken);
+      }
     }
   },
+
   methods: {
     handleSelectedDeposit(val) {
       this.selectedToken = val;
