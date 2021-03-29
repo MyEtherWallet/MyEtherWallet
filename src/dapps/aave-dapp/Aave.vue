@@ -301,7 +301,9 @@ export default {
         };
 
       const eth = `${this.handler.userSummary.totalCollateralETH}`;
-      const usd = `${this.handler.userSummary.totalCollateralUSD}`;
+      const usd = `${BigNumber(
+        this.handler.userSummary.totalCollateralUSD
+      ).toFixed(2)}`;
 
       return {
         eth: eth,
@@ -316,7 +318,9 @@ export default {
         };
 
       const eth = `${this.handler.userSummary.totalBorrowsETH}`;
-      const usd = `${this.handler.userSummary.totalBorrowsUSD}`;
+      const usd = `${BigNumber(
+        this.handler.userSummary.totalBorrowsUSD
+      ).toFixed(2)}`;
 
       return {
         eth: eth,
