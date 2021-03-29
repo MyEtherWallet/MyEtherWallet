@@ -62,7 +62,7 @@
           ref="input"
           label="Amount"
           :value="amount"
-          right-label="DAI"
+          :right-label="selectedToken.token"
           :hide-clear-btn="true"
           type="number"
         />

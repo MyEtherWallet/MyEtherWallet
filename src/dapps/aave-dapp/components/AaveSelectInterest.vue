@@ -69,6 +69,16 @@
 
 <script>
 export default {
+  props: {
+    handler: {
+      type: [Object, null],
+      default: () => {}
+    },
+    selectedToken: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       /* currently using dummy data for values */

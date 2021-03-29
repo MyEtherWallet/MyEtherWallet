@@ -68,7 +68,7 @@
               :handler="handler"
               :has-search="false"
               :has-toggle="false"
-              @selectedDeposit="openDepositOverlay"
+              @selectedDeposit="openDepositOverlayWithToken"
               @withdrawToken="openWithdrawOverlay"
               @collateralChange="openCollateralOverlay"
             />
@@ -165,6 +165,7 @@
     <aave-deposit-overlay
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
+      :pre-selected-token="requestToken"
       :handler="handler"
       @onConfirm="callDeposit"
     />
@@ -234,7 +235,7 @@ export default {
       handler: null,
       caller: null,
       showDepositOverlay: false,
-      requestDepositToken: {},
+      requestToken: {},
       showBorrowOverlay: false,
       showWithdrawOverlay: false,
       showCollateralOverlay: false,
@@ -310,7 +311,9 @@ export default {
         };
 
       const eth = `${this.handler.userSummary.totalCollateralETH}`;
-      const usd = `${this.handler.userSummary.totalCollateralUSD}`;
+      const usd = `${BigNumber(
+        this.handler.userSummary.totalCollateralUSD
+      ).toFixed(2)}`;
 
       return {
         eth: eth,
@@ -325,7 +328,9 @@ export default {
         };
 
       const eth = `${this.handler.userSummary.totalBorrowsETH}`;
-      const usd = `${this.handler.userSummary.totalBorrowsUSD}`;
+      const usd = `${BigNumber(
+        this.handler.userSummary.totalBorrowsUSD
+      ).toFixed(2)}`;
 
       return {
         eth: eth,
@@ -476,10 +481,15 @@ export default {
           Toast(e.message, {}, ERROR);
         });
     },
+    openDepositOverlayWithToken(token) {
+      this.requestToken = token;
+      this.showDepositOverlay = true;
+    },
     openDepositOverlay() {
       this.showDepositOverlay = true;
     },
     closeDepositOverlay() {
+      this.requestToken = {};
       this.showDepositOverlay = false;
     },
     openBorrowOverlay() {
