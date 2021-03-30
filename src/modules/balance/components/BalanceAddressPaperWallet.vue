@@ -118,7 +118,7 @@
                 ></VueQrcode>
               </v-sheet>
             </div>
-            <div v-if="isHardware" class="mt-4 d-flex align-content-stretch">
+            <div v-if="!isHardware" class="mt-4 d-flex align-content-stretch">
               <v-theme-provider root>
                 <v-sheet
                   class="d-flex flex-column justify-center flex-grow-1 px-8"
