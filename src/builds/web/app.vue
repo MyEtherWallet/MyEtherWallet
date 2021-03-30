@@ -3,6 +3,7 @@
     <logout-warning-modal ref="logoutWarningModal" />
     <header-container
       v-show="
+        !on &&
         $route.fullPath !== '/getting-started' &&
         !$route.fullPath.includes('/dapp-submission')
       "
@@ -36,6 +37,11 @@ export default {
     'welcome-modal': WelcomeModal,
     'wallet-launched-footer-banner': WalletLaunchedBanner
   },
+  data() {
+    return {
+      on: true
+    };
+  },
   computed: {
     ...mapState('main', ['wallet', 'online'])
   },
@@ -66,6 +72,9 @@ export default {
     window.addEventListener('offline', () => {
       this.checkIfOnline(false);
     });
+    window.addEventListener('TURN_OFF', () => {
+      this.on = false;
+    });
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
@@ -85,6 +94,7 @@ export default {
     window.removeEventListener('PWA_UPDATED');
     window.removeEventListener('offline');
     window.removeEventListener('online');
+    window.removeEventListener('turnOff');
   },
   methods: {
     ...mapActions('main', ['checkIfOnline'])

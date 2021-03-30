@@ -1,121 +1,128 @@
 <template>
-  <div class="interface-layout">
-    <!-- Modals ******************************************************** -->
-    <!-- Modals ******************************************************** -->
-    <!-- Modals ******************************************************** -->
-    <wallet-password-modal />
-    <enter-pin-number-modal />
-    <ledger-app-modal
-      ref="ledgerAppModal"
-      :networks="Networks"
-      @hardwareWalletOpen="toggleNetworkAddrModal"
-    />
-    <mnemonic-modal
-      ref="mnemonicPhraseModal"
-      :hardware-wallet-open="toggleNetworkAddrModal"
-    />
-
-    <mnemonic-password-modal
-      ref="mnemonicPhrasePassword"
-      :hardware-wallet-open="toggleNetworkAddrModal"
-      :phrase="phrase"
-    />
-    <network-and-address-modal
-      ref="networkAddress"
-      :hardware-wallet="hwInstance"
-    />
-    <hardware-password-modal
-      ref="hardwareModal"
-      :wallet-constructor="walletConstructor"
-      :hardware-brand="hardwareBrand"
-      @hardwareWalletOpen="toggleNetworkAddrModal"
-    />
-    <print-modal
-      ref="printModal"
-      :priv-key="!wallet"
-      :address="account.address"
-    />
-    <expired-names-modal ref="expiredNames" />
-    <bcvault-address-modal
-      ref="bcvault"
-      :addresses="bcVaultWallets"
-      :callback-fn="bcVaultCb"
-    />
-    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
-    <!-- Modals ******************************************************** -->
-    <!-- Modals ******************************************************** -->
-    <!-- Modals ******************************************************** -->
-
-    <div class="mobile-interface-address-block">
-      <mobile-interface-address
-        :address="address"
-        :print="print"
-        :switch-addr="switchAddress"
+  <div>
+    <interface-modal ref="interfaceModal" :step="onStep" @turnOff="turnOff" />
+    <img v-if="on" class="img-1" :src="image" @click="showModal()" />
+    <div v-if="!on" class="interface-layout">
+      <!-- Modals ******************************************************** -->
+      <!-- Modals ******************************************************** -->
+      <!-- Modals ******************************************************** -->
+      <wallet-password-modal />
+      <enter-pin-number-modal />
+      <ledger-app-modal
+        ref="ledgerAppModal"
+        :networks="Networks"
+        @hardwareWalletOpen="toggleNetworkAddrModal"
       />
-      <mobile-interface-balance
-        :balance="balance"
-        :get-balance="getBalance"
-        class="mt-2"
+      <mnemonic-modal
+        ref="mnemonicPhraseModal"
+        :hardware-wallet-open="toggleNetworkAddrModal"
       />
-      <mobile-interface-network :block-number="blockNumber" class="mt-2" />
-    </div>
-    <div class="wrap">
-      <div class="sidemenu">
-        <div
-          :class="isSidemenuOpen && 'side-nav-open'"
-          class="side-nav-background"
-          @click="startToggleSideMenu;"
+
+      <mnemonic-password-modal
+        ref="mnemonicPhrasePassword"
+        :hardware-wallet-open="toggleNetworkAddrModal"
+        :phrase="phrase"
+      />
+      <network-and-address-modal
+        ref="networkAddress"
+        :hardware-wallet="hwInstance"
+      />
+      <hardware-password-modal
+        ref="hardwareModal"
+        :wallet-constructor="walletConstructor"
+        :hardware-brand="hardwareBrand"
+        @hardwareWalletOpen="toggleNetworkAddrModal"
+      />
+      <print-modal
+        ref="printModal"
+        :priv-key="!wallet"
+        :address="account.address"
+      />
+      <expired-names-modal ref="expiredNames" />
+      <bcvault-address-modal
+        ref="bcvault"
+        :addresses="bcVaultWallets"
+        :callback-fn="bcVaultCb"
+      />
+      <address-qrcode-modal
+        ref="addressQrcodeModal"
+        :address="account.address"
+      />
+      <!-- Modals ******************************************************** -->
+      <!-- Modals ******************************************************** -->
+      <!-- Modals ******************************************************** -->
+
+      <div class="mobile-interface-address-block">
+        <mobile-interface-address
+          :address="address"
+          :print="print"
+          :switch-addr="switchAddress"
         />
-        <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
-          <interface-side-menu />
-        </div>
+        <mobile-interface-balance
+          :balance="balance"
+          :get-balance="getBalance"
+          class="mt-2"
+        />
+        <mobile-interface-network :block-number="blockNumber" class="mt-2" />
       </div>
-      <div class="contents">
-        <div class="tx-contents">
-          <div class="content-container mobile-hide">
-            <interface-address
-              v-if="wallet"
-              :address="address"
-              :print="print"
-              :switch-addr="switchAddress"
-              :display-addr="wallet.displayAddress"
-              :qrcode="openAddressQrcode"
-            />
-          </div>
-          <div class="content-container mobile-hide">
-            <interface-balance :balance="balance" :get-balance="getBalance" />
-          </div>
-          <div class="content-container mobile-hide">
-            <interface-network :block-number="blockNumber" />
-          </div>
-          <router-view
-            :tokens-with-balance="tokensWithBalance"
-            :get-balance="getBalance"
-            :tokens="tokens"
-            :highest-gas="highestGas"
-            :nonce="nonce"
-            :value="value"
-            :data="data"
-            :to="to"
-            :gaslimit="gaslimit"
-            :gas="gas"
-            :tokensymbol="tokensymbol"
-            :is-prefilled="prefilled"
-            :clear-prefilled="clearPrefilled"
-            :check-prefilled="checkPrefilled"
+      <div class="wrap">
+        <div class="sidemenu">
+          <div
+            :class="isSidemenuOpen && 'side-nav-open'"
+            class="side-nav-background"
+            @click="startToggleSideMenu;"
           />
-          <div class="tokens">
-            <interface-tokens
-              v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-              :fetch-tokens="fetchSetTokens"
-              :get-token-balance="getTokenBalance"
+          <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
+            <interface-side-menu />
+          </div>
+        </div>
+        <div class="contents">
+          <div class="tx-contents">
+            <div class="content-container mobile-hide">
+              <interface-address
+                v-if="wallet"
+                :address="address"
+                :print="print"
+                :switch-addr="switchAddress"
+                :display-addr="wallet.displayAddress"
+                :qrcode="openAddressQrcode"
+              />
+            </div>
+            <div class="content-container mobile-hide">
+              <interface-balance :balance="balance" :get-balance="getBalance" />
+            </div>
+            <div class="content-container mobile-hide">
+              <interface-network :block-number="blockNumber" />
+            </div>
+            <router-view
+              :tokens-with-balance="tokensWithBalance"
+              :get-balance="getBalance"
               :tokens="tokens"
-              :received-tokens="receivedTokens"
-              :reset-token-selection="setTokensWithBalance"
+              :highest-gas="highestGas"
+              :nonce="nonce"
+              :value="value"
+              :data="data"
+              :to="to"
+              :gaslimit="gaslimit"
+              :gas="gas"
+              :tokensymbol="tokensymbol"
+              :is-prefilled="prefilled"
+              :clear-prefilled="clearPrefilled"
+              :check-prefilled="checkPrefilled"
             />
-            <token-overview
-              v-if="$route.fullPath === '/interface/dapps/aave/action'"
-            />
+            <div class="tokens">
+              <interface-tokens
+                v-if="$route.fullPath !== '/interface/dapps/aave/action'"
+                :fetch-tokens="fetchSetTokens"
+                :get-token-balance="getTokenBalance"
+                :tokens="tokens"
+                :received-tokens="receivedTokens"
+                :reset-token-selection="setTokensWithBalance"
+              />
+              <token-overview
+                v-if="$route.fullPath === '/interface/dapps/aave/action'"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -135,6 +142,8 @@ import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/Hardw
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import LedgerAppModal from '@/layouts/AccessWalletLayout/components/LedgerAppModal';
+import img from '@/assets/images/ads/1.png';
+import InterfaceModal from './components/InterfaceModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -190,6 +199,7 @@ const EXPIRY_CHECK_CONTRACT = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
 export default {
   name: 'Interface',
   components: {
+    InterfaceModal,
     'bcvault-address-modal': BcVaultAddressModal,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
@@ -244,7 +254,10 @@ export default {
       gas: 0,
       tokensymbol: '',
       prefilled: false,
-      bcVaultWallets: []
+      bcVaultWallets: [],
+      on: true,
+      image: img,
+      onStep: 1
     };
   },
   computed: {
@@ -302,6 +315,14 @@ export default {
       'setGasPrice',
       'setEthGasPrice'
     ]),
+    showModal() {
+      console.error('in heres', this.$refs);
+      this.$refs.interfaceModal.$refs.interfaceBModal.show();
+    },
+    turnOff() {
+      this.on = false;
+      if (window) window.dispatchEvent(new Event('TURN_OFF'));
+    },
     fetchSetTokens() {
       this.setTokens().then(res => {
         this.tokens = res;
@@ -519,7 +540,9 @@ export default {
       }
     },
     notifyExpiredNames() {
-      this.$refs.expiredNames.$refs.expiredNames.show();
+      if (this.$refs.expiredNames) {
+        this.$refs.expiredNames.$refs.expiredNames.show();
+      }
     },
     async setNonce() {
       store.set(this.web3.utils.sha3(this.account.address), {
@@ -940,6 +963,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+img {
+  cursor: pointer;
+  max-width: 100%;
+}
 @import 'InterfaceLayout-desktop.scss';
 @import 'InterfaceLayout-tablet.scss';
 @import 'InterfaceLayout-mobile.scss';
