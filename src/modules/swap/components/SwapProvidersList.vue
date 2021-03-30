@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5">
+  <div class="my-5">
     <div class="mew-heading-3 mb-5">Select a provider</div>
     <!--
     =====================================================================================

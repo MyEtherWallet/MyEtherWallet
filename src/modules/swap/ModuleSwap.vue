@@ -34,16 +34,19 @@
                 :value="fromTokenType"
                 :items="fromTokens"
                 label="From"
-                @input="setFromToken"
-              />
+                @input="setFromToken" />
+
               <mew-input
-                label="you'll send"
+                label="you'll swap"
                 placeholder=""
                 :value="tokenInValue"
                 type="number"
+                :hint="availableBalanceHint"
+                :persistent-hint="true"
+                :rules="fromAmountRulles"
                 @input="setTokenInValue"
-              />
-            </v-col>
+            /></v-col>
+
             <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
               <div class="d-flex align-center justify-center">
                 <img :src="swapIcon" height="35" />
@@ -137,6 +140,7 @@ import Swapper from './handlers/handlerSwap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { roundNumber } from './handlers/helpers';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
@@ -181,6 +185,10 @@ export default {
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
+      fromAmountRulles: [
+        this.validateBalanceAndFrom,
+        value => !!value || 'field is required'
+      ],
       currentTrade: null,
       allTrades: [],
       isLoading: false,
@@ -206,6 +214,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },
@@ -229,6 +238,35 @@ export default {
     showToAddress() {
       if (typeof this.toTokenType.isEth === 'undefined') return false;
       return !this.toTokenType.isEth;
+    },
+    /**
+     * @returns BigNumber of the available balance for the From Token
+     */
+    availableBalance() {
+      if (this.fromTokenType.value) {
+        let balance = this.balanceInETH.toString();
+        if (this.fromTokenType.value !== 'Ethereum') {
+          const hasBalance = this.tokensList.find(
+            token => token.symbol === this.fromTokenType.symbol
+          );
+          balance = hasBalance || '0';
+        }
+        return new BigNumber(balance);
+      }
+      return new BigNumber(0);
+    },
+    /**
+     * @return string for the available balance
+     * Used in hint for the From token amount
+     * Amount is rounded
+     */
+    availableBalanceHint() {
+      if (this.fromTokenType.value) {
+        return `available: ${roundNumber(this.availableBalance)} ${
+          this.fromTokenType.symbol
+        }`;
+      }
+      return '';
     }
   },
   watch: {
@@ -393,6 +431,20 @@ export default {
     executeTrade() {
       this.confirmInfo.show = false;
       this.swapper.executeTrade(this.currentTrade);
+    },
+    /**
+     * Method validates input for the From token amount against user input
+     */
+    validateBalanceAndFrom(value) {
+      if (this.availableBalance.lte(0)) {
+        return this.fromTokenType.value === 'Ethereum'
+          ? 'your ETH balance is 0'
+          : 'you do not own this token';
+      }
+      if (this.availableBalance.lt(new BigNumber(value))) {
+        return `your balance is low (${this.availableBalanceHint})`;
+      }
+      return true;
     }
   }
 };
