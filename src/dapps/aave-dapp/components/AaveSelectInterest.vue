@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { INTEREST_TYPES } from '../handlers/helpers';
 export default {
   props: {
     selectedToken: {
@@ -95,21 +96,22 @@ export default {
       };
     },
     isStable() {
-      return this.type === 'Stable';
+      return this.type === INTEREST_TYPES.stable;
     },
     isVariable() {
-      return this.type === 'Variable';
+      return this.type === INTEREST_TYPES.variable;
     }
   },
   methods: {
     setTypeToStable() {
-      this.type = 'Stable';
+      this.type = INTEREST_TYPES.stable;
     },
     setTypeToVariable() {
-      this.type = 'Variable';
+      this.type = INTEREST_TYPES.variable;
     },
     onContinue() {
-      this.$emit('continue', this.type);
+      const type = this.type.charAt(0).toUpperCase() + this.type.slice(1);
+      this.$emit('continue', type);
     }
   }
 };

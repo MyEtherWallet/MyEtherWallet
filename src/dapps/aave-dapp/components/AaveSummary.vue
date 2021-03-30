@@ -18,7 +18,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit || step === 3"
+      v-if="isDeposit && step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"

@@ -13,7 +13,7 @@
     <template #mewOverlayBody>
       <aave-summary
         :handler="handler"
-        :selected-token="selectedToken"
+        :selected-token="preSelectedToken"
         :action-type="collateral"
         @onConfirm="callSwitchCollateral"
       />
@@ -25,30 +25,10 @@
 import AaveSummary from './AaveSummary';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import { mapState } from 'vuex';
-import { _ } from 'web3-utils';
+import actualTokenMixin from '../handlers/actualTokenMixin';
 export default {
   components: { AaveSummary },
-  props: {
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
-      default: () => {}
-    },
-    selectedToken: {
-      default: () => {
-        return {};
-      },
-      type: Object
-    },
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: () => {},
-      type: Function
-    }
-  },
+  mixins: [actualTokenMixin],
   data() {
     return {
       collateral: ACTION_TYPES.collateral
@@ -57,25 +37,11 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     title() {
-      return Object.keys(this.selectedToken).length === 0
+      return Object.keys(this.preSelectedToken).length === 0
         ? ''
-        : this.selectedToken?.toggle?.value
+        : this.preSelectedToken?.toggle?.value
         ? 'Usage as collateral'
         : 'Disable usage as collateral';
-    },
-    actualToken() {
-      if (
-        this.handler &&
-        !_.isEmpty(this.handler) &&
-        !_.isEmpty(this.selectedToken)
-      ) {
-        const token = this.handler?.reservesData.find(item => {
-          if (item.symbol === this.selectedToken.token) return item;
-        });
-
-        return token;
-      }
-      return {};
     }
   },
   methods: {

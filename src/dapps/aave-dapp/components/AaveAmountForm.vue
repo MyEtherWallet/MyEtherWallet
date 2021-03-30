@@ -6,14 +6,14 @@
     elevation="1"
     width="650"
   >
-    <v-row v-if="isDeposit" justify="space-around">
+    <v-row justify="space-around">
       <v-col cols="6">
         <mew-module
           color-type="overlayBg"
           :has-body-padding="true"
-          subtitle="Aave Deposit Balance"
-          :title="aaveBalance.title"
-          :caption="aaveBalance.caption"
+          :subtitle="leftSideValues.subTitle"
+          :title="leftSideValues.title"
+          :caption="leftSideValues.caption"
           class="text-left"
         />
       </v-col>
@@ -21,31 +21,9 @@
         <mew-module
           color-type="overlayBg"
           :has-body-padding="true"
-          subtitle="Aave Wallet Balance"
-          :title="walletBalance.title"
-          :caption="walletBalance.caption"
-          class="text-left"
-        />
-      </v-col>
-    </v-row>
-    <v-row v-if="!isDeposit" justify="space-around">
-      <v-col cols="6">
-        <mew-module
-          color-type="overlayBg"
-          :has-body-padding="true"
-          subtitle="You borrowed"
-          :title="totalBorrowed.title"
-          :caption="totalBorrowed.caption"
-          class="text-left"
-        />
-      </v-col>
-      <v-col cols="6">
-        <mew-module
-          color-type="overlayBg"
-          :has-body-padding="true"
-          subtitle="Total Collateral"
-          :title="totalCollateral.title"
-          :caption="totalCollateral.caption"
+          :subtitle="rightSideValues.subTitle"
+          :title="rightSideValues.title"
+          :caption="rightSideValues.caption"
           class="text-left"
         />
       </v-col>
@@ -68,7 +46,7 @@
         />
       </div>
       <mew-toggle
-        v-if="isDeposit"
+        v-if="showToggle"
         :button-group="group"
         button-type="percentage"
         :on-toggle-btn-idx="startingIdx"
@@ -104,12 +82,6 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
-import {
-  AAVE_TABLE_HEADER,
-  convertToFixed
-} from '@/dapps/aave-dapp/handlers/helpers';
-
 export default {
   name: 'AaveAmountForm',
   props: {
@@ -121,9 +93,41 @@ export default {
       type: [Object, null],
       default: () => {}
     },
-    actionType: {
+    showToggle: {
+      type: Boolean,
+      default: false
+    },
+    leftSideValues: {
+      type: Object,
+      default: () => {
+        return {
+          title: '',
+          caption: '',
+          subTitle: ''
+        };
+      }
+    },
+    rightSideValues: {
+      type: Object,
+      default: () => {
+        return { title: '', caption: '', subTitle: '' };
+      }
+    },
+    formText: {
+      type: Object,
+      default: () => {
+        return { title: '', caption: '' };
+      }
+    },
+    buttonTitle: {
+      type: Object,
+      default: () => {
+        return { action: '', cancel: '' };
+      }
+    },
+    tokenBalance: {
       type: String,
-      default: AAVE_TABLE_HEADER.DEPOSIT
+      default: '0'
     }
   },
   data() {
@@ -134,112 +138,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['network']),
     hasAmount() {
       return BigNumber(this.amount).gt(0);
-    },
-    isDeposit() {
-      return this.actionType === AAVE_TABLE_HEADER.DEPOSIT;
-    },
-    tokenBalance() {
-      const symbol = this.selectedToken.token;
-      if (symbol === this.network.type.currencyName) return this.balanceInETH;
-      const hasBalance = this.tokensList.find(item => {
-        if (item.symbol === symbol) {
-          return item;
-        }
-      });
-
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : 0;
-    },
-    depositedBalance() {
-      const symbol = this.selectedToken.token;
-      const userReserves = this.handler.userSummary.reservesData.find(item => {
-        if (item.reserve.symbol === symbol) return item;
-      });
-      return userReserves ? userReserves.currentUnderlyingBalance : 0;
-    },
-    selectedTokenUSDValue() {
-      const symbol = this.selectedToken.token;
-      const reserves = this.handler.reservesData.find(item => {
-        if (item.symbol === symbol) return item;
-      });
-
-      return reserves ? reserves.price.priceInEth : 0;
-    },
-    tokenBalanceInUSD() {
-      return BigNumber(this.selectedTokenUSDValue).times(this.tokenBalance);
-    },
-    depositedBalanceInUSD() {
-      return BigNumber(this.selectedTokenUSDValue).times(this.depositedBalance);
-    },
-    walletBalance() {
-      return {
-        title: `${convertToFixed(this.tokenBalance, 6)} ${
-          this.selectedToken.token
-        }`,
-        caption: `$ ${convertToFixed(this.tokenBalanceInUSD.toFixed())}`
-      };
-    },
-    aaveBalance() {
-      return {
-        title: `${convertToFixed(this.depositedBalance, 6)} ${
-          this.selectedToken.token
-        }`,
-        caption: `$ ${convertToFixed(this.depositedBalanceInUSD.toFixed())}`
-      };
-    },
-    totalCollateral() {
-      const eth = this.handler?.userSummary.totalCollateralETH;
-      const usd = this.handler?.userSummary.totalCollateralUSD;
-      return {
-        title: `$ ${convertToFixed(usd)}`,
-        caption: `${eth} ETH`
-      };
-    },
-    totalBorrowed() {
-      const hasBorrowed = this.handler?.userSummary.reservesData.find(item => {
-        if (item.reserve.symbol === this.selectedToken.token) {
-          return item;
-        }
-      });
-      const eth = hasBorrowed
-        ? `${hasBorrowed.currentBorrows} ${this.selectedToken.token}`
-        : `$ 0.00`;
-      const usd = hasBorrowed
-        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
-        : `0 ETH`;
-      return {
-        title: eth,
-        caption: usd
-      };
-    },
-    buttonTitle() {
-      const cancel = `Cancel ${this.isDeposit ? 'Deposit' : 'Borrow'}`;
-      const action = this.isDeposit ? 'Deposit' : 'Borrow';
-      return {
-        cancel: cancel,
-        action: action
-      };
-    },
-    formText() {
-      const title = `How much would you like to ${
-        this.isDeposit ? 'deposit' : 'borrow'
-      }?`;
-      const caption = `Here you can set the amount you want to ${
-        this.isDeposit
-          ? 'deposit. You can manually enter a specific amount or use the percentage buttons below.'
-          : 'borrow.'
-      }`;
-      return {
-        title: title,
-        caption: caption
-      };
     }
   },
   mounted() {
-    if (this.isDeposit) {
+    if (this.showToggle) {
       this.onToggle('50%');
     }
   },
@@ -267,10 +171,7 @@ export default {
       this.$emit('cancel');
     },
     emitValues() {
-      const amtUSDvalue = BigNumber(this.selectedTokenUSDValue)
-        .times(this.amount)
-        .toFixed();
-      this.$emit('emitValues', [this.amount, `$ ${amtUSDvalue}`]);
+      this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
       const amt = BigNumber(this.tokenBalance).times(per);

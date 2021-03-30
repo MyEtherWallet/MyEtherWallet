@@ -33,6 +33,11 @@
           :selected-token="selectedToken"
           :handler="handler"
           :action-type="aaveTableHandler"
+          :show-toggle="aaveBorrowForm.showToggle"
+          :left-side-values="aaveBorrowForm.leftSideValues"
+          :right-side-values="aaveBorrowForm.rightSideValues"
+          :form-text="aaveBorrowForm.formText"
+          :button-title="aaveBorrowForm.buttonTitle"
           @cancelDeposit="handleCancel"
           @emitValues="handleValues"
         />
@@ -74,44 +79,59 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
-import { AAVE_TABLE_HEADER } from '../handlers/helpers';
-import { _ } from 'web3-utils';
+import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { mapState } from 'vuex';
+import { _ } from 'web3-utils';
+import actualTokenMixin from '../handlers/actualTokenMixin';
+
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  props: {
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
-      default: () => {}
-    },
-    preSelectedToken: {
-      type: Object,
-      default: () => {}
-    }
-  },
+  mixins: [actualTokenMixin],
   data() {
     return {
       step: 0,
       selectedToken: {},
       aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
       amount: '0',
-      amountUsd: '$ 0.00',
       type: ''
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
+    aaveBorrowForm() {
+      const hasBorrowed = this.selectedTokenInUserSummary;
+      const borrowedEth = hasBorrowed
+        ? `${hasBorrowed.currentBorrows} ${this.selectedToken.token}`
+        : `$ 0.00`;
+      const borrowedUSD = hasBorrowed
+        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        : `0 ETH`;
+      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
+      const usd = `$ ${convertToFixed(
+        this.handler?.userSummary.totalCollateralUSD
+      )}`;
+      return {
+        showToggle: false,
+        leftSideValues: {
+          title: borrowedEth,
+          caption: borrowedUSD,
+          subTitle: 'You borrowed'
+        },
+        rightSideValues: {
+          title: usd,
+          caption: eth,
+          subTitle: 'Total Collateral'
+        },
+        formText: {
+          title: 'How much would you like to borrow?',
+          caption: 'Here you can set the amount you want to borrow.'
+        },
+        buttonTitle: {
+          action: 'Borrow',
+          cancel: 'Cancel Borrow'
+        }
+      };
+    },
     header() {
       switch (this.step) {
         case 1:
@@ -122,20 +142,6 @@ export default {
         default:
           return 'Select the token you want to borrow';
       }
-    },
-    actualToken() {
-      if (
-        this.handler &&
-        !_.isEmpty(this.handler) &&
-        !_.isEmpty(this.selectedToken)
-      ) {
-        const token = this.handler?.reservesData.find(item => {
-          if (item.symbol === this.selectedToken.token) return item;
-        });
-
-        return token;
-      }
-      return {};
     }
   },
   watch: {
@@ -152,8 +158,7 @@ export default {
     },
     handleValues(e) {
       this.step = 2;
-      this.amount = e[0];
-      this.amountUsd = e[1];
+      this.amount = e;
     },
     handleCancel() {
       this.callClose();
@@ -163,7 +168,6 @@ export default {
       this.selectedToken = {};
       this.aaveTableHandler = AAVE_TABLE_HEADER.BORROW;
       this.amount = '0';
-      this.amountUsd = '$ 0.00';
       this.close();
     },
     handleContinue(e) {

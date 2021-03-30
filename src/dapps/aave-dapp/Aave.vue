@@ -177,11 +177,25 @@
       @onConfirm="callBorrow"
     />
     <aave-collateral-overlay
-      :selected-token="selectedToken"
+      :pre-selected-token="requestToken"
       :handler="handler"
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
       @onConfirm="callSwitchCollateral"
+    />
+    <aave-withdraw-overlay
+      :pre-selected-token="requestToken"
+      :handler="handler"
+      :open="showWithdrawOverlay"
+      :close="closeWithdrawOverlay"
+      @onConfirm="callWithdraw"
+    />
+    <aave-repay-overlay
+      :pre-selected-token="requestToken"
+      :handler="handler"
+      :open="showRepayOverlay"
+      :close="closeRepayOverlay"
+      @onConfirm="callRepay"
     />
   </div>
 </template>
@@ -191,6 +205,8 @@ import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import AaveBorrowOverlay from './components/AaveBorrowOverlay';
 import AaveDepositOverlay from './components/AaveDepositOverlay';
 import AaveCollateralOverlay from './components/AaveCollateralOverlay';
+import AaveRepayOverlay from './components/AaveRepayOverlay';
+import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
@@ -229,11 +245,12 @@ export default {
     AaveBorrowOverlay,
     AaveDepositOverlay,
     AaveTable,
-    AaveCollateralOverlay
+    AaveCollateralOverlay,
+    AaveRepayOverlay,
+    AaveWithdrawOverlay
   },
   data() {
     return {
-      selectedToken: {},
       handler: null,
       caller: null,
       showDepositOverlay: false,
@@ -501,6 +518,34 @@ export default {
           Toast(e.message, {}, ERROR);
         });
     },
+    callWithdraw(e) {
+      this.handler
+        .withdraw(e)
+        .then(() => {
+          Toast(
+            'Success! Your borrowed token will be displayed shortly',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
+    callRepay(e) {
+      this.handler
+        .repay(e)
+        .then(() => {
+          Toast(
+            'Success! Your borrowed token will be displayed shortly',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
     openDepositOverlayWithToken(token) {
       this.requestToken = token;
       this.showDepositOverlay = true;
@@ -523,20 +568,22 @@ export default {
       this.requestToken = {};
       this.showBorrowOverlay = false;
     },
-    openWithdrawOverlay() {
+    openWithdrawOverlay(token) {
+      this.requestToken = token;
       this.showWithdrawOverlay = true;
     },
     closeWithdrawOverlay() {
       this.showWithdrawOverlay = false;
     },
     openCollateralOverlay(token) {
-      this.selectedToken = token;
+      this.requestToken = token;
       this.showCollateralOverlay = true;
     },
     closeCollateralOverlay() {
       this.showCollateralOverlay = false;
     },
-    openRepayOverlay() {
+    openRepayOverlay(token) {
+      this.requestToken = token;
       this.showRepayOverlay = true;
     },
     closeRepayOverlay() {
