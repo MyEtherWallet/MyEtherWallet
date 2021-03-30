@@ -124,7 +124,11 @@
    Pin Step
   =====================================================================================
   -->
-      <access-wallet-pin v-else-if="enterPin" />
+      <access-wallet-pin
+        v-else-if="enterPin"
+        :keep-key-pin-enter="callback"
+        :wallet-type="walletType"
+      />
     </template>
   </mew-overlay>
 </template>
@@ -516,6 +520,7 @@ export default {
     },
     keepkeyUnlock() {
       EventBus.$on('showHardwarePinMatrix', callback => {
+        console.log('showHardwarePinMatrix'); // todo remove dev item
         this.step += 1;
         this.enterPin = true;
         this.callback = callback;
@@ -639,8 +644,9 @@ export default {
     keepKeyClear() {
       this.pin = '';
     },
-    keepKeyPinEnter() {
-      this.callback(this.pin);
+    keepKeyPinEnter(pin) {
+      console.log('pin', pin); // todo remove dev item
+      this.callback(pin);
       this.enterPin = false;
       this.step += 1;
       setTimeout(() => {

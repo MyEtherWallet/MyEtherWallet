@@ -26,13 +26,37 @@
       btn-size="xlarge"
       title="Unlock wallet"
       has-full-width
-      @click.native="keepKeyPinEnter"
+      @click.native="keepKeyPinEnterCall"
     />
   </v-sheet>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    walletType: {
+      type: String,
+      default: ''
+    },
+    keepKeyPinEnter: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      pin: '',
+      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3']
+    };
+  },
+  methods: {
+    keepKeyPinEnterCall() {
+      console.log(this.pin); // todo remove dev item
+      this.keepKeyPinEnter(this.pin)
+    },
+    keepKeyClear() {}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
