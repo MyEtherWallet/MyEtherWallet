@@ -25,10 +25,10 @@
 import AaveSummary from './AaveSummary';
 import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 import { mapState } from 'vuex';
-import actualTokenMixin from '../handlers/actualTokenMixin';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 export default {
   components: { AaveSummary },
-  mixins: [actualTokenMixin],
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       collateral: ACTION_TYPES.collateral

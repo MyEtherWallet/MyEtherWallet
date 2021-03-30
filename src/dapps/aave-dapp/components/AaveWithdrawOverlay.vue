@@ -33,13 +33,13 @@
 import BigNumber from 'bignumber.js';
 import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
-import actualTokenMixin from '../handlers/actualTokenMixin';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import { mapGetters } from 'vuex';
 export default {
   components: {
     AaveAmountForm
   },
-  mixins: [actualTokenMixin],
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       withdraw: ACTION_TYPES.withdraw,
@@ -103,8 +103,7 @@ export default {
         aavePool: 'proto',
         amount: e,
         userAddress: this.address,
-        aToken: this.actualToken.aToken.id,
-        interestRateMode: this.type
+        aToken: this.actualToken.aToken.id
       };
 
       this.$emit('onConfirm', param);

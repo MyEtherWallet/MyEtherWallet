@@ -65,6 +65,7 @@
       @click.native="onContinue"
     />
     <mew-warning-sheet
+      v-if="showError"
       class="mt-4"
       description="You cannot choose stable for reserves being
     used as collateral. Disable the collateral usage and try again."
@@ -73,7 +74,8 @@
 </template>
 
 <script>
-import { INTEREST_TYPES } from '../handlers/helpers';
+import { INTEREST_TYPES, roundPercentage } from '../handlers/helpers';
+import BigNumber from 'bignumber.js';
 export default {
   props: {
     selectedToken: {
@@ -87,9 +89,24 @@ export default {
     };
   },
   computed: {
+    showError() {
+      return this.selectedToken?.usageAsCollateralEnabled || false;
+    },
     rates() {
-      const stable = this.selectedToken?.stableApr;
-      const variable = this.selectedToken?.variableApr;
+      const stable = this.selectedToken?.stableBorrowRateEnabled
+        ? roundPercentage(
+            new BigNumber(this.selectedToken.stableBorrowRate)
+              .multipliedBy(100)
+              .toString()
+          )
+        : '--';
+      const variable = this.selectedToken
+        ? roundPercentage(
+            new BigNumber(this.selectedToken.variableBorrowRate)
+              .multipliedBy(100)
+              .toString()
+          )
+        : '--';
       return {
         stable,
         variable

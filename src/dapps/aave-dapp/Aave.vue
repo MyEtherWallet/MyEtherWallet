@@ -197,6 +197,13 @@
       :close="closeRepayOverlay"
       @onConfirm="callRepay"
     />
+    <aave-set-apr-overlay
+      :pre-selected-token="requestToken"
+      :handler="handler"
+      :open="showAprTypeOverlay"
+      :close="closeAprTypeOverlay"
+      @onConfirm="callSwitchInterest"
+    />
   </div>
 </template>
 
@@ -207,6 +214,7 @@ import AaveDepositOverlay from './components/AaveDepositOverlay';
 import AaveCollateralOverlay from './components/AaveCollateralOverlay';
 import AaveRepayOverlay from './components/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
+import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
@@ -247,7 +255,8 @@ export default {
     AaveTable,
     AaveCollateralOverlay,
     AaveRepayOverlay,
-    AaveWithdrawOverlay
+    AaveWithdrawOverlay,
+    AaveSetAprOverlay
   },
   data() {
     return {
@@ -517,6 +526,20 @@ export default {
     callRepay(e) {
       this.handler
         .repay(e)
+        .then(() => {
+          Toast(
+            'Success! Your borrowed token will be displayed shortly',
+            {},
+            SUCCESS
+          );
+        })
+        .catch(e => {
+          Toast(e.message, {}, ERROR);
+        });
+    },
+    callSwitchInterest(e) {
+      this.handler
+        .switchRate(e)
         .then(() => {
           Toast(
             'Success! Your borrowed token will be displayed shortly',

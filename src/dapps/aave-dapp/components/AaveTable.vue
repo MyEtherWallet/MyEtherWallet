@@ -367,7 +367,7 @@ export default {
                 token: item.reserve.symbol,
                 tokenImg: item.reserve.icon,
                 balance: [
-                  `${roundNumber(item?.currentUnderlyingBalance)} ${
+                  `${roundNumber(item.currentUnderlyingBalance)} ${
                     item.reserve.symbol
                   }`,
                   `$${roundNumber(item.currentUnderlyingBalanceUSD)}`

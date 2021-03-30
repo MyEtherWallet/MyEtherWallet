@@ -32,12 +32,12 @@
 <script>
 import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
-import actualTokenMixin from '../handlers/actualTokenMixin';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 export default {
   components: {
     AaveAmountForm
   },
-  mixins: [actualTokenMixin],
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       repay: ACTION_TYPES.repay,
@@ -91,10 +91,8 @@ export default {
         aavePool: 'proto',
         amount: e,
         userAddress: this.address,
-        reserve: this.actualToken.underlyingAsset,
-        interestRateMode: this.type
+        reserve: this.actualToken.underlyingAsset
       };
-
       this.$emit('onConfirm', param);
       this.handleCancel();
     },

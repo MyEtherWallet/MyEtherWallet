@@ -68,12 +68,12 @@ import {
   convertToFixed
 } from '../handlers/helpers';
 import { _ } from 'web3-utils';
-import actualTokenMixin from '../handlers/actualTokenMixin';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
-  mixins: [actualTokenMixin],
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       step: 0,

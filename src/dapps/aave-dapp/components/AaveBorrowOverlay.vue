@@ -49,8 +49,7 @@
       -->
       <div v-if="step === 2">
         <aave-select-interest
-          :on-stable="true"
-          :selected-token="selectedToken"
+          :selected-token="actualToken"
           @continue="handleContinue"
         />
       </div>
@@ -82,11 +81,11 @@ import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { _ } from 'web3-utils';
-import actualTokenMixin from '../handlers/actualTokenMixin';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  mixins: [actualTokenMixin],
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       step: 0,

@@ -38,11 +38,11 @@
       <div class="px-12">
         <mew-input
           ref="input"
-          v-model="amount"
+          :value="amount"
           label="Amount"
           :right-label="selectedToken.token"
           :hide-clear-btn="true"
-          type="number"
+          :rules="[checkIfNumerical]"
         />
       </div>
       <mew-toggle
@@ -166,6 +166,12 @@ export default {
           this.startingIdx = 3;
           this.amount = this.calculatedAmt(1);
       }
+    },
+    checkIfNumerical(value) {
+      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
+      const test = regex.test(value);
+      if (!test) return 'Please enter a valid value!';
+      return test;
     },
     cancel() {
       this.$emit('cancel');

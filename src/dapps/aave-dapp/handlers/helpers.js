@@ -121,7 +121,9 @@ const ACTION_TYPES = {
   borrow: 'borrow',
   collateral: 'collateral',
   interest: 'interest',
-  repay: 'repay'
+  withdraw: 'withdraw',
+  repay: 'repay',
+  switch: 'switch'
 };
 
 const INTEREST_TYPES = {
