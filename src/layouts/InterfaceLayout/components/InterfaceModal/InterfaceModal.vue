@@ -1,72 +1,83 @@
-<template>
-  <b-modal
-    ref="interfaceBModal"
-    hide-header
-    class="bootstrap-modal nopadding"
-    :dialog-class="dialogClass"
-    hide-footer
-  >
-    <div class="text-center text-container">
-      {{ text.desc }}
-    </div>
-    <div class="d-flex align-items-center btn-container">
-      <button class="mid-round-button-green-border" @click="onLeftClick">
-        {{ text.rightBtn }}
-      </button>
-      <button class="mid-round-button-green-filled ml-3" @click="onRightClick">
-        {{ text.leftBtn }}
-      </button>
-    </div>
-  </b-modal>
+<template lang="html">
+  <div>
+    <b-modal
+      ref="modal"
+      hide-header
+      class="bootstrap-modal nopadding"
+      :dialog-class="dialogClass"
+      hide-footer
+    >
+      <div class="text-center text-container">
+        {{ details.desc }}
+      </div>
+      <div class="d-flex align-items-center btn-container">
+        <button class="mid-round-button-green-border" @click="onLeftClick">
+          {{ details.rightBtn }}
+        </button>
+        <button
+          class="mid-round-button-green-filled ml-3"
+          @click="onRightClick"
+        >
+          {{ details.leftBtn }}
+        </button>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'InterfaceModal',
-  props: {
-    step: {
-      default: 0,
-      type: Number
-    }
+  data() {
+    return {
+      step: 1
+    };
   },
   computed: {
-    text() {
+    details() {
       return {
         desc:
           this.step === 1
-            ? this.t('common.popup.desc1')
-            : this.t('common.popup.desc2'),
+            ? this.$t('common.popup.desc1')
+            : this.$t('common.popup.desc2'),
         rightBtn:
           this.step === 1
-            ? this.t('common.popup.rightBtn1')
-            : this.t('common.popup.rightBtn2'),
+            ? this.$t('common.popup.rightBtn1')
+            : this.$t('common.popup.rightBtn2'),
         leftBtn:
           this.step === 1
-            ? this.t('common.popup.leftBtn1')
-            : this.t('common.popup.leftBtn2')
+            ? this.$t('common.popup.leftBtn1')
+            : this.$t('common.popup.leftBtn2')
       };
     },
     dialogClass() {
       const arr = ['interface-dialog'];
-      return this.step === 2
-        ? arr.push('off-center-right')
-        : this.step === 3
-        ? arr.push('off-center=left')
-        : arr;
+      switch (this.step) {
+        case 2:
+          arr.push('off-center-right');
+          return arr;
+        case 3:
+          arr.push('off-center-left');
+          return arr;
+        default:
+          break;
+      }
+      return arr;
     }
+  },
+  mounted() {
+    console.error('dialog', this.dialogClass)
   },
   methods: {
     onRightClick() {
-      this.step < 4 ? this.hideShowModal() : this.onLeftClick();
+      this.step < 4 ? this.changeDisplay() : this.onLeftClick();
     },
-    hideShowModal() {
-      this.$refs.interfaceModal.hide();
+    changeDisplay() {
       this.step += 1;
-      this.$refs.interfaceModal.show();
     },
     onLeftClick() {
       this.$emit('turnOff');
-      this.$refs.interfaceModal.hide();
+      this.step = 1;
+      this.$refs.modal.hide();
     }
   }
 };
@@ -80,12 +91,12 @@ export default {
   .btn-container {
     padding: 20px;
   }
-  &.off-center-right {
+  &.off-center-left {
     margin-top: 150px;
-    margin-left: 40px;
+    margin-left: 100px;
   }
   &.off-center-right {
-    margin-top: 50px;
+    margin-top: 500px;
     margin-right: 30px;
   }
 }

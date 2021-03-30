@@ -1,7 +1,7 @@
 <template>
   <div>
-    <interface-modal ref="interfaceModal" :step="onStep" @turnOff="turnOff" />
-    <img v-if="on" class="img-1" :src="image" @click="showModal()" />
+    <interface-modal ref="interface" @turnOff="turnOff" />
+    <img v-if="on" class="img-1" :src="image" @click="showModal" />
     <div v-if="!on" class="interface-layout">
       <!-- Modals ******************************************************** -->
       <!-- Modals ******************************************************** -->
@@ -199,7 +199,7 @@ const EXPIRY_CHECK_CONTRACT = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
 export default {
   name: 'Interface',
   components: {
-    InterfaceModal,
+    'interface-modal': InterfaceModal,
     'bcvault-address-modal': BcVaultAddressModal,
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
@@ -223,6 +223,7 @@ export default {
   },
   data() {
     return {
+      onShowModal: false,
       balance: '0',
       blockNumber: 0,
       tokens: [],
@@ -256,8 +257,7 @@ export default {
       prefilled: false,
       bcVaultWallets: [],
       on: true,
-      image: img,
-      onStep: 1
+      image: img
     };
   },
   computed: {
@@ -316,8 +316,7 @@ export default {
       'setEthGasPrice'
     ]),
     showModal() {
-      console.error('in heres', this.$refs);
-      this.$refs.interfaceModal.$refs.interfaceBModal.show();
+      this.$refs.interface.$refs.modal.show();
     },
     turnOff() {
       this.on = false;
