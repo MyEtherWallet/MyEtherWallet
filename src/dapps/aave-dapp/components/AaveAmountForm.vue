@@ -37,12 +37,12 @@
     <div class="px-12 mt-5">
       <div class="px-12">
         <mew-input
-          ref="input"
           :value="amount"
           label="Amount"
           :right-label="selectedToken.token"
           :hide-clear-btn="true"
           :rules="[checkIfNumerical]"
+          @input="setAmount"
         />
       </div>
       <mew-toggle
@@ -148,6 +148,9 @@ export default {
     }
   },
   methods: {
+    setAmount(e) {
+      this.amount = e;
+    },
     onToggle(e) {
       switch (e) {
         case this.group[0]:
@@ -170,7 +173,7 @@ export default {
     checkIfNumerical(value) {
       const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
       const test = regex.test(value);
-      if (!test) return 'Please enter a valid value!';
+      if (value !== '' && !test) return 'Please enter a valid value!';
       return test;
     },
     cancel() {
