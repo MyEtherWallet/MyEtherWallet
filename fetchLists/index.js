@@ -14,7 +14,7 @@ const fetchTokens = async () => {
       fs.mkdirSync(configs.TOKENS_PATH);
     }
     const tokenFileURL =
-      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/tokens/';
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
     if (tokenList !== undefined && tokenList.length > 0) {
       for (let i = 0; i < tokenList.length; i++) {
         const tokenFile = tokenList[i];
@@ -44,7 +44,7 @@ const fetchAddressDarkList = async () => {
     }
 
     const darkList = await fetch(
-      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/src/addresses/addresses-darklist.json'
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
       .then(res => res.json())
       .catch(console.log);
@@ -171,7 +171,6 @@ const fetchContracts = async () => {
     }
 
     const contractFileURL =
-      // 'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/contracts/';
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
       for (let i = 0; i < contractList.length; i++) {

@@ -19,7 +19,7 @@
           :idx-to-expand="idxToExpand"
         >
           <template #panelBody1>
-            <gas-price
+            <settings-gas-price
               :buttons="gasButtons"
               :selected="gasPriceType"
               :set-selected="setSelected"
@@ -28,13 +28,15 @@
             />
           </template>
           <template #panelBody2>
-            <import-config :import-config="settingsHandler" />
+            <settings-import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <export-config :export-config="settingsHandler.exportStore" />
+            <settings-export-config
+              :export-config="settingsHandler.exportStore"
+            />
           </template>
           <template #panelBody4>
-            <div class="pb-4">
+            <div class="pa-6">
               <div class="mb-4">
                 {{ $t('interface.address-book.add-up-to') }}
               </div>
@@ -77,11 +79,11 @@
 </template>
 
 <script>
-import ImportConfig from './components/SettingsImportConfig';
-import ExportConfig from './components/SettingsExportConfig';
-import GasPrice from './components/SettingsGasPrice';
+import SettingsImportConfig from './components/SettingsImportConfig';
+import SettingsExportConfig from './components/SettingsExportConfig';
+import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
-import SettingsHandler from './handler/handlerSettings';
+import handlerSettings from './handler/handlerSettings';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { SENTRY, Toast } from '../toast/handler/handlerToast';
 import {
@@ -93,9 +95,9 @@ const modes = ['add', 'edit'];
 export default {
   name: 'Settings',
   components: {
-    ImportConfig,
-    ExportConfig,
-    GasPrice,
+    SettingsImportConfig,
+    SettingsExportConfig,
+    SettingsGasPrice,
     AddressBookAddEdit
   },
   props: {
@@ -243,7 +245,7 @@ export default {
     this.getAddressBookTableData();
   },
   created() {
-    this.settingsHandler = new SettingsHandler();
+    this.settingsHandler = new handlerSettings();
     this.fetchGasPrice();
   },
   methods: {

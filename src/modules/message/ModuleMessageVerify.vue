@@ -1,39 +1,77 @@
 <template>
-  <div>
-    <app-block-title
-      max-width="600px"
-      no-page-title
-      :data="title"
-      class="mb-7"
-    />
-    <v-textarea outlined label="Signature" value="Value"></v-textarea>
-    <mew-button
-      title="Verify"
-      btn-size="xlarge"
-      class="display--block mx-auto mt-5"
-    />
-    <mew-button
-      btn-style="transparent"
-      title="Clean all"
-      btn-size="small"
-      class="display--block mx-auto mt-5"
-    />
-  </div>
+  <mew-module
+    class="d-flex flex-grow-1 pt-6"
+    :title="title"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
+      <div>
+        <v-textarea
+          v-model="message"
+          outlined
+          label="Signature"
+          :value="message"
+        ></v-textarea>
+
+        <div v-if="signResult">
+          <span v-if="didSign"> {{ signer }} Did Sign</span>
+          <span v-if="didntSign">{{ signer }} Didn't sign</span>
+        </div>
+        <mew-button
+          title="Verify"
+          btn-size="xlarge"
+          class="display--block mx-auto mt-5"
+          @click.native="verifyMessage"
+        />
+        <mew-button
+          btn-style="transparent"
+          title="Clean all"
+          btn-size="small"
+          class="display--block mx-auto mt-5"
+          @click.native="clearAll"
+        />
+      </div>
+    </template>
+  </mew-module>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
+import SignAndVerifyMessage from '@/modules/message/handlers';
 
 export default {
   name: 'ModuleMessageVerify',
-  components: { AppBlockTitle },
-  data: () => ({
-    title: {
-      title: 'Verify message',
-      description:
-        'This is a recommended way to view your balance. You can only view your balance via this option.'
+  data() {
+    return {
+      title: 'Verify Message',
+      didSign: false,
+      didntSign: false,
+      signResult: false,
+      message: '',
+      signer: ''
+    };
+  },
+  computed: {},
+  mounted() {
+    this.signAndVerify = new SignAndVerifyMessage(this.web3, this.address);
+  },
+  methods: {
+    verifyMessage() {
+      this.signResult = true;
+      const signCheck = this.signAndVerify.verifyMessage(this.message);
+      if (signCheck.verified) {
+        this.didSign = true;
+      } else {
+        this.didntSign = true;
+      }
+      this.signer = '0x' + signCheck.signer;
+    },
+    clearAll() {
+      this.didntSign = false;
+      this.didSign = false;
+      this.signResult = false;
     }
-  })
+  }
 };
 </script>
 

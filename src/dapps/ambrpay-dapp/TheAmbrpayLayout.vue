@@ -100,34 +100,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-// Fix mew-components
-.mew-component-fix--ambrpay {
-  .mew-banner {
-    min-height: 180px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    .exit-container {
-      display: none;
-    }
-    .banner-content {
-      > div:nth-child(2) {
-        margin-top: 9px;
-        max-width: 700px;
-        padding: 0 20px !important;
-      }
-    }
-    .mew-subtitle {
-      font-size: 36px !important;
-    }
-  }
-  .v-tab {
-    letter-spacing: -0.1px;
-  }
-  .v-tabs-bar {
-    height: 70px;
-  }
-}
-</style>

@@ -169,7 +169,8 @@
       class="d-flex d-lg-none"
     >
       <v-row class="pa-3 align-center justify-space-between">
-        <app-btn-menu :menu-method="openNavigation" class="mr-3" />
+        <app-btn-menu class="mr-3" @click.native="openNavigation" />
+
         <router-link :to="{ name: 'Dashboard' }">
           <img width="80" src="@/assets/images/icons/logo-mew.png" />
         </router-link>
@@ -189,7 +190,8 @@ import send from '@/assets/images/icons/icon-send-enable.png';
 import nft from '@/assets/images/icons/icon-nft.png';
 import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
-import tools from '@/assets/images/icons/icon-contract-enable.png';
+import contract from '@/assets/images/icons/icon-contract-enable.png';
+import message from '@/assets/images/icons/icon-message-enable.png';
 import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
@@ -244,18 +246,28 @@ export default {
           icon: swap
         },
         {
-          title: this.$t('interface.menu.dapps-center'),
+          title: this.$t('interface.menu.dapps'),
           route: { name: 'Dapps' },
           icon: dapp
         },
         {
-          title: this.$t('interface.menu.tools'),
-          icon: tools,
+          title: this.$t('interface.menu.contract'),
+          icon: contract,
           children: [
+            {
+              title: this.$t('interface.menu.deploy'),
+              route: { name: 'DeployContract' }
+            },
             {
               title: this.$t('interface.menu.interact-contract'),
               route: { name: 'InteractWithContract' }
-            },
+            }
+          ]
+        },
+        {
+          title: this.$t('interface.menu.message'),
+          icon: message,
+          children: [
             {
               title: this.$t('interface.menu.deploy'),
               route: { name: 'DeployContract' }
@@ -263,6 +275,10 @@ export default {
             {
               title: this.$t('interface.menu.sign-message'),
               route: { name: 'SignMessage' }
+            },
+            {
+              title: this.$t('interface.menu.verify-message'),
+              route: { name: 'verifyMessage' }
             }
           ]
         }
