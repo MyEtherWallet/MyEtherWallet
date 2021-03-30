@@ -1,9 +1,9 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    title="Select Token to Deposit"
+    :title="header"
     right-btn-text="Close"
-    :close="close"
+    :close="handleCancel"
   >
     <template #mewOverlayBody>
       <!--
@@ -94,6 +94,17 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    header() {
+      switch (this.step) {
+        case 1:
+        case 3:
+          return 'Deposit';
+        case 2:
+          return 'Confirmation';
+        default:
+          return 'Select the token you want to deposit';
+      }
+    },
     actualToken() {
       if (
         this.handler &&

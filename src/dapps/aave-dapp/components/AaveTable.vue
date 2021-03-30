@@ -49,6 +49,7 @@ import {
 } from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+
 export default {
   name: 'AaveTable',
   props: {
@@ -78,7 +79,8 @@ export default {
         title: 'Deposit',
         btnStyle: 'background',
         colorTheme: 'primary',
-        method: this.onDepositClick
+        method: this.onDepositClick,
+        disabled: false
       },
       btnSwap: {
         title: 'Swap',
@@ -309,16 +311,13 @@ export default {
                 item.symbol === 'ETH'
                   ? this.balanceInETH
                   : this.tokensList.find(balance => {
-                      if (item.symbol === balance.symbol) {
-                        return balance.balance;
-                      }
+                      return item.symbol === balance.symbol;
                     });
-
               /* If !balance or balance = 0, disable deposit button */
-              const depositButton = Object.assign(this.btnDeposit);
-              depositButton.disabled =
-                !userBalance || new BigNumber(userBalance).lte(0);
-
+              const depositButton = Object.assign({}, this.btnDeposit);
+              depositButton['disabled'] = userBalance
+                ? BigNumber(userBalance).lte(0)
+                : true;
               return {
                 token: item.symbol,
                 available: userBalance ? roundNumber(userBalance) : '0',

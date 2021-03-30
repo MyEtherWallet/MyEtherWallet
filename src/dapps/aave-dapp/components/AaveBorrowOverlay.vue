@@ -1,7 +1,7 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    title="Select Token to Borrow"
+    :title="header"
     right-btn-text="Close"
     :close="callClose"
   >
@@ -112,6 +112,17 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    header() {
+      switch (this.step) {
+        case 1:
+        case 3:
+          return 'Borrow';
+        case 2:
+          return 'Confirmation';
+        default:
+          return 'Select the token you want to borrow';
+      }
+    },
     actualToken() {
       if (
         this.handler &&
