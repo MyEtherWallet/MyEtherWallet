@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    console.error('dialog', this.dialogClass)
+    console.error('dialog', this.dialogClass);
   },
   methods: {
     onRightClick() {

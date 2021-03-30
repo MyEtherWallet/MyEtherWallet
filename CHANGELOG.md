@@ -1,5 +1,6 @@
 ### Devop
-- Update component [#2946](https://github.com/MyEtherWallet/MyEtherWallet/pull/2946)
+
+* Update component [#2946](https://github.com/MyEtherWallet/MyEtherWallet/pull/2946)
 
 ### Release v5.7.25
 
