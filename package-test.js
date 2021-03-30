@@ -61,8 +61,7 @@ const EXCEPTIONS = [
   '@sentry/browser',
   '@sentry/integrations',
   'sass-loader',
-  'stylelint',
-  'vue-i18n'
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
