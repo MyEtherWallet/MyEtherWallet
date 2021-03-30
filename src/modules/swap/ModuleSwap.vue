@@ -91,36 +91,44 @@
             :to-token-icon="toTokenType.img"
             :message="providersMessage"
           />
-
-          <mew-expand-panel
-            v-show="step >= 2"
-            is-toggle
-            has-dividers
-            :panel-items="exPannel"
-            class="mt-4 mb-10 swap-expend"
-          >
-            <template #panelBody1>
-              <mew-input
-                label="Gas Price"
-                placeholder=" "
-                right-label="Gwei"
-                :value="gasPriceGwei"
-                disabled
-              />
-              <mew-input
-                label="Total Gas Limit"
-                placeholder=" "
-                right-label="Wei"
-                disabled
-                :value="totalGasLimit"
-              />
+          <!--
+            =====================================================================================
+             Swap Fee
+            =====================================================================================
+          -->
+          <swap-fee :show-fee="showSwapFee" :getting-fee="loadingFee">
+            <template slot="fee">
+              <mew-expand-panel
+                is-toggle
+                has-dividers
+                :panel-items="exPannel"
+                class="swap-expend"
+              >
+                <template #panelBody1>
+                  <mew-input
+                    label="Gas Price"
+                    placeholder=" "
+                    right-label="Gwei"
+                    :value="gasPriceGwei"
+                    disabled
+                  />
+                  <mew-input
+                    label="Total Gas Limit"
+                    placeholder=" "
+                    right-label="Wei"
+                    disabled
+                    :value="totalGasLimit"
+                  />
+                </template>
+              </mew-expand-panel>
             </template>
-          </mew-expand-panel>
+          </swap-fee>
 
-          <div v-show="step >= 2" class="text-center">
+          <div class="text-center">
             <mew-button
               title="Swap"
               :has-full-width="false"
+              :disabled="step < 2"
               btn-size="xlarge"
               @click.native="showConfirm()"
             />
@@ -136,6 +144,7 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
+import SwapFee from './components/SwapFee.vue';
 import Swapper from './handlers/handlerSwap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
@@ -145,11 +154,12 @@ const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const AMT = '0.1';
 export default {
-  name: 'ModuleSwapRates',
+  name: 'ModuleSwap',
   components: {
     ModuleAddressBook,
     SwapConfirmation,
-    SwapProvidersList
+    SwapProvidersList,
+    SwapFee
   },
   props: {
     fromToken: {
@@ -267,6 +277,21 @@ export default {
         }`;
       }
       return '';
+    },
+
+    /**
+     * Determines whether or not to show swap fee panel
+     * Fee is shown if provider was selected and no errors are passed
+     */
+    showSwapFee() {
+      return this.step >= 2 && this.availableBalance.gt(0);
+    },
+
+    /**
+     * Determines whether or not to show swap fee panel
+     */
+    loadingFee() {
+      return this.step === 1;
     }
   },
   watch: {
