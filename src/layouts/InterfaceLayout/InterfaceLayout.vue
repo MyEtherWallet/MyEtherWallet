@@ -223,7 +223,6 @@ export default {
   },
   data() {
     return {
-      onShowModal: false,
       balance: '0',
       blockNumber: 0,
       tokens: [],
