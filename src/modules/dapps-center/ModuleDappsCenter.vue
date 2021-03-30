@@ -47,6 +47,13 @@ export default {
           rightIconType: 'mew',
           rightIcon: 'ensManager',
           path: 'ENSManager'
+        },
+        {
+          title: 'Unstoppable Domains',
+          subtitle: 'Buy your .crypto domain',
+          tag: '#Domains',
+          rightIcon: 'UnstoppableDomain',
+          path: 'UnstoppableDomain'
         }
       ]
     };

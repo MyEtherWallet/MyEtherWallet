@@ -78,5 +78,6 @@ module.exports = [
   'https://api.ethvm.com:443',
   'https://qa.mewwallet.dev:443',
   'https://api.exchangeratesapi.io:443',
-  'wss://apiws.ethvm.com:443'
+  'wss://apiws.ethvm.com:443',
+  'https://api.commerce.coinbase.com:443'
 ];

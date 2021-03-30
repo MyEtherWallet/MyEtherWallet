@@ -6,6 +6,7 @@ import notifications from './notifications';
 import externalData from './external';
 import Configs from './configs';
 import LocalStore from 'store';
+import unstoppableStore from '../../dapps/unstoppable-domains/store';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
     global: globalModule,
     wallet: wallet,
     external: externalData,
-    notifications: notifications
+    notifications: notifications,
+    unstoppable: unstoppableStore
   }
 });
 
