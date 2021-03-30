@@ -80,6 +80,7 @@ export default {
         {
           title: 'More actions',
           items: [
+            /*
             {
               title: 'Watch only address',
               to: { name: 'Tools', query: { tab: '1' } }
@@ -89,12 +90,13 @@ export default {
               to: { name: 'Tools', query: { tab: '2' } }
             },
             {
-              title: 'Verify message',
-              to: { name: 'Tools', query: { tab: '3' } }
-            },
-            {
               title: 'Convery units',
               to: { name: 'Tools', query: { tab: '4' } }
+            },
+            */
+            {
+              title: 'Verify message',
+              to: { name: 'Tools', query: { tab: '1' } }
             }
           ]
         }
