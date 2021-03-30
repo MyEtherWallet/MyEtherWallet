@@ -11,7 +11,7 @@
     <welcome-modal ref="welcome" />
     <router-view />
     <footer-container />
-    <wallet-launched-footer-banner />
+    <wallet-launched-footer-banner v-if="!on" />
     <confirmation-container v-if="wallet !== null" />
   </div>
 </template>
@@ -54,6 +54,16 @@ export default {
       ) {
         this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
       }
+    },
+    on(newVal) {
+      if (newVal === false) {
+        if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+          this.$refs.welcome.$refs.welcome.show();
+        }
+        this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+          store.set('notFirstTimeVisit', true);
+        });
+      }
     }
   },
   created() {
@@ -74,17 +84,11 @@ export default {
     });
     window.addEventListener('TURN_OFF', () => {
       this.on = false;
+      store.set('taskDone', true);
     });
   },
   mounted() {
     this.checkIfOnline(navigator.onLine);
-    if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
-      this.$refs.welcome.$refs.welcome.show();
-    }
-
-    this.$refs.welcome.$refs.welcome.$on('hidden', () => {
-      store.set('notFirstTimeVisit', true);
-    });
 
     this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
       window.scrollTo(0, 0);

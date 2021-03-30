@@ -50,7 +50,7 @@ export default {
       };
     },
     dialogClass() {
-      const arr = ['interface-dialog'];
+      const arr = ['home-dialog'];
       switch (this.step) {
         case 2:
           arr.push('off-center-right');
@@ -66,21 +66,21 @@ export default {
   },
   methods: {
     onRightClick() {
-      this.step < 4 ? this.changeDisplay() : this.onLeftClick();
+      this.step < 3 ? this.changeDisplay() : this.onLeftClick();
     },
     changeDisplay() {
       this.step += 1;
     },
     onLeftClick() {
+      this.$refs.modal.hide();
       this.$emit('turnOff');
       this.step = 1;
-      this.$refs.modal.hide();
     }
   }
 };
 </script>
 <style lang="scss">
-.interface-dialog {
+.home-dialog {
   .text-container {
     padding: 20px;
     width: 100%;
