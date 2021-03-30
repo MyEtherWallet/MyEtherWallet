@@ -64,9 +64,6 @@ export default {
       return arr;
     }
   },
-  mounted() {
-    console.error('dialog', this.dialogClass);
-  },
   methods: {
     onRightClick() {
       this.step < 4 ? this.changeDisplay() : this.onLeftClick();
