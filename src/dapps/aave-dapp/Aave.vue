@@ -147,7 +147,7 @@
               :handler="handler"
               :has-search="false"
               :has-toggle="false"
-              @selectedBorrow="openBorrowOverlay"
+              @selectedBorrow="openBorrowOverlayWithToken"
               @repayBorrowing="openRepayOverlay"
               @changeAprType="openAprTypeOverlay"
             />
@@ -170,6 +170,7 @@
       @onConfirm="callDeposit"
     />
     <aave-borrow-overlay
+      :pre-selected-token="requestToken"
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
       :handler="handler"
@@ -506,7 +507,7 @@ export default {
     },
     openBorrowOverlayWithToken(token) {
       this.requestToken = token;
-      this.showDepositOverlay = true;
+      this.showBorrowOverlay = true;
     },
     openDepositOverlay() {
       this.showDepositOverlay = true;

@@ -18,7 +18,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="step === 3"
+      v-if="isDeposit || step === 3"
       class="d-flex align-center justify-space-between pa-7"
       flat
       color="overlayBg"
@@ -183,33 +183,6 @@ export default {
         case ACTION_TYPES.deposit:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
-          details.push(
-            {
-              title: 'Current Health Factor',
-              tooltip: 'Tooltip text',
-              value: this.currentHealthFactor,
-              class:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'primary--text'
-                  : 'error-text'
-            },
-            {
-              title: 'Next Health Factor',
-              tooltip: 'Tooltip text',
-              value: this.nextHealthFactor,
-              class:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'error--text'
-                  : 'primary--text',
-              indicator:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'mdi-arrow-down'
-                  : 'mdi-arrow-up'
-            }
-          );
-          return details;
-        case ACTION_TYPES.borrow:
-          details = this.step === 3 && !this.isDeposit ? [] : details;
           details.push(
             {
               title: 'Current Health Factor',

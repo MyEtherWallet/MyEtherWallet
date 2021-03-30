@@ -84,7 +84,7 @@
           btn-size="xlarge"
           class="mb-2 px-12"
           :has-full-width="true"
-          :disabled="hasAmount"
+          :disabled="!hasAmount"
           @click.native="emitValues"
         />
         <br />
@@ -205,7 +205,7 @@ export default {
         }
       });
       const eth = hasBorrowed
-        ? `${hasBorrowed.currentBorrowsETH} ETH`
+        ? `${hasBorrowed.currentBorrows} ${this.selectedToken.token}`
         : `$ 0.00`;
       const usd = hasBorrowed
         ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`

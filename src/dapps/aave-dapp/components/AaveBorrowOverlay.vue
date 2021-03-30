@@ -94,6 +94,10 @@ export default {
       type: [Object, null],
       validator: item => typeof item === 'object' || null,
       default: () => {}
+    },
+    preSelectedToken: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -121,6 +125,13 @@ export default {
         return token;
       }
       return {};
+    }
+  },
+  watch: {
+    preSelectedToken(newVal) {
+      if (newVal && !_.isEmpty(newVal)) {
+        this.handleSelectedBorrow(this.preSelectedToken);
+      }
     }
   },
   methods: {

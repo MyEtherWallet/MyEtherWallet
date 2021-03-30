@@ -110,19 +110,12 @@ export default {
     }
   },
   watch: {
-    open(newVal) {
-      if (!newVal) {
-        this.step = 0;
-        this.selectedToken = {};
-      }
-    },
     preSelectedToken(newVal) {
       if (newVal && !_.isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }
   },
-
   methods: {
     handleSelectedDeposit(val) {
       this.selectedToken = val;
@@ -137,6 +130,11 @@ export default {
       this.amountUsd = e[1];
     },
     handleCancel() {
+      this.step = 0;
+      this.selectedToken = {};
+      this.amount = '0';
+      this.amountUsd = '$ 0.00';
+
       this.close();
     },
     emitDeposit() {
@@ -148,7 +146,7 @@ export default {
         reserve: this.actualToken.underlyingAsset
       };
       this.$emit('onConfirm', param);
-      this.close();
+      this.handleCancel();
     }
   }
 };
