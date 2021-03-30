@@ -134,7 +134,7 @@ export default {
     return {
       group: ['25%', '50%', '75%', 'MAX'],
       amount: '0',
-      startingIdx: 1
+      startingIdx: 0
     };
   },
   computed: {
@@ -163,7 +163,7 @@ export default {
           this.amount = this.calculatedAmt(0.75);
           break;
         default:
-          this.startingIdx = 2;
+          this.startingIdx = 3;
           this.amount = this.calculatedAmt(1);
       }
     },

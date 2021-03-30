@@ -221,7 +221,7 @@ export default {
       const totalBorrowsETH = this.handler?.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(
-          selectedToken.price.priceInEth
+          selectedToken?.price?.priceInEth
         );
         collateralBalanceETH = new BigNumber(
           this.handler.userSummary.totalCollateralETH

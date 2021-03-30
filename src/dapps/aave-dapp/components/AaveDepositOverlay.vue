@@ -111,11 +111,11 @@ export default {
     aaveDepositForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
       const depositedBalance = `${convertToFixed(
-        hasDeposit ? hasDeposit.currentUnderlyingBalance : 0,
+        hasDeposit ? hasDeposit?.currentUnderlyingBalance : 0,
         6
       )} ${this.selectedToken.token}`;
       const depositedBalanceInUSD = `$ ${BigNumber(this.selectedTokenUSDValue)
-        .times(hasDeposit.currentUnderlyingBalance)
+        .times(hasDeposit?.currentUnderlyingBalance)
         .toFixed(2)}`;
 
       const tokenBalance = `${this.tokenBalance} ${this.selectedToken.token}`;

@@ -26,14 +26,18 @@ const actualTokenMixin = {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    actualSelectedToken() {
+      const selectedTokens = _.isEmpty(this.selectedToken)
+        ? _.isEmpty(this.preSelectedToken)
+          ? {}
+          : this.preSelectedToken
+        : this.selectedToken;
+      return selectedTokens;
+    },
     actualToken() {
-      if (
-        this.handler &&
-        !_.isEmpty(this.handler) &&
-        !_.isEmpty(this.selectedToken)
-      ) {
+      if (this.handler && !_.isEmpty(this.handler)) {
         const token = this.handler?.reservesData.find(item => {
-          if (item.symbol === this.selectedToken.token) return item;
+          if (item.symbol === this.actualSelectedToken.token) return item;
         });
 
         return token;
@@ -41,11 +45,11 @@ const actualTokenMixin = {
       return {};
     },
     selectedTokenUSDValue() {
-      return this.actualToken ? this.actualToken.price.priceInEth : 0;
+      return this.actualToken ? this.actualToken?.price?.priceInEth : 0;
     },
     selectedTokenInUserSummary() {
-      return this.handler?.userSummary.reservesData.find(item => {
-        if (item.reserve.symbol === this.selectedToken.token) {
+      return this.handler?.userSummary?.reservesData?.find(item => {
+        if (item.reserve.symbol === this.actualSelectedToken.token) {
           return item;
         }
       });

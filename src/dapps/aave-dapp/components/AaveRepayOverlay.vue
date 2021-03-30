@@ -13,9 +13,14 @@
     <template #mewOverlayBody>
       <div>
         <aave-amount-form
-          :selected-token="selectedToken"
+          :selected-token="preSelectedToken"
           :handler="handler"
-          :action-type="repay"
+          :show-toggle="aaveRepayForm.showToggle"
+          :left-side-values="aaveRepayForm.leftSideValues"
+          :right-side-values="aaveRepayForm.rightSideValues"
+          :form-text="aaveRepayForm.formText"
+          :button-title="aaveRepayForm.buttonTitle"
+          :token-balance="totalBorrow"
           @cancel="handleCancel"
           @emitValues="handleRepayAmount"
         />
@@ -25,47 +30,76 @@
 </template>
 
 <script>
-import { ACTION_TYPES } from '../handlers/helpers';
+import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
+import actualTokenMixin from '../handlers/actualTokenMixin';
 export default {
   components: {
     AaveAmountForm
   },
-  props: {
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
-      default: () => {}
-    },
-    selectedToken: {
-      default: () => {
-        return {};
-      },
-      type: Object
-    },
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: () => {},
-      type: Function
-    }
-  },
+  mixins: [actualTokenMixin],
   data() {
     return {
       repay: ACTION_TYPES.repay,
-      amount: '',
-      amountUsd: '$ 0.00'
+      amount: ''
     };
   },
-  computed: {},
+  computed: {
+    totalBorrow() {
+      const borrows = this.selectedTokenInUserSummary?.currentBorrows;
+      return borrows ? borrows : '0';
+    },
+    aaveRepayForm() {
+      const hasBorrowed = this.selectedTokenInUserSummary;
+      const borrowedEth = hasBorrowed
+        ? `${hasBorrowed.currentBorrows} ${this.preSelectedToken.token}`
+        : `$ 0.00`;
+      const borrowedUSD = hasBorrowed
+        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        : `0 ETH`;
+      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
+      const usd = `$ ${convertToFixed(
+        this.handler?.userSummary.totalCollateralUSD
+      )}`;
+      return {
+        showToggle: true,
+        leftSideValues: {
+          title: borrowedEth,
+          caption: borrowedUSD,
+          subTitle: 'You borrowed'
+        },
+        rightSideValues: {
+          title: usd,
+          caption: eth,
+          subTitle: 'Total Collateral'
+        },
+        formText: {
+          title: 'How much would you like to repay?',
+          caption:
+            'Here you can set the amount you want to repay. You can manually enter a specific amount or use the percentage buttons below.'
+        },
+        buttonTitle: {
+          action: 'Repay',
+          cancel: 'Cancel Repay'
+        }
+      };
+    }
+  },
   methods: {
     handleRepayAmount(e) {
-      this.amount = e;
+      const param = {
+        aavePool: 'proto',
+        amount: e,
+        userAddress: this.address,
+        reserve: this.actualToken.underlyingAsset,
+        interestRateMode: this.type
+      };
+
+      this.$emit('onConfirm', param);
+      this.handleCancel();
     },
     handleCancel() {
-      this.amount = '0';
+      this.amount = '';
       this.close();
     }
   }

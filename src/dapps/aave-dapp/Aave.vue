@@ -269,25 +269,7 @@ export default {
       },
       depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
       borrowTableHeader: AAVE_TABLE_HEADER.BALANCE_BORROW,
-      tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }],
-
-      balance: {
-        total: 20.32,
-        data: [
-          {
-            color: 'titlePrimary',
-            amount: 5.3,
-            tooltip: 'Send: 5.3',
-            percentage: '26.08'
-          },
-          {
-            color: 'warning darken-1',
-            amount: 3.2,
-            tooltip: 'Fee: 3.2',
-            percentage: '15.75'
-          }
-        ]
-      }
+      tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }]
     };
   },
   computed: {
@@ -573,6 +555,7 @@ export default {
       this.showWithdrawOverlay = true;
     },
     closeWithdrawOverlay() {
+      this.requestToken = {};
       this.showWithdrawOverlay = false;
     },
     openCollateralOverlay(token) {
@@ -580,6 +563,7 @@ export default {
       this.showCollateralOverlay = true;
     },
     closeCollateralOverlay() {
+      this.requestToken = {};
       this.showCollateralOverlay = false;
     },
     openRepayOverlay(token) {
@@ -587,12 +571,15 @@ export default {
       this.showRepayOverlay = true;
     },
     closeRepayOverlay() {
+      this.requestToken = {};
       this.showRepayOverlay = false;
     },
-    openAprTypeOverlay() {
+    openAprTypeOverlay(token) {
+      this.requestToken = token;
       this.showAprTypeOverlay = true;
     },
     closeAprTypeOverlay() {
+      this.requestToken = {};
       this.showAprTypeOverlay = false;
     },
     setCallerAndHandler() {

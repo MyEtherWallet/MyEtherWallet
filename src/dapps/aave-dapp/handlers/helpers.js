@@ -120,7 +120,8 @@ const ACTION_TYPES = {
   deposit: 'deposit',
   borrow: 'borrow',
   collateral: 'collateral',
-  interest: 'interest'
+  interest: 'interest',
+  repay: 'repay'
 };
 
 const INTEREST_TYPES = {
