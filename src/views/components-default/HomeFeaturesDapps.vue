@@ -42,32 +42,32 @@ export default {
         icon: require('@/assets/images/icons/icon-dapp-lock.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'Stake on ETH 2.0',
+        icon: require('@/assets/images/icons/icon-dapp-eth20.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'AAVE',
+        icon: require('@/assets/images/icons/icon-dapp-aave.png')
       },
       {
-        label: 'SafeSend transaction',
-        icon: require('@/assets/images/icons/icon-dapp-lock.png')
+        label: 'Golem Migrator',
+        icon: require('@/assets/images/icons/icon-dapp-golem.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'LEND Migrator',
+        icon: require('@/assets/images/icons/icon-dapp-lend.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'Unstopabble Domain',
+        icon: require('@/assets/images/icons/icon-dapp-unstoppable.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'Ambrpay',
+        icon: require('@/assets/images/icons/icon-dapp-ambrpay.png')
       },
       {
-        label: 'MakerDAO',
-        icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
+        label: 'ENS Manager',
+        icon: require('@/assets/images/icons/icon-dapp-ens-manager.png')
       }
     ]
   })
