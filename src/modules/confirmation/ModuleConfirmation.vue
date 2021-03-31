@@ -34,10 +34,21 @@
         <confirmation-messsage v-if="true" :msg="signature" />
       </template>
     </mew-overlay>
+    <mew-overlay
+      :show-overlay="showBatchOverlay"
+      title="Batch Transaction Confirmation"
+      right-btn-text="close"
+      :close="overlayClose"
+    >
+      <template #mewOverlayBody>
+        <confirmation-messsage v-if="true" :msg="signature" />
+      </template>
+    </mew-overlay>
   </div>
 </template>
 
 <script>
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
@@ -58,12 +69,15 @@ export default {
     return {
       showOverlay: false,
       showSignOverlay: false,
+      showBatchOverlay: false,
       tx: {},
       resolver: () => {},
       title: '',
       signedTxObject: {},
       signedTx: {},
-      signature: ''
+      signature: '',
+      unsignedTxArr: [],
+      signedTxArr: []
     };
   },
   computed: {
@@ -129,6 +143,33 @@ export default {
           _self.instance.errorHandler(e);
         });
     });
+    EventBus.$on(
+      EventNames.SHOW_BATCH_TX_MODAL,
+      async (arr, resolver, isHardware) => {
+        _self.isHardwareWallet = isHardware;
+        const signed = [];
+        _self.unsignedTx = arr;
+        if (resolver) resolver = () => {};
+        _self.resolver = resolver;
+        _self.showBatcjOverlay = true;
+
+        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          for (let i = 0; i < arr.length; i++) {
+            try {
+              const _signedTx = await this.instance.signTransaction(arr[i]);
+              signed.push(_signedTx);
+            } catch (err) {
+              this.instance.errorHandler(err);
+            }
+          }
+          this.signedArray = signed;
+        } else {
+          this.signedArray = this.unSignedArray.map(_tx => {
+            return { tx: _tx, rawTransaction: _tx };
+          });
+        }
+      }
+    );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
       _self.title = 'Message Signed';
       _self.instance
@@ -159,6 +200,7 @@ export default {
   methods: {
     overlayClose() {
       this.showOverlay = false;
+      this.showBatchOverlay = false;
       this.showSignOverlay = false;
     },
     parseRawData(tx) {

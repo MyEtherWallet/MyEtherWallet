@@ -65,6 +65,7 @@ const setWeb3Instance = function (
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
+        const gasPrice = rootGetters['global/gasPrice'];
         const localTx = {
           to: arr[i].to,
           data: arr[i].data,
@@ -85,7 +86,7 @@ const setWeb3Instance = function (
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined
-            ? unit.toWei(state.gasPrice, 'gwei')
+            ? unit.toWei(gasPrice, 'gwei')
             : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
