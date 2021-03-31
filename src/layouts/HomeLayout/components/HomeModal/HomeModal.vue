@@ -2,6 +2,7 @@
   <div>
     <b-modal
       ref="modal"
+      no-close-on-backdrop
       hide-header
       class="bootstrap-modal nopadding"
       :dialog-class="dialogClass"

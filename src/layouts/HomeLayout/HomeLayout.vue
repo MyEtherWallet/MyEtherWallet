@@ -32,7 +32,7 @@ export default {
     return {
       address: '',
       resolvedAddress: '',
-      on: true,
+      on: false,
       img: img
     };
   },
@@ -40,6 +40,14 @@ export default {
     ...mapState('main', ['online'])
   },
   mounted() {
+    const currentDate = new Date().getTime();
+    const date1 = new Date().getTime();
+    const date2 = new Date('03/31/21').getTime();
+    // const date1 = 1617260400000;
+    // const date2 = 1617346800000;
+    if (currentDate >= date1 && currentDate < date2) {
+      this.on = true;
+    }
     if (store.get('taskDone')) {
       this.on = false;
     }

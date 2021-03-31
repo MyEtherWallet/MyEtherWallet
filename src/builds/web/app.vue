@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      on: true
+      on: false
     };
   },
   computed: {
@@ -88,6 +88,28 @@ export default {
     });
   },
   mounted() {
+    const currentDate = new Date().getTime();
+    const date1 = new Date().getTime();
+    const date2 = new Date('03/31/21').getTime();
+    // const date1 = 1617260400000;
+    // const date2 = 1617346800000;
+    if (currentDate >= date1 && currentDate < date2) {
+      this.on = true;
+    }
+
+    if (store.get('taskDone')) {
+      this.on = false;
+    }
+
+    if (!this.on) {
+      if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+        this.$refs.welcome.$refs.welcome.show();
+      }
+      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        store.set('notFirstTimeVisit', true);
+      });
+    }
+
     this.checkIfOnline(navigator.onLine);
 
     this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
