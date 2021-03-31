@@ -1,13 +1,8 @@
 <template>
   <div class="component-container">
-    <v-container>
-      <div class="py-7" />
+    <div class="py-6 py-md-12" />
 
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
+    <v-container>
       <v-sheet max-width="600px" class="mb-12">
         <app-block-title no-page-title :data="titleData" class="mb-8" />
       </v-sheet>
@@ -23,13 +18,10 @@
         >
           <img :src="content.img" height="60" />
           <h5 class="font-weight-bold mt-3">{{ content.title }}</h5>
-          <v-sheet max-width="300px" class="mt-3">
-            <p class="ma-0">{{ content.description }}</p>
-          </v-sheet>
+          <div class="mt-3 pr-md-12">{{ content.description }}</div>
         </v-col>
       </v-row>
     </v-container>
-    <div class="py-4" />
   </div>
 </template>
 

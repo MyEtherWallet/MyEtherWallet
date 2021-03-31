@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
 * Fix acceass wallet button font size [#2943](https://github.com/MyEtherWallet/MyEtherWallet/pull/2943)
 * Update side menu [#2949](https://github.com/MyEtherWallet/MyEtherWallet/pull/2949)
