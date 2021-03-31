@@ -44,7 +44,7 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-show="step >= 1" mandatory>
+    <v-item-group v-show="step >= 1">
       <v-row>
         <v-col
           v-for="(quote, idx) in providersList"

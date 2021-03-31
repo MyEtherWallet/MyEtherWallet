@@ -203,6 +203,7 @@ export default {
       currentTrade: null,
       allTrades: [],
       isLoading: false,
+      loadingFee: false,
       defaults: {
         fromToken: this.fromToken,
         toToken: this.toToken
@@ -290,13 +291,6 @@ export default {
      */
     showSwapFee() {
       return this.step >= 2 && this.availableBalance.gt(0);
-    },
-
-    /**
-     * Determines whether or not to show swap fee panel
-     */
-    loadingFee() {
-      return this.step === 1;
     },
 
     /**
@@ -467,6 +461,7 @@ export default {
         this.step = 2;
         return;
       }
+      this.loadingFee = true;
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -486,6 +481,7 @@ export default {
           }`;
           this.allTrades[idx] = trade;
           this.step = 2;
+          this.loadingFee = false;
         });
     }, 500),
     showConfirm() {

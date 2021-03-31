@@ -9,8 +9,7 @@
           min-height="94px"
         >
           <v-card-text v-if="!gettingFee" class="text-center">
-            Select tokens, correct amount to swap, and provider to load fee and
-            enable Swap.
+            Select provider to load transaction fee and enable Swap.
           </v-card-text>
           <v-card-text v-if="gettingFee">
             Loading transaction fee.
