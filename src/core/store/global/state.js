@@ -2,6 +2,9 @@ import Configs from '../configs';
 import { toWei } from 'web3-utils';
 import nodeList from '@/utils/networks';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
+const defaultNetwork = nodeList['ETH'].find(item => {
+  return item.service === 'myetherwallet.com-ws';
+});
 
 const state = {
   localStore: true,
@@ -14,9 +17,12 @@ const state = {
   gasLimitWarning: 100,
   baseGasPrice: toWei('41', 'gwei'),
   gasPriceType: gasPriceTypes.ECONOMY,
-  currentNetwork: Object.assign({}, nodeList['ETH'][0]),
+  currentNetwork: defaultNetwork
+    ? Object.assign({}, defaultNetwork)
+    : Object.assign({}, nodeList['ETH'][0]),
   preferredCurrency: 'USD',
-  customPaths: []
+  customPaths: [],
+  localContracts: {}
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name
