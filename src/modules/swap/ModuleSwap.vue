@@ -77,6 +77,7 @@
             -->
           <module-address-book
             v-show="showToAddress"
+            :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
           <!--
@@ -243,7 +244,11 @@ export default {
     },
     toAddress() {
       if (this.toTokenType.isEth) return this.address;
-      return this.addressValue.address;
+      return this.addressValue.value;
+    },
+    isToAddressValid() {
+      if (this.toTokenType.isEth) return true;
+      return this.addressValue.isValid;
     },
     showToAddress() {
       if (typeof this.toTokenType.isEth === 'undefined') return false;
@@ -390,8 +395,11 @@ export default {
         this.setTokenInValue(this.tokenInValue);
       });
     },
-    setToAddress(value) {
-      this.addressValue = value;
+    setToAddress(value, isValid) {
+      this.addressValue = {
+        value,
+        isValid
+      };
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -449,6 +457,7 @@ export default {
       });
     },
     getTrade: utils._.debounce(function (idx) {
+      if (!this.isToAddressValid) return;
       this.step = 1;
       if (this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
@@ -492,6 +501,13 @@ export default {
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         show: true
       };
+    },
+    isValidToAddress(address) {
+      return this.swapper.isValidToAddress({
+        provider: this.availableQuotes[0].provider,
+        toT: this.toTokenType,
+        address
+      });
     },
     backFunction() {
       this.confirmInfo.show = false;
