@@ -57,12 +57,7 @@ export default {
     },
     on(newVal) {
       if (newVal === false) {
-        if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
-          this.$refs.welcome.$refs.welcome.show();
-        }
-        this.$refs.welcome.$refs.welcome.$on('hidden', () => {
-          store.set('notFirstTimeVisit', true);
-        });
+        this.showWelcome();
       }
     }
   },
@@ -102,12 +97,7 @@ export default {
     }
 
     if (!this.on) {
-      if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
-        this.$refs.welcome.$refs.welcome.show();
-      }
-      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
-        store.set('notFirstTimeVisit', true);
-      });
+      this.showWelcome();
     }
 
     this.checkIfOnline(navigator.onLine);
@@ -123,7 +113,15 @@ export default {
     window.removeEventListener('turnOff');
   },
   methods: {
-    ...mapActions('main', ['checkIfOnline'])
+    ...mapActions('main', ['checkIfOnline']),
+    showWelcome() {
+      if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+        this.$refs.welcome.$refs.welcome.show();
+      }
+      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+        store.set('notFirstTimeVisit', true);
+      });
+    }
   }
 };
 </script>
