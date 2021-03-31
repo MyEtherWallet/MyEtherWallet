@@ -16,7 +16,8 @@ const state = {
   gasPriceType: gasPriceTypes.ECONOMY,
   currentNetwork: Object.assign({}, nodeList['ETH'][0]),
   preferredCurrency: 'USD',
-  customPaths: []
+  customPaths: [],
+  localContracts: {}
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

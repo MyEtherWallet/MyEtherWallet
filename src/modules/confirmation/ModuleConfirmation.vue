@@ -4,7 +4,7 @@
       :show-overlay="showOverlay"
       :title="title ? title : 'Confirmation'"
       left-btn-text=""
-      right-btn-text="close"
+      right-btn-text="Close"
       :close="overlayClose"
     >
       <template #mewOverlayBody>
@@ -23,12 +23,24 @@
         />
       </template>
     </mew-overlay>
+    <mew-overlay
+      :show-overlay="showSignOverlay"
+      :title="title ? title : 'Message'"
+      left-btn-text=""
+      right-btn-text="close"
+      :close="overlayClose"
+    >
+      <template #mewOverlayBody>
+        <confirmation-messsage v-if="true" :msg="signature" />
+      </template>
+    </mew-overlay>
   </div>
 </template>
 
 <script>
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
+import ConfirmationMesssage from './components/ConfirmationMessage';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -39,20 +51,29 @@ import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ConfirmationContainer',
   components: {
-    ConfirmationTransaction
+    ConfirmationTransaction,
+    ConfirmationMesssage
   },
   data() {
     return {
       showOverlay: false,
+      showSignOverlay: false,
       tx: {},
       resolver: () => {},
       title: '',
       signedTxObject: {},
-      signedTx: {}
+      signedTx: {},
+      signature: ''
     };
   },
   computed: {
-    ...mapState('wallet', ['instance', 'web3']),
+    ...mapState('wallet', [
+      'instance',
+      'web3',
+      'address',
+      'identifier',
+      'isHardware'
+    ]),
     ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
@@ -108,10 +129,37 @@ export default {
           _self.instance.errorHandler(e);
         });
     });
+    EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
+      _self.title = 'Message Signed';
+      _self.instance
+        .signMessage(msg)
+        .then(res => {
+          const result = Buffer.from(res).toString('hex');
+          _self.signature = JSON.stringify(
+            {
+              address: _self.address,
+              msg: msg,
+              sig: result,
+              version: '3',
+              signer: _self.isHardware ? _self.identifier : 'MEW'
+            },
+            null,
+            2
+          );
+          _self.signedMessage = result;
+          resolver(result);
+          _self.showSignOverlay = true;
+        })
+        .catch(e => {
+          this.overlayClose();
+          _self.instance.errorHandler(e);
+        });
+    });
   },
   methods: {
     overlayClose() {
       this.showOverlay = false;
+      this.showSignOverlay = false;
     },
     parseRawData(tx) {
       let tokenData = '';

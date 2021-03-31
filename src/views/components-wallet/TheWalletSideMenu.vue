@@ -269,12 +269,12 @@ export default {
           icon: message,
           children: [
             {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: 'DeployContract' }
-            },
-            {
               title: this.$t('interface.menu.sign-message'),
               route: { name: 'SignMessage' }
+            },
+            {
+              title: this.$t('interface.menu.verify-message'),
+              route: { name: 'verifyMessage' }
             }
           ]
         }
