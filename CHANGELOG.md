@@ -3,6 +3,9 @@
 ### Devop
 
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
+* Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
+* Fix acceass wallet button font size [#2943](https://github.com/MyEtherWallet/MyEtherWallet/pull/2943)
+* Update side menu [#2949](https://github.com/MyEtherWallet/MyEtherWallet/pull/2949)
 * Add MEWconnect [#2934](https://github.com/MyEtherWallet/MyEtherWallet/pull/2934)
 * Fix send and sign tx [#2929](https://github.com/MyEtherWallet/MyEtherWallet/pull/2929)
 * Merge UI fixes [#2916](https://github.com/MyEtherWallet/MyEtherWallet/pull/2916)

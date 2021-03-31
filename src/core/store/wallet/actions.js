@@ -5,6 +5,7 @@ import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import BigNumber from 'bignumber.js';
+import EventNames from '@/utils/web3-provider/events';
 
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
@@ -93,7 +94,7 @@ const setWeb3Instance = function (
         resolve(promises);
       };
       EventBus.$emit(
-        'showTxCollectionConfirmModal',
+        EventNames.SHOW_BATCH_TX_MODAL,
         arr,
         batchSignCallback,
         state.instance.isHardware
