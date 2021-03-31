@@ -11,7 +11,7 @@
     <welcome-modal ref="welcome" />
     <welcome-modal-temp ref="welcomeTemp" />
     <router-view />
-    <footer-container />
+    <footer-container v-if="!on" />
     <wallet-launched-footer-banner v-if="!on" />
     <confirmation-container v-if="wallet !== null" />
   </div>
