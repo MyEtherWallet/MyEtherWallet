@@ -1,4 +1,6 @@
 import akaremote from './aka-remote';
+import aquaconical from './aqua-conical';
+import aquainfo from './aqua-info';
 import ath from './ath';
 import avax from './avax-c-mainnet';
 import avaxtest from './avax-c-testnet';
@@ -63,6 +65,8 @@ import xdai from './xdai';
 
 export {
   akaremote,
+  aquaconical,
+  aquainfo,
   ath,
   avax,
   avaxtest,
