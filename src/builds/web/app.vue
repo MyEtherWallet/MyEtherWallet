@@ -9,6 +9,7 @@
       "
     />
     <welcome-modal ref="welcome" />
+    <welcome-modal-temp ref="welcomeTemp" />
     <router-view />
     <footer-container />
     <wallet-launched-footer-banner v-if="!on" />
@@ -21,6 +22,7 @@ import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import WelcomeModal from '@/components/WelcomeModal';
+import WelcomeModalTemp from '@/layouts/HomeLayout/components/WelcomeModal';
 import store from 'store';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
@@ -30,6 +32,7 @@ import WalletLaunchedBanner from '@/components/WalletLaunchedBanner';
 export default {
   name: 'App',
   components: {
+    WelcomeModalTemp,
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer,
@@ -54,11 +57,6 @@ export default {
       ) {
         this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
       }
-    },
-    on(newVal) {
-      if (newVal === false) {
-        this.showWelcome();
-      }
     }
   },
   created() {
@@ -80,6 +78,7 @@ export default {
     window.addEventListener('TURN_OFF', () => {
       this.on = false;
       store.set('taskDone', true);
+      this.$refs.welcomeTemp.$refs.welcome.show();
     });
   },
   mounted() {
