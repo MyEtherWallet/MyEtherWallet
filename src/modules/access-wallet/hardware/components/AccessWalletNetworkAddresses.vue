@@ -52,10 +52,10 @@
                     -->
                   <v-row dense class="table-header">
                     <v-col offset="2">
-                      <p class="">{{$t('common.addr')}}</p>
+                      <p class="">{{ $t('common.addr') }}</p>
                     </v-col>
                     <v-col cols="4" sm="3">
-                      <p>ETH {{$t('common.string.string')}}</p>
+                      <p>ETH {{ $t('common.string.string') }}</p>
                     </v-col>
                   </v-row>
                   <!--
