@@ -52,10 +52,10 @@
                     -->
                   <v-row dense class="table-header">
                     <v-col offset="2">
-                      <p class="">Adddress</p>
+                      <p class="">{{$t('common.addr')}}</p>
                     </v-col>
                     <v-col cols="4" sm="3">
-                      <p>ETH Balance</p>
+                      <p>ETH {{$t('common.string.string')}}</p>
                     </v-col>
                   </v-row>
                   <!--
@@ -124,7 +124,7 @@
                 <v-row align="center" justify="center">
                   <div>
                     <mew-button
-                      title="Previous"
+                      :title="$t('access-wallet.previous')"
                       color-theme="basic"
                       icon="mdi-chevron-left"
                       icon-type="mdi"
@@ -134,7 +134,7 @@
                       @click.native="previousAddressSet"
                     />
                     <mew-button
-                      title="Next"
+                      :title="$t('access-wallet.next')"
                       color-theme="basic"
                       icon="mdi-chevron-right"
                       icon-type="mdi"
@@ -150,7 +150,7 @@
           </mew-expand-panel>
           <div class="d-flex align-center flex-column">
             <mew-button
-              title="Access My Wallet"
+              :title="$t('access-wallet.access-my-wallet')"
               btn-size="large"
               :disabled="!(selectedAddress && acceptTerms)"
               @click.native="
@@ -161,7 +161,7 @@
             />
             <mew-checkbox
               v-model="acceptTerms"
-              label="To access my wallet, I accept "
+              :label="$t('access-wallet.accept-terms')"
               :link="link"
               class="justify-center"
             />
