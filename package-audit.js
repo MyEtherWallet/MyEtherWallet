@@ -8,7 +8,8 @@ const AUDIT_EXCEPTIONS = [
   'serialize-javascript',
   'bl',
   'cryptiles',
-  'axios'
+  'axios',
+  'y18n'
 ];
 
 const execute = (command, callback) => {

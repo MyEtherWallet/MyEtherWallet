@@ -3,5 +3,6 @@ export default {
   SHOW_TX_CONFIRM_MODAL: 'showTxConfirmModal',
   SHOW_MSG_CONFIRM_MODAL: 'showMessageConfirmModal',
   SHOW_TX_SIGN_MODAL: 'showTxSignModal',
-  CONFIRMED_TX: 'confirmedTx'
+  CONFIRMED_TX: 'confirmedTx',
+  SHOW_BATCH_TX_MODAL: 'showTxCollectionConfirmModal'
 };
