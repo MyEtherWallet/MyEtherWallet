@@ -22,53 +22,32 @@
             is-block
           >
             <template #tabContent1>
-              <img
-                class="pt-7 pb-3 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-send-page.png')"
-                alt="Send"
-              />
+              <home-features-send class="mt-16 mb-10" />
             </template>
             <template #tabContent2>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-swap-page.png')"
-                alt="Swap"
-              />
+              <home-features-swap class="mt-16 mb-10" />
             </template>
             <template #tabContent3>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-dapps-page.png')"
-                alt="Dapps"
-              />
+              <home-features-dapps class="mt-16 mb-10" />
             </template>
             <template #tabContent4>
-              <img
-                class="pt-7 tab-image-content"
-                :src="require('@/assets/images/backgrounds/bg-tokens-page.png')"
-                alt="tokens"
-              />
+              <home-features-tokens class="mt-16 mb-10" />
             </template>
           </mew-tabs>
         </v-container>
       </div>
     </div>
+
     <div class="mobile-content d-block d-lg-none">
       <div class="py-7" />
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <v-sheet
-            color="transparent"
-            max-width="400px"
-            class="mx-auto text-center mb-9"
-          >
-            <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
-              Features
-            </h5>
-            <h1 class="font-weight--700">
-              All-in-one gateway to your Ethereum Blockchain service
-            </h1>
-          </v-sheet>
+          <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
+            Features
+          </h5>
+          <h1 class="font-weight--700 mb-10">
+            All-in-one gateway to your Ethereum Blockchain service
+          </h1>
 
           <v-tabs v-model="mobileTab" fixed-tabs>
             <v-tab v-for="item in mobileItems" :key="item.tab">
@@ -77,8 +56,13 @@
           </v-tabs>
 
           <v-tabs-items v-model="mobileTab">
-            <v-tab-item v-for="item in mobileItems" :key="item.tab">
-              <img class="tab-image mx-n10" :src="item.img" :alt="item.tab" />
+            <v-tab-item v-for="item in mewTabs" :key="item.tab">
+              <div class="mt-10 mb-5">
+                <home-features-send v-if="item.name === 'Send'" />
+                <home-features-swap v-if="item.name === 'Swap'" />
+                <home-features-dapps v-if="item.name === 'Dapps'" />
+                <home-features-tokens v-if="item.name === 'Tokens'" />
+              </div>
             </v-tab-item>
           </v-tabs-items>
         </v-sheet>
@@ -89,9 +73,19 @@
 </template>
 
 <script>
+import HomeFeaturesSend from './HomeFeaturesSend';
+import HomeFeaturesSwap from './HomeFeaturesSwap';
+import HomeFeaturesDapps from './HomeFeaturesDapps';
+import HomeFeaturesTokens from './HomeFeaturesTokens';
+
 export default {
   name: 'HomeFeatures',
-  components: {},
+  components: {
+    HomeFeaturesSend,
+    HomeFeaturesSwap,
+    HomeFeaturesDapps,
+    HomeFeaturesTokens
+  },
   data: () => ({
     mobileTab: null,
     mobileItems: [
@@ -192,11 +186,14 @@ export default {
     }
 
     .v-window-item {
-      height: 125vw;
-      max-height: 680px;
+      //height: 125vw;
+      //max-height: 680px;
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+    .v-window {
+      overflow: visible;
     }
   }
 }
