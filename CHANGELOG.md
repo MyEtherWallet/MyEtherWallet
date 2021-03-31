@@ -1,6 +1,8 @@
 ### Devop
 
+
 * Update component [#2946](https://github.com/MyEtherWallet/MyEtherWallet/pull/2946)
+* Add affiliate link for alchemy [#2940](https://github.com/MyEtherWallet/MyEtherWallet/pull/2940)
 
 ### Release v5.7.25
 
