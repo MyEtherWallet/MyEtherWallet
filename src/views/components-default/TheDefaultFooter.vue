@@ -358,7 +358,9 @@ export default {
             label: 'Verify message',
             routerLink: 'Tools',
             query: { tool: 'verify' }
-          },
+          }
+          /*
+          ,
           {
             label: 'Send offline help',
             routerLink: 'Tools',
@@ -379,6 +381,7 @@ export default {
             routerLink: 'Tools',
             query: { tool: 'convert' }
           }
+          */
         ]
       }
     ],
