@@ -37,13 +37,14 @@
                 @input="setFromToken" />
 
               <mew-input
-                label="you'll swap"
-                placeholder=""
+                label="amount to swap"
+                placeholder="Enter amount to swap"
                 :value="tokenInValue"
                 type="number"
                 :hint="availableBalanceHint"
                 :persistent-hint="true"
-                :rules="fromAmountRulles"
+                :error-messages="amountErrorMessage"
+                :disabled="initialLoad"
                 @input="setTokenInValue"
             /></v-col>
 
@@ -96,7 +97,11 @@
              Swap Fee
             =====================================================================================
           -->
-          <swap-fee :show-fee="showSwapFee" :getting-fee="loadingFee">
+          <swap-fee
+            v-if="!hasAmountErrors"
+            :show-fee="showSwapFee"
+            :getting-fee="loadingFee"
+          >
             <template slot="fee">
               <mew-expand-panel
                 is-toggle
@@ -152,7 +157,6 @@ import BigNumber from 'bignumber.js';
 import { roundNumber } from './handlers/helpers';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
-const AMT = '0.1';
 export default {
   name: 'ModuleSwap',
   components: {
@@ -172,7 +176,7 @@ export default {
     },
     amount: {
       type: String,
-      default: AMT
+      default: ''
     }
   },
   data() {
@@ -195,10 +199,6 @@ export default {
       tokenOutValue: null,
       availableTokens: [],
       availableQuotes: [],
-      fromAmountRulles: [
-        this.validateBalanceAndFrom,
-        value => !!value || 'field is required'
-      ],
       currentTrade: null,
       allTrades: [],
       isLoading: false,
@@ -211,20 +211,20 @@ export default {
           name: 'Transaction Fee',
           subtext: '$0.00',
           tooltip:
-            'Transaction fee is automatically caculated. If you want to customize the Transaction fee, you can do it from here.'
+            'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
         }
       ],
       swapIcon: SwapIcon,
       fromTokens: [],
       toTokens: [],
-      providersMessage: '',
+      providersMessage: 'Loading Tokens Data',
       addressValue: {}
     };
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },
@@ -253,7 +253,7 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (this.fromTokenType.value) {
+      if (!this.initialLoad && this.fromTokenType.value) {
         let balance = this.balanceInETH.toString();
         if (this.fromTokenType.value !== 'Ethereum') {
           const hasBalance = this.tokensList.find(
@@ -271,7 +271,7 @@ export default {
      * Amount is rounded
      */
     availableBalanceHint() {
-      if (this.fromTokenType.value) {
+      if (!this.initialLoad && this.fromTokenType.value) {
         return `available: ${roundNumber(this.availableBalance)} ${
           this.fromTokenType.symbol
         }`;
@@ -292,6 +292,44 @@ export default {
      */
     loadingFee() {
       return this.step === 1;
+    },
+
+    /**
+     * Return true Input Amount Error or input is empty
+     * Used to determine whether or not to fetch provider's list and show transaction fee
+     */
+    hasAmountErrors() {
+      return (
+        !this.tokenInValue ||
+        this.amountErrorMessage !== '' ||
+        this.tokenInValue === ''
+      );
+    },
+    /**
+     * Method validates input for the From token amount against user input
+     * Used to show error messages for the amount input component
+     */
+    amountErrorMessage() {
+      if (
+        !this.initialLoad &&
+        !this.isLoading &&
+        this.tokenInValue &&
+        this.tokenInValue !== ''
+      ) {
+        if (this.availableBalance.lte(0)) {
+          return this.fromTokenType.value === 'Ethereum'
+            ? 'your ETH balance is 0'
+            : 'you do not own this token';
+        }
+        if (new BigNumber(this.tokenInValue).eq(0)) {
+          return `swap amount must be greater than 0`;
+        }
+        if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+          return `your balance is lower (${this.availableBalanceHint})`;
+        }
+        return '';
+      }
+      return '';
     }
   },
   watch: {
@@ -364,11 +402,16 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: utils._.debounce(function (value) {
-      if (!value || this.isLoading) return;
+      if (this.isLoading || this.initialLoad) return;
+      this.tokenInValue = value;
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-      this.tokenInValue = value;
+      if (!value || this.hasAmountErrors) {
+        this.providersMessage =
+          'Change your amount or token pair to see providers and proceed with Swap';
+        return;
+      }
       this.providersMessage = '';
       this.swapper
         .getAllQuotes({
@@ -456,20 +499,6 @@ export default {
     executeTrade() {
       this.confirmInfo.show = false;
       this.swapper.executeTrade(this.currentTrade);
-    },
-    /**
-     * Method validates input for the From token amount against user input
-     */
-    validateBalanceAndFrom(value) {
-      if (this.availableBalance.lte(0)) {
-        return this.fromTokenType.value === 'Ethereum'
-          ? 'your ETH balance is 0'
-          : 'you do not own this token';
-      }
-      if (this.availableBalance.lt(new BigNumber(value))) {
-        return `your balance is low (${this.availableBalanceHint})`;
-      }
-      return true;
     }
   }
 };

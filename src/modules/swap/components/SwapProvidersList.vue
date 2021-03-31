@@ -27,7 +27,18 @@
       Providers Message
     =====================================================================================
     -->
-    <p v-if="step == 0 && message != ''">{{ message }}</p>
+    <v-row v-if="step == 0 && message != ''">
+      <v-col cols="12" class="mb-n3">
+        <v-card
+          flat
+          color="selectorBg lighten-1"
+          class="d-flex align-center px-5 py-4"
+          min-height="94px"
+        >
+          <v-card-text class="text-center">{{ message }} </v-card-text>
+        </v-card>
+      </v-col></v-row
+    >
     <!--
     =====================================================================================
       Provider Rate Row
