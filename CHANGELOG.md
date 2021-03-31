@@ -2,6 +2,12 @@
 
 - fix send offline data issue with BSC [#2941](https://github.com/MyEtherWallet/MyEtherWallet/pull/2941)
 
+### Devop
+
+- Add affiliate link for alchemy [#2940](https://github.com/MyEtherWallet/MyEtherWallet/pull/2940)
+
+* Add Aqua node [#2942](https://github.com/MyEtherWallet/MyEtherWallet/pull/2942)
+
 ### Release v5.7.25
 
 ### Bug

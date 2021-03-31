@@ -17,6 +17,15 @@ const affiliates = [
     logo: ''
   },
   {
+    text: 'footer.alchemy',
+    price: '',
+    description: '',
+    href:
+      'https://alchemyapi.io/?referral=1a26b6d7-f8bb-4554-b878-a5f87d6e4d78',
+    currency: '',
+    logo: ''
+  },
+  {
     text: 'footer.bity',
     price: '',
     description: '',
