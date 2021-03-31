@@ -29,6 +29,7 @@
         <v-sheet color="transparent" max-width="650px" class="mx-auto">
           <div v-for="btn in buttons" :key="btn.title" class="mb-5">
             <mew-super-button
+              font-class="mew-heading-1"
               :color-theme="btn.color"
               :title="btn.title"
               :subtitle="btn.subtitle"

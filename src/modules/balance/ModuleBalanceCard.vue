@@ -50,6 +50,7 @@
           </v-btn>
         </div>
         <v-btn
+          v-if="false"
           outlined
           small
           color="white"
