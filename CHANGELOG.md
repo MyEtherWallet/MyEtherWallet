@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Update side menu [#2949](https://github.com/MyEtherWallet/MyEtherWallet/pull/2949)
 * Add MEWconnect [#2934](https://github.com/MyEtherWallet/MyEtherWallet/pull/2934)
 * Fix send and sign tx [#2929](https://github.com/MyEtherWallet/MyEtherWallet/pull/2929)
 * Fix get started block [#2924](https://github.com/MyEtherWallet/MyEtherWallet/pull/2924)
