@@ -1,9 +1,10 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
+  'y18n',
   'decompress',
   'http-proxy',
-  'y18n',
+  'findings',
   'elliptic',
   'dot-prop',
   'serialize-javascript',
