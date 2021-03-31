@@ -25,7 +25,7 @@ const SET_WALLET = function (state, wallet) {
 const SET_BALANCE = function (state, balance) {
   state.balance = balance;
   if (state.initialLoadBalance) {
-    state.initialLoadBalance = false
+    state.initialLoadBalance = false;
   }
 };
 
@@ -44,10 +44,9 @@ const SET_OWNED_DOMAINS = function (state, ensDomains) {
 const SET_TOKENS = function (state, tokens) {
   state.tokens = tokens;
   if (state.initialLoadTokens) {
-    state.initialLoadTokens = false
+    state.initialLoadTokens = false;
   }
 };
-
 
 export default {
   REMOVE_WALLET,
