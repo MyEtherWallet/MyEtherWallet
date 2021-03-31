@@ -520,7 +520,6 @@ export default {
     },
     keepkeyUnlock() {
       EventBus.$on('showHardwarePinMatrix', callback => {
-        console.log('showHardwarePinMatrix'); // todo remove dev item
         this.step += 1;
         this.enterPin = true;
         this.callback = callback;
@@ -645,7 +644,6 @@ export default {
       this.pin = '';
     },
     keepKeyPinEnter(pin) {
-      console.log('pin', pin); // todo remove dev item
       this.callback(pin);
       this.enterPin = false;
       this.step += 1;
@@ -685,7 +683,6 @@ export default {
             tokens: 'Loading..'
           });
         }
-        console.log(this.accounts); // todo remove dev item
         this.addressPage += 1;
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
