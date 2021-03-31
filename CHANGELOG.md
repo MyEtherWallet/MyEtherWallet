@@ -2,11 +2,13 @@
 
 ### Devop
 
+* Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
 * Fix acceass wallet button font size [#2943](https://github.com/MyEtherWallet/MyEtherWallet/pull/2943)
 * Update side menu [#2949](https://github.com/MyEtherWallet/MyEtherWallet/pull/2949)
 * Add MEWconnect [#2934](https://github.com/MyEtherWallet/MyEtherWallet/pull/2934)
 * Fix send and sign tx [#2929](https://github.com/MyEtherWallet/MyEtherWallet/pull/2929)
+* Fix get started block [#2924](https://github.com/MyEtherWallet/MyEtherWallet/pull/2924)
 * Merge UI fixes [#2916](https://github.com/MyEtherWallet/MyEtherWallet/pull/2916)
 * Fix create wallet nnemonic layout [#2912](https://github.com/MyEtherWallet/MyEtherWallet/pull/2912)
 * Fix create wallet keystore layout [#2911](https://github.com/MyEtherWallet/MyEtherWallet/pull/2911)
