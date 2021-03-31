@@ -98,7 +98,7 @@ const setWeb3Instance = function (
         EventNames.SHOW_BATCH_TX_MODAL,
         arr,
         batchSignCallback,
-        state.instance.isHardware
+        state.isHardware
       );
     });
   };

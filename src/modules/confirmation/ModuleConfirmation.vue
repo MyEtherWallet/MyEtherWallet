@@ -31,7 +31,7 @@
       :close="overlayClose"
     >
       <template #mewOverlayBody>
-        <confirmation-messsage v-if="true" :msg="signature" />
+        <confirmation-messsage :msg="signature" />
       </template>
     </mew-overlay>
     <mew-overlay
@@ -41,7 +41,10 @@
       :close="overlayClose"
     >
       <template #mewOverlayBody>
-        <confirmation-messsage v-if="true" :msg="signature" />
+        <confirmation-batch-transaction
+          :transactions="unsignedTxArr"
+          :send="sendBatchTransaction"
+        />
       </template>
     </mew-overlay>
   </div>
@@ -52,6 +55,7 @@ import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
+import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -59,11 +63,15 @@ import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
+import { setEvents } from '@/utils/web3-provider/methods/utils.js';
+import * as locStore from 'store';
+import { sanitizeHex } from '@/modules/wallets/utils/utils.js';
 export default {
   name: 'ConfirmationContainer',
   components: {
     ConfirmationTransaction,
-    ConfirmationMesssage
+    ConfirmationMesssage,
+    ConfirmationBatchTransaction
   },
   data() {
     return {
@@ -146,25 +154,26 @@ export default {
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
+        console.log(arr, resolver, isHardware);
         _self.isHardwareWallet = isHardware;
         const signed = [];
-        _self.unsignedTx = arr;
+        _self.unsignedTxArr = arr;
         if (resolver) resolver = () => {};
         _self.resolver = resolver;
-        _self.showBatcjOverlay = true;
+        _self.showBatchOverlay = true;
 
-        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        if (_self.identifier !== WALLET_TYPES.WEB3_WALLET) {
           for (let i = 0; i < arr.length; i++) {
             try {
-              const _signedTx = await this.instance.signTransaction(arr[i]);
+              const _signedTx = await _self.instance.signTransaction(arr[i]);
               signed.push(_signedTx);
             } catch (err) {
-              this.instance.errorHandler(err);
+              _self.instance.errorHandler(err);
             }
           }
-          this.signedArray = signed;
+          _self.signedTxArray = signed;
         } else {
-          this.signedArray = this.unSignedArray.map(_tx => {
+          _self.signedTxArray = _self.unsignedTxArr.map(_tx => {
             return { tx: _tx, rawTransaction: _tx };
           });
         }
@@ -225,6 +234,34 @@ export default {
       tx.type = 'OUT';
       tx.network = this.network.type.name;
       tx.transactionFee = this.txFee;
+    },
+    sendBatchTransaction() {
+      this.$refs.confirmCollectionModal.$refs.confirmCollection.hide();
+      const web3 = this.web3;
+      const _method =
+        this.identifier === WALLET_TYPES.WEB3_WALLET
+          ? 'sendTransaction'
+          : 'sendSignedTransaction';
+      const _arr = this.signedArray;
+      const promises = _arr.map(tx => {
+        const _tx = tx.tx;
+        _tx.from = this.address;
+        const _rawTx = tx.rawTransaction;
+        const promiEvent = web3.eth[_method](_rawTx);
+        setEvents(promiEvent, tx, this.$store.dispatch);
+        promiEvent.once('transactionHash', () => {
+          const localStoredObj = locStore.get(
+            web3.utils.sha3(this.account.address)
+          );
+          locStore.set(web3.utils.sha3(this.account.address), {
+            nonce: sanitizeHex(
+              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+            ),
+            timestamp: localStoredObj.timestamp
+          });
+        });
+      });
+      this.resolver(promises);
     },
     send() {
       this.resolver(this.signedTxObject);
