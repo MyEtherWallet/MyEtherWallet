@@ -30,6 +30,7 @@
             </div>
             <div class="d-flex align-start">
               <mew-input
+                :error-messages="domainTaken ? $t('ens.domain-taken') : null"
                 :value="name"
                 :has-clear-btn="true"
                 :rules="rules"
@@ -39,7 +40,8 @@
                 @input="setName"
               />
               <mew-button
-                :disabled="name.length <= 0"
+                :loading="loading"
+                :disabled="(name && name.length === 0) || loading"
                 :has-full-width="false"
                 btn-size="xlarge"
                 :title="$t('ens.register-domain')"
@@ -187,8 +189,7 @@
       :commit="commit"
       :name="nameHandler.name"
       :parsed-host-name="nameHandler.parsedHostName"
-      :is-available="nameHandler.isAvailable"
-      :checking-domain-avail="nameHandler.checkingDomainAvail"
+      :checking-domain-avail="loading"
       :generate-key-phrase="generateKeyPhrase"
       :get-rent-price="getRentPrice"
     />
@@ -233,6 +234,7 @@ export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
     return {
+      nameNull: false,
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -282,8 +284,10 @@ export default {
     ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [
-        this.name.length > 2 || this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
+        (this.name && this.name.length > 2) ||
+          this.$t('ens.warning.not-enough-char'),
+        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
+        !this.domainTaken || this.$t('ens.domain-taken')
       ];
     },
     hasInvalidChars() {
@@ -295,6 +299,30 @@ export default {
     },
     balanceToWei() {
       return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
+    },
+    loading() {
+      return this.nameHandler.checkingDomainAvail;
+    },
+    ensDomainAvailable() {
+      return this.nameHandler.isAvailable;
+    },
+    isNameEmpty() {
+      return this.name === null || this.name === '';
+    },
+    domainTaken() {
+      return (
+        !this.isNameEmpty &&
+        !this.loading &&
+        !this.ensDomainAvailable &&
+        Object.keys(this.nameHandler).length !== 0
+      );
+    }
+  },
+  watch: {
+    ensDomainAvailable(newVal) {
+      if (newVal === true) {
+        this.onRegister = true;
+      }
     }
   },
   mounted() {
@@ -428,7 +456,6 @@ export default {
         .searchName(name)
         .then(res => {
           this.nameHandler = res;
-          this.onRegister = true;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
@@ -442,6 +469,9 @@ export default {
       this.$refs.registerDomain.reset();
     },
     setName(name) {
+      if (this.name === null || this.name === '') {
+        this.nameHandler = {};
+      }
       this.name = name;
     },
     register() {
