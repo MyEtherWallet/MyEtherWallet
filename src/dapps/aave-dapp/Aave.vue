@@ -8,7 +8,11 @@
       :active-tab="activeTab"
     >
       <template #tabContent1>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
+        <v-sheet
+          color="transparent"
+          max-width="724px"
+          class="mx-auto py-6 px-5 px-md-3"
+        >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
             <div
@@ -21,7 +25,7 @@
             <mew-tooltip text="Health factor" />
           </div>
           <v-row class="mb-1 mt-2">
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6" class="pa-1">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
@@ -61,7 +65,7 @@
                 />
               </div>
             </v-col>
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6" class="pa-1">
               <div class="tableHeader pa-5 border-radius--5px height-100">
                 <v-row>
                   <v-col cols="7">
@@ -111,7 +115,11 @@
         </v-sheet>
       </template>
       <template #tabContent2>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
+        <v-sheet
+          color="transparent"
+          max-width="724px"
+          class="mx-auto py-6 px-5 px-md-3"
+        >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
             <div
@@ -125,7 +133,7 @@
           </div>
 
           <v-row class="mb-1 mt-2">
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6" class="pa-1">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
@@ -165,7 +173,7 @@
                 />
               </div>
             </v-col>
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6" class="pa-1">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
