@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix token list stuck loading when no token balance [#2962](https://github.com/MyEtherWallet/MyEtherWallet/pull/2962)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
