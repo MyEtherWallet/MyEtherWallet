@@ -266,7 +266,9 @@ export default {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
           );
-          return new BigNumber(hasBalance || '0');
+          return hasBalance && hasBalance.balance && hasBalance.decimals
+            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+            : new BigNumber(0);
         }
         return BigNumber.max(
           new BigNumber(this.balanceInETH).minus(fromWei(MIN_GAS_WEI)),
@@ -412,6 +414,9 @@ export default {
     setTokenInValue: utils._.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value;
+      this.availableQuotes.forEach(q => {
+        q.isSelected = false;
+      });
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
@@ -524,6 +529,11 @@ export default {
     executeTrade() {
       this.confirmInfo.show = false;
       this.swapper.executeTrade(this.currentTrade);
+    },
+    getTokenBalance(balance, decimals) {
+      return new BigNumber(balance.toString()).div(
+        new BigNumber(10).pow(decimals)
+      );
     }
   }
 };
