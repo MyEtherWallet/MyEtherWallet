@@ -197,6 +197,7 @@ import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -269,10 +270,6 @@ export default {
           icon: message,
           children: [
             {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: 'DeployContract' }
-            },
-            {
               title: this.$t('interface.menu.sign-message'),
               route: { name: 'SignMessage' }
             },
@@ -298,6 +295,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('wallet', ['removeWallet']),
     openNavigation() {
       this.navOpen = true;
     },
@@ -307,7 +305,9 @@ export default {
     onLogout(res) {
       this.showLogoutPopup = false;
       if (res.title === this.logout.btnRight.title) {
-        this.$router.push({ name: 'Home' });
+        this.removeWallet().then(() => {
+          this.$router.push({ name: 'Home' });
+        });
       }
     },
     toggleLogout() {

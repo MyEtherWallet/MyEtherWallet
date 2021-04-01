@@ -9,9 +9,8 @@ import Web3Contract from 'web3-eth-contract';
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
-    Object.assign(this, mapState('global', ['gasPrice']));
     Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    Object.assign(this, mapGetters('global', ['network']));
+    Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
     this.currency = null;
     this.TX = {
       from: '0x',

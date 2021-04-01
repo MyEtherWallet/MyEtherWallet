@@ -4,10 +4,10 @@ const SET_BLOCK_NUMBER = function (state, blockNumber) {
 
 const REMOVE_WALLET = function (state) {
   state.instance = null;
-  this.balance = 0;
-  this.address = null;
-  this.isHardWare = null;
-  this.identifier = '';
+  state.balance = 0;
+  state.address = null;
+  state.isHardWare = null;
+  state.identifier = '';
   state.initialLoadTokens = true;
   state.initialLoadBalance = true;
 };

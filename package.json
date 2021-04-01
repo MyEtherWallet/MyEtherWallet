@@ -34,12 +34,12 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.56-beta",
+    "@myetherwallet/mew-components": "0.5.57-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.8",
     "@sentry/browser": "6.2.3",
     "@sentry/integrations": "6.2.3",
-    "@sentry/tracing": "6.2.3",
     "@sentry/vue": "6.2.3",
+    "@sentry/tracing": "6.2.3",
     "@unstoppabledomains/resolution": "2.1.1",
     "@vue/babel-preset-app": "4.5.12",
     "@walletconnect/browser": "1.0.0",
@@ -112,7 +112,7 @@
     "ethjs-unit": "0.1.6",
     "ganache-core": "2.13.2",
     "hdkey": "2.0.1",
-    "husky": "^5.0.9",
+    "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "is-ipfs": "4.0.0",
@@ -159,10 +159,10 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "handlebars": "^4.5.3",
-    "axios": "^0.21.1",
-    "node-fetch": "^2.6.1",
-    "cryptiles": "^4.1.2"
+    "handlebars": "4.5.3",
+    "axios": "0.21.1",
+    "node-fetch": "2.6.1",
+    "cryptiles": "4.1.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
