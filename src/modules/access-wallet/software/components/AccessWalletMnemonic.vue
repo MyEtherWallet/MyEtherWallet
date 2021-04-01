@@ -659,6 +659,7 @@ export default {
         const account = await this.handlerAccessWallet
           .getWalletInstance()
           .getAccount(i);
+        console.error("account", account)
         this.accounts.push({
           address: account.getAddressString(),
           account: account,
