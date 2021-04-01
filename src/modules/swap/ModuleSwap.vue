@@ -153,7 +153,7 @@ import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
 import Swapper from './handlers/handlerSwap';
-import utils, { toBN, fromWei, toWei, _ } from 'web3-utils';
+import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
