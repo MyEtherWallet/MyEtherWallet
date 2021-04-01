@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="overlay-content pa-8">
+  <v-sheet class="overlay-content pa-5">
     <div class="text-center mb-8">
       <img :src="icon" alt="Network Icon" height="60" />
     </div>
