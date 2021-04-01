@@ -112,7 +112,11 @@ export default {
       return utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei');
     },
     gasLimit() {
-      const gasLimit = this.tx.gasLimit ? this.tx.gasLimit : '0x';
+      const gasLimit = this.tx.gasLimit
+        ? this.tx.gasLimit
+        : this.tx.gas
+        ? this.tx.gas
+        : '0x';
       return utils.hexToNumberString(gasLimit);
     },
     nonce() {
@@ -139,6 +143,7 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
+      console.log(tx);
       _self.instance
         .signTransaction(tx)
         .then(res => {

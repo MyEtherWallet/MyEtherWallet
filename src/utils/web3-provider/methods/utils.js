@@ -38,6 +38,7 @@ const setEvents = (promiObj, tx, dispatch) => {
   delete newTxObj['chainId'];
   delete newTxObj['input'];
   delete newTxObj['hash'];
+  delete newTxObj['__typename'];
 
   promiObj
     .once('transactionHash', hash => {
