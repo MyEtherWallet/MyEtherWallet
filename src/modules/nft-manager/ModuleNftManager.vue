@@ -23,11 +23,27 @@
         />
         <!--
     =====================================================================================
+     Display if no nfts owned
+    =====================================================================================
+    -->
+        <v-card
+          v-if="initLoaded && contracts.length === 0 && tabs.length === 0"
+          flat
+          color="selectorBg lighten-1"
+          class="d-flex align-center px-5 py-4"
+          min-height="94px"
+        >
+          <v-card-text class="text-center"
+            >{{ $t('nftManager.none-owned') }}
+          </v-card-text>
+        </v-card>
+        <!--
+    =====================================================================================
       Display owned nft tokens
     =====================================================================================
     -->
         <mew-tabs
-          v-if="initLoaded && !onNftSend"
+          v-if="initLoaded && !onNftSend && tabs.length > 0"
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
@@ -212,14 +228,21 @@ export default {
       web3: this.web3,
       apollo: this.$apollo
     });
-    this.nft.init().then(() => {
-      this.initLoaded = true;
-      this.contracts = this.nft.getAvailableContracts();
-      this.tabs = this.contracts.map(item => {
-        return { name: `${item.name} (${item.count})` };
+    this.nft
+      .init()
+      .then(() => {
+        this.initLoaded = true;
+        this.contracts = this.nft.getAvailableContracts();
+        this.tabs = this.contracts.map(item => {
+          return { name: `${item.name} (${item.count})` };
+        });
+        this.onTab(0);
+      })
+      .catch(e => {
+        e === this.$t('nftManager.none-owned')
+          ? (this.initLoaded = true)
+          : Toast(e.message, {}, ERROR);
       });
-      this.onTab(0);
-    });
   },
   methods: {
     toggleNftSend() {
