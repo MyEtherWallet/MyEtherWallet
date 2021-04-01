@@ -9,16 +9,16 @@
           min-height="94px"
         >
           <v-card-text
-            v-if="!gettingFee || error"
-            :class="[error ? 'error--text' : '', 'text-center']"
+            v-if="!gettingFee || hasError"
+            :class="[hasError ? 'error--text' : '', 'text-center']"
           >
             {{ message }}
           </v-card-text>
-          <v-card-text v-if="gettingFee && !error">
+          <v-card-text v-if="gettingFee && !hasError">
             Loading transaction fee.
           </v-card-text>
           <v-skeleton-loader
-            v-if="gettingFee && !error"
+            v-if="gettingFee && !hasError"
             type="chip"
             width="100%"
           />
@@ -42,14 +42,17 @@ export default {
       default: false
     },
     error: {
-      type: Boolean,
-      default: false
+      type: String,
+      default: ''
     }
   },
   computed: {
+    hasError() {
+      return this.error !== '';
+    },
     message() {
-      return this.error
-        ? 'This provider is not available.'
+      return this.hasError
+        ? this.error
         : ' Select provider to load transaction fee and enable Swap.';
     }
   }
