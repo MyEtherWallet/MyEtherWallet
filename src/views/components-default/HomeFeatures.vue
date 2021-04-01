@@ -11,7 +11,7 @@
           Features
         </div>
         <h2 class="font-weight--700 mb-9">
-          All-in-one gateway to your Ethereum Blockchain service
+          Your All-In-One Gateway to the Ethereum Blockchain
         </h2>
       </v-sheet>
       <div class="features-tabs-container">
@@ -46,7 +46,7 @@
             Features
           </h5>
           <h1 class="font-weight--700 mb-10">
-            All-in-one gateway to your Ethereum Blockchain service
+            Your All-In-One Gateway to the Ethereum Blockchain
           </h1>
 
           <v-tabs v-model="mobileTab" fixed-tabs>
