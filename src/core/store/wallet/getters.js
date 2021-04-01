@@ -1,5 +1,6 @@
 import { fromWei, toBN } from 'web3-utils';
 const balanceInETH = function (state) {
+  if (!state.balance) state.balance = '0';
   return fromWei(state.balance);
 };
 
