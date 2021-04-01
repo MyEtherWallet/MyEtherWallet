@@ -28,26 +28,30 @@
             <div class="mew-heading-2 mb-8 ml-2">
               {{ $t('ens.search-domain') }}
             </div>
-            <div class="d-flex align-start">
-              <mew-input
-                :error-messages="domainTaken ? $t('ens.domain-taken') : null"
-                :value="name"
-                :has-clear-btn="true"
-                :rules="rules"
-                :label="$t('ens.register.domain-name')"
-                :placeholder="$t('ens.ph.three-char')"
-                class="mr-3 flex-grow-1"
-                @input="setName"
-              />
-              <mew-button
-                :loading="loading"
-                :disabled="(name && name.length === 0) || loading"
-                :has-full-width="false"
-                btn-size="xlarge"
-                :title="$t('ens.register-domain')"
-                @click.native="findDomain"
-              />
-            </div>
+            <v-row class="mx-0">
+              <v-col class="pr-0" cols="8">
+                <mew-input
+                  :error-messages="domainTaken ? $t('ens.domain-taken') : null"
+                  :value="name"
+                  :has-clear-btn="true"
+                  :rules="rules"
+                  :label="$t('ens.register.domain-name')"
+                  :placeholder="$t('ens.ph.three-char')"
+                  class="mr-3 flex-grow-1"
+                  @input="setName"
+                />
+              </v-col>
+              <v-col class="pl-0" cols="4">
+                <mew-button
+                  :loading="loading"
+                  :disabled="(name && name.length === 0) || loading"
+                  :has-full-width="true"
+                  btn-size="xlarge"
+                  :title="$t('ens.register-domain')"
+                  @click.native="findDomain"
+                />
+              </v-col>
+            </v-row>
           </div>
         </v-sheet>
       </template>
