@@ -234,7 +234,6 @@ export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
     return {
-      nameNull: false,
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -286,8 +285,7 @@ export default {
       return [
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        !this.domainTaken || this.$t('ens.domain-taken')
+        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
       ];
     },
     hasInvalidChars() {
