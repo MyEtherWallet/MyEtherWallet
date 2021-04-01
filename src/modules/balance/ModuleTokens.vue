@@ -97,6 +97,16 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3']),
     tokensData() {
+      if (Array.isArray(this.tokensList)) {
+        // To avoid side effect error
+        const setLoading = () => {
+          this.loading = false;
+          return [];
+        };
+        if (this.tokensList.length === 0) {
+          return setLoading();
+        }
+      }
       return this.tokensList
         .filter(item => {
           if (item.price_change_24h || item.market_cap) {
