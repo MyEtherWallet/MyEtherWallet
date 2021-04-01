@@ -219,7 +219,7 @@
                   Table - Header
                 =====================================================================================
                 -->
-                <v-row dense class="table-header">
+                <v-row dense class="table-header mx-0">
                   <v-col offset="2">
                     <p class="">Adddress</p>
                   </v-col>
@@ -237,7 +237,7 @@
                   v-show="accounts.length > 0"
                   :key="acc.address"
                   dense
-                  class="table-row-class align-center justify-start py-1"
+                  class="table-row-class align-center justify-start py-1 mx-0"
                 >
                   <v-col cols="2" sm="1">
                     <v-radio label="" :value="acc.address" class="mx-2" />
@@ -261,7 +261,6 @@
                       </p>
                       <mew-copy
                         is-small
-                        :copy-ref="acc.address"
                         tooltip="Copy Address"
                         :copy-value="acc.address"
                         class="ml-2"
@@ -284,7 +283,7 @@
                Previous / Next Buttons
               =====================================================================================
               -->
-              <v-row align="center" justify="center">
+              <v-row class="pb-6" align="center" justify="center">
                 <div>
                   <mew-button
                     title="Previous"
@@ -386,6 +385,9 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import { checkCustomPath } from '../handlers/pathHelper';
 import AppBtnRow from '@/core/components/AppBtnRow';
+import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
+import { fromWei } from 'web3-utils';
+
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -416,9 +418,49 @@ export default {
       }
     }
   },
+  apollo: {
+    /**
+     * Apollo query to return eth balance for each account
+     */
+    getEthBalance: {
+      query: getEthBalance,
+      variables() {
+        return {
+          hash: this.accountAddress
+        };
+      },
+      skip() {
+        return this.skipApollo;
+      },
+      result({ data }) {
+        if (data && data.getEthBalance) {
+          if (this.accounts[this.onAccountIndex]) {
+            /**
+             * Sets the balance of the accountAddress
+             */
+            this.accounts[this.onAccountIndex].balance = fromWei(
+              data.getEthBalance.balance
+            );
+            /**
+             * Find the next index and set the address of it to accountAddress
+             */
+            const nextIdx = this.onAccountIndex + 1;
+            if (
+              nextIdx < this.accounts.length &&
+              this.accounts[nextIdx].balance === 'Loading..'
+            ) {
+              this.accountAddress = this.accounts[nextIdx].address;
+            }
+          }
+        }
+      }
+    }
+  },
   data() {
     return {
-      /*Stepper Items */
+      /* Apollo */
+      getEthBalance: '',
+      /* Stepper Items */
       step: 1,
       stepperItems: [
         {
@@ -463,6 +505,7 @@ export default {
       panelNetworkSubstring: '',
       /* Mnemonic Addresses */
       selectedAddress: '',
+      accountAddress: '',
       accounts: [],
       currentIdx: 0,
       addressPage: 0
@@ -471,6 +514,24 @@ export default {
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
     ...mapState('global', ['customPaths']),
+    /**
+     * Property returns the index of the account of the accountAddress
+     */
+    onAccountIndex() {
+      return this.accounts.findIndex(
+        acc => acc.address === this.accountAddress
+      );
+    },
+    /**
+     * Property returns boolean and validates whether or not to skip Apollo GetEthBalance query.
+     */
+    skipApollo() {
+      return (
+        (!this.accountAddress && this.accountAddress === '') ||
+        (this.accounts[this.onAccountIndex] &&
+          this.accounts[this.onAccountIndex].balance !== 'Loading..')
+      );
+    },
     /*------------------------------------
      * STEP 1 ITEMS
     -------------------------------------*/
@@ -659,18 +720,17 @@ export default {
         const account = await this.handlerAccessWallet
           .getWalletInstance()
           .getAccount(i);
-        console.error('account', account);
         this.accounts.push({
           address: account.getAddressString(),
           account: account,
           idx: i,
-          balance: 'Loading..',
-          tokens: 'Loading..'
+          balance: 'Loading..'
         });
       }
       this.currentIdx += MAX_ADDRESSES;
       this.addressPage += 1;
       this.selectedAddress = this.accounts[0].address;
+      this.accountAddress = this.accounts[0].address;
     },
     /**
      * Method unlocks mnemonic phrase;
