@@ -11,17 +11,37 @@
         <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
-            <div class="primary--text font-weight-bold mr-3">
+            <div
+              v-if="!isLoadingData"
+              class="primary--text font-weight-bold mr-3"
+            >
               {{ healthFactor }}
             </div>
+            <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
             <mew-tooltip text="Health factor" />
           </div>
           <v-row class="mb-1 mt-2">
             <v-col cols="6" class="pa-1">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 class="font-weight-bold">$ {{ totalLiquidity.usd }}</h3>
-                <div class="mt-2">{{ totalLiquidity.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalLiquidity.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalLiquidity.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -29,8 +49,15 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="compositionPercentage"
+                />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  type="text"
+                  class="mt-2"
                 />
               </div>
             </v-col>
@@ -87,9 +114,13 @@
         <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
-            <div class="primary--text font-weight-bold mr-3">
+            <div
+              v-if="!isLoadingData"
+              class="primary--text font-weight-bold mr-3"
+            >
               {{ healthFactor }}
             </div>
+            <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
             <mew-tooltip text="Health factor" />
           </div>
 
@@ -97,8 +128,24 @@
             <v-col cols="6" class="pa-1">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
-                <h3 class="font-weight-bold">$ {{ totalBorrow.usd }}</h3>
-                <div class="mt-2">{{ totalBorrow.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalBorrow.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalBorrow.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -106,16 +153,39 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="borrowingsPercentage"
+                />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  type="text"
+                  class="mt-2 mb-0"
                 />
               </div>
             </v-col>
             <v-col cols="6" class="pa-1">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
-                <h3 class="font-weight-bold">$ {{ totalCollateral.usd }}</h3>
-                <div class="mt-2">{{ totalCollateral.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalCollateral.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalCollateral.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -123,8 +193,15 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="collateralPercentage"
+                />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  width="30px"
+                  type="text"
                 />
               </div>
             </v-col>
@@ -138,7 +215,16 @@
               <span class="mew-heading-3">Loan to Value</span>
             </v-col>
             <v-col cols="1">
-              <span class="mew-heading-3">{{ loanValue }}</span>
+              <span v-if="!isLoadingData" class="mew-heading-3">{{
+                loanValue
+              }}</span>
+              <v-skeleton-loader
+                v-else
+                height="19px"
+                width
+                type="text"
+                class="mt-2 mb-0"
+              />
             </v-col>
           </v-row>
           <v-row class="pl-1 pr-1 mt-5">
@@ -264,6 +350,10 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapState('external', ['ETHUSDValue']),
+    isLoadingData() {
+      if (!this.handler) true;
+      return this.handler.isLoading;
+    },
     loanValue() {
       if (!this.handler) return `0%`;
       return `${BigNumber(this.handler.userSummary.currentLiquidationThreshold)
