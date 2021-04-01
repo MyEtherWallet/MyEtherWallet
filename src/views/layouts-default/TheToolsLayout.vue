@@ -26,7 +26,7 @@
 
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
-          <module-tools-watch-only />
+          <module-message-verify />
         </template>
         <template #tabItemContent2>
           <module-tools-convert />
@@ -35,7 +35,7 @@
           <module-tools-offline-helper />
         </template>
         <template #tabItemContent4>
-          <module-message-verify />
+          <module-tools-watch-only />
         </template>
       </mew-tabs>
     </v-container>
