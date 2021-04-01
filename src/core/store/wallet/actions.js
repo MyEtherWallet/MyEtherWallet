@@ -2,7 +2,6 @@ import url from 'url';
 import web3 from 'web3';
 import MEWProvider from '@/utils/web3-provider';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
-import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import BigNumber from 'bignumber.js';
 import EventNames from '@/utils/web3-provider/events';
@@ -85,9 +84,7 @@ const setWeb3Instance = function (
           ? rootState.global.currentNetwork.type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
-          arr[i].gasPrice === undefined
-            ? unit.toWei(gasPrice, 'gwei')
-            : arr[i].gasPrice;
+          arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
 

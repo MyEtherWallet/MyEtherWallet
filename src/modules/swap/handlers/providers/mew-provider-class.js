@@ -116,6 +116,7 @@ class MEWPClass {
     tradeObj.transactions.forEach(tx => {
       tx.from = from;
       tx.gasPrice = gasPrice;
+      tx.type = 'SWAP';
       txs.push(tx);
     });
 

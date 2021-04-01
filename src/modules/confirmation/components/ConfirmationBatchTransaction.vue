@@ -7,7 +7,10 @@
     >
       <template v-for="(item, idx) in panelItems" #[item.slotName]>
         <v-container :key="item.details.to + idx" fluid>
-          <v-row v-for="(detail, idx) in Object.keys(item.details)" :key="idx">
+          <v-row
+            v-for="(detail, index) in Object.keys(item.details)"
+            :key="index"
+          >
             <v-col cols="2">{{ detail }} </v-col>
             <v-col cols="10" class="text-right word-break--break-all"
               >{{ item.details[detail] }}
@@ -30,7 +33,7 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { fromWei, toWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 export default {
   props: {
     transactions: {
@@ -55,10 +58,7 @@ export default {
       let ethTxFeeTotal = 0;
       let usdTxFeeTotal = 0;
       this.transactions.forEach(item => {
-        const txFee = toWei(
-          BigNumber(item.gasPrice).times(item.gas).toFixed(),
-          'gwei'
-        );
+        const txFee = fromWei(toBN(item.gasPrice).mul(item.gas));
         const usdTxFee = BigNumber(this.ETHUSDValue.value)
           .times(txFee)
           .toFixed(2);
@@ -66,7 +66,7 @@ export default {
         usdTxFeeTotal += usdTxFee;
       });
       return {
-        eth: fromWei(ethTxFeeTotal),
+        eth: ethTxFeeTotal,
         usd: usdTxFeeTotal
       };
     },
@@ -77,14 +77,13 @@ export default {
         Object.keys(item).forEach(key => {
           reparseItem[key] =
             key !== 'data' && key !== 'from' && key !== 'to'
-              ? BigNumber(item[key]).toFixed()
+              ? key === 'gasPrice'
+                ? fromWei(item[key], 'gwei')
+                : BigNumber(item[key]).toFixed()
               : item[key];
         });
-        const txFee = fromWei(
-          toWei(BigNumber(item.gasPrice).times(item.gas).toFixed(), 'gwei')
-        );
-
-        delete item['__typename'];
+        const txFee = fromWei(toBN(item.gasPrice).mul(toBN(item.gas)));
+        delete reparseItem['__typename'];
         return Object.assign(
           {},
           {

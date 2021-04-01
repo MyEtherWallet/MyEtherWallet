@@ -12,7 +12,7 @@ toTxData and fromTxData = {
 */
 
 const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
-const VALID_STATUS = ['SUCCESS', 'ERROR', 'PENDING'];
+const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
 const VALID_ARGUMENTS = [
   'transactionHash', // string
   'to', // string

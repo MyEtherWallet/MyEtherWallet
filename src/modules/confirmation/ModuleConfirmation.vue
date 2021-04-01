@@ -247,12 +247,20 @@ export default {
         _tx.from = this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
+        _tx.type = 'OUT';
+        _tx.network = this.network.type.name;
+        _tx.gasPrice = utils.fromWei(
+          utils.hexToNumberString(_tx.gasPrice),
+          'gwei'
+        );
+        _tx.transactionFee = utils.fromWei(
+          BigNumber(utils.toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+        );
+        _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', () => {
-          const localStoredObj = locStore.get(
-            web3.utils.sha3(this.account.address)
-          );
-          locStore.set(web3.utils.sha3(this.account.address), {
+          const localStoredObj = locStore.get(web3.utils.sha3(this.address));
+          locStore.set(web3.utils.sha3(this.address), {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),

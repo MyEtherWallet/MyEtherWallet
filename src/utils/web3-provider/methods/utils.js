@@ -61,7 +61,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      newTxObj.status = 'ERROR';
+      newTxObj.status = 'FAILED';
       newTxObj.errMessage = err.message;
       if (!isExcempt) {
         const notification = new Notification(newTxObj);
