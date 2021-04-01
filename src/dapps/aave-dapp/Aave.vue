@@ -8,20 +8,44 @@
       :active-tab="activeTab"
     >
       <template #tabContent1>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
+        <v-sheet
+          color="transparent"
+          max-width="724px"
+          class="mx-auto py-6 px-5 px-md-3"
+        >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
-            <div class="primary--text font-weight-bold mr-3">
+            <div
+              v-if="!isLoadingData"
+              class="primary--text font-weight-bold mr-3"
+            >
               {{ healthFactor }}
             </div>
+            <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
             <mew-tooltip text="Health factor" />
           </div>
-          <v-row class="mb-1 mt-2">
-            <v-col cols="6" class="pa-1">
+          <v-row class="mb-1 mt-2" dense>
+            <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 class="font-weight-bold">$ {{ totalLiquidity.usd }}</h3>
-                <div class="mt-2">{{ totalLiquidity.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalLiquidity.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalLiquidity.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -29,12 +53,19 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="compositionPercentage"
                 />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  type="text"
+                  class="mt-2"
+                />
               </div>
             </v-col>
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px height-100">
                 <v-row>
                   <v-col cols="7">
@@ -61,18 +92,19 @@
                 </div>
               </div>
             </v-col>
+            <v-col cols="12" class="pt-md-2">
+              <aave-table
+                :table-header="depositsTableHeader"
+                :handler="handler"
+                :has-search="false"
+                :has-toggle="false"
+                @selectedDeposit="openDepositOverlayWithToken"
+                @withdrawToken="openWithdrawOverlay"
+                @collateralChange="openCollateralOverlay"
+              />
+            </v-col>
           </v-row>
-          <v-row class="pl-1 pr-1">
-            <aave-table
-              :table-header="depositsTableHeader"
-              :handler="handler"
-              :has-search="false"
-              :has-toggle="false"
-              @selectedDeposit="openDepositOverlayWithToken"
-              @withdrawToken="openWithdrawOverlay"
-              @collateralChange="openCollateralOverlay"
-            />
-          </v-row>
+          <v-row class="pl-1 pr-1"> </v-row>
 
           <div class="d-flex justify-center mt-9">
             <mew-button
@@ -84,21 +116,45 @@
         </v-sheet>
       </template>
       <template #tabContent2>
-        <v-sheet color="transparent" max-width="700px" class="mx-auto py-6">
+        <v-sheet
+          color="transparent"
+          max-width="724px"
+          class="mx-auto py-6 px-5 px-md-3"
+        >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
-            <div class="primary--text font-weight-bold mr-3">
+            <div
+              v-if="!isLoadingData"
+              class="primary--text font-weight-bold mr-3"
+            >
               {{ healthFactor }}
             </div>
+            <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
             <mew-tooltip text="Health factor" />
           </div>
 
-          <v-row class="mb-1 mt-2">
-            <v-col cols="6" class="pa-1">
+          <v-row class="mb-1 mt-2" dense>
+            <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
-                <h3 class="font-weight-bold">$ {{ totalBorrow.usd }}</h3>
-                <div class="mt-2">{{ totalBorrow.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalBorrow.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalBorrow.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -106,16 +162,39 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="borrowingsPercentage"
                 />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  type="text"
+                  class="mt-2 mb-0"
+                />
               </div>
             </v-col>
-            <v-col cols="6" class="pa-1">
+            <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
-                <h3 class="font-weight-bold">$ {{ totalCollateral.usd }}</h3>
-                <div class="mt-2">{{ totalCollateral.eth }} ETH</div>
+                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                  $ {{ totalCollateral.usd }}
+                </h3>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
+                <div v-if="!isLoadingData" class="mt-2">
+                  {{ totalCollateral.eth }} ETH
+                </div>
+                <v-skeleton-loader
+                  v-else
+                  height="20px"
+                  type="text"
+                  class="mt-2"
+                />
 
                 <v-divider class="my-4" />
 
@@ -123,34 +202,53 @@
                   <div class="font-weight-medium">Composition</div>
                 </div>
                 <mew-progress-bar
+                  v-if="!isLoadingData"
                   class="mt-2"
                   :balance-obj="collateralPercentage"
                 />
+                <v-skeleton-loader
+                  v-else
+                  height="12px"
+                  width="30px"
+                  type="text"
+                />
               </div>
             </v-col>
-          </v-row>
 
-          <v-row
-            class="mt-2 pa-2 loan-value-container progressBar"
-            align="center"
-          >
-            <v-col cols="11">
-              <span class="mew-heading-3">Loan to Value</span>
+            <v-col cols="12" class="pt-md-2">
+              <div class="progressBar pa-5 loan-value-container">
+                <v-row align="center">
+                  <v-col cols="9">
+                    <span class="mew-heading-3">Loan to Value</span>
+                  </v-col>
+                  <v-col cols="3">
+                    <div class="d-flex justify-end align-center">
+                      <span v-if="!isLoadingData" class="mew-heading-3">{{
+                        loanValue
+                      }}</span>
+                      <v-skeleton-loader
+                        v-else
+                        height="19px"
+                        width
+                        type="text"
+                        class="mt-2 mb-0"
+                      />
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
             </v-col>
-            <v-col cols="1">
-              <span class="mew-heading-3">{{ loanValue }}</span>
+            <v-col cols="12" class="pt-md-2">
+              <aave-table
+                :table-header="borrowTableHeader"
+                :handler="handler"
+                :has-search="false"
+                :has-toggle="false"
+                @selectedBorrow="openBorrowOverlayWithToken"
+                @repayBorrowing="openRepayOverlay"
+                @changeAprType="openAprTypeOverlay"
+              />
             </v-col>
-          </v-row>
-          <v-row class="pl-1 pr-1 mt-5">
-            <aave-table
-              :table-header="borrowTableHeader"
-              :handler="handler"
-              :has-search="false"
-              :has-toggle="false"
-              @selectedBorrow="openBorrowOverlayWithToken"
-              @repayBorrowing="openRepayOverlay"
-              @changeAprType="openAprTypeOverlay"
-            />
           </v-row>
           <div class="d-flex justify-center mt-9">
             <mew-button
@@ -284,6 +382,10 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapState('external', ['ETHUSDValue']),
+    isLoadingData() {
+      if (!this.handler) true;
+      return this.handler.isLoading;
+    },
     loanValue() {
       if (!this.handler) return `0%`;
       return `${BigNumber(this.handler.userSummary.currentLiquidationThreshold)
