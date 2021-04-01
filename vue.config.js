@@ -6,7 +6,7 @@ const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
 const webpackConfig = {
-  devtool: false,
+  devtool: 'source-map',
   node: {
     process: true
   },

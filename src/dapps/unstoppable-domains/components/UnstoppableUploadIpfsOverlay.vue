@@ -44,21 +44,24 @@
               </span>
             </div>
           </div>
-          <div class="mt-8 mb-12 label-container">
+          <div class="mt-8 mb-8 label-container">
             <mew-input
-              v-model="ipfsHash"
+              v-model="input"
               style="max-height: 50px"
               placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
               :label="$t('unstoppable.ipfs-hash')"
               :rules="[v => isValidIpfs(v) || 'Invalid format']"
             />
           </div>
+          <div v-if="error" class="error--text mb-7 font-weight-medium">
+            {{ error }}
+          </div>
           <div class="d-flex justify-space-between align-center">
             <mew-button
               :title="$t('unstoppable.save-changes')"
               btn-size="large"
               :disabled="disabled"
-              @click.native="() => saveIpfsHash(ipfsHash)"
+              @click.native="() => saveIpfsHash(input)"
             />
           </div>
         </div>
@@ -85,7 +88,9 @@ export default {
   data() {
     return {
       disabled: false,
-      loading: false
+      loading: false,
+      input: '',
+      error: 'Some test error happened'
     };
   },
   computed: {
@@ -161,17 +166,20 @@ export default {
       if (!supportedFile) {
         this.$refs.zipInput.value = '';
         console.error('unsupported File type');
+        this.error = 'Unsupported File type';
         return;
       }
       if (e.target.files[0].size < 500) {
         this.loading = false;
         this.$refs.zipInput.value = '';
+        this.error = 'The website is too small';
         console.error('too small warning');
         return;
       }
       if (e.target.files[0].size > 50000) {
         this.loading = false;
         this.$refs.zipInput.value = '';
+        this.error = 'The website is too big';
         console.error('too big warning');
         return;
       }
@@ -205,6 +213,7 @@ export default {
           if (!response.ok) {
             this.loading = false;
             console.error('Upload error');
+            this.error = 'Upload failed';
             return;
           }
           this.getHashFromFile(content.body.hashResponse);
@@ -212,6 +221,7 @@ export default {
       } catch (e) {
         this.loading = false;
         console.error('Error', e);
+        this.error = e.message;
       }
     },
     async getHashFromFile(hash) {
@@ -236,6 +246,7 @@ export default {
         if (ipfsHash.error) {
           console.error('error fetching ipfs');
         } else {
+          this.ipfsHash = ipfsHash;
           this.saveIpfsHash(ipfsHash);
         }
       } catch (e) {
@@ -252,7 +263,9 @@ export default {
       );
 
       if (!currentResolverAddress) {
-        throw new Error("Couldn't fetch resolver address");
+        this.error = "Couldn't fetch resolver address";
+        this.loading = false;
+        return ;
       }
 
       console.log(`saving ${hash}`);
@@ -260,6 +273,7 @@ export default {
         resolverAbi,
         currentResolverAddress
       );
+      console.log("got contract");
       try {
         const txObj = {
           from: this.address,
@@ -269,11 +283,12 @@ export default {
             .encodeABI(),
           value: 0
         };
-        this.web3.eth.sendTransaction(txObj).then(() => {
-          this.loading = false;
-        });
+        console.log("sending the transaction?");
+        await this.web3.eth.sendTransaction(txObj);
+        this.loading = false;
       } catch (e) {
         this.loading = false;
+        this.error = e.message;
         console.error('Error?', e);
       }
     }

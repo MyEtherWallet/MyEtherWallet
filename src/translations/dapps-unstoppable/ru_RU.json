@@ -32,5 +32,6 @@
     "pay": "Оплатить",
     "upload-my-website": "Загрузить мой вебсайт",
     "ipfs-hash": "IPFS хэш",
-    "save-changes": "Сохранить"
+    "save-changes": "Сохранить",
+    "is-available": "Имя доступно"
 }

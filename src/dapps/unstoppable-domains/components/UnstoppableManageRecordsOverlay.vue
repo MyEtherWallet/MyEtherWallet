@@ -19,7 +19,7 @@
           </span>
         </div>
         <div v-if="!loading" class="pa-8">
-          <h3 class="font-weight-medium">{{ domain.name || ''}}</h3>
+          <h3 class="font-weight-medium">{{ domain.name || '' }}</h3>
           <div class="mt-8">
             <div
               v-for="(value, record) in records"
@@ -62,7 +62,7 @@
             <div class="cursor--pointer" @click="rotate">
               <div class="d-flex align-center justify-right">
                 <span class="mew-caption mr-2">
-                 {{ $t('unstoppable.more-curriencies') }}
+                  {{ $t('unstoppable.more-curriencies') }}
                 </span>
                 <mew-icon
                   icon-name="arrow"
@@ -125,7 +125,7 @@ export default {
       },
       disabled: false,
       loading: false,
-      rotation: 0,
+      rotation: 180,
       dropdownOpen: false,
       additionalRecords: []
     };

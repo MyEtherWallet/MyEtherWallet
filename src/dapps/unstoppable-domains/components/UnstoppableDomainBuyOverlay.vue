@@ -230,7 +230,10 @@ export default {
       return this.getDomain();
     },
     InsufficientBalance() {
-      return this.convertedEthPrice > this.balance;
+      const domainPriceInWei = new BigNumber(
+        this.web3.utils.toWei(this.convertedEthPrice, 'ether')
+      );
+      return domainPriceInWei.comparedTo(new BigNumber(this.balance)) === 1;
     },
     email() {
       return this.getEmail();
@@ -352,8 +355,10 @@ export default {
           email: this.email,
           chargeId: response.order.payment.tokenId
         });
-
-        const value = this.web3.utils.toWei(this.convertedEthPrice, 'ether');
+        const value = this.web3.utils.toWei(
+          charge.data.pricing.ethereum.amount,
+          'ether'
+        );
         await this.web3.eth
           .sendTransaction({
             from: this.address,

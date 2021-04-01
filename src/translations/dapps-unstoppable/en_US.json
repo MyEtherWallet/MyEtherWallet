@@ -32,5 +32,6 @@
   "pay": "Pay",
   "upload-my-website": "Upload my website",
   "ipfs-hash": "IPFS hash",
-  "save-changes": "Save changes"
+  "save-changes": "Save changes",
+  "is-available": "Domain is available"
 }
