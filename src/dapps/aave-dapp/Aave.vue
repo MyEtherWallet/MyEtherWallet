@@ -24,8 +24,8 @@
             <v-skeleton-loader v-else width="31px" type="text" class="mr-3" />
             <mew-tooltip text="Health factor" />
           </div>
-          <v-row class="mb-1 mt-2">
-            <v-col cols="12" md="6" class="pa-1">
+          <v-row class="mb-1 mt-2" dense>
+            <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
@@ -65,7 +65,7 @@
                 />
               </div>
             </v-col>
-            <v-col cols="12" md="6" class="pa-1">
+            <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px height-100">
                 <v-row>
                   <v-col cols="7">
@@ -92,18 +92,19 @@
                 </div>
               </div>
             </v-col>
+            <v-col cols="12" class="pt-md-2">
+              <aave-table
+                :table-header="depositsTableHeader"
+                :handler="handler"
+                :has-search="false"
+                :has-toggle="false"
+                @selectedDeposit="openDepositOverlayWithToken"
+                @withdrawToken="openWithdrawOverlay"
+                @collateralChange="openCollateralOverlay"
+              />
+            </v-col>
           </v-row>
-          <v-row class="pl-1 pr-1">
-            <aave-table
-              :table-header="depositsTableHeader"
-              :handler="handler"
-              :has-search="false"
-              :has-toggle="false"
-              @selectedDeposit="openDepositOverlayWithToken"
-              @withdrawToken="openWithdrawOverlay"
-              @collateralChange="openCollateralOverlay"
-            />
-          </v-row>
+          <v-row class="pl-1 pr-1"> </v-row>
 
           <div class="d-flex justify-center mt-9">
             <mew-button
@@ -132,8 +133,8 @@
             <mew-tooltip text="Health factor" />
           </div>
 
-          <v-row class="mb-1 mt-2">
-            <v-col cols="12" md="6" class="pa-1">
+          <v-row class="mb-1 mt-2" dense>
+            <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
@@ -173,7 +174,7 @@
                 />
               </div>
             </v-col>
-            <v-col cols="12" md="6" class="pa-1">
+            <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
                 <h3 v-if="!isLoadingData" class="font-weight-bold">
@@ -213,38 +214,41 @@
                 />
               </div>
             </v-col>
-          </v-row>
 
-          <v-row
-            class="mt-2 pa-2 loan-value-container progressBar"
-            align="center"
-          >
-            <v-col cols="11">
-              <span class="mew-heading-3">Loan to Value</span>
+            <v-col cols="12" class="pt-md-2">
+              <div class="progressBar pa-5 loan-value-container">
+                <v-row align="center">
+                  <v-col cols="9">
+                    <span class="mew-heading-3">Loan to Value</span>
+                  </v-col>
+                  <v-col cols="3">
+                    <div class="d-flex justify-end align-center">
+                      <span v-if="!isLoadingData" class="mew-heading-3">{{
+                        loanValue
+                      }}</span>
+                      <v-skeleton-loader
+                        v-else
+                        height="19px"
+                        width
+                        type="text"
+                        class="mt-2 mb-0"
+                      />
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
             </v-col>
-            <v-col cols="1">
-              <span v-if="!isLoadingData" class="mew-heading-3">{{
-                loanValue
-              }}</span>
-              <v-skeleton-loader
-                v-else
-                height="19px"
-                width
-                type="text"
-                class="mt-2 mb-0"
+            <v-col cols="12" class="pt-md-2">
+              <aave-table
+                :table-header="borrowTableHeader"
+                :handler="handler"
+                :has-search="false"
+                :has-toggle="false"
+                @selectedBorrow="openBorrowOverlayWithToken"
+                @repayBorrowing="openRepayOverlay"
+                @changeAprType="openAprTypeOverlay"
               />
             </v-col>
-          </v-row>
-          <v-row class="pl-1 pr-1 mt-5">
-            <aave-table
-              :table-header="borrowTableHeader"
-              :handler="handler"
-              :has-search="false"
-              :has-toggle="false"
-              @selectedBorrow="openBorrowOverlayWithToken"
-              @repayBorrowing="openRepayOverlay"
-              @changeAprType="openAprTypeOverlay"
-            />
           </v-row>
           <div class="d-flex justify-center mt-9">
             <mew-button
