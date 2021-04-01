@@ -2,7 +2,7 @@
 
 ### Devop
 
-* Fix print paper wallet [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+* Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
