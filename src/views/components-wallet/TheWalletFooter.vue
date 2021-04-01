@@ -12,18 +12,16 @@
     >
       <v-row class="align-center justify-space-between">
         <v-col cols="12" md="7">
-          <p class="mb-0 text-center text-md-left">
+          <div class="mb-0 text-center text-md-left">
             ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-            <span>
-              <a
-                class="titlePrimary--text text-decoration--none"
-                href="/"
-                target="_blank"
-              >
-                CoinMarketCap
-              </a>
-            </span>
-          </p>
+            <a
+              class="titlePrimary--text text-decoration--none"
+              href="https://coinmarketcap.com/"
+              target="_blank"
+            >
+              CoinMarketCap
+            </a>
+          </div>
         </v-col>
         <v-col
           cols="12"
