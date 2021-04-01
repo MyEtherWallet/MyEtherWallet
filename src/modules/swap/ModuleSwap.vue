@@ -99,7 +99,7 @@
             =====================================================================================
           -->
           <swap-fee
-            v-if="!hasAmountErrors"
+            v-if="!hasAmountErrors && step > 0"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
           >
@@ -155,9 +155,9 @@ import Swapper from './handlers/handlerSwap';
 import utils, { toBN, fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { roundNumber } from './handlers/helpers';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
+const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
@@ -260,14 +260,16 @@ export default {
      */
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType.value) {
-        let balance = this.balanceInETH.toString();
         if (this.fromTokenType.value !== 'Ethereum') {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
           );
-          balance = hasBalance || '0';
+          return new BigNumber(hasBalance || '0');
         }
-        return new BigNumber(balance);
+        return BigNumber.max(
+          new BigNumber(this.balanceInETH).minus(fromWei(MIN_GAS_WEI)),
+          0
+        );
       }
       return new BigNumber(0);
     },
@@ -278,7 +280,7 @@ export default {
      */
     availableBalanceHint() {
       if (!this.initialLoad && this.fromTokenType.value) {
-        return `available: ${roundNumber(this.availableBalance)} ${
+        return `available: ${this.availableBalance.toFixed()} ${
           this.fromTokenType.symbol
         }`;
       }
@@ -309,24 +311,26 @@ export default {
      * Used to show error messages for the amount input component
      */
     amountErrorMessage() {
-      if (
-        !this.initialLoad &&
-        !this.isLoading &&
-        this.tokenInValue &&
-        this.tokenInValue !== ''
-      ) {
+      if (!this.initialLoad && !this.isLoading) {
         if (this.availableBalance.lte(0)) {
           return this.fromTokenType.value === 'Ethereum'
-            ? 'your ETH balance is 0'
+            ? 'your available ETH balance is 0'
             : 'you do not own this token';
         }
-        if (new BigNumber(this.tokenInValue).eq(0)) {
-          return `swap amount must be greater than 0`;
+        if (
+          this.fromTokenType.value !== 'Ethereum' &&
+          this.availableBalance.lte(fromWei(MIN_GAS_WEI))
+        ) {
+          return 'you do not have enough ETH to cover transaction fee for a swap';
         }
-        if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
-          return `your balance is lower (${this.availableBalanceHint})`;
+        if (this.tokenInValue && this.tokenInValue !== '') {
+          if (new BigNumber(this.tokenInValue).eq(0)) {
+            return `swap amount must be greater than 0`;
+          }
+          if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+            return `your balance is lower (${this.availableBalanceHint})`;
+          }
         }
-        return '';
       }
       return '';
     }
