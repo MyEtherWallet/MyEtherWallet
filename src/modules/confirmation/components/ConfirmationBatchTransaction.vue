@@ -84,6 +84,8 @@ export default {
         });
         const txFee = fromWei(toBN(item.gasPrice).mul(toBN(item.gas)));
         delete reparseItem['__typename'];
+        delete reparseItem['type'];
+        delete reparseItem['handleNotification'];
         return Object.assign(
           {},
           {

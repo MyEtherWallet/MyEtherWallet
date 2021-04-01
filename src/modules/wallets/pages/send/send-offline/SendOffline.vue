@@ -90,7 +90,7 @@
       <div>
         <network />
         <div class="pa-4"></div>
-        <swap />
+        <module-swap-rates />
       </div>
     </div>
   </div>
@@ -98,13 +98,13 @@
 
 <script>
 import Network from '@/modules/network/ModuleNetwork';
-import swap from '@/core/components/AppSwap';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
 import eth from '@/assets/images/currencies/icon-eth-blue.svg';
 
 export default {
   components: {
     Network,
-    swap
+    ModuleSwapRates
   },
   data() {
     return {

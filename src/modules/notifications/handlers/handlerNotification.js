@@ -34,7 +34,6 @@ const VALID_ARGUMENTS = [
   'toTxData', // obj
   'errMessage', // string
   'swapObj', // obj
-  'swapResolved',
   'swapResolver'
 ];
 
@@ -84,7 +83,7 @@ export default class Notification {
             res === 'COMPLETED'
               ? 'SUCCESS'
               : res === 'FAILED' || res === 'UNKOWN'
-              ? 'ERRORED'
+              ? 'FAILED'
               : res;
         });
         if (_this.status !== 'PENDING') {

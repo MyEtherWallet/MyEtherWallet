@@ -85,7 +85,7 @@ export default {
       signedTx: {},
       signature: '',
       unsignedTxArr: [],
-      signedTxArr: []
+      signedTxArray: []
     };
   },
   computed: {
@@ -161,7 +161,7 @@ export default {
         _self.isHardwareWallet = isHardware;
         const signed = [];
         _self.unsignedTxArr = arr;
-        if (resolver) resolver = () => {};
+        if (!resolver) resolver = () => {};
         _self.resolver = resolver;
         _self.showBatchOverlay = true;
 
@@ -169,6 +169,10 @@ export default {
           for (let i = 0; i < arr.length; i++) {
             try {
               const _signedTx = await _self.instance.signTransaction(arr[i]);
+              if (arr[i].hasOwnProperty('handleNotification')) {
+                _signedTx.tx['handleNotification'] = arr[i].handleNotification;
+              }
+              _signedTx.tx['type'] = arr[i].type ? arr[i].type : 'OUT';
               signed.push(_signedTx);
             } catch (err) {
               _self.instance.errorHandler(err);
@@ -251,7 +255,6 @@ export default {
         _tx.from = this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
-        _tx.type = 'OUT';
         _tx.network = this.network.type.name;
         _tx.gasPrice = utils.fromWei(
           utils.hexToNumberString(_tx.gasPrice),
@@ -271,8 +274,15 @@ export default {
             timestamp: localStoredObj.timestamp
           });
         });
+        return promiEvent;
       });
       this.resolver(promises);
+      Toast(
+        'Transaction is being mined. Watch out for the notifications on the top right of the screen!',
+        {},
+        SUCCESS,
+        5000
+      );
     },
     send() {
       this.resolver(this.signedTxObject);
