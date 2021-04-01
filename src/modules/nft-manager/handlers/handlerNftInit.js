@@ -93,7 +93,7 @@ export default class Nft {
       reject(
         Error(
           Vue.$i18n
-            ? Vue.$i18n.t('nftManager.no-nfts-for-address')
+            ? Vue.$i18n.t('nftManager.none-owned')
             : 'Nft Module is only available on mainnet'
         )
       );
@@ -105,7 +105,7 @@ export default class Nft {
       if (!this.nftConfig[selectedContract]) {
         reject(
           Vue.$i18n
-            ? Vue.$i18n.t('nftManager.no-nfts-for-address', {
+            ? Vue.$i18n.t('nftManager.none-owned', {
                 selectedContract
               })
             : `NFT contract [${selectedContract}] not found for address`
