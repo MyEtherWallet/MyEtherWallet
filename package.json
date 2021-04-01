@@ -112,7 +112,7 @@
     "ethjs-unit": "0.1.6",
     "ganache-core": "2.13.2",
     "hdkey": "2.0.1",
-    "husky": "^5.0.9",
+    "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
     "is-ipfs": "4.0.0",
@@ -159,10 +159,10 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "handlebars": "^4.5.3",
-    "axios": "^0.21.1",
-    "node-fetch": "^2.6.1",
-    "cryptiles": "^4.1.2"
+    "handlebars": "4.5.3",
+    "axios": "0.21.1",
+    "node-fetch": "2.6.1",
+    "cryptiles": "4.1.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
