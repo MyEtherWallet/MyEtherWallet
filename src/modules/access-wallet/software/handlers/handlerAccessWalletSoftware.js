@@ -53,7 +53,6 @@ export default class AccessWallet {
   unlockMnemonicWallet(phrase, password = '') {
     return (this.walletInstance = new MnemonicWallet(phrase, password).then(
       wallet => {
-        console.error("wallet", wallet)
         this.walletInstance = wallet;
         return this.walletInstance;
       }
