@@ -56,7 +56,7 @@ export default class AaveHandler {
     return new Error('No Parameters sent!');
   }
 
-  borrow(param) {
+  async borrow(param) {
     param.referralCode = '14';
     try {
       return borrowDetails(param).then(res => {
@@ -64,7 +64,7 @@ export default class AaveHandler {
         res.data.borrow.forEach(data => {
           txArr.push(data.tx);
         });
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);
@@ -85,21 +85,21 @@ export default class AaveHandler {
     }
   }
 
-  withdraw(param) {
+  async withdraw(param) {
     try {
       return withdrawDetails(param).then(res => {
         const txArr = [];
         res.data.redeem.forEach(data => {
           txArr.push(data.tx);
         });
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);
     }
   }
 
-  switchCollateral(param) {
+  async switchCollateral(param) {
     try {
       return setUsageAsCollateralDetails(param).then(res => {
         const txArr = [];
@@ -107,14 +107,14 @@ export default class AaveHandler {
           txArr.push(data.tx);
         });
 
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);
     }
   }
 
-  switchRate(param) {
+  async switchRate(param) {
     try {
       return swapBorrowRateDetails(param).then(res => {
         const txArr = [];
@@ -122,14 +122,14 @@ export default class AaveHandler {
           txArr.push(data.tx);
         });
 
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);
     }
   }
 
-  repay(param) {
+  async repay(param) {
     try {
       return repayDetails(param).then(res => {
         const txArr = [];
@@ -137,7 +137,7 @@ export default class AaveHandler {
           txArr.push(data.tx);
         });
 
-        this.sendTransaction(txArr);
+        return this.sendTransaction(txArr);
       });
     } catch (e) {
       throw new Error(e);

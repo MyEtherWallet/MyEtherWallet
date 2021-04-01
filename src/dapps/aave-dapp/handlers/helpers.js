@@ -116,11 +116,28 @@ const AAVE_TABLE_HEADER = {
   BALANCE_BORROW: 'BALANCE_BORROW'
 };
 
+const ACTION_TYPES = {
+  deposit: 'deposit',
+  borrow: 'borrow',
+  collateral: 'collateral',
+  interest: 'interest',
+  withdraw: 'withdraw',
+  repay: 'repay',
+  switch: 'switch'
+};
+
+const INTEREST_TYPES = {
+  stable: 'stable',
+  variable: 'variable'
+};
+
 export {
   checkAmount,
   findReserve,
   convertToFixed,
   roundPercentage,
   roundNumber,
-  AAVE_TABLE_HEADER
+  AAVE_TABLE_HEADER,
+  ACTION_TYPES,
+  INTEREST_TYPES
 };

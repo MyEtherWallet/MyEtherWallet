@@ -1,9 +1,9 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    title="Select Token to Deposit"
+    :title="header"
     right-btn-text="Close"
-    :close="close"
+    :close="handleCancel"
   >
     <template #mewOverlayBody>
       <!--
@@ -37,14 +37,19 @@
           :step="step"
           :action-type="depositHeader"
           @confirmed="handleConfirm"
-          @makeDeposit="emitDeposit"
+          @onConfirm="emitDeposit"
         />
       </div>
       <div v-if="step === 2">
         <aave-amount-form
           :selected-token="selectedToken"
           :handler="handler"
-          :action-type="depositHeader"
+          :show-toggle="aaveDepositForm.showToggle"
+          :left-side-values="aaveDepositForm.leftSideValues"
+          :right-side-values="aaveDepositForm.rightSideValues"
+          :form-text="aaveDepositForm.formText"
+          :button-title="aaveDepositForm.buttonTitle"
+          :token-balance="tokenBalance"
           @cancel="handleCancel"
           @emitValues="handleDepositAmount"
         />
@@ -57,72 +62,126 @@
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
-import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import {
+  AAVE_TABLE_HEADER,
+  ACTION_TYPES,
+  convertToFixed
+} from '../handlers/helpers';
+import { _ } from 'web3-utils';
+import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
-  props: {
-    open: {
-      default: false,
-      type: Boolean
-    },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    },
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
-      default: () => {}
-    },
-    preSelectedToken: {
-      type: Object,
-      default: () => {}
-    }
-  },
+  mixins: [aaveOverlayMixin],
   data() {
     return {
       step: 0,
       selectedToken: {},
       amount: '0',
-      amountUsd: '$ 0.00',
-      depositHeader: AAVE_TABLE_HEADER.DEPOSIT
+      depositHeader: AAVE_TABLE_HEADER.DEPOSIT,
+      deposit: ACTION_TYPES.deposit
     };
   },
-  watch: {
-    open(newVal) {
-      if (!newVal) {
-        this.step = 0;
-        this.selectedToken = {};
+  computed: {
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
+    ...mapGetters('global', ['network']),
+    tokenBalance() {
+      const symbol = this.selectedToken.token;
+      if (symbol === this.network.type.currencyName) return this.balanceInETH;
+      const hasBalance = this.tokensList.find(item => {
+        if (item.symbol === symbol) {
+          return item;
+        }
+      });
+
+      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+    },
+    header() {
+      switch (this.step) {
+        case 1:
+        case 3:
+          return 'Deposit';
+        case 2:
+          return 'Confirmation';
+        default:
+          return 'Select the token you want to deposit';
       }
     },
+    aaveDepositForm() {
+      const hasDeposit = this.selectedTokenInUserSummary;
+      const depositedBalance = `${convertToFixed(
+        hasDeposit ? hasDeposit?.currentUnderlyingBalance : 0,
+        6
+      )} ${this.selectedToken.token}`;
+      const depositedBalanceInUSD = `$ ${BigNumber(this.selectedTokenUSDValue)
+        .times(hasDeposit?.currentUnderlyingBalance)
+        .toFixed(2)}`;
+
+      const tokenBalance = `${this.tokenBalance} ${this.selectedToken.token}`;
+      const usd = `$ ${BigNumber(this.tokenBalance)
+        .times(this.selectedTokenUSDValue)
+        .toFixed(2)}`;
+      return {
+        showToggle: true,
+        leftSideValues: {
+          title: depositedBalance,
+          caption: depositedBalanceInUSD,
+          subTitle: 'Aave Deposit Balance'
+        },
+        rightSideValues: {
+          title: tokenBalance,
+          caption: usd,
+          subTitle: 'Aave Wallet Balance'
+        },
+        formText: {
+          title: 'How much would you like to deposit?',
+          caption:
+            'Here you can set the amount you want to deposit. You can manually enter a specific amount or use the percentage buttons below.'
+        },
+        buttonTitle: {
+          action: 'Deposit',
+          cancel: 'Cancel Deposit'
+        }
+      };
+    }
+  },
+  watch: {
     preSelectedToken(newVal) {
-      if (newVal && Object.keys(newVal).length > 0) {
+      if (newVal && !_.isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }
   },
-
   methods: {
     handleSelectedDeposit(val) {
       this.selectedToken = val;
-      this.step += 1;
+      this.step = 1;
     },
     handleConfirm() {
       this.step += 1;
     },
     handleDepositAmount(e) {
-      this.step += 1;
-      this.amount = e[0];
-      this.amountUsd = e[1];
+      this.step = 3;
+      this.amount = e;
     },
     handleCancel() {
+      this.step = 0;
+      this.selectedToken = {};
+      this.amount = '0';
+
       this.close();
     },
-    emitDeposit(e) {
-      this.$emit('sendDeposit', e);
-      this.close();
+    emitDeposit() {
+      const param = {
+        aavePool: 'proto',
+        userAddress: this.address,
+        amount: this.amount,
+        referralCode: '14',
+        reserve: this.actualToken.underlyingAsset
+      };
+      this.$emit('onConfirm', param);
+      this.handleCancel();
     }
   }
 };
