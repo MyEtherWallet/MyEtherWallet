@@ -143,7 +143,6 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
-      console.log(tx);
       _self.instance
         .signTransaction(tx)
         .then(res => {
