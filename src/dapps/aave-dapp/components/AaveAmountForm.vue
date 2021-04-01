@@ -1,13 +1,13 @@
 <template>
   <v-sheet
-    class="pa-12 text-center"
+    class="pa-3 pa-md-5 text-center"
     rounded
     color="white"
     elevation="1"
-    width="650"
+    max-width="650"
   >
     <v-row justify="space-around">
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
           :has-body-padding="true"
@@ -17,7 +17,7 @@
           class="text-left"
         />
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
           :has-body-padding="true"
