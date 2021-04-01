@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.welcome-modal-text {
+  text-align: center;
+
+  h3 {
+    font-weight: 600;
+    font-size: 25px;
+    padding: 5px 20px 30px;
+  }
+}
+
+.welcome-modal-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 60px 40px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 20px;
+  }
+}
+
+.welcome-modal {
+  position: relative;
+
+  img {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.welcome-modal-button {
+  padding-top: 20px;
+
+  button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 4px;
+    color: $white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 15px;
+    width: 200px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

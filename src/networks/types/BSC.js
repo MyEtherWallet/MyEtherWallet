@@ -4,7 +4,7 @@ import bsc from '@/assets/images/icons/network.svg';
 
 export default {
   name: 'BSC',
-  name_long: 'Binane Smart Chain',
+  name_long: 'Binance Smart Chain',
   homePage: 'https://www.binance.org/en/smartChain',
   blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',

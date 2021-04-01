@@ -186,5 +186,14 @@
   "language": "Language",
   "logout": "Logout",
   "settings": "Settings",
-  "exit-dapp": "Exit DApp"
+  "exit-dapp": "Exit DApp",
+  "popup": {
+    "desc1": "Remember this interface? We've come a long way since then to improve the experience for our users. Don't you think MEW is so much more awesome now?",
+    "desc2": "Are you sure about that ?",
+    "rightBtn1": "Yes, MEW is awesome!",
+    "rightBtn2": "Actually, you're right, it's great!",
+    "leftBtn1": "No, I prefer Vintage.",
+    "leftBtn2": "No, I still prefer the old one.",
+    "desc3": "Happy April Fools!"
+  }
 }
