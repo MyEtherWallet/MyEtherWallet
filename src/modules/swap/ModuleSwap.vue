@@ -135,7 +135,7 @@
             <mew-button
               title="Swap"
               :has-full-width="false"
-              :disabled="step < 2"
+              :disabled="step < 2 || feeError != ''"
               btn-size="xlarge"
               @click.native="showConfirm()"
             />
@@ -153,7 +153,7 @@ import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
 import Swapper from './handlers/handlerSwap';
-import utils, { toBN, fromWei } from 'web3-utils';
+import utils, { toBN, fromWei, toWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -205,7 +205,7 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
-      feeError: false,
+      feeError: '',
       defaults: {
         fromToken: this.fromToken,
         toToken: this.toToken
@@ -226,7 +226,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     totalFees() {
@@ -296,7 +296,9 @@ export default {
      * Fee is shown if provider was selected and no errors are passed
      */
     showSwapFee() {
-      return this.step >= 2 && this.availableBalance.gt(0);
+      return (
+        this.step >= 2 && this.availableBalance.gt(0) && this.feeError === ''
+      );
     },
 
     /**
@@ -420,12 +422,17 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-      if (!value || this.hasAmountErrors) {
+      if (
+        !value ||
+        this.hasAmountErrors ||
+        this.fromTokenType.value === this.toTokenType.value
+      ) {
         this.providersMessage =
           'Change your amount or token pair to see providers and proceed with Swap';
         return;
       }
       this.providersMessage = '';
+      this.feeError = '';
       this.swapper
         .getAllQuotes({
           fromT: this.fromTokenType,
@@ -464,13 +471,14 @@ export default {
     getTrade: utils._.debounce(function (idx) {
       if (!this.isToAddressValid) return;
       this.step = 1;
-      this.feeError = false;
+      this.feeError = '';
       if (this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
         this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
           this.network.type.name
         }`;
         this.step = 2;
+        this.checkFeeBalance();
         return;
       }
       this.loadingFee = true;
@@ -495,10 +503,11 @@ export default {
           this.allTrades[idx] = trade;
           this.step = 2;
           this.loadingFee = false;
+          this.checkFeeBalance();
         })
         .catch(e => {
           if (e) {
-            this.feeError = true;
+            this.feeError = 'This provider is not available.';
           }
         });
     }, 500),
@@ -534,6 +543,19 @@ export default {
       return new BigNumber(balance.toString()).div(
         new BigNumber(10).pow(decimals)
       );
+    },
+    checkFeeBalance() {
+      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+      const isNotEnoughEth =
+        this.fromTokenType.value === 'Ethereum'
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+      if (isNotEnoughEth) {
+        const message = `This provider  transaction fee is ${this.exPannel[0].subtext} ETH, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
+        const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
+        this.feeError =
+          this.fromTokenType.value === 'Ethereum' ? ethError : message;
+      }
     }
   }
 };
