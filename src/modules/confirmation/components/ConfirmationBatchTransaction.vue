@@ -1,12 +1,16 @@
 <template>
   <v-sheet max-width="600px" class="pa-8">
-    <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
-      <template #panelBody1>
-        <v-container fluid>
-          <v-row v-for="(detail, idx) in details" :key="idx">
-            <v-col cols="6">{{ detail.title }} </v-col>
-            <v-col cols="6" class="text-right word-break--break-all"
-              >{{ detail.value }}
+    <mew-expand-panel
+      :panel-items="panelItems"
+      :is-toggle="true"
+      :idx-to-expand="activeTab"
+    >
+      <template v-for="(item, idx) in panelItems" #[item.slotName]>
+        <v-container :key="item.details.to + idx" fluid>
+          <v-row v-for="(detail, idx) in Object.keys(item.details)" :key="idx">
+            <v-col cols="2">{{ detail }} </v-col>
+            <v-col cols="10" class="text-right word-break--break-all"
+              >{{ item.details[detail] }}
             </v-col>
           </v-row>
         </v-container>
@@ -25,6 +29,8 @@
 
 <script>
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { fromWei, toWei } from 'web3-utils';
 export default {
   props: {
     transactions: {
@@ -40,40 +46,55 @@ export default {
     return {
       warningDescription:
         'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
-      open: false,
-      panelItems: [
-        {
-          name: 'Details'
-        }
-      ],
       activeTab: 0
     };
   },
   computed: {
     ...mapState('external', ['ETHUSDValue']),
-    details() {
-      return [
-        {
-          title: 'Network',
-          value: this.network.type.name + ' by ' + this.network.service
-        },
-        {
-          title: 'Gas Price',
-          value: this.gasPrice + ' gwei'
-        },
-        {
-          title: 'Gas Limit',
-          value: this.gasLimit
-        },
-        {
-          title: 'Nonce',
-          value: this.nonce
-        },
-        {
-          title: 'Data',
-          value: this.data
-        }
-      ];
+    totalTransaction() {
+      let ethTxFeeTotal = 0;
+      let usdTxFeeTotal = 0;
+      this.transactions.forEach(item => {
+        const txFee = toWei(
+          BigNumber(item.gasPrice).times(item.gas).toFixed(),
+          'gwei'
+        );
+        const usdTxFee = BigNumber(this.ETHUSDValue.value)
+          .times(txFee)
+          .toFixed(2);
+        ethTxFeeTotal += txFee;
+        usdTxFeeTotal += usdTxFee;
+      });
+      return {
+        eth: fromWei(ethTxFeeTotal),
+        usd: usdTxFeeTotal
+      };
+    },
+    panelItems() {
+      const copyTransactions = JSON.parse(JSON.stringify(this.transactions));
+      return copyTransactions.map((item, idx) => {
+        const reparseItem = {};
+        Object.keys(item).forEach(key => {
+          reparseItem[key] =
+            key !== 'data' && key !== 'from' && key !== 'to'
+              ? BigNumber(item[key]).toFixed()
+              : item[key];
+        });
+        const txFee = fromWei(
+          toWei(BigNumber(item.gasPrice).times(item.gas).toFixed(), 'gwei')
+        );
+
+        delete item['__typename'];
+        return Object.assign(
+          {},
+          {
+            name: `Transaction ${idx + 1}`,
+            subtext: `Tx Fee: ${txFee}`,
+            slotName: `panelBody${idx + 1}`,
+            details: reparseItem
+          }
+        );
+      });
     }
   }
 };

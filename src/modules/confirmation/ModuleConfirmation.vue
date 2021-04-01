@@ -154,7 +154,6 @@ export default {
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
-        console.log(arr, resolver, isHardware);
         _self.isHardwareWallet = isHardware;
         const signed = [];
         _self.unsignedTxArr = arr;
@@ -235,20 +234,20 @@ export default {
       tx.network = this.network.type.name;
       tx.transactionFee = this.txFee;
     },
-    sendBatchTransaction() {
-      this.$refs.confirmCollectionModal.$refs.confirmCollection.hide();
+    async sendBatchTransaction() {
+      this.showBatchOverlay = false;
       const web3 = this.web3;
       const _method =
         this.identifier === WALLET_TYPES.WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
-      const _arr = this.signedArray;
+      const _arr = this.signedTxArray;
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
-        setEvents(promiEvent, tx, this.$store.dispatch);
+        setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', () => {
           const localStoredObj = locStore.get(
             web3.utils.sha3(this.account.address)

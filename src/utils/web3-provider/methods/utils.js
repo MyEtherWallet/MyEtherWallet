@@ -27,12 +27,17 @@ const getSanitizedTx = tx => {
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
   const newTxObj = _.clone(tx);
+  newTxObj['data'] = newTxObj.hasOwnProperty('input')
+    ? newTxObj.input
+    : newTxObj.data;
   newTxObj.date = new Date().getTime();
   const isExcempt = newTxObj.hasOwnProperty('handleNotification');
   delete newTxObj['r'];
   delete newTxObj['v'];
   delete newTxObj['s'];
   delete newTxObj['chainId'];
+  delete newTxObj['input'];
+  delete newTxObj['hash'];
 
   promiObj
     .once('transactionHash', hash => {
