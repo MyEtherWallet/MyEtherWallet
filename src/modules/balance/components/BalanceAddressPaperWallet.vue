@@ -9,7 +9,7 @@
     <template #mewOverlayBody>
       <v-sheet max-width="800px">
         <mew6-white-sheet>
-          <div class="pa-10">
+          <div ref="printContainer" class="pa-10">
             <div class="d-flex justify-space-between align-start">
               <div class="d-flex align-center">
                 <img
@@ -108,14 +108,11 @@
                   <div class="subtitle-1 font-weight-black text-uppercase">
                     My Address
                   </div>
-                  <div>{{ address }}</div>
+                  <div>{{ key }}</div>
                 </v-sheet>
               </v-theme-provider>
               <v-sheet height="130px" class="qr-image">
-                <VueQrcode
-                  :value="address"
-                  :options="{ size: 130 }"
-                ></VueQrcode>
+                <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
               </v-sheet>
             </div>
             <div v-if="isHardware" class="mt-4 d-flex align-content-stretch">
@@ -154,7 +151,7 @@
         </mew6-white-sheet>
 
         <div class="d-flex justify-center mt-12">
-          <mew-button title="Print" btn-size="xlarge" />
+          <mew-button title="Print" btn-size="xlarge" @click.native="print" />
         </div>
       </v-sheet>
     </template>
@@ -164,6 +161,10 @@
 <script>
 import VueQrcode from '@xkeshi/vue-qrcode';
 import { mapState } from 'vuex';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import html2canvas from 'html2canvas';
+import printJS from 'print-js';
+
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
@@ -190,6 +191,32 @@ export default {
         return this.instance.getPrivateKeyString();
       }
       return null;
+    }
+  },
+  methods: {
+    async print() {
+      try {
+        const element = this.$refs.printContainer;
+        const screen = await html2canvas(element, {
+          async: true,
+          logging: false
+        }).then(canvas => {
+          return canvas;
+        });
+        if (screen && screen.toDataURL !== '') {
+          printJS({
+            printable: screen.toDataURL('image/png'),
+            type: 'image',
+            onError: () => {
+              Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
+            }
+          });
+        } else {
+          Toast(this.$t('errorsGlobal.print-support-error'), ERROR);
+        }
+      } catch (e) {
+        Toast(e, ERROR);
+      }
     }
   }
 };
