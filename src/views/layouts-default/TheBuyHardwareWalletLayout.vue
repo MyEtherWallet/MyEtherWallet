@@ -91,7 +91,7 @@ export default {
         currency: '$',
         price: '59.00',
         note: 'Easy to carry everywhere thanks to its USB format.',
-        link: 'https://www.ledger.com/'
+        link: 'https://shop.ledger.com/?r=fa4b'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
@@ -100,7 +100,7 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link: 'https://trezor.io/?offer_id=12&aff_id=2029'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-keepkey.png'),
@@ -109,7 +109,8 @@ export default {
         currency: '$',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link:
+          'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
       {
         logoText: 'BitBox',
@@ -119,7 +120,7 @@ export default {
         currency: '$',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link: 'https://shiftcrypto.ch/'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-secalot.png'),
@@ -128,7 +129,7 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link: 'https://www.secalot.com/'
       },
       {
         logoText: 'ETHER.CARDS',
@@ -138,7 +139,8 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link:
+          'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
       },
       {
         logoText: 'FINNEY',
@@ -148,7 +150,8 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://trezor.io/'
+        link:
+          'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
@@ -157,7 +160,8 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'Unmatched physical security for your private keys.',
-        link: 'https://trezor.io/'
+        link:
+          'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
       }
     ],
     titleData: {
