@@ -436,7 +436,7 @@ export default {
         if (data && data.getEthBalance) {
           if (this.accounts[this.onAccountIndex]) {
             /**
-             * Sets the balance of the accountAddress
+             * Sets the balance of the account of accountAddress
              */
             this.accounts[this.onAccountIndex].balance = fromWei(
               data.getEthBalance.balance
