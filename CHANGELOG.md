@@ -3,6 +3,7 @@
 ### Devop
 
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
+* Fix access hardware wallet layout [#2926](https://github.com/MyEtherWallet/MyEtherWallet/pull/2926)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
