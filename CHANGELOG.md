@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix interact with contract dropdown [#2964](https://github.com/MyEtherWallet/MyEtherWallet/pull/2964)
 * Fix access hardware wallet layout [#2926](https://github.com/MyEtherWallet/MyEtherWallet/pull/2926)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
