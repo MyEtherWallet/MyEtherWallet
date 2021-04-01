@@ -102,6 +102,7 @@
             v-if="!hasAmountErrors && step > 0"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
+            :error="feeError"
           >
             <template slot="fee">
               <mew-expand-panel
@@ -204,6 +205,7 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
+      feeError: false,
       defaults: {
         fromToken: this.fromToken,
         toToken: this.toToken
@@ -457,6 +459,7 @@ export default {
     getTrade: utils._.debounce(function (idx) {
       if (!this.isToAddressValid) return;
       this.step = 1;
+      this.feeError = false;
       if (this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
         this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
@@ -466,6 +469,7 @@ export default {
         return;
       }
       this.loadingFee = true;
+
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -486,6 +490,11 @@ export default {
           this.allTrades[idx] = trade;
           this.step = 2;
           this.loadingFee = false;
+        })
+        .catch(e => {
+          if (e) {
+            this.feeError = true;
+          }
         });
     }, 500),
     showConfirm() {

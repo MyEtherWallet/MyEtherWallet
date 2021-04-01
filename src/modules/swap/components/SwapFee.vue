@@ -8,13 +8,20 @@
           class="d-flex align-center px-5 py-4"
           min-height="94px"
         >
-          <v-card-text v-if="!gettingFee" class="text-center">
-            Select provider to load transaction fee and enable Swap.
+          <v-card-text
+            v-if="!gettingFee || error"
+            :class="[error ? 'error--text' : '', 'text-center']"
+          >
+            {{ message }}
           </v-card-text>
-          <v-card-text v-if="gettingFee">
+          <v-card-text v-if="gettingFee && !error">
             Loading transaction fee.
           </v-card-text>
-          <v-skeleton-loader v-if="gettingFee" type="chip" width="100%" />
+          <v-skeleton-loader
+            v-if="gettingFee && !error"
+            type="chip"
+            width="100%"
+          />
         </v-card>
       </v-col>
     </v-row>
@@ -33,6 +40,17 @@ export default {
     gettingFee: {
       type: Boolean,
       default: false
+    },
+    error: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    message() {
+      return this.error
+        ? 'This provider is not available.'
+        : ' Select provider to load transaction fee and enable Swap.';
     }
   }
 };
