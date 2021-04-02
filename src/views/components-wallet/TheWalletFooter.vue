@@ -13,13 +13,13 @@
       <v-row class="align-center justify-space-between">
         <v-col cols="12" md="7">
           <div class="mb-0 text-center text-md-left">
-            ©2020 MyEtherWallet. All rights reserved. Pricing taken from
+            ©2021 MyEtherWallet. All rights reserved. Pricing taken from
             <a
               class="titlePrimary--text text-decoration--none"
-              href="https://coinmarketcap.com/"
+              href="https://www.coingecko.com/en"
               target="_blank"
             >
-              CoinMarketCap
+              CoinGecko
             </a>
           </div>
         </v-col>

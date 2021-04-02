@@ -2,7 +2,7 @@
 
 ### Devop
 
-* Fix footer CoinMarketCap link and verify message link [#2957](https://github.com/MyEtherWallet/MyEtherWallet/pull/2957)
+* Fix footer CoinGecko link and verify message link [#2957](https://github.com/MyEtherWallet/MyEtherWallet/pull/2957)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
 * Fix logout [#2950](https://github.com/MyEtherWallet/MyEtherWallet/pull/2950)
