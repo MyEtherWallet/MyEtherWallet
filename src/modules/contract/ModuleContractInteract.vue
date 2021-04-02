@@ -147,7 +147,7 @@
 
 <script>
 import Vue from 'vue';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { toBN, toWei } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import { stringToArray } from '@/core/helpers/common';
@@ -182,7 +182,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'balance']),
-    ...mapState('global', ['currentNetwork', 'gasPrice', 'localContracts']),
+    ...mapState('global', ['currentNetwork']),
+    ...mapGetters('global', ['gasPrice', 'localContracts']),
     canProceed() {
       if (this.isPayableFunction) {
         if (!this.canPay) {
@@ -216,7 +217,7 @@ export default {
     },
     mergedContracts() {
       return [{ name: 'select a contract', abi: '', address: '' }].concat(
-        this.localContracts[this.currentNetwork.type.name],
+        this.localContracts,
         this.currentNetwork.type.contracts
       );
     },

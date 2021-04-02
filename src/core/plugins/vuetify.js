@@ -17,6 +17,7 @@ import Vuetify, {
   VImg,
   VList,
   VListItem,
+  VListItemAvatar,
   VListItemContent,
   VListItemIcon,
   VListItemTitle,
@@ -56,7 +57,6 @@ import Vuetify, {
   VCarouselItem,
   VListGroup,
   VListItemGroup,
-  VListItemAvatar,
   VOverlay,
   VThemeProvider,
   VRadio,
@@ -72,6 +72,7 @@ import Vuetify, {
   VItemGroup,
   VScrollYTransition,
   VSkeletonLoader,
+  VChip,
   VSystemBar
 } from 'vuetify/lib';
 import 'vuetify/dist/vuetify.min.css';
@@ -150,6 +151,7 @@ Vue.use(Vuetify, {
     VItemGroup,
     VScrollYTransition,
     VSkeletonLoader,
+    VChip,
     VSystemBar
   }
 });

@@ -25,9 +25,9 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Our story',
+      title: 'About Us',
       description:
-        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum. Eos rebum nonumy ea sit, nonumy sed duo no gubergren sea rebum, stet ut aliquyam amet gubergren erat. Voluptua lorem diam et ea ut, et sanctus justo ea aliquyam vero ipsum est amet sed. Sanctus sanctus sadipscing ipsum invidunt dolor consetetur gubergren. Labore dolor diam diam ea et sit rebum. Invidunt lorem diam magna ipsum,.',
+        'MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We are always here to help, and we are never giving away ETH. Cheers!',
       centered: true
     }
   })
