@@ -17,6 +17,7 @@ class MEWPClass {
       return data.map(d => {
         return {
           contract_address: d.contract_address.toLowerCase(),
+          isEth: true,
           decimals: parseInt(d.decimals),
           img: d.icon,
           name: d.name ? d.name : d.symbol,
@@ -116,6 +117,7 @@ class MEWPClass {
     tradeObj.transactions.forEach(tx => {
       tx.from = from;
       tx.gasPrice = gasPrice;
+      tx.handleNotification = false;
       txs.push(tx);
     });
 
@@ -131,6 +133,17 @@ class MEWPClass {
               counter++;
               if (counter === promises.length)
                 resolve({
+                  provider: this.provider,
+                  hashes,
+                  statusObj: { hashes }
+                });
+            });
+
+            p.on('error', err => {
+              hashes.push(err);
+              counter++;
+              if (counter === promises.length)
+                reject({
                   provider: this.provider,
                   hashes,
                   statusObj: { hashes }
