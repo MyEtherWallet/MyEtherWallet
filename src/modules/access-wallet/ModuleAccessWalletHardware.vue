@@ -72,7 +72,14 @@
    Network Address Step
   =====================================================================================
   -->
-      <access-wallet-network-addresses v-else-if="onNetworkAddresses" />
+      <access-wallet-network-addresses
+        v-else-if="onNetworkAddresses"
+        :accounts="accounts"
+        :next-address-set="nextAddressSet"
+        :previous-address-set="previousAddressSet"
+        :set-hardware-wallet="setHardwareWallet"
+        :address-page="addressPage"
+      />
       <!--
   =====================================================================================
    Password Step (Coolwallet, Secalot)
@@ -106,7 +113,11 @@
    Pin Step
   =====================================================================================
   -->
-      <access-wallet-pin v-else-if="enterPin" />
+      <access-wallet-pin
+        v-else-if="enterPin"
+        :keep-key-pin-enter="callback"
+        :wallet-type="walletType"
+      />
     </template>
   </mew-overlay>
 </template>
@@ -248,35 +259,12 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
-    /**
-     * On Network Address step
-     */
-    networkTypes() {
-      const showFirst = ['ETH', 'ROP', 'RIN'];
-      const typeArr = Object.keys(this.Networks).filter(item => {
-        if (!showFirst.includes(item)) {
-          return item;
-        }
-      });
-      typeArr.unshift('ETH', 'ROP', 'RIN');
-      return typeArr;
-    },
     onNetworkAddresses() {
       return (
         Object.keys(this.hwWalletInstance).length > 0 &&
         this.step >= 1 &&
         this.step > this.wallets[this.walletType].when
       );
-    },
-    /**
-     * Returns the selected address account
-     */
-    wallet() {
-      const wallet = this.accounts.find(item => {
-        return item.address === this.selectedAddress;
-      });
-
-      return wallet ? wallet : null;
     },
     /**
      * Returns the correct network icon
@@ -408,21 +396,7 @@ export default {
         : this.wallets[this.walletType].titles[this.step];
     }
   },
-  watch: {
-    selectedNetwork(newVal) {
-      Object.values(this.Networks).forEach(itm => {
-        const found = itm.find(network => {
-          return network.url === newVal;
-        });
-
-        if (found) {
-          this.setNetwork(found);
-        }
-      });
-    }
-  },
   mounted() {
-    this.selectedNetwork = this.network.url;
     // watcher was falling into an infinite loop with keepkey
     this.unwatch = this.$watch('hwWalletInstance', function (newVal) {
       if (Object.keys(newVal).length > 0) {
@@ -437,7 +411,6 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
-    ...mapActions('global', ['setNetwork']),
     /**
      * Resets the Data
      */
@@ -659,8 +632,8 @@ export default {
     keepKeyClear() {
       this.pin = '';
     },
-    keepKeyPinEnter() {
-      this.callback(this.pin);
+    keepKeyPinEnter(pin) {
+      this.callback(pin);
       this.enterPin = false;
       this.step += 1;
       setTimeout(() => {
@@ -699,7 +672,6 @@ export default {
             tokens: 'Loading..'
           });
         }
-
         this.addressPage += 1;
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;

@@ -5,8 +5,8 @@
   >
     <div class="mew-heading-1 mb-3">Send transaction</div>
     <div>
-      MEW puts the Ethereum Blockchain at your fingertips, and use MEW to send
-      the transaction in a simple way.
+      MEW puts the Ethereum Blockchain at your fingertips, use MEW to send the
+      transaction in a simple way.
     </div>
     <div class="mt-10">
       <v-row>
@@ -21,7 +21,7 @@
           />
         </v-col>
         <v-col cols="12" class="mt-n5">
-          <mew-address-select />
+          <module-address-book is-home-page />
         </v-col>
       </v-row>
       <mew-button
@@ -36,10 +36,11 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   name: 'HomeFeaturesSend',
-  components: {},
+  components: { ModuleAddressBook },
   data: () => ({
     data: '0'
   }),
