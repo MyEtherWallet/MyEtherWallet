@@ -20,7 +20,20 @@
       =====================================================================================
        -->
       <div v-if="isEth">
+        <v-btn
+          v-show="$vuetify.breakpoint.xsOnly"
+          x-large
+          depressed
+          color="primary"
+          @click="openBuyEth()"
+        >
+          <div class="d-block text-left text-transform--initial">
+            <div>Buy ETH with a</div>
+            <div>credit card</div>
+          </div>
+        </v-btn>
         <mew-button
+          v-show="!$vuetify.breakpoint.xsOnly"
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
@@ -94,6 +107,9 @@ export default {
      */
     navigateToSwap() {
       this.$router.push({ name: 'Swap' });
+    },
+    openBuyEth() {
+      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
     }
   }
 };
