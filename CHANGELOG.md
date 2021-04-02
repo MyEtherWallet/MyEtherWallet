@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Update mobile responsive buy eth button  [#2982](https://github.com/MyEtherWallet/MyEtherWallet/pull/2982)
 * Fix hardware access - network and address select  [#2937](https://github.com/MyEtherWallet/MyEtherWallet/pull/2937)
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
 * Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
