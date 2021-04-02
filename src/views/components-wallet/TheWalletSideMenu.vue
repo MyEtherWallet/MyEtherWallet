@@ -24,30 +24,33 @@
             </v-btn>
           </div>
           <balance-card />
-          <mew-super-button
-            icon
-            font-class="mew-body"
-            class="mt-3 px-3"
-            title="Buy ETH here"
-            color-theme="outline"
-            style="height: 46px; border-radius: 5px"
+
+          <v-btn
+            class="mt-3"
+            color="white"
+            outlined
+            x-large
+            width="100%"
             @click.native="openSimplex"
           >
-            <!-- going to change slot name -->
-            <template #contentSlot>
-              <img
-                src="@/assets/images/icons/icon-visa-white.png"
-                alt="Master card"
-                height="11"
-              />
-              <img
-                src="@/assets/images/icons/icon-mastercard-mew.png"
-                alt="Master card"
-                height="16"
-                class="ml-2 mr-8"
-              />
-            </template>
-          </mew-super-button>
+            <div class="d-flex align-center justify-space-between width--full">
+              <div>Buy ETH here</div>
+
+              <div class="d-flex align-center">
+                <img
+                  src="@/assets/images/icons/icon-visa-white.png"
+                  alt="Master card"
+                  height="11"
+                />
+                <img
+                  src="@/assets/images/icons/icon-mastercard-mew.png"
+                  alt="Master card"
+                  height="16"
+                  class="ml-2"
+                />
+              </div>
+            </div>
+          </v-btn>
         </div>
       </template>
 
