@@ -118,12 +118,12 @@ export default {
           link: 'https://www.mewtopia.com/'
         },
         {
-          label: 'Support center',
+          label: 'Help center',
           img: require('@/assets/images/icons/icon-customer-support.svg'),
           link: 'https://kb.myetherwallet.com/'
         },
         {
-          label: 'MEW connect protocol',
+          label: 'MEWconnect protocol',
           img: require('@/assets/images/icons/icon-mew-connect.png'),
           link: 'https://mewconnect.myetherwallet.com/'
         }
