@@ -275,7 +275,6 @@ export default {
           this.setGasPriceType(selected);
         });
       } catch (e) {
-        console.log(e); // todo remove dev item
         Toast(e, {}, SENTRY);
       }
     },
@@ -293,7 +292,6 @@ export default {
       try {
         this.localGas = await this.web3.eth.getGasPrice();
       } catch (e) {
-        console.log(e); // todo remove dev item
         Toast(e, {}, SENTRY);
       }
     },
