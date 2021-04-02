@@ -1,5 +1,5 @@
 <template>
-  <div class="decision-tree-container">
+  <div class="mew-component--decision-tree decision-tree-container">
     <button
       :class="button ? 'active' : ''"
       class="show-button"
@@ -97,12 +97,13 @@
 
         <div class="footer d-flex align-center">
           <div class="help d-flex align-center">
-            <div
-              class="cursor-pointer"
-              @click="showCustomerSupport = !showCustomerSupport"
+            <a
+              class="cursor-pointer white--text"
+              href="mailto:support@myetherwallet.com"
+              target="_blank"
             >
               {{ $t('common.contact-support') }}
-            </div>
+            </a>
             <div class="ml-2 mr-2">|</div>
             <a
               href="https://kb.myetherwallet.com/"
