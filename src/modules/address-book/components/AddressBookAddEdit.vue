@@ -10,7 +10,7 @@
       :show-blockie="true"
       :label="$t('interface.address-book.address')"
       :placeholder="$t('interface.address-book.enter-addr')"
-      :value="address"
+      :value="addressToAdd"
       :rules="addressRules"
       :resolved-addr="resolvedAddr"
       @input="setAddress"
@@ -33,7 +33,7 @@
         </h5>
         <div class="d-flex align-center">
           <span id="item-addr" class="monospace mr-3 truncate">
-            {{ address }}
+            {{ addressToAdd }}
           </span>
           <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
@@ -106,16 +106,17 @@ export default {
       nameResolver: {},
       currentIdx: null,
       nickname: '',
-      address: ''
+      addressToAdd: ''
     };
   },
   computed: {
+    ...mapState('wallet', ['address']),
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
         return (
-          !this.address ||
+          !this.addressToAdd ||
           !this.validAddress ||
           this.nickname.length > 20 ||
           this.alreadyExists
@@ -149,7 +150,7 @@ export default {
     validAddress() {
       return this.resolvedAddr.length > 0
         ? utils.isAddress(this.resolvedAddr)
-        : utils.isAddress(this.address);
+        : utils.isAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
@@ -159,10 +160,13 @@ export default {
     },
     alreadyExists() {
       if (this.addMode) {
+        if (this.address === this.addressToAdd) {
+          return true;
+        }
         return Object.keys(this.addressBook).some(key => {
           return (
             this.addressBook[key].address.toLowerCase() ===
-            this.address.toLowerCase()
+            this.addressToAdd.toLowerCase()
           );
         });
       }
@@ -170,17 +174,17 @@ export default {
     }
   },
   watch: {
-    address() {
+    addressToAdd() {
       this.resolveName();
     }
   },
   mounted() {
     this.nameResolver = new NameResolver(this.network);
     if (this.addMode && this.toAddress) {
-      this.address = this.toAddress;
+      this.addressToAdd = this.toAddress;
     }
     if (this.editMode) {
-      this.address = this.item.address;
+      this.addressToAdd = this.item.address;
       this.nickname = this.item.nickname;
       this.currentIdx = this.addressBook.findIndex(
         item => item.address === this.item.address
@@ -190,14 +194,14 @@ export default {
   methods: {
     ...mapActions('global', ['setAddressBook']),
     reset() {
-      this.address = '';
+      this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
     },
     async resolveName() {
       if (this.nameResolver) {
         await this.nameResolver
-          .resolveName(this.address)
+          .resolveName(this.addressToAdd)
           .then(addr => {
             this.resolvedAddr = addr;
           })
@@ -207,13 +211,13 @@ export default {
       }
     },
     setAddress(value) {
-      this.address = value;
+      this.addressToAdd = value;
     },
     setNickname(value) {
       this.nickname = value;
     },
     update() {
-      this.addressBook[this.currentIdx].address = this.address;
+      this.addressBook[this.currentIdx].address = this.addressToAdd;
       this.addressBook[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBook);
       this.$emit('back', 3);
@@ -230,7 +234,7 @@ export default {
         return;
       }
       this.addressBook.push({
-        address: this.address,
+        address: this.addressToAdd,
         resolvedAddr: this.resolvedAddr,
         nickname: this.nickname || (this.addressBook.length + 1).toString()
       });

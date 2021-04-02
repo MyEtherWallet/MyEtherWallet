@@ -13,8 +13,6 @@
           label="Signature"
           :value="message"
         ></v-textarea>
-        {{ message }}
-        {{ signature }}
         <mew-button
           title="Sign"
           btn-size="xlarge"
