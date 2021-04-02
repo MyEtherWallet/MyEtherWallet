@@ -35,7 +35,8 @@
           v-if="true"
           ref="messageConfirmationContainer"
           :msg="signature"
-          :copy="copyToClipboard" />
+          :copy="copyToClipboard"
+        />
       </template>
     </mew-overlay>
     <mew-overlay
