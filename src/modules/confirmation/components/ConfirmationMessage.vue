@@ -3,6 +3,7 @@
     <div class="px-3">
       <div class="d-flex justify-space-between mb-2">
         <v-textarea
+          ref="signatureContent"
           outlined
           label="Signature"
           :value="msg"
@@ -12,11 +13,7 @@
       </div>
     </div>
     <div class="d-flex justify-center my-8">
-      <mew-button
-        btn-size="xlarge"
-        title="Confirm and Send"
-        @click.native="send"
-      />
+      <mew-button btn-size="xlarge" title="Copy" @click.native="copy" />
     </div>
     <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
@@ -57,7 +54,7 @@ export default {
       type: Object,
       default: () => {}
     },
-    send: {
+    copy: {
       type: Function,
       default: () => {}
     },
