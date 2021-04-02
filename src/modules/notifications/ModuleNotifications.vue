@@ -77,7 +77,12 @@
                 v-show="showNotifications.length === 0"
                 class="pa-5 text-center"
               >
-                <h3>No notifications to display for {{ address }}</h3>
+                <div class="mew-heading-2 mb-2">
+                  No notifications to display for
+                </div>
+                <div class="word-break--break-all mew-heading-3">
+                  {{ address }}
+                </div>
               </div>
             </div>
           </mew6-white-sheet>
