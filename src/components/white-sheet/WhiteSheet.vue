@@ -36,7 +36,7 @@ export default {
 
 <style lang="scss">
 .mew-component--white-sheet.box-shadow-light {
-  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) !important;
 }
 .mew-component--white-sheet.box-shadow-dark {
   box-shadow: 0 0 15px #3c3c3c !important;
