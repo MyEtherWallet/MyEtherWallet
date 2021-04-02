@@ -6,7 +6,7 @@
       :resolved-addr="resolvedAddr"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
-      :enable-save-address="isValidAddress"
+      :enable-save-address="enableSave"
       :label="$t('sendTx.to-addr')"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
@@ -49,6 +49,10 @@ export default {
     isValidAddressFunc: {
       type: Function,
       default: isAddress
+    },
+    isHomePage: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -75,13 +79,25 @@ export default {
       return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
     },
     addressBookWithMyAddress() {
-      return [
-        {
-          address: this.$store.state.wallet.address,
-          nickname: 'My Address',
-          resolverAddr: ''
-        }
-      ].concat(this.addressBook);
+      return this.isHomePage
+        ? [
+            {
+              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+              currency: 'ETH',
+              nickname: 'MEW Donations',
+              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            }
+          ]
+        : [
+            {
+              address: this.$store.state.wallet.address,
+              nickname: 'My Address',
+              resolverAddr: ''
+            }
+          ].concat(this.addressBook);
+    },
+    enableSave() {
+      return this.isHomePage ? false : this.isValidAddress;
     }
   },
   mounted() {
