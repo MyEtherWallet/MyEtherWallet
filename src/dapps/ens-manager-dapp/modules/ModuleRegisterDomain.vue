@@ -11,7 +11,6 @@
           ><request
             v-if="onStep === 1"
             class="mt-3"
-            :is-available="isAvailable"
             :name="name"
             :host-name="parsedHostName"
             :loading="checkingDomainAvail"
@@ -94,10 +93,6 @@ export default {
       default: '',
       type: String
     },
-    isAvailable: {
-      default: false,
-      type: Boolean
-    },
     checkingDomainAvail: {
       default: false,
       type: Boolean
@@ -129,10 +124,6 @@ export default {
       this.duration = 0;
     },
     onRequest(val) {
-      if (!this.isAvailable) {
-        this.close();
-        return;
-      }
       this.generateKeyPhrase();
       this.duration = val;
       this.onStep += 1;

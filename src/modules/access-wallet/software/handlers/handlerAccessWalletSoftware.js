@@ -14,7 +14,6 @@ export default class AccessWallet {
   getWalletInstance() {
     return this.walletInstance;
   }
-
   /**
    * Keystore Method
    */
