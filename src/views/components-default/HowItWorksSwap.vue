@@ -25,11 +25,11 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Bitcoin
+                Cross-Chain Swaps
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                MEW offers cross-chain swaps for a variety of popular coins.
+                Swap between Ether and Bitcoin, Litecoin, or even DOGE!
               </p>
             </div>
           </div>
@@ -40,11 +40,12 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Tokens
+                Competitive Rates
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                DEX.AG is made up of several popular Decentralized exchanges,
+                allowing you to pick the provider that works best for your token
+                swap.
               </p>
             </div>
           </div>
@@ -55,19 +56,19 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Fiat
+                Cash Out to Fiat
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                Our partner Bity allows anyone to cash out their Ether for Euros
+                or Swiss Francs.
               </p>
-              <div class="d-flex align-center mt-10">
+              <!-- <div class="d-flex align-center mt-10">
                 <a
                   href="#"
                   class="text-decoration--underline white--text font-weight-medium"
                   >Watch tutorial</a
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </v-col>
@@ -87,7 +88,7 @@ export default {
       toptitle: '',
       title: 'Swap',
       description:
-        'MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to offer competitive rates for for swaps including fiat to crypto, BTC, ETH, and ERC20 tokens.',
+        'MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for swaps including fiat-to-crypto, ETH, ERC20 tokens, BTC, and more!',
       centered: false
     }
   })

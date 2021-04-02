@@ -15,11 +15,12 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                Send Transaction
+                Send Transactions
               </div>
               <p>
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                MEW enables users to send their ETH or ERC20 tokens with no
+                minimums to any other Ethereum wallet. Just pay the gas fee for
+                using the blockchain, and you’re done!
               </p>
             </div>
           </div>
@@ -29,12 +30,11 @@
               <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">
-                Send Offline Helper
-              </div>
+              <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
               <p>
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                Non-Fungible-Tokens (NFTs) are supported through our NFT
+                Manager, where you can send and manage your own NFTs right in
+                MEW!
               </p>
             </div>
           </div>
@@ -44,19 +44,22 @@
               <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                Change Networks
+              </div>
               <p>
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                We have integrated other Ethereum-compatible networks, such as
+                Ethereum Classic (ETC) and the Binance Smart Chain (BSC), so
+                users can interact beyond Ethereum.
               </p>
-              <div class="d-flex align-center mt-10">
+              <!-- <div class="d-flex align-center mt-10">
                 <a
                   href="#"
                   class="mr-5 teal--text text-decoration--underline text--lighten-2 font-weight-medium"
                 >
                   Watch tutorial
                 </a>
-              </div>
+              </div> -->
             </div>
           </div>
         </v-col>
@@ -81,9 +84,9 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Send',
+      title: 'Send Your Funds',
       description:
-        'MyEtherWallet - please, call us MEW - puts the ETH blockchain at your fingertips.',
+        'Sending with MEW is as easy as accessing your wallet and pressing a button.',
       centered: false
     }
   })

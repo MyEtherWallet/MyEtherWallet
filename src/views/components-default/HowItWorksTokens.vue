@@ -28,8 +28,8 @@
                 Buy Tokens
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                Swap for ERC20 tokens and stablecoins through our decentralized
+                providers.
               </p>
             </div>
           </div>
@@ -40,19 +40,20 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Add My Tokens
+                Custom Tokens
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                MEW automatically supports most ERC20 tokens through our API,
+                but if you don’t see the token you’re looking for, you can add
+                it as a custom token right into the interface!
               </p>
-              <div class="d-flex align-center mt-10">
+              <!-- <div class="d-flex align-center mt-10">
                 <a
                   href="#"
                   class="white--text font-weight-medium text-decoration--underline"
                   >Watch tutorial</a
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </v-col>
