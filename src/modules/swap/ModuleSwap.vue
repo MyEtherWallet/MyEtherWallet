@@ -153,8 +153,9 @@ import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
 import Swapper from './handlers/handlerSwap';
-import utils, { toBN, fromWei, toWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import { toBN, fromWei, toWei, _ } from 'web3-utils';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -383,6 +384,7 @@ export default {
       });
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
     getTokenFromAddress(address) {
       if (!this.availableTokens.toTokens) return {};
       for (const t of this.availableTokens.toTokens) {
@@ -413,7 +415,7 @@ export default {
       this.toTokenType = value;
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: utils._.debounce(function (value) {
+    setTokenInValue: _.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value;
       this.availableQuotes.forEach(q => {
@@ -468,7 +470,7 @@ export default {
         }
       });
     },
-    getTrade: utils._.debounce(function (idx) {
+    getTrade: _.debounce(function (idx) {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
@@ -537,12 +539,55 @@ export default {
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      this.swapper.executeTrade(this.currentTrade);
+      this.swapper
+        .executeTrade(this.currentTrade)
+        .then(res => {
+          this.swapNotificationFormatter(res);
+        })
+        .catch(err => {
+          this.swapNotificationFormatter(err, true);
+        });
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
         new BigNumber(10).pow(decimals)
       );
+    },
+    swapNotificationFormatter(obj, isError) {
+      obj.hashes.forEach((hash, idx) => {
+        const notification = {
+          transactionHash: !isError ? hash : '',
+          transactionFee: fromWei(this.totalFees),
+          to: this.currentTrade.transactions[idx].to,
+          from: this.confirmInfo.from,
+          gas: this.currentTrade.transactions[idx].gas,
+          gasPrice: this.currentTrade.transactions[idx].gasPrice,
+          gasLimit: this.totalGasLimit,
+          data: this.currentTrade.transactions[idx].data,
+          value: this.currentTrade.transactions[idx].value,
+          type: 'SWAP',
+          read: false,
+          network: this.network.type.name,
+          date: new Date().getTime(),
+          status: isError ? 'FAILED' : 'PENDING',
+          fromTxData: {
+            currency: this.confirmInfo.fromType,
+            amount: this.confirmInfo.fromVal,
+            icon: this.confirmInfo.fromImg
+          },
+          toTxData: {
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
+            to: this.confirmInfo.to
+              ? this.confirmInfo.to
+              : this.currentTrade.transactions[idx].to
+          },
+          swapObj: obj,
+          errMessage: isError ? hash : ''
+        };
+        this.addNotification(new Notification(notification));
+      });
     },
     checkFeeBalance() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));

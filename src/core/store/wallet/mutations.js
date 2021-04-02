@@ -6,7 +6,7 @@ const REMOVE_WALLET = function (state) {
   state.instance = null;
   state.balance = 0;
   state.address = null;
-  state.isHardWare = null;
+  state.isHardWare = false;
   state.identifier = '';
   state.initialLoadTokens = true;
   state.initialLoadBalance = true;
@@ -15,7 +15,9 @@ const REMOVE_WALLET = function (state) {
 const SET_WALLET = function (state, wallet) {
   state.instance = wallet;
   state.address = wallet.getAddressString();
-  state.isHardware = wallet.isHardware;
+  state.isHardware = wallet.hasOwnProperty('isHardware')
+    ? wallet.isHardWare
+    : false;
   state.identifier = wallet.identifier;
   if (!wallet.hasOwnProperty('isHardWare')) {
     state.nickname = wallet.getNickname();
