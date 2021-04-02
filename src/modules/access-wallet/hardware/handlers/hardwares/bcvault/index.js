@@ -14,7 +14,7 @@ import {
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '../../../../../wallets/utils/utils';
+} from '@/modules/wallets/utils/utils.js';
 
 const NEED_PASSWORD = false;
 
