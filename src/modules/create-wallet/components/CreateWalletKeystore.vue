@@ -41,6 +41,7 @@
             placeholder="Confirm password"
             class="mr-3 flex-grow-1"
             :rules="passwordConfirmRulles"
+            type="password"
           />
           <!--
           =====================================================================================
