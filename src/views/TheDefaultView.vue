@@ -11,7 +11,6 @@
 <script>
 import TheDefaultHeader from './components-default/TheDefaultHeader';
 import TheDefaultFooter from './components-default/TheDefaultFooter';
-
 export default {
   name: 'TheDefaultView',
   components: {

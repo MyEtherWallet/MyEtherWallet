@@ -1,9 +1,9 @@
 <template>
   <v-sheet
-    :outlined="true"
     color="white"
     :rounded="true"
-    :min-width="475"
+    max-width="475px"
+    width="100%"
     class="pa-5"
   >
     <div class="d-flex flex-column align-center justify-center">
@@ -12,16 +12,16 @@
         class="text-center bcvault-address-container"
       >
         <v-progress-circular indeterminate />
-        <p class="text-center mew-subtitle">Loading...</p>
-        <p class="text-center mew-heading-1">
+        <div class="text-center mew-subtitle">Loading...</div>
+        <div class="text-center mew-heading-1">
           Please follow the prompts from the BCVault app and Hardware Wallet
-        </p>
+        </div>
       </div>
       <div v-else-if="accounts.length === 0 && !loading" class="text-center">
         <v-icon color="titlePrimary"> mdi-alert </v-icon>
-        <p class="text-center mew-heading-1">
+        <div class="text-center mew-heading-1">
           Connection timed out or user cancelled action or no account found!
-        </p>
+        </div>
       </div>
       <div v-else class="text-center">
         <div

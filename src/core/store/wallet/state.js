@@ -9,7 +9,9 @@ const state = {
   instance: null,
   web3: {},
   ensDomains: null,
-  tokens: []
+  tokens: [],
+  initialLoadTokens: true,
+  initialLoadBalance: true
 };
 
 export default state;
