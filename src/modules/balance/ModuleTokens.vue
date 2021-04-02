@@ -44,7 +44,7 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import { fromWei } from 'web3-utils';
+import numberFormatHelper from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: {
@@ -106,10 +106,9 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            new BigNumber(fromWei(item.balance, 'ether')).toFixed(2) +
-              ' ' +
-              item.symbol,
-            '$' + new BigNumber(item.usdBalance).toFixed(2)
+            this.getTokenValue(item).value + ' ' + item.symbol,
+            numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
+              .value
           ];
           newObj.token = item.symbol;
           newObj.cap = new BigNumber(item.market_cap).toFormat();
@@ -143,6 +142,16 @@ export default {
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
+    }
+  },
+  methods: {
+    getTokenValue(_token) {
+      let n = new BigNumber(_token.balance);
+      if (_token.decimals) {
+        n = n.div(new BigNumber(10).pow(_token.decimals));
+        n = numberFormatHelper.formatFloatingPointValue(n);
+      }
+      return n;
     }
   }
 };
