@@ -54,7 +54,7 @@
               :has-full-width="false"
               title="Send Transaction"
               btn-size="xlarge"
-              @click.native="navigateToSwap"
+              @click.native="navigateToSend"
             />
           </v-col>
         </v-row>
@@ -176,6 +176,9 @@ export default {
       const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
       this.key = '1d';
       this.getBalanceHistory(yesterday, 'hours');
+    },
+    navigateToSend() {
+      this.$router.push({ name: 'SendTX' });
     }
   }
 };

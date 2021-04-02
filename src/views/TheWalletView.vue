@@ -83,6 +83,11 @@ export default {
     getPriceAndBalance() {
       if (this.isEthNetwork) {
         const walletCalls = new WalletCalls(this.$apollo);
+        walletCalls.subscribeToUserBalance(this.address, () => {
+          walletCalls.getBalance(this.address).then(res => {
+            this.setAccountBalance(toBN(res));
+          });
+        });
         walletCalls.getBalance(this.address).then(res => {
           this.setAccountBalance(toBN(res));
         });

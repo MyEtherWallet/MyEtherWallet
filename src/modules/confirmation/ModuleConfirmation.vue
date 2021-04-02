@@ -31,7 +31,12 @@
       :close="overlayClose"
     >
       <template #mewOverlayBody>
-        <confirmation-messsage :msg="signature" />
+        <confirmation-messsage
+          v-if="true"
+          ref="messageConfirmationContainer"
+          :msg="signature"
+          :copy="copyToClipboard"
+        />
       </template>
     </mew-overlay>
     <mew-overlay
@@ -59,7 +64,7 @@ import ConfirmationBatchTransaction from './components/ConfirmationBatchTransact
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, INFO } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -298,6 +303,13 @@ export default {
         SUCCESS,
         5000
       );
+      this.overlayClose();
+    },
+    copyToClipboard() {
+      this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      Toast(this.$t('common.copied'), {}, INFO);
       this.overlayClose();
     }
   }
