@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
 * Fix decision-tree support contact link [#2959](https://github.com/MyEtherWallet/MyEtherWallet/pull/2959)
 * Fix hardware wallet links [#2963](https://github.com/MyEtherWallet/MyEtherWallet/pull/2963)
 * Fix interact with contract dropdown [#2964](https://github.com/MyEtherWallet/MyEtherWallet/pull/2964)
