@@ -51,6 +51,7 @@ export default {
           Toast('Settings succesfully imported!', {}, SUCCESS);
         })
         .catch(e => {
+          console.log(e); // todo remove dev item
           Toast(e.messsage, {}, ERROR);
         });
     }
