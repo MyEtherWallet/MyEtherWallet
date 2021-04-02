@@ -34,9 +34,12 @@
           <div
             class="d-flex align-center justify-center justify-md-end titlePrimary--text"
           >
-            <span>Feedback</span>
-            <span class="mx-5">|</span>
-            <span>Support</span>
+            <a
+              class="black--text"
+              href="https://kb.myetherwallet.com/"
+              target="_blank"
+              >Help Center</a
+            >
             <span class="mx-5">|</span>
             <div style="max-width=200px">
               <v-select

@@ -7,7 +7,7 @@
       <module-tokens />
     </template>
     <template #rightColItem1>
-      <app-swap />
+      <module-swap-rates />
     </template>
     <template #rightColItem2>
       <app-carousel />
@@ -20,14 +20,14 @@ import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import AppCarousel from '@/core/components/AppCarousel';
 import ModuleBalance from '@/modules/balance/ModuleBalance';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
-import AppSwap from '@/core/components/AppSwap';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
 
 export default {
   components: {
     AppCarousel,
     ModuleBalance,
     ModuleTokens,
-    AppSwap,
+    ModuleSwapRates,
     TheWrapperWallet
   }
 };

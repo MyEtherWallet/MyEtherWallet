@@ -3,50 +3,39 @@
     :outlined="true"
     color="white"
     :rounded="true"
-    :max-width="740"
-    :min-width="575"
-    :min-height="340"
+    class="pa-5 d-flex flex-column"
+    width="100%"
+    max-width="500px"
   >
-    <v-container>
-      <v-row align="center" justify="center">
-        <v-col cols="10">
-          <p class="mt-2 mew-heading-3 text-center">
-            Please enter the password of your
-            <span class="text-capitalize">{{ walletType }}</span> device.
-          </p>
-          <v-container>
-            <v-row align="center" justify="center">
-              <v-col cols="10">
-                <mew-input
-                  v-model="password"
-                  label="Password"
-                  placeholder="Enter your password"
-                  :type="onCoolWallet ? 'text' : 'password'"
-                />
-                <div class="d-flex align-center flex-column">
-                  <mew-button
-                    title="Access My Wallet"
-                    btn-size="xlarge"
-                    :disabled="!(password !== '' && acceptTerms)"
-                    @click.native="
-                      () => {
-                        nextStep();
-                      }
-                    "
-                  />
-                  <mew-checkbox
-                    v-model="acceptTerms"
-                    label="To access my wallet, I accept "
-                    :link="link"
-                    class="justify-center"
-                  />
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-container>
+    <div class="mt-2 mb-10 mew-heading-3 text-center">
+      Please enter the password of your
+      <span class="text-capitalize">{{ walletType }}</span> device.
+    </div>
+
+    <mew-input
+      v-model="password"
+      label="Password"
+      placeholder="Enter your password"
+      :type="onCoolWallet ? 'text' : 'password'"
+    />
+
+    <mew-button
+      title="Access My Wallet"
+      btn-size="xlarge"
+      :disabled="!(password !== '' && acceptTerms)"
+      @click.native="
+        () => {
+          nextStep();
+        }
+      "
+    />
+
+    <mew-checkbox
+      v-model="acceptTerms"
+      label="To access my wallet, I accept "
+      :link="link"
+      class="justify-center"
+    />
   </v-sheet>
 </template>
 
