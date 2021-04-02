@@ -78,7 +78,7 @@ export default {
         leftSideValues: {
           title: depositedBalance,
           caption: depositedBalanceInUSD,
-          subTitle: 'Aave Deposit Balance'
+          subTitle: 'Aave Withdraw Balance'
         },
         rightSideValues: {
           title: tokenBalance,
@@ -86,13 +86,13 @@ export default {
           subTitle: 'Aave Wallet Balance'
         },
         formText: {
-          title: 'How much would you like to deposit?',
+          title: 'How much would you like to withdraw?',
           caption:
-            'Here you can set the amount you want to deposit. You can manually enter a specific amount or use the percentage buttons below.'
+            'Here you can set the amount you want to withdraw. You can manually enter a specific amount or use the percentage buttons below.'
         },
         buttonTitle: {
-          action: 'Deposit',
-          cancel: 'Cancel Deposit'
+          action: 'Withdraw',
+          cancel: 'Cancel Withdraw'
         }
       };
     }
