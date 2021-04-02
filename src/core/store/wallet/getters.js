@@ -22,8 +22,13 @@ const tokensList = function (state) {
     : [];
 };
 
+const initialLoad = function (state) {
+  return state.initialLoadTokens || state.initialLoadBalance;
+};
+
 export default {
   balanceInETH,
   totalOwnedDomains,
-  tokensList
+  tokensList,
+  initialLoad
 };

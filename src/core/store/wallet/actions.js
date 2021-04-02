@@ -2,7 +2,6 @@ import url from 'url';
 import web3 from 'web3';
 import MEWProvider from '@/utils/web3-provider';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
-import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
 import BigNumber from 'bignumber.js';
 import EventNames from '@/utils/web3-provider/events';
@@ -65,6 +64,7 @@ const setWeb3Instance = function (
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
+        const gasPrice = rootGetters['global/gasPrice'];
         const localTx = {
           to: arr[i].to,
           data: arr[i].data,
@@ -84,9 +84,7 @@ const setWeb3Instance = function (
           ? rootState.global.currentNetwork.type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
-          arr[i].gasPrice === undefined
-            ? unit.toWei(state.gasPrice, 'gwei')
-            : arr[i].gasPrice;
+          arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
         arr[i] = formatters.inputCallFormatter(arr[i]);
       }
 
@@ -97,7 +95,7 @@ const setWeb3Instance = function (
         EventNames.SHOW_BATCH_TX_MODAL,
         arr,
         batchSignCallback,
-        state.instance.isHardware
+        state.isHardware
       );
     });
   };
