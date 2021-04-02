@@ -221,7 +221,7 @@ export default {
     // next key for pendingTx subscription
     parsePendingTx(result) {
       const data = result.data.pendingTransaction;
-      if (data.to.toLowerCase() === this.address.toLowerCase()) {
+      if (data.to?.toLowerCase() === this.address?.toLowerCase()) {
         const copyArray = this.inTx;
         data['transactionFee'] = data.txFee;
         data['date'] = data.timestamp * 1000;
@@ -325,11 +325,11 @@ export default {
           string: 'Time'
         },
         status: {
-          value: obj.status.toLowerCase(),
+          value: obj.status?.toLowerCase(),
           string: 'Status'
         },
         type: {
-          value: obj.type.toLowerCase(),
+          value: obj.type?.toLowerCase(),
           string: obj.type
         },
         read: obj.read,

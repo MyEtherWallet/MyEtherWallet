@@ -2,7 +2,7 @@ import {
   getEthBalance,
   getUSDPrice,
   getBalanceHistory,
-  subscribeToUserBalance
+  subscribeToAccountBalance
 } from './wallets.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default class WalletCalls {
@@ -65,8 +65,8 @@ export default class WalletCalls {
   }
 
   subscribeToUserBalance(address, nextHandler) {
-    const connector = this.$apollo.subscribe({
-      query: subscribeToUserBalance,
+    const connector = this.apollo.subscribe({
+      query: subscribeToAccountBalance,
       variables: {
         owner: address,
         event: 'NEW_ETH_TRANSFER'

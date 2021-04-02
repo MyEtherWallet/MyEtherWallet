@@ -35,7 +35,10 @@ query getBalanceHistory(
   }
 }
 
-subscription subscribeToAccountBalance($owner: String!, $event: String!) {
+subscription subscribeToAccountBalance(
+  $owner: String!
+  $event: AddressEventType!
+) {
   addressEvent(owner: $owner, event: $event) {
     blockNumber
   }
