@@ -208,7 +208,7 @@ export default {
           name: 'Export configurations'
         },
         {
-          name: 'Contact Address'
+          name: 'Contact Addresses'
         }
         // {
         //   name: 'Notifications'
@@ -258,7 +258,14 @@ export default {
           address: item.address,
           nickname: item.nickname,
           resolvedAddr: item.resolvedAddr,
-          callToAction: 'Edit'
+          callToAction: [
+            {
+              title: 'Edit',
+              btnStyle: 'transparent',
+              colorTheme: 'primary',
+              method: this.onEdit
+            }
+          ]
         });
       });
     },

@@ -1,5 +1,6 @@
 import { fromWei, toBN } from 'web3-utils';
 const balanceInETH = function (state) {
+  if (!state.balance) state.balance = '0';
   return fromWei(state.balance);
 };
 
@@ -21,8 +22,13 @@ const tokensList = function (state) {
     : [];
 };
 
+const initialLoad = function (state) {
+  return state.initialLoadTokens || state.initialLoadBalance;
+};
+
 export default {
   balanceInETH,
   totalOwnedDomains,
-  tokensList
+  tokensList,
+  initialLoad
 };
