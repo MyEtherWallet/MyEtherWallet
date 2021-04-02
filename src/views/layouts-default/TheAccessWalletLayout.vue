@@ -134,7 +134,7 @@ export default {
           title: 'MEWwallet',
           subtitle: 'Use MEWwallet to access my wallet',
           note: '',
-          rightIcon: require('@/assets/images/icons/icon-mew-connect.png'),
+          rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
