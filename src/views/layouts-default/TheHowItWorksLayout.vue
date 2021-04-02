@@ -5,7 +5,7 @@
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
         <div class="display-1 font-weight-bold text-sm-center">
-          All-in-one gateway to your Ethereum Blockchain service
+          Your All-In-One Gateway to the Ethereum Blockchain
         </div>
       </v-sheet>
     </v-container>
