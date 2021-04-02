@@ -37,7 +37,11 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-if="!loading && tokensData.length === 0" is-tokens />
+    <balance-empty-block
+      v-if="!loading && tokensData.length === 0"
+      is-tokens
+      :is-eth="isEthNetwork"
+    />
   </div>
 </template>
 <script>
@@ -89,13 +93,18 @@ export default {
           sortable: false,
           width: '15%'
         }
-      ],
-      loading: true
+      ]
+      // loading: true
     };
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'initialLoadTokens']),
+    ...mapGetters('global', ['isEthNetwork']),
+
+    loading() {
+      return this.initialLoadTokens;
+    },
     tokensData() {
       return this.tokensList
         .filter(item => {
@@ -126,7 +135,7 @@ export default {
               colorTheme: 'primary'
             }
           ];
-          this.loading = false;
+          // this.loading = false;
           return newObj;
         });
     },
