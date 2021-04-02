@@ -302,7 +302,7 @@ export default {
           string: 'Gas Price'
         },
         gasLimit: {
-          value: obj.gasLimit,
+          value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
           string: 'Gas Limit'
         },
         total: {

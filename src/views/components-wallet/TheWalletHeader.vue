@@ -19,7 +19,12 @@
           <div>
             Find out what Crypto Wallets is and learn to use MEW securly by
             using many different mobile wallets.
-            <a href="#">Read...</a>
+            <a
+              href="https://www.mewtopia.com/tag/getting-started/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Read...</a
+            >
           </div>
         </div>
       </div>
