@@ -3,16 +3,14 @@
     <logout-warning-modal ref="logoutWarningModal" />
     <header-container
       v-show="
-        !on &&
         $route.fullPath !== '/getting-started' &&
         !$route.fullPath.includes('/dapp-submission')
       "
     />
     <welcome-modal ref="welcome" />
-    <welcome-modal-temp ref="welcomeTemp" />
     <router-view />
-    <footer-container v-if="!on" />
-    <wallet-launched-footer-banner v-if="!on" />
+    <footer-container />
+    <wallet-launched-footer-banner />
     <confirmation-container v-if="wallet !== null" />
   </div>
 </template>
@@ -22,7 +20,6 @@ import FooterContainer from '@/containers/FooterContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import WelcomeModal from '@/components/WelcomeModal';
-import WelcomeModalTemp from '@/layouts/HomeLayout/components/WelcomeModal';
 import store from 'store';
 import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
@@ -32,18 +29,12 @@ import WalletLaunchedBanner from '@/components/WalletLaunchedBanner';
 export default {
   name: 'App',
   components: {
-    WelcomeModalTemp,
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer,
     'logout-warning-modal': LogoutWarningModal,
     'welcome-modal': WelcomeModal,
     'wallet-launched-footer-banner': WalletLaunchedBanner
-  },
-  data() {
-    return {
-      on: false
-    };
   },
   computed: {
     ...mapState('main', ['wallet', 'online'])
@@ -75,30 +66,16 @@ export default {
     window.addEventListener('offline', () => {
       this.checkIfOnline(false);
     });
-    window.addEventListener('TURN_OFF', () => {
-      this.on = false;
-      store.set('taskDone', true);
-      this.$refs.welcomeTemp.$refs.welcome.show();
-    });
   },
   mounted() {
-    const currentDate = new Date().getTime();
-    const date1 = 1617260400000;
-    const date2 = 1617346800000;
-
-    if (currentDate >= date1 && currentDate < date2) {
-      this.on = true;
-    }
-
-    if (store.get('taskDone')) {
-      this.on = false;
-    }
-
-    if (!this.on) {
-      this.showWelcome();
-    }
-
     this.checkIfOnline(navigator.onLine);
+    if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
+      this.$refs.welcome.$refs.welcome.show();
+    }
+
+    this.$refs.welcome.$refs.welcome.$on('hidden', () => {
+      store.set('notFirstTimeVisit', true);
+    });
 
     this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
       window.scrollTo(0, 0);
@@ -108,18 +85,9 @@ export default {
     window.removeEventListener('PWA_UPDATED');
     window.removeEventListener('offline');
     window.removeEventListener('online');
-    window.removeEventListener('turnOff');
   },
   methods: {
-    ...mapActions('main', ['checkIfOnline']),
-    showWelcome() {
-      if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
-        this.$refs.welcome.$refs.welcome.show();
-      }
-      this.$refs.welcome.$refs.welcome.$on('hidden', () => {
-        store.set('notFirstTimeVisit', true);
-      });
-    }
+    ...mapActions('main', ['checkIfOnline'])
   }
 };
 </script>
