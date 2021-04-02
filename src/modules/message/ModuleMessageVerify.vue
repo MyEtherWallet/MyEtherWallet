@@ -70,6 +70,8 @@ export default {
       this.didntSign = false;
       this.didSign = false;
       this.signResult = false;
+      this.message = '';
+      this.signer = '';
     }
   }
 };

@@ -2,6 +2,9 @@
 
 ### Devop
 
+* Fix import configuration, sign message clear [#2985](https://github.com/MyEtherWallet/MyEtherWallet/pull/2985)
+* Fix sign message mobile layout [#2990](https://github.com/MyEtherWallet/MyEtherWallet/pull/2990)
+* Fix verify message layout [#2987](https://github.com/MyEtherWallet/MyEtherWallet/pull/2987)
 * Fix footer CoinGecko link and verify message link [#2957](https://github.com/MyEtherWallet/MyEtherWallet/pull/2957)
 * Fix hardware access - network and address select  [#2937](https://github.com/MyEtherWallet/MyEtherWallet/pull/2937)
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
