@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix footer CoinGecko link and verify message link [#2957](https://github.com/MyEtherWallet/MyEtherWallet/pull/2957)
 * Fix hardware access - network and address select  [#2937](https://github.com/MyEtherWallet/MyEtherWallet/pull/2937)
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
 * Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
