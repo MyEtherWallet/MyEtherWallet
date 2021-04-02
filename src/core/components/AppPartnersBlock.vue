@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-7 py-md-12 mb-6">
+  <v-container class="mew-component--partners py-7 py-md-12 mb-6">
     <v-sheet color="transparent" max-width="400px">
       <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
         Partners
@@ -33,7 +33,7 @@ export default {
     partners: [
       {
         img: require('@/assets/images/partners/ledger.png'),
-        href: 'https://www.ledger.com/?r=fa4b'
+        link: 'https://www.ledger.com/?r=fa4b'
       },
       {
         img: require('@/assets/images/partners/trezor.png'),
