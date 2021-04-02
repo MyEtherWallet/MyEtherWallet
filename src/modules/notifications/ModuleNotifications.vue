@@ -77,7 +77,8 @@
                 v-show="showNotifications.length === 0"
                 class="pa-5 text-center"
               >
-                <h3>No notifications to display for {{ address }}</h3>
+                <h3 class="mb-5">No notifications to display for:</h3>
+                <h3 class="break-hash">{{ address }}</h3>
               </div>
             </div>
           </mew6-white-sheet>
@@ -345,6 +346,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.break-hash {
+  word-break: break-all;
+}
 .edit {
   width: 37px;
   height: 37px;
