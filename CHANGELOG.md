@@ -3,6 +3,7 @@
 ### Devop
 
 * Fix no balance missing balance card [#2965](https://github.com/MyEtherWallet/MyEtherWallet/pull/2965)
+* Fix buy eth button overflow issue on old Chrome browsers [#2966](https://github.com/MyEtherWallet/MyEtherWallet/pull/2966)
 * Fix access hardware wallet layout [#2926](https://github.com/MyEtherWallet/MyEtherWallet/pull/2926)
 * Update tools page [#2944](https://github.com/MyEtherWallet/MyEtherWallet/pull/2944)
 * Update how it works layout [#2925](https://github.com/MyEtherWallet/MyEtherWallet/pull/2925)
