@@ -27,7 +27,7 @@ export default {
       toptitle: '',
       title: 'What is MEW?',
       description:
-        'Still though still lost followed and by angels december in flown. Ungainly angels so what the, so much the morrow opened my heart or, gloating with on nevermore wondering moment chamber weary, till we liftednevermore usby feather eagerly before stillness, spoken borrow my opened before ah upon bust chamber. Rapping or parting angels lattice still ah, i still till a discourse nevermore spoken soul. I for my the on you, of my my angels more lamplight me lenore the, there all in implore above blessed the sitting raven my. This angels gileadtell straight with distinctly meant the discourse, mystery whose.',
+        'MEW is an expanding suite of products offering complete access to all the Ethereum blockchain has to offer. With a web platform, a mobile app, a chrome extension, an explorer, and educational resources, MEW has all the tools to help newcomers and experienced users explore new Ethereum applications in a trusted environment.',
       centered: false
     }
   })
