@@ -3,6 +3,7 @@
 ### Devop
 
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
+* Fix decision-tree support contact link [#2959](https://github.com/MyEtherWallet/MyEtherWallet/pull/2959)
 * Fix hardware wallet links [#2963](https://github.com/MyEtherWallet/MyEtherWallet/pull/2963)
 * Fix interact with contract dropdown [#2964](https://github.com/MyEtherWallet/MyEtherWallet/pull/2964)
 * Fix no balance missing balance card [#2965](https://github.com/MyEtherWallet/MyEtherWallet/pull/2965)
