@@ -8,7 +8,7 @@
       :save-tooltip="$t('common.save')"
       :enable-save-address="isValidAddress"
       :label="$t('sendTx.to-addr')"
-      :items="addressBook"
+      :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import utils from 'web3-utils';
+import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
@@ -45,20 +45,24 @@ export default {
   components: {
     AddressBookAddEdit
   },
+  props: {
+    isValidAddressFunc: {
+      type: Function,
+      default: isAddress
+    }
+  },
   data() {
     return {
       addMode: false,
       resolvedAddr: '',
       inputAddr: '',
-      nameResolver: {}
+      nameResolver: {},
+      isValidAddress: false
     };
   },
   computed: {
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
-    isValidAddress() {
-      return utils.isAddress(this.address);
-    },
     rules() {
       return [
         this.isValidAddress ||
@@ -69,6 +73,15 @@ export default {
     },
     address() {
       return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
+    },
+    addressBookWithMyAddress() {
+      return [
+        {
+          address: this.$store.state.wallet.address,
+          nickname: 'My Address',
+          resolverAddr: ''
+        }
+      ].concat(this.addressBook);
     }
   },
   mounted() {
@@ -80,18 +93,32 @@ export default {
     },
     async resolveName() {
       if (this.nameResolver) {
-        await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-          this.resolvedAddr = addr;
-          this.$emit('setAddress', this.resolvedAddr, this.isValidAddress);
-        });
+        try {
+          await this.nameResolver.resolveName(this.inputAddr).then(addr => {
+            this.resolvedAddr = addr;
+            this.$emit('setAddress', this.resolvedAddr, true);
+          });
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
       }
     },
     setAddress(value) {
-      this.inputAddr = value && value.address ? value.address : value;
-      this.resolvedAddr = '';
-      this.$emit('setAddress', this.inputAddr, this.isValidAddress);
-      if (this.inputAddr && !utils.isAddress(this.inputAddr)) {
-        this.resolveName();
+      if (value) {
+        this.inputAddr = value.address ? value.address : value;
+        this.resolvedAddr = '';
+        const isAddValid = this.isValidAddressFunc(this.inputAddr);
+        if (isAddValid instanceof Promise) {
+          isAddValid.then(res => {
+            this.isValidAddress = res;
+            this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+          });
+        } else {
+          this.isValidAddress = isAddValid;
+          this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+        }
+        if (!this.isValidAddress) {
+          this.resolveName();
+        }
       }
     }
   }
