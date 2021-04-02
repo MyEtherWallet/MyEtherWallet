@@ -14,9 +14,9 @@
             <app-block-title no-page-title :data="titleData" />
             <mew-button
               class="mt-5"
-              btn-link="https://www.mewtopia.com/"
+              btn-link="https://kb.myetherwallet.com/"
               :has-full-width="false"
-              title="Contact Support"
+              title="Visit Help Center"
               btn-size="xlarge"
             />
           </v-sheet>
@@ -30,7 +30,7 @@
               aspect-ratio="1"
               class="mb-5"
             />
-            <app-block-title no-page-title :data="titleData" />
+            <app-block-title no-page-title :data="titleDataRight" />
             <div class="d-flex align-center mt-5">
               <v-btn
                 v-for="(i, key) in icons"
@@ -82,9 +82,15 @@ export default {
       }
     ],
     titleData: {
-      title: 'Community',
+      title: 'Get answers to questions',
       description:
-        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+        'See our Help Center for assistance with using MEW, sending transactions, swapping, DeFi, DApps, and much more.',
+      centered: false
+    },
+    titleDataRight: {
+      title: 'Join the MEW community',
+      description:
+        'Follow us on our social channels for Ethereum news, guides, security tips, and support from other MEW users.',
       centered: false
     }
   })
