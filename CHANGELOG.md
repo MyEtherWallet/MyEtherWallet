@@ -2,7 +2,7 @@
 
 ### Devop
 
-* Fix wallet notification msg [#]()
+* Fix wallet notification msg [#2979](https://github.com/MyEtherWallet/MyEtherWallet/pull/2979)
 * Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
 * Fix decision-tree support contact link [#2959](https://github.com/MyEtherWallet/MyEtherWallet/pull/2959)
 * Fix hardware wallet links [#2963](https://github.com/MyEtherWallet/MyEtherWallet/pull/2963)
