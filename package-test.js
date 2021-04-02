@@ -18,7 +18,8 @@ const EXCEPTIONS = [
   'copy-webpack-plugin',
   'vuetify',
   'sass-loader',
-  'husky'
+  'husky',
+  '@aave/protocol-js'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
