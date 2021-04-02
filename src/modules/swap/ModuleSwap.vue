@@ -14,7 +14,6 @@
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
     />
-    <module-network v-if="$vuetify.breakpoint.smAndDown" class="pa-2 pa-md-3" />
 
     <mew6-white-sheet>
       <mew-module
@@ -24,148 +23,122 @@
         title="Swap"
       >
         <template #moduleBody>
-          <div class="d-flex flex-column pa-10">
-            <div class="mt-6 d-flex justify-space-between">
-              <div>
-                <mew-select
-                  :value="fromTokenType"
-                  :items="fromTokens"
-                  label="From"
-                  @input="setFromToken"
-                />
-                <mew-input
-                  label="you'll send"
-                  placeholder=""
-                  :value="tokenInValue"
-                  type="number"
-                  @input="setTokenInValue"
-                />
-              </div>
-              <div class="px-6 mb-8 d-flex align-center">
+          <!--
+            =====================================================================================
+              From / Amount to Swap / To / Amount to Recieve
+            =====================================================================================
+            -->
+          <v-row class="align-center justify-space-between">
+            <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
+              <mew-select
+                :value="fromTokenType"
+                :items="fromTokens"
+                label="From"
+                @input="setFromToken" />
+
+              <mew-input
+                label="amount to swap"
+                placeholder="Enter amount to swap"
+                :value="tokenInValue"
+                type="number"
+                :hint="availableBalanceHint"
+                :persistent-hint="true"
+                :error-messages="amountErrorMessage"
+                :disabled="initialLoad"
+                @input="setTokenInValue"
+            /></v-col>
+
+            <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
+              <div class="d-flex align-center justify-center">
                 <img :src="swapIcon" height="35" />
               </div>
-              <div>
-                <mew-select
-                  ref="toToken"
-                  :value="toTokenType"
-                  :items="toTokens"
-                  label="To"
-                  @input="setToToken"
-                />
-                <mew-input
-                  label="you'll receive"
-                  placeholder=""
-                  type="number"
-                  disabled
-                  :value="tokenOutValue"
-                />
-              </div>
-            </div>
-
-            <module-address-book @setAddress="setToAddress" />
-
-            <div class="mt-5">
-              <div class="mew-heading-3 mb-5">Select a provider</div>
-
-              <!-- Dummy skeleton loader for provider list -->
-              <v-row v-if="step == 0">
-                <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
-                  <v-card
-                    flat
-                    color="selectorBg lighten-1"
-                    class="d-flex align-center px-5 py-5"
-                  >
-                    <v-skeleton-loader width="300px" type="chip" />
-                    <v-spacer />
-                    <div class="d-flex align-center">
-                      <v-skeleton-loader
-                        width="170px"
-                        type="chip"
-                        class="mr-5"
-                      />
-                      <v-skeleton-loader width="32px" type="chip" />
-                    </div>
-                  </v-card>
-                </v-col>
-              </v-row>
-
-              <!-- Real provider list -->
-              <v-item-group v-show="step >= 1" mandatory>
-                <v-row>
-                  <v-col
-                    v-for="(quote, idx) in availableQuotes"
-                    :key="`quote-${idx}`"
-                    cols="12"
-                    class="mb-n3"
-                  >
-                    <v-item v-slot="{ active, toggle }">
-                      <v-card
-                        :style="
-                          active
-                            ? 'border-color: var(--v-primary-base) !important'
-                            : ''
-                        "
-                        outlined
-                        :color="active ? 'selectorBg' : 'selectorBg lighten-1'"
-                        class="d-flex align-center justify-space-between border-radius--10px pl-5 pr-2 py-1"
-                        @click="
-                          toggle();
-                          setProvider(idx);
-                        "
-                      >
-                        <div class="mew-heading-2 font-weight-medium">
-                          {{ (Math.round(quote.rate * 100) / 100).toFixed(3) }}
-                          {{ toTokenType.symbol }}
-                        </div>
-                        <div class="d-flex align-center">
-                          <img
-                            :class="$vuetify.theme.dark ? 'invert' : ''"
-                            :src="quote.exchangeInfo.img"
-                            :alt="quote.exchangeInfo.name"
-                            height="25"
-                          />
-                          <mew-checkbox class="ml-3" :value="active" />
-                        </div>
-                      </v-card>
-                    </v-item>
-                  </v-col>
-                </v-row>
-              </v-item-group>
-            </div>
-
-            <mew-expand-panel
-              v-show="step >= 2"
-              is-toggle
-              has-dividers
-              :panel-items="exPannel"
-              class="mt-4 mb-10 swap-expend"
-            >
-              <template #panelBody1>
-                <mew-input
-                  label="Gas Price"
-                  placeholder=" "
-                  right-label="Gwei"
-                  :value="gasPriceGwei"
-                  disabled
-                />
-                <mew-input
-                  label="Total Gas Limit"
-                  placeholder=" "
-                  right-label="Wei"
-                  disabled
-                  :value="totalGasLimit"
-                />
-              </template>
-            </mew-expand-panel>
-
-            <div v-show="step >= 2" class="text-center">
-              <mew-button
-                title="Swap"
-                :has-full-width="false"
-                btn-size="xlarge"
-                @click.native="showConfirm()"
+            </v-col>
+            <v-col cols="12" sm="5">
+              <mew-select
+                ref="toToken"
+                :value="toTokenType"
+                :items="toTokens"
+                label="To"
+                @input="setToToken"
               />
-            </div>
+              <mew-input
+                label="you'll receive"
+                placeholder=""
+                type="number"
+                disabled
+                :value="tokenOutValue"
+              />
+            </v-col>
+          </v-row>
+          <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+            -->
+          <module-address-book
+            v-show="showToAddress"
+            :is-valid-address-func="isValidToAddress"
+            @setAddress="setToAddress"
+          />
+          <!--
+            =====================================================================================
+             Providers List
+            =====================================================================================
+            -->
+          <swap-providers-list
+            :step="step"
+            :available-quotes="availableQuotes"
+            :set-provider="setProvider"
+            :to-token-symbol="toTokenType.symbol"
+            :to-token-icon="toTokenType.img"
+            :message="providersMessage"
+          />
+          <!--
+            =====================================================================================
+             Swap Fee
+            =====================================================================================
+          -->
+          <swap-fee
+            v-if="!hasAmountErrors && step > 0"
+            :show-fee="showSwapFee"
+            :getting-fee="loadingFee"
+            :error="feeError"
+          >
+            <template slot="fee">
+              <mew-expand-panel
+                is-toggle
+                has-dividers
+                :panel-items="exPannel"
+                class="swap-expend"
+              >
+                <template #panelBody1>
+                  <mew-input
+                    label="Gas Price"
+                    placeholder=" "
+                    right-label="Gwei"
+                    :value="gasPriceGwei"
+                    disabled
+                  />
+                  <mew-input
+                    label="Total Gas Limit"
+                    placeholder=" "
+                    right-label="Wei"
+                    disabled
+                    :value="totalGasLimit"
+                  />
+                </template>
+              </mew-expand-panel>
+            </template>
+          </swap-fee>
+
+          <div class="text-center">
+            <mew-button
+              title="Swap"
+              :has-full-width="false"
+              :disabled="step < 2 || feeError != ''"
+              btn-size="xlarge"
+              @click.native="showConfirm()"
+            />
           </div>
         </template>
       </mew-module>
@@ -177,23 +150,23 @@
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
-import KyberNetwork from '@/assets/images/icons/icon-kyber-network.svg';
-import Changelly from '@/assets/images/icons/icon-changelly.png';
-import Simplex from '@/assets/images/icons/icon-simplex.png';
-import Bity from '@/assets/images/icons/icon-bity.png';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
-import ModuleNetwork from '@/modules/network/ModuleNetwork';
-import utils, { toBN, fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import SwapProvidersList from './components/SwapProvidersList.vue';
+import SwapFee from './components/SwapFee.vue';
+import Swapper from './handlers/handlerSwap';
+import { toBN, fromWei, toWei, _ } from 'web3-utils';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
-const AMT = '0.1';
+const MIN_GAS_WEI = '800000000000000';
 export default {
+  name: 'ModuleSwap',
   components: {
     ModuleAddressBook,
     SwapConfirmation,
-    ModuleNetwork
+    SwapProvidersList,
+    SwapFee
   },
   props: {
     fromToken: {
@@ -206,7 +179,7 @@ export default {
     },
     amount: {
       type: String,
-      default: AMT
+      default: ''
     }
   },
   data() {
@@ -223,8 +196,8 @@ export default {
         show: false
       },
       swapper: null,
-      toTokenType: null,
-      fromTokenType: null,
+      toTokenType: {},
+      fromTokenType: {},
       tokenInValue: this.amount,
       tokenOutValue: null,
       availableTokens: [],
@@ -232,6 +205,8 @@ export default {
       currentTrade: null,
       allTrades: [],
       isLoading: false,
+      loadingFee: false,
+      feeError: '',
       defaults: {
         fromToken: this.fromToken,
         toToken: this.toToken
@@ -241,36 +216,20 @@ export default {
           name: 'Transaction Fee',
           subtext: '$0.00',
           tooltip:
-            'Transaction fee is automatically caculated. If you want to customize the Transaction fee, you can do it from here.'
+            'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
         }
       ],
       swapIcon: SwapIcon,
-      kyber: KyberNetwork,
-      changelly: Changelly,
-      simplex: Simplex,
-      bity: Bity,
-      addresses: [
-        {
-          address: '0x8c08079b06f83b7e04781c290a375e9572f9a90c',
-          currency: 'ETH',
-          nickname: 'My Address',
-          resolverAddr: '0x8c08079b06f83b7e04781c290a375e9572f9a90c'
-        },
-        {
-          address: '0x43689531907482BEE7e650D18411E284A7337A66',
-          currency: 'ETH',
-          nickname: 'nickname',
-          resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-        }
-      ],
       fromTokens: [],
-      toTokens: []
+      toTokens: [],
+      providersMessage: 'Loading Tokens Data',
+      addressValue: {}
     };
   },
   computed: {
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapState('global', ['gasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
     },
@@ -286,6 +245,101 @@ export default {
         return totalGas.toString();
       }
       return '0';
+    },
+    toAddress() {
+      if (this.toTokenType.isEth) return this.address;
+      return this.addressValue.value;
+    },
+    isToAddressValid() {
+      if (this.toTokenType.isEth) return true;
+      return this.addressValue.isValid;
+    },
+    showToAddress() {
+      if (typeof this.toTokenType.isEth === 'undefined') return false;
+      return !this.toTokenType.isEth;
+    },
+    /**
+     * @returns BigNumber of the available balance for the From Token
+     */
+    availableBalance() {
+      if (!this.initialLoad && this.fromTokenType.value) {
+        if (this.fromTokenType.value !== 'Ethereum') {
+          const hasBalance = this.tokensList.find(
+            token => token.symbol === this.fromTokenType.symbol
+          );
+          return hasBalance && hasBalance.balance && hasBalance.decimals
+            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+            : new BigNumber(0);
+        }
+        return BigNumber.max(
+          new BigNumber(this.balanceInETH).minus(fromWei(MIN_GAS_WEI)),
+          0
+        );
+      }
+      return new BigNumber(0);
+    },
+    /**
+     * @return string for the available balance
+     * Used in hint for the From token amount
+     * Amount is rounded
+     */
+    availableBalanceHint() {
+      if (!this.initialLoad && this.fromTokenType.value) {
+        return `available: ${this.availableBalance.toFixed()} ${
+          this.fromTokenType.symbol
+        }`;
+      }
+      return '';
+    },
+
+    /**
+     * Determines whether or not to show swap fee panel
+     * Fee is shown if provider was selected and no errors are passed
+     */
+    showSwapFee() {
+      return (
+        this.step >= 2 && this.availableBalance.gt(0) && this.feeError === ''
+      );
+    },
+
+    /**
+     * Return true Input Amount Error or input is empty
+     * Used to determine whether or not to fetch provider's list and show transaction fee
+     */
+    hasAmountErrors() {
+      return (
+        !this.tokenInValue ||
+        this.amountErrorMessage !== '' ||
+        this.tokenInValue === ''
+      );
+    },
+    /**
+     * Method validates input for the From token amount against user input
+     * Used to show error messages for the amount input component
+     */
+    amountErrorMessage() {
+      if (!this.initialLoad && !this.isLoading) {
+        if (this.availableBalance.lte(0)) {
+          return this.fromTokenType.value === 'Ethereum'
+            ? 'your available ETH balance is 0'
+            : 'you do not own this token';
+        }
+        if (
+          this.fromTokenType.value !== 'Ethereum' &&
+          this.availableBalance.lte(fromWei(MIN_GAS_WEI))
+        ) {
+          return 'you do not have enough ETH to cover transaction fee for a swap';
+        }
+        if (this.tokenInValue && this.tokenInValue !== '') {
+          if (new BigNumber(this.tokenInValue).eq(0)) {
+            return `swap amount must be greater than 0`;
+          }
+          if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+            return `your balance is lower (${this.availableBalanceHint})`;
+          }
+        }
+      }
+      return '';
     }
   },
   watch: {
@@ -314,6 +368,15 @@ export default {
       .getAllTokens()
       .then(tokens => {
         this.availableTokens = tokens;
+        /* Add Correct Values for the MewSelect*/
+        this.availableTokens.toTokens.forEach(token => {
+          token.subtext = token.symbol;
+          token.value = token.name;
+        });
+        this.availableTokens.fromTokens.forEach(token => {
+          token.subtext = token.symbol;
+          token.value = token.name;
+        });
       })
       .then(() => {
         this.setDefaults();
@@ -321,7 +384,9 @@ export default {
       });
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
     getTokenFromAddress(address) {
+      if (!this.availableTokens.toTokens) return {};
       for (const t of this.availableTokens.toTokens) {
         if (t.contract_address === address) return t;
       }
@@ -336,8 +401,11 @@ export default {
         this.setTokenInValue(this.tokenInValue);
       });
     },
-    setToAddress(value) {
-      this.addressValue = value;
+    setToAddress(value, isValid) {
+      this.addressValue = {
+        value,
+        isValid
+      };
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -347,12 +415,26 @@ export default {
       this.toTokenType = value;
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: utils._.debounce(function (value) {
-      if (!value || this.isLoading) return;
+    setTokenInValue: _.debounce(function (value) {
+      if (this.isLoading || this.initialLoad) return;
+      this.tokenInValue = value;
+      this.availableQuotes.forEach(q => {
+        q.isSelected = false;
+      });
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-      this.tokenInValue = value;
+      if (
+        !value ||
+        this.hasAmountErrors ||
+        this.fromTokenType.value === this.toTokenType.value
+      ) {
+        this.providersMessage =
+          'Change your amount or token pair to see providers and proceed with Swap';
+        return;
+      }
+      this.providersMessage = '';
+      this.feeError = '';
       this.swapper
         .getAllQuotes({
           fromT: this.fromTokenType,
@@ -373,6 +455,9 @@ export default {
           if (quotes.length) {
             this.tokenOutValue = quotes[0].amount;
             this.step = 1;
+          } else {
+            this.providersMessage =
+              'There are no available Providers at this time, please try another pair.';
           }
         });
     }, 500),
@@ -385,20 +470,25 @@ export default {
         }
       });
     },
-    getTrade: utils._.debounce(function (idx) {
+    getTrade: _.debounce(function (idx) {
+      if (!this.isToAddressValid) return;
       this.step = 1;
+      this.feeError = '';
       if (this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
         this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
           this.network.type.name
         }`;
         this.step = 2;
+        this.checkFeeBalance();
         return;
       }
+      this.loadingFee = true;
+
       this.swapper
         .getTrade({
           fromAddress: this.address,
-          toAddress: this.addressValue.address,
+          toAddress: this.toAddress,
           provider: this.availableQuotes[idx].provider,
           fromT: this.fromTokenType,
           toT: this.toTokenType,
@@ -414,12 +504,19 @@ export default {
           }`;
           this.allTrades[idx] = trade;
           this.step = 2;
+          this.loadingFee = false;
+          this.checkFeeBalance();
+        })
+        .catch(e => {
+          if (e) {
+            this.feeError = 'This provider is not available.';
+          }
         });
     }, 500),
     showConfirm() {
       this.confirmInfo = {
         from: this.address,
-        to: this.addressValue.address,
+        to: this.toAddress,
         fromType: this.fromTokenType.symbol,
         toType: this.toTokenType.symbol,
         fromImg: this.fromTokenType.img,
@@ -430,12 +527,80 @@ export default {
         show: true
       };
     },
+    isValidToAddress(address) {
+      return this.swapper.isValidToAddress({
+        provider: this.availableQuotes[0].provider,
+        toT: this.toTokenType,
+        address
+      });
+    },
     backFunction() {
       this.confirmInfo.show = false;
     },
     executeTrade() {
       this.confirmInfo.show = false;
-      this.swapper.executeTrade(this.currentTrade);
+      this.swapper
+        .executeTrade(this.currentTrade)
+        .then(res => {
+          this.swapNotificationFormatter(res);
+        })
+        .catch(err => {
+          this.swapNotificationFormatter(err, true);
+        });
+    },
+    getTokenBalance(balance, decimals) {
+      return new BigNumber(balance.toString()).div(
+        new BigNumber(10).pow(decimals)
+      );
+    },
+    swapNotificationFormatter(obj, isError) {
+      obj.hashes.forEach((hash, idx) => {
+        const notification = {
+          transactionHash: !isError ? hash : '',
+          transactionFee: fromWei(this.totalFees),
+          to: this.currentTrade.transactions[idx].to,
+          from: this.confirmInfo.from,
+          gas: this.currentTrade.transactions[idx].gas,
+          gasPrice: this.currentTrade.transactions[idx].gasPrice,
+          gasLimit: this.totalGasLimit,
+          data: this.currentTrade.transactions[idx].data,
+          value: this.currentTrade.transactions[idx].value,
+          type: 'SWAP',
+          read: false,
+          network: this.network.type.name,
+          date: new Date().getTime(),
+          status: isError ? 'FAILED' : 'PENDING',
+          fromTxData: {
+            currency: this.confirmInfo.fromType,
+            amount: this.confirmInfo.fromVal,
+            icon: this.confirmInfo.fromImg
+          },
+          toTxData: {
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
+            to: this.confirmInfo.to
+              ? this.confirmInfo.to
+              : this.currentTrade.transactions[idx].to
+          },
+          swapObj: obj,
+          errMessage: isError ? hash : ''
+        };
+        this.addNotification(new Notification(notification));
+      });
+    },
+    checkFeeBalance() {
+      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+      const isNotEnoughEth =
+        this.fromTokenType.value === 'Ethereum'
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+      if (isNotEnoughEth) {
+        const message = `This provider  transaction fee is ${this.exPannel[0].subtext} ETH, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
+        const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
+        this.feeError =
+          this.fromTokenType.value === 'Ethereum' ? ethError : message;
+      }
     }
   }
 };

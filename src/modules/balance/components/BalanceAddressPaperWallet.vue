@@ -69,7 +69,7 @@
                 </v-sheet>
               </v-theme-provider>
             </div>
-            <div class="mt-4 d-flex align-content-stretch">
+            <!-- <div class="mt-4 d-flex align-content-stretch">
               <v-theme-provider root>
                 <v-sheet
                   class="d-flex flex-column justify-center flex-grow-1 px-8"
@@ -87,7 +87,7 @@
                   :options="{ size: 130 }"
                 ></VueQrcode>
               </v-sheet>
-            </div>
+            </div> -->
 
             <div
               class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
@@ -115,7 +115,7 @@
                 <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
               </v-sheet>
             </div>
-            <div v-if="isHardware" class="mt-4 d-flex align-content-stretch">
+            <div v-if="!isHardware" class="mt-4 d-flex align-content-stretch">
               <v-theme-provider root>
                 <v-sheet
                   class="d-flex flex-column justify-center flex-grow-1 px-8"
@@ -130,7 +130,7 @@
                 </v-sheet>
               </v-theme-provider>
               <v-sheet height="130px" class="qr-image">
-                <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
+                <VueQrcode :value="key" :options="{ size: 130 }" />
               </v-sheet>
             </div>
 

@@ -30,7 +30,8 @@ class Changelly {
             decimals: 18,
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
-            symbol: d.ticker.toUpperCase()
+            symbol: d.ticker.toUpperCase(),
+            isEth: d.contractAddress ? true : false
           };
         });
       });
