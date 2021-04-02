@@ -61,10 +61,17 @@ export default class AaveHandler {
     try {
       return borrowDetails(param).then(res => {
         const txArr = [];
-        res.data.borrow.forEach(data => {
-          txArr.push(data.tx);
-        });
-        return this.sendTransaction(txArr);
+        if (res.data.length !== 0) {
+          res.data.borrow.forEach(data => {
+            txArr.push(data.tx);
+          });
+          return this.sendTransaction(txArr);
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
       });
     } catch (e) {
       throw new Error(e);
@@ -75,10 +82,17 @@ export default class AaveHandler {
     try {
       return await depositDetails(param).then(res => {
         const txArr = [];
-        res.data.deposit.forEach(data => {
-          txArr.push(data.tx);
-        });
-        return this.sendTransaction(txArr);
+        if (res.data.length !== 0) {
+          res.data.deposit.forEach(data => {
+            txArr.push(data.tx);
+          });
+          return this.sendTransaction(txArr);
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
       });
     } catch (e) {
       throw new Error(e);
@@ -89,10 +103,17 @@ export default class AaveHandler {
     try {
       return withdrawDetails(param).then(res => {
         const txArr = [];
-        res.data.redeem.forEach(data => {
-          txArr.push(data.tx);
-        });
-        return this.sendTransaction(txArr);
+        if (res.data.length !== 0) {
+          res.data.redeem.forEach(data => {
+            txArr.push(data.tx);
+          });
+          return this.sendTransaction(txArr);
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
       });
     } catch (e) {
       throw new Error(e);
@@ -103,9 +124,16 @@ export default class AaveHandler {
     try {
       return setUsageAsCollateralDetails(param).then(res => {
         const txArr = [];
-        res.data.setUsageAsCollateral.forEach(data => {
-          txArr.push(data.tx);
-        });
+        if (res.data.length !== 0) {
+          res.data.setUsageAsCollateral.forEach(data => {
+            txArr.push(data.tx);
+          });
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
 
         return this.sendTransaction(txArr);
       });
@@ -118,11 +146,17 @@ export default class AaveHandler {
     try {
       return swapBorrowRateDetails(param).then(res => {
         const txArr = [];
-        res.data.swapBorrowRateMode.forEach(data => {
-          txArr.push(data.tx);
-        });
-
-        return this.sendTransaction(txArr);
+        if (res.data.length !== 0) {
+          res.data.swapBorrowRateMode.forEach(data => {
+            txArr.push(data.tx);
+          });
+          return this.sendTransaction(txArr);
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
       });
     } catch (e) {
       throw new Error(e);
@@ -133,11 +167,17 @@ export default class AaveHandler {
     try {
       return repayDetails(param).then(res => {
         const txArr = [];
-        res.data.repay.forEach(data => {
-          txArr.push(data.tx);
-        });
-
-        return this.sendTransaction(txArr);
+        if (res.data.length !== 0) {
+          res.data.repay.forEach(data => {
+            txArr.push(data.tx);
+          });
+          return this.sendTransaction(txArr);
+        }
+        if (res.errors.length !== 0) {
+          throw new Error(
+            'You may not have enough token balance or eth to execute transaction!'
+          );
+        }
       });
     } catch (e) {
       throw new Error(e);
