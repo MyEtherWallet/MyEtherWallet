@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import vuetifyTheme from '@myetherwallet/mew-components/src/assets/styles/vuetifyTheme.js';
+import 'vuetify/dist/vuetify.min.css';
 
 import Vuetify, {
   VApp,
@@ -77,7 +78,6 @@ import Vuetify, {
   VChip,
   VSystemBar
 } from 'vuetify/lib';
-import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify, {
   components: {
