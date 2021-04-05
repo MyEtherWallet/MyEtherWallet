@@ -15,7 +15,7 @@
   >
     <template #mewOverlayBody>
       <div>
-        {{stepperStep}}
+        {{ stepperStep }}
         <div v-if="step === 0">
           <v-sheet color="transparent" :max-width="740">
             <v-row justify="start">
@@ -135,7 +135,6 @@ Step 1: Enter mnemonic
                 @setPath="setPath"
                 @setLedgerApp="setLedgerApp"
               />
-
             </template>
             <!--
     =====================================================================================

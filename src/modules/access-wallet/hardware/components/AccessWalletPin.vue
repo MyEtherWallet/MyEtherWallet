@@ -55,7 +55,7 @@ export default {
       this.keepKeyPinEnter(this.pin);
     },
     keepKeyClear() {
-      this.pin = ''
+      this.pin = '';
     }
   }
 };

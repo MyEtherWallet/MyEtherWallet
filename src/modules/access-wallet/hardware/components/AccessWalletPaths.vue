@@ -8,12 +8,10 @@
     =====================================================================================
     -->
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-        <div class="headline font-weight-bold">
-          Select HD Derivation Path
-        </div>
+        <div class="headline font-weight-bold">Select HD Derivation Path</div>
         <p class="mb-5">
-          Please select HD Derivation Path that you you want to interact
-          with or enter a custom one.
+          Please select HD Derivation Path that you you want to interact with or
+          enter a custom one.
         </p>
         <div class="text-center mb-8">
           <img :src="icon" alt="Network Icon" height="60" />
