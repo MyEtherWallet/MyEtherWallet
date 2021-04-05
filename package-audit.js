@@ -1,7 +1,6 @@
 const exec = require('child_process').exec;
 
 const AUDIT_EXCEPTIONS = [
-  'y18n',
   'decompress',
   'http-proxy',
   'findings',
