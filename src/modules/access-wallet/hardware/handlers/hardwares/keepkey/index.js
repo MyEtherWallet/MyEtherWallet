@@ -46,6 +46,7 @@ class KeepkeyWallet {
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
       EventBus.$emit('showHardwarePinMatrix', pin => {
+        console.log('keepkey pin', pin); // todo remove dev item
         this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
       });
     });

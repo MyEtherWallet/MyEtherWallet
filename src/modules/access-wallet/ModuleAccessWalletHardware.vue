@@ -1,9 +1,9 @@
 <template>
   <!--
-  =====================================================================================
-    Overlay - access using hardware
-  =====================================================================================
-  -->
+=====================================================================================
+  Overlay - access using hardware
+=====================================================================================
+-->
   <mew-overlay
     description="Select a hardware wallet to access. Make sure your device is connected and unlocked."
     :show-overlay="open"
@@ -14,110 +14,169 @@
     :left-btn-text="step > 0 ? 'Back' : ''"
   >
     <template #mewOverlayBody>
-      <div v-if="step === 0">
-        <v-sheet color="transparent" :max-width="740">
-          <v-row justify="start">
-            <v-col
-              v-for="button in buttons"
-              :key="button.label"
-              class="button-container"
-              cols="12"
-              md="6"
-            >
-              <mew-super-button
-                :title="button.label"
-                :cols-num="6"
-                color-theme="basic"
-                right-icon-type="img"
-                :right-icon="button.icon"
-                :right-icon-height="45"
-                @click.native="nextStep(button.type)"
+      <div>
+        {{stepperStep}}
+        <div v-if="step === 0">
+          <v-sheet color="transparent" :max-width="740">
+            <v-row justify="start">
+              <v-col
+                v-for="button in buttons"
+                :key="button.label"
+                class="button-container"
+                cols="12"
+                md="6"
+              >
+                <mew-super-button
+                  :title="button.label"
+                  :cols-num="6"
+                  color-theme="basic"
+                  right-icon-type="img"
+                  :right-icon="button.icon"
+                  :right-icon-height="45"
+                  @click.native="nextStep(button.type)"
+                />
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </div>
+        <div v-if="step > 0">
+          <mew-stepper :items="extraStepDetails" :on-step="stepperStep">
+            <!--
+=====================================================================================
+Step 1: Enter mnemonic
+=====================================================================================
+-->
+            <template v-if="stepperStep === 1" #stepperContent1>
+              <div>
+                <v-sheet color="transparent" :max-width="740">
+                  <v-row justify="start">
+                    <v-col
+                      v-for="button in buttons"
+                      :key="button.label"
+                      class="button-container"
+                      cols="12"
+                      md="6"
+                    >
+                      <mew-super-button
+                        :title="button.label"
+                        :cols-num="6"
+                        color-theme="basic"
+                        right-icon-type="img"
+                        :right-icon="button.icon"
+                        :right-icon-height="45"
+                        @click.native="nextStep(button.type)"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-sheet>
+              </div>
+            </template>
+            <!--
+    =====================================================================================
+      Step 1: Enter mnemonic
+    =====================================================================================
+    -->
+            <template v-if="stepperStep === 2" #stepperContent2>
+              <!--
+            =====================================================================================
+            BcVault
+            =====================================================================================
+            -->
+              <access-wallet-bc-vault
+                v-if="onBCVault"
+                :accounts="accounts"
+                :loading="bcVaultLoading"
+                :set-address="setBCvaultAddress"
               />
-            </v-col>
-          </v-row>
-        </v-sheet>
+              <!--
+            =====================================================================================
+             Qr Step (Finney , XWallet)
+            =====================================================================================
+            -->
+              <access-wallet-qr-code
+                v-else-if="onQrCode"
+                :on-xwallet="onXwallet"
+                :qr-code="qrCode"
+              />
+              <!--
+            =====================================================================================
+             Bitbox
+            =====================================================================================
+            -->
+              <access-wallet-bitbox
+                v-else-if="onBitbox"
+                :set-selected-bitbox="setSelectedBitbox"
+              />
+              <!--
+            =====================================================================================
+            Password Step (Coolwallet, Secalot)
+            =====================================================================================
+            -->
+              <access-wallet-password
+                v-else-if="onPassword"
+                :on-cool-wallet="onCoolWallet"
+                :next-step="nextStep"
+                :wallet-type="walletType"
+                @setTerms="setTerms"
+                @setPassword="setPassword"
+              />
+              <!--
+            =====================================================================================
+            Paths Step (Ledger, Trezor)
+            =====================================================================================
+            -->
+              <access-wallet-paths
+                v-else-if="onPaths"
+                :ledger-apps="ledgerApps"
+                :paths="paths"
+                :on-ledger="onLedger"
+                :icon="icon"
+                :next-step="nextStep"
+                @setPath="setPath"
+                @setLedgerApp="setLedgerApp"
+              />
+
+            </template>
+            <!--
+    =====================================================================================
+      Step 2: Select Derivation Path
+    =====================================================================================
+    -->
+            <template v-if="stepperStep === 3" #stepperContent3>
+              step 3
+              <!--
+=====================================================================================
+Pin Step
+=====================================================================================
+-->
+              <access-wallet-pin
+                v-if="enterPin"
+                :keep-key-pin-enter="callback"
+                :wallet-type="walletType"
+              />
+              <!--
+=====================================================================================
+Network Address Step
+=====================================================================================
+-->
+              <access-wallet-network-addresses
+                v-else-if="onNetworkAddresses"
+                :accounts="accounts"
+                :next-address-set="nextAddressSet"
+                :previous-address-set="previousAddressSet"
+                :set-hardware-wallet="setHardwareWallet"
+                :address-page="addressPage"
+              />
+            </template>
+            <!--
+    =====================================================================================
+      Step 3: Select Address and Network
+    =====================================================================================
+    -->
+            <!--        <template v-if="step === 3" #stepperContent3> </template>-->
+          </mew-stepper>
+        </div>
       </div>
-      <!--
-  =====================================================================================
-    BcVault
-  =====================================================================================
-  -->
-      <access-wallet-bc-vault
-        v-if="onBCVault"
-        :accounts="accounts"
-        :loading="bcVaultLoading"
-        :set-address="setBCvaultAddress"
-      />
-      <!--
-  =====================================================================================
-   Qr Step (Finney , XWallet)
-  =====================================================================================
-  -->
-      <access-wallet-qr-code
-        v-else-if="onQrCode"
-        :on-xwallet="onXwallet"
-        :qr-code="qrCode"
-      />
-      <!--
-  =====================================================================================
-   Bitbox
-  =====================================================================================
-  -->
-      <access-wallet-bitbox
-        v-else-if="onBitbox"
-        :set-selected-bitbox="setSelectedBitbox"
-      />
-      <!--
-  =====================================================================================
-   Network Address Step
-  =====================================================================================
-  -->
-      <access-wallet-network-addresses
-        v-else-if="onNetworkAddresses"
-        :accounts="accounts"
-        :next-address-set="nextAddressSet"
-        :previous-address-set="previousAddressSet"
-        :set-hardware-wallet="setHardwareWallet"
-        :address-page="addressPage"
-      />
-      <!--
-  =====================================================================================
-   Password Step (Coolwallet, Secalot)
-  =====================================================================================
-  -->
-      <access-wallet-password
-        v-else-if="onPassword"
-        :on-cool-wallet="onCoolWallet"
-        :next-step="nextStep"
-        :wallet-type="walletType"
-        @setTerms="setTerms"
-        @setPassword="setPassword"
-      />
-      <!--
-  =====================================================================================
-   Paths Step (Ledger, Trezor)
-  =====================================================================================
-  -->
-      <access-wallet-paths
-        v-else-if="onPaths"
-        :ledger-apps="ledgerApps"
-        :paths="paths"
-        :on-ledger="onLedger"
-        :icon="icon"
-        :next-step="nextStep"
-        @setPath="setPath"
-        @setLedgerApp="setLedgerApp"
-      />
-      <!--
-  =====================================================================================
-   Pin Step
-  =====================================================================================
-  -->
-      <access-wallet-pin
-        v-else-if="enterPin"
-        :keep-key-pin-enter="callback"
-        :wallet-type="walletType"
-      />
     </template>
   </mew-overlay>
 </template>
@@ -171,6 +230,24 @@ export default {
   },
   data() {
     return {
+      stepperItems: [
+        {
+          step: 1,
+          name: 'Select Hardware Wallet'
+        },
+        {
+          step: 2,
+          name: 'Enter Phrase'
+        },
+        // {
+        //   step: 3,
+        //   name: 'Select HD Path'
+        // },
+        {
+          step: 3,
+          name: 'Address & Network'
+        }
+      ],
       positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
       buttons: [
         {
@@ -259,6 +336,37 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    stepperStep() {
+      return this.step + 1;
+    },
+    extraSteps() {
+      return Object.keys(this.wallets[this.walletType].titles);
+    },
+    extraStepDetails() {
+      if (this.walletType !== '') {
+        return Object.keys(this.wallets[this.walletType].titles).reduce(
+          (acc, item) => {
+            acc.push({
+              step: +item + 1,
+              name: this.wallets[this.walletType].titles[item]
+            });
+            return acc;
+          },
+          [
+            {
+              step: 1,
+              name: 'Select Hardware Wallet'
+            }
+          ]
+        );
+      }
+      return [
+        {
+          step: 1,
+          name: 'Select Hardware Wallet'
+        }
+      ];
+    },
     onNetworkAddresses() {
       return (
         Object.keys(this.hwWalletInstance).length > 0 &&
@@ -509,7 +617,8 @@ export default {
     },
     keepkeyUnlock() {
       EventBus.$on('showHardwarePinMatrix', callback => {
-        this.step += 1;
+        console.log(this.step); // todo remove dev item
+        // this.step += 1;
         this.enterPin = true;
         this.callback = callback;
       });

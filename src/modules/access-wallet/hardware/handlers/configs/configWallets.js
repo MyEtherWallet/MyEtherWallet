@@ -88,7 +88,8 @@ export default {
     accountOnly: false,
     titles: {
       1: '1. Connect with KeepKey',
-      2: '2. Enter your password'
+      2: '2. Enter your password',
+      3: '3. Confirm Network & Address'
     }
   },
   [WALLET_TYPES.FINNEY]: {

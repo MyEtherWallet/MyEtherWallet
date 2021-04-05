@@ -51,9 +51,12 @@ export default {
   },
   methods: {
     keepKeyPinEnterCall() {
+      console.log(this.pin); // todo remove dev item
       this.keepKeyPinEnter(this.pin);
     },
-    keepKeyClear() {}
+    keepKeyClear() {
+      this.pin = ''
+    }
   }
 };
 </script>
