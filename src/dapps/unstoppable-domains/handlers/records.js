@@ -178,4 +178,4 @@ export const parseUDRecordToLabel = key => {
     return `${ticker} Address`;
   }
   return UdRecordToLabelMap[key];
-}
+};
