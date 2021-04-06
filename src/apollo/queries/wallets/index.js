@@ -1,8 +1,11 @@
 import { getBalanceHistory } from './wallets.graphql';
+import apollo from '@/apollo/mainApolloClient';
+
 export default class WalletCalls {
-  constructor(apollo) {
-    this.apollo = apollo;
-  }
+  constructor() {}
+  /**
+   * Apollo query to return balance history
+   */
   getBalanceHistory(timeString, todaysDate, address, scale, nextKey) {
     const key = `ACCOUNT_BALANCE_PREFIX_AVG-0xETH-${address}`;
     const actualTimeString = Math.floor(timeString / 1000);
@@ -11,7 +14,7 @@ export default class WalletCalls {
     if (!acceptableScales.includes(scale)) {
       throw new Error('Scale not valid.');
     }
-    return this.apollo.query({
+    return apollo.query({
       query: getBalanceHistory,
       variables: {
         timeString: actualTimeString,

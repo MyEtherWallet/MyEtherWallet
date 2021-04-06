@@ -3,42 +3,57 @@ import utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 
 export default class Balance extends WalletCalls {
-  constructor(apollo, address) {
-    super(apollo, address);
-    this.apollo = apollo;
+  constructor(address) {
+    super(address);
     this.address = address;
     this.chartData = [];
   }
-  // get balance history
-  getBalanceHistory(timeString, scale, nextKey) {
+  /**
+   * Get Balance History
+   * using Apollo query: getBalanceHistory
+   * from WalletCalls
+   */
+  getHistory(timeString, scale, nextKey) {
     const todaysDate = new Date().getTime();
-    const wallet = new WalletCalls(this.apollo);
-    return wallet
-      .getBalanceHistory(timeString, todaysDate, this.address, scale, nextKey)
-      .then(res => {
-        const parsedResult = res.data.getTimeseriesData.items.map(item => {
-          const fromWei = utils.fromWei(item.value);
-          const value = BigNumber(fromWei).toFixed(4);
-          const returnedValue = BigNumber(value).toNumber();
-          const actualTimeStamp = BigNumber(item.timestamp)
-            .times(1000)
-            .toNumber();
-          return [actualTimeStamp, returnedValue];
-        });
-        do {
-          if (!res.data.getTimeseriesData.nextKey) {
-            // when null
-            this.chartData = parsedResult;
-          } else {
-            // when key exists
-            const key = res.data.getTimeseriesData.nextKey;
-            const timeString = new Date();
-            const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
-            this.chartData.push(parsedResult);
-            this.getBalanceHistory(lastYear, 'days', key);
-          }
-        } while (res.data.getTimeseriesData.nextKey);
-        return this.chartData;
-      });
+    return this.getBalanceHistory(
+      timeString,
+      todaysDate,
+      this.address,
+      scale,
+      nextKey
+    ).then(res => {
+      const parsedResult = this._parseResult(res.data.getTimeseriesData.items);
+      const nextKey = res.data.getTimeseriesData.nextKey;
+      do {
+        if (!nextKey) {
+          /**
+           * when nextKey null
+           */
+          this.chartData = parsedResult;
+        } else {
+          /**
+           * when nextKey exists
+           */
+          const key = nextKey;
+          const timeString = new Date();
+          const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
+          this.chartData.push(parsedResult);
+          this.getBalanceHistory(lastYear, 'days', key);
+        }
+      } while (nextKey);
+      return this.chartData;
+    });
+  }
+  /**
+   * Parse the history result correctly
+   */
+  _parseResult(data) {
+    return data.map(item => {
+      const fromWei = utils.fromWei(item.value);
+      const value = BigNumber(fromWei).toFixed(4);
+      const returnedValue = BigNumber(value).toNumber();
+      const actualTimeStamp = BigNumber(item.timestamp).times(1000).toNumber();
+      return [actualTimeStamp, returnedValue];
+    });
   }
 }

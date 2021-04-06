@@ -126,7 +126,7 @@ export default {
     }
   },
   mounted() {
-    this.handlerBalance = new handlerBalance(this.$apollo, this.address);
+    this.handlerBalance = new handlerBalance(this.address);
     this.setDataYesterday();
   },
   methods: {
@@ -148,10 +148,8 @@ export default {
           this.setDataMonth();
       }
     },
-    getBalanceHistory(interval, duration) {
-      this.handlerBalance.getBalanceHistory(interval, duration).then(res => {
-        this.chartData = res;
-      });
+    async getBalanceHistory(interval, duration) {
+      this.chartData = await this.handlerBalance.getHistory(interval, duration);
     },
     setDataMonth() {
       const timeString = new Date();
@@ -183,9 +181,3 @@ export default {
   }
 };
 </script>
-<style class="scss">
-/* remove after updating mew-module */
-.auto-height {
-  height: auto !important;
-}
-</style>
