@@ -19,7 +19,6 @@
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
 import TokenCalls from '@/apollo/queries/tokens/index';
-import WalletCalls from '@/apollo/queries/wallets/index';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -28,6 +27,16 @@ import {
   getGasBasedOnType,
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper.js';
+import {
+  getEthBalance,
+  subscribeToAccountBalance,
+  getUSDPrice
+} from '@/apollo/queries/wallets/wallets.graphql';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
+const tokens = {
+  eth: 'ethereum'
+};
 
 export default {
   components: {
@@ -37,7 +46,83 @@ export default {
     ModuleConfirmation
   },
   data() {
-    return {};
+    return {
+      getEthBalance: '',
+      getLatestPrices: '',
+      subscribeToAccountBalance: ''
+    };
+  },
+  apollo: {
+    /**
+     * Apollo query to get eth balance
+     */
+    getEthBalance: {
+      query: getEthBalance,
+      variables() {
+        return {
+          hash: this.address
+        };
+      },
+      skip() {
+        return !this.isEthNetwork;
+      },
+      result({ data }) {
+        this.setAccountBalance(toBN(data.getEthBalance.balance));
+      },
+      error(error) {
+        Toast(error.message, {}, ERROR);
+      }
+    },
+    /**
+     * Apollo subscription for eth balance
+     */
+    $subscribe: {
+      subscribeToAccountBalance: {
+        query: subscribeToAccountBalance,
+        variables() {
+          return {
+            owner: this.address,
+            event: 'NEW_ETH_TRANSFER'
+          };
+        },
+        skip() {
+          return !this.isEthNetwork;
+        },
+        result() {
+          this.$apollo.queries.getEthBalance.refetch();
+        },
+        error(error) {
+          Toast(error.message, {}, ERROR);
+        }
+      }
+    },
+    /**
+     * Apollo query to fetch latest Eth price in USD.
+     */
+    getLatestPrices: {
+      query: getUSDPrice,
+      skip() {
+        return !this.isEthNetwork;
+      },
+      result({ data }) {
+        const ethereumPrice = data.getLatestPrices.filter(item => {
+          if (item.id === tokens.eth) return item;
+        });
+
+        if (ethereumPrice) {
+          const usd = {
+            value: ethereumPrice[0].current_price,
+            symbol: '$',
+            name: 'USD',
+            price_change_24h: ethereumPrice[0].price_change_24h
+          };
+          this.setETHUSDValue(usd);
+        }
+      },
+      error(error) {
+        Toast(error.message, {}, ERROR);
+      }
+    }
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
@@ -81,26 +166,7 @@ export default {
       }
     },
     getPriceAndBalance() {
-      if (this.isEthNetwork) {
-        const walletCalls = new WalletCalls(this.$apollo);
-        walletCalls.subscribeToUserBalance(this.address, () => {
-          walletCalls.getBalance(this.address).then(res => {
-            this.setAccountBalance(toBN(res));
-          });
-        });
-        walletCalls.getBalance(this.address).then(res => {
-          this.setAccountBalance(toBN(res));
-        });
-        walletCalls.getUSDPrice(this.address).then(res => {
-          const usd = {
-            value: res.current_price,
-            symbol: '$',
-            name: 'USD',
-            price_change_24h: res.price_change_24h
-          };
-          this.setETHUSDValue(usd);
-        });
-      } else {
+      if (!this.isEthNetwork) {
         this.web3.eth.getBalance(this.address).then(res => {
           this.setAccountBalance(toBN(res));
         });

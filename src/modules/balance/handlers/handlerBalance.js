@@ -2,8 +2,9 @@ import WalletCalls from '@/apollo/queries/wallets/index';
 import utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 
-export default class Balance {
+export default class Balance extends WalletCalls {
   constructor(apollo, address) {
+    super(apollo, address);
     this.apollo = apollo;
     this.address = address;
     this.chartData = [];
