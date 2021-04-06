@@ -29,19 +29,22 @@
             =====================================================================================
             -->
           <v-row class="align-center justify-space-between">
+            <v-col cols="12">
+              <div class="available-balance text-right">
+                {{ availableBalanceHint }}
+              </div>
+            </v-col>
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
               <mew-select
                 :value="fromTokenType"
                 :items="fromTokens"
                 label="From"
                 @input="setFromToken" />
-
               <mew-input
                 label="amount to swap"
                 placeholder="Enter amount to swap"
                 :value="tokenInValue"
                 type="number"
-                :hint="availableBalanceHint"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
@@ -208,8 +211,7 @@ export default {
       loadingFee: false,
       feeError: '',
       defaults: {
-        fromToken: this.fromToken,
-        toToken: this.toToken
+        fromToken: this.fromToken
       },
       exPannel: [
         {
@@ -222,7 +224,10 @@ export default {
       swapIcon: SwapIcon,
       fromTokens: [],
       toTokens: [],
-      providersMessage: 'Loading Tokens Data',
+      providersMessage: {
+        title: 'Loading Tokens Data',
+        subtitle: ''
+      },
       addressValue: {}
     };
   },
@@ -285,7 +290,7 @@ export default {
      */
     availableBalanceHint() {
       if (!this.initialLoad && this.fromTokenType.value) {
-        return `available: ${this.availableBalance.toFixed()} ${
+        return `${this.availableBalance.toFixed()} ${
           this.fromTokenType.symbol
         }`;
       }
@@ -429,11 +434,17 @@ export default {
         this.hasAmountErrors ||
         this.fromTokenType.value === this.toTokenType.value
       ) {
-        this.providersMessage =
-          'Change your amount or token pair to see providers and proceed with Swap';
+        this.providersMessage = {
+          title: 'Select token and enter amount to see rates',
+          subtitle:
+            'MEW finds the best price for you across multiple Dexs and Exchange services.'
+        };
         return;
       }
-      this.providersMessage = '';
+      this.providersMessage = {
+        title: '',
+        subtitle: ''
+      };
       this.feeError = '';
       this.swapper
         .getAllQuotes({
@@ -456,8 +467,11 @@ export default {
             this.tokenOutValue = quotes[0].amount;
             this.step = 1;
           } else {
-            this.providersMessage =
-              'There are no available Providers at this time, please try another pair.';
+            this.providersMessage = {
+              title:
+                'There are no available Providers at this time, please try another pair.',
+              subtitle: ''
+            };
           }
         });
     }, 500),
@@ -632,5 +646,9 @@ export default {
   .v-skeleton-loader__chip {
     width: 100% !important;
   }
+}
+
+.available-balance {
+  width: 375px;
 }
 </style>

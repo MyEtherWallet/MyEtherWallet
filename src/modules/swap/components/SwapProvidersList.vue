@@ -27,7 +27,9 @@
       Providers Message
     =====================================================================================
     -->
-    <v-row v-if="step == 0 && message != ''">
+    <v-row
+      v-if="step == 0 && (message.title !== '' || message.subtitle !== '')"
+    >
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
@@ -35,7 +37,12 @@
           class="d-flex align-center px-5 py-4"
           min-height="94px"
         >
-          <v-card-text class="text-center">{{ message }} </v-card-text>
+          <v-card-text class="text-center">
+            <p v-show="message.title !== ''" class="mew-heading-1 pb-0">
+              {{ message.title }}
+            </p>
+            <p v-show="message.subtitle !== ''">{{ message.subtitle }}</p>
+          </v-card-text>
         </v-card>
       </v-col></v-row
     >
@@ -196,8 +203,8 @@ export default {
       default: ''
     },
     message: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     }
   },
   data() {
