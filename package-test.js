@@ -62,7 +62,8 @@ const EXCEPTIONS = [
   '@sentry/integrations',
   'sass-loader',
   'stylelint',
-  '@unstoppabledomains/resolution'
+  '@unstoppabledomains/resolution',
+  'vue-stripe-elements-plus'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
