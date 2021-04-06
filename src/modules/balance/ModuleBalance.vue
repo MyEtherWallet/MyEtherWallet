@@ -5,18 +5,19 @@
     display if the user has an eth balance > 0
   =====================================================================================
   -->
-    <!-- TODO: mew-module: need to add icon height, add full-height prop & remove auto-height class-->
     <mew-module
       v-if="!showBuyEth"
-      class="auto-height pa-7"
+      class="pa-7"
       :subtitle="subtitle"
       :title="title"
+      :icon="network.type.icon"
       :caption="convertedBalance"
+      :has-elevation="true"
+      :has-full-height="true"
       icon-align="left"
     >
       <template #rightHeaderContainer>
         <div class="d-flex align-center">
-          <!-- TODO: mew-toggle: add prop to control-->
           <mew-toggle :button-group="chartButtons" @onBtnClick="onToggle" />
           <!-- not sure what this button is for, commented out for now -->
           <!-- <mew-button
@@ -53,7 +54,7 @@
               :has-full-width="false"
               title="Send Transaction"
               btn-size="xlarge"
-              @click.native="navigateToSwap"
+              @click.native="navigateToSend"
             />
           </v-col>
         </v-row>
@@ -175,6 +176,9 @@ export default {
       const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
       this.key = '1d';
       this.getBalanceHistory(yesterday, 'hours');
+    },
+    navigateToSend() {
+      this.$router.push({ name: 'SendTX' });
     }
   }
 };

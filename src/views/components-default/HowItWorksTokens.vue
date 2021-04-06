@@ -4,14 +4,9 @@
       src="@/assets/images/backgrounds/bg-waves.svg"
       class="block-background-pattern"
     />
+    <div class="py-6 py-md-12" />
     <v-container>
-      <div class="py-7" />
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center white--text">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
-      <v-row class="align-center">
+      <v-row>
         <v-col cols="12" lg="7">
           <v-img
             src="@/assets/images/snippets/my-tokens-table.png"
@@ -33,37 +28,38 @@
                 Buy Tokens
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                Swap for ERC20 tokens and stablecoins through our decentralized
+                providers.
               </p>
             </div>
           </div>
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
+              <v-img src="@/assets/images/currencies/icon-eth-white.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Add My Tokens
+                Custom Tokens
               </div>
               <p class="white--text">
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                MEW automatically supports most ERC20 tokens through our API,
+                but if you don’t see the token you’re looking for, you can add
+                it as a custom token right into the interface!
               </p>
-              <div class="d-flex align-center mt-10">
+              <!-- <div class="d-flex align-center mt-10">
                 <a
                   href="#"
                   class="white--text font-weight-medium text-decoration--underline"
                   >Watch tutorial</a
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </v-col>
       </v-row>
     </v-container>
-    <div class="py-12" />
+    <div class="py-6 py-md-12" />
   </div>
 </template>
 

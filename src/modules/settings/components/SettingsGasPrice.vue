@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4 pb-sm-0">
+  <div class="pa-6">
     <div>Please select a default gas price for your transaction fee</div>
     <!--
     =====================================================================================
@@ -15,7 +15,7 @@
             @click="setSelected(b.title)"
           >
             <mew-icon :icon-name="b.icon" :img-height="80" />
-            <h5 class="font-weight-bold mb-2">{{ b.title | capitalize }}</h5>
+            <h5 class="font-weight-bold mb-2 text-capitalize">{{ b.title }}</h5>
             <div class="font-weight-bold mb-2">
               ~ {{ b.gas | twoDecimalPoint }} Gwei
             </div>
@@ -62,11 +62,6 @@ import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 export default {
   name: 'SettingsGasPrice',
   filters: {
-    capitalize: function (value) {
-      if (!value) return '';
-      value = value.toString();
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    },
     twoDecimalPoint: function (value) {
       if (value.includes('.')) return BigNumber(value).toFixed(2);
       return value;

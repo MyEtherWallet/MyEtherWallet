@@ -28,24 +28,30 @@
             <div class="mew-heading-2 mb-8 ml-2">
               {{ $t('ens.search-domain') }}
             </div>
-            <div class="d-flex align-start">
-              <mew-input
-                :value="name"
-                :has-clear-btn="true"
-                :rules="rules"
-                :label="$t('ens.register.domain-name')"
-                :placeholder="$t('ens.ph.three-char')"
-                class="mr-3 flex-grow-1"
-                @input="setName"
-              />
-              <mew-button
-                :disabled="name.length <= 0"
-                :has-full-width="false"
-                btn-size="xlarge"
-                :title="$t('ens.register-domain')"
-                @click.native="findDomain"
-              />
-            </div>
+            <v-row class="mx-0">
+              <v-col class="pr-0" cols="8">
+                <mew-input
+                  :error-messages="domainTaken ? $t('ens.domain-taken') : null"
+                  :value="name"
+                  :has-clear-btn="true"
+                  :rules="rules"
+                  :label="$t('ens.register.domain-name')"
+                  :placeholder="$t('ens.ph.three-char')"
+                  class="mr-3 flex-grow-1"
+                  @input="setName"
+                />
+              </v-col>
+              <v-col class="pl-0" cols="4">
+                <mew-button
+                  :loading="loading"
+                  :disabled="(name && name.length === 0) || loading"
+                  :has-full-width="true"
+                  btn-size="xlarge"
+                  :title="$t('ens.register-domain')"
+                  @click.native="findDomain"
+                />
+              </v-col>
+            </v-row>
           </div>
         </v-sheet>
       </template>
@@ -187,8 +193,7 @@
       :commit="commit"
       :name="nameHandler.name"
       :parsed-host-name="nameHandler.parsedHostName"
-      :is-available="nameHandler.isAvailable"
-      :checking-domain-avail="nameHandler.checkingDomainAvail"
+      :checking-domain-avail="loading"
       :generate-key-phrase="generateKeyPhrase"
       :get-rent-price="getRentPrice"
     />
@@ -282,7 +287,8 @@ export default {
     ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [
-        this.name.length > 2 || this.$t('ens.warning.not-enough-char'),
+        (this.name && this.name.length > 2) ||
+          this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
       ];
     },
@@ -295,6 +301,30 @@ export default {
     },
     balanceToWei() {
       return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
+    },
+    loading() {
+      return this.nameHandler.checkingDomainAvail;
+    },
+    ensDomainAvailable() {
+      return this.nameHandler.isAvailable;
+    },
+    isNameEmpty() {
+      return this.name === null || this.name === '';
+    },
+    domainTaken() {
+      return (
+        !this.isNameEmpty &&
+        !this.loading &&
+        !this.ensDomainAvailable &&
+        Object.keys(this.nameHandler).length !== 0
+      );
+    }
+  },
+  watch: {
+    ensDomainAvailable(newVal) {
+      if (newVal === true) {
+        this.onRegister = true;
+      }
     }
   },
   mounted() {
@@ -314,7 +344,9 @@ export default {
     buyDomain() {
       this.activeTab = 0;
     },
-    //manage domain
+    /**
+     * Manage Domain
+     */
     manage(type, idx) {
       this.onManage = true;
       this.manageType = type;
@@ -410,9 +442,13 @@ export default {
         });
       this.closeManage();
     },
-    // register domain
+    /**
+     * Register Domain
+     */
     findDomain() {
-      //make sure there is no empty string after '.'
+      /**
+       * make sure there is no empty string after '.'
+       */
       const strLength = this.name.length;
       const name =
         this.name[strLength - 1] === '.'
@@ -422,7 +458,6 @@ export default {
         .searchName(name)
         .then(res => {
           this.nameHandler = res;
-          this.onRegister = true;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
@@ -436,6 +471,9 @@ export default {
       this.$refs.registerDomain.reset();
     },
     setName(name) {
+      if (this.name === null || this.name === '') {
+        this.nameHandler = {};
+      }
       this.name = name;
     },
     register() {
@@ -450,7 +488,9 @@ export default {
       this.nameHandler.getMinimumAge().then(resp => {
         this.minimumAge = resp;
       });
-      // start timer after confirming tx
+      /**
+       * start timer after confirming tx
+       */
       EventBus.$on(EventNames.CONFIRMED_TX, () => {
         this.loadingCommit = true;
       });
@@ -491,18 +531,11 @@ export default {
 </script>
 <style lang="scss">
 .my-domains-panel {
-  .v-expansion-panel-content__wrap {
-    padding: 0;
-  }
-  .v-expansion-panel--active > .v-expansion-panel-header {
-    border-radius: 0 !important; //need to update mew components
-  }
   .active-border {
     .subheader-container {
       background-color: var(--v-superPrimary-base);
-      border-top: 1px solid var(--v-primary-base);
       div {
-        width: 200px;
+        max-width: 400px;
       }
     }
   }

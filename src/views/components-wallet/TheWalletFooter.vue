@@ -12,18 +12,16 @@
     >
       <v-row class="align-center justify-space-between">
         <v-col cols="12" md="7">
-          <p class="mb-0 text-center text-md-left">
-            ©2020 MyEtherWallet. All rights reserved. Pricing taken from
-            <span>
-              <a
-                class="titlePrimary--text text-decoration--none"
-                href="/"
-                target="_blank"
-              >
-                CoinMarketCap
-              </a>
-            </span>
-          </p>
+          <div class="mb-0 text-center text-md-left">
+            ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+            <a
+              class="titlePrimary--text text-decoration--none"
+              href="https://www.coingecko.com/en"
+              target="_blank"
+            >
+              CoinGecko
+            </a>
+          </div>
         </v-col>
         <v-col
           cols="12"
@@ -36,9 +34,12 @@
           <div
             class="d-flex align-center justify-center justify-md-end titlePrimary--text"
           >
-            <span>Feedback</span>
-            <span class="mx-5">|</span>
-            <span>Support</span>
+            <a
+              class="black--text"
+              href="https://kb.myetherwallet.com/"
+              target="_blank"
+              >Help Center</a
+            >
             <span class="mx-5">|</span>
             <div style="max-width=200px">
               <v-select

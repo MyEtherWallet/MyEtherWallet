@@ -150,5 +150,8 @@
   "get-it-now": "Get It Now",
   "or": "OR CONNECT WITH",
   "wallet-connect": "WalletConnect",
-  "wallet-link": "WalletLink"
+  "wallet-link": "WalletLink",
+  "previous": "Previous",
+  "next": "Next",
+  "access-my-wallet": "Access My Wallet"
 }

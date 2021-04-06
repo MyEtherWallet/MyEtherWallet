@@ -18,6 +18,9 @@ export default class Settings {
       const _this = this;
       try {
         const reader = new FileReader();
+        reader.onerror = e => {
+          Toast(e.message, {}, ERROR);
+        };
         reader.onloadend = evt => {
           const file = evt.target.result;
           const obj = JSON.parse(file);
@@ -29,9 +32,6 @@ export default class Settings {
           });
         };
         reader.readAsBinaryString(file);
-        reader.onerror(e => {
-          Toast(e.message, {}, ERROR);
-        });
       } catch (e) {
         reject(e.message);
       }

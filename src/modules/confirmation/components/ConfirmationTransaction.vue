@@ -8,28 +8,14 @@
     />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
       <template #panelBody1>
-        <div class="px-3">
-          <div class="d-flex justify-space-between mb-2">
-            <div>Network</div>
-            <div>{{ network.type.name }} by {{ network.service }}</div>
-          </div>
-          <div class="d-flex justify-space-between mb-2">
-            <div>Gas Price</div>
-            <div>{{ gasPrice }} gwei</div>
-          </div>
-          <div class="d-flex justify-space-between mb-2">
-            <div>Gas Limit</div>
-            <div>{{ gasLimit }}</div>
-          </div>
-          <div class="d-flex justify-space-between mb-2">
-            <div>Nonce</div>
-            <div>{{ nonce }}</div>
-          </div>
-          <div class="d-flex justify-space-between">
-            <div>Data</div>
-            <div>{{ data }}</div>
-          </div>
-        </div>
+        <v-container fluid>
+          <v-row v-for="(detail, idx) in details" :key="idx">
+            <v-col cols="6">{{ detail.title }} </v-col>
+            <v-col cols="6" class="text-right word-break--break-all"
+              >{{ detail.value }}
+            </v-col>
+          </v-row>
+        </v-container>
       </template>
     </mew-expand-panel>
     <div class="d-flex justify-center my-8">
@@ -110,14 +96,31 @@ export default {
       activeTab: 0
     };
   },
-  methods: {
-    close: () => {}
+  computed: {
+    details() {
+      return [
+        {
+          title: 'Network',
+          value: this.network.type.name + ' by ' + this.network.service
+        },
+        {
+          title: 'Gas Price',
+          value: this.gasPrice + ' gwei'
+        },
+        {
+          title: 'Gas Limit',
+          value: this.gasLimit
+        },
+        {
+          title: 'Nonce',
+          value: this.nonce
+        },
+        {
+          title: 'Data',
+          value: this.data
+        }
+      ];
+    }
   }
 };
 </script>
-
-<style lang="scss">
-.v-application .warning {
-  border-radius: 10px;
-}
-</style>

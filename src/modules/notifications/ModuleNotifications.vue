@@ -77,7 +77,8 @@
                 v-show="showNotifications.length === 0"
                 class="pa-5 text-center"
               >
-                <h3>No notifications to display for {{ address }}</h3>
+                <h3 class="mb-5">No notifications to display for:</h3>
+                <h3 class="break-hash">{{ address }}</h3>
               </div>
             </div>
           </mew6-white-sheet>
@@ -221,7 +222,7 @@ export default {
     // next key for pendingTx subscription
     parsePendingTx(result) {
       const data = result.data.pendingTransaction;
-      if (data.to.toLowerCase() === this.address.toLowerCase()) {
+      if (data.to?.toLowerCase() === this.address?.toLowerCase()) {
         const copyArray = this.inTx;
         data['transactionFee'] = data.txFee;
         data['date'] = data.timestamp * 1000;
@@ -301,7 +302,7 @@ export default {
           string: 'Gas Price'
         },
         gasLimit: {
-          value: obj.gasLimit,
+          value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
           string: 'Gas Limit'
         },
         total: {
@@ -325,11 +326,11 @@ export default {
           string: 'Time'
         },
         status: {
-          value: obj.status.toLowerCase(),
+          value: obj.status?.toLowerCase(),
           string: 'Status'
         },
         type: {
-          value: obj.type.toLowerCase(),
+          value: obj.type?.toLowerCase(),
           string: obj.type
         },
         read: obj.read,
@@ -345,6 +346,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.break-hash {
+  word-break: break-all;
+}
 .edit {
   width: 37px;
   height: 37px;

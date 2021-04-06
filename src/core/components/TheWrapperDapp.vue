@@ -81,8 +81,8 @@ export default {
     };
   },
   mounted() {
+    this.bannerTextObj = this.bannerText;
     if (this.hasExitBtn) {
-      this.bannerTextObj = this.bannerText;
       this.bannerTextObj.exit = this.$t('common.exit-dapp');
     }
   },

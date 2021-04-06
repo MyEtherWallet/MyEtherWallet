@@ -12,7 +12,7 @@ toTxData and fromTxData = {
 */
 
 const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
-const VALID_STATUS = ['SUCCESS', 'ERROR', 'PENDING'];
+const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
 const VALID_ARGUMENTS = [
   'transactionHash', // string
   'to', // string
@@ -34,7 +34,6 @@ const VALID_ARGUMENTS = [
   'toTxData', // obj
   'errMessage', // string
   'swapObj', // obj
-  'swapResolved',
   'swapResolver'
 ];
 
@@ -84,7 +83,7 @@ export default class Notification {
             res === 'COMPLETED'
               ? 'SUCCESS'
               : res === 'FAILED' || res === 'UNKOWN'
-              ? 'ERRORED'
+              ? 'FAILED'
               : res;
         });
         if (_this.status !== 'PENDING') {

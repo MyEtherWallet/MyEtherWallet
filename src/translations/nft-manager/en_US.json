@@ -9,7 +9,7 @@
   "showing-range": " {first} - {last} ({count} items)",
   "showing": " {first} ({count} item)",
   "reloading": "reloading",
-  "none-owned": "You own no NFTs",
+  "none-owned": "You do not own any NFTs yet",
   "custom": "Add custom NFT",
   "nft-are": "NFTs are",
   "ph-token-addr": "Token Contract Address",

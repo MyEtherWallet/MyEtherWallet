@@ -4,23 +4,25 @@
       <module-contract-interact />
     </template>
     <template #rightColItem1>
-      <swap />
+      <module-swap-rates />
     </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import Swap from '@/core/components/AppSwap';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
 import ModuleContractInteract from '@/modules/contract/ModuleContractInteract.vue';
 
 export default {
   name: '',
   components: {
     ModuleContractInteract,
-    Swap,
+    ModuleSwapRates,
     TheWrapperWallet
   },
   data() {}
 };
 </script>
+
+<style lang="scss"></style>

@@ -1,19 +1,35 @@
 <template>
+  <!--
+  =============================================================
+  Module Tokens
+  =============================================================
+  -->
   <div>
+    <v-skeleton-loader
+      v-if="loading && tokensData"
+      class="mx-auto"
+      type="table"
+    />
     <mew-module
-      v-if="tokensData.length > 0"
-      class="mt-6"
+      v-if="!loading && tokensData.length > 0"
       subtitle="My Tokens Value"
+      :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
       :icon="require('@/assets/images/icons/icon-token-grey.png')"
       icon-align="left"
     >
+      <!-- hiding for now until we have the ui  -->
+      <!-- <template #rightHeaderContainer>
+        <mew-button btn-style="transparent" title="All Tokens" />
+      </template> -->
       <template #moduleBody>
-        <mew-table
-          :has-color="false"
-          :table-headers="tableHeaders"
-          :table-data="tokensData"
-        />
+        <div class="my-8">
+          <mew-table
+            :has-color="false"
+            :table-headers="tableHeaders"
+            :table-data="tokensData"
+          />
+        </div>
       </template>
     </mew-module>
     <!--
@@ -21,13 +37,19 @@
       display if the user has no tokens
     =====================================================================================
     -->
-    <balance-empty-block v-else is-tokens />
+    <balance-empty-block
+      v-if="!loading && tokensData.length === 0"
+      is-tokens
+      :is-eth="isEthNetwork"
+    />
   </div>
 </template>
 <script>
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
+import numberFormatHelper from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     BalanceEmptyBlock
@@ -38,34 +60,51 @@ export default {
         {
           text: 'Token',
           value: 'token',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
           text: 'Price',
           value: 'price',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
           text: 'Market Cap',
           value: 'cap',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
-          text: '24H Changes',
+          text: '24H',
           value: 'change',
-          sortable: true
+          sortable: false,
+          width: '20%'
         },
         {
-          text: 'Token Value',
-          value: 'value',
-          sortable: true,
-          width: '250px'
+          text: 'Balance',
+          value: 'balance',
+          sortable: false,
+          width: '20%'
+        },
+        {
+          text: '',
+          value: 'callToAction',
+          sortable: false,
+          width: '15%'
         }
       ]
+      // loading: true
     };
   },
   computed: {
-    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('wallet', ['tokensList', 'web3']),
+    ...mapState('wallet', ['web3', 'initialLoadTokens']),
+    ...mapGetters('global', ['isEthNetwork']),
+
+    loading() {
+      return this.initialLoadTokens;
+    },
     tokensData() {
       return this.tokensList
         .filter(item => {
@@ -75,46 +114,54 @@ export default {
         })
         .map(item => {
           const newObj = {};
-          newObj.value = `$ ${item.usdBalance}`;
+          newObj.balance = [
+            this.getTokenValue(item).value + ' ' + item.symbol,
+            numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
+              .value
+          ];
           newObj.token = item.symbol;
-          newObj.cap = item.market_cap;
-          newObj.change = item.price_change_24h;
+          newObj.cap = new BigNumber(item.market_cap).toFormat();
+          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
           newObj.status = item.price_change_24h > 0 ? '+' : '-';
-          newObj.price = item.price;
+          newObj.price = '$' + new BigNumber(item.price).toFixed(2);
           newObj.tokenImg = item.img;
-          newObj.usdBalance = item.usdBalance;
-
+          newObj.callToAction = [
+            {
+              title: 'Trade',
+              method: () => {
+                this.$router.push({ name: 'Swap' });
+              },
+              btnStyle: 'outline',
+              colorTheme: 'primary'
+            }
+          ];
+          // this.loading = false;
           return newObj;
         });
     },
     totalTokensValue() {
       return new BigNumber(
-        this.tokensData.reduce((acc, currentVal) => {
-          return new BigNumber(acc).plus(currentVal.usdBalance).toFixed();
+        this.tokensList.reduce((total, currentVal) => {
+          const balance =
+            currentVal.usdBalance !== null &&
+            (currentVal.price_change_24h !== null ||
+              currentVal.market_cap !== 0)
+              ? currentVal.usdBalance
+              : 0;
+          return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
+    }
+  },
+  methods: {
+    getTokenValue(_token) {
+      let n = new BigNumber(_token.balance);
+      if (_token.decimals) {
+        n = n.div(new BigNumber(10).pow(_token.decimals));
+        n = numberFormatHelper.formatFloatingPointValue(n);
+      }
+      return n;
     }
   }
 };
 </script>
-<style lang="scss" scoped>
-.mew-component--my-token-value {
-  .theme--dark.v-sheet {
-    background-color: var(--v-mewBg-base);
-    border-color: var(--v-mewBg-base);
-  }
-  .block-title {
-    margin-left: 10px;
-    .header-wrapper {
-      padding: 0 !important;
-    }
-    .left-wrapper {
-      padding-left: 0 !important;
-    }
-    .right-wrapper {
-      padding: 0 !important;
-      margin-right: 10px;
-    }
-  }
-}
-</style>

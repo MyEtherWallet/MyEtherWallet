@@ -1,13 +1,8 @@
 <template>
   <div class="component-container">
-    <v-container>
-      <div class="py-7" />
+    <div class="py-6 py-md-12" />
 
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
+    <v-container>
       <v-sheet max-width="600px" class="mb-12">
         <app-block-title no-page-title :data="titleData" class="mb-8" />
       </v-sheet>
@@ -23,13 +18,10 @@
         >
           <img :src="content.img" height="60" />
           <h5 class="font-weight-bold mt-3">{{ content.title }}</h5>
-          <v-sheet max-width="300px" class="mt-3">
-            <p class="ma-0">{{ content.description }}</p>
-          </v-sheet>
+          <div class="mt-3 pr-md-12">{{ content.description }}</div>
         </v-col>
       </v-row>
     </v-container>
-    <div class="py-4" />
   </div>
 </template>
 
@@ -50,7 +42,7 @@ export default {
       toptitle: '',
       title: 'More tools',
       description:
-        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+        'We are always expanding to keep up with the constantly evolving technology of the Ethereum blockchain.',
       centered: false
     },
     blockContent: [
@@ -58,37 +50,37 @@ export default {
         img: Contract,
         title: 'Smart Contract',
         description:
-          'Interact with any smart contract on the Ethereum Blockchain.'
+          'Interact with any smart contract on Ethereum, whether we’ve integrated it or not!'
       },
       {
         img: Message,
-        title: 'Message',
+        title: 'Messages',
         description:
-          'MEWconnect, an official, free companion app for MEW that helps you secure your funds as never before.'
+          'Send or Verify Messages from the MEW interface to verify ownership of your wallet.'
       },
       {
         img: ViewOnlyWallet,
         title: 'View Only Wallet',
         description:
-          'MEWconnect, an official, free companion app for MEW that helps you secure your funds as never before.'
+          'Search your Public Address without accessing your wallet, so you can keep track of your balances quickly and easily.'
       },
       {
         img: ChromeEx,
         title: 'MEW CX',
         description:
-          'MUse our Web3-enabled Chrome Extension to interact with Dapps right in your browser.'
+          'Connect with our Web-3 enabled Chrome Extension wallet, capable of third-party DApp interaction right from your browser.'
       },
       {
         img: BuyEth,
         title: 'Buy Eth',
         description:
-          'Purchase Ether using only a credit card through our partner Simplex.'
+          'Purchase Ether with a credit card through our provider, Simplex.'
       },
       {
         img: AdvancedTools,
         title: 'Advanced Tools',
         description:
-          'MEWconnect, an official, free companion app for MEW that helps you secure your funds as never before.'
+          'MEW’s functionality ranges from Beginner to Expert, with everything in-between.'
       }
     ]
   })

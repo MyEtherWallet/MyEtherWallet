@@ -1,63 +1,19 @@
-// import unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
-import { getSanitizedTx } from './utils';
+import { getSanitizedTx, setEvents } from './utils';
 import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 import { EventBus } from '@/core/plugins/eventBus';
-import Notification from '@/modules/notifications/handlers/handlerNotification';
 
-const setEvents = (promiObj, tx, dispatch) => {
-  // create a no reference copy specifically for notification
-  const newTxObj = utils._.clone(tx);
-  newTxObj.date = new Date().getTime();
-  const isExcempt = newTxObj.hasOwnProperty('handleNotification');
-  delete newTxObj['r'];
-  delete newTxObj['v'];
-  delete newTxObj['s'];
-  delete newTxObj['chainId'];
-
-  promiObj
-    .once('transactionHash', hash => {
-      newTxObj.status = 'PENDING';
-      newTxObj.transactionHash = hash;
-      if (!isExcempt) {
-        const notification = new Notification(newTxObj);
-        dispatch('notifications/addNotification', notification, {
-          root: true
-        });
-      }
-    })
-    .on('receipt', res => {
-      newTxObj.transactionHash = res.transactionHash;
-      newTxObj.status = 'SUCCESS';
-      if (!isExcempt) {
-        const notification = new Notification(newTxObj);
-        dispatch('notifications/updateNotification', notification, {
-          root: true
-        });
-      }
-    })
-    .on('error', err => {
-      newTxObj.status = 'ERROR';
-      newTxObj.errMessage = err.message;
-      if (!isExcempt) {
-        const notification = new Notification(newTxObj);
-        dispatch('notifications/addNotification', notification, {
-          root: true
-        });
-      }
-    });
-};
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = BigNumber(store.state.global.gasPrice).toFixed();
+  tx.gasPrice = BigNumber(store.getters['global/gasPrice']).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
@@ -76,7 +32,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.chainId = !tx.chainId
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
-
   getSanitizedTx(tx)
     .then(_tx => {
       if (
@@ -98,7 +53,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
-
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {

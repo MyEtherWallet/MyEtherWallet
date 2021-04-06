@@ -1,23 +1,20 @@
 <template>
   <div class="mew-component--how-it-works">
     <the-layout-header title="How it works" />
-    <mew-tabs :items="mewTabs" has-underline>
-      <template #tabContent1>
-        <how-it-works-send />
-      </template>
-      <template #tabContent2>
-        <how-it-works-swap />
-      </template>
-      <template #tabContent3>
-        <how-it-works-dapps-center />
-      </template>
-      <template #tabContent4>
-        <how-it-works-tokens />
-      </template>
-      <template #tabContent5>
-        <how-it-works-more />
-      </template>
-    </mew-tabs>
+    <div class="py-7" />
+    <v-container>
+      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
+        <div class="display-1 font-weight-bold text-sm-center">
+          Your All-In-One Gateway to the Ethereum Blockchain
+        </div>
+      </v-sheet>
+    </v-container>
+
+    <how-it-works-send />
+    <how-it-works-swap />
+    <how-it-works-dapps-center />
+    <how-it-works-tokens />
+    <how-it-works-more />
     <app-get-started />
   </div>
 </template>
@@ -67,7 +64,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-component--how-it-works {
   .v-slide-group__prev {
     display: none !important;

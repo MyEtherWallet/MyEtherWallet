@@ -1,14 +1,8 @@
 <template>
   <div class="component-container">
+    <div class="py-3 py-md-12" />
     <v-container>
-      <div class="py-7" />
-
-      <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <div class="display-1 font-weight-bold text-sm-center">
-          All-in-one gateway to your Ethereum Blockchain service
-        </div>
-      </v-sheet>
-      <v-row class="flex-column-reverse flex-lg-row align-center">
+      <v-row class="flex-column-reverse flex-lg-row">
         <v-col
           cols="12"
           lg="5"
@@ -24,10 +18,12 @@
               <v-img src="@/assets/images/icons/icon-dapps-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">Dapps Center</div>
+              <div class="mb-1 font-weight-bold subtitle-1">DApps Center</div>
               <p>
-                MEW has pasrtnered with Bity, Kyber Network, and Simplex to
-                allow users to swap fiat to crypto, ETH and BTC.
+                Explore our integrated DApps to fully experience Ethereum’s
+                capabilities. Our partners Aave and MakerDAO offer DeFi
+                services, or you can register a domain name for your wallet
+                through ENS or Unstoppable Domains.
               </p>
             </div>
           </div>
@@ -37,18 +33,26 @@
               <v-img src="@/assets/images/icons/icon-submit-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">Submit</div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                Submit Your Own DApp!
+              </div>
               <p>
-                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
-                sed stet takimata ipsum invidunt, est ea no dolor.
+                MEW is a decentralized and open-source project, so we’re happy
+                to take new DApp integrations. You can fill out your details
+                through our
+                <a
+                  href="https://www.myetherwallet.com/dapp-submission"
+                  target="_blank"
+                  >DApp Submit Form</a
+                >.
               </p>
-              <div class="d-flex align-center mt-10">
+              <!-- <div class="d-flex align-center mt-10">
                 <a
                   href="#"
                   class="teal--text text--lighten-2 font-weight-medium text-decoration--underline"
                   >Watch tutorial</a
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </v-col>
@@ -73,9 +77,9 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Dapps',
+      title: 'DApps',
       description:
-        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum.',
+        'Decentralized Applications (DApps) are the backbone of what makes Ethereum special.',
       centered: false
     }
   })

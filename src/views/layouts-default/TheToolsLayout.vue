@@ -3,20 +3,17 @@
     <the-layout-header title="Tools" />
 
     <div class="expandHeader mobile-menu px-3 mt-n7 d-block d-lg-none">
-      <v-sheet
+      <v-select
+        v-model="currentTool"
         max-width="500px"
         width="100%"
         class="mx-auto"
-        color="expandHeader"
-      >
-        <v-select
-          v-model="currentTool"
-          :items="items"
-          item-text="name"
-          item-value="val"
-          outlined
-        ></v-select>
-      </v-sheet>
+        :items="items"
+        item-text="name"
+        item-value="val"
+        outlined
+        dark
+      ></v-select>
     </div>
 
     <v-container class="mt-8 mb-12">
@@ -29,7 +26,7 @@
 
       <mew-tabs class="d-none d-lg-block" :is-vertical="true" :items="items">
         <template #tabItemContent1>
-          <module-tools-watch-only />
+          <module-message-verify />
         </template>
         <template #tabItemContent2>
           <module-tools-convert />
@@ -38,7 +35,7 @@
           <module-tools-offline-helper />
         </template>
         <template #tabItemContent4>
-          <module-message-verify />
+          <module-tools-watch-only />
         </template>
       </mew-tabs>
     </v-container>
@@ -68,6 +65,7 @@ export default {
   data: () => ({
     currentTool: 'watch',
     items: [
+      /*
       {
         name: 'Watch only address',
         val: 'watch'
@@ -80,6 +78,7 @@ export default {
         name: 'Send offline helper',
         val: 'offline'
       },
+      */
       {
         name: 'Verify message',
         val: 'verify'
@@ -113,7 +112,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mew-component--tools {
   .mobile-menu {
     .v-input__slot {

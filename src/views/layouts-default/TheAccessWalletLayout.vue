@@ -29,6 +29,7 @@
         <v-sheet color="transparent" max-width="650px" class="mx-auto">
           <div v-for="btn in buttons" :key="btn.title" class="mb-5">
             <mew-super-button
+              font-class="mew-heading-1"
               :color-theme="btn.color"
               :title="btn.title"
               :subtitle="btn.subtitle"
@@ -87,15 +88,23 @@ import browserExtensionOverlay from '@/modules/wallets/components/browser-extens
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import {
+  Toast,
+  ERROR,
+  WARNING,
+  SENTRY
+} from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
+import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import MewConnect from '@myetherwallet/mewconnect-web-client';
+import Web3 from 'web3';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
     AppBlockTitle,
     browserExtensionOverlay,
     ModuleAccessWalletHardware,
-
     ModuleAccessWalletSoftware,
     ModuleAccessWalletMobile
   },
@@ -125,12 +134,12 @@ export default {
           title: 'MEWwallet',
           subtitle: 'Use MEWwallet to access my wallet',
           note: '',
-          rightIcon: require('@/assets/images/icons/icon-mew-connect.png'),
+          rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            window.open('https://www.mewwallet.com', '_blank');
+            this.openMEWconnect();
           }
         },
         /* Browser Extension */
@@ -144,15 +153,14 @@ export default {
           titleIconType: 'mdi',
           titleIconClass: 'primary--text',
           fn: () => {
-            //this.open('showBrowser');
-            this.$router.push({ name: 'BrowserExtension' });
+            this.openWeb3Wallet();
           }
         },
         /* Hardware Wallet */
         {
           color: 'basic',
           title: 'Hardware wallets',
-          subtitle: 'Ledge, Trezor, Keep key, FINNEY, BitBox, Secalot',
+          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox, Secalot',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',
@@ -198,6 +206,11 @@ export default {
     };
   },
   computed: {
+    ...mapState('external', ['path']),
+    /**
+     * Used in the creation of a MEWconnect instance
+     **/
+    ...mapGetters('global', ['network']),
     /**
      * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
      * @return - boolean
@@ -221,6 +234,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions('wallet', ['setWallet']),
+    /**
+     * Used to set the MEWconnect instance as the wallet
+     **/
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Pushes route to empty Access wallet with no props
      * Consequently closing any open overlay
@@ -251,6 +269,50 @@ export default {
         Toast(e, {}, ERROR);
       }
       this[type] = true;
+    },
+    /**
+     * Checks and open web3 wallet
+     */
+    async openWeb3Wallet() {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        try {
+          await window.ethereum.enable();
+          const acc = await web3.eth.getAccounts();
+          const wallet = new Web3Wallet(acc[0]);
+          this.setWallet([wallet, web3.currentProvider]);
+          window.ethereum.on('accountsChanged', acc => {
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          });
+          if (this.path !== '') {
+            this.$router.push({ path: this.path });
+          } else {
+            this.$router.push({ name: 'Wallets' });
+          }
+        } catch (e) {
+          Toast(e.message, {}, WARNING);
+        }
+      }
+    },
+    /** Opens a modal to initiate a connection with a MEW mobile app.
+     * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
+     */
+    openMEWconnect() {
+      try {
+        const mc = new MewConnect.Initiator({ newPopupCreator: true });
+        mc.createWalletOnly(this.network)
+          .then(_newWallet => {
+            this.setWallet([_newWallet]).then(() => {
+              this.$router.push({ name: 'Dashboard' });
+            });
+          })
+          .catch(e => {
+            Toast(e.message, {}, SENTRY);
+          });
+      } catch (e) {
+        Toast(e.message, {}, SENTRY);
+      }
     }
   }
 };

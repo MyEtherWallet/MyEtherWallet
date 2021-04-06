@@ -4,22 +4,24 @@
       <module-contract-deploy />
     </template>
     <template #rightColItem1>
-      <swap />
+      <module-swap-rates />
     </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import Swap from '@/core/components/AppSwap';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
 import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
 
 export default {
   name: 'TheDeployContractLayout',
   components: {
     TheWrapperWallet,
-    Swap,
+    ModuleSwapRates,
     ModuleContractDeploy
   }
 };
 </script>
+
+<style lang="scss"></style>

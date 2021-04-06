@@ -4,7 +4,7 @@
       :show-overlay="showOverlay"
       :title="title ? title : 'Confirmation'"
       left-btn-text=""
-      right-btn-text="close"
+      right-btn-text="Close"
       :close="overlayClose"
     >
       <template #mewOverlayBody>
@@ -23,36 +23,84 @@
         />
       </template>
     </mew-overlay>
+    <mew-overlay
+      :show-overlay="showSignOverlay"
+      :title="title ? title : 'Message'"
+      left-btn-text=""
+      right-btn-text="close"
+      :close="overlayClose"
+    >
+      <template #mewOverlayBody>
+        <confirmation-messsage
+          v-if="true"
+          ref="messageConfirmationContainer"
+          :msg="signature"
+          :copy="copyToClipboard"
+        />
+      </template>
+    </mew-overlay>
+    <mew-overlay
+      :show-overlay="showBatchOverlay"
+      title="Batch Transaction Confirmation"
+      right-btn-text="close"
+      :close="overlayClose"
+    >
+      <template #mewOverlayBody>
+        <confirmation-batch-transaction
+          :transactions="unsignedTxArr"
+          :send="sendBatchTransaction"
+        />
+      </template>
+    </mew-overlay>
   </div>
 </template>
 
 <script>
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
+import ConfirmationMesssage from './components/ConfirmationMessage';
+import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, INFO } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
+import { setEvents } from '@/utils/web3-provider/methods/utils.js';
+import * as locStore from 'store';
+import { sanitizeHex } from '@/modules/wallets/utils/utils.js';
 export default {
   name: 'ConfirmationContainer',
   components: {
-    ConfirmationTransaction
+    ConfirmationTransaction,
+    ConfirmationMesssage,
+    ConfirmationBatchTransaction
   },
   data() {
     return {
       showOverlay: false,
+      showSignOverlay: false,
+      showBatchOverlay: false,
       tx: {},
       resolver: () => {},
       title: '',
       signedTxObject: {},
-      signedTx: {}
+      signedTx: {},
+      signature: '',
+      unsignedTxArr: [],
+      signedTxArray: []
     };
   },
   computed: {
-    ...mapState('wallet', ['instance', 'web3']),
+    ...mapState('wallet', [
+      'instance',
+      'web3',
+      'address',
+      'identifier',
+      'isHardware'
+    ]),
     ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
@@ -69,7 +117,11 @@ export default {
       return utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei');
     },
     gasLimit() {
-      const gasLimit = this.tx.gasLimit ? this.tx.gasLimit : '0x';
+      const gasLimit = this.tx.gasLimit
+        ? this.tx.gasLimit
+        : this.tx.gas
+        ? this.tx.gas
+        : '0x';
       return utils.hexToNumberString(gasLimit);
     },
     nonce() {
@@ -108,10 +160,69 @@ export default {
           _self.instance.errorHandler(e);
         });
     });
+    EventBus.$on(
+      EventNames.SHOW_BATCH_TX_MODAL,
+      async (arr, resolver, isHardware) => {
+        _self.isHardwareWallet = isHardware;
+        const signed = [];
+        _self.unsignedTxArr = arr;
+        if (!resolver) resolver = () => {};
+        _self.resolver = resolver;
+        _self.showBatchOverlay = true;
+
+        if (_self.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          for (let i = 0; i < arr.length; i++) {
+            try {
+              const _signedTx = await _self.instance.signTransaction(arr[i]);
+              if (arr[i].hasOwnProperty('handleNotification')) {
+                _signedTx.tx['handleNotification'] = arr[i].handleNotification;
+              }
+              _signedTx.tx['type'] = arr[i].type ? arr[i].type : 'OUT';
+              signed.push(_signedTx);
+            } catch (err) {
+              _self.instance.errorHandler(err);
+            }
+          }
+          _self.signedTxArray = signed;
+        } else {
+          _self.signedTxArray = _self.unsignedTxArr.map(_tx => {
+            return { tx: _tx, rawTransaction: _tx };
+          });
+        }
+      }
+    );
+    EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
+      _self.title = 'Message Signed';
+      _self.instance
+        .signMessage(msg)
+        .then(res => {
+          const result = Buffer.from(res).toString('hex');
+          _self.signature = JSON.stringify(
+            {
+              address: _self.address,
+              msg: msg,
+              sig: result,
+              version: '3',
+              signer: _self.isHardware ? _self.identifier : 'MEW'
+            },
+            null,
+            2
+          );
+          _self.signedMessage = result;
+          resolver(result);
+          _self.showSignOverlay = true;
+        })
+        .catch(e => {
+          this.overlayClose();
+          _self.instance.errorHandler(e);
+        });
+    });
   },
   methods: {
     overlayClose() {
       this.showOverlay = false;
+      this.showBatchOverlay = false;
+      this.showSignOverlay = false;
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -136,10 +247,52 @@ export default {
       tx.network = this.network.type.name;
       tx.transactionFee = this.txFee;
     },
+    async sendBatchTransaction() {
+      this.showBatchOverlay = false;
+      const web3 = this.web3;
+      const _method =
+        this.identifier === WALLET_TYPES.WEB3_WALLET
+          ? 'sendTransaction'
+          : 'sendSignedTransaction';
+      const _arr = this.signedTxArray;
+      const promises = _arr.map(tx => {
+        const _tx = tx.tx;
+        _tx.from = this.address;
+        const _rawTx = tx.rawTransaction;
+        const promiEvent = web3.eth[_method](_rawTx);
+        _tx.network = this.network.type.name;
+        _tx.gasPrice = utils.fromWei(
+          utils.hexToNumberString(_tx.gasPrice),
+          'gwei'
+        );
+        _tx.transactionFee = utils.fromWei(
+          BigNumber(utils.toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+        );
+        _tx.gasLimit = _tx.gas;
+        setEvents(promiEvent, _tx, this.$store.dispatch);
+        promiEvent.once('transactionHash', () => {
+          const localStoredObj = locStore.get(web3.utils.sha3(this.address));
+          locStore.set(web3.utils.sha3(this.address), {
+            nonce: sanitizeHex(
+              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+            ),
+            timestamp: localStoredObj.timestamp
+          });
+        });
+        return promiEvent;
+      });
+      this.resolver(promises);
+      Toast(
+        'Transaction is being mined. Watch out for the notifications on the top right of the screen!',
+        {},
+        SUCCESS,
+        5000
+      );
+    },
     send() {
       this.resolver(this.signedTxObject);
       Toast(
-        'Transaction is being mined. Check here ',
+        `Transaction is being mined. Check here `,
         {
           title: `${getService(this.network.type.blockExplorerTX)}`,
           url: this.network.type.blockExplorerTX.replace(
@@ -150,6 +303,13 @@ export default {
         SUCCESS,
         5000
       );
+      this.overlayClose();
+    },
+    copyToClipboard() {
+      this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      Toast(this.$t('common.copied'), {}, INFO);
       this.overlayClose();
     }
   }

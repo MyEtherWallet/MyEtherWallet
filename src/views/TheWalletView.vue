@@ -4,7 +4,7 @@
     <the-wallet-header />
     <v-main>
       <v-container
-        class="pa-3 pa-md-5 align-center wallet-content-container"
+        class="pa-3 pa-md-5 mb-10 align-center wallet-content-container"
         fluid
       >
         <module-confirmation />
@@ -83,6 +83,11 @@ export default {
     getPriceAndBalance() {
       if (this.isEthNetwork) {
         const walletCalls = new WalletCalls(this.$apollo);
+        walletCalls.subscribeToUserBalance(this.address, () => {
+          walletCalls.getBalance(this.address).then(res => {
+            this.setAccountBalance(toBN(res));
+          });
+        });
         walletCalls.getBalance(this.address).then(res => {
           this.setAccountBalance(toBN(res));
         });

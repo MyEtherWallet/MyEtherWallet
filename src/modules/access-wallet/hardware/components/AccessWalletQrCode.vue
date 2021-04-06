@@ -1,48 +1,47 @@
 <template>
   <v-sheet
-    :outlined="true"
     color="white"
     :rounded="true"
-    :max-width="740"
-    :min-width="475"
-    :min-height="340"
+    class="pa-5"
+    width="100%"
+    max-width="400px"
   >
-    <v-container>
-      <v-row align="center" justify="center">
-        <v-col cols="9">
-          <p v-if="onXwallet" class="mew-heading-3 pa-3">
-            Please use Pundi X Savings account to scan the QR code below.
-          </p>
-          <p v-else class="mew-heading-3">
-            Please use FINNEY to scan the QR code below.
-          </p>
-          <v-row align="center" justify="center">
-            <vue-qrcode :value="qrCode" :options="{ size: 186 }" />
-          </v-row>
-          <v-row v-show="onXwallet" align="center" justify="space-around">
-            <a
-              href="https://apps.apple.com/us/app/xwallet-by-pundi-x/id1321754661"
-              target="_blank"
-            >
-              <img
-                src="@/assets/images/icons/button-app-store.png"
-                alt="Apple app store"
-                height="50"
-              />
-            </a>
-            <a
-              href="https://play.google.com/store/apps/details?id=com.pundix.xwallet&hl=en_US"
-            >
-              <img
-                src="@/assets/images/icons/button-play-store.png"
-                alt="Google play store"
-                height="50"
-              />
-            </a>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-container>
+    <p v-if="onXwallet" class="mew-heading-3 pa-3">
+      Please use Pundi X Savings account to scan the QR code below.
+    </p>
+    <p v-else class="mew-heading-3 pa-3">
+      Please use FINNEY to scan the QR code below.
+    </p>
+    <div align="center" justify="center" class="px-sm-12">
+      <vue-qrcode
+        :value="qrCode"
+        :options="{ size: 300 }"
+        style="width: 100%"
+      />
+    </div>
+    <div v-show="onXwallet" align="center" justify="space-around" class="mt-5">
+      <a
+        href="https://apps.apple.com/us/app/xwallet-by-pundi-x/id1321754661"
+        target="_blank"
+        class="mr-1"
+      >
+        <img
+          src="@/assets/images/icons/button-app-store.png"
+          alt="Apple app store"
+          height="35"
+        />
+      </a>
+      <a
+        href="https://play.google.com/store/apps/details?id=com.pundix.xwallet&hl=en_US"
+        target="_blank"
+      >
+        <img
+          src="@/assets/images/icons/button-play-store.png"
+          alt="Google play store"
+          height="35"
+        />
+      </a>
+    </div>
   </v-sheet>
 </template>
 

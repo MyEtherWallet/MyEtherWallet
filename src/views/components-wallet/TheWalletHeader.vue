@@ -17,9 +17,13 @@
         <div>
           <div class="font-weight-bold">MEWtopia</div>
           <div>
-            Find out what Crypto Wallets is and learn to use MEW securly by
-            using many different mobile wallets.
-            <a href="#">Read...</a>
+            Getting started on Ethereum? Visit our blog for help and tips.
+            <a
+              href="https://www.mewtopia.com/tag/getting-started/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Read...</a
+            >
           </div>
         </div>
       </div>

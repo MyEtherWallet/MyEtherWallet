@@ -1,68 +1,78 @@
 <template>
-  <v-container class="pb-12 pb-lg-0">
-    <div class="py-7" />
-    <v-sheet color="transparent" max-width="500px" class="mx-auto mb-12">
-      <div class="display-1 font-weight-bold text-sm-center">
-        All-in-one gateway to your Ethereum Blockchain service
-      </div>
-    </v-sheet>
-    <v-row class="flex-column-reverse flex-lg-row">
-      <v-col cols="12" lg="5" class="text-content pr-12 mt-4 mt-lg-0">
-        <app-block-title no-page-title :data="titleData" class="mb-12 pl-12" />
-        <div class="mb-4 d-flex">
-          <div class="mr-3">
-            <v-img src="@/assets/images/icons/icon-send-mew.svg" />
-          </div>
-          <div>
-            <div class="mb-1 font-weight-bold subtitle-1">Send Transaction</div>
-            <p>
-              Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
-              stet takimata ipsum invidunt, est ea no dolor.
-            </p>
-          </div>
-        </div>
-
-        <div class="mb-4 d-flex">
-          <div class="mr-3">
-            <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
-          </div>
-          <div>
-            <div class="mb-1 font-weight-bold subtitle-1">
-              Send Offline Helper
+  <div>
+    <div class="py-3 py-md-7" />
+    <v-container class="pb-12 pb-lg-0">
+      <v-row class="flex-column-reverse flex-lg-row">
+        <v-col cols="12" lg="5" class="text-content pr-12 mt-4 mt-lg-0">
+          <app-block-title
+            no-page-title
+            :data="titleData"
+            class="mb-12 pl-12"
+          />
+          <div class="mb-4 d-flex">
+            <div class="mr-3">
+              <v-img src="@/assets/images/icons/icon-send-mew.svg" />
             </div>
-            <p>
-              Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
-              stet takimata ipsum invidunt, est ea no dolor.
-            </p>
-          </div>
-        </div>
-
-        <div class="d-flex">
-          <div class="mr-3">
-            <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
-          </div>
-          <div>
-            <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
-            <p>
-              Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
-              stet takimata ipsum invidunt, est ea no dolor.
-            </p>
-            <div class="d-flex align-center mt-10">
-              <a
-                href="#"
-                class="mr-5 teal--text text-decoration--underline text--lighten-2 font-weight-medium"
-              >
-                Watch tutorial
-              </a>
+            <div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                Send Transactions
+              </div>
+              <p>
+                MEW enables users to send their ETH or ERC20 tokens with no
+                minimums to any other Ethereum wallet. Just pay the gas fee for
+                using the blockchain, and you’re done!
+              </p>
             </div>
           </div>
-        </div>
-      </v-col>
-      <v-col cols="12" lg="7">
-        <v-img src="@/assets/images/snippets/send-tx-page.png" class="mt-n6" />
-      </v-col>
-    </v-row>
-  </v-container>
+
+          <div class="mb-4 d-flex">
+            <div class="mr-3">
+              <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
+            </div>
+            <div>
+              <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
+              <p>
+                Non-Fungible-Tokens (NFTs) are supported through our NFT
+                Manager, where you can send and manage your own NFTs right in
+                MEW!
+              </p>
+            </div>
+          </div>
+
+          <div class="d-flex">
+            <div class="mr-3">
+              <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
+            </div>
+            <div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                Change Networks
+              </div>
+              <p>
+                We have integrated other Ethereum-compatible networks, such as
+                Ethereum Classic (ETC) and the Binance Smart Chain (BSC), so
+                users can interact beyond Ethereum.
+              </p>
+              <!-- <div class="d-flex align-center mt-10">
+                <a
+                  href="#"
+                  class="mr-5 teal--text text-decoration--underline text--lighten-2 font-weight-medium"
+                >
+                  Watch tutorial
+                </a>
+              </div> -->
+            </div>
+          </div>
+        </v-col>
+        <v-col cols="12" lg="7">
+          <v-img
+            src="@/assets/images/snippets/send-tx-page.png"
+            class="mt-n6"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="py-2 py-md-9" />
+  </div>
 </template>
 
 <script>
@@ -74,9 +84,9 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Send',
+      title: 'Send Your Funds',
       description:
-        'MyEtherWallet - please, call us MEW - puts the ETH blockchain at your fingertips.',
+        'Sending with MEW is as easy as accessing your wallet and pressing a button.',
       centered: false
     }
   })

@@ -9,45 +9,37 @@
     <div v-if="loading" class="d-flex align-center justify-center">
       <v-progress-circular indeterminate color="primary" />
     </div>
-    <div
-      v-if="!loading"
-      :class="[
-        'd-flex align-center pa-6 rounded',
-        isAvailable ? 'superPrimary' : 'error lighten-3'
-      ]"
-    >
-      <v-icon size="80" :color="isAvailable ? 'primary' : 'error'" class="mr-3">
-        {{ icon }}
+    <div v-if="!loading" class="d-flex align-center pa-6 rounded superPrimary'">
+      <v-icon size="80" color="primary" class="mr-3">
+        mdi-check-circle-outline
       </v-icon>
       <div>
-        <div
-          :class="[
-            'mew-heading-2 mb-2',
-            isAvailable ? 'primary--text' : 'error--text'
-          ]"
-        >
-          {{ isAvailable ? $t('ens.is-available') : $t('ens.domain-taken') }}
+        <div class="mew-heading-2 mb-2 primary--text">
+          {{ $t('ens.is-available') }}
         </div>
         <div class="mew-heading-2">{{ name }}</div>
       </div>
     </div>
-    <div v-if="isAvailable" class="pa-1 mt-3 mb-7 text-center">
+    <div class="pa-1 mt-3 mb-7 text-center">
       {{ $t('ens.request.about-domain') }}
     </div>
     <mew-select
-      v-if="isAvailable"
       :has-filter="false"
       :label="$t('ens.request.choose-term')"
       :items="items"
       @input="setDuration"
     />
 
-    <div v-if="isAvailable" class="font-weight-bold text-center">
+    <div class="font-weight-bold text-center">
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
       {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
     <div class="d-flex justify-center my-6">
-      <mew-button :title="btnTitle" btn-size="xlarge" @click.native="onClick" />
+      <mew-button
+        :title="$t('ens.request.request-registr')"
+        btn-size="xlarge"
+        @click.native="onClick"
+      />
     </div>
   </v-sheet>
 </template>
@@ -61,10 +53,6 @@ export default {
         return {};
       },
       type: Function
-    },
-    isAvailable: {
-      default: false,
-      type: Boolean
     },
     loading: {
       default: false,
@@ -87,16 +75,6 @@ export default {
     };
   },
   computed: {
-    btnTitle() {
-      return this.isAvailable
-        ? this.$t('ens.request.request-registr')
-        : this.$t('common.ok');
-    },
-    icon() {
-      return this.isAvailable
-        ? 'mdi-check-circle-outline'
-        : 'mdi-do-not-disturb';
-    },
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {

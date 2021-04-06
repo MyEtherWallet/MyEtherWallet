@@ -16,7 +16,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions@0.0.3",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -26,26 +26,23 @@
     "update:swap": "node compileBaseSwapOptions.js",
     "apollo": "apollo",
     "apollo:schema": "apollo service:download src/apollo/schemas/api.json",
-    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "bash ./checkBranch.sh && npm run test",
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "apollo:codegen": "npm run apollo:schema && apollo client:codegen src/apollo/global/globalTypes.json --target=json",
+    "apollo:aave": "apollo service:download -c=apolloAave.config.js src/dapps/aave-dapp/apollo/schemas/api.json && apollo client:codegen -c=apolloAave.config.js src/dapps/aave-dapp/apollo/global/globalTypes.json --target=json",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@aave/protocol-js": "1.0.3",
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.39-beta",
+    "@myetherwallet/mew-components": "0.5.57-beta",
+    "@myetherwallet/mewconnect-web-client": "2.1.23-beta.8",
     "@sentry/browser": "6.2.3",
     "@sentry/integrations": "6.2.3",
-    "@sentry/tracing": "6.2.3",
     "@sentry/vue": "6.2.3",
+    "@sentry/tracing": "6.2.3",
     "@unstoppabledomains/resolution": "3.0.0",
     "@vue/babel-preset-app": "4.5.12",
     "@walletconnect/browser": "1.0.0",
@@ -120,7 +117,9 @@
     "ethereumjs-util": "7.0.9",
     "ethereumjs-wallet": "1.0.1",
     "ethjs-unit": "0.1.6",
+    "ganache-core": "2.13.2",
     "hdkey": "2.0.1",
+    "html2canvas": "1.0.0-rc.7",
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
@@ -134,6 +133,7 @@
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.2.1",
+    "print-js": "1.6.0",
     "raw-loader": "4.0.2",
     "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
@@ -168,11 +168,10 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "handlebars": "^4.5.3",
-    "axios": "^0.21.1",
-    "node-fetch": "^2.6.1",
-    "elliptic": "^6.5.3",
-    "cryptiles": "^4.1.2"
+    "handlebars": "4.5.3",
+    "axios": "0.21.1",
+    "node-fetch": "2.6.1",
+    "cryptiles": "4.1.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
