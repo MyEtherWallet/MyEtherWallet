@@ -10,7 +10,7 @@ const getAccounts = callback => {
 };
 
 const getPrivFromMnemonicWallet = async (mnem, path, password) => {
-  const receivedPassword = password ? password : '';
+  const receivedPassword = password && password !== '' ? password : '';
   const wallet = await MnemonicWallet(mnem, receivedPassword);
   return wallet.hdKey.derive(path ? path : wallet.basePath).privateKey;
 };
