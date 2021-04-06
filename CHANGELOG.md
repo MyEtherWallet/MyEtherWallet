@@ -3,6 +3,10 @@
 ### Devop
 
 * Update mobile responsive buy eth button  [#2982](https://github.com/MyEtherWallet/MyEtherWallet/pull/2982)
+* Fix import configuration, sign message clear [#2985](https://github.com/MyEtherWallet/MyEtherWallet/pull/2985)
+* Fix sign message mobile layout [#2990](https://github.com/MyEtherWallet/MyEtherWallet/pull/2990)
+* Fix verify message layout [#2987](https://github.com/MyEtherWallet/MyEtherWallet/pull/2987)
+* Fix footer CoinGecko link and verify message link [#2957](https://github.com/MyEtherWallet/MyEtherWallet/pull/2957)
 * Fix hardware access - network and address select  [#2937](https://github.com/MyEtherWallet/MyEtherWallet/pull/2937)
 * Fix partners link [#2953](https://github.com/MyEtherWallet/MyEtherWallet/pull/2953)
 * Fix print paper wallet [#2956](https://github.com/MyEtherWallet/MyEtherWallet/pull/2956)
@@ -62,3 +66,4 @@
 * Add MY TOKENS VALUE component for Dashboard [#2015](https://github.com/MyEtherWallet/MyEtherWallet/pull/2015)
 * Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
 * Sign and Verify Message [#2841](https://github.com/MyEtherWallet/MyEtherWallet/pull/2841)
+

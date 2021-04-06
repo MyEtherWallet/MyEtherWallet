@@ -292,7 +292,7 @@ export default {
     send() {
       this.resolver(this.signedTxObject);
       Toast(
-        'Transaction is being mined. Check here ',
+        `Transaction is being mined. Check here `,
         {
           title: `${getService(this.network.type.blockExplorerTX)}`,
           url: this.network.type.blockExplorerTX.replace(

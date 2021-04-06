@@ -79,5 +79,12 @@ module.exports = [
   'https://qa.mewwallet.dev:443',
   'https://api.exchangeratesapi.io:443',
   'wss://apiws.ethvm.com:443',
-  'https://nft.mewapi.io:443'
+  'https://nft.mewapi.io:443',
+  'https://api.avax.network:443',
+  'https://api.avax-test.network:443',
+  'https://staked.mewapi.io:443',
+  'https://stakedtest.mewapi.io:443',
+  'https://c.onical.org:443', // aqua
+  'https://tx.info.aquacha.in:443/api', // aqua
+  'https://rpc.xdaichain.com:443'
 ];

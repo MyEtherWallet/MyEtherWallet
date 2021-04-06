@@ -75,11 +75,11 @@ export default {
       obj['yAxis'] = {
         gridLineColor: '#efefef',
         title: {
-          text: 'USD $'
+          text: 'ETH'
         },
         labels: {
           formatter: function () {
-            return '$ ' + this.value;
+            return this.value + ' ETH';
           }
         }
       };

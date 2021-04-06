@@ -116,8 +116,13 @@
             <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              ©2019 MyEtherWallet. All rights reserved. Pricing taken from
-              <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
+              ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+              <a
+                class="cyan--text text--lighten-3"
+                href="https://www.coingecko.com/en"
+                target="_blank"
+                >CoinGecko</a
+              >.
             </p>
             <v-spacer />
             <v-sheet width="150" color="transparent">
@@ -288,8 +293,12 @@
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                ©2019 MyEtherWallet. All rights reserved. Pricing taken from
-                <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a
+                ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+                <a
+                  class="cyan--text text--lighten-3"
+                  href="https://www.coingecko.com/en"
+                  target="_blank"
+                  >Coingecko</a
                 >.
               </p>
             </v-sheet>
