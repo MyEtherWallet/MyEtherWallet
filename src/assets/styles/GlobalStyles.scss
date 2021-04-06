@@ -6,6 +6,12 @@
   }
 }
 
+@media (min-width: 1904px) {
+  .container {
+    max-width: 1185px !important;
+  }
+}
+
 @media (max-width: 1263px) {
   html {
     font-size: 14px !important;
