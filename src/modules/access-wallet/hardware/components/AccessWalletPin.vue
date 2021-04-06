@@ -1,5 +1,5 @@
 <template>
-  <v-sheet>
+  <v-sheet class="border-radius--10px pa-4 pa-md-10">
     <div class="pin-input-block">
       <i18n path="accessWallet.pin.enter" tag="p" class="main-title"
         ><span slot="device"> {{ walletType }} </span></i18n

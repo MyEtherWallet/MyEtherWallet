@@ -14,8 +14,12 @@
     :left-btn-text="step > 0 ? 'Back' : ''"
   >
     <template #mewOverlayBody>
-      <div>
-        {{ stepperStep }}
+      <div class="expand-width">
+        <!--
+        =====================================================================================
+        Step 0: Select hardware wallet
+        =====================================================================================
+        -->
         <div v-if="step === 0">
           <v-sheet color="transparent" :max-width="740">
             <v-row justify="start">
@@ -42,40 +46,10 @@
         <div v-if="step > 0">
           <mew-stepper :items="extraStepDetails" :on-step="stepperStep">
             <!--
-=====================================================================================
-Step 1: Enter mnemonic
-=====================================================================================
--->
-            <template v-if="stepperStep === 1" #stepperContent1>
-              <div>
-                <v-sheet color="transparent" :max-width="740">
-                  <v-row justify="start">
-                    <v-col
-                      v-for="button in buttons"
-                      :key="button.label"
-                      class="button-container"
-                      cols="12"
-                      md="6"
-                    >
-                      <mew-super-button
-                        :title="button.label"
-                        :cols-num="6"
-                        color-theme="basic"
-                        right-icon-type="img"
-                        :right-icon="button.icon"
-                        :right-icon-height="45"
-                        @click.native="nextStep(button.type)"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-sheet>
-              </div>
-            </template>
-            <!--
-    =====================================================================================
-      Step 1: Enter mnemonic
-    =====================================================================================
-    -->
+            =====================================================================================
+              Step 1: Start Access Selected Wallet
+            =====================================================================================
+            -->
             <template v-if="stepperStep === 2" #stepperContent2>
               <!--
             =====================================================================================
@@ -137,27 +111,27 @@ Step 1: Enter mnemonic
               />
             </template>
             <!--
-    =====================================================================================
-      Step 2: Select Derivation Path
-    =====================================================================================
-    -->
+            =====================================================================================
+              Step 3: Select Network Address or Enter Pin | (If Applicable)
+            =====================================================================================
+            -->
             <template v-if="stepperStep === 3" #stepperContent3>
               step 3
               <!--
-=====================================================================================
-Pin Step
-=====================================================================================
--->
+              =====================================================================================
+              Pin Step
+              =====================================================================================
+              -->
               <access-wallet-pin
                 v-if="enterPin"
                 :keep-key-pin-enter="callback"
                 :wallet-type="walletType"
               />
               <!--
-=====================================================================================
-Network Address Step
-=====================================================================================
--->
+              =====================================================================================
+              Network Address Step
+              =====================================================================================
+              -->
               <access-wallet-network-addresses
                 v-else-if="onNetworkAddresses"
                 :accounts="accounts"
@@ -168,11 +142,26 @@ Network Address Step
               />
             </template>
             <!--
-    =====================================================================================
-      Step 3: Select Address and Network
-    =====================================================================================
-    -->
-            <!--        <template v-if="step === 3" #stepperContent3> </template>-->
+            =====================================================================================
+              Step 4: Select Address and Network | (If Applicable)
+            =====================================================================================
+            -->
+            <template v-if="stepperStep === 4" #stepperContent4>
+              <div>
+                <!--
+                =====================================================================================
+                Network Address Step
+                =====================================================================================
+                -->
+                <access-wallet-network-addresses
+                  :accounts="accounts"
+                  :next-address-set="nextAddressSet"
+                  :previous-address-set="previousAddressSet"
+                  :set-hardware-wallet="setHardwareWallet"
+                  :address-page="addressPage"
+                />
+              </div>
+            </template>
           </mew-stepper>
         </div>
       </div>
@@ -233,18 +222,6 @@ export default {
         {
           step: 1,
           name: 'Select Hardware Wallet'
-        },
-        {
-          step: 2,
-          name: 'Enter Phrase'
-        },
-        // {
-        //   step: 3,
-        //   name: 'Select HD Path'
-        // },
-        {
-          step: 3,
-          name: 'Address & Network'
         }
       ],
       positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
@@ -347,7 +324,11 @@ export default {
           (acc, item) => {
             acc.push({
               step: +item + 1,
-              name: this.wallets[this.walletType].titles[item]
+              name: this.wallets[this.walletType].titles[item].includes(
+                'Enter your password'
+              )
+                ? 'Verify password'
+                : this.wallets[this.walletType].titles[item]
             });
             return acc;
           },
@@ -500,7 +481,9 @@ export default {
     title() {
       return !this.step
         ? 'Hardware Wallets'
-        : this.wallets[this.walletType].titles[this.step];
+        : this.stepperStep +
+            '. ' +
+            this.wallets[this.walletType].titles[this.step];
     }
   },
   mounted() {
@@ -616,12 +599,14 @@ export default {
     },
     keepkeyUnlock() {
       EventBus.$on('showHardwarePinMatrix', callback => {
-        console.log(this.step); // todo remove dev item
         // this.step += 1;
         this.enterPin = true;
         this.callback = callback;
       });
-      this.unlockPathOnly();
+
+      this.unlockPathOnly(() => {
+        this.step += 1;
+      });
     },
     coolWalletUnlock() {
       this.unlockPathAndPassword(null, this.password);
@@ -635,10 +620,11 @@ export default {
     /**
      * Unlock only the path step
      */
-    unlockPathOnly() {
+    unlockPathOnly(cb = () => {}) {
       this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
+          cb();
           this.hwWalletInstance = _hwWallet;
         })
         .catch(err => {
@@ -806,5 +792,11 @@ export default {
 <style lang="scss" scoped>
 .button-container {
   height: 100px;
+}
+
+@media screen and (min-width: 800px) {
+  .expand-width {
+    min-width: 740px;
+  }
 }
 </style>
