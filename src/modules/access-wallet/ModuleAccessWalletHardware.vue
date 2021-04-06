@@ -5,7 +5,7 @@
 =====================================================================================
 -->
   <mew-overlay
-    description="Select a hardware wallet to access. Make sure your device is connected and unlocked."
+    description=""
     :show-overlay="open"
     :title="title"
     right-btn-text="Cancel"
@@ -21,6 +21,24 @@
         =====================================================================================
         -->
         <div v-if="step === 0">
+          <v-row class="align-end justify-start">
+            <v-col cols="12">
+              <!--
+              =====================================================================================
+                Title
+              =====================================================================================
+              -->
+              <div class="subtitle-1 font-weight-bold grey--text">
+                STEP {{ step + 1 }}.
+              </div>
+              <div class="headline font-weight-bold">
+                Select a hardware wallet to access.
+              </div>
+              <p class="mb-5">
+                Make sure your device is connected and unlocked.
+              </p>
+            </v-col>
+          </v-row>
           <v-sheet color="transparent" :max-width="740">
             <v-row justify="start">
               <v-col
@@ -106,6 +124,7 @@
                 :on-ledger="onLedger"
                 :icon="icon"
                 :next-step="nextStep"
+                :step="step"
                 @setPath="setPath"
                 @setLedgerApp="setLedgerApp"
               />
@@ -116,7 +135,6 @@
             =====================================================================================
             -->
             <template v-if="stepperStep === 3" #stepperContent3>
-              step 3
               <!--
               =====================================================================================
               Pin Step
@@ -139,6 +157,24 @@
                 :previous-address-set="previousAddressSet"
                 :set-hardware-wallet="setHardwareWallet"
                 :address-page="addressPage"
+                :step="step"
+              />
+
+              <!--
+=====================================================================================
+Paths Step (Ledger, Trezor)
+=====================================================================================
+-->
+              <access-wallet-paths
+                v-else-if="onPaths"
+                :ledger-apps="ledgerApps"
+                :paths="paths"
+                :on-ledger="onLedger"
+                :icon="icon"
+                :next-step="nextStep"
+                :step="step"
+                @setPath="setPath"
+                @setLedgerApp="setLedgerApp"
               />
             </template>
             <!--
@@ -150,15 +186,30 @@
               <div>
                 <!--
                 =====================================================================================
+                Password Step (Coolwallet, Secalot)
+                =====================================================================================
+                -->
+                <access-wallet-password
+                  v-if="onPassword"
+                  :on-cool-wallet="onCoolWallet"
+                  :next-step="nextStep"
+                  :wallet-type="walletType"
+                  @setTerms="setTerms"
+                  @setPassword="setPassword"
+                />
+                <!--
+                =====================================================================================
                 Network Address Step
                 =====================================================================================
                 -->
                 <access-wallet-network-addresses
+                  v-else
                   :accounts="accounts"
                   :next-address-set="nextAddressSet"
                   :previous-address-set="previousAddressSet"
                   :set-hardware-wallet="setHardwareWallet"
                   :address-page="addressPage"
+                  :step="step"
                 />
               </div>
             </template>
@@ -599,7 +650,6 @@ export default {
     },
     keepkeyUnlock() {
       EventBus.$on('showHardwarePinMatrix', callback => {
-        // this.step += 1;
         this.enterPin = true;
         this.callback = callback;
       });
