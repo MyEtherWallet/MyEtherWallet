@@ -848,7 +848,8 @@ export default {
       this.loading = true;
       const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
         this.wallet.mnemonic,
-        this.selectedAddressPath
+        this.selectedAddressPath,
+        this.extraWord
       );
 
       this.loading = false;
@@ -857,6 +858,7 @@ export default {
         false,
         privKeyType
       );
+      this.extraWord = '';
       this.step += 1;
     },
     getWalletFromMnemonic() {
@@ -867,7 +869,6 @@ export default {
           this.extraWord
         )
           .then(wallet => {
-            this.extraWord = '';
             this.loading = false;
             this.wallet = wallet;
             this.mnemonicPhraseHolder = {};
