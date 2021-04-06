@@ -1,3 +1,7 @@
+### Bug
+
+* Fix mnemonic address generation with Extra word on mew cx [#3002](https://github.com/MyEtherWallet/MyEtherWallet/pull/3002)
+
 ### Release v5.7.26
 
 ### Bug
