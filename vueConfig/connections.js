@@ -4,8 +4,6 @@ module.exports = [
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
   'https://apiccswap.myetherwallet.com:443',
-  'https://api.avax.network:443',
-  'https://api.avax-test.network:443',
   'https://cryptorates.mewapi.io:443',
   'https://cloudflare-dns.com:443',
   'https://ethgasstation.info:443',
@@ -18,6 +16,7 @@ module.exports = [
   'https://jsonrpc.ellaism.io:443',
   'https://api.esn.gonspool.com:443',
   'https://www.ethercluster.com:443',
+  'wss://www.ethercluster.com:443',
   'https://api.etherscan.io:443',
   'https://mainnet.infura.io:443',
   'wss://mainnet.infura.io:443',
@@ -76,10 +75,16 @@ module.exports = [
   'wss://www.walletlink.org:443',
   'https://estimategas.mewapi.io:443',
   'https://bsc-dataseed1.binance.org:443',
+  'https://api.ethvm.com:443',
+  'https://qa.mewwallet.dev:443',
+  'https://api.exchangeratesapi.io:443',
+  'wss://apiws.ethvm.com:443',
+  'https://nft.mewapi.io:443',
+  'https://api.avax.network:443',
+  'https://api.avax-test.network:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
-  'https://api.ethvm.com:443',
-  'https://c.onical.org:443',      // aqua
+  'https://c.onical.org:443', // aqua
   'https://tx.info.aquacha.in:443/api', // aqua
   'https://rpc.xdaichain.com:443'
 ];
