@@ -1,3 +1,11 @@
+### Release v5.7.27
+
+### Bug
+
+* Fix mnemonic address generation with Extra word on mew cx [#3002](https://github.com/MyEtherWallet/MyEtherWallet/pull/3002)
+* Fix path for Avalanche [#2897](https://github.com/MyEtherWallet/MyEtherWallet/pull/2897)
+* fix checking estimateGas after estimateGas failure [#3005](https://github.com/MyEtherWallet/MyEtherWallet/pull/3005)
+
 ### Release v5.7.26
 
 ### Bug
