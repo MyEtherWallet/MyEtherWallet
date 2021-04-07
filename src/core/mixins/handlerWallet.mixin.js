@@ -34,7 +34,6 @@ export default {
         return !this.isEthNetwork;
       },
       result({ data }) {
-        console.error('eth balance', data)
         this.setAccountBalance(utils.toBN(data.getEthBalance.balance));
       },
       error(error) {
@@ -57,7 +56,6 @@ export default {
           return !this.isEthNetwork;
         },
         result() {
-          console.error('in sub')
           this.$apollo.queries.getEthBalance.refetch();
         },
         error(error) {
@@ -87,7 +85,6 @@ export default {
           };
           this.setETHUSDValue(usd);
         }
-        console.error('ethereumPrice', ethereumPrice)
       },
       error(error) {
         Toast(error.message, {}, ERROR);
