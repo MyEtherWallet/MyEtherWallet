@@ -9,8 +9,9 @@ const getAccounts = callback => {
   chrome.storage.sync.get(null, callback);
 };
 
-const getPrivFromMnemonicWallet = async (mnem, path) => {
-  const wallet = await MnemonicWallet(mnem, '');
+const getPrivFromMnemonicWallet = async (mnem, path, password) => {
+  const receivedPassword = password && password !== '' ? password : '';
+  const wallet = await MnemonicWallet(mnem, receivedPassword);
   return wallet.hdKey.derive(path ? path : wallet.basePath).privateKey;
 };
 
