@@ -411,7 +411,7 @@ export default {
   },
   watch: {
     multiWatch: utils._.debounce(function () {
-      if (this.validInputs) this.estimateGas();
+      if (this.validInputs || this.gasLimit < 0) this.estimateGas();
     }, 500),
     network(newVal) {
       if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
