@@ -1,3 +1,7 @@
+### Bug
+* fix checking estimateGas after estimateGas failure [#3005](https://github.com/MyEtherWallet/MyEtherWallet/pull/3005)
+
+
 ### Release v5.7.26
 
 ### Bug
