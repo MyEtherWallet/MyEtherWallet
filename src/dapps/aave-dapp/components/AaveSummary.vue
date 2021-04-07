@@ -6,7 +6,7 @@
   =====================================================================================
   -->
   <v-sheet
-    class="pa-12 text-center"
+    class="pa-4 pa-md-12"
     rounded
     color="white"
     elevation="1"
@@ -90,7 +90,7 @@
     <v-row
       v-for="(detail, idx) in details"
       :key="idx"
-      class="d-flex align-center mt-5"
+      class="d-flex align-center"
     >
       <v-col class="d-flex align-center" cols="6"
         ><span>{{ detail.title }}</span>
@@ -98,7 +98,7 @@
       /></v-col>
       <v-col class="font-weight-bold d-flex align-center justify-end" cols="6">
         <img v-if="detail.icon" :src="detail.icon" height="20" class="mr-1" />
-        <v-icon v-if="detail.indicator" :class="detail.class">{{
+        <v-icon v-if="detail.indicator" :class="detail.class" dense>{{
           detail.indicator
         }}</v-icon>
         <span :class="detail.class">{{ detail.value }}</span>
@@ -111,7 +111,7 @@
   =====================================================================================
   -->
     <mew-button
-      class="mt-10"
+      class="mt-10 mx-auto d-block"
       title="Confirm"
       btn-size="xlarge"
       @click.native="confirm"
@@ -203,8 +203,8 @@ export default {
                   : 'primary--text',
               indicator:
                 this.currentHealthFactor > this.nextHealthFactor
-                  ? 'mdi-arrow-down'
-                  : 'mdi-arrow-up'
+                  ? 'mdi-arrow-down-bold'
+                  : 'mdi-arrow-up-bold'
             }
           );
           return details;
