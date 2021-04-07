@@ -149,7 +149,7 @@
     <div class="submit-button-container">
       <div
         :class="[
-          validInputs ? '' : 'disabled',
+          validInputs && gasLimit >= 0 ? '' : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
         @click="submitTransaction"
@@ -346,7 +346,7 @@ export default {
       return (
         this.isValidAmount.valid &&
         this.isValidAddress &&
-        new BigNumber(this.gasLimit).gte(0) &&
+        new BigNumber(this.gasLimit).gte(-1) &&
         Misc.validateHexString(this.toData)
       );
     },
@@ -411,7 +411,7 @@ export default {
   },
   watch: {
     multiWatch: utils._.debounce(function () {
-      if (this.validInputs || this.gasLimit < 0) this.estimateGas();
+      if (this.validInputs) this.estimateGas();
     }, 500),
     network(newVal) {
       if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
