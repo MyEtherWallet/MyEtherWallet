@@ -1,7 +1,10 @@
 <template>
   <div class="component--wallet-card">
     <div class="background-image">
-      <img src="@/assets/images/snippets/wallet-card.png" />
+      <img
+        :src="'https://mewcard.mewapi.io/?address=' + address"
+        alt="MEW Card"
+      />
     </div>
     <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
@@ -20,16 +23,16 @@
         </div>
         <div class="ml-4">
           <div class="font-weight-medium d-flex align-center">
-            <div>MY ACCOUNT VALUE</div>
+            <div class="text-shadow">MY ACCOUNT VALUE</div>
           </div>
-          <div class="headline font-weight-bold monospace">
+          <div class="text-shadow headline font-weight-bold monospace">
             {{ convertedBalance }}
           </div>
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
-        <div class="monospace full-address">{{ address }}</div>
-        <div class="monospace last-four">{{ lastFour }}</div>
+        <div class="text-shadow monospace full-address">{{ address }}</div>
+        <div class="text-shadow monospace last-four">{{ lastFour }}</div>
       </div>
       <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
       <div class="d-flex align-center mt-2">
@@ -39,6 +42,7 @@
               src="@/assets/images/icons/icon-print-light.png"
               alt="Print Wallet"
               height="20"
+              class="drop-shadow"
             />
           </v-btn>
           <v-btn icon @click="copyAddress">
@@ -46,6 +50,7 @@
               src="@/assets/images/icons/icon-copy-light.png"
               alt="Print Wallet"
               height="20"
+              class="drop-shadow"
             />
           </v-btn>
         </div>
@@ -140,6 +145,8 @@ export default {
   width: 100%;
 }
 .background-image {
+  border-radius: 10px;
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -192,6 +199,14 @@ export default {
 
 .last-four {
   margin-left: -4px;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+}
+
+.drop-shadow {
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8));
 }
 </style>
 
