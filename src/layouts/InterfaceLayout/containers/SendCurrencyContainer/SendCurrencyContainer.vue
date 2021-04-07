@@ -149,7 +149,7 @@
     <div class="submit-button-container">
       <div
         :class="[
-          validInputs ? '' : 'disabled',
+          validInputs && isValidGasLimit ? '' : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
         @click="submitTransaction"
@@ -346,7 +346,7 @@ export default {
       return (
         this.isValidAmount.valid &&
         this.isValidAddress &&
-        new BigNumber(this.gasLimit).gte(0) &&
+        new BigNumber(this.gasLimit).gte(-1) &&
         Misc.validateHexString(this.toData)
       );
     },
@@ -383,6 +383,7 @@ export default {
       return (
         this.toValue,
         this.isValidAddress,
+        this.address,
         this.toData,
         this.selectedCurrency,
         new Date().getTime() / 1000
