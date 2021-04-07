@@ -89,6 +89,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import resolverAbi from '../handlers/resolverAbi';
 import isIpfs from 'is-ipfs';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 export default {
   props: {
@@ -252,17 +253,17 @@ export default {
           })
           .catch(e => {
             this.loading = false;
-            console.error(e);
+            Toast(e, {}, ERROR);
           });
         if (ipfsHash.error) {
-          console.error('error fetching ipfs');
+          Toast('Error fetching ipfs', {}, ERROR);
         } else {
           this.ipfsHash = ipfsHash;
           this.saveIpfsHash(ipfsHash);
         }
       } catch (e) {
         this.loading = false;
-        console.error(e);
+        Toast(e, {}, ERROR);
       }
     },
 
