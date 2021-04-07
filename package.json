@@ -45,7 +45,7 @@
     "@unstoppabledomains/resolution": "2.1.1",
     "@vue/babel-preset-app": "4.5.12",
     "@walletconnect/browser": "1.0.0",
-    "@walletconnect/qrcode-modal": "1.4.0",
+    "@walletconnect/qrcode-modal": "1.4.1",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
     "apollo-link": "1.2.14",
