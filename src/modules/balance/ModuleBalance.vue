@@ -34,13 +34,18 @@
         <v-row class="align-center">
           <v-col class="d-flex align-center justify-center">
             <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-            <div class="ml-2 font-weight-regular text-color--mew-green">
+            <div
+              :class="[
+                'ml-2 font-weight-regular',
+                priceChange ? 'primary--text' : 'error--text'
+              ]"
+            >
               ${{ ETHUSDValue.price_change_24h }}
             </div>
             <v-icon
               :class="[
-                priceChange ? 'primary--text' : 'light_red--text error-text',
-                'body-2'
+                priceChange ? 'primary--text' : 'error--text',
+                'body-2 mt-1'
               ]"
               >{{ priceChangeArrow }}</v-icon
             >
@@ -76,7 +81,7 @@
 <script>
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalance from './handlers/handlerBalance';
+import handlerBalance from './handlers/handlerBalance.mixin';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -85,10 +90,13 @@ export default {
     BalanceChart,
     BalanceEmptyBlock
   },
+  mixins: [handlerBalance],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
-      chartData: []
+      chartData: [],
+      timeString: '',
+      scale: ''
     };
   },
   computed: {
@@ -98,7 +106,7 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      return this.balanceInETH <= 0;
+      return this.balanceInETH <= 0 && this.chartData.length < 0;
     },
     priceChangeArrow() {
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
@@ -126,7 +134,6 @@ export default {
     }
   },
   mounted() {
-    this.handlerBalance = new handlerBalance(this.address);
     this.setDataYesterday();
   },
   methods: {
@@ -148,32 +155,25 @@ export default {
           this.setDataMonth();
       }
     },
-    async getBalanceHistory(interval, duration) {
-      this.chartData = await this.handlerBalance.getHistory(interval, duration);
-    },
     setDataMonth() {
       const timeString = new Date();
-      const lastMonth = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
-      this.key = '1m';
-      this.getBalanceHistory(lastMonth, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
+      this.scale = 'days';
     },
     setDataYear() {
       const timeString = new Date();
-      const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
-      this.key = '1y';
-      this.getBalanceHistory(lastYear, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
+      this.scale = 'days';
     },
     setDataWeek() {
       const timeString = new Date();
-      const lastWeek = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
-      this.key = '1w';
-      this.getBalanceHistory(lastWeek, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
+      this.scale = 'days';
     },
     setDataYesterday() {
       const timeString = new Date();
-      const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
-      this.key = '1d';
-      this.getBalanceHistory(yesterday, 'hours');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
+      this.scale = 'hours';
     },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
