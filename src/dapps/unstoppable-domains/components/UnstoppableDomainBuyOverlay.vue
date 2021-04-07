@@ -216,12 +216,13 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('external', ['ETHUSDValue']),
     convertedEthPrice() {
       let ethConvertPrice = 0;
       const domainPrice = this.getDomainPrice();
       if (domainPrice > 0) {
         ethConvertPrice = new BigNumber(domainPrice)
-          .dividedBy(this.ethPrice)
+          .dividedBy(this.ETHUSDValue.value)
           .toFixed(8);
       }
       return ethConvertPrice;
@@ -272,7 +273,6 @@ export default {
     );
     document.head.appendChild(coinbaseScript);
     document.head.appendChild(stripeScript);
-    await this.getEthPrice();
   },
   beforeDestroy() {
     if (this.interval) {
@@ -295,15 +295,6 @@ export default {
       const tabId = event.currentTarget.id;
       this.crypto = tabId === 'crypto';
       this.credit = !this.crypto;
-    },
-    async getEthPrice() {
-      const price = await fetch(
-        'https://cryptorates.mewapi.io/ticker?filter=ETH'
-      ).then(res => {
-        return res.json();
-      });
-      this.ethPrice =
-        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     async pay() {
       if (this.crypto) {
