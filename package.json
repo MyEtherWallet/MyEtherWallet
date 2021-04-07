@@ -42,7 +42,7 @@
     "@sentry/integrations": "6.2.3",
     "@sentry/vue": "6.2.3",
     "@sentry/tracing": "6.2.3",
-    "@unstoppabledomains/resolution": "2.1.1",
+    "@unstoppabledomains/resolution": "3.0.0",
     "@vue/babel-preset-app": "4.5.12",
     "@walletconnect/browser": "1.0.0",
     "@walletconnect/qrcode-modal": "1.4.1",

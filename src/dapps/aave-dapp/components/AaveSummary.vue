@@ -19,7 +19,7 @@
   -->
     <v-card
       v-if="isDeposit && step === 3"
-      class="d-flex align-center justify-space-between pa-7"
+      class="d-flex align-center justify-space-between pa-7 mb-6"
       flat
       color="overlayBg"
     >
@@ -34,7 +34,7 @@
         <span class="textPrimaryModule--text">{{ amountUsd }}</span>
       </div>
       <img
-        height="80"
+        :height="$vuetify.breakpoint.mdAndUp ? '80' : '30'"
         :src="selectedToken.tokenImg"
         :alt="selectedToken.token"
       />
