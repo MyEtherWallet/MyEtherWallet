@@ -383,6 +383,7 @@ export default {
       return (
         this.toValue,
         this.isValidAddress,
+        this.address,
         this.toData,
         this.selectedCurrency,
         new Date().getTime() / 1000
