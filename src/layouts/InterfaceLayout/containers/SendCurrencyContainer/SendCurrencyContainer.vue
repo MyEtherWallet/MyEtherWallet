@@ -149,7 +149,7 @@
     <div class="submit-button-container">
       <div
         :class="[
-          validInputs && gasLimit >= 0 ? '' : 'disabled',
+          validInputs && isValidGasLimit ? '' : 'disabled',
           'submit-button large-round-button-green-filled'
         ]"
         @click="submitTransaction"
