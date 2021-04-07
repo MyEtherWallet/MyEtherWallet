@@ -152,7 +152,7 @@ const ethercore = {
   label: 'EtherCore'
 };
 const avalanche = {
-  path: "m/44'/9000'/0'/0",
+  path: "m/44'/60'/0'/0",
   label: 'Avalanche'
 };
 export {
