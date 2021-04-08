@@ -5,6 +5,7 @@ import {
   getUSDPrice
 } from '@/apollo/queries/wallets/wallets.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { AddressEventType } from '@/apollo/global/globalTypes.js';
 
 const tokens = {
   eth: 'ethereum'
@@ -49,7 +50,7 @@ export default {
         variables() {
           return {
             owner: this.address,
-            event: 'NEW_ETH_TRANSFER'
+            event: AddressEventType.NEW_ETH_TRANSFER
           };
         },
         skip() {
