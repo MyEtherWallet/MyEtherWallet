@@ -95,11 +95,13 @@
 import { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
+import handlerNotification from './handlers/handlerNotification.mixin';
 import NotificationsCall from '@/apollo/queries/notifications';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import timeAgo from '@/core/helpers/timeAgo';
 export default {
   name: 'ModuleNotifications',
+  mixins: [handlerNotification],
   props: {
     invertIcon: {
       type: Boolean,
@@ -256,6 +258,7 @@ export default {
         const lastFetched = this.lastFetched;
         const newArr = [];
         this.caller.getAllTransfer(this.address).then(res => {
+          console.error('res', res);
           res.forEach(item => {
             if (item.date < lastFetched) {
               item.read = true;

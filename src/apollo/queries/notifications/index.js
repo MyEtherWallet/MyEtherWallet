@@ -38,7 +38,6 @@ export default class NotificationCalls {
         });
     });
   }
-
   getTxDetails(arr) {
     const promises = [];
     arr.forEach(item => {

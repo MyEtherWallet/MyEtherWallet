@@ -64,21 +64,20 @@ const looper = () => {
     .then(info => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
-      if (
-        ALL_PACKAGES[_name] !== latestVersion &&
-        new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME
-      ) {
-        console.error(
-          'ERROR: Update ' +
-            _name +
-            ' from ' +
-            ALL_PACKAGES[_name] +
-            ' to ' +
-            latestVersion +
-            '. Released:',
-          latestVersionTime
-        );
-        updatesFound = true;
+      if (ALL_PACKAGES[_name] !== latestVersion) {
+        if (_name === "@myetherwallet/mew-components" && new Date(latestVersionTime).getTime() < new Date().getTime() || new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME) {
+          console.error(
+            'ERROR: Update ' +
+              _name +
+              ' from ' +
+              ALL_PACKAGES[_name] +
+              ' to ' +
+              latestVersion +
+              '. Released:',
+            latestVersionTime
+          );
+          updatesFound = true;
+        }
       }
     })
     .then(looper);
