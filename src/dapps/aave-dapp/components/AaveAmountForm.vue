@@ -1,6 +1,6 @@
 <template>
   <v-sheet
-    class="pa-3 pa-md-5 text-center"
+    class="mew-component--aave-amount-form pa-3 pa-md-5 text-center"
     rounded
     color="white"
     elevation="1"
@@ -14,7 +14,7 @@
           :subtitle="leftSideValues.subTitle"
           :title="leftSideValues.title"
           :caption="leftSideValues.caption"
-          class="text-left"
+          class="text-left height--full"
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -24,7 +24,7 @@
           :subtitle="rightSideValues.subTitle"
           :title="rightSideValues.title"
           :caption="rightSideValues.caption"
-          class="text-left"
+          class="text-left height--full"
         />
       </v-col>
     </v-row>

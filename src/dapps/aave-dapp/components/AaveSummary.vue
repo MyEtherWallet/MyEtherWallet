@@ -6,7 +6,7 @@
   =====================================================================================
   -->
   <v-sheet
-    class="pa-4 pa-md-12"
+    class="mew-component--aave-summary pa-4 pa-md-12"
     rounded
     color="white"
     elevation="1"
