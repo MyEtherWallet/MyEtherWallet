@@ -1,7 +1,7 @@
 {
 	"operations": [
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/notifications/notification.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
 			"operationName": "getEthTransfersV2",
 			"operationType": "query",
 			"rootType": "Query",
@@ -97,7 +97,7 @@
 			"operationId": "0ee6593c2581d74fd8fbdb8f4a14718e4eada8f78acb4481d0b733157471f5b8"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/notifications/notification.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
 			"operationName": "getTransactionDetails",
 			"operationType": "query",
 			"rootType": "Query",
@@ -229,7 +229,7 @@
 			"operationId": "98465082cb79f7b52db34d140918a62f0ab4d8a6865cd2bfd3f0406382a9b35b"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/notifications/notification.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
 			"operationName": "pendingTransaction",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -319,7 +319,7 @@
 			"operationId": "e6c29cb9ee8a3f18b7a7b797bf8d5eaf4b6b2839d88ebcaca3ae1095bf978919"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/notifications/notification.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
 			"operationName": "transactionEvent",
 			"operationType": "subscription",
 			"rootType": "Subscription",
@@ -356,7 +356,7 @@
 			"operationId": "3fbae1793eb1f34e67e5f20462838475cdd6681f732acc0fb283622c57fff403"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/tokens/tokens.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens/tokens.graphql",
 			"operationName": "getLatestPrices",
 			"operationType": "query",
 			"rootType": "Query",
@@ -459,7 +459,7 @@
 			"operationId": "402f0593f5157e7ec00b832e8e83a5bc180d9b76afdeff94a923ebedcfb05bd7"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/tokens/tokens.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens/tokens.graphql",
 			"operationName": "getOwnersERC20Tokens",
 			"operationType": "query",
 			"rootType": "Query",
@@ -577,11 +577,268 @@
 			"fragmentsReferenced": [
 				"TokenFragment"
 			],
-			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
-			"operationId": "e4101db0908e197d2029ecaa177d66a6f12d1794f28b9cadf3a5e658e79c3e37"
+			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
+			"operationId": "d99d19a9e0feac2ca082d58b84760a083d278140d40b800a6f73673f80a7977b"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/wallets/wallets.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
+			"operationName": "getOwnersERC721Balances",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "hash",
+					"type": "String!"
+				}
+			],
+			"source": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      ...TokenFragment\n      contract\n    }\n    owner\n    balance\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getOwnersERC721Balances",
+					"fieldName": "getOwnersERC721Balances",
+					"type": "[ERC721TokenBalance]!",
+					"args": [
+						{
+							"name": "owner",
+							"value": {
+								"kind": "Variable",
+								"variableName": "hash"
+							},
+							"type": "String!"
+						}
+					],
+					"isConditional": false,
+					"description": "Returns a list of ERC721 balances",
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "tokenInfo",
+							"fieldName": "tokenInfo",
+							"type": "EthTokenInfo!",
+							"isConditional": false,
+							"isDeprecated": false,
+							"fields": [
+								{
+									"responseName": "__typename",
+									"fieldName": "__typename",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "contract",
+									"fieldName": "contract",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								}
+							],
+							"fragmentSpreads": [
+								"TokenFragment"
+							],
+							"inlineFragments": []
+						},
+						{
+							"responseName": "owner",
+							"fieldName": "owner",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "balance",
+							"fieldName": "balance",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [
+				"TokenFragment"
+			],
+			"sourceWithFragments": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      ...TokenFragment\n      contract\n    }\n    owner\n    balance\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
+			"operationId": "fe2fb6e18432e12f2dbf1cee4a5d4c13446aff610399c4398899a4380f500418"
+		},
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
+			"operationName": "getOwnersERC721Tokens",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "owner",
+					"type": "String!"
+				},
+				{
+					"name": "contract",
+					"type": "String"
+				},
+				{
+					"name": "nextKey",
+					"type": "String"
+				}
+			],
+			"source": "query getOwnersERC721Tokens($owner: String!, $contract: String, $nextKey: String) {\n  getOwnersERC721Tokens(owner: $owner, contract: $contract, nextKey: $nextKey) {\n    __typename\n    tokens {\n      __typename\n      tokenInfo {\n        __typename\n        name\n        symbol\n        decimals\n        totalSupply\n        contract\n      }\n      owner\n      token\n    }\n    nextKey\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getOwnersERC721Tokens",
+					"fieldName": "getOwnersERC721Tokens",
+					"type": "ERC721TokenContract!",
+					"args": [
+						{
+							"name": "owner",
+							"value": {
+								"kind": "Variable",
+								"variableName": "owner"
+							},
+							"type": "String!"
+						},
+						{
+							"name": "contract",
+							"value": {
+								"kind": "Variable",
+								"variableName": "contract"
+							},
+							"type": "String"
+						},
+						{
+							"name": "nextKey",
+							"value": {
+								"kind": "Variable",
+								"variableName": "nextKey"
+							},
+							"type": "String"
+						}
+					],
+					"isConditional": false,
+					"description": "Returns a list of all ERC721 Tokens owned by an address",
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "tokens",
+							"fieldName": "tokens",
+							"type": "[ERC721TokenOwner]!",
+							"isConditional": false,
+							"isDeprecated": false,
+							"fields": [
+								{
+									"responseName": "__typename",
+									"fieldName": "__typename",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "tokenInfo",
+									"fieldName": "tokenInfo",
+									"type": "EthTokenInfo!",
+									"isConditional": false,
+									"isDeprecated": false,
+									"fields": [
+										{
+											"responseName": "__typename",
+											"fieldName": "__typename",
+											"type": "String!",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "name",
+											"fieldName": "name",
+											"type": "String",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "symbol",
+											"fieldName": "symbol",
+											"type": "String",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "decimals",
+											"fieldName": "decimals",
+											"type": "Int",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "totalSupply",
+											"fieldName": "totalSupply",
+											"type": "String",
+											"isConditional": false,
+											"isDeprecated": false
+										},
+										{
+											"responseName": "contract",
+											"fieldName": "contract",
+											"type": "String!",
+											"isConditional": false,
+											"isDeprecated": false
+										}
+									],
+									"fragmentSpreads": [],
+									"inlineFragments": []
+								},
+								{
+									"responseName": "owner",
+									"fieldName": "owner",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "token",
+									"fieldName": "token",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								}
+							],
+							"fragmentSpreads": [],
+							"inlineFragments": []
+						},
+						{
+							"responseName": "nextKey",
+							"fieldName": "nextKey",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getOwnersERC721Tokens($owner: String!, $contract: String, $nextKey: String) {\n  getOwnersERC721Tokens(owner: $owner, contract: $contract, nextKey: $nextKey) {\n    __typename\n    tokens {\n      __typename\n      tokenInfo {\n        __typename\n        name\n        symbol\n        decimals\n        totalSupply\n        contract\n      }\n      owner\n      token\n    }\n    nextKey\n  }\n}",
+			"operationId": "856d484c34bfcbbceeb0e29c60cb0ce77f0adc80775a12cabeab27e5a237862f"
+		},
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/wallets/wallets.graphql",
 			"operationName": "getEthBalance",
 			"operationType": "query",
 			"rootType": "Query",
@@ -637,7 +894,7 @@
 			"operationId": "e577a92be9f5470547613c7e15fce43c50f910c2f78d61043d7bcc55c7a3b742"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/wallets/wallets.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/wallets/wallets.graphql",
 			"operationName": "getUSDPrice",
 			"operationType": "query",
 			"rootType": "Query",
@@ -698,7 +955,7 @@
 			"operationId": "26a9b515a72e9321f2215d7f56d2c1cfc2de061f8b237b44f37cbab310abc4a0"
 		},
 		{
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/wallets/wallets.graphql",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/wallets/wallets.graphql",
 			"operationName": "getBalanceHistory",
 			"operationType": "query",
 			"rootType": "Query",
@@ -831,6 +1088,73 @@
 			"fragmentsReferenced": [],
 			"sourceWithFragments": "query getBalanceHistory($timeString: Int!, $todaysDate: Int!, $key: String!, $scale: TimeseriesScale!, $_nextKey: String) {\n  getTimeseriesData(\n    fromT: $timeString\n    toT: $todaysDate\n    key: $key\n    scale: $scale\n    nextKey: $_nextKey\n  ) {\n    __typename\n    items {\n      __typename\n      value\n      timestamp\n    }\n    nextKey\n  }\n}",
 			"operationId": "d2ef9064f951316fd0fe05613922abf01c45d121000095aa76c49b09b9f56ede"
+		},
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/wallets/wallets.graphql",
+			"operationName": "subscribeToAccountBalance",
+			"operationType": "subscription",
+			"rootType": "Subscription",
+			"variables": [
+				{
+					"name": "owner",
+					"type": "String!"
+				},
+				{
+					"name": "event",
+					"type": "AddressEventType!"
+				}
+			],
+			"source": "subscription subscribeToAccountBalance($owner: String!, $event: AddressEventType!) {\n  addressEvent(owner: $owner, event: $event) {\n    __typename\n    blockNumber\n  }\n}",
+			"fields": [
+				{
+					"responseName": "addressEvent",
+					"fieldName": "addressEvent",
+					"type": "AddressEvent!",
+					"args": [
+						{
+							"name": "owner",
+							"value": {
+								"kind": "Variable",
+								"variableName": "owner"
+							},
+							"type": "String!"
+						},
+						{
+							"name": "event",
+							"value": {
+								"kind": "Variable",
+								"variableName": "event"
+							},
+							"type": "AddressEventType"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "blockNumber",
+							"fieldName": "blockNumber",
+							"type": "Int!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "subscription subscribeToAccountBalance($owner: String!, $event: AddressEventType!) {\n  addressEvent(owner: $owner, event: $event) {\n    __typename\n    blockNumber\n  }\n}",
+			"operationId": "7ebb928f3a8acc6f5628038cc75e020325df8e2fd283a8b7bfa9ae848df51663"
 		}
 	],
 	"fragments": [
@@ -840,8 +1164,8 @@
 				"EthTokenInfo"
 			],
 			"fragmentName": "TokenFragment",
-			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/apollo/queries/tokens/tokens.graphql",
-			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
+			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
 			"fields": [
 				{
 					"responseName": "__typename",
@@ -861,13 +1185,6 @@
 					"responseName": "symbol",
 					"fieldName": "symbol",
 					"type": "String",
-					"isConditional": false,
-					"isDeprecated": false
-				},
-				{
-					"responseName": "decimals",
-					"fieldName": "decimals",
-					"type": "Int",
 					"isConditional": false,
 					"isDeprecated": false
 				}
@@ -895,6 +1212,32 @@
 				},
 				{
 					"name": "days",
+					"isDeprecated": false
+				}
+			]
+		},
+		{
+			"kind": "EnumType",
+			"name": "AddressEventType",
+			"values": [
+				{
+					"name": "NEW_ETH_TRANSFER",
+					"isDeprecated": false
+				},
+				{
+					"name": "NEW_ERC20_TRANSFER",
+					"isDeprecated": false
+				},
+				{
+					"name": "NEW_ERC721_TRANSFER",
+					"isDeprecated": false
+				},
+				{
+					"name": "NEW_MINED_BLOCK",
+					"isDeprecated": false
+				},
+				{
+					"name": "NEW_MINED_UNCLE",
 					"isDeprecated": false
 				}
 			]
