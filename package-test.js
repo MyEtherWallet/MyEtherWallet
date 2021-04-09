@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   'vuetify',
   'sass-loader',
   'husky',
-  '@aave/protocol-js'
+  '@aave/protocol-js',
+  '@unstoppabledomains/resolution'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

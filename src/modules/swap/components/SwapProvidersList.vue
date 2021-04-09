@@ -6,8 +6,15 @@
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row v-if="step == 0 && message == ''">
-      <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
+    <v-row
+      v-if="
+        step === 0 &&
+        (toTokenIcon !== '' || toTokenSymbol !== '') &&
+        (message.title === '' || message.subtitle === '') &&
+        availableQuotes.length === 0
+      "
+    >
+      <v-col cols="12" class="mb-n3">
         <v-card
           flat
           color="selectorBg lighten-1"
@@ -59,7 +66,7 @@
           cols="12"
           class="mb-n3"
         >
-          <v-item v-slot="{ active, toggle }">
+          <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
             <v-card
               :style="
                 active ? 'border-color: var(--v-primary-base) !important' : ''
@@ -263,6 +270,20 @@ export default {
      */
     moreProvidersIcon() {
       return this.showMore ? 'mdi-arrow-up' : 'mdi-arrow-down';
+    }
+  },
+  watch: {
+    providersList(newValue) {
+      if (newValue.length > 0) {
+        const bestRate = newValue.findIndex(item => {
+          return item.rate === this.bestRate;
+        });
+        console.log(this.$refs[`card${bestRate}`]);
+        if (bestRate !== -1 && this.$refs.hasOwnProperty(`card${bestRate}`)) {
+          this.$refs[`card${bestRate}`][0].toggle();
+          this.setProvider(bestRate);
+        }
+      }
     }
   }
 };

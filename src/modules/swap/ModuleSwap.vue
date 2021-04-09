@@ -1,5 +1,17 @@
 <template>
   <div class="mew-component--swap">
+    <v-dialog v-model="gasPriceModal" width="500">
+      <v-row>
+        <v-col cols="12">
+          <p class="mew-heading-1">Network Fee</p>
+          <p class="mew-body">
+            This fee is calculated by multiplying the gas price and gas limit
+            for your transaction. Higher fees results in faster transactions.
+            <a>Learn More </a>
+          </p>
+        </v-col>
+      </v-row>
+    </v-dialog>
     <swap-confirmation
       :to="confirmInfo.to"
       :from="confirmInfo.from"
@@ -30,7 +42,8 @@
             -->
           <v-row class="align-center justify-space-between">
             <v-col cols="12">
-              <div class="available-balance text-right">
+              <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
+              <div v-else class="available-balance text-right">
                 {{ availableBalanceHint }}
               </div>
             </v-col>
@@ -106,34 +119,9 @@
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
-          >
-            <template slot="fee">
-              <mew-expand-panel
-                is-toggle
-                has-dividers
-                :panel-items="exPannel"
-                class="swap-expend"
-              >
-                <template #panelBody1>
-                  <mew-input
-                    label="Gas Price"
-                    placeholder=" "
-                    right-label="Gwei"
-                    :value="gasPriceGwei"
-                    disabled
-                  />
-                  <mew-input
-                    label="Total Gas Limit"
-                    placeholder=" "
-                    right-label="Wei"
-                    disabled
-                    :value="totalGasLimit"
-                  />
-                </template>
-              </mew-expand-panel>
-            </template>
-          </swap-fee>
-
+            :total-fees="totalFees"
+            :open-gas-price-modal="openGasPriceModal"
+          />
           <div class="text-center">
             <mew-button
               title="Swap"
@@ -228,7 +216,8 @@ export default {
         title: 'Loading Tokens Data',
         subtitle: ''
       },
-      addressValue: {}
+      addressValue: {},
+      gasPriceModal: false
     };
   },
   computed: {
@@ -390,6 +379,9 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
+    openGasPriceModal() {
+      this.gasPriceModal = true;
+    },
     getTokenFromAddress(address) {
       if (!this.availableTokens.toTokens) return {};
       for (const t of this.availableTokens.toTokens) {
@@ -441,10 +433,6 @@ export default {
         };
         return;
       }
-      this.providersMessage = {
-        title: '',
-        subtitle: ''
-      };
       this.feeError = '';
       this.swapper
         .getAllQuotes({
@@ -649,6 +637,6 @@ export default {
 }
 
 .available-balance {
-  width: 375px;
+  width: 39%;
 }
 </style>
