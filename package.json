@@ -76,7 +76,7 @@
     "worker-loader": "3.0.8"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "12.0.1",
+    "@commitlint/config-conventional": "12.1.1",
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "5.48.0",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
@@ -102,7 +102,7 @@
     "bignumber.js": "9.0.1",
     "bip39": "3.0.3",
     "codecov": "3.8.1",
-    "commitlint": "12.0.1",
+    "commitlint": "12.1.1",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.23.0",
     "eslint-plugin-prettier": "3.3.1",
