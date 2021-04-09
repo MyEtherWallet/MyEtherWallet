@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
-        <div class="monospace full-address">{{ address }}</div>
+        <div class="monospace full-address">{{ getChecksumAddressString }}</div>
         <div class="monospace last-four">{{ lastFour }}</div>
       </div>
       <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
@@ -80,6 +80,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   components: {
@@ -98,6 +99,9 @@ export default {
     ...mapState('wallet', ['address', 'isHardware']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
+    getChecksumAddressString() {
+      return toChecksumAddress(this.address);
+    },
     canSwitch() {
       return this.isHardware;
     },
