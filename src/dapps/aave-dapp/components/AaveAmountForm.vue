@@ -6,7 +6,7 @@
     elevation="1"
     max-width="650"
   >
-    <v-row justify="space-around">
+    <v-row justify="space-around" dense>
       <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
@@ -15,6 +15,9 @@
           :title="leftSideValues.title"
           :caption="leftSideValues.caption"
           class="text-left height--full"
+          :style="
+            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
+          "
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -25,6 +28,9 @@
           :title="rightSideValues.title"
           :caption="rightSideValues.caption"
           class="text-left height--full"
+          :style="
+            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
+          "
         />
       </v-col>
     </v-row>
@@ -185,5 +191,3 @@ export default {
   }
 };
 </script>
-
-<style></style>
