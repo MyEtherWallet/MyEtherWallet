@@ -6,6 +6,7 @@
       :idx-to-expand="activeTab"
     >
       <template v-for="(item, idx) in panelItems" #[item.slotName]>
+        1111111111
         <v-container :key="item.details.to + idx" fluid>
           <v-row
             v-for="(detail, index) in Object.keys(item.details)"

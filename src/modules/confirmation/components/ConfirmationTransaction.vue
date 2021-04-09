@@ -1,5 +1,5 @@
 <template>
-  <v-sheet max-width="600px" class="pa-8">
+  <v-sheet max-width="600px" class="pa-4 pa-md-8">
     <transaction-addresses :from="from" :to="to" class="mb-2" />
     <transaction-balance
       :tx-fee="txFee"
@@ -8,6 +8,7 @@
     />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
       <template #panelBody1>
+        222222222222
         <v-container fluid>
           <v-row v-for="(detail, idx) in details" :key="idx">
             <v-col cols="6">{{ detail.title }} </v-col>
