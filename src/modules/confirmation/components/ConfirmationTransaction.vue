@@ -8,7 +8,6 @@
     />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
       <template #panelBody1>
-        222222222222
         <v-container fluid>
           <v-row v-for="(detail, idx) in details" :key="idx">
             <v-col cols="6">{{ detail.title }} </v-col>

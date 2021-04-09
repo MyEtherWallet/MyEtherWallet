@@ -2,7 +2,7 @@
   <div class="position--relative superPrimary border-radius--5px">
     <div
       class="right-arrow d-flex align-center justify-center"
-      :style="$vuetify.breakpoint.mdAndDown ? 'transform: rotate(90deg)' : ''"
+      :style="$vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''"
     >
       <v-icon class="searchText--text">mdi-arrow-right-thick</v-icon>
     </div>
@@ -17,7 +17,7 @@
           </h6>
           <v-sheet
             color="transparent"
-            :width="$vuetify.breakpoint.mdAndDown ? '50vw' : ''"
+            :width="$vuetify.breakpoint.smAndDown ? '50vw' : ''"
             class="d-flex align-center justify-center mx-auto"
           >
             <div class="text-uppercase monospace address">{{ from }}</div>
@@ -35,7 +35,7 @@
           </h6>
           <v-sheet
             color="transparent"
-            :width="$vuetify.breakpoint.mdAndDown ? '50vw' : ''"
+            :width="$vuetify.breakpoint.smAndDown ? '50vw' : ''"
             class="d-flex align-center justify-center mx-auto"
           >
             <div class="text-uppercase monospace address">{{ to }}</div>
