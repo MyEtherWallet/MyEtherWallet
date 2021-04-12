@@ -278,7 +278,6 @@ export default {
         const bestRate = newValue.findIndex(item => {
           return item.rate === this.bestRate;
         });
-        console.log(this.$refs[`card${bestRate}`]);
         if (bestRate !== -1 && this.$refs.hasOwnProperty(`card${bestRate}`)) {
           this.$refs[`card${bestRate}`][0].toggle();
           this.setProvider(bestRate);
