@@ -250,7 +250,10 @@ export default {
     confirmationStep: async function (newVal) {
       if (newVal === true) {
         this.interval = setInterval(
-          async () => await this.updateOrderStatus(),
+          async () =>
+            await this.updateOrderStatus().then(() =>
+              this.fetchMyDomains(this.address)
+            ),
           8000
         );
       }
@@ -290,7 +293,7 @@ export default {
       'getOrder'
     ]),
     ...mapMutations('unstoppable', ['setOrder']),
-    ...mapActions('unstoppable', ['updateOrderStatus']),
+    ...mapActions('unstoppable', ['updateOrderStatus', 'fetchMyDomains']),
     selectTab(event) {
       const tabId = event.currentTarget.id;
       this.crypto = tabId === 'crypto';
@@ -356,7 +359,10 @@ export default {
             to: charge.data.addresses.ethereum,
             value
           })
-          .then(() => (this.confirmationStep = true) && (this.loading = false));
+          .then(() => {
+            this.confirmationStep = true;
+            this.loading = false;
+          });
       } catch (err) {
         this.loading = false;
         this.paymentError = err.message;
