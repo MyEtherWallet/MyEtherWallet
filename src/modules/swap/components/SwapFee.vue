@@ -25,7 +25,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row justify="space-between" align="center" v-else>
+    <v-row v-else justify="space-between" align="center">
       <v-col cols="4 mb-n3">
         <p class="mew-heading-3">Network Fee</p>
       </v-col>

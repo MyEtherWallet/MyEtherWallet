@@ -84,12 +84,9 @@ import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
-import { mapGetters, mapState, mapActions } from 'vuex';
-import { SENTRY, Toast } from '../toast/handler/handlerToast';
-import {
-  getGasBasedOnType,
-  gasPriceTypes
-} from '@/core/helpers/gasPriceHelper';
+import { mapState } from 'vuex';
+import { fromWei } from 'web3-utils';
+import gasPriceMixin from './handler/gasPriceMixin';
 const modes = ['add', 'edit'];
 
 export default {
@@ -100,6 +97,7 @@ export default {
     SettingsGasPrice,
     AddressBookAddEdit
   },
+  mixins: [gasPriceMixin],
   props: {
     onSettings: { default: false, type: Boolean }
   },
@@ -110,7 +108,6 @@ export default {
       editMode: false,
       addMode: false,
       itemToEdit: {},
-      localGas: null,
       tableHeaders: [
         {
           text: '#',
@@ -146,58 +143,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['gasPriceType', 'addressBook']),
-    ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice']),
-    gasButtons() {
-      const utils = this.web3.utils;
-      const economy = this.localGas
-        ? utils.fromWei(
-            getGasBasedOnType(this.localGas, gasPriceTypes.ECONOMY),
-            'gwei'
-          )
-        : 0;
-      const regular = this.localGas
-        ? utils.fromWei(
-            getGasBasedOnType(this.localGas, gasPriceTypes.REGULAR),
-            'gwei'
-          )
-        : 0;
-      const fast = this.localGas
-        ? utils.fromWei(
-            getGasBasedOnType(this.localGas, gasPriceTypes.FAST),
-            'gwei'
-          )
-        : 0;
-      return [
-        {
-          icon: 'bicycle',
-          title: gasPriceTypes.ECONOMY,
-          gas: `${economy}`
-          // usd: '$0.004',
-          // time: '< 30 min'
-        },
-        {
-          icon: 'car',
-          title: gasPriceTypes.REGULAR,
-          gas: `${regular}`
-          // usd: '$0.008',
-          // time: '< 10 min'
-        },
-        {
-          icon: 'rocket',
-          title: gasPriceTypes.FAST,
-          gas: `${fast}`
-          // usd: '$0.012',
-          // time: '< 5 min'
-        }
-      ];
-    },
+    ...mapState('global', ['addressBook']),
     panelItems() {
       return [
         {
           name: 'Gas price',
-          subtext: `${this.web3.utils.fromWei(this.gasPrice, 'gwei')} Gwei (${
+          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
             this.gasPriceType
           })`
         },
@@ -249,7 +200,6 @@ export default {
     this.fetchGasPrice();
   },
   methods: {
-    ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
     getAddressBookTableData() {
       this.tableData = [];
       this.addressBook.forEach((item, idx) => {
@@ -268,32 +218,6 @@ export default {
           ]
         });
       });
-    },
-    setSelected(selected) {
-      try {
-        this.setGasPrice(this.localGas).then(() => {
-          this.setGasPriceType(selected);
-        });
-      } catch (e) {
-        Toast(e, {}, SENTRY);
-      }
-    },
-    setCustomGasPrice(customGasPrice) {
-      this.setGasPriceType(gasPriceTypes.STORED).then(() => {
-        this.setGasPrice(
-          getGasBasedOnType(
-            this.web3.utils.toWei(customGasPrice, 'gwei'),
-            gasPriceTypes.STORED
-          )
-        );
-      });
-    },
-    async fetchGasPrice() {
-      try {
-        this.localGas = await this.web3.eth.getGasPrice();
-      } catch (e) {
-        Toast(e, {}, SENTRY);
-      }
     },
     back(idx) {
       this.idxToExpand = idx ? idx : null;

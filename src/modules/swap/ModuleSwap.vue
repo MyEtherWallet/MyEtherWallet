@@ -1,16 +1,18 @@
 <template>
   <div class="mew-component--swap">
     <v-dialog v-model="gasPriceModal" width="500">
-      <v-row>
-        <v-col cols="12">
-          <p class="mew-heading-1">Network Fee</p>
-          <p class="mew-body">
-            This fee is calculated by multiplying the gas price and gas limit
-            for your transaction. Higher fees results in faster transactions.
-            <a>Learn More </a>
-          </p>
-        </v-col>
-      </v-row>
+      <v-card>
+        <v-row>
+          <v-col cols="12">
+            <p class="mew-heading-1">Network Fee</p>
+            <p class="mew-body">
+              This fee is calculated by multiplying the gas price and gas limit
+              for your transaction. Higher fees results in faster transactions.
+              <a>Learn More </a>
+            </p>
+          </v-col>
+        </v-row>
+      </v-card>
     </v-dialog>
     <swap-confirmation
       :to="confirmInfo.to"
