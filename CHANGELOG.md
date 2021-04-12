@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
 * Fix import configuration, sign message clear [#2985](https://github.com/MyEtherWallet/MyEtherWallet/pull/2985)
 * Fix sign message mobile layout [#2990](https://github.com/MyEtherWallet/MyEtherWallet/pull/2990)
 * Fix verify message layout [#2987](https://github.com/MyEtherWallet/MyEtherWallet/pull/2987)
