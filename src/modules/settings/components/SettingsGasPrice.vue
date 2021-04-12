@@ -1,13 +1,15 @@
 <template>
   <div class="pa-6">
-    <div>Please select a default gas price for your transaction fee</div>
+    <div v-if="!isSwap" class="mb-6">
+      Please select a default gas price for your transaction fee
+    </div>
     <!--
     =====================================================================================
       Economic / Regular / Fast
     =====================================================================================
     -->
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
-      <v-row class="mt-6">
+      <v-row>
         <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
           <div
             class="text-center group-button pb-5 pt-2"
@@ -28,7 +30,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row align="center" class="pt-3 pb-9 px-3">
+      <v-row align="center" class="pt-3 pb-9 px-3" v-if="!isSwap">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -40,6 +42,7 @@
       -->
       <v-row align="start" class="px-3">
         <mew-input
+          v-if="!isSwap"
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
@@ -47,10 +50,20 @@
           class="mr-3"
         />
         <mew-button
-          title="Confirm"
+          :title="customBtn.text"
           btn-size="xlarge"
+          :btn-style="customBtn.style"
+          :has-full-width="isSwap"
           @click.native="setCustomGasPrice(customGasPrice)"
         />
+        <p v-if="isSwap" class="pt-2">
+          To change the custom gas price, go to
+          <span
+            @click="openGlobalSettings"
+            class="cursor--pointer go-to-global-text"
+            >global settings</span
+          >
+        </p>
       </v-row>
     </v-sheet>
   </div>
@@ -59,6 +72,9 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
+import { mapState } from 'vuex';
+import { fromWei } from 'web3-utils';
+
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -87,6 +103,14 @@ export default {
     setCustomGasPrice: {
       type: Function,
       default: () => {}
+    },
+    isSwap: {
+      type: Boolean,
+      default: false
+    },
+    openGlobalSettings: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -94,6 +118,20 @@ export default {
       customGasPrice:
         this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
     };
+  },
+  computed: {
+    ...mapState('external', ['ETHUSDValue']),
+    customBtn() {
+      const usdValue = BigNumber(this.ETHUSDValue.value).times(
+        fromWei(this.customGasPrice, 'ether')
+      );
+      return {
+        text: this.isSwap
+          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei ${usdValue}`
+          : 'Confirm',
+        style: this.isSwap ? 'outline' : 'background'
+      };
+    }
   }
 };
 </script>
@@ -114,5 +152,9 @@ export default {
     background-color: #f2fafa;
     opacity: 1;
   }
+}
+
+.go-to-global-text {
+  color: var(--v-primary-base);
 }
 </style>

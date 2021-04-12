@@ -201,6 +201,7 @@ import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { mapActions } from 'vuex';
+import { EventBus } from '@/core/plugins/eventBus';
 
 export default {
   components: {
@@ -296,6 +297,11 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    EventBus.$on('toggleSettings', () => {
+      this.toggleSettings();
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),

@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--swap">
     <v-dialog v-model="gasPriceModal" width="500">
-      <v-card>
+      <v-card class="py-6 px-4">
         <v-row>
           <v-col cols="12">
             <p class="mew-heading-1">Network Fee</p>
@@ -10,6 +10,15 @@
               for your transaction. Higher fees results in faster transactions.
               <a>Learn More </a>
             </p>
+            <settings-gas-price
+              :isSwap="true"
+              :buttons="gasButtons"
+              :selected="gasPriceType"
+              :set-selected="setSelected"
+              :gas-price="gasPrice"
+              :set-custom-gas-price="setCustomAndClose"
+              :open-global-settings="openSettings"
+            />
           </v-col>
         </v-row>
       </v-card>
@@ -141,6 +150,8 @@
 
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
+import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -150,6 +161,7 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import { EventBus } from '@/core/plugins/eventBus';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -159,8 +171,10 @@ export default {
     ModuleAddressBook,
     SwapConfirmation,
     SwapProvidersList,
-    SwapFee
+    SwapFee,
+    SettingsGasPrice
   },
+  mixins: [gasPriceMixin],
   props: {
     fromToken: {
       type: String,
@@ -228,9 +242,6 @@ export default {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     totalFees() {
       return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
-    },
-    gasPriceGwei() {
-      return fromWei(this.gasPrice, 'gwei');
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -376,6 +387,7 @@ export default {
       })
       .then(() => {
         this.setDefaults();
+        this.fetchGasPrice();
         this.isLoading = false;
       });
   },
@@ -605,6 +617,14 @@ export default {
         this.feeError =
           this.fromTokenType.value === 'Ethereum' ? ethError : message;
       }
+    },
+    openSettings() {
+      EventBus.$emit('toggleSettings');
+      this.gasPriceModal = false;
+    },
+    setCustomAndClose(value) {
+      this.setCustomGasPrice(value);
+      this.gasPriceModal = false;
     }
   }
 };
