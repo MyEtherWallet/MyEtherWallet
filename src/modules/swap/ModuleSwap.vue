@@ -1,28 +1,10 @@
 <template>
   <div class="mew-component--swap">
-    <v-dialog v-model="gasPriceModal" width="500">
-      <v-card class="py-6 px-4">
-        <v-row>
-          <v-col cols="12">
-            <p class="mew-heading-1">Network Fee</p>
-            <p class="mew-body">
-              This fee is calculated by multiplying the gas price and gas limit
-              for your transaction. Higher fees results in faster transactions.
-              <a>Learn More </a>
-            </p>
-            <settings-gas-price
-              :is-swap="true"
-              :buttons="gasButtons"
-              :selected="gasPriceType"
-              :set-selected="setSelected"
-              :gas-price="gasPrice"
-              :set-custom-gas-price="setCustomAndClose"
-              :open-global-settings="openSettings"
-            />
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-dialog>
+    <swap-network-settings-modal
+      :open-settings="openSettings"
+      :close="closeGasPrice"
+      :gas-price-modal="gasPriceModal"
+    />
     <swap-confirmation
       :to="confirmInfo.to"
       :from="confirmInfo.from"
@@ -150,12 +132,11 @@
 
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
-import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
+import SwapNetworkSettingsModal from './components/SwapNetworkSettingsModal.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -172,9 +153,8 @@ export default {
     SwapConfirmation,
     SwapProvidersList,
     SwapFee,
-    SettingsGasPrice
+    SwapNetworkSettingsModal
   },
-  mixins: [gasPriceMixin],
   props: {
     fromToken: {
       type: String,
@@ -387,7 +367,6 @@ export default {
       })
       .then(() => {
         this.setDefaults();
-        this.fetchGasPrice();
         this.isLoading = false;
       });
   },
@@ -622,8 +601,7 @@ export default {
       EventBus.$emit('toggleSettings');
       this.gasPriceModal = false;
     },
-    setCustomAndClose(value) {
-      this.setCustomGasPrice(value);
+    closeGasPrice() {
       this.gasPriceModal = false;
     }
   }
