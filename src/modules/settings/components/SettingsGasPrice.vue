@@ -30,7 +30,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row align="center" class="pt-3 pb-9 px-3" v-if="!isSwap">
+      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -59,8 +59,8 @@
         <p v-if="isSwap" class="pt-2">
           To change the custom gas price, go to
           <span
-            @click="openGlobalSettings"
             class="cursor--pointer go-to-global-text"
+            @click="openGlobalSettings"
             >global settings</span
           >
         </p>
