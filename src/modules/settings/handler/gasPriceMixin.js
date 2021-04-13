@@ -85,8 +85,8 @@ const gasPriceMixin = {
     ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
     setSelected(selected) {
       try {
-        this.setGasPrice(this.localGas).then(() => {
-          this.setGasPriceType(selected);
+        this.setGasPriceType(selected).then(() => {
+          this.setGasPrice(this.localGas);
         });
       } catch (e) {
         Toast(e, {}, SENTRY);

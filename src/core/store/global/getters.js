@@ -22,7 +22,8 @@ const network = function (state) {
 };
 
 const gasPrice = function (state) {
-  return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
+  const stateCopy = JSON.parse(JSON.stringify(Object.assign({}, state)));
+  return getGasBasedOnType(stateCopy.baseGasPrice, stateCopy.gasPriceType);
 };
 
 const isEthNetwork = function (state) {

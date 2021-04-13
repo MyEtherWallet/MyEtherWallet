@@ -12,9 +12,15 @@
       <v-row>
         <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
           <div
-            class="text-center group-button pb-5 pt-2"
-            :class="selected === b.title ? 'active' : ''"
-            @click="setSelected(b.title)"
+            :class="[
+              selected === b.title ? 'active' : '',
+              'text-center group-button pb-5 pt-2'
+            ]"
+            @click.stop="
+              () => {
+                setSelected(b.title);
+              }
+            "
           >
             <mew-icon :icon-name="b.icon" :img-height="80" />
             <h5 class="font-weight-bold mb-2 text-capitalize">{{ b.title }}</h5>
@@ -127,7 +133,7 @@ export default {
       );
       return {
         text: this.isSwap
-          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei ${usdValue}`
+          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${usdValue}`
           : 'Confirm',
         style: this.isSwap ? 'outline' : 'background'
       };
