@@ -112,7 +112,6 @@
     "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "7.0.10",
     "ethereumjs-wallet": "1.0.1",
-    "ethjs-unit": "0.1.6",
     "ganache-core": "2.13.2",
     "hdkey": "2.0.1",
     "html2canvas": "1.0.0-rc.7",

@@ -5,7 +5,22 @@
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
     />
-    <swap-confirmation
+    <swap-confirmation-modal
+      :to="confirmInfo.to"
+      :from="confirmInfo.from"
+      :from-img="confirmInfo.fromImg"
+      :from-type="confirmInfo.fromType"
+      :to-type="confirmInfo.toType"
+      :to-img="confirmInfo.toImg"
+      :show="confirmInfo.show"
+      :from-val="confirmInfo.fromVal"
+      :to-val="confirmInfo.toVal"
+      :send="executeTrade"
+      :provider="selectedProvider"
+      :tx-fee="totalFees"
+      :close="closeSwapConfirmation"
+    />
+    <!-- <swap-confirmation
       :to="confirmInfo.to"
       :from="confirmInfo.from"
       :from-img="confirmInfo.fromImg"
@@ -18,7 +33,7 @@
       :to-val="confirmInfo.toVal"
       :valid-until="confirmInfo.validUntil"
       :send="executeTrade"
-    />
+    /> -->
 
     <mew6-white-sheet>
       <mew-module
@@ -132,11 +147,11 @@
 
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
 import SwapNetworkSettingsModal from './components/SwapNetworkSettingsModal.vue';
+import SwapConfirmationModal from './components/SwapConfirmationModal.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -150,10 +165,10 @@ export default {
   name: 'ModuleSwap',
   components: {
     ModuleAddressBook,
-    SwapConfirmation,
     SwapProvidersList,
     SwapFee,
-    SwapNetworkSettingsModal
+    SwapNetworkSettingsModal,
+    SwapConfirmationModal
   },
   props: {
     fromToken: {
@@ -213,7 +228,8 @@ export default {
         subtitle: ''
       },
       addressValue: {},
-      gasPriceModal: false
+      gasPriceModal: false,
+      selectedProvider: {}
     };
   },
   computed: {
@@ -462,6 +478,7 @@ export default {
           q.isSelected = event;
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
+          this.selectedProvider = q;
         }
       });
     },
@@ -529,9 +546,7 @@ export default {
         address
       });
     },
-    backFunction() {
-      this.confirmInfo.show = false;
-    },
+
     executeTrade() {
       this.confirmInfo.show = false;
       this.swapper
@@ -603,6 +618,9 @@ export default {
     },
     closeGasPrice() {
       this.gasPriceModal = false;
+    },
+    closeSwapConfirmation() {
+      this.confirmInfo.show = false;
     }
   }
 };

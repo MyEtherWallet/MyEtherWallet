@@ -1,10 +1,9 @@
-import unit from 'ethjs-unit';
 import EthCalls from '../web3Calls';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import { toPayload } from '../jsonrpc';
 import EventNames from '../events';
 import { getSanitizedTx } from './utils';
-
+import { toWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
@@ -24,7 +23,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.gasPrice = !tx.gasPrice
-    ? unit.toWei(store.getters['global/gasPrice'], 'gwei').toString()
+    ? toWei(store.getters['global/gasPrice'], 'gwei').toString()
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
