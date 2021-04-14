@@ -61,7 +61,7 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet min-height="500px" class="pa-4 pa-md-12">
+        <v-sheet min-height="500px" class="pa-3 pa-md-12">
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -81,9 +81,8 @@
               :class="domain.expired ? 'expired' : 'available'"
             >
               <div :key="idx" class="ma-3">
-                <!-- ====================================================================== -->
                 <v-row class="subheader-container">
-                  <v-col cols="12" lg="6" class="d-flex align-center">
+                  <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.registrant') }}</div>
                     <mew-blockie
                       :address="domain.registrarAddress"
@@ -111,7 +110,7 @@
 
                   <v-spacer></v-spacer>
 
-                  <v-col cols="12" lg="6" class="d-flex align-center">
+                  <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.controller') }}</div>
                     <mew-blockie
                       :address="domain.controllerAddress"
@@ -137,7 +136,6 @@
                     </a>
                   </v-col>
                 </v-row>
-                <!-- ====================================================================== -->
 
                 <div
                   class="mt-3 d-flex align-center justify-space-between py-5 px-7"
