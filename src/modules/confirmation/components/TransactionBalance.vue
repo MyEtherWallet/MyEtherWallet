@@ -13,7 +13,7 @@
     <mew-progress-bar class="my-5" :balance-obj="progressBar" />
 
     <div>
-      <v-row dense :class="!$vuetify.breakpoint.smAndUp ? 'mb-5' : ''">
+      <v-row dense class="mb-sm-5">
         <v-col class="d-flex align-center text-uppercase" cols="12" sm="4">
           <v-icon color="titlePrimary"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Send</h6>
@@ -24,8 +24,7 @@
           />
         </v-col>
         <v-col
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-start justify-ms-end"
           cols="12"
           sm="4"
         >
@@ -36,8 +35,7 @@
         </v-col>
         <v-col
           v-if="isEthNetwork"
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-start justify-sm-end"
           cols="12"
           sm="4"
         >
@@ -45,26 +43,24 @@
         </v-col>
       </v-row>
 
-      <v-row dense :class="!$vuetify.breakpoint.smAndUp ? 'mb-5' : ''">
+      <v-row dense class="mb-sm-5">
         <v-col class="d-flex align-center text-uppercase" cols="4">
           <v-icon color="#f5a623"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Transaction Fee</h6>
         </v-col>
         <v-col
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
           cols="12"
           sm="4"
         >
           <span class="mr-1">- {{ txFee }}</span>
           <span class="searchText--text font-weight-medium">{{
             currency
-          }}</span></v-col
-        >
+          }}</span>
+        </v-col>
         <v-col
           v-if="isEthNetwork"
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
           cols="12"
           sm="4"
         >
@@ -78,20 +74,18 @@
           <h6 class="searchText--text font-weight-medium">Total Pay</h6>
         </v-col>
         <v-col
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
           cols="12"
           sm="4"
         >
           <span class="mr-1">{{ total }} </span>
           <span class="searchText--text font-weight-medium">{{
             currency
-          }}</span></v-col
-        >
+          }}</span>
+        </v-col>
         <v-col
           v-if="isEthNetwork"
-          class="d-flex align-center pl-6"
-          :class="$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-start'"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
           cols="12"
           sm="4"
         >

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet max-width="600px" class="pa-4 pa-md-8">
+  <v-sheet max-width="600px" class="pa-3 pa-md-8">
     <transaction-addresses :from="from" :to="to" class="mb-2" />
     <transaction-balance
       :tx-fee="txFee"
