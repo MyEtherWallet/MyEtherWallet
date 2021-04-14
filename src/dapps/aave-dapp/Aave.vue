@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mew-component--aave">
     <the-wrapper-dapp
       :has-exit-btn="true"
       :banner-img="BG"
@@ -66,30 +66,24 @@
               </div>
             </v-col>
             <v-col cols="12" md="6">
-              <div class="tableHeader pa-5 border-radius--5px height-100">
-                <v-row>
-                  <v-col cols="7">
-                    <h5 class="mb-2 font-weight-bold">Earnings</h5>
-                  </v-col>
-                  <v-col
-                    cols="5"
-                    class="d-flex align-center justify-space-between"
-                  >
-                    <div class="d-flex align-center">
-                      <div class="circle pink mr-2" />
+              <div
+                class="tableHeader pa-5 border-radius--5px height-100 d-flex flex-column"
+              >
+                <div class="d-flex aling-center">
+                  <h5 class="font-weight-bold mr-auto">Earnings</h5>
+                  <div class="d-flex align-center">
+                    <div class="d-flex align-center mr-3">
+                      <div class="circle pink mr-1" />
                       APR
                     </div>
                     <div class="d-flex align-center">
-                      <div class="circle lightblue mr-2" />
+                      <div class="circle lightblue mr-1" />
                       Total
                     </div>
-                  </v-col>
-                </v-row>
-                <div
-                  class="d-flex flex-column justify-center align-center text-center height-100"
-                >
-                  No data to show yet
+                  </div>
                 </div>
+
+                <div class="ma-auto text-center pa-5">No data to show yet</div>
               </div>
             </v-col>
             <v-col cols="12" class="pt-md-2">
@@ -104,7 +98,6 @@
               />
             </v-col>
           </v-row>
-          <v-row class="pl-1 pr-1"> </v-row>
 
           <div class="d-flex justify-center mt-9">
             <mew-button
