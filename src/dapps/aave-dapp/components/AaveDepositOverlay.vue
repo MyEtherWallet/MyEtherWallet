@@ -4,6 +4,7 @@
     :title="header"
     right-btn-text="Close"
     :close="handleCancel"
+    class="mew-component--aave-deposit-overlay"
   >
     <template #mewOverlayBody>
       <!--
@@ -186,5 +187,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
