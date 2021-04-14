@@ -1,10 +1,13 @@
 <template>
   <div class="component--wallet-card">
-    <div class="background-image mew-card" style="opacity: 0">
+    <div class="mew-card">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
         alt="MEW Card"
-        @load="animateMewCard"
+        @load="
+          animateMewCard();
+          animateBlockie();
+        "
       />
     </div>
     <div class="info-container px-4 pt-5 pb-3">
@@ -24,7 +27,7 @@
         </div>
         <div class="ml-4">
           <div class="font-weight-medium d-flex align-center">
-            <div class="text-shadow">MY ACCOUNT VALUE</div>
+            <div class="text-shadow font-weight-bold">MY ACCOUNT VALUE</div>
           </div>
           <div
             v-show="convertedBalance !== 'undefinedNaN'"
@@ -35,8 +38,12 @@
         </div>
       </div>
       <div class="component--address d-flex align-center mt-1">
-        <div class="text-shadow monospace full-address">{{ address }}</div>
-        <div class="text-shadow monospace last-four">{{ lastFour }}</div>
+        <div class="text-shadow monospace full-address font-weight-bold">
+          {{ address }}
+        </div>
+        <div class="text-shadow monospace last-four font-weight-bold">
+          {{ lastFour }}
+        </div>
       </div>
       <!-- <div class="mb-2">OWNED 3 DOMAINS ></div> -->
       <div class="d-flex align-center mt-2">
@@ -134,7 +141,7 @@ export default {
     }
   },
   mounted() {
-    this.animateBlockie();
+    //this.animateBlockie();
   },
   methods: {
     animateBlockie() {
@@ -149,14 +156,15 @@ export default {
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
-      el.style.transform = 'scale(3)';
+      //el.style.transform = 'scale(6)';
       el.style.opacity = 0;
       anime({
         targets: el,
-        scale: 1,
+        //scale: 1,
         opacity: 1,
-        delay: 2000,
-        duration: 3000
+        delay: 1800,
+        duration: 500,
+        easing: 'easeInOutQuad'
       });
     },
     closeChangeAddress() {
@@ -175,10 +183,13 @@ export default {
 
 <style lang="scss" scoped>
 .component--wallet-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   position: relative;
   width: 100%;
 }
-.background-image {
+.mew-card {
+  opacity: 0;
   border-radius: 10px;
   overflow: hidden;
   position: absolute;
