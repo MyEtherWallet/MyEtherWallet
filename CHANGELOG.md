@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix custom gas price not loaded after logging in [#3026](https://github.com/MyEtherWallet/MyEtherWallet/pull/3026)
 * Fix import configuration, sign message clear [#2985](https://github.com/MyEtherWallet/MyEtherWallet/pull/2985)
 * Fix sign message mobile layout [#2990](https://github.com/MyEtherWallet/MyEtherWallet/pull/2990)
 * Fix verify message layout [#2987](https://github.com/MyEtherWallet/MyEtherWallet/pull/2987)
