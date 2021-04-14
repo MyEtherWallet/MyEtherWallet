@@ -1,14 +1,15 @@
 <template>
   <div class="component--wallet-card">
-    <div class="background-image">
+    <div class="background-image mew-card" style="opacity: 0">
       <img
         :src="'https://mewcard.mewapi.io/?address=' + address"
         alt="MEW Card"
+        @load="animateMewCard"
       />
     </div>
     <div class="info-container px-4 pt-5 pb-3">
       <div class="d-flex">
-        <div class="blockie-img">
+        <div ref="blockie" class="blockie-img">
           <mew-blockie
             :address="address"
             :size="8"
@@ -25,7 +26,10 @@
           <div class="font-weight-medium d-flex align-center">
             <div class="text-shadow">MY ACCOUNT VALUE</div>
           </div>
-          <div class="text-shadow headline font-weight-bold monospace">
+          <div
+            v-show="convertedBalance !== 'undefinedNaN'"
+            class="text-shadow headline font-weight-bold monospace"
+          >
             {{ convertedBalance }}
           </div>
         </div>
@@ -78,6 +82,7 @@
 </template>
 
 <script>
+import anime from 'animejs/lib/anime.es.js';
 import BalanceAddressSwitch from './components/BalanceAddressSwitch';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
@@ -85,6 +90,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   components: {
@@ -103,6 +109,9 @@ export default {
     ...mapState('wallet', ['address', 'isHardware']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
+    getChecksumAddressString() {
+      return toChecksumAddress(this.address);
+    },
     canSwitch() {
       return this.isHardware;
     },
@@ -124,7 +133,32 @@ export default {
       }`;
     }
   },
+  mounted() {
+    this.animateBlockie();
+  },
   methods: {
+    animateBlockie() {
+      const el = document.querySelector('.blockie-img');
+      el.style.transform = 'scale(0)';
+      anime({
+        targets: el,
+        keyframes: [{ scale: 0 }, { scale: 3 }, { scale: 1 }],
+        delay: 2000,
+        duration: 2000
+      });
+    },
+    animateMewCard() {
+      const el = document.querySelector('.mew-card');
+      el.style.transform = 'scale(3)';
+      el.style.opacity = 0;
+      anime({
+        targets: el,
+        scale: 1,
+        opacity: 1,
+        delay: 2000,
+        duration: 3000
+      });
+    },
     closeChangeAddress() {
       this.openChangeAddress = false;
     },
