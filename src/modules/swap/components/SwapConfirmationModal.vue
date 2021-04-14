@@ -1,20 +1,13 @@
 <template>
-  <v-dialog :value="show" width="500">
-    <v-sheet class="py-6 px-4">
-      <!--
-        =====================================================================================
-          Dialog Header text
-        =====================================================================================
-        -->
+  <app-modal
+    :title="'Review Swap'"
+    :close="close"
+    :btn-enabled="true"
+    :btn-action="send"
+    :show="show"
+  >
+    <div slot="dialogBody">
       <v-row>
-        <v-col cols="12" class="text-right">
-          <v-icon size="large" color="grey cursor--pointer" @click="close"
-            >mdi-close</v-icon
-          >
-        </v-col>
-        <v-col cols="12" align-self="center">
-          <p class="mew-heading-2 text-center">Review Swap</p>
-        </v-col>
         <v-col cols="12">
           <p>
             <b>Please doublecheck everything.</b> MEW team will not be able to
@@ -59,15 +52,19 @@
           {{ convertedFees }} {{ txFeeUSD }}
         </v-col>
       </v-row>
-    </v-sheet>
-  </v-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script>
+import AppModal from '@/core/components/AppModal';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 export default {
+  components: {
+    AppModal
+  },
   props: {
     provider: {
       type: Object,
@@ -117,15 +114,15 @@ export default {
       type: Boolean,
       default: false
     },
-    send: {
-      type: Function,
-      default: () => {}
-    },
     txFee: {
       type: String,
       default: '0'
     },
     close: {
+      type: Function,
+      default: () => {}
+    },
+    send: {
       type: Function,
       default: () => {}
     }
