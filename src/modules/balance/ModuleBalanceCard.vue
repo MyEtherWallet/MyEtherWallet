@@ -203,6 +203,7 @@ export default {
   }
 }
 .blockie-img {
+  transform: scale(0);
   position: relative;
 
   .blockie-image {
