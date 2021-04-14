@@ -108,7 +108,7 @@
                   <div class="subtitle-1 font-weight-black text-uppercase">
                     My Address
                   </div>
-                  <div>{{ key }}</div>
+                  <div>{{ getChecksumAddressString }}</div>
                 </v-sheet>
               </v-theme-provider>
               <v-sheet height="130px" class="qr-image">
@@ -164,6 +164,7 @@ import { mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import html2canvas from 'html2canvas';
 import printJS from 'print-js';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   name: 'BalanceAddressPaperWallet',
@@ -191,6 +192,9 @@ export default {
         return this.instance.getPrivateKeyString();
       }
       return null;
+    },
+    getChecksumAddressString() {
+      return toChecksumAddress(this.address);
     }
   },
   methods: {
