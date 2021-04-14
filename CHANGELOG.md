@@ -2,10 +2,11 @@
 
 ### Devop
 
-
+* Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)
 * Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
 * Update Deposit Borrow Withdraw layouts [#3016](https://github.com/MyEtherWallet/MyEtherWallet/pull/3016)
 * Fix mobile menu logo and max screen size [#2998](https://github.com/MyEtherWallet/MyEtherWallet/pull/2998)
+* Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)
 * Fix import configuration, sign message clear [#2985](https://github.com/MyEtherWallet/MyEtherWallet/pull/2985)
 * Fix sign message mobile layout [#2990](https://github.com/MyEtherWallet/MyEtherWallet/pull/2990)
 * Fix verify message layout [#2987](https://github.com/MyEtherWallet/MyEtherWallet/pull/2987)
@@ -69,3 +70,4 @@
 * Add MY TOKENS VALUE component for Dashboard [#2015](https://github.com/MyEtherWallet/MyEtherWallet/pull/2015)
 * Update my eth balance component chart [#1987](https://github.com/MyEtherWallet/MyEtherWallet/pull/1987)
 * Sign and Verify Message [#2841](https://github.com/MyEtherWallet/MyEtherWallet/pull/2841)
+
