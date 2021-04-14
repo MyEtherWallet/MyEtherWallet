@@ -1,3 +1,6 @@
+/**
+ * The Wallet View Apollo Mixin
+ */
 import utils from 'web3-utils';
 import {
   getEthBalance,

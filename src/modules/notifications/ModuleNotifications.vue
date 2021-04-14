@@ -1,4 +1,9 @@
 <template>
+  <!--
+  =====================================================================================
+    Module Notifications
+  =====================================================================================
+  -->
   <div>
     <div class="d-flex align-center">
       <v-btn icon @click="openNotifications = true">
@@ -63,8 +68,8 @@
           <mew6-white-sheet>
             <div class="pa-4">
               <div
-                v-for="data in showNotifications"
-                v-show="showNotifications.length > 0"
+                v-for="data in notificationsByType"
+                v-show="notificationsByType.length > 0"
                 :key="data.transactionHash"
                 class="mt-2"
               >
@@ -74,7 +79,7 @@
                 />
               </div>
               <div
-                v-show="showNotifications.length === 0"
+                v-show="notificationsByType.length === 0"
                 class="pa-5 text-center"
               >
                 <h3 class="mb-5">No notifications to display for:</h3>
@@ -92,13 +97,20 @@
 </template>
 
 <script>
-import { fromWei, toBN } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
-import NotificationsCall from '@/apollo/queries/notifications';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import timeAgo from '@/core/helpers/timeAgo';
+import BigNumber from 'bignumber.js';
+
+const types = {
+  swap: 'swap',
+  in: 'in',
+  out: 'out'
+};
+
 export default {
   name: 'ModuleNotifications',
   mixins: [handlerNotification],
@@ -118,7 +130,6 @@ export default {
         { label: 'Swap', val: 'swap' }
       ],
       page: null,
-      inTx: [],
       openNotifications: false
     };
   },
@@ -134,71 +145,86 @@ export default {
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
+    /**
+     * Swap Handler
+     */
     swapper() {
-      return new Swapper(this.web3);
+      return new handlerSwap(this.web3);
     },
-    caller() {
-      if (this.isEthNetwork) {
-        return new NotificationsCall(this.$apollo);
-      }
-      return null;
-    },
-    transformCurrentNoti() {
-      const newArr = this.currentNotifications.map(notification => {
-        const newObj = this.formatObj(notification);
-        if (newObj.type === 'SWAP') {
+    /**
+     * Formatted current notifications
+     */
+    formattedCurrentNotifications() {
+      return this.currentNotifications.map(notification => {
+        const newObj = this.formatNotification(notification);
+        if (newObj.type.toLowerCase() === types.swap) {
           newObj.checkSwapStatus(this.swapper);
         }
         return newObj;
       });
-      return newArr;
     },
-    transformTxNoti() {
-      const newArr = this.txNotifications
+    /**
+     * Formatteds outgoing tx notifications
+     */
+    outgoingTxNotifications() {
+      return this.txNotifications
         .map(notification => {
-          const newObj = this.formatObj(notification);
-          return newObj;
+          return this.formatNotification(notification);
         })
         .sort(this.sortByDate);
-      return newArr;
     },
-    transformSwapNoti() {
-      const newArr = this.swapNotifications
+    /**
+     * Formatted swap notifications
+     */
+    formattedSwapNotifications() {
+      return this.swapNotifications
         .map(notification => {
-          const newObj = this.formatObj(notification);
+          const newObj = this.formatNotification(notification);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
         .sort(this.sortByDate);
-      return newArr;
     },
-    transformInNoti() {
-      const newArr = this.inTx
+    /**
+     * Formatted incoming tx notifications
+     */
+    incomingTxNotifications() {
+      return this.incomingTxs
         .map(notification => {
-          const newObj = this.formatObj(notification);
-          return newObj;
+          notification.read = notification.date < this.lastFetched;
+          notification = new Notification(notification);
+          this.setFetchedTime();
+          return this.formatNotification(notification);
         })
         .sort(this.sortByDate);
-      return newArr;
     },
+    /**
+     * Returns all the notifications
+     */
     allNotifications() {
-      const sorted = this.transformCurrentNoti
-        .concat(this.transformInNoti)
+      const sorted = this.formattedCurrentNotifications
+        .concat(this.incomingTxNotifications)
         .sort(this.sortByDate);
       return sorted;
     },
-    showNotifications() {
+    /**
+     * Display notifications based on type
+     */
+    notificationsByType() {
       switch (this.selected) {
-        case 'in':
-          return this.inTx;
-        case 'out':
-          return this.transformTxNoti;
-        case 'swap':
-          return this.transformSwapNoti;
+        case types.in:
+          return this.incomingTxNotifications;
+        case types.out:
+          return this.outgoingTxNotifications;
+        case types.swap:
+          return this.swapNotifications;
         default:
           return this.allNotifications;
       }
     },
+    /**
+     * Notification count
+     */
     notificationCount() {
       const unread = this.allNotifications.filter(item => {
         if (!item.read) {
@@ -209,76 +235,26 @@ export default {
     }
   },
   watch: {
-    network() {
-      this.setupInTx();
+    notificationsByType(newVal, oldVal) {
+      console.error('hello', newVal, oldVal);
     }
-  },
-  mounted() {
-    this.setupInTx();
   },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },
-    // next key for pendingTx subscription
-    parsePendingTx(result) {
-      const data = result.data.pendingTransaction;
-      if (data.to?.toLowerCase() === this.address?.toLowerCase()) {
-        const copyArray = this.inTx;
-        data['transactionFee'] = data.txFee;
-        data['date'] = data.timestamp * 1000;
-        delete data.txFee;
-        delete data.__typename;
-        delete data.timestamp;
-        const newNotification = new Notification(data);
-        this.inTx.push(newNotification);
-        this.caller.subscribeToTxHash(data, () => {
-          this.caller.getTxDetailFromPending(data).then(res => {
-            const notification = new Notification(res);
-            const foundIdx = copyArray.findIndex(item => {
-              if (res.transactionHash === item.transactionHash) {
-                return item;
-              }
-            });
-
-            if (foundIdx) {
-              copyArray.splice(foundIdx, 0, notification);
-              this.inTx = copyArray;
-            } else {
-              copyArray.push(notification);
-            }
-            this.inTx = copyArray;
-          });
-        });
-      }
-    },
-    setupInTx() {
-      if (this.isEthNetwork) {
-        const lastFetched = this.lastFetched;
-        const newArr = [];
-        this.caller.getAllTransfer(this.address).then(res => {
-          console.error('res', res);
-          res.forEach(item => {
-            if (item.date < lastFetched) {
-              item.read = true;
-            }
-            newArr.push(new Notification(item));
-          });
-          this.inTx = newArr;
-          this.setFetchedTime();
-        });
-        this.caller.subscribeToPending(this.address, this.parsePendingTx);
-      }
-    },
     markNotificationAsRead(notification) {
       if (!notification.read) {
         notification.markAsRead().then(res => {
           delete res.notification;
-          if (notification.type === 'OUT' || notification.type === 'SWAP') {
+          if (
+            notification.type.toLowerCase() === types.out ||
+            notification.type.toLowerCase() === types.swap
+          ) {
             this.updateNotification(new Notification(res));
           } else {
-            this.inTx = this.inTx.map(item => {
+            this.incomingTxs = this.incomingTxs.map(item => {
               if (item.transactionHash === res.transactionHash) {
                 return new Notification(res);
               }
@@ -288,7 +264,7 @@ export default {
         });
       }
     },
-    formatObj(obj) {
+    formatNotification(obj) {
       const newObj = {
         txHash: {
           value: obj.transactionHash,
@@ -300,7 +276,9 @@ export default {
         },
         gasPrice: {
           value: `${
-            obj.gasPrice ? fromWei(toBN(obj.gasPrice), 'gwei') : 0
+            obj.gasPrice
+              ? fromWei(BigNumber(obj.gasPrice).toString(), 'gwei')
+              : 0
           } Gwei`,
           string: 'Gas Price'
         },
@@ -309,7 +287,7 @@ export default {
           string: 'Gas Limit'
         },
         total: {
-          value: `${obj.transactionFee} ${this.network.type.currencyName}`,
+          value: `${obj.txFee} ${this.network.type.currencyName}`,
           string: 'Total Transaction fee'
         },
         to: {
@@ -325,7 +303,7 @@ export default {
           string: 'Amount'
         },
         timestamp: {
-          value: timeAgo(toBN(obj.date).toNumber()),
+          value: timeAgo(BigNumber(obj.date).toNumber()),
           string: 'Time'
         },
         status: {

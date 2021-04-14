@@ -1,20 +1,22 @@
 import { isAddress, isHex } from 'web3-utils';
 import vuexStore from '@/core/store';
-/*
 
-NOTE: toTxData can be null if it's just a regular tx
-toTxData and fromTxData = {
-  currency: 'ETH',
-  amount: 0,
-  to: '0x.....' (only for toTxData)
-}
+/**
+ * NOTE: toTxData can be null if it's just a regular tx
+ * toTxData and fromTxData = {
+ * currency: 'ETH',
+ * amount: 0,
+ * to: '0x.....' (only for toTxData)
+ * }
+ */
 
-*/
-
+/**
+ * Valid values for notification obj
+ */
 const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
 const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
 const VALID_ARGUMENTS = [
-  'transactionHash', // string
+  'hash', // string
   'to', // string
   'from', // string
   'gas', // string
@@ -23,7 +25,9 @@ const VALID_ARGUMENTS = [
   'data', // number
   'nonce', // string
   'value', // string
-  // injected from mew
+  /**
+   * Injected from mew
+   */
   'type', // string
   'read', // bool
   'network', // string
@@ -41,32 +45,41 @@ export default class Notification {
   constructor(obj) {
     this.read = obj['read'] ? obj['read'] : false;
     this.swapResolver = null;
-    // validate passed params before assigning to this
-    const objArr = Object.keys(obj);
-    for (let i = 0; i < objArr.length; i++) {
-      if (!VALID_ARGUMENTS.includes(objArr[i])) {
-        this._invalidType(objArr[i]);
-      } else if (objArr[i] === 'type' && !VALID_TYPES.includes(obj['type'])) {
-        this._invalidType(objArr[i]);
+    this.validateNotificationObj(obj);
+  }
+  /**
+   * Validates notification obj
+   */
+  validateNotificationObj(obj) {
+    const keysArray = Object.keys(obj);
+    for (let i = 0; i < keysArray.length; i++) {
+      if (!VALID_ARGUMENTS.includes(keysArray[i])) {
+        this._invalidType(keysArray[i]);
       } else if (
-        objArr[i] === 'status' &&
+        keysArray[i] === 'type' &&
+        !VALID_TYPES.includes(obj['type'])
+      ) {
+        this._invalidType(keysArray[i]);
+      } else if (
+        keysArray[i] === 'status' &&
         !VALID_STATUS.includes(obj['status'])
       ) {
-        this._invalidType(objArr[i]);
+        this._invalidType(keysArray[i]);
       } else if (
-        (objArr[i] === 'to' || objArr[i] === 'from') &&
-        !isAddress(obj[objArr[i]])
+        (keysArray[i] === 'to' || keysArray[i] === 'from') &&
+        !isAddress(obj[keysArray[i]])
       ) {
-        this._invalidType(objArr[i]);
-      } else if (objArr[i] === 'transactionHash' && !isHex(obj[objArr[i]])) {
-        this._invalidType(objArr[i]);
-      } else if (obj[objArr[i]]) {
-        this[objArr[i]] = obj[objArr[i]];
+        this._invalidType(keysArray[i]);
+      } else if (keysArray[i] === 'hash' && !isHex(obj[keysArray[i]])) {
+        this._invalidType(keysArray[i]);
+      } else if (obj[keysArray[i]]) {
+        this[keysArray[i]] = obj[keysArray[i]];
       }
     }
   }
-
-  // updates status and resolves back to ui with the new object
+  /**
+   * Updates status and resolves back to ui with the new object
+   */
   updateStatus(status) {
     return new Promise(resolve => {
       this.status = status;
@@ -95,7 +108,9 @@ export default class Notification {
     }
   }
 
-  // updates read and resolves back to ui with the new object
+  /**
+   * Updates read and resolves back to ui with the new object
+   */
   markAsRead() {
     return new Promise(resolve => {
       this.read = true;
@@ -103,7 +118,9 @@ export default class Notification {
     });
   }
 
-  // updates read and resolves back to ui with the new object
+  /**
+   * Updates read and resolves back to ui with the new object
+   */
   markAsUnread() {
     return new Promise(resolve => {
       this.read = false;

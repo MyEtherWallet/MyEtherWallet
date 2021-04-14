@@ -9,9 +9,17 @@
 				{
 					"name": "owner",
 					"type": "String!"
+				},
+				{
+					"name": "limit",
+					"type": "Int"
+				},
+				{
+					"name": "nextKey",
+					"type": "String"
 				}
 			],
-			"source": "query getEthTransfersV2($owner: String!) {\n  getEthTransfersV2(owner: $owner, filter: TO) {\n    __typename\n    transfers {\n      __typename\n      transfer {\n        __typename\n        transactionHash\n      }\n    }\n  }\n}",
+			"source": "query getEthTransfersV2($owner: String!, $limit: Int, $nextKey: String) {\n  getEthTransfersV2(owner: $owner, filter: TO, limit: $limit, nextKey: $nextKey) {\n    __typename\n    transfers {\n      __typename\n      transfer {\n        __typename\n        transactionHash\n      }\n    }\n    nextKey\n  }\n}",
 			"fields": [
 				{
 					"responseName": "getEthTransfersV2",
@@ -30,6 +38,22 @@
 							"name": "filter",
 							"value": "TO",
 							"type": "TransferFilter"
+						},
+						{
+							"name": "limit",
+							"value": {
+								"kind": "Variable",
+								"variableName": "limit"
+							},
+							"type": "Int"
+						},
+						{
+							"name": "nextKey",
+							"value": {
+								"kind": "Variable",
+								"variableName": "nextKey"
+							},
+							"type": "String"
 						}
 					],
 					"isConditional": false,
@@ -84,6 +108,13 @@
 							],
 							"fragmentSpreads": [],
 							"inlineFragments": []
+						},
+						{
+							"responseName": "nextKey",
+							"fieldName": "nextKey",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
 						}
 					],
 					"fragmentSpreads": [],
@@ -93,50 +124,44 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "query getEthTransfersV2($owner: String!) {\n  getEthTransfersV2(owner: $owner, filter: TO) {\n    __typename\n    transfers {\n      __typename\n      transfer {\n        __typename\n        transactionHash\n      }\n    }\n  }\n}",
-			"operationId": "0ee6593c2581d74fd8fbdb8f4a14718e4eada8f78acb4481d0b733157471f5b8"
+			"sourceWithFragments": "query getEthTransfersV2($owner: String!, $limit: Int, $nextKey: String) {\n  getEthTransfersV2(owner: $owner, filter: TO, limit: $limit, nextKey: $nextKey) {\n    __typename\n    transfers {\n      __typename\n      transfer {\n        __typename\n        transactionHash\n      }\n    }\n    nextKey\n  }\n}",
+			"operationId": "427e1182d2888e8d674ac4dfd75661ebd89cf88f4735054bb82b8c609b76c19c"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
-			"operationName": "getTransactionDetails",
+			"operationName": "getTransactionsByHashes",
 			"operationType": "query",
 			"rootType": "Query",
 			"variables": [
 				{
-					"name": "hash",
-					"type": "String!"
+					"name": "hashes",
+					"type": "[String]!"
 				}
 			],
-			"source": "query getTransactionDetails($hash: String!) {\n  getTransactionByHash(hash: $hash) {\n    __typename\n    blockHash\n    from\n    gas\n    gasPrice\n    gasUsed\n    timestamp\n    nonce\n    to\n    value\n    contractAddress\n    input\n    status\n  }\n}",
+			"source": "query getTransactionsByHashes($hashes: [String]!) {\n  getTransactionsByHashes(hashes: $hashes) {\n    __typename\n    from\n    gas\n    gasPrice\n    gasUsed\n    hash\n    timestamp\n    nonce\n    to\n    value\n    input\n    status\n  }\n}",
 			"fields": [
 				{
-					"responseName": "getTransactionByHash",
-					"fieldName": "getTransactionByHash",
-					"type": "Tx!",
+					"responseName": "getTransactionsByHashes",
+					"fieldName": "getTransactionsByHashes",
+					"type": "[Tx]!",
 					"args": [
 						{
-							"name": "hash",
+							"name": "hashes",
 							"value": {
 								"kind": "Variable",
-								"variableName": "hash"
+								"variableName": "hashes"
 							},
-							"type": "String!"
+							"type": "[String]!"
 						}
 					],
 					"isConditional": false,
+					"description": "------------------------------------------------\nTransaction:\n------------------------------------------------",
 					"isDeprecated": false,
 					"fields": [
 						{
 							"responseName": "__typename",
 							"fieldName": "__typename",
 							"type": "String!",
-							"isConditional": false,
-							"isDeprecated": false
-						},
-						{
-							"responseName": "blockHash",
-							"fieldName": "blockHash",
-							"type": "String",
 							"isConditional": false,
 							"isDeprecated": false
 						},
@@ -169,6 +194,13 @@
 							"isDeprecated": false
 						},
 						{
+							"responseName": "hash",
+							"fieldName": "hash",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
 							"responseName": "timestamp",
 							"fieldName": "timestamp",
 							"type": "Int",
@@ -197,9 +229,127 @@
 							"isDeprecated": false
 						},
 						{
-							"responseName": "contractAddress",
-							"fieldName": "contractAddress",
+							"responseName": "input",
+							"fieldName": "input",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "status",
+							"fieldName": "status",
 							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getTransactionsByHashes($hashes: [String]!) {\n  getTransactionsByHashes(hashes: $hashes) {\n    __typename\n    from\n    gas\n    gasPrice\n    gasUsed\n    hash\n    timestamp\n    nonce\n    to\n    value\n    input\n    status\n  }\n}",
+			"operationId": "51943e1de36a615836301c276f85d02e3ebf262828fb6e61c16dbacb2a87a11b"
+		},
+		{
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
+			"operationName": "getTransactionByHash",
+			"operationType": "query",
+			"rootType": "Query",
+			"variables": [
+				{
+					"name": "hash",
+					"type": "String!"
+				}
+			],
+			"source": "query getTransactionByHash($hash: String!) {\n  getTransactionByHash(hash: $hash) {\n    __typename\n    from\n    gas\n    gasPrice\n    gasUsed\n    hash\n    timestamp\n    nonce\n    to\n    value\n    input\n    status\n  }\n}",
+			"fields": [
+				{
+					"responseName": "getTransactionByHash",
+					"fieldName": "getTransactionByHash",
+					"type": "Tx!",
+					"args": [
+						{
+							"name": "hash",
+							"value": {
+								"kind": "Variable",
+								"variableName": "hash"
+							},
+							"type": "String!"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "from",
+							"fieldName": "from",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "gas",
+							"fieldName": "gas",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "gasPrice",
+							"fieldName": "gasPrice",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "gasUsed",
+							"fieldName": "gasUsed",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "hash",
+							"fieldName": "hash",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "timestamp",
+							"fieldName": "timestamp",
+							"type": "Int",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "nonce",
+							"fieldName": "nonce",
+							"type": "Int!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "to",
+							"fieldName": "to",
+							"type": "String",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "value",
+							"fieldName": "value",
+							"type": "String!",
 							"isConditional": false,
 							"isDeprecated": false
 						},
@@ -225,8 +375,8 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "query getTransactionDetails($hash: String!) {\n  getTransactionByHash(hash: $hash) {\n    __typename\n    blockHash\n    from\n    gas\n    gasPrice\n    gasUsed\n    timestamp\n    nonce\n    to\n    value\n    contractAddress\n    input\n    status\n  }\n}",
-			"operationId": "98465082cb79f7b52db34d140918a62f0ab4d8a6865cd2bfd3f0406382a9b35b"
+			"sourceWithFragments": "query getTransactionByHash($hash: String!) {\n  getTransactionByHash(hash: $hash) {\n    __typename\n    from\n    gas\n    gasPrice\n    gasUsed\n    hash\n    timestamp\n    nonce\n    to\n    value\n    input\n    status\n  }\n}",
+			"operationId": "1bf6909a2e3d13979734b6821cc30e3869fd92b7bd8df8834a26b805da2a735a"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",

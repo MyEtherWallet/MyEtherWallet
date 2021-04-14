@@ -126,8 +126,6 @@ export default class NotificationCalls {
 
     delete newObj.input;
     delete newObj.__typename;
-    delete newObj.blockHash;
-    delete newObj.contractAddress;
     delete newObj.gasUsed;
     delete newObj.timestamp;
 

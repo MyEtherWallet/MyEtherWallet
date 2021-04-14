@@ -1,25 +1,42 @@
-query getEthTransfersV2($owner: String!) {
-    getEthTransfersV2(owner: $owner, filter: TO) {
+query getEthTransfersV2($owner: String!, $limit: Int, $nextKey: String) {
+    getEthTransfersV2(owner: $owner, filter: TO, limit: $limit, nextKey: $nextKey) {
       transfers {
         transfer {
           transactionHash
+          txFee
         }
       }
+      nextKey
     }
 }
 
-query getTransactionDetails($hash: String!) {
-  getTransactionByHash(hash: $hash) {
-    blockHash
+query getTransactionsByHashes($hashes: [String]!) {
+  getTransactionsByHashes(hashes: $hashes) {
     from
     gas
     gasPrice
     gasUsed
+    hash
     timestamp
     nonce
     to
     value
-    contractAddress
+    input
+    status
+  }
+}
+
+query getTransactionByHash($hash: String!) {
+  getTransactionByHash(hash: $hash) {
+    from
+    gas
+    gasPrice
+    gasUsed
+    hash
+    timestamp
+    nonce
+    to
+    value
     input
     status
   }
