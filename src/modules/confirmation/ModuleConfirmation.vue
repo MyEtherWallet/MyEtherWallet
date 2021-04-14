@@ -90,8 +90,7 @@ export default {
       signedTx: {},
       signature: '',
       unsignedTxArr: [],
-      signedTxArray: [],
-      forceComputed: true
+      signedTxArray: []
     };
   },
   computed: {
