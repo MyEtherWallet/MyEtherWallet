@@ -260,6 +260,7 @@ export default {
       return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
     },
     txFeeUSD() {
+      console.log(this.gasPrice, this.gasLimit); // todo remove dev item
       return new BigNumber(
         fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
       )

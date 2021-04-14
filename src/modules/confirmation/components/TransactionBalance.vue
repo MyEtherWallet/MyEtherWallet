@@ -82,7 +82,7 @@ export default {
       type: String,
       default: '0'
     },
-    txFeeUSD: {
+    txFeeUsd: {
       type: String,
       default: '0'
     },
@@ -123,7 +123,7 @@ export default {
       return `$ ${value}`;
     },
     formattedTx() {
-      return `$ ${BigNumber(this.txFeeUSD).toFixed(2)}`;
+      return `$ ${BigNumber(this.txFeeUsd).toFixed(2)}`;
     },
     progressBar() {
       const toSendPercent = BigNumber(this.value)
