@@ -148,6 +148,9 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
+      if (_self.instance.isHardware) {
+        Toast('Continue on device.', {}, INFO, 5000);
+      }
       _self.instance
         .signTransaction(tx)
         .then(res => {
@@ -173,6 +176,9 @@ export default {
         if (_self.identifier !== WALLET_TYPES.WEB3_WALLET) {
           for (let i = 0; i < arr.length; i++) {
             try {
+              if (_self.instance.isHardware) {
+                Toast('Continue on device.', {}, INFO, 5000);
+              }
               const _signedTx = await _self.instance.signTransaction(arr[i]);
               if (arr[i].hasOwnProperty('handleNotification')) {
                 _signedTx.tx['handleNotification'] = arr[i].handleNotification;
@@ -193,6 +199,9 @@ export default {
     );
     EventBus.$on(EventNames.SHOW_MSG_CONFIRM_MODAL, (msg, resolver) => {
       _self.title = 'Message Signed';
+      if (_self.instance.isHardware) {
+        Toast('Continue on device.', {}, INFO, 5000);
+      }
       _self.instance
         .signMessage(msg)
         .then(res => {
