@@ -134,7 +134,7 @@ export default {
           };
         },
         skip() {
-          return !this.address || this.address === null
+          return !this.address || this.address === null;
         },
         result(data) {
           if (data.data.pendingTransaction) {
