@@ -18,7 +18,11 @@
     >
       <template #rightHeaderContainer>
         <div class="d-flex align-center">
-          <mew-toggle :button-group="chartButtons" @onBtnClick="onToggle" />
+          <mew-toggle
+            :button-group="chartButtons"
+            :on-toggle-btn-idx="activeButton"
+            @onBtnClick="onToggle"
+          />
           <!-- not sure what this button is for, commented out for now -->
           <!-- <mew-button
             btn-size="small"
@@ -88,7 +92,8 @@ export default {
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
-      chartData: []
+      chartData: [],
+      activeButton: 0
     };
   },
   computed: {
@@ -127,55 +132,72 @@ export default {
   },
   mounted() {
     this.handlerBalance = new handlerBalance(this.$apollo, this.address);
-    this.setDataYesterday();
+    this.initChart();
   },
   methods: {
+    initChart() {
+      let count = 0;
+      const checker = () => {
+        this.onToggle(this.chartButtons[count]).then(res => {
+          if (count >= 3) {
+            this.onToggle(this.chartButtons[count]);
+            this.activeButton = count;
+            // a single point basically looks the same as an empty chart
+          } else if (res.length <= 1) {
+            count++;
+            checker();
+          } else {
+            this.activeButton = count;
+          }
+        });
+      };
+      checker();
+    },
     onToggle(e) {
       switch (e) {
         case this.chartButtons[0]:
-          this.setDataYesterday();
-          break;
+          return this.setDataYesterday();
         case this.chartButtons[1]:
-          this.setDataWeek();
-          break;
+          return this.setDataWeek();
         case this.chartButtons[2]:
-          this.setDataMonth();
-          break;
+          return this.setDataMonth();
         case this.chartButtons[3]:
-          this.setDataYear();
-          break;
+          return this.setDataYear();
         default:
-          this.setDataMonth();
+          return this.setDataMonth();
       }
     },
     getBalanceHistory(interval, duration) {
-      this.handlerBalance.getBalanceHistory(interval, duration).then(res => {
-        this.chartData = res;
-      });
+      return this.handlerBalance
+        .getBalanceHistory(interval, duration)
+        .then(res => {
+          this.chartData = res;
+          return res;
+        });
     },
     setDataMonth() {
       const timeString = new Date();
       const lastMonth = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
       this.key = '1m';
-      this.getBalanceHistory(lastMonth, 'days');
+      return this.getBalanceHistory(lastMonth, 'days');
     },
     setDataYear() {
       const timeString = new Date();
       const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
       this.key = '1y';
-      this.getBalanceHistory(lastYear, 'days');
+      return this.getBalanceHistory(lastYear, 'days');
     },
     setDataWeek() {
       const timeString = new Date();
       const lastWeek = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
       this.key = '1w';
-      this.getBalanceHistory(lastWeek, 'days');
+      return this.getBalanceHistory(lastWeek, 'days');
     },
     setDataYesterday() {
       const timeString = new Date();
       const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
       this.key = '1d';
-      this.getBalanceHistory(yesterday, 'hours');
+      return this.getBalanceHistory(yesterday, 'hours');
     },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
