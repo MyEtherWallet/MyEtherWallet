@@ -107,18 +107,14 @@ export default {
       result({ data }) {
         const copyArray = this.incomingTxs;
         const getTransactionByHash = data.data.getTransactionByHash;
-        const notification = new Notification(getTransactionByHash);
         const foundIdx = copyArray.findIndex(item => {
           if (getTransactionByHash.transactionHash === item.transactionHash) {
             return item;
           }
         });
-
-        if (foundIdx) {
-          copyArray.splice(foundIdx, 0, notification);
-        } else {
-          copyArray.push(notification);
-        }
+        foundIdx
+          ? copyArray.splice(foundIdx, 0, getTransactionByHash)
+          : copyArray.push(getTransactionByHash);
         this.incomingTxs = copyArray;
       },
       error(error) {
@@ -143,11 +139,9 @@ export default {
               pendingTx['date'] = pendingTx.timestamp * 1000;
               delete pendingTx.__typename;
               delete pendingTx.timestamp;
-              const newNotification = new Notification(pendingTx);
-              this.incomingTxs.push(newNotification);
+              this.incomingTxs.push(pendingTx);
               this.txHash = pendingTx.transactionHash;
-              console.error('new notification', newNotification);
-              console.error('txHash', this.txHash);
+              console.error('txHash', pendingTx, this.txHash);
             }
           }
         },
