@@ -41,7 +41,7 @@ export default {
         };
       },
       skip() {
-        return !this.isEthNetwork;
+        return !this.isEthNetwork || !this.address || this.address === null;
       },
       result({ data }) {
         if (data.getEthTransfersV2.transfers) {
@@ -82,6 +82,7 @@ export default {
             incomingTxs = this.incomingTxs.concat(data.getTransactionsByHashes);
             this.txHashes = [];
           }
+          this.setFetchedTime();
           this.incomingTxs = incomingTxs;
         }
       },
@@ -131,6 +132,9 @@ export default {
           return {
             owner: this.address
           };
+        },
+        skip() {
+          return !this.address || this.address === null
         },
         result(data) {
           if (data.data.pendingTransaction) {

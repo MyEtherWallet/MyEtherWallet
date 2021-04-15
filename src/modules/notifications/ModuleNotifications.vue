@@ -5,7 +5,13 @@
   =====================================================================================
   -->
   <div>
-    <div class="d-flex align-center">
+    <v-skeleton-loader
+      v-if="loading"
+      class="mx-auto"
+      max-width="300"
+      type="avatar"
+    ></v-skeleton-loader>
+    <div v-if="!loading" class="d-flex align-center">
       <v-btn icon @click="openNotifications = true">
         <img
           src="@/assets/images/icons/icon-notifications.svg"
@@ -14,7 +20,7 @@
       </v-btn>
       <div
         v-if="notificationCount > 0"
-        class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
+        class="notification-count pa-3 cursor--pointer d-flex align-center justify-center white--text error lighten2"
         @click="openNotifications = true"
       >
         {{ notificationCount }}
@@ -162,7 +168,7 @@ export default {
       });
     },
     /**
-     * Formatteds outgoing tx notifications
+     * Formatted outgoing tx notifications
      */
     outgoingTxNotifications() {
       return this.txNotifications
@@ -188,7 +194,6 @@ export default {
      */
     incomingTxNotifications() {
       if (!this.loading) {
-        // this.setFetchedTime();
         return this.incomingTxs
           .map(notification => {
             notification.read = notification.date < this.lastFetched;
