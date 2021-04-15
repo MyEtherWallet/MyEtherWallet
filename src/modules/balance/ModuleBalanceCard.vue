@@ -150,19 +150,17 @@ export default {
       anime({
         targets: el,
         keyframes: [{ scale: 0 }, { scale: 3 }, { scale: 1 }],
-        delay: 2000,
+        delay: 1500,
         duration: 2000
       });
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
-      //el.style.transform = 'scale(6)';
       el.style.opacity = 0;
       anime({
         targets: el,
-        //scale: 1,
         opacity: 1,
-        delay: 1800,
+        delay: 1300,
         duration: 500,
         easing: 'easeInOutQuad'
       });
@@ -259,6 +257,7 @@ export default {
 <style lang="scss">
 .component--wallet-card {
   .bottom-buttons {
+    z-index: -1;
     .v-btn {
       padding: 0 !important;
       min-width: 36px !important;
