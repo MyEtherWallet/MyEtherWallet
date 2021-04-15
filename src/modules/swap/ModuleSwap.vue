@@ -20,21 +20,6 @@
       :tx-fee="totalFees"
       :close="closeSwapConfirmation"
     />
-    <!-- <swap-confirmation
-      :to="confirmInfo.to"
-      :from="confirmInfo.from"
-      :from-img="confirmInfo.fromImg"
-      :from-type="confirmInfo.fromType"
-      :to-type="confirmInfo.toType"
-      :to-img="confirmInfo.toImg"
-      :show="confirmInfo.show"
-      :back-func="backFunction"
-      :from-val="confirmInfo.fromVal"
-      :to-val="confirmInfo.toVal"
-      :valid-until="confirmInfo.validUntil"
-      :send="executeTrade"
-    /> -->
-
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -194,8 +179,7 @@ export default {
         toImg: '',
         fromType: '',
         toType: '',
-        validUntil: 0,
-        show: false
+        validUntil: 0
       },
       swapper: null,
       toTokenType: {},
@@ -550,7 +534,7 @@ export default {
     executeTrade() {
       this.confirmInfo.show = false;
       this.swapper
-        .executeTrade(this.currentTrade)
+        .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
           this.swapNotificationFormatter(res);
         })

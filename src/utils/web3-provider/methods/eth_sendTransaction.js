@@ -13,6 +13,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
+  const confirmInfo = tx['confirmInfo'];
   tx.gasPrice = BigNumber(store.getters['global/gasPrice']).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
@@ -49,37 +50,71 @@ export default async ({ payload, store, requestManager }, res, next) => {
             });
         });
       } else {
-        EventBus.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-            _response.rawTransaction
-          );
-          _promiObj
-            .once('transactionHash', hash => {
-              if (store.state.wallet.instance !== null) {
-                const localStoredObj = locStore.get(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
-                  )
-                );
-                locStore.set(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
-                  ),
-                  {
-                    nonce: sanitizeHex(
-                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
+        // if this is true, assume transaction is swap
+        if (confirmInfo) {
+          EventBus.$emit(EventNames.SHOW_SWAP_TX_MODAL, _tx, _response => {
+            const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+              _response.rawTransaction
+            );
+            _promiObj
+              .once('transactionHash', hash => {
+                if (store.state.wallet.instance !== null) {
+                  const localStoredObj = locStore.get(
+                    utils.sha3(
+                      store.state.wallet.instance.getChecksumAddressString()
+                    )
+                  );
+                  locStore.set(
+                    utils.sha3(
+                      store.state.wallet.instance.getChecksumAddressString()
                     ),
-                    timestamp: localStoredObj.timestamp
-                  }
-                );
-              }
-              res(null, toPayload(payload.id, hash));
-            })
-            .on('error', err => {
-              res(err);
-            });
-          setEvents(_promiObj, _tx, store.dispatch);
-        });
+                    {
+                      nonce: sanitizeHex(
+                        BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                      ),
+                      timestamp: localStoredObj.timestamp
+                    }
+                  );
+                }
+                res(null, toPayload(payload.id, hash));
+              })
+              .on('error', err => {
+                res(err);
+              });
+          });
+        } else {
+          EventBus.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
+            const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+              _response.rawTransaction
+            );
+            _promiObj
+              .once('transactionHash', hash => {
+                if (store.state.wallet.instance !== null) {
+                  const localStoredObj = locStore.get(
+                    utils.sha3(
+                      store.state.wallet.instance.getChecksumAddressString()
+                    )
+                  );
+                  locStore.set(
+                    utils.sha3(
+                      store.state.wallet.instance.getChecksumAddressString()
+                    ),
+                    {
+                      nonce: sanitizeHex(
+                        BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                      ),
+                      timestamp: localStoredObj.timestamp
+                    }
+                  );
+                }
+                res(null, toPayload(payload.id, hash));
+              })
+              .on('error', err => {
+                res(err);
+              });
+            setEvents(_promiObj, _tx, store.dispatch);
+          });
+        }
       }
     })
     .catch(e => {

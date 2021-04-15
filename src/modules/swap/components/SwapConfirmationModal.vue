@@ -1,6 +1,6 @@
 <template>
   <app-modal
-    :title="'Review Swap'"
+    title="Review Swap"
     :close="close"
     :btn-enabled="true"
     :btn-action="send"

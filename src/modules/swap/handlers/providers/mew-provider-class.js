@@ -90,7 +90,7 @@ class MEWPClass {
         };
       });
   }
-  async executeTrade(tradeObj) {
+  async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = await this.web3.eth.getGasPrice();
     if (tradeObj.transactions.length === 1) {
@@ -100,7 +100,8 @@ class MEWPClass {
             Object.assign(tradeObj.transactions[0], {
               from,
               gasPrice,
-              handleNotification: false
+              handleNotification: false,
+              confirmInfo: confirmInfo
             })
           )
           .on('transactionHash', hash => {
@@ -118,6 +119,7 @@ class MEWPClass {
       tx.from = from;
       tx.gasPrice = gasPrice;
       tx.handleNotification = false;
+      tx.confirmInfo = confirmInfo;
       txs.push(tx);
     });
 
