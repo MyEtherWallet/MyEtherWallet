@@ -1,5 +1,6 @@
 import { isAddress, isHex } from 'web3-utils';
 import vuexStore from '@/core/store';
+import { txTypes, notificationTypes } from '../configs/configTypes';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -13,21 +14,24 @@ import vuexStore from '@/core/store';
 /**
  * Valid values for notification obj
  */
-const VALID_TYPES = ['IN', 'SWAP', 'OUT'];
-const VALID_STATUS = ['SUCCESS', 'FAILED', 'PENDING'];
 const VALID_ARGUMENTS = [
-  'hash', // string
   'to', // string
   'from', // string
   'gas', // string
+  'gasUsed', //string
   'gasLimit', // string
   'gasPrice', // string
   'data', // number
   'nonce', // string
-  'value', // string
   /**
    * Injected from mew
    */
+  'toObj', // string
+  'fromObj', // string
+  'timestamp', // string
+  'amount', // string
+  'total', // string
+  'txHash', // string
   'type', // string
   'read', // bool
   'network', // string
@@ -57,20 +61,20 @@ export default class Notification {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'type' &&
-        !VALID_TYPES.includes(obj['type'])
+        !notificationTypes.hasOwnProperty(obj['type'].value)
       ) {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'status' &&
-        !VALID_STATUS.includes(obj['status'])
+        !txTypes.hasOwnProperty(obj['status'].value)
       ) {
         this._invalidType(keysArray[i]);
       } else if (
         (keysArray[i] === 'to' || keysArray[i] === 'from') &&
-        !isAddress(obj[keysArray[i]])
+        !isAddress(obj[keysArray[i]].value)
       ) {
         this._invalidType(keysArray[i]);
-      } else if (keysArray[i] === 'hash' && !isHex(obj[keysArray[i]])) {
+      } else if (keysArray[i] === 'txHash' && !isHex(obj[keysArray[i]].value)) {
         this._invalidType(keysArray[i]);
       } else if (obj[keysArray[i]]) {
         this[keysArray[i]] = obj[keysArray[i]];

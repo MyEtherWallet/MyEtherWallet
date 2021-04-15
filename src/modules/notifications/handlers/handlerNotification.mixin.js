@@ -9,9 +9,10 @@ import {
   transactionEvent
 } from '@/apollo/queries/notifications/notification.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import BigNumber from 'bignumber.js';
-import { hexToNumber, fromWei } from 'web3-utils';
 
+/**
+ * Max notification items
+ */
 const MAX_ITEMS = 20;
 
 export default {
@@ -81,8 +82,7 @@ export default {
             incomingTxs = this.incomingTxs.concat(data.getTransactionsByHashes);
             this.txHashes = [];
           }
-          this.incomingTxs = this._parseTxs(incomingTxs);
-          console.error('incomingTxs', this.incomingTxs);
+          this.incomingTxs = incomingTxs;
         }
       },
       error(error) {
@@ -172,41 +172,6 @@ export default {
           Toast(error.message, {}, ERROR);
         }
       }
-    }
-  },
-  methods: {
-    /**
-     * Get Transaction Fee
-     */
-    _getTxFee(value, gasPrice, gasUsed) {
-      const gasFee = BigNumber(gasPrice).times(gasUsed).toString();
-      const total = BigNumber(value).plus(gasFee).toString();
-      return fromWei(total);
-    },
-    /**
-     * Parse tx object from apollo
-     */
-    _parseTxs(obj) {
-      return obj.map(tx => {
-        const newObj = Object.assign({}, tx);
-        newObj['gasLimit'] = newObj.gas;
-
-        newObj['data'] = newObj.input;
-        newObj['transactionFee'] = this._getTxFee(
-          newObj.value,
-          newObj.gasPrice,
-          newObj.gasUsed
-        );
-        newObj['status'] = hexToNumber(newObj.status) ? 'SUCCESS' : 'ERROR';
-        newObj['type'] = 'IN';
-        newObj['value'] = fromWei(newObj.value);
-        newObj['date'] = new BigNumber(newObj.timestamp).times(1000);
-        delete newObj.input;
-        delete newObj.__typename;
-        delete newObj.gasUsed;
-        delete newObj.timestamp;
-        return newObj;
-      });
     }
   }
 };

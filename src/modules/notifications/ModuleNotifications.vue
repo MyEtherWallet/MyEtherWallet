@@ -69,13 +69,13 @@
             <div class="pa-4">
               <div
                 v-for="data in notificationsByType"
-                v-show="notificationsByType.length > 0"
+                v-show="!loading && notificationsByType.length > 0"
                 :key="data.transactionHash"
                 class="mt-2"
               >
                 <mew-notification
                   :notification="data.notification"
-                  @click.native="markNotificationAsRead(data)"
+                  @click.native="markNotificationAsRead(data.notification)"
                 />
               </div>
               <div
@@ -97,19 +97,14 @@
 </template>
 
 <script>
-import { fromWei } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import timeAgo from '@/core/helpers/timeAgo';
 import BigNumber from 'bignumber.js';
-
-const types = {
-  swap: 'swap',
-  in: 'in',
-  out: 'out'
-};
+import { isHex, hexToNumber, fromWei, toBN } from 'web3-utils';
+import { txTypes, notificationTypes } from './configs/configTypes';
+import timeAgo from '@/core/helpers/timeAgo';
 
 export default {
   name: 'ModuleNotifications',
@@ -145,6 +140,9 @@ export default {
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
+    loading() {
+      return this.$apollo.loading;
+    },
     /**
      * Swap Handler
      */
@@ -156,8 +154,8 @@ export default {
      */
     formattedCurrentNotifications() {
       return this.currentNotifications.map(notification => {
-        const newObj = this.formatNotification(notification);
-        if (newObj.type.toLowerCase() === types.swap) {
+        const newObj = this.formatNotifications(notification);
+        if (newObj.type.toLowerCase() === notificationTypes.swap) {
           newObj.checkSwapStatus(this.swapper);
         }
         return newObj;
@@ -169,7 +167,7 @@ export default {
     outgoingTxNotifications() {
       return this.txNotifications
         .map(notification => {
-          return this.formatNotification(notification);
+          return this.formatNotifications(notification);
         })
         .sort(this.sortByDate);
     },
@@ -179,7 +177,7 @@ export default {
     formattedSwapNotifications() {
       return this.swapNotifications
         .map(notification => {
-          const newObj = this.formatNotification(notification);
+          const newObj = this.formatNotifications(notification);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
@@ -189,14 +187,16 @@ export default {
      * Formatted incoming tx notifications
      */
     incomingTxNotifications() {
-      return this.incomingTxs
-        .map(notification => {
-          notification.read = notification.date < this.lastFetched;
-          notification = new Notification(notification);
-          this.setFetchedTime();
-          return this.formatNotification(notification);
-        })
-        .sort(this.sortByDate);
+      if (!this.loading) {
+        // this.setFetchedTime();
+        return this.incomingTxs
+          .map(notification => {
+            notification.read = notification.date < this.lastFetched;
+            return this.formatNotifications(notification, true);
+          })
+          .sort(this.sortByDate);
+      }
+      return [];
     },
     /**
      * Returns all the notifications
@@ -212,11 +212,11 @@ export default {
      */
     notificationsByType() {
       switch (this.selected) {
-        case types.in:
+        case notificationTypes.in:
           return this.incomingTxNotifications;
-        case types.out:
+        case notificationTypes.out:
           return this.outgoingTxNotifications;
-        case types.swap:
+        case notificationTypes.swap:
           return this.swapNotifications;
         default:
           return this.allNotifications;
@@ -234,93 +234,123 @@ export default {
       return unread.length;
     }
   },
-  watch: {
-    notificationsByType(newVal, oldVal) {
-      console.error('hello', newVal, oldVal);
-    }
-  },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },
+    /**
+     * Mark notification as red
+     */
     markNotificationAsRead(notification) {
       if (!notification.read) {
         notification.markAsRead().then(res => {
-          delete res.notification;
           if (
-            notification.type.toLowerCase() === types.out ||
-            notification.type.toLowerCase() === types.swap
+            notification.type.value.toLowerCase() === notificationTypes.out ||
+            notification.type.value.toLowerCase() === notificationTypes.swap
           ) {
             this.updateNotification(new Notification(res));
-          } else {
-            this.incomingTxs = this.incomingTxs.map(item => {
-              if (item.transactionHash === res.transactionHash) {
-                return new Notification(res);
-              }
-              return item;
-            });
           }
         });
       }
     },
-    formatNotification(obj) {
-      const newObj = {
-        txHash: {
-          value: obj.transactionHash,
-          string: 'Transaction Hash',
-          link: `${this.network.type.blockExplorerTX.replace(
-            '[[txHash]]',
-            obj.transactionHash
-          )}`
-        },
-        gasPrice: {
-          value: `${
-            obj.gasPrice
-              ? fromWei(BigNumber(obj.gasPrice).toString(), 'gwei')
-              : 0
-          } Gwei`,
-          string: 'Gas Price'
-        },
-        gasLimit: {
-          value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
-          string: 'Gas Limit'
-        },
-        total: {
-          value: `${obj.txFee} ${this.network.type.currencyName}`,
-          string: 'Total Transaction fee'
-        },
-        to: {
-          value: obj.toTxData && obj.toTxData.to ? obj.toTxData.to : obj.to,
-          string: 'To'
-        },
-        from: {
-          value: obj.from,
-          string: 'From'
-        },
-        amount: {
-          value: `${obj.value} ${this.network.type.currencyName}`,
-          string: 'Amount'
-        },
-        timestamp: {
-          value: timeAgo(BigNumber(obj.date).toNumber()),
-          string: 'Time'
-        },
-        status: {
-          value: obj.status?.toLowerCase(),
-          string: 'Status'
-        },
-        type: {
-          value: obj.type?.toLowerCase(),
-          string: obj.type
-        },
-        read: obj.read,
-        toObj: obj.toTxData,
-        fromObj: obj.fromTxData
+    /**
+     * Get Transaction Fee
+     */
+    _getTotal(value, gasPrice, gasUsed) {
+      const gasFee = toBN(gasPrice).mul(toBN(gasUsed));
+      const total = toBN(value).add(gasFee);
+      return fromWei(total);
+    },
+    /**
+     * Get Transaction Status
+     */
+    _getTxStatus(status) {
+      return hexToNumber(status) ? txTypes.success : txTypes.error;
+    },
+    /**
+     * Format Tx obj to Notification obj
+     */
+    formatNotifications(obj, isIncomingTx) {
+      /**
+       * Get the correct values for tx fee, value, status and date
+       */
+      const txFee = obj.txFee
+        ? obj.txFee
+        : this._getTotal(obj.value, obj.gasPrice, obj.gasUsed);
+      const value = isIncomingTx ? fromWei(obj.value) : obj.value;
+      const date = obj.date
+        ? obj.date
+        : new BigNumber(obj.timestamp).times(1000);
+      const status = isIncomingTx ? notificationTypes.in : obj.type;
+      /**
+       * Format into notification object for mew-notification
+       */
+      const notificationObj = {
+        transactionHash: obj.hash,
+        notification: {
+          txHash: {
+            value: obj.hash,
+            string: 'Transaction Hash',
+            link: `${this.network.type.blockExplorerTX.replace(
+              '[[txHash]]',
+              obj.hash
+            )}`
+          },
+          gasPrice: {
+            value: `${
+              obj.gasPrice
+                ? fromWei(BigNumber(obj.gasPrice).toString(), 'gwei')
+                : 0
+            } Gwei`,
+            string: 'Gas Price'
+          },
+          gasLimit: {
+            value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
+            string: 'Gas Limit'
+          },
+          total: {
+            value: `${txFee} ${this.network.type.currencyName}`,
+            string: 'Total Transaction fee'
+          },
+          to: {
+            value: obj.toTxData && obj.toTxData.to ? obj.toTxData.to : obj.to,
+            string: 'To'
+          },
+          from: {
+            value: obj.from,
+            string: 'From'
+          },
+          amount: {
+            value: `${value} ${this.network.type.currencyName}`,
+            string: 'Amount'
+          },
+          timestamp: {
+            value: timeAgo(BigNumber(date).toNumber()),
+            string: 'Time'
+          },
+          status: {
+            value: isHex(obj.status)
+              ? this._getTxStatus(obj.status).toLowerCase()
+              : obj.status,
+            string: 'Status'
+          },
+          type: {
+            value: status,
+            string: status
+          },
+          read: obj && obj.read ? obj.read : false,
+          toObj: obj.toTxData,
+          fromObj: obj.fromTxData
+        }
       };
-
-      obj.notification = newObj;
-      return obj;
+      /**
+       * Initiate new Notification class
+       */
+      notificationObj.notification = new Notification(
+        notificationObj.notification
+      );
+      return notificationObj;
     }
   }
 };
