@@ -74,5 +74,17 @@ module.exports = [
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
   'wss://www.walletlink.org:443',
   'https://estimategas.mewapi.io:443',
-  'https://bsc-dataseed1.binance.org:443'
+  'https://bsc-dataseed1.binance.org:443',
+  'https://api.ethvm.com:443',
+  'https://qa.mewwallet.dev:443',
+  'https://api.exchangeratesapi.io:443',
+  'wss://apiws.ethvm.com:443',
+  'https://nft.mewapi.io:443',
+  'https://api.avax.network:443',
+  'https://api.avax-test.network:443',
+  'https://staked.mewapi.io:443',
+  'https://stakedtest.mewapi.io:443',
+  'https://c.onical.org:443', // aqua
+  'https://tx.info.aquacha.in:443/api', // aqua
+  'https://rpc.xdaichain.com:443'
 ];

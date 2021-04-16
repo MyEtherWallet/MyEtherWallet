@@ -35,9 +35,8 @@
               :import="stepChange"
             />
           </div>
-          <div>
+          <div v-show="step === 1" class="generate-wallet-form">
             <generate-wallet-form
-              v-show="step === 1"
               :error="error"
               :loading="loading"
               :generate-wallet="generateWallet"
@@ -283,10 +282,8 @@
             <verify-wallet-info-form
               :error="error"
               :loading="loading"
-              :generate-wallet="generateWallet"
-              :generate-wallet-validation="generateWalletValidation"
               :network="network"
-              :wallet="wallet"
+              :address="selectedAddress"
               :converted-balance="convertedBalance"
               :balance="balance"
               @walletName="updateWalletName"
@@ -851,7 +848,8 @@ export default {
       this.loading = true;
       const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
         this.wallet.mnemonic,
-        this.selectedAddressPath
+        this.selectedAddressPath,
+        this.extraWord
       );
 
       this.loading = false;
@@ -860,6 +858,7 @@ export default {
         false,
         privKeyType
       );
+      this.extraWord = '';
       this.step += 1;
     },
     getWalletFromMnemonic() {
@@ -870,7 +869,6 @@ export default {
           this.extraWord
         )
           .then(wallet => {
-            this.extraWord = '';
             this.loading = false;
             this.wallet = wallet;
             this.mnemonicPhraseHolder = {};

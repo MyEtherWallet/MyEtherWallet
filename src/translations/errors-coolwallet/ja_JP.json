@@ -3,5 +3,10 @@
   "card-locked": "Card locked! Please unlock through the app",
   "already-registered": "App is already registered! If you're having trouble, please reregister the app by removing it from the wallet app.",
   "no-wallet-instance": "No wallet instance!",
-  "pairing-issue": "Having issues with pairing CoolWallet"
+  "pairing-issue": "Having issues with pairing CoolWallet",
+  "no-bluetooth": "No bluetooth support, try using chrome browser",
+  "max-app-instance": "Maximum paired device reached! Please remove a paired device through the CoolWallet app settings!",
+  "user-cancelled-action": "User cancelled device search!",
+  "generated-pairing-password": "Error with the generated password! Please generate a new pairing password!",
+  "restart-device": "Device pairing error! Please restart device and try again!"
 }

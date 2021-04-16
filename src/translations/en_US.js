@@ -6,8 +6,6 @@ import dappsSubmission from './dapps-submission/en_US';
 import home from './home/en_US';
 import footer from './footer/en_US';
 import gettingStarted from './getting-started/en_US';
-import privacyPolicy from './privacy-policy/en_US';
-import termsOfService from './terms-of-conditions/en_US';
 import createWallet from './create-wallet/en_US';
 import accessWallet from './access-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
@@ -44,6 +42,8 @@ import phishing from './other/phishing/en_US';
 import dappsAave from './dapps-aave/en_US';
 import header from './header/en_US';
 import dappsMCDMaker from './dapps-mcd-maker/en_US';
+import dappsStaked from './dapps-staked/en_US';
+import dappsMisc from './dapps-misc/en_US';
 
 const en_US = {
   common: common,
@@ -51,8 +51,6 @@ const en_US = {
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,
-  privacyPol: privacyPolicy,
-  termsOfService: termsOfService,
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,
@@ -90,6 +88,8 @@ const en_US = {
   phishing: phishing,
   dappsAave: dappsAave,
   header: header,
-  dappsMCDMaker: dappsMCDMaker
+  dappsMCDMaker: dappsMCDMaker,
+  dappsStaked: dappsStaked,
+  dappsMisc: dappsMisc
 };
 export default en_US;

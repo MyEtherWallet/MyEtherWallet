@@ -1,6 +1,17 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = ['decompress', 'http-proxy', 'findings', 'elliptic', 'dot-prop', 'serialize-javascript', 'handlebars', 'cryptiles', 'bl'];
+const AUDIT_EXCEPTIONS = [
+  'decompress',
+  'http-proxy',
+  'findings',
+  'elliptic',
+  'dot-prop',
+  'serialize-javascript',
+  'handlebars',
+  'cryptiles',
+  'bl',
+  'axios'
+];
 
 const execute = (command, callback) => {
   exec(

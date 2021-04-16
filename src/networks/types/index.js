@@ -1,4 +1,7 @@
 import AKA from './AKA.js';
+import AQUA from './AQUA.js';
+import AVAX from './AVAX.js';
+import AVAXTEST from './AVAXTEST.js';
 import ATH from './ATH.js';
 import BSC from './BSC.js';
 import CLO from './CLO.js';
@@ -35,9 +38,13 @@ import ERE from './ERE.js';
 import PRKL from './PRKL.js';
 import FUSE from './FUSE.js';
 import EWT from './EWT.js';
+import XDAI from './XDAI.js';
 
 export {
   AKA,
+  AQUA,
+  AVAX,
+  AVAXTEST,
   ATH,
   BSC,
   CLO,
@@ -73,5 +80,6 @@ export {
   ERE,
   PRKL,
   FUSE,
-  EWT
+  EWT,
+  XDAI
 };

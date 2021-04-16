@@ -301,3 +301,86 @@ $swap-custom-mobile-colleps-width: 700px;
     }
   }
 }
+
+.btc-alternates {
+  padding: 21px 28px;
+  border-radius: 5px;
+  background-color: $light-green-1;
+  margin-bottom: 20px;
+
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    i {
+      color: $black;
+    }
+  }
+
+  .btc-body {
+    margin-top: 10px;
+    .alternative-btn-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      align-items: flex-start;
+      max-width: 600px;
+
+      @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: 640px) {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    .alternative-btn {
+      background-color: transparent;
+      border-radius: 5px;
+      border: 1px solid rgb(11, 40, 64);
+      padding: 11px 49px;
+      min-width: 258px;
+      margin: 10px;
+    }
+  }
+}
+
+// Animation
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.animated-background {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f2f4fa;
+  background: linear-gradient(to right, #f2f4fa 8%, #dcdee3 18%, #f2f4fa 33%);
+  background-size: 800px 104px;
+  height: 96px;
+  position: relative;
+}
+
+.text-line {
+  height: 10px;
+  width: 100%;
+  margin: 4px 0;
+  @extend .animated-background;
+}
+
+.changelly-terms-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  p {
+    margin-top: 5px;
+  }
+}

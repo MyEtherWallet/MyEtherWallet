@@ -1,3 +1,205 @@
+### Release v5.7.27
+
+### Bug
+
+* Fix mnemonic address generation with Extra word on mew cx [#3002](https://github.com/MyEtherWallet/MyEtherWallet/pull/3002)
+* Fix path for Avalanche [#2897](https://github.com/MyEtherWallet/MyEtherWallet/pull/2897)
+* fix checking estimateGas after estimateGas failure [#3005](https://github.com/MyEtherWallet/MyEtherWallet/pull/3005)
+
+### Release v5.7.26
+
+### Bug
+
+* fix send offline data issue with BSC [#2941](https://github.com/MyEtherWallet/MyEtherWallet/pull/2941)
+
+### Devop
+
+* Add affiliate link for alchemy [#2940](https://github.com/MyEtherWallet/MyEtherWallet/pull/2940)
+* Add Aqua node [#2942](https://github.com/MyEtherWallet/MyEtherWallet/pull/2942)
+
+### Release v5.7.25-majorupdate.1
+
+### Devop
+
+* Update component [#2946](https://github.com/MyEtherWallet/MyEtherWallet/pull/2946)
+
+### Release v5.7.25
+
+### Bug
+
+* fix send offline helper issue [#2930](https://github.com/MyEtherWallet/MyEtherWallet/pull/2930)
+
+### Release v5.7.24
+
+### Bug
+
+* fix send offline helper issue with bignumber [#2907](https://github.com/MyEtherWallet/MyEtherWallet/pull/2907)
+* Add some space for ledger paths [#2905](https://github.com/MyEtherWallet/MyEtherWallet/pull/2905)
+* add loading tokens to fetch correct balance [#2904](https://github.com/MyEtherWallet/MyEtherWallet/pull/2904)
+
+### Release v5.7.23-hotfix.1
+
+### Bug
+
+* Fix weird token issue when tokens has way too long of a symbol [#2894](https://github.com/MyEtherWallet/MyEtherWallet/pull/2894)
+
+### Release v5.7.23
+
+### Bug
+
+* Remove tokens with no balance so users can manually add and load tokens [#2892](https://github.com/MyEtherWallet/MyEtherWallet/pull/2892)
+* Fix checking gas when swap from is not on ethereum [#2879](https://github.com/MyEtherWallet/MyEtherWallet/pull/2879)
+
+### Devop
+
+* consolidate node PRs [#2883](https://github.com/MyEtherWallet/MyEtherWallet/pull/2883)
+* Address no decimals for NEO [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+* change the way we are checking lend balance[#2893](https://github.com/MyEtherWallet/MyEtherWallet/pull/2893)
+
+### Release v5.7.22
+
+### Bug
+
+* Fix token loading issue [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
+* Fix coolwallet bug when accessing for first time [#2863](https://github.com/MyEtherWallet/MyEtherWallet/pull/2863)
+
+### Release v5.7.21
+
+### Bug
+
+* Reset stepper on init [#2840](https://github.com/MyEtherWallet/MyEtherWallet/pull/2840)
+* Fix ETC send offline helper bug[#2852](https://github.com/MyEtherWallet/MyEtherWallet/pull/2852)
+
+### Devop
+
+* Use api instead of token balance for web [#2839](https://github.com/MyEtherWallet/MyEtherWallet/pull/2839)
+
+### Release v5.7.20
+
+### Bug
+
+* Disable button on init [#2832](https://github.com/MyEtherWallet/MyEtherWallet/pull/2832)
+* Fix #2761 [#2811](https://github.com/MyEtherWallet/MyEtherWallet/pull/2811)
+* Fix CryptoKitties UI for Russian language [#2824](https://github.com/MyEtherWallet/MyEtherWallet/pull/2824)
+* store cw appId to prevent reregistering MEW, fix error catch [#2808](https://github.com/MyEtherWallet/MyEtherWallet/pull/2808)
+* Fix send entire amount to contracts [#2820](https://github.com/MyEtherWallet/MyEtherWallet/pull/2820)
+
+### Devop
+
+* Add exited popup for staked status [#2828](https://github.com/MyEtherWallet/MyEtherWallet/pull/2828)
+* Update packages from snyk and from the script [#2806](https://github.com/MyEtherWallet/MyEtherWallet/pull/2806)
+
+### Release v5.7.19-hotfix.1
+
+### Devop
+
+* Revert aave package [#2793](https://github.com/MyEtherWallet/MyEtherWallet/pull/2793)
+* Revert aave change [#2794](https://github.com/MyEtherWallet/MyEtherWallet/pull/2794)
+
+### Release v5.7.19
+
+### Devop
+
+* Add terms for changelly [#2783](https://github.com/MyEtherWallet/MyEtherWallet/pull/2783)
+
+### Bug
+
+* Fix amount unit for Lend Migrator [#2776](https://github.com/MyEtherWallet/MyEtherWallet/pull/2776)
+
+### Release v5.7.18
+
+### Bug
+
+* Update gas limit for Lend Migrator [#2765](https://github.com/MyEtherWallet/MyEtherWallet/pull/2765)
+* Fix build name for cx [#2763](https://github.com/MyEtherWallet/MyEtherWallet/pull/2763)
+
+### Devop
+
+* Update team [#2782](https://github.com/MyEtherWallet/MyEtherWallet/pull/2782)
+* Improve start script [#2647](https://github.com/MyEtherWallet/MyEtherWallet/pull/2647)
+* Forwatch ninja.besu patch [#2764](https://github.com/MyEtherWallet/MyEtherWallet/pull/2764)
+* Update Bity Max [#2758](https://github.com/MyEtherWallet/MyEtherWallet/pull/2758)
+
+### Release v5.7.17
+
+### Feature
+
+* Staked validators status [#2748](https://github.com/MyEtherWallet/MyEtherWallet/pull/2748)
+
+### Bug
+
+* Fix wrong values passed to estimateGas in eth_signTransaction method [#2753](https://github.com/MyEtherWallet/MyEtherWallet/pull/2753)
+* mew cx ens bug fix [#2745](https://github.com/MyEtherWallet/MyEtherWallet/pull/2745)
+* mew cx remove duplicate notification due to checksum [#2732](https://github.com/MyEtherWallet/MyEtherWallet/pull/2732)
+
+### Release v5.7.16
+
+### Feature
+
+* Add Swap alternatives [#2679](https://github.com/MyEtherWallet/MyEtherWallet/pull/2679)
+
+### Devop
+
+* Remove terms and privacy ona translations [#2723](https://github.com/MyEtherWallet/MyEtherWallet/pull/2723)
+
+### Bug
+
+* Fix contract interaction when arrays have set params [#2719](https://github.com/MyEtherWallet/MyEtherWallet/pull/2719)
+* Fix contract interaction inputs [#2729](https://github.com/MyEtherWallet/MyEtherWallet/pull/2729)
+* Fix GLN copy [#2717](https://github.com/MyEtherWallet/MyEtherWallet/pull/2717)
+* Fix GNT migrator balance not showing sometimes [#2728](https://github.com/MyEtherWallet/MyEtherWallet/pull/2728)
+* Fix LTC validation for Unstoppable [#2699](https://github.com/MyEtherWallet/MyEtherWallet/pull/2699)
+* Add exeption for GameCredits token [#2727](https://github.com/MyEtherWallet/MyEtherWallet/pull/2727)
+* Fix missing decimal for ETH and handle new est. gas error [#2730](https://github.com/MyEtherWallet/MyEtherWallet/pull/2730)
+
+### Release v5.7.15
+
+### Feature
+
+* Eth2 Staking Feature [#2662](https://github.com/MyEtherWallet/MyEtherWallet/pull/2662)
+
+### Bug
+
+* Fixed various bugs from asana [#2693](https://github.com/MyEtherWallet/MyEtherWallet/pull/2693)
+* Fix error on print [#2676](https://github.com/MyEtherWallet/MyEtherWallet/pull/2676)
+
+### Release v5.7.14
+
+### Feature
+
+* Golem GNT -> GLM Migrator [#2672](https://github.com/MyEtherWallet/MyEtherWallet/pull/2672)
+
+### Bug
+
+* Fix subdomain transfer [#2675](https://github.com/MyEtherWallet/MyEtherWallet/pull/2675)
+
+### Devop
+
+* Update Musicoin with new node [#2667](https://github.com/MyEtherWallet/MyEtherWallet/pull/2667)
+
+### Release v5.7.13
+
+### Bug
+
+* Update rates and min dai for makerDao [#2646](https://github.com/MyEtherWallet/MyEtherWallet/pull/2646)
+* Disable button when swap expires, disable click outside swap modal [#2648](https://github.com/MyEtherWallet/MyEtherWallet/pull/2648)
+* Add allowance check for LEND migrator [#2649](https://github.com/MyEtherWallet/MyEtherWallet/pull/2649)
+
+### Devop
+
+* Update address validation package [#2652](https://github.com/MyEtherWallet/MyEtherWallet/pull/2652)
+* normalize address when verifying massages [#2650](https://github.com/MyEtherWallet/MyEtherWallet/pull/2650)
+
+### Release v5.7.12
+
+## Devop
+
+* Check that user has enough (amount + gas price) to proceed even before they click to continue in swap [#2655](https://github.com/MyEtherWallet/MyEtherWallet/pull/2655)
+
+### Bug
+
+* Gas price bug on batch tx [#2654](https://github.com/MyEtherWallet/MyEtherWallet/pull/2654)
+
 ### Release v5.7.12-hotfix.1
 
 ### Bug
@@ -55,14 +257,14 @@
 ### Bug
 
 * Weird gasprice setting [#2595](https://github.com/MyEtherWallet/MyEtherWallet/pull/2595)
-* Get Eth token icons from ethereum-lists for swap  [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
+* Get Eth token icons from ethereum-lists for swap [#2592](https://github.com/MyEtherWallet/MyEtherWallet/pull/2592)
 
 ### Release v5.7.8-hotfix.2
 
 ### Bug
 
 * Only send gas limit value as 'gas' to phone for signing [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
-* Fix erroneously showing view transaction button with metamask  [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
+* Fix erroneously showing view transaction button with metamask [#2586](https://github.com/MyEtherWallet/MyEtherWallet/pull/2586)
 
 ### Release v5.7.8-hotfix.1
 

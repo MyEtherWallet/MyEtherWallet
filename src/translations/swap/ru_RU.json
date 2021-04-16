@@ -6,6 +6,7 @@
   "deposit-addr": "Адрес депозита",
   "recieve-amount": "Сумма к Получению",
   "review": "Обзор обмена",
+  "recalculating": "Пересчет",
   "sent-my-coins": "Я отправил {currency}",
   "send-value-curr": "Отправить {value} {currency} ",
   "value-below-min": "Значение ниже минимального для выбранного провайдера",
@@ -15,12 +16,18 @@
   "time-remain": "Оставшееся время",
   "refund": "{currency} адрес для возмещения (при необходимости) от Changelly",
   "button-loading": "Завершение деталей обмена",
+  "estimated-fee": "Примерная комиссия за транзакцию:",
   "providers": {
     "string": "Провайдер | Провайдеры",
     "no-provider-found": "Провайдер не найден :(",
     "loading-rates": "Пожалуйста, подождите, пока мы загружаем тарифы провайдера...",
     "load-rate-error": "При получении курса {from-currency} к {to-currency} произошла ошибка. Пожалуйста, подождите минуту и повторите попытку",
     "kyber-slippage": "Возможно проскальзывание {value}%"
+  },
+  "alternates": {
+    "title": "Используйте BTC на Ethereum",
+    "body": "Обменивайте биткоин один к одному на обернутые токены WBTC, renBTC или PBTC, чтобы использовать его в приложениях на Ethereum.",
+    "learn-more": "Подробнее."
   },
   "warning": {
     "unable-validate-addr": "В настоящее время не удалось проверить адреса для {currency}. Вероятно, что все правильно, но пожалуйста, убедитесь, что адрес верный перед отправкой.",
@@ -33,13 +40,23 @@
     "kyber-gasLimit-list-update-failed": "Не удалось обновить список gasLimit в Kyber Network",
     "kyber-list-update-failed": "Не удалось обновить информацию Kyber Network",
     "dexag-cannot-complete": "Ошибка при получении обмена, попробуйте другую биржу",
-    "gas-too-high": "Цена газа слишком высока. Пожалуйста, понизьте цену газа и повторите попытку."
+    "gas-too-high": "Цена газа слишком высока. Пожалуйста, понизьте цену газа и повторите попытку.",
+    "error-generating-swap": "Произошла ошибка при завершении деталей обмена",
+    "not-enough-eth-gas": "Недостаточно средств для суммы + комиссии за транзакцию.",
+    "not-enough-tx-fee": "Недостаточно средств для оплаты комиссии за транзакцию.",
+    "liquidity-too-low": "Запрошенная сумма больше, чем доступная на данный момент",
+    "currency-warning": "Убедитесь, что у вас есть совместимый кошелек {currency} для этого обмена, MEW не поддерживает {currency}."
   },
   "notice": {
     "retrieve-changelly-rate-failed": "Не удалось получить курс Changelly от {fromCurrency} к {toCurrency}",
     "retrieve-bity-rate-failed": "Не удалось получить курс Bity от {fromCurrency} к {toCurrency}",
     "retrieve-kyber-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}",
-    "retrieve-simplex-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}"
+    "retrieve-rate-failed": "Не удалось получить курс провайдера с {fromCurrency} на {toCurrency}",
+    "retrieve-simplex-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}",
+    "error-finalizing": "Ошибка при запросе окончательных данных от провайдера",
+    "bity-rate-failed": "Не удалось получить курс Bity",
+    "selected-provider-cleared": "Выбранный провайдер очищен",
+    "changelly-terms": "Нажав продолжить, я соглашаюсь {aml} и {terms} Changelly"
   },
   "tag-line": {
     "bity": "Обменяйте ETH, BTC, REP, или продавайте за фиат, используя ваш телефон!",
@@ -80,5 +97,7 @@
   "max": "Макс.",
   "address-verification": "Подтверждение адреса",
   "message-to-sign": "Подпись сообщения для проверки владельца адреса назначения",
-  "proceed-to-sign": "Перейти к подписанию сообщения"
+  "proceed-to-sign": "Перейти к подписанию сообщения",
+  "gas-price-source-notice": "*исходя из цены газа из настроек",
+  "current-gas-price": "Текущая цена газа: {value} Gwei"
 }

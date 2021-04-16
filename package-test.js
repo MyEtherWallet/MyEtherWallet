@@ -12,7 +12,11 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // Matching exceptions with package.json
 // Lock @vue packages due to complications on updating
 // @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
+// @aave/protocol-js - freezes the whole page
 const EXCEPTIONS = [
+  'postcss-import',
+  'postcss-url',
+  'webpack',
   'canvas',
   'ethereum-ens',
   'babel-jest',
@@ -44,7 +48,22 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-eslint',
   '@vue/cli-plugin-pwa',
   '@vue/cli-plugin-unit-jest',
-  '@vue/cli-service'
+  '@vue/cli-service',
+  'postcss-import',
+  'postcss-url',
+  'webpack',
+  'copy-webpack-plugin',
+  '@aave/protocol-js',
+  // look into updating this after release
+  'is-ipfs',
+  '@stripe/stripe-js',
+  // probably hold off on these ones until next iteration
+  '@sentry/browser',
+  '@sentry/integrations',
+  'sass-loader',
+  'stylelint',
+  '@unstoppabledomains/resolution',
+  'vue-stripe-elements-plus'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

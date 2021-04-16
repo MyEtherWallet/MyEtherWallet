@@ -107,7 +107,7 @@
           <div class="tokens">
             <interface-tokens
               v-if="$route.fullPath !== '/interface/dapps/aave/action'"
-              :fetch-tokens="setTokens"
+              :fetch-tokens="fetchSetTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
@@ -151,7 +151,6 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
-import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import web3Utils from 'web3-utils';
@@ -183,6 +182,7 @@ import {
   getEconomy
 } from '@/helpers/gasMultiplier.js';
 import ExpiryAbi from './expiryAbi.js';
+import { getAddressTokens } from './graphQLHelpers';
 
 const ENS_TOKEN_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
 const EXPIRY_CHECK_CONTRACT = '0x78e21d038fcbb6d56f825dc1e8d8acd965744adb';
@@ -278,6 +278,9 @@ export default {
     network() {
       this.clearIntervals();
       this.setupOnlineEnvironment();
+    },
+    receivedTokens(val) {
+      if (val) this.setTokensWithBalance();
     }
   },
   mounted() {
@@ -299,6 +302,12 @@ export default {
       'setGasPrice',
       'setEthGasPrice'
     ]),
+    fetchSetTokens() {
+      this.setTokens().then(res => {
+        this.tokens = res;
+        this.receivedTokens = true;
+      });
+    },
     checkPrefilled() {
       const _self = this;
       const hasLinkQuery = Object.keys(_self.linkQuery).length;
@@ -512,55 +521,6 @@ export default {
     notifyExpiredNames() {
       this.$refs.expiredNames.$refs.expiredNames.show();
     },
-    async fetchTokens() {
-      this.receivedTokens = false;
-      let tokens = [];
-      if (
-        (this.network.type.chainID === 1 || this.network.type.chainID === 3) &&
-        !this.network.url.includes('infura')
-      ) {
-        const tb = new TokenBalance(this.web3.currentProvider);
-        try {
-          tokens = await tb.getBalance(this.account.address, true, true, true, {
-            gas: '0x11e1a300'
-          });
-          tokens = tokens.map(token => {
-            token.address = token.addr;
-            delete token.addr;
-            return token;
-          });
-
-          const filteredNetwork = this.network.type.tokens.filter(token => {
-            const found = tokens.find(item => {
-              return (
-                this.web3.utils.toChecksumAddress(item.address) ===
-                this.web3.utils.toChecksumAddress(token.address)
-              );
-            });
-
-            if (!found) return token;
-          });
-          tokens = tokens.concat(filteredNetwork).map(item => {
-            if (!item.hasOwnProperty('balance')) {
-              item.balance = 'Load';
-            }
-            return item;
-          });
-        } catch (e) {
-          tokens = this.network.type.tokens.map(token => {
-            token.balance = 'Load';
-            return token;
-          });
-        }
-      } else {
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          return token;
-        });
-      }
-      this.receivedTokens = true;
-      return tokens;
-    },
     async setNonce() {
       store.set(this.web3.utils.sha3(this.account.address), {
         nonce: '0x00',
@@ -624,54 +584,103 @@ export default {
       });
       store.set('customTokens', customTokenStore);
     },
-    async setTokens() {
-      this.tokens = [];
-      let tokens = await this.fetchTokens();
-      tokens = tokens
-        .sort((a, b) => {
-          if (a.name.toUpperCase() < b.name.toUpperCase()) {
-            return -1;
-          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-            return 1;
-          }
-          return 0;
-        })
-        .map(token => {
-          const balanceCheck = new BigNumber(token.balance);
-          const balance = balanceCheck.isNaN()
-            ? token.balance
-            : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
-          const convertedToken = {
-            address: token.address,
-            balance: balance,
-            decimals: token.decimals,
-            email: token.email,
-            name: token.name,
-            symbol: token.symbol,
-            website: token.website
-          };
+    fetchTokens() {
+      return new Promise(resolve => {
+        if (
+          (this.network.type.chainID === 1 ||
+            this.network.type.chainID === 3) &&
+          !this.network.url.includes('infura')
+        ) {
+          try {
+            getAddressTokens(this.account.address).then(res => {
+              const tokens = [];
+              const apiTokens = res.data.getOwnersERC20Tokens.owners;
+              const parsedApiTokens = apiTokens.map(apiT => {
+                const newT = Object.assign(
+                  {},
+                  { balance: apiT.balance },
+                  { address: apiT.tokenInfo.contract },
+                  {
+                    logo: {
+                      src: '',
+                      width: '',
+                      height: '',
+                      ipfs_hash: ''
+                    }
+                  },
+                  apiT.tokenInfo
+                );
+                newT['balance'] = BigNumber(newT.balance)
+                  .div(BigNumber(10).pow(newT.decimals))
+                  .toFixed();
+                delete newT['contract'];
+                return newT;
+              });
 
-          if (token.hasOwnProperty('logo')) {
-            convertedToken['logo'] = token.logo;
+              parsedApiTokens.forEach(apiT => {
+                const found = tokens.find(item => {
+                  if (item.address === apiT.address) {
+                    return item;
+                  }
+                });
+
+                if (!found) {
+                  tokens.push(apiT);
+                }
+              });
+
+              resolve(tokens);
+            });
+          } catch (e) {
+            resolve(this.network.type.tokens);
           }
-          return convertedToken;
-        });
-      this.tokens = tokens
-        .sort((a, b) => {
-          const a1 = typeof a.balance,
-            b1 = typeof b.balance;
-          return a1 > b1
-            ? -1
-            : a1 < b1
-            ? 1
-            : a.balance < b.balance
-            ? -1
-            : a.balance > b.balance
-            ? 1
-            : 0;
-        })
-        .sort(sortByBalance);
-      this.setTokensWithBalance();
+        } else {
+          resolve(this.network.type.tokens);
+        }
+      });
+    },
+    setTokens() {
+      this.tokens = [];
+      this.receivedTokens = false;
+      return new Promise(resolve => {
+        if (this.network.type.name === 'ETH') {
+          this.fetchTokens().then(res => {
+            let tokens = res;
+            tokens = tokens
+              .map(token => {
+                const convertedToken = {
+                  address: token.address,
+                  balance: token.balance,
+                  decimals: token.decimals,
+                  email: token.email,
+                  name: token.name,
+                  symbol: token.symbol,
+                  website: token.website
+                };
+
+                if (token.hasOwnProperty('logo')) {
+                  convertedToken['logo'] = token.logo;
+                }
+                return convertedToken;
+              })
+              .sort((a, b) => {
+                if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                  return -1;
+                } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                  return 1;
+                }
+                return 0;
+              });
+            resolve(tokens.sort(sortByBalance));
+          });
+        } else {
+          const tokens = this.network.type.tokens.map(item => {
+            item.balance = 'Load';
+            return item;
+          });
+          resolve(tokens);
+        }
+      });
     },
     setTokensWithBalance() {
       const customStore = store.get('customTokens');
@@ -791,7 +800,10 @@ export default {
           if (this.network.type.name === ETH.name) this.fetchNames();
           this.getBlock();
           this.getBalance();
-          this.setTokens();
+          this.setTokens().then(res => {
+            this.tokens = res;
+            this.receivedTokens = true;
+          });
           this.setNonce();
           this.getHighestGas();
           this.getBlockUpdater().then(_sub => {

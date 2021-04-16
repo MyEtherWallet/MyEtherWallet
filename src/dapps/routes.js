@@ -6,6 +6,8 @@ import makerDaiRoutes from './MakerDai/routes';
 import ambrpayRoutes from './Ambrpay/routes';
 import aaveRoutes from './Aave/routes';
 import lendMigratorRoutes from './LendMigrator/routes';
+import stakedRoutes from './Staked/routes';
+import gntMigratorRoutes from './GntMigrator/routes';
 
 const routes = {
   manageENS: manageENSRoutes,
@@ -15,7 +17,9 @@ const routes = {
   makerDaiRoutes: makerDaiRoutes,
   aaveDLP: aaveRoutes,
   amberpay: ambrpayRoutes,
-  lendMigrator: lendMigratorRoutes
+  lendMigrator: lendMigratorRoutes,
+  stakedRoutes: stakedRoutes,
+  gntMigratorRoutes: gntMigratorRoutes
 };
 
 export default routes;

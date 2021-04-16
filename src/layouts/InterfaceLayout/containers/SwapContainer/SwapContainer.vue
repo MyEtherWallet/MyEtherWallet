@@ -111,12 +111,59 @@
           </div>
           <!-- form-block amount-to-address -->
         </div>
-
+        <div v-if="showAlternates" class="btc-alternates">
+          <div no-body class="mb-1">
+            <div class="title-container" @click="toggleAlternates">
+              <h3>{{ $t('swap.alternates.title') }}</h3>
+              <i
+                :class="[
+                  openAltnernates ? 'fa-chevron-up' : 'fa-chevron-down',
+                  'fa'
+                ]"
+              />
+            </div>
+            <b-collapse
+              v-model="openAltnernates"
+              accordion="btc-alternatives"
+              role="tabpanel"
+            >
+              <div class="btc-body">
+                <p>
+                  {{ $t('swap.alternates.body') }}
+                  <a
+                    href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                    target="_blank"
+                    >{{ $t('swap.alternates.learn-more') }}</a
+                  >
+                </p>
+                <div v-if="!loadingData" class="alternative-btn-container">
+                  <div v-for="alt in alternativesOrdered" :key="alt.symbol">
+                    <button
+                      v-if="alt.hasValue"
+                      class="alternative-btn"
+                      @click="setAltToPrimary(alt)"
+                    >
+                      {{ fromValue }} {{ fromCurrency }} /
+                      {{ alt.computeConversion(fromValue) || alt.toValue }}
+                      {{ alt.symbol }}
+                    </button>
+                  </div>
+                </div>
+                <div v-else class="alternative-btn-container">
+                  <button class="alternative-btn">
+                    <div class="text-line"></div>
+                  </button>
+                </div>
+              </div>
+            </b-collapse>
+          </div>
+        </div>
         <div v-if="!isExitToFiat && !isBityCryptoToCrypto()" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
               :currency="toCurrency"
               :current-address="currentAddress"
+              :fill-address="fillAddress"
               :copybutton="true"
               :title="$t('sendTx.to-addr')"
               :clear-address="overrideAddress"
@@ -135,7 +182,6 @@
             Amount will be sent to your current wallet address.
           </div>
         </div>
-
         <div
           v-if="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
@@ -153,7 +199,6 @@
             />
           </div>
         </div>
-
         <div v-if="showRefundAddress" class="send-form">
           <div class="the-form gas-amount">
             <swap-address-selector
@@ -198,6 +243,28 @@
           <span v-if="gasNotice && fromCurrency !== 'ETH'">
             {{ $t('swap.warning.not-enough-tx-fee') }}</span
           >
+        </div>
+        <div
+          v-if="providerSelectedName === 'changelly'"
+          class="changelly-terms-container"
+        >
+          <checkbox @changeStatus="handleChangellyTerms" />
+          <i18n path="swap.notice.changelly-terms" tag="p">
+            <a
+              slot="aml"
+              href="https://changelly.com/aml-kyc"
+              target="_blank"
+              rel="noopener noreferrer"
+              >AML/KYC</a
+            >
+            <a
+              slot="terms"
+              href="https://changelly.com/terms-of-use"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Terms of Use</a
+            >
+          </i18n>
         </div>
         <div class="submit-button-container">
           <div
@@ -254,6 +321,8 @@ import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 import SignatureModal from './components/SignatureModal';
 
+import CheckBox from '@/components/Buttons/CheckBox/CheckBox.vue';
+
 import {
   SwapProviders,
   providers,
@@ -280,7 +349,8 @@ export default {
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
     'swap-send-to-modal': SwapSendToModal,
-    'signature-modal': SignatureModal
+    'signature-modal': SignatureModal,
+    checkbox: CheckBox
   },
   props: {
     tokensWithBalance: {
@@ -366,7 +436,29 @@ export default {
       unableToValidate: false,
       unableToValidateExit: false,
       unableToValidateRefund: false,
-      overrideAddress: false
+      overrideAddress: false,
+      openAltnernates: true,
+      alternates: [
+        {
+          symbol: 'RENBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'WBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        },
+        {
+          symbol: 'PBTC',
+          rates: [],
+          computeConversion: () => {},
+          hasValue: false
+        }
+      ],
+      acceptChangellyTerms: false
     };
   },
   computed: {
@@ -393,6 +485,9 @@ export default {
         errorLogger(e);
       }
       return null;
+    },
+    fillAddress() {
+      return SwapProviders.isToken(this.toCurrency);
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
@@ -450,18 +545,21 @@ export default {
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
       if (this.recalculating) return false;
+      if (this.gasNotice) return false;
       const canExit =
         this.isExitToFiat && this.fromCurrency !== this.baseCurrency
           ? this.exitFromAddress !== ''
           : true;
-      return (
+      const canSwap =
         this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
-          this.selectedProvider.maxValue === 0)
-      );
+          this.selectedProvider.maxValue === 0);
+      return this.providerSelectedName === 'changelly'
+        ? canSwap && this.acceptChangellyTerms
+        : canSwap;
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -523,9 +621,34 @@ export default {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
         ? this.currentAddress
         : this.exitFromAddress;
+    },
+    showAlternates() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
+    },
+    getAlternatives() {
+      if (this.toCurrency === 'BTC') {
+        return true;
+      }
+      return false;
+    },
+    alternativesOrdered() {
+      return [...this.alternates].sort((a, b) => b.rates - a.rates);
     }
   },
   watch: {
+    toCurrency(value) {
+      if (value === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
+    fromValue() {
+      if (this.toCurrency === 'BTC') {
+        this.standAloneRateEstimate();
+      }
+    },
     ['gasPrice'](value) {
       if (!this.selectedProvider) {
         this.selectedProvider = {};
@@ -561,6 +684,7 @@ export default {
         this.fromValue,
         'from'
       );
+      this.standAloneRateEstimate();
     },
     network(newVal) {
       this.providerData = [];
@@ -576,6 +700,12 @@ export default {
         },
         { tokensWithBalance: this.tokensWithBalance }
       );
+    },
+    alternates: {
+      deep: true,
+      handler: function (newVal) {
+        this.alternates = newVal;
+      }
     }
   },
   mounted() {
@@ -593,8 +723,59 @@ export default {
     );
   },
   methods: {
+    handleChangellyTerms(val) {
+      this.acceptChangellyTerms = val;
+    },
     getTokenAddress(currency) {
       return this.swap.getTokenAddress(currency, true);
+    },
+    async standAloneRateEstimate() {
+      const checkAndSetup = res => {
+        setTimeout(() => {
+          if (res) {
+            const idx = this.alternates.findIndex(
+              item => item.symbol === res[0].toCurrency
+            );
+            if (idx > -1) {
+              this.alternates[idx].rates = res[0].rate;
+              this.alternates[idx].fromValue = res[0].fromValue;
+              this.alternates[idx].toValue = res[0].computeConversion(
+                this.fromValue
+              );
+              this.alternates[
+                idx
+              ].computeConversion = res[0].computeConversion.bind(res[0]);
+              this.alternates[idx].hasValue = true;
+              if (this.bestRate > 0) {
+                this.alternates[idx].hasValue = new BigNumber(res[0].rate)
+                  .div(this.bestRate)
+                  .gte(0.9);
+              }
+              return res;
+            }
+          }
+        }, 250);
+      };
+      this.alternates.forEach(val => {
+        this.swap
+          .standAloneRateEstimate(this.fromCurrency, val.symbol, this.fromValue)
+          .then(checkAndSetup);
+        return { symbol: val.symbol, rates: [] };
+      });
+    },
+    toggleAlternates() {
+      this.openAltnernates = !this.openAltnernates;
+    },
+    setAltToPrimary(newCurrency) {
+      const details = this.toArray.find(
+        item => item.symbol.toLowerCase() === newCurrency.symbol.toLowerCase()
+      );
+      this.toCurrency = newCurrency.symbol;
+      this.overrideTo = {};
+      this.$nextTick(() => {
+        this.overrideTo = details;
+        this.setToCurrency(newCurrency);
+      });
     },
     reset() {
       this.lastFeeEstimate = new BigNumber(0);
@@ -753,6 +934,7 @@ export default {
             this.fromCurrency
           );
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
@@ -761,6 +943,7 @@ export default {
             this.toCurrency
           );
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
         case `${this.providerNames.simplex}to`:
           this.simplexUpdate = true;
@@ -839,8 +1022,15 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           this.intermediateGasCheck();
+          this.gasCheck();
           break;
       }
+    },
+    decimalsGenerally(toCurrency) {
+      if (toCurrency.toLowerCase() === 'neo') {
+        return 0;
+      }
+      return this.fiatCurrenciesArray.includes(toCurrency) ? 2 : 6;
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
@@ -895,11 +1085,7 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: _fromValue => {
-                    const decimals = this.fiatCurrenciesArray.includes(
-                      toCurrency
-                    )
-                      ? 2
-                      : 6;
+                    const decimals = this.decimalsGenerally(toCurrency);
                     return new BigNumber(_fromValue)
                       .times(entry.rate)
                       .toFixed(decimals)
@@ -991,6 +1177,7 @@ export default {
 
         return enoughToContinue;
       }
+      return true;
     },
     intermediateGasCheck() {
       if (this.fromCurrency === 'ETH' && this.lastFeeEstimate.gt(0)) {
@@ -1002,6 +1189,59 @@ export default {
           )
           .lte(0);
       } else {
+        this.gasNotice = false;
+      }
+    },
+    async gasCheck() {
+      try {
+        if (
+          !SwapProviders.isToken(this.fromCurrency) ||
+          !SwapProviders.isToken(this.toCurrency)
+        ) {
+          this.gasNotice = false;
+          return;
+        }
+        if (!this.selectedProvider.provider) {
+          this.gasNotice = false;
+          return;
+        }
+        const providerDetails = this.providerList.find(entry => {
+          return entry.provider === this.selectedProvider.provider;
+        });
+        let swapDetails = {
+          providerDetails: providerDetails,
+          fromValue: this.fromValue,
+          toValue: this.toValue,
+          toAddress: this.toAddress || this.currentAddress,
+          fromAddress: this.currentAddress,
+          refundAddress: SwapProviders.isToken(providerDetails.fromCurrency)
+            ? this.currentAddress
+            : this.refundAddress,
+          exitFromAddress:
+            this.isExitToFiat && this.fromCurrency === this.baseCurrency
+              ? this.currentAddress
+              : this.exitFromAddress
+        };
+        swapDetails = await this.swap.startSwap(swapDetails);
+        if (swapDetails.marketImpact) {
+          throw Error('marketImpactAbort');
+        }
+        const enoughForGas = await this.checkForEnoughGas(swapDetails);
+        if (!enoughForGas) {
+          throw Error('notEnoughWithGas');
+        }
+        this.gasNotice = false;
+      } catch (e) {
+        if (e.message === 'marketImpactAbort') {
+          this.finalizingSwap = false;
+          // Toast.responseHandler('liquidity-too-low', 1, true);
+          return;
+        } else if (e.message === 'notEnoughWithGas') {
+          this.finalizingSwap = false;
+          this.gasNotice = true;
+          // Toast.responseHandler('not-enough-eth-gas', 1, true);
+          return;
+        }
         this.gasNotice = false;
       }
     },

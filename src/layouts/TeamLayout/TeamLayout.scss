@@ -62,6 +62,10 @@
       }
     }
   }
+
+  .blank-member {
+    @extend .member;
+  }
 }
 
 // Desktop

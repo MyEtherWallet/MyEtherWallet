@@ -205,6 +205,7 @@
                   buttonStyle: 'green',
                   noWalletTerms: true
                 }"
+                :button-disabled="wrongNetwork || invalidSignature"
                 :click-function="stage3Btn"
               />
             </div>
@@ -377,6 +378,8 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 import ENS from 'ethereum-ens';
+import commonGenerator from '@/helpers/commonGenerator';
+import { Toast } from '@/helpers';
 export default {
   components: {
     'page-title': PageTitleComponent,
@@ -444,7 +447,7 @@ export default {
       return this.gasPrice >= this.gasLimitWarning;
     },
     showGenInfoGasWarning() {
-      const num = new BigNumber(this.toGwei(this.genInfo.gasPrice)).gte(
+      const num = BigNumber(this.toGwei(this.genInfo.gasPrice)).gte(
         this.gasLimitWarning
       );
       return num;
@@ -574,37 +577,45 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new Transaction(sanitizedRawSigned, {
-          chain: this.genInfo['chainID']
-        });
-        this.invalidSignature = !tx.verifySignature();
-        this.chainID = tx.getChainId();
-        this.wrongNetwork = !new BigNumber(
-          this.selectedNetwork.type.chainID
-        ).eq(new BigNumber(this.chainID));
-        this.chainID = tx.getChainId();
-
-        if (this.wrongNetwork) {
-          const correctNetwork = this.networkTypes.filter(
-            entry => entry.chainID === this.chainID
+        try {
+          const tx = new Transaction(sanitizedRawSigned, {
+            common: commonGenerator(this.selectedNetwork)
+          });
+          this.invalidSignature = !tx.verifySignature();
+          this.chainID = tx.getChainId();
+          this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
+          const asJson = tx.toJSON();
+          this.to = asJson[positions.to];
+          this.gasLimit = BigNumber(asJson[positions.gasLimit]).gt(0)
+            ? BigNumber(asJson[positions.gasLimit]).toFixed()
+            : '0';
+          this.nonce = BigNumber(asJson[positions.nonce]).gt(0)
+            ? BigNumber(asJson[positions.nonce]).toFixed()
+            : '0';
+          this.value = BigNumber(asJson[positions.value]).gt(0)
+            ? BigNumber(asJson[positions.value]).toFixed()
+            : '0';
+          this.data = asJson[positions.data];
+          this.minAccountBalance = tx.getUpfrontCost().toString();
+          this.gasPrice = BigNumber(asJson[positions.gasPrice]).gt(0)
+            ? BigNumber(asJson[positions.gasPrice]).toFixed()
+            : '0';
+          this.fee = BigNumber(this.toGwei(this.gasPrice))
+            .times(this.gasLimit)
+            .toFixed();
+        } catch (e) {
+          this.wrongNetwork = !BigNumber(this.selectedNetwork.type.chainID).eq(
+            BigNumber(this.chainID)
           );
-          if (correctNetwork) this.correctNetwork = correctNetwork[0].name_long;
+          if (this.wrongNetwork) {
+            const correctNetwork = this.networkTypes.filter(
+              entry => entry.chainID === this.chainID
+            );
+            if (correctNetwork.length)
+              this.correctNetwork = correctNetwork[0].name_long;
+          }
+          Toast.responseHandler(e.message, Toast.ERROR);
         }
-        this.from = Misc.sanitizeHex(tx.getSenderAddress().toString('hex'));
-        const asJson = tx.toJSON();
-        this.to = asJson[positions.to];
-        this.gasLimit = new BigNumber(asJson[positions.gasLimit]).toFixed();
-        this.nonce = new BigNumber(asJson[positions.nonce]).toFixed();
-        this.value = new BigNumber(asJson[positions.value]).toFixed();
-
-        this.data = asJson[positions.data];
-        this.minAccountBalance = tx.getUpfrontCost().toString();
-        this.gasPrice = new BigNumber(
-          Misc.sanitizeHex(tx.gasPrice.toString('hex'))
-        ).toFixed();
-        this.fee = new BigNumber(this.toGwei(this.gasPrice))
-          .times(this.gasLimit)
-          .toString();
       }
     },
     async fetchBalanceData() {
@@ -613,26 +624,26 @@ export default {
       const result = await fetchValues.json();
       const values = result.data;
       if (!values['ETH']) return 0;
-      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
+      this.ethPrice = BigNumber(values['ETH'].quotes.USD.price);
     },
     toEth(val) {
       if (!val || isNaN(val)) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toString(), 'ether');
+      return web3Utils.fromWei(BigNumber(val).toFixed(), 'ether');
     },
     toWei(val) {
       if (!val) return 0;
-      return web3Utils.toWei(new BigNumber(val).toFixed(), 'gwei');
+      return web3Utils.toWei(BigNumber(val).toFixed(), 'gwei');
     },
     toGwei(val) {
       if (!val) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'gwei');
+      return web3Utils.fromWei(BigNumber(val).toFixed(), 'gwei');
     },
     dateTimeDisplay(unixTimeStamp) {
       return new Date(unixTimeStamp).toString();
     },
     calculateCost(inGwei) {
       const fromGweiToWei = this.toWei(inGwei);
-      const cost = new BigNumber(this.ethPrice)
+      const cost = BigNumber(this.ethPrice)
         .times(this.toEth(fromGweiToWei))
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();

@@ -1,12 +1,15 @@
 import akaremote from './aka-remote';
+import aquaconical from './aqua-conical';
+import aquainfo from './aqua-info';
 import ath from './ath';
+import avax from './avax-c-mainnet';
+import avaxtest from './avax-c-testnet';
 import bscMainnet from './bsc-mainnet';
 import clo from './clo';
 import egem from './egem';
 import ella from './ella';
 import esn from './esn';
 import etcethereumclassiccooperativeparity from './etc-ethereumclassiccooperative-parity';
-import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
@@ -58,17 +61,21 @@ import ere from './ere';
 import prkl from './prkl';
 import fuse from './fuse';
 import ewt from './ewt';
+import xdai from './xdai';
 
 export {
   akaremote,
+  aquaconical,
+  aquainfo,
   ath,
+  avax,
+  avaxtest,
   bscMainnet,
   clo,
   egem,
   ella,
   esn,
   etcethereumclassiccooperativeparity,
-  etcethereumclassiccooperativeparityws,
   ethethscan,
   ethinfura,
   ethinfuraws,
@@ -119,5 +126,6 @@ export {
   ere,
   prkl,
   fuse,
-  ewt
+  ewt,
+  xdai
 };

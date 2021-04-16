@@ -1,21 +1,31 @@
 {
   "mewconnect": {
-    "option-text": "Отсканируйте QR-код для доступа с помощью MEW wallet или MEWconnect",
+    "option-text": "Чтобы увидеть ваш мобильный кошелек в интерфейсе MEW web.",
     "modal": {
       "title": "Мобильный доступ",
-      "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
-      "text2": "Нет приложения MEW wallet? Загрузите сейчас."
+      "text1": "Используйте приложение MEW wallet для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения? {action}",
+      "download-now": "Скачайте сейчас."
     },
-    "protocol": "Протокол MEWconnect",
-    "warning": "MEW wallet и MEWconnect несовместимы с iPads."
+    "scan": "Сканируйте QR-код с помощью приложения MEW wallet",
+    "warning": "MEW wallet несовместим с iPads.",
+    "instructions": {
+      "step1": "Шаг 1: {first}",
+      "step2": "Шаг 2: {second}",
+      "step3": "Шаг 3: {third}",
+      "first": "Открыть приложение MEW wallet",
+      "second": "Нажмите {icon-pos}",
+      "icon-pos": "иконка в правом верхнем углу",
+      "third": "Отсканируйте QR-код"
+    }
   },
   "mobile-app": {
     "option-title": "Мобильное приложение",
     "examples": "WalletConnect; WalletLink",
     "modal": {
-      "title": "Мобильный доступ"
+      "title": "Доступ через мобильное приложение"
     },
-    "mew-connect": "MEWconnect"
+    "mew-wallet": "MEW wallet"
   },
   "finney": {
     "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
@@ -52,7 +62,7 @@
     "modal": {
       "title": "Программный доступ",
       "purchase-text": "Приобретите аппаратный кошелек для максимальной безопасности при доступе к средствам.",
-      "purchase-link": "Купить аппаратный кошелек...."
+      "purchase-link": "Купить аппаратный кошелек"
     }
   },
   "metamask": {

@@ -24,6 +24,11 @@
     "load-rate-error": "An Error occurred while retrieving the rates for {from-currency} to {to-currency}. Please wait a moment and try again",
     "kyber-slippage": "Slippage of {value}% possible"
   },
+  "alternates": {
+    "title": "Get BTC Exposure On Ethereum",
+    "body": "Swap for 1-to-1 wrapped tokens WBTC, RENBTC, or PBTC and hold bitcoin compatible with Ethereum applications.",
+    "learn-more": "Learn more."
+  },
   "warning": {
     "unable-validate-addr": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
     "not-valid-addr-src": "Not a valid {currency} address",
@@ -50,7 +55,8 @@
     "retrieve-simplex-rate-failed": "Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}",
     "error-finalizing": "Error while requesting finalized details from provider",
     "bity-rate-failed": "Failed to retrieve Bity rates",
-    "selected-provider-cleared": "Selected provider cleared"
+    "selected-provider-cleared": "Selected provider cleared",
+    "changelly-terms": "By clicking continue, I agree to the Changelly {aml} and {terms}"
   },
   "tag-line": {
     "bity": "Swap ETH, BTC, REP, or sell for fiat using your phone!",

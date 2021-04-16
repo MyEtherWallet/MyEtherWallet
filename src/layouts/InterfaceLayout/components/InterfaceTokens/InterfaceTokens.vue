@@ -47,6 +47,10 @@
               <td>
                 {{ token.balance }}
                 <i
+                  class="fa fa-refresh clickable pr-1"
+                  @click="getSpecificTokenBalance(token)"
+                />
+                <i
                   class="fa fa-times-circle clickable"
                   @click="removeToken(index)"
                 />
@@ -72,7 +76,12 @@
                   "
                   rel="noopener noreferrer"
                   target="_blank"
-                  >{{ token.symbol }}</a
+                >
+                  <span>{{
+                    token.symbol.length > 10
+                      ? `${token.symbol.substr(0, 15)}...`
+                      : token.symbol
+                  }}</span></a
                 >
               </td>
               <td
@@ -82,7 +91,17 @@
               >
                 {{ token.balance }}
               </td>
-              <td v-else>{{ token.balance }}</td>
+              <td v-else>
+                {{
+                  token.balance.length > 10
+                    ? `${token.balance.substr(0, 25)}...`
+                    : token.balance
+                }}
+                <i
+                  class="fa fa-refresh clickable"
+                  @click="getSpecificTokenBalance(token)"
+                />
+              </td>
             </tr>
           </table>
 
@@ -223,6 +242,8 @@ export default {
             ? `https://img.mewapi.io/?image=${token.icon_png}&width=50&height=50&fit=scale-down`
             : token.icon !== ''
             ? `https://img.mewapi.io/?image=${token.icon}&width=50&height=50&fit=scale-down`
+            : tok.logo && tok.logo.src && tok.logo.src !== ''
+            ? `https://img.mewapi.io/?image=${tok.logo.src}&width=50&height=50&fit=scale-down`
             : this.network.type.icon;
         return tokenSrc;
       } else if (tok.logo && tok.logo.src && tok.logo.src !== '') {

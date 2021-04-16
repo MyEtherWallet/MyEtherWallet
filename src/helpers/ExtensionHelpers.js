@@ -2,14 +2,16 @@ import Toast from './responseHandler';
 import { toChecksumAddress, isAddress } from './addressUtils';
 import { MnemonicWallet } from '@/wallets';
 import Misc from './misc';
+import store from 'store';
 
 const getAccounts = callback => {
   const chrome = window.chrome;
   chrome.storage.sync.get(null, callback);
 };
 
-const getPrivFromMnemonicWallet = async (mnem, path) => {
-  const wallet = await MnemonicWallet(mnem, '');
+const getPrivFromMnemonicWallet = async (mnem, path, password) => {
+  const receivedPassword = password && password !== '' ? password : '';
+  const wallet = await MnemonicWallet(mnem, receivedPassword);
   return wallet.hdKey.derive(path ? path : wallet.basePath).privateKey;
 };
 
@@ -80,6 +82,7 @@ const deleteWalletFromStore = (addr, callback) => {
     });
   });
   try {
+    const notifications = store.get('notifications');
     chrome.storage.sync.remove(toChecksumAddress(addr), callback);
     chrome.storage.sync.get('favorites', item => {
       const favorites = JSON.parse(item.favorites);
@@ -92,6 +95,9 @@ const deleteWalletFromStore = (addr, callback) => {
       chrome.storage.sync.set({
         favorites: JSON.stringify(favorites)
       });
+
+      delete notifications[toChecksumAddress(addr)];
+      store.set('notifications');
     });
   } catch (e) {
     Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
