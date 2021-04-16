@@ -15,23 +15,16 @@ import { txTypes, notificationTypes } from '../configs/configTypes';
  * Valid values for notification obj
  */
 const VALID_ARGUMENTS = [
+  'transactionHash', // string
   'to', // string
   'from', // string
   'gas', // string
-  'gasUsed', //string
   'gasLimit', // string
   'gasPrice', // string
   'data', // number
   'nonce', // string
-  /**
-   * Injected from mew
-   */
-  'toObj', // string
-  'fromObj', // string
-  'timestamp', // string
-  'amount', // string
-  'total', // string
-  'txHash', // string
+  'value', // string
+  // injected from mew
   'type', // string
   'read', // bool
   'network', // string
@@ -61,20 +54,23 @@ export default class Notification {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'type' &&
-        !notificationTypes.hasOwnProperty(obj['type'].value)
+        !Object.values(notificationTypes).includes(obj['type'].toLowerCase())
       ) {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'status' &&
-        !txTypes.hasOwnProperty(obj['status'].value)
+        !Object.values(txTypes).includes(obj['status'].toLowerCase())
       ) {
         this._invalidType(keysArray[i]);
       } else if (
         (keysArray[i] === 'to' || keysArray[i] === 'from') &&
-        !isAddress(obj[keysArray[i]].value)
+        !isAddress(obj[keysArray[i]])
       ) {
         this._invalidType(keysArray[i]);
-      } else if (keysArray[i] === 'txHash' && !isHex(obj[keysArray[i]].value)) {
+      } else if (
+        keysArray[i] === 'transactionHash' &&
+        !isHex(obj[keysArray[i]])
+      ) {
         this._invalidType(keysArray[i]);
       } else if (obj[keysArray[i]]) {
         this[keysArray[i]] = obj[keysArray[i]];

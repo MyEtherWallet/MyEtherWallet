@@ -31,7 +31,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     ? newTxObj.input
     : newTxObj.data;
   newTxObj.date = new Date().getTime();
-  const isExcempt = newTxObj.hasOwnProperty('handleNotification');
+  const isExempt = newTxObj.hasOwnProperty('handleNotification');
   delete newTxObj['r'];
   delete newTxObj['v'];
   delete newTxObj['s'];
@@ -44,7 +44,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     .once('transactionHash', hash => {
       newTxObj.status = 'PENDING';
       newTxObj.transactionHash = hash;
-      if (!isExcempt) {
+      if (!isExempt) {
         const notification = new Notification(newTxObj);
         dispatch('notifications/addNotification', notification, {
           root: true
@@ -54,7 +54,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('receipt', res => {
       newTxObj.transactionHash = res.transactionHash;
       newTxObj.status = 'SUCCESS';
-      if (!isExcempt) {
+      if (!isExempt) {
         const notification = new Notification(newTxObj);
         dispatch('notifications/updateNotification', notification, {
           root: true
@@ -64,7 +64,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('error', err => {
       newTxObj.status = 'FAILED';
       newTxObj.errMessage = err.message;
-      if (!isExcempt) {
+      if (!isExempt) {
         const notification = new Notification(newTxObj);
         dispatch('notifications/addNotification', notification, {
           root: true

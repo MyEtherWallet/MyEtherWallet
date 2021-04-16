@@ -25,7 +25,7 @@ export default {
       txHash: '',
       initialLoad: true,
       txHashes: [],
-      incomingTxs: []
+      ethTransfers: []
     };
   },
   apollo: {
@@ -71,19 +71,20 @@ export default {
         return this.txHashes.length === 0;
       },
       result({ data }) {
+        console.error('data', data)
         if (data && data.getTransactionsByHashes) {
-          let incomingTxs = [];
+          let ethTransfers = [];
           if (this.initialLoad) {
-            incomingTxs = data.getTransactionsByHashes;
+            ethTransfers = data.getTransactionsByHashes;
             this.txHashes =
               this.txHashes.length > 10 ? this.txHashes.slice(10, 20) : [];
             this.initialLoad = false;
           } else {
-            incomingTxs = this.incomingTxs.concat(data.getTransactionsByHashes);
+            ethTransfers = this.ethTransfers.concat(data.getTransactionsByHashes);
             this.txHashes = [];
           }
           this.setFetchedTime();
-          this.incomingTxs = incomingTxs;
+          this.ethTransfers = ethTransfers;
         }
       },
       error(error) {
@@ -106,7 +107,7 @@ export default {
         return !this.txHash || this.txHash === '';
       },
       result({ data }) {
-        const copyArray = this.incomingTxs;
+        const copyArray = this.ethTransfers;
         const getTransactionByHash = data.data.getTransactionByHash;
         const foundIdx = copyArray.findIndex(item => {
           if (getTransactionByHash.transactionHash === item.transactionHash) {
@@ -116,7 +117,7 @@ export default {
         foundIdx
           ? copyArray.splice(foundIdx, 0, getTransactionByHash)
           : copyArray.push(getTransactionByHash);
-        this.incomingTxs = copyArray;
+        this.ethTransfers = copyArray;
       },
       error(error) {
         Toast(error.message, {}, ERROR);
@@ -143,7 +144,7 @@ export default {
               pendingTx['date'] = pendingTx.timestamp * 1000;
               delete pendingTx.__typename;
               delete pendingTx.timestamp;
-              this.incomingTxs.push(pendingTx);
+              this.ethTransfers.push(pendingTx);
               this.txHash = pendingTx.transactionHash;
               console.error('txHash', pendingTx, this.txHash);
             }
