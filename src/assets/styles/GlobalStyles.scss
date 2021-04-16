@@ -6,6 +6,12 @@
   }
 }
 
+@media (min-width: 1904px) {
+  .container {
+    max-width: 1185px !important;
+  }
+}
+
 @media (max-width: 1263px) {
   html {
     font-size: 14px !important;
@@ -221,10 +227,10 @@ h6 {
   width: initial;
 }
 .width--full {
-  width: 100%;
+  width: 100% !important;
 }
 .height--full {
-  height: 100%;
+  height: 100% !important;
 }
 .vertical-align--middle {
   vertical-align: middle;

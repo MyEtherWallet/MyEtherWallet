@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="network.type.name === 'ETH'">
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
