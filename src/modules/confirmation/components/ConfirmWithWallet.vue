@@ -3,10 +3,10 @@
     <v-col cols="12" class="text-center">
       <div>
         <mew-icon
+          v-if="!hasIcon"
           class="border-radius--5px custom-icon-style"
           :icon-name="instance.identifier"
           :img-height="50"
-          v-if="!hasIcon"
         />
         <img v-else :src="icons[instance.identifier]" height="50px" />
       </div>
