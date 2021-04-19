@@ -9,15 +9,13 @@
       color="expandHeader"
     >
       <v-list-item class="pt-8 pb-8 pl-4 pr-1">
-        <v-list-item-avatar>
-          <v-img
-            class="mx-auto"
-            src="@/assets/images/icons/logo-mew.png"
-            max-height="36"
-            max-width="130"
-            @click="pushRoute({ name: 'Home' })"
-          />
-        </v-list-item-avatar>
+        <v-img
+          class="mx-auto"
+          src="@/assets/images/icons/logo-mew.png"
+          max-height="36"
+          max-width="130"
+          @click="pushRoute({ name: 'Home' })"
+        />
 
         <v-spacer></v-spacer>
 

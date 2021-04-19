@@ -61,7 +61,7 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet min-height="500px" class="pa-12">
+        <v-sheet min-height="500px" class="pa-3 pa-md-12">
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -80,11 +80,9 @@
               :slot="'panelBody' + (idx + 1)"
               :class="domain.expired ? 'expired' : 'available'"
             >
-              <div :key="idx">
-                <div
-                  class="px-7 d-flex justify-space-between py-5 subheader-container"
-                >
-                  <div class="d-flex align-center">
+              <div :key="idx" class="ma-3">
+                <v-row class="subheader-container">
+                  <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.registrant') }}</div>
                     <mew-blockie
                       :address="domain.registrarAddress"
@@ -108,8 +106,11 @@
                     >
                       <v-icon small class="call-made"> mdi-call-made </v-icon>
                     </a>
-                  </div>
-                  <div class="d-flex align-center justify-end">
+                  </v-col>
+
+                  <v-spacer></v-spacer>
+
+                  <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.controller') }}</div>
                     <mew-blockie
                       :address="domain.controllerAddress"
@@ -133,8 +134,9 @@
                     >
                       <v-icon small class="call-made"> mdi-call-made </v-icon>
                     </a>
-                  </div>
-                </div>
+                  </v-col>
+                </v-row>
+
                 <div
                   class="mt-3 d-flex align-center justify-space-between py-5 px-7"
                 >
@@ -147,7 +149,10 @@
                   <v-col
                     v-for="(option, key) in manageDomainOptions"
                     :key="key"
-                    cols="2"
+                    cols="6"
+                    sm="6"
+                    md="4"
+                    lg="2"
                     class="text-center"
                   >
                     <mew-icon
