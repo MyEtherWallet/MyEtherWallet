@@ -9,6 +9,7 @@
     title="Repay"
     right-btn-text="Close"
     :close="close"
+    class="mew-component--aave-repay-overlay"
   >
     <template #mewOverlayBody>
       <div>

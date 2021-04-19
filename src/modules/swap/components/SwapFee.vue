@@ -26,10 +26,10 @@
       </v-col>
     </v-row>
     <v-row v-else justify="space-between" align="center">
-      <v-col cols="4 mb-n3">
+      <v-col cols="8" class="mb-n3">
         <p class="mew-heading-3">Network Fee</p>
       </v-col>
-      <v-col cols="7" class="d-flex justify-space-around align-center">
+      <v-col cols="4" class="d-flex justify-space-around align-center">
         <div class="d-flex justify-space-around align-center">
           <mew-icon :icon-name="icon" :img-height="30" />
           <span class="capitalize">{{ gasPriceType }}</span>

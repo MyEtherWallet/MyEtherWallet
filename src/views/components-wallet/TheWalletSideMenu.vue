@@ -26,6 +26,7 @@
           <balance-card />
 
           <v-btn
+            v-if="network.type.name === 'ETH'"
             class="mt-3"
             color="white"
             outlined
@@ -58,7 +59,7 @@
         <v-list-item-group model="menuSelected">
           <template v-for="(item, idx) in sectionOne">
             <v-list-item
-              v-if="!item.children"
+              v-if="!item.children && shouldShow(item.route)"
               :key="item + idx + 1"
               :to="item.route"
             >
@@ -200,8 +201,8 @@ import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
-import { mapActions } from 'vuex';
 import { EventBus } from '@/core/plugins/eventBus';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -298,6 +299,9 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters('global', ['network'])
+  },
   mounted() {
     EventBus.$on('toggleSettings', () => {
       this.toggleSettings();
@@ -305,6 +309,13 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    shouldShow(route) {
+      const onlyEth = ['Dapps', 'Swap'];
+      if (this.network.type.name !== 'ETH') {
+        return !onlyEth.includes(route.name);
+      }
+      return true;
+    },
     openNavigation() {
       this.navOpen = true;
     },
@@ -339,6 +350,7 @@ export default {
   .v-list-item--link {
     border-top: none;
   }
+
   .v-list-item--active {
     .v-list-item__content {
       .v-list-item__title {
@@ -346,11 +358,13 @@ export default {
       }
     }
   }
+
   .v-list-group__header__append-icon {
     .v-icon {
       color: var(--v-white-base) !important;
     }
   }
+
   .v-divider {
     border-color: rgba(255, 255, 255, 0.22) !important;
   }
@@ -362,12 +376,15 @@ export default {
   .v-list-item:after {
     min-height: 40px !important;
   }
+
   .mew-body.font-weight-bold {
     font-weight: 400 !important;
   }
+
   .v-list-item--active.v-list-item:not(.v-list-group__header) {
     background-color: rgba(255, 255, 255, 0.1) !important;
   }
+
   .v-list-item--active::before {
     opacity: 0 !important;
   }
@@ -375,36 +392,45 @@ export default {
   .v-navigation-drawer__content {
     margin-right: 5px;
     margin-bottom: 10px;
+
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
     }
+
     &::-webkit-scrollbar-button {
       width: 0;
       height: 0;
     }
+
     &::-webkit-scrollbar-thumb {
       background: #7b91ac;
       border: 0 none #fff;
       border-radius: 50px;
     }
+
     &::-webkit-scrollbar-thumb:hover {
       background: #7b91ac;
     }
+
     &::-webkit-scrollbar-thumb:active {
       background: #4b4949;
     }
+
     &::-webkit-scrollbar-track {
       background: #e1dfdf;
       border: 0 none #fff;
       border-radius: 39px;
     }
+
     &::-webkit-scrollbar-track:hover {
       background: #ddd5d5;
     }
+
     &::-webkit-scrollbar-track:active {
       background: #dedede;
     }
+
     &::-webkit-scrollbar-corner {
       background: transparent;
     }
