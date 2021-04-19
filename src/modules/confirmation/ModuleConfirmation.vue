@@ -1,5 +1,21 @@
 <template>
   <div>
+    <confirmation-swap-modal
+      :to="swapInfo.to"
+      :from="swapInfo.from"
+      :from-img="swapInfo.fromImg"
+      :from-type="swapInfo.fromType"
+      :to-type="swapInfo.toType"
+      :to-img="swapInfo.toImg"
+      :from-val="swapInfo.fromVal"
+      :to-val="swapInfo.toVal"
+      :provider="swapInfo.selectedProvider"
+      :tx-fee="swapInfo.totalFees"
+      :send="signTx"
+      :show="showSwapModal"
+      :close="overlayClose"
+      @close="overlayClose"
+    />
     <app-modal
       title="Confirm Transaction"
       :btn-action="sendSignedTx"
@@ -73,6 +89,7 @@ import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
+import ConfirmationSwapModal from './components/ConfirmationSwapModal';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
@@ -91,7 +108,8 @@ export default {
     ConfirmationMesssage,
     ConfirmationBatchTransaction,
     AppModal,
-    ConfirmWithWallet
+    ConfirmWithWallet,
+    ConfirmationSwapModal
   },
   data() {
     return {
@@ -99,13 +117,15 @@ export default {
       showSignOverlay: false,
       showBatchOverlay: false,
       showSignTxModal: false,
+      showSwapModal: false,
       tx: {},
       resolver: () => {},
       title: '',
       signedTxObject: {},
       signature: '',
       unsignedTxArr: [],
-      signedTxArray: []
+      signedTxArray: [],
+      swapInfo: {}
     };
   },
   computed: {
@@ -175,6 +195,16 @@ export default {
       _self.tx = tx;
       _self.resolver = resolver;
       _self.showTxOverlay = true;
+    });
+    // recieves an array
+    // arr[0] is the tx
+    // arr[1] is the swap information
+    EventBus.$on(EventNames.SHOW_SWAP_TX_MODAL, (arr, resolver) => {
+      console.log('gets here');
+      _self.tx = arr[0];
+      _self.swapInfo = arr[1];
+      _self.resolver = resolver;
+      _self.showSwapModal = true;
     });
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
@@ -249,6 +279,7 @@ export default {
       this.showBatchOverlay = false;
       this.showSignOverlay = false;
       this.showSignTxModal = false;
+      this.showSwapModal = false;
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -333,7 +364,7 @@ export default {
                 title: `${getService(this.network.type.blockExplorerTX)}`,
                 url: this.network.type.blockExplorerTX.replace(
                   '[[txHash]]',
-                  this.signedTxObject.tx.hash
+                  res.tx.hash
                 )
               },
               SUCCESS,

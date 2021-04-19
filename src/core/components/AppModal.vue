@@ -29,7 +29,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row>
+      <v-row class="mt-2">
         <v-col cols="12" class="text-center">
           <mew-button
             btn-size="xlarge"

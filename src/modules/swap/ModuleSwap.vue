@@ -5,21 +5,6 @@
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
     />
-    <swap-confirmation-modal
-      :to="confirmInfo.to"
-      :from="confirmInfo.from"
-      :from-img="confirmInfo.fromImg"
-      :from-type="confirmInfo.fromType"
-      :to-type="confirmInfo.toType"
-      :to-img="confirmInfo.toImg"
-      :show="confirmInfo.show"
-      :from-val="confirmInfo.fromVal"
-      :to-val="confirmInfo.toVal"
-      :send="executeTrade"
-      :provider="selectedProvider"
-      :tx-fee="totalFees"
-      :close="closeSwapConfirmation"
-    />
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -121,7 +106,7 @@
               :has-full-width="false"
               :disabled="step < 2 || feeError != ''"
               btn-size="xlarge"
-              @click.native="showConfirm()"
+              @click.native="showConfirm"
             />
           </div>
         </template>
@@ -136,7 +121,6 @@ import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
 import SwapNetworkSettingsModal from './components/SwapNetworkSettingsModal.vue';
-import SwapConfirmationModal from './components/SwapConfirmationModal.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -152,8 +136,7 @@ export default {
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
-    SwapNetworkSettingsModal,
-    SwapConfirmationModal
+    SwapNetworkSettingsModal
   },
   props: {
     fromToken: {
@@ -179,7 +162,9 @@ export default {
         toImg: '',
         fromType: '',
         toType: '',
-        validUntil: 0
+        validUntil: 0,
+        selectedProvider: '',
+        totalFees: ''
       },
       swapper: null,
       toTokenType: {},
@@ -520,8 +505,10 @@ export default {
         fromVal: this.tokenInValue,
         toVal: this.tokenOutValue,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
-        show: true
+        selectedProvider: this.selectedProvider,
+        totalFees: this.totalFees
       };
+      this.executeTrade();
     },
     isValidToAddress(address) {
       return this.swapper.isValidToAddress({
@@ -532,7 +519,6 @@ export default {
     },
 
     executeTrade() {
-      this.confirmInfo.show = false;
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
@@ -602,9 +588,6 @@ export default {
     },
     closeGasPrice() {
       this.gasPriceModal = false;
-    },
-    closeSwapConfirmation() {
-      this.confirmInfo.show = false;
     }
   }
 };
