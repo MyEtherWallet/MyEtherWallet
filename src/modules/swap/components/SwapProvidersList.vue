@@ -7,12 +7,7 @@
     =====================================================================================
     -->
     <v-row
-      v-if="
-        step === 0 &&
-        (toTokenIcon !== '' || toTokenSymbol !== '') &&
-        (message.title === '' || message.subtitle === '') &&
-        availableQuotes.length === 0
-      "
+      v-if="step === 0 && (message.title === '' || message.subtitle === '')"
     >
       <v-col cols="12" class="mb-n3">
         <v-card

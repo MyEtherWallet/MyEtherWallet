@@ -20,20 +20,6 @@
       :tx-fee="totalFees"
       :close="closeSwapConfirmation"
     />
-    <!-- <swap-confirmation
-      :to="confirmInfo.to"
-      :from="confirmInfo.from"
-      :from-img="confirmInfo.fromImg"
-      :from-type="confirmInfo.fromType"
-      :to-type="confirmInfo.toType"
-      :to-img="confirmInfo.toImg"
-      :show="confirmInfo.show"
-      :back-func="backFunction"
-      :from-val="confirmInfo.fromVal"
-      :to-val="confirmInfo.toVal"
-      :valid-until="confirmInfo.validUntil"
-      :send="executeTrade"
-    /> -->
 
     <mew6-white-sheet>
       <mew-module
@@ -104,6 +90,62 @@
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
+          <!--
+            =====================================================================================
+             BTC options
+            =====================================================================================
+            -->
+          <div v-if="isToBtc" class="pa-6 wrapped-btc-text">
+            <p class="mew-heading-3">
+              <v-icon class="icon" size="20" color="#0B2840">
+                mdi-information-outline</v-icon
+              >Did you know? You can store your Bitcoin on Ethereum
+            </p>
+            <p>
+              To swap to BTC you need a Bitcoin wallet, but you can swap to
+              wrapped Bitcoin instead and store it in your Ethereum wallet.
+            </p>
+            <v-divider />
+            <v-expansion-panels flat>
+              <v-expansion-panel>
+                <v-expansion-panel-header color="transparent">
+                  How can I get wrapped Bitcoin?
+                </v-expansion-panel-header>
+                <v-expansion-panel-content color="transparent">
+                  <div>
+                    <p>
+                      When you swap to Bitcoin, it is moved to the Bitcoin
+                      blockchain, & requires a Bitcoin wallet. In order to keep
+                      Bitcoin in MyEtherWallet, you can swap to
+                      <span class="font-italic">wrapped</span> Bitcoin instead.
+                      Wrapped Bitcoin is an Ethereum token, with a value
+                      approximately equal to 1 BTC. Wrapped Bitcoins can be
+                      stored in MEW, and can be used as any other Ethereum
+                      asset: you can swap it to oether tokens, use it as
+                      collateral in DeFi apps, etc. There are multiple kinds of
+                      wrapped Bitcoins, but they roughly do the same thing.
+                      <a target="_blank" rel="noopener noreferrer"
+                        >Learn more about Wrapped Bitcoin.</a
+                      >
+                    </p>
+                    <div class="d-flex align-center">
+                      <mew-button
+                        v-for="btn in wrappedBtc"
+                        class="px-2 mx-1"
+                        :key="btn"
+                        :title="`Swap to ${btn}`"
+                        color-theme="primary"
+                        :has-full-width="false"
+                        btn-size="xlarge"
+                        btn-style="outline"
+                        @click.native="setWrappedBtc(btn)"
+                      />
+                    </div>
+                  </div>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </div>
           <!--
             =====================================================================================
              Providers List
@@ -197,6 +239,7 @@ export default {
         validUntil: 0,
         show: false
       },
+      wrappedBtc: ['renBTC', 'wBTC', 'PBTC'],
       swapper: null,
       toTokenType: {},
       fromTokenType: {},
@@ -256,6 +299,15 @@ export default {
     isToAddressValid() {
       if (this.toTokenType.isEth) return true;
       return this.addressValue.isValid;
+    },
+    /**
+     * Checks whether the swap is to BTC
+     */
+    isToBtc() {
+      return (
+        this.fromTokenType.symbol === this.network.type.currencyName &&
+        this.toTokenType.symbol === 'BTC'
+      );
     },
     showToAddress() {
       if (typeof this.toTokenType.isEth === 'undefined') return false;
@@ -621,6 +673,12 @@ export default {
     },
     closeSwapConfirmation() {
       this.confirmInfo.show = false;
+    },
+    setWrappedBtc(symbol) {
+      const foundToken = this.toTokens.find(
+        item => item.symbol.toLowerCase() === symbol.toLowerCase()
+      );
+      this.setToToken(foundToken);
     }
   }
 };
@@ -639,6 +697,19 @@ export default {
 .border-radius--10px::before {
   border-radius: 10px !important;
 }
+
+.available-balance {
+  width: 39%;
+}
+
+.icon {
+  margin-right: 6px;
+}
+
+.wrapped-btc-text {
+  border-radius: 5px;
+  background-color: var(--v-selectorBg-lighten1);
+}
 </style>
 
 <style lang="scss">
@@ -654,7 +725,18 @@ export default {
   }
 }
 
-.available-balance {
-  width: 39%;
+.wrapped-btc-text {
+  .v-expansion-panel-content__wrap {
+    padding: 0 !important;
+  }
+
+  .v-expansion-panel,
+  .v-expansion-panels {
+    background-color: transparent !important;
+  }
+
+  .v-expansion-panel-header {
+    padding: 16px 0px !important;
+  }
 }
 </style>
