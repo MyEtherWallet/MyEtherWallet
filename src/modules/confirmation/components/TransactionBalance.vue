@@ -24,7 +24,7 @@
           />
         </v-col>
         <v-col
-          class="d-flex align-center pl-6 justify-start justify-ms-end"
+          class="d-flex align-center pl-6 justify-start justify-sm-end"
           cols="12"
           sm="4"
         >
