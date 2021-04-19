@@ -131,8 +131,8 @@
                     <div class="d-flex align-center">
                       <mew-button
                         v-for="btn in wrappedBtc"
-                        class="px-2 mx-1"
                         :key="btn"
+                        class="px-2 mx-1"
                         :title="`Swap to ${btn}`"
                         color-theme="primary"
                         :has-full-width="false"
@@ -494,6 +494,17 @@ export default {
         };
         return;
       }
+      if (
+        value ||
+        !this.hasAmountErrors ||
+        this.fromTokenType.value !== this.toTokenType.value
+      ) {
+        this.providersMessage = {
+          title: '',
+          subtitle: ''
+        };
+      }
+
       this.feeError = '';
       this.swapper
         .getAllQuotes({

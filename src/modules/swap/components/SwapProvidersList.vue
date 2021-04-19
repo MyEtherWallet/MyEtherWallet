@@ -6,9 +6,7 @@
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row
-      v-if="step === 0 && (message.title === '' || message.subtitle === '')"
-    >
+    <v-row v-if="step === 0 && message.title === ''">
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
@@ -30,7 +28,7 @@
     =====================================================================================
     -->
     <v-row
-      v-if="step == 0 && (message.title !== '' || message.subtitle !== '')"
+      v-if="step === 0 && (message.title !== '' || message.subtitle !== '')"
     >
       <v-col cols="12" class="mb-n3">
         <v-card
