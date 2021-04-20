@@ -170,8 +170,7 @@ export default {
             hash: this.txHash
           };
         },
-        result(data) {
-          console.error('subscribe tx', data);
+        result() {
           this.$apollo.queries.getTransactionByHash.refetch();
         },
         error(error) {

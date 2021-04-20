@@ -561,7 +561,7 @@ export default {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
           transactionHash: !isError ? hash : '',
-          txFee: fromWei(this.totalFees),
+          transactionFee: fromWei(this.totalFees),
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,

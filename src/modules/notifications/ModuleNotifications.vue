@@ -108,7 +108,7 @@ import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { toBN } from 'web3-utils';
-import { txTypes, notificationTypes } from './configs/configTypes';
+import { notificationTypes } from './configs/configTypes';
 import timeAgo from '@/core/helpers/timeAgo';
 
 export default {
@@ -159,7 +159,6 @@ export default {
      * Formatted current notifications
      */
     formattedCurrentNotifications() {
-      console.error('currentNotifications', this.currentNotifications)
       return this.currentNotifications.map(notification => {
         const newObj = this.formatNotification(notification);
         const type = newObj.type.toLowerCase();
@@ -169,26 +168,26 @@ export default {
         if (type === notificationTypes.swap) {
           newObj.checkSwapStatus(this.swapper);
         }
-        /**
-         * Check status if it is an outgoing pending tx
-         * only do it on init
-         */
-        if (this.onInit) {
-          console.error('in hereeeeeeee', newObj)
-          if (
-            type === notificationTypes.out &&
-            newObj.status.toLowerCase() === txTypes.pending
-          ) {
-            console.error('in here')
-            this.txHash = newObj.transactionHash;
-            if (this.getTransactionByHash) {
-              console.error('data', this.getTransactionByHash)
-              this.updateNotification(
-                new Notification(this.getTransactionByHash, true)
-              );
-            }
-          }
-        }
+        // /**
+        //  * Check status if it is an outgoing pending tx
+        //  * only do it on init
+        //  */
+        // if (this.onInit) {
+        //   console.error('in hereeeeeeee', newObj);
+        //   if (
+        //     type === notificationTypes.out &&
+        //     newObj.status.toLowerCase() === txTypes.pending
+        //   ) {
+        //     console.error('in here');
+        //     this.txHash = newObj.transactionHash;
+        //     if (this.getTransactionByHash) {
+        //       console.error('data', this.getTransactionByHash);
+        //       this.updateNotification(
+        //         new Notification(this.getTransactionByHash, true)
+        //       );
+        //     }
+        //   }
+        // }
         return newObj;
       });
     },

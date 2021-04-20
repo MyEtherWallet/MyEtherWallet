@@ -29,7 +29,6 @@ const getSanitizedTx = tx => {
 };
 
 const setEvents = (promiObj, tx, dispatch) => {
-  console.error('tx', tx);
   // create a no reference copy specifically for notification
   const newTxObj = _.clone(tx);
   newTxObj.type = notificationTypes.out;
@@ -49,12 +48,10 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('receipt', res => {
       newTxObj.transactionHash = res.transactionHash;
       newTxObj.status = txTypes.success;
-      if (!isExempt) {
-        const notification = new Notification(newTxObj);
-        dispatch('notifications/updateNotification', notification, {
-          root: true
-        });
-      }
+      const notification = new Notification(newTxObj, true);
+      dispatch('notifications/updateNotification', notification, {
+        root: true
+      });
     })
     .on('error', err => {
       newTxObj.status = txTypes.failed;
