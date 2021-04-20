@@ -1,3 +1,7 @@
+### Bug
+
+- Fix UD 2.0 version upgrade [#3033](https://github.com/MyEtherWallet/MyEtherWallet/pull/3033)
+
 ### Devop
 
 - Update packages and add MATIC network [#3035](https://github.com/MyEtherWallet/MyEtherWallet/pull/3035)
