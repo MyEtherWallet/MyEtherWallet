@@ -2,7 +2,7 @@
 
 ### Devop
 
-* Allows press enter on keystore access [#3041](https://github.com/MyEtherWallet/MyEtherWallet/pull/3041)
+* Allows press enter on keystore access [#3043](https://github.com/MyEtherWallet/MyEtherWallet/pull/3043)
 * Add mewcard wallet image [#3006](https://github.com/MyEtherWallet/MyEtherWallet/pull/3006)
 * Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)
 * Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
