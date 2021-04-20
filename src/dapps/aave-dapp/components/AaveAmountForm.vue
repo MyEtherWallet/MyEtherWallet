@@ -1,12 +1,12 @@
 <template>
   <v-sheet
-    class="pa-3 pa-md-5 text-center"
+    class="mew-component--aave-amount-form pa-3 pa-md-5 text-center"
     rounded
     color="white"
     elevation="1"
     max-width="650"
   >
-    <v-row justify="space-around">
+    <v-row justify="space-around" dense>
       <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
@@ -14,7 +14,10 @@
           :subtitle="leftSideValues.subTitle"
           :title="leftSideValues.title"
           :caption="leftSideValues.caption"
-          class="text-left"
+          class="text-left height--full"
+          :style="
+            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
+          "
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -24,18 +27,21 @@
           :subtitle="rightSideValues.subTitle"
           :title="rightSideValues.title"
           :caption="rightSideValues.caption"
-          class="text-left"
+          class="text-left height--full"
+          :style="
+            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
+          "
         />
       </v-col>
     </v-row>
-    <div class="px-12 mt-5">
+    <div class="px-2 px-md-12 mt-5">
       <p class="mew-heading-3 text-left">{{ formText.title }}</p>
       <p class="mew-body pt-1 text-left">
         {{ formText.caption }}
       </p>
     </div>
-    <div class="px-12 mt-5">
-      <div class="px-12">
+    <div class="px-0 px-md-12 mt-5">
+      <v-sheet max-width="300px" class="mx-auto">
         <mew-input
           :value="amount"
           label="Amount"
@@ -44,7 +50,7 @@
           :rules="[checkIfNumerical]"
           @input="setAmount"
         />
-      </div>
+      </v-sheet>
       <mew-toggle
         v-if="showToggle"
         :button-group="group"
@@ -53,30 +59,26 @@
         @onBtnClick="onToggle"
       />
     </div>
-    <v-row class="px-12 mt-5" align="center" justify="center">
-      <v-col cols="6">
-        <mew-button
-          :title="buttonTitle.action"
-          color-theme="primary"
-          btn-style="background"
-          btn-size="xlarge"
-          class="mb-2 px-12"
-          :has-full-width="true"
-          :disabled="!hasAmount"
-          @click.native="emitValues"
-        />
-        <br />
-        <mew-button
-          :title="buttonTitle.cancel"
-          color-theme="error"
-          btn-style="transparent"
-          btn-size="xlarge"
-          class="px-12"
-          :has-full-width="true"
-          @click.native="cancel"
-        />
-      </v-col>
-    </v-row>
+
+    <div class="mt-12 mb-2">
+      <mew-button
+        :title="buttonTitle.action"
+        color-theme="primary"
+        btn-style="background"
+        btn-size="xlarge"
+        :disabled="!hasAmount"
+        @click.native="emitValues"
+      />
+    </div>
+    <div>
+      <mew-button
+        :title="buttonTitle.cancel"
+        color-theme="error"
+        btn-style="transparent"
+        btn-size="xlarge"
+        @click.native="cancel"
+      />
+    </div>
   </v-sheet>
 </template>
 
@@ -189,5 +191,3 @@ export default {
   }
 };
 </script>
-
-<style></style>
