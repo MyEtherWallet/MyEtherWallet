@@ -18,6 +18,7 @@ import GO from './GO.js';
 import IOLITE from './IOLITE.js';
 import KOV from './KOV.js';
 import META from './META.js';
+import MATIC from './MATIC.js';
 import MIX from './MIX.js';
 import MUSIC from './MUSIC.js';
 import PIRL from './PIRL.js';
@@ -60,6 +61,7 @@ export {
   GO,
   IOLITE,
   KOV,
+  MATIC,
   META,
   MIX,
   MUSIC,
