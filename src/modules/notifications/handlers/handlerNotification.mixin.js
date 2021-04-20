@@ -22,6 +22,7 @@ export default {
       getEthTransfersV2: '',
       getTransactionsByHashes: '',
       pendingTransaction: '',
+      getTransactionByHash: '',
       txHash: '',
       initialLoad: true,
       txHashes: [],
@@ -71,7 +72,6 @@ export default {
         return this.txHashes.length === 0;
       },
       result({ data }) {
-        console.error('data', data)
         if (data && data.getTransactionsByHashes) {
           let ethTransfers = [];
           if (this.initialLoad) {
@@ -80,7 +80,9 @@ export default {
               this.txHashes.length > 10 ? this.txHashes.slice(10, 20) : [];
             this.initialLoad = false;
           } else {
-            ethTransfers = this.ethTransfers.concat(data.getTransactionsByHashes);
+            ethTransfers = this.ethTransfers.concat(
+              data.getTransactionsByHashes
+            );
             this.txHashes = [];
           }
           this.setFetchedTime();
@@ -102,22 +104,27 @@ export default {
           hash: this.txHash
         };
       },
-      fetchPolicy: 'cache-and-network',
       skip() {
-        return !this.txHash || this.txHash === '';
+        return !this.txHash || this.txHash === '' || this.txHash === null;
       },
       result({ data }) {
-        const copyArray = this.ethTransfers;
-        const getTransactionByHash = data.data.getTransactionByHash;
-        const foundIdx = copyArray.findIndex(item => {
-          if (getTransactionByHash.transactionHash === item.transactionHash) {
-            return item;
+        if (data) {
+          if (data.to === this.address) {
+            const getTransactionByHash = data.getTransactionByHash;
+            const copyArray = this.ethTransfers;
+            const foundIdx = copyArray.findIndex(item => {
+              if (
+                getTransactionByHash.transactionHash === item.transactionHash
+              ) {
+                return item;
+              }
+            });
+            foundIdx >= 0
+              ? copyArray.splice(foundIdx, 0, getTransactionByHash)
+              : copyArray.push(getTransactionByHash);
+            this.ethTransfers = copyArray;
           }
-        });
-        foundIdx
-          ? copyArray.splice(foundIdx, 0, getTransactionByHash)
-          : copyArray.push(getTransactionByHash);
-        this.ethTransfers = copyArray;
+        }
       },
       error(error) {
         Toast(error.message, {}, ERROR);
@@ -140,13 +147,12 @@ export default {
         result(data) {
           if (data.data.pendingTransaction) {
             const pendingTx = data.data.pendingTransaction;
-            if (pendingTx.to?.toLowerCase() === this.address?.toLowerCase()) {
+            if (pendingTx.to?.toLowerCase() === this.address) {
               pendingTx['date'] = pendingTx.timestamp * 1000;
               delete pendingTx.__typename;
               delete pendingTx.timestamp;
               this.ethTransfers.push(pendingTx);
               this.txHash = pendingTx.transactionHash;
-              console.error('txHash', pendingTx, this.txHash);
             }
           }
         },
@@ -166,6 +172,7 @@ export default {
         },
         result(data) {
           console.error('subscribe tx', data);
+          this.$apollo.queries.getTransactionByHash.refetch();
         },
         error(error) {
           Toast(error.message, {}, ERROR);

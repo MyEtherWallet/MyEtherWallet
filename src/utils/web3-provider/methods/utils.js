@@ -1,5 +1,9 @@
 import { formatters } from 'web3-core-helpers';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
+import {
+  txTypes,
+  notificationTypes
+} from '@/modules/notifications/configs/configTypes';
 import { _ } from 'web3-utils';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
@@ -25,27 +29,18 @@ const getSanitizedTx = tx => {
 };
 
 const setEvents = (promiObj, tx, dispatch) => {
+  console.error('tx', tx);
   // create a no reference copy specifically for notification
   const newTxObj = _.clone(tx);
-  newTxObj['data'] = newTxObj.hasOwnProperty('input')
-    ? newTxObj.input
-    : newTxObj.data;
-  newTxObj.date = new Date().getTime();
+  newTxObj.type = notificationTypes.out;
   const isExempt = newTxObj.hasOwnProperty('handleNotification');
-  delete newTxObj['r'];
-  delete newTxObj['v'];
-  delete newTxObj['s'];
-  delete newTxObj['chainId'];
-  delete newTxObj['input'];
-  delete newTxObj['hash'];
-  delete newTxObj['__typename'];
 
   promiObj
     .once('transactionHash', hash => {
-      newTxObj.status = 'PENDING';
+      newTxObj.status = txTypes.pending;
       newTxObj.transactionHash = hash;
       if (!isExempt) {
-        const notification = new Notification(newTxObj);
+        const notification = new Notification(newTxObj, true);
         dispatch('notifications/addNotification', notification, {
           root: true
         });
@@ -53,7 +48,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     })
     .on('receipt', res => {
       newTxObj.transactionHash = res.transactionHash;
-      newTxObj.status = 'SUCCESS';
+      newTxObj.status = txTypes.success;
       if (!isExempt) {
         const notification = new Notification(newTxObj);
         dispatch('notifications/updateNotification', notification, {
@@ -62,10 +57,10 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      newTxObj.status = 'FAILED';
+      newTxObj.status = txTypes.failed;
       newTxObj.errMessage = err.message;
       if (!isExempt) {
-        const notification = new Notification(newTxObj);
+        const notification = new Notification(newTxObj, true);
         dispatch('notifications/addNotification', notification, {
           root: true
         });

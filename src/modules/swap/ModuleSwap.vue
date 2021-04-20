@@ -157,6 +157,10 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import {
+  txTypes,
+  notificationTypes
+} from '@/modules/notifications/configs/configTypes';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -565,11 +569,10 @@ export default {
           gasLimit: this.totalGasLimit,
           data: this.currentTrade.transactions[idx].data,
           value: this.currentTrade.transactions[idx].value,
-          type: 'SWAP',
+          type: notificationTypes.swap,
           read: false,
           network: this.network.type.name,
-          date: new Date().getTime(),
-          status: isError ? 'FAILED' : 'PENDING',
+          status: isError ? txTypes.failed : txTypes.pending,
           fromTxData: {
             currency: this.confirmInfo.fromType,
             amount: this.confirmInfo.fromVal,
@@ -586,7 +589,7 @@ export default {
           swapObj: obj,
           errMessage: isError ? hash : ''
         };
-        this.addNotification(new Notification(notification));
+        this.addNotification(new Notification(notification, true));
       });
     },
     checkFeeBalance() {

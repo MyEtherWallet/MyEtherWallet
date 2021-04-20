@@ -147,6 +147,7 @@ export default {
       this.parseRawData(tx);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
+      _self.tx.transactionFee = this.txFee;
       _self.resolver = resolver;
       _self.instance
         .signTransaction(tx)

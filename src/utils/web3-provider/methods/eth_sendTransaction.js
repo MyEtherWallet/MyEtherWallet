@@ -39,7 +39,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
               res(null, toPayload(payload.id, hash));
@@ -78,7 +78,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
             .on('error', err => {
               res(err);
             });
-          setEvents(_promiObj, _tx, store.dispatch);
+          setEvents(_promiObj, tx, store.dispatch);
         });
       }
     })

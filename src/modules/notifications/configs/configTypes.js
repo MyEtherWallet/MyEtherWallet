@@ -4,7 +4,10 @@
 const txTypes = {
   success: 'success',
   error: 'error',
-  pending: 'pending'
+  pending: 'pending',
+  completed: 'completed',
+  failed: 'failed',
+  unknown: 'unknown'
 };
 /**
  * Notification types

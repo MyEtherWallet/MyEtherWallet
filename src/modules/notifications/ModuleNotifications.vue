@@ -107,8 +107,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import BigNumber from 'bignumber.js';
-import { hexToNumber, fromWei, toBN } from 'web3-utils';
+import { toBN } from 'web3-utils';
 import { txTypes, notificationTypes } from './configs/configTypes';
 import timeAgo from '@/core/helpers/timeAgo';
 
@@ -123,6 +122,7 @@ export default {
   },
   data() {
     return {
+      onInit: true,
       selected: 'all',
       items: [
         { label: 'All', val: 'all' },
@@ -159,10 +159,35 @@ export default {
      * Formatted current notifications
      */
     formattedCurrentNotifications() {
+      console.error('currentNotifications', this.currentNotifications)
       return this.currentNotifications.map(notification => {
-        const newObj = this.formatNotifications(notification);
-        if (newObj.type.toLowerCase() === notificationTypes.swap) {
+        const newObj = this.formatNotification(notification);
+        const type = newObj.type.toLowerCase();
+        /**
+         * Check status if it is a swap tx
+         */
+        if (type === notificationTypes.swap) {
           newObj.checkSwapStatus(this.swapper);
+        }
+        /**
+         * Check status if it is an outgoing pending tx
+         * only do it on init
+         */
+        if (this.onInit) {
+          console.error('in hereeeeeeee', newObj)
+          if (
+            type === notificationTypes.out &&
+            newObj.status.toLowerCase() === txTypes.pending
+          ) {
+            console.error('in here')
+            this.txHash = newObj.transactionHash;
+            if (this.getTransactionByHash) {
+              console.error('data', this.getTransactionByHash)
+              this.updateNotification(
+                new Notification(this.getTransactionByHash, true)
+              );
+            }
+          }
         }
         return newObj;
       });
@@ -173,7 +198,7 @@ export default {
     outgoingTxNotifications() {
       return this.txNotifications
         .map(notification => {
-          return this.formatNotifications(notification);
+          return this.formatNotification(notification);
         })
         .sort(this.sortByDate);
     },
@@ -183,7 +208,7 @@ export default {
     formattedSwapNotifications() {
       return this.swapNotifications
         .map(notification => {
-          const newObj = this.formatNotifications(notification);
+          const newObj = this.formatNotification(notification);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
@@ -195,10 +220,13 @@ export default {
     incomingTxNotifications() {
       if (!this.loading) {
         return this.ethTransfers
+          .filter(notification => {
+            return notification.to === this.address;
+          })
           .map(notification => {
-            notification = this._formatIncomingTx(notification);
-            notification = new Notification(notification);
-            return this.formatNotifications(notification);
+            notification.lastFetched = this.lastFetched;
+            notification = new Notification(notification, true);
+            return this.formatNotification(notification);
           })
           .sort(this.sortByDate);
       }
@@ -211,7 +239,7 @@ export default {
       const sorted = this.formattedCurrentNotifications
         .concat(this.incomingTxNotifications)
         .sort(this.sortByDate);
-      return sorted;
+      return sorted.slice(0, 20);
     },
     /**
      * Display notifications based on type
@@ -219,11 +247,11 @@ export default {
     notificationsByType() {
       switch (this.selected) {
         case notificationTypes.in:
-          return this.incomingTxNotifications;
+          return this.incomingTxNotifications.slice(0, 20);
         case notificationTypes.out:
-          return this.outgoingTxNotifications;
+          return this.outgoingTxNotifications.slice(0, 20);
         case notificationTypes.swap:
-          return this.swapNotifications;
+          return this.swapNotifications.slice(0, 20);
         default:
           return this.allNotifications;
       }
@@ -259,34 +287,20 @@ export default {
           ) {
             this.updateNotification(new Notification(res));
           } else {
-            this.ethTransfers = this.ethTransfers.map(item => {
-              if (item.transactionHash === res.transactionHash) {
-                return new Notification(res);
+            this.ethTransfers = this.ethTransfers.map(transfer => {
+              if (transfer.transactionHash === res.transactionHash) {
+                return new Notification(res, true);
               }
-              return item;
+              return transfer;
             });
           }
         });
       }
     },
     /**
-     * Get Transaction Fee
+     * Format Notification obj for mew-notification
      */
-    _getTxFee(value, gasPrice, gasUsed) {
-      const gasFee = toBN(gasPrice).mul(toBN(gasUsed));
-      const total = toBN(value).add(gasFee);
-      return fromWei(total);
-    },
-    /**
-     * Get Transaction Status
-     */
-    _getTxStatus(status) {
-      return hexToNumber(status) ? txTypes.success : txTypes.error;
-    },
-    /**
-     * Format Tx obj to Notification obj for mew-notification
-     */
-    formatNotifications(obj) {
+    formatNotification(obj) {
       const notificationObj = {
         txHash: {
           value: obj.transactionHash,
@@ -297,13 +311,11 @@ export default {
           )}`
         },
         gasPrice: {
-          value: `${
-            obj.gasPrice ? fromWei(toBN(obj.gasPrice), 'gwei') : 0
-          } Gwei`,
+          value: `${obj.gasPrice ? obj.gasPrice : 0} Gwei`,
           string: 'Gas Price'
         },
         gasLimit: {
-          value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
+          value: obj.gasLimit ? obj.gasLimit : '',
           string: 'Gas Limit'
         },
         total: {
@@ -340,29 +352,6 @@ export default {
       };
       obj.notification = notificationObj;
       return obj;
-    },
-    /**
-     * Format incoming tx for handler notification
-     */
-    _formatIncomingTx(obj) {
-      const date = new BigNumber(obj.timestamp).times(1000).toFixed();
-      return {
-        from: obj.from,
-        to: obj.to,
-        gasLimit: obj.gas,
-        data: obj.input,
-        transactionHash: obj.hash,
-        nonce: obj.nonce,
-        transactionFee: this._getTxFee(obj.value, obj.gasPrice, obj.gasUsed),
-        status: hexToNumber(obj.status) ? txTypes.success : txTypes.error,
-        type:
-          obj.to !== this.address
-            ? notificationTypes.out
-            : notificationTypes.in,
-        value: fromWei(obj.value),
-        date: date,
-        read: date < this.lastFetched
-      };
     }
   }
 };
