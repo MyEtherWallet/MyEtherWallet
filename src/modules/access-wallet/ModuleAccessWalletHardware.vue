@@ -233,7 +233,7 @@ import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { EventBus } from '@/core/plugins/eventBus';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
 const MAX_ADDRESSES = 5;
 
@@ -265,6 +265,10 @@ export default {
     close: {
       type: Function,
       default: () => {}
+    },
+    switchAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -363,6 +367,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
+    ...mapState('wallet', ['identifier']),
     stepperStep() {
       return this.step + 1;
     },
@@ -549,6 +554,11 @@ export default {
         this.unwatch();
       }
     });
+
+    if (this.switchAddress) {
+      this.nextStep(this.identifier);
+      this.walletType = this.identifier;
+    }
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
@@ -709,7 +719,8 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            this.$router.push({ name: 'Dashboard' });
+            if (!this.switchAddress) this.$router.push({ name: 'Dashboard' });
+            else this.close();
           })
           .catch(e => {
             this.reset();

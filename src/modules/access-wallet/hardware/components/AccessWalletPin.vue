@@ -99,12 +99,13 @@ export default {
   $button-element-size: 70px;
   $grid-width-size: $button-element-size + 2px;
 
-  margin-top: 30px;
+  margin-top: 10px;
   display: grid;
   justify-items: center;
   justify-content: center;
   grid-gap: 10px;
   grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  padding-bottom: 20px;
   button {
     cursor: pointer;
     background: #dadada;
