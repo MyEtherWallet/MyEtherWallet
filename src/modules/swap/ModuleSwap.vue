@@ -669,7 +669,6 @@ export default {
       });
     },
     checkFeeBalance() {
-      console.log(this.totalFees);
       this.feeError = '';
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
       const isNotEnoughEth =
