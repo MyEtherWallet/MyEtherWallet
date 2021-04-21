@@ -54,7 +54,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
             });
         });
       } else {
-        // if this is true, assume transaction is swap
+        /**
+         * confirmInfo is @Boolean
+         * Checks whether confirmInfo is true
+         * if true, assume transaction is a swap
+         */
         if (confirmInfo) {
           EventBus.$emit(
             EventNames.SHOW_SWAP_TX_MODAL,

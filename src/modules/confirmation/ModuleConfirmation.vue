@@ -196,9 +196,11 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
     });
-    // recieves an array
-    // arr[0] is the tx
-    // arr[1] is the swap information
+    /**
+     * receives an @Array
+     * arr[0] is the tx
+     * arr[1] is the swap information
+     */
     EventBus.$on(EventNames.SHOW_SWAP_TX_MODAL, (arr, resolver) => {
       _self.tx = arr[0];
       _self.swapInfo = arr[1];
