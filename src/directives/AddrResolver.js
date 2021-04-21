@@ -314,7 +314,7 @@ const AddrResolver = {
                   ? `<img style="padding:1em" src="${ethereumLogo}"/>`
                   : `<p style="padding:1em .5em 1em 1em">${parentCurrency} Address: </p>`
               }<span style="font-weight: 600">${_this.hexAddress}</span>`;
-              const twitterUsername = await resolution.cns
+              const twitterUsername = await resolution
                 .twitter(domain)
                 .catch(() => null);
               if (twitterUsername) {
