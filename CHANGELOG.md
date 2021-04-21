@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fetch swap quotes only when all fields are in place [#3040](https://github.com/MyEtherWallet/MyEtherWallet/pull/3040)
 * swap updates [#3034](https://github.com/MyEtherWallet/MyEtherWallet/pull/3034)
 * Show toast when no web3 wallet is shown [#3037](https://github.com/MyEtherWallet/MyEtherWallet/pull/3037)
 * Add mewcard wallet image [#3006](https://github.com/MyEtherWallet/MyEtherWallet/pull/3006)
