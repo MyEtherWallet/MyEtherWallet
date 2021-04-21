@@ -151,9 +151,9 @@ const ethercore = {
   path: "m/44'/466'/0'/0",
   label: 'EtherCore'
 };
-const avalanche = {
-  path: "m/44'/60'/0'/0",
-  label: 'Avalanche'
+const avalancheC = {
+  path: "m/44'/60'",
+  label: 'Avax C-chain'
 };
 export {
   ethereum,
@@ -194,5 +194,5 @@ export {
   lightstreamsNetwork,
   mintmeComCoin,
   ethercore,
-  avalanche
+  avalancheC
 };
