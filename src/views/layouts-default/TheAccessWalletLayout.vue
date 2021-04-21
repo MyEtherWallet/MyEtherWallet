@@ -293,6 +293,8 @@ export default {
         } catch (e) {
           Toast(e.message, {}, WARNING);
         }
+      } else {
+        Toast('No web3 wallet found!', {}, WARNING);
       }
     },
     /** Opens a modal to initiate a connection with a MEW mobile app.
