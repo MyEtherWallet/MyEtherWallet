@@ -381,6 +381,12 @@ export default {
     }
   },
   watch: {
+    totalFees: {
+      handler: function () {
+        this.checkFeeBalance();
+      },
+      immediate: true
+    },
     defaults: {
       handler: function () {
         this.setDefaults();
@@ -459,6 +465,7 @@ export default {
     setTokenInValue: _.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value;
+      this.tokenOutValue = '';
       this.availableQuotes.forEach(q => {
         q.isSelected = false;
       });
@@ -477,11 +484,7 @@ export default {
         };
         return;
       }
-      if (
-        value ||
-        !this.hasAmountErrors ||
-        this.fromTokenType.value !== this.toTokenType.value
-      ) {
+      if (value || !this.hasAmountErrors || !_.isEmpty(this.toTokenType)) {
         this.providersMessage = {
           title: '',
           subtitle: ''
@@ -489,34 +492,36 @@ export default {
       }
 
       this.feeError = '';
-      this.swapper
-        .getAllQuotes({
-          fromT: this.fromTokenType,
-          toT: this.toTokenType,
-          fromAmount: new BigNumber(this.tokenInValue).times(
-            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-          )
-        })
-        .then(quotes => {
-          quotes = quotes.map(q => {
-            q.rate = new BigNumber(q.amount)
-              .dividedBy(new BigNumber(this.tokenInValue))
-              .toString();
-            q.isSelected = false;
-            return q;
+      if (this.tokenInValue !== '' && !_.isEmpty(this.toTokenType)) {
+        this.swapper
+          .getAllQuotes({
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            fromAmount: new BigNumber(this.tokenInValue).times(
+              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+            )
+          })
+          .then(quotes => {
+            quotes = quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.tokenInValue))
+                .toString();
+              q.isSelected = false;
+              return q;
+            });
+            this.availableQuotes = quotes;
+            if (quotes.length) {
+              this.tokenOutValue = quotes[0].amount;
+              this.step = 1;
+            } else {
+              this.providersMessage = {
+                title:
+                  'There are no available Providers at this time, please try another pair.',
+                subtitle: ''
+              };
+            }
           });
-          this.availableQuotes = quotes;
-          if (quotes.length) {
-            this.tokenOutValue = quotes[0].amount;
-            this.step = 1;
-          } else {
-            this.providersMessage = {
-              title:
-                'There are no available Providers at this time, please try another pair.',
-              subtitle: ''
-            };
-          }
-        });
+      }
     }, 500),
     setProvider(idx) {
       this.availableQuotes.forEach((q, _idx) => {
@@ -647,13 +652,14 @@ export default {
       });
     },
     checkFeeBalance() {
+      this.feeError = '';
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
       const isNotEnoughEth =
         this.fromTokenType.value === 'Ethereum'
           ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
           : balanceAfterFees.isNeg();
       if (isNotEnoughEth) {
-        const message = `This provider  transaction fee is ${this.exPannel[0].subtext} ETH, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
+        const message = `This provider  transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
         const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
         this.feeError =
           this.fromTokenType.value === 'Ethereum' ? ethError : message;
