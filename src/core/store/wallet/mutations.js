@@ -16,7 +16,7 @@ const SET_WALLET = function (state, wallet) {
   state.instance = wallet;
   state.address = wallet.getAddressString();
   state.isHardware = wallet.hasOwnProperty('isHardware')
-    ? wallet.isHardWare
+    ? wallet.isHardware
     : false;
   state.identifier = wallet.identifier;
   if (!wallet.hasOwnProperty('isHardWare')) {

@@ -137,7 +137,7 @@ class Changelly {
         });
       });
   }
-  async executeTrade(tradeObj) {
+  async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = await this.web3.eth.getGasPrice();
 
@@ -147,7 +147,8 @@ class Changelly {
           Object.assign(tradeObj.transactions[0], {
             from,
             gasPrice,
-            handleNotification: false
+            handleNotification: false,
+            confirmInfo: confirmInfo
           })
         )
         .on('transactionHash', hash => {

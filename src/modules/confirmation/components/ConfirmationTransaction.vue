@@ -1,5 +1,5 @@
 <template>
-  <v-sheet max-width="600px" class="pa-8">
+  <v-sheet max-width="600px">
     <transaction-addresses :from="from" :to="to" class="mb-2" />
     <transaction-balance
       :tx-fee="txFee"
@@ -18,13 +18,6 @@
         </v-container>
       </template>
     </mew-expand-panel>
-    <div class="d-flex justify-center my-8">
-      <mew-button
-        btn-size="xlarge"
-        title="Confirm and Send"
-        @click.native="send"
-      />
-    </div>
     <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
 </template>
@@ -66,7 +59,7 @@ export default {
       type: Object,
       default: () => {}
     },
-    send: {
+    signTx: {
       type: Function,
       default: () => {}
     },
