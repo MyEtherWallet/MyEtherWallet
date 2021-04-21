@@ -50,7 +50,6 @@ class ledgerWallet {
         this.ledger,
         this.basePath + '/' + idx + "'"
       );
-      console.log(this.basePath + '/' + idx + "'");
       const hdKey = new HDKey();
       hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
       hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
