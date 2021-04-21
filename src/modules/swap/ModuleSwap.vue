@@ -398,6 +398,12 @@ export default {
     }
   },
   watch: {
+    totalFees: {
+      handler: function () {
+        this.checkFeeBalance();
+      },
+      immediate: true
+    },
     defaults: {
       handler: function () {
         this.setDefaults();
@@ -662,13 +668,14 @@ export default {
       });
     },
     checkFeeBalance() {
+      this.feeError = '';
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
       const isNotEnoughEth =
         this.fromTokenType.value === 'Ethereum'
           ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
           : balanceAfterFees.isNeg();
       if (isNotEnoughEth) {
-        const message = `This provider  transaction fee is ${this.exPannel[0].subtext} ETH, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
+        const message = `This provider  transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
         const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
         this.feeError =
           this.fromTokenType.value === 'Ethereum' ? ethError : message;
