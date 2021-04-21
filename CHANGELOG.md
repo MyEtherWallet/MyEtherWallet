@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Find chart timeframe with data on load [#3031](https://github.com/MyEtherWallet/MyEtherWallet/pull/3031)
 * Show toast when no web3 wallet is shown [#3037](https://github.com/MyEtherWallet/MyEtherWallet/pull/3037)
 * Add mewcard wallet image [#3006](https://github.com/MyEtherWallet/MyEtherWallet/pull/3006)
 * Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)
