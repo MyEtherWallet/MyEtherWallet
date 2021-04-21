@@ -9,9 +9,10 @@ import {
   transactionEvent
 } from '@/apollo/queries/notifications/notification.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import errorMsgs from '@/apollo/configs/configErrorMsgs';
 
 /**
- * Max notification items
+ * Constants
  */
 const MAX_ITEMS = 20;
 
@@ -107,6 +108,7 @@ export default {
       skip() {
         return !this.txHash || this.txHash === '' || this.txHash === null;
       },
+      update: data => data.getTransactionByHash,
       result({ data }) {
         if (data) {
           if (data.to === this.address) {
@@ -127,6 +129,9 @@ export default {
         }
       },
       error(error) {
+        if (error.message.includes(errorMsgs.getTransactionByHash)) {
+          return;
+        }
         Toast(error.message, {}, ERROR);
       }
     },

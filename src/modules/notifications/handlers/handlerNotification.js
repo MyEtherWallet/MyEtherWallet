@@ -45,7 +45,7 @@ export default class Notification {
     this.read = obj['read'] ? obj['read'] : false;
     this.swapResolver = null;
     /**
-     * Format notification obj only if it is on first init
+     * Format notification obj only if it is onInit
      * otherwise validate the notification obj
      */
     onInit
