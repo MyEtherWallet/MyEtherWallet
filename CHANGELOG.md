@@ -1,3 +1,5 @@
+### Release v5.7.28
+
 ### Bug
 
 - Fix UD 2.0 version upgrade [#3033](https://github.com/MyEtherWallet/MyEtherWallet/pull/3033)
