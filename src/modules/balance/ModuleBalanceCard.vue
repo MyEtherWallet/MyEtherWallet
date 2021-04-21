@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       openChangeAddress: false,
-      openPaperWallet: false
+      openPaperWallet: true
     };
   },
   computed: {
