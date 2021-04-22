@@ -224,7 +224,7 @@ export default class Changelly {
 
       let estValueResponse = changellyDetails[1][0];
       if (!estValueResponse.rate) {
-         useAsMax = new BigNumber(minAmount).lt(fromValue);
+        useAsMax = new BigNumber(minAmount).lt(fromValue);
         const reRequestRate = await changellyCalls.getRate(
           checkAndChange(fromCurrency).toLowerCase(),
           checkAndChange(toCurrency).toLowerCase(),
