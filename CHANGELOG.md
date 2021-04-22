@@ -1,7 +1,7 @@
 
 ### Devop
 
-- Update changelly swap handling  [#]()
+- Update changelly swap handling  [#3046](https://github.com/MyEtherWallet/MyEtherWallet/pull/3046)
 
 ### Release v5.7.28
 
