@@ -149,6 +149,7 @@ export default {
           this.file = JSON.parse(evt.target.result);
           this.step = 2;
         } catch (e) {
+          Toast(e.message, {}, ERROR);
           throw new Error(e);
         }
       };
