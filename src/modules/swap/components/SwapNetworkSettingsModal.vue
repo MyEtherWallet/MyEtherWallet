@@ -52,11 +52,11 @@ export default {
   },
   methods: {
     setCustom(value) {
-      this.setCustomGasPrice(value);
+      this.setCustomGasPrice(value, false);
       this.close();
     },
     setGas(value) {
-      this.setSelected(value);
+      this.setSelected(value, false);
       this.close();
     }
   }

@@ -18,7 +18,9 @@ export default async ({ payload, store, requestManager }, res, next) => {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
   }
-  tx.gasPrice = BigNumber(store.getters['global/gasPrice']).toFixed();
+  tx.gasPrice = tx.gasPrice
+    ? tx.gasPrice
+    : BigNumber(store.getters['global/gasPrice']).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];

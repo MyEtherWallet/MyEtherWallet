@@ -271,10 +271,13 @@ export default {
         const bestRate = newValue.findIndex(item => {
           return item.rate === this.bestRate;
         });
-        if (bestRate !== -1 && this.$refs.hasOwnProperty(`card${bestRate}`)) {
-          this.$refs[`card${bestRate}`][0].toggle();
-          this.setProvider(bestRate);
-        }
+        this.$nextTick(() => {
+          console.log(this.$refs, bestRate, this.$refs[`card${bestRate}`]);
+          if (bestRate !== -1) {
+            this.$refs[`card${bestRate}`][0].toggle();
+            this.setProvider(bestRate);
+          }
+        });
       }
     }
   }

@@ -10,7 +10,8 @@ import { fromWei, toWei } from 'web3-utils';
 const gasPriceMixin = {
   data() {
     return {
-      localGas: null
+      localGas: null,
+      convertedGasPrice: '0'
     };
   },
   computed: {
@@ -83,21 +84,32 @@ const gasPriceMixin = {
   },
   methods: {
     ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
-    setSelected(selected) {
-      try {
-        this.setGasPriceType(selected).then(() => {
-          this.setGasPrice(this.localGas);
-        });
-      } catch (e) {
-        Toast(e, {}, SENTRY);
+    setSelected(selected, setGlobal = true) {
+      if (setGlobal) {
+        try {
+          this.setGasPriceType(selected).then(() => {
+            this.setGasPrice(this.localGas);
+          });
+        } catch (e) {
+          Toast(e, {}, SENTRY);
+        }
+      } else {
+        this.convertedGasPrice = getGasBasedOnType(this.gasPrice, selected);
       }
     },
-    setCustomGasPrice(customGasPrice) {
-      this.setGasPriceType(gasPriceTypes.STORED).then(() => {
-        this.setGasPrice(
-          getGasBasedOnType(toWei(customGasPrice, 'gwei'), gasPriceTypes.STORED)
-        );
-      });
+    setCustomGasPrice(customGasPrice, setGlobal = true) {
+      if (setGlobal) {
+        this.setGasPriceType(gasPriceTypes.STORED).then(() => {
+          this.setGasPrice(
+            getGasBasedOnType(
+              toWei(customGasPrice, 'gwei'),
+              gasPriceTypes.STORED
+            )
+          );
+        });
+      } else {
+        this.convertedGasPrice = customGasPrice;
+      }
     },
     async fetchGasPrice() {
       try {
