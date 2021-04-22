@@ -26,6 +26,7 @@ import kovpocket from './kov-pocket';
 import kovmew from './kov-mew';
 import kovmewws from './kov-mew-ws';
 import metadium from './meta';
+import matic from './matic';
 import music from './music';
 import pirl from './pirl';
 import poa from './poa';
@@ -97,6 +98,7 @@ export {
   kovmewws,
   kovpocket,
   metadium,
+  matic,
   mix,
   music,
   pirl,
