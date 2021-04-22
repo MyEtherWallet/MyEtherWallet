@@ -121,7 +121,6 @@ export default class Changelly {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
-    console.log(fromCurrency, toCurrency, fromValue); // todo remove dev item
     if (this.useFixed && this.currencies[toCurrency]) {
       if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
         return this.getFixedRate(fromCurrency, toCurrency, fromValue);
@@ -166,7 +165,7 @@ export default class Changelly {
         ]);
 
         clearTimeout(timeout);
-        console.log('getFixRate', changellyDetails); // todo remove dev item
+
         if (!Array.isArray(changellyDetails[1])) {
           return {
             fromCurrency,
@@ -218,7 +217,6 @@ export default class Changelly {
         )
       ]);
 
-      console.log('market rate', changellyDetails); // todo remove dev item
       const minAmount = new BigNumber(changellyDetails[0])
         .times(0.001)
         .plus(new BigNumber(changellyDetails[0]))
@@ -234,8 +232,6 @@ export default class Changelly {
           this.network
         );
         estValueResponse = reRequestRate[0];
-
-        console.log(estValueResponse); // todo remove dev item
       }
       return {
         fromCurrency,
