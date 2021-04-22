@@ -18,7 +18,11 @@
     >
       <template #rightHeaderContainer>
         <div class="d-flex align-center">
-          <mew-toggle :button-group="chartButtons" @onBtnClick="onToggle" />
+          <mew-toggle
+            :button-group="chartButtons"
+            :on-toggle-btn-idx="activeButton"
+            @onBtnClick="onToggle"
+          />
           <!-- not sure what this button is for, commented out for now -->
           <!-- <mew-button
             btn-size="small"
@@ -96,7 +100,8 @@ export default {
       chartButtons: ['1D', '1W', '1M', '1Y'],
       chartData: [],
       timeString: '',
-      scale: ''
+      scale: '',
+      activeButton: 0
     };
   },
   computed: {
@@ -134,25 +139,39 @@ export default {
     }
   },
   mounted() {
-    this.setDataYesterday();
+    this.initChart();
   },
   methods: {
+    initChart() {
+      let count = 0;
+      const checker = () => {
+        this.onToggle(this.chartButtons[count]).then(res => {
+          if (count >= 3) {
+            this.onToggle(this.chartButtons[count]);
+            this.activeButton = count;
+            // a single point basically looks the same as an empty chart
+          } else if (res.length <= 1) {
+            count++;
+            checker();
+          } else {
+            this.activeButton = count;
+          }
+        });
+      };
+      checker();
+    },
     onToggle(e) {
       switch (e) {
         case this.chartButtons[0]:
-          this.setDataYesterday();
-          break;
+          return this.setDataYesterday();
         case this.chartButtons[1]:
-          this.setDataWeek();
-          break;
+          return this.setDataWeek();
         case this.chartButtons[2]:
-          this.setDataMonth();
-          break;
+          return this.setDataMonth();
         case this.chartButtons[3]:
-          this.setDataYear();
-          break;
+          return this.setDataYear();
         default:
-          this.setDataMonth();
+          return this.setDataMonth();
       }
     },
     setDataMonth() {

@@ -116,7 +116,11 @@ export default {
           if (getTransactionByHash.to === this.address) {
             const copyArray = this.ethTransfersIncoming;
             const foundIdx = copyArray.findIndex(item => {
-              if (getTransactionByHash.hash === item.hash) {
+              const dataHash =
+                getTransactionByHash.hash ||
+                getTransactionByHash.transactionHash;
+              const itemHash = item.hash || item.transactionHash;
+              if (dataHash === itemHash) {
                 return item;
               }
             });

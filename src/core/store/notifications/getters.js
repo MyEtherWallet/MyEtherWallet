@@ -19,7 +19,7 @@ const txNotifications = function (state, _, rootState, rootGetters) {
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from.toLowerCase() === address.toLowerCase() &&
-      item.type === notificationTypes.out &&
+      item.type.toLowerCase() === notificationTypes.out &&
       item.network === currentNetworkType
     )
       return item;
@@ -33,7 +33,7 @@ const swapNotifications = function (state, _, rootState, rootGetters) {
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from.toLowerCase() === address.toLowerCase() &&
-      item.type === notificationTypes.swap &&
+      item.type.toLowerCase() === notificationTypes.swap &&
       item.network === currentNetworkType
     )
       return item;

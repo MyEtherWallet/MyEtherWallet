@@ -122,7 +122,6 @@ export default {
   },
   data() {
     return {
-      onInit: true,
       selected: 'all',
       items: [
         { label: 'All', val: 'all' },
@@ -267,7 +266,6 @@ export default {
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },
-    callPending() {},
     /**
      * Mark notification as read
      */
