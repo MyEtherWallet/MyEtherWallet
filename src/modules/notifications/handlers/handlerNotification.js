@@ -219,6 +219,6 @@ export default class Notification {
    * Get Transaction Status
    */
   _getTxStatus(status) {
-    return hexToNumber(status) ? txTypes.success : txTypes.error;
+    return hexToNumber(status) ? txTypes.success : txTypes.failed;
   }
 }

@@ -3,7 +3,6 @@
  */
 const txTypes = {
   success: 'success',
-  error: 'error',
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
