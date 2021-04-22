@@ -3,7 +3,7 @@
     <transaction-addresses :from="from" :to="to" class="mb-2" />
     <transaction-balance
       :tx-fee="txFee"
-      :tx-fee-usd="txFeeUSD"
+      :tx-fee-usd="txFeeUsd"
       :value="value"
     />
     <mew-expand-panel :panel-items="panelItems" :is-toggle="true">
@@ -74,7 +74,7 @@ export default {
       type: String,
       default: '0'
     },
-    txFeeUSD: {
+    txFeeUsd: {
       type: String,
       default: '0'
     },
