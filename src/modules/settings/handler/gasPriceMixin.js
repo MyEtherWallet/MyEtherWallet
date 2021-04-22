@@ -11,7 +11,9 @@ const gasPriceMixin = {
   data() {
     return {
       localGas: null,
-      convertedGasPrice: '0'
+      convertedGasPrice: '0',
+      useGlobal: true,
+      selected: gasPriceTypes.ECONOMY
     };
   },
   computed: {
@@ -82,10 +84,15 @@ const gasPriceMixin = {
       ];
     }
   },
+  watch: {
+    gasPrice() {
+      this.fetchGasPrice();
+    }
+  },
   methods: {
     ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
-    setSelected(selected, setGlobal = true) {
-      if (setGlobal) {
+    setSelected(selected) {
+      if (this.useGlobal) {
         try {
           this.setGasPriceType(selected).then(() => {
             this.setGasPrice(this.localGas);
@@ -94,11 +101,12 @@ const gasPriceMixin = {
           Toast(e, {}, SENTRY);
         }
       } else {
+        this.selected = selected;
         this.convertedGasPrice = getGasBasedOnType(this.gasPrice, selected);
       }
     },
-    setCustomGasPrice(customGasPrice, setGlobal = true) {
-      if (setGlobal) {
+    setCustomGasPrice(customGasPrice) {
+      if (this.useGlobal) {
         this.setGasPriceType(gasPriceTypes.STORED).then(() => {
           this.setGasPrice(
             getGasBasedOnType(
@@ -108,7 +116,10 @@ const gasPriceMixin = {
           );
         });
       } else {
-        this.convertedGasPrice = customGasPrice;
+        this.convertedGasPrice = getGasBasedOnType(
+          toWei(customGasPrice, 'gwei'),
+          gasPriceTypes.STORED
+        );
       }
     },
     async fetchGasPrice() {

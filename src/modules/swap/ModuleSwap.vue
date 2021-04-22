@@ -4,6 +4,7 @@
       :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
+      @onLocalGasPrice="handleLocalGasPrice"
     />
     <mew6-white-sheet>
       <mew-module
@@ -22,7 +23,7 @@
             <v-col cols="12">
               <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
               <div v-else class="available-balance text-right">
-                {{ availableBalanceHint }}
+                {{ balanceInETH }}
               </div>
             </v-col>
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
@@ -149,12 +150,14 @@
             =====================================================================================
           -->
           <swap-fee
-            v-if="!hasAmountErrors && step > 0"
+            v-if="step > 0"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
             :total-fees="totalFees"
             :open-gas-price-modal="openGasPriceModal"
+            :gas-price-type="localGasType"
+            :message="feeError"
           />
           <div class="text-center">
             <mew-button
@@ -255,7 +258,9 @@ export default {
       },
       addressValue: {},
       gasPriceModal: false,
-      selectedProvider: {}
+      selectedProvider: {},
+      localGasPrice: '0',
+      localGasType: 'economy'
     };
   },
   computed: {
@@ -263,7 +268,9 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     totalFees() {
-      return toBN(this.totalGasLimit).mul(toBN(this.gasPrice)).toString();
+      const gasPrice =
+        this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
+      return toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -335,9 +342,7 @@ export default {
      * Fee is shown if provider was selected and no errors are passed
      */
     showSwapFee() {
-      return (
-        this.step >= 2 && this.availableBalance.gt(0) && this.feeError === ''
-      );
+      return this.step >= 2 && this.availableBalance.gt(0);
     },
 
     /**
@@ -562,6 +567,7 @@ export default {
         })
         .then(trade => {
           this.currentTrade = trade;
+          this.currentTrade.gasPrice = this.localGasPrice;
           this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
             this.network.type.name
           }`;
@@ -588,7 +594,8 @@ export default {
         toVal: this.tokenOutValue,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
-        totalFees: this.totalFees
+        totalFees: this.totalFees,
+        gasPriceType: this.localGasType
       };
       this.executeTrade();
     },
@@ -677,6 +684,10 @@ export default {
         item => item.symbol.toLowerCase() === symbol.toLowerCase()
       );
       this.setToToken(foundToken);
+    },
+    handleLocalGasPrice(e) {
+      this.localGasPrice = e.gasPrice;
+      this.localGasType = e.gasType;
     }
   }
 };

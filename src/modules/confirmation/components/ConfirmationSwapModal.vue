@@ -78,6 +78,10 @@ export default {
         };
       }
     },
+    gasPriceType: {
+      type: String,
+      default: ''
+    },
     fromVal: {
       type: String,
       default: '0'
@@ -128,7 +132,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['ETHUSDValue']),
     convertedFees() {
       return fromWei(this.txFee);

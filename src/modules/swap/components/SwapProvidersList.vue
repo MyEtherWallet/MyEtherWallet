@@ -272,7 +272,6 @@ export default {
           return item.rate === this.bestRate;
         });
         this.$nextTick(() => {
-          console.log(this.$refs, bestRate, this.$refs[`card${bestRate}`]);
           if (bestRate !== -1) {
             this.$refs[`card${bestRate}`][0].toggle();
             this.setProvider(bestRate);

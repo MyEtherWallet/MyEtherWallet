@@ -11,6 +11,7 @@
       :to-val="swapInfo.toVal"
       :provider="swapInfo.selectedProvider"
       :tx-fee="swapInfo.totalFees"
+      :gas-price-type="swapInfo.gasPriceType"
       :send="signTx"
       :show="showSwapModal"
       :close="overlayClose"

@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5 mb-10">
-    <v-row v-if="!showFee">
+    <!-- <v-row v-if="!showFee">
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
@@ -24,28 +24,36 @@
           />
         </v-card>
       </v-col>
-    </v-row>
-    <v-row v-else justify="space-between" align="center">
+    </v-row> -->
+    <v-row justify="space-between" align="center">
       <v-col cols="8" class="mb-n3">
         <p class="mew-heading-3">Network Fee</p>
       </v-col>
-      <v-col cols="4" class="d-flex justify-space-around align-center">
+      <v-col cols="4">
         <div class="d-flex justify-space-around align-center">
-          <mew-icon :icon-name="icon" :img-height="30" />
-          <span class="capitalize">{{ gasPriceType }}</span>
+          <div class="d-flex justify-space-around align-center">
+            <mew-icon :icon-name="icon" :img-height="30" />
+            <span class="capitalize">{{ gasPriceType }}</span>
+          </div>
+          <span v-show="!gettingFee && showFee"
+            >{{ actualFees }} {{ network.type.currencyName }}
+            {{ feesInUsd }}</span
+          >
+          <v-skeleton-loader
+            v-show="gettingFee || !showFee"
+            type="text"
+            width="250px"
+          />
+          <div class="icon-holder primary" @click="openGasPriceModal">
+            <v-icon size="small" color="white">mdi-pencil</v-icon>
+          </div>
         </div>
-        <span v-show="!gettingFee && showFee"
-          >{{ actualFees }} {{ network.type.currencyName }}
-          {{ feesInUsd }}</span
+        <p
+          v-if="!gettingFee || hasError"
+          :class="[hasError ? 'error--text' : '', 'text-center']"
         >
-        <v-skeleton-loader
-          v-show="gettingFee || !showFee"
-          type="text"
-          width="250px"
-        />
-        <div class="icon-holder primary" @click="openGasPriceModal">
-          <v-icon size="small" color="white">mdi-pencil</v-icon>
-        </div>
+          {{ message }}
+        </p>
       </v-col>
     </v-row>
   </div>
@@ -84,10 +92,17 @@ export default {
     openGasPriceModal: {
       type: Function,
       default: () => {}
+    },
+    gasPriceType: {
+      type: String,
+      default: 'economy'
+    },
+    message: {
+      type: String,
+      default: ''
     }
   },
   computed: {
-    ...mapState('global', ['gasPriceType']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     icon() {
@@ -104,12 +119,12 @@ export default {
     },
     hasError() {
       return this.error !== '';
-    },
-    message() {
-      return this.hasError
-        ? this.error
-        : ' Select provider to load transaction fee and enable Swap.';
     }
+    // message() {
+    //   return this.hasError
+    //     ? this.error
+    //     : ' Select provider to load transaction fee and enable Swap.';
+    // }
   }
 };
 </script>

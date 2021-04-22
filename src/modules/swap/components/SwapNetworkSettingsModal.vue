@@ -12,7 +12,7 @@
           <settings-gas-price
             :is-swap="true"
             :buttons="gasButtons"
-            :selected="gasPriceType"
+            :selected="selected"
             :set-selected="setGas"
             :gas-price="gasPrice"
             :set-custom-gas-price="setCustom"
@@ -48,15 +48,26 @@ export default {
     }
   },
   created() {
+    this.useGlobal = false;
     this.fetchGasPrice();
   },
   methods: {
     setCustom(value) {
+      const newObj = {
+        gasType: value,
+        gasPrice: this.convertedGasPrice
+      };
       this.setCustomGasPrice(value, false);
+      this.$emit('onLocalGasPrice', newObj);
       this.close();
     },
     setGas(value) {
+      const newObj = {
+        gasType: value,
+        gasPrice: this.convertedGasPrice
+      };
       this.setSelected(value, false);
+      this.$emit('onLocalGasPrice', newObj);
       this.close();
     }
   }
