@@ -18,6 +18,7 @@ function checkAndChange(value) {
 }
 const getCurrencies = async network => {
   try {
+    console.log(network); // todo remove dev item
     if (changellyMethods[network]) {
       const results = await post(
         buildPath(),
@@ -49,6 +50,7 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
           }
         ])
       );
+      console.log('getRate', results); // todo remove dev item
 
       if (results.error) {
         throw Error(results.error.message);
@@ -77,7 +79,7 @@ const getResultAmount = async (
           amount: fromValue
         })
       );
-
+      console.log('getResultAmount', results); // todo remove dev item
       if (results.error) {
         throw Error(results.error.message);
       }
@@ -100,10 +102,11 @@ const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
         })
       );
 
+      console.log('getMin', results); // todo remove dev item
+
       if (results.error) {
         throw Error(results.error.message);
       }
-
       return results.result;
     }
     return Promise.resolve(-1);
@@ -193,6 +196,32 @@ const getFixRate = async (fromCurrency, toCurrency, fromValue, network) => {
           }
         ])
       );
+      console.log('getFixRate', results); // todo remove dev item
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const getPairsParams = async (fromCurrency, toCurrency, fromValue, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].getPairsParams, [
+          {
+            from: checkAndChange(fromCurrency),
+            to: checkAndChange(toCurrency)
+          }
+        ])
+      );
+      console.log('getPairsParams', results); // todo remove dev item
 
       if (results.error) {
         throw Error(results.error.message);
@@ -238,5 +267,6 @@ export default {
   getStatus,
   login,
   getFixRate,
-  createFixTransaction
+  createFixTransaction,
+  getPairsParams
 };
