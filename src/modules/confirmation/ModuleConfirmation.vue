@@ -148,6 +148,9 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
+      // this.txFee is not updating before reaching about here
+      _self.tx.transactionFee = this.txFee;
+      tx.transactionFee = this.txFee;
       _self.instance
         .signTransaction(tx)
         .then(res => {
