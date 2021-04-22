@@ -147,7 +147,6 @@ export default {
       this.parseRawData(tx);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
-      _self.tx.transactionFee = this.txFee;
       _self.resolver = resolver;
       // this.txFee is not updating before reaching about here
       _self.tx.transactionFee = this.txFee;
