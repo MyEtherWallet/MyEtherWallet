@@ -8,7 +8,7 @@ import {
   rskTestnet,
   thundercore,
   solidum,
-  avalanche
+  avalancheC
 } from './paths';
 export default [
   ledgerEthereum,
@@ -20,5 +20,5 @@ export default [
   rskTestnet,
   thundercore,
   solidum,
-  avalanche
+  avalancheC
 ];
