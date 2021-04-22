@@ -37,18 +37,19 @@ const VALID_ARGUMENTS = [
   'toTxData', // obj
   'errMessage', // string
   'swapObj', // obj
-  'swapResolver'
+  'swapResolver',
+  'formatted' //boolean
 ];
 
 export default class Notification {
-  constructor(obj, onInit) {
+  constructor(obj) {
     this.read = obj['read'] ? obj['read'] : false;
     this.swapResolver = null;
     /**
      * Format notification obj only if it is onInit
      * otherwise validate the notification obj
      */
-    onInit
+    obj && !obj.formatted
       ? this.formatNotificiationObj(obj)
       : this.validateNotificationObj(obj);
   }
@@ -76,7 +77,7 @@ export default class Notification {
         ? txTypes.success
         : obj.status
         ? obj.status
-        : txTypes.error;
+        : txTypes.pending;
     /**
      * The Notification Obj
      */
@@ -108,7 +109,8 @@ export default class Notification {
       swapObj: obj.swapObj ? obj.swapObj : '',
       fromTxData: obj.fromTxData ? obj.fromTxData : {},
       toTxData: obj.toTxData ? obj.toTxData : {},
-      network: obj.network ? obj.network : ''
+      network: obj.network ? obj.network : '',
+      formatted: true
     };
     this.validateNotificationObj(notification);
   }

@@ -74,9 +74,9 @@
           <mew6-white-sheet>
             <div class="pa-4">
               <div
-                v-for="data in notificationsByType"
+                v-for="(data, key) in notificationsByType"
                 v-show="!loading && notificationsByType.length > 0"
-                :key="data.transactionHash"
+                :key="key"
                 class="mt-2"
               >
                 <mew-notification
@@ -177,10 +177,7 @@ export default {
         ) {
           this.txHash = notification.transactionHash;
           if (this.getTransactionByHash) {
-            const notification = new Notification(
-              this.getTransactionByHash,
-              true
-            );
+            const notification = new Notification(this.getTransactionByHash);
             this.updateNotification(notification);
           }
         }
@@ -214,13 +211,15 @@ export default {
      */
     incomingTxNotifications() {
       if (!this.loading) {
-        return this.ethTransfers
+        return this.ethTransfersIncoming
           .filter(notification => {
             return notification.to === this.address;
           })
           .map(notification => {
-            notification.lastFetched = this.lastFetched;
-            notification = new Notification(notification, true);
+            if (!notification.formatted) {
+              notification.lastFetched = this.lastFetched;
+            }
+            notification = new Notification(notification);
             return this.formatNotification(notification);
           })
           .sort(this.sortByDate);
@@ -283,12 +282,14 @@ export default {
           ) {
             this.updateNotification(new Notification(res));
           } else {
-            this.ethTransfers = this.ethTransfers.map(transfer => {
-              if (transfer.transactionHash === res.transactionHash) {
-                return new Notification(res, true);
+            this.ethTransfersIncoming = this.ethTransfersIncoming.map(
+              transfer => {
+                if (transfer.hash === res.transactionHash) {
+                  return new Notification(res);
+                }
+                return transfer;
               }
-              return transfer;
-            });
+            );
           }
         });
       }

@@ -588,7 +588,7 @@ export default {
           swapObj: obj,
           errMessage: isError ? hash : ''
         };
-        this.addNotification(new Notification(notification, true));
+        this.addNotification(new Notification(notification));
       });
     },
     checkFeeBalance() {

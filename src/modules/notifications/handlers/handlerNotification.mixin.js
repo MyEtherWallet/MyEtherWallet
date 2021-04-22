@@ -24,10 +24,11 @@ export default {
       getTransactionsByHashes: '',
       newPendingTransaction: '',
       getTransactionByHash: '',
+      subscribeToTxHash: '',
       txHash: '',
       initialLoad: true,
       txHashes: [],
-      ethTransfers: []
+      ethTransfersIncoming: []
     };
   },
   apollo: {
@@ -74,20 +75,20 @@ export default {
       },
       result({ data }) {
         if (data && data.getTransactionsByHashes) {
-          let ethTransfers = [];
+          let ethTransfersIncoming = [];
           if (this.initialLoad) {
-            ethTransfers = data.getTransactionsByHashes;
+            ethTransfersIncoming = data.getTransactionsByHashes;
             this.txHashes =
               this.txHashes.length > 10 ? this.txHashes.slice(10, 20) : [];
             this.initialLoad = false;
           } else {
-            ethTransfers = this.ethTransfers.concat(
+            ethTransfersIncoming = this.ethTransfersIncoming.concat(
               data.getTransactionsByHashes
             );
             this.txHashes = [];
           }
           this.setFetchedTime();
-          this.ethTransfers = ethTransfers;
+          this.ethTransfersIncoming = ethTransfersIncoming;
         }
       },
       error(error) {
@@ -111,20 +112,18 @@ export default {
       update: data => data.getTransactionByHash,
       result({ data }) {
         if (data) {
-          if (data.to === this.address) {
-            const getTransactionByHash = data.getTransactionByHash;
-            const copyArray = this.ethTransfers;
+          const getTransactionByHash = data.getTransactionByHash;
+          if (getTransactionByHash.to === this.address) {
+            const copyArray = this.ethTransfersIncoming;
             const foundIdx = copyArray.findIndex(item => {
-              if (
-                getTransactionByHash.transactionHash === item.transactionHash
-              ) {
+              if (getTransactionByHash.hash === item.hash) {
                 return item;
               }
             });
             foundIdx >= 0
-              ? copyArray.splice(foundIdx, 0, getTransactionByHash)
-              : copyArray.push(getTransactionByHash);
-            this.ethTransfers = copyArray;
+              ? copyArray.splice(foundIdx, 1, getTransactionByHash)
+              : copyArray.unshift(getTransactionByHash);
+            this.ethTransfersIncoming = copyArray;
           }
         }
       },
@@ -143,21 +142,22 @@ export default {
         query: pendingTransaction,
         variables() {
           return {
-            owner: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+            owner: this.address
           };
         },
+        skip() {
+          return !this.address || this.address === '' || this.loading;
+        },
         result({ data }) {
-          console.error('in HERE!', data)
-          // if (data && data.pendingTransaction) {
-          //   const pendingTx = data.pendingTransaction;
-          //   if (pendingTx.to?.toLowerCase() === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d") {
-          //     this.txHash = pendingTx.transactionHash;
-          //   }
-          // }
+          if (data && data.pendingTransaction) {
+            const pendingTx = data.pendingTransaction;
+            if (pendingTx.to?.toLowerCase() === this.address) {
+              this.txHash = pendingTx.transactionHash;
+            }
+          }
         },
         error(error) {
-          console.error('error', error)
-          // Toast(error.message, {}, ERROR);
+          Toast(error.message, {}, ERROR);
         }
       },
       /**
@@ -169,6 +169,9 @@ export default {
           return {
             hash: this.txHash
           };
+        },
+        skip() {
+          return !this.txHash || this.txHash === '' || this.txHash === null;
         },
         result() {
           this.$apollo.queries.getTransactionByHash.refetch();

@@ -39,7 +39,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.status = txTypes.pending;
       newTxObj.transactionHash = hash;
       if (!isExempt) {
-        const notification = new Notification(newTxObj, true);
+        const notification = new Notification(newTxObj);
         dispatch('notifications/addNotification', notification, {
           root: true
         });
@@ -48,7 +48,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('receipt', res => {
       newTxObj.transactionHash = res.transactionHash;
       newTxObj.status = txTypes.success;
-      const notification = new Notification(newTxObj, true);
+      const notification = new Notification(newTxObj);
       dispatch('notifications/updateNotification', notification, {
         root: true
       });
@@ -56,7 +56,7 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('error', err => {
       newTxObj.status = txTypes.failed;
       newTxObj.errMessage = err.message;
-      const notification = new Notification(newTxObj, true);
+      const notification = new Notification(newTxObj);
       dispatch('notifications/updateNotification', notification, {
         root: true
       });
