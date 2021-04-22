@@ -207,6 +207,7 @@ export default {
   .blockie-image {
     border: 2px solid white;
     border-radius: 100%;
+    z-index: 1;
   }
 
   img {
@@ -257,7 +258,6 @@ export default {
 <style lang="scss">
 .component--wallet-card {
   .bottom-buttons {
-    z-index: -1;
     .v-btn {
       padding: 0 !important;
       min-width: 36px !important;
