@@ -380,16 +380,16 @@
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
-			"operationName": "pendingTransaction",
+			"operationName": "pendingTx",
 			"operationType": "subscription",
 			"rootType": "Subscription",
 			"variables": [
 				{
 					"name": "owner",
-					"type": "String!"
+					"type": "String"
 				}
 			],
-			"source": "subscription pendingTransaction($owner: String!) {\n  pendingTransaction(owner: $owner) {\n    __typename\n    transactionHash\n    from\n    to\n    txFee\n    value\n    timestamp\n  }\n}",
+			"source": "subscription pendingTx($owner: String) {\n  pendingTransaction(owner: $owner) {\n    __typename\n    transactionHash\n  }\n}",
 			"fields": [
 				{
 					"responseName": "pendingTransaction",
@@ -421,41 +421,6 @@
 							"type": "String!",
 							"isConditional": false,
 							"isDeprecated": false
-						},
-						{
-							"responseName": "from",
-							"fieldName": "from",
-							"type": "String!",
-							"isConditional": false,
-							"isDeprecated": false
-						},
-						{
-							"responseName": "to",
-							"fieldName": "to",
-							"type": "String",
-							"isConditional": false,
-							"isDeprecated": false
-						},
-						{
-							"responseName": "txFee",
-							"fieldName": "txFee",
-							"type": "String!",
-							"isConditional": false,
-							"isDeprecated": false
-						},
-						{
-							"responseName": "value",
-							"fieldName": "value",
-							"type": "String!",
-							"isConditional": false,
-							"isDeprecated": false
-						},
-						{
-							"responseName": "timestamp",
-							"fieldName": "timestamp",
-							"type": "Int!",
-							"isConditional": false,
-							"isDeprecated": false
 						}
 					],
 					"fragmentSpreads": [],
@@ -465,12 +430,12 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "subscription pendingTransaction($owner: String!) {\n  pendingTransaction(owner: $owner) {\n    __typename\n    transactionHash\n    from\n    to\n    txFee\n    value\n    timestamp\n  }\n}",
-			"operationId": "e6c29cb9ee8a3f18b7a7b797bf8d5eaf4b6b2839d88ebcaca3ae1095bf978919"
+			"sourceWithFragments": "subscription pendingTx($owner: String) {\n  pendingTransaction(owner: $owner) {\n    __typename\n    transactionHash\n  }\n}",
+			"operationId": "67497c9516f35b03e7347a065d10d3bab4d1cc72c19ca7759dbea2747bd7c7fa"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/notifications/notification.graphql",
-			"operationName": "transactionEvent",
+			"operationName": "txMined",
 			"operationType": "subscription",
 			"rootType": "Subscription",
 			"variables": [
@@ -479,7 +444,7 @@
 					"type": "String!"
 				}
 			],
-			"source": "subscription transactionEvent($hash: String!) {\n  transactionEvent(hash: $hash)\n}",
+			"source": "subscription txMined($hash: String!) {\n  transactionEvent(hash: $hash)\n}",
 			"fields": [
 				{
 					"responseName": "transactionEvent",
@@ -502,8 +467,8 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "subscription transactionEvent($hash: String!) {\n  transactionEvent(hash: $hash)\n}",
-			"operationId": "3fbae1793eb1f34e67e5f20462838475cdd6681f732acc0fb283622c57fff403"
+			"sourceWithFragments": "subscription txMined($hash: String!) {\n  transactionEvent(hash: $hash)\n}",
+			"operationId": "db79969a4b070f434efcd4887b1a95ea74b9751b5883cf37f086e85f2ec79b15"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens/tokens.graphql",

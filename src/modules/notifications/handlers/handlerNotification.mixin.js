@@ -9,7 +9,7 @@ import {
   transactionEvent
 } from '@/apollo/queries/notifications/notification.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import errorMsgs from '@/apollo/configs/configErrorMsgs';
+import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
 
 /**
  * Constants
@@ -22,7 +22,7 @@ export default {
     return {
       getEthTransfersV2: '',
       getTransactionsByHashes: '',
-      pendingTransaction: '',
+      newPendingTransaction: '',
       getTransactionByHash: '',
       txHash: '',
       initialLoad: true,
@@ -129,7 +129,7 @@ export default {
         }
       },
       error(error) {
-        if (error.message.includes(errorMsgs.getTransactionByHash)) {
+        if (error.message.includes(errorMsgs.cannotReturnNull)) {
           return;
         }
         Toast(error.message, {}, ERROR);
@@ -139,30 +139,25 @@ export default {
       /**
        * Apollo subscription for pending txs
        */
-      pendingTransaction: {
+      newPendingTransaction: {
         query: pendingTransaction,
         variables() {
           return {
-            owner: this.address
+            owner: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
           };
         },
-        skip() {
-          return !this.address || this.address === null;
-        },
-        result(data) {
-          if (data.data.pendingTransaction) {
-            const pendingTx = data.data.pendingTransaction;
-            if (pendingTx.to?.toLowerCase() === this.address) {
-              pendingTx['date'] = pendingTx.timestamp * 1000;
-              delete pendingTx.__typename;
-              delete pendingTx.timestamp;
-              this.ethTransfers.push(pendingTx);
-              this.txHash = pendingTx.transactionHash;
-            }
-          }
+        result({ data }) {
+          console.error('in HERE!', data)
+          // if (data && data.pendingTransaction) {
+          //   const pendingTx = data.pendingTransaction;
+          //   if (pendingTx.to?.toLowerCase() === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d") {
+          //     this.txHash = pendingTx.transactionHash;
+          //   }
+          // }
         },
         error(error) {
-          Toast(error.message, {}, ERROR);
+          console.error('error', error)
+          // Toast(error.message, {}, ERROR);
         }
       },
       /**

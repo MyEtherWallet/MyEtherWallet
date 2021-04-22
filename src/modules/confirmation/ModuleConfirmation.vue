@@ -246,7 +246,6 @@ export default {
       }
       tx.type = 'OUT';
       tx.network = this.network.type.name;
-      tx.transactionFee = this.txFee;
     },
     async sendBatchTransaction() {
       this.showBatchOverlay = false;

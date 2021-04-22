@@ -160,32 +160,31 @@ export default {
      */
     formattedCurrentNotifications() {
       return this.currentNotifications.map(notification => {
-        let newObj = this.formatNotification(notification);
-        const type = newObj.type.toLowerCase();
+        const type = notification.type.toLowerCase();
         /**
          * Check status if it is a swap tx
          */
         if (type === notificationTypes.swap) {
-          newObj.checkSwapStatus(this.swapper);
+          notification.checkSwapStatus(this.swapper);
         }
         /**
          * Check status if it is an outgoing pending tx
+         * by querying getTransactionByHash
          */
         if (
           type === notificationTypes.out &&
-          newObj.status.toLowerCase() === txTypes.pending
+          notification.status.toLowerCase() === txTypes.pending
         ) {
-          this.txHash = newObj.transactionHash;
+          this.txHash = notification.transactionHash;
           if (this.getTransactionByHash) {
             const notification = new Notification(
               this.getTransactionByHash,
               true
             );
             this.updateNotification(notification);
-            newObj = this.formatNotification(notification);
           }
         }
-        return newObj;
+        return this.formatNotification(notification);
       });
     },
     /**

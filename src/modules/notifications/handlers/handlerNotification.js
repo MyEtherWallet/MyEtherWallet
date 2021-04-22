@@ -57,7 +57,7 @@ export default class Notification {
    */
   formatNotificiationObj(obj) {
     /**
-     * Assigning values: date, value, gasPrice, status
+     * Assigning values: date, value, gasPrice, gas, status
      */
     const date = obj.timestamp
       ? new BigNumber(obj.timestamp).times(1000).toFixed()
@@ -70,6 +70,7 @@ export default class Notification {
       : obj.gasPrice
       ? obj.gasPrice
       : 0;
+    const gas = isHexStrict(obj.gas) ? hexToNumberString(obj.gas) : obj.gas;
     const status =
       isHexStrict(obj.status) && hexToNumber(obj.status)
         ? txTypes.success
@@ -91,18 +92,14 @@ export default class Notification {
         : '0x',
       data: obj.input ? obj.input : obj.data,
       transactionHash: obj.transactionHash || obj.hash,
-      gas: isHexStrict(obj.gas)
-        ? fromWei(hexToNumberString(obj.gas), 'gwei')
-        : obj.gas,
+      gas: fromWei(gas, 'gwei'),
       gasPrice: fromWei(toBN(gasPrice), 'gwei'),
       nonce: isHexStrict(obj.nonce)
         ? fromWei(hexToNumberString(obj.nonce), 'gwei')
         : obj.nonce,
-      transactionFee: obj.txFee
-        ? obj.txFee
-        : obj.transactionFee
+      transactionFee: obj.transactionFee
         ? obj.transactionFee
-        : this._getTxFee(obj.value, obj.gasPrice, obj.gasUsed),
+        : this._getTxFee(gasPrice, obj.gasUsed ? obj.gasUsed : gas),
       status: status,
       type: obj.type ? obj.type : notificationTypes.in,
       value: toBN(value) ? fromWei(toBN(value), 'ether') : value,
@@ -212,10 +209,9 @@ export default class Notification {
   /**
    * Get Transaction Fee
    */
-  _getTxFee(value, gasPrice, gasUsed) {
-    const gasFee = toBN(gasPrice).mul(toBN(gasUsed));
-    const total = toBN(value).add(gasFee);
-    return fromWei(total, 'ether');
+  _getTxFee(gasPrice, gas) {
+    const gasFee = toBN(gasPrice).mul(toBN(gas));
+    return fromWei(gasFee, 'ether');
   }
   /**
    * Get Transaction Status

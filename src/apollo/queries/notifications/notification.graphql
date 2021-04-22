@@ -41,18 +41,12 @@ query getTransactionByHash($hash: String!) {
   }
 }
 
-
-subscription pendingTransaction($owner: String!){
-  pendingTransaction(owner: $owner) {
-    transactionHash
-    from
-    to
-    txFee
-    value
-    timestamp
-  }
+subscription pendingTx($owner: String) {
+    pendingTransaction(owner: $owner) {
+        transactionHash
+    }
 }
 
-subscription transactionEvent($hash: String!){
-  transactionEvent(hash: $hash)
+subscription txMined($hash: String!) {
+    transactionEvent(hash: $hash)
 }
