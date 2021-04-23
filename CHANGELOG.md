@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Add Switch Address for Hardware wallets [#3042](https://github.com/MyEtherWallet/MyEtherWallet/pull/3042)
 * Allows press enter on keystore access [#3043](https://github.com/MyEtherWallet/MyEtherWallet/pull/3043)
 * Fix zero tx fee on confirmation screen and in notifications [#3025](https://github.com/MyEtherWallet/MyEtherWallet/pull/3025)
 * Find chart timeframe with data on load [#3031](https://github.com/MyEtherWallet/MyEtherWallet/pull/3031)
