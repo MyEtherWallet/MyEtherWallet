@@ -18,7 +18,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import TokenCalls from '@/apollo/queries/tokens/index';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -46,14 +45,18 @@ export default {
     web3() {
       this.web3.eth.clearSubscriptions();
       this.subscribeToBlockNumber();
-      this.getTokens();
-      this.getPriceAndBalance();
+      this.setGas();
+      if (!this.isEthNetwork) {
+        this.setTokensAndBalance();
+      }
     }
   },
   mounted() {
     if (this.online) {
-      this.getTokens();
-      this.getPriceAndBalance();
+      if (!this.isEthNetwork) {
+        this.setTokensAndBalance();
+      }
+      this.setGas();
       this.subscribeToBlockNumber();
     }
   },
@@ -68,22 +71,13 @@ export default {
     ]),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
-    getTokens() {
-      if (this.isEthNetwork) {
-        const tokensList = new TokenCalls(this.$apollo);
-        tokensList.getOwnersERC20Tokens(this.address).then(res => {
-          this.setTokens(res);
-        });
-      } else {
-        this.setTokens(this.network.type.tokens);
-      }
+    setTokensAndBalance() {
+      this.setTokens(this.network.type.tokens);
+      this.web3.eth.getBalance(this.address).then(res => {
+        this.setAccountBalance(toBN(res));
+      });
     },
-    getPriceAndBalance() {
-      if (!this.isEthNetwork) {
-        this.web3.eth.getBalance(this.address).then(res => {
-          this.setAccountBalance(toBN(res));
-        });
-      }
+    setGas() {
       this.web3.eth.getGasPrice().then(res => {
         this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
       });

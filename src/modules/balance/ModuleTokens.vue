@@ -94,7 +94,6 @@ export default {
           width: '15%'
         }
       ]
-      // loading: true
     };
   },
   computed: {
@@ -115,7 +114,7 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            this.getTokenValue(item).value + ' ' + item.symbol,
+            item.tokenBalance.value + ' ' + item.symbol,
             numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
               .value
           ];
@@ -151,16 +150,6 @@ export default {
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
-    }
-  },
-  methods: {
-    getTokenValue(_token) {
-      let n = new BigNumber(_token.balance);
-      if (_token.decimals) {
-        n = n.div(new BigNumber(10).pow(_token.decimals));
-        n = numberFormatHelper.formatFloatingPointValue(n);
-      }
-      return n;
     }
   }
 };
