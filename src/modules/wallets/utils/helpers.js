@@ -32,7 +32,7 @@ const createKeystore = password => {
   createdWallet.name = wallet.getV3Filename();
   return createdWallet;
 };
-const unlockKeystore = (file, password) => {
+const unlockKeystore = async (file, password) => {
   const newFile = {};
   // Small hack because non strict wasn't working..
   Object.keys(file).forEach(key => {
