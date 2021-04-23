@@ -1,38 +1,51 @@
 <template>
   <div class="position--relative superPrimary border-radius--5px">
-    <div class="right-arrow d-flex align-center justify-center">
+    <div
+      class="right-arrow d-flex align-center justify-center"
+      :style="$vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''"
+    >
       <v-icon class="searchText--text">mdi-arrow-right-thick</v-icon>
     </div>
-    <v-row>
-      <v-col cols="6" class="text-center px-10 py-6">
-        <div class="blockie mb-3">
-          <mew-blockie width="36px" height="36px" :address="from" />
-        </div>
-        <h6 class="font-weight-bold text-uppercase searchText--text">
-          From address
-        </h6>
-        <div class="d-flex align-center">
-          <div class="text-uppercase monospace address">{{ from }}</div>
-          <div class="text-uppercase monospace">
-            {{ from.substr(to.length - 5) }}
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="6" class="text-center px-4 px-md-10 py-10">
+          <div class="blockie mb-3">
+            <mew-blockie width="36px" height="36px" :address="from" />
           </div>
-        </div>
-      </v-col>
-      <v-col cols="6" class="text-center px-10 py-6">
-        <div class="blockie mb-3">
-          <mew-blockie width="36px" height="36px" :address="to" />
-        </div>
-        <h6 class="font-weight-bold text-uppercase searchText--text">
-          To address
-        </h6>
-        <div class="d-flex align-center">
-          <div class="text-uppercase monospace address">{{ to }}</div>
-          <div class="text-uppercase monospace">
-            {{ to.substr(to.length - 5) }}
+          <h6 class="font-weight-bold text-uppercase searchText--text">
+            From address
+          </h6>
+          <v-sheet
+            color="transparent"
+            :width="$vuetify.breakpoint.smAndDown ? '50vw' : ''"
+            class="d-flex align-center justify-center mx-auto"
+          >
+            <div class="text-uppercase monospace address">{{ from }}</div>
+            <div class="text-uppercase monospace">
+              {{ from.substr(to.length - 5) }}
+            </div>
+          </v-sheet>
+        </v-col>
+        <v-col cols="12" md="6" class="text-center px-4 px-md-10 py-10">
+          <div class="blockie mb-3">
+            <mew-blockie width="36px" height="36px" :address="to" />
           </div>
-        </div>
-      </v-col>
-    </v-row>
+          <h6 class="font-weight-bold text-uppercase searchText--text">
+            To address
+          </h6>
+          <v-sheet
+            color="transparent"
+            :width="$vuetify.breakpoint.smAndDown ? '50vw' : ''"
+            class="d-flex align-center justify-center mx-auto"
+          >
+            <div class="text-uppercase monospace address">{{ to }}</div>
+            <div class="text-uppercase monospace">
+              {{ to.substr(to.length - 5) }}
+            </div>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
