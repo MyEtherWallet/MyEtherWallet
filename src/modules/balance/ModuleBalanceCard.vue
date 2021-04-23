@@ -66,7 +66,7 @@
           </v-btn>
         </div>
         <v-btn
-          v-if="false"
+          v-if="isHardware"
           outlined
           small
           color="white"
@@ -77,9 +77,10 @@
         </v-btn>
       </div>
     </div>
-    <balance-address-switch
+    <module-access-wallet-hardware
       :open="openChangeAddress"
-      @close="openChangeAddress = false"
+      :close="closeChangeAddress"
+      :switch-address="true"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -90,7 +91,7 @@
 
 <script>
 import anime from 'animejs/lib/anime.es.js';
-import BalanceAddressSwitch from './components/BalanceAddressSwitch';
+import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
@@ -101,9 +102,9 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
   components: {
-    BalanceAddressSwitch,
     BalanceAddressPaperWallet,
-    BalanceAddressQrCode
+    BalanceAddressQrCode,
+    ModuleAccessWalletHardware
   },
   data() {
     return {
@@ -113,7 +114,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapState('wallet', ['address', 'isHardware']),
+    ...mapState('wallet', ['address', 'isHardware', 'identifier']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {

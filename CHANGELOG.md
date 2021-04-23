@@ -5,6 +5,7 @@
 * Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
 * Update Deposit Borrow Withdraw layouts [#3016](https://github.com/MyEtherWallet/MyEtherWallet/pull/3016)
 * Fix custom gas price not loaded after logging in [#3026](https://github.com/MyEtherWallet/MyEtherWallet/pull/3026)
+* Add Switch Address for Hardware wallets [#3042](https://github.com/MyEtherWallet/MyEtherWallet/pull/3042)
 * Allows press enter on keystore access [#3043](https://github.com/MyEtherWallet/MyEtherWallet/pull/3043)
 * Fix zero tx fee on confirmation screen and in notifications [#3025](https://github.com/MyEtherWallet/MyEtherWallet/pull/3025)
 * Find chart timeframe with data on load [#3031](https://github.com/MyEtherWallet/MyEtherWallet/pull/3031)
