@@ -159,6 +159,7 @@
             :open-gas-price-modal="openGasPriceModal"
             :gas-price-type="localGasType"
             :message="feeError"
+            :not-enough-eth="notEnoughEth"
           />
           <div class="text-center">
             <mew-button
@@ -290,6 +291,18 @@ export default {
     isToAddressValid() {
       if (this.toTokenType.isEth) return true;
       return this.addressValue.isValid;
+    },
+    /**
+     * Checks whether the user has enough
+     * balance for the transaction
+     */
+    notEnoughEth() {
+      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+      const isNotEnoughEth =
+        this.fromTokenType.value === 'Ethereum'
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+      return isNotEnoughEth;
     },
     /**
      * Checks whether the swap is to BTC
@@ -664,13 +677,8 @@ export default {
     },
     checkFeeBalance() {
       this.feeError = '';
-      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth =
-        this.fromTokenType.value === 'Ethereum'
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
-      if (isNotEnoughEth) {
-        const message = `This provider  transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
+      if (this.notEnoughEth) {
+        const message = `This provider transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
         const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
         this.feeError =
           this.fromTokenType.value === 'Ethereum' ? ethError : message;
@@ -692,6 +700,9 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e.gasPrice;
       this.localGasType = e.gasType;
+      if (!_.isEmpty(this.currentTrade)) {
+        this.currentTrade.gasPrice = e.gasPrice;
+      }
     }
   }
 };

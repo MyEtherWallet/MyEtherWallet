@@ -46,9 +46,8 @@
        Custom Gas
       =====================================================================================
       -->
-      <v-row align="start" class="px-3">
+      <v-row v-if="!isSwap" align="start" class="px-3">
         <mew-input
-          v-if="!isSwap"
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
@@ -63,6 +62,23 @@
           @click.native="setCustomGasPrice(customGasPrice)"
         />
         <p v-if="isSwap" class="pt-2">
+          To change the custom gas price, go to
+          <span
+            class="cursor--pointer go-to-global-text"
+            @click="openGlobalSettings"
+            >global settings</span
+          >
+        </p>
+      </v-row>
+      <v-row v-if="hasCustom" align="start" class="px-3">
+        <mew-button
+          :title="customBtn.text"
+          btn-size="xlarge"
+          :btn-style="customBtn.style"
+          :has-full-width="true"
+          @click.native="setCustomGasPrice(customGasPrice)"
+        />
+        <p class="pt-2">
           To change the custom gas price, go to
           <span
             class="cursor--pointer go-to-global-text"
@@ -127,6 +143,7 @@ export default {
   },
   computed: {
     ...mapState('external', ['ETHUSDValue']),
+    ...mapState('global', ['gasPriceType']),
     customBtn() {
       const usdValue = BigNumber(this.ETHUSDValue.value).times(
         fromWei(this.customGasPrice, 'ether')
@@ -137,6 +154,9 @@ export default {
           : 'Confirm',
         style: this.isSwap ? 'outline' : 'background'
       };
+    },
+    hasCustom() {
+      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
     }
   }
 };

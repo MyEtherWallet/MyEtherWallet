@@ -25,11 +25,11 @@
         </v-card>
       </v-col>
     </v-row> -->
-    <v-row justify="space-between" align="center">
-      <v-col cols="8" class="mb-n3">
+    <v-row justify="space-between" align="start">
+      <v-col cols="4" class="mb-n3">
         <p class="mew-heading-3">Network Fee</p>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="7">
         <div class="d-flex justify-space-around align-center">
           <div class="d-flex justify-space-around align-center">
             <mew-icon :icon-name="icon" :img-height="30" />
@@ -37,8 +37,8 @@
           </div>
           <span v-show="!gettingFee && showFee"
             >{{ actualFees }} {{ network.type.currencyName }}
-            {{ feesInUsd }}</span
-          >
+          </span>
+          <span :class="[hasError ? 'error--text' : '']">{{ feesInUsd }}</span>
           <v-skeleton-loader
             v-show="gettingFee || !showFee"
             type="text"
@@ -50,10 +50,21 @@
         </div>
         <p
           v-if="!gettingFee || hasError"
-          :class="[hasError ? 'error--text' : '', 'text-center']"
+          :class="[hasError ? 'error--text' : '']"
         >
           {{ message }}
         </p>
+        <div v-if="notEnoughEth" class="d-flex align-center justify-start">
+          <a rel="noopener noreferrer" class="mr-3" target="_blank"
+            >Why are the fees so high?</a
+          >
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://ccswap.myetherwallet.com/#/"
+            >Buy more ETH</a
+          >
+        </div>
       </v-col>
     </v-row>
   </div>
@@ -84,6 +95,10 @@ export default {
     error: {
       type: String,
       default: ''
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
     },
     totalFees: {
       type: String,
