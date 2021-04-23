@@ -8,7 +8,7 @@
       :close="close"
     >
       <template #mewOverlayBody>
-        <v-sheet max-width="800px" color="transparent">
+        <v-sheet max-width="900px" color="transparent">
           <mew6-white-sheet class="pa-12">
             <!--
             ===============================================

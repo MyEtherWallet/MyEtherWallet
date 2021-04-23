@@ -1,5 +1,8 @@
 <template>
-  <div class="mew-component--paper-wallet-content">
+  <div
+    class="mew-component--paper-wallet-content"
+    :class="printable ? 'printable' : ''"
+  >
     <div class="d-flex justify-space-between align-start">
       <div class="d-flex align-center">
         <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
@@ -24,8 +27,9 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 d-flex align-center">
+    <div class="mt-12 d-flex align-center">
       <mew-blockie
+        v-if="false"
         :address="address"
         :size="8"
         :scale="16"
@@ -34,63 +38,70 @@
         class="mr-4 white"
       />
 
+      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
+
       <div style="max-width: 400px">
-        <div class="subtitle-1 font-weight-black text-uppercase">
+        <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
           My address icon
         </div>
         <div>
           Always look for the icon when sending to this wallet. And please keep
           your paper wallet at a
-          <span class="text-uppercase red--text font-weight-medium"
-            >Safe Place!</span
+          <span class="text-uppercase error--text font-weight-medium">
+            Safe Place!
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <v-divider class="my-6"></v-divider>
+
+    <v-container>
+      <v-row class="align-center mb-6">
+        <v-col cols="8">
+          <div class="mew-heading-1 font-weight-black text-uppercase">
+            My wallet address
+          </div>
+          <div class="mew-heading-3 mew-address font-weight-bold mt-4">
+            {{ getChecksumAddressString }}
+          </div>
+        </v-col>
+        <v-col cols="auto" class="ml-auto">
+          <VueQrcode :value="key" :options="{ size: 140 }"></VueQrcode>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="!isHardware">
+        <v-col cols="8">
+          <div
+            class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
-        </div>
-      </div>
-    </div>
+            <v-icon color="error">mdi-alert</v-icon>
+            My Private Key
+          </div>
+          <div class="font-weight-black error--text mt-2">
+            You might LOSE your MONEY if you share this Private Key with anyone!
+            KEEP YOUR PRIVATE KEY IN SAFE PLACE!
+          </div>
+          <div
+            class="mew-heading-3 mew-address font-weight-bold word-break--break-all mt-4"
+          >
+            {{ key }}
+          </div>
+        </v-col>
+        <v-col cols="auto" class="ml-auto">
+          <VueQrcode :value="key" :options="{ size: 140 }" />
+        </v-col>
+      </v-row>
+    </v-container>
 
-    <div
-      class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-    >
-      --------------------------------------------------------------------------------------------------------
-    </div>
+    <v-divider class="my-6"></v-divider>
 
-    <div class="font-weight-black">
-      You might LOSE your MONEY if you share this Private Key with anyone!
-    </div>
-    <div class="mt-4 d-flex align-content-stretch">
-      <div class="d-flex flex-column justify-center flex-grow-1 px-8">
-        <div class="subtitle-1 font-weight-black text-uppercase">
-          My Address
-        </div>
-        <div class="mew-address">{{ getChecksumAddressString }}</div>
-      </div>
-      <div class="qr-image">
-        <VueQrcode :value="key" :options="{ size: 130 }"></VueQrcode>
-      </div>
-    </div>
-    <div v-if="!isHardware" class="mt-4 d-flex align-content-stretch">
-      <div class="d-flex flex-column justify-center flex-grow-1 px-8">
-        <div class="subtitle-1 font-weight-black text-uppercase red--text">
-          My Private Key
-        </div>
-        <div class="mew-address">{{ key }}</div>
-      </div>
-      <div class="qr-image">
-        <VueQrcode :value="key" :options="{ size: 130 }" />
-      </div>
-    </div>
-
-    <div
-      class="cut-line my-5 mx-n4 gray3--text overflow--hidden white-space--nowrap"
-    >
-      --------------------------------------------------------------------------------------------------------
-    </div>
-
-    <div class="text-center">
+    <div class="text-center py-4">
       <img
-        src="@/assets/images/backgrounds/bg-paper-wallet.png"
+        src="@/assets/images/backgrounds/bg-spaceman.png"
         alt="Spaceman"
-        height="250"
+        height="200"
       />
     </div>
   </div>
@@ -100,6 +111,7 @@
 import VueQrcode from '@xkeshi/vue-qrcode';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
@@ -111,7 +123,8 @@ export default {
   },
   data() {
     return {
-      blockieSize: '70px'
+      blockieSize: '70px',
+      blockieImg: undefined
     };
   },
   computed: {
@@ -125,18 +138,26 @@ export default {
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
     }
+  },
+  mounted() {
+    this.blockieImg = Blockies({
+      seed: this.address ? this.address.toLowerCase() : '',
+      size: 8,
+      scale: 16
+    }).toDataURL();
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.qr-image {
-  margin: -6px 0;
-  height: 130px;
+.printable {
+  max-width: 700px !important;
+  transform: scale(0.5, 0.5);
 }
-.cut-line {
-  font-size: 18px;
-  letter-spacing: 3px;
-  text-align: center;
+
+.blockie-image {
+  height: 110px;
+  width: 110px;
+  border-radius: 50%;
 }
 </style>
