@@ -266,8 +266,8 @@ export default {
     }
   },
   watch: {
-    providersList(newValue) {
-      if (newValue.length > 0) {
+    providersList(newValue, oldVal) {
+      if (newValue.length > 0 && oldVal.length === 0) {
         const bestRate = newValue.findIndex(item => {
           return item.rate === this.bestRate;
         });

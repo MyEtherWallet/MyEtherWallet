@@ -5,6 +5,7 @@
     :btn-enabled="true"
     :btn-action="send"
     :show="show"
+    @close="handleClose"
   >
     <div slot="dialogBody">
       <v-row>
@@ -145,6 +146,9 @@ export default {
   methods: {
     toFixed(val) {
       return `~${BigNumber(val).toFixed(2)}`;
+    },
+    handleClose() {
+      this.$emit('close');
     }
   }
 };

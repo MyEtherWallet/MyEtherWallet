@@ -5,6 +5,7 @@
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
       @onLocalGasPrice="handleLocalGasPrice"
+      @close="closeGasPrice"
     />
     <mew6-white-sheet>
       <mew-module
@@ -544,6 +545,8 @@ export default {
       this.feeError = '';
       if (this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
+        this.currentTrade.gasPrice =
+          this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
         this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
           this.network.type.name
         }`;
@@ -567,7 +570,8 @@ export default {
         })
         .then(trade => {
           this.currentTrade = trade;
-          this.currentTrade.gasPrice = this.localGasPrice;
+          this.currentTrade.gasPrice =
+            this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
           this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
             this.network.type.name
           }`;

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="gasPriceModal" width="500">
+  <v-dialog :value="gasPriceModal" width="500" @close="handleClose">
     <v-sheet class="py-6 px-4">
       <v-row>
         <v-col cols="12">
@@ -69,6 +69,9 @@ export default {
       this.setSelected(value, false);
       this.$emit('onLocalGasPrice', newObj);
       this.close();
+    },
+    handleClose() {
+      this.$emit('close');
     }
   }
 };
