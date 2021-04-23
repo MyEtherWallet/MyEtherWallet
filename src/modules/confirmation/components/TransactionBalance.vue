@@ -1,20 +1,20 @@
 <template>
   <div class="superPrimary border-radius--5px pa-5">
     <v-row>
-      <v-col class="pt-0">
+      <v-col class="d-flex align-center">
         <h5 class="font-weight-bold">Balance Remaining</h5>
       </v-col>
-      <v-col class="text-right pt-0">
+      <v-col class="d-flex flex-column align-end justify-center">
         <h5 class="font-weight-bold">{{ balanceUsd }}</h5>
         <div>{{ balanceInETH }} {{ currency }}</div>
       </v-col>
     </v-row>
 
-    <mew-progress-bar :balance-obj="progressBar" />
+    <mew-progress-bar class="my-5" :balance-obj="progressBar" />
 
-    <div class="mt-5">
-      <v-row class="py-0">
-        <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
+    <div>
+      <v-row dense class="mb-sm-5">
+        <v-col class="d-flex align-center text-uppercase" cols="12" sm="4">
           <v-icon color="titlePrimary"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Send</h6>
           <img
@@ -23,48 +23,71 @@
             height="17"
           />
         </v-col>
-        <v-col class="py-0 my-0 text-right" cols="5">
-          <span> - {{ value }} </span>
+        <v-col
+          class="d-flex align-center pl-6 justify-start justify-sm-end"
+          cols="12"
+          sm="4"
+        >
+          <span class="mr-1">- {{ value }}</span>
           <span class="searchText--text font-weight-medium">{{
             currency
-          }}</span></v-col
+          }}</span>
+        </v-col>
+        <v-col
+          v-if="isEthNetwork"
+          class="d-flex align-center pl-6 justify-start justify-sm-end"
+          cols="12"
+          sm="4"
         >
-        <v-col v-if="isEthNetwork" class="py-0 my-0 text-right" cols="3">
           <span> - {{ valueUsd }} </span>
         </v-col>
       </v-row>
 
-      <v-row class="py-0">
-        <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
+      <v-row dense class="mb-sm-5">
+        <v-col class="d-flex align-center text-uppercase" cols="4">
           <v-icon color="#f5a623"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Transaction Fee</h6>
         </v-col>
-        <v-col class="py-0 my-0 text-right" cols="5">
-          <span> - {{ txFee }} </span>
+        <v-col
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
+          cols="12"
+          sm="4"
+        >
+          <span class="mr-1">- {{ txFee }}</span>
           <span class="searchText--text font-weight-medium">{{
             currency
-          }}</span></v-col
+          }}</span>
+        </v-col>
+        <v-col
+          v-if="isEthNetwork"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
+          cols="12"
+          sm="4"
         >
-        <v-col v-if="isEthNetwork" class="py-0 my-0 text-right" cols="3">
           <span> - {{ formattedTx }} </span>
         </v-col>
       </v-row>
 
-      <v-row class="py-0">
-        <v-col class="d-flex align-center py-1 my-0 text-uppercase" cols="4">
+      <v-row dense>
+        <v-col class="d-flex align-center text-uppercase" cols="4">
           <v-icon color="transparent"> mdi-circle-medium </v-icon>
           <h6 class="searchText--text font-weight-medium">Total Pay</h6>
         </v-col>
-        <v-col class="py-0 my-0 text-right font-weight-medium" cols="5">
-          <span>{{ total }} </span>
+        <v-col
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
+          cols="12"
+          sm="4"
+        >
+          <span class="mr-1">{{ total }} </span>
           <span class="searchText--text font-weight-medium">{{
             currency
-          }}</span></v-col
-        >
+          }}</span>
+        </v-col>
         <v-col
           v-if="isEthNetwork"
-          class="py-0 my-0 text-right font-weight-medium"
-          cols="3"
+          class="d-flex align-center pl-6 justify-sm-end justify-start"
+          cols="12"
+          sm="4"
         >
           {{ totalUsd }}
         </v-col>
