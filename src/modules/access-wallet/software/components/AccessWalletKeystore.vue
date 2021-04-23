@@ -62,39 +62,41 @@
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
         <div class="headline font-weight-bold">Enter Password</div>
         <div class="mb-5">Enter your password to unlock your wallet.</div>
-        <v-row class="align-stretch">
-          <v-col cols="12">
-            <mew-input
-              v-model="password"
-              label="Enter Password"
-              placeholder="Enter my keystore password"
-              type="password"
-            />
-          </v-col>
-          <v-col cols="12" class="pt-0">
-            <app-btn-row
-              v-if="!isUnlockingKeystore"
-              class="pb-5"
-              next-btn-text="Access Wallet"
-              :next-btn-method="unlockBtn"
-              :back-btn-method="backStepOne"
-            />
-            <!--
+        <form @submit.prevent="unlockBtn">
+          <v-row class="align-stretch">
+            <v-col cols="12">
+              <mew-input
+                v-model="password"
+                label="Enter Password"
+                placeholder="Enter my keystore password"
+                type="password"
+              />
+            </v-col>
+            <v-col cols="12" class="pt-0">
+              <app-btn-row
+                v-if="!isUnlockingKeystore"
+                class="pb-5"
+                next-btn-text="Access Wallet"
+                :next-btn-method="unlockBtn"
+                :back-btn-method="backStepOne"
+              />
+              <!--
             =====================================================================================
               Unlocking State: isUnlockingKeystore = true
             =====================================================================================
             -->
-            <v-row v-else justify="center" align="center" class="pt-5 pb-9">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-              <p class="mb-0 mx-3">
-                Sit tight while we are unlocking your wallet
-              </p>
-            </v-row>
-          </v-col>
-        </v-row>
+              <v-row v-else justify="center" align="center" class="pt-5 pb-9">
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+                <p class="mb-0 mx-3">
+                  Sit tight while we are unlocking your wallet
+                </p>
+              </v-row>
+            </v-col>
+          </v-row>
+        </form>
       </v-sheet>
     </template>
   </mew-stepper>
@@ -147,6 +149,7 @@ export default {
           this.file = JSON.parse(evt.target.result);
           this.step = 2;
         } catch (e) {
+          Toast(e.message, {}, ERROR);
           throw new Error(e);
         }
       };

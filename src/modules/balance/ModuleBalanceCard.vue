@@ -39,7 +39,7 @@
       </div>
       <div class="component--address d-flex align-center mt-1">
         <div class="text-shadow monospace full-address font-weight-bold">
-          {{ address }}
+          {{ getChecksumAddressString }}
         </div>
         <div class="text-shadow monospace last-four font-weight-bold">
           {{ lastFour }}
@@ -204,6 +204,7 @@ export default {
 .blockie-img {
   transform: scale(0);
   position: relative;
+  z-index: 1;
 
   .blockie-image {
     border: 2px solid white;
@@ -258,7 +259,6 @@ export default {
 <style lang="scss">
 .component--wallet-card {
   .bottom-buttons {
-    z-index: -1;
     .v-btn {
       padding: 0 !important;
       min-width: 36px !important;
