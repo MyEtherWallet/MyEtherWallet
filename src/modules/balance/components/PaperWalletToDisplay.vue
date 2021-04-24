@@ -1,78 +1,77 @@
 <template>
-  <div
-    class="mew-component--paper-wallet-content"
-    :class="printable ? 'printable' : ''"
-  >
-    <div class="d-flex justify-space-between align-start">
-      <div class="d-flex align-center">
-        <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
-        <div class="primary--text"><span class="mx-3">|</span>Paper Wallet</div>
-      </div>
-      <div>
-        <div class="d-flex align-center mr-3 mb-2">
-          <img
-            class="mr-2"
-            height="20"
-            src="@/assets/images/icons/icon-support.svg"
-          />
-          <div>support@myetherwallet.com</div>
-        </div>
-        <div class="d-flex align-center mr-3">
-          <img
-            class="mr-2"
-            height="20"
-            src="@/assets/images/icons/icon-support.svg"
-          />
-          <div>https://www.myetherwallet.com</div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-12 d-flex align-center">
-      <mew-blockie
-        v-if="false"
-        :address="address"
-        :size="8"
-        :scale="16"
-        :width="blockieSize"
-        :height="blockieSize"
-        class="mr-4 white"
-      />
+  <div class="mew-component--paper-wallet-content">
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="6" class="d-flex align-center mr-auto">
+          <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
+          <div class="primary--text">
+            <span class="mx-3">|</span>Paper Wallet
+          </div>
+        </v-col>
+        <v-col cols="auto">
+          <div class="d-flex align-center mr-3 mb-2">
+            <img
+              class="mr-2"
+              height="20"
+              src="@/assets/images/icons/icon-support.svg"
+            />
+            <div>support@myetherwallet.com</div>
+          </div>
+          <div class="d-flex align-center mr-3">
+            <img
+              class="mr-2"
+              height="20"
+              src="@/assets/images/icons/icon-support.svg"
+            />
+            <div>https://www.myetherwallet.com</div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
 
-      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
-
-      <div style="max-width: 400px">
-        <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
-          My address icon
+    <v-row class="mt-3 mt-md-12 d-flex align-center">
+      <v-col cols="12" md="2">
+        <img :src="blockieImg" alt="Blockie Image" class="blockie-image" />
+      </v-col>
+      <v-col col="auto">
+        <div style="max-width: 400px">
+          <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
+            My address icon
+          </div>
+          <div>
+            Always look for the icon when sending to this wallet. And please
+            keep your paper wallet at a
+            <span class="text-uppercase error--text font-weight-medium">
+              Safe Place!
+            </span>
+          </div>
         </div>
-        <div>
-          Always look for the icon when sending to this wallet. And please keep
-          your paper wallet at a
-          <span class="text-uppercase error--text font-weight-medium">
-            Safe Place!
-          </span>
-        </div>
-      </div>
-    </div>
+      </v-col>
+    </v-row>
 
     <v-divider class="my-6"></v-divider>
 
     <v-container>
       <v-row class="align-center mb-6">
-        <v-col cols="8">
-          <div class="mew-heading-1 font-weight-black text-uppercase">
+        <v-col cols="12" md="8" class="mr-auto">
+          <div
+            class="mew-heading-1 word-break--break-all font-weight-black text-uppercase"
+          >
             My wallet address
           </div>
-          <div class="mew-heading-3 mew-address font-weight-bold mt-4">
+          <div
+            class="mew-heading-3 mew-address word-break--break-all font-weight-bold mt-4"
+          >
             {{ getChecksumAddressString }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="auto">
           <VueQrcode :value="key" :options="{ size: 140 }"></VueQrcode>
         </v-col>
       </v-row>
 
       <v-row v-if="!isHardware">
-        <v-col cols="8">
+        <v-col cols="12" md="8" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
@@ -89,7 +88,7 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="auto">
           <VueQrcode :value="key" :options="{ size: 140 }" />
         </v-col>
       </v-row>
@@ -101,7 +100,7 @@
       <img
         src="@/assets/images/backgrounds/bg-spaceman.png"
         alt="Spaceman"
-        height="200"
+        width="200"
       />
     </div>
   </div>
@@ -117,9 +116,6 @@ export default {
   name: 'BalanceAddressPaperWallet',
   components: {
     VueQrcode
-  },
-  props: {
-    printable: { default: false, type: Boolean }
   },
   data() {
     return {
@@ -150,11 +146,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.printable {
-  max-width: 700px !important;
-  transform: scale(0.5, 0.5);
-}
-
 .blockie-image {
   height: 110px;
   width: 110px;

@@ -9,14 +9,14 @@
     >
       <template #mewOverlayBody>
         <v-sheet max-width="900px" color="transparent">
-          <mew6-white-sheet class="pa-12">
+          <mew6-white-sheet class="pa-3 pa-md-12">
             <!--
             ===============================================
             Printable paper wallet content
             ===============================================
             -->
             <div ref="printContainer" class="printable-wallet">
-              <paper-wallet-content printable />
+              <paper-wallet-to-print />
             </div>
 
             <!--
@@ -24,7 +24,7 @@
             Paper wallet to show
             ===============================================
             -->
-            <paper-wallet-content />
+            <paper-wallet-to-display />
           </mew6-white-sheet>
 
           <div class="d-flex justify-center mt-12 mb-10">
@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import PaperWalletContent from './BalanceAddressPaperWalletContent';
+import PaperWalletToPrint from './PaperWalletToPrint';
+import PaperWalletToDisplay from './PaperWalletToDisplay';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -45,7 +46,8 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'BalanceAddressPaperWallet',
   components: {
-    PaperWalletContent
+    PaperWalletToPrint,
+    PaperWalletToDisplay
   },
   props: {
     open: { default: false, type: Boolean },
@@ -91,8 +93,8 @@ export default {
 <style lang="scss" scoped>
 .printable-wallet {
   position: fixed;
-  bottom: 0px;
-  right: 0px;
+  top: -3000px;
+  left: -3000px;
   z-index: -1;
 }
 </style>
