@@ -625,6 +625,7 @@ export default {
         }
       } catch (e) {
         this.reset();
+        console.log('gets here for some reason?');
         Toast(e.message, {}, ERROR);
       }
     },

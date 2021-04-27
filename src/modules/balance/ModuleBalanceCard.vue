@@ -80,7 +80,7 @@
     <module-access-wallet-hardware
       :open="openChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="true"
+      :switch-address="isHardware"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -119,9 +119,6 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
-    },
-    canSwitch() {
-      return this.isHardware;
     },
     lastFour() {
       return this.address.substring(

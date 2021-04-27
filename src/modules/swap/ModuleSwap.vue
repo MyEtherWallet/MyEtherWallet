@@ -441,7 +441,10 @@ export default {
           this.isLoading = false;
         });
     } else {
+      console.log(this.prefetched, this.isLoading, this.swapTokens);
       this.processTokens(this.swapTokens, false);
+      this.setDefaults();
+      this.isLoading = false;
     }
   },
   methods: {
