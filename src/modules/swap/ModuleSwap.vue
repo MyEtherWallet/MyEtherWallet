@@ -266,6 +266,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
@@ -425,29 +426,39 @@ export default {
     }
   },
   mounted() {
-    this.isLoading = true;
+    this.isLoading = !this.prefetched;
     this.swapper = new Swapper(this.web3);
-    this.swapper
-      .getAllTokens()
-      .then(tokens => {
-        this.availableTokens = tokens;
-        /* Add Correct Values for the MewSelect*/
-        this.availableTokens.toTokens.forEach(token => {
-          token.subtext = token.symbol;
-          token.value = token.name;
+    if (!this.prefetched) {
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
         });
-        this.availableTokens.fromTokens.forEach(token => {
-          token.subtext = token.symbol;
-          token.value = token.name;
-        });
-      })
-      .then(() => {
-        this.setDefaults();
-        this.isLoading = false;
-      });
+    } else {
+      this.processTokens(this.swapTokens, false);
+    }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
+    ...mapActions('swap', ['setSwapTokens']),
+    processTokens(tokens, storeTokens) {
+      this.availableTokens = tokens;
+      /* Add Correct Values for the MewSelect*/
+      this.availableTokens.toTokens.forEach(token => {
+        token.subtext = token.symbol;
+        token.value = token.name;
+      });
+      this.availableTokens.fromTokens.forEach(token => {
+        token.subtext = token.symbol;
+        token.value = token.name;
+      });
+
+      if (_.isUndefined(storeTokens)) {
+        this.setSwapTokens(tokens);
+      }
+    },
     openGasPriceModal() {
       this.gasPriceModal = true;
     },

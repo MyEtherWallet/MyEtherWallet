@@ -1,5 +1,7 @@
 const state = {
-  localStore: false
+  localStore: false,
+  prefetched: false,
+  swapTokens: []
 };
 
 export default state;

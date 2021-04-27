@@ -1,5 +1,5 @@
-// const SET_DARK_LIST = async function (state, darkList) {
-//   state.darkList = darkList;
-// };
+const SET_SWAP_TOKENS = async function (state, tokens) {
+  state.swapTokens = tokens;
+};
 
-export default {};
+export default { SET_SWAP_TOKENS };

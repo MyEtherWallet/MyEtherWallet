@@ -2,7 +2,7 @@ import State from './state';
 import Mutations from './mutations';
 import Actions from './actions';
 
-const external = {
+const swap = {
   namespaced: true,
   state: State,
   mutations: Mutations,
@@ -10,4 +10,4 @@ const external = {
   strict: false
 };
 
-export default external;
+export default swap;

@@ -21,7 +21,8 @@ class MEWPClass {
           decimals: parseInt(d.decimals),
           img: `https://img.mewapi.io/?image=${d.icon}`,
           name: d.name ? d.name : d.symbol,
-          symbol: d.symbol
+          symbol: d.symbol,
+          type: 'ERC20'
         };
       });
     });
