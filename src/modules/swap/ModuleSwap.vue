@@ -239,6 +239,7 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
+      belowMinError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken
@@ -395,6 +396,9 @@ export default {
           if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
             return `your balance is lower (${this.availableBalanceHint})`;
           }
+          if (new BigNumber(this.tokenInValue).lt(this.belowMinError)) {
+            return `Below minimum amount of ${this.belowMinError} for available providers`;
+          }
         }
       }
       return '';
@@ -537,6 +541,12 @@ export default {
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
+              if (q?.rateId === 'belowMin') {
+                this.belowMinError = q.minAmount;
+                return;
+              }
+              this.belowMinError = false;
+
               return q;
             });
             this.availableQuotes = quotes;

@@ -1,29 +1,50 @@
 <template>
-  <v-sheet class="overlay-content pa-5">
-    <div class="text-center mb-8">
-      <img :src="icon" alt="Network Icon" height="60" />
-    </div>
-    <div>
-      <mew-select
-        v-if="onLedger"
-        v-model="ledgerApp"
-        label="Open Ledger App"
-        :items="ledgerApps"
-      />
-      <mew-select v-model="path" label="HD derivation path" :items="paths" />
-    </div>
-    <mew-button
-      btn-size="xlarge"
-      title="Unlock wallet"
-      has-full-width
-      @click.native="nextStep"
-    />
+  <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
+    <v-row class="align-end justify-start">
+      <v-col cols="12">
+        <!--
+        =====================================================================================
+          Title
+        =====================================================================================
+        -->
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+        <div class="headline font-weight-bold">Select HD Derivation Path</div>
+        <p class="mb-5">
+          Please select HD Derivation Path that you you want to interact
+        </p>
+        <div>
+          <mew-select
+            v-if="onLedger"
+            v-model="ledgerApp"
+            label="Open Ledger App"
+            :items="ledgerApps"
+          />
+          <mew-select
+            v-model="path"
+            :items="parsedPaths"
+            label="Select Path"
+            :has-filter="true"
+            filter-placeholder="Search Path"
+          />
+        </div>
+        <mew-button
+          btn-size="xlarge"
+          title="Unlock wallet"
+          has-full-width
+          @click.native="nextStep"
+        />
+      </v-col>
+    </v-row>
   </v-sheet>
 </template>
 
 <script>
 export default {
   props: {
+    step: {
+      type: Number,
+      default: 0
+    },
     paths: {
       type: Array,
       default: () => []
@@ -50,6 +71,25 @@ export default {
       path: {},
       ledgerApp: {}
     };
+  },
+  computed: {
+    /**
+     * Property returns defualt Paths + Custom paths, used in Select Path component
+     * Property Interface:
+     * {  name = string -> Name of the Path,
+     *    subtext = string --> Derivation Path,
+     *    value = tring --> Derivation Path
+     * }
+     */
+    parsedPaths() {
+      return this.paths.map(item => {
+        const newObj = {};
+        newObj['name'] = item['name'];
+        newObj['subtext'] = item['value'];
+        newObj['value'] = item['value'];
+        return newObj;
+      });
+    }
   },
   watch: {
     path(newVal) {

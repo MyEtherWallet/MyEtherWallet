@@ -107,7 +107,9 @@
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
-    "icon": "icon"
+    "icon": "icon",
+    "select": "Please select address that you want to interact with and network.",
+    "select-title": "Select Address and Network"
   },
   "path": {
     "string": "Path",

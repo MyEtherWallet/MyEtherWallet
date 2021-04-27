@@ -9,6 +9,24 @@
     class="border-radius--10px pa-4 pa-md-10"
   >
     <v-container>
+      <v-row class="align-end justify-start">
+        <v-col cols="12">
+          <!--
+          =====================================================================================
+            Title
+          =====================================================================================
+          -->
+          <div class="subtitle-1 font-weight-bold grey--text">
+            STEP {{ step + 1 }}.
+          </div>
+          <div class="headline font-weight-bold">
+            {{ $t('accessWallet.network-addr.select-title') }}
+          </div>
+          <p class="mb-5">
+            {{ $t('accessWallet.network-addr.select') }}
+          </p>
+        </v-col>
+      </v-row>
       <v-row align="center" justify="center">
         <v-col cols="12">
           <mew-expand-panel
@@ -43,7 +61,7 @@
             =====================================================================================
             -->
             <template #panelBody2>
-              <div>
+              <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
                 <v-radio-group v-model="selectedAddress">
                   <!--
                     =====================================================================================
@@ -55,7 +73,7 @@
                       <p class="">{{ $t('common.addr') }}</p>
                     </v-col>
                     <v-col cols="4" sm="3">
-                      <p>ETH {{ $t('common.string.string') }}</p>
+                      <p>ETH {{ $t('common.balance.string') }}</p>
                     </v-col>
                   </v-row>
                   <!--
@@ -124,7 +142,7 @@
                 <v-row align="center" justify="center">
                   <div>
                     <mew-button
-                      :title="$t('access-wallet.previous')"
+                      :title="$t('accessWallet.previous')"
                       color-theme="basic"
                       icon="mdi-chevron-left"
                       icon-type="mdi"
@@ -134,7 +152,7 @@
                       @click.native="previousAddressSet"
                     />
                     <mew-button
-                      :title="$t('access-wallet.next')"
+                      :title="$t('accessWallet.next')"
                       color-theme="basic"
                       icon="mdi-chevron-right"
                       icon-type="mdi"
@@ -150,7 +168,7 @@
           </mew-expand-panel>
           <div class="d-flex align-center flex-column">
             <mew-button
-              :title="$t('access-wallet.access-my-wallet')"
+              :title="$t('accessWallet.access-my-wallet')"
               btn-size="large"
               :disabled="!(selectedAddress && acceptTerms)"
               @click.native="
@@ -161,7 +179,7 @@
             />
             <mew-checkbox
               v-model="acceptTerms"
-              :label="$t('access-wallet.accept-terms')"
+              :label="$t('accessWallet.accept-terms')"
               :link="link"
               class="justify-center"
             />
@@ -186,6 +204,10 @@ export default {
     }
   },
   props: {
+    step: {
+      type: Number,
+      default: 0
+    },
     accounts: {
       type: Array,
       default: () => {
