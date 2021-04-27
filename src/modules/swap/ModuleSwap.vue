@@ -311,7 +311,8 @@ export default {
      */
     isToBtc() {
       return (
-        this.fromTokenType.symbol === this.network.type.currencyName &&
+        (this.fromTokenType.symbol === this.network.type.currencyName ||
+          this.fromTokenType.isEth) &&
         this.toTokenType.symbol === 'BTC'
       );
     },
