@@ -441,7 +441,6 @@ export default {
           this.isLoading = false;
         });
     } else {
-      console.log(this.prefetched, this.isLoading, this.swapTokens);
       this.processTokens(this.swapTokens, false);
       this.setDefaults();
       this.isLoading = false;
@@ -461,6 +460,9 @@ export default {
         token.subtext = token.symbol;
         token.value = token.name;
       });
+      this.availableTokens.fromTokens.filter(
+        token => token.symbol.toLowerCase() !== 'btc'
+      );
 
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
