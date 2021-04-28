@@ -146,12 +146,14 @@ import {
 import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
+import handlerNft from './handlers/handlerNft.mixin';
 
 export default {
   components: {
     NftManagerDetails,
     NftManagerSend
   },
+  mixins: [handlerNft],
   data() {
     return {
       nft: {},
@@ -173,7 +175,7 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'online']),
     ...mapState('external', ['ETHUSDValue']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'gasPrice']),
     /**
      * Pagination
      */
