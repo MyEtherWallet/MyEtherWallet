@@ -90,6 +90,10 @@ export default class SwapProviders {
       } else {
         for (let i = 0; i < areEth.length; i++) {
           const present = this.ethereumTokenList.find(item => {
+            if (!item.address) {
+              console.log(item); // todo remove dev item
+              return false;
+            }
             return (
               item.address.toLowerCase() === areEth[i].address.toLowerCase()
             );

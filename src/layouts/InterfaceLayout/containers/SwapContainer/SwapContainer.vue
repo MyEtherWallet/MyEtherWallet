@@ -1057,6 +1057,7 @@ export default {
         );
         this.loadingData = false;
         this.recalculating = false;
+        console.log('rawResults', rawResults); // todo remove dev item
         const results = rawResults.reduce((agg, result) => {
           if (Array.isArray(result)) {
             agg = [...agg, ...result];
