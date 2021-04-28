@@ -72,7 +72,7 @@ export default {
 
 .mobile-content {
   .card-content {
-    padding: 4rem 2rem;
+    padding: 56px 20px;
     background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
     background-position: center right -30px;
     background-size: cover;
