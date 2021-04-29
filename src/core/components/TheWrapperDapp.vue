@@ -4,7 +4,7 @@
       DAPP WRAPPER:
     =====================================================================================
     -->
-  <v-sheet class="rounded-lg">
+  <mew6-white-sheet>
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -46,7 +46,7 @@
     <div v-if="tabItems.length === 0" class="pa-8">
       <slot name="content" />
     </div>
-  </v-sheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
