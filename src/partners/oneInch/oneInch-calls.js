@@ -1,6 +1,5 @@
 import { post, get } from '@/helpers/httpRequests';
 import { utils } from '../helpers';
-import { swapApiEndpoints } from '@/partners/partnersConfig';
 import { dexAgMethods } from './config';
 import web3 from 'web3';
 
@@ -25,29 +24,12 @@ const getSupportedCurrencies = async () => {
         img: `https://img.mewapi.io/?image=${d.icon}`,
         name: d.name ? d.name : d.symbol,
         symbol: d.symbol
-      }
+      };
       return acc;
     }, {});
     const currencyDetails = details;
     const tokenDetails = details;
-    // const currencyList = currencyListRaw.result;
-    // const currencyDetails = {};
-    // const tokenDetails = {};
-    // if (currencyList) {
-    //   for (let i = 0; i < currencyList.length; i++) {
-    //     if (currencyList[i].address) {
-    //       const details = {
-    //         symbol: currencyList[i].symbol.toUpperCase(),
-    //         name: currencyList[i].name,
-    //         address: currencyList[i].address
-    //       };
-    //       currencyDetails[details.symbol] = details;
-    //       tokenDetails[details.symbol] = details;
-    //     }
-    //   }
     return { currencyDetails, tokenDetails };
-    // }
-    // throw Error('Dex.ag get supported currencies failed to return a value');
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -60,7 +42,6 @@ const getPrice = async (fromToken, toToken, fromValue) => {
         GET_QUOTE
       )}?fromContractAddress=${fromToken}&toContractAddress=${toToken}&amount=${fromValue}&exexcludeDexes=DEX_AG`
     );
-    console.log('getPrice', results); // todo remove dev item
     if (results.error) {
       utils.checkErrorJson(results);
     }
@@ -98,18 +79,22 @@ const estimateGas = async (txs, from) => {
 
 const createTransaction = async transactionParams => {
   try {
-    if (transactionParams.dex === 'dexag') {
-      transactionParams.dex = 'ag';
-    }
-    const results = await post(
-      buildPath('1'),
-      utils.buildPayload(dexAgMethods.createTransaction, { transactionParams })
+    const results = await get(
+      `${buildPath(GET_TRADE)}?address=${
+        transactionParams.fromAddress
+      }&recipient=${
+        transactionParams.toAddress
+      }&dex=ONE_INCH&exchange=one_inch&platform=ios&fromContractAddress=${
+        transactionParams.fromTokenAddress
+      }&toContractAddress=${transactionParams.toTokenAddress}&amount=${
+        transactionParams.fromValue
+      }`
     );
     if (results.error) {
       utils.checkErrorJson(results);
     }
 
-    return results.result;
+    return results;
   } catch (e) {
     utils.handleOrThrow(e);
   }
