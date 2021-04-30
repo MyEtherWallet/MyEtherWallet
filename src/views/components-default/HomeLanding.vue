@@ -1,13 +1,9 @@
 <template>
   <div class="mew-component--landing">
     <div class="desktop-content d-none d-lg-block expandHeader">
-      <div class="pointer-event--none user-select--none line-height--0">
-        <img
-          class="banner-img"
-          src="@/assets/images/backgrounds/bg-homepage-spaceman.svg"
-        />
-      </div>
-      <v-container class="banner-content-container">
+      <v-container
+        class="banner-content-container d-flex align-center justify-space-between"
+      >
         <v-card color="transparent" flat tile max-width="430px">
           <div class="white--text font-weight-bold banner-top-title">
             Ethereum's Original Wallet
@@ -35,6 +31,11 @@
             />
           </div>
         </v-card>
+        <img
+          src="@/assets/images/backgrounds/bg-home-spaceman-and-dog.svg"
+          alt="Spaceman and his dog"
+          height="500"
+        />
       </v-container>
     </div>
     <div class="mobile-content d-block d-lg-none expandHeader pt-5">
@@ -85,17 +86,11 @@ export default {
 
 <style lang="scss" scoped>
 .desktop-content {
-  .banner-img {
-    width: 100%;
-  }
+  background-image: url(~@/assets/images/backgrounds/bg-homepage.svg);
+  background-size: cover;
+  background-position: 100% bottom;
   .banner-content-container {
-    height: 400px;
-    position: absolute;
-    top: 300px;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    z-index: 1;
+    height: 800px;
   }
   .banner-top-title {
     line-height: 55px !important;

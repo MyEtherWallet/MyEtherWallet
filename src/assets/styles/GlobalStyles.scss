@@ -1,15 +1,18 @@
 /* Set maximum size for "wallet-container" */
-
 @media (min-width: 1904px) {
   .wallet-content-container {
     max-width: 1603px !important;
   }
 }
 
-@media (min-width: 1904px) {
-  .container {
-    max-width: 1185px !important;
-  }
+/* Limit minimum width */
+html {
+  min-width: 320px !important;
+}
+
+/* Limit maximum width */
+.container {
+  max-width: 1185px !important;
 }
 
 @media (max-width: 1263px) {

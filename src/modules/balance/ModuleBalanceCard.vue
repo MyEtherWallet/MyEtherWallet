@@ -209,6 +209,7 @@ export default {
   .blockie-image {
     border: 2px solid white;
     border-radius: 100%;
+    z-index: 1;
   }
 
   img {

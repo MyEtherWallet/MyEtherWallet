@@ -73,7 +73,7 @@
     "vue-apollo": "3.0.7",
     "vue-router": "3.5.1",
     "vuex": "3.6.2",
-    "walletlink": "2.0.3"
+    "walletlink": "2.1.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.1",
@@ -134,7 +134,7 @@
     "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
     "rskjs-util": "1.0.3",
-    "sass": "1.32.8",
+    "sass": "1.32.11",
     "sass-loader": "10.1.1",
     "sinon": "10.0.0",
     "store": "2.0.12",
