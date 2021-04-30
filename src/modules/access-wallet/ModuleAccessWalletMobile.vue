@@ -20,6 +20,7 @@
         <v-row>
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
             <mew-super-button
+              font-class="mew-heading-2"
               :title="btn.label"
               :subtitle="btn.description"
               color-theme="basic"
