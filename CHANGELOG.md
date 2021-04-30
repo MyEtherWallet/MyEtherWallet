@@ -1,5 +1,8 @@
+
+
 ### Devop
 
+* Add One Inch Exchange to swap [#3061](https://github.com/MyEtherWallet/MyEtherWallet/pull/3061)
 * Update changelly swap handling  [#3046](https://github.com/MyEtherWallet/MyEtherWallet/pull/3046)
 
 ### Release v5.7.28
