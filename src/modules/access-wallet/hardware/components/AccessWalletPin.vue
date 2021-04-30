@@ -1,5 +1,5 @@
 <template>
-  <v-sheet>
+  <v-sheet class="border-radius--10px pa-4 pa-md-10">
     <div class="pin-input-block">
       <i18n path="accessWallet.pin.enter" tag="p" class="main-title"
         ><span slot="device"> {{ walletType }} </span></i18n
@@ -53,7 +53,9 @@ export default {
     keepKeyPinEnterCall() {
       this.keepKeyPinEnter(this.pin);
     },
-    keepKeyClear() {}
+    keepKeyClear() {
+      this.pin = '';
+    }
   }
 };
 </script>
@@ -97,12 +99,13 @@ export default {
   $button-element-size: 70px;
   $grid-width-size: $button-element-size + 2px;
 
-  margin-top: 30px;
+  margin-top: 10px;
   display: grid;
   justify-items: center;
   justify-content: center;
   grid-gap: 10px;
   grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  padding-bottom: 20px;
   button {
     cursor: pointer;
     background: #dadada;
