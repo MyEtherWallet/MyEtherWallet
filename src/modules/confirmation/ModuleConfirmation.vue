@@ -27,6 +27,10 @@
     >
       <template #dialogBody>
         <confirm-with-wallet />
+        <!-- change this depending on what type of transaction it is -->
+        <!-- also add is batchTx -->
+        <!-- <confirm-swap-tx v-if="isSwap" /> -->
+        <!-- <confirm-send-tx v-if="isSwap" /> -->
       </template>
     </app-modal>
     <app-modal
@@ -37,7 +41,7 @@
       @close="overlayClose"
     >
       <template #dialogBody>
-        <confirmation-transaction
+        <confirmation-send-transaction-details
           :to="to"
           :from="from"
           :data="data"
@@ -91,6 +95,7 @@ import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
 import ConfirmationSwapModal from './components/ConfirmationSwapModal';
+import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
@@ -110,7 +115,8 @@ export default {
     ConfirmationBatchTransaction,
     AppModal,
     ConfirmWithWallet,
-    ConfirmationSwapModal
+    ConfirmationSwapModal,
+    ConfirmationSendTransactionDetails
   },
   data() {
     return {
