@@ -193,9 +193,6 @@ h6 {
 .font-weight--800 {
   font-weight: 800 !important;
 }
-.nowrap {
-  white-space: nowrap;
-}
 
 /* ========== Cursor ========== */
 .pointer-event--none {
@@ -220,14 +217,8 @@ h6 {
 .overflow--hidden {
   overflow: hidden !important;
 }
-.overflow--initial {
-  overflow: initial;
-}
 .position--relative {
   position: relative;
-}
-.width--initial {
-  width: initial;
 }
 .width--full {
   width: 100% !important;
@@ -243,9 +234,6 @@ h6 {
 }
 .spacer-y-medium {
   height: 5rem;
-}
-.box-shadow--sm {
-  box-shadow: 0 2px 7px var(--v-boxShadow-base) !important;
 }
 .rotate {
   &.transition {
@@ -295,13 +283,7 @@ h6 {
   }
 }
 
-/* ========== Mobile ========== */
-.preset--mobile-max-width {
-  max-width: 420px;
-}
-
 /* ========== Convert SVG to white ========== */
-
 .make-white-svg {
   filter: brightness(10);
 }

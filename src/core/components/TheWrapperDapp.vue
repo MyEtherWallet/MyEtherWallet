@@ -4,7 +4,7 @@
       DAPP WRAPPER:
     =====================================================================================
     -->
-  <v-sheet class="rounded-lg">
+  <mew6-white-sheet>
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -43,10 +43,10 @@
      Slot: content, used to place body content if not using tabs.
     =====================================================================================
     -->
-    <div v-if="tabItems.length === 0" class="pa-8">
+    <div v-if="tabItems.length === 0" class="pt-8 px-3 pa-md-8">
       <slot name="content" />
     </div>
-  </v-sheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
