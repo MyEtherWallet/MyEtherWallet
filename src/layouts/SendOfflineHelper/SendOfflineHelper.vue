@@ -295,8 +295,8 @@
               />
             </div>
             <p
-              class="gas-price-warning signer-mismatch-warning"
               v-if="isAddressMatch"
+              class="gas-price-warning signer-mismatch-warning"
             >
               {{ $t('errorsGlobal.signer-mismatch') }}
             </p>
