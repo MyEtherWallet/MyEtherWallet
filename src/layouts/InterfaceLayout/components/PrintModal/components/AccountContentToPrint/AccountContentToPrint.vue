@@ -163,7 +163,7 @@
   </div>
 </template>
 <script>
-import Blockie from '@/components/Blockie';
+import Blockie from '@/components/BlockiePrintable';
 import { mapState } from 'vuex';
 
 export default {
