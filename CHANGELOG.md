@@ -1,3 +1,9 @@
+### Release v5.7.29
+
+### Bug
+
+- Add catch when selected address doesn't match signer [#3065](https://github.com/MyEtherWallet/MyEtherWallet/pull/3065)
+
 ### Release v5.7.28
 
 ### Bug
