@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix paper wallet blockie color issue [#3064](https://github.com/MyEtherWallet/MyEtherWallet/pull/3064)
 - Fix UD 2.0 version upgrade [#3033](https://github.com/MyEtherWallet/MyEtherWallet/pull/3033)
 
 ### Devop
