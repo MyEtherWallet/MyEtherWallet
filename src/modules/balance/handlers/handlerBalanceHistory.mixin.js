@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
-  name: 'HandlerBalance',
+  name: 'HandlerBalanceHistory',
   data() {
     return {
       getTimeseriesData: '',
@@ -26,6 +26,7 @@ export default {
           _nextKey: this.nextKey
         };
       },
+      update: data => data.getTimeseriesData,
       skip() {
         const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
         return !acceptableScales.includes(this.scale);

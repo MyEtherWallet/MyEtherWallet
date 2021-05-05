@@ -38,7 +38,7 @@ export default {
   mixins: [handlerWallet],
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapGetters('global', ['isEthNetwork', 'network'])
   },
   watch: {
@@ -79,7 +79,13 @@ export default {
     },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
-        this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
+        if (this.gasPriceType === gasPriceTypes.STORED) {
+          this.setGasPrice(this.baseGasPrice);
+        } else if (this.gasPriceType) {
+          this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
+        } else {
+          this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
+        }
       });
     },
     subscribeToBlockNumber() {

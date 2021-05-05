@@ -92,7 +92,7 @@ export default {
                   value: token.current_price,
                   symbol: '$',
                   name: 'USD',
-                  price_change_24h: token.price_change_24h
+                  price_change_percentage_24h: token.price_change_percentage_24h
                 };
                 this.setETHUSDValue(usd);
               }
@@ -100,6 +100,7 @@ export default {
                 token.contract ? token.contract.toLowerCase() : tokens.eth,
                 token
               );
+              this.$apollo.queries.getOwnersERC20Tokens.refetch();
             }
           });
         }
@@ -151,7 +152,9 @@ export default {
               img: foundToken ? foundToken.image : ethImg,
               decimals: token.tokenInfo.decimals,
               market_cap: foundToken ? foundToken.market_cap : null,
-              price_change_24h: foundToken ? foundToken.price_change_24h : null,
+              price_change_percentage_24h: foundToken
+                ? foundToken.price_change_percentage_24h
+                : null,
               usdBalance: usdBalance,
               price: price,
               tokenBalance: this._getTokenBalance(

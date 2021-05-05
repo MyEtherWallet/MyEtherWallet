@@ -918,7 +918,7 @@
 			"operationType": "query",
 			"rootType": "Query",
 			"variables": [],
-			"source": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_24h\n    total_supply\n  }\n}",
+			"source": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_percentage_24h\n    total_supply\n  }\n}",
 			"fields": [
 				{
 					"responseName": "getLatestPrices",
@@ -991,8 +991,8 @@
 							"isDeprecated": false
 						},
 						{
-							"responseName": "price_change_24h",
-							"fieldName": "price_change_24h",
+							"responseName": "price_change_percentage_24h",
+							"fieldName": "price_change_percentage_24h",
 							"type": "Float",
 							"isConditional": false,
 							"isDeprecated": false
@@ -1012,8 +1012,8 @@
 			"fragmentSpreads": [],
 			"inlineFragments": [],
 			"fragmentsReferenced": [],
-			"sourceWithFragments": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_24h\n    total_supply\n  }\n}",
-			"operationId": "402f0593f5157e7ec00b832e8e83a5bc180d9b76afdeff94a923ebedcfb05bd7"
+			"sourceWithFragments": "query getLatestPrices {\n  getLatestPrices {\n    __typename\n    id\n    symbol\n    name\n    image\n    contract\n    current_price\n    market_cap\n    total_volume\n    price_change_percentage_24h\n    total_supply\n  }\n}",
+			"operationId": "513721ab89fd52bc799a40a1571e49ee07f351c035d4d0152ce263856cb811f9"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/wallets/wallets.graphql",

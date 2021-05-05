@@ -107,7 +107,7 @@ export default {
     tokensData() {
       return this.tokensList
         .filter(item => {
-          if (item.price_change_24h || item.market_cap) {
+          if (item.price_change_percentage_24h || item.market_cap) {
             return item;
           }
         })
@@ -120,8 +120,10 @@ export default {
           ];
           newObj.token = item.symbol;
           newObj.cap = new BigNumber(item.market_cap).toFormat();
-          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
-          newObj.status = item.price_change_24h > 0 ? '+' : '-';
+          newObj.change = new BigNumber(
+            item.price_change_percentage_24h
+          ).toFixed(2);
+          newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
           newObj.price = '$' + new BigNumber(item.price).toFixed(2);
           newObj.tokenImg = item.img;
           newObj.callToAction = [
@@ -143,7 +145,7 @@ export default {
         this.tokensList.reduce((total, currentVal) => {
           const balance =
             currentVal.usdBalance !== null &&
-            (currentVal.price_change_24h !== null ||
+            (currentVal.price_change_percentage_24h !== null ||
               currentVal.market_cap !== 0)
               ? currentVal.usdBalance
               : 0;

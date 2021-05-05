@@ -2,12 +2,23 @@
 
 ### Devop
 
+* Fix ui issues for dapps [#3060](https://github.com/MyEtherWallet/MyEtherWallet/pull/3060)
+* Fix paper wallet printing bugs [#3050](https://github.com/MyEtherWallet/MyEtherWallet/pull/3050)
+* Fix landing page paddings and set min width [#3059](https://github.com/MyEtherWallet/MyEtherWallet/pull/3059)
+* Adjust home banner to fit on very large screen size [#3058](https://github.com/MyEtherWallet/MyEtherWallet/pull/3058)
+* Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
+* Update Deposit Borrow Withdraw layouts [#3016](https://github.com/MyEtherWallet/MyEtherWallet/pull/3016)
+* Fix custom gas price not loaded after logging in [#3026](https://github.com/MyEtherWallet/MyEtherWallet/pull/3026)
+* Note below min amount swaps [#3030](https://github.com/MyEtherWallet/MyEtherWallet/pull/3030)
+* Add Switch Address for Hardware wallets [#3042](https://github.com/MyEtherWallet/MyEtherWallet/pull/3042)
+* Allows press enter on keystore access [#3043](https://github.com/MyEtherWallet/MyEtherWallet/pull/3043)
 * Fix zero tx fee on confirmation screen and in notifications [#3025](https://github.com/MyEtherWallet/MyEtherWallet/pull/3025)
 * Find chart timeframe with data on load [#3031](https://github.com/MyEtherWallet/MyEtherWallet/pull/3031)
 * Show toast when no web3 wallet is shown [#3037](https://github.com/MyEtherWallet/MyEtherWallet/pull/3037)
 * Add mewcard wallet image [#3006](https://github.com/MyEtherWallet/MyEtherWallet/pull/3006)
 * Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)
 * Hide options when not on mainnet [#3021](https://github.com/MyEtherWallet/MyEtherWallet/pull/3021)
+* Fix dapps confirmation layout issues [#3017](https://github.com/MyEtherWallet/MyEtherWallet/pull/3017)
 * Update Deposit Borrow Withdraw layouts [#3016](https://github.com/MyEtherWallet/MyEtherWallet/pull/3016)
 * Fix mobile menu logo and max screen size [#2998](https://github.com/MyEtherWallet/MyEtherWallet/pull/2998)
 * Fix ens manage domain [#2997](https://github.com/MyEtherWallet/MyEtherWallet/pull/2997)

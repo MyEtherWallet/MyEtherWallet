@@ -52,35 +52,68 @@ class Changelly {
         return response.data.result.result;
       });
   }
+  getMinAmount({ fromT, toT }) {
+    return axios
+      .post(`${HOST_URL}`, {
+        id: uuidv4(),
+        jsonrpc: '2.0',
+        method: 'getFixRate',
+        params: [
+          {
+            from: fromT.symbol.toLowerCase(),
+            to: toT.symbol.toLowerCase()
+          }
+        ]
+      })
+      .then(response => {
+        return response?.data?.result[0].minFrom;
+      });
+  }
   getQuote({ fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
-        jsonrpc: '2.0',
-        method: 'getFixRateForAmount',
-        params: [
-          {
-            from: fromT.symbol.toLowerCase(),
-            to: toT.symbol.toLowerCase(),
-            amountFrom: queryAmount.toString()
-          }
-        ]
-      })
-      .then(response => {
-        if (response.data.result[0].result === 0) return [];
+    return this.getMinAmount({ fromT, toT }).then(result => {
+      if (queryAmount.lte(result)) {
         return [
           {
             exchange: this.provider,
             provider: this.provider,
-            amount: response.data.result[0].amountTo,
-            rateId: response.data.result[0].id
+            amount: '0',
+            minAmount: new BigNumber(result)
+              .times(0.01)
+              .plus(result)
+              .toString(),
+            rateId: 'belowMin'
           }
         ];
-      });
+      }
+      return axios
+        .post(`${HOST_URL}`, {
+          id: uuidv4(),
+          jsonrpc: '2.0',
+          method: 'getFixRateForAmount',
+          params: [
+            {
+              from: fromT.symbol.toLowerCase(),
+              to: toT.symbol.toLowerCase(),
+              amountFrom: queryAmount.toString()
+            }
+          ]
+        })
+        .then(response => {
+          if (response.data.result[0].result === 0) return [];
+          return [
+            {
+              exchange: this.provider,
+              provider: this.provider,
+              amount: response.data.result[0].amountTo,
+              rateId: response.data.result[0].id
+            }
+          ];
+        });
+    });
   }
   getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);

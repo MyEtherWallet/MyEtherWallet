@@ -22,8 +22,8 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with Ledger',
-      2: '2. Confirm Network & Address'
+      1: 'Connect with Ledger',
+      2: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.TREZOR]: {
@@ -34,8 +34,8 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with Trezor',
-      2: '2. Confirm Network & Address'
+      1: 'Connect with Trezor',
+      2: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.BITBOX]: {
@@ -46,10 +46,10 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Select BitBox Wallet',
-      2: '2. Connect with BitBox',
-      3: '3. Enter your password',
-      4: '4. Confirm Network & Address'
+      1: 'Select BitBox Wallet',
+      2: 'Connect with BitBox',
+      3: 'Enter your password',
+      4: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.BITBOX2]: {
@@ -60,10 +60,10 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Select BitBox Wallet',
+      1: 'Select BitBox Wallet',
       // 2: 'Match your encryption pairing code',
-      2: '2. Connect with BitBox',
-      3: '3. Confirm Network & Address'
+      2: 'Connect with BitBox',
+      3: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.SECALOT]: {
@@ -74,9 +74,9 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Enter your password',
-      2: '2. Connect with Secalot',
-      3: '3. Confirm Network & Address'
+      1: 'Enter your password',
+      2: 'Connect with Secalot',
+      3: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.KEEPKEY]: {
@@ -87,8 +87,9 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with KeepKey',
-      2: '2. Enter your password'
+      1: 'Connect with KeepKey',
+      2: 'Enter your password',
+      3: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.FINNEY]: {
@@ -98,7 +99,7 @@ export default {
     requiresPassword: false,
     needsQr: true,
     titles: {
-      1: '1. Connect with Finney'
+      1: 'Connect with Finney'
     }
   },
   [WALLET_TYPES.XWALLET]: {
@@ -109,7 +110,7 @@ export default {
     needsQr: true,
     accountOnly: false,
     titles: {
-      1: '1. Connect with XWallet'
+      1: 'Connect with XWallet'
     }
   },
   [WALLET_TYPES.BCVAULT]: {
@@ -120,7 +121,7 @@ export default {
     needsQr: false,
     accountOnly: true,
     titles: {
-      1: '1. Connect with BC Vault'
+      1: 'Connect with BC Vault'
     }
   },
   [WALLET_TYPES.COOL_WALLET]: {
@@ -131,8 +132,8 @@ export default {
     needsQr: false,
     accountOnly: false,
     titles: {
-      1: '1. Connect with CoolWallet',
-      2: '2. Confirm Network & Address'
+      1: 'Connect with CoolWallet',
+      2: 'Confirm Network & Address'
     }
   }
 };

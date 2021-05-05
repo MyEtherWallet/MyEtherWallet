@@ -44,7 +44,7 @@
                 priceChange ? 'primary--text' : 'error--text'
               ]"
             >
-              ${{ ETHUSDValue.price_change_24h }}
+              ${{ ETHUSDValue.price_change_percentage_24h }}
             </div>
             <v-icon
               :class="[
@@ -85,7 +85,7 @@
 <script>
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalance from './handlers/handlerBalance.mixin';
+import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -94,7 +94,7 @@ export default {
     BalanceChart,
     BalanceEmptyBlock
   },
-  mixins: [handlerBalance],
+  mixins: [handlerBalanceHistory],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
@@ -117,7 +117,7 @@ export default {
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
-      return this.ETHUSDValue.price_change_24h > 0;
+      return this.ETHUSDValue.price_change_percentage_24h > 0;
     },
     title() {
       return `${this.balanceInETH} ${this.network.type.name}`;
@@ -145,33 +145,38 @@ export default {
     initChart() {
       let count = 0;
       const checker = () => {
-        this.onToggle(this.chartButtons[count]).then(res => {
+        this.onToggle(this.chartButtons[count]);
+        setTimeout(() => {
           if (count >= 3) {
-            this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
             // a single point basically looks the same as an empty chart
-          } else if (res.length <= 1) {
+          } else if (this.chartData.length <= 1) {
             count++;
             checker();
           } else {
+            this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
           }
-        });
+        }, 1000);
       };
       checker();
     },
     onToggle(e) {
       switch (e) {
         case this.chartButtons[0]:
-          return this.setDataYesterday();
+          this.setDataYesterday();
+          break;
         case this.chartButtons[1]:
-          return this.setDataWeek();
+          this.setDataWeek();
+          break;
         case this.chartButtons[2]:
-          return this.setDataMonth();
+          this.setDataMonth();
+          break;
         case this.chartButtons[3]:
-          return this.setDataYear();
+          this.setDataYear();
+          break;
         default:
-          return this.setDataMonth();
+          this.setDataMonth();
       }
     },
     setDataMonth() {

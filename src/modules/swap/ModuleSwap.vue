@@ -210,6 +210,7 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
+      belowMinError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken,
@@ -341,6 +342,9 @@ export default {
           if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
             return `your balance is lower (${this.availableBalanceHint})`;
           }
+          if (new BigNumber(this.tokenInValue).lt(this.belowMinError)) {
+            return `Below minimum amount of ${this.belowMinError} for available providers`;
+          }
         }
       }
       return '';
@@ -448,13 +452,21 @@ export default {
           )
         })
         .then(quotes => {
-          quotes = quotes.map(q => {
-            q.rate = new BigNumber(q.amount)
-              .dividedBy(new BigNumber(this.tokenInValue))
-              .toString();
-            q.isSelected = false;
-            return q;
-          });
+          quotes = quotes
+            .map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.tokenInValue))
+                .toString();
+              q.isSelected = false;
+              if (q?.rateId === 'belowMin') {
+                this.belowMinError = q.minAmount;
+                return;
+              }
+              this.belowMinError = false;
+
+              return q;
+            })
+            .filter(item => !!item);
           this.availableQuotes = quotes;
           if (quotes.length) {
             this.tokenOutValue = quotes[0].amount;
