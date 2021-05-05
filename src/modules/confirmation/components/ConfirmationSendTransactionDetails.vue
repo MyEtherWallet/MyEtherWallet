@@ -5,14 +5,17 @@
       <div class="border-radius--5px pa-2 information-container">
         <v-row>
           <!-- icon -->
-          <v-col cols="2"> </v-col>
+          <v-col cols="2">
+            <img :src="currency.img" width="32px" class="currency-icon" />
+          </v-col>
           <!-- tx information -->
           <v-col cols="10" class="d-flex flex-column text-left">
-            <p class="text-uppercase">SENDING</p>
+            <p class="text-uppercase ma-0">SENDING</p>
             <!-- Span has to be smaller than the value text -->
-            <p class="text-uppercase">
-              {{ value }} <span>{{ network.type.currencyName }}</span>
+            <p class="text-uppercase ma-0">
+              {{ currency.amount }} <span>{{ currency.name }}</span>
             </p>
+            <p class="text-uppercase ma-0">$ {{ usdAmount }}</p>
           </v-col>
         </v-row>
       </div>
@@ -27,21 +30,24 @@
           <v-col cols="2"> </v-col>
           <!-- tx information -->
           <v-col cols="10" class="d-flex flex-column text-left">
-            <p class="text-uppercase">TO ADDRESS</p>
-            <p class="text-uppercase">{{ toEnsName }}</p>
+            <p class="text-uppercase ma-0">TO ADDRESS</p>
+            <p class="ma-0 text-wrap">{{ actualToAddress }}</p>
+            <p v-show="toEnsName !== ''" class="ma-0">{{ toEnsName }}</p>
+            <p v-show="showToAddress" class="ma-0 truncate">{{ to }}</p>
           </v-col>
         </v-row>
       </div>
     </div>
     <!-- Transaction fee -->
-    <div class="top-border py-5 mt-5">
+    <v-divider :light="true" class="mt-5" />
+    <div class="py-5">
       <div class="d-flex justify-space-between align-center">
         <div class="text-left">
           <p class="text-uppercase ma-0">TRANSACTION FEE</p>
         </div>
         <div class="width-40 text-right d-flex justify-space-between">
-          <p>{{ txFee }} {{ network.type.currencyName }}</p>
-          <p class="ml-6">$ {{ txFeeUsd }}</p>
+          <p class="ma-0">{{ txFee }} {{ network.type.currencyName }}</p>
+          <p class="ml-6 ma-0">$ {{ txFeeUsd }}</p>
         </div>
       </div>
       <div class="d-flex justify-space-between align-center">
@@ -49,25 +55,38 @@
           <p class="text-uppercase ma-0">TOTAL</p>
         </div>
         <div class="width-40 text-right d-flex justify-space-between">
-          <p>{{ totalTxFee }} {{ network.type.currencyName }}</p>
-          <p class="ml-6">$ {{ totalTxFeeUSD }}</p>
+          <p class="ma-0">{{ totalTxFee }} {{ network.type.currencyName }}</p>
+          <p class="ml-6 ma-0">~$ {{ totalTxFeeUSD }}</p>
         </div>
       </div>
     </div>
     <!-- More Details -->
-    <div></div>
+    <mew-expand-panel
+      :has-dividers="true"
+      :panel-items="panelItems"
+      :idx-to-expand="2"
+      class="mb-5"
+    >
+      <template #panelBody1>
+        <div>
+          <div
+            v-for="dets in details"
+            :key="dets.title + dets.value"
+            class="d-flex justify-space-between"
+          >
+            <p class="text-left text-capitalized">{{ dets.title }}</p>
+            <p class="text-right data-values">{{ dets.value }}</p>
+          </div>
+        </div>
+      </template>
+    </mew-expand-panel>
     <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
 </template>
 
 <script>
-import TransactionAddresses from './TransactionAddresses';
-import TransactionBalance from './TransactionBalance';
+import BigNumber from 'bignumber.js';
 export default {
-  components: {
-    TransactionAddresses,
-    TransactionBalance
-  },
   props: {
     to: {
       type: String,
@@ -77,11 +96,7 @@ export default {
       type: String,
       default: ''
     },
-    toCurrency: {
-      type: String,
-      default: ''
-    },
-    toIcon: {
+    toNickName: {
       type: String,
       default: ''
     },
@@ -93,13 +108,9 @@ export default {
       type: String,
       default: ''
     },
-    fromCurrency: {
-      type: String,
-      default: ''
-    },
-    fromIcon: {
-      type: String,
-      default: ''
+    sendCurrency: {
+      type: Object,
+      default: () => {}
     },
     data: {
       type: String,
@@ -140,6 +151,10 @@ export default {
     value: {
       type: String,
       default: '0'
+    },
+    valueUsd: {
+      type: Number,
+      default: 0
     }
   },
   data: function () {
@@ -149,18 +164,47 @@ export default {
       open: false,
       panelItems: [
         {
-          name: 'Details'
+          name: 'More Details'
         }
       ],
       activeTab: 0
     };
   },
   computed: {
+    currency() {
+      const obj = Object.assign({}, this.sendCurrency);
+      if (!obj.hasOwnProperty('amount') && !obj.hasOwnProperty('price')) {
+        obj['amount'] = this.value;
+        obj['price'] = this.valueUsd;
+      }
+      return obj;
+    },
+    usdAmount() {
+      return BigNumber(this.currency.amount)
+        .times(this.currency.price)
+        .toFixed(2);
+    },
     details() {
-      return [
+      const details = [
         {
           title: 'Network',
-          value: this.network.type.name + ' by ' + this.network.service
+          value: this.network.type.name_long
+        },
+        {
+          title: 'From ENS',
+          value: this.fromEnsName
+        },
+        {
+          title: 'From address',
+          value: this.from
+        },
+        {
+          title: 'To address',
+          value: this.to
+        },
+        {
+          title: 'Sending',
+          value: `${this.value} ${this.currency.symbol}`
         },
         {
           title: 'Gas Price',
@@ -171,14 +215,31 @@ export default {
           value: this.gasLimit
         },
         {
+          title: 'Transaction fee',
+          value: `${this.txFee} ${this.network.type.currencyName} ~ $ ${this.txFeeUsd}`
+        },
+        {
           title: 'Nonce',
-          value: this.nonce
+          value: `${this.nonce}`
         },
         {
           title: 'Data',
           value: this.data
         }
       ];
+      return details.filter(item => {
+        return item.value !== '';
+      });
+    },
+    showToAddress() {
+      return this.toNickName !== '' && this.toEnsName !== '';
+    },
+    actualToAddress() {
+      return this.toNickName !== ''
+        ? this.toNickName
+        : this.toEnsName !== ''
+        ? this.toEnsName
+        : this.to;
     }
   }
 };
@@ -189,12 +250,23 @@ export default {
   background-color: #f9f9f9;
   height: 100px;
   width: 100%;
-}
-.top-border {
-  border-top: 1px solid #f9f9f9;
+  max-width: 215px;
 }
 
 .width-40 {
   width: 40%;
+  max-width: 40%;
+}
+
+.text-wrap {
+  overflow-wrap: break-word;
+}
+
+.data-values {
+  max-width: 321px;
+}
+
+.currency-icon {
+  border-radius: 50%;
 }
 </style>

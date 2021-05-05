@@ -138,6 +138,10 @@ class SendTransaction {
       const _tx = new Transaction(this.TX);
       const json = _tx.toJSON(true);
       json.from = this.address();
+      json.currency = this.currency;
+      if (this.currency.name !== 'ETH') {
+        json.currency['value'] = this.amount;
+      }
       return this.web3().eth.sendTransaction(json);
     } catch (e) {
       return e;

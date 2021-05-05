@@ -1,19 +1,6 @@
 <template>
   <v-sheet max-width="600px" class="pa-2">
-    <!-- Top Section -->
-    <div>
-      <!-- Sending Section -->
-      <div></div>
-      <!-- Arrow Icon -->
-      <v-icon> mdi-right-arrow </v-icon>
-      <!-- To Address -->
-      <div></div>
-    </div>
-    <!-- Transaction fee -->
-    <div></div>
-    <!-- More Details -->
-    <div></div>
-    <!-- <transaction-addresses :from="from" :to="to" class="mb-2" />
+    <transaction-addresses :from="from" :to="to" class="mb-2" />
     <transaction-balance
       :tx-fee="txFee"
       :tx-fee-usd="txFeeUsd"
@@ -30,7 +17,7 @@
           </v-row>
         </v-container>
       </template>
-    </mew-expand-panel> -->
+    </mew-expand-panel>
     <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
 </template>
