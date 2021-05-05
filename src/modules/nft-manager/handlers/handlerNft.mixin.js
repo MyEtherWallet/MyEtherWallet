@@ -7,7 +7,7 @@ import {
 } from '@/apollo/queries/tokens721/tokens721.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-// import NftCollection from './handlerNftCollection';
+import NftCollection from './handlerNftCollection';
 
 export default {
   name: 'HandlerNft',
@@ -18,7 +18,7 @@ export default {
       getOwnersERC721Tokens: '',
       contract: '',
       nextKey: '',
-      ownedTokenBasicDetails: []
+      ownedTokensDetails: []
     };
   },
   apollo: {
@@ -37,19 +37,34 @@ export default {
       },
       result({ data }) {
         if (data && data.getOwnersERC721Balances) {
-          data.getOwnersERC721Balances.forEach(tkn => {
-            console.error('name', name);
-            const token = {
-              contractAddresses: [tkn.tokenInfo.contract],
-              contractIdAddress: tkn.tokenInfo.contract,
-              // contracts: [tkn.tokenInfo.contract],
-              name: this._getName(tkn.tokenInfo.contract),
-              owned_asset_count: BigNumber(tkn.balance).toFixed(0),
-              retrievedTo: 0,
-              tokens: []
-            };
-            console.error('tkn', token, this._getName(tkn.tokenInfo.contract));
+          this.ownedTokensDetails = data.getOwnersERC721Balances.map(tkn => {
+            const nftData = {};
+            let name;
+            this._getName(tkn.tokenInfo.contract).then((resp) => {
+              console.error('resp', resp)
+              return resp;
+            })
+            nftData[tkn.tokenInfo.contract] = new NftCollection({
+              details: {
+                contractAddresses: [tkn.tokenInfo.contract],
+                contractIdAddress: tkn.tokenInfo.contract,
+                contracts: [tkn.tokenInfo.contract],
+                name: name,
+                owned_asset_count: BigNumber(tkn.balance).toFixed(0),
+                retrievedTo: 0,
+                tokens: []
+              },
+              api: this.api,
+              address: this.activeAddress,
+              web3: this.web3,
+              apollo: this.apollo
+            });
+            console.error('tkn', this._getName(tkn.tokenInfo.contract));
+            return nftData[tkn.tokenInfo.contract].getPanelDetails();
           });
+          setTimeout(() => {
+            console.error('hello', this.ownedTokensDetails);
+          }, 5000)
         }
       },
       error(error) {
@@ -80,18 +95,15 @@ export default {
     }
   },
   methods: {
-    _getContractDetails(contract) {
-      return fetch(
-        `https://nft.mewapi.io/nft?contractHash=${contract}`
-      ).then(res => res.json());
-    },
     async _getName(contract) {
-      const details = await this._getContractDetails(contract);
-      if (details.tokenContracts) {
-        return details.tokenContracts[0].name || 'Unknown Nft';
-      }
-      console.error('details', details);
-      return details.name;
+      return await fetch(`https://nft.mewapi.io/nft?contractHash=${contract}`)
+        .then(res => res.json())
+        .then(json => {
+          if (json.tokenContracts) {
+            return json.tokenContracts[0].name || 'Unknown Nft';
+          }
+          return json.name;
+        });
     }
   }
 };
