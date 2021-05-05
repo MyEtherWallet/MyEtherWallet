@@ -188,6 +188,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';
+import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -431,25 +432,34 @@ export default {
     }
   },
   mounted() {
-    this.isLoading = !this.prefetched;
-    this.swapper = new Swapper(this.web3);
-    if (!this.prefetched) {
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+    if (this.isEthNetwork) {
+      this.isLoading = !this.prefetched;
+      this.swapper = new Swapper(this.web3);
+      if (!this.prefetched) {
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      } else {
+        this.processTokens(this.swapTokens, false);
+        this.setDefaults();
+        this.isLoading = false;
+      }
     } else {
-      this.processTokens(this.swapTokens, false);
-      this.setDefaults();
-      this.isLoading = false;
+      Toast(
+        'Swap feature only supports Ethereum Network right now! Please Make sure to set your node to an ETH node',
+        {},
+        WARNING
+      );
     }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    ...mapActions('global', ['isEthNetwork']),
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       /* Add Correct Values for the MewSelect*/
