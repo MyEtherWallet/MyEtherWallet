@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12" class="text-center">
+  <div class="mt-10">
+    <div class="text-center">
       <div>
         <mew-icon
           v-if="!hasIcon"
@@ -10,11 +10,11 @@
         />
         <img v-else :src="icons[instance.identifier]" height="50px" />
       </div>
-    </v-col>
-    <v-col cols="12" class="text-center mb-5">
+    </div>
+    <div class="text-center mb-5">
       <p>{{ bodyText }}</p>
-    </v-col>
-  </v-row>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,8 +27,8 @@ import secalot from '@/assets/images/hardware-wallets/logo-secalot.png';
 export default {
   props: {
     isSwap: {
-      type: String,
-      default: 'Swap'
+      type: Boolean,
+      default: false
     }
   },
   computed: {

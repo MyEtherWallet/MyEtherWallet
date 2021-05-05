@@ -17,22 +17,6 @@
       :close="overlayClose"
       @close="overlayClose"
     />
-    <!-- <app-modal
-      title="Confirm Transaction"
-      :btn-action="sendSignedTx"
-      :close="overlayClose"
-      :btn-enabled="disableBtn"
-      :show="showSignTxModal"
-      @close="overlayClose"
-    >
-      <template #dialogBody>
-        <confirm-with-wallet />
-        change this depending on what type of transaction it is
-        also add is batchTx
-        <confirm-swap-tx v-if="isSwap" />
-        <confirm-send-tx v-if="isSwap" />
-      </template>
-    </app-modal> -->
     <app-modal
       :show="showTxOverlay"
       :title="title ? title : 'Confirmation'"
@@ -42,20 +26,23 @@
       @close="overlayClose"
     >
       <template #dialogBody>
-        <confirmation-send-transaction-details
-          :to="to"
-          :from="from"
-          :data="data"
-          :gas-price="gasPrice"
-          :gas-limit="gasLimit"
-          :nonce="nonce"
-          :network="network"
-          :tx-fee="txFee"
-          :tx-fee-usd="txFeeUSD"
-          :value="value"
-          :value-usd="ETHUSDValue.value"
-          :send-currency="sendCurrency"
-        />
+        <div>
+          <confirmation-send-transaction-details
+            :to="to"
+            :from="from"
+            :data="data"
+            :gas-price="gasPrice"
+            :gas-limit="gasLimit"
+            :nonce="nonce"
+            :network="network"
+            :tx-fee="txFee"
+            :tx-fee-usd="txFeeUSD"
+            :value="value"
+            :value-usd="ETHUSDValue.value"
+            :send-currency="sendCurrency"
+          />
+          <confirm-with-wallet v-if="isHardware" :is-swap="isSwap" />
+        </div>
       </template>
     </app-modal>
     <mew-overlay
@@ -98,7 +85,7 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
 import ConfirmationSwapModal from './components/ConfirmationSwapModal';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
-// import ConfirmWithWallet from './components/ConfirmWithWallet';
+import ConfirmWithWallet from './components/ConfirmWithWallet';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -115,16 +102,15 @@ export default {
     ConfirmationMesssage,
     ConfirmationBatchTransaction,
     AppModal,
-    // ConfirmWithWallet,
     ConfirmationSwapModal,
-    ConfirmationSendTransactionDetails
+    ConfirmationSendTransactionDetails,
+    ConfirmWithWallet
   },
   data() {
     return {
       showTxOverlay: false,
       showSignOverlay: false,
       showBatchOverlay: false,
-      // showSignTxModal: false,
       showSwapModal: false,
       tx: {},
       resolver: () => {},
@@ -194,32 +180,37 @@ export default {
     },
     disableBtn() {
       return !utils._.isEmpty(this.signedTxObject);
+    },
+    isSwap() {
+      return !utils._.isEmpty(this.swapInfo);
     }
   },
   created() {
     const _self = this;
+    /**
+     * receives an @Array
+     * arr[0] is the tx
+     * arr[1] is the selected currency
+     */
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
       this.parseRawData(tx[0]);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      // this.txFee is not updating before reaching about here
       _self.tx.transactionFee = this.txFee;
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
         _self.sendCurrency = tx[1];
       }
-      console.log('gets here');
       await this.instance
         .signTransaction(this.tx)
         .then(res => {
           this.signedTxObject = res;
         })
         .catch(e => {
-          console.log(e);
-          // this.overlayClose();
-          // this.reset();
+          this.overlayClose();
+          this.reset();
           this.instance.errorHandler(e);
         });
     });
@@ -306,7 +297,6 @@ export default {
       this.showTxOverlay = false;
       this.showBatchOverlay = false;
       this.showSignOverlay = false;
-      // this.showSignTxModal = false;
       this.showSwapModal = false;
     },
     parseRawData(tx) {
