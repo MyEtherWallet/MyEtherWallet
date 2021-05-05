@@ -30,7 +30,7 @@ import {
   mintmeComCoin,
   ethercore,
   ledgerEthereum,
-  avalanche
+  avalancheC
 } from './paths';
 const renamedLedger = Object.assign({}, ledgerEthereum);
 renamedLedger.label = 'Ledger';
@@ -67,5 +67,5 @@ export default [
   lightstreamsNetwork,
   mintmeComCoin,
   ethercore,
-  avalanche
+  avalancheC
 ];

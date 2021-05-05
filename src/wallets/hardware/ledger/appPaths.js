@@ -53,7 +53,7 @@ import {
   thundercore,
   lightstreamsNetwork,
   ethercore,
-  avalanche
+  avalancheC
 } from '../../bip44/paths';
 const appList = [
   {
@@ -178,13 +178,13 @@ const appList = [
   },
   {
     network: AVAX,
-    prefixes: ["m/44'/60'"],
-    paths: [avalanche]
+    prefixes: ["m/44'/60'/0'"],
+    paths: [avalancheC]
   },
   {
     network: AVAXTEST,
-    prefixes: ["m/44'/60'"],
-    paths: [avalanche]
+    prefixes: ["m/44'/60'/0'"],
+    paths: [avalancheC]
   }
 ];
 export default appList;
