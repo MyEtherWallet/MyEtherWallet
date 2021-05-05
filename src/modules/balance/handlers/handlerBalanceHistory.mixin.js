@@ -31,9 +31,9 @@ export default {
         const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
         return !acceptableScales.includes(this.scale);
       },
-      result({ data }) {
-        const parsedResult = this._parseResult(data.getTimeseriesData.items);
-        const nextKey = data.getTimeseriesData.nextKey;
+      result() {
+        const parsedResult = this._parseResult(this.getTimeseriesData.items);
+        const nextKey = this.getTimeseriesData.nextKey;
         do {
           if (!nextKey) {
             /**
