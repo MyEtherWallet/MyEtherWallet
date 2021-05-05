@@ -40,10 +40,10 @@ export default {
           this.ownedTokensDetails = data.getOwnersERC721Balances.map(tkn => {
             const nftData = {};
             let name;
-            this._getName(tkn.tokenInfo.contract).then((resp) => {
-              console.error('resp', resp)
+            this._getName(tkn.tokenInfo.contract).then(resp => {
+              console.error('resp', resp);
               return resp;
-            })
+            });
             nftData[tkn.tokenInfo.contract] = new NftCollection({
               details: {
                 contractAddresses: [tkn.tokenInfo.contract],
@@ -64,7 +64,7 @@ export default {
           });
           setTimeout(() => {
             console.error('hello', this.ownedTokensDetails);
-          }, 5000)
+          }, 5000);
         }
       },
       error(error) {
