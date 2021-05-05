@@ -9,7 +9,8 @@ const AUDIT_EXCEPTIONS = [
   'bl',
   'cryptiles',
   'axios',
-  'y18n'
+  'y18n',
+  'xmlhttprequest-ssl'
 ];
 
 const execute = (command, callback) => {
