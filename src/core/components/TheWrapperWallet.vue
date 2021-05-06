@@ -8,7 +8,7 @@
       RightCol - takes rightColItem${n} slot that will be displayed one after another
     =====================================================================================
     -->
-  <v-row class="pb-14">
+  <v-row>
     <!--
     =====================================================================================
      Network Col on SM-XS
