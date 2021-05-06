@@ -16,7 +16,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions@0.0.3",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -69,6 +69,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.2",
     "subscriptions-transport-ws": "0.9.18",
+    "underscore": "1.13.1",
     "vue": "2.6.12",
     "vue-apollo": "3.0.7",
     "vue-router": "3.5.1",
@@ -167,7 +168,9 @@
     "handlebars": "4.5.3",
     "axios": "0.21.1",
     "node-fetch": "2.6.1",
-    "cryptiles": "4.1.2"
+    "cryptiles": "4.1.2",
+    "lodash": "4.17.21",
+    "underscore": "1.13.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
