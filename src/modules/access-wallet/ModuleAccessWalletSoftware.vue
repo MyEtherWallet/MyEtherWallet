@@ -22,6 +22,7 @@
         <v-row v-if="walletType === types.OVERVIEW">
           <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
             <mew-super-button
+              font-class="mew-heading-2"
               btn-mode="small-right-image"
               :title="btn.label"
               :subtitle="btn.description"
