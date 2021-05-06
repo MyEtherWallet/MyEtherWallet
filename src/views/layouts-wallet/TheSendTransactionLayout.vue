@@ -1,5 +1,5 @@
 <template>
-  <the-wrapper-wallet>
+  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
     <template #leftColItem1>
       <module-send />
     </template>
