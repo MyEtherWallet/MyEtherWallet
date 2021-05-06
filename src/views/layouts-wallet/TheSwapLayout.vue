@@ -10,6 +10,9 @@
     <template #rightColItem1>
       <module-tokens-value />
     </template>
+    <template #rightColItem2>
+      <module-transfer-history :is-swap="true" />
+    </template>
   </the-wrapper-wallet>
 </template>
 
@@ -17,11 +20,17 @@
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import ModuleSwap from '@/modules/swap/ModuleSwap';
 import ModuleTokensValue from '@/modules/tokens-value/ModuleTokensValue';
+import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
-  components: { TheWrapperWallet, ModuleSwap, ModuleTokensValue },
+  components: {
+    TheWrapperWallet,
+    ModuleSwap,
+    ModuleTokensValue,
+    ModuleTransferHistory
+  },
   props: {
     fromToken: {
       type: String,

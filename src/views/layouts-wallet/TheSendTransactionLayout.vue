@@ -3,17 +3,26 @@
     <template #leftColItem1>
       <module-send />
     </template>
+    <template #rightColItem1>
+      <module-tokens-value />
+    </template>
+    <template #rightColItem2>
+      <module-transfer-history />
+    </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import ModuleSend from '@/modules/send/ModuleSend';
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-
+import ModuleTokensValue from '@/modules/tokens-value/ModuleTokensValue';
+import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 export default {
   components: {
     ModuleSend,
-    TheWrapperWallet
+    TheWrapperWallet,
+    ModuleTokensValue,
+    ModuleTransferHistory
   }
 };
 </script>
