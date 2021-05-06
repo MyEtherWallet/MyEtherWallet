@@ -46,6 +46,7 @@ export default class Nft {
           if (!configData.error) {
             try {
               const getDetails = async () => {
+                console.error('toknContracts', configData.tokenContracts);
                 for (let i = 0; i < configData.tokenContracts.length; i++) {
                   const data = configData.tokenContracts[i];
                   const details = await this.api.getContractDetails(
@@ -79,6 +80,7 @@ export default class Nft {
                 this.nftConfig = { ...res };
                 selectedContract = Object.keys(this.nftConfig)[0];
                 this.selectedContract = Object.keys(this.nftConfig)[0];
+                console.error('res', res, this.selectedContract);
                 this.setAvailableContracts(Object.keys(this.nftConfig));
                 return resolve(selectedContract);
               });

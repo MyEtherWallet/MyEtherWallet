@@ -16,7 +16,7 @@ export default class NftCollection {
     this.currentPage = 1;
     this.countPerPage = configs.countPerPage || 9;
     this.selectedContract = details.contractIdAddress;
-    this.imageContractBase = this.contracts[0].contract;
+    this.imageContractBase = Array.from(this.contracts)[0].contract;
     this.nftConfig = props.details;
     this.count = details.owned_asset_count;
     this.startIndex = 0;

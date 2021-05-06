@@ -146,6 +146,7 @@ export default class NFT {
 
   setAvailableContracts(contracts) {
     this.availableContracts = contracts;
+    console.error('aviaalbecontracts', this.availableContracts);
   }
 
   getImageUrl(tokenId, contract) {
