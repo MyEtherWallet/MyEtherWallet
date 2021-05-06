@@ -17,5 +17,6 @@
   "unable-to-reset-device": "Unable to reset device, try unplugging and replugging",
   "u2f-not-supported": "U2F Not supported by browser!",
   "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address may not be recoverable.",
-  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction."
+  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction.",
+  "signer-mismatch": "Warning: Signer does not match selected address!"
 }

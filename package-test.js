@@ -62,6 +62,7 @@ const EXCEPTIONS = [
   '@sentry/integrations',
   'sass-loader',
   'stylelint',
+  'stylelint-config-standard',
   '@unstoppabledomains/resolution',
   'vue-stripe-elements-plus'
 ];
