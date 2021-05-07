@@ -1,7 +1,7 @@
 /**
  * Module Nft Apollo Mixin
  */
-import {
+ import {
   getOwnersERC721Balances,
   getOwnersERC721Tokens
 } from '@/apollo/queries/tokens721/tokens721.graphql';
@@ -34,18 +34,18 @@ export default {
       skip() {
         return !this.address || this.address === null || !this.isEthNetwork;
       },
-      result({ data }) {
+      async result({ data }) {
         if (data && data.getOwnersERC721Balances) {
-          this.contracts = data.getOwnersERC721Balances.map(tkn => {
-            const tokenContract = tkn.tokenInfo.contract;
-            const name = this._getName(tokenContract);
-            console.error('name', name);
+          const promiseContracts = data.getOwnersERC721Balances.map(tkn => {
             return {
               count: BigNumber(tkn.balance).toFixed(0),
-              name: name,
-              contract: tokenContract
+              name: this._getName(tkn),
+              contract: tkn.tokenInfo.contract
             };
           });
+          const resolveContracts = await Promise.all(promiseContracts);
+          console.errro("resolveContracts", resolveContracts)
+          this.contracts = resolveContracts;
           this.selectedContract = this.contracts[0].contract;
         }
       },
@@ -82,14 +82,16 @@ export default {
     }
   },
   methods: {
-    async _getName(contract) {
-      return await fetch(`https://nft.mewapi.io/nft?contractHash=${contract}`)
+    async _getName(tkn) {
+      return await fetch(`https://nft.mewapi.io/nft?contractHash=${tkn.tokenInfo.contract}`)
         .then(res => res.json())
         .then(json => {
           if (json.tokenContracts) {
-            return json.tokenContracts[0].name || 'Unknown Nft';
+            tkn.tokenInfo.name = json.tokenContracts[0].name || 'Unknown Nft';
+          } else {
+            tkn.tokenInfo.name = json.name;
           }
-          return json.name;
+          return tkn;
         });
     }
   }

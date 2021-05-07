@@ -249,7 +249,7 @@ export default {
         img: this.network.type.icon,
         decimals: 18,
         market_cap: null,
-        price_change_24h: null
+        price_change_percentage_24h: null
       };
 
       const copiedTokens = this.tokensList.slice();

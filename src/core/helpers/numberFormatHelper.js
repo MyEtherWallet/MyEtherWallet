@@ -1,3 +1,7 @@
+/**
+ * Number Format Helper
+ * taken from EthVM
+ */
 /* Constants: */
 const SmallUsdBreakpoint = 0.04;
 const SmallNumberBreakpoint = 0.0000001;

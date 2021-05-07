@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   'vuetify',
   'sass-loader',
   'husky',
-  '@aave/protocol-js'
+  '@aave/protocol-js',
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

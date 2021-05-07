@@ -94,7 +94,6 @@ export default {
           width: '15%'
         }
       ]
-      // loading: true
     };
   },
   computed: {
@@ -108,21 +107,23 @@ export default {
     tokensData() {
       return this.tokensList
         .filter(item => {
-          if (item.price_change_24h || item.market_cap) {
+          if (item.price_change_percentage_24h || item.market_cap) {
             return item;
           }
         })
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            this.getTokenValue(item).value + ' ' + item.symbol,
+            item.tokenBalance.value + ' ' + item.symbol,
             numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
               .value
           ];
           newObj.token = item.symbol;
           newObj.cap = new BigNumber(item.market_cap).toFormat();
-          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
-          newObj.status = item.price_change_24h > 0 ? '+' : '-';
+          newObj.change = new BigNumber(
+            item.price_change_percentage_24h
+          ).toFixed(2);
+          newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
           newObj.price = '$' + new BigNumber(item.price).toFixed(2);
           newObj.tokenImg = item.img;
           newObj.callToAction = [
@@ -144,23 +145,13 @@ export default {
         this.tokensList.reduce((total, currentVal) => {
           const balance =
             currentVal.usdBalance !== null &&
-            (currentVal.price_change_24h !== null ||
+            (currentVal.price_change_percentage_24h !== null ||
               currentVal.market_cap !== 0)
               ? currentVal.usdBalance
               : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).toFixed(2);
-    }
-  },
-  methods: {
-    getTokenValue(_token) {
-      let n = new BigNumber(_token.balance);
-      if (_token.decimals) {
-        n = n.div(new BigNumber(10).pow(_token.decimals));
-        n = numberFormatHelper.formatFloatingPointValue(n);
-      }
-      return n;
     }
   }
 };

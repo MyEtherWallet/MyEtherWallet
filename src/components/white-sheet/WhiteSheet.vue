@@ -29,14 +29,13 @@ export default {
 
 <style lang="scss" scoped>
 .sideinfo {
-  //width: 350px;
   width: 100%;
 }
 </style>
 
 <style lang="scss">
 .mew-component--white-sheet.box-shadow-light {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
 }
 .mew-component--white-sheet.box-shadow-dark {
   box-shadow: 0 0 15px #3c3c3c !important;

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet
+  <mew6-white-sheet
     :class="[
       isTokens ? 'empty-token-list' : 'empty-network-balance',
       'module-no-balance pa-4 py-7 pa-sm-12'
@@ -67,7 +67,7 @@
         @click.native="navigateToSwap"
       />
     </div>
-  </v-sheet>
+  </mew6-white-sheet>
 </template>
 
 <script>
@@ -101,9 +101,6 @@ export default {
 
 <style scoped class="scss">
 .module-no-balance {
-  border-radius: 12px !important;
-  width: 100%;
-  box-shadow: 0 12px 17px rgb(21 29 63 / 3%) !important;
   min-height: 352px;
 }
 .empty-network-balance {
