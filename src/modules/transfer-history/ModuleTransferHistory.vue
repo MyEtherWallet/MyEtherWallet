@@ -1,19 +1,19 @@
 <template>
   <mew6-white-sheet>
-    <div class="px-5 px-lg-7 py-5">
+    <div class="px-5 px-lg-3 pt-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ actualTitle }}</span>
         <mew-button
           btn-style="transparent"
           button-size="small"
-          :title="$t('common.more') + '...'"
+          title="EthVM"
           @click.native="() => navigateToEthvm()"
         />
       </div>
     </div>
-    <div class="pa-3">
-      <div v-for="(notification, key) in swapNotifications" :key="key">
-        <mew-notification :notification="notification" />
+    <div class="pa-1 history-container">
+      <div v-for="(data, key) in actualNotifications" :key="key">
+        <mew-notification :notification="data.notification" class="px-0" />
       </div>
     </div>
   </mew6-white-sheet>
@@ -21,8 +21,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-// import BigNumber from 'bignumber.js';
-// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import formatObj from '@/modules/notifications/helpers/formatObj';
 
 export default {
   name: 'ModuleTransferHistory',
@@ -40,8 +39,26 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network']),
     ...mapGetters('notifications', ['txNotifications', 'swapNotifications']),
+    parsedTxNotifications() {
+      return this.txNotifications.map(item => {
+        const newItem = formatObj(item, this.network);
+        // removes the color from the component
+        newItem['notification'].status.value = 'history';
+        return newItem;
+      });
+    },
+    parsedSwapNotifications() {
+      return this.swapNotifications.map(item => {
+        const newItem = formatObj(item, this.network);
+        // removes the color from the component
+        newItem['notification'].status.value = 'history';
+        return newItem;
+      });
+    },
     actualNotifications() {
-      return this.isSwap ? this.swapNotifications : this.txNotifications;
+      return !this.isSwap
+        ? this.parsedTxNotifications
+        : this.parsedSwapNotifications;
     },
     actualTitle() {
       return this.isSwap ? `Swap History` : `Tx History`;
@@ -60,5 +77,10 @@ export default {
 <style lang="scss" scoped>
 .cursor {
   cursor: pointer;
+}
+
+.history-container {
+  max-height: 300px;
+  overflow-y: scroll;
 }
 </style>
