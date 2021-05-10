@@ -129,12 +129,6 @@ export default {
           ownedTokens.forEach(token => {
             let foundToken;
             if (this.tokensData && this.tokensData.get) {
-              console.error(
-                'hello',
-                this.tokensData.get(
-                  '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85'
-                )
-              );
               foundToken = this.tokensData.get(
                 token.tokenInfo.contract.toLowerCase()
               );

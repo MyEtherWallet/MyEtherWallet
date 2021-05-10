@@ -1,13 +1,42 @@
 /**
  * Module Nft Apollo Mixin
  */
- import {
+import {
   getOwnersERC721Balances,
   getOwnersERC721Tokens
 } from '@/apollo/queries/tokens721/tokens721.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 // import NftCollection from './handlerNftCollection';
+// First Fetch Balances -->
+// Fetch All Names(on results) -->
+
+// Computed:
+// isLoading = {
+// return isLoadingNames || fetchBalance
+// }
+
+// nftdata = {
+// if(!isLoading) {
+// return fetchBalanceGraphqlResult
+
+// }
+// }
+
+// Methods:
+// Fetch All Names = {
+// const promiseNames = [];
+// fetchBalanceGraphqlResult.forEach (item => {
+//         try {
+//            promiseNames.push(_ameget(etchBalanceGraphqlResult.contract));
+//         } catch (err) {
+//            soem error
+//         }
+// })
+
+//   thicontractsNames = await Promise.all(promiseNames);
+// set isLoadingNames = false
+// }
 
 export default {
   name: 'HandlerNft',
@@ -17,7 +46,9 @@ export default {
       erc721Tokens: {},
       getOwnersERC721Tokens: '',
       contract: '',
-      nextKey: ''
+      nextKey: '',
+      isLoadingNames: true,
+      contractNames: []
     };
   },
   apollo: {
@@ -31,22 +62,15 @@ export default {
           hash: this.address
         };
       },
+      update: data => data.getOwnersERC721Balances,
       skip() {
         return !this.address || this.address === null || !this.isEthNetwork;
       },
       async result({ data }) {
         if (data && data.getOwnersERC721Balances) {
-          const promiseContracts = data.getOwnersERC721Balances.map(tkn => {
-            return {
-              count: BigNumber(tkn.balance).toFixed(0),
-              name: this._getName(tkn),
-              contract: tkn.tokenInfo.contract
-            };
+          data.getOwnersERC721Balances.map(tkn => {
+            this._getContractInfo(tkn);
           });
-          const resolveContracts = await Promise.all(promiseContracts);
-          console.errro("resolveContracts", resolveContracts)
-          this.contracts = resolveContracts;
-          this.selectedContract = this.contracts[0].contract;
         }
       },
       error(error) {
@@ -81,17 +105,33 @@ export default {
       }
     }
   },
+  computed: {
+    isLoading() {
+      return (
+        this.isLoadingNames ||
+        this.$apollo.queries.getOwnersERC721Balances.loading
+      );
+    }
+  },
   methods: {
-    async _getName(tkn) {
-      return await fetch(`https://nft.mewapi.io/nft?contractHash=${tkn.tokenInfo.contract}`)
+    async _getContractInfo(tkn) {
+      console.error('tkn', tkn);
+      return await fetch(
+        `https://nft.mewapi.io/nft?contractHash=${tkn.tokenInfo.contract}`
+      )
         .then(res => res.json())
         .then(json => {
-          if (json.tokenContracts) {
-            tkn.tokenInfo.name = json.tokenContracts[0].name || 'Unknown Nft';
-          } else {
-            tkn.tokenInfo.name = json.name;
-          }
-          return tkn;
+          const name = json.tokenContracts
+            ? json.tokenContracts[0].name || 'Unknown Nft'
+            : json.name;
+
+          this.contracts.push({
+            count: BigNumber(tkn.balance).toFixed(0),
+            name: name || tkn.tokenInfo.name,
+            contract: tkn.tokenInfo.contract
+          });
+          this.selectedContract = this.contracts[0];
+          console.error('contracts', this.contracts, this.selectedContract);
         });
     }
   }

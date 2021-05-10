@@ -92,6 +92,7 @@ export default class NFT {
 
   setActiveContract(contractAddress) {
     return new Promise((resolve, reject) => {
+      console.error('nft', this.nft.nftConfig);
       if (!this.nft.nftConfig[contractAddress]) {
         reject(Error(''));
       }

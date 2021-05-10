@@ -171,6 +171,18 @@ export default {
       contentLoading: false
     };
   },
+  // watch: {
+  //   contracts(newVal) {
+  //     console.error('neVal', newVal);
+  //     if (newVal.length > 0) {
+  //       this.tabs = this.contracts.map(item => {
+  //         console.error('item', item);
+  //         return { name: `${item.name} (${item.count})` };
+  //       });
+  //       this.onTab(0);
+  //     }
+  //   }
+  // },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'online']),
@@ -230,21 +242,6 @@ export default {
       web3: this.web3,
       apollo: this.$apollo
     });
-    this.nft
-      .init()
-      .then(() => {
-        this.initLoaded = true;
-        this.contracts = this.nft.getAvailableContracts();
-        this.tabs = this.contracts.map(item => {
-          return { name: `${item.name} (${item.count})` };
-        });
-        this.onTab(0);
-      })
-      .catch(e => {
-        e === this.$t('nftManager.none-owned')
-          ? (this.initLoaded = true)
-          : Toast(e.message, {}, ERROR);
-      });
   },
   methods: {
     toggleNftSend() {
@@ -342,16 +339,16 @@ export default {
       }
     },
     onTab(val) {
+      console.error('in hereeee', val);
       this.activeTab = val;
-      if (this.contracts.length === 0) {
-        this.contracts = this.nft.getAvailableContracts();
-      }
       this.contentLoading = true;
       this.tokens = [];
       this.nft
-        .setActiveContract(this.nft.getAvailableContracts()[val].contract)
+        .setActiveContract(this.contracts[val].contract)
         .then(() => {
+          console.error('in set active contract resp');
           this.nft.getPageValues().then(result => {
+            console.error('result', result);
             if (result.tokens && Array.isArray(result.tokens)) {
               this.tokens = this.nft.selectNftsToShow();
               this.currentPage = this.nft.getCurrentPage();
@@ -362,6 +359,7 @@ export default {
           });
         })
         .catch(e => {
+          console.error('e', e);
           Toast(e.message, {}, WARNING);
         });
     }
