@@ -109,7 +109,6 @@ class CompileSwapOptions {
         'https://api.coingecko.com/api/v3/exchanges/uniswap'
       );
       const tokenDetails = {};
-      console.log(tickers.tickers.length);
       for (let i = 0; i < tickers.tickers.length; i++) {
         // waits for half a sec to call coingecko to avoid rate limit
         setTimeout(function () {}, 500);
