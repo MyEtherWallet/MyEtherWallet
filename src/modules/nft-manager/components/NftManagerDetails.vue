@@ -13,9 +13,9 @@
     <div
       class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
     >
-      <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''">{{
-        token.name
-      }}</span>
+      <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+        >#{{ token.token_id }}</span
+      >
       <mew-button
         :has-full-width="false"
         btn-style="outline"

@@ -18,7 +18,7 @@
     =====================================================================================
     -->
         <v-skeleton-loader
-          v-if="!initLoaded"
+          v-if="isLoadingContracts"
           type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
         />
         <!--
@@ -27,7 +27,9 @@
     =====================================================================================
     -->
         <v-card
-          v-if="initLoaded && contracts.length === 0 && tabs.length === 0"
+          v-if="
+            !isLoadingContracts && contracts.length === 0 && tabs.length === 0
+          "
           flat
           color="selectorBg lighten-1"
           class="d-flex align-center px-5 py-4"
@@ -43,7 +45,7 @@
     =====================================================================================
     -->
         <mew-tabs
-          v-if="initLoaded && !onNftSend && tabs.length > 0"
+          v-if="!isLoadingContracts && !onNftSend && tabs.length > 0"
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
@@ -62,14 +64,18 @@
     -->
               <div class="d-flex justify-space-between mt-3 mb-5">
                 <h5 class="font-weight-bold">
-                  {{ nftCategory }}
+                  {{ currentActive.name }}
                 </h5>
                 <div>Showing {{ startIndex }} to {{ endIndex }}</div>
+                <span>{{ tokens.tokens }}</span>
+                <span>Hello</span>
               </div>
-              <div v-if="tokens.length === 0">Loading ...</div>
-              <div v-if="tokens.length !== 0">
+              <div v-if="tokens.tokens && tokens.tokens.length === 0">
+                Loading ...
+              </div>
+              <div v-if="tokens.tokens && tokens.tokens.length !== 0">
                 <div
-                  v-for="(token, tokenIdx) in tokens"
+                  v-for="(token, tokenIdx) in tokens.tokens"
                   :key="tokenIdx"
                   class="mb-3"
                 >
@@ -124,7 +130,7 @@
           :close="toggleNftSend"
           :get-image-url="getImageUrl"
           :nft="selectedNft"
-          :nft-category="nftCategory"
+          :nft-category="currentActive.name"
           :send="sendTx"
           :disabled="!isValid"
           :set-address="setAddress"
@@ -159,7 +165,7 @@ export default {
       nft: {},
       initLoaded: false,
       tabs: [],
-      contracts: [],
+      // contracts: [],
       activeTab: 0,
       tokens: [],
       onNftSend: false,
@@ -168,21 +174,10 @@ export default {
       selectedCurrency: {},
       currentPage: 1,
       countPerPage: 9,
-      contentLoading: false
+      contentLoading: false,
+      currentActive: {}
     };
   },
-  // watch: {
-  //   contracts(newVal) {
-  //     console.error('neVal', newVal);
-  //     if (newVal.length > 0) {
-  //       this.tabs = this.contracts.map(item => {
-  //         console.error('item', item);
-  //         return { name: `${item.name} (${item.count})` };
-  //       });
-  //       this.onTab(0);
-  //     }
-  //   }
-  // },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'online']),
@@ -227,9 +222,16 @@ export default {
      */
     isValid() {
       return this.isValidAddress() && this.address !== '';
-    },
-    nftCategory() {
-      return this.nft.getActiveName();
+    }
+  },
+  watch: {
+    contracts(newVal) {
+      if (newVal.length > 0) {
+        this.tabs = this.contracts.map(item => {
+          return { name: `${item.name} (${item.count})` };
+        });
+        this.onTab(0);
+      }
     }
   },
   mounted() {
@@ -239,13 +241,13 @@ export default {
     this.nft = new NFT({
       network: this.network,
       address: this.address,
-      web3: this.web3,
-      apollo: this.$apollo
+      web3: this.web3
     });
   },
   methods: {
     toggleNftSend() {
       this.onNftSend = !this.onNftSend;
+      console.error('selectedContrct', this.tabs);
     },
     goToSend(selectedNft) {
       if (selectedNft) {
@@ -334,34 +336,34 @@ export default {
       this.countPerPage = this.nft.getCountPerPage();
     },
     getImageUrl(token) {
-      if (this.initLoaded) {
-        return this.nft.getImageUrl(token.token_id, token.contract);
-      }
+      return this.nft.getImageUrl(token.contract, token.token_id);
     },
     onTab(val) {
-      console.error('in hereeee', val);
       this.activeTab = val;
-      this.contentLoading = true;
+      this.selectedContract = this.contracts[val].contract;
+      this.currentActive = this.contracts[val];
+      console.error('currentActive', this.currentActive);
+      // this.contentLoading = true;
       this.tokens = [];
-      this.nft
-        .setActiveContract(this.contracts[val].contract)
-        .then(() => {
-          console.error('in set active contract resp');
-          this.nft.getPageValues().then(result => {
-            console.error('result', result);
-            if (result.tokens && Array.isArray(result.tokens)) {
-              this.tokens = this.nft.selectNftsToShow();
-              this.currentPage = this.nft.getCurrentPage();
-              this.countPerPage = this.nft.getCountPerPage();
-              this.contentLoading = false;
-              this.$nextTick();
-            }
-          });
-        })
-        .catch(e => {
-          console.error('e', e);
-          Toast(e.message, {}, WARNING);
-        });
+      // this.nft
+      //   .setActiveContract(this.contracts[val].contract)
+      //   .then(() => {
+      //     console.error('in set active contract resp');
+      //     this.nft.getPageValues().then(result => {
+      //       console.error('result', result);
+      //       if (result.tokens && Array.isArray(result.tokens)) {
+      //         this.tokens = this.nft.selectNftsToShow();
+      //         this.currentPage = this.nft.getCurrentPage();
+      //         this.countPerPage = this.nft.getCountPerPage();
+      //         this.contentLoading = false;
+      //         this.$nextTick();
+      //       }
+      //     });
+      //   })
+      //   .catch(e => {
+      //     console.error('e', e);
+      //     Toast(e.message, {}, WARNING);
+      //   });
     }
   }
 };

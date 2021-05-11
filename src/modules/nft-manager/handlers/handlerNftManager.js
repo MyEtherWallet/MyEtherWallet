@@ -1,24 +1,24 @@
 import Nft from './handlerNftInit';
 import utils from 'web3-utils';
+import configs from './config/configNft';
 
 export default class NFT {
-  constructor({ network, address, web3, apollo }) {
+  constructor({ network, address, web3 }) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
-    this.apollo = apollo;
     this.nft = new Nft({
       network: this.network,
       address: this.address,
       setAvailableContracts: this.setAvailableContracts.bind(this),
-      web3: this.web3,
-      apollo: this.apollo
+      web3: this.web3
     });
     this.availableContracts = [];
     this.selectedContract = {};
     this.currentActive = '';
     this.currentPageState = '';
     this.ready = false;
+    this.nftUrl = `${configs.url}/getImage`;
   }
 
   init(selectedContractOverride) {
@@ -83,6 +83,7 @@ export default class NFT {
   }
 
   getCountPerPage() {
+    console.error('count per page', this.currentActive);
     return this.currentActive.countPerPage;
   }
 
@@ -90,20 +91,22 @@ export default class NFT {
     return this.nft.getOwnedTokenBasicDetails();
   }
 
-  setActiveContract(contractAddress) {
-    return new Promise((resolve, reject) => {
-      console.error('nft', this.nft.nftConfig);
-      if (!this.nft.nftConfig[contractAddress]) {
-        reject(Error(''));
-      }
-      this.currentActive = this.nft.nftConfig[contractAddress];
-      resolve(this.nft.nftConfig[contractAddress].activate());
-    });
-  }
+  // setActiveContract(contractAddress) {
+  //   return new Promise((resolve, reject) => {
+  //     console.error('nft', this.nft.nftConfig);
+  //     if (!this.nft.nftConfig[contractAddress]) {
+  //       reject(Error(''));
+  //     }
+  //     this.currentActive = this.nft.nftConfig[contractAddress];
+  //     console.error('nft', this.nft.nftConfig);
 
-  getActiveName() {
-    return this.currentActive.name;
-  }
+  //     resolve(this.nft.nftConfig[contractAddress].activate());
+  //   });
+  // }
+
+  // getActiveName() {
+  //   return this.currentActive.name;
+  // }
 
   getPageValues() {
     return this.currentActive.getPageState().catch(() => {
@@ -147,15 +150,14 @@ export default class NFT {
 
   setAvailableContracts(contracts) {
     this.availableContracts = contracts;
-    console.error('aviaalbecontracts', this.availableContracts);
   }
 
-  getImageUrl(tokenId, contract) {
+  getImageUrl(contract, tokenId) {
     if (!contract) contract = this.currentActive.contract;
     if (!tokenId) return '';
     if (tokenId.slice(0, 2) === '0x') {
       tokenId = tokenId.slice(2);
     }
-    return this.currentActive.getImageUrl(contract, tokenId);
+    return `${this.nftUrl}?contract=${contract}&tokenId=${tokenId}`;
   }
 }

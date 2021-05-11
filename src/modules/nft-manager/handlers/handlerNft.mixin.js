@@ -8,47 +8,16 @@ import {
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 // import NftCollection from './handlerNftCollection';
-// First Fetch Balances -->
-// Fetch All Names(on results) -->
-
-// Computed:
-// isLoading = {
-// return isLoadingNames || fetchBalance
-// }
-
-// nftdata = {
-// if(!isLoading) {
-// return fetchBalanceGraphqlResult
-
-// }
-// }
-
-// Methods:
-// Fetch All Names = {
-// const promiseNames = [];
-// fetchBalanceGraphqlResult.forEach (item => {
-//         try {
-//            promiseNames.push(_ameget(etchBalanceGraphqlResult.contract));
-//         } catch (err) {
-//            soem error
-//         }
-// })
-
-//   thicontractsNames = await Promise.all(promiseNames);
-// set isLoadingNames = false
-// }
 
 export default {
   name: 'HandlerNft',
   data() {
     return {
       getOwnersERC721Balances: '',
-      erc721Tokens: {},
       getOwnersERC721Tokens: '',
-      contract: '',
-      nextKey: '',
       isLoadingNames: true,
-      contractNames: []
+      contractNames: [],
+      selectedContract: ''
     };
   },
   apollo: {
@@ -68,9 +37,7 @@ export default {
       },
       async result({ data }) {
         if (data && data.getOwnersERC721Balances) {
-          data.getOwnersERC721Balances.map(tkn => {
-            this._getContractInfo(tkn);
-          });
+          this._getAllNames();
         }
       },
       error(error) {
@@ -86,19 +53,31 @@ export default {
         return {
           owner: this.address,
           contract: this.selectedContract,
-          nextKey: this.nextKey
+          nextKey: this.getOwnersERC721Tokens.nextKey
         };
       },
+      update: data => data.getOwnersERC721Tokens,
       skip() {
         return (
           !this.address ||
           this.address === null ||
           !this.isEthNetwork ||
-          !this.selectedContract
+          this.selectedContract === ''
         );
       },
       result({ data }) {
-        console.error('erc721 token', data);
+        console.error('data', data);
+        this.tokens = {
+          contractIdAddress: this.selectedContract,
+          tokens: data.getOwnersERC721Tokens.tokens.map(item => {
+            return {
+              description: item.tokenInfo.name,
+              token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
+              name: item.tokenInfo.name,
+              contract: item.tokenInfo.contract
+            };
+          })
+        };
       },
       error(error) {
         Toast(error.message, {}, ERROR);
@@ -106,32 +85,53 @@ export default {
     }
   },
   computed: {
-    isLoading() {
+    isLoadingContracts() {
       return (
         this.isLoadingNames ||
         this.$apollo.queries.getOwnersERC721Balances.loading
       );
+    },
+    contracts() {
+      if (!this.isLoadingContracts) {
+        return this.contractNames.map((name, idx) => {
+          return {
+            contract: this.getOwnersERC721Balances[idx].tokenInfo.contract,
+            name: name,
+            count: BigNumber(this.getOwnersERC721Balances[idx].balance).toFixed(
+              0
+            )
+          };
+        });
+      }
+      return [];
     }
   },
   methods: {
-    async _getContractInfo(tkn) {
-      console.error('tkn', tkn);
-      return await fetch(
-        `https://nft.mewapi.io/nft?contractHash=${tkn.tokenInfo.contract}`
-      )
+    _getTokenId(tokenId) {
+      if (tokenId.length > 30) {
+        return `${tokenId.slice(0, 6)}...${tokenId.slice(-6)}`;
+      }
+      return tokenId;
+    },
+    async _getAllNames() {
+      const promiseNames = [];
+      this.getOwnersERC721Balances.forEach(token => {
+        try {
+          promiseNames.push(this._getName(token.tokenInfo.contract));
+        } catch (error) {
+          Toast(error.message, {}, ERROR);
+        }
+      });
+      this.contractNames = await Promise.all(promiseNames);
+      this.isLoadingNames = false;
+    },
+    async _getName(contract) {
+      return await fetch(`https://nft.mewapi.io/nft?contractHash=${contract}`)
         .then(res => res.json())
         .then(json => {
-          const name = json.tokenContracts
+          return json.tokenContracts
             ? json.tokenContracts[0].name || 'Unknown Nft'
             : json.name;
-
-          this.contracts.push({
-            count: BigNumber(tkn.balance).toFixed(0),
-            name: name || tkn.tokenInfo.name,
-            contract: tkn.tokenInfo.contract
-          });
-          this.selectedContract = this.contracts[0];
-          console.error('contracts', this.contracts, this.selectedContract);
         });
     }
   }

@@ -24,10 +24,6 @@ export default class Sender {
     }
   }
 
-  updateTokens(tokens) {
-    this.tokens = tokens;
-  }
-
   send(to, tokenId) {
     const details = this.getTokenDetails(tokenId);
     if (!details) {

@@ -596,8 +596,8 @@
 			"fragmentsReferenced": [
 				"TokenFragment"
 			],
-			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
-			"operationId": "d99d19a9e0feac2ca082d58b84760a083d278140d40b800a6f73673f80a7977b"
+			"sourceWithFragments": "query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {\n  getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {\n    __typename\n    owners {\n      __typename\n      tokenInfo {\n        __typename\n        ...TokenFragment\n        contract\n      }\n      balance\n    }\n    nextKey\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
+			"operationId": "e4101db0908e197d2029ecaa177d66a6f12d1794f28b9cadf3a5e658e79c3e37"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
@@ -610,7 +610,7 @@
 					"type": "String!"
 				}
 			],
-			"source": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      ...TokenFragment\n      contract\n    }\n    owner\n    balance\n  }\n}",
+			"source": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      name\n      contract\n    }\n    balance\n  }\n}",
 			"fields": [
 				{
 					"responseName": "getOwnersERC721Balances",
@@ -652,6 +652,13 @@
 									"isDeprecated": false
 								},
 								{
+									"responseName": "name",
+									"fieldName": "name",
+									"type": "String",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
 									"responseName": "contract",
 									"fieldName": "contract",
 									"type": "String!",
@@ -659,17 +666,8 @@
 									"isDeprecated": false
 								}
 							],
-							"fragmentSpreads": [
-								"TokenFragment"
-							],
+							"fragmentSpreads": [],
 							"inlineFragments": []
-						},
-						{
-							"responseName": "owner",
-							"fieldName": "owner",
-							"type": "String!",
-							"isConditional": false,
-							"isDeprecated": false
 						},
 						{
 							"responseName": "balance",
@@ -685,11 +683,9 @@
 			],
 			"fragmentSpreads": [],
 			"inlineFragments": [],
-			"fragmentsReferenced": [
-				"TokenFragment"
-			],
-			"sourceWithFragments": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      ...TokenFragment\n      contract\n    }\n    owner\n    balance\n  }\n}\nfragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
-			"operationId": "fe2fb6e18432e12f2dbf1cee4a5d4c13446aff610399c4398899a4380f500418"
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "query getOwnersERC721Balances($hash: String!) {\n  getOwnersERC721Balances(owner: $hash) {\n    __typename\n    tokenInfo {\n      __typename\n      name\n      contract\n    }\n    balance\n  }\n}",
+			"operationId": "ec22c35d2a777f1b0948f25c6a418d74fd7910259e3b7c37731c059f1f21a877"
 		},
 		{
 			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
@@ -1225,8 +1221,8 @@
 				"EthTokenInfo"
 			],
 			"fragmentName": "TokenFragment",
-			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens721/tokens721.graphql",
-			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n}",
+			"filePath": "file:///Users/jessicapeng/MyEtherWallet/src/apollo/queries/tokens/tokens.graphql",
+			"source": "fragment TokenFragment on EthTokenInfo {\n  __typename\n  name\n  symbol\n  decimals\n}",
 			"fields": [
 				{
 					"responseName": "__typename",
@@ -1246,6 +1242,13 @@
 					"responseName": "symbol",
 					"fieldName": "symbol",
 					"type": "String",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "decimals",
+					"fieldName": "decimals",
+					"type": "Int",
 					"isConditional": false,
 					"isDeprecated": false
 				}
