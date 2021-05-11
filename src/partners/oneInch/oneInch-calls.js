@@ -84,7 +84,7 @@ const createTransaction = async transactionParams => {
         transactionParams.fromAddress
       }&recipient=${
         transactionParams.toAddress
-      }&dex=ONE_INCH&exchange=one_inch&platform=ios&fromContractAddress=${
+      }&dex=ONE_INCH&exchange=one_inch&platform=web&fromContractAddress=${
         transactionParams.fromTokenAddress
       }&toContractAddress=${transactionParams.toTokenAddress}&amount=${
         transactionParams.fromValue
