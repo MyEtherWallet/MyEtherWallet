@@ -110,6 +110,8 @@ class CompileSwapOptions {
       );
       const tokenDetails = {};
       for (let i = 0; i < tickers.tickers.length; i++) {
+        // waits for half a sec to call coingecko to avoid rate limit
+        setTimeout(function () {}, 500);
         const token = await this.get(
           `https://api.coingecko.com/api/v3/coins/${tickers.tickers[i].coin_id}/tickers`
         );
