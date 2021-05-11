@@ -88,6 +88,7 @@ export default {
       );
     },
     getTagLine(name) {
+      console.log(name); // todo remove dev item
       return this.$t(`swap.tag-line.${name}`);
     }
   }

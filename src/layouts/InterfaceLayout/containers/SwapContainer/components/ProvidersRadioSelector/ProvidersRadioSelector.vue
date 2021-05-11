@@ -309,7 +309,7 @@ export default {
         uniswap_v2: UniSwap,
         bancor: Bancor,
         zero_x: Zx,
-        one_inch: OneInch
+        oneInch: OneInch
       },
       betaLogos: {},
       providerNames: providerNames,
