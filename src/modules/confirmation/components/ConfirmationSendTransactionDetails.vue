@@ -5,17 +5,20 @@
       <div class="border-radius--5px pa-2 information-container">
         <v-row>
           <!-- icon -->
-          <v-col cols="2">
+          <v-col cols="2" align-self="center">
             <img :src="currency.img" width="32px" class="currency-icon" />
           </v-col>
           <!-- tx information -->
           <v-col cols="10" class="d-flex flex-column text-left">
-            <p class="text-uppercase ma-0">SENDING</p>
+            <p class="text-uppercase details-header mb-1">SENDING</p>
             <!-- Span has to be smaller than the value text -->
-            <p class="text-uppercase ma-0">
-              {{ currency.amount }} <span>{{ currency.name }}</span>
+            <p class="text-uppercase ma-0 mew-heading-2">
+              {{ currency.amount }}
+              <span class="mew-caption">{{ currency.name }}</span>
             </p>
-            <p class="text-uppercase ma-0">$ {{ usdAmount }}</p>
+            <p class="text-uppercase ma-0 mew-heading-3 usd-to-amt">
+              ${{ usdAmount }}
+            </p>
           </v-col>
         </v-row>
       </div>
@@ -30,10 +33,22 @@
           <v-col cols="2"> </v-col>
           <!-- tx information -->
           <v-col cols="10" class="d-flex flex-column text-left">
-            <p class="text-uppercase ma-0">TO ADDRESS</p>
-            <p class="ma-0 text-wrap">{{ actualToAddress }}</p>
+            <p class="text-uppercase details-header mb-1">TO ADDRESS</p>
+            <p
+              :class="[
+                showToAddress ? '' : 'address-color',
+                'ma-0 text-wrap mew-address'
+              ]"
+            >
+              {{ actualToAddress }}
+            </p>
             <p v-show="toEnsName !== ''" class="ma-0">{{ toEnsName }}</p>
-            <p v-show="showToAddress" class="ma-0 truncate">{{ to }}</p>
+            <p
+              v-show="showToAddress"
+              class="ma-0 truncate mew-address address-color"
+            >
+              {{ to }}
+            </p>
           </v-col>
         </v-row>
       </div>
@@ -43,20 +58,26 @@
     <div class="py-5">
       <div class="d-flex justify-space-between align-center">
         <div class="text-left">
-          <p class="text-uppercase ma-0">TRANSACTION FEE</p>
+          <p class="text-uppercase ma-0 fee-color">TRANSACTION FEE</p>
         </div>
         <div class="width-40 text-right d-flex justify-space-between">
-          <p class="ma-0">{{ txFee }} {{ network.type.currencyName }}</p>
-          <p class="ml-6 ma-0">$ {{ txFeeUsd }}</p>
+          <p class="ma-0 base-color">
+            {{ txFee }}
+            <span class="fee-color">{{ network.type.currencyName }} </span>
+          </p>
+          <p class="ml-6 ma-0 base-color">${{ txFeeUsd }}</p>
         </div>
       </div>
       <div class="d-flex justify-space-between align-center">
         <div class="text-left">
-          <p class="text-uppercase ma-0">TOTAL</p>
+          <p class="text-uppercase ma-0 fee-color">TOTAL</p>
         </div>
         <div class="width-40 text-right d-flex justify-space-between">
-          <p class="ma-0">{{ totalTxFee }} {{ network.type.currencyName }}</p>
-          <p class="ml-6 ma-0">~$ {{ totalTxFeeUSD }}</p>
+          <p class="ma-0 base-color">
+            {{ totalFee }}
+            <span class="fee-color">{{ network.type.currencyName }} </span>
+          </p>
+          <p class="ml-6 ma-0 base-color">${{ totalFeeUSD }}</p>
         </div>
       </div>
     </div>
@@ -75,7 +96,15 @@
             class="d-flex justify-space-between"
           >
             <p class="text-left text-capitalized">{{ dets.title }}</p>
-            <p class="text-right data-values">{{ dets.value }}</p>
+            <p
+              :class="[
+                dets.title.includes('address') ? 'mew-address truncate' : '',
+                dets.title.toLowerCase() === 'data' ? 'text-wrap' : '',
+                'text-right data-values'
+              ]"
+            >
+              {{ dets.value }}
+            </p>
           </div>
         </div>
       </template>
@@ -140,14 +169,6 @@ export default {
       type: String,
       default: '0'
     },
-    totalTxFee: {
-      type: String,
-      default: '0'
-    },
-    totalTxFeeUSD: {
-      type: String,
-      default: '0'
-    },
     value: {
       type: String,
       default: '0'
@@ -179,10 +200,22 @@ export default {
       }
       return obj;
     },
+    totalFee() {
+      if (this.currency.symbol === this.network.type.currencyName) {
+        return BigNumber(this.value).plus(this.txFee).toFixed();
+      }
+      return this.txFee;
+    },
+    totalFeeUSD() {
+      const ethFeeToUsd = BigNumber(this.totalFee).times(this.valueUsd);
+      if (this.currency.symbol === this.network.type.currencyName) {
+        return ethFeeToUsd;
+      }
+      const tokenPrice = BigNumber(this.currency.price).times(this.value);
+      return tokenPrice.plus(ethFeeToUsd).toFixed(2);
+    },
     usdAmount() {
-      return BigNumber(this.currency.amount)
-        .times(this.currency.price)
-        .toFixed(2);
+      return BigNumber(this.value).times(this.currency.price).toFixed(2);
     },
     details() {
       const details = [
@@ -216,7 +249,7 @@ export default {
         },
         {
           title: 'Transaction fee',
-          value: `${this.txFee} ${this.network.type.currencyName} ~ $ ${this.txFeeUsd}`
+          value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUsd}`
         },
         {
           title: 'Nonce',
@@ -268,5 +301,27 @@ export default {
 
 .currency-icon {
   border-radius: 50%;
+}
+
+.details-header {
+  font-size: 12px;
+  color: #b3c3d7;
+}
+
+.usd-to-amt {
+  color: #788ea7;
+  font-weight: normal !important;
+}
+
+.address-color {
+  color: #667f9b;
+}
+
+.fee-color {
+  color: #96a8b6;
+}
+
+.base-color {
+  color: var(--v-titlePrimary-base);
 }
 </style>

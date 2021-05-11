@@ -165,8 +165,12 @@ export default {
       return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
     },
     value() {
-      const parsedValue = this.tx.value ? this.tx.value : '0x';
-      return utils.fromWei(utils.hexToNumberString(parsedValue));
+      const parsedValue = this.tx.value
+        ? this.tx.hasOwnProperty('toTxData')
+          ? this.tx.toTxData.amount
+          : utils.fromWei(utils.hexToNumberString(this.tx.value))
+        : '0x';
+      return parsedValue;
     },
     isSoftwareWallet() {
       return (
