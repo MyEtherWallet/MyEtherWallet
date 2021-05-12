@@ -1,5 +1,5 @@
 ### Devop
-* Add security policy link to footer
+* Add security policy link to footer [#3085](https://github.com/MyEtherWallet/MyEtherWallet/pull/3085)
 
 ### Release v5.7.29
 
