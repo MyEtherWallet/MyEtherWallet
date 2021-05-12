@@ -31,7 +31,7 @@ export default class NftCollection {
     this.sender = new Sender({
       web3: this.web3,
       address: this.address,
-      contractAddresses: this.contracts,
+      contractAddresses: this.contracts
       // tokens: this.tokens
     });
     this.failureRetryReset = false;
@@ -51,18 +51,6 @@ export default class NftCollection {
   //     }
   //   });
   // }
-
-  send(to, tokenId) {
-    return this.sender
-      .send(to, tokenId)
-      .on('transactionHash', () => {
-        this.removeSentNft(tokenId);
-      })
-      .on('error', err => {
-        this.resetNFT();
-        return err;
-      });
-  }
 
   sendData(to, tokenId) {
     return this.sender.sendData(to, tokenId);
@@ -112,7 +100,7 @@ export default class NftCollection {
         return resolve({
           name: this.name,
           currentPage: this.currentPage,
-          count: this.count,
+          count: this.count
           // tokens: this.selectNftsToShow()
         });
       } catch (e) {
@@ -266,17 +254,6 @@ export default class NftCollection {
     });
   }
 
-  hasNextPage() {
-    if (this.currentPage === 1 && this.count >= configs.countPerPage) {
-      return true;
-    }
-    const moreAvailableToGet =
-      this.count > this.currentPage * this.countPerPage;
-    const moreToGetForPage =
-      this.tokens.length >= this.currentPage * this.countPerPage;
-    return moreAvailableToGet && moreToGetForPage;
-  }
-
   getNext() {
     this.getNftsToShow();
 
@@ -287,10 +264,6 @@ export default class NftCollection {
       return this.incrementTokenList();
     }
     return Promise.resolve(this.getPageState());
-  }
-
-  hasPrevious() {
-    return this.currentPage >= 2;
   }
 
   getPrevious() {

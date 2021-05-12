@@ -24,26 +24,6 @@ export default class Sender {
     }
   }
 
-  send(to, tokenId) {
-    const details = this.getTokenDetails(tokenId);
-    if (!details) {
-      throw Error(
-        Vue.$i18n
-          ? Vue.$i18n.t('nftManager.token-id-not-found')
-          : 'token id not found'
-      );
-    }
-    let raw;
-    if (this.isCryptoKitties) {
-      raw = this.cryptoKittiesTransfer(to, tokenId, details);
-    } else {
-      raw = this.safeTransferFrom(to, tokenId, details);
-    }
-
-    raw.from = this.address;
-    return this.web3.eth.sendTransaction(raw);
-  }
-
   sendData(to, tokenId) {
     const details = this.getTokenDetails(tokenId);
     if (!details) {
@@ -112,9 +92,5 @@ export default class Sender {
       to: details.contract,
       data: this.contract.methods.transfer(to, tokenId).encodeABI()
     };
-  }
-
-  getTokenDetails(tokenId) {
-    return this.tokens.find(item => item.token_id == tokenId);
   }
 }

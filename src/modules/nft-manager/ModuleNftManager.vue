@@ -187,32 +187,19 @@ export default {
      * Pagination
      */
     hasPages() {
-      return this.countPerPage < this.currentActive.count;
+      return this.nft.hasPages(this.currentActive.count);
     },
     hasNextPage() {
-      if (this.initLoaded) {
-        return this.nft.hasNextPage();
-      }
-      return false;
+      return this.nft.hasNextPage(this.currentActive.count);
     },
     hasPriorPage() {
-      if (this.initLoaded) {
-        return this.nft.hasPriorPage();
-      }
-      return false;
+      return this.nft.hasPriorPage();
     },
     startIndex() {
-      return 1 + (this.currentPage * this.countPerPage - this.countPerPage);
+      return this.nft.startIndex();
     },
     endIndex() {
-      const endIdx = this.currentPage * this.countPerPage;
-      if (this.tokens.length < this.countPerPage) {
-        return (
-          this.currentPage * this.countPerPage -
-          (this.countPerPage - this.tokens.length)
-        );
-      }
-      return this.tokens.length < endIdx ? endIdx : this.tokens.length;
+      return this.nft.endIndex();
     },
     /**
      * Check values
@@ -294,10 +281,7 @@ export default {
       });
     },
     isValidAddress() {
-      if (this.nft.ready) {
-        return this.nft.isValidAddress(this.toAddress);
-      }
-      return false;
+      return this.nft.isValidAddress(this.toAddress);
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {

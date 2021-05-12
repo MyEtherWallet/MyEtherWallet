@@ -68,7 +68,6 @@ export default {
       },
       result({ data }) {
         if (data) {
-
           console.error('data', data);
           this.tokens = {
             contractIdAddress: this.selectedContract,
@@ -81,7 +80,7 @@ export default {
               };
             })
           };
-          console.error('tokens', this.tokens)
+          console.error('tokens', this.tokens);
         }
       },
       error(error) {
