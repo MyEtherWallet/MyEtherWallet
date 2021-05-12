@@ -70,6 +70,31 @@
               />
             </v-col>
           </v-row>
+
+          <!--
+          =====================================================================================
+            User Message Block
+          =====================================================================================
+          -->
+          <user-msg-block
+            class="mt-5"
+            title="Your Ether balance is too low"
+            text="Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
+          >
+            <mew-button
+              btn-size="small"
+              btn-style="outline"
+              title="Swap your Bitcoin to Ether"
+              class="mr-2 mt-2"
+            />
+            <mew-button
+              btn-size="small"
+              btn-style="outline"
+              title="Buy Ether"
+              class="mr-2 mt-2"
+            />
+          </user-msg-block>
+
           <!--
             =====================================================================================
               Address Book
@@ -147,6 +172,7 @@
 </template>
 
 <script>
+import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapConfirmation from '@/modules/swap/components/SwapConfirmation';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -163,6 +189,7 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
+    UserMsgBlock,
     ModuleAddressBook,
     SwapConfirmation,
     SwapProvidersList,
