@@ -1,3 +1,6 @@
+### Devop
+* Add security policy link to footer
+
 ### Release v5.7.29
 
 ### Bug
