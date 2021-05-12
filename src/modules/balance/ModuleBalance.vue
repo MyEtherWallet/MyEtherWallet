@@ -1,5 +1,8 @@
 <template>
-  <div v-if="network.type.name === 'ETH'">
+  <div
+    v-if="network.type.name === 'ETH'"
+    class="mew6-component--module-balance"
+  >
     <!--
   =====================================================================================
     display if the user has an eth balance > 0

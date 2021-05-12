@@ -77,11 +77,13 @@
           =====================================================================================
           -->
           <user-msg-block
-            class="mt-5"
+            v-if="availableBalance.isNegative() || availableBalance.isZero()"
+            class="mt-5 mb-10"
             title="Your Ether balance is too low"
             text="Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
           >
             <mew-button
+              v-if="false"
               btn-size="small"
               btn-style="outline"
               title="Swap your Bitcoin to Ether"
@@ -92,6 +94,7 @@
               btn-style="outline"
               title="Buy Ether"
               class="mr-2 mt-2"
+              @click.native="buyEth"
             />
           </user-msg-block>
 
@@ -393,6 +396,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.availableBalance);
     this.isLoading = true;
     this.swapper = new Swapper(this.web3);
     this.swapper
@@ -415,6 +419,9 @@ export default {
       });
   },
   methods: {
+    buyEth() {
+      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
     ...mapActions('notifications', ['addNotification']),
     getTokenFromAddress(address) {
       if (!this.availableTokens.toTokens) return {};
