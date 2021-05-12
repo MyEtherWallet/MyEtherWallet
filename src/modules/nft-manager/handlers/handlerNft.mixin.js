@@ -49,6 +49,7 @@ export default {
      */
     getOwnersERC721Tokens: {
       query: getOwnersERC721Tokens,
+      fetchPolicy: 'cache-and-network',
       variables() {
         return {
           owner: this.address,
@@ -66,18 +67,22 @@ export default {
         );
       },
       result({ data }) {
-        console.error('data', data);
-        this.tokens = {
-          contractIdAddress: this.selectedContract,
-          tokens: data.getOwnersERC721Tokens.tokens.map(item => {
-            return {
-              description: item.tokenInfo.name,
-              token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
-              name: item.tokenInfo.name,
-              contract: item.tokenInfo.contract
-            };
-          })
-        };
+        if (data) {
+
+          console.error('data', data);
+          this.tokens = {
+            contractIdAddress: this.selectedContract,
+            items: data.getOwnersERC721Tokens.tokens.map(item => {
+              return {
+                description: item.tokenInfo.name,
+                token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
+                name: item.tokenInfo.name,
+                contract: item.tokenInfo.contract
+              };
+            })
+          };
+          console.error('tokens', this.tokens)
+        }
       },
       error(error) {
         Toast(error.message, {}, ERROR);

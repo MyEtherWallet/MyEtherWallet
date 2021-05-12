@@ -67,15 +67,15 @@
                   {{ currentActive.name }}
                 </h5>
                 <div>Showing {{ startIndex }} to {{ endIndex }}</div>
-                <span>{{ tokens.tokens }}</span>
+                <span>{{ tokens.items }}</span>
                 <span>Hello</span>
               </div>
-              <div v-if="tokens.tokens && tokens.tokens.length === 0">
+              <div v-if="tokens.items && tokens.items.length === 0">
                 Loading ...
               </div>
-              <div v-if="tokens.tokens && tokens.tokens.length !== 0">
+              <div v-if="tokens.items && tokens.items.length !== 0">
                 <div
-                  v-for="(token, tokenIdx) in tokens.tokens"
+                  v-for="(token, tokenIdx) in tokens.items"
                   :key="tokenIdx"
                   class="mb-3"
                 >
@@ -167,7 +167,7 @@ export default {
       tabs: [],
       // contracts: [],
       activeTab: 0,
-      tokens: [],
+      tokens: {},
       onNftSend: false,
       selectedNft: {},
       toAddress: '',
@@ -187,10 +187,7 @@ export default {
      * Pagination
      */
     hasPages() {
-      if (this.initLoaded) {
-        return this.nft.hasPages();
-      }
-      return false;
+      return this.countPerPage < this.currentActive.count;
     },
     hasNextPage() {
       if (this.initLoaded) {
@@ -247,7 +244,7 @@ export default {
   methods: {
     toggleNftSend() {
       this.onNftSend = !this.onNftSend;
-      console.error('selectedContrct', this.tabs);
+      console.error('selectedContrct', this.tokens);
     },
     goToSend(selectedNft) {
       if (selectedNft) {
@@ -287,7 +284,6 @@ export default {
       }
     },
     updateValues() {
-      this.tokens = this.nft.selectNftsToShow();
       this.tabs = this.tabs.map(item => {
         if (item.name.toLowerCase().includes(this.nftCategory.toLowerCase())) {
           return {
@@ -317,9 +313,8 @@ export default {
         this.nft
           .nextPage()
           .then(() => {
-            this.tokens = this.nft.selectNftsToShow();
+            // this.tokens = this.nft.selectNftsToShow();
             this.currentPage = this.nft.getCurrentPage();
-            this.countPerPage = this.nft.getCountPerPage();
             this.contentLoading = false;
           })
           .catch(() => {
@@ -331,9 +326,8 @@ export default {
     },
     priorPage() {
       this.nft.priorPage();
-      this.tokens = this.nft.selectNftsToShow();
+      // this.tokens = this.nft.selectNftsToShow();
       this.currentPage = this.nft.getCurrentPage();
-      this.countPerPage = this.nft.getCountPerPage();
     },
     getImageUrl(token) {
       return this.nft.getImageUrl(token.contract, token.token_id);
@@ -354,7 +348,6 @@ export default {
       //       if (result.tokens && Array.isArray(result.tokens)) {
       //         this.tokens = this.nft.selectNftsToShow();
       //         this.currentPage = this.nft.getCurrentPage();
-      //         this.countPerPage = this.nft.getCountPerPage();
       //         this.contentLoading = false;
       //         this.$nextTick();
       //       }

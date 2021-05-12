@@ -38,7 +38,7 @@ export default class Nft {
   }
 
   async getFirstTokenSet(selectedContract) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // if (!this.nftConfig[selectedContract]) {
       //   reject(
       //     Vue.$i18n

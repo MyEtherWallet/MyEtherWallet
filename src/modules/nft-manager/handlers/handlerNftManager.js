@@ -75,7 +75,7 @@ export default class NFT {
   }
 
   getTokenCount() {
-    return this.currentActive.getTokenCount();
+    return this.currentActive.count;
   }
 
   getCurrentPage() {
@@ -84,7 +84,7 @@ export default class NFT {
 
   getCountPerPage() {
     console.error('count per page', this.currentActive);
-    return this.currentActive.countPerPage;
+    return configs.countPerPage;
   }
 
   getAvailableContracts() {
@@ -114,13 +114,13 @@ export default class NFT {
         name: 'unknown',
         currentPage: 0,
         count: 0,
-        tokens: []
+        // tokens: []
       };
     });
   }
 
   hasPages() {
-    return this.currentActive.countPerPage < this.currentActive.getTokenCount();
+    return this.currentActive.countPerPage < this.currentActive.count;
   }
 
   hasNextPage() {

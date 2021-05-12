@@ -14,7 +14,6 @@ export default class NftCollection {
     this.contracts = details.contracts;
     this.contract = details.contractIdAddress;
     this.currentPage = 1;
-    this.countPerPage = configs.countPerPage || 9;
     this.selectedContract = details.contractIdAddress;
     this.imageContractBase = Array.from(this.contracts)[0].contract;
     this.nftConfig = props.details;
@@ -33,7 +32,7 @@ export default class NftCollection {
       web3: this.web3,
       address: this.address,
       contractAddresses: this.contracts,
-      tokens: this.tokens
+      // tokens: this.tokens
     });
     this.failureRetryReset = false;
     this.displayEndIndex = 0;
@@ -114,7 +113,7 @@ export default class NftCollection {
           name: this.name,
           currentPage: this.currentPage,
           count: this.count,
-          tokens: this.selectNftsToShow()
+          // tokens: this.selectNftsToShow()
         });
       } catch (e) {
         if (this.failureRetryReset) {
@@ -149,7 +148,7 @@ export default class NftCollection {
       endIndex = 9;
     }
     try {
-      if (!this.tokens) return [];
+      if (!this.tokens) return {};
       return this.tokens.length > this.countPerPage
         ? this.tokens.slice(startIndex, endIndex)
         : this.tokens;
@@ -268,7 +267,7 @@ export default class NftCollection {
   }
 
   hasNextPage() {
-    if (this.currentPage === 1 && this.count >= this.countPerPage) {
+    if (this.currentPage === 1 && this.count >= configs.countPerPage) {
       return true;
     }
     const moreAvailableToGet =
