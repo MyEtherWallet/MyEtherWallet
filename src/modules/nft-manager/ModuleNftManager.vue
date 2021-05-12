@@ -18,7 +18,7 @@
     =====================================================================================
     -->
         <v-skeleton-loader
-          v-if="isLoadingContracts"
+          v-if="loadingContracts"
           type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
         />
         <!--
@@ -28,7 +28,7 @@
     -->
         <v-card
           v-if="
-            !isLoadingContracts && contracts.length === 0 && tabs.length === 0
+            !loadingContracts && contracts.length === 0 && tabs.length === 0
           "
           flat
           color="selectorBg lighten-1"
@@ -45,7 +45,7 @@
     =====================================================================================
     -->
         <mew-tabs
-          v-if="!isLoadingContracts && !onNftSend && tabs.length > 0"
+          v-if="!loadingContracts && !onNftSend && tabs.length > 0"
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
@@ -64,18 +64,16 @@
     -->
               <div class="d-flex justify-space-between mt-3 mb-5">
                 <h5 class="font-weight-bold">
-                  {{ currentActive.name }}
+                  {{ selectedContract.name }}
                 </h5>
-                <div>Showing {{ startIndex }} to {{ endIndex }}</div>
-                <span>{{ tokens.items }}</span>
-                <span>Hello</span>
+                <div>Showing {{ startIndex + 1 }} to {{ endIndex }}</div>
               </div>
-              <div v-if="tokens.items && tokens.items.length === 0">
+              <div v-if="displayedTokens && displayedTokens.length === 0">
                 Loading ...
               </div>
-              <div v-if="tokens.items && tokens.items.length !== 0">
+              <div v-if="displayedTokens && displayedTokens.length !== 0">
                 <div
-                  v-for="(token, tokenIdx) in tokens.items"
+                  v-for="(token, tokenIdx) in displayedTokens"
                   :key="tokenIdx"
                   class="mb-3"
                 >
@@ -85,6 +83,7 @@
     =====================================================================================
     -->
                   <nft-manager-details
+                    :loading="loadingTokens"
                     :on-click="goToSend"
                     :get-image-url="getImageUrl"
                     :token="token"
@@ -104,7 +103,7 @@
                     btn-style="outline"
                     title="Prior"
                     btn-size="small"
-                    :disabled="!hasPriorPage && !contentLoading"
+                    :disabled="!hasPriorPage"
                     @click.native="priorPage"
                   />
                   <mew-button
@@ -112,7 +111,7 @@
                     btn-style="outline"
                     title="Next"
                     btn-size="small"
-                    :disabled="!hasNextPage && !contentLoading"
+                    :disabled="!hasNextPage"
                     @click.native="nextPage"
                   />
                 </div>
@@ -130,7 +129,7 @@
           :close="toggleNftSend"
           :get-image-url="getImageUrl"
           :nft="selectedNft"
-          :nft-category="currentActive.name"
+          :nft-category="selectedContract.name"
           :send="sendTx"
           :disabled="!isValid"
           :set-address="setAddress"
@@ -163,19 +162,13 @@ export default {
   data() {
     return {
       nft: {},
-      initLoaded: false,
       tabs: [],
-      // contracts: [],
       activeTab: 0,
-      tokens: {},
+      tokens: [],
       onNftSend: false,
       selectedNft: {},
       toAddress: '',
-      selectedCurrency: {},
-      currentPage: 1,
-      countPerPage: 9,
-      contentLoading: false,
-      currentActive: {}
+      selectedContract: {}
     };
   },
   computed: {
@@ -187,10 +180,10 @@ export default {
      * Pagination
      */
     hasPages() {
-      return this.nft.hasPages(this.currentActive.count);
+      return this.nft.hasPages(this.selectedContract.count);
     },
     hasNextPage() {
-      return this.nft.hasNextPage(this.currentActive.count);
+      return this.nft.hasNextPage(this.selectedContract.count);
     },
     hasPriorPage() {
       return this.nft.hasPriorPage();
@@ -199,17 +192,27 @@ export default {
       return this.nft.startIndex();
     },
     endIndex() {
-      return this.nft.endIndex();
+      return this.nft.endIndex(this.selectedContract.count);
+    },
+    currentPage() {
+      return this.nft.currentPage();
     },
     /**
-     * Check values
+     * Display tokens according to page
+     */
+    displayedTokens() {
+      return this.tokens.slice(this.startIndex, this.endIndex + 1);
+    },
+    /**
+     * Check if address is valid
      */
     isValid() {
-      return this.isValidAddress() && this.address !== '';
+      return this.nft.isValidAddress(this.toAddress) && this.address !== '';
     }
   },
   watch: {
     contracts(newVal) {
+      console.error('newVal', newVal);
       if (newVal.length > 0) {
         this.tabs = this.contracts.map(item => {
           return { name: `${item.name} (${item.count})` };
@@ -229,9 +232,19 @@ export default {
     });
   },
   methods: {
+    getImageUrl(token) {
+      return this.nft.getImageUrl(token.contract, token.token_id);
+    },
+    onTab(val) {
+      this.activeTab = val;
+      this.selectedContract = this.contracts[val];
+      this.selectedContractHash = this.contracts[val].contract;
+    },
+    /**
+     * Send NFT
+     */
     toggleNftSend() {
       this.onNftSend = !this.onNftSend;
-      console.error('selectedContrct', this.tokens);
     },
     goToSend(selectedNft) {
       if (selectedNft) {
@@ -243,8 +256,11 @@ export default {
       if (this.isValid) {
         try {
           this.nft
-            .send(this.toAddress, this.selectedNft.token_id)
+            .send(this.toAddress, this.selectedNft)
             .then(response => {
+              this.tokens = this.tokens.filter(token => {
+                return token.token_id !== this.selectedNft.token_id;
+              });
               this.updateValues();
               Toast(
                 'Cheers! Your transaction was mined. Check it in ',
@@ -280,9 +296,6 @@ export default {
         return item;
       });
     },
-    isValidAddress() {
-      return this.nft.isValidAddress(this.toAddress);
-    },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {
         this.toAddress = address.address;
@@ -290,57 +303,16 @@ export default {
         this.toAddress = address;
       }
     },
+    /**
+     * Pagination
+     */
     nextPage() {
-      try {
-        if (this.contentLoading) return;
-        this.contentLoading = true;
-        this.nft
-          .nextPage()
-          .then(() => {
-            // this.tokens = this.nft.selectNftsToShow();
-            this.currentPage = this.nft.getCurrentPage();
-            this.contentLoading = false;
-          })
-          .catch(() => {
-            this.contentLoading = false;
-          });
-      } catch (e) {
-        this.contentLoading = false;
+      if (this.hasNextPage) {
+        this.nft.nextPage();
       }
     },
     priorPage() {
       this.nft.priorPage();
-      // this.tokens = this.nft.selectNftsToShow();
-      this.currentPage = this.nft.getCurrentPage();
-    },
-    getImageUrl(token) {
-      return this.nft.getImageUrl(token.contract, token.token_id);
-    },
-    onTab(val) {
-      this.activeTab = val;
-      this.selectedContract = this.contracts[val].contract;
-      this.currentActive = this.contracts[val];
-      console.error('currentActive', this.currentActive);
-      // this.contentLoading = true;
-      this.tokens = [];
-      // this.nft
-      //   .setActiveContract(this.contracts[val].contract)
-      //   .then(() => {
-      //     console.error('in set active contract resp');
-      //     this.nft.getPageValues().then(result => {
-      //       console.error('result', result);
-      //       if (result.tokens && Array.isArray(result.tokens)) {
-      //         this.tokens = this.nft.selectNftsToShow();
-      //         this.currentPage = this.nft.getCurrentPage();
-      //         this.contentLoading = false;
-      //         this.$nextTick();
-      //       }
-      //     });
-      //   })
-      //   .catch(e => {
-      //     console.error('e', e);
-      //     Toast(e.message, {}, WARNING);
-      //   });
     }
   }
 };

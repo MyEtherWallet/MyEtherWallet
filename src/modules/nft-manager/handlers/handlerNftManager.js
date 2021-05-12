@@ -1,12 +1,13 @@
 import utils from 'web3-utils';
 import configs from './config/configNft';
+import ABI from './abi/abiNft';
 
 export default class NFT {
   constructor({ network, address, web3 }) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
-    this.countPerPage = configs.countPerPage;
+    this.countPerPage = 6;
     this.currentPage = 1;
   }
   isValidAddress(hash) {
@@ -16,46 +17,48 @@ export default class NFT {
   /**
    * Send NFT
    */
-  // send(token) {
-  //   let raw;
-  //   if (this.contractAddresses.includes(configs.cryptoKittiesContract)) {
-  //     raw = this.cryptoKittiesTransfer(to, tokenId, details);
-  //   } else {
-  //     raw = this.safeTransferFrom(to, tokenId, details);
-  //   }
+  send(to, token) {
+    console.error('adfadsf', to, token);
+    let raw;
+    this.contract = new this.web3.eth.Contract(ABI);
 
-  //   raw.from = this.address;
-  //   return this.web3.eth
-  //     .sendTransaction(raw)
-  //     .send(to, tokenId)
-  //     .on('transactionHash', () => {
-  //       this.removeSentNft(tokenId);
-  //     })
-  //     .on('error', err => {
-  //       this.resetNFT();
-  //       return err;
-  //     });
-  // }
+    if (this.contractAddresses.includes(configs.cryptoKittiesContract)) {
+      raw = this.cryptoKittiesTransfer(to, token);
+    } else {
+      raw = this.safeTransferFrom(to, token);
+    }
 
-  safeTransferFrom(to, tokenId, details) {
-    this.contract.options.address = details.contract;
+    raw.from = this.address;
+    return this.web3.eth.sendTransaction(raw).send(to, token.token_id);
+    // .on('transactionHash', () => {
+    //   this.removeSentNft(token.token_id);
+    // })
+    // .on('error', err => {
+    //   this.resetNFT();
+    //   return err;
+    // });
+  }
+
+  safeTransferFrom(to, token) {
+    this.contract.options.address = token.contract;
     return {
-      to: details.contract,
+      to: token.contract,
       data: this.contract.methods
-        .safeTransferFrom(this.address, to, tokenId)
+        .safeTransferFrom(this.address, to, token.token_id)
         .encodeABI()
     };
   }
 
-  cryptoKittiesTransfer(to, tokenId, details) {
-    this.contract.options.address = details.contract;
+  cryptoKittiesTransfer(to, token) {
+    this.contract.options.address = token.contract;
     return {
-      to: details.contract,
-      data: this.contract.methods.transfer(to, tokenId).encodeABI()
+      to: token.contract,
+      data: this.contract.methods.transfer(to, token.token_id).encodeABI()
     };
   }
 
   sendData(to, tokenId) {
+    // what does this do
     return this.currentActive.sendData(to, tokenId);
   }
 
@@ -74,16 +77,6 @@ export default class NFT {
   /**
    * Pagination
    */
-  getPageValues() {
-    return this.currentActive.getPageState().catch(() => {
-      return {
-        name: 'unknown',
-        currentPage: 0,
-        count: 0
-        // tokens: []
-      };
-    });
-  }
 
   hasPages(count) {
     return this.countPerPage < count;
@@ -93,28 +86,24 @@ export default class NFT {
     return count > this.currentPage * this.countPerPage;
   }
 
+  currentPage() {
+    return this.currentPage;
+  }
+
   startIndex() {
-    return 1 + (this.currentPage * this.countPerPage - this.countPerPage);
+    return this.currentPage * this.countPerPage - this.countPerPage;
   }
 
-  endIndex() {
+  endIndex(count) {
     const endIdx = this.currentPage * this.countPerPage;
-    if (this.tokens.length < this.countPerPage) {
-      return (
-        this.currentPage * this.countPerPage -
-        (this.countPerPage - this.tokens.length)
-      );
+    if (count > endIdx) {
+      return endIdx;
     }
-    return this.tokens.length < endIdx ? endIdx : this.tokens.length;
+    return count;
   }
 
-  async nextPage() {
-    if (this.currentActive.hasNextPage()) {
-      return new Promise((resolve, reject) => {
-        this.currentActive.getNext().then(resolve).catch(reject);
-      });
-    }
-    return Promise.resolve();
+  nextPage() {
+    this.currentPage++;
   }
 
   hasPriorPage() {
@@ -122,11 +111,9 @@ export default class NFT {
   }
 
   priorPage() {
-    return this.currentActive.getPrevious();
-  }
-
-  selectNftsToShow() {
-    return this.currentActive.selectNftsToShow();
+    if (this.currentPage >= 2) {
+      this.currentPage--;
+    }
   }
 
   /**

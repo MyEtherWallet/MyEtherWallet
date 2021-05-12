@@ -1,34 +1,57 @@
 <template>
   <!--
-    =====================================================================================
-      Nft Manager Details Component
-    =====================================================================================
-    -->
+  =====================================================================================
+    Nft Manager Details Component
+  =====================================================================================
+  -->
   <v-card flat color="tableHeader" class="rounded-lg pa-2 d-flex align-center">
-    <img
-      height="100"
-      :src="token.image ? token.image : getImageUrl(token)"
-      alt="nft token"
+    <!--
+  =====================================================================================
+    Loading Details
+  =====================================================================================
+  -->
+    <v-skeleton-loader
+      v-if="loading"
+      class="nft-manager-details-loader tableHeader py-2"
+      width="100%"
+      height="100%"
+      type="list-item-avatar"
     />
-    <div
-      class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
-    >
-      <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
-        >#{{ token.token_id }}</span
-      >
-      <mew-button
-        :has-full-width="false"
-        btn-style="outline"
-        title="Send"
-        btn-size="large"
-        @click.native="onClick(token)"
+    <!--
+  =====================================================================================
+    Loaded Details
+  =====================================================================================
+  -->
+    <div v-if="!loading" class="d-flex align-center full-width">
+      <img
+        height="100"
+        :src="token.image ? token.image : getImageUrl(token)"
+        alt="nft token"
       />
+      <div
+        class="d-flex align-center flex-column flex-md-row flex-lg-row flex-xl-row justify-space-between pa-3 full-width"
+      >
+        <span :class="$vuetify.breakpoint.smAndDown ? 'mb-1' : ''"
+          >#{{ token.token_id }}</span
+        >
+        <mew-button
+          :has-full-width="false"
+          btn-style="outline"
+          title="Send"
+          btn-size="large"
+          @click.native="onClick(token)"
+        />
+      </div>
     </div>
   </v-card>
 </template>
 <script>
 export default {
   props: {
+    loading: {
+      default: false,
+      type: Boolean
+    },
     token: {
       default: () => {
         return {};
@@ -50,3 +73,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.nft-manager-details-loader {
+  .v-skeleton-loader__list-item-avatar {
+    background: none !important;
+  }
+}
+</style>

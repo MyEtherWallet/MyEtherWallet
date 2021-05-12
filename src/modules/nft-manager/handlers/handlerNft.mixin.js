@@ -7,7 +7,6 @@ import {
 } from '@/apollo/queries/tokens721/tokens721.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-// import NftCollection from './handlerNftCollection';
 
 export default {
   name: 'HandlerNft',
@@ -17,7 +16,7 @@ export default {
       getOwnersERC721Tokens: '',
       isLoadingNames: true,
       contractNames: [],
-      selectedContract: ''
+      selectedContractHash: ''
     };
   },
   apollo: {
@@ -53,7 +52,7 @@ export default {
       variables() {
         return {
           owner: this.address,
-          contract: this.selectedContract,
+          contract: this.selectedContractHash,
           nextKey: this.getOwnersERC721Tokens.nextKey
         };
       },
@@ -63,24 +62,19 @@ export default {
           !this.address ||
           this.address === null ||
           !this.isEthNetwork ||
-          this.selectedContract === ''
+          this.selectedContractHash === ''
         );
       },
       result({ data }) {
         if (data) {
-          console.error('data', data);
-          this.tokens = {
-            contractIdAddress: this.selectedContract,
-            items: data.getOwnersERC721Tokens.tokens.map(item => {
-              return {
-                description: item.tokenInfo.name,
-                token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
-                name: item.tokenInfo.name,
-                contract: item.tokenInfo.contract
-              };
-            })
-          };
-          console.error('tokens', this.tokens);
+          this.tokens = data.getOwnersERC721Tokens.tokens.map(item => {
+            return {
+              description: item.tokenInfo.name,
+              token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
+              name: item.tokenInfo.name,
+              contract: item.tokenInfo.contract
+            };
+          });
         }
       },
       error(error) {
@@ -89,14 +83,17 @@ export default {
     }
   },
   computed: {
-    isLoadingContracts() {
+    loadingTokens() {
+      return this.$apollo.queries.getOwnersERC721Tokens.loading;
+    },
+    loadingContracts() {
       return (
         this.isLoadingNames ||
         this.$apollo.queries.getOwnersERC721Balances.loading
       );
     },
     contracts() {
-      if (!this.isLoadingContracts) {
+      if (!this.loadingContracts) {
         return this.contractNames.map((name, idx) => {
           return {
             contract: this.getOwnersERC721Balances[idx].tokenInfo.contract,
