@@ -70,7 +70,7 @@ const estimateGas = async (txs, from) => {
   } catch (e) {
     const re = new RegExp('([0-9]+)');
     const reResult = re[Symbol.match](e.message);
-    utils.handleOrThrow(e);
+    utils.handleOrThrow(e, 'eth_estimateGasList');
     if (reResult) {
       return reResult[0];
     }
@@ -89,7 +89,10 @@ const createTransaction = async transactionParams => {
       }&toContractAddress=${transactionParams.toTokenAddress}&amount=${
         transactionParams.fromValue
       }`
-    );
+    )
+    if(results.msg === 'Unable to estimate gas price'){
+      utils.checkErrorJson(results, 'eth_estimateGasList');
+    }
     if (results.error) {
       utils.checkErrorJson(results);
     }

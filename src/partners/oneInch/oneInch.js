@@ -102,7 +102,6 @@ export default class OneInch {
             this.getTokenAddress(fromCurrency),
             this.getTokenAddress(toCurrency),
             fromValue
-            // this.convertToTokenWei(fromCurrency, fromValue)
           );
           resolve(
             vals.quotes.map(val => {
@@ -110,11 +109,11 @@ export default class OneInch {
               const bnRate = new BigNumber(val.amount)
                 .div(fromValue)
                 .toNumber();
-
               return {
                 fromCurrency,
                 toCurrency,
-                provider: val.exchange,
+                provider:
+                  val.exchange === 'one_inch' ? 'oneInch' : val.exchange,
                 rate: notExcluded ? bnRate : 0,
                 additional: { source: 'oneInch' }
               };
@@ -196,26 +195,6 @@ export default class OneInch {
   }
 
   async prepareApprovals(fromAddress, providerAddress, fromCurrency, metadata) {
-    // const contract = new this.web3.eth.Contract(
-    //   [
-    //     {
-    //       constant: true,
-    //       inputs: [],
-    //       name: 'approvalHandler',
-    //       outputs: [
-    //         {
-    //           name: '',
-    //           type: 'address'
-    //         }
-    //       ],
-    //       payable: false,
-    //       stateMutability: 'view',
-    //       type: 'function'
-    //     }
-    //   ],
-    //   PROXY_CONTRACT_ADDRESS
-    // );
-    // const providerAddress = await contract.methods.approvalHandler().call();
     const isTokenApprovalNeeded = async (fromToken, fromAddress) => {
       if (fromToken === this.baseCurrency)
         return { approve: false, reset: false };
@@ -270,38 +249,7 @@ export default class OneInch {
     tradeDetails
   ) {
     try {
-      // const preparedTradeTxs = await this.prepareApprovals(
-      //   swapDetails.fromAddress,
-      //   providerAddress,
-      //   swapDetails.fromCurrency,
-      //   tradeDetails
-      // );
-
       const preparedTradeTxs = new Set(tradeDetails.transactions);
-      // const tx = {
-      //   to: tradeDetails.trade.to,
-      //   data: tradeDetails.trade.data,
-      //   value: tradeDetails.trade.value
-      // };
-      //
-      // const checkGas =
-      //   tradeDetails.metadata.gasPrice && this.platformGasPrice > 0;
-      //
-      // if (checkGas) {
-      //   const gasPrice = new BigNumber(tradeDetails.metadata.gasPrice);
-      //   const platformGasPrice = this.web3.utils.toWei(
-      //     this.platformGasPrice.toString(),
-      //     'gwei'
-      //   );
-      //
-      //   if (gasPrice.lte(platformGasPrice)) {
-      //     Toast.responseHandler(`gas-too-high`, 1, true);
-      //     throw Error('abort');
-      //   }
-      // }
-      //
-      // preparedTradeTxs.add(tx);
-
       if (preparedTradeTxs.size > 0) {
         const preparedAry = Array.from(preparedTradeTxs);
         const result = await oneInchCalls.estimateGas(
