@@ -4,7 +4,7 @@
 * Add security policy link to footer [#3085](https://github.com/MyEtherWallet/MyEtherWallet/pull/3085)
 
 ### Bug
-
+* Fix network change on send tx page [#3086](https://github.com/MyEtherWallet/MyEtherWallet/pull/3086)
 * Add catch when selected address doesn't match signer [#3065](https://github.com/MyEtherWallet/MyEtherWallet/pull/3065)
 * Fix paper wallet blockie color issue [#3064](https://github.com/MyEtherWallet/MyEtherWallet/pull/3064)
 

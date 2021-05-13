@@ -374,8 +374,8 @@ export default {
     txTo() {
       if (this.selectedCurrency || this.hexAddress) {
         return this.isToken
-          ? this.selectedCurrency.address.toLowerCase()
-          : this.hexAddress.toLowerCase().trim();
+          ? this.selectedCurrency.address?.toLowerCase()
+          : this.hexAddress?.toLowerCase().trim();
       }
       return '';
     },
