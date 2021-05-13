@@ -70,8 +70,8 @@ export default {
           this.tokens = data.getOwnersERC721Tokens.tokens.map(item => {
             return {
               description: item.tokenInfo.name,
-              token_id: this._getTokenId(BigNumber(item.token).toFixed(0)),
-              name: item.tokenInfo.name,
+              token_id: BigNumber(item.token).toFixed(0),
+              name: this._getTokenIdName(BigNumber(item.token).toFixed(0)),
               contract: item.tokenInfo.contract
             };
           });
@@ -108,7 +108,7 @@ export default {
     }
   },
   methods: {
-    _getTokenId(tokenId) {
+    _getTokenIdName(tokenId) {
       if (tokenId.length > 30) {
         return `${tokenId.slice(0, 6)}...${tokenId.slice(-6)}`;
       }

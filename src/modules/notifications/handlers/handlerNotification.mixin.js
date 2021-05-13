@@ -178,7 +178,7 @@ export default {
           return !this.txHash || this.txHash === '' || this.txHash === null;
         },
         result() {
-          this.$apollo.queries.getTransactionByHash.refetch();
+          this.$apollo.queries.getTransactionByHash?.refetch();
         },
         error(error) {
           Toast(error.message, {}, ERROR);

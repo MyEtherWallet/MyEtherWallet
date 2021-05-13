@@ -18,7 +18,7 @@
     =====================================================================================
     -->
         <v-skeleton-loader
-          v-if="loadingContracts"
+          v-if="loadingContracts && !hasNoTokens"
           type="table-heading,list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
         />
         <!--
@@ -28,7 +28,10 @@
     -->
         <v-card
           v-if="
-            !loadingContracts && contracts.length === 0 && tabs.length === 0
+            (!loadingContracts &&
+              contracts.length === 0 &&
+              tabs.length === 0) ||
+            hasNoTokens
           "
           flat
           color="selectorBg lighten-1"
@@ -45,7 +48,9 @@
     =====================================================================================
     -->
         <mew-tabs
-          v-if="!loadingContracts && !onNftSend && tabs.length > 0"
+          v-if="
+            !loadingContracts && !onNftSend && tabs.length > 0 && !hasNoTokens
+          "
           :items="tabs"
           :is-vertical="$vuetify.breakpoint.mdAndUp"
           :has-underline="$vuetify.breakpoint.smAndDown"
@@ -162,10 +167,10 @@ export default {
   data() {
     return {
       nft: {},
-      tabs: [],
       activeTab: 0,
       tokens: [],
       onNftSend: false,
+      hasNoTokens: false,
       selectedNft: {},
       toAddress: '',
       selectedContract: {}
@@ -176,6 +181,14 @@ export default {
     ...mapState('global', ['network', 'online']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPrice']),
+    /**
+     * Get Tabs
+     */
+    tabs() {
+      return this.contracts.map(item => {
+        return { name: `${item.name} (${item.count})` };
+      });
+    },
     /**
      * Pagination
      */
@@ -201,7 +214,7 @@ export default {
      * Display tokens according to page
      */
     displayedTokens() {
-      return this.tokens.slice(this.startIndex, this.endIndex + 1);
+      return this.tokens.slice(this.startIndex, this.endIndex);
     },
     /**
      * Check if address is valid
@@ -212,11 +225,7 @@ export default {
   },
   watch: {
     contracts(newVal) {
-      console.error('newVal', newVal);
       if (newVal.length > 0) {
-        this.tabs = this.contracts.map(item => {
-          return { name: `${item.name} (${item.count})` };
-        });
         this.onTab(0);
       }
     }
@@ -239,6 +248,7 @@ export default {
       this.activeTab = val;
       this.selectedContract = this.contracts[val];
       this.selectedContractHash = this.contracts[val].contract;
+      this.nft.goToFirstPage();
     },
     /**
      * Send NFT
@@ -258,9 +268,6 @@ export default {
           this.nft
             .send(this.toAddress, this.selectedNft)
             .then(response => {
-              this.tokens = this.tokens.filter(token => {
-                return token.token_id !== this.selectedNft.token_id;
-              });
               this.updateValues();
               Toast(
                 'Cheers! Your transaction was mined. Check it in ',
@@ -278,7 +285,6 @@ export default {
             .catch(e => {
               Toast(e.message, {}, ERROR);
             });
-          this.updateValues();
           this.toggleNftSend();
           this.selectedNft = {};
         } catch (e) {
@@ -287,14 +293,14 @@ export default {
       }
     },
     updateValues() {
-      this.tabs = this.tabs.map(item => {
-        if (item.name.toLowerCase().includes(this.nftCategory.toLowerCase())) {
-          return {
-            name: `${this.nftCategory} (${this.nft.getTokenCount()})`
-          };
-        }
-        return item;
-      });
+      const idx = this.tokens.findIndex(
+        item => item.token_id === this.selectedNft.token_id
+      );
+      this.tokens.splice(idx, 1);
+      if (this.tokens.length === 0 && this.contracts.length === 1) {
+        this.hasNoTokens = true;
+      }
+      this.$apollo.queries.getOwnersERC721Balances.refetch();
     },
     setAddress(address) {
       if (typeof address === 'object' && !!address) {

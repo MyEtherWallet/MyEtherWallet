@@ -65,7 +65,7 @@ export default {
           return !this.isEthNetwork;
         },
         result() {
-          this.$apollo.queries.getEthBalance.refetch();
+          this.$apollo.queries.getEthBalance?.refetch();
         },
         error(error) {
           Toast(error.message, {}, ERROR);
@@ -100,7 +100,7 @@ export default {
                 token.contract ? token.contract.toLowerCase() : tokens.eth,
                 token
               );
-              this.$apollo.queries.getOwnersERC20Tokens.refetch();
+              this.$apollo.queries.getOwnersERC20Tokens?.refetch();
             }
           });
         }

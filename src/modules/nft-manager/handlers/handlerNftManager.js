@@ -7,7 +7,7 @@ export default class NFT {
     this.network = network;
     this.address = address;
     this.web3 = web3;
-    this.countPerPage = 6;
+    this.countPerPage = configs.countPerPage;
     this.currentPage = 1;
   }
   isValidAddress(hash) {
@@ -18,25 +18,17 @@ export default class NFT {
    * Send NFT
    */
   send(to, token) {
-    console.error('adfadsf', to, token);
     let raw;
     this.contract = new this.web3.eth.Contract(ABI);
-
-    if (this.contractAddresses.includes(configs.cryptoKittiesContract)) {
+    console.error('send', token)
+    if (token.contract.includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
     } else {
       raw = this.safeTransferFrom(to, token);
     }
 
     raw.from = this.address;
-    return this.web3.eth.sendTransaction(raw).send(to, token.token_id);
-    // .on('transactionHash', () => {
-    //   this.removeSentNft(token.token_id);
-    // })
-    // .on('error', err => {
-    //   this.resetNFT();
-    //   return err;
-    // });
+    return this.web3.eth.sendTransaction(raw);
   }
 
   safeTransferFrom(to, token) {
@@ -57,22 +49,22 @@ export default class NFT {
     };
   }
 
-  sendData(to, tokenId) {
-    // what does this do
-    return this.currentActive.sendData(to, tokenId);
-  }
+  // sendData(to, tokenId) {
+  //   // what does this do
+  //   return this.currentActive.sendData(to, tokenId);
+  // }
 
-  txFeeETH(gasLimit, gasPrice) {
-    return this.currentActive.txFeeETH(gasLimit, gasPrice);
-  }
+  // txFeeETH(gasLimit, gasPrice) {
+  //   return this.currentActive.txFeeETH(gasLimit, gasPrice);
+  // }
 
-  txFeeUSD(gasLimit, ethPrice, gasPrice) {
-    return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice);
-  }
+  // txFeeUSD(gasLimit, ethPrice, gasPrice) {
+  //   return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice);
+  // }
 
-  removeSentNft(tokenId) {
-    this.currentActive.removeSentNft(tokenId);
-  }
+  // removeSentNft(tokenId) {
+  //   this.currentActive.removeSentNft(tokenId);
+  // }
 
   /**
    * Pagination
@@ -114,6 +106,10 @@ export default class NFT {
     if (this.currentPage >= 2) {
       this.currentPage--;
     }
+  }
+
+  goToFirstPage() {
+    this.currentPage = 1;
   }
 
   /**
