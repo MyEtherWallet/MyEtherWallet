@@ -89,8 +89,8 @@ const createTransaction = async transactionParams => {
       }&toContractAddress=${transactionParams.toTokenAddress}&amount=${
         transactionParams.fromValue
       }`
-    )
-    if(results.msg === 'Unable to estimate gas price'){
+    );
+    if (results.msg === 'Unable to estimate gas price') {
       utils.checkErrorJson(results, 'eth_estimateGasList');
     }
     if (results.error) {
