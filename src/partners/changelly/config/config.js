@@ -10,7 +10,8 @@ const changellyMethods = {
     createTransaction: 'createTransaction',
     status: 'getStatus',
     createFixTransaction: 'createFixTransaction',
-    getFixRate: 'getFixRate'
+    getFixRate: 'getFixRate',
+    getPairsParams: 'getPairsParams'
   }
 };
 

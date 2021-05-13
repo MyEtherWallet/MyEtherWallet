@@ -88,5 +88,6 @@ module.exports = [
   'https://tx.info.aquacha.in:443/api', // aqua
   'https://rpc.xdaichain.com:443',
   'https://rpc-mainnet.maticvigil.com:443/',
-  'wss://rpc-mainnet.maticvigil.com:443/ws'
+  'wss://rpc-mainnet.maticvigil.com:443/ws',
+  'https://api.1inch.exchange:443'
 ];

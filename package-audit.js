@@ -10,7 +10,11 @@ const AUDIT_EXCEPTIONS = [
   'handlebars',
   'cryptiles',
   'bl',
-  'axios'
+  'axios',
+  'xmlhttprequest-ssl',
+  'url-parse', // added 5-10-21
+  'underscore', // added 5-10-21
+  'lodash' // added 5-10-21
 ];
 
 const execute = (command, callback) => {

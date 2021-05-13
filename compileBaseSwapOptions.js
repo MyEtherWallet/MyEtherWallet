@@ -105,62 +105,67 @@ class CompileSwapOptions {
 
   async getCoinGeckoTokens() {
     try {
-      const tokenList = await this.get(
-        'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'
+      const tickers = await this.get(
+        'https://api.coingecko.com/api/v3/exchanges/uniswap'
       );
       const tokenDetails = {};
-      for (let i = 0; i < tokenList.length; i++) {
+      for (let i = 0; i < tickers.tickers.length; i++) {
+        // waits for half a sec to call coingecko to avoid rate limit
+        await new Promise(r => setTimeout(r, 500));
+        const token = await this.get(
+          `https://api.coingecko.com/api/v3/coins/${tickers.tickers[i].coin_id}/tickers`
+        );
+
         if (
-          tokenList[i].symbol &&
-          tokenList[i].name &&
-          tokenList[i].decimals &&
-          tokenList[i].contractAddress
+          token.symbol &&
+          token.name &&
+          token.decimals &&
+          token.contractAddress
         ) {
           // otherwise the entry is invalid
-          const symbol = tokenList[i].symbol.toUpperCase();
+          const symbol = token.symbol.toUpperCase();
           tokenDetails[symbol] = {
-            symbol: tokenList[i].symbol,
-            name: tokenList[i].name.trim(),
-            decimals: tokenList[i].decimals,
-            contractAddress: tokenList[i].address
+            symbol: token.symbol,
+            name: token.name.trim(),
+            decimals: token.decimals,
+            contractAddress: token.address
           };
           this.coinGecko[symbol] = {
-            symbol: tokenList[i].symbol,
-            name: tokenList[i].name.trim(),
-            decimals: tokenList[i].decimals,
-            contractAddress: tokenList[i].address
+            symbol: token.symbol,
+            name: token.name.trim(),
+            decimals: token.decimals,
+            contractAddress: token.address
           };
         }
+        this.KyberCurrencies = tokenDetails;
       }
-
-      this.KyberCurrencies = tokenDetails;
       return {
         ETH: tokenDetails,
         other: {}
       };
     } catch (e) {
+      this.KyberCurrencies = {};
       console.error(e);
     }
   }
 
-  async getDexAgSupported(    priorCollected = {
-    ETH: {},
-    other: {}
-  }) {
+  async getDexAgSupported(
+    priorCollected = {
+      ETH: {},
+      other: {}
+    }
+  ) {
     try {
-      const tokenListRaw = await this.post(
-        'https://swap.mewapi.io/dexag',
-        {
-          jsonrpc: '2.0',
-          method: 'getSupportedCurrencies',
-          params: {},
-          id: v4()
-        }
-      );
+      const tokenListRaw = await this.post('https://swap.mewapi.io/dexag', {
+        jsonrpc: '2.0',
+        method: 'getSupportedCurrencies',
+        params: {},
+        id: v4()
+      });
       const tokenList = tokenListRaw.result || tokenListRaw;
       const tokenDetails = priorCollected.ETH;
       for (let i = 0; i < tokenList.length; i++) {
-        if(!tokenDetails[tokenList[i].symbol] && tokenList[i].address){
+        if (!tokenDetails[tokenList[i].symbol] && tokenList[i].address) {
           this.needDecimalCheck.push({
             symbol: tokenList[i].symbol.toUpperCase(),
             contractAddress: tokenList[i].address
@@ -318,7 +323,7 @@ class CompileSwapOptions {
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
       if (withChangelly.ETH[this.needDecimalCheck[i].symbol] && decimals) {
         withChangelly.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
-        if(allTokens.ETH[this.needDecimalCheck[i].symbol]){
+        if (allTokens.ETH[this.needDecimalCheck[i].symbol]) {
           allTokens.ETH[this.needDecimalCheck[i].symbol].decimals = +decimals;
         }
       } else if (allTokens.ETH[this.needDecimalCheck[i].symbol] && decimals) {
@@ -340,12 +345,12 @@ class CompileSwapOptions {
       if (!fs.existsSync(swapConfigFolder)) {
         fs.mkdirSync(swapConfigFolder);
       }
-      if(allTokens.ETH.ETH){
+      if (allTokens.ETH.ETH) {
         allTokens.ETH.ETH = {
           ...allTokens.ETH.ETH,
           decimals: 18,
           contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        }
+        };
       }
       fs.writeFileSync(
         `${swapConfigFolder}/EthereumTokens.json`,

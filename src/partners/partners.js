@@ -90,6 +90,9 @@ export default class SwapProviders {
       } else {
         for (let i = 0; i < areEth.length; i++) {
           const present = this.ethereumTokenList.find(item => {
+            if (!item.address) {
+              return false;
+            }
             return (
               item.address.toLowerCase() === areEth[i].address.toLowerCase()
             );
@@ -430,6 +433,12 @@ export default class SwapProviders {
     } else if (providerDetails.additional) {
       if (providerDetails.additional.source === 'dexag') {
         const provider = this.providers.get('dexag');
+        swapDetails.maybeToken = SwapProviders.isToken(
+          swapDetails.fromCurrency
+        );
+        return provider.startSwap(swapDetails);
+      } else if (providerDetails.additional.source === 'oneInch') {
+        const provider = this.providers.get('oneInch');
         swapDetails.maybeToken = SwapProviders.isToken(
           swapDetails.fromCurrency
         );

@@ -291,8 +291,15 @@
                   rightArrow: true
                 }"
                 :click-function="stage4Btn"
+                :button-disabled="!isAddressMatch"
               />
             </div>
+            <p
+              v-if="isAddressMatch"
+              class="gas-price-warning signer-mismatch-warning"
+            >
+              {{ $t('errorsGlobal.signer-mismatch') }}
+            </p>
           </accordion-menu>
 
           <!-- Sent Tx Details & Hash-->
@@ -443,6 +450,9 @@ export default {
       'online',
       'gasLimitWarning'
     ]),
+    isAddressMatch() {
+      return this.genInfo.address === this.from;
+    },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
     },

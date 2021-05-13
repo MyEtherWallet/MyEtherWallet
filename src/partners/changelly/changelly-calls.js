@@ -103,7 +103,6 @@ const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
       if (results.error) {
         throw Error(results.error.message);
       }
-
       return results.result;
     }
     return Promise.resolve(-1);
@@ -205,6 +204,30 @@ const getFixRate = async (fromCurrency, toCurrency, fromValue, network) => {
   }
 };
 
+const getPairsParams = async (fromCurrency, toCurrency, fromValue, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].getPairsParams, [
+          {
+            from: checkAndChange(fromCurrency),
+            to: checkAndChange(toCurrency)
+          }
+        ])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 const createFixTransaction = async (transactionParams, network) => {
   try {
     if (changellyMethods[network]) {
@@ -238,5 +261,6 @@ export default {
   getStatus,
   login,
   getFixRate,
-  createFixTransaction
+  createFixTransaction,
+  getPairsParams
 };

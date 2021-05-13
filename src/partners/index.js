@@ -11,6 +11,7 @@ import {
   SimplexCurrencies,
   PROVIDER_NAME as simplex
 } from './simplex';
+import { OneInch, PROVIDER_NAME as oneInch } from './oneInch';
 import SwapProviders from './partners';
 import {
   ERC20,
@@ -34,7 +35,7 @@ import {
 } from './helpers';
 
 // Array of currently supported providers
-const providers = [BitySwap, ChangellySwap, Simplex, DexAg];
+const providers = [BitySwap, ChangellySwap, Simplex, DexAg, OneInch];
 
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>
@@ -46,7 +47,8 @@ const providerNames = {
   simplex: simplex,
   changelly: changelly,
   bity: bity,
-  dexag: dexAg
+  dexag: dexAg,
+  oneInch: oneInch
 };
 
 const offChainProviders = [

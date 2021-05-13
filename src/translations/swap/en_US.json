@@ -63,7 +63,8 @@
     "kybernetwork": "Swap ETH and ERC20 tokens!",
     "changelly": "Swap ETH, ERC20 tokens, and more!",
     "simplex": "Buy crypto with a credit card!",
-    "dexag": "Instantly compare prices across decentralized exchanges"
+    "dexag": "Instantly compare prices across decentralized exchanges",
+    "oneInch": "A DEX aggregator that works out crypto prices across decentralized exchanges"
   },
   "exit-to-fiat": {
     "bank-info": "Bank Information",

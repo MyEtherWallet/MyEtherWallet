@@ -28,7 +28,9 @@ module.exports = {
     'security/detect-new-buffer': 'off',
     'security/detect-object-injection': 'off',
     'require-atomic-updates': 'off',
-    'no-prototype-builtins': 'off'
+    'no-prototype-builtins': 'off',
+    "no-irregular-whitespace": ["error", { "skipComments": true, "skipTemplates": true, "skipStrings": true, "skipRegExps": true }],
+    // "no-invalid-position-at-import-rule": 'off'
   },
   parserOptions: {
     parser: 'babel-eslint'

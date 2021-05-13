@@ -14,7 +14,8 @@ const getSupportedCurrencies = async network => {
       for (let i = 0; i < currencyList.length; i++) {
         if (
           !requireExtraId.includes(currencyList[i].name.toUpperCase()) &&
-          currencyList[i].enabled
+          currencyList[i].enabled &&
+          (currencyList[i].enabledTo || currencyList[i].enabledFrom)
         ) {
           if (
             currencyList[i].extraIdName === null ||
@@ -24,6 +25,8 @@ const getSupportedCurrencies = async network => {
               symbol: currencyList[i].name.toUpperCase(),
               name: currencyList[i].fullName,
               fixRateEnabled: currencyList[i].fixRateEnabled,
+              enabledTo: currencyList[i].enabledTo,
+              enabledFrom: currencyList[i].enabledFrom,
               address: currencyList[i].contractAddress
                 ? currencyList[i].contractAddress
                 : null
