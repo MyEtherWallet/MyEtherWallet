@@ -64,7 +64,7 @@
     "changelly": "Обменяйте ETH, ЕRC20 токены и многое другое!",
     "simplex": "Покупка криптовалюты при помощи кредитной карты!",
     "dexag": "Мгновенное сравнение цен между децентрализованными биржами",
-    "oneInch": "A DEX aggregator that works out crypto prices across decentralized exchanges"
+    "oneInch": "Агрегатор DEX, сравнивающий цены криптовалют на децентрализованных биржах"
   },
   "exit-to-fiat": {
     "bank-info": "Банковская информация",
