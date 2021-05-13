@@ -1,0 +1,13 @@
+@import '~@/scss/GlobalVariables';
+
+.address-identicon {
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+
+  img {
+    height: 64px;
+    width: 64px;
+  }
+}

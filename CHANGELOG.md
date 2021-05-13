@@ -8,6 +8,7 @@
 ### Bug
 
 * Add catch when selected address doesn't match signer [#3065](https://github.com/MyEtherWallet/MyEtherWallet/pull/3065)
+* Fix paper wallet blockie color issue [#3064](https://github.com/MyEtherWallet/MyEtherWallet/pull/3064)
 
 ### Release v5.7.28
 
