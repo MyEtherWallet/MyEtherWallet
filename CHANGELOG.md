@@ -1,7 +1,13 @@
-
 ### Release v5.7.29
+
 ### Devop
+
 * Add security policy link to footer [#3085](https://github.com/MyEtherWallet/MyEtherWallet/pull/3085)
+
+### Devop
+
+* Add One Inch Exchange to swap [#3061](https://github.com/MyEtherWallet/MyEtherWallet/pull/3061)
+* Update changelly swap handling  [#3046](https://github.com/MyEtherWallet/MyEtherWallet/pull/3046)
 
 ### Bug
 * Fix network change on send tx page [#3086](https://github.com/MyEtherWallet/MyEtherWallet/pull/3086)

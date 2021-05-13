@@ -22,6 +22,7 @@ import Bity from '@/assets/images/etc/bity_gray.png';
 import Simplex from '@/assets/images/etc/simplex_gray.png';
 import Changelly from '@/assets/images/etc/changelly_gray.png';
 import DexAg from '@/assets/images/etc/dexag_gray.svg';
+import OneInch from '@/assets/images/etc/oneinch_gray.png';
 
 export default {
   props: {
@@ -46,7 +47,8 @@ export default {
         bity: Bity,
         simplex: Simplex,
         changelly: Changelly,
-        dexag: DexAg
+        dexag: DexAg,
+        oneInch: OneInch
       },
       betaLogos: {}
     };

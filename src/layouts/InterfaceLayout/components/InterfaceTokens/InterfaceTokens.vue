@@ -421,7 +421,7 @@ export default {
     },
     async assignTokens(arr, query) {
       const localCustomTok =
-        this.customTokens.length > 0 ? this.customTokens.slice() : [];
+        this.customTokens?.length > 0 ? this.customTokens.slice() : [];
       if (query !== '') {
         this.customTokens = localCustomTok
           .filter(token => {
