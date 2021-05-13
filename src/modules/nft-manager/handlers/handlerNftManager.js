@@ -20,7 +20,7 @@ export default class NFT {
   send(to, token) {
     let raw;
     this.contract = new this.web3.eth.Contract(ABI);
-    console.error('send', token)
+    console.error('send', token);
     if (token.contract.includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
     } else {
@@ -48,23 +48,6 @@ export default class NFT {
       data: this.contract.methods.transfer(to, token.token_id).encodeABI()
     };
   }
-
-  // sendData(to, tokenId) {
-  //   // what does this do
-  //   return this.currentActive.sendData(to, tokenId);
-  // }
-
-  // txFeeETH(gasLimit, gasPrice) {
-  //   return this.currentActive.txFeeETH(gasLimit, gasPrice);
-  // }
-
-  // txFeeUSD(gasLimit, ethPrice, gasPrice) {
-  //   return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice);
-  // }
-
-  // removeSentNft(tokenId) {
-  //   this.currentActive.removeSentNft(tokenId);
-  // }
 
   /**
    * Pagination
