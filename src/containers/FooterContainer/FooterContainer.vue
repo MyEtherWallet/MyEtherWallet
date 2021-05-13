@@ -278,6 +278,10 @@ export default {
             {
               text: 'common.help-center',
               href: 'https://kb.myetherwallet.com'
+            },
+            {
+              text: 'footer.security-policy',
+              to: '/security-policy'
             }
           ]
         }
