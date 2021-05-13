@@ -69,7 +69,6 @@
     "pocket-js-web3-provider": "0.0.3",
     "register-service-worker": "1.7.2",
     "subscriptions-transport-ws": "0.9.18",
-    "underscore": "1.13.1",
     "vue": "2.6.12",
     "vue-apollo": "3.0.7",
     "vue-router": "3.5.1",
@@ -169,8 +168,7 @@
     "axios": "0.21.1",
     "node-fetch": "2.6.1",
     "cryptiles": "4.1.2",
-    "lodash": "4.17.21",
-    "underscore": "1.13.1"
+    "lodash": "4.17.21"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
