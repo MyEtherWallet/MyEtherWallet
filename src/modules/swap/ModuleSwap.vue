@@ -77,7 +77,10 @@
           =====================================================================================
           -->
           <user-msg-block
-            v-if="availableBalance.isNegative() || availableBalance.isZero()"
+            v-if="
+              (availableBalance.isNegative() || availableBalance.isZero()) &&
+              !isLoading
+            "
             class="mt-5 mb-10"
             title="Your Ether balance is too low"
             text="Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
@@ -396,7 +399,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.availableBalance);
     this.isLoading = true;
     this.swapper = new Swapper(this.web3);
     this.swapper
@@ -468,7 +470,7 @@ export default {
         this.fromTokenType.value === this.toTokenType.value
       ) {
         this.providersMessage =
-          'Change your amount or token pair to see providers and proceed with Swap';
+          'Select token and enter amount to see rates. MEW finds the best price for you across multiple DEXs and Exchange services.';
         return;
       }
       this.providersMessage = '';
