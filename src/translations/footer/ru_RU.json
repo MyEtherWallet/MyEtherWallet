@@ -47,5 +47,6 @@
     "subtext": "Объявления можно найти на нашем {mediumlink}. По вопросам прессы и медиа пожалуйста свяжитесь с: {hyperlink}",
     "medium": "Medium блоге"
   },
-  "ethvm": "EthVM"
+  "ethvm": "EthVM",
+  "security-policy": "Security Policy"
 }
