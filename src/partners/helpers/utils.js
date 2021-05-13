@@ -108,7 +108,7 @@ const checkErrorJson = (results, source) => {
   ) {
     throw Error('Please try a different dex. Problem calculating gas Limit.');
   }
-  if(results.msg === 'Unable to estimate gas price'){
+  if (results.msg === 'Unable to estimate gas price') {
     Toast.responseHandler(results.error.message, 3);
     throw Error('abort');
   }
