@@ -67,6 +67,7 @@ const estimateGas = async (txs, from) => {
       utils.checkErrorJson(results, 'eth_estimateGasList');
     }
     return results.result;
+    //
   } catch (e) {
     const re = new RegExp('([0-9]+)');
     const reResult = re[Symbol.match](e.message);
