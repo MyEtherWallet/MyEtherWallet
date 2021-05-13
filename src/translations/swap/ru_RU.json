@@ -63,7 +63,8 @@
     "kybernetwork": "Обменяйте ETH и ERC20 токены!",
     "changelly": "Обменяйте ETH, ЕRC20 токены и многое другое!",
     "simplex": "Покупка криптовалюты при помощи кредитной карты!",
-    "dexag": "Мгновенное сравнение цен между децентрализованными биржами"
+    "dexag": "Мгновенное сравнение цен между децентрализованными биржами",
+    "oneInch": "A DEX aggregator that works out crypto prices across decentralized exchanges"
   },
   "exit-to-fiat": {
     "bank-info": "Банковская информация",
