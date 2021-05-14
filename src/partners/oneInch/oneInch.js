@@ -339,12 +339,14 @@ export default class OneInch {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.EthereumTokens[token].contractAddress
-          ? this.EthereumTokens[token].contractAddress
-          : this.tokenDetails[token].address;
+        return this.tokenDetails[token]?.address
+          ? this.tokenDetails[token].address
+          : this.EthereumTokens[token].contractAddress;
       }
       return this.web3.utils.toChecksumAddress(
-        this.EthereumTokens[token].contractAddress
+        this.tokenDetails[token]?.address
+          ? this.tokenDetails[token].address
+          : this.EthereumTokens[token].contractAddress
       );
     } catch (e) {
       errorLogger(e);
