@@ -30,8 +30,10 @@
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
               <mew-select
                 :value="fromTokenType"
-                :items="fromTokens"
                 label="From"
+                :items="actualFromTokens"
+                :is-swap="true"
+                :loading="isLoading"
                 @input="setFromToken" />
               <mew-input
                 label="amount to swap"
@@ -53,7 +55,9 @@
               <mew-select
                 ref="toToken"
                 :value="toTokenType"
-                :items="toTokens"
+                :items="actualToTokens"
+                :is-swap="true"
+                :loading="isLoading"
                 label="To"
                 @input="setToToken"
               />
@@ -188,6 +192,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';
+import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -271,6 +276,127 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    actualToTokens() {
+      const toTokens = this.toTokens ? this.toTokens : [];
+      const imgs = [
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+        'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+        'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
+        'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
+        'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
+      ];
+      const trendingList = [
+        {
+          contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          decimals: 18,
+          img:
+            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+          isEth: true,
+          name: 'Ethereum',
+          subtext: 'ETH',
+          symbol: 'ETH',
+          type: 'ERC20',
+          value: 'Ethereum'
+        },
+        {
+          contract_address: '0xbtc',
+          decimals: 18,
+          img:
+            'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+          isEth: false,
+          name: 'Bitcoin',
+          subtext: 'BTC',
+          symbol: 'BTC',
+          value: 'Bitcoin'
+        },
+        {
+          contract_address: '0xc713e5e149d5d0715dcd1c156a020976e7e56b88',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=',
+          isEth: true,
+          name: 'Aave MKR',
+          subtext: 'aMKR',
+          symbol: 'aMKR',
+          type: 'ERC20',
+          value: 'Aave MKR'
+        },
+        {
+          contract_address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
+          decimals: 18,
+          img:
+            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
+          isEth: true,
+          name: '0x',
+          subtext: 'ZRX',
+          symbol: 'ZRX',
+          type: 'ERC20',
+          value: '0x'
+        },
+        {
+          contract_address: '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=',
+          isEth: true,
+          name: 'Kyber Network Crystal',
+          subtext: 'KNC',
+          symbol: 'KNC',
+          type: 'ERC20',
+          value: 'Kyber Network Crystal'
+        }
+      ];
+      return [
+        {
+          text: 'Select Token',
+          imgs: imgs,
+          total: `${toTokens.length}`,
+          divider: true,
+          selectTokenLabel: true
+        },
+        {
+          header: 'Trending'
+        },
+        ...trendingList,
+        {
+          header: 'All Tokens'
+        },
+        ...toTokens
+      ];
+    },
+    actualFromTokens() {
+      const defaultToken = [this.fromTokenType];
+      const fromTokens = this.fromTokens ? this.fromTokens : [];
+      const tokensList = this.tokensList
+        ? defaultToken.concat(this.tokensList)
+        : [];
+      const imgs = tokensList.map(item => {
+        return item.img;
+      });
+      if (BigNumber(this.balanceInETH).lte(0))
+        tokensList.push({
+          hasNoEth: true,
+          disabled: true,
+          text: 'Your wallet is empty.',
+          linkText: 'Buy ETH',
+          link: 'https://ccswap.myetherwallet.com/#/'
+        });
+      return [
+        {
+          text: 'Select Token',
+          imgs: imgs,
+          total: `${fromTokens.length}`,
+          divider: true,
+          selectTokenLabel: true
+        },
+        {
+          header: 'My Wallet'
+        },
+        ...tokensList,
+        {
+          header: 'All Tokens'
+        },
+        ...fromTokens
+      ];
+    },
     totalFees() {
       const gasPrice =
         this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
@@ -431,25 +557,34 @@ export default {
     }
   },
   mounted() {
-    this.isLoading = !this.prefetched;
-    this.swapper = new Swapper(this.web3);
-    if (!this.prefetched) {
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+    if (this.isEthNetwork) {
+      this.isLoading = !this.prefetched;
+      this.swapper = new Swapper(this.web3);
+      if (!this.prefetched) {
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      } else {
+        this.processTokens(this.swapTokens, false);
+        this.setDefaults();
+        this.isLoading = false;
+      }
     } else {
-      this.processTokens(this.swapTokens, false);
-      this.setDefaults();
-      this.isLoading = false;
+      Toast(
+        'Swap feature only supports Ethereum Network right now! Please Make sure to set your node to an ETH node',
+        {},
+        WARNING
+      );
     }
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    ...mapActions('global', ['isEthNetwork']),
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       /* Add Correct Values for the MewSelect*/
