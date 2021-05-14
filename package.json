@@ -16,7 +16,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions@0.0.3",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -37,7 +37,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.62-beta",
+    "@myetherwallet/mew-components": "0.5.64-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.2.5",
     "@sentry/integrations": "6.2.5",
@@ -156,7 +156,7 @@
     "web3-utils": "1.3.5",
     "webpack": "4.44.2",
     "weekstart": "1.1.0",
-    "xss": "1.0.8"
+    "xss": "1.0.9"
   },
   "engines": {
     "node": ">= 10.0.0 < 12.0.0",
@@ -166,7 +166,13 @@
     "handlebars": "4.5.3",
     "axios": "0.21.1",
     "node-fetch": "2.6.1",
-    "cryptiles": "4.1.2"
+    "cryptiles": "4.1.2",
+    "xmlhttprequest-ssl": "1.6.2",
+    "lodash": "4.17.21",
+    "url-parse": "1.5.0",
+    "y18n": "5.0.5",
+    "bl": "4.0.3",
+    "elliptic": "6.5.3"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"

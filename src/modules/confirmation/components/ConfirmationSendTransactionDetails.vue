@@ -176,6 +176,10 @@ export default {
     valueUsd: {
       type: Number,
       default: 0
+    },
+    toTxData: {
+      type: Object,
+      default: () => {}
     }
   },
   data: function () {
@@ -209,7 +213,8 @@ export default {
     totalFeeUSD() {
       const ethFeeToUsd = BigNumber(this.totalFee).times(this.valueUsd);
       if (this.currency.symbol === this.network.type.currencyName) {
-        return ethFeeToUsd;
+        const amountToUsd = BigNumber(this.value).times(this.valueUsd);
+        return BigNumber(amountToUsd).plus(ethFeeToUsd).toFixed(2);
       }
       const tokenPrice = BigNumber(this.currency.price).times(this.value);
       return tokenPrice.plus(ethFeeToUsd).toFixed(2);
@@ -232,7 +237,7 @@ export default {
           value: this.from
         },
         {
-          title: 'To address',
+          title: this.data !== '0x' ? 'Via Contract Address' : 'To address',
           value: this.to
         },
         {
@@ -272,6 +277,8 @@ export default {
         ? this.toNickName
         : this.toEnsName !== ''
         ? this.toEnsName
+        : this.data !== '0x'
+        ? this.toTxData.to
         : this.to;
     }
   }

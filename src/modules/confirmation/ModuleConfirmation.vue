@@ -23,6 +23,7 @@
             :tx-fee-usd="txFeeUSD"
             :value="value"
             :value-usd="ETHUSDValue.value"
+            :to-tx-data="tx.toTxData"
             :send-currency="sendCurrency"
           />
           <confirmation-swap-transaction-details

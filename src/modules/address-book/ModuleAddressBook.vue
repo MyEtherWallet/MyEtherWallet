@@ -2,7 +2,6 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :value="inputAddr"
       :resolved-addr="resolvedAddr"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
@@ -112,13 +111,19 @@ export default {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
             this.resolvedAddr = addr;
-            this.$emit('setAddress', this.resolvedAddr, true);
+            this.isValidAddress = true;
+            this.$emit(
+              'setAddress',
+              this.resolvedAddr,
+              this.isValidAddress,
+              'resolved'
+            );
           });
           // eslint-disable-next-line no-empty
         } catch (e) {}
       }
     },
-    setAddress(value) {
+    setAddress(value, inputType) {
       if (value) {
         this.inputAddr = value.address ? value.address : value;
         this.resolvedAddr = '';
@@ -126,11 +131,11 @@ export default {
         if (isAddValid instanceof Promise) {
           isAddValid.then(res => {
             this.isValidAddress = res;
-            this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+            this.$emit('setAddress', value, this.isValidAddress, inputType);
           });
         } else {
           this.isValidAddress = isAddValid;
-          this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+          this.$emit('setAddress', value, this.isValidAddress, inputType);
         }
         if (!this.isValidAddress) {
           this.resolveName();
