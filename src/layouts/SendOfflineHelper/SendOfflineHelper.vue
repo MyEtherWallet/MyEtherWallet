@@ -295,7 +295,7 @@
               />
             </div>
             <p
-              v-if="isAddressMatch"
+              v-if="!isAddressMatch"
               class="gas-price-warning signer-mismatch-warning"
             >
               {{ $t('errorsGlobal.signer-mismatch') }}
@@ -451,7 +451,10 @@ export default {
       'gasLimitWarning'
     ]),
     isAddressMatch() {
-      return this.genInfo.address === this.from;
+      return this.from !== '0x' && this.genInfo.address !== '0x'
+        ? web3Utils.toChecksumAddress(this.genInfo.address) ==
+            web3Utils.toChecksumAddress(this.from)
+        : false;
     },
     showGasWarning() {
       return this.gasPrice >= this.gasLimitWarning;
