@@ -2,6 +2,7 @@
 
 ### Bug
 
+- fix address property checks for one inch[#3094](https://github.com/MyEtherWallet/MyEtherWallet/pull/3094)
 - send offline helper bug checksum address issue [#3092](https://github.com/MyEtherWallet/MyEtherWallet/pull/3092)
 
 ### Release v5.7.29
