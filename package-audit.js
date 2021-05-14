@@ -11,7 +11,8 @@ const AUDIT_EXCEPTIONS = [
   'axios',
   'y18n',
   'xmlhttprequest-ssl',
-  'lodash'
+  'lodash',
+  'underscore'
 ];
 
 const execute = (command, callback) => {
