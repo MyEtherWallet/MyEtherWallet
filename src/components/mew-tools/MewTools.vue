@@ -13,6 +13,7 @@
           x-large
           v-bind="attrs"
           :ripple="false"
+          @click="menuOpen()"
           v-on="on"
         >
           <mew-button
@@ -40,6 +41,7 @@
           class="d-lg-none"
           v-bind="attrs"
           v-on="on"
+          @click="menuOpen()"
         >
           <img
             src="@/assets/images/icons/icon-grid-dot.png"
@@ -90,6 +92,7 @@ export default {
   props: {},
   data() {
     return {
+      top: undefined,
       tools: [
         {
           label: 'MEW web',
@@ -129,6 +132,22 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    menuOpen() {
+      const checkExist = setInterval(() => {
+        const menu = document.querySelector('.v-menu__content');
+        if (menu !== null) {
+          clearInterval(checkExist);
+          if (this.top === undefined) {
+            console.log(top);
+            this.top = parseInt(menu.style.top.replace('px', ''));
+          }
+          menu.style.top = this.top + 15 + 'px';
+          menu.classList.add('mew-tools-menu-container');
+        }
+      }, 100); // check every 100ms
+    }
   }
 };
 </script>
@@ -139,21 +158,7 @@ export default {
 }
 .mew-tools-menu {
   width: 300px;
-  border-radius: 6px;
-  margin-top: 20px;
   position: relative;
-
-  &:after {
-    position: absolute;
-    top: -6px;
-    right: 55px;
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid white;
-  }
 
   &.md,
   &.sm {
@@ -187,10 +192,6 @@ export default {
 </style>
 
 <style lang="scss">
-.v-menu__content {
-  border: 0 !important;
-}
-
 .mew-component--mew-tools {
   .mew-button {
     font-weight: 400 !important;
@@ -203,5 +204,10 @@ export default {
       margin-right: 6px !important;
     }
   }
+}
+
+.mew-tools-menu-container {
+  border: 0 !important;
+  border-radius: 6px !important;
 }
 </style>
