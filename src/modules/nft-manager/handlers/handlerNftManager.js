@@ -20,7 +20,6 @@ export default class NFT {
   send(to, token) {
     let raw;
     this.contract = new this.web3.eth.Contract(ABI);
-    console.error('send', token);
     if (token.contract.includes(configs.cryptoKittiesContract)) {
       raw = this.cryptoKittiesTransfer(to, token);
     } else {
