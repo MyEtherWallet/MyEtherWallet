@@ -1,3 +1,7 @@
+### Bug
+* fix address property checks for one inch[#3094](https://github.com/MyEtherWallet/MyEtherWallet/pull/3094)
+
+
 ### Release v5.7.29
 
 ### Devop
