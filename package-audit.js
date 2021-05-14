@@ -10,14 +10,14 @@ const AUDIT_EXCEPTIONS = [
   'cryptiles',
   'axios',
   'y18n',
-  'underscore'
+  'xmlhttprequest-ssl'
 ];
 
 const execute = (command, callback) => {
   exec(
     command,
     {
-      maxBuffer: 5000 * 1024
+      maxBuffer: 2000 * 4096
     },
     (error, stdout, stderr) => {
       callback(stdout);
