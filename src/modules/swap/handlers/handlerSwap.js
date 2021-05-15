@@ -85,9 +85,10 @@ class Swap {
         return p.isValidToAddress(addressInfo);
     }
   }
-  executeTrade(tradeInfo) {
+  executeTrade(tradeInfo, confirmInfo) {
     for (const p of this.providers) {
-      if (p.provider === tradeInfo.provider) return p.executeTrade(tradeInfo);
+      if (p.provider === tradeInfo.provider)
+        return p.executeTrade(tradeInfo, confirmInfo);
     }
   }
   getStatus(statusObj) {

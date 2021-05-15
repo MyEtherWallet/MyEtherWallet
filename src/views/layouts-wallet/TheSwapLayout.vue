@@ -1,5 +1,5 @@
 <template>
-  <the-wrapper-wallet :total-left-col-items="1">
+  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
     <template #leftColItem1>
       <module-swap
         :from-token="fromToken"
@@ -7,17 +7,30 @@
         :amount="amount"
       />
     </template>
+    <template #rightColItem1>
+      <module-tokens-value />
+    </template>
+    <template #rightColItem2>
+      <module-transfer-history :is-swap="true" />
+    </template>
   </the-wrapper-wallet>
 </template>
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import ModuleSwap from '@/modules/swap/ModuleSwap';
+import ModuleTokensValue from '@/modules/tokens-value/ModuleTokensValue';
+import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
 export default {
-  components: { TheWrapperWallet, ModuleSwap },
+  components: {
+    TheWrapperWallet,
+    ModuleSwap,
+    ModuleTokensValue,
+    ModuleTransferHistory
+  },
   props: {
     fromToken: {
       type: String,
