@@ -52,7 +52,7 @@
     "idna-uts46": "1.1.0",
     "is-ipfs": "2.0.0",
     "levenshtein": "1.0.5",
-    "luxon": "1.26.0",
+    "luxon": "1.27.0",
     "moment": "2.29.1",
     "moment-timezone": "0.5.33",
     "node-fetch": "2.6.1",
