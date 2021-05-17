@@ -15,6 +15,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
   let currency;
+  let toDetails;
   if (tx.hasOwnProperty('confirmInfo')) {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
@@ -23,6 +24,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
   if (tx.hasOwnProperty('currency')) {
     currency = tx['currency'];
     delete tx['currency'];
+  }
+
+  if (tx.hasOwnProperty('toDetails')) {
+    toDetails = tx['toDetails'];
+    delete tx['toDetails'];
   }
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
@@ -72,9 +78,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
             EventNames.SHOW_SWAP_TX_MODAL,
             [_tx, confirmInfo],
             _response => {
-              const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-                _response.rawTransaction
-              );
+              const _promiObj =
+                store.state.wallet.web3.eth.sendSignedTransaction(
+                  _response.rawTransaction
+                );
               _promiObj
                 .once('transactionHash', hash => {
                   if (store.state.wallet.instance !== null) {
@@ -105,11 +112,12 @@ export default async ({ payload, store, requestManager }, res, next) => {
         } else {
           EventBus.$emit(
             EventNames.SHOW_TX_CONFIRM_MODAL,
-            [_tx, currency],
+            [_tx, toDetails, currency],
             _response => {
-              const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-                _response.rawTransaction
-              );
+              const _promiObj =
+                store.state.wallet.web3.eth.sendSignedTransaction(
+                  _response.rawTransaction
+                );
               _promiObj
                 .once('transactionHash', hash => {
                   if (store.state.wallet.instance !== null) {

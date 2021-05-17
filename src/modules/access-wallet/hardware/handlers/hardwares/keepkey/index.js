@@ -24,10 +24,8 @@ import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 
 const { MessageType } = Messages;
-const {
-  MESSAGETYPE_PINMATRIXREQUEST,
-  MESSAGETYPE_PASSPHRASEREQUEST
-} = MessageType;
+const { MESSAGETYPE_PINMATRIXREQUEST, MESSAGETYPE_PASSPHRASEREQUEST } =
+  MessageType;
 
 const NEED_PASSWORD = false;
 

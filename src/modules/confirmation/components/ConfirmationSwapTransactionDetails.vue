@@ -31,7 +31,7 @@
         Summary
       =====================================================================================
     -->
-    <v-divider :light="true" class="mt-5" />
+    <v-divider :light="true" class="mt-5 mb-5" />
     <v-row>
       <v-col cols="6" class="text-left">
         Provider <br />

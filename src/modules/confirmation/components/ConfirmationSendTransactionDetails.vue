@@ -42,7 +42,15 @@
             >
               {{ actualToAddress }}
             </p>
-            <p v-show="toEnsName !== ''" class="ma-0">{{ toEnsName }}</p>
+            <p
+              v-show="
+                toDetails.nickname !== '' &&
+                actualToAddress !== toDetails.nickname
+              "
+              class="ma-0"
+            >
+              {{ toDetails.nickname }}
+            </p>
             <p
               v-show="showToAddress"
               class="ma-0 truncate mew-address address-color"
@@ -121,14 +129,6 @@ export default {
       type: String,
       default: ''
     },
-    toEnsName: {
-      type: String,
-      default: ''
-    },
-    toNickName: {
-      type: String,
-      default: ''
-    },
     from: {
       type: String,
       default: ''
@@ -178,6 +178,10 @@ export default {
       default: 0
     },
     toTxData: {
+      type: Object,
+      default: () => {}
+    },
+    toDetails: {
       type: Object,
       default: () => {}
     }
@@ -270,16 +274,17 @@ export default {
       });
     },
     showToAddress() {
-      return this.toNickName !== '' && this.toEnsName !== '';
+      return this.toDetails.selected !== 'TYPED';
     },
     actualToAddress() {
-      return this.toNickName !== ''
-        ? this.toNickName
-        : this.toEnsName !== ''
-        ? this.toEnsName
-        : this.data !== '0x'
-        ? this.toTxData.to
-        : this.to;
+      switch (this.toDetails.type) {
+        case 'resolved':
+          return this.toDetails.ensName;
+        case 'selected':
+          return this.toDetails.nickname;
+        default:
+          return this.data !== '0x' ? this.toTxData.to : this.to;
+      }
     }
   }
 };

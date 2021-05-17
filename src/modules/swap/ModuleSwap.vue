@@ -684,7 +684,7 @@ export default {
               q.isSelected = false;
               if (q?.rateId === 'belowMin') {
                 this.belowMinError = q.minAmount;
-                return;
+                // return;
               }
               this.belowMinError = false;
 

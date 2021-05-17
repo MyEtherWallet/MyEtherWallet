@@ -24,9 +24,11 @@ class SendTransaction {
       data: '0x'
     };
   }
-  setTo(_to) {
-    if (isAddress(_to)) this.TX.destination = _to;
-    else throw ErrorList.INVALID_TO_ADDRESS;
+  setTo(_to, _type) {
+    if (isAddress(_to)) {
+      this.TX.destination = _to;
+      this.TX.toDetails = _type;
+    } else throw ErrorList.INVALID_TO_ADDRESS;
   }
   _setTo() {
     this.TX.to = this.isToken()
@@ -139,6 +141,7 @@ class SendTransaction {
       const json = _tx.toJSON(true);
       json.from = this.address();
       json.currency = this.currency;
+      json.toDetails = this.TX.toDetails;
       return this.web3().eth.sendTransaction(json);
     } catch (e) {
       return e;

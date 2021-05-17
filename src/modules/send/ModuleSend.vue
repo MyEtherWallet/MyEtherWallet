@@ -295,7 +295,9 @@ export default {
       deep: true
     },
     toAddress() {
-      if (this.isValidAddress) this.sendTx.setTo(this.toAddress);
+      if (this.isValidAddress) {
+        this.sendTx.setTo(this.toAddress, this.userInputType);
+      }
     },
     amount() {
       this.sendTx.setValue(this.getCalculatedAmount);

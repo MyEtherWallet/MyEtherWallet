@@ -10,9 +10,9 @@ export default class API {
   }
 
   getContractDetails(contract) {
-    return fetch(
-      `https://nft.mewapi.io/nft?contractHash=${contract}`
-    ).then(res => res.json());
+    return fetch(`https://nft.mewapi.io/nft?contractHash=${contract}`).then(
+      res => res.json()
+    );
   }
 
   getTokens() {

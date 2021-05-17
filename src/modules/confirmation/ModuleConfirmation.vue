@@ -24,6 +24,7 @@
             :value="value"
             :value-usd="ETHUSDValue.value"
             :to-tx-data="tx.toTxData"
+            :to-details="allToDetails"
             :send-currency="sendCurrency"
           />
           <confirmation-swap-transaction-details
@@ -110,7 +111,6 @@ export default {
       showTxOverlay: false,
       showSignOverlay: false,
       showBatchOverlay: false,
-      showSwapModal: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -119,7 +119,8 @@ export default {
       unsignedTxArr: [],
       signedTxArray: [],
       swapInfo: {},
-      sendCurrency: {}
+      sendCurrency: {},
+      toDetails: {}
     };
   },
   computed: {
@@ -132,8 +133,24 @@ export default {
     ]),
     ...mapState('external', ['ETHUSDValue', 'test']),
     ...mapGetters('global', ['network']),
+    ...mapState('global', ['addressBook']),
     to() {
       return this.tx.to;
+    },
+    allToDetails() {
+      const toNickname = this.addressBook.find(item => {
+        return this.to?.toLowerCase() === item.address?.toLowerCase();
+      });
+      return {
+        ensName: this.toDetails.type === 'resolved' ? this.toDetails.value : '',
+        nickname:
+          this.toDetails.type === 'selected'
+            ? this.toDetails.value
+            : toNickname
+            ? toNickname.nickname
+            : '',
+        selected: this.toDetails.type
+      };
     },
     from() {
       return this.tx.from;
@@ -193,9 +210,10 @@ export default {
     /**
      * receives an @Array
      * arr[0] is the tx
-     * arr[1] is the selected currency
+     * arr[1] is the to details (nickname, ens name)
+     * arr[2] is the selected currency
      */
-    EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, (tx, resolver) => {
+    EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
       this.parseRawData(tx[0]);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
@@ -204,22 +222,23 @@ export default {
       _self.tx.transactionFee = this.txFee;
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
-        _self.sendCurrency = tx[1];
+        _self.toDetails = tx[1];
+        _self.sendCurrency = tx[2];
       }
-      this.signTx();
+      await this.signTx();
     });
     /**
      * receives an @Array
      * arr[0] is the tx
      * arr[1] is the swap information
      */
-    EventBus.$on(EventNames.SHOW_SWAP_TX_MODAL, (arr, resolver) => {
+    EventBus.$on(EventNames.SHOW_SWAP_TX_MODAL, async (arr, resolver) => {
       _self.tx = arr[0];
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
-      _self.showSwapModal = true;
+      _self.showTxOverlay = true;
       _self.title = 'Swap Confirmation';
-      this.signTx();
+      await this.signTx();
     });
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
@@ -291,7 +310,6 @@ export default {
       this.showTxOverlay = false;
       this.showBatchOverlay = false;
       this.showSignOverlay = false;
-      this.showSwapModal = false;
     },
     parseRawData(tx) {
       let tokenData = '';
