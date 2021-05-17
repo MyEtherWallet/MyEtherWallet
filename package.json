@@ -16,7 +16,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions@0.0.3",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists && npm run update:swap",
@@ -166,7 +166,13 @@
     "handlebars": "4.5.3",
     "axios": "0.21.1",
     "node-fetch": "2.6.1",
-    "cryptiles": "4.1.2"
+    "cryptiles": "4.1.2",
+    "xmlhttprequest-ssl": "1.6.2",
+    "lodash": "4.17.21",
+    "url-parse": "1.5.0",
+    "y18n": "5.0.5",
+    "bl": "4.0.3",
+    "elliptic": "6.5.3"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"

@@ -93,7 +93,6 @@ class MEWPClass {
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    console.log(tradeObj);
     const gasPrice = tradeObj.gasPrice
       ? tradeObj.gasPrice
       : await this.web3.eth.getGasPrice();
