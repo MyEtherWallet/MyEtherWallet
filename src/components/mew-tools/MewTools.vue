@@ -139,7 +139,6 @@ export default {
         if (menu !== null) {
           clearInterval(checkExist);
           if (this.top === undefined) {
-            console.log(top);
             this.top = parseInt(menu.style.top.replace('px', ''));
           }
           menu.style.top = this.top + 15 + 'px';
