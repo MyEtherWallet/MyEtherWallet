@@ -24,7 +24,7 @@
             <v-col cols="12">
               <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
               <div v-else class="available-balance text-right">
-                {{ balanceInETH }}
+                {{ selectedBalance }}
               </div>
             </v-col>
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
@@ -277,12 +277,15 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     selectedBalance() {
-      if (this.fromTokenType.symbol === this.network.type.currencyName)
+      if (
+        _.isEmpty(this.fromTokenType) ||
+        this.fromTokenType.symbol === this.network.type.currencyName
+      )
         return this.balanceInETH;
       const token = this.tokensList.find(item => {
         return item.symbol === this.fromTokenType.symbol;
       });
-      return BigNumber(token).toFixed();
+      return this.getTokenBalance(token.balance, token.decimals).toFixed();
     },
     actualToTokens() {
       const toTokens = this.toTokens ? this.toTokens : [];
@@ -297,7 +300,8 @@ export default {
         {
           contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
           decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+          img:
+            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
           isEth: true,
           name: 'Ethereum',
           subtext: 'ETH',
@@ -308,7 +312,8 @@ export default {
         {
           contract_address: '0xbtc',
           decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+          img:
+            'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
           isEth: false,
           name: 'Bitcoin',
           subtext: 'BTC',
@@ -329,7 +334,8 @@ export default {
         {
           contract_address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
           decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
+          img:
+            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
           isEth: true,
           name: '0x',
           subtext: 'ZRX',
@@ -643,6 +649,7 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value;
       this.tokenOutValue = '';
@@ -682,6 +689,7 @@ export default {
             )
           })
           .then(quotes => {
+            console.log(quotes);
             quotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
@@ -705,6 +713,7 @@ export default {
       }
     }, 500),
     setProvider(idx) {
+      this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = true;
