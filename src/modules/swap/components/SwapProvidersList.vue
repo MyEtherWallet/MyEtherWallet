@@ -66,7 +66,15 @@
               "
               outlined
               :color="active ? 'selectorBg' : 'selectorBg lighten-1'"
-              class="d-flex align-center justify-space-between border-radius--10px pl-5 pr-2 py-1"
+              class="
+                d-flex
+                align-center
+                justify-space-between
+                border-radius--10px
+                pl-5
+                pr-2
+                py-1
+              "
               @click="
                 toggle();
                 setProvider(idx);
@@ -94,7 +102,13 @@
                         </div>
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="ml-3 px-3 rate-chip-xs align-center justify-center"
+                          class="
+                            ml-3
+                            px-3
+                            rate-chip-xs
+                            align-center
+                            justify-center
+                          "
                         >
                           Best Rate
                         </div>

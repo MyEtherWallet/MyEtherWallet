@@ -40,10 +40,8 @@ class CoolWallet {
         if (device) {
           cwsTransportLib.connect(device).then(_transport => {
             _this.transport = _transport;
-            const {
-              publicKey: appPublicKey,
-              privateKey: appPrivateKey
-            } = generateKeyPair();
+            const { publicKey: appPublicKey, privateKey: appPrivateKey } =
+              generateKeyPair();
             _this.appPrivateKey = appPrivateKey;
             _this.appPublicKey = appPublicKey;
             const coolWalletInstance = new cwsWallet(

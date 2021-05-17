@@ -289,8 +289,7 @@ export default {
         {
           contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
           decimals: 18,
-          img:
-            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
           isEth: true,
           name: 'Ethereum',
           subtext: 'ETH',
@@ -301,8 +300,7 @@ export default {
         {
           contract_address: '0xbtc',
           decimals: 18,
-          img:
-            'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+          img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
           isEth: false,
           name: 'Bitcoin',
           subtext: 'BTC',
@@ -323,8 +321,7 @@ export default {
         {
           contract_address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
           decimals: 18,
-          img:
-            'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
           isEth: true,
           name: '0x',
           subtext: 'ZRX',
