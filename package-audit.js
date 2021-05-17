@@ -1,24 +1,14 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = [
-  'handlebars',
-  'decompress',
-  'http-proxy',
-  'elliptic',
-  'serialize-javascript',
-  'bl',
-  'cryptiles',
-  'axios',
-  'y18n'
-];
+const AUDIT_EXCEPTIONS = ['underscore'];
 
 const execute = (command, callback) => {
   exec(
     command,
     {
-      maxBuffer: 2000 * 1024
+      maxBuffer: 2000 * 4096
     },
-    (error, stdout, stderr) => {
+    (stdout, stderr) => {
       callback(stdout);
     }
   );

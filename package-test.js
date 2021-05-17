@@ -20,7 +20,7 @@ const EXCEPTIONS = [
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  'stylelint-config-standard'
+  '@unstoppabledomains/resolution'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -66,7 +66,12 @@ const looper = () => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
       if (ALL_PACKAGES[_name] !== latestVersion) {
-        if (_name === "@myetherwallet/mew-components" && new Date(latestVersionTime).getTime() < new Date().getTime() || new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME) {
+        if (
+          (_name === '@myetherwallet/mew-components' &&
+            new Date(latestVersionTime).getTime() < new Date().getTime()) ||
+          new Date(latestVersionTime).getTime() <
+            new Date().getTime() - SAFE_TIME
+        ) {
           console.error(
             'ERROR: Update ' +
               _name +

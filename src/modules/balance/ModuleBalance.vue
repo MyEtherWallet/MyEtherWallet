@@ -111,15 +111,19 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      return this.balanceInETH <= 0 && this.chartData.length < 0;
+      // console.error('this', this.balanceInETH, this.chartData);
+      return this.balanceInETH <= 0 && this.chartData.length <= 0;
     },
     priceChangeArrow() {
+            console.error('this', this.showBuyEth)
+
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
       return this.ETHUSDValue.price_change_percentage_24h > 0;
     },
     title() {
+      console.error('this', this.showBuyEth)
       return `${this.balanceInETH} ${this.network.type.name}`;
     },
     subtitle() {
