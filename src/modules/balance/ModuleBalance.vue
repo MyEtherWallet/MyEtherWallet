@@ -5,8 +5,16 @@
     display if the user has an eth balance > 0
   =====================================================================================
   -->
+    <v-skeleton-loader
+      v-if="loading"
+      class="mx-auto module-balance-loader"
+      width="100%"
+      min-height="352px"
+      max-width="100%"
+      type="card"
+    ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth"
+      v-if="!showBuyEth && !loading"
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
@@ -75,7 +83,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-else
+      v-if="showBuyEth && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -101,7 +109,8 @@ export default {
       chartData: [],
       timeString: '',
       scale: '',
-      activeButton: 0
+      activeButton: 0,
+      loading: true
     };
   },
   computed: {
@@ -111,19 +120,15 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      // console.error('this', this.balanceInETH, this.chartData);
       return this.balanceInETH <= 0 && this.chartData.length <= 0;
     },
     priceChangeArrow() {
-            console.error('this', this.showBuyEth)
-
       return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
       return this.ETHUSDValue.price_change_percentage_24h > 0;
     },
     title() {
-      console.error('this', this.showBuyEth)
       return `${this.balanceInETH} ${this.network.type.name}`;
     },
     subtitle() {
@@ -161,6 +166,7 @@ export default {
           } else {
             this.activeButton = count;
           }
+          this.loading = false;
         }, 1000);
       };
       checker();
@@ -209,3 +215,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.module-balance-loader {
+  .v-skeleton-loader__image {
+    height: 352px;
+  }
+}
+</style>

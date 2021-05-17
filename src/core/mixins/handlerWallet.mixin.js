@@ -65,7 +65,7 @@ export default {
           return !this.isEthNetwork;
         },
         result() {
-          this.$apollo.queries.getEthBalance.refetch();
+          this.$apollo.queries.getEthBalance?.refetch();
         },
         error(error) {
           Toast(error.message, {}, ERROR);
