@@ -112,8 +112,7 @@ export default {
         {
           label: 'MEW CX',
           img: require('@/assets/images/icons/icon-mew-cx.png'),
-          link:
-            'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+          link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
         },
         {
           label: 'MEW topia',

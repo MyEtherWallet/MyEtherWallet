@@ -245,7 +245,12 @@
                   <v-col cols="6" sm="8">
                     <v-row
                       dense
-                      class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                      class="
+                        align-center
+                        justify-start
+                        pl-1 pl-sm-3
+                        pr-2 pr-sm-3
+                      "
                     >
                       <mew-blockie
                         width="25px"

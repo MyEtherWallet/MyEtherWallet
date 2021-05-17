@@ -66,9 +66,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
             EventNames.SHOW_SWAP_TX_MODAL,
             [_tx, confirmInfo],
             _response => {
-              const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-                _response.rawTransaction
-              );
+              const _promiObj =
+                store.state.wallet.web3.eth.sendSignedTransaction(
+                  _response.rawTransaction
+                );
               _promiObj
                 .once('transactionHash', hash => {
                   if (store.state.wallet.instance !== null) {
