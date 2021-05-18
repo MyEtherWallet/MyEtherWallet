@@ -62,7 +62,6 @@
       </div>
     </div>
     <!-- Transaction fee -->
-    <v-divider :light="true" class="mt-5" />
     <div class="py-5">
       <div class="d-flex justify-space-between align-center">
         <div class="text-left">
@@ -89,73 +88,21 @@
         </div>
       </div>
     </div>
-    <!-- More Details -->
-    <mew-expand-panel
-      :has-dividers="true"
-      :panel-items="panelItems"
-      :idx-to-expand="2"
-      class="mb-5"
-    >
-      <template #panelBody1>
-        <div>
-          <div
-            v-for="dets in details"
-            :key="dets.title + dets.value"
-            class="d-flex justify-space-between"
-          >
-            <p class="text-left text-capitalized">{{ dets.title }}</p>
-            <p
-              :class="[
-                dets.title.includes('address') ? 'mew-address truncate' : '',
-                dets.title.toLowerCase() === 'data' ? 'text-wrap' : '',
-                'text-right data-values'
-              ]"
-            >
-              {{ dets.value }}
-            </p>
-          </div>
-        </div>
-      </template>
-    </mew-expand-panel>
-    <mew-warning-sheet :description="warningDescription" />
   </v-sheet>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
+
 export default {
   props: {
     to: {
       type: String,
       default: ''
     },
-    from: {
-      type: String,
-      default: ''
-    },
-    fromEnsName: {
-      type: String,
-      default: ''
-    },
-    sendCurrency: {
-      type: Object,
-      default: () => {}
-    },
     data: {
       type: String,
       default: ''
-    },
-    gasPrice: {
-      type: String,
-      default: ''
-    },
-    gasLimit: {
-      type: String,
-      default: ''
-    },
-    nonce: {
-      type: Number,
-      default: 0
     },
     network: {
       type: Object,
@@ -184,20 +131,14 @@ export default {
     toDetails: {
       type: Object,
       default: () => {}
+    },
+    sendCurrency: {
+      type: Object,
+      default: () => {}
     }
   },
   data: function () {
-    return {
-      warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
-      open: false,
-      panelItems: [
-        {
-          name: 'More Details'
-        }
-      ],
-      activeTab: 0
-    };
+    return {};
   },
   computed: {
     currency() {
@@ -225,53 +166,6 @@ export default {
     },
     usdAmount() {
       return BigNumber(this.value).times(this.currency.price).toFixed(2);
-    },
-    details() {
-      const details = [
-        {
-          title: 'Network',
-          value: this.network.type.name_long
-        },
-        {
-          title: 'From ENS',
-          value: this.fromEnsName
-        },
-        {
-          title: 'From address',
-          value: this.from
-        },
-        {
-          title: this.data !== '0x' ? 'Via Contract Address' : 'To address',
-          value: this.to
-        },
-        {
-          title: 'Sending',
-          value: `${this.value} ${this.currency.symbol}`
-        },
-        {
-          title: 'Gas Price',
-          value: this.gasPrice + ' gwei'
-        },
-        {
-          title: 'Gas Limit',
-          value: this.gasLimit
-        },
-        {
-          title: 'Transaction fee',
-          value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUsd}`
-        },
-        {
-          title: 'Nonce',
-          value: `${this.nonce}`
-        },
-        {
-          title: 'Data',
-          value: this.data
-        }
-      ];
-      return details.filter(item => {
-        return item.value !== '';
-      });
     },
     showToAddress() {
       return this.toDetails.selected !== 'TYPED';

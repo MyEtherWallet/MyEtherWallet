@@ -91,7 +91,7 @@
     "@vue/eslint-config-prettier": "6.0.0",
     "@vue/test-utils": "1.2.0",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
-    "apollo": "2.32.5",
+    "apollo": "2.33.2",
     "axios": "0.21.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",

@@ -31,7 +31,18 @@ class MEWPClass {
     return Promise.resolve(isAddress(address));
   }
   getQuote({ fromT, toT, fromAmount }) {
-    if (!isAddress(fromT.contract_address) || !isAddress(toT.contract_address))
+    const fromAddress = fromT.hasOwnProperty('contract_address')
+      ? fromT.contract_address
+      : fromT.hasOwnProperty('contract')
+      ? fromT.contract
+      : '';
+    const toAddress = toT.hasOwnProperty('contract_address')
+      ? toT.contract_address
+      : toT.hasOwnProperty('contract')
+      ? toT.contract
+      : '';
+
+    if (!isAddress(fromAddress) || !isAddress(toAddress))
       return Promise.resolve([]);
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
@@ -40,10 +51,10 @@ class MEWPClass {
     return axios
       .get(`${HOST_URL}${GET_QUOTE}`, {
         params: {
-          fromContractAddress: fromT.contract_address,
-          toContractAddress: toT.contract_address,
+          fromContractAddress: fromAddress,
+          toContractAddress: toAddress,
           amount: queryAmount.toFixed(fromT.decimals),
-          exexcludeDexes:
+          excludeDexes:
             this.provider === MEWPClass.supportedDexes.DEX_AG
               ? MEWPClass.supportedDexes.ONE_INCH
               : MEWPClass.supportedDexes.DEX_AG
@@ -67,6 +78,16 @@ class MEWPClass {
       });
   }
   getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
+    const contactFromAddress = fromT.hasOwnProperty('contract_address')
+      ? fromT.contract_address
+      : fromT.hasOwnProperty('contract')
+      ? fromT.contract
+      : '';
+    const contractToAddress = toT.hasOwnProperty('contract_address')
+      ? toT.contract_address
+      : toT.hasOwnProperty('contract')
+      ? toT.contract
+      : '';
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
@@ -79,8 +100,8 @@ class MEWPClass {
           dex: this.provider,
           exchange: quote.exchange,
           platform: 'ios',
-          fromContractAddress: fromT.contract_address,
-          toContractAddress: toT.contract_address,
+          fromContractAddress: contactFromAddress,
+          toContractAddress: contractToAddress,
           amount: queryAmount.toFixed(fromT.decimals)
         }
       })
@@ -122,9 +143,10 @@ class MEWPClass {
       tx.from = from;
       tx.gasPrice = gasPrice;
       tx.handleNotification = false;
-      tx.confirmInfo = confirmInfo;
       txs.push(tx);
     });
+
+    txs[0].confirmInfo = confirmInfo;
 
     return new Promise((resolve, reject) => {
       let counter = 0;

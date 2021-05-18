@@ -13,11 +13,6 @@
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="to"
-            :from="from"
-            :data="data"
-            :gas-price="gasPrice"
-            :gas-limit="gasLimit"
-            :nonce="nonce"
             :network="network"
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
@@ -40,8 +35,51 @@
             :provider="swapInfo.selectedProvider"
             :tx-fee="swapInfo.totalFees"
             :gas-price-type="swapInfo.gasPriceType"
+            :is-hardware="isHardware"
           />
-          <confirm-with-wallet v-if="isHardware" :is-swap="isHardware" />
+          <!-- Warning Sheet -->
+          <div
+            class="
+              px-4
+              py-6
+              pr-6
+              warning
+              textSecondary--text
+              border-radius--5px
+              mb-4
+            "
+          >
+            <b>Make sure all the information is correct.</b> Canceling or
+            reversing a transaction cannot be guaranteed. You will still be
+            charged gas fee even if transaction fails.
+            <a rel="noopener noreferrer">Learn more.</a>
+          </div>
+          <!-- transaction details -->
+          <v-expansion-panels accordion multiple>
+            <v-expansion-panel v-if="isHardware" readonly>
+              <v-expansion-panel-content>
+                <confirm-with-wallet :is-swap="isHardware" />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel
+              v-for="(tx, i) in transactions"
+              :key="tx.to + tx.from + i"
+            >
+              <v-expansion-panel-header>
+                <p class="ma-0 font-weight-bold">
+                  Transaction
+                  {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                </p>
+                <p v-if="isSwap" class="ma-0">Swap part {{ i + 1 }}</p>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </div>
       </template>
     </app-modal>
@@ -137,6 +175,9 @@ export default {
     to() {
       return this.tx.to;
     },
+    transactions() {
+      return utils._.isEmpty(this.tx) ? this.unsignedTxArr : [this.tx];
+    },
     allToDetails() {
       const toNickname = this.addressBook.find(item => {
         return this.to?.toLowerCase() === item.address?.toLowerCase();
@@ -199,7 +240,9 @@ export default {
       );
     },
     disableBtn() {
-      return !utils._.isEmpty(this.signedTxObject);
+      return !this.isSwap
+        ? !utils._.isEmpty(this.signedTxObject)
+        : this.signedTxArray.length > 0;
     },
     isSwap() {
       return !utils._.isEmpty(this.swapInfo);
@@ -237,18 +280,28 @@ export default {
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      _self.title = 'Swap Confirmation';
+      _self.title = 'Verify Swap';
       await this.signTx();
     });
+
+    /**
+     * receives an @Array
+     * arr[0] is the tx that may have confirmInfo
+     * which identifies the transaction as a swap tx
+     */
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
         _self.isHardwareWallet = isHardware;
+        if (arr[0].hasOwnProperty('confirmInfo')) {
+          _self.swapInfo = arr[0].confirmInfo;
+          _self.title = 'Verify Swap';
+        }
         const signed = [];
         _self.unsignedTxArr = arr;
-        if (!resolver) resolver = () => {};
+        if (!resolver) _self.resolver = () => {};
         _self.resolver = resolver;
-        _self.showBatchOverlay = true;
+        _self.showTxOverlay = true;
 
         if (_self.identifier !== WALLET_TYPES.WEB3_WALLET) {
           for (let i = 0; i < arr.length; i++) {

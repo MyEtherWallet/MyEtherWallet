@@ -686,7 +686,6 @@ export default {
             )
           })
           .then(quotes => {
-            console.log(quotes);
             quotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
