@@ -9,7 +9,16 @@
       </v-btn>
       <div
         v-if="notificationCount > 0"
-        class="notification-count cursor--pointer d-flex align-center justify-center white--text error lighten2"
+        class="
+          notification-count
+          cursor--pointer
+          d-flex
+          align-center
+          justify-center
+          white--text
+          error
+          lighten2
+        "
         @click="openNotifications = true"
       >
         {{ notificationCount }}

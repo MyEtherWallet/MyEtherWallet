@@ -58,8 +58,7 @@ export default {
   data: () => ({
     walletTypes: WALLET_TYPES,
     linkToLearnMore: {
-      url:
-        'https://kb.myetherwallet.com/en/security-and-privacy/not-recommended/',
+      url: 'https://kb.myetherwallet.com/en/security-and-privacy/not-recommended/',
       title: 'Learn more'
     }
   }),

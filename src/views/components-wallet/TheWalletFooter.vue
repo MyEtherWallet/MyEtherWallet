@@ -32,7 +32,12 @@
           class="pb-0 pb-md-2"
         >
           <div
-            class="d-flex align-center justify-center justify-md-end titlePrimary--text"
+            class="
+              d-flex
+              align-center
+              justify-center justify-md-end
+              titlePrimary--text
+            "
           >
             <a
               class="black--text"

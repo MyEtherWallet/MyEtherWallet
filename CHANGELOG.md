@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Add top right button [#3081](https://github.com/MyEtherWallet/MyEtherWallet/pull/3081)
 * Fix ui issues for dapps [#3060](https://github.com/MyEtherWallet/MyEtherWallet/pull/3060)
 * Fix paper wallet printing bugs [#3050](https://github.com/MyEtherWallet/MyEtherWallet/pull/3050)
 * Fix landing page paddings and set min width [#3059](https://github.com/MyEtherWallet/MyEtherWallet/pull/3059)
