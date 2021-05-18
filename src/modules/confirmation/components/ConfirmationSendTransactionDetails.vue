@@ -143,10 +143,8 @@ export default {
   computed: {
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
-      if (!obj.hasOwnProperty('amount') && !obj.hasOwnProperty('price')) {
-        obj['amount'] = this.value;
-        obj['price'] = this.valueUsd;
-      }
+      if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
+      if (!obj.hasOwnProperty('price')) obj['price'] = this.valueUsd;
       return obj;
     },
     totalFee() {
@@ -177,7 +175,9 @@ export default {
         case 'selected':
           return this.toDetails.nickname;
         default:
-          return this.data !== '0x' ? this.toTxData.to : this.to;
+          return this.data !== '' && this.data !== '0x'
+            ? this.toTxData.to
+            : this.to;
       }
     }
   }
@@ -189,7 +189,7 @@ export default {
   background-color: #f9f9f9;
   height: 100px;
   width: 100%;
-  max-width: 215px;
+  max-width: 260px;
 }
 
 .width-40 {
@@ -199,10 +199,6 @@ export default {
 
 .text-wrap {
   overflow-wrap: break-word;
-}
-
-.data-values {
-  max-width: 321px;
 }
 
 .currency-icon {

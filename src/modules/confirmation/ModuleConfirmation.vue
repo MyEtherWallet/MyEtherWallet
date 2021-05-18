@@ -12,7 +12,7 @@
         <div>
           <confirmation-send-transaction-details
             v-if="!isSwap"
-            :to="to"
+            :to="tx.to"
             :network="network"
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
@@ -55,28 +55,34 @@
             <a rel="noopener noreferrer">Learn more.</a>
           </div>
           <!-- transaction details -->
-          <v-expansion-panels accordion multiple>
+          <v-expansion-panels accordion multiple flat class="expansion-border">
             <v-expansion-panel v-if="isHardware" readonly>
               <v-expansion-panel-content>
                 <confirm-with-wallet :is-swap="isHardware" />
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel
-              v-for="(tx, i) in transactions"
-              :key="tx.to + tx.from + i"
+              v-for="(transaction, i) in transactions"
+              :key="transaction.to + transaction.from + i"
             >
               <v-expansion-panel-header>
                 <p class="ma-0 font-weight-bold">
                   Transaction
                   {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                  <span v-if="isSwap" class="ma-0">Swap part {{ i + 1 }}</span>
                 </p>
-                <p v-if="isSwap" class="ma-0">Swap part {{ i + 1 }}</p>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                <div>
+                  <div
+                    v-for="txVal in transaction"
+                    :key="txVal.title + txVal.value"
+                    class="d-flex justify-space-between"
+                  >
+                    <p class="ma-0">{{ txVal.title }}</p>
+                    <p class="ma-0 data-values">{{ txVal.value }}</p>
+                  </div>
+                </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -169,14 +175,17 @@ export default {
       'identifier',
       'isHardware'
     ]),
-    ...mapState('external', ['ETHUSDValue', 'test']),
+    ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
-    to() {
-      return this.tx.to;
-    },
     transactions() {
-      return utils._.isEmpty(this.tx) ? this.unsignedTxArr : [this.tx];
+      const newArr =
+        this.unsignedTxArr.length > 0
+          ? [].concat(this.unsignedTxArr)
+          : utils._.isEmpty(this.tx)
+          ? []
+          : [this.tx];
+      return this.arrayParser(newArr);
     },
     allToDetails() {
       const toNickname = this.addressBook.find(item => {
@@ -192,12 +201,6 @@ export default {
             : '',
         selected: this.toDetails.type
       };
-    },
-    from() {
-      return this.tx.from;
-    },
-    data() {
-      return this.tx.data;
     },
     gasPrice() {
       const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
@@ -353,6 +356,9 @@ export default {
   },
   methods: {
     reset() {
+      this.showTxOverlay = false;
+      this.showSignOverlay = false;
+      this.showBatchOverlay = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -360,9 +366,9 @@ export default {
       this.signature = '';
       this.unsignedTxArr = [];
       this.signedTxArray = [];
-      this.showTxOverlay = false;
-      this.showBatchOverlay = false;
-      this.showSignOverlay = false;
+      this.swapInfo = {};
+      this.sendCurrency = {};
+      this.toDetails = {};
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -462,7 +468,77 @@ export default {
       window.getSelection().removeAllRanges();
       Toast(this.$t('common.copied'), {}, INFO);
       this.reset();
+    },
+    arrayParser(arr) {
+      return arr.map(item => {
+        const gasLimit = item.gasLimit
+          ? item.gasLimit
+          : item.gas
+          ? item.gas
+          : '0x';
+        const gasPrice = item.gasPrice ? item.gasPrice : '0x';
+        return [
+          {
+            title: 'Network',
+            value: this.network.type.name_long
+          },
+          {
+            title: 'From ENS',
+            value: ''
+          },
+          {
+            title: 'From address',
+            value: item.from
+          },
+          {
+            title: item.data !== '0x' ? 'Via Contract Address' : 'To address',
+            value: item.to
+          },
+          {
+            title: 'Sending',
+            value:
+              item.data !== '0x' && !this.isSwap
+                ? `${
+                    utils.isHex
+                      ? utils.hexToNumberString(item.value)
+                      : item.value
+                  } ${this.sendCurrency.symbol}`
+                : `0 ${this.network.type.currencyName}`
+          },
+          {
+            title: 'Gas Price',
+            value:
+              utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei') + ' gwei'
+          },
+          {
+            title: 'Gas Limit',
+            value: utils.hexToNumberString(gasLimit)
+          },
+          {
+            title: 'Transaction fee',
+            value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
+          },
+          {
+            title: 'Nonce',
+            value: utils.hexToNumber(item.nonce)
+          },
+          {
+            title: 'Data',
+            value: item.data
+          }
+        ];
+      });
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.expansion-border {
+  border: 1px solid var(--v-selectBorder-base) !important;
+}
+
+.data-values {
+  max-width: 350px;
+  overflow-wrap: break-word;
+}
+</style>

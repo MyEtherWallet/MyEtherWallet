@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500" :value="show" @click:outside="handleClickOutside">
+  <v-dialog max-width="600" :value="show" @click:outside="handleClickOutside">
     <v-sheet class="py-6 px-4">
       <!--
         =====================================================================================
@@ -29,8 +29,16 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2">
-        <v-col cols="12" class="text-center">
+      <v-row class="mt-2" justify="space-around">
+        <v-col cols="5" class="text-right">
+          <mew-button
+            btn-style="outline"
+            btn-size="xlarge"
+            title="Cancel"
+            @click.native="close"
+          />
+        </v-col>
+        <v-col cols="7" class="text-left">
           <mew-button
             btn-size="xlarge"
             :title="btnText"
