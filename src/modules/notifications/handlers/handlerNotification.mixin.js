@@ -44,7 +44,9 @@ export default {
         };
       },
       skip() {
-        return !this.isEthNetwork || !this.address || this.address === null;
+        return (
+          !this.isEthNetwork || this.address === null || this.address === ''
+        );
       },
       result({ data }) {
         if (data.getEthTransfersV2.transfers) {
@@ -150,7 +152,7 @@ export default {
           };
         },
         skip() {
-          return !this.address || this.address === '' || this.loading;
+          return this.address === '' || this.address === null || this.loading;
         },
         result({ data }) {
           if (data && data.pendingTransaction) {
@@ -178,7 +180,7 @@ export default {
           return !this.txHash || this.txHash === '' || this.txHash === null;
         },
         result() {
-          this.$apollo.queries.getTransactionByHash.refetch();
+          this.$apollo.queries.getTransactionByHash?.refetch();
         },
         error(error) {
           Toast(error.message, {}, ERROR);

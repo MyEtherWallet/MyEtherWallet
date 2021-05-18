@@ -40,7 +40,9 @@ export default {
         };
       },
       skip() {
-        return !this.isEthNetwork;
+        return (
+          !this.isEthNetwork || this.address === null || this.address === ''
+        );
       },
       result({ data }) {
         this.setAccountBalance(utils.toBN(data.getEthBalance.balance));
@@ -62,7 +64,9 @@ export default {
           };
         },
         skip() {
-          return !this.isEthNetwork;
+          return (
+            !this.isEthNetwork || this.address === '' || this.address === null
+          );
         },
         result() {
           this.$apollo.queries.getEthBalance?.refetch();
@@ -100,7 +104,7 @@ export default {
                 token.contract ? token.contract.toLowerCase() : tokens.eth,
                 token
               );
-              this.$apollo.queries.getOwnersERC20Tokens.refetch();
+              this.$apollo.queries.getOwnersERC20Tokens?.refetch();
             }
           });
         }
@@ -120,7 +124,9 @@ export default {
         };
       },
       skip() {
-        return !this.address || this.address === '' || !this.isEthNetwork;
+        return (
+          this.address === null || !this.isEthNetwork || this.address === ''
+        );
       },
       result({ data }) {
         if (data && data.getOwnersERC20Tokens) {

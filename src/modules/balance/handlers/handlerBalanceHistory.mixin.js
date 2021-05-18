@@ -48,7 +48,7 @@ export default {
             this.scale = 'days';
             this.timeString = new Date().getTime() - 1000 * 60 * 60 * 24 * 365;
             this.chartData.push(parsedResult);
-            this.$apollo.queries.getBalanceHistory.refetch();
+            this.$apollo.queries.getBalanceHistory?.refetch();
           }
         } while (nextKey);
       },

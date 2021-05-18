@@ -435,7 +435,7 @@ export default {
         };
       },
       skip() {
-        return this.skipApollo;
+        return this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
         if (data && data.getEthBalance) {

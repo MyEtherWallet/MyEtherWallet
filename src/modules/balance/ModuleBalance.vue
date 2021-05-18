@@ -159,14 +159,15 @@ export default {
           if (count >= 3) {
             this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
+            this.loading = false;
             // a single point basically looks the same as an empty chart
           } else if (this.chartData.length <= 1) {
             count++;
             checker();
           } else {
             this.activeButton = count;
+            this.loading = false;
           }
-          this.loading = false;
         }, 1000);
       };
       checker();
