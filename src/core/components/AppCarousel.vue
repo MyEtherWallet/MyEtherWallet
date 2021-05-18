@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--banner-ads cursor--pointer">
     <mew6-white-sheet>
-      <mew-carousel class="box-shadow" carousel-height="145" :total-slides="2">
+      <mew-carousel class="box-shadow" carousel-height="155" :total-slides="2">
         <template #slide1>
           <a href="https://www.mewwallet.com/" target="_blank">
             <div class="ad1 px-5 d-flex flex-column justify-center">

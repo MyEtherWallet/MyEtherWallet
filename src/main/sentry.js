@@ -7,8 +7,7 @@ import store from '@/core/store';
 // Sentry
 Sentry.init({
   Vue,
-  dsn:
-    'https://82c2004a8ba740e1b80f8589f9ca1770@o382951.ingest.sentry.io/5652727',
+  dsn: 'https://82c2004a8ba740e1b80f8589f9ca1770@o382951.ingest.sentry.io/5652727',
   integrations: [new Integrations.BrowserTracing()],
   maxBreadcrumbs: 0,
   environment: 'web',
