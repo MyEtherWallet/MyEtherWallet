@@ -101,12 +101,11 @@
 </template>
 
 <script>
-import { fromWei, toBN } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import NotificationsCall from '@/apollo/queries/notifications';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
-import timeAgo from '@/core/helpers/timeAgo';
+import formatObj from './helpers/formatObj';
 export default {
   name: 'ModuleNotifications',
   props: {
@@ -152,7 +151,7 @@ export default {
     },
     transformCurrentNoti() {
       const newArr = this.currentNotifications.map(notification => {
-        const newObj = this.formatObj(notification);
+        const newObj = formatObj(notification, this.network);
         if (newObj.type === 'SWAP') {
           newObj.checkSwapStatus(this.swapper);
         }
@@ -163,7 +162,7 @@ export default {
     transformTxNoti() {
       const newArr = this.txNotifications
         .map(notification => {
-          const newObj = this.formatObj(notification);
+          const newObj = formatObj(notification, this.network);
           return newObj;
         })
         .sort(this.sortByDate);
@@ -172,7 +171,7 @@ export default {
     transformSwapNoti() {
       const newArr = this.swapNotifications
         .map(notification => {
-          const newObj = this.formatObj(notification);
+          const newObj = formatObj(notification, this.network);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
@@ -182,7 +181,7 @@ export default {
     transformInNoti() {
       const newArr = this.inTx
         .map(notification => {
-          const newObj = this.formatObj(notification);
+          const newObj = formatObj(notification, this.network);
           return newObj;
         })
         .sort(this.sortByDate);
@@ -293,62 +292,6 @@ export default {
           }
         });
       }
-    },
-    formatObj(obj) {
-      const newObj = {
-        txHash: {
-          value: obj.transactionHash,
-          string: 'Transaction Hash',
-          link: `${this.network.type.blockExplorerTX.replace(
-            '[[txHash]]',
-            obj.transactionHash
-          )}`
-        },
-        gasPrice: {
-          value: `${
-            obj.gasPrice ? fromWei(toBN(obj.gasPrice), 'gwei') : 0
-          } Gwei`,
-          string: 'Gas Price'
-        },
-        gasLimit: {
-          value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
-          string: 'Gas Limit'
-        },
-        total: {
-          value: `${obj.transactionFee} ${this.network.type.currencyName}`,
-          string: 'Total Transaction fee'
-        },
-        to: {
-          value: obj.toTxData && obj.toTxData.to ? obj.toTxData.to : obj.to,
-          string: 'To'
-        },
-        from: {
-          value: obj.from,
-          string: 'From'
-        },
-        amount: {
-          value: `${obj.value} ${this.network.type.currencyName}`,
-          string: 'Amount'
-        },
-        timestamp: {
-          value: timeAgo(toBN(obj.date).toNumber()),
-          string: 'Time'
-        },
-        status: {
-          value: obj.status?.toLowerCase(),
-          string: 'Status'
-        },
-        type: {
-          value: obj.type?.toLowerCase(),
-          string: obj.type
-        },
-        read: obj.read,
-        toObj: obj.toTxData,
-        fromObj: obj.fromTxData
-      };
-
-      obj.notification = newObj;
-      return obj;
     }
   }
 };
