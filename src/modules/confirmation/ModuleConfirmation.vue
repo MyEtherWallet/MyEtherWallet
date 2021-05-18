@@ -1,13 +1,42 @@
 <template>
   <div>
-    <mew-overlay
-      :show-overlay="showOverlay"
-      :title="title ? title : 'Confirmation'"
-      left-btn-text=""
-      right-btn-text="Close"
+    <confirmation-swap-modal
+      :to="swapInfo.to"
+      :from="swapInfo.from"
+      :from-img="swapInfo.fromImg"
+      :from-type="swapInfo.fromType"
+      :to-type="swapInfo.toType"
+      :to-img="swapInfo.toImg"
+      :from-val="swapInfo.fromVal"
+      :to-val="swapInfo.toVal"
+      :provider="swapInfo.selectedProvider"
+      :tx-fee="swapInfo.totalFees"
+      :gas-price-type="swapInfo.gasPriceType"
+      :send="signTx"
+      :show="showSwapModal"
       :close="overlayClose"
+      @close="overlayClose"
+    />
+    <app-modal
+      title="Confirm Transaction"
+      :btn-action="sendSignedTx"
+      :close="overlayClose"
+      :btn-enabled="disableBtn"
+      :show="showSignTxModal"
+      @close="overlayClose"
     >
-      <template #mewOverlayBody>
+      <template #dialogBody>
+        <confirm-with-wallet />
+      </template>
+    </app-modal>
+    <app-modal
+      :show="showTxOverlay"
+      :title="title ? title : 'Confirmation'"
+      :close="overlayClose"
+      :btn-action="signTx"
+      @close="overlayClose"
+    >
+      <template #dialogBody>
         <confirmation-transaction
           :to="to"
           :from="from"
@@ -16,13 +45,12 @@
           :gas-limit="gasLimit"
           :nonce="nonce"
           :network="network"
-          :send="send"
           :tx-fee="txFee"
           :tx-fee-usd="txFeeUSD"
           :value="value"
         />
       </template>
-    </mew-overlay>
+    </app-modal>
     <mew-overlay
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
@@ -56,11 +84,14 @@
 </template>
 
 <script>
+import AppModal from '@/core/components/AppModal';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
+import ConfirmationSwapModal from './components/ConfirmationSwapModal';
+import ConfirmWithWallet from './components/ConfirmWithWallet';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -76,21 +107,26 @@ export default {
   components: {
     ConfirmationTransaction,
     ConfirmationMesssage,
-    ConfirmationBatchTransaction
+    ConfirmationBatchTransaction,
+    AppModal,
+    ConfirmWithWallet,
+    ConfirmationSwapModal
   },
   data() {
     return {
-      showOverlay: false,
+      showTxOverlay: false,
       showSignOverlay: false,
       showBatchOverlay: false,
+      showSignTxModal: false,
+      showSwapModal: false,
       tx: {},
       resolver: () => {},
       title: '',
       signedTxObject: {},
-      signedTx: {},
       signature: '',
       unsignedTxArr: [],
-      signedTxArray: []
+      signedTxArray: [],
+      swapInfo: {}
     };
   },
   computed: {
@@ -139,6 +175,17 @@ export default {
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';
       return utils.fromWei(utils.hexToNumberString(parsedValue));
+    },
+    isSoftwareWallet() {
+      return (
+        !this.instance.isHardware &&
+        (this.instance.identifier === WALLET_TYPES.KEYSTORE ||
+          this.instance.identifier === WALLET_TYPES.PRIV_KEY ||
+          this.instance.identifier === WALLET_TYPES.MNEMONIC)
+      );
+    },
+    disableBtn() {
+      return !utils._.isEmpty(this.signedTxObject);
     }
   },
   created() {
@@ -148,20 +195,21 @@ export default {
       _self.title = 'Transaction Confirmation';
       _self.tx = tx;
       _self.resolver = resolver;
+      _self.showTxOverlay = true;
       // this.txFee is not updating before reaching about here
       _self.tx.transactionFee = this.txFee;
       tx.transactionFee = this.txFee;
-      _self.instance
-        .signTransaction(tx)
-        .then(res => {
-          _self.signedTxObject = res;
-          _self.signedTx = res.rawTransaction;
-          _self.showOverlay = true;
-        })
-        .catch(e => {
-          this.overlayClose();
-          _self.instance.errorHandler(e);
-        });
+    });
+    /**
+     * receives an @Array
+     * arr[0] is the tx
+     * arr[1] is the swap information
+     */
+    EventBus.$on(EventNames.SHOW_SWAP_TX_MODAL, (arr, resolver) => {
+      _self.tx = arr[0];
+      _self.swapInfo = arr[1];
+      _self.resolver = resolver;
+      _self.showSwapModal = true;
     });
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
@@ -222,10 +270,21 @@ export default {
     });
   },
   methods: {
+    reset() {
+      this.tx = {};
+      this.resolver = () => {};
+      this.title = '';
+      this.signedTxObject = {};
+      this.signature = '';
+      this.unsignedTxArr = [];
+      this.signedTxArray = [];
+    },
     overlayClose() {
-      this.showOverlay = false;
+      this.showTxOverlay = false;
       this.showBatchOverlay = false;
       this.showSignOverlay = false;
+      this.showSignTxModal = false;
+      this.showSwapModal = false;
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -291,8 +350,44 @@ export default {
         5000
       );
     },
-    send() {
+    async signTx() {
+      this.overlayClose();
+      if (!this.isSoftwareWallet) {
+        this.showSignTxModal = true;
+      }
+
+      await this.instance
+        .signTransaction(this.tx)
+        .then(res => {
+          if (this.isSoftwareWallet) {
+            this.resolver(res);
+            this.reset();
+            Toast(
+              `Transaction is being mined. Check here `,
+              {
+                title: `${getService(this.network.type.blockExplorerTX)}`,
+                url: this.network.type.blockExplorerTX.replace(
+                  '[[txHash]]',
+                  res.tx.hash
+                )
+              },
+              SUCCESS,
+              5000
+            );
+          } else {
+            this.signedTxObject = res;
+          }
+        })
+        .catch(e => {
+          this.overlayClose();
+          this.reset();
+          this.instance.errorHandler(e);
+        });
+    },
+    sendSignedTx() {
       this.resolver(this.signedTxObject);
+      this.overlayClose();
+      this.reset();
       Toast(
         `Transaction is being mined. Check here `,
         {
@@ -305,7 +400,6 @@ export default {
         SUCCESS,
         5000
       );
-      this.overlayClose();
     },
     copyToClipboard() {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
