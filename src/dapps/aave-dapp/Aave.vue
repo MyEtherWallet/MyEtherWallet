@@ -11,7 +11,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
@@ -119,7 +119,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
