@@ -321,20 +321,17 @@ export default {
           { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
           {
             label: 'Ether card',
-            link:
-              'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+            link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
           },
           { label: 'Trezor', link: 'https://trezor.io/' },
           { label: 'KeepKey', link: 'http://lddy.no/a4im' },
           {
             label: 'Finney',
-            link:
-              'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+            link: 'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
           },
           {
             label: 'Billfodl',
-            link:
-              'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
+            link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
           },
           { label: 'Secalot', link: 'https://www.secalot.com/' }
         ]
@@ -360,8 +357,7 @@ export default {
           { label: 'MEW wallet', routerLink: 'Dashboard' },
           {
             label: 'MEW CX',
-            link:
-              'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
+            link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
           },
           {
             label: 'Verify message',

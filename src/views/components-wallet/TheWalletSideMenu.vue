@@ -201,6 +201,7 @@ import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
+import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -300,6 +301,11 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network'])
+  },
+  mounted() {
+    EventBus.$on('toggleSettings', () => {
+      this.toggleSettings();
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),

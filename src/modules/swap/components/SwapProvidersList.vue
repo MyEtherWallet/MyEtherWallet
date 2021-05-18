@@ -6,8 +6,8 @@
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row v-if="step == 0 && message == ''">
-      <v-col v-for="btn in 4" :key="btn" cols="12" class="mb-n3">
+    <v-row v-if="step === 0 && message.title === ''">
+      <v-col cols="12" class="mb-n3">
         <v-card
           flat
           color="selectorBg lighten-1"
@@ -27,7 +27,9 @@
       Providers Message
     =====================================================================================
     -->
-    <v-row v-if="step == 0 && message != ''">
+    <v-row
+      v-if="step === 0 && (message.title !== '' || message.subtitle !== '')"
+    >
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
@@ -35,7 +37,12 @@
           class="d-flex align-center px-5 py-4"
           min-height="94px"
         >
-          <v-card-text class="text-center">{{ message }} </v-card-text>
+          <v-card-text class="text-center">
+            <p v-show="message.title !== ''" class="mew-heading-1 pb-0">
+              {{ message.title }}
+            </p>
+            <p v-show="message.subtitle !== ''">{{ message.subtitle }}</p>
+          </v-card-text>
         </v-card>
       </v-col></v-row
     >
@@ -52,14 +59,22 @@
           cols="12"
           class="mb-n3"
         >
-          <v-item v-slot="{ active, toggle }">
+          <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
             <v-card
               :style="
                 active ? 'border-color: var(--v-primary-base) !important' : ''
               "
               outlined
               :color="active ? 'selectorBg' : 'selectorBg lighten-1'"
-              class="d-flex align-center justify-space-between border-radius--10px pl-5 pr-2 py-1"
+              class="
+                d-flex
+                align-center
+                justify-space-between
+                border-radius--10px
+                pl-5
+                pr-2
+                py-1
+              "
               @click="
                 toggle();
                 setProvider(idx);
@@ -87,7 +102,13 @@
                         </div>
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="ml-3 px-3 rate-chip-xs align-center justify-center"
+                          class="
+                            ml-3
+                            px-3
+                            rate-chip-xs
+                            align-center
+                            justify-center
+                          "
                         >
                           Best Rate
                         </div>
@@ -196,8 +217,8 @@ export default {
       default: ''
     },
     message: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -256,6 +277,21 @@ export default {
      */
     moreProvidersIcon() {
       return this.showMore ? 'mdi-arrow-up' : 'mdi-arrow-down';
+    }
+  },
+  watch: {
+    providersList(newValue, oldVal) {
+      if (newValue.length > 0 && oldVal.length === 0) {
+        const bestRate = newValue.findIndex(item => {
+          return item.rate === this.bestRate;
+        });
+        this.$nextTick(() => {
+          if (bestRate !== -1) {
+            this.$refs[`card${bestRate}`][0].toggle();
+            this.setProvider(bestRate);
+          }
+        });
+      }
     }
   }
 };
