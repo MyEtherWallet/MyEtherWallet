@@ -30,7 +30,7 @@
         =====================================================================================
         -->
       <v-row class="mt-2" justify="space-around">
-        <v-col cols="5" class="text-right" v-if="!closeOnly">
+        <v-col v-if="!closeOnly" cols="5" class="text-right">
           <mew-button
             btn-style="outline"
             btn-size="xlarge"
@@ -38,7 +38,7 @@
             @click.native="close"
           />
         </v-col>
-        <v-col cols="7" class="text-left" v-if="!closeOnly">
+        <v-col v-if="!closeOnly" cols="7" class="text-left">
           <mew-button
             btn-size="xlarge"
             :title="btnText"
@@ -46,7 +46,7 @@
             @click.native="btnAction"
           />
         </v-col>
-        <v-col cols="12" class="text-left" v-if="closeOnly">
+        <v-col v-if="closeOnly" cols="12" class="text-left">
           <mew-button
             btn-size="xlarge"
             btn-style="outline"

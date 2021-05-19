@@ -37,7 +37,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/dnsregistrar": "0.4.0",
-    "@myetherwallet/mew-components": "0.5.67-beta",
+    "@myetherwallet/mew-components": "0.5.71-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.3.5",
     "@sentry/integrations": "6.3.5",
