@@ -123,7 +123,7 @@ export default {
       return this.balanceInETH <= 0 && this.chartData.length <= 0;
     },
     priceChangeArrow() {
-      return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
+      return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
       return this.ETHUSDValue.price_change_percentage_24h > 0;

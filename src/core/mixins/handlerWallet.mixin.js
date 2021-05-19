@@ -8,7 +8,7 @@ import {
   getLatestPrices
 } from '@/apollo/queries/wallets/wallets.graphql';
 import { getOwnersERC20Tokens } from '@/apollo/queries/tokens/tokens.graphql';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { AddressEventType } from '@/apollo/global/globalTypes.js';
 import BigNumber from 'bignumber.js';
 import ethImg from '@/assets/images/networks/eth.svg';
@@ -48,7 +48,7 @@ export default {
         this.setAccountBalance(utils.toBN(data.getEthBalance.balance));
       },
       error(error) {
-        Toast(error.message, {}, ERROR);
+        Toast(error.message, {}, SENTRY);
       }
     },
     /**
@@ -72,7 +72,7 @@ export default {
           this.$apollo.queries.getEthBalance?.refetch();
         },
         error(error) {
-          Toast(error.message, {}, ERROR);
+          Toast(error.message, {}, SENTRY);
         }
       }
     },
@@ -85,6 +85,7 @@ export default {
       skip() {
         return !this.isEthNetwork;
       },
+      pollInterval: 600000,
       result({ data }) {
         this.tokensData = new Map();
         if (data && data.getLatestPrices) {
