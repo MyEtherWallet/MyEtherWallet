@@ -4,7 +4,7 @@
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
       :close="reset"
-      :btn-action="sendSignedTx"
+      :btn-action="btnAction"
       :btn-enabled="disableBtn"
       @close="reset"
     >
@@ -55,22 +55,58 @@
             <a rel="noopener noreferrer">Learn more.</a>
           </div>
           <!-- transaction details -->
-          <v-expansion-panels accordion multiple flat class="expansion-border">
-            <v-expansion-panel v-if="isHardware" readonly>
-              <v-expansion-panel-content>
-                <confirm-with-wallet :is-swap="isHardware" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
+          <confirm-with-wallet
+            v-if="
+              isHardware &&
+              (signing || unsignedTxArr.length === signedTxArray.length)
+            "
+            :is-swap="isHardware"
+            :tx-length="unsignedTxArr.length > 0 ? unsignedTxArr.length : 1"
+            :signed="signingPending"
+          />
+          <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
               :key="transaction.to + transaction.from + i"
+              class="expansion-border"
             >
-              <v-expansion-panel-header>
-                <p class="ma-0 font-weight-bold">
-                  Transaction
-                  {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+              <v-expansion-panel-header :disable-icon-rotate="signing">
+                <p class="ma-0">
+                  <span class="font-weight-bold"
+                    >Transaction
+                    {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                  </span>
+                  <br />
                   <span v-if="isSwap" class="ma-0">Swap part {{ i + 1 }}</span>
                 </p>
+                <template v-if="signing" #actions>
+                  <v-progress-circular
+                    v-show="isBatch && signedTxArray.length < i + 1"
+                    indeterminate
+                    color="primary"
+                  />
+                  <v-progress-circular
+                    v-show="
+                      !isBatch && Object.keys(signedTxObject).length === 0
+                    "
+                    indeterminate
+                    color="primary"
+                  />
+                  <v-icon
+                    v-show="
+                      !isBatch && Object.keys(signedTxObject).length !== 0
+                    "
+                    color="primary"
+                  >
+                    mdi-check
+                  </v-icon>
+                  <v-icon
+                    v-show="isBatch && signedTxArray.length >= i + 1"
+                    color="primary"
+                  >
+                    mdi-check
+                  </v-icon>
+                </template>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div>
@@ -164,7 +200,8 @@ export default {
       signedTxArray: [],
       swapInfo: {},
       sendCurrency: {},
-      toDetails: {}
+      toDetails: {},
+      signing: false
     };
   },
   computed: {
@@ -243,12 +280,23 @@ export default {
       );
     },
     disableBtn() {
-      return !this.isSwap
-        ? !utils._.isEmpty(this.signedTxObject)
-        : this.signedTxArray.length > 0;
+      if (!this.signing) return true;
+      return this.isBatch
+        ? this.signedTxArray.length > 0 &&
+            this.signedTxArray.length === this.unsignedTxArr.length
+        : !utils._.isEmpty(this.signedTxObject);
     },
     isSwap() {
       return !utils._.isEmpty(this.swapInfo);
+    },
+    isBatch() {
+      return this.unsignedTxArr.length > 0;
+    },
+    signingPending() {
+      if (this.isBatch) {
+        return this.unsignedTxArr.length === this.signedTxArray.length;
+      }
+      return !utils._.isEmpty(this.signedTxObject);
     }
   },
   created() {
@@ -271,7 +319,8 @@ export default {
         _self.toDetails = tx[1];
         _self.sendCurrency = tx[2];
       }
-      await this.signTx();
+      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET)
+        await this.signTx();
     });
     /**
      * receives an @Array
@@ -284,7 +333,9 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
       _self.title = 'Verify Swap';
-      await this.signTx();
+      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        await this.signTx();
+      }
     });
 
     /**
@@ -300,30 +351,13 @@ export default {
           _self.swapInfo = arr[0].confirmInfo;
           _self.title = 'Verify Swap';
         }
-        const signed = [];
         _self.unsignedTxArr = arr;
         if (!resolver) _self.resolver = () => {};
         _self.resolver = resolver;
         _self.showTxOverlay = true;
 
-        if (_self.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          for (let i = 0; i < arr.length; i++) {
-            try {
-              const _signedTx = await _self.instance.signTransaction(arr[i]);
-              if (arr[i].hasOwnProperty('handleNotification')) {
-                _signedTx.tx['handleNotification'] = arr[i].handleNotification;
-              }
-              _signedTx.tx['type'] = arr[i].type ? arr[i].type : 'OUT';
-              signed.push(_signedTx);
-            } catch (err) {
-              _self.instance.errorHandler(err);
-            }
-          }
-          _self.signedTxArray = signed;
-        } else {
-          _self.signedTxArray = _self.unsignedTxArr.map(_tx => {
-            return { tx: _tx, rawTransaction: _tx };
-          });
+        if (!isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
+          this.signBatchTx();
         }
       }
     );
@@ -369,6 +403,7 @@ export default {
       this.swapInfo = {};
       this.sendCurrency = {};
       this.toDetails = {};
+      this.signing = false;
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -452,15 +487,54 @@ export default {
       );
     },
     async signTx() {
+      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+        this.signing = true;
       await this.instance
         .signTransaction(this.tx)
         .then(res => {
           this.signedTxObject = res;
         })
         .catch(e => {
-          this.reset();
           this.instance.errorHandler(e);
+          this.signing = false;
         });
+    },
+    async signBatchTx() {
+      const signed = [];
+      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+        this.signing = true;
+      for (let i = 0; i < this.unsignedTxArr.length; i++) {
+        try {
+          const _signedTx = await this.instance.signTransaction(
+            this.unsignedTxArr[i]
+          );
+          if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
+            _signedTx.tx['handleNotification'] =
+              this.unsignedTxArr[i].handleNotification;
+          }
+          _signedTx.tx['type'] = this.unsignedTxArr[i].type
+            ? this.unsignedTxArr[i].type
+            : 'OUT';
+          signed.push(_signedTx);
+          this.signedTxArray = signed;
+        } catch (err) {
+          this.signing = false;
+          this.instance.errorHandler(err);
+          return;
+        }
+      }
+      this.signing = false;
+    },
+    btnAction() {
+      if (!this.signing) {
+        this.isHardware
+          ? this.isBatch
+            ? this.signBatchTx()
+            : this.signTx()
+          : this.sendSignedTx();
+        return;
+      }
+      this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
     },
     copyToClipboard() {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
@@ -497,13 +571,11 @@ export default {
           {
             title: 'Sending',
             value:
-              item.data !== '0x' && !this.isSwap
-                ? `${
-                    utils.isHex
-                      ? utils.hexToNumberString(item.value)
-                      : item.value
-                  } ${this.sendCurrency.symbol}`
-                : `0 ${this.network.type.currencyName}`
+              item.data !== '0x'
+                ? !this.isSwap
+                  ? `${this.value} ${this.sendCurrency.symbol}`
+                  : `0 ${this.network.type.currencyName}`
+                : `${this.value} ${this.sendCurrency.symbol}`
           },
           {
             title: 'Gas Price',

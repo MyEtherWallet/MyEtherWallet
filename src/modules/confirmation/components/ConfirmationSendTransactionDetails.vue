@@ -175,9 +175,9 @@ export default {
         case 'selected':
           return this.toDetails.nickname;
         default:
-          return this.data !== '' && this.data !== '0x'
-            ? this.toTxData.to
-            : this.to;
+          return this.data === '' || this.data === '0x'
+            ? this.to
+            : this.toTxData.to;
       }
     }
   }

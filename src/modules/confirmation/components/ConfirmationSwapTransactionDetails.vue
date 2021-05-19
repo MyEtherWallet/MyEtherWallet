@@ -15,24 +15,26 @@
       =====================================================================================
     -->
     <v-row class="position--relative" justify="space-around">
-      <v-col cols="5" class="text-center value-container">
+      <v-col cols="6" class="text-center value-container">
         You Swap <br />
         <img :src="fromImg" height="30px" /> <br />
         {{ fromVal }} {{ fromType }}
       </v-col>
-      <v-col cols="5" class="text-center value-container">
+      <v-col cols="6" class="text-center value-container">
         You will get <br />
         <img :src="toImg" height="30px" /> <br />
         {{ toVal }} {{ toType }}
       </v-col>
+      <div class="icon d-flex align-center">
+        <v-icon> mdi-arrow-right </v-icon>
+      </div>
     </v-row>
     <!--
       =====================================================================================
         Summary
       =====================================================================================
     -->
-    <v-divider :light="true" class="mt-5 mb-5" />
-    <v-row>
+    <v-row class="my-4">
       <v-col cols="6" class="text-left">
         Provider <br />
         Exchange rate <br />
@@ -46,7 +48,6 @@
         {{ convertedFees }} {{ txFeeUSD }}
       </v-col>
     </v-row>
-    <v-divider :light="true" class="mt-5" />
   </div>
 </template>
 
@@ -147,5 +148,16 @@ export default {
 .value-container {
   border-radius: 5px;
   background-color: #f9f9f9;
+}
+
+.icon {
+  width: 32px;
+  border-radius: 50%;
+  background-color: white;
+  height: 32px;
+  top: 30px;
+  position: absolute;
+  text-align: center;
+  padding-left: 5px;
 }
 </style>

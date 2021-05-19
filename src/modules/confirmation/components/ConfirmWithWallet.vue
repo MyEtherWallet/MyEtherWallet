@@ -14,6 +14,12 @@
     <div class="text-center mb-5">
       <p>{{ bodyText }}</p>
     </div>
+    <v-progress-linear
+      v-if="!signed"
+      indeterminate
+      color="primary"
+      class="mb-3"
+    ></v-progress-linear>
   </div>
 </template>
 
@@ -27,6 +33,14 @@ import secalot from '@/assets/images/hardware-wallets/logo-secalot.png';
 export default {
   props: {
     isSwap: {
+      type: Boolean,
+      default: false
+    },
+    txLength: {
+      type: Number,
+      default: 1
+    },
+    signed: {
       type: Boolean,
       default: false
     }
@@ -50,9 +64,9 @@ export default {
         coolWallet: 'Cool Wallet',
         walletLink: 'Wallet Link'
       };
-      return `Please confirm ${this.isSwap ? 'swap' : ''} transaction with ${
-        walletNames[this.instance.identifier]
-      }`;
+      return `Approve ${this.txLength} ${
+        this.txLength > 1 ? 'transactions' : 'transaction'
+      } on ${walletNames[this.instance.identifier]}.`;
     },
     icons() {
       return {
