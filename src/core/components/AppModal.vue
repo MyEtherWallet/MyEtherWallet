@@ -30,7 +30,7 @@
         =====================================================================================
         -->
       <v-row class="mt-2" justify="space-around">
-        <v-col cols="5" class="text-right">
+        <v-col cols="5" class="text-right" v-if="!closeOnly">
           <mew-button
             btn-style="outline"
             btn-size="xlarge"
@@ -38,12 +38,20 @@
             @click.native="close"
           />
         </v-col>
-        <v-col cols="7" class="text-left">
+        <v-col cols="7" class="text-left" v-if="!closeOnly">
           <mew-button
             btn-size="xlarge"
             :title="btnText"
             :disabled="!btnEnabled"
             @click.native="btnAction"
+          />
+        </v-col>
+        <v-col cols="12" class="text-left" v-if="closeOnly">
+          <mew-button
+            btn-size="xlarge"
+            btn-style="outline"
+            title="Close"
+            @click.native="close"
           />
         </v-col>
       </v-row>
@@ -77,6 +85,10 @@ export default {
     btnText: {
       type: String,
       default: 'Confirm and Send'
+    },
+    closeOnly: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

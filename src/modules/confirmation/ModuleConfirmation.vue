@@ -460,12 +460,8 @@ export default {
         return promiEvent;
       });
       this.resolver(promises);
-      Toast(
-        'Transaction is being mined. Watch out for the notifications on the top right of the screen!',
-        {},
-        SUCCESS,
-        5000
-      );
+      this.showTxOverlay = false;
+      this.showTxSuccess = true;
     },
     sendSignedTx() {
       this.resolver(this.signedTxObject);
