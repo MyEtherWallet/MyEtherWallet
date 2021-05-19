@@ -42,8 +42,7 @@
       </v-col>
       <v-col cols="6" class="text-right">
         <img :src="provider.exchangeInfo.img" height="25px" /> <br />
-        {{ toFixed(provider.amount) }} {{ fromType }} =
-        {{ toFixed(provider.rate) }} {{ toType }} <br />
+        1 {{ fromType }} = {{ toFixed(provider.rate) }} {{ toType }} <br />
         <span class="capitalize">{{ gasPriceType }}</span>
         {{ convertedFees }} {{ txFeeUSD }}
       </v-col>

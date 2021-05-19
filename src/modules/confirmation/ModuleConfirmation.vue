@@ -77,7 +77,9 @@
                     {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
                   </span>
                   <br />
-                  <span v-if="isSwap" class="ma-0">Swap part {{ i + 1 }}</span>
+                  <span v-if="isSwap" class="ma-0"
+                    >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
+                  >
                 </p>
                 <template v-if="signing" #actions>
                   <v-progress-circular
@@ -141,19 +143,6 @@
         />
       </template>
     </mew-overlay>
-    <mew-overlay
-      :show-overlay="showBatchOverlay"
-      title="Batch Transaction Confirmation"
-      right-btn-text="close"
-      :close="reset"
-    >
-      <template #mewOverlayBody>
-        <confirmation-batch-transaction
-          :transactions="unsignedTxArr"
-          :send="sendBatchTransaction"
-        />
-      </template>
-    </mew-overlay>
   </div>
 </template>
 
@@ -162,7 +151,6 @@ import AppModal from '@/core/components/AppModal';
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationMesssage from './components/ConfirmationMessage';
-import ConfirmationBatchTransaction from './components/ConfirmationBatchTransaction';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
@@ -176,11 +164,13 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/wallets/utils/utils.js';
+
+const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
+
 export default {
   name: 'ConfirmationContainer',
   components: {
     ConfirmationMesssage,
-    ConfirmationBatchTransaction,
     AppModal,
     ConfirmationSwapTransactionDetails,
     ConfirmationSendTransactionDetails,
@@ -190,7 +180,6 @@ export default {
     return {
       showTxOverlay: false,
       showSignOverlay: false,
-      showBatchOverlay: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -215,6 +204,16 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    swapLabel() {
+      switch (this.transactions.length) {
+        case 1:
+          return SWAP_LABELS.slice(2);
+        case 2:
+          return SWAP_LABELS.slice(1);
+        default:
+          return SWAP_LABELS;
+      }
+    },
     transactions() {
       const newArr =
         this.unsignedTxArr.length > 0
@@ -392,7 +391,6 @@ export default {
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
-      this.showBatchOverlay = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -429,7 +427,6 @@ export default {
       tx.transactionFee = this.txFee;
     },
     async sendBatchTransaction() {
-      this.showBatchOverlay = false;
       const web3 = this.web3;
       const _method =
         this.identifier === WALLET_TYPES.WEB3_WALLET
