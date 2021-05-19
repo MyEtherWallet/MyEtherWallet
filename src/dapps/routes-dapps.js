@@ -4,6 +4,7 @@ import Aave from './aave-dapp/Aave';
 import Ambrpay from './ambrpay-dapp/TheAmbrpayLayout';
 import UnstoppableDomain from './unstoppable-domains/UnstoppableDomain';
 import Dapps from '@/modules/dapps-center/ModuleDappsCenter';
+import Staked from './staked/ModuleStaked';
 
 export default [
   {
@@ -35,5 +36,10 @@ export default [
     path: 'unstoppable-domain',
     name: 'UnstoppableDomain',
     component: UnstoppableDomain
+  },
+  {
+    path: 'staked',
+    name: 'Staked',
+    component: Staked
   }
 ];

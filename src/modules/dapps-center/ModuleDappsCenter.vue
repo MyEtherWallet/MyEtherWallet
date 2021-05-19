@@ -55,6 +55,14 @@ export default {
           rightIconType: 'mew',
           rightIcon: 'aave',
           path: 'Aave'
+        },
+        {
+          title: 'Staked',
+          subtitle: 'stake',
+          tag: '#DeFi',
+          rightIconType: 'mew',
+          rightIcon: 'stake',
+          path: 'Staked'
         }
       ]
     };
