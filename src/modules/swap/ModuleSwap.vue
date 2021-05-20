@@ -73,17 +73,44 @@
 
           <!--
           =====================================================================================
-            User Message Block
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+          <user-msg-block
+            v-if="notEnoughEth && !isLoading"
+            class="mt-5"
+            :message="msg.storeBitcoin"
+          >
+            <div class="mt-3 mx-n1">
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Swap Your Bitcoin to Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+              />
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Buy Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+                @click.native="buyEth"
+              />
+            </div>
+          </user-msg-block>
+
+          <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
           <user-msg-block
             v-if="
-              (availableBalance.isNegative() || availableBalance.isZero()) &&
-              !isLoading
+              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
-            class="mt-5 mb-10"
-            title="Your Ether balance is too low"
-            text="To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet."
+            class="mt-5"
+            :message="msg.lowBalance"
           >
             <div class="border-top mt-3">
               <v-expansion-panels
@@ -114,35 +141,29 @@
                         Learn more about Wrapped Bitcoin.
                       </a>
                     </div>
-                    <mew-button
-                      btn-size="small"
-                      btn-style="outline"
-                      title="Swap to renBTC"
-                      class="ma-1"
-                      :has-full-width="$vuetify.breakpoint.xsOnly"
-                    />
-                    <mew-button
-                      btn-size="small"
-                      btn-style="outline"
-                      title="Swap to wBTC"
-                      class="ma-1"
-                      :has-full-width="$vuetify.breakpoint.xsOnly"
-                    />
-                    <mew-button
-                      btn-size="small"
-                      btn-style="outline"
-                      title="Swap to PBTC"
-                      class="ma-1"
-                      :has-full-width="$vuetify.breakpoint.xsOnly"
-                    />
-                    <mew-button
-                      btn-size="small"
-                      btn-style="outline"
-                      title="Buy Ether"
-                      class="ma-1"
-                      :has-full-width="$vuetify.breakpoint.xsOnly"
-                      @click.native="buyEth"
-                    />
+                    <div class="mx-n1">
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to renBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to wBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to PBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                    </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -156,6 +177,7 @@
             -->
           <module-address-book
             v-show="showToAddress"
+            class="mt-10"
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
@@ -301,6 +323,18 @@ export default {
   },
   data() {
     return {
+      msg: {
+        storeBitcoin: {
+          title: 'Your Ether balance is too low',
+          subtitle:
+            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
+        },
+        lowBalance: {
+          title: 'Did you know? You can store your Bitcoin on Ethereum',
+          subtitle:
+            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
+        }
+      },
       step: 0,
       confirmInfo: {
         to: '',
@@ -733,8 +767,11 @@ export default {
         this.hasAmountErrors ||
         this.fromTokenType.value === this.toTokenType.value
       ) {
-        this.providersMessage =
-          'Select token and enter amount to see rates. MEW finds the best price for you across multiple DEXs and Exchange services.';
+        this.providersMessage = {
+          title: 'Select token and enter amount to see rates.',
+          subtitle:
+            'MEW finds the best price for you across multiple DEXs and Exchange services.'
+        };
         return;
       }
       if (value || !this.hasAmountErrors || !_.isEmpty(this.toTokenType)) {

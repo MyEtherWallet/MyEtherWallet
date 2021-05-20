@@ -7,7 +7,7 @@
       Providers Message
     =====================================================================================
     -->
-    <user-msg-block v-if="step == 0 && message != ''" :text="message">
+    <user-msg-block v-if="step == 0 && message != ''" :message="message">
     </user-msg-block>
 
     <!--

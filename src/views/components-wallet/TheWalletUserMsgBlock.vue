@@ -1,12 +1,14 @@
 <template>
   <v-sheet color="tableHeader" class="pa-5 border-radius--5px">
-    <div v-if="title !== ''" class="d-flex align-center mb-2">
-      <v-icon color="titlePrimary" class="mr-1">
+    <div v-if="message.title !== ''" class="d-flex align-center mb-2">
+      <v-icon color="titlePrimary" class="mr-1 ml-n1">
         mdi-alert-circle-outline
       </v-icon>
-      <div class="titlePrimary--text font-weight-bold">{{ title }}</div>
+      <div class="titlePrimary--text font-weight-bold">{{ message.title }}</div>
     </div>
-    <div v-if="text !== ''" class="textPrimaryModule--text">{{ text }}</div>
+    <div v-if="message.subtitle !== ''" class="textPrimaryModule--text">
+      {{ message.subtitle }}
+    </div>
     <slot></slot>
     <slot name="expansion"></slot>
   </v-sheet>
@@ -16,8 +18,10 @@
 export default {
   name: 'WalletUserMsgBlock',
   props: {
-    title: { default: '', type: String },
-    text: { default: '', type: String }
+    message: {
+      type: Object,
+      default: () => {}
+    }
   },
   data: () => ({})
 };
