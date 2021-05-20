@@ -366,7 +366,6 @@ export default {
      * arr[2] is the selected currency
      */
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
-      console.log('gets here for metamask');
       this.parseRawData(tx[0]);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
