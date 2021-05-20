@@ -115,7 +115,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -128,10 +128,8 @@ export default {
     },
     convertedBalance() {
       if (this.isEthNetwork) {
-        const balance = BigNumber(this.balanceInETH).times(
-          this.ETHUSDValue.value
-        );
-        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+        const balance = BigNumber(this.balanceInETH).times(this.fiatValue);
+        return `${'$' + balance.toFixed(2).toString()}`;
       }
       return `${BigNumber(this.balanceInETH).toFixed(2)} ${
         this.network.type.currencyName

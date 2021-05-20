@@ -52,18 +52,14 @@
                 priceChange ? 'primary--text' : 'error--text'
               ]"
             >
-              ${{ ETHUSDValue.price_change_percentage_24h }}
+              {{ ETHUSDValue.price_change_percentage_24h }}%
             </div>
             <v-icon
-              :class="[
-                priceChange ? 'primary--text' : 'error--text',
-                'body-2 mt-1'
-              ]"
+              :class="[priceChange ? 'primary--text' : 'error--text', 'body-2']"
               >{{ priceChangeArrow }}</v-icon
             >
             <div class="ml-5">
-              {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
-              {{ network.type.currenyName }} ETH
+              {{ '$' + fiatValue }} / 1 {{ network.type.currenyName }} ETH
             </div>
           </v-col>
           <v-col class="text-right">
@@ -117,6 +113,7 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
@@ -135,9 +132,7 @@ export default {
       return `My ${this.network.type.name} Balance`;
     },
     convertedBalance() {
-      const converted = BigNumber(this.balanceInETH).times(
-        this.ETHUSDValue.value
-      );
+      const converted = BigNumber(this.balanceInETH).times(this.fiatValue);
       return `$ ${converted.toFixed(2)}`;
     }
   },

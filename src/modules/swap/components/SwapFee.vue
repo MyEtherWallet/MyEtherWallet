@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 
@@ -93,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     icon() {
       return GAS_TYPE_ICONS[this.gasPriceType];
@@ -102,10 +102,8 @@ export default {
       return fromWei(this.totalFees).toString();
     },
     feesInUsd() {
-      const value = BigNumber(this.actualFees)
-        .times(this.ETHUSDValue.value)
-        .toFixed(2);
-      return `~${this.ETHUSDValue.symbol} ${value}`;
+      const value = BigNumber(this.actualFees).times(this.fiatValue).toFixed(2);
+      return `~${'$' + value}`;
     },
     hasError() {
       return this.error !== '';

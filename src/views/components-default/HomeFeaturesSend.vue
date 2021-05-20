@@ -47,7 +47,6 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     tokens() {

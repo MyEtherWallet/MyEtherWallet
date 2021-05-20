@@ -12,26 +12,31 @@ const setDarkList = async function ({ commit }) {
     timestamp: Date.now()
   });
 };
-const setForexRates = async function ({ commit }) {
-  const rates = await fetch('https://api.exchangeratesapi.io/latest?base=USD')
+const setCurrency = async function ({ commit }, val) {
+  const rates = await fetch(
+    'https://mainnet.mewwallet.dev/v2/prices/exchange-rates?base=USD'
+  )
     .then(res => res.json())
     .catch(e => {
       Toast(e.message, {}, ERROR);
     });
-  commit('SET_FOREX_RATES', {
-    data: rates.rates,
+  const currentRate = rates.find(rate => rate.fiat_currency === val);
+  commit('SET_CURRENCY_RATE', {
+    data: currentRate,
     timestamp: Date.now()
   });
 };
 const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
+
 const setETHUSDValue = function ({ commit }, val) {
   commit('SET_ETH_USD_VALUE', val);
 };
+
 export default {
   setDarkList,
   setLastPath,
-  setForexRates,
+  setCurrency,
   setETHUSDValue
 };

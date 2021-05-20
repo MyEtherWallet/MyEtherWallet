@@ -16,6 +16,10 @@ export default {
   components: { ModuleToast, ModuleDecisionTree },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
+    if (window.navigator.onLine) {
+      this.setDarkList();
+      this.setCurrency('USD');
+    }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
       this.setOnlineStatus(false);
@@ -23,12 +27,12 @@ export default {
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
       this.setDarkList();
-      this.setForexRates();
+      this.setCurrency('USD');
     });
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setDarkList', 'setForexRates'])
+    ...mapActions('external', ['setDarkList', 'setCurrency'])
   }
 };
 </script>

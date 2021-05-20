@@ -170,7 +170,7 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     amtRules() {
@@ -260,7 +260,7 @@ export default {
       return new BigNumber(
         fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
       )
-        .times(this.ETHUSDValue.value)
+        .times(this.fiatValue)
         .toFixed(2);
     },
     getCalculatedAmount() {
