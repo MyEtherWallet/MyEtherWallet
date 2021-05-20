@@ -198,7 +198,7 @@ export default {
     outgoingTxNotifications() {
       return this.txNotifications
         .map(notification => {
-          return this.formatNotification(notification, this.network);
+          return formatNotification(notification, this.network);
         })
         .sort(this.sortByDate);
     },
@@ -208,7 +208,7 @@ export default {
     formattedSwapNotifications() {
       return this.swapNotifications
         .map(notification => {
-          const newObj = this.formatNotification(notification, this.network);
+          const newObj = formatNotification(notification, this.network);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })

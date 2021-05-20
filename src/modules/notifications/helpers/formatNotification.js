@@ -1,5 +1,8 @@
 import timeAgo from '@/core/helpers/timeAgo';
 import { toBN } from 'web3-utils';
+/**
+ * Formatted notification for mew-notification component
+ */
 const formatNotification = (obj, network) => {
   const newObj = {
     txHash: {
