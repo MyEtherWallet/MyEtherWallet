@@ -1,6 +1,64 @@
 <template>
   <div>
     <app-modal
+      :show="showSuccessModal"
+      title="Transaction initiated"
+      :close="reset"
+      :btn-action="btnAction"
+      :btn-enabled="disableBtn"
+      :close-only="true"
+      :width="'450'"
+      @close="reset"
+    >
+      <template #dialogBody>
+        <div class="px-5">
+          <div
+            v-if="showSuccessModal"
+            v-lottie="'checkmark'"
+            style="height: 150px"
+          />
+          <div>
+            Once completed, the token amount will be deposited to the address
+            you provider. this should take a few minutes depending on how
+            congested the Ethereum network is.
+          </div>
+          <div
+            class="
+              d-flex
+              justify-space-around
+              flex-md-row flex-sm-column-reverse flex-xs-column-reverse
+              align-sm-center align-xs-center
+              my-3
+            "
+          >
+            <div>
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                :href="links.etherscan"
+                class="d-flex"
+                >View on Etherscan
+                <v-icon color="primary" small>mdi-launch</v-icon></a
+              >
+            </div>
+            <div v-if="network.type.isEthVMSupported.supported">
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                :href="links.ethvm"
+                class="d-flex"
+                >View on EthVM
+                <v-icon color="primary" small>mdi-launch</v-icon></a
+              >
+            </div>
+            <div>
+              <a @click.stop="viewProgress">View Progress</a>
+            </div>
+          </div>
+        </div>
+      </template>
+    </app-modal>
+    <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
       :close="reset"
@@ -56,10 +114,7 @@
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
-            v-if="
-              isHardware &&
-              (signing || unsignedTxArr.length === signedTxArray.length)
-            "
+            v-if="signing || signingPending"
             :is-swap="isHardware"
             :tx-length="unsignedTxArr.length > 0 ? unsignedTxArr.length : 1"
             :signed="signingPending"
@@ -157,8 +212,7 @@ import ConfirmWithWallet from './components/ConfirmWithWallet';
 import utils from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, SUCCESS, INFO } from '@/modules/toast/handler/handlerToast';
-import getService from '@/core/helpers/getService';
+import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
@@ -180,6 +234,7 @@ export default {
     return {
       showTxOverlay: false,
       showSignOverlay: false,
+      showSuccessModal: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -190,7 +245,11 @@ export default {
       swapInfo: {},
       sendCurrency: {},
       toDetails: {},
-      signing: false
+      signing: false,
+      links: {
+        ethvm: '',
+        etherscan: ''
+      }
     };
   },
   computed: {
@@ -307,6 +366,7 @@ export default {
      * arr[2] is the selected currency
      */
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
+      console.log('gets here for metamask');
       this.parseRawData(tx[0]);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
@@ -391,6 +451,7 @@ export default {
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
+      this.showSuccessModal = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -459,25 +520,48 @@ export default {
         });
         return promiEvent;
       });
-      this.resolver(promises);
-      this.showTxOverlay = false;
-      this.showTxSuccess = true;
+      // this.resolver(promises);
+      this.reset();
+      this.showSuccess(promises[promises.length - 1]);
     },
     sendSignedTx() {
-      this.resolver(this.signedTxObject);
+      const hash = this.signedTxObject.tx.hash;
+      // this.resolver(this.signedTxObject);
       this.reset();
-      Toast(
-        `Transaction is being mined. Check here `,
-        {
-          title: `${getService(this.network.type.blockExplorerTX)}`,
-          url: this.network.type.blockExplorerTX.replace(
+      this.showSuccess(hash);
+    },
+    viewProgress() {
+      EventBus.$emit('openNotifications');
+      this.reset();
+    },
+    showSuccess(param) {
+      if (utils._.isArray(param)) {
+        const lastHash = param[param.length - 1].tx.hash;
+        this.links.ethvm = this.network.type.isEthVMSupported.supported
+          ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
+              '[[txHash]]',
+              lastHash
+            )
+          : '';
+        this.links.etherscan = this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          lastHash
+        );
+        this.showSuccessModal = true;
+        return;
+      }
+
+      this.links.ethvm = this.network.type.isEthVMSupported.supported
+        ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
             '[[txHash]]',
-            this.signedTxObject.tx.hash
+            param
           )
-        },
-        SUCCESS,
-        5000
+        : '';
+      this.links.etherscan = this.network.type.blockExplorerTX.replace(
+        '[[txHash]]',
+        param
       );
+      this.showSuccessModal = true;
     },
     async signTx() {
       if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
@@ -489,6 +573,7 @@ export default {
         })
         .catch(e => {
           this.instance.errorHandler(e);
+          this.signedTxObject = {};
           this.signing = false;
         });
     },
@@ -511,6 +596,7 @@ export default {
           signed.push(_signedTx);
           this.signedTxArray = signed;
         } catch (err) {
+          this.signedTxArray = [];
           this.signing = false;
           this.instance.errorHandler(err);
           return;

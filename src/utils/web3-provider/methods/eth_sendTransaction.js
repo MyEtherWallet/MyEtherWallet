@@ -11,6 +11,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
+  console.log(payload);
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
@@ -53,10 +54,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
     : tx.chainId;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (
-        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
-      ) {
+      console.log('gt here for metamask');
+      if (store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj

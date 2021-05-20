@@ -49,8 +49,8 @@
         <v-col v-if="closeOnly" cols="12" class="text-left">
           <mew-button
             btn-size="xlarge"
-            btn-style="outline"
             title="Close"
+            :has-full-width="true"
             @click.native="close"
           />
         </v-col>
@@ -89,6 +89,10 @@ export default {
     closeOnly: {
       type: Boolean,
       default: false
+    },
+    width: {
+      type: String,
+      default: '600'
     }
   },
   methods: {

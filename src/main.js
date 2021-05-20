@@ -11,11 +11,16 @@ import router from '@/core/router';
 import store from '@/core/store';
 import Vuex from 'vuex';
 
+import LottieAnimation from '@/core/directives/lottie';
+
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
 import apolloProvider from './main/apolloProvider';
 import i18n from './main/i18n';
+
+// Directives
+Vue.directive('lottie', LottieAnimation);
 
 //Router
 Vue.use(Router);

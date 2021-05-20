@@ -106,6 +106,7 @@ import Notification from './handlers/handlerNotification';
 import NotificationsCall from '@/apollo/queries/notifications';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import formatObj from './helpers/formatObj';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ModuleNotifications',
   props: {
@@ -220,6 +221,9 @@ export default {
     }
   },
   mounted() {
+    EventBus.$on('openNotifications', () => {
+      this.openNotifications = true;
+    });
     this.setupInTx();
   },
   methods: {
