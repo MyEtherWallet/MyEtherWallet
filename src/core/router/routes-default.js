@@ -9,6 +9,7 @@ import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
 import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
 import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout';
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
+import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 import {
   createWalletProps,
@@ -34,6 +35,14 @@ export default {
       path: 'how-it-works',
       name: 'HowItWorks',
       component: TheHowItWorksLayout,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: 'security-policy',
+      name: 'SecurityPolicy',
+      component: TheSecurityPolicyLayout,
       meta: {
         requiresAuth: false
       }
