@@ -3,12 +3,9 @@ import { toBN } from 'web3-utils';
 const formatNotification = (obj, network) => {
   const newObj = {
     txHash: {
-      value: obj.transactionHash,
+      value: obj.hash,
       string: 'Transaction Hash',
-      link: `${network.type.blockExplorerTX.replace(
-        '[[txHash]]',
-        obj.transactionHash
-      )}`
+      link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },
     gasPrice: {
       value: `${obj.gasPrice ? obj.gasPrice : 0} Gwei`,

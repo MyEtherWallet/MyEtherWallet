@@ -805,7 +805,7 @@ export default {
     swapNotificationFormatter(obj, isError) {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          transactionHash: !isError ? hash : '',
+          hash: !isError ? hash : '',
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,

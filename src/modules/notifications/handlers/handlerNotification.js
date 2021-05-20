@@ -17,7 +17,7 @@ import { hexToNumberString, hexToNumber, fromWei, toBN } from 'web3-utils';
  * Valid values for notification obj
  */
 const VALID_ARGUMENTS = [
-  'transactionHash', // string
+  'hash', // string
   'to', // string
   'from', // string
   'gas', // string
@@ -92,7 +92,7 @@ export default class Notification {
         ? obj.gas
         : '0x',
       data: obj.input ? obj.input : obj.data,
-      transactionHash: obj.transactionHash || obj.hash,
+      hash: obj.hash,
       gas: fromWei(gas, 'gwei'),
       gasPrice: fromWei(toBN(gasPrice), 'gwei'),
       nonce: isHexStrict(obj.nonce)
@@ -137,10 +137,7 @@ export default class Notification {
         !isAddress(obj[keysArray[i]])
       ) {
         this._invalidType(keysArray[i]);
-      } else if (
-        keysArray[i] === 'transactionHash' &&
-        !isHexStrict(obj[keysArray[i]])
-      ) {
+      } else if (keysArray[i] === 'hash' && !isHexStrict(obj[keysArray[i]])) {
         this._invalidType(keysArray[i]);
       } else if (obj[keysArray[i]]) {
         this[keysArray[i]] = obj[keysArray[i]];

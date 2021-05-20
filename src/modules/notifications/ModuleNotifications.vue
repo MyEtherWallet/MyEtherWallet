@@ -183,7 +183,7 @@ export default {
           type === notificationTypes.out &&
           notification.status.toLowerCase() === txTypes.pending
         ) {
-          this.txHash = notification.transactionHash;
+          this.txHash = notification.hash;
           if (this.getTransactionByHash) {
             const notification = new Notification(this.getTransactionByHash);
             this.updateNotification(notification);
@@ -291,7 +291,7 @@ export default {
           } else {
             this.ethTransfersIncoming = this.ethTransfersIncoming.map(
               transfer => {
-                if (transfer.hash === res.transactionHash) {
+                if (transfer.hash === res.hash) {
                   return new Notification(res);
                 }
                 return transfer;
