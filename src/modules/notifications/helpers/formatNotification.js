@@ -50,7 +50,6 @@ const formatNotification = (obj, network) => {
     toObj: obj.toTxData,
     fromObj: obj.fromTxData
   };
-
   obj.notification = newObj;
   return obj;
 };

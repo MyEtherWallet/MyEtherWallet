@@ -348,7 +348,8 @@ export default {
             link: 'mailto:support@myetherwallet.com'
           },
           { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
-          { label: 'Press Kit', routerLink: 'PressKit' }
+          { label: 'Press Kit', routerLink: 'PressKit' },
+          { label: 'Security Policy', routerLink: 'SecurityPolicy' }
         ]
       },
       {

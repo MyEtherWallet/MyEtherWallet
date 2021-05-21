@@ -14,7 +14,7 @@ const setDarkList = async function ({ commit }) {
 };
 const setCurrency = async function ({ commit }, val) {
   const rates = await fetch(
-    'https://mainnet.mewwallet.dev/v2/prices/exchange-rates?base=USD'
+    'https://mainnet.mewwallet.dev/v2/prices/exchange-rates'
   )
     .then(res => res.json())
     .catch(e => {
