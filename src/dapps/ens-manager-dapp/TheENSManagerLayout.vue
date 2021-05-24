@@ -44,10 +44,10 @@
               <v-col class="pl-0" cols="4">
                 <mew-button
                   :loading="loading"
-                  :disabled="(name && name.length === 0) || loading"
+                  :disabled="!name || (name && name.length < 3) || loading"
                   :has-full-width="true"
                   btn-size="xlarge"
-                  :title="$t('ens.register-domain')"
+                  :title="$t('ens.register.name')"
                   @click.native="findDomain"
                 />
               </v-col>
@@ -139,11 +139,11 @@
 
                 <div
                   class="
-                    mt-3
                     d-flex
                     align-center
                     justify-space-between
-                    py-5
+                    pb-5
+                    pt-8
                     px-7
                   "
                 >
