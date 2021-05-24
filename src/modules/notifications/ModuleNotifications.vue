@@ -170,14 +170,14 @@ export default {
       return this.currentNotifications.map(notification => {
         const type = notification.type.toLowerCase();
         /**
-         * Check status if it is a swap tx
+         * Check swap status if it is a swap notification
          */
         if (type === notificationTypes.swap) {
           notification.checkSwapStatus(this.swapper);
         }
         /**
          * Check status if it is an outgoing pending tx
-         * by querying getTransactionByHash
+         * and query getTransactionByHash
          */
         if (
           type === notificationTypes.out &&
