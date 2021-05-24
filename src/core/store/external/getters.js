@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
  */
 const fiatValue = function (state) {
   const ethUSDValue = state.ETHUSDValue.value || 0;
-  const rate = state.currencyRate.data.exchange_rate;
+  const rate = state.currencyRate.data?.exchange_rate;
   return new BigNumber(ethUSDValue).times(rate);
 };
 

@@ -20,7 +20,9 @@ const setCurrency = async function ({ commit }, val) {
     .catch(e => {
       Toast(e.message, {}, ERROR);
     });
-  const currentRate = rates.find(rate => rate.fiat_currency === val);
+  const currentRate = rates
+    ? rates.find(rate => rate.fiat_currency === val)
+    : {};
   commit('SET_CURRENCY_RATE', {
     data: currentRate,
     timestamp: Date.now()
