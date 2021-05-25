@@ -36,13 +36,13 @@
                 :loading="isLoading"
                 @input="setFromToken" />
               <mew-input
-                label="amount to swap"
-                placeholder="Enter amount to swap"
+                label="Amount"
+                placeholder="0"
                 :value="tokenInValue"
-                type="number"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
+                :max-btn-obj="{title: 'Max', disabled: false, method: setMaxAmount}"
                 @input="setTokenInValue"
             /></v-col>
 
@@ -62,9 +62,8 @@
                 @input="setToToken"
               />
               <mew-input
-                label="you'll receive"
-                placeholder=""
-                type="number"
+                label="Amount"
+                placeholder="0"
                 disabled
                 :value="tokenOutValue"
               />
@@ -318,7 +317,7 @@ export default {
     },
     amount: {
       type: String,
-      default: ''
+      default: '0'
     }
   },
   data() {
@@ -352,7 +351,7 @@ export default {
       toTokenType: {},
       fromTokenType: {},
       tokenInValue: this.amount,
-      tokenOutValue: null,
+      tokenOutValue: '0',
       availableTokens: [],
       availableQuotes: [],
       currentTrade: null,
@@ -469,7 +468,7 @@ export default {
         },
         ...trendingList,
         {
-          header: 'All Tokens'
+          header: 'All'
         },
         ...toTokens
       ];
@@ -504,7 +503,7 @@ export default {
         },
         ...tokensList,
         {
-          header: 'All Tokens'
+          header: 'Other Tokens'
         },
         ...fromTokens
       ];
@@ -694,6 +693,9 @@ export default {
     }
   },
   methods: {
+    setMaxAmount() {
+      this.tokenInValue = this.balanceInETH;
+    },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
     },
@@ -755,7 +757,7 @@ export default {
     setTokenInValue: _.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value;
-      this.tokenOutValue = '';
+      this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         q.isSelected = false;
       });
