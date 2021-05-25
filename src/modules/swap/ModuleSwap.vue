@@ -549,7 +549,9 @@ export default {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
       const isNotEnoughEth =
         this.fromTokenType.value === 'Ethereum'
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          ? this.tokenInValue !== ''
+            ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+            : false
           : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
