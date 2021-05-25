@@ -70,6 +70,106 @@
               />
             </v-col>
           </v-row>
+
+          <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+          <user-msg-block
+            v-if="notEnoughEth && !isLoading"
+            class="mt-5"
+            :message="msg.storeBitcoin"
+          >
+            <div class="mt-3 mx-n1">
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Swap Your Bitcoin to Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+              />
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Buy Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+                @click.native="buyEth"
+              />
+            </div>
+          </user-msg-block>
+
+          <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+          <user-msg-block
+            v-if="
+              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
+            "
+            class="mt-5"
+            :message="msg.lowBalance"
+          >
+            <div class="border-top mt-3">
+              <v-expansion-panels
+                flat
+                class="expansion-panels--remove-paddings"
+              >
+                <v-expansion-panel>
+                  <v-expansion-panel-header
+                    color="tableHeader"
+                    class="textPrimaryModule--text"
+                  >
+                    How can I get wrapped Bitcoin?
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content color="tableHeader" class="pa-0">
+                    <div class="textPrimaryModule--text mb-2">
+                      When you swap to Bitcoin, it is moved to the Bitcoin
+                      blockchain, & requires a Bitcoin wallet. In order to keep
+                      Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
+                      instead. Wrapped Bitcoin is an Ethereum token, with a
+                      value approximately equal to 1 BTC. Wrapped Bitcoins can
+                      be stored in MEW, and can be used as any other Ethereum
+                      asset: you can swap it to other tokens, use it as
+                      collateral in DeFi apps, etc. There are multiple kinds of
+                      wrapped Bitcoins, but they roughly do the same thing.
+                      <a
+                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                      >
+                        Learn more about Wrapped Bitcoin.
+                      </a>
+                    </div>
+                    <div class="mx-n1">
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to renBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to wBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                      <mew-button
+                        btn-size="small"
+                        btn-style="outline"
+                        title="Swap to PBTC"
+                        class="ma-1"
+                        :has-full-width="$vuetify.breakpoint.xsOnly"
+                      />
+                    </div>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
+          </user-msg-block>
+
           <!--
             =====================================================================================
               Address Book
@@ -77,6 +177,7 @@
             -->
           <module-address-book
             v-show="showToAddress"
+            class="mt-10"
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
@@ -181,6 +282,7 @@
 </template>
 
 <script>
+import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -199,6 +301,7 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
+    UserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
@@ -220,6 +323,18 @@ export default {
   },
   data() {
     return {
+      msg: {
+        storeBitcoin: {
+          title: 'Your Ether balance is too low',
+          subtitle:
+            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
+        },
+        lowBalance: {
+          title: 'Did you know? You can store your Bitcoin on Ethereum',
+          subtitle:
+            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
+        }
+      },
       step: 0,
       confirmInfo: {
         to: '',
@@ -579,6 +694,9 @@ export default {
     }
   },
   methods: {
+    buyEth() {
+      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
@@ -650,9 +768,9 @@ export default {
         this.fromTokenType.value === this.toTokenType.value
       ) {
         this.providersMessage = {
-          title: 'Select token and enter amount to see rates',
+          title: 'Select token and enter amount to see rates.',
           subtitle:
-            'MEW finds the best price for you across multiple Dexs and Exchange services.'
+            'MEW finds the best price for you across multiple DEXs and Exchange services.'
         };
         return;
       }
@@ -921,5 +1039,9 @@ export default {
   .v-expansion-panel-header {
     padding: 16px 0px !important;
   }
+}
+
+.border-top {
+  border-top: 1px solid var(--v-inputBorder-base);
 }
 </style>
