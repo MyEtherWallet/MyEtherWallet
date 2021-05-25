@@ -53,7 +53,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     : tx.chainId;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT) {
+      if (
+        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
+      ) {
         EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
