@@ -64,7 +64,8 @@ const EXCEPTIONS = [
   'stylelint',
   'stylelint-config-standard',
   '@unstoppabledomains/resolution',
-  'vue-stripe-elements-plus'
+  'vue-stripe-elements-plus',
+  'node-sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
