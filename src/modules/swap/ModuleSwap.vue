@@ -47,7 +47,13 @@
             /></v-col>
 
             <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
-              <div class="d-flex align-center justify-center">
+              <div
+                :class="[
+                  enableTokenSwitch ? 'cursor--pointer' : 'pointer-event--none',
+                  'd-flex align-center justify-center'
+                ]"
+                @click.stop="switchTokens"
+              >
                 <img :src="swapIcon" height="35" />
               </div>
             </v-col>
@@ -391,6 +397,9 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    enableTokenSwitch() {
+      return !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+    },
     actualToTokens() {
       const toTokens = this.toTokens ? this.toTokens : [];
       const imgs = [
@@ -696,6 +705,12 @@ export default {
   methods: {
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
+    switchTokens() {
+      const fromToken = _.clone(this.fromTokenType);
+      const toToken = _.clone(this.toTokenType);
+      this.setFromToken(toToken);
+      this.setToToken(fromToken);
     },
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
