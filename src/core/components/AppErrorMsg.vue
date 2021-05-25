@@ -14,15 +14,19 @@
           Something goes wrong, would you want to inform to #MEWteam about this
           error?
         </div>
-        <div class="d-flex align-center justify-center my-7">
-          <mew-button
-            btn-style="outline"
-            btn-size="xlarge"
-            title="Ok"
-            class="mx-1"
-          />
-          <mew-button btn-size="xlarge" title="Send" class="mx-1" />
-        </div>
+        <v-row class="mt-7 mb-3">
+          <v-col>
+            <mew-button
+              :has-full-width="true"
+              btn-style="outline"
+              btn-size="xlarge"
+              title="Ok"
+            />
+          </v-col>
+          <v-col>
+            <mew-button :has-full-width="true" btn-size="xlarge" title="Send" />
+          </v-col>
+        </v-row>
       </div>
 
       <v-divider class="mx-6"></v-divider>
