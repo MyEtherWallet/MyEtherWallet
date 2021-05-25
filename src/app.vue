@@ -1,5 +1,6 @@
 <template>
   <v-app class="walletBg">
+    <msg />
     <module-decision-tree />
     <router-view />
     <module-toast />
@@ -7,13 +8,14 @@
 </template>
 
 <script>
+import msg from '@/core/components/AppErrorMsg';
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleDecisionTree },
+  components: { msg, ModuleToast, ModuleDecisionTree },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     // Window events to watch out if the online status changes
