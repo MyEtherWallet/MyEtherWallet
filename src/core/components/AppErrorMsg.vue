@@ -14,7 +14,7 @@
           Something goes wrong, would you want to inform to #MEWteam about this
           error?
         </div>
-        <v-row class="mt-7 mb-3">
+        <v-row class="mt-4 mb-2">
           <v-col>
             <mew-button
               :has-full-width="true"
