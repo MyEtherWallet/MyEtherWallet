@@ -42,7 +42,11 @@
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
-                :max-btn-obj="{title: 'Max', disabled: false, method: setMaxAmount}"
+                :max-btn-obj="{
+                  title: 'Max',
+                  disabled: false,
+                  method: setMaxAmount
+                }"
                 @input="setTokenInValue"
             /></v-col>
 
