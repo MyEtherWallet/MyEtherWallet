@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix mew-select border issue [#3091](https://github.com/MyEtherWallet/MyEtherWallet/pull/3091)
 * Add user msg for swap [#3087](https://github.com/MyEtherWallet/MyEtherWallet/pull/3087)
 * Recalculate rates when gas price is switched [#3039](https://github.com/MyEtherWallet/MyEtherWallet/pull/3039)
 * Fetch swap quotes only when all fields are in place [#3040](https://github.com/MyEtherWallet/MyEtherWallet/pull/3040)
