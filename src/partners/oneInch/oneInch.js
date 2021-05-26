@@ -355,7 +355,6 @@ export default class OneInch {
   }
 
   getTokenDecimals(token) {
-    console.log('this.tokenDetails[token]', this.tokenDetails[token]); // todo remove dev item
     try {
       return new BigNumber(
         this.EthereumTokens[token]?.decimals
