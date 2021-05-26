@@ -465,7 +465,7 @@ export default {
           value: 'Kyber Network Crystal'
         }
       ];
-      return [
+      const returnableTokens = [
         {
           text: 'Select Token',
           imgs: imgs,
@@ -482,6 +482,22 @@ export default {
         },
         ...toTokens
       ];
+      const fromTokenAddress = this.fromTokenType.hasOwnProperty(
+        'contract_address'
+      )
+        ? this.fromTokenType.contract_address
+        : this.fromTokenType.hasOwnProperty('contract')
+        ? this.fromTokenType.contract
+        : '';
+      return returnableTokens.filter(item => {
+        const address = item.hasOwnProperty('contract_address')
+          ? item.contract_address
+          : item.hasOwnProperty('contract')
+          ? item.contract
+          : '';
+        if (address.toLowerCase() !== fromTokenAddress.toLowerCase())
+          return item;
+      });
     },
     actualFromTokens() {
       const defaultToken = [this.fromTokenType];
@@ -500,7 +516,7 @@ export default {
           linkText: 'Buy ETH',
           link: 'https://ccswap.myetherwallet.com/#/'
         });
-      return [
+      const returnableTokens = [
         {
           text: 'Select Token',
           imgs: imgs,
@@ -517,6 +533,21 @@ export default {
         },
         ...fromTokens
       ];
+
+      const toTokenAddress = this.toTokenType.hasOwnProperty('contract_address')
+        ? this.toTokenType.contract_address
+        : this.toTokenType.hasOwnProperty('contract')
+        ? this.toTokenType.contract
+        : '';
+      return returnableTokens.filter(item => {
+        const address = item.hasOwnProperty('contract_address')
+          ? item.contract_address
+          : item.hasOwnProperty('contract')
+          ? item.contract
+          : '';
+        if (address.toLowerCase() !== toTokenAddress.toLowerCase()) return item;
+        return item;
+      });
     },
     totalFees() {
       const gasPrice =
