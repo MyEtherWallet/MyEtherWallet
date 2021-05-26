@@ -50,8 +50,10 @@ export default class OneInch {
 
   async getSupportedCurrencies() {
     try {
-      const { currencyDetails, tokenDetails } =
-        await oneInchCalls.getSupportedCurrencies(this.network);
+      const {
+        currencyDetails,
+        tokenDetails
+      } = await oneInchCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.tokenUpdate(tokenDetails);
@@ -361,7 +363,9 @@ export default class OneInch {
       ).toNumber();
     } catch (e) {
       errorLogger(e);
-      throw Error(`Token [${token}] not included in one-inch list of tokens`);
+      throw Error(
+        `Token [${token}] not included in one-inch list of tokens`
+      );
     }
   }
 
