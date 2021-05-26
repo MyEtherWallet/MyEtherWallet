@@ -1,12 +1,7 @@
 <template>
   <div class="create-password-container d-flex">
     <div
-      class="
-        password-container
-        mt-4
-        d-flex
-        mew-custom-form mew-custom-form__password
-      "
+      class="password-container mt-4 d-flex mew-custom-form mew-custom-form__password"
     >
       <div class="d-flex title-container">
         <span class="mr-2"

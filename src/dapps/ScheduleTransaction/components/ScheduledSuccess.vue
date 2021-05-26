@@ -131,8 +131,9 @@ export default {
           );
           const util = new Util(this.web3);
           this.receipt = receipt;
-          this.scheduledTxAddress =
-            util.getTransactionRequestAddressFromReceipt(receipt);
+          this.scheduledTxAddress = util.getTransactionRequestAddressFromReceipt(
+            receipt
+          );
           this.mined = true;
         } else if (latestNotification.status === 'pending') {
           const transaction = await this.web3.eth.getTransaction(

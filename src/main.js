@@ -138,7 +138,8 @@ const vue = new Vue({
 const integration = new Integrations.Vue({ Vue, attachProps: true });
 const sentryVersion = BUILD_TYPE === MEW_CX ? `${VERSION}-cx` : VERSION;
 Sentry.init({
-  dsn: 'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
+  dsn:
+    'https://8c29b655fc4e433494fbba7bcac35ae3@o382951.ingest.sentry.io/5230441',
   integrations: [integration],
   maxBreadcrumbs: 0,
   environment: BUILD_TYPE,

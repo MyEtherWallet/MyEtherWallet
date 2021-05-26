@@ -67,8 +67,10 @@ export default class Changelly {
 
   async getSupportedCurrencies() {
     try {
-      const { currencyDetails, tokenDetails } =
-        await changellyApi.getSupportedCurrencies(this.network);
+      const {
+        currencyDetails,
+        tokenDetails
+      } = await changellyApi.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.tokenUpdate(tokenDetails);

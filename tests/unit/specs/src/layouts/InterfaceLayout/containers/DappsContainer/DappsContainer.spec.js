@@ -68,8 +68,9 @@ describe('DappsContainer.vue', () => {
 
   it('should render correct localDapps data', () => {
     for (const [i, sortedObject] of wrapper.vm.sortedObject.entries()) {
-      const dappsButtonTitle =
-        wrapper.vm.$el.querySelectorAll('.dapps-button h4')[i];
+      const dappsButtonTitle = wrapper.vm.$el.querySelectorAll(
+        '.dapps-button h4'
+      )[i];
       expect(translate(sortedObject.title)).toEqual(
         dappsButtonTitle.textContent.trim()
       );

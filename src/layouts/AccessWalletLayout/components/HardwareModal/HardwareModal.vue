@@ -163,7 +163,8 @@ export default {
           text: 'FINNEY',
           disabled: false,
           msg: '',
-          link: 'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+          link:
+            'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
         },
         {
           name: 'BitBox',

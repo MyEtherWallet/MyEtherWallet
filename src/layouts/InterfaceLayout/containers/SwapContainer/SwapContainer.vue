@@ -269,12 +269,7 @@
         <div class="submit-button-container">
           <div
             v-show="finalizingSwap"
-            class="
-              disabled
-              submit-button
-              large-round-button-green-filled
-              clickable
-            "
+            class="disabled submit-button large-round-button-green-filled clickable"
           >
             <i class="fa fa-spinner fa-spin" />
             {{ $t('swap.button-loading') }}
@@ -747,8 +742,9 @@ export default {
               this.alternates[idx].toValue = res[0].computeConversion(
                 this.fromValue
               );
-              this.alternates[idx].computeConversion =
-                res[0].computeConversion.bind(res[0]);
+              this.alternates[
+                idx
+              ].computeConversion = res[0].computeConversion.bind(res[0]);
               this.alternates[idx].hasValue = true;
               if (this.bestRate > 0) {
                 this.alternates[idx].hasValue = new BigNumber(res[0].rate)
@@ -1044,13 +1040,15 @@ export default {
         this.noProvidersPair = { fromCurrency, toCurrency };
         this.selectedProvider = {}; // Reset the selected provider when new rate pair is choosen
         this.providerData = [];
-        const { providersFound, callsToMake } =
-          await this.swap.updateRateEstimate(
-            fromCurrency,
-            toCurrency,
-            fromValue,
-            this.toValue
-          );
+        const {
+          providersFound,
+          callsToMake
+        } = await this.swap.updateRateEstimate(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.toValue
+        );
         this.providersFound = providersFound;
         const rawResults = await Promise.all(
           callsToMake.map(func =>
@@ -1289,8 +1287,7 @@ export default {
             this.isBityCryptoToCrypto() ||
             this.isBityCryptoToCrypto('REP')
           ) {
-            this.stringToSign =
-              this.swapDetails.dataForInitialization.messageToSign.body;
+            this.stringToSign = this.swapDetails.dataForInitialization.messageToSign.body;
             this.$refs.signatureModal.$refs.signatureModal.show();
             this.sendSignedCallback = async signed => {
               const response = await this.swap.extraActions(
@@ -1298,9 +1295,9 @@ export default {
                 'sendSigned',
                 {
                   signature: signed,
-                  signature_submission_url:
-                    this.swapDetails.dataForInitialization.messageToSign
-                      .signature_submission_url,
+                  signature_submission_url: this.swapDetails
+                    .dataForInitialization.messageToSign
+                    .signature_submission_url,
                   statusId: this.swapDetails.dataForInitialization.id,
                   token: this.swapDetails.dataForInitialization.token
                 }

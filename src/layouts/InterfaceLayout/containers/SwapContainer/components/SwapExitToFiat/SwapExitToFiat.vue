@@ -156,12 +156,7 @@
           />
           <div
             v-show="finalizingSwap"
-            class="
-              disabled
-              submit-button
-              large-round-button-green-filled
-              clickable
-            "
+            class="disabled submit-button large-round-button-green-filled clickable"
           >
             <i class="fa fa-spinner fa-spin" />
             {{ $t('swap.button-loading') }}
