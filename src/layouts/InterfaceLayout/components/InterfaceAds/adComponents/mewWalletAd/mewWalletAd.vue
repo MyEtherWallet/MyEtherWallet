@@ -44,8 +44,7 @@ export default {
         },
         {
           src: googlePlay,
-          url:
-            'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
+          url: 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
         }
       ]
     };

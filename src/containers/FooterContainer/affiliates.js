@@ -11,8 +11,7 @@ const affiliates = [
     text: 'footer.ethCard',
     price: '',
     description: '',
-    href:
-      'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
+    href: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
     currency: '',
     logo: ''
   },
@@ -20,8 +19,7 @@ const affiliates = [
     text: 'footer.alchemy',
     price: '',
     description: '',
-    href:
-      'https://alchemyapi.io/?referral=1a26b6d7-f8bb-4554-b878-a5f87d6e4d78',
+    href: 'https://alchemyapi.io/?referral=1a26b6d7-f8bb-4554-b878-a5f87d6e4d78',
     currency: '',
     logo: ''
   },
@@ -37,8 +35,7 @@ const affiliates = [
     text: 'footer.billfodl',
     price: '',
     description: '',
-    href:
-      'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
+    href: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
     currency: '',
     logo: ''
   },
@@ -46,8 +43,7 @@ const affiliates = [
     text: 'footer.finney',
     price: '999.00',
     description: 'buyHardwareWallet.desc.finney',
-    href:
-      'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
+    href: 'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
     currency: '$',
     logo: 'finney'
   },

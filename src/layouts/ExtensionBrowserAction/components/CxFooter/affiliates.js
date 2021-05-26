@@ -12,8 +12,7 @@ const affiliates = [
     text: 'footer.ethCard',
     price: '',
     description: '',
-    href:
-      'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
+    href: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site',
     currency: '',
     logo: ''
   },
@@ -29,8 +28,7 @@ const affiliates = [
     text: 'footer.billfodl',
     price: '',
     description: '',
-    href:
-      'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
+    href: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate',
     currency: '',
     logo: ''
   },
@@ -38,8 +36,7 @@ const affiliates = [
     text: 'footer.finney',
     price: '999.00',
     description: 'Uncompromised Security In a Blockchain Smartphone',
-    href:
-      'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
+    href: 'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
     currency: '$',
     logo: 'finney'
   },

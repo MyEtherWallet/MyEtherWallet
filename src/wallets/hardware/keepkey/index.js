@@ -23,10 +23,8 @@ import commonGenerator from '@/helpers/commonGenerator';
 import Vue from 'vue';
 
 const { MessageType } = Messages;
-const {
-  MESSAGETYPE_PINMATRIXREQUEST,
-  MESSAGETYPE_PASSPHRASEREQUEST
-} = MessageType;
+const { MESSAGETYPE_PINMATRIXREQUEST, MESSAGETYPE_PASSPHRASEREQUEST } =
+  MessageType;
 
 const NEED_PASSWORD = false;
 

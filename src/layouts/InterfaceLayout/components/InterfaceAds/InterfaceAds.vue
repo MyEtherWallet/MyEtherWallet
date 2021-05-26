@@ -8,7 +8,11 @@
         rel="noopener noreferrer"
       >
         <div
-          class="global__interface-block flex--row--align-center twitter-ad-block"
+          class="
+            global__interface-block
+            flex--row--align-center
+            twitter-ad-block
+          "
         >
           <p class="block-title">
             {{ $t('interface.ads.twitter') }}

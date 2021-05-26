@@ -653,9 +653,8 @@ export default {
       });
 
     this.datetime = moment().add(1, 'days').toISOString();
-    this.futureGasPrice = (this.gasPrice >= this.minGasPrice
-      ? this.gasPrice
-      : this.minGasPrice
+    this.futureGasPrice = (
+      this.gasPrice >= this.minGasPrice ? this.gasPrice : this.minGasPrice
     ).toString();
 
     this.timeBountyPresets = [

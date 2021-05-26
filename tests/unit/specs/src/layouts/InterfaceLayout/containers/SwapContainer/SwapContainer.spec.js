@@ -57,9 +57,8 @@ describe('SwapContainer.vue', () => {
   });
 
   xit('[Failing] should render correct fromArray to currenPicker element', () => {
-    const containerElements = wrapper.vm.$el.querySelectorAll(
-      '.item-container'
-    );
+    const containerElements =
+      wrapper.vm.$el.querySelectorAll('.item-container');
     const fromToElements = containerElements[0];
     for (const [i, currencyElement] of fromToElements
       .querySelectorAll('div')
@@ -78,9 +77,8 @@ describe('SwapContainer.vue', () => {
   });
 
   xit('[Failing] should render correct toArray to currenPicker element', () => {
-    const containerElements = wrapper.vm.$el.querySelectorAll(
-      '.item-container'
-    );
+    const containerElements =
+      wrapper.vm.$el.querySelectorAll('.item-container');
     const fromToElements = containerElements[1];
     for (const [i, currencyElement] of fromToElements
       .querySelectorAll('div')

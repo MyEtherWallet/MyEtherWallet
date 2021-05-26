@@ -49,7 +49,12 @@
             >
               <div
                 v-if="!hasImage(nft)"
-                class="spinner-box d-flex justify-content-center align-items-center"
+                class="
+                  spinner-box
+                  d-flex
+                  justify-content-center
+                  align-items-center
+                "
               >
                 <b-spinner
                   label="Large Spinner"
@@ -276,8 +281,8 @@ export default {
     showNextButton() {
       if (this.nftConfig[this.selectedContract]) {
         if (!this.nftConfig[this.selectedContract].tokens) return false;
-        const ids_retrieved = this.nftConfig[this.selectedContract].tokens
-          .length;
+        const ids_retrieved =
+          this.nftConfig[this.selectedContract].tokens.length;
         return (
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );

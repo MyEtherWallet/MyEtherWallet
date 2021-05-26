@@ -63,10 +63,8 @@ class CoolWallet {
               await this.deviceInstance.getAddress(0);
               resolve();
             } catch (e) {
-              const {
-                publicKey: appPublicKey,
-                privateKey: appPrivateKey
-              } = generateKeyPair();
+              const { publicKey: appPublicKey, privateKey: appPrivateKey } =
+                generateKeyPair();
               this.appPrivateKey = appPrivateKey;
               this.appPublicKey = appPublicKey;
               const coolWalletInstance = new cwsWallet(

@@ -46,9 +46,8 @@ describe('InterfaceBalanceModal.vue', () => {
         .querySelector('.total-balance-amount span')
         .textContent.trim()
     ).toEqual(balance);
-    const valuesElements = wrapper.vm.$el.querySelectorAll(
-      '.equivalent-values'
-    );
+    const valuesElements =
+      wrapper.vm.$el.querySelectorAll('.equivalent-values');
 
     const { equivalentValues } = wrapper.vm.$data;
     for (const [i, valuesElement] of valuesElements.entries()) {
