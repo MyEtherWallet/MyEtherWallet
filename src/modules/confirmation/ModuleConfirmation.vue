@@ -114,7 +114,7 @@
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
-            v-if="signing || signingPending"
+            v-if="showConfirmWithWallet"
             :is-swap="isHardware"
             :tx-length="unsignedTxArr.length > 0 ? unsignedTxArr.length : 1"
             :signed="signingPending"
@@ -263,6 +263,12 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    showConfirmWithWallet() {
+      return (
+        (this.signing || this.signingPending) &&
+        (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+      );
+    },
     swapLabel() {
       switch (this.transactions.length) {
         case 1:
