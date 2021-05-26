@@ -60,6 +60,9 @@ const ADD_LOCAL_CONTRACT = function (state, contract) {
     state.localContracts[state.currentNetwork.type.name] = [];
   state.localContracts[state.currentNetwork.type.name].push(contract);
 };
+const SET_TRACKING_CONSENT = function (state, val) {
+  state.consentToTrack = val;
+};
 
 export default {
   SET_ONLINE_STATUS,
@@ -72,5 +75,6 @@ export default {
   ADD_CUSTOM_PATH,
   DELETE_CUSTOM_PATH,
   SET_IMPORTED_STATE,
-  ADD_LOCAL_CONTRACT
+  ADD_LOCAL_CONTRACT,
+  SET_TRACKING_CONSENT
 };

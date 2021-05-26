@@ -37,6 +37,7 @@ new Vue({
   beforeCreate() {
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
+    this.$store.dispatch('global/setTracking');
   },
   render: h => h(app)
 });

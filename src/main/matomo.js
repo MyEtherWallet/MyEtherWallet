@@ -7,7 +7,7 @@ Vue.use(VueMatomo, {
   trackerFileName: 'matomo',
   router: router,
   enableLinkTracking: true,
-  requireConsent: false,
+  requireConsent: true,
   trackInitialView: true,
   disableCookies: true,
   enableHeartBeatTimer: true,
