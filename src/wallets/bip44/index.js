@@ -6,7 +6,8 @@ import {
   SECALOT,
   KEEPKEY,
   MNEMONIC,
-  COOLWALLET
+  COOLWALLET,
+  SATOCHIP
 } from './walletTypes';
 import ledgerPaths from './ledgerPaths';
 import trezorPaths from './trezorPaths';
@@ -16,6 +17,7 @@ import secalotPaths from './secalotPaths';
 import keepkeyPaths from './keepkeyPaths';
 import mnemonicPaths from './mnemonicPaths';
 import coolWalletPaths from './coolWalletPaths';
+import satochipPaths from './satochipPaths';
 
 export default {
   [LEDGER]: ledgerPaths,
@@ -25,5 +27,6 @@ export default {
   [SECALOT]: secalotPaths,
   [KEEPKEY]: keepkeyPaths,
   [MNEMONIC]: mnemonicPaths,
-  [COOLWALLET]: coolWalletPaths
+  [COOLWALLET]: coolWalletPaths,
+  [SATOCHIP]: satochipPaths
 };

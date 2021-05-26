@@ -6,6 +6,7 @@ import SecalotWallet from './secalot';
 import KeepkeyWallet from './keepkey';
 import BCVaultWallet from './bcvault';
 import CoolWallet from './coolwallet';
+import SatochipWallet from './satochip';
 
 export {
   BitBoxWallet,
@@ -15,5 +16,6 @@ export {
   SecalotWallet,
   KeepkeyWallet,
   BCVaultWallet,
-  CoolWallet
+  CoolWallet,
+  SatochipWallet
 };

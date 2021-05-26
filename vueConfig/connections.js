@@ -58,6 +58,7 @@ module.exports = [
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
   'https://localhost:1991', // server for bcvault
+  'ws://localhost:8397', // satochip-bridge
   'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
   'https://dexag.mewapi.io:443',

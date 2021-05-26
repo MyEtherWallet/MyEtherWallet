@@ -10,6 +10,11 @@
       :networks="Networks"
       @hardwareWalletOpen="toggleNetworkAddrModal"
     />
+	<satochip-app-modal
+      ref="satochipAppModal"
+      :networks="Networks"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :hardware-wallet-open="toggleNetworkAddrModal"
@@ -135,6 +140,7 @@ import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/Hardw
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import LedgerAppModal from '@/layouts/AccessWalletLayout/components/LedgerAppModal';
+import SatochipAppModal from '@/layouts/AccessWalletLayout/components/SatochipAppModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -163,6 +169,7 @@ import {
   BitBox02Wallet,
   SecalotWallet,
   KeepkeyWallet,
+  SatochipWallet,
   BCVaultWallet
 } from '@/wallets';
 import {
@@ -174,6 +181,7 @@ import {
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE,
+  SATOCHIP as SATOCHIP_TYPE,
   BCVAULT as BC_VAULT
 } from '@/wallets/bip44/walletTypes';
 import {
@@ -208,6 +216,7 @@ export default {
     'mobile-interface-network': MobileInterfaceNetwork,
     'address-qrcode-modal': AddressQrcodeModal,
     'ledger-app-modal': LedgerAppModal,
+    'satochip-app-modal': SatochipAppModal,
     'token-overview': TokenOverview,
     'expired-names-modal': ExpiredNamesModal
   },
@@ -230,6 +239,7 @@ export default {
         ledger: LedgerWallet,
         trezor: TrezorWallet,
         bitbox: BitBoxWallet,
+        satochip: SatochipWallet,
         secalot: SecalotWallet
       },
       hwInstance: {},
@@ -375,6 +385,9 @@ export default {
     ledgerAppModalOpen() {
       this.$refs.ledgerAppModal.$refs.ledgerApp.show();
     },
+	satochipAppModalOpen() {
+      this.$refs.satochipAppModal.$refs.satochipApp.show();
+    },
     switchAddress() {
       switch (this.account.identifier) {
         case LEDGER_TYPE:
@@ -412,6 +425,16 @@ export default {
           break;
         case SECALOT_TYPE:
           this.togglePasswordModal(SecalotWallet, 'Secalot');
+          break;
+		//case SATOCHIP_TYPE:
+        //  this.satochipAppModalOpen();
+        //  break;
+        case SATOCHIP_TYPE:
+          SatochipWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(SatochipWallet.errorHandler);
           break;
         case MNEMONIC_TYPE:
           this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();

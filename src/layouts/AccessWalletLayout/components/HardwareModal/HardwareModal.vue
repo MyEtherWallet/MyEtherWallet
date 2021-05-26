@@ -57,6 +57,7 @@ import finney from '@/assets/images/icons/button-finney-hover.png';
 import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
 import bcvault from '@/assets/images/icons/HardwareWallet/bcvault.svg';
 import coolwallet from '@/assets/images/icons/HardwareWallet/coolwallet.svg';
+import satochip from '@/assets/images/icons/HardwareWallet/satochip.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported, ensureSupport } from 'u2f-api';
@@ -66,6 +67,7 @@ import {
   TrezorWallet,
   SecalotWallet,
   BCVaultWallet,
+  SatochipWallet,
   CoolWallet
 } from '@/wallets';
 import {
@@ -76,6 +78,7 @@ import {
   XWALLET as XWALLET_TYPE,
   FINNEY as FINNEY_TYPE,
   COOLWALLET as COOLWALLET_TYPE,
+  SATOCHIP as SATOCHIP_TYPE,
   BCVAULT as BCVAULT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
@@ -97,6 +100,10 @@ export default {
       default: function () {}
     },
     ledgerAppOpen: {
+      type: Function,
+      default: () => {}
+    },
+	satochipAppOpen: {
       type: Function,
       default: () => {}
     },
@@ -156,6 +163,14 @@ export default {
           disabled: false,
           msg: '',
           link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
+        },
+		{
+          name: SATOCHIP_TYPE,
+          imgPath: satochip,
+          text: 'Satochip',
+          disabled: false,
+          msg: '',
+          link: 'https://www.satochip.io/'
         },
         {
           name: FINNEY_TYPE,
@@ -320,6 +335,21 @@ export default {
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: CoolWallet
           });
+          break;
+		// case SATOCHIP_TYPE:
+          // this.$refs.hardware.hide();
+          // this.SatochipAppOpen();
+          // break;
+        case SATOCHIP_TYPE:
+          SatochipWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(e => {
+              this.mayNotBeAttached = true;
+              SatochipWallet.errorHandler(e);
+            });
           break;
         default:
           Toast.responseHandler(
