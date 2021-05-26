@@ -10,6 +10,7 @@
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
+import currencyTypes from '@/core/configs/configCurrencyTypes';
 
 export default {
   name: 'App',
@@ -18,7 +19,7 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setDarkList();
-      this.setCurrency('USD');
+      this.setCurrency(currencyTypes.USD);
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
@@ -27,7 +28,7 @@ export default {
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
       this.setDarkList();
-      this.setCurrency('USD');
+      this.setCurrency(currencyTypes.USD);
     });
   },
   methods: {

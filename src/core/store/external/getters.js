@@ -8,6 +8,15 @@ const fiatValue = function (state) {
   return new BigNumber(ethUSDValue).times(rate);
 };
 
+/**
+ * Get Eth Balance Fiat value
+ */
+const balanceFiatValue = function (state, getters, rootState, rootGetters) {
+  const balanceInETH = rootGetters['wallet/balanceInETH'];
+  return new BigNumber(balanceInETH).times(getters.fiatValue);
+};
+
 export default {
-  fiatValue
+  fiatValue,
+  balanceFiatValue
 };
