@@ -103,10 +103,6 @@ export default {
       type: Function,
       default: () => {}
     },
-	satochipAppOpen: {
-      type: Function,
-      default: () => {}
-    },
     openFinney: {
       type: Function,
       default: () => {}
@@ -336,10 +332,6 @@ export default {
             walletConstructor: CoolWallet
           });
           break;
-		// case SATOCHIP_TYPE:
-          // this.$refs.hardware.hide();
-          // this.SatochipAppOpen();
-          // break;
         case SATOCHIP_TYPE:
           SatochipWallet()
             .then(_newWallet => {
