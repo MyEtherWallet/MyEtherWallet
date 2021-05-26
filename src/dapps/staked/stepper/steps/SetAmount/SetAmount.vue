@@ -75,6 +75,7 @@
       <v-col class="pl-4" cols="8">
         <mew-button
           :loading="false"
+          :disabled="getErrorMessage !== null"
           :has-full-width="true"
           btn-size="xlarge"
           :title="$t('ens.register-domain')"
@@ -108,13 +109,12 @@ export default {
     return {
       amount: '0',
       ethPrice: '',
-      balance: 0,
-      balanceInETH: '72'
+      balance: 0
     };
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    // ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH']),
     hasError() {
       return this.notValidMultiple || this.notEnoughBalance;
     },
@@ -125,7 +125,7 @@ export default {
       return (
         this.amount &&
         toBN(toWei(this.amount.toString(), 'ether')).gt(
-          toWei(this.balance.toString(), 'ether')
+          toBN(toWei(this.balance.toString(), 'ether'))
         )
       );
     },
@@ -140,17 +140,17 @@ export default {
     },
     rules() {
       return [
-        (this.name && this.name.length > 2) ||
-          this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
+        this.notValidMultiple || this.$t('dappsStaked.error-set-amount'),
+        (this.hasError && this.notEnoughBalance) ||
+          this.$t('dappsStaked.error-not-enough-bal')
       ];
     },
     getErrorMessage() {
-      // if(this.notValidMultiple){
-      //   return this.$t('dappsStaked.error-set-amount')
-      // } else if(this.hasError && this.notEnoughBalance){
-      //   return this.$t('dappsStaked.error-not-enough-bal')
-      // }
+      if (this.notValidMultiple) {
+        return this.$t('dappsStaked.error-set-amount');
+      } else if (this.hasError && this.notEnoughBalance) {
+        return this.$t('dappsStaked.error-not-enough-bal');
+      }
       return null;
     }
   },
@@ -213,11 +213,11 @@ export default {
     setAmount(idx) {
       if (Number.isInteger(idx) && idx < 4) {
         this.amount = types[idx];
-        console.log(this.amount); // todo remove dev item
+        console.log('amount', this.amount); // todo remove dev item
       }
       this.$emit(
         'completed',
-        /*!this.hasError,*/ true,
+        !this.hasError,
         {
           key: 'amount',
           value: this.amount

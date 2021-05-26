@@ -127,9 +127,9 @@ export default class Staked {
       });
     this.getValidators();
   }
-  goToGenerate() {
-    this.$router.push('/generate-eth2-keystore');
-  }
+  // goToGenerate() {
+  //   this.$router.push('/generate-eth2-keystore');
+  // }
   async startProvision() {
     const params = {
       address: this.address(),
@@ -170,21 +170,23 @@ export default class Staked {
             response.data.raw.length === parseInt(this.validatorsCount())
           ) {
             const validatorStaked = this.details.amount / 32;
-            if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-              this.details.currentValidatorsStaked = validatorStaked;
-            } else {
-              this.$set(
-                this.details,
-                'currentValidatorsStaked',
-                validatorStaked
-              );
-            }
-
-            if (this.details.hasOwnProperty('totalValidators')) {
-              this.details.totalValidators = validatorStaked;
-            } else {
-              this.$set(this.details, 'totalValidators', validatorStaked);
-            }
+            // if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+            //   this.details.currentValidatorsStaked = validatorStaked;
+            // } else {
+            //   this.$set(
+            //     this.details,
+            //     'currentValidatorsStaked',
+            //     validatorStaked
+            //   );
+            // }
+            //
+            // if (this.details.hasOwnProperty('totalValidators')) {
+            //   this.details.totalValidators = validatorStaked;
+            // } else {
+            //   this.$set(this.details, 'totalValidators', validatorStaked);
+            // }
+            this.details.currentValidatorsStaked = validatorStaked;
+            this.details.totalValidators = validatorStaked;
             this.transactionData = response.data.transaction;
             clearInterval(interval);
           }
@@ -196,25 +198,27 @@ export default class Staked {
             err.response.status === 424 &&
             err.response.data.msg === 'Not all validators have been provisioned'
           ) {
-            if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-              this.details.currentValidatorsStaked = err.response.data.current;
-            } else {
-              this.$set(
-                this.details,
-                'currentValidatorsStaked',
-                err.response.data.current
-              );
-            }
-
-            if (this.details.hasOwnProperty('totalValidators')) {
-              this.details.totalValidators = err.response.data.total;
-            } else {
-              this.$set(
-                this.details,
-                'totalValidators',
-                err.response.data.total
-              );
-            }
+            this.details.currentValidatorsStaked = err.response.data.current;
+            // if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+            //   this.details.currentValidatorsStaked = err.response.data.current;
+            // } else {
+            //
+            //   this.$set(
+            //     this.details,
+            //     'currentValidatorsStaked',
+            //     err.response.data.current
+            //   );
+            // }
+            this.details.totalValidators = err.response.data.total;
+            // if (this.details.hasOwnProperty('totalValidators')) {
+            //   this.details.totalValidators = err.response.data.total;
+            // } else {
+            //   this.$set(
+            //     this.details,
+            //     'totalValidators',
+            //     err.response.data.total
+            //   );
+            // }
 
             return;
           }
@@ -230,26 +234,22 @@ export default class Staked {
     }, 5000);
   }
   sendTransaction() {
-    this.transactionData.from = this.address();
-    this.transactionData.to = this.batchContract;
-    this.transactionData.gasPrice = new BigNumber(
-      this.web3().utils.toWei(this.gasPrice(), 'gwei')
-    ).toFixed();
-    this.web3()
-      .eth.sendTransaction(this.transactionData)
-      .on('transactionHash', res => {
-        this.txHash = res;
-      })
-      .catch(err => {
-        Toast(err, {}, ERROR);
-      });
+    // this.transactionData.from = this.address();
+    // this.transactionData.to = this.batchContract;
+    // this.transactionData.gasPrice = new BigNumber(
+    //   this.web3().utils.toWei(this.gasPrice(), 'gwei')
+    // ).toFixed();
+    // this.web3()
+    //   .eth.sendTransaction(this.transactionData)
+    //   .on('transactionHash', res => {
+    //     this.txHash = res;
+    //   })
+    //   .catch(err => {
+    //     Toast(err, {}, ERROR);
+    //   });
   }
   setData(data) {
-    if (this.details.hasOwnProperty(data.key)) {
-      this.details[data.key] = data.value;
-    } else {
-      this.$set(this.details, data.key, data.value);
-    }
+    this.details[data.key] = data.value;
   }
   completeStep(payload) {
     this.steps.forEach(step => {

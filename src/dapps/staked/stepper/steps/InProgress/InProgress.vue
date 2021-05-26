@@ -1,13 +1,44 @@
 <template>
-  <div class="progress-step d-flex">
-    <div class="content-container d-flex">
-      <h3>{{ $t('dappsStaked.hang-on') }}</h3>
-      <i18n tag="p" class="subtitle" path="dappsStaked.please-do-not-close">
-        <p slot="creating-validators">
-          {{ $t('dappsStaked.creating-validators') }}
+  <div>
+    <v-row class="mx-0 bottom-pad">
+      <v-col class="pr-0" cols="12">
+        <h3>{{ $t('dappsStaked.hang-on') }}</h3>
+        <i18n tag="p" class="subtitle" path="dappsStaked.please-do-not-close">
+          <p slot="creating-validators">
+            {{ $t('dappsStaked.creating-validators') }}
+          </p>
+        </i18n>
+      </v-col>
+    </v-row>
+    <v-row class="mx-0 bottom-pad">
+      <v-col class="pr-0" cols="12">
+        <mew-progress-bar
+          :balance-obj="details.currentValidatorsStaked"
+          :animated="details.currentValidatorsStaked !== total"
+        />
+      </v-col>
+    </v-row>
+    <v-row class="mx-0 bottom-pad">
+      <v-col class="pr-0" cols="12">
+        <p class="validator-progress">
+          <strong
+            >{{
+              details.currentValidatorsStaked
+                ? details.currentValidatorsStaked
+                : '0'
+            }}
+            / {{ total }}</strong
+          >
+          {{
+            $tc(
+              'dappsStaked.completed-validators',
+              details.currentValidatorsStaked > 1 ? 2 : 1
+            )
+          }}
         </p>
-      </i18n>
-      <b-progress
+      </v-col>
+    </v-row>
+    <!--      <b-progress
         v-if="details.currentValidatorsStaked"
         :max="total"
         class="w-100"
@@ -15,13 +46,10 @@
         :variant="
           details.currentValidatorsStaked === total ? 'success' : 'primary'
         "
-      >
-        <b-progress-bar
-          :value="details.currentValidatorsStaked"
-          :animated="details.currentValidatorsStaked !== total"
-        />
-      </b-progress>
-      <b-progress
+      >-->
+
+    <!--      </b-progress>-->
+    <!--      <b-progress
         v-if="!details.currentValidatorsStaked"
         :max="100"
         class="w-100"
@@ -31,24 +59,7 @@
         <b-progress-bar :value="100" animated>
           <span>Loading</span>
         </b-progress-bar>
-      </b-progress>
-      <p class="validator-progress">
-        <strong
-          >{{
-            details.currentValidatorsStaked
-              ? details.currentValidatorsStaked
-              : '0'
-          }}
-          / {{ total }}</strong
-        >
-        {{
-          $tc(
-            'dappsStaked.completed-validators',
-            details.currentValidatorsStaked > 1 ? 2 : 1
-          )
-        }}
-      </p>
-    </div>
+      </b-progress>-->
   </div>
 </template>
 

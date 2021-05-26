@@ -107,7 +107,7 @@
         <step-two :next="nextStep" @completed="proceed" />
       </template>
       <template v-if="isStepActive(2)" #stepperContent3>
-        <step-three :details="details" @completed="proceed" />
+        <step-three :details="details" :next="nextStep" @completed="proceed" />
       </template>
       <template v-if="isStepActive(3)" #stepperContent4>
         <step-four :details="details" @completed="proceed" />

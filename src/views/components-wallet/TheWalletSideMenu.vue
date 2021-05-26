@@ -304,7 +304,8 @@ export default {
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     shouldShow(route) {
-      const onlyEth = ['Dapps', 'Swap'];
+      // const onlyEth = ['Dapps', 'Swap'];
+      const onlyEth = ['Swap']; // todo remove dev item console.log
       if (this.network.type.name !== 'ETH') {
         return !onlyEth.includes(route.name);
       }

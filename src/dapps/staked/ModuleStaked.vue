@@ -170,6 +170,12 @@ import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import Staked from './handlers/staked';
 import Stepper from './stepper/Stepper';
 import stakedLogo from '@/assets/images/icons/staked.png';
+import stakeConfigs from './handlers/configs';
+import axios from 'axios';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import calculateEth2Rewards from './handlers/helpers';
 export default {
   name: 'ModuleStaked',
   components: {
@@ -246,12 +252,46 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapGetters('global', ['network', 'gasPrice'])
+  },
   mounted() {
-    this.staked = new Staked();
+    // this.staked = new Staked();
+    this.setup();
   },
   methods: {
+    setup() {
+      console.log('setup'); // todo remove dev item
+      this.eth2ContractAddress =
+        stakeConfigs.network[this.network.type.name].depositAddress;
+      this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
+      this.batchContract =
+        stakeConfigs.network[this.network.type.name].batchContract;
+
+      this.web3.eth
+        .getBalance(this.eth2ContractAddress)
+        .then(res => {
+          const raw = this.web3.utils.fromWei(res, 'ether');
+          this.totalStaked = new BigNumber(raw).toFormat(0);
+          this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+            .times(100)
+            .toFixed(2);
+        })
+        .catch(err => {
+          Toast(err, ERROR);
+        });
+      console.log('endpoint', this.endpoint); // todo remove dev item
+      this.getValidators();
+    },
+    validatorsCount() {
+      if (this.details.amount) {
+        return new BigNumber(this.details.amount).dividedBy(32).toFixed();
+      }
+      return 0;
+    },
     async getValidators() {
-      return this.staked.validatorsCount();
+      return this.validatorsCount();
     },
     resetStepperDone() {
       this.resetStepper = false;
@@ -267,12 +307,110 @@ export default {
       this.batchContract = '';
       this.setup();
     },
-    setup() {},
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');
     },
-    async startProvision() {},
-    startPolling(uuid) {},
+    async startProvision() {
+      const params = {
+        address: this.address,
+        withdrawalKey: this.details.address,
+        validatorsCount: this.validatorsCount
+      };
+      await axios
+        .post(this.endpoint + '/provision', params, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          response && response.data.provisioning_request_uuid
+            ? this.startPolling(response.data.provisioning_request_uuid)
+            : Toast(this.$t('dappsStaked.error-try-again'), {}, ERROR);
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    },
+    startPolling(uuid) {
+      let prevReqComplete = true;
+      const interval = setInterval(() => {
+        if (!prevReqComplete) return;
+        prevReqComplete = false;
+        axios
+          .get(`${this.endpoint}/status?provisioning_request_uuid=${uuid}`, {
+            header: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            prevReqComplete = true;
+            if (
+              response &&
+              response.data &&
+              response.data.raw.length === parseInt(this.validatorsCount())
+            ) {
+              const validatorStaked = this.details.amount / 32;
+              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+                this.details.currentValidatorsStaked = validatorStaked;
+              } else {
+                this.$set(
+                  this.details,
+                  'currentValidatorsStaked',
+                  validatorStaked
+                );
+              }
+
+              if (this.details.hasOwnProperty('totalValidators')) {
+                this.details.totalValidators = validatorStaked;
+              } else {
+                this.$set(this.details, 'totalValidators', validatorStaked);
+              }
+              this.transactionData = response.data.transaction;
+              clearInterval(interval);
+            }
+          })
+          .catch(err => {
+            prevReqComplete = true;
+            if (
+              err.response &&
+              err.response.status === 424 &&
+              err.response.data.msg ===
+                'Not all validators have been provisioned'
+            ) {
+              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
+                this.details.currentValidatorsStaked =
+                  err.response.data.current;
+              } else {
+                this.$set(
+                  this.details,
+                  'currentValidatorsStaked',
+                  err.response.data.current
+                );
+              }
+
+              if (this.details.hasOwnProperty('totalValidators')) {
+                this.details.totalValidators = err.response.data.total;
+              } else {
+                this.$set(
+                  this.details,
+                  'totalValidators',
+                  err.response.data.total
+                );
+              }
+
+              return;
+            }
+            if (
+              err.response &&
+              err.response.status === 404 &&
+              err.response.data.msg ===
+                'Requested provisioning_request_uuid not found'
+            )
+              return;
+            Toast(err, {}, ERROR);
+          });
+      }, 5000);
+    },
     sendTransaction() {},
     setData(data) {
       if (this.details.hasOwnProperty(data.key)) {
@@ -280,9 +418,25 @@ export default {
       } else {
         this.$set(this.details, data.key, data.value);
       }
+      console.log('this.details', this.details); // todo remove dev item
     },
-    completeStep(payload) {},
-    isStepActive(payload) {}
+    completeStep(payload) {
+      this.steps.forEach(step => {
+        if (step.name === payload.name) {
+          step.completed = true;
+        }
+      });
+    },
+    isStepActive(payload) {
+      this.currentStepIdx = payload.index;
+      this.steps.forEach(step => {
+        if (step.name === payload.name) {
+          if (step.completed === true) {
+            step.completed = false;
+          }
+        }
+      });
+    }
   }
 };
 </script>

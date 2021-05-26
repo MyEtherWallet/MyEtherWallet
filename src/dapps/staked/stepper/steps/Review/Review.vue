@@ -74,6 +74,7 @@
       :title="$t('ens.register-domain')"
       @click.native="doNext"
     />
+    {{ details }}
   </div>
 </template>
 
