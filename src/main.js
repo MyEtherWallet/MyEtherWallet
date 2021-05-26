@@ -38,6 +38,9 @@ new Vue({
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.dispatch('global/setTracking');
+    setTimeout(() => {
+      this.$store.commit('global/SET_TRACKING_CONSENT', true);
+    }, 5000);
   },
   render: h => h(app)
 });

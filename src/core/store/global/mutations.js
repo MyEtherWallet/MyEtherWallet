@@ -61,7 +61,9 @@ const ADD_LOCAL_CONTRACT = function (state, contract) {
   state.localContracts[state.currentNetwork.type.name].push(contract);
 };
 const SET_TRACKING_CONSENT = function (state, val) {
-  if (this._vm.$matomo) this._vm.$matomo.trackEvent('consent', val);
+  if (this._vm.$matomo)
+    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
+
   state.consentToTrack = val;
 };
 
