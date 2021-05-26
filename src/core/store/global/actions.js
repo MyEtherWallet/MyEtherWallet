@@ -53,9 +53,7 @@ const setTracking = function ({ state }) {
         }
         if (Date.now() >= waitStart + timeout) {
           clearInterval(interval);
-          throw new Error(
-            `[vue-matomo]: window.Piwik undefined after waiting for ${timeout}ms`
-          );
+          throw new Error(`$matomo undefined after waiting for ${timeout}ms`);
         }
       }, checkInterval);
     });
