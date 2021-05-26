@@ -102,7 +102,7 @@ class SendTransaction {
   }
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
-    if (this.isToken()) {
+    if (this.isToken() && this.currency.balance) {
       const hasAmountToken = amount.lte(this.currency.balance);
       const hasGas = this.txFee().lte(this.balance());
       return hasAmountToken && hasGas;

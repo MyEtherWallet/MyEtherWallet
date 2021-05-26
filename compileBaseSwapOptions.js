@@ -110,6 +110,7 @@ class CompileSwapOptions {
       );
       const tokenDetails = {};
       for (let i = 0; i < tickers.tickers.length; i++) {
+        await new Promise(r => setTimeout(r, 500));
         const token = await this.get(
           `https://api.coingecko.com/api/v3/coins/${tickers.tickers[i].coin_id}/tickers`
         );
@@ -237,9 +238,8 @@ class CompileSwapOptions {
       };
     }
     if (regex.test(currentValue.transactionUrl)) {
-      accumulator.ETH[currentValue.name.toUpperCase()] = this.createEntry(
-        currentValue
-      );
+      accumulator.ETH[currentValue.name.toUpperCase()] =
+        this.createEntry(currentValue);
     } else {
       if (!currentValue.extraIdName) {
         accumulator.other[currentValue.name.toUpperCase()] = {
