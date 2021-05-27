@@ -9,7 +9,14 @@
     absolute
   >
     <v-container
-      class="d-flex align-center pt-4 pb-0 px-0 px-md-3 wallet-content-container"
+      class="
+        d-flex
+        align-center
+        pt-4
+        pb-0
+        px-0 px-md-3
+        wallet-content-container
+      "
       fluid
     >
       <div class="d-flex align-center">
