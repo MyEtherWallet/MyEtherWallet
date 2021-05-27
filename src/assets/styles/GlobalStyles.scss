@@ -64,22 +64,7 @@ html {
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
 }
-.corner-btn {
-  color: var(--v-primary-base);
-  font-weight: 500;
-  position: absolute;
-  top: -1.56rem;
-  right: 0.63rem;
-  cursor: pointer;
-  filter: brightness(1);
 
-  &:hover {
-    filter: brightness(1.15);
-  }
-}
-.mew-super-btn-shadow {
-  box-shadow: 0 7px 13px rgba(0, 0, 0, 0.04);
-}
 .v-application .v-input .v-label {
   font-weight: 400 !important;
   font-size: 0.88rem;
@@ -160,9 +145,6 @@ h6 {
 .color--inherit {
   color: inherit !important;
 }
-.line-height--0 {
-  line-height: 0 !important;
-}
 .text-transform--initial {
   text-transform: initial !important;
 }
@@ -190,9 +172,7 @@ h6 {
 .font-weight--700 {
   font-weight: 700 !important;
 }
-.font-weight--800 {
-  font-weight: 800 !important;
-}
+
 
 /* ========== Cursor ========== */
 .pointer-event--none {

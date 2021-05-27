@@ -146,3 +146,18 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.corner-btn {
+  color: var(--v-primary-base);
+  font-weight: 500;
+  position: absolute;
+  top: -1.56rem;
+  right: 0.63rem;
+  cursor: pointer;
+  filter: brightness(1);
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+}
+</style>
