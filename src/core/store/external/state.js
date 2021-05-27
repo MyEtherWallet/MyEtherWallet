@@ -2,7 +2,7 @@ const state = {
   localStore: false,
   darkList: {},
   path: '',
-  forexRates: {},
+  currencyRate: {},
   ETHUSDValue: {}
 };
 
