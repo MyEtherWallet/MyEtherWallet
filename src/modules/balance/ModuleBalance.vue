@@ -114,7 +114,6 @@ export default {
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      console.log(this.balanceInETH);
       return this.balanceInETH <= 0 && this.chartData.length < 0;
     },
     priceChangeArrow() {
