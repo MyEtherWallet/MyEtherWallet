@@ -623,7 +623,7 @@ export default {
       this.reset();
     },
     arrayParser(arr) {
-      return arr.map(item => {
+      const newArr = arr.map(item => {
         const gasLimit = item.gasLimit
           ? item.gasLimit
           : item.gas
@@ -678,6 +678,9 @@ export default {
             value: item.data
           }
         ];
+      });
+      return newArr.filter(item => {
+        if (item.value !== '') return item;
       });
     }
   }
