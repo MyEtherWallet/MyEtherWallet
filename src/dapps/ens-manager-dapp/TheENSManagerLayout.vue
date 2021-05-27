@@ -160,25 +160,26 @@
                     sm="6"
                     md="4"
                     lg="2"
-                    class="text-center"
                   >
-                    <mew-icon
-                      class="cursor-pointer"
-                      icon-name="ensManager"
-                      :img-height="70"
-                      @click.native="manage(option.type, idx)"
-                    />
-                    <div>{{ option.label }}</div>
                     <div
-                      v-if="domain.expiration && key === 1"
-                      class="orange--text"
+                      class="text-center cursor-pointer"
+                      @click="manage(option.type, idx)"
                     >
-                      <div>
-                        {{
-                          $t('ens.manage-domains.expire-at', {
-                            date: domain.expiration
-                          })
-                        }}
+                      <v-icon color="titlePrimary" x-large>{{
+                        option.icon
+                      }}</v-icon>
+                      <div>{{ option.label }}</div>
+                      <div
+                        v-if="domain.expiration && key === 1"
+                        class="orange--text"
+                      >
+                        <div>
+                          {{
+                            $t('ens.manage-domains.expire-at', {
+                              date: domain.expiration
+                            })
+                          }}
+                        </div>
                       </div>
                     </div>
                   </v-col>
@@ -263,22 +264,30 @@ export default {
       ensManager: {},
       onRegister: false,
       manageDomainOptions: [
-        { label: this.$t('ens.transfer-domain'), type: 'transfer' },
+        {
+          label: this.$t('ens.transfer-domain'),
+          type: 'transfer',
+          icon: 'mdi-account-arrow-right'
+        },
         {
           label: this.$t('ens.manage-domains.renew-domain'),
-          type: 'renew'
+          type: 'renew',
+          icon: 'mdi-autorenew'
         },
         {
           label: this.$t('ens.manage-domains.manage-multi'),
-          type: 'manageMulticoin'
+          type: 'manageMulticoin',
+          icon: 'mdi-link'
         },
         {
           label: this.$t('ens.manage-domains.manage-txt'),
-          type: 'manageTxtRecord'
+          type: 'manageTxtRecord',
+          icon: 'mdi-book-open'
         },
         {
           label: this.$t('ens.manage-domains.upload-site'),
-          type: 'manageUpload'
+          type: 'manageUpload',
+          icon: 'mdi-cloud-upload'
         }
       ],
       tabs: [
