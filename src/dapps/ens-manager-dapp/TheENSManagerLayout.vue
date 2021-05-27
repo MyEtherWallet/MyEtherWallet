@@ -138,7 +138,14 @@
                 </v-row>
 
                 <div
-                  class="mt-3 d-flex align-center justify-space-between py-5 px-7"
+                  class="
+                    mt-3
+                    d-flex
+                    align-center
+                    justify-space-between
+                    py-5
+                    px-7
+                  "
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
