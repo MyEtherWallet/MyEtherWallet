@@ -94,7 +94,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 
 export default {
@@ -142,10 +142,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      const usdValue = BigNumber(this.ETHUSDValue.value).times(
+      const usdValue = BigNumber(this.fiatValue).times(
         fromWei(this.customGasPrice, 'ether')
       );
       return {
