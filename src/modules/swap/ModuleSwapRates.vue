@@ -16,16 +16,7 @@
         <v-sheet
           v-if="data.rate"
           color="tableHeader"
-          class="
-            d-flex
-            align-center
-            justify-space-between
-            border-radius--5px
-            mt-1
-            py-3
-            px-4
-            cursor
-          "
+          class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
           @click="goToSwap(data)"
         >
           <div class="text-uppercase">
@@ -81,8 +72,7 @@
 <script>
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
-
+import { formatFloatingPointValue } from '../../core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 const STATIC_PAIRS = [
@@ -206,9 +196,7 @@ export default {
             itm['rate'] =
               res[idx].length === 0
                 ? false
-                : new BigNumber(res[idx][0].amount).lte(1)
-                ? res[idx][0].amount
-                : new BigNumber(res[idx][0].amount).toFixed(2);
+                : formatFloatingPointValue(res[idx][0].amount).value;
             return itm;
           });
           this.loading = false;
