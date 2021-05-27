@@ -91,9 +91,7 @@
             <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
               Why Mew
             </h5>
-            <h1 class="font-weight--700">
-              Make Ethereum Blockchain easy and secure
-            </h1>
+            <h1>Make Ethereum Blockchain easy and secure</h1>
           </v-sheet>
 
           <mew-info-card

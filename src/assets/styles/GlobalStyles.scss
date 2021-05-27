@@ -110,9 +110,7 @@ p {
   font-weight: 400;
 }
 h1 {
-  font-size: 2.1rem;
-  line-height: 2.5rem;
-  font-weight: 400;
+  @extend .mew-heading-1;
 }
 h2 {
   font-size: 1.88rem;
@@ -172,7 +170,6 @@ h6 {
 .font-weight--700 {
   font-weight: 700 !important;
 }
-
 
 /* ========== Cursor ========== */
 .pointer-event--none {

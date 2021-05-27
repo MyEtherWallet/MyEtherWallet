@@ -45,7 +45,7 @@
           <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
             Features
           </h5>
-          <h1 class="font-weight--700 mb-10">
+          <h1 class="mb-10">
             Your All-In-One Gateway to the Ethereum Blockchain
           </h1>
 

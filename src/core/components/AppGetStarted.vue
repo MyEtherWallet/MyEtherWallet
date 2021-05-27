@@ -52,9 +52,7 @@
       <v-container class="px-5">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-9">
-            <h1 class="font-weight--700 white--text">
-              Ready to explore Ethereum?
-            </h1>
+            <h1 class="white--text">Ready to explore Ethereum?</h1>
             <p class="white--text mt-3">
               Still don't know what MEW is?
               <a
