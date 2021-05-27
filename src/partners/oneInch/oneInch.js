@@ -50,8 +50,10 @@ export default class OneInch {
 
   async getSupportedCurrencies() {
     try {
-      const { currencyDetails, tokenDetails } =
-        await oneInchCalls.getSupportedCurrencies(this.network);
+      const {
+        currencyDetails,
+        tokenDetails
+      } = await oneInchCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.tokenUpdate(tokenDetails);

@@ -94,8 +94,10 @@ export default class DexAg {
 
   async getSupportedCurrencies() {
     try {
-      const { currencyDetails, tokenDetails } =
-        await dexAgCalls.getSupportedCurrencies(this.network);
+      const {
+        currencyDetails,
+        tokenDetails
+      } = await dexAgCalls.getSupportedCurrencies(this.network);
       this.currencyDetails = currencyDetails;
       this.tokenDetails = tokenDetails;
       this.tokenUpdate(tokenDetails);
