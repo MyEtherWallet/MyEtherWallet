@@ -313,8 +313,15 @@ export default {
       const hasLinkQuery = Object.keys(_self.linkQuery).length;
       if (hasLinkQuery > 0) {
         _self.prefilled = true;
-        const { value, data, to, gaslimit, gas, tokensymbol, network } =
-          _self.linkQuery;
+        const {
+          value,
+          data,
+          to,
+          gaslimit,
+          gas,
+          tokensymbol,
+          network
+        } = _self.linkQuery;
         _self.value =
           value && new BigNumber(value).gt(0)
             ? new BigNumber(value).toFixed()
