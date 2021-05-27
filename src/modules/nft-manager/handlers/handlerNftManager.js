@@ -1,6 +1,7 @@
 import utils from 'web3-utils';
 import configs from './config/configNft';
 import ABI from './abi/abiNft';
+import BigNumber from 'bignumber.js';
 
 export default class NFT {
   constructor({ network, address, web3 }) {
@@ -52,16 +53,12 @@ export default class NFT {
    * Pagination
    */
 
+  totalPages(count) {
+    return Math.ceil(new BigNumber(count).div(this.countPerPage).toNumber());
+  }
+
   hasPages(count) {
     return this.countPerPage < count;
-  }
-
-  hasNextPage(count) {
-    return count > this.currentPage * this.countPerPage;
-  }
-
-  currentPage() {
-    return this.currentPage;
   }
 
   startIndex() {
@@ -76,18 +73,8 @@ export default class NFT {
     return count;
   }
 
-  nextPage() {
-    this.currentPage++;
-  }
-
-  hasPriorPage() {
-    return this.currentPage >= 2;
-  }
-
-  priorPage() {
-    if (this.currentPage >= 2) {
-      this.currentPage--;
-    }
+  setCurrentPage(page) {
+    this.currentPage = page;
   }
 
   goToFirstPage() {

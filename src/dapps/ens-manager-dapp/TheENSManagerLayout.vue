@@ -138,7 +138,14 @@
                 </v-row>
 
                 <div
-                  class="mt-3 d-flex align-center justify-space-between py-5 px-7"
+                  class="
+                    mt-3
+                    d-flex
+                    align-center
+                    justify-space-between
+                    py-5
+                    px-7
+                  "
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
@@ -288,7 +295,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [
@@ -524,9 +531,7 @@ export default {
           const priceFromWei = fromWei(toBN(resp));
           return {
             eth: new BigNumber(priceFromWei).toFixed(4),
-            usd: new BigNumber(priceFromWei)
-              .times(this.ETHUSDValue.value)
-              .toFixed(2)
+            usd: new BigNumber(priceFromWei).times(this.fiatValue).toFixed(2)
           };
         }
       });

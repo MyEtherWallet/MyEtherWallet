@@ -245,7 +245,12 @@
                   <v-col cols="6" sm="8">
                     <v-row
                       dense
-                      class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                      class="
+                        align-center
+                        justify-start
+                        pl-1 pl-sm-3
+                        pr-2 pr-sm-3
+                      "
                     >
                       <mew-blockie
                         width="25px"
@@ -430,7 +435,7 @@ export default {
         };
       },
       skip() {
-        return this.skipApollo;
+        return this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
         if (data && data.getEthBalance) {

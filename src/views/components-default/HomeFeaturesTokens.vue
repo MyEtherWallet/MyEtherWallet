@@ -32,28 +32,23 @@ export default {
     tokens: [
       {
         label: 'Tether (USDT)',
-        icon:
-          'https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png'
+        icon: 'https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png'
       },
       {
         label: 'Uniswap (UNI)',
-        icon:
-          'https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png'
+        icon: 'https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png'
       },
       {
         label: 'Chainlink (LINK)',
-        icon:
-          'https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png'
+        icon: 'https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png'
       },
       {
         label: 'USD Coin (USDC)',
-        icon:
-          'https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png'
+        icon: 'https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png'
       },
       {
         label: 'Wrapped Bitcoin (WBTC)',
-        icon:
-          'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png'
+        icon: 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png'
       },
       {
         label: 'Crypto.com Coin (CRO)',
@@ -65,8 +60,7 @@ export default {
       },
       {
         label: 'OKB (OKB)',
-        icon:
-          'https://assets.coingecko.com/coins/images/4463/thumb/okb_token.png'
+        icon: 'https://assets.coingecko.com/coins/images/4463/thumb/okb_token.png'
       },
       {
         label: 'Binance USD (BUSD)',
@@ -78,13 +72,11 @@ export default {
       },
       {
         label: 'cUSDC (CUSDC)',
-        icon:
-          'https://assets.coingecko.com/coins/images/9442/thumb/Compound_USDC.png'
+        icon: 'https://assets.coingecko.com/coins/images/9442/thumb/Compound_USDC.png'
       },
       {
         label: 'Dai (DAI)',
-        icon:
-          'https://assets.coingecko.com/coins/images/9956/thumb/dai-multi-collateral-mcd.png'
+        icon: 'https://assets.coingecko.com/coins/images/9956/thumb/dai-multi-collateral-mcd.png'
       },
       {
         label: 'Chiliz (CHZ)',

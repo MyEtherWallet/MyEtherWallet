@@ -44,7 +44,9 @@ export default {
         };
       },
       skip() {
-        return !this.isEthNetwork || !this.address || this.address === null;
+        return (
+          !this.isEthNetwork || this.address === null || this.address === ''
+        );
       },
       result({ data }) {
         if (data.getEthTransfersV2.transfers) {
@@ -116,11 +118,7 @@ export default {
           if (getTransactionByHash.to === this.address) {
             const copyArray = this.ethTransfersIncoming;
             const foundIdx = copyArray.findIndex(item => {
-              const dataHash =
-                getTransactionByHash.hash ||
-                getTransactionByHash.transactionHash;
-              const itemHash = item.hash || item.transactionHash;
-              if (dataHash === itemHash) {
+              if (getTransactionByHash.hash === item.hash) {
                 return item;
               }
             });
@@ -150,7 +148,7 @@ export default {
           };
         },
         skip() {
-          return !this.address || this.address === '' || this.loading;
+          return this.address === '' || this.address === null || this.loading;
         },
         result({ data }) {
           if (data && data.pendingTransaction) {

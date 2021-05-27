@@ -5,8 +5,16 @@
     display if the user has an eth balance > 0
   =====================================================================================
   -->
+    <v-skeleton-loader
+      v-if="loading"
+      class="mx-auto module-balance-loader"
+      width="100%"
+      min-height="352px"
+      max-width="100%"
+      type="card"
+    ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth"
+      v-if="!showBuyEth && !loading"
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
@@ -44,18 +52,14 @@
                 priceChange ? 'primary--text' : 'error--text'
               ]"
             >
-              ${{ ETHUSDValue.price_change_percentage_24h }}
+              {{ ETHUSDValue.price_change_percentage_24h }}%
             </div>
             <v-icon
-              :class="[
-                priceChange ? 'primary--text' : 'error--text',
-                'body-2 mt-1'
-              ]"
+              :class="[priceChange ? 'primary--text' : 'error--text', 'body-2']"
               >{{ priceChangeArrow }}</v-icon
             >
             <div class="ml-5">
-              {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
-              {{ network.type.currenyName }} ETH
+              {{ '$' + fiatValue }} / 1 {{ network.type.currenyName }} ETH
             </div>
           </v-col>
           <v-col class="text-right">
@@ -75,7 +79,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-else
+      v-if="showBuyEth && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -101,20 +105,22 @@ export default {
       chartData: [],
       timeString: '',
       scale: '',
-      activeButton: 0
+      activeButton: 0,
+      loading: true
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      return this.balanceInETH <= 0 && this.chartData.length < 0;
+      return this.balanceInETH <= 0 && this.chartData.length <= 0;
     },
     priceChangeArrow() {
-      return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
+      return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
       return this.ETHUSDValue.price_change_percentage_24h > 0;
@@ -126,9 +132,7 @@ export default {
       return `My ${this.network.type.name} Balance`;
     },
     convertedBalance() {
-      const converted = BigNumber(this.balanceInETH).times(
-        this.ETHUSDValue.value
-      );
+      const converted = BigNumber(this.balanceInETH).times(this.fiatValue);
       return `$ ${converted.toFixed(2)}`;
     }
   },
@@ -150,12 +154,14 @@ export default {
           if (count >= 3) {
             this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
+            this.loading = false;
             // a single point basically looks the same as an empty chart
           } else if (this.chartData.length <= 1) {
             count++;
             checker();
           } else {
             this.activeButton = count;
+            this.loading = false;
           }
         }, 1000);
       };
@@ -205,3 +211,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.module-balance-loader {
+  .v-skeleton-loader__image {
+    height: 352px;
+  }
+}
+</style>

@@ -28,7 +28,11 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
         // Ignore getTransactionByHash null error msg
-        if (newError.includes(errorMsgs.cannotReturnNull)) {
+        if (
+          newError
+            .toLowerCase()
+            .includes(errorMsgs.cannotReturnNull.toLowerCase())
+        ) {
           return;
         }
         // eslint-disable-next-line
