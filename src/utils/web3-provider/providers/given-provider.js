@@ -33,7 +33,6 @@ class GivenProvider {
           requestManager,
           eventHub: EventBus
         };
-        console.log('does it get here?', req);
         const middleware = new MiddleWare();
         middleware.use(ethSendTransaction);
         middleware.use(ethSignTransaction);
@@ -45,7 +44,6 @@ class GivenProvider {
       });
     };
     this.givenProvider.send = (payload, callback) => {
-      console.log('does it get here? 1231231', payload);
       this.givenProvider
         .request(payload)
         .then(res =>
