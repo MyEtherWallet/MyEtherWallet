@@ -37,23 +37,23 @@ describe('DexAG Swap', () => {
         expect(isValid).toBe(false);
       });
   });
-  // test('it should return a quote', () => {
-  //   return dexag
-  //     .getQuote({
-  //       toT: {
-  //         symbol: 'DAI',
-  //         contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f'
-  //       },
-  //       fromT: {
-  //         symbol: 'ETH',
-  //         decimals: 18,
-  //         contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-  //       },
-  //       fromAmount: '100000000000000000'
-  //     })
-  //     .then(quotes => {
-  //       expect(quotes.length).toBeGreaterThanOrEqual(1);
-  //       expect(quotes[0].provider).toBe('DEX_AG');
-  //     });
-  // });
+  test('it should return a quote', () => {
+    return dexag
+      .getQuote({
+        toT: {
+          symbol: 'DAI',
+          contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f'
+        },
+        fromT: {
+          symbol: 'ETH',
+          decimals: 18,
+          contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        },
+        fromAmount: '100000000000000000'
+      })
+      .then(quotes => {
+        expect(quotes.length).toBeGreaterThanOrEqual(1);
+        expect(quotes[0].provider).toBe('DEX_AG');
+      });
+  });
 });
