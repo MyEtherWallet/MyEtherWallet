@@ -5,17 +5,11 @@
       <v-container>
         <div class="d-flex align-center px-6">
           <div>
-            <h2 class="font-weight--700 white--text mb-3">
-              Ready to explore Ethereum?
-            </h2>
+            <h2 class="white--text mb-3">Ready to explore Ethereum?</h2>
             <p class="white--text ma-0">
               Still don't know what MEW is?
               <a
-                class="
-                  color--inherit
-                  font-weight-medium
-                  text-decoration--underline
-                "
+                class="color--inherit font-weight-medium text-decoration--underline"
                 href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >
@@ -56,11 +50,7 @@
             <p class="white--text mt-3">
               Still don't know what MEW is?
               <a
-                class="
-                  color--inherit
-                  font-weight-medium
-                  text-decoration--underline
-                "
+                class="color--inherit font-weight-medium text-decoration--underline"
                 href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >

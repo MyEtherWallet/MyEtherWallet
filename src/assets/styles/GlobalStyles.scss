@@ -113,9 +113,7 @@ h1 {
   @extend .mew-heading-1;
 }
 h2 {
-  font-size: 1.88rem;
-  line-height: 2.31rem;
-  font-weight: 700;
+  @extend .mew-heading-2;
 }
 h3 {
   font-size: 1.5rem;

@@ -4,9 +4,7 @@
       <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
         Partners
       </div>
-      <h2 class="font-weight--700 mb-md-9">
-        Connect with the powerful crypto communities
-      </h2>
+      <h2 class="mb-md-9">Connect with the powerful crypto communities</h2>
     </v-sheet>
     <v-row class="mt-md-8 px-4">
       <v-col

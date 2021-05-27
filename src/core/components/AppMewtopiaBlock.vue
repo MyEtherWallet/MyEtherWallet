@@ -4,18 +4,10 @@
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
-          class="
-            border-radius--10px
-            card-content
-            d-flex
-            align-center
-            justify-space-between
-          "
+          class="border-radius--10px card-content d-flex align-center justify-space-between"
         >
           <div>
-            <h2 class="font-weight--700 white--text">
-              Newbie in crypto? Explore MEWtopia!
-            </h2>
+            <h1 class="white--text">Newbie in crypto? Explore MEWtopia!</h1>
             <p class="white--text mt-3">
               Our media platform where you can learn about crypto, share ideas,
               and become part of a supportive community.
