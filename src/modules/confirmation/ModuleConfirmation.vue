@@ -290,16 +290,11 @@ export default {
     },
     allToDetails() {
       const toNickname = this.addressBook.find(item => {
-        return this.to?.toLowerCase() === item.address?.toLowerCase();
+        return this.tx.to?.toLowerCase() === item.address?.toLowerCase();
       });
       return {
-        ensName: this.toDetails.type === 'resolved' ? this.toDetails.value : '',
-        nickname:
-          this.toDetails.type === 'selected'
-            ? this.toDetails.value
-            : toNickname
-            ? toNickname.nickname
-            : '',
+        ensName: this.toDetails.type === 'RESOLVED' ? this.toDetails.value : '',
+        nickname: toNickname ? toNickname.nickname : '',
         selected: this.toDetails.type
       };
     },

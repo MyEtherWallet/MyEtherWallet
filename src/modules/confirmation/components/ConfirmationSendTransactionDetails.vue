@@ -35,27 +35,21 @@
           <v-col cols="10" class="d-flex flex-column text-left">
             <p class="text-uppercase details-header mb-1">TO ADDRESS</p>
             <p
-              :class="[
-                showToAddress ? '' : 'address-color',
-                'ma-0 text-wrap mew-address'
-              ]"
-            >
-              {{ actualToAddress }}
-            </p>
-            <p
-              v-show="
-                toDetails.nickname !== '' &&
-                actualToAddress !== toDetails.nickname
-              "
-              class="ma-0"
+              v-if="toDetails.nickname !== ''"
+              class="font-weight-bold text-truncate ma-0"
             >
               {{ toDetails.nickname }}
             </p>
             <p
-              v-show="showToAddress"
-              class="ma-0 truncate mew-address address-color"
+              :class="[
+                toDetails.nickname === '' ? 'text-wrap' : 'truncate',
+                'address-color ma-0 mew-address'
+              ]"
             >
               {{ to }}
+            </p>
+            <p v-if="toDetails.ensName !== ''" class="primary--text ma-0">
+              {{ toDetails.ensName }}
             </p>
           </v-col>
         </v-row>
@@ -164,21 +158,6 @@ export default {
     },
     usdAmount() {
       return BigNumber(this.value).times(this.currency.price).toFixed(2);
-    },
-    showToAddress() {
-      return this.toDetails.selected !== 'TYPED';
-    },
-    actualToAddress() {
-      switch (this.toDetails.type) {
-        case 'resolved':
-          return this.toDetails.ensName;
-        case 'selected':
-          return this.toDetails.nickname;
-        default:
-          return this.data === '' || this.data === '0x'
-            ? this.to
-            : this.toTxData.to;
-      }
     }
   }
 };

@@ -114,7 +114,7 @@ export default {
             this.resolvedAddr = addr;
             this.isValidAddress = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'resolved',
+              type: 'RESOLVED',
               value: this.inputAddr
             });
           });

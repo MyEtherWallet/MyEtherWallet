@@ -51,6 +51,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.chainId = !tx.chainId
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
+  console.log('gets here now?');
   getSanitizedTx(tx)
     .then(_tx => {
       if (
