@@ -38,6 +38,7 @@
         </p>
       </v-col>
     </v-row>
+    {{details}}
     <!--      <b-progress
         v-if="details.currentValidatorsStaked"
         :max="total"

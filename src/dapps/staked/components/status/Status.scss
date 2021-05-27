@@ -1,0 +1,121 @@
+
+.staked-status {
+  .title {
+    color: #003B48;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 30px 40px 10px 40px;
+  }
+  .no-validators {
+    padding: 30px 40px 0 40px;
+  }
+  a {
+    color: #003B48 !important;
+    font-weight: normal;
+  }
+  .validator-container {
+    border-radius: 4px;
+    color: #003B48;
+    cursor: pointer;
+    flex-direction: column;
+    font-weight: 600;
+    margin: 20px 40px;
+    .top-row {
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      width: 100%;
+      .badge-container {
+        align-items: center;
+        @media all and (max-width: 625px) {
+          align-items: baseline;
+          flex-direction: column;
+        }
+      }
+      &.pending-expanded {
+        border-bottom: 1px solid #F5A623;
+      }
+      &.active-expanded {
+        border-bottom: 1px solid #05C0A5;
+      }
+      &.deposited-expanded {
+        border-bottom: 1px solid #5A78F0;
+      }
+      &.exited-expanded {
+        border-bottom: 1px solid #FF445B;
+      }
+      .badge {
+        color: #FFFFFF;
+        font-weight: normal;
+        padding: 10px;
+        text-transform: capitalize;
+        width: 100px;
+        @media all and (max-width: 625px) {
+          margin-left: 0 !important;
+          margin-top: 15px;
+        }
+      }
+      .pending-badge {
+        background-color: #F5A623;
+      }
+      .active-badge {
+        background-color: #05C0A5;
+      }
+      .deposited-badge {
+        background-color: #5A78F0;
+      }
+      .exited-badge {
+        background-color: #FF445B;
+      }
+      .right-container {
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .more-info {
+      background: #FFFFFF;
+      cursor: text;
+      flex-direction: column;
+      .queue-speed {
+        font-style: italic;
+        padding: 15px 20px;
+      }
+      .more-info-row {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 20px;
+        span {
+          width: 100%;
+        }
+        .info-text {
+          word-break: break-all;
+          font-weight: normal;
+          text-align: right;
+        }
+      }
+      .more-info-border {
+        border-bottom: 1px solid #efefef;
+      }
+    }
+  }
+
+  .pending-container {
+    border: 1px solid #F5A623;
+    background-color: #FFF6E6;
+  }
+
+  .active-container {
+    background-color: #F2FAFA;
+    border: 1px solid #05C0A5;
+  }
+
+  .deposited-container {
+    background-color: #F9FAFE;
+    border: 1px solid #5A78F0;
+  }
+
+  .exited-container {
+    background-color: #FFF8F9;
+    border: 1px solid #FF445B;
+  }
+}

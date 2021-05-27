@@ -66,14 +66,28 @@
         </i18n>
       </label>
     </div>
-    <mew-button
-      :disabled="emitWhenAllIsValid"
-      :loading="false"
-      :has-full-width="true"
-      btn-size="xlarge"
-      :title="$t('ens.register-domain')"
-      @click.native="doNext"
-    />
+    <v-row class="mx-0 top-pad">
+      <v-col class="pl-4" cols="6">
+        <mew-button
+          :loading="false"
+          :has-full-width="true"
+          btn-size="xlarge"
+          title="back"
+          @click.native="back"
+        />
+      </v-col>
+      <v-col class="pl-4" cols="6">
+        <mew-button
+          :disabled="emitWhenAllIsValid"
+          :loading="false"
+          :has-full-width="true"
+          btn-size="xlarge"
+          :title="$t('ens.register-domain')"
+          @click.native="doNext"
+        />
+      </v-col>
+    </v-row>
+
     {{ details }}
   </div>
 </template>
@@ -90,6 +104,10 @@ export default {
       default: () => {}
     },
     next: {
+      type: Function,
+      default: function () {}
+    },
+    back: {
       type: Function,
       default: function () {}
     }

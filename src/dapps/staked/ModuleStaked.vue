@@ -18,20 +18,41 @@
             <div class="mew-heading-2 mb-8 ml-2">
               {{ $t('ens.search-domain') }}
             </div>
-            <Stepper
+            <mew-stepper :items="stepperItems" :on-step="currentStepIdx">
+              <template v-if="isStepActive(0)" #stepperContent1>
+                <step-one :next="nextStep" @completed="proceed" />
+              </template>
+              <template v-if="isStepActive(1)" #stepperContent2>
+                <step-two :back="backStep" :next="nextStep" @completed="proceed" />
+              </template>
+              <template v-if="isStepActive(2)" #stepperContent3>
+                <step-three :details="details" :back="backStep" :next="nextStep" @completed="proceed" />
+              </template>
+              <template v-if="isStepActive(3)" #stepperContent4>
+                <step-four :details="details"  @completed="proceed" />
+              </template>
+              <template v-if="isStepActive(4)" #stepperContent5>
+                <step-five
+                  :amt="details.amount ? details.amount : 0"
+                  :hash="txHash"
+                  @completed="proceed"
+                />
+              </template>
+            </mew-stepper>
+<!--            <Stepper
               :steps="steps"
               :details="details"
               :set-data="setData"
               :tx-hash="txHash"
               :reset-stepper="resetStepper"
               @complete-step="completeStep"
-              @active-step="isStepActive"
+              @active-step="isStepActiveIdx"
               @stakeEth2="startProvision"
               @sendTransaction="sendTransaction"
               @reset="reset"
               @resetStepperDone="resetStepperDone"
             >
-            </Stepper>
+            </Stepper>-->
             <!--            <v-row class="mx-0">
               <v-col class="pr-0" cols="12">
                 stake
@@ -82,93 +103,12 @@
       </template>
     </the-wrapper-dapp>
   </div>
-  <!--  <div class="staked-wrapper">
-    <div class="header-container d-flex">
-      <back-button class="button-container" :title="$t('common.exit-dapp')">
-        <template #center>
-          <div class="d-flex">
-            <div
-              :class="['tab-btn', !activeValidatorsTab ? 'active-tab' : '']"
-              @click="activeValidatorsTab = !activeValidatorsTab"
-            >
-              {{ $t('dappsStaked.stake') }}
-            </div>
-            <div
-              :class="[
-                'tab-btn',
-                'validators-btn',
-                activeValidatorsTab ? 'active-tab' : ''
-              ]"
-              @click="activeValidatorsTab = !activeValidatorsTab"
-            >
-              {{ $t('dappsStaked.status') }}
-            </div>
-          </div>
-        </template>
-        <template #right>
-          <div class="d-flex stats-wrapper">
-            <div class="d-flex stats-container">
-              <i
-                v-if="!apr"
-                class="fa fa-spinner fa-spin staking-percent mb-1"
-              />
-              <span v-if="apr" class="staking-percent">{{ apr }}%</span>
-              <span>{{ $t('dappsStaked.current-stake-title') }}</span>
-            </div>
-            <div class="d-flex stats-container px-3">
-              <i
-                v-if="!totalStaked"
-                class="fa fa-spinner fa-spin total-eth-percent mb-1"
-              />
-              <span v-if="totalStaked" class="total-eth-percent">{{
-                totalStaked
-              }}</span>
-              <span>{{ $t('dappsStaked.total-eth-title') }}</span>
-            </div>
-          </div>
-        </template>
-      </back-button>
-    </div>
-    <div v-if="!activeValidatorsTab">
-      <div class="about-container">
-        <img :src="stakedLogo" height="20px" alt="Staked Logo" />
-        <p class="pt-2">{{ $t('dappsStaked.about') }}</p>
-      </div>
-      <stepper
-        :steps="steps"
-        :details="details"
-        :set-data="setData"
-        :tx-hash="txHash"
-        :reset-stepper="resetStepper"
-        @complete-step="completeStep"
-        @active-step="isStepActive"
-        @stakeEth2="startProvision"
-        @sendTransaction="sendTransaction"
-        @reset="reset"
-        @resetStepperDone="resetStepperDone"
-      />
-
-      <div v-if="currentStepIdx === 0" class="warning-container d-flex">
-        <div><i class="fa fa-exclamation-triangle" /></div>
-        <div>
-          <span>{{ $t('dappsStaked.generate-address.attention') }}</span>
-          <p class="warning mt-2">{{ $t('dappsStaked.warning') }}</p>
-        </div>
-      </div>
-    </div>
-    &lt;!&ndash;    <staked-status&ndash;&gt;
-    &lt;!&ndash;      v-if="activeValidatorsTab"&ndash;&gt;
-    &lt;!&ndash;      :network="network.type.name"&ndash;&gt;
-    &lt;!&ndash;      :loading="loadingValidators"&ndash;&gt;
-    &lt;!&ndash;      :validators="myValidators"&ndash;&gt;
-    &lt;!&ndash;    />&ndash;&gt;
-  </div>-->
 </template>
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import Staked from './handlers/staked';
-import Stepper from './stepper/Stepper';
+// import Staked from './handlers/staked';
+// import Stepper from './stepper/Stepper';
 import stakedLogo from '@/assets/images/icons/staked.png';
 import stakeConfigs from './handlers/configs';
 import axios from 'axios';
@@ -176,11 +116,21 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import calculateEth2Rewards from './handlers/helpers';
+import stepOne from './stepper/steps/SetAmount/SetAmount';
+import stepTwo from './stepper/steps/Upload/Upload';
+import stepThree from './stepper/steps/Review/Review';
+import stepFour from './stepper/steps/InProgress/InProgress';
+import stepFive from './stepper/steps/Done/Done';
+
 export default {
   name: 'ModuleStaked',
   components: {
     TheWrapperDapp,
-    Stepper
+    stepOne,
+    stepTwo,
+    stepThree,
+    stepFour,
+    stepFive
   },
   data() {
     return {
@@ -249,12 +199,47 @@ export default {
           title: '5', //this.$t('dappsStaked.steps.5'),
           completed: false
         }
-      ]
+      ],
+      currentStep: { index: '0' },
+      previousStep: {},
+      nextButton: {},
+      canContinue: false,
+      finalStep: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapGetters('global', ['network', 'gasPrice'])
+  },
+  watch: {
+    resetStepper: {
+      handler: function (val) {
+        if (val === true) {
+          this.init();
+          this.previousStep = {};
+          this.$emit('resetStepperDone');
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    currentStep: {
+      handler: function (newVal, oldVal) {
+        if (newVal.index === 0 && oldVal.index === 4) {
+          this.reset();
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    txHash(val) {
+      if (val && val !== '') {
+        this.nextStepAction();
+      }
+    }
+  },
+  created() {
+    this.init();
   },
   mounted() {
     // this.staked = new Staked();
@@ -291,7 +276,29 @@ export default {
       return 0;
     },
     async getValidators() {
-      return this.validatorsCount();
+      this.loadingValidators = true;
+      await axios
+        .get(`${this.endpoint}/history?address=${this.address}`, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(resp => {
+          this.myValidators = resp.data;
+          this.loadingValidators = false;
+        })
+        .catch(err => {
+          this.loadingValidators = false;
+          this.myValidators = [];
+          if (
+            err.response &&
+            err.response.status === 404 &&
+            err.response.data.msg === 'No matching history found'
+          ) {
+            return;
+          }
+          Toast(err, ERROR);
+        });
     },
     resetStepperDone() {
       this.resetStepper = false;
@@ -427,7 +434,7 @@ export default {
         }
       });
     },
-    isStepActive(payload) {
+    isStepActiveIdx(payload) {
       this.currentStepIdx = payload.index;
       this.steps.forEach(step => {
         if (step.name === payload.name) {
@@ -435,6 +442,75 @@ export default {
             step.completed = false;
           }
         }
+      });
+    },
+    isStepActive(index) {
+      if (this.currentStep.index === index) {
+        return true;
+      }
+      return false;
+    },
+    activateStep(index) {
+      if (this.steps[index]) {
+        this.previousStep = this.currentStep;
+        this.currentStep = {
+          name: this.steps[index].name,
+          index: index
+        };
+        if (index + 1 === this.steps.length) {
+          this.finalStep = true;
+        } else {
+          this.finalStep = false;
+        }
+      }
+      this.$emit('active-step', this.currentStep);
+    },
+    nextStepAction() {
+      this.nextButton[this.currentStep.name] = true;
+      console.log(this.canContinue); // todo remove dev item
+      if (this.canContinue) {
+        const currentIndex =
+          this.currentStep.index === 4 ? 0 : this.currentStep.index + 1;
+        this.activateStep(currentIndex);
+      }
+      this.canContinue = false;
+      this.$forceUpdate();
+    },
+    nextStep() {
+      console.log('nextStep'); // todo remove dev item
+      if (this.currentStep.index === 2) {
+        this.startProvision();
+        // this.$emit('stakeEth2');
+      }
+      if (this.currentStep.index === 3) {
+        this.$emit('sendTransaction');
+        return;
+      }
+      if (!this.$listeners || !this.$listeners['before-next-step']) {
+        this.nextStepAction();
+      }
+      this.canContinue = false;
+    },
+    backStep() {
+      const currentIndex = this.currentStep.index - 1;
+      if (currentIndex >= 0) {
+        this.activateStep(currentIndex, true);
+      }
+    },
+    proceed(canContinue, param, ethPrice) {
+      console.log(canContinue, param, ethPrice); // todo remove dev item
+      this.canContinue = canContinue;
+      this.setData(param);
+      if (ethPrice) {
+        this.setData({ key: 'ethPrice', value: ethPrice });
+      }
+    },
+    init() {
+      // Initiate stepper
+      this.activateStep(0);
+      this.canContinue = false;
+      this.steps.forEach(step => {
+        this.nextButton[step.name] = false;
       });
     }
   }

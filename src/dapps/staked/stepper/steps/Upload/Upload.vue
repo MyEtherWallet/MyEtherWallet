@@ -32,8 +32,18 @@
       <span class="address mt-2">{{ address }}</span>
     </div>
     <v-row class="mx-0 top-pad">
-      <v-col class="pl-4" cols="8">
+      <v-col class="pl-4" cols="6">
         <mew-button
+          :loading="false"
+          :has-full-width="true"
+          btn-size="xlarge"
+          title="back"
+          @click.native="back"
+        />
+      </v-col>
+      <v-col class="pl-4" cols="6">
+        <mew-button
+          :disabled="address === ''"
           :loading="false"
           :has-full-width="true"
           btn-size="xlarge"
@@ -52,6 +62,10 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
     next: {
+      type: Function,
+      default: function () {}
+    },
+    back: {
       type: Function,
       default: function () {}
     }
