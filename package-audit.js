@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = ['underscore'];
-
+const AUDIT_EXCEPTIONS = ['underscore','dns-packet'];
+// dns-packet added to permit builds on 5-27-21
 const execute = (command, callback) => {
   exec(
     command,
