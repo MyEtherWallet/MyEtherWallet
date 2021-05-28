@@ -144,29 +144,32 @@
                         Learn more about Wrapped Bitcoin.
                       </a>
                     </div>
-                    <div class="mx-n1">
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to renBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to wBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to PBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                    </div>
+                    <v-row class="mt-6">
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to renBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to wBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to PBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                    </v-row>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
