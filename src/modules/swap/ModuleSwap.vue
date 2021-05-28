@@ -300,6 +300,7 @@ import {
   txTypes,
   notificationTypes
 } from '@/modules/notifications/configs/configTypes';
+import { TRENDING_SYMBOLS, trendingList } from './configs/configTrendingTokens';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -380,8 +381,6 @@ export default {
         }
       ],
       swapIcon: SwapIcon,
-      fromTokens: [],
-      toTokens: [],
       providersMessage: {
         title: 'Loading Tokens Data',
         subtitle: ''
@@ -395,9 +394,13 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    /**
+     * Returns the dropdown token data
+     * to swap to
+     */
     actualToTokens() {
       const toTokens = this.toTokens ? this.toTokens : [];
       const imgs = [
@@ -406,62 +409,6 @@ export default {
         'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
         'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
         'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
-      ];
-      const trendingList = [
-        {
-          contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          isEth: true,
-          name: 'Ethereum',
-          subtext: 'ETH',
-          symbol: 'ETH',
-          type: 'ERC20',
-          value: 'Ethereum'
-        },
-        {
-          contract_address: '0xbtc',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-          isEth: false,
-          name: 'Bitcoin',
-          subtext: 'BTC',
-          symbol: 'BTC',
-          value: 'Bitcoin'
-        },
-        {
-          contract_address: '0xc713e5e149d5d0715dcd1c156a020976e7e56b88',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=',
-          isEth: true,
-          name: 'Aave MKR',
-          subtext: 'aMKR',
-          symbol: 'aMKR',
-          type: 'ERC20',
-          value: 'Aave MKR'
-        },
-        {
-          contract_address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
-          isEth: true,
-          name: '0x',
-          subtext: 'ZRX',
-          symbol: 'ZRX',
-          type: 'ERC20',
-          value: '0x'
-        },
-        {
-          contract_address: '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=',
-          isEth: true,
-          name: 'Kyber Network Crystal',
-          subtext: 'KNC',
-          symbol: 'KNC',
-          type: 'ERC20',
-          value: 'Kyber Network Crystal'
-        }
       ];
       return [
         {
@@ -474,13 +421,34 @@ export default {
         {
           header: 'Trending'
         },
-        ...trendingList,
+        ...this.trendingTokens,
         {
           header: 'All'
         },
         ...toTokens
       ];
     },
+    /**
+     * Returns all the tokens
+     * to swap to
+     */
+    toTokens() {
+      return this.availableTokens.toTokens
+        .filter(token => {
+          return !TRENDING_SYMBOLS.includes(token.symbol);
+        })
+        .map(token => {
+          const foundToken = this.findCoinToken(token.contract_address);
+          token.price = foundToken ? foundToken.current_price : '0';
+          token.subtext = token.symbol;
+          token.value = token.name;
+          return token;
+        });
+    },
+    /**
+     * Returns the dropdown token data
+     * to swap from
+     */
     actualFromTokens() {
       const defaultToken = [this.fromTokenType];
       const fromTokens = this.fromTokens ? this.fromTokens : [];
@@ -515,6 +483,31 @@ export default {
         },
         ...fromTokens
       ];
+    },
+    /**
+     * Returns all the tokens
+     * to swap from
+     */
+    fromTokens() {
+      return this.availableTokens.fromTokens.map(token => {
+        const foundToken = this.findCoinToken(token.contract_address);
+        token.price = foundToken ? foundToken.current_price : '0';
+        token.subtext = token.symbol;
+        token.value = token.name;
+        return token;
+      });
+    },
+    /**
+     * Returns all trending tokens
+     * to swap to
+     */
+    trendingTokens() {
+      return trendingList.map(token => {
+        const foundToken = this.findCoinToken(token.contract_address);
+        token.price = foundToken ? foundToken.current_price : '0';
+        token.img = foundToken ? foundToken.image : '';
+        return token;
+      });
     },
     totalFees() {
       const gasPrice =
@@ -710,21 +703,12 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
+    /* Find token from getLatestPrices query data*/
+    findCoinToken(hash) {
+      return this.coinGeckoTokens.get(hash.toLowerCase());
+    },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
-      /* Add Correct Values for the MewSelect*/
-      this.availableTokens.toTokens.forEach(token => {
-        token.subtext = token.symbol;
-        token.value = token.name;
-      });
-      this.availableTokens.fromTokens.forEach(token => {
-        token.subtext = token.symbol;
-        token.value = token.name;
-      });
-      this.availableTokens.fromTokens.filter(
-        token => token.symbol.toLowerCase() !== 'btc'
-      );
-
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
@@ -740,11 +724,15 @@ export default {
       return {};
     },
     setDefaults() {
-      this.fromTokens = this.availableTokens.fromTokens;
-      this.toTokens = this.availableTokens.toTokens;
+      // this.fromTokens = this.availableTokens.fromTokens;
+      // this.toTokens = this.availableTokens.toTokens;
       setImmediate(() => {
         this.fromTokenType = this.getTokenFromAddress(this.defaults.fromToken);
-        this.toTokenType = this.getTokenFromAddress(this.defaults.toToken);
+        console.error(
+          'in here',
+          this.getTokenFromAddress(this.defaults.fromToken)
+        );
+        this.toTokenType = {};
         this.setTokenInValue(this.tokenInValue);
       });
     },
@@ -764,7 +752,7 @@ export default {
     },
     setTokenInValue: _.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
-      this.tokenInValue = value;
+      this.tokenInValue = value || '0';
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         q.isSelected = false;

@@ -78,7 +78,7 @@ export default {
     },
     /**
      * Apollo query to fetch latest tokens
-     * also set eth price for state
+     * also set the state for eth price
      */
     getLatestPrices: {
       query: getLatestPrices,
@@ -105,9 +105,10 @@ export default {
                 token.contract ? token.contract.toLowerCase() : tokens.eth,
                 token
               );
-              this.$apollo.queries.getOwnersERC20Tokens?.refetch();
             }
           });
+          this.setCoinGeckoTokens(this.tokensData);
+          this.$apollo.queries.getOwnersERC20Tokens?.refetch();
         }
       },
       error(error) {
@@ -115,7 +116,7 @@ export default {
       }
     },
     /**
-     * Apollo query to fetch owners erc20 tokens and set it to state
+     * Apollo query to fetch owners erc20 tokens and set the state
      */
     getOwnersERC20Tokens: {
       query: getOwnersERC20Tokens,
@@ -167,7 +168,7 @@ export default {
               tokenBalance: this._getTokenBalance(
                 token.balance,
                 token.tokenInfo.decimals
-              )
+              ).value
             });
           });
           this.setTokens(formattedList);

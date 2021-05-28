@@ -27,6 +27,10 @@ const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);
 };
 
+const setCoinGeckoTokens = function ({ commit }, params) {
+  commit('SET_COIN_TOKENS', params);
+};
+
 const setAccountBalance = function ({ commit }, balance) {
   commit('SET_BALANCE', balance);
 };
@@ -122,5 +126,6 @@ export default {
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,
-  setTokens
+  setTokens,
+  setCoinGeckoTokens
 };

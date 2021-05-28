@@ -66,7 +66,7 @@ class Changelly {
         ]
       })
       .then(response => {
-        return response?.data?.result[0].minFrom;
+        return response?.data?.result[0]?.minFrom;
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
