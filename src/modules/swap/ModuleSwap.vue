@@ -485,7 +485,7 @@ export default {
       ];
     },
     /**
-     * Returns all the tokens
+     * Returns other tokens
      * to swap from
      */
     fromTokens() {
