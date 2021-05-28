@@ -60,7 +60,7 @@
 <script>
 import AppModal from '@/core/components/AppModal';
 import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 export default {
   components: {
@@ -133,13 +133,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     convertedFees() {
       return fromWei(this.txFee);
     },
     txFeeUSD() {
       return `$ ${BigNumber(this.convertedFees)
-        .times(this.ETHUSDValue.value)
+        .times(this.fiatValue)
         .toFixed(2)}`;
     }
   },
