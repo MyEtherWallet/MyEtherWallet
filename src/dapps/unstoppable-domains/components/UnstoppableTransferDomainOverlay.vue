@@ -21,14 +21,7 @@
           <div class="pa-8">
             <v-sheet
               color="transparent"
-              class="
-                mx-auto
-                mb-10
-                border-radius--10px
-                informationBlock
-                py-5
-                px-7
-              "
+              class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
             >
               <div class="d-flex align-center justify-space-between">
                 <div>Domain name:</div>
@@ -40,9 +33,7 @@
               indeterminate
               color="primary"
             ></v-progress-linear>
-            <h4 class="font-weight-bold text-center">
-              Processing the registration
-            </h4>
+            <h3 class="text-center">Processing the registration</h3>
             <v-sheet
               color="transparent"
               max-width="300px"

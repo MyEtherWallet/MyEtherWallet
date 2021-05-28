@@ -33,9 +33,9 @@
                 <p v-else-if="item.includes('item')">
                   {{ item[item.length - 1] }}. {{ $t(`privacyPol.${item}`) }}
                 </p>
-                <h4 v-else-if="item.includes('subtitle')">
+                <h3 v-else-if="item.includes('subtitle')">
                   {{ $t(`privacyPol.${item}`) }}
-                </h4>
+                </h3>
                 <h3 v-else>
                   {{ $t(`privacyPol.${item}`) }}
                 </h3>
