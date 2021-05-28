@@ -520,13 +520,13 @@ export default {
         });
         return promiEvent;
       });
-      // this.resolver(promises);
+      this.resolver(promises);
       this.reset();
       this.showSuccess(promises[promises.length - 1]);
     },
     sendSignedTx() {
       const hash = this.signedTxObject.tx.hash;
-      // this.resolver(this.signedTxObject);
+      this.resolver(this.signedTxObject);
       this.reset();
       this.showSuccess(hash);
     },
@@ -570,6 +570,10 @@ export default {
         .signTransaction(this.tx)
         .then(res => {
           this.signedTxObject = res;
+          if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+            this.showTxOverlay = false;
+            this.showSuccess(res.transactionHash);
+          }
         })
         .catch(e => {
           this.instance.errorHandler(e);
@@ -583,18 +587,22 @@ export default {
         this.signing = true;
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
         try {
-          const _signedTx = await this.instance.signTransaction(
-            this.unsignedTxArr[i]
-          );
-          if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
-            _signedTx.tx['handleNotification'] =
-              this.unsignedTxArr[i].handleNotification;
+          if (this.instance.identifier !== WALLET_TYPES.WEB3_WALLET) {
+            const _signedTx = await this.instance.signTransaction(
+              this.unsignedTxArr[i]
+            );
+            if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
+              _signedTx.tx['handleNotification'] =
+                this.unsignedTxArr[i].handleNotification;
+            }
+            _signedTx.tx['type'] = this.unsignedTxArr[i].type
+              ? this.unsignedTxArr[i].type
+              : 'OUT';
+            signed.push(_signedTx);
+            this.signedTxArray = signed;
+          } else {
+            signed.push(this.instance.signTransaction(this.unsignedTxArr[i]));
           }
-          _signedTx.tx['type'] = this.unsignedTxArr[i].type
-            ? this.unsignedTxArr[i].type
-            : 'OUT';
-          signed.push(_signedTx);
-          this.signedTxArray = signed;
         } catch (err) {
           this.signedTxArray = [];
           this.signing = false;
@@ -602,11 +610,16 @@ export default {
           return;
         }
       }
+      if (this.instance.identifier === WALLET_TYPES.WEB3_WALLET) {
+        Promise.all(signed).then(arr => {
+          console.log(arr);
+        });
+      }
       this.signing = false;
     },
     btnAction() {
       if (!this.signing) {
-        this.isHardware
+        this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET
           ? this.isBatch
             ? this.signBatchTx()
             : this.signTx()
@@ -677,11 +690,11 @@ export default {
             title: 'Data',
             value: item.data
           }
-        ];
+        ].filter(item => {
+          if (item.value !== '') return item;
+        });
       });
-      return newArr.filter(item => {
-        if (item.value !== '') return item;
-      });
+      return newArr;
     }
   }
 };
