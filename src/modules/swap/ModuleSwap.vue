@@ -20,21 +20,22 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <v-row class="align-center justify-space-between">
-            <v-col cols="12">
-              <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
-              <div v-else class="available-balance text-right">
-                {{ balanceInETH }}
-              </div>
-            </v-col>
+          <v-row class="align-center justify-space-between mt-4">
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
-              <mew-select
-                :value="fromTokenType"
-                label="From"
-                :items="actualFromTokens"
-                :is-swap="true"
-                :loading="isLoading"
-                @input="setFromToken" />
+              <div class="position--relative">
+                <wallet-top-right-text
+                  :loading="isLoading"
+                  :text="balanceInETH"
+                />
+                <mew-select
+                  :value="fromTokenType"
+                  label="From"
+                  :items="actualFromTokens"
+                  :is-swap="true"
+                  :loading="isLoading"
+                  @input="setFromToken"
+                />
+              </div>
               <mew-input
                 label="amount to swap"
                 placeholder="Enter amount to swap"
@@ -51,6 +52,7 @@
                 <img :src="swapIcon" height="35" />
               </div>
             </v-col>
+
             <v-col cols="12" sm="5">
               <mew-select
                 ref="toToken"
@@ -285,6 +287,7 @@
 </template>
 
 <script>
+import WalletTopRightText from '@/views/components-wallet/TheWalletTopRightText';
 import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -304,6 +307,7 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
+    WalletTopRightText,
     UserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
