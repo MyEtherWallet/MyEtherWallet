@@ -28,7 +28,7 @@
             <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                <h3 v-if="!isLoadingData" class="">
                   $ {{ totalLiquidity.usd }}
                 </h3>
                 <v-skeleton-loader
@@ -137,9 +137,7 @@
             <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
-                  $ {{ totalBorrow.usd }}
-                </h3>
+                <h3 v-if="!isLoadingData">$ {{ totalBorrow.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
@@ -177,9 +175,7 @@
             <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
-                  $ {{ totalCollateral.usd }}
-                </h3>
+                <h3 v-if="!isLoadingData">$ {{ totalCollateral.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
