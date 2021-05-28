@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
 * Fix ENS icons [#3110](https://github.com/MyEtherWallet/MyEtherWallet/pull/3110)
 * Fix mew-select border issue [#3091](https://github.com/MyEtherWallet/MyEtherWallet/pull/3091)
 * Add user msg for swap [#3087](https://github.com/MyEtherWallet/MyEtherWallet/pull/3087)
