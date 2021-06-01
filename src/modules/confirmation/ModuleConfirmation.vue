@@ -75,7 +75,7 @@
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
             :value="value"
-            :value-usd="ETHUSDValue.value"
+            :value-usd="usdValue"
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
@@ -263,6 +263,9 @@ export default {
     ...mapGetters('external', ['fiatValue', 'test']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    usdValue() {
+      return BigNumber(this.fiatValue).toFixed();
+    },
     showConfirmWithWallet() {
       return (
         (this.signing || this.signingPending) &&
@@ -570,6 +573,7 @@ export default {
         .then(res => {
           this.signedTxObject = res;
           if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+            console.log(res, 'got here');
             this.showTxOverlay = false;
             this.showSuccess(res.transactionHash);
           }
@@ -601,6 +605,9 @@ export default {
             this.signedTxArray = signed;
           } else {
             signed.push(this.instance.signTransaction(this.unsignedTxArr[i]));
+            Promise.all(signed).then(val => {
+              this.signedTxArray = val;
+            });
           }
         } catch (err) {
           this.signedTxArray = [];

@@ -30,7 +30,25 @@
       <div class="border-radius--5px pa-2 information-container">
         <v-row>
           <!-- icon -->
-          <v-col cols="2"> </v-col>
+          <v-col
+            cols="2"
+            class="d-flex flex-column justify-center align-center"
+          >
+            <v-img
+              v-if="avatar !== ''"
+              :src="avatar"
+              height="25px"
+              width="25px"
+              class="circle"
+            />
+            <mew-blockie
+              :address="to"
+              width="25px"
+              height="25px"
+              class="mx-2"
+              v-else
+            />
+          </v-col>
           <!-- tx information -->
           <v-col cols="10" class="d-flex flex-column text-left">
             <p class="text-uppercase details-header mb-1">TO ADDRESS</p>
@@ -129,6 +147,10 @@ export default {
     sendCurrency: {
       type: Object,
       default: () => {}
+    },
+    avatar: {
+      type: String,
+      default: ''
     }
   },
   data: function () {
@@ -204,5 +226,8 @@ export default {
 
 .base-color {
   color: var(--v-titlePrimary-base);
+}
+.circle {
+  border-radius: 50%;
 }
 </style>
