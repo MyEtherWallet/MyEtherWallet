@@ -119,7 +119,7 @@ import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { txTypes, notificationTypes } from './configs/configTypes';
 import formatNotification from './helpers/formatNotification';
-import EventBus from '@/core/plugins/eventBus.js';
+import { EventBus } from '@/core/plugins/eventBus.js';
 
 export default {
   name: 'ModuleNotifications',

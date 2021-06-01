@@ -42,11 +42,11 @@
               class="circle"
             />
             <mew-blockie
+              v-else
               :address="to"
               width="25px"
               height="25px"
               class="mx-2"
-              v-else
             />
           </v-col>
           <!-- tx information -->

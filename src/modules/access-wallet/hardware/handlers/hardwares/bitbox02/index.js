@@ -24,6 +24,10 @@ class BitBox02Wallet {
     this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX2];
     this.status = undefined;
     this.pairingConfirmed = false;
+    this.icon = {
+      type: 'mew-icon',
+      value: 'bitbox'
+    };
   }
   async connect() {
     const devicePath = await getDevicePath();

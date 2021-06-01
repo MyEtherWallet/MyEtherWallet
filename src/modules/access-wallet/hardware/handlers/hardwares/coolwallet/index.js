@@ -8,6 +8,7 @@ import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
+import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 
 import store from '@/core/store';
 import {
@@ -31,6 +32,10 @@ class CoolWallet {
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
+    this.icon = {
+      type: 'img',
+      value: coolwallet
+    };
   }
   init(password) {
     const _this = this;

@@ -28,6 +28,10 @@ class BitBoxWallet {
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX];
     this.password = password;
+    this.icon = {
+      type: 'mew-icon',
+      value: 'bitbox'
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

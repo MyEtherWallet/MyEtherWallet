@@ -115,9 +115,10 @@
           <!-- transaction details -->
           <confirm-with-wallet
             v-if="showConfirmWithWallet"
-            :is-swap="isHardware"
+            :is-swap="isSwap"
             :tx-length="unsignedTxArr.length > 0 ? unsignedTxArr.length : 1"
             :signed="signingPending"
+            :error="error"
           />
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
@@ -249,7 +250,8 @@ export default {
       links: {
         ethvm: '',
         etherscan: ''
-      }
+      },
+      error: ''
     };
   },
   computed: {
@@ -264,7 +266,7 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
     usdValue() {
-      return BigNumber(this.fiatValue).toFixed();
+      return BigNumber(this.fiatValue).toNumber();
     },
     showConfirmWithWallet() {
       return (
@@ -342,6 +344,7 @@ export default {
       );
     },
     disableBtn() {
+      if (this.error !== '') return true;
       if (!this.signing) return true;
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
@@ -466,6 +469,11 @@ export default {
       this.sendCurrency = {};
       this.toDetails = {};
       this.signing = false;
+      this.links = {
+        etherscan: '',
+        ethvm: ''
+      };
+      this.error = '';
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -568,21 +576,28 @@ export default {
     async signTx() {
       if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
         this.signing = true;
-      await this.instance
-        .signTransaction(this.tx)
-        .then(res => {
-          this.signedTxObject = res;
-          if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-            console.log(res, 'got here');
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        await this.instance
+          .signTransaction(this.tx)
+          .on('transactionHash', res => {
             this.showTxOverlay = false;
-            this.showSuccess(res.transactionHash);
-          }
-        })
-        .catch(e => {
-          this.instance.errorHandler(e);
-          this.signedTxObject = {};
-          this.signing = false;
-        });
+            this.showSuccess(res);
+          })
+          .catch(e => {
+            this.signedTxObject = {};
+            this.error = e.message;
+          });
+      } else {
+        await this.instance
+          .signTransaction(this.tx)
+          .then(res => {
+            this.signedTxObject = res;
+          })
+          .catch(e => {
+            this.signedTxObject = {};
+            this.error = e.message;
+          });
+      }
     },
     async signBatchTx() {
       const signed = [];
@@ -602,28 +617,39 @@ export default {
               ? this.unsignedTxArr[i].type
               : 'OUT';
             signed.push(_signedTx);
-            this.signedTxArray = signed;
           } else {
-            signed.push(this.instance.signTransaction(this.unsignedTxArr[i]));
-            Promise.all(signed).then(val => {
-              this.signedTxArray = val;
-            });
+            this.instance
+              .signTransaction(this.unsignedTxArr[i])
+              .on('transactionHash', res => {
+                signed.push({
+                  tx: {
+                    hash: res
+                  }
+                });
+              });
           }
+          this.signedTxArray = signed;
         } catch (err) {
           this.signedTxArray = [];
           this.signing = false;
           this.instance.errorHandler(err);
           return;
         }
-      }
-      if (this.instance.identifier === WALLET_TYPES.WEB3_WALLET) {
-        Promise.all(signed).then(arr => {
-          console.log(arr);
-        });
+        if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+          if (this.signedTxArray.length === this.unsignedTxArr.length)
+            this.showSuccess(this.signedTxArray);
+        }
       }
       this.signing = false;
     },
     btnAction() {
+      if (
+        this.error !== '' &&
+        (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+      ) {
+        this.isBatch ? this.signBatchTx() : this.signTx();
+        return;
+      }
       if (!this.signing) {
         this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET
           ? this.isBatch

@@ -22,7 +22,7 @@ import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
-
+import keepkey from '@/assets/images/icons/wallets/keepkey.svg';
 const { MessageType } = Messages;
 const { MESSAGETYPE_PINMATRIXREQUEST, MESSAGETYPE_PASSPHRASEREQUEST } =
   MessageType;
@@ -35,6 +35,10 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
+    this.icon = {
+      type: 'img',
+      value: keepkey
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
