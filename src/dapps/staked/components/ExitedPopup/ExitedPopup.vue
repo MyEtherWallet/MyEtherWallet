@@ -1,5 +1,5 @@
 <template>
-  <b-modal
+  <mew-modal
     ref="exitedPopup"
     :title="$t('dappsStaked.exited-popup.title')"
     hide-footer
@@ -28,7 +28,7 @@
         ></i18n
       >
     </div>
-  </b-modal>
+  </mew-modal>
 </template>
 
 <style lang="scss" scoped>

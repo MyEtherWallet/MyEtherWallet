@@ -10,54 +10,64 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import vuexStore from '@/core/store';
+import EventEmitter from 'events';
 
-export default class Staked {
+export default class Staked extends EventEmitter {
   constructor() {
-    this.$store = vuexStore;
-    Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
-    const stakedLogo = '';
-    this.myValidators = [];
-    this.transactionData = {};
-    this.details = {};
-    this.totalStaked = '';
-    this.apr = '';
-    this.eth2ContractAddress = '';
-    this.endpoint = '';
-    this.batchContract = '';
-    this.txHash = '';
-    this.currentStepIdx = 0;
-    this.resetStepper = false;
-    this.stakedLogo = stakedLogo;
-    this.loadingValidators = true;
-    this.activeValidatorsTab = false;
-    this.steps = [
-      {
-        name: 1,
-        title: this.$t('dappsStaked.steps.1'),
-        completed: false
-      },
-      {
-        name: 2,
-        title: this.$t('dappsStaked.steps.2'),
-        completed: false
-      },
-      {
-        name: 3,
-        title: this.$t('dappsStaked.steps.3'),
-        completed: false
-      },
-      {
-        name: 4,
-        title: this.$t('dappsStaked.steps.4'),
-        completed: false
-      },
-      {
-        name: 5,
-        title: this.$t('dappsStaked.steps.5'),
-        completed: false
-      }
-    ];
+    super();
+    try {
+      this.$store = vuexStore;
+      Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
+      Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
+      const stakedLogo = '';
+      this.settingUp = true;
+      this.myValidators = [];
+      this.priorValidators = [];
+      this.transactionData = {};
+      this.details = {};
+      this.totalStaked = '';
+      this.apr = '';
+      this.eth2ContractAddress = '';
+      this.endpoint = '';
+      this.batchContract = '';
+      this.txHash = '';
+      this.currentStepIdx = 0;
+      this.resetStepper = false;
+      this.stakedLogo = stakedLogo;
+      this.loadingValidators = true;
+      this.activeValidatorsTab = false;
+      this.networkName = this.network().type.name;
+      this.steps = [
+        {
+          name: 1,
+          // title: this.$t('dappsStaked.steps.1'),
+          completed: false
+        },
+        {
+          name: 2,
+          // title: this.$t('dappsStaked.steps.2'),
+          completed: false
+        },
+        {
+          name: 3,
+          // title: this.$t('dappsStaked.steps.3'),
+          completed: false
+        },
+        {
+          name: 4,
+          // title: this.$t('dappsStaked.steps.4'),
+          completed: false
+        },
+        {
+          name: 5,
+          // title: this.$t('dappsStaked.steps.5'),
+          completed: false
+        }
+      ];
+    } catch (e) {
+      console.log(e); // todo remove dev item
+    }
+    this.setup();
   }
 
   validatorsCount() {
@@ -77,11 +87,17 @@ export default class Staked {
       })
       .then(resp => {
         this.myValidators = resp.data;
+        if(this.settingUp){
+          this.priorValidators = resp.data;
+        }
         this.loadingValidators = false;
       })
       .catch(err => {
         this.loadingValidators = false;
         this.myValidators = [];
+        if(this.settingUp){
+          this.priorValidators = [];
+        }
         if (
           err.response &&
           err.response.status === 404 &&
@@ -107,25 +123,35 @@ export default class Staked {
     this.setup();
   }
   setup() {
-    this.eth2ContractAddress =
-      stakeConfigs.network[this.network().type.name].depositAddress;
-    this.endpoint = stakeConfigs.network[this.network().type.name].endpoint;
-    this.batchContract =
-      stakeConfigs.network[this.network().type.name].batchContract;
+    try {
+      this.eth2ContractAddress =
+        stakeConfigs.network[this.networkName].depositAddress;
+      this.endpoint = stakeConfigs.network[this.networkName].endpoint;
+      this.batchContract = stakeConfigs.network[this.networkName].batchContract;
 
-    this.web3()
-      .eth.getBalance(this.eth2ContractAddress)
-      .then(res => {
-        const raw = this.web3().utils.fromWei(res, 'ether');
-        this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
-          .times(100)
-          .toFixed(2);
-      })
-      .catch(err => {
-        Toast(err, {}, ERROR);
-      });
-    this.getValidators();
+      this.web3()
+        .eth.getBalance(this.eth2ContractAddress)
+        .then(res => {
+          const raw = this.web3().utils.fromWei(res, 'ether');
+          this.totalStaked = new BigNumber(raw).toFormat(0);
+          this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+            .times(100)
+            .toFixed(2);
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+      this.getValidators()
+        .then(() =>{
+          this.settingUp = false;
+        })
+    } catch (e) {
+      // eslint-disable-next-line
+            console.error(e);
+    }
+  }
+  allValidatorsStaked(){
+    this.priorValidators
   }
   // goToGenerate() {
   //   this.$router.push('/generate-eth2-keystore');
@@ -170,23 +196,12 @@ export default class Staked {
             response.data.raw.length === parseInt(this.validatorsCount())
           ) {
             const validatorStaked = this.details.amount / 32;
-            // if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-            //   this.details.currentValidatorsStaked = validatorStaked;
-            // } else {
-            //   this.$set(
-            //     this.details,
-            //     'currentValidatorsStaked',
-            //     validatorStaked
-            //   );
-            // }
-            //
-            // if (this.details.hasOwnProperty('totalValidators')) {
-            //   this.details.totalValidators = validatorStaked;
-            // } else {
-            //   this.$set(this.details, 'totalValidators', validatorStaked);
-            // }
-            this.details.currentValidatorsStaked = validatorStaked;
-            this.details.totalValidators = validatorStaked;
+            this.setData({
+              key: 'currentValidatorsStaked',
+              value: validatorStaked
+            });
+            this.setData({ key: 'totalValidators', value: validatorStaked });
+            this.emit('done')
             this.transactionData = response.data.transaction;
             clearInterval(interval);
           }
@@ -198,27 +213,14 @@ export default class Staked {
             err.response.status === 424 &&
             err.response.data.msg === 'Not all validators have been provisioned'
           ) {
-            this.details.currentValidatorsStaked = err.response.data.current;
-            // if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-            //   this.details.currentValidatorsStaked = err.response.data.current;
-            // } else {
-            //
-            //   this.$set(
-            //     this.details,
-            //     'currentValidatorsStaked',
-            //     err.response.data.current
-            //   );
-            // }
-            this.details.totalValidators = err.response.data.total;
-            // if (this.details.hasOwnProperty('totalValidators')) {
-            //   this.details.totalValidators = err.response.data.total;
-            // } else {
-            //   this.$set(
-            //     this.details,
-            //     'totalValidators',
-            //     err.response.data.total
-            //   );
-            // }
+            this.setData({
+              key: 'currentValidatorsStaked',
+              value: err.response.data.current
+            });
+            this.setData({
+              key: 'totalValidators',
+              value: err.response.data.total
+            });
 
             return;
           }
@@ -249,7 +251,15 @@ export default class Staked {
     //   });
   }
   setData(data) {
+    // if (this.details.hasOwnProperty(data.key)) {
+    //   this.details[data.key] = data.value;
+    // } else {
+    //   this.$set(this.details, data.key, data.value);
+    // }
+    console.log('details internal', this.details); // todo remove dev item
+    this.emit('setData', data);
     this.details[data.key] = data.value;
+    return this.details;
   }
   completeStep(payload) {
     this.steps.forEach(step => {

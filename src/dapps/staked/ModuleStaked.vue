@@ -23,13 +23,22 @@
                 <step-one :next="nextStep" @completed="proceed" />
               </template>
               <template v-if="isStepActive(1)" #stepperContent2>
-                <step-two :back="backStep" :next="nextStep" @completed="proceed" />
+                <step-two
+                  :back="backStep"
+                  :next="nextStep"
+                  @completed="proceed"
+                />
               </template>
               <template v-if="isStepActive(2)" #stepperContent3>
-                <step-three :details="details" :back="backStep" :next="nextStep" @completed="proceed" />
+                <step-three
+                  :details="details"
+                  :back="backStep"
+                  :next="nextStep"
+                  @completed="proceed"
+                />
               </template>
               <template v-if="isStepActive(3)" #stepperContent4>
-                <step-four :details="details"  @completed="proceed" />
+                <step-four :details="details" :next="nextStep" @completed="proceed" />
               </template>
               <template v-if="isStepActive(4)" #stepperContent5>
                 <step-five
@@ -39,7 +48,7 @@
                 />
               </template>
             </mew-stepper>
-<!--            <Stepper
+            <!--            <Stepper
               :steps="steps"
               :details="details"
               :set-data="setData"
@@ -95,8 +104,12 @@
               {{ $t('ens.search-domain') }}
             </div>
             <v-row class="mx-0">
-              <v-col class="pr-0" cols="8"> status </v-col>
-              <v-col class="pl-0" cols="4"> status </v-col>
+              <v-col class="pr-0" cols="12">
+                <status
+                  :validators="myValidators"
+                  :loading="loadingValidators"
+                ></status>
+              </v-col>
             </v-row>
           </div>
         </v-sheet>
@@ -107,7 +120,7 @@
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-// import Staked from './handlers/staked';
+import Staked from './handlers/staked';
 // import Stepper from './stepper/Stepper';
 import stakedLogo from '@/assets/images/icons/staked.png';
 import stakeConfigs from './handlers/configs';
@@ -121,6 +134,7 @@ import stepTwo from './stepper/steps/Upload/Upload';
 import stepThree from './stepper/steps/Review/Review';
 import stepFour from './stepper/steps/InProgress/InProgress';
 import stepFive from './stepper/steps/Done/Done';
+import status from './components/status/Status';
 
 export default {
   name: 'ModuleStaked',
@@ -130,7 +144,8 @@ export default {
     stepTwo,
     stepThree,
     stepFour,
-    stepFive
+    stepFive,
+    status
   },
   data() {
     return {
@@ -242,8 +257,16 @@ export default {
     this.init();
   },
   mounted() {
-    // this.staked = new Staked();
-    this.setup();
+    this.staked = new Staked();
+    this.staked.on('setData', data => {
+      console.log(data); // todo remove dev item
+      this.setData(data);
+    });
+    this.staked.on('done', () => {
+      console.log('DONE'); // todo remove dev item
+      this.nextStepAction();
+    });
+    // this.setup();
   },
   methods: {
     setup() {
@@ -267,7 +290,7 @@ export default {
           Toast(err, ERROR);
         });
       console.log('endpoint', this.endpoint); // todo remove dev item
-      this.getValidators();
+      this.staked.getValidators();
     },
     validatorsCount() {
       if (this.details.amount) {
@@ -318,105 +341,10 @@ export default {
       this.$router.push('/generate-eth2-keystore');
     },
     async startProvision() {
-      const params = {
-        address: this.address,
-        withdrawalKey: this.details.address,
-        validatorsCount: this.validatorsCount
-      };
-      await axios
-        .post(this.endpoint + '/provision', params, {
-          header: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          response && response.data.provisioning_request_uuid
-            ? this.startPolling(response.data.provisioning_request_uuid)
-            : Toast(this.$t('dappsStaked.error-try-again'), {}, ERROR);
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      await this.staked.startProvision();
     },
     startPolling(uuid) {
-      let prevReqComplete = true;
-      const interval = setInterval(() => {
-        if (!prevReqComplete) return;
-        prevReqComplete = false;
-        axios
-          .get(`${this.endpoint}/status?provisioning_request_uuid=${uuid}`, {
-            header: {
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(response => {
-            prevReqComplete = true;
-            if (
-              response &&
-              response.data &&
-              response.data.raw.length === parseInt(this.validatorsCount())
-            ) {
-              const validatorStaked = this.details.amount / 32;
-              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-                this.details.currentValidatorsStaked = validatorStaked;
-              } else {
-                this.$set(
-                  this.details,
-                  'currentValidatorsStaked',
-                  validatorStaked
-                );
-              }
-
-              if (this.details.hasOwnProperty('totalValidators')) {
-                this.details.totalValidators = validatorStaked;
-              } else {
-                this.$set(this.details, 'totalValidators', validatorStaked);
-              }
-              this.transactionData = response.data.transaction;
-              clearInterval(interval);
-            }
-          })
-          .catch(err => {
-            prevReqComplete = true;
-            if (
-              err.response &&
-              err.response.status === 424 &&
-              err.response.data.msg ===
-                'Not all validators have been provisioned'
-            ) {
-              if (this.details.hasOwnProperty('currentValidatorsStaked')) {
-                this.details.currentValidatorsStaked =
-                  err.response.data.current;
-              } else {
-                this.$set(
-                  this.details,
-                  'currentValidatorsStaked',
-                  err.response.data.current
-                );
-              }
-
-              if (this.details.hasOwnProperty('totalValidators')) {
-                this.details.totalValidators = err.response.data.total;
-              } else {
-                this.$set(
-                  this.details,
-                  'totalValidators',
-                  err.response.data.total
-                );
-              }
-
-              return;
-            }
-            if (
-              err.response &&
-              err.response.status === 404 &&
-              err.response.data.msg ===
-                'Requested provisioning_request_uuid not found'
-            )
-              return;
-            Toast(err, {}, ERROR);
-          });
-      }, 5000);
+      this.staked.startPolling(uuid);
     },
     sendTransaction() {},
     setData(data) {
@@ -425,9 +353,11 @@ export default {
       } else {
         this.$set(this.details, data.key, data.value);
       }
+      // this.staked.setData(data);
       console.log('this.details', this.details); // todo remove dev item
     },
     completeStep(payload) {
+      console.log('completeStep'); // todo remove dev item
       this.steps.forEach(step => {
         if (step.name === payload.name) {
           step.completed = true;
@@ -435,6 +365,8 @@ export default {
       });
     },
     isStepActiveIdx(payload) {
+      console.log('isStepActiveIdx'); // todo remove dev item
+      console.log('payload', payload); // todo remove dev item
       this.currentStepIdx = payload.index;
       this.steps.forEach(step => {
         if (step.name === payload.name) {
@@ -451,6 +383,7 @@ export default {
       return false;
     },
     activateStep(index) {
+      console.log('activateStep'); // todo remove dev item
       if (this.steps[index]) {
         this.previousStep = this.currentStep;
         this.currentStep = {
@@ -466,6 +399,7 @@ export default {
       this.$emit('active-step', this.currentStep);
     },
     nextStepAction() {
+      console.log('nextStepAction'); // todo remove dev item
       this.nextButton[this.currentStep.name] = true;
       console.log(this.canContinue); // todo remove dev item
       if (this.canContinue) {
@@ -477,14 +411,15 @@ export default {
       this.$forceUpdate();
     },
     nextStep() {
-      console.log('nextStep'); // todo remove dev item
-      if (this.currentStep.index === 2) {
+      console.log('nextStep', this.currentStep.index); // todo remove dev item
+      if (this.currentStep.index === 1) {
         this.startProvision();
         // this.$emit('stakeEth2');
       }
       if (this.currentStep.index === 3) {
+        console.log('sendTransaction'); // todo remove dev item
         this.$emit('sendTransaction');
-        return;
+        // return;
       }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();
@@ -498,11 +433,11 @@ export default {
       }
     },
     proceed(canContinue, param, ethPrice) {
-      console.log(canContinue, param, ethPrice); // todo remove dev item
+      console.log('proceed', canContinue, param, ethPrice); // todo remove dev item
       this.canContinue = canContinue;
-      this.setData(param);
+      this.staked.setData(param);
       if (ethPrice) {
-        this.setData({ key: 'ethPrice', value: ethPrice });
+        this.staked.setData({ key: 'ethPrice', value: ethPrice });
       }
     },
     init() {

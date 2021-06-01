@@ -12,10 +12,16 @@
     </v-row>
     <v-row class="mx-0 bottom-pad">
       <v-col class="pr-0" cols="12">
-        <mew-progress-bar
+        <v-progress-linear
+          color="teal"
+          buffer-value="0"
+          :value="current"
+          stream
+        ></v-progress-linear>
+<!--        <mew-progress-bar
           :balance-obj="details.currentValidatorsStaked"
           :animated="details.currentValidatorsStaked !== total"
-        />
+        />-->
       </v-col>
     </v-row>
     <v-row class="mx-0 bottom-pad">
@@ -38,7 +44,7 @@
         </p>
       </v-col>
     </v-row>
-    {{details}}
+    {{ details }}
     <!--      <b-progress
         v-if="details.currentValidatorsStaked"
         :max="total"
@@ -70,11 +76,22 @@ export default {
     details: {
       type: Object,
       default: () => {}
+    },
+    next: {
+      type: Function,
+      default: function () {}
     }
   },
   computed: {
     total() {
       return this.details.amount / 32;
+    },
+    current() {
+      const val = parseInt(
+        this.details.currentValidatorsStaked?.toString() / this.total.toString()
+      );
+      if (val) return val * 100;
+      return 0;
     }
   },
   watch: {
@@ -82,6 +99,7 @@ export default {
       handler: function (newVal) {
         if (newVal && newVal.currentValidatorsStaked === this.total) {
           this.$emit('completed', true, { key: 'stake', value: true });
+          this.next();
         }
       },
       deep: true,
