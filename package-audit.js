@@ -14,7 +14,8 @@ const AUDIT_EXCEPTIONS = [
   'xmlhttprequest-ssl',
   'url-parse', // added 5-10-21
   'underscore', // added 5-10-21
-  'lodash' // added 5-10-21
+  'lodash', // added 5-10-21,
+  'dns-packet' // added 5-25-21 (could be related to an @ensdomains internal dependency)
 ];
 
 const execute = (command, callback) => {

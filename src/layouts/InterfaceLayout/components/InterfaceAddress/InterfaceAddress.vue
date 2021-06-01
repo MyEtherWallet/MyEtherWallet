@@ -107,7 +107,8 @@ import {
   KEYSTORE,
   PRIV_KEY,
   MEW_CONNECT,
-  WEB3_WALLET
+  WEB3_WALLET,
+  WALLET_CONNECT
 } from '@/wallets/bip44/walletTypes';
 
 export default {
@@ -150,7 +151,8 @@ export default {
         this.account.identifier !== KEYSTORE &&
         this.account.identifier !== PRIV_KEY &&
         this.account.identifier !== MEW_CONNECT &&
-        this.account.identifier !== WEB3_WALLET
+        this.account.identifier !== WEB3_WALLET &&
+        this.account.identifier !== WALLET_CONNECT
       ) {
         this.hasMultipleAddr = true;
       } else {

@@ -1,3 +1,10 @@
+### v5.8.0
+
+### Bug
+
+- remove switch addres for wallet connect [#3111](https://github.com/MyEtherWallet/MyEtherWallet/pull/3111)
+- fix decimal property checks for one inch [#3105](https://github.com/MyEtherWallet/MyEtherWallet/pull/3105)
+
 ### v5.7.30
 
 ### Bug
