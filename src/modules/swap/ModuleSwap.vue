@@ -303,12 +303,20 @@ import {
   txTypes,
   notificationTypes
 } from '@/modules/notifications/configs/configTypes';
-import { TRENDING_SYMBOLS, trendingList } from './configs/configTrendingTokens';
+import {
+  TRENDING_SYMBOLS,
+  TRENDING_LIST
+} from './handlers/configs/configTrendingTokens';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
+
+const tokens = {
+  eth: 'ethereum'
+};
+
 export default {
   name: 'ModuleSwap',
   components: {
@@ -364,7 +372,7 @@ export default {
       fromTokenType: {},
       tokenInValue: this.amount,
       tokenOutValue: '0',
-      availableTokens: [],
+      availableTokens: { toTokens: [], fromTokens: [] },
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
@@ -401,11 +409,19 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     /**
+     * Check if fromTokenType is Eth
+     */
+    isFromTokenEth() {
+      return (
+        this.fromTokenType.name &&
+        this.fromTokenType.name.toLowerCase() === tokens.eth
+      );
+    },
+    /**
      * Returns the dropdown token data
      * to swap to
      */
     actualToTokens() {
-      const toTokens = this.toTokens ? this.toTokens : [];
       const imgs = [
         'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
         'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
@@ -417,7 +433,7 @@ export default {
         {
           text: 'Select Token',
           imgs: imgs,
-          total: `${toTokens.length}`,
+          total: `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
         },
@@ -428,7 +444,7 @@ export default {
         {
           header: 'All'
         },
-        ...toTokens
+        ...this.toTokens
       ];
     },
     /**
@@ -453,30 +469,19 @@ export default {
      * to swap from
      */
     actualFromTokens() {
-      const defaultToken = [this.fromTokenType];
-      const fromTokens = this.fromTokens ? this.fromTokens : [];
-      const tokensList = this.tokensList
-        ? defaultToken.concat(this.tokensList)
-        : [];
-      const imgs = tokensList.map(item => {
-        return item.img;
-      });
-      if (BigNumber(this.balanceInETH).lte(0))
-        tokensList.push({
-          hasNoEth: true,
-          disabled: true,
-          text: 'Your wallet is empty.',
-          linkText: 'Buy ETH',
-          link: 'https://ccswap.myetherwallet.com/#/'
-        });
+      const tokensList = this.tokensList || [];
+      BigNumber(this.balanceInETH).lte(0)
+        ? tokensList.unshift({
+            hasNoEth: true,
+            disabled: true,
+            text: 'Your wallet is empty.',
+            linkText: 'Buy ETH',
+            link: 'https://ccswap.myetherwallet.com/#/'
+          })
+        : this.isFromTokenEth
+        ? tokensList.unshift(this.fromTokenType)
+        : null;
       return [
-        {
-          text: 'Select Token',
-          imgs: imgs,
-          total: `${fromTokens.length}`,
-          divider: true,
-          selectTokenLabel: true
-        },
         {
           header: 'My Wallet'
         },
@@ -484,7 +489,7 @@ export default {
         {
           header: 'Other Tokens'
         },
-        ...fromTokens
+        ...this.fromTokens
       ];
     },
     /**
@@ -505,8 +510,9 @@ export default {
      * to swap to
      */
     trendingTokens() {
-      return trendingList.map(token => {
-        const foundToken = this.findCoinToken(token.contract_address);
+      return TRENDING_LIST.map(token => {
+        const id = token.id || token.contract_address;
+        const foundToken = this.findCoinToken(id);
         token.price = foundToken ? foundToken.current_price : '0';
         token.img = foundToken ? foundToken.image : '';
         return token;
@@ -541,10 +547,9 @@ export default {
      */
     notEnoughEth() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth =
-        this.fromTokenType.value === 'Ethereum'
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
+      const isNotEnoughEth = this.isFromTokenEth
+        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+        : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
     /**
@@ -565,8 +570,8 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType.value) {
-        if (this.fromTokenType.value !== 'Ethereum') {
+      if (!this.initialLoad && this.fromTokenType.name) {
+        if (!this.isFromTokenEth) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
           );
@@ -587,7 +592,7 @@ export default {
      * Amount is rounded
      */
     availableBalanceHint() {
-      if (!this.initialLoad && this.fromTokenType.value) {
+      if (!this.initialLoad && this.fromTokenType.name) {
         return `${this.availableBalance.toFixed()} ${
           this.fromTokenType.symbol
         }`;
@@ -621,12 +626,12 @@ export default {
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading) {
         if (this.availableBalance.lte(0)) {
-          return this.fromTokenType.value === 'Ethereum'
+          return this.isFromTokenEth
             ? 'your available ETH balance is 0'
             : 'you do not own this token';
         }
         if (
-          this.fromTokenType.value !== 'Ethereum' &&
+          !this.isFromTokenEth &&
           this.availableBalance.lte(fromWei(MIN_GAS_WEI))
         ) {
           return 'you do not have enough ETH to cover transaction fee for a swap';
@@ -706,9 +711,11 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
-    /* Find token from getLatestPrices query data*/
+    /* Find token from getLatestPrices query data */
     findCoinToken(hash) {
-      return this.coinGeckoTokens.get(hash.toLowerCase());
+      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
+        return this.coinGeckoTokens.get(hash.toLowerCase());
+      }
     },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
@@ -719,22 +726,12 @@ export default {
     openGasPriceModal() {
       this.gasPriceModal = true;
     },
-    getTokenFromAddress(address) {
-      if (!this.availableTokens.toTokens) return {};
-      for (const t of this.availableTokens.toTokens) {
-        if (t.contract_address === address) return t;
-      }
-      return {};
-    },
     setDefaults() {
-      // this.fromTokens = this.availableTokens.fromTokens;
-      // this.toTokens = this.availableTokens.toTokens;
       setImmediate(() => {
-        this.fromTokenType = this.getTokenFromAddress(this.defaults.fromToken);
-        console.error(
-          'in here',
-          this.getTokenFromAddress(this.defaults.fromToken)
-        );
+        this.fromTokenType =
+          this.defaults.fromToken === ETH_TOKEN
+            ? this.trendingTokens[0]
+            : this.findCoinToken(this.defaults.fromToken);
         this.toTokenType = {};
         this.setTokenInValue(this.tokenInValue);
       });
@@ -766,7 +763,7 @@ export default {
       if (
         !value ||
         this.hasAmountErrors ||
-        this.fromTokenType.value === this.toTokenType.value
+        this.fromTokenType.name === this.toTokenType.name
       ) {
         this.providersMessage = {
           title: 'Select token and enter amount to see rates.',
@@ -956,8 +953,7 @@ export default {
       if (this.notEnoughEth) {
         const message = `This provider transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
         const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
-        this.feeError =
-          this.fromTokenType.value === 'Ethereum' ? ethError : message;
+        this.feeError = this.isFromTokenEth ? ethError : message;
       }
     },
     openSettings() {

@@ -1,16 +1,17 @@
 const TRENDING_SYMBOLS = ['ETH', 'BTC', 'aMKR', 'ZRX', 'KNC'];
 
-const trendingList = [
+const TRENDING_LIST = [
   {
     contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     decimals: 18,
-    img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+    img: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
     isEth: true,
     name: 'Ethereum',
     subtext: 'ETH',
     symbol: 'ETH',
     type: 'ERC20',
-    value: 'Ethereum'
+    value: 'Ethereum',
+    id: 'ethereum'
   },
   {
     contract_address: '0xbtc',
@@ -20,7 +21,8 @@ const trendingList = [
     name: 'Bitcoin',
     subtext: 'BTC',
     symbol: 'BTC',
-    value: 'Bitcoin'
+    value: 'Bitcoin',
+    id: 'bitcoin'
   },
   {
     contract_address: '0xc713e5e149d5d0715dcd1c156a020976e7e56b88',
@@ -54,4 +56,4 @@ const trendingList = [
   }
 ];
 
-export { TRENDING_SYMBOLS, trendingList };
+export { TRENDING_SYMBOLS, TRENDING_LIST };
