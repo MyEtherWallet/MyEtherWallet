@@ -9,7 +9,7 @@ import { Toast } from '@/helpers';
 import debug from 'debug';
 import { utils } from '@/partners';
 
-const errorLogger = debug('v5:partners-dexag');
+const errorLogger = debug('v5:partners-oneinch');
 
 export default class OneInch {
   constructor(props = {}) {
@@ -350,22 +350,20 @@ export default class OneInch {
       );
     } catch (e) {
       errorLogger(e);
-      throw Error(`Token [${token}] not included in dex.ag list of tokens`);
+      throw Error(`Token [${token}] not included in one-inch list of tokens`);
     }
   }
 
   getTokenDecimals(token) {
     try {
       return new BigNumber(
-        this.EthereumTokens[token].decimals
+        this.EthereumTokens[token]?.decimals
           ? this.EthereumTokens[token].decimals
           : this.tokenDetails[token].decimals
       ).toNumber();
     } catch (e) {
       errorLogger(e);
-      throw Error(
-        `Token [${token}] not included in dex.ag network list of tokens`
-      );
+      throw Error(`Token [${token}] not included in one-inch list of tokens`);
     }
   }
 
