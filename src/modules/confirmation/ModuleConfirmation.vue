@@ -260,7 +260,7 @@ export default {
       'identifier',
       'isHardware'
     ]),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue', 'test']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
     showConfirmWithWallet() {
@@ -320,7 +320,7 @@ export default {
       return utils.fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
+      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value
@@ -485,7 +485,6 @@ export default {
       }
       tx.type = 'OUT';
       tx.network = this.network.type.name;
-      tx.transactionFee = this.txFee;
     },
     async sendBatchTransaction() {
       const web3 = this.web3;

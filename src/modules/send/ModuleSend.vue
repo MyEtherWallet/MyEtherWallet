@@ -171,7 +171,7 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     amtRules() {
@@ -247,7 +247,7 @@ export default {
         img: this.network.type.icon,
         decimals: 18,
         market_cap: null,
-        price_change_24h: null
+        price_change_percentage_24h: null
       };
 
       const copiedTokens = this.tokensList.slice();
@@ -261,7 +261,7 @@ export default {
       return new BigNumber(
         fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
       )
-        .times(this.ETHUSDValue.value)
+        .times(this.fiatValue)
         .toFixed(2);
     },
     getCalculatedAmount() {

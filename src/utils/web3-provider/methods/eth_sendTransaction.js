@@ -1,6 +1,6 @@
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+// import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
