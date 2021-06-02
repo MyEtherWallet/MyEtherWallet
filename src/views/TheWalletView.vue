@@ -67,7 +67,8 @@ export default {
     ...mapActions('wallet', [
       'setAccountBalance',
       'setBlockNumber',
-      'setTokens'
+      'setTokens',
+      'setCoinGeckoTokens'
     ]),
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
