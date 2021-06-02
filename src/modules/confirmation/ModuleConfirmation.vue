@@ -137,7 +137,7 @@ export default {
       'identifier',
       'isHardware'
     ]),
-    ...mapState('external', ['ETHUSDValue', 'test']),
+    ...mapGetters('external', ['fiatValue', 'test']),
     ...mapGetters('global', ['network']),
     to() {
       return this.tx.to;
@@ -170,7 +170,7 @@ export default {
       return utils.fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
+      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value ? this.tx.value : '0x';
@@ -307,7 +307,6 @@ export default {
       }
       tx.type = 'OUT';
       tx.network = this.network.type.name;
-      tx.transactionFee = this.txFee;
     },
     async sendBatchTransaction() {
       this.showBatchOverlay = false;

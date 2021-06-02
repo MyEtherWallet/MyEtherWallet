@@ -22,3 +22,7 @@ chrome-extension
 
 # Generated files
 src/_generated
+
+
+# Apollo files
+src/apollo/global/globalTypes.json

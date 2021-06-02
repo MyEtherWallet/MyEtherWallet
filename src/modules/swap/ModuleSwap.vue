@@ -103,11 +103,23 @@
           </user-msg-block>
 
           <!--
+            =====================================================================================
+              Address Book
+            =====================================================================================
+            -->
+          <module-address-book
+            v-show="showToAddress"
+            class="mt-10"
+            :is-valid-address-func="isValidToAddress"
+            @setAddress="setToAddress"
+          />
+
+          <!--
           =====================================================================================
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-          <user-msg-block
+          <wallet-user-msg-block
             v-if="
               toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
@@ -173,75 +185,8 @@
                 </v-expansion-panel>
               </v-expansion-panels>
             </div>
-          </user-msg-block>
+          </wallet-user-msg-block>
 
-          <!--
-            =====================================================================================
-              Address Book
-            =====================================================================================
-            -->
-          <module-address-book
-            v-show="showToAddress"
-            class="mt-10"
-            :is-valid-address-func="isValidToAddress"
-            @setAddress="setToAddress"
-          />
-          <!--
-            =====================================================================================
-             BTC options
-            =====================================================================================
-            -->
-          <div v-if="isToBtc" class="pa-6 wrapped-btc-text">
-            <p class="mew-heading-3">
-              <v-icon class="icon" size="20" color="#0B2840">
-                mdi-information-outline</v-icon
-              >Did you know? You can store your Bitcoin on Ethereum
-            </p>
-            <p>
-              To swap to BTC you need a Bitcoin wallet, but you can swap to
-              wrapped Bitcoin instead and store it in your Ethereum wallet.
-            </p>
-            <v-divider />
-            <v-expansion-panels flat>
-              <v-expansion-panel>
-                <v-expansion-panel-header color="transparent">
-                  How can I get wrapped Bitcoin?
-                </v-expansion-panel-header>
-                <v-expansion-panel-content color="transparent">
-                  <div>
-                    <p>
-                      When you swap to Bitcoin, it is moved to the Bitcoin
-                      blockchain, & requires a Bitcoin wallet. In order to keep
-                      Bitcoin in MyEtherWallet, you can swap to
-                      <span class="font-italic">wrapped</span> Bitcoin instead.
-                      Wrapped Bitcoin is an Ethereum token, with a value
-                      approximately equal to 1 BTC. Wrapped Bitcoins can be
-                      stored in MEW, and can be used as any other Ethereum
-                      asset: you can swap it to oether tokens, use it as
-                      collateral in DeFi apps, etc. There are multiple kinds of
-                      wrapped Bitcoins, but they roughly do the same thing.
-                      <a target="_blank" rel="noopener noreferrer"
-                        >Learn more about Wrapped Bitcoin.</a
-                      >
-                    </p>
-                    <div class="d-flex align-center">
-                      <mew-button
-                        v-for="btn in wrappedBtc"
-                        :key="btn"
-                        class="px-2 mx-1"
-                        :title="`Swap to ${btn}`"
-                        color-theme="primary"
-                        :has-full-width="false"
-                        btn-size="xlarge"
-                        btn-style="outline"
-                        @click.native="setWrappedBtc(btn)"
-                      />
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </div>
           <!--
             =====================================================================================
              Providers List
@@ -288,7 +233,7 @@
 
 <script>
 import AppButtonBalance from '@/core/components/AppButtonBalance';
-import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -308,7 +253,7 @@ export default {
   name: 'ModuleSwap',
   components: {
     AppButtonBalance,
-    UserMsgBlock,
+    WalletUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
