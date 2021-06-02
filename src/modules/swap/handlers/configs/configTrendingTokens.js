@@ -7,7 +7,7 @@ const TRENDING_LIST = [
     img: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
     isEth: true,
     name: 'Ethereum',
-    subtext: 'ETH',
+    subtext: 'Ethereum',
     symbol: 'ETH',
     type: 'ERC20',
     value: 'Ethereum',
@@ -19,7 +19,7 @@ const TRENDING_LIST = [
     img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
     isEth: false,
     name: 'Bitcoin',
-    subtext: 'BTC',
+    subtext: 'Bitcoin',
     symbol: 'BTC',
     value: 'Bitcoin',
     id: 'bitcoin'
@@ -29,7 +29,7 @@ const TRENDING_LIST = [
     decimals: 18,
     isEth: true,
     name: 'Aave MKR',
-    subtext: 'aMKR',
+    subtext: 'Aave MKR',
     symbol: 'aMKR',
     type: 'ERC20',
     value: 'Aave MKR'
@@ -39,7 +39,7 @@ const TRENDING_LIST = [
     decimals: 18,
     isEth: true,
     name: '0x',
-    subtext: 'ZRX',
+    subtext: '0x',
     symbol: 'ZRX',
     type: 'ERC20',
     value: '0x'
@@ -49,7 +49,7 @@ const TRENDING_LIST = [
     decimals: 18,
     isEth: true,
     name: 'Kyber Network Crystal',
-    subtext: 'KNC',
+    subtext: 'Kyber Network Crystal',
     symbol: 'KNC',
     type: 'ERC20',
     value: 'Kyber Network Crystal'

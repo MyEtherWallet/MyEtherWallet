@@ -42,6 +42,11 @@
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
+                :buy-more-str="
+                  amountErrorMessage === errorMsgs.amountExceedsEthBalance
+                    ? 'Buy more.'
+                    : ''
+                "
                 :max-btn-obj="{
                   title: 'Max',
                   disabled: false,
@@ -317,6 +322,13 @@ const tokens = {
   eth: 'ethereum'
 };
 
+const errorMsgs = {
+  amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
+  amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
+  amountLessThan0: 'Swap amount must be greater than 0',
+  doNotOwnToken: 'You do not own this token'
+};
+
 export default {
   name: 'ModuleSwap',
   components: {
@@ -370,7 +382,7 @@ export default {
       swapper: null,
       toTokenType: {},
       fromTokenType: {},
-      tokenInValue: this.amount,
+      tokenInValue: this.amount || '0',
       tokenOutValue: '0',
       availableTokens: { toTokens: [], fromTokens: [] },
       availableQuotes: [],
@@ -378,7 +390,7 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
-      belowMinError: false,
+      minMaxError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken
@@ -400,7 +412,8 @@ export default {
       gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy'
+      localGasType: 'economy',
+      errorMsgs: errorMsgs
     };
   },
   computed: {
@@ -459,7 +472,7 @@ export default {
         .map(token => {
           const foundToken = this.findCoinToken(token.contract_address);
           token.price = foundToken ? foundToken.current_price : '0';
-          token.subtext = token.symbol;
+          token.subtext = token.name;
           token.value = token.name;
           return token;
         });
@@ -470,6 +483,9 @@ export default {
      */
     actualFromTokens() {
       const tokensList = this.tokensList || [];
+      const imgs = tokensList.map(item => {
+        return item.img;
+      });
       BigNumber(this.balanceInETH).lte(0)
         ? tokensList.unshift({
             hasNoEth: true,
@@ -482,6 +498,13 @@ export default {
         ? tokensList.unshift(this.fromTokenType)
         : null;
       return [
+        {
+          text: 'Select Token',
+          imgs: imgs,
+          total: `${this.toTokens.length}`,
+          divider: true,
+          selectTokenLabel: true
+        },
         {
           header: 'My Wallet'
         },
@@ -500,7 +523,7 @@ export default {
       return this.availableTokens.fromTokens.map(token => {
         const foundToken = this.findCoinToken(token.contract_address);
         token.price = foundToken ? foundToken.current_price : '0';
-        token.subtext = token.symbol;
+        token.subtext = token.name;
         token.value = token.name;
         return token;
       });
@@ -627,24 +650,38 @@ export default {
       if (!this.initialLoad && !this.isLoading) {
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenEth
-            ? 'your available ETH balance is 0'
-            : 'you do not own this token';
+            ? this.errorMsgs.amountExceedsEthBalance
+            : this.errorMsgs.doNotOwnToken;
         }
         if (
           !this.isFromTokenEth &&
           this.availableBalance.lte(fromWei(MIN_GAS_WEI))
         ) {
-          return 'you do not have enough ETH to cover transaction fee for a swap';
+          return this.errorMsgs.amountExceedsTxFee;
         }
         if (this.tokenInValue && this.tokenInValue !== '') {
-          if (new BigNumber(this.tokenInValue).eq(0)) {
-            return `swap amount must be greater than 0`;
+          if (new BigNumber(this.tokenInValue).lt(0)) {
+            return this.errorMsgs.amountLessThan0;
           }
-          if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
-            return `your balance is lower (${this.availableBalanceHint})`;
+          if (
+            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
+            this.isFromTokenEth
+          ) {
+            return this.errorMsgs.amountExceedsEthBalance;
           }
-          if (new BigNumber(this.tokenInValue).lt(this.belowMinError)) {
-            return `Below minimum amount of ${this.belowMinError} for available providers`;
+          if (
+            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
+            !this.isFromTokenEth
+          ) {
+            return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
+          }
+          if (this.selectedProvider.exchange === 'changelly') {
+            if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+              return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
+            }
+            if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+              return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
+            }
           }
         }
       }
@@ -703,7 +740,11 @@ export default {
   },
   methods: {
     setMaxAmount() {
-      this.tokenInValue = this.balanceInETH;
+      this.tokenInValue = this.isFromTokenEth
+        ? new BigNumber(this.availableBalance)
+            .minus(fromWei(MIN_GAS_WEI))
+            .toFixed()
+        : this.availableBalance.toFixed();
     },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
@@ -730,9 +771,9 @@ export default {
       setImmediate(() => {
         this.fromTokenType =
           this.defaults.fromToken === ETH_TOKEN
-            ? this.trendingTokens[0]
+            ? Object.assign({}, this.trendingTokens[0])
             : this.findCoinToken(this.defaults.fromToken);
-        this.toTokenType = {};
+        this.fromTokenType.tokenBalance = this.availableBalance;
         this.setTokenInValue(this.tokenInValue);
       });
     },
@@ -755,7 +796,9 @@ export default {
       this.tokenInValue = value || '0';
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
-        q.isSelected = false;
+        if (q) {
+          q.isSelected = false;
+        }
       });
       this.availableQuotes = [];
       this.allTrades = [];
@@ -780,7 +823,11 @@ export default {
       }
 
       this.feeError = '';
-      if (this.tokenInValue !== '' && !_.isEmpty(this.toTokenType)) {
+      if (
+        this.tokenInValue !== '' &&
+        this.toTokenType.symbol &&
+        !_.isEmpty(this.toTokenType)
+      ) {
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -795,17 +842,20 @@ export default {
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
-              if (q?.rateId === 'belowMin') {
-                this.belowMinError = q.minAmount;
+              if (q?.rateId === 'MinMax') {
+                this.minMaxError = {
+                  minFrom: q.minAmount,
+                  maxFrom: q.maxAmount
+                };
                 return;
               }
-              this.belowMinError = false;
+              this.minMaxError = false;
 
               return q;
             });
             this.availableQuotes = quotes;
             if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
+              this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
             } else {
               this.providersMessage = {
