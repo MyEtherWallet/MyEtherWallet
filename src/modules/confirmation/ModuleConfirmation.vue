@@ -123,7 +123,7 @@
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="transaction.to + transaction.from + i"
+              :key="transaction.title + transaction.value + i"
               class="expansion-border"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
@@ -269,10 +269,11 @@ export default {
       return BigNumber(this.fiatValue).toNumber();
     },
     showConfirmWithWallet() {
-      return (
-        (this.signing || this.signingPending) &&
-        (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
-      );
+      if (this.isHardware) {
+        return this.signing || this.signingPending;
+      }
+      if (this.identifier === WALLET_TYPES.WEB3_WALLET) return this.signing;
+      return false;
     },
     swapLabel() {
       switch (this.transactions.length) {
@@ -601,8 +602,9 @@ export default {
     },
     async signBatchTx() {
       const signed = [];
-      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET) {
         this.signing = true;
+      }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
         try {
           if (this.instance.identifier !== WALLET_TYPES.WEB3_WALLET) {
@@ -629,15 +631,17 @@ export default {
               });
           }
           this.signedTxArray = signed;
+          if (
+            this.identifier === WALLET_TYPES.WEB3_WALLET &&
+            this.signedTxArray.length === this.unsignedTxArr.length
+          ) {
+            this.showSuccess(this.signedTxArray);
+          }
         } catch (err) {
           this.signedTxArray = [];
           this.signing = false;
           this.instance.errorHandler(err);
           return;
-        }
-        if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-          if (this.signedTxArray.length === this.unsignedTxArr.length)
-            this.showSuccess(this.signedTxArray);
         }
       }
       this.signing = false;

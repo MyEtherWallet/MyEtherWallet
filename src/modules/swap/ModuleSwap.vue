@@ -284,12 +284,16 @@ export default {
       if (
         _.isEmpty(this.fromTokenType) ||
         this.fromTokenType.symbol === this.network.type.currencyName
-      )
+      ) {
         return this.balanceInETH;
+      }
+
       const token = this.tokensList.find(item => {
         return item.symbol === this.fromTokenType.symbol;
       });
-      return this.getTokenBalance(token.balance, token.decimals).toFixed();
+      return token
+        ? this.getTokenBalance(token.balance, token.decimals).toFixed()
+        : this.balanceInETH;
     },
     actualToTokens() {
       const toTokens = this.toTokens ? this.toTokens : [];
