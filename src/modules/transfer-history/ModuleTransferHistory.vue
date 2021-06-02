@@ -21,7 +21,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import formatObj from '@/modules/notifications/helpers/formatObj';
+import formatNotification from '@/modules/notifications/helpers/formatNotification';
 
 export default {
   name: 'ModuleTransferHistory',
@@ -40,20 +40,18 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapGetters('notifications', ['txNotifications', 'swapNotifications']),
     parsedTxNotifications() {
-      return this.txNotifications.map(item => {
-        const newItem = formatObj(item, this.network);
-        // removes the color from the component
-        newItem['notification'].status.value = 'history';
-        return newItem;
-      });
+      return this.txNotifications
+        .map(item => {
+          return formatNotification(item, this.network);
+        })
+        .sort(this.sortByDate);
     },
     parsedSwapNotifications() {
-      return this.swapNotifications.map(item => {
-        const newItem = formatObj(item, this.network);
-        // removes the color from the component
-        newItem['notification'].status.value = 'history';
-        return newItem;
-      });
+      return this.swapNotifications
+        .map(item => {
+          return formatNotification(item, this.network);
+        })
+        .sort(this.sortByDate);
     },
     actualNotifications() {
       return !this.isSwap
@@ -66,6 +64,9 @@ export default {
   },
   mounted() {},
   methods: {
+    sortByDate(a, b) {
+      return new Date(b.date) - new Date(a.date);
+    },
     navigateToEthvm() {
       // eslint-disable-next-line
       window.open(`https://www.ethvm.com/address/${this.address}`, '_blank');
@@ -82,5 +83,12 @@ export default {
 .history-container {
   max-height: 300px;
   overflow-y: scroll;
+  /**
+  * adding this style here until mew-notification is updated with a new prop
+  */
+  .notification-container {
+    background-color: var(--v-white-base) !important;
+    border: none !important;
+  }
 }
 </style>
