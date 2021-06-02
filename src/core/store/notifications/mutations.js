@@ -19,13 +19,17 @@ const INIT_STORE = function (state) {
 
 const ADD_NOTIFICATION = function (state, obj) {
   delete obj.notification;
+  if (state.notifications.length >= 20) {
+    state.notifications.shift();
+  }
   state.notifications.push(obj);
 };
 
 const UPDATE_NOTIFICATION = function (state, obj) {
   delete obj.notification;
+
   state.notifications = state.notifications.map(item => {
-    if (item.transactionHash === obj.transactionHash) {
+    if (item.hash === obj.hash) {
       item = obj;
     }
     return item;
@@ -34,7 +38,7 @@ const UPDATE_NOTIFICATION = function (state, obj) {
 
 const DELETE_NOTIFICATION = function (state, obj) {
   state.notifications = state.notifications.filter(item => {
-    if (item.transactionHash !== obj.transactionHash) return item;
+    if (item.hash !== obj.hash) return item;
   });
 };
 
