@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { fromWei, toBN } from 'web3-utils';
 export default {
@@ -53,15 +53,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     totalTransaction() {
       let ethTxFeeTotal = 0;
       let usdTxFeeTotal = 0;
       this.transactions.forEach(item => {
         const txFee = fromWei(toBN(item.gasPrice).mul(item.gas));
-        const usdTxFee = BigNumber(this.ETHUSDValue.value)
-          .times(txFee)
-          .toFixed(2);
+        const usdTxFee = BigNumber(this.fiatValue).times(txFee).toFixed(2);
         ethTxFeeTotal += txFee;
         usdTxFeeTotal += usdTxFee;
       });

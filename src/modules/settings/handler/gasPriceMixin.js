@@ -19,7 +19,7 @@ const gasPriceMixin = {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['gasPrice']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     gasButtons() {
       const economy = this.localGas
@@ -58,27 +58,21 @@ const gasPriceMixin = {
           icon: 'bicycle',
           title: gasPriceTypes.ECONOMY,
           gas: `${economy}`,
-          usd: `$ ${BigNumber(this.ETHUSDValue.value)
-            .times(economyEth)
-            .toFixed(9)}`
+          usd: `$ ${BigNumber(this.fiatValue).times(economyEth).toFixed(9)}`
           // time: '< 30 min'
         },
         {
           icon: 'car',
           title: gasPriceTypes.REGULAR,
           gas: `${regular}`,
-          usd: `$ ${BigNumber(this.ETHUSDValue.value)
-            .times(regularEth)
-            .toFixed(9)}`
+          usd: `$ ${BigNumber(this.fiatValue).times(regularEth).toFixed(9)}`
           // time: '< 10 min'
         },
         {
           icon: 'rocket',
           title: gasPriceTypes.FAST,
           gas: `${fast}`,
-          usd: `$ ${BigNumber(this.ETHUSDValue.value)
-            .times(fastEth)
-            .toFixed(9)}`
+          usd: `$ ${BigNumber(this.fiatValue).times(fastEth).toFixed(9)}`
           // time: '< 5 min'
         }
       ];

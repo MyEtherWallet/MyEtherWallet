@@ -1,17 +1,17 @@
 import timeAgo from '@/core/helpers/timeAgo';
-import { fromWei, toBN } from 'web3-utils';
-const formatObj = (obj, network) => {
+import { toBN } from 'web3-utils';
+/**
+ * Formatted notification for mew-notification component
+ */
+const formatNotification = (obj, network) => {
   const newObj = {
     txHash: {
-      value: obj.transactionHash,
+      value: obj.hash,
       string: 'Transaction Hash',
-      link: `${network.type.blockExplorerTX.replace(
-        '[[txHash]]',
-        obj.transactionHash
-      )}`
+      link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },
     gasPrice: {
-      value: `${obj.gasPrice ? fromWei(toBN(obj.gasPrice), 'gwei') : 0} Gwei`,
+      value: `${obj.gasPrice ? obj.gasPrice : 0} Gwei`,
       string: 'Gas Price'
     },
     gasLimit: {
@@ -50,8 +50,7 @@ const formatObj = (obj, network) => {
     toObj: obj.toTxData,
     fromObj: obj.fromTxData
   };
-
   obj.notification = newObj;
   return obj;
 };
-export default formatObj;
+export default formatNotification;
