@@ -91,7 +91,8 @@ class BitBoxWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      null
+      null,
+      this.icon
     );
   }
   getCurrentPath() {

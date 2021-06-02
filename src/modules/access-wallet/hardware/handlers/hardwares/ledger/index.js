@@ -127,7 +127,8 @@ class ledgerWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress
+      displayAddress,
+      this.icon
     );
   }
   getCurrentPath() {

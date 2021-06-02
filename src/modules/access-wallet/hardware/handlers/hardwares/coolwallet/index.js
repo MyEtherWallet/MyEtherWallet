@@ -136,7 +136,8 @@ class CoolWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      null
+      null,
+      this.icon
     );
   }
 

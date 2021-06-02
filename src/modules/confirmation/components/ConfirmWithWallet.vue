@@ -27,10 +27,6 @@
 import { mapState } from 'vuex';
 export default {
   props: {
-    isSwap: {
-      type: Boolean,
-      default: false
-    },
     txLength: {
       type: Number,
       default: 1

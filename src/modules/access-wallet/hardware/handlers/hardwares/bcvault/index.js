@@ -159,7 +159,9 @@ class BCVault {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      null,
+      this.icon
     );
   }
 }
