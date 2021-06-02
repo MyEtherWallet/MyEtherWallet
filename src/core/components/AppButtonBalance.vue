@@ -1,7 +1,7 @@
 <template>
   <div class="mew-component--top-right-text">
-    <v-skeleton-loader v-if="loading" type="text" width="120px" />
-    <div v-else class="text">{{ text }}</div>
+    <v-skeleton-loader v-if="loading" type="text" width="100px" />
+    <div v-else class="text primary--text">{{ balance }}</div>
   </div>
 </template>
 
@@ -11,9 +11,9 @@ export default {
   props: {
     loading: {
       type: Boolean,
-      default: false
+      default: true
     },
-    text: {
+    balance: {
       type: String,
       default: ''
     }
@@ -28,7 +28,7 @@ export default {
 .mew-component--top-right-text {
   position: absolute;
   top: -23px;
-  right: 8px;
+  right: 0px;
 }
 
 .text {

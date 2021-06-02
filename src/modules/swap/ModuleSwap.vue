@@ -23,9 +23,9 @@
           <v-row class="align-center justify-space-between mt-4">
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
               <div class="position--relative">
-                <wallet-top-right-text
+                <app-button-balance
                   :loading="isLoading"
-                  :text="balanceInETH"
+                  :balance="balanceInETH"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -287,7 +287,7 @@
 </template>
 
 <script>
-import WalletTopRightText from '@/views/components-wallet/TheWalletTopRightText';
+import AppButtonBalance from '@/core/components/AppButtonBalance';
 import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
@@ -307,7 +307,7 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
-    WalletTopRightText,
+    AppButtonBalance,
     UserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
