@@ -153,6 +153,10 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import {
+  txTypes,
+  notificationTypes
+} from '@/modules/notifications/configs/configTypes';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -779,8 +783,7 @@ export default {
     swapNotificationFormatter(obj, isError) {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          transactionHash: !isError ? hash : '',
-          transactionFee: fromWei(this.totalFees),
+          hash: !isError ? hash : '',
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,
@@ -788,11 +791,10 @@ export default {
           gasLimit: this.totalGasLimit,
           data: this.currentTrade.transactions[idx].data,
           value: this.currentTrade.transactions[idx].value,
-          type: 'SWAP',
+          type: notificationTypes.swap,
           read: false,
           network: this.network.type.name,
-          date: new Date().getTime(),
-          status: isError ? 'FAILED' : 'PENDING',
+          status: isError ? txTypes.failed : txTypes.pending,
           fromTxData: {
             currency: this.confirmInfo.fromType,
             amount: this.confirmInfo.fromVal,

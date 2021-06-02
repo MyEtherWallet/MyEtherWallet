@@ -1,6 +1,17 @@
 <template>
+  <!--
+  =====================================================================================
+    Module Notifications
+  =====================================================================================
+  -->
   <div>
-    <div class="d-flex align-center">
+    <v-skeleton-loader
+      v-if="loading"
+      class="mx-auto"
+      max-width="300"
+      type="avatar"
+    ></v-skeleton-loader>
+    <div v-if="!loading" class="d-flex align-center">
       <v-btn icon @click="openNotifications = true">
         <img
           src="@/assets/images/icons/icon-notifications.svg"
@@ -11,6 +22,7 @@
         v-if="notificationCount > 0"
         class="
           notification-count
+          pa-3
           cursor--pointer
           d-flex
           align-center
@@ -72,9 +84,9 @@
           <mew6-white-sheet>
             <div class="pa-4">
               <div
-                v-for="data in showNotifications"
-                v-show="showNotifications.length > 0"
-                :key="data.transactionHash"
+                v-for="(data, key) in notificationsByType"
+                v-show="!loading && notificationsByType.length > 0"
+                :key="key"
                 class="mt-2"
               >
                 <mew-notification
@@ -83,7 +95,7 @@
                 />
               </div>
               <div
-                v-show="showNotifications.length === 0"
+                v-show="notificationsByType.length === 0"
                 class="pa-5 text-center"
               >
                 <h3 class="mb-5">No notifications to display for:</h3>
@@ -103,11 +115,14 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
-import NotificationsCall from '@/apollo/queries/notifications';
-import Swapper from '@/modules/swap/handlers/handlerSwap';
-import formatObj from './helpers/formatObj';
+import handlerNotification from './handlers/handlerNotification.mixin';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+import { txTypes, notificationTypes } from './configs/configTypes';
+import formatNotification from './helpers/formatNotification';
+
 export default {
   name: 'ModuleNotifications',
+  mixins: [handlerNotification],
   props: {
     invertIcon: {
       type: Boolean,
@@ -124,7 +139,6 @@ export default {
         { label: 'Swap', val: 'swap' }
       ],
       page: null,
-      inTx: [],
       openNotifications: false
     };
   },
@@ -140,71 +154,113 @@ export default {
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
+    loading() {
+      return this.$apollo.loading;
+    },
+    /**
+     * Swap Handler
+     */
     swapper() {
-      return new Swapper(this.web3);
+      return new handlerSwap(this.web3);
     },
-    caller() {
-      if (this.isEthNetwork) {
-        return new NotificationsCall(this.$apollo);
-      }
-      return null;
-    },
-    transformCurrentNoti() {
-      const newArr = this.currentNotifications.map(notification => {
-        const newObj = formatObj(notification, this.network);
-        if (newObj.type === 'SWAP') {
-          newObj.checkSwapStatus(this.swapper);
+    /**
+     * Formatted current notifications
+     */
+    formattedCurrentNotifications() {
+      return this.currentNotifications.map(notification => {
+        const type = notification.type.toLowerCase();
+        /**
+         * Check swap status if it is a swap notification
+         */
+        if (type === notificationTypes.swap) {
+          notification.checkSwapStatus(this.swapper);
         }
-        return newObj;
+        /**
+         * Check status if it is an outgoing pending tx
+         * and query getTransactionByHash
+         */
+        if (
+          type === notificationTypes.out &&
+          notification.status.toLowerCase() === txTypes.pending
+        ) {
+          this.txHash = notification.hash;
+          if (this.getTransactionByHash) {
+            const notification = new Notification(this.getTransactionByHash);
+            this.updateNotification(notification);
+          }
+        }
+        return formatNotification(notification, this.network);
       });
-      return newArr;
     },
-    transformTxNoti() {
-      const newArr = this.txNotifications
+    /**
+     * Formatted outgoing tx notifications
+     */
+    outgoingTxNotifications() {
+      return this.txNotifications
         .map(notification => {
-          const newObj = formatObj(notification, this.network);
-          return newObj;
+          return formatNotification(notification, this.network);
         })
         .sort(this.sortByDate);
-      return newArr;
     },
-    transformSwapNoti() {
-      const newArr = this.swapNotifications
+    /**
+     * Formatted swap notifications
+     */
+    formattedSwapNotifications() {
+      return this.swapNotifications
         .map(notification => {
-          const newObj = formatObj(notification, this.network);
+          const newObj = formatNotification(notification, this.network);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
         .sort(this.sortByDate);
-      return newArr;
     },
-    transformInNoti() {
-      const newArr = this.inTx
-        .map(notification => {
-          const newObj = formatObj(notification, this.network);
-          return newObj;
-        })
-        .sort(this.sortByDate);
-      return newArr;
+    /**
+     * Formatted incoming tx notifications
+     */
+    incomingTxNotifications() {
+      if (!this.loading) {
+        return this.ethTransfersIncoming
+          .filter(notification => {
+            return notification.to === this.address;
+          })
+          .map(notification => {
+            if (!notification.formatted) {
+              notification.lastFetched = this.lastFetched;
+            }
+            notification = new Notification(notification);
+            return formatNotification(notification, this.network);
+          })
+          .sort(this.sortByDate);
+      }
+      return [];
     },
+    /**
+     * Returns all the notifications
+     */
     allNotifications() {
-      const sorted = this.transformCurrentNoti
-        .concat(this.transformInNoti)
+      const sorted = this.formattedCurrentNotifications
+        .concat(this.incomingTxNotifications)
         .sort(this.sortByDate);
-      return sorted;
+      return sorted.slice(0, 20);
     },
-    showNotifications() {
+    /**
+     * Display notifications based on type
+     */
+    notificationsByType() {
       switch (this.selected) {
-        case 'in':
-          return this.inTx;
-        case 'out':
-          return this.transformTxNoti;
-        case 'swap':
-          return this.transformSwapNoti;
+        case notificationTypes.in:
+          return this.incomingTxNotifications.slice(0, 20);
+        case notificationTypes.out:
+          return this.outgoingTxNotifications.slice(0, 20);
+        case notificationTypes.swap:
+          return this.swapNotifications.slice(0, 20);
         default:
           return this.allNotifications;
       }
     },
+    /**
+     * Notification count
+     */
     notificationCount() {
       const unread = this.allNotifications.filter(item => {
         if (!item.read) {
@@ -214,81 +270,33 @@ export default {
       return unread.length;
     }
   },
-  watch: {
-    network() {
-      this.setupInTx();
-    }
-  },
-  mounted() {
-    this.setupInTx();
-  },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },
-    // next key for pendingTx subscription
-    parsePendingTx(result) {
-      const data = result.data.pendingTransaction;
-      if (data.to?.toLowerCase() === this.address?.toLowerCase()) {
-        const copyArray = this.inTx;
-        data['transactionFee'] = data.txFee;
-        data['date'] = data.timestamp * 1000;
-        delete data.txFee;
-        delete data.__typename;
-        delete data.timestamp;
-        const newNotification = new Notification(data);
-        this.inTx.push(newNotification);
-        this.caller.subscribeToTxHash(data, () => {
-          this.caller.getTxDetailFromPending(data).then(res => {
-            const notification = new Notification(res);
-            const foundIdx = copyArray.findIndex(item => {
-              if (res.transactionHash === item.transactionHash) {
-                return item;
-              }
-            });
-
-            if (foundIdx) {
-              copyArray.splice(foundIdx, 0, notification);
-              this.inTx = copyArray;
-            } else {
-              copyArray.push(notification);
-            }
-            this.inTx = copyArray;
-          });
-        });
-      }
-    },
-    setupInTx() {
-      if (this.isEthNetwork) {
-        const lastFetched = this.lastFetched;
-        const newArr = [];
-        this.caller.getAllTransfer(this.address).then(res => {
-          res.forEach(item => {
-            if (item.date < lastFetched) {
-              item.read = true;
-            }
-            newArr.push(new Notification(item));
-          });
-          this.inTx = newArr;
-          this.setFetchedTime();
-        });
-        this.caller.subscribeToPending(this.address, this.parsePendingTx);
-      }
-    },
+    /**
+     * Mark notification as read
+     */
     markNotificationAsRead(notification) {
       if (!notification.read) {
         notification.markAsRead().then(res => {
           delete res.notification;
-          if (notification.type === 'OUT' || notification.type === 'SWAP') {
+          const type = notification.type.toLowerCase();
+          if (
+            type === notificationTypes.out ||
+            type === notificationTypes.swap
+          ) {
             this.updateNotification(new Notification(res));
           } else {
-            this.inTx = this.inTx.map(item => {
-              if (item.transactionHash === res.transactionHash) {
-                return new Notification(res);
+            this.ethTransfersIncoming = this.ethTransfersIncoming.map(
+              transfer => {
+                if (transfer.hash === res.hash) {
+                  return new Notification(res);
+                }
+                return transfer;
               }
-              return item;
-            });
+            );
           }
         });
       }

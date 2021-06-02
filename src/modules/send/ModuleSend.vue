@@ -7,14 +7,6 @@
   >
     <template #moduleBody>
       <div class="full-width px-lg-3 pb-6">
-        <div class="d-flex justify-end mr-3 entire-bal">
-          <mew-button
-            :title="$t('sendTx.button-entire')"
-            btn-style="transparent"
-            @click.native="setEntireBal"
-          />
-        </div>
-
         <v-row>
           <v-col cols="12" md="6">
             <mew-select
@@ -25,7 +17,11 @@
               @input="setCurrency"
             />
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="position--relative">
+            <top-right-btn
+              :text="$t('sendTx.button-entire')"
+              @click.native="setEntireBal"
+            />
             <mew-input
               ref="mewInput"
               :value="amount"
@@ -116,7 +112,7 @@
 import utils, { fromWei, toBN, isHexStrict } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-
+import TopRightBtn from '@/core/components/AppTopRightBtn';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
@@ -125,7 +121,8 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   components: {
-    ModuleAddressBook
+    ModuleAddressBook,
+    TopRightBtn
   },
   props: {
     prefilledAmount: {
@@ -173,7 +170,7 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     amtRules() {
@@ -249,7 +246,7 @@ export default {
         img: this.network.type.icon,
         decimals: 18,
         market_cap: null,
-        price_change_24h: null
+        price_change_percentage_24h: null
       };
 
       const copiedTokens = this.tokensList.slice();
@@ -263,7 +260,7 @@ export default {
       return new BigNumber(
         fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
       )
-        .times(this.ETHUSDValue.value)
+        .times(this.fiatValue)
         .toFixed(2);
     },
     getCalculatedAmount() {

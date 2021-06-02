@@ -5,6 +5,8 @@
 * Fix Swap store BTC on ETH message [#3106](https://github.com/MyEtherWallet/MyEtherWallet/pull/3106)
 * Fix mew-select border issue [#3091](https://github.com/MyEtherWallet/MyEtherWallet/pull/3091)
 * Add user msg for swap [#3087](https://github.com/MyEtherWallet/MyEtherWallet/pull/3087)
+* Fix ui issues for aave [#3079](https://github.com/MyEtherWallet/MyEtherWallet/pull/3079)
+* Add top right button [#3081](https://github.com/MyEtherWallet/MyEtherWallet/pull/3081)
 * Recalculate rates when gas price is switched [#3039](https://github.com/MyEtherWallet/MyEtherWallet/pull/3039)
 * Fetch swap quotes only when all fields are in place [#3040](https://github.com/MyEtherWallet/MyEtherWallet/pull/3040)
 * swap updates [#3034](https://github.com/MyEtherWallet/MyEtherWallet/pull/3034)
