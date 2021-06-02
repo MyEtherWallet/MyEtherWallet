@@ -83,12 +83,7 @@ html {
     padding: 1.8rem 0;
   }
 }
-.mew-subtitle {
-  line-height: 34px;
-}
-.mew-heading-1 {
-  line-height: 27px;
-}
+
 
 /* ========== CSS Style Reset ========== */
 .monospace {
@@ -98,16 +93,11 @@ i {
   font-family: 'Material Icons' !important;
 }
 div {
-  font-size: 0.88rem;
-  line-height: 1.3rem;
-  font-weight: 400;
   padding: 0;
   margin: 0;
 }
 p {
-  font-size: 0.88rem;
-  line-height: 1.3rem;
-  font-weight: 400;
+  @extend .mew-body;
 }
 h1 {
   @extend .mew-heading-1;
@@ -120,9 +110,7 @@ h3 {
 }
 h5,
 .h5 {
-  font-size: 1rem;
-  line-height: 1.44rem;
-  font-weight: 400;
+  @extend .mew-body;
 }
 h6 {
   font-size: 0.75rem;

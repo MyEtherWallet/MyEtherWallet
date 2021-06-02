@@ -7,9 +7,9 @@
       =====================================================================================
       -->
       <app-block-title :data="titleData">
-        <h5 class="white--text ma-0">
+        <p class="white--text ma-0">
           Please select a method to access your wallet.
-        </h5>
+        </p>
         <h5 class="white--text ma-0">
           Don't have a wallet?
           <router-link
