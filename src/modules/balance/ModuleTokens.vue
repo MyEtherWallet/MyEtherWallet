@@ -121,7 +121,7 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            item.tokenBalance.value + ' ' + item.symbol,
+            item.tokenBalance + ' ' + item.symbol,
             numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
               .value
           ];
