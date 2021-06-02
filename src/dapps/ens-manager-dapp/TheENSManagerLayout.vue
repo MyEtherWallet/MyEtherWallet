@@ -165,9 +165,7 @@
                       class="text-center cursor-pointer"
                       @click="manage(option.type, idx)"
                     >
-                      <v-icon color="titlePrimary" x-large>{{
-                        option.icon
-                      }}</v-icon>
+                      <v-icon color="primary" x-large>{{ option.icon }}</v-icon>
                       <div>{{ option.label }}</div>
                       <div
                         v-if="domain.expiration && key === 1"
