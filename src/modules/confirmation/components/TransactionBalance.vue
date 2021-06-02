@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 export default {
   props: {
@@ -119,17 +119,17 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork']),
     balanceUsd() {
       const value = this.isEthNetwork
-        ? BigNumber(this.balanceInETH).times(this.ETHUSDValue.value).toFixed(2)
+        ? BigNumber(this.balanceInETH).times(this.fiatValue).toFixed(2)
         : this.balanceInETH;
       return `$ ${value}`;
     },
     valueUsd() {
       const value = this.isEthNetwork
-        ? BigNumber(this.value).times(this.ETHUSDValue.value).toFixed(2)
+        ? BigNumber(this.value).times(this.fiatValue).toFixed(2)
         : this.value;
       return `$ ${value}`;
     },
@@ -141,7 +141,7 @@ export default {
     },
     totalUsd() {
       const value = this.isEthNetwork
-        ? BigNumber(this.total).times(this.ETHUSDValue.value).toFixed(2)
+        ? BigNumber(this.total).times(this.fiatValue).toFixed(2)
         : 0;
       return `$ ${value}`;
     },

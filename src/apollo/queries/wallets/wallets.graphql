@@ -4,12 +4,18 @@ query getEthBalance($hash: String!) {
   }
 }
 
-query getUSDPrice {
+query getLatestPrices {
   getLatestPrices {
-    id
-    current_price
-    market_cap
-    price_change_24h
+      id
+      symbol
+      name
+      image
+      contract
+      current_price
+      market_cap
+      total_volume
+      price_change_percentage_24h
+      total_supply
   }
 }
 

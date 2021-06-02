@@ -19,7 +19,7 @@
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
-            -->
+          -->
           <v-row class="align-center justify-space-between">
             <v-col cols="12">
               <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
@@ -49,7 +49,7 @@
             <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
               <div
                 :class="[
-                  enableTokenSwitch ? 'cursor--pointer' : 'pointer-event--none',
+                  userHasToToken ? 'cursor--pointer' : 'pointer-event--none',
                   'd-flex align-center justify-center'
                 ]"
                 @click.stop="switchTokens"
@@ -78,176 +78,36 @@
           </v-row>
 
           <!--
-          =====================================================================================
-            User Message Block: store your Bitcoin on Ethereum
-          =====================================================================================
-          -->
-          <user-msg-block
-            v-if="notEnoughEth && !isLoading"
-            class="mt-5"
-            :message="msg.storeBitcoin"
-          >
-            <div class="mt-3 mx-n1">
-              <mew-button
-                btn-size="small"
-                btn-style="outline"
-                title="Swap Your Bitcoin to Ether"
-                class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
-              />
-              <mew-button
-                btn-size="small"
-                btn-style="outline"
-                title="Buy Ether"
-                class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="buyEth"
-              />
-            </div>
-          </user-msg-block>
-
-          <!--
-          =====================================================================================
-            User Message Block: store your Bitcoin on Ethereum
-          =====================================================================================
-          -->
-          <user-msg-block
-            v-if="
-              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
-            "
-            class="mt-5"
-            :message="msg.lowBalance"
-          >
-            <div class="border-top mt-3">
-              <v-expansion-panels
-                flat
-                class="expansion-panels--remove-paddings"
-              >
-                <v-expansion-panel>
-                  <v-expansion-panel-header
-                    color="tableHeader"
-                    class="textPrimaryModule--text"
-                  >
-                    How can I get wrapped Bitcoin?
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content color="tableHeader" class="pa-0">
-                    <div class="textPrimaryModule--text mb-2">
-                      When you swap to Bitcoin, it is moved to the Bitcoin
-                      blockchain, & requires a Bitcoin wallet. In order to keep
-                      Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
-                      instead. Wrapped Bitcoin is an Ethereum token, with a
-                      value approximately equal to 1 BTC. Wrapped Bitcoins can
-                      be stored in MEW, and can be used as any other Ethereum
-                      asset: you can swap it to other tokens, use it as
-                      collateral in DeFi apps, etc. There are multiple kinds of
-                      wrapped Bitcoins, but they roughly do the same thing.
-                      <a
-                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
-                      >
-                        Learn more about Wrapped Bitcoin.
-                      </a>
-                    </div>
-                    <div class="mx-n1">
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to renBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to wBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                      <mew-button
-                        btn-size="small"
-                        btn-style="outline"
-                        title="Swap to PBTC"
-                        class="ma-1"
-                        :has-full-width="$vuetify.breakpoint.xsOnly"
-                      />
-                    </div>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </div>
-          </user-msg-block>
-
-          <!--
             =====================================================================================
               Address Book
             =====================================================================================
-            -->
+          -->
           <module-address-book
             v-show="showToAddress"
             class="mt-10"
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
+
           <!--
             =====================================================================================
-             BTC options
+              User Message Block: store your Bitcoin on Ethereum
             =====================================================================================
-            -->
-          <div v-if="isToBtc" class="pa-6 wrapped-btc-text">
-            <p class="mew-heading-3">
-              <v-icon class="icon" size="20" color="#0B2840">
-                mdi-information-outline</v-icon
-              >Did you know? You can store your Bitcoin on Ethereum
-            </p>
-            <p>
-              To swap to BTC you need a Bitcoin wallet, but you can swap to
-              wrapped Bitcoin instead and store it in your Ethereum wallet.
-            </p>
-            <v-divider />
-            <v-expansion-panels flat>
-              <v-expansion-panel>
-                <v-expansion-panel-header color="transparent">
-                  How can I get wrapped Bitcoin?
-                </v-expansion-panel-header>
-                <v-expansion-panel-content color="transparent">
-                  <div>
-                    <p>
-                      When you swap to Bitcoin, it is moved to the Bitcoin
-                      blockchain, & requires a Bitcoin wallet. In order to keep
-                      Bitcoin in MyEtherWallet, you can swap to
-                      <span class="font-italic">wrapped</span> Bitcoin instead.
-                      Wrapped Bitcoin is an Ethereum token, with a value
-                      approximately equal to 1 BTC. Wrapped Bitcoins can be
-                      stored in MEW, and can be used as any other Ethereum
-                      asset: you can swap it to oether tokens, use it as
-                      collateral in DeFi apps, etc. There are multiple kinds of
-                      wrapped Bitcoins, but they roughly do the same thing.
-                      <a target="_blank" rel="noopener noreferrer"
-                        >Learn more about Wrapped Bitcoin.</a
-                      >
-                    </p>
-                    <div class="d-flex align-center">
-                      <mew-button
-                        v-for="btn in wrappedBtc"
-                        :key="btn"
-                        class="px-2 mx-1"
-                        :title="`Swap to ${btn}`"
-                        color-theme="primary"
-                        :has-full-width="false"
-                        btn-size="xlarge"
-                        btn-style="outline"
-                        @click.native="setWrappedBtc(btn)"
-                      />
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </div>
+          -->
+          <swap-msg-store-btc-eth
+            v-if="
+              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
+            "
+            class="mt-5"
+            :message="msg.lowBalance"
+            :to-token-type="toTokenType.value"
+          />
+
           <!--
             =====================================================================================
              Providers List
             =====================================================================================
-            -->
+          -->
           <swap-providers-list
             :step="step"
             :available-quotes="availableQuotes"
@@ -288,7 +148,7 @@
 </template>
 
 <script>
-import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import SwapMsgStoreBtcEth from './components/SwapMsgStoreBtcEth';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -299,6 +159,10 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import {
+  txTypes,
+  notificationTypes
+} from '@/modules/notifications/configs/configTypes';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -307,7 +171,7 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
-    UserMsgBlock,
+    SwapMsgStoreBtcEth,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
@@ -397,9 +261,37 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    /**
+     * checks whether both token fields are empty
+     */
     enableTokenSwitch() {
-      return !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      const isNotEmpty =
+        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      return isNotEmpty;
     },
+    /**
+     * checks whether the user's tokenslist contains the to tokens
+     */
+    userHasToToken() {
+      if (this.enableTokenSwitch) {
+        const hasToken = this.parsedUserTokenList.find(item => {
+          if (item.contract_address === this.toTokenType.contract_address) {
+            return item;
+          }
+        });
+
+        return this.toTokenType.hasOwnProperty('isEth') &&
+          this.toTokenType.isEth &&
+          this.toTokenType.symbol !== this.network.type.currencyName
+          ? hasToken
+          : true;
+      }
+      return false;
+    },
+    /**
+     * Fetched tokens from all providers(?) + specific tokens
+     * Returns an @Array
+     */
     actualToTokens() {
       const toTokens = this.toTokens ? this.toTokens : [];
       const imgs = [
@@ -483,11 +375,15 @@ export default {
         ...toTokens
       ];
     },
+    /**
+     * Fetched tokens from all providers(?) + user's tokens found in their account
+     * Returns an @Array
+     */
     actualFromTokens() {
       const defaultToken = [this.fromTokenType];
       const fromTokens = this.fromTokens ? this.fromTokens : [];
-      const tokensList = this.tokensList
-        ? defaultToken.concat(this.tokensList)
+      const tokensList = this.parsedUserTokenList
+        ? defaultToken.concat(this.parsedUserTokenList)
         : [];
       const imgs = tokensList.map(item => {
         return item.img;
@@ -517,6 +413,27 @@ export default {
         },
         ...fromTokens
       ];
+    },
+    parsedUserTokenList() {
+      const copyUserToken = this.tokensList.slice();
+      return copyUserToken.map(item => {
+        const newItem = {
+          contract_address: item.contract,
+          value: item.name,
+          decimals: item.decimals,
+          img: item.img,
+          name: item.name,
+          symbol: item.symbol,
+          type: 'ERC20'
+        };
+        return Object.assign(
+          {},
+          {
+            isEth: true
+          },
+          newItem
+        );
+      });
     },
     totalFees() {
       const gasPrice =
@@ -936,8 +853,7 @@ export default {
     swapNotificationFormatter(obj, isError) {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          transactionHash: !isError ? hash : '',
-          transactionFee: fromWei(this.totalFees),
+          hash: !isError ? hash : '',
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,
@@ -945,11 +861,10 @@ export default {
           gasLimit: this.totalGasLimit,
           data: this.currentTrade.transactions[idx].data,
           value: this.currentTrade.transactions[idx].value,
-          type: 'SWAP',
+          type: notificationTypes.swap,
           read: false,
           network: this.network.type.name,
-          date: new Date().getTime(),
-          status: isError ? 'FAILED' : 'PENDING',
+          status: isError ? txTypes.failed : txTypes.pending,
           fromTxData: {
             currency: this.confirmInfo.fromType,
             amount: this.confirmInfo.fromVal,
