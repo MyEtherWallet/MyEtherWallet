@@ -19,7 +19,7 @@
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
-            -->
+          -->
           <v-row class="align-center justify-space-between">
             <v-col cols="12">
               <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
@@ -36,13 +36,22 @@
                 :loading="isLoading"
                 @input="setFromToken" />
               <mew-input
-                label="amount to swap"
-                placeholder="Enter amount to swap"
+                label="Amount"
+                placeholder="0"
                 :value="tokenInValue"
-                type="number"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
+                :buy-more-str="
+                  amountErrorMessage === errorMsgs.amountExceedsEthBalance
+                    ? 'Buy more.'
+                    : ''
+                "
+                :max-btn-obj="{
+                  title: 'Max',
+                  disabled: false,
+                  method: setMaxAmount
+                }"
                 @input="setTokenInValue"
             /></v-col>
 
@@ -62,85 +71,45 @@
                 @input="setToToken"
               />
               <mew-input
-                label="you'll receive"
-                placeholder=""
-                type="number"
+                label="Amount"
+                placeholder="0"
                 disabled
                 :value="tokenOutValue"
               />
             </v-col>
           </v-row>
+
           <!--
             =====================================================================================
               Address Book
             =====================================================================================
-            -->
+          -->
           <module-address-book
             v-show="showToAddress"
+            class="mt-10"
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
+
           <!--
             =====================================================================================
-             BTC options
+              User Message Block: store your Bitcoin on Ethereum
             =====================================================================================
-            -->
-          <div v-if="isToBtc" class="pa-6 wrapped-btc-text">
-            <p class="mew-heading-3">
-              <v-icon class="icon" size="20" color="#0B2840">
-                mdi-information-outline</v-icon
-              >Did you know? You can store your Bitcoin on Ethereum
-            </p>
-            <p>
-              To swap to BTC you need a Bitcoin wallet, but you can swap to
-              wrapped Bitcoin instead and store it in your Ethereum wallet.
-            </p>
-            <v-divider />
-            <v-expansion-panels flat>
-              <v-expansion-panel>
-                <v-expansion-panel-header color="transparent">
-                  How can I get wrapped Bitcoin?
-                </v-expansion-panel-header>
-                <v-expansion-panel-content color="transparent">
-                  <div>
-                    <p>
-                      When you swap to Bitcoin, it is moved to the Bitcoin
-                      blockchain, & requires a Bitcoin wallet. In order to keep
-                      Bitcoin in MyEtherWallet, you can swap to
-                      <span class="font-italic">wrapped</span> Bitcoin instead.
-                      Wrapped Bitcoin is an Ethereum token, with a value
-                      approximately equal to 1 BTC. Wrapped Bitcoins can be
-                      stored in MEW, and can be used as any other Ethereum
-                      asset: you can swap it to oether tokens, use it as
-                      collateral in DeFi apps, etc. There are multiple kinds of
-                      wrapped Bitcoins, but they roughly do the same thing.
-                      <a target="_blank" rel="noopener noreferrer"
-                        >Learn more about Wrapped Bitcoin.</a
-                      >
-                    </p>
-                    <div class="d-flex align-center">
-                      <mew-button
-                        v-for="btn in wrappedBtc"
-                        :key="btn"
-                        class="px-2 mx-1"
-                        :title="`Swap to ${btn}`"
-                        color-theme="primary"
-                        :has-full-width="false"
-                        btn-size="xlarge"
-                        btn-style="outline"
-                        @click.native="setWrappedBtc(btn)"
-                      />
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </div>
+          -->
+          <swap-msg-store-btc-eth
+            v-if="
+              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
+            "
+            class="mt-5"
+            :message="msg.lowBalance"
+            :to-token-type="toTokenType.value"
+          />
+
           <!--
             =====================================================================================
              Providers List
             =====================================================================================
-            -->
+          -->
           <swap-providers-list
             :step="step"
             :available-quotes="availableQuotes"
@@ -181,6 +150,7 @@
 </template>
 
 <script>
+import SwapMsgStoreBtcEth from './components/SwapMsgStoreBtcEth';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -195,14 +165,31 @@ import {
   txTypes,
   notificationTypes
 } from '@/modules/notifications/configs/configTypes';
+import {
+  TRENDING_SYMBOLS,
+  TRENDING_LIST
+} from './handlers/configs/configTrendingTokens';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
+
+const tokens = {
+  eth: 'ethereum'
+};
+
+const errorMsgs = {
+  amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
+  amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
+  amountLessThan0: 'Swap amount must be greater than 0',
+  doNotOwnToken: 'You do not own this token'
+};
+
 export default {
   name: 'ModuleSwap',
   components: {
+    SwapMsgStoreBtcEth,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
@@ -219,11 +206,23 @@ export default {
     },
     amount: {
       type: String,
-      default: ''
+      default: '0'
     }
   },
   data() {
     return {
+      msg: {
+        storeBitcoin: {
+          title: 'Your Ether balance is too low',
+          subtitle:
+            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
+        },
+        lowBalance: {
+          title: 'Did you know? You can store your Bitcoin on Ethereum',
+          subtitle:
+            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
+        }
+      },
       step: 0,
       confirmInfo: {
         to: '',
@@ -240,15 +239,15 @@ export default {
       swapper: null,
       toTokenType: {},
       fromTokenType: {},
-      tokenInValue: this.amount,
-      tokenOutValue: null,
-      availableTokens: [],
+      tokenInValue: this.amount || '0',
+      tokenOutValue: '0',
+      availableTokens: { toTokens: [], fromTokens: [] },
       availableQuotes: [],
       currentTrade: null,
       allTrades: [],
       isLoading: false,
       loadingFee: false,
-      belowMinError: false,
+      minMaxError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken
@@ -262,8 +261,6 @@ export default {
         }
       ],
       swapIcon: SwapIcon,
-      fromTokens: [],
-      toTokens: [],
       providersMessage: {
         title: 'Loading Tokens Data',
         subtitle: ''
@@ -272,16 +269,29 @@ export default {
       gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy'
+      localGasType: 'economy',
+      errorMsgs: errorMsgs
     };
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    /**
+     * Check if fromTokenType is Eth
+     */
+    isFromTokenEth() {
+      return (
+        this.fromTokenType.name &&
+        this.fromTokenType.name.toLowerCase() === tokens.eth
+      );
+    },
+    /**
+     * Returns the dropdown token data
+     * to swap to
+     */
     actualToTokens() {
-      const toTokens = this.toTokens ? this.toTokens : [];
       const imgs = [
         'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
         'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
@@ -289,102 +299,66 @@ export default {
         'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
         'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
       ];
-      const trendingList = [
-        {
-          contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-          isEth: true,
-          name: 'Ethereum',
-          subtext: 'ETH',
-          symbol: 'ETH',
-          type: 'ERC20',
-          value: 'Ethereum'
-        },
-        {
-          contract_address: '0xbtc',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-          isEth: false,
-          name: 'Bitcoin',
-          subtext: 'BTC',
-          symbol: 'BTC',
-          value: 'Bitcoin'
-        },
-        {
-          contract_address: '0xc713e5e149d5d0715dcd1c156a020976e7e56b88',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=',
-          isEth: true,
-          name: 'Aave MKR',
-          subtext: 'aMKR',
-          symbol: 'aMKR',
-          type: 'ERC20',
-          value: 'Aave MKR'
-        },
-        {
-          contract_address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ZRX-0xe41d2489571d322189246dafa5ebde1f4699f498.svg',
-          isEth: true,
-          name: '0x',
-          subtext: 'ZRX',
-          symbol: 'ZRX',
-          type: 'ERC20',
-          value: '0x'
-        },
-        {
-          contract_address: '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=',
-          isEth: true,
-          name: 'Kyber Network Crystal',
-          subtext: 'KNC',
-          symbol: 'KNC',
-          type: 'ERC20',
-          value: 'Kyber Network Crystal'
-        }
-      ];
       return [
         {
           text: 'Select Token',
           imgs: imgs,
-          total: `${toTokens.length}`,
+          total: `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
         },
         {
           header: 'Trending'
         },
-        ...trendingList,
+        ...this.trendingTokens,
         {
-          header: 'All Tokens'
+          header: 'All'
         },
-        ...toTokens
+        ...this.toTokens
       ];
     },
+    /**
+     * Returns all the tokens
+     * to swap to
+     */
+    toTokens() {
+      return this.availableTokens.toTokens
+        .filter(token => {
+          return !TRENDING_SYMBOLS.includes(token.symbol);
+        })
+        .map(token => {
+          const foundToken = this.findCoinToken(token.contract_address);
+          token.price = foundToken ? foundToken.current_price : '0';
+          token.subtext = token.name;
+          token.value = token.name;
+          return token;
+        });
+    },
+    /**
+     * Returns the dropdown token data
+     * to swap from
+     */
     actualFromTokens() {
-      const defaultToken = [this.fromTokenType];
-      const fromTokens = this.fromTokens ? this.fromTokens : [];
-      const tokensList = this.tokensList
-        ? defaultToken.concat(this.tokensList)
-        : [];
+      const tokensList = this.tokensList || [];
       const imgs = tokensList.map(item => {
         return item.img;
       });
-      if (BigNumber(this.balanceInETH).lte(0))
-        tokensList.push({
-          hasNoEth: true,
-          disabled: true,
-          text: 'Your wallet is empty.',
-          linkText: 'Buy ETH',
-          link: 'https://ccswap.myetherwallet.com/#/'
-        });
+      BigNumber(this.balanceInETH).lte(0)
+        ? tokensList.unshift({
+            hasNoEth: true,
+            disabled: true,
+            text: 'Your wallet is empty.',
+            linkText: 'Buy ETH',
+            link: 'https://ccswap.myetherwallet.com/#/'
+          })
+        : this.isFromTokenEth
+        ? tokensList.unshift(this.fromTokenType)
+        : null;
       return [
         {
           text: 'Select Token',
           imgs: imgs,
-          total: `${fromTokens.length}`,
+          total: `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
         },
@@ -393,10 +367,36 @@ export default {
         },
         ...tokensList,
         {
-          header: 'All Tokens'
+          header: 'Other Tokens'
         },
-        ...fromTokens
+        ...this.fromTokens
       ];
+    },
+    /**
+     * Returns other tokens
+     * to swap from
+     */
+    fromTokens() {
+      return this.availableTokens.fromTokens.map(token => {
+        const foundToken = this.findCoinToken(token.contract_address);
+        token.price = foundToken ? foundToken.current_price : '0';
+        token.subtext = token.name;
+        token.value = token.name;
+        return token;
+      });
+    },
+    /**
+     * Returns all trending tokens
+     * to swap to
+     */
+    trendingTokens() {
+      return TRENDING_LIST.map(token => {
+        const id = token.id || token.contract_address;
+        const foundToken = this.findCoinToken(id);
+        token.price = foundToken ? foundToken.current_price : '0';
+        token.img = foundToken ? foundToken.image : '';
+        return token;
+      });
     },
     totalFees() {
       const gasPrice =
@@ -427,10 +427,9 @@ export default {
      */
     notEnoughEth() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth =
-        this.fromTokenType.value === 'Ethereum'
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
+      const isNotEnoughEth = this.isFromTokenEth
+        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+        : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
     /**
@@ -451,8 +450,8 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType.value) {
-        if (this.fromTokenType.value !== 'Ethereum') {
+      if (!this.initialLoad && this.fromTokenType.name) {
+        if (!this.isFromTokenEth) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
           );
@@ -473,7 +472,7 @@ export default {
      * Amount is rounded
      */
     availableBalanceHint() {
-      if (!this.initialLoad && this.fromTokenType.value) {
+      if (!this.initialLoad && this.fromTokenType.name) {
         return `${this.availableBalance.toFixed()} ${
           this.fromTokenType.symbol
         }`;
@@ -507,25 +506,39 @@ export default {
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading) {
         if (this.availableBalance.lte(0)) {
-          return this.fromTokenType.value === 'Ethereum'
-            ? 'your available ETH balance is 0'
-            : 'you do not own this token';
+          return this.isFromTokenEth
+            ? this.errorMsgs.amountExceedsEthBalance
+            : this.errorMsgs.doNotOwnToken;
         }
         if (
-          this.fromTokenType.value !== 'Ethereum' &&
+          !this.isFromTokenEth &&
           this.availableBalance.lte(fromWei(MIN_GAS_WEI))
         ) {
-          return 'you do not have enough ETH to cover transaction fee for a swap';
+          return this.errorMsgs.amountExceedsTxFee;
         }
         if (this.tokenInValue && this.tokenInValue !== '') {
-          if (new BigNumber(this.tokenInValue).eq(0)) {
-            return `swap amount must be greater than 0`;
+          if (new BigNumber(this.tokenInValue).lt(0)) {
+            return this.errorMsgs.amountLessThan0;
           }
-          if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
-            return `your balance is lower (${this.availableBalanceHint})`;
+          if (
+            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
+            this.isFromTokenEth
+          ) {
+            return this.errorMsgs.amountExceedsEthBalance;
           }
-          if (new BigNumber(this.tokenInValue).lt(this.belowMinError)) {
-            return `Below minimum amount of ${this.belowMinError} for available providers`;
+          if (
+            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
+            !this.isFromTokenEth
+          ) {
+            return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
+          }
+          if (this.selectedProvider.exchange === 'changelly') {
+            if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+              return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
+            }
+            if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+              return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
+            }
           }
         }
       }
@@ -583,24 +596,27 @@ export default {
     }
   },
   methods: {
+    setMaxAmount() {
+      this.tokenInValue = this.isFromTokenEth
+        ? new BigNumber(this.availableBalance)
+            .minus(fromWei(MIN_GAS_WEI))
+            .toFixed()
+        : this.availableBalance.toFixed();
+    },
+    buyEth() {
+      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
+    /* Find token from getLatestPrices query data */
+    findCoinToken(hash) {
+      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
+        return this.coinGeckoTokens.get(hash.toLowerCase());
+      }
+    },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
-      /* Add Correct Values for the MewSelect*/
-      this.availableTokens.toTokens.forEach(token => {
-        token.subtext = token.symbol;
-        token.value = token.name;
-      });
-      this.availableTokens.fromTokens.forEach(token => {
-        token.subtext = token.symbol;
-        token.value = token.name;
-      });
-      this.availableTokens.fromTokens.filter(
-        token => token.symbol.toLowerCase() !== 'btc'
-      );
-
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
@@ -608,19 +624,13 @@ export default {
     openGasPriceModal() {
       this.gasPriceModal = true;
     },
-    getTokenFromAddress(address) {
-      if (!this.availableTokens.toTokens) return {};
-      for (const t of this.availableTokens.toTokens) {
-        if (t.contract_address === address) return t;
-      }
-      return {};
-    },
     setDefaults() {
-      this.fromTokens = this.availableTokens.fromTokens;
-      this.toTokens = this.availableTokens.toTokens;
       setImmediate(() => {
-        this.fromTokenType = this.getTokenFromAddress(this.defaults.fromToken);
-        this.toTokenType = this.getTokenFromAddress(this.defaults.toToken);
+        this.fromTokenType =
+          this.defaults.fromToken === ETH_TOKEN
+            ? Object.assign({}, this.trendingTokens[0])
+            : this.findCoinToken(this.defaults.fromToken);
+        this.fromTokenType.tokenBalance = this.availableBalance;
         this.setTokenInValue(this.tokenInValue);
       });
     },
@@ -640,10 +650,12 @@ export default {
     },
     setTokenInValue: _.debounce(function (value) {
       if (this.isLoading || this.initialLoad) return;
-      this.tokenInValue = value;
-      this.tokenOutValue = '';
+      this.tokenInValue = value || '0';
+      this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
-        q.isSelected = false;
+        if (q) {
+          q.isSelected = false;
+        }
       });
       this.availableQuotes = [];
       this.allTrades = [];
@@ -651,12 +663,12 @@ export default {
       if (
         !value ||
         this.hasAmountErrors ||
-        this.fromTokenType.value === this.toTokenType.value
+        this.fromTokenType.name === this.toTokenType.name
       ) {
         this.providersMessage = {
-          title: 'Select token and enter amount to see rates',
+          title: 'Select token and enter amount to see rates.',
           subtitle:
-            'MEW finds the best price for you across multiple Dexs and Exchange services.'
+            'MEW finds the best price for you across multiple DEXs and Exchange services.'
         };
         return;
       }
@@ -668,7 +680,11 @@ export default {
       }
 
       this.feeError = '';
-      if (this.tokenInValue !== '' && !_.isEmpty(this.toTokenType)) {
+      if (
+        this.tokenInValue !== '' &&
+        this.toTokenType.symbol &&
+        !_.isEmpty(this.toTokenType)
+      ) {
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -683,17 +699,20 @@ export default {
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
-              if (q?.rateId === 'belowMin') {
-                this.belowMinError = q.minAmount;
+              if (q?.rateId === 'MinMax') {
+                this.minMaxError = {
+                  minFrom: q.minAmount,
+                  maxFrom: q.maxAmount
+                };
                 return;
               }
-              this.belowMinError = false;
+              this.minMaxError = false;
 
               return q;
             });
             this.availableQuotes = quotes;
             if (quotes.length) {
-              this.tokenOutValue = quotes[0].amount;
+              this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
             } else {
               this.providersMessage = {
@@ -841,8 +860,7 @@ export default {
       if (this.notEnoughEth) {
         const message = `This provider transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
         const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
-        this.feeError =
-          this.fromTokenType.value === 'Ethereum' ? ethError : message;
+        this.feeError = this.isFromTokenEth ? ethError : message;
       }
     },
     openSettings() {
@@ -923,5 +941,9 @@ export default {
   .v-expansion-panel-header {
     padding: 16px 0px !important;
   }
+}
+
+.border-top {
+  border-top: 1px solid var(--v-inputBorder-base);
 }
 </style>

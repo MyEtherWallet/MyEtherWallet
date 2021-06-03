@@ -1,6 +1,15 @@
 <template>
   <div class="my-5">
     <div class="mew-heading-3 mb-5">Select a provider</div>
+
+    <!--
+    =====================================================================================
+      Providers Message
+    =====================================================================================
+    -->
+    <user-msg-block v-if="step == 0 && message != ''" :message="message">
+    </user-msg-block>
+
     <!--
     =====================================================================================
       Sceleton Loader
@@ -22,30 +31,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <!--
-    =====================================================================================
-      Providers Message
-    =====================================================================================
-    -->
-    <v-row
-      v-if="step === 0 && (message.title !== '' || message.subtitle !== '')"
-    >
-      <v-col cols="12" class="mb-n3">
-        <v-card
-          flat
-          color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-4"
-          min-height="94px"
-        >
-          <v-card-text class="text-center">
-            <p v-show="message.title !== ''" class="mew-heading-1 pb-0">
-              {{ message.title }}
-            </p>
-            <p v-show="message.subtitle !== ''">{{ message.subtitle }}</p>
-          </v-card-text>
-        </v-card>
-      </v-col></v-row
-    >
     <!--
     =====================================================================================
       Provider Rate Row
@@ -192,9 +177,13 @@
   </div>
 </template>
 <script>
+import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
+  components: {
+    UserMsgBlock
+  },
   props: {
     step: {
       type: Number,

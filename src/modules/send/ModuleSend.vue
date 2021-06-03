@@ -9,26 +9,30 @@
       <div class="full-width px-lg-3 pb-6">
         <v-row>
           <v-col cols="12" md="6">
+            <p class="ma-0" />
             <mew-select
               ref="mewSelect"
               :items="tokens"
-              :label="$t('sendTx.type')"
               class="mr-3"
+              :value="selectedCurrency"
               @input="setCurrency"
             />
           </v-col>
           <v-col cols="12" md="6" class="position--relative">
-            <top-right-btn
-              :text="$t('sendTx.button-entire')"
-              @click.native="setEntireBal"
-            />
+            <p class="ma-0 text-right balance-container">
+              {{ selectedBalance }}
+            </p>
             <mew-input
-              ref="mewInput"
+              label="Amount"
+              placeholder="0"
               :value="amount"
-              :label="$t('sendTx.amount')"
-              placeholder=" "
-              :right-label="currencyBalance"
+              :persistent-hint="true"
               :rules="amtRules"
+              :max-btn-obj="{
+                title: 'Max',
+                disabled: false,
+                method: setEntireBal
+              }"
               @input="setAmount"
             />
           </v-col>
@@ -109,10 +113,9 @@
 </template>
 
 <script>
-import utils, { fromWei, toBN, isHexStrict } from 'web3-utils';
+import utils, { fromWei, toBN, isHexStrict, _ } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import TopRightBtn from '@/core/components/AppTopRightBtn';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
@@ -121,8 +124,7 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 
 export default {
   components: {
-    ModuleAddressBook,
-    TopRightBtn
+    ModuleAddressBook
   },
   props: {
     prefilledAmount: {
@@ -156,6 +158,7 @@ export default {
       sendTx: null,
       isValidAddress: false,
       amount: '0',
+      amountErrorMessage: '0',
       selectedCurrency: {},
       data: '0x',
       clearAll: false,
@@ -173,6 +176,64 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ethToken() {
+      return {
+        contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        decimals: 18,
+        img: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+        isEth: true,
+        name: 'Ethereum',
+        subtext: 'Ethereum',
+        symbol: 'ETH',
+        type: 'ERC20',
+        value: 'Ethereum',
+        id: 'ethereum',
+        price: BigNumber(this.fiatValue),
+        tokenBalance: this.balance
+      };
+    },
+    selectedBalance() {
+      if (
+        _.isEmpty(this.selectedCurrency) ||
+        this.selectedCurrency.symbol === this.network.type.currencyName
+      ) {
+        return this.balanceInETH;
+      }
+      return this.convertToDisplay(
+        BigNumber(this.selectedCurrency.balance).toFixed(),
+        this.selectedCurrency.decimals
+      );
+    },
+    tokens() {
+      const tokensList = this.tokensList || [];
+      const imgs = tokensList.map(item => {
+        return item.img;
+      });
+      const ethToken = [this.ethToken];
+      const mergedList = ethToken.concat(tokensList);
+      BigNumber(this.balanceInETH).lte(0)
+        ? mergedList.unshift({
+            hasNoEth: true,
+            disabled: true,
+            text: 'Your wallet is empty.',
+            linkText: 'Buy ETH',
+            link: 'https://ccswap.myetherwallet.com/#/'
+          })
+        : null;
+      return [
+        {
+          text: 'Select Token',
+          imgs: imgs.splice(0, 5),
+          total: `${this.tokensList.length}`,
+          divider: true,
+          selectTokenLabel: true
+        },
+        {
+          header: 'My Wallet'
+        },
+        ...mergedList
+      ];
+    },
     amtRules() {
       return [
         value => !!value || "Amount can't be empty!",
@@ -227,31 +288,6 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
-    },
-    currencyBalance() {
-      if (this.selectedCurrency.balance)
-        return this.convertToDisplay(
-          this.selectedCurrency.balance,
-          this.selectedCurrency.decimals
-        );
-      return '0';
-    },
-    tokens() {
-      const eth = {
-        name: this.network.type.name,
-        symbol: this.network.type.name,
-        subtext: this.network.type.name_long,
-        value: this.network.type.name_long,
-        balance: this.balance,
-        img: this.network.type.icon,
-        decimals: 18,
-        market_cap: null,
-        price_change_percentage_24h: null
-      };
-
-      const copiedTokens = this.tokensList.slice();
-      copiedTokens.unshift(eth);
-      return copiedTokens;
     },
     txFeeETH() {
       return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
@@ -313,6 +349,7 @@ export default {
   mounted() {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
+    this.selectedCurrency = this.ethToken;
   },
   methods: {
     setAddress(addr, isValidAddress) {
@@ -395,11 +432,22 @@ export default {
         .div(BigNumber(10).pow(decimals))
         .toString();
     },
-    async setEntireBal() {
-      this.amount = this.convertToDisplay(
-        this.sendTx.getEntireBal(),
-        this.selectedCurrency.decimals
-      );
+    setEntireBal() {
+      if (
+        _.isEmpty(this.selectedCurrency) ||
+        this.selectedCurrency.symbol === this.network.type.currencyName
+      ) {
+        this.setAmount(
+          BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed()
+        );
+      } else {
+        this.setAmount(
+          this.convertToDisplay(
+            BigNumber(this.selectedCurrency.balance),
+            this.selectedCurrency.decimals
+          )
+        );
+      }
     },
     setAmount(value) {
       this.amount = value;
@@ -414,16 +462,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.entire-bal {
-  .mew-button {
-    margin-bottom: -12px;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .border-bottom {
   border-bottom: 2px dotted #f5f5f5;
+}
+
+.balance-container {
+  top: -15px;
+  position: absolute;
+  right: 15px;
 }
 </style>
