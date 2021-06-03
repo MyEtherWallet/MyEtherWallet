@@ -10,9 +10,7 @@
         "
       >
         <v-card color="transparent" flat tile max-width="430px">
-          <div class="white--text font-weight-bold banner-top-title">
-            Ethereum's Original Wallet
-          </div>
+          <div class="white--text mew-title">Ethereum's Original Wallet</div>
           <p class="white--text mt-3">
             MEW (MyEtherWallet) is a free, client-side interface helping you
             interact with the Ethereum blockchain. Our easy-to-use, open-source
@@ -96,10 +94,6 @@ export default {
   background-position: 100% bottom;
   .banner-content-container {
     height: 800px;
-  }
-  .banner-top-title {
-    line-height: 55px !important;
-    font-size: 50px;
   }
 }
 

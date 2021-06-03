@@ -10,7 +10,7 @@
         <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Features
         </div>
-        <h2 class="mb-9">Your All-In-One Gateway to the Ethereum Blockchain</h2>
+        <h1 class="mb-9">Your All-In-One Gateway to the Ethereum Blockchain</h1>
       </v-sheet>
       <div class="features-tabs-container">
         <v-container>

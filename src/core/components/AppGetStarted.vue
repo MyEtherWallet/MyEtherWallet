@@ -5,7 +5,7 @@
       <v-container>
         <div class="d-flex align-center px-6">
           <div>
-            <h2 class="white--text mb-3">Ready to explore Ethereum?</h2>
+            <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
             <p class="white--text ma-0">
               Still don't know what MEW is?
               <a
