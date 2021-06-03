@@ -1,3 +1,7 @@
+/**
+ * Number Format Helper
+ * taken from EthVM
+ */
 /* Constants: */
 const SmallUsdBreakpoint = 0.04;
 const SmallNumberBreakpoint = 0.0000001;
@@ -23,7 +27,33 @@ const FormattedNumberUnit = {
 };
 
 /**
- * GROUP I: Floating point values
+ * GROUP I: Formatted integers
+ * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 billion
+ * @param value: BigNumber
+ * @return FormattedNumber
+ */
+function formatIntegerValue(value) {
+  /* Case I: value >= 1,000,000,000,000,000 */
+  if (value.isGreaterThanOrEqualTo(OneQuadrillion)) {
+    return this.convertToQuadrillion(value);
+  }
+
+  /* Case II: value >= 1,000,000,000,000 */
+  if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+    return this.convertToTrillions(value);
+  }
+
+  /* Case III: value >= 1,000,000,000 */
+  if (value.isGreaterThanOrEqualTo(OneBillion)) {
+    return this.convertToBillions(value);
+  }
+
+  /* Case IV: value < 1,000,000,000 */
+  return { value: value.toFormat() };
+}
+
+/**
+ * GROUP II: Floating point values
  * Converts a floating point value to a FormattedNumber object
  * Use cases: Token Balances / Quantities / Non Detail page for floating numbers
  * @param value BigNumber
@@ -91,7 +121,7 @@ function formatFloatingPointValue(value) {
 }
 
 /**
- * GROUP II: USD Values
+ * GROUP III: USD Values
  * Converts a USD value to a FormattedNumber
  * @param value: BigNumber
  * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
@@ -228,6 +258,7 @@ function getRoundNumber(value, round, dp) {
 }
 
 export default {
+  formatIntegerValue,
   formatFloatingPointValue,
   formatUsdValue,
   convertToBillions,
