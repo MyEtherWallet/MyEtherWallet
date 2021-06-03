@@ -2,6 +2,8 @@
 
 ### Devop
 
+* Remove compiler [#3115](https://github.com/MyEtherWallet/MyEtherWallet/pull/3115)
+* Harmonize errors across wallets [#3051](https://github.com/MyEtherWallet/MyEtherWallet/pull/3051)
 * Fix ui issues for aave [#3079](https://github.com/MyEtherWallet/MyEtherWallet/pull/3079)
 * Add top right button [#3081](https://github.com/MyEtherWallet/MyEtherWallet/pull/3081)
 * Recalculate rates when gas price is switched [#3039](https://github.com/MyEtherWallet/MyEtherWallet/pull/3039)

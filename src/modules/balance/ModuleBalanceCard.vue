@@ -78,6 +78,7 @@
       </div>
     </div>
     <module-access-wallet-hardware
+      v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
       :switch-address="isHardware"
