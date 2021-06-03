@@ -233,7 +233,6 @@
 
 <script>
 import SwapBtn from '@/views/components-wallet/TheSwapBtn';
-import SwapMsgStoreBtcEth from './components/SwapMsgStoreBtcEth';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -255,7 +254,6 @@ export default {
   name: 'ModuleSwap',
   components: {
     SwapBtn,
-    SwapMsgStoreBtcEth,
     AppButtonBalance,
     WalletUserMsgBlock,
     ModuleAddressBook,
