@@ -8,17 +8,12 @@
 /* Limit minimum width */
 html {
   min-width: 320px !important;
+  font-size: 14px !important;
 }
 
 /* Limit maximum width */
 .container {
   max-width: 1185px !important;
-}
-
-@media (max-width: 1263px) {
-  html {
-    font-size: 14px !important;
-  }
 }
 
 /* Remove default background color */
@@ -65,11 +60,6 @@ html {
   background-color: transparent !important;
 }
 
-.v-application .v-input .v-label {
-  font-weight: 400 !important;
-  font-size: 0.88rem;
-  color: var(--v-titlePrimary-base) !important;
-}
 .v-application .v-btn.mew-button .v-btn__content span {
   text-transform: initial;
   font-size: 0.88rem !important;
@@ -84,7 +74,6 @@ html {
   }
 }
 
-
 /* ========== CSS Style Reset ========== */
 .monospace {
   font-family: monospace !important;
@@ -95,27 +84,38 @@ i {
 div {
   padding: 0;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.357rem;
+  font-weight: 400;
 }
 p {
+  /* size - 14px,  height - 19px, normal */
   @extend .mew-body;
 }
 h1 {
-  @extend .mew-heading-1;
+  /* size - 30px,  height - 36px, bold */
+  @extend .mew-subtitle;
 }
 h2 {
+  /* size - 22px,  height - 26px, bold */
   @extend .mew-heading-2;
 }
 h3 {
+  /* size - 16px,  height - 22px, bold */
   @extend .mew-heading-3;
 }
-h5,
-.h5 {
+h4 {
+  /* size - 16px,  height - 22px, normal */
+  @extend .mew-heading-4;
+
+  font-weight: 400;
+}
+h5 {
   @extend .mew-body;
 }
 h6 {
-  font-size: 0.75rem;
-  line-height: 0.85rem;
-  font-weight: 400;
+  /* size - 12px,  height - 14px, normal */
+  @extend .mew-label;
 }
 
 /* ========== Text ========== */
