@@ -16,7 +16,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists",
@@ -162,7 +162,7 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "handlebars": "4.7.7",
+    "handlebars": "4.5.3",
     "axios": "0.21.1",
     "node-fetch": "2.6.1",
     "cryptiles": "4.1.2",
