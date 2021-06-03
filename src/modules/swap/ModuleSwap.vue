@@ -47,9 +47,9 @@
                 @input="setTokenInValue"
             /></v-col>
 
-            <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
+            <v-col cols="12" sm="2" class="mt-n5">
               <div class="d-flex align-center justify-center">
-                <img :src="swapIcon" height="35" />
+                <swap-btn />
               </div>
             </v-col>
 
@@ -232,6 +232,8 @@
 </template>
 
 <script>
+import SwapBtn from '@/views/components-wallet/TheSwapBtn';
+import SwapMsgStoreBtcEth from './components/SwapMsgStoreBtcEth';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -252,6 +254,8 @@ const MIN_GAS_WEI = '800000000000000';
 export default {
   name: 'ModuleSwap',
   components: {
+    SwapBtn,
+    SwapMsgStoreBtcEth,
     AppButtonBalance,
     WalletUserMsgBlock,
     ModuleAddressBook,
