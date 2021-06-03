@@ -19,22 +19,23 @@
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
-          -->
-          <v-row class="align-center justify-space-between">
-            <v-col cols="12">
-              <v-skeleton-loader v-if="isLoading" type="text" width="375px" />
-              <div v-else class="available-balance text-right">
-                {{ balanceInETH }}
-              </div>
-            </v-col>
+            -->
+          <v-row class="align-center justify-space-between mt-4">
             <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
-              <mew-select
-                :value="fromTokenType"
-                label="From"
-                :items="actualFromTokens"
-                :is-swap="true"
-                :loading="isLoading"
-                @input="setFromToken" />
+              <div class="position--relative">
+                <app-button-balance
+                  :loading="isLoading"
+                  :balance="balanceInETH"
+                />
+                <mew-select
+                  :value="fromTokenType"
+                  label="From"
+                  :items="actualFromTokens"
+                  :is-swap="true"
+                  :loading="isLoading"
+                  @input="setFromToken"
+                />
+              </div>
               <mew-input
                 label="Amount"
                 placeholder="0"
@@ -55,11 +56,12 @@
                 @input="setTokenInValue"
             /></v-col>
 
-            <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
+            <v-col cols="12" sm="2" class="mt-n5">
               <div class="d-flex align-center justify-center">
-                <img :src="swapIcon" height="35" />
+                <swap-btn />
               </div>
             </v-col>
+
             <v-col cols="12" sm="5">
               <mew-select
                 ref="toToken"
@@ -80,10 +82,39 @@
           </v-row>
 
           <!--
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
+          -->
+          <user-msg-block
+            v-if="notEnoughEth && !isLoading"
+            class="mt-5"
+            :message="msg.storeBitcoin"
+          >
+            <div class="mt-3 mx-n1">
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Swap Your Bitcoin to Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+              />
+              <mew-button
+                btn-size="small"
+                btn-style="outline"
+                title="Buy Ether"
+                class="ma-1"
+                :has-full-width="$vuetify.breakpoint.xsOnly"
+                @click.native="buyEth"
+              />
+            </div>
+          </user-msg-block>
+
+          <!--
             =====================================================================================
               Address Book
             =====================================================================================
-          -->
+            -->
           <module-address-book
             v-show="showToAddress"
             class="mt-10"
@@ -92,24 +123,83 @@
           />
 
           <!--
-            =====================================================================================
-              User Message Block: store your Bitcoin on Ethereum
-            =====================================================================================
+          =====================================================================================
+            User Message Block: store your Bitcoin on Ethereum
+          =====================================================================================
           -->
-          <swap-msg-store-btc-eth
+          <wallet-user-msg-block
             v-if="
               toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
             class="mt-5"
             :message="msg.lowBalance"
-            :to-token-type="toTokenType.value"
-          />
+          >
+            <div class="border-top mt-3">
+              <v-expansion-panels
+                flat
+                class="expansion-panels--remove-paddings"
+              >
+                <v-expansion-panel>
+                  <v-expansion-panel-header
+                    color="tableHeader"
+                    class="textPrimaryModule--text"
+                  >
+                    How can I get wrapped Bitcoin?
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content color="tableHeader" class="pa-0">
+                    <div class="textPrimaryModule--text mb-2">
+                      When you swap to Bitcoin, it is moved to the Bitcoin
+                      blockchain, & requires a Bitcoin wallet. In order to keep
+                      Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
+                      instead. Wrapped Bitcoin is an Ethereum token, with a
+                      value approximately equal to 1 BTC. Wrapped Bitcoins can
+                      be stored in MEW, and can be used as any other Ethereum
+                      asset: you can swap it to other tokens, use it as
+                      collateral in DeFi apps, etc. There are multiple kinds of
+                      wrapped Bitcoins, but they roughly do the same thing.
+                      <a
+                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                      >
+                        Learn more about Wrapped Bitcoin.
+                      </a>
+                    </div>
+                    <v-row class="mt-6">
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to renBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to wBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                      <v-col cols="12" md="4">
+                        <mew-button
+                          btn-size="small"
+                          btn-style="outline"
+                          title="Swap to PBTC"
+                          :has-full-width="true"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
+          </wallet-user-msg-block>
 
           <!--
             =====================================================================================
              Providers List
             =====================================================================================
-          -->
+            -->
           <swap-providers-list
             :step="step"
             :available-quotes="availableQuotes"
@@ -150,7 +240,9 @@
 </template>
 
 <script>
-import SwapMsgStoreBtcEth from './components/SwapMsgStoreBtcEth';
+import SwapBtn from '@/views/components-wallet/TheSwapBtn';
+import AppButtonBalance from '@/core/components/AppButtonBalance';
+import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -161,10 +253,6 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import {
-  txTypes,
-  notificationTypes
-} from '@/modules/notifications/configs/configTypes';
 import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
@@ -189,7 +277,9 @@ const errorMsgs = {
 export default {
   name: 'ModuleSwap',
   components: {
-    SwapMsgStoreBtcEth,
+    SwapBtn,
+    AppButtonBalance,
+    WalletUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
@@ -825,7 +915,8 @@ export default {
     swapNotificationFormatter(obj, isError) {
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          hash: !isError ? hash : '',
+          transactionHash: !isError ? hash : '',
+          transactionFee: fromWei(this.totalFees),
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
           gas: this.currentTrade.transactions[idx].gas,
@@ -833,10 +924,11 @@ export default {
           gasLimit: this.totalGasLimit,
           data: this.currentTrade.transactions[idx].data,
           value: this.currentTrade.transactions[idx].value,
-          type: notificationTypes.swap,
+          type: 'SWAP',
           read: false,
           network: this.network.type.name,
-          status: isError ? txTypes.failed : txTypes.pending,
+          date: new Date().getTime(),
+          status: isError ? 'FAILED' : 'PENDING',
           fromTxData: {
             currency: this.confirmInfo.fromType,
             amount: this.confirmInfo.fromVal,
