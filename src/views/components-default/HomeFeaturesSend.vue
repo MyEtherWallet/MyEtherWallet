@@ -47,7 +47,6 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     tokens() {
@@ -60,7 +59,7 @@ export default {
         img: this.network.type.icon,
         decimals: 18,
         market_cap: null,
-        price_change_24h: null
+        price_change_percentage_24h: null
       };
 
       const copiedTokens = this.tokensList.slice();

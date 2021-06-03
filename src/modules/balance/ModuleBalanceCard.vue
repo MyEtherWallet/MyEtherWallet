@@ -81,7 +81,7 @@
       v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="true"
+      :switch-address="isHardware"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -116,13 +116,10 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
-    },
-    canSwitch() {
-      return this.isHardware;
     },
     lastFour() {
       return this.address.substring(
@@ -132,10 +129,7 @@ export default {
     },
     convertedBalance() {
       if (this.isEthNetwork) {
-        const balance = BigNumber(this.balanceInETH).times(
-          this.ETHUSDValue.value
-        );
-        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+        return `${'$' + this.balanceFiatValue.toFixed(2).toString()}`;
       }
       return `${BigNumber(this.balanceInETH).toFixed(2)} ${
         this.network.type.currencyName
@@ -210,6 +204,7 @@ export default {
   .blockie-image {
     border: 2px solid white;
     border-radius: 100%;
+    z-index: 1;
   }
 
   img {

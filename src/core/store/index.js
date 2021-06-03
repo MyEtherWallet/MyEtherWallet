@@ -4,6 +4,7 @@ import globalModule from './global';
 import wallet from './wallet';
 import notifications from './notifications';
 import externalData from './external';
+import swap from './swap';
 import Configs from './configs';
 import LocalStore from 'store';
 Vue.use(Vuex);
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
     global: globalModule,
     wallet: wallet,
     external: externalData,
-    notifications: notifications
+    notifications: notifications,
+    swap: swap
   }
 });
 

@@ -4,7 +4,13 @@
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
-          class="border-radius--10px card-content d-flex align-center justify-space-between"
+          class="
+            border-radius--10px
+            card-content
+            d-flex
+            align-center
+            justify-space-between
+          "
         >
           <div>
             <h2 class="font-weight--700 white--text">
@@ -72,7 +78,7 @@ export default {
 
 .mobile-content {
   .card-content {
-    padding: 4rem 2rem;
+    padding: 56px 20px;
     background-image: url('~@/assets/images/backgrounds/bg-light.jpg');
     background-position: center right -30px;
     background-size: cover;

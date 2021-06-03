@@ -14,7 +14,14 @@
               <v-card
                 height="100%"
                 color="white"
-                class="btn-custom border-radius--10px pa-8 pa-md-10 d-flex align-center justify-space-between"
+                class="
+                  btn-custom
+                  border-radius--10px
+                  pa-8 pa-md-10
+                  d-flex
+                  align-center
+                  justify-space-between
+                "
               >
                 <div>
                   <v-img
@@ -37,7 +44,13 @@
                     {{ b.logoText }}
                   </div>
                   <div
-                    class="mew-caption text-uppercase font-weight-bold primary--text text--lighten-1"
+                    class="
+                      mew-caption
+                      text-uppercase
+                      font-weight-bold
+                      primary--text
+                      text--lighten-1
+                    "
                   >
                     {{ b.priceNote }}
                   </div>
@@ -109,8 +122,7 @@ export default {
         currency: '$',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link:
-          'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
+        link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
       {
         logoText: 'BitBox',
@@ -139,8 +151,7 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link:
-          'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+        link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
       },
       {
         logoText: 'FINNEY',
@@ -150,8 +161,7 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link:
-          'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+        link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
       },
       {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
@@ -160,8 +170,7 @@ export default {
         currency: '€',
         price: '83.26',
         note: 'Unmatched physical security for your private keys.',
-        link:
-          'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
+        link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
       }
     ],
     titleData: {

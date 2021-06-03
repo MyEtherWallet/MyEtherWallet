@@ -7,7 +7,17 @@
       <div v-for="(btn, key) in buttons" :key="key" class="mb-3">
         <router-link :to="btn.to" class="display--block">
           <div
-            class="white titlePrimary--text d-flex align-center justify-space-between py-6 px-6 text-transform--initial border-radius--5px"
+            class="
+              white
+              titlePrimary--text
+              d-flex
+              align-center
+              justify-space-between
+              py-6
+              px-6
+              text-transform--initial
+              border-radius--5px
+            "
             style="width: 100%; height: initial; letter-spacing: initial"
           >
             <div class="d-flex align-center">

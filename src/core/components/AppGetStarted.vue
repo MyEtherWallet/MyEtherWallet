@@ -11,7 +11,11 @@
             <p class="white--text ma-0">
               Still don't know what MEW is?
               <a
-                class="color--inherit font-weight-medium text-decoration--underline"
+                class="
+                  color--inherit
+                  font-weight-medium
+                  text-decoration--underline
+                "
                 href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >
@@ -45,8 +49,8 @@
 
     <!-- Mobile design -->
     <div class="mobile-content d-block d-lg-none">
-      <v-container>
-        <v-sheet color="transparent" max-width="500px" class="mx-auto px-2">
+      <v-container class="px-5">
+        <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-9">
             <h1 class="font-weight--700 white--text">
               Ready to explore Ethereum?
@@ -54,7 +58,11 @@
             <p class="white--text mt-3">
               Still don't know what MEW is?
               <a
-                class="color--inherit font-weight-medium text-decoration--underline"
+                class="
+                  color--inherit
+                  font-weight-medium
+                  text-decoration--underline
+                "
                 href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                 target="_blank"
               >

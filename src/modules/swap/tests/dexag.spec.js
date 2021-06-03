@@ -8,8 +8,7 @@ describe('DexAG Swap', () => {
         expect.arrayContaining([
           expect.objectContaining({
             contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-            img:
-              'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+            img: 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
             decimals: 18,
             name: 'Ethereum',
             symbol: 'ETH'

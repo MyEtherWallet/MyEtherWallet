@@ -11,7 +11,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
@@ -67,7 +67,14 @@
             </v-col>
             <v-col cols="12" md="6">
               <div
-                class="tableHeader pa-5 border-radius--5px height-100 d-flex flex-column"
+                class="
+                  tableHeader
+                  pa-5
+                  border-radius--5px
+                  height-100
+                  d-flex
+                  flex-column
+                "
               >
                 <div class="d-flex aling-center">
                   <h5 class="font-weight-bold mr-auto">Earnings</h5>
@@ -112,7 +119,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
@@ -309,7 +316,7 @@ import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
@@ -374,7 +381,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
       if (!this.handler) true;
       return this.handler.isLoading;
@@ -400,7 +407,7 @@ export default {
         !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
           ? '0'
           : BigNumber(this.handler.userSummary.totalLiquidityETH)
-              .times(this.ETHUSDValue.value ? this.ETHUSDValue.value : 0)
+              .times(this.fiatValue ? this.fiatValue : 0)
               .toFixed(2);
 
       return {

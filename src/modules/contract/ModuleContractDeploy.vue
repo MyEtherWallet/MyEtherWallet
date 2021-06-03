@@ -99,7 +99,6 @@
 <script>
 import Vue from 'vue';
 import { mapState, mapActions, mapGetters } from 'vuex';
-import * as unit from 'ethjs-unit';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import validateHexString from '@/core/helpers/validateHexString';
 import {
@@ -154,7 +153,7 @@ export default {
       return false;
     },
     txValue() {
-      return sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
+      return sanitizeHex(toWei(this.value, 'ether').toString(16));
     }
   },
   watch: {
