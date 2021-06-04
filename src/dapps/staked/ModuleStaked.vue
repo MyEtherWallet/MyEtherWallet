@@ -18,7 +18,8 @@
             <div class="mew-heading-2 mb-8 ml-2">
               {{ $t('ens.search-domain') }}
             </div>
-            <mew-stepper :items="stepperItems" :on-step="currentStepIdx">
+            {{ getCurrentStep }}
+            <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
               <template v-if="isStepActive(0)" #stepperContent1>
                 <step-one :next="nextStep" @completed="proceed" />
               </template>
@@ -38,57 +39,20 @@
                 />
               </template>
               <template v-if="isStepActive(3)" #stepperContent4>
-                <step-four :details="details" :next="nextStep" @completed="proceed" />
+                <step-four
+                  :details="details"
+                  :next="nextStep"
+                  @completed="proceed"
+                />
               </template>
               <template v-if="isStepActive(4)" #stepperContent5>
                 <step-five
-                  :amt="details.amount ? details.amount : 0"
+                  :amt="details.amount ? details.amount.toString() : '0'"
                   :hash="txHash"
                   @completed="proceed"
                 />
               </template>
             </mew-stepper>
-            <!--            <Stepper
-              :steps="steps"
-              :details="details"
-              :set-data="setData"
-              :tx-hash="txHash"
-              :reset-stepper="resetStepper"
-              @complete-step="completeStep"
-              @active-step="isStepActiveIdx"
-              @stakeEth2="startProvision"
-              @sendTransaction="sendTransaction"
-              @reset="reset"
-              @resetStepperDone="resetStepperDone"
-            >
-            </Stepper>-->
-            <!--            <v-row class="mx-0">
-              <v-col class="pr-0" cols="12">
-                stake
-                <mew-stepper :items="stepperItems" :on-step="currentStepIdx">
-                  <template v-if="currentStepIdx === 1" #stepperContent1>
-                    <mew-input
-                      :error-messages="domainTaken ? $t('ens.domain-taken') : null"
-                      :value="name"
-                      :has-clear-btn="true"
-                      :rules="rules"
-                      :label="$t('ens.register.domain-name')"
-                      :placeholder="$t('ens.ph.three-char')"
-                      class="mr-3 flex-grow-1"
-                      @input="setName"
-                    />
-                  </template>
-                  <template v-if="currentStepIdx === 2" #stepperContent2>
-                  </template>
-                  <template v-if="currentStepIdx === 3" #stepperContent3>
-                  </template>
-                  <template v-if="currentStepIdx === 4" #stepperContent4>
-                  </template>
-                  <template v-if="currentStepIdx === 5" #stepperContent5>
-                  </template>
-                </mew-stepper>
-              </v-col>
-            </v-row>-->
           </div>
         </v-sheet>
       </template>
@@ -121,14 +85,8 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import Staked from './handlers/staked';
-// import Stepper from './stepper/Stepper';
 import stakedLogo from '@/assets/images/icons/staked.png';
-import stakeConfigs from './handlers/configs';
-import axios from 'axios';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-import calculateEth2Rewards from './handlers/helpers';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
 import stepTwo from './stepper/steps/Upload/Upload';
 import stepThree from './stepper/steps/Review/Review';
@@ -219,12 +177,17 @@ export default {
       previousStep: {},
       nextButton: {},
       canContinue: false,
-      finalStep: false
+      finalStep: false,
+      presentStep: 0,
+      canProceed: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapGetters('global', ['network', 'gasPrice'])
+    ...mapGetters('global', ['network', 'gasPrice']),
+    getCurrentStep() {
+      return this.currentStep.index + 1;
+    }
   },
   watch: {
     resetStepper: {
@@ -248,6 +211,7 @@ export default {
       immediate: true
     },
     txHash(val) {
+      console.log('txhash watcher', val); // todo remove dev item
       if (val && val !== '') {
         this.nextStepAction();
       }
@@ -262,66 +226,22 @@ export default {
       console.log(data); // todo remove dev item
       this.setData(data);
     });
-    this.staked.on('done', () => {
-      console.log('DONE'); // todo remove dev item
-      this.nextStepAction();
+    this.staked.on('myValidators', validators => {
+      this.myValidators = validators;
+      this.loadingValidators = false;
     });
-    // this.setup();
+
+    this.staked.on('transaction', () => {
+      console.log('transaction sent'); // todo remove dev item
+    });
+    this.staked.on('txHash', txHash => {
+      console.log('txHash', txHash); // todo remove dev item
+      this.txHash = txHash;
+    });
   },
   methods: {
-    setup() {
-      console.log('setup'); // todo remove dev item
-      this.eth2ContractAddress =
-        stakeConfigs.network[this.network.type.name].depositAddress;
-      this.endpoint = stakeConfigs.network[this.network.type.name].endpoint;
-      this.batchContract =
-        stakeConfigs.network[this.network.type.name].batchContract;
-
-      this.web3.eth
-        .getBalance(this.eth2ContractAddress)
-        .then(res => {
-          const raw = this.web3.utils.fromWei(res, 'ether');
-          this.totalStaked = new BigNumber(raw).toFormat(0);
-          this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
-            .times(100)
-            .toFixed(2);
-        })
-        .catch(err => {
-          Toast(err, ERROR);
-        });
-      console.log('endpoint', this.endpoint); // todo remove dev item
-      this.staked.getValidators();
-    },
     validatorsCount() {
-      if (this.details.amount) {
-        return new BigNumber(this.details.amount).dividedBy(32).toFixed();
-      }
-      return 0;
-    },
-    async getValidators() {
-      this.loadingValidators = true;
-      await axios
-        .get(`${this.endpoint}/history?address=${this.address}`, {
-          header: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(resp => {
-          this.myValidators = resp.data;
-          this.loadingValidators = false;
-        })
-        .catch(err => {
-          this.loadingValidators = false;
-          this.myValidators = [];
-          if (
-            err.response &&
-            err.response.status === 404 &&
-            err.response.data.msg === 'No matching history found'
-          ) {
-            return;
-          }
-          Toast(err, ERROR);
-        });
+      return this.staked.validatorsCount();
     },
     resetStepperDone() {
       this.resetStepper = false;
@@ -335,7 +255,7 @@ export default {
       this.eth2ContractAddress = '';
       this.endpoint = '';
       this.batchContract = '';
-      this.setup();
+      this.staked.reset();
     },
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');
@@ -346,7 +266,9 @@ export default {
     startPolling(uuid) {
       this.staked.startPolling(uuid);
     },
-    sendTransaction() {},
+    sendTransaction() {
+      this.staked.sendTransaction();
+    },
     setData(data) {
       if (this.details.hasOwnProperty(data.key)) {
         this.details[data.key] = data.value;
@@ -355,26 +277,6 @@ export default {
       }
       // this.staked.setData(data);
       console.log('this.details', this.details); // todo remove dev item
-    },
-    completeStep(payload) {
-      console.log('completeStep'); // todo remove dev item
-      this.steps.forEach(step => {
-        if (step.name === payload.name) {
-          step.completed = true;
-        }
-      });
-    },
-    isStepActiveIdx(payload) {
-      console.log('isStepActiveIdx'); // todo remove dev item
-      console.log('payload', payload); // todo remove dev item
-      this.currentStepIdx = payload.index;
-      this.steps.forEach(step => {
-        if (step.name === payload.name) {
-          if (step.completed === true) {
-            step.completed = false;
-          }
-        }
-      });
     },
     isStepActive(index) {
       if (this.currentStep.index === index) {
@@ -400,11 +302,12 @@ export default {
     },
     nextStepAction() {
       console.log('nextStepAction'); // todo remove dev item
-      this.nextButton[this.currentStep.name] = true;
       console.log(this.canContinue); // todo remove dev item
+
+      this.nextButton[this.currentStep.name] = true;
       if (this.canContinue) {
         const currentIndex =
-          this.currentStep.index === 4 ? 0 : this.currentStep.index + 1;
+          +this.currentStep.index + 1 === 5 ? 0 : this.currentStep.index + 1;
         this.activateStep(currentIndex);
       }
       this.canContinue = false;
@@ -412,14 +315,16 @@ export default {
     },
     nextStep() {
       console.log('nextStep', this.currentStep.index); // todo remove dev item
-      if (this.currentStep.index === 1) {
+      if (this.currentStep.index === 2) {
+        console.log('startProvision'); // todo remove dev item
         this.startProvision();
         // this.$emit('stakeEth2');
       }
       if (this.currentStep.index === 3) {
         console.log('sendTransaction'); // todo remove dev item
-        this.$emit('sendTransaction');
-        // return;
+        // this.$emit('sendTransaction');``
+        this.sendTransaction();
+        return;
       }
       if (!this.$listeners || !this.$listeners['before-next-step']) {
         this.nextStepAction();

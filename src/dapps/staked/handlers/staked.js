@@ -21,6 +21,7 @@ export default class Staked extends EventEmitter {
       Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
       const stakedLogo = '';
       this.settingUp = true;
+      this.transactionInProgress = false;
       this.myValidators = [];
       this.priorValidators = [];
       this.transactionData = {};
@@ -77,36 +78,48 @@ export default class Staked extends EventEmitter {
     return 0;
   }
 
-  async getValidators() {
+  getValidators() {
     this.loadingValidators = true;
-    await axios
-      .get(`${this.endpoint}/history?address=${this.address()}`, {
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(resp => {
-        this.myValidators = resp.data;
-        if(this.settingUp){
-          this.priorValidators = resp.data;
-        }
-        this.loadingValidators = false;
-      })
-      .catch(err => {
-        this.loadingValidators = false;
-        this.myValidators = [];
-        if(this.settingUp){
-          this.priorValidators = [];
-        }
-        if (
-          err.response &&
-          err.response.status === 404 &&
-          err.response.data.msg === 'No matching history found'
-        ) {
-          return;
-        }
-        Toast(err, {}, ERROR);
-      });
+    return (
+      axios
+        .get(`${this.endpoint}/history?address=${this.address()}`, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
+        // return axios
+        //   .get(`${this.endpoint}/history?address=0xed561e40A66e791988977c21fDC7f083E9Bf24B0`, {
+        //     header: {
+        //       'Content-Type': 'application/json'
+        //     }
+        //   })
+        .then(resp => {
+          this.myValidators = resp.data;
+          if (this.settingUp) {
+            this.priorValidators = resp.data;
+          }
+          this.loadingValidators = false;
+          this.emit('myValidators', resp.data);
+          return resp;
+        })
+        .catch(err => {
+          this.loadingValidators = false;
+          this.myValidators = [];
+          if (this.settingUp) {
+            this.priorValidators = [];
+          }
+          this.emit('myValidators', []);
+          if (
+            err.response &&
+            err.response.status === 404 &&
+            err.response.data.msg === 'No matching history found'
+          ) {
+            return err;
+          }
+          // Toast(err, {}, ERROR);
+          return err;
+        })
+    );
   }
   resetStepperDone() {
     this.resetStepper = false;
@@ -141,21 +154,18 @@ export default class Staked extends EventEmitter {
         .catch(err => {
           Toast(err, {}, ERROR);
         });
-      this.getValidators()
-        .then(() =>{
-          this.settingUp = false;
-        })
+      this.getValidators().then(() => {
+        this.settingUp = false;
+      });
     } catch (e) {
       // eslint-disable-next-line
             console.error(e);
     }
   }
-  allValidatorsStaked(){
-    this.priorValidators
+  allValidatorsStaked() {
+    const validatorStaked = this.details.amount / 32;
+    return this.priorValidators.length + validatorStaked;
   }
-  // goToGenerate() {
-  //   this.$router.push('/generate-eth2-keystore');
-  // }
   async startProvision() {
     const params = {
       address: this.address(),
@@ -195,13 +205,14 @@ export default class Staked extends EventEmitter {
             response.data &&
             response.data.raw.length === parseInt(this.validatorsCount())
           ) {
+            console.log('response.data', response.data); // todo remove dev item
             const validatorStaked = this.details.amount / 32;
             this.setData({
               key: 'currentValidatorsStaked',
               value: validatorStaked
             });
             this.setData({ key: 'totalValidators', value: validatorStaked });
-            this.emit('done')
+            // this.emit('done');
             this.transactionData = response.data.transaction;
             clearInterval(interval);
           }
@@ -213,6 +224,7 @@ export default class Staked extends EventEmitter {
             err.response.status === 424 &&
             err.response.data.msg === 'Not all validators have been provisioned'
           ) {
+            console.log('err.response', err.response); // todo remove dev item
             this.setData({
               key: 'currentValidatorsStaked',
               value: err.response.data.current
@@ -236,19 +248,25 @@ export default class Staked extends EventEmitter {
     }, 5000);
   }
   sendTransaction() {
-    // this.transactionData.from = this.address();
-    // this.transactionData.to = this.batchContract;
-    // this.transactionData.gasPrice = new BigNumber(
-    //   this.web3().utils.toWei(this.gasPrice(), 'gwei')
-    // ).toFixed();
-    // this.web3()
-    //   .eth.sendTransaction(this.transactionData)
-    //   .on('transactionHash', res => {
-    //     this.txHash = res;
-    //   })
-    //   .catch(err => {
-    //     Toast(err, {}, ERROR);
-    //   });
+    if (!this.transactionInProgress) {
+      console.log('SENDING========================'); // todo remove dev item
+      this.transactionInProgress = true;
+      this.transactionData.from = this.address();
+      this.transactionData.to = this.batchContract;
+      this.transactionData.gasPrice = new BigNumber(
+        this.web3().utils.toWei(this.gasPrice(), 'gwei')
+      ).toFixed();
+      console.log(this.transactionData); // todo remove dev item
+      this.web3()
+        .eth.sendTransaction(this.transactionData)
+        .on('transactionHash', res => {
+          this.emit('txHash', res);
+          this.txHash = res;
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
+    }
   }
   setData(data) {
     // if (this.details.hasOwnProperty(data.key)) {

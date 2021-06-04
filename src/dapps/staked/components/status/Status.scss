@@ -1,7 +1,6 @@
-
 .staked-status {
   .title {
-    color: #003B48;
+    color: #003b48;
     font-size: 18px;
     font-weight: 600;
     padding: 30px 40px 10px 40px;
@@ -10,12 +9,12 @@
     padding: 30px 40px 0 40px;
   }
   a {
-    color: #003B48 !important;
+    color: #003b48 !important;
     font-weight: normal;
   }
   .validator-container {
     border-radius: 4px;
-    color: #003B48;
+    color: #003b48;
     cursor: pointer;
     flex-direction: column;
     font-weight: 600;
@@ -33,19 +32,19 @@
         }
       }
       &.pending-expanded {
-        border-bottom: 1px solid #F5A623;
+        border-bottom: 1px solid #f5a623;
       }
       &.active-expanded {
-        border-bottom: 1px solid #05C0A5;
+        border-bottom: 1px solid #05c0a5;
       }
       &.deposited-expanded {
-        border-bottom: 1px solid #5A78F0;
+        border-bottom: 1px solid #5a78f0;
       }
       &.exited-expanded {
-        border-bottom: 1px solid #FF445B;
+        border-bottom: 1px solid #ff445b;
       }
       .badge {
-        color: #FFFFFF;
+        color: #fff;
         font-weight: normal;
         padding: 10px;
         text-transform: capitalize;
@@ -56,16 +55,16 @@
         }
       }
       .pending-badge {
-        background-color: #F5A623;
+        background-color: #f5a623;
       }
       .active-badge {
-        background-color: #05C0A5;
+        background-color: #05c0a5;
       }
       .deposited-badge {
-        background-color: #5A78F0;
+        background-color: #5a78f0;
       }
       .exited-badge {
-        background-color: #FF445B;
+        background-color: #ff445b;
       }
       .right-container {
         align-items: center;
@@ -73,7 +72,7 @@
       }
     }
     .more-info {
-      background: #FFFFFF;
+      background: #fff;
       cursor: text;
       flex-direction: column;
       .queue-speed {
@@ -100,22 +99,22 @@
   }
 
   .pending-container {
-    border: 1px solid #F5A623;
-    background-color: #FFF6E6;
+    border: 1px solid #f5a623;
+    background-color: #fff6e6;
   }
 
   .active-container {
-    background-color: #F2FAFA;
-    border: 1px solid #05C0A5;
+    background-color: #f2fafa;
+    border: 1px solid #05c0a5;
   }
 
   .deposited-container {
-    background-color: #F9FAFE;
-    border: 1px solid #5A78F0;
+    background-color: #f9fafe;
+    border: 1px solid #5a78f0;
   }
 
   .exited-container {
-    background-color: #FFF8F9;
-    border: 1px solid #FF445B;
+    background-color: #fff8f9;
+    border: 1px solid #ff445b;
   }
 }

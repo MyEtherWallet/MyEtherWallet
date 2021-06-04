@@ -82,7 +82,7 @@
           :loading="false"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('ens.register-domain')"
+          :title="$t('dappsStaked.enable-staking')"
           @click.native="doNext"
         />
       </v-col>

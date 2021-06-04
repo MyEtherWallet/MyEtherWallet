@@ -18,7 +18,7 @@
           :value="current"
           stream
         ></v-progress-linear>
-<!--        <mew-progress-bar
+        <!--        <mew-progress-bar
           :balance-obj="details.currentValidatorsStaked"
           :animated="details.currentValidatorsStaked !== total"
         />-->
@@ -42,6 +42,18 @@
             )
           }}
         </p>
+      </v-col>
+    </v-row>
+    <v-row class="mx-0">
+      <v-col class="pl-4" cols="8">
+        <mew-button
+          :loading="false"
+          :disabled="buttonDisable"
+          :has-full-width="true"
+          btn-size="xlarge"
+          :title="$t('dappsStaked.stake-on-eth2')"
+          @click.native="doNext"
+        />
       </v-col>
     </v-row>
     {{ details }}
@@ -82,6 +94,11 @@ export default {
       default: function () {}
     }
   },
+  data() {
+    return {
+      buttonDisable: true
+    };
+  },
   computed: {
     total() {
       return this.details.amount / 32;
@@ -99,11 +116,19 @@ export default {
       handler: function (newVal) {
         if (newVal && newVal.currentValidatorsStaked === this.total) {
           this.$emit('completed', true, { key: 'stake', value: true });
+          this.buttonDisable = false;
+          // this.$emit('validatorsstaked')
           this.next();
         }
       },
       deep: true,
       immediate: true
+    }
+  },
+  methods: {
+    doNext() {
+      console.log('do next'); // todo remove dev item
+      this.next();
     }
   }
 };

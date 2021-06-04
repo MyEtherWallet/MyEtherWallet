@@ -78,7 +78,7 @@
           :disabled="getErrorMessage !== null"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('ens.register-domain')"
+          :title="$t('common.next')"
           @click.native="doNext"
         />
       </v-col>

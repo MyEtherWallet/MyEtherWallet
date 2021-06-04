@@ -37,7 +37,7 @@
           :loading="false"
           :has-full-width="true"
           btn-size="xlarge"
-          title="back"
+          :title="$t('common.back')"
           @click.native="back"
         />
       </v-col>
@@ -47,7 +47,7 @@
           :loading="false"
           :has-full-width="true"
           btn-size="xlarge"
-          :title="$t('ens.register-domain')"
+          :title="$t('common.next')"
           @click.native="doNext"
         />
       </v-col>

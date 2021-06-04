@@ -95,6 +95,7 @@
         </div>
       </div>
     </div>
+    <!--    {{validators}}-->
     <exited-popup ref="exitedPopup" />
   </div>
 </template>
