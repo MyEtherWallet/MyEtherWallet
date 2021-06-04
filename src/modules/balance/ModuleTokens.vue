@@ -134,7 +134,7 @@ export default {
           newObj.cap = formatIntegerToString(item.market_cap);
           newObj.change = formatPercentageValue(
             item.price_change_percentage_24h
-          ).value;
+          ).value.replaceAll('%', '');
           newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
           newObj.price = '$' + formatFiatValue(item.price).value;
           newObj.tokenImg = item.img;
