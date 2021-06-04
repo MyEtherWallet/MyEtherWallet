@@ -20,7 +20,7 @@
         <v-card
           flat
           color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-5"
+          class="swap-providers-list-loading d-flex align-center px-5 py-5"
         >
           <v-skeleton-loader width="300px" type="chip" />
           <v-spacer />
