@@ -3,12 +3,7 @@ import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import stakeConfigs from './configs';
 import calculateEth2Rewards from './helpers';
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import vuexStore from '@/core/store';
 import EventEmitter from 'events';
 
