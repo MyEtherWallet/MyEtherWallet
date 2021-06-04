@@ -12,9 +12,9 @@
           <v-row v-for="(detail, idx) in details" :key="idx">
             <v-col cols="5">{{ detail.title }} </v-col>
             <v-col cols="7" class="text-right word-break--break-all">
-              <hover-expanding-block v-if="detail.expanding">
+              <scroll-block v-if="detail.expanding">
                 {{ detail.value }}
-              </hover-expanding-block>
+              </scroll-block>
               <div v-else>{{ detail.value }}</div>
             </v-col>
           </v-row>
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import HoverExpandingBlock from '@/core/components/AppHoverExpandingBlock';
+import ScrollBlock from '@/core/components/AppScrollBlock';
 import TransactionAddresses from './TransactionAddresses';
 import TransactionBalance from './TransactionBalance';
 export default {
   components: {
-    HoverExpandingBlock,
+    ScrollBlock,
     TransactionAddresses,
     TransactionBalance
   },
