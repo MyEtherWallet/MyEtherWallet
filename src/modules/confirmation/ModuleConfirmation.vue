@@ -30,7 +30,7 @@
       </template>
     </app-modal>
     <app-modal
-      :show="true"
+      :show="showTxOverlay"
       :title="title ? title : 'Confirmation'"
       :close="overlayClose"
       :btn-action="signTx"
