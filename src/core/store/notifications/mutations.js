@@ -29,9 +29,7 @@ const UPDATE_NOTIFICATION = function (state, obj) {
   delete obj.notification;
 
   state.notifications = state.notifications.map(item => {
-    const itemTxHash = item.transactionHash || item.hash;
-    const objTxHash = obj.transactionHash || obj.hash;
-    if (itemTxHash === objTxHash) {
+    if (item.hash === obj.hash) {
       item = obj;
     }
     return item;
@@ -40,7 +38,7 @@ const UPDATE_NOTIFICATION = function (state, obj) {
 
 const DELETE_NOTIFICATION = function (state, obj) {
   state.notifications = state.notifications.filter(item => {
-    if (item.transactionHash !== obj.transactionHash) return item;
+    if (item.hash !== obj.hash) return item;
   });
 };
 

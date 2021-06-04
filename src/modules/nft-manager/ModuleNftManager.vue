@@ -71,7 +71,7 @@
                 <h5 class="font-weight-bold">
                   {{ selectedContract.name }}
                 </h5>
-                <div>Showing {{ startIndex + 1 }} to {{ endIndex }}</div>
+                <div>Total: {{ selectedContract.count }}</div>
               </div>
               <div v-if="displayedTokens && displayedTokens.length === 0">
                 Loading ...
@@ -101,23 +101,16 @@
     -->
                 <div
                   v-if="hasPages"
-                  class="px-4 mt-3 d-flex align-center justify-space-between"
+                  class="px-4 mt-3 d-flex align-center justify-end"
                 >
-                  <mew-button
-                    :has-full-width="false"
-                    btn-style="outline"
-                    title="Prior"
-                    btn-size="small"
-                    :disabled="!hasPriorPage"
-                    @click.native="priorPage"
-                  />
-                  <mew-button
-                    :has-full-width="false"
-                    btn-style="outline"
-                    title="Next"
-                    btn-size="small"
-                    :disabled="!hasNextPage"
-                    @click.native="nextPage"
+                  <v-pagination
+                    v-model="currentPage"
+                    class="nft-pagination"
+                    color="expandHeader"
+                    :length="totalPages"
+                    prev-icon="mdi-menu-left"
+                    next-icon="mdi-menu-right"
+                    @input="setPage"
                   />
                 </div>
               </div>
@@ -192,14 +185,11 @@ export default {
     /**
      * Pagination
      */
+    totalPages() {
+      return this.nft.totalPages(this.selectedContract.count);
+    },
     hasPages() {
       return this.nft.hasPages(this.selectedContract.count);
-    },
-    hasNextPage() {
-      return this.nft.hasNextPage(this.selectedContract.count);
-    },
-    hasPriorPage() {
-      return this.nft.hasPriorPage();
     },
     startIndex() {
       return this.nft.startIndex();
@@ -207,8 +197,13 @@ export default {
     endIndex() {
       return this.nft.endIndex(this.selectedContract.count);
     },
-    currentPage() {
-      return this.nft.currentPage();
+    currentPage: {
+      get() {
+        return this.nft.currentPage;
+      },
+      set(value) {
+        return value;
+      }
     },
     /**
      * Display tokens according to page
@@ -312,14 +307,17 @@ export default {
     /**
      * Pagination
      */
-    nextPage() {
-      if (this.hasNextPage) {
-        this.nft.nextPage();
-      }
-    },
-    priorPage() {
-      this.nft.priorPage();
+    setPage(number) {
+      this.nft.setCurrentPage(number);
     }
   }
 };
 </script>
+<style lang="scss">
+.nft-pagination {
+  .v-pagination__navigation,
+  .v-pagination__item {
+    box-shadow: none;
+  }
+}
+</style>

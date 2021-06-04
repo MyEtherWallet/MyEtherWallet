@@ -117,9 +117,8 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import { toBN } from 'web3-utils';
 import { txTypes, notificationTypes } from './configs/configTypes';
-import timeAgo from '@/core/helpers/timeAgo';
+import formatNotification from './helpers/formatNotification';
 
 export default {
   name: 'ModuleNotifications',
@@ -171,26 +170,26 @@ export default {
       return this.currentNotifications.map(notification => {
         const type = notification.type.toLowerCase();
         /**
-         * Check status if it is a swap tx
+         * Check swap status if it is a swap notification
          */
         if (type === notificationTypes.swap) {
           notification.checkSwapStatus(this.swapper);
         }
         /**
          * Check status if it is an outgoing pending tx
-         * by querying getTransactionByHash
+         * and query getTransactionByHash
          */
         if (
           type === notificationTypes.out &&
           notification.status.toLowerCase() === txTypes.pending
         ) {
-          this.txHash = notification.transactionHash;
+          this.txHash = notification.hash;
           if (this.getTransactionByHash) {
             const notification = new Notification(this.getTransactionByHash);
             this.updateNotification(notification);
           }
         }
-        return this.formatNotification(notification);
+        return formatNotification(notification, this.network);
       });
     },
     /**
@@ -199,7 +198,7 @@ export default {
     outgoingTxNotifications() {
       return this.txNotifications
         .map(notification => {
-          return this.formatNotification(notification);
+          return formatNotification(notification, this.network);
         })
         .sort(this.sortByDate);
     },
@@ -209,7 +208,7 @@ export default {
     formattedSwapNotifications() {
       return this.swapNotifications
         .map(notification => {
-          const newObj = this.formatNotification(notification);
+          const newObj = formatNotification(notification, this.network);
           newObj.checkSwapStatus(this.swapper);
           return newObj;
         })
@@ -229,7 +228,7 @@ export default {
               notification.lastFetched = this.lastFetched;
             }
             notification = new Notification(notification);
-            return this.formatNotification(notification);
+            return formatNotification(notification, this.network);
           })
           .sort(this.sortByDate);
       }
@@ -292,7 +291,7 @@ export default {
           } else {
             this.ethTransfersIncoming = this.ethTransfersIncoming.map(
               transfer => {
-                if (transfer.hash === res.transactionHash) {
+                if (transfer.hash === res.hash) {
                   return new Notification(res);
                 }
                 return transfer;
@@ -301,62 +300,6 @@ export default {
           }
         });
       }
-    },
-    /**
-     * Format Notification obj for mew-notification
-     */
-    formatNotification(obj) {
-      const notificationObj = {
-        txHash: {
-          value: obj.transactionHash,
-          string: 'Transaction Hash',
-          link: `${this.network.type.blockExplorerTX.replace(
-            '[[txHash]]',
-            obj.transactionHash
-          )}`
-        },
-        gasPrice: {
-          value: `${obj.gasPrice ? obj.gasPrice : 0} Gwei`,
-          string: 'Gas Price'
-        },
-        gasLimit: {
-          value: obj.gasLimit ? obj.gasLimit : '',
-          string: 'Gas Limit'
-        },
-        total: {
-          value: `${obj.transactionFee} ${this.network.type.currencyName}`,
-          string: 'Total Transaction fee'
-        },
-        to: {
-          value: obj.toTxData && obj.toTxData.to ? obj.toTxData.to : obj.to,
-          string: 'To'
-        },
-        from: {
-          value: obj.from,
-          string: 'From'
-        },
-        amount: {
-          value: `${obj.value} ${this.network.type.currencyName}`,
-          string: 'Amount'
-        },
-        timestamp: {
-          value: timeAgo(toBN(obj.date).toNumber()),
-          string: 'Time'
-        },
-        status: {
-          value: obj.status?.toLowerCase(),
-          string: 'Status'
-        },
-        type: {
-          value: obj.type?.toLowerCase(),
-          string: obj.type
-        },
-        read: obj.read,
-        toObj: obj.toTxData,
-        fromObj: obj.fromTxData
-      };
-      obj.notification = notificationObj;
-      return obj;
     }
   }
 };

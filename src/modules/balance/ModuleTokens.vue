@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      tokensDataLoading: true,
       tableHeaders: [
         {
           text: 'Token',
@@ -102,11 +103,17 @@ export default {
     ...mapGetters('global', ['isEthNetwork']),
 
     loading() {
-      return this.initialLoadTokens;
+      return this.initialLoadTokens || this.tokensDataLoading;
     },
     tokensData() {
       return this.tokensList
-        .filter(item => {
+        .filter((item, idx) => {
+          if (idx === this.tokensList.length - 1) {
+            setTimeout(() => {
+              this.tokensDataLoading = false;
+            }, 3000);
+          }
+
           if (item.price_change_percentage_24h || item.market_cap) {
             return item;
           }
@@ -136,7 +143,6 @@ export default {
               colorTheme: 'primary'
             }
           ];
-          // this.loading = false;
           return newObj;
         });
     },

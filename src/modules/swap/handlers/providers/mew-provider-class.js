@@ -21,7 +21,8 @@ class MEWPClass {
           decimals: parseInt(d.decimals),
           img: `https://img.mewapi.io/?image=${d.icon}`,
           name: d.name ? d.name : d.symbol,
-          symbol: d.symbol
+          symbol: d.symbol,
+          type: 'ERC20'
         };
       });
     });
@@ -61,7 +62,7 @@ class MEWPClass {
         });
       })
       .catch(e => {
-        if (e.response.data.msg === 'No matching swap pairs found') return [];
+        if (e.response?.data.msg === 'No matching swap pairs found') return [];
         return e;
       });
   }
@@ -90,9 +91,11 @@ class MEWPClass {
         };
       });
   }
-  async executeTrade(tradeObj) {
+  async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = await this.web3.eth.getGasPrice();
+    const gasPrice = tradeObj.gasPrice
+      ? tradeObj.gasPrice
+      : await this.web3.eth.getGasPrice();
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
         this.web3.eth
@@ -100,7 +103,8 @@ class MEWPClass {
             Object.assign(tradeObj.transactions[0], {
               from,
               gasPrice,
-              handleNotification: false
+              handleNotification: false,
+              confirmInfo: confirmInfo
             })
           )
           .on('transactionHash', hash => {
@@ -118,6 +122,7 @@ class MEWPClass {
       tx.from = from;
       tx.gasPrice = gasPrice;
       tx.handleNotification = false;
+      tx.confirmInfo = confirmInfo;
       txs.push(tx);
     });
 

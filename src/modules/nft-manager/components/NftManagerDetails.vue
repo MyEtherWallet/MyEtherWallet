@@ -27,6 +27,7 @@
         height="100"
         :src="token.image ? token.image : getImageUrl(token)"
         alt="nft token"
+        @error="onImgErr"
       />
       <div
         class="
@@ -53,6 +54,8 @@
   </v-card>
 </template>
 <script>
+import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
+
 export default {
   props: {
     loading: {
@@ -76,6 +79,16 @@ export default {
         return;
       },
       type: Function
+    }
+  },
+  data() {
+    return {
+      nftPlaceholder: nftPlaceholder
+    };
+  },
+  methods: {
+    onImgErr(e) {
+      e.target.src = this.nftPlaceholder;
     }
   }
 };
