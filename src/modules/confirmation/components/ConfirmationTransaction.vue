@@ -10,9 +10,12 @@
       <template #panelBody1>
         <v-container fluid>
           <v-row v-for="(detail, idx) in details" :key="idx">
-            <v-col cols="6">{{ detail.title }} </v-col>
-            <v-col cols="6" class="text-right word-break--break-all"
-              >{{ detail.value }}
+            <v-col cols="5">{{ detail.title }} </v-col>
+            <v-col cols="7" class="text-right word-break--break-all">
+              <hover-expanding-block v-if="detail.expanding">
+                {{ detail.value }}
+              </hover-expanding-block>
+              <div v-else>{{ detail.value }}</div>
             </v-col>
           </v-row>
         </v-container>
@@ -23,10 +26,12 @@
 </template>
 
 <script>
+import HoverExpandingBlock from '@/core/components/AppHoverExpandingBlock';
 import TransactionAddresses from './TransactionAddresses';
 import TransactionBalance from './TransactionBalance';
 export default {
   components: {
+    HoverExpandingBlock,
     TransactionAddresses,
     TransactionBalance
   },
@@ -41,7 +46,8 @@ export default {
     },
     data: {
       type: String,
-      default: ''
+      default:
+        '345789263925392632683930562036852345789263925392632683930562036852345789263925392632683930562036852345789263925392632683930562036852345789263925392632683930562036852345789263925392632683930562036852'
     },
     gasPrice: {
       type: String,
@@ -110,7 +116,8 @@ export default {
         },
         {
           title: 'Data',
-          value: this.data
+          value: this.data,
+          expanding: true
         }
       ];
     }

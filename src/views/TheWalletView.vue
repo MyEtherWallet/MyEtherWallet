@@ -4,7 +4,7 @@
     <the-wallet-header />
     <v-main>
       <v-container
-        class="pa-2 pa-md-3 mb-14 align-center wallet-content-container"
+        class="pa-md-3 mb-14 align-center wallet-content-container"
         fluid
       >
         <module-confirmation />

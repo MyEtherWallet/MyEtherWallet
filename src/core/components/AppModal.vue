@@ -1,5 +1,10 @@
 <template>
-  <v-dialog max-width="500" :value="show" @click:outside="handleClickOutside">
+  <v-dialog
+    content-class="core--components--app-modal"
+    max-width="500"
+    :value="show"
+    @click:outside="handleClickOutside"
+  >
     <v-sheet class="py-6 px-4">
       <!--
         =====================================================================================
@@ -78,6 +83,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.core--components--app-modal {
+  margin: 0 !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .header-container {
