@@ -95,7 +95,7 @@ import {
   formatFiatValue,
   formatBalanceEthValue,
   formatPercentageValue
-} from '../../core/helpers/numberFormatHelper';
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceChart,

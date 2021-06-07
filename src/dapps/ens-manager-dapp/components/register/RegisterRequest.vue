@@ -48,7 +48,7 @@
 import {
   formatFloatingPointValue,
   formatFiatValue
-} from '../../../../core/helpers/numberFormatHelper';
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: {},

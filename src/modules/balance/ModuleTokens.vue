@@ -53,7 +53,7 @@ import {
   formatPercentageValue,
   formatFloatingPointValue,
   formatIntegerToString
-} from '../../core/helpers/numberFormatHelper';
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceEmptyBlock

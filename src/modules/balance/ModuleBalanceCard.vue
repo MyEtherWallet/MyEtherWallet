@@ -102,7 +102,7 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   formatFiatValue,
   formatBalanceEthValue
-} from '../../core/helpers/numberFormatHelper';
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceAddressPaperWallet,

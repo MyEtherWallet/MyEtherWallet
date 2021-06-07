@@ -18,7 +18,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { formatFiatValue } from '../../core/helpers/numberFormatHelper';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleTokensValue',
   computed: {

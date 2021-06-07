@@ -245,7 +245,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
 import { fromWei, toBN } from 'web3-utils';
-import { formatIntegerToString } from '../../core/helpers/numberFormatHelper';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {

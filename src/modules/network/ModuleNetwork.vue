@@ -35,7 +35,7 @@
 <script>
 import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
-import { formatIntegerToString } from '../../core/helpers/numberFormatHelper';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
