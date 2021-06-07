@@ -18,6 +18,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleTokensValue',
   computed: {
@@ -31,7 +32,7 @@ export default {
         const value = token.usdBalance ? token.usdBalance : 0;
         total = total.plus(value);
       });
-      return total.toFixed(2);
+      return formatFiatValue(total).value;
     },
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);

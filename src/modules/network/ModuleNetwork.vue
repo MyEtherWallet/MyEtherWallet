@@ -24,7 +24,7 @@
 
         <div class="mt-4">
           <div class="mb-1">{{ type }} - {{ service }}</div>
-          <div>Last Block: {{ blockNumber }}</div>
+          <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
       <mew-icon icon-name="ETH" :img-height="65" />
@@ -35,7 +35,7 @@
 <script>
 import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
-
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
@@ -58,6 +58,9 @@ export default {
     },
     service() {
       return this.network.service;
+    },
+    lastBlock() {
+      return formatIntegerToString(this.blockNumber);
     }
   }
 };
