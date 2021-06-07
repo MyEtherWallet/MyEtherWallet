@@ -387,7 +387,9 @@ export default {
      * Returns correct balance to be dispalyed above From Selection field
      */
     displayBalance() {
-      return this.isFromTokenEth ? this.balanceInWei : this.availableBalance;
+      return this.isFromTokenEth
+        ? this.balanceInWei.toString()
+        : this.availableBalance.toString();
     },
     /**
      * Returns the dropdown token data
