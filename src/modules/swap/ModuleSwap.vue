@@ -25,7 +25,8 @@
               <div class="position--relative">
                 <app-button-balance
                   :loading="isLoading"
-                  :balance="balanceInETH"
+                  :balance="displayBalance"
+                  :isEth="isFromTokenEth"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -367,7 +368,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'initialLoad',
+      'balanceInWei'
+    ]),
     /**
      * Check if fromTokenType is Eth
      */
@@ -376,6 +382,12 @@ export default {
         this.fromTokenType.name &&
         this.fromTokenType.name.toLowerCase() === tokens.eth
       );
+    },
+    /**
+     * Returns correct balance to be dispalyed above From Selection field
+     */
+    displayBalance() {
+      return this.isFromTokenEth ? this.balanceInWei : this.availableBalance;
     },
     /**
      * Returns the dropdown token data
