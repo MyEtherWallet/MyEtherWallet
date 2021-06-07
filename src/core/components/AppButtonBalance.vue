@@ -6,8 +6,8 @@
         Balance: {{ balanceFormatted.value }}
       </div>
       <mew-tooltip
-        class="pl-1"
         v-if="balanceFormatted.tooltipText"
+        class="pl-1"
         :text="balanceFormatted.tooltipText"
       />
     </div>

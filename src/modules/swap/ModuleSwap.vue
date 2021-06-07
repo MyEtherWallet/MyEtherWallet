@@ -26,7 +26,7 @@
                 <app-button-balance
                   :loading="isLoading"
                   :balance="displayBalance"
-                  :isEth="isFromTokenEth"
+                  :is-eth="isFromTokenEth"
                 />
                 <mew-select
                   :value="fromTokenType"
