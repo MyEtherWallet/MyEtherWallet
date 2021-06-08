@@ -69,7 +69,10 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     typeNames() {
-      return ['ETH', 'ROP', 'RIN', 'GOERLI', 'KOV', 'ETC'];
+      const typeNames = Object.keys(types);
+      typeNames.splice(typeNames.indexOf('ETH'), 1);
+      typeNames.unshift('ETH');
+      return typeNames;
     },
     networks() {
       const newObj = {};
