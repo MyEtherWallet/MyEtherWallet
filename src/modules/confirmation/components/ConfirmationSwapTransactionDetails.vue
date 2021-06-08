@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
@@ -122,13 +123,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapState('external', ['fiatValue']),
     convertedFees() {
       return fromWei(this.txFee);
     },
     txFeeUSD() {
       return `$ ${BigNumber(this.convertedFees)
-        .times(this.ETHUSDValue.value)
+        .times(formatFiatValue(this.fiatValue).value)
         .toFixed(2)}`;
     }
   },
