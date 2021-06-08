@@ -16,18 +16,20 @@
                 }}</span>
               </div>
               <span
-                v-show="!gettingFee && showFee"
+                v-if="!gettingFee && showFee"
                 class="pl-2 mew-heading-4 textSecondary--text d-flex eth-fee"
                 >{{ actualFeeFormatted }} {{ network.type.currencyName }}
               </span>
               <span
+                v-if="!gettingFee && showFee"
                 :class="[hasError ? 'error--text' : '', 'px-2 mew-heading-4']"
                 >{{ feesInUsd }}</span
               >
               <v-skeleton-loader
                 v-show="gettingFee || !showFee"
                 type="text"
-                width="250px"
+                width="150px"
+                class="mb-0 px-2"
               />
             </div>
           </v-col>
