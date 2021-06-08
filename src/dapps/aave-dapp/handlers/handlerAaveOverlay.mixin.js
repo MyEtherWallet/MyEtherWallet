@@ -2,7 +2,7 @@ import { _ } from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
-const aaveOverlayMixin = {
+const handlerAaveOverlay = {
   props: {
     handler: {
       type: [Object, null],
@@ -63,4 +63,4 @@ const aaveOverlayMixin = {
   }
 };
 
-export default aaveOverlayMixin;
+export default handlerAaveOverlay;

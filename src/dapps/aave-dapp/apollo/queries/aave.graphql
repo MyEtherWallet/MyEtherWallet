@@ -1,3 +1,45 @@
+mutation Deposit($data: TransferFromInput!) {
+  deposit(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
+mutation Borrow($data: BorrowInput!) {
+  borrow(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
+mutation Repay($data: TransferFromInput!) {
+  repay(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
+mutation SwapBorrowRateMode($data: ApproveInput!) {
+  swapBorrowRateMode(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
+mutation Withdraw($data: RedeemInput!) {
+  redeem(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
+mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
+  setUsageAsCollateral(data: $data) {
+    ...EthTransaction
+    __typename
+  }
+}
+
 subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
   reserveParamsHistoryItems(
     where: { reserve: $reserveAddress }
@@ -34,6 +76,18 @@ subscription UsdPriceEth {
   }
 }
 
+fragment EthTransaction on EthereumTransactionModelExtended {
+  tx {
+    from
+    to
+    gas
+    data
+    value
+    __typename
+  }
+  txType
+  __typename
+}
 
 fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
   variableBorrowRate

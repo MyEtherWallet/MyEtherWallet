@@ -81,11 +81,11 @@ import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { _ } from 'web3-utils';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   data() {
     return {
       step: 0,

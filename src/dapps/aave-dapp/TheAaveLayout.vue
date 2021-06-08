@@ -316,11 +316,12 @@ import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
+import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
 
 const COLORS = {
   ENJ: 'expandHeader',
@@ -356,6 +357,7 @@ export default {
     AaveWithdrawOverlay,
     AaveSetAprOverlay
   },
+  mixins: [handlerAaveApollo],
   data() {
     return {
       handler: null,
@@ -380,6 +382,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', ['address']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {

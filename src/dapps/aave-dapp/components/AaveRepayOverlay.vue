@@ -33,12 +33,12 @@
 <script>
 import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 export default {
   components: {
     AaveAmountForm
   },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   data() {
     return {
       repay: ACTION_TYPES.repay,
