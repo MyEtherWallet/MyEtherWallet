@@ -23,6 +23,8 @@ export default {
   isEthVMSupported: {
     supported: true,
     url: 'http://api.ethvm.com/',
+    blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
+    blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
     websocket: null
   }
 };

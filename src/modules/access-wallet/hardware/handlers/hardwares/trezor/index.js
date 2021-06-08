@@ -15,6 +15,7 @@ import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
+import trezor from '@/assets/images/icons/wallets/trezor.svg';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
@@ -28,6 +29,10 @@ class TrezorWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.TREZOR];
+    this.icon = {
+      type: 'img',
+      value: trezor
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

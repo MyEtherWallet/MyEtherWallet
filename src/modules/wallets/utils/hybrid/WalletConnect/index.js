@@ -17,6 +17,7 @@ const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = true;
 
 import { EventBus } from '@/core/plugins/eventBus';
+import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
 
 class WalletConnectWallet {
   constructor() {
@@ -41,6 +42,11 @@ class WalletConnectWallet {
     this.walletConnect.disconnect = () => {
       this.isKilled = true;
       this.walletConnect.killSession();
+    };
+
+    this.icon = {
+      type: 'img',
+      value: walletconnect
     };
   }
   init() {
@@ -107,7 +113,8 @@ class WalletConnectWallet {
             txSigner,
             msgSigner,
             this.walletConnect,
-            errorHandler
+            errorHandler,
+            this.icon
           )
         );
       });

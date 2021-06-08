@@ -383,6 +383,25 @@ export default {
       'balanceInWei'
     ]),
     /**
+     * Switches displayed balance
+     * depending on selected currency balance
+     */
+    selectedBalance() {
+      if (
+        _.isEmpty(this.fromTokenType) ||
+        this.fromTokenType.symbol === this.network.type.currencyName
+      ) {
+        return this.balanceInETH;
+      }
+
+      const token = this.tokensList.find(item => {
+        return item.symbol === this.fromTokenType.symbol;
+      });
+      return token
+        ? this.getTokenBalance(token.balance, token.decimals).toFixed()
+        : this.balanceInETH;
+    },
+    /**
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
@@ -559,7 +578,7 @@ export default {
     totalGasLimit() {
       if (this.currentTrade) {
         let totalGas = toBN(0);
-        this.currentTrade.transactions.forEach(tx => {
+        this.currentTrade.transactions?.forEach(tx => {
           totalGas = totalGas.add(toBN(tx.gas));
         });
         return totalGas.toString();
@@ -809,6 +828,7 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
       this.tokenOutValue = '0';
@@ -885,9 +905,14 @@ export default {
       }
     }, 500),
     setProvider(idx) {
+      this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
-          q.isSelected = event;
+          q.isSelected = true;
+          if (q?.rateId === 'belowMin') {
+            this.belowMinError = q.minAmount;
+            return;
+          }
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
           this.selectedProvider = q;
@@ -898,7 +923,7 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      if (this.allTrades[idx]) {
+      if (this.allTrades.length > 0 && this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
         this.currentTrade.gasPrice =
           this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
@@ -924,6 +949,11 @@ export default {
           )
         })
         .then(trade => {
+          if (trade instanceof Error) {
+            this.feeError = 'Provider issue';
+            return;
+          }
+
           this.currentTrade = trade;
           this.currentTrade.gasPrice =
             this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
