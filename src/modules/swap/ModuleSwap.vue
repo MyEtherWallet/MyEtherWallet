@@ -253,6 +253,7 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
@@ -382,6 +383,7 @@ export default {
      * to swap to
      */
     actualToTokens() {
+      if (this.isLoading) return [];
       const imgs = [
         'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
         'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
@@ -412,13 +414,16 @@ export default {
      * to swap to
      */
     toTokens() {
+      if (this.isLoading) return [];
       return this.availableTokens.toTokens
         .filter(token => {
           return !TRENDING_SYMBOLS.includes(token.symbol);
         })
         .map(token => {
           const foundToken = this.findCoinToken(token.contract_address);
-          token.price = foundToken ? foundToken.current_price : '0';
+          token.price = foundToken
+            ? formatFiatValue(foundToken.current_price).value
+            : '0.00';
           token.subtext = token.name;
           token.value = token.name;
           return token;
@@ -429,12 +434,14 @@ export default {
      * to swap from
      */
     actualFromTokens() {
-      const tokensList = this.tokensList || [];
-      const imgs = tokensList.map(item => {
+      if (this.isLoading) return [];
+      const tokensOwned = Object.assign(this.tokensList) || [];
+      const imgs = tokensOwned.map(item => {
         return item.img;
       });
+
       BigNumber(this.balanceInETH).lte(0)
-        ? tokensList.unshift({
+        ? tokensOwned.unshift({
             hasNoEth: true,
             disabled: true,
             text: 'Your wallet is empty.',
@@ -442,8 +449,18 @@ export default {
             link: 'https://ccswap.myetherwallet.com/#/'
           })
         : this.isFromTokenEth
-        ? tokensList.unshift(this.fromTokenType)
+        ? tokensOwned.unshift(this.fromTokenType)
         : null;
+      // tokensOwned.forEach(item => {
+      //   if (item.tokenBalance) {
+      //     item.tokenBalance = formatFloatingPointValue(
+      //       item.tokenBalance || 0
+      //     ).value;
+      //     item.price = formatFiatValue(item.price).value;
+
+      //     item.totalBalance = formatFiatValue(item.usdBalance).value;
+      //   }
+      // });
       return [
         {
           text: 'Select Token',
@@ -455,7 +472,7 @@ export default {
         {
           header: 'My Wallet'
         },
-        ...tokensList,
+        ...tokensOwned,
         {
           header: 'Other Tokens'
         },
@@ -469,7 +486,9 @@ export default {
     fromTokens() {
       return this.availableTokens.fromTokens.map(token => {
         const foundToken = this.findCoinToken(token.contract_address);
-        token.price = foundToken ? foundToken.current_price : '0';
+        token.price = foundToken
+          ? formatFiatValue(foundToken.current_price).value
+          : '0.00';
         token.subtext = token.name;
         token.value = token.name;
         return token;
@@ -483,7 +502,9 @@ export default {
       return TRENDING_LIST.map(token => {
         const id = token.id || token.contract_address;
         const foundToken = this.findCoinToken(id);
-        token.price = foundToken ? foundToken.current_price : '0';
+        token.price = foundToken
+          ? formatFiatValue(foundToken.current_price).value
+          : '0.00';
         token.img = foundToken ? foundToken.image : '';
         return token;
       });
