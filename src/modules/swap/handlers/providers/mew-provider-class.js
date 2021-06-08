@@ -1,6 +1,6 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://qa.mewwallet.dev/v2';
+const HOST_URL = 'https://mainnet.mewwallet.dev/v2';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
