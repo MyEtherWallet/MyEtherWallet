@@ -25,7 +25,8 @@
               <div class="position--relative">
                 <app-button-balance
                   :loading="isLoading"
-                  :balance="balanceInETH"
+                  :balance="displayBalance"
+                  :is-eth="isFromTokenEth"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -398,6 +399,14 @@ export default {
         this.fromTokenType.name &&
         this.fromTokenType.name.toLowerCase() === tokens.eth
       );
+    },
+    /**
+     * Returns correct balance to be dispalyed above From Selection field
+     */
+    displayBalance() {
+      return this.isFromTokenEth
+        ? this.balanceInWei.toString()
+        : this.availableBalance.toString();
     },
     /**
      * Returns the dropdown token data
