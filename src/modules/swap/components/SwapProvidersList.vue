@@ -1,19 +1,25 @@
 <template>
   <div class="my-5">
-    <div class="mew-heading-3 mb-5">Select a provider</div>
-
+    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
+      Select a provider
+    </div>
     <!--
     =====================================================================================
       Providers Message
     =====================================================================================
     -->
-    <app-user-msg-block v-if="step == 0 && message != ''" :message="message" />
+    <app-user-msg-block
+      v-if="step == 0 && !isLoading"
+      :message="providersMessage"
+      :is-alert="false"
+    />
     <!--
     =====================================================================================
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row v-if="step === 0 && message.title === ''">
+
+    <v-row v-if="step === 0 && isLoading">
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
@@ -203,14 +209,19 @@ export default {
       type: String,
       default: ''
     },
-    message: {
-      type: Object,
-      default: () => {}
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      showMore: false
+      showMore: false,
+      providersMessage: {
+        title: 'Select token and enter amount to see rates.',
+        subtitle:
+          'MEW finds the best price for you across multiple DEXs and Exchange services.'
+      }
     };
   },
   computed: {

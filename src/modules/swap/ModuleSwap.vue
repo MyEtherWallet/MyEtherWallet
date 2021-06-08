@@ -206,7 +206,7 @@
             :set-provider="setProvider"
             :to-token-symbol="toTokenType.symbol"
             :to-token-icon="toTokenType.img"
-            :message="providersMessage"
+            :is-loading="isLoadingProviders"
           />
           <!--
             =====================================================================================
@@ -351,10 +351,7 @@ export default {
         }
       ],
       swapIcon: SwapIcon,
-      providersMessage: {
-        title: 'Loading Tokens Data',
-        subtitle: ''
-      },
+      isLoadingProviders: false,
       addressValue: {},
       gasPriceModal: false,
       selectedProvider: {},
@@ -751,31 +748,15 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-      if (
-        !value ||
-        this.hasAmountErrors ||
-        this.fromTokenType.name === this.toTokenType.name
-      ) {
-        this.providersMessage = {
-          title: 'Select token and enter amount to see rates.',
-          subtitle:
-            'MEW finds the best price for you across multiple DEXs and Exchange services.'
-        };
-        return;
-      }
-      if (value || !this.hasAmountErrors || !_.isEmpty(this.toTokenType)) {
-        this.providersMessage = {
-          title: '',
-          subtitle: ''
-        };
-      }
 
       this.feeError = '';
       if (
         this.tokenInValue !== '' &&
+        this.tokenInValue > 0 &&
         this.toTokenType.symbol &&
         !_.isEmpty(this.toTokenType)
       ) {
+        this.isLoadingProviders = true;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -805,13 +786,8 @@ export default {
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
-            } else {
-              this.providersMessage = {
-                title:
-                  'There are no available Providers at this time, please try another pair.',
-                subtitle: ''
-              };
             }
+            this.isLoadingProviders = false;
           });
       }
     }, 500),

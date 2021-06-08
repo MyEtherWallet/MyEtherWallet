@@ -57,7 +57,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-  <app-user-msg-block>
+  </app-user-msg-block>
 </template>
 
 <script>
