@@ -81,8 +81,7 @@
 <script>
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
-
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 const STATIC_PAIRS = [
@@ -206,9 +205,7 @@ export default {
             itm['rate'] =
               res[idx].length === 0
                 ? false
-                : new BigNumber(res[idx][0].amount).lte(1)
-                ? res[idx][0].amount
-                : new BigNumber(res[idx][0].amount).toFixed(2);
+                : formatFloatingPointValue(res[idx][0].amount).value;
             return itm;
           });
           this.loading = false;
