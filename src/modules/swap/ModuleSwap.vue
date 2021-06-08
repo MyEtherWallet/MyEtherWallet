@@ -58,7 +58,15 @@
 
             <v-col cols="12" sm="2" class="mt-n5">
               <div class="d-flex align-center justify-center">
-                <swap-btn />
+                <swap-btn
+                  :class="[
+                    enableTokenSwitch
+                      ? 'cursor--pointer'
+                      : 'pointer-event--none',
+                    'd-flex align-center justify-center'
+                  ]"
+                  @click.native="switchTokens"
+                />
               </div>
             </v-col>
 
@@ -253,12 +261,12 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
+import { EventBus } from '@/core/plugins/eventBus';
+import { Toast, WARNING } from '../toast/handler/handlerToast';
 import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
 } from './handlers/configs/configTrendingTokens';
-import { EventBus } from '@/core/plugins/eventBus';
-import { Toast, WARNING } from '../toast/handler/handlerToast';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -388,6 +396,16 @@ export default {
         : this.balanceInETH;
     },
     /**
+     * checks whether both token fields are empty
+     */
+    enableTokenSwitch() {
+      const isNotEmpty =
+        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      return isNotEmpty;
+    },
+    /**
+     * Fetched tokens from all providers(?) + specific tokens
+     * Returns an @Array
      * Check if fromTokenType is Eth
      */
     isFromTokenEth() {
@@ -408,7 +426,7 @@ export default {
         'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
         'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
       ];
-      return [
+      const returnableTokens = [
         {
           text: 'Select Token',
           imgs: imgs,
@@ -425,6 +443,22 @@ export default {
         },
         ...this.toTokens
       ];
+      const fromTokenAddress = this.fromTokenType.hasOwnProperty(
+        'contract_address'
+      )
+        ? this.fromTokenType.contract_address
+        : this.fromTokenType.hasOwnProperty('contract')
+        ? this.fromTokenType.contract
+        : '';
+      return returnableTokens.filter(item => {
+        const address = item.hasOwnProperty('contract_address')
+          ? item.contract_address
+          : item.hasOwnProperty('contract')
+          ? item.contract
+          : '';
+        if (address.toLowerCase() !== fromTokenAddress.toLowerCase())
+          return item;
+      });
     },
     /**
      * Returns all the tokens
@@ -463,7 +497,7 @@ export default {
         : this.isFromTokenEth
         ? tokensList.unshift(this.fromTokenType)
         : null;
-      return [
+      const returnableTokens = [
         {
           text: 'Select Token',
           imgs: imgs,
@@ -480,6 +514,21 @@ export default {
         },
         ...this.fromTokens
       ];
+
+      const toTokenAddress = this.toTokenType.hasOwnProperty('contract_address')
+        ? this.toTokenType.contract_address
+        : this.toTokenType.hasOwnProperty('contract')
+        ? this.toTokenType.contract
+        : '';
+      return returnableTokens.filter(item => {
+        const address = item.hasOwnProperty('contract_address')
+          ? item.contract_address
+          : item.hasOwnProperty('contract')
+          ? item.contract
+          : '';
+        if (address.toLowerCase() !== toTokenAddress.toLowerCase()) return item;
+        return item;
+      });
     },
     /**
      * Returns other tokens
@@ -714,6 +763,12 @@ export default {
     },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
+    switchTokens() {
+      const fromToken = _.clone(this.fromTokenType);
+      const toToken = _.clone(this.toTokenType);
+      this.setFromToken(toToken);
+      this.setToToken(fromToken);
     },
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
