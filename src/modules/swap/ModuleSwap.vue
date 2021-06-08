@@ -46,7 +46,7 @@
                 :buy-more-str="
                   amountErrorMessage === errorMsgs.amountExceedsEthBalance
                     ? 'Buy more.'
-                    : ''
+                    : null
                 "
                 :max-btn-obj="{
                   title: 'Max',
@@ -768,6 +768,7 @@ export default {
             ? Object.assign({}, this.trendingTokens[0])
             : this.findCoinToken(this.defaults.fromToken);
         this.fromTokenType.tokenBalance = this.availableBalance;
+        this.toTokenType = this.actualToTokens[0];
         this.setTokenInValue(this.tokenInValue);
       });
     },
@@ -1062,8 +1063,10 @@ export default {
       background-color: transparent !important;
     }
   }
-  .v-skeleton-loader__chip {
-    width: 100% !important;
+  .swap-providers-list-loading {
+    .v-skeleton-loader__chip {
+      width: 100% !important;
+    }
   }
 }
 
