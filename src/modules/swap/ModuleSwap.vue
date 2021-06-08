@@ -44,7 +44,8 @@
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
                 :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance
+                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                  amountErrorMessage === errorMsgs.amountEthIsTooLow
                     ? 'Buy more.'
                     : null
                 "
@@ -86,8 +87,8 @@
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-          <user-msg-block
-            v-if="notEnoughEth && !isLoading"
+          <app-user-msg-block
+            v-if="!hasMinEth"
             class="mt-5"
             :message="msg.storeBitcoin"
           >
@@ -108,7 +109,7 @@
                 @click.native="buyEth"
               />
             </div>
-          </user-msg-block>
+          </app-user-msg-block>
 
           <!--
             =====================================================================================
@@ -268,6 +269,7 @@ const tokens = {
 };
 
 const errorMsgs = {
+  amountEthIsTooLow: 'You do not have enough ETH to swap',
   amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
   amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
   amountLessThan0: 'Swap amount must be greater than 0',
@@ -364,7 +366,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'initialLoad',
+      'balanceInWei'
+    ]),
     /**
      * Check if fromTokenType is Eth
      */
@@ -509,6 +516,14 @@ export default {
       return this.addressValue.isValid;
     },
     /**
+     * Checks whether or not teh user has a minimum eth balance to swap:
+     * @returns{boolean}
+     */
+    hasMinEth() {
+      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+    },
+
+    /**
      * Checks whether the user has enough
      * balance for the transaction
      */
@@ -592,33 +607,36 @@ export default {
      */
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading) {
+        /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenEth
-            ? this.errorMsgs.amountExceedsEthBalance
+            ? this.errorMsgs.amountEthIsTooLow
             : this.errorMsgs.doNotOwnToken;
         }
-        if (
-          !this.isFromTokenEth &&
-          this.availableBalance.lte(fromWei(MIN_GAS_WEI))
-        ) {
-          return this.errorMsgs.amountExceedsTxFee;
+        /*Eth Balance is to low to send a transaction*/
+        if (!this.hasMinEth) {
+          return this.errorMsgs.amountEthIsTooLow;
         }
         if (this.tokenInValue && this.tokenInValue !== '') {
+          /* Amount entered < 0 */
           if (new BigNumber(this.tokenInValue).lt(0)) {
             return this.errorMsgs.amountLessThan0;
           }
+          /* ETH only: Amount entered > (ETH Balance - Gas Price )*/
           if (
-            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
-            this.isFromTokenEth
+            this.isFromTokenEth &&
+            this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return this.errorMsgs.amountExceedsEthBalance;
           }
+          /*ERC20 Only: Amount entered > Balance  */
           if (
-            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
-            !this.isFromTokenEth
+            !this.isFromTokenEth &&
+            this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
+          /* Changelly Errors: */
           if (this.selectedProvider.exchange === 'changelly') {
             if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
               return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
