@@ -84,7 +84,7 @@
 
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
+import browserExtensionOverlay from '@/modules/access-wallet/software/components/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
