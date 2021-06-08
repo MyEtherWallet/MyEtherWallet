@@ -1,159 +1,95 @@
-import Nft from './handlerNftInit';
 import utils from 'web3-utils';
+import configs from './config/configNft';
+import ABI from './abi/abiNft';
+import BigNumber from 'bignumber.js';
 
 export default class NFT {
-  constructor({ network, address, web3, apollo }) {
+  constructor({ network, address, web3 }) {
     this.network = network;
     this.address = address;
     this.web3 = web3;
-    this.apollo = apollo;
-    this.nft = new Nft({
-      network: this.network,
-      address: this.address,
-      setAvailableContracts: this.setAvailableContracts.bind(this),
-      web3: this.web3,
-      apollo: this.apollo
-    });
-    this.availableContracts = [];
-    this.selectedContract = {};
-    this.currentActive = '';
-    this.currentPageState = '';
-    this.ready = false;
+    this.countPerPage = configs.countPerPage;
+    this.currentPage = 1;
   }
-
-  init(selectedContractOverride) {
-    return new Promise((resolve, reject) => {
-      try {
-        this.nft
-          .setup()
-          .then(selectedContract => {
-            if (selectedContractOverride) {
-              selectedContract = selectedContractOverride;
-            }
-            this.selectedContract = selectedContract;
-            return this.nft.getFirstTokenSet(selectedContract);
-          })
-          .then(currentActive => {
-            this.currentActive = currentActive;
-            this.currentPageState = this.currentActive.getPageState();
-            this.ready = true;
-            resolve(this.currentPageState);
-          })
-          .catch(reject);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  get currentActiveContract() {
-    return this.currentActive.contract;
-  }
-
   isValidAddress(hash) {
     return utils.isAddress(hash);
   }
 
-  send(to, tokenId) {
-    return this.currentActive.send(to, tokenId);
-  }
-
-  sendData(to, tokenId) {
-    return this.currentActive.sendData(to, tokenId);
-  }
-
-  txFeeETH(gasLimit, gasPrice) {
-    return this.currentActive.txFeeETH(gasLimit, gasPrice);
-  }
-
-  txFeeUSD(gasLimit, ethPrice, gasPrice) {
-    return this.currentActive.txFeeUSD(gasLimit, ethPrice, gasPrice);
-  }
-
-  removeSentNft(tokenId) {
-    this.currentActive.removeSentNft(tokenId);
-  }
-
-  getTokenCount() {
-    return this.currentActive.getTokenCount();
-  }
-
-  getCurrentPage() {
-    return this.currentActive.currentPage;
-  }
-
-  getCountPerPage() {
-    return this.currentActive.countPerPage;
-  }
-
-  getAvailableContracts() {
-    return this.nft.getOwnedTokenBasicDetails();
-  }
-
-  setActiveContract(contractAddress) {
-    return new Promise((resolve, reject) => {
-      if (!this.nft.nftConfig[contractAddress]) {
-        reject(Error(''));
-      }
-      this.currentActive = this.nft.nftConfig[contractAddress];
-      resolve(this.nft.nftConfig[contractAddress].activate());
-    });
-  }
-
-  getActiveName() {
-    return this.currentActive.name;
-  }
-
-  getPageValues() {
-    return this.currentActive.getPageState().catch(() => {
-      return {
-        name: 'unknown',
-        currentPage: 0,
-        count: 0,
-        tokens: []
-      };
-    });
-  }
-
-  hasPages() {
-    return this.currentActive.countPerPage < this.currentActive.getTokenCount();
-  }
-
-  hasNextPage() {
-    return this.currentActive.hasNextPage();
-  }
-
-  async nextPage() {
-    if (this.currentActive.hasNextPage()) {
-      return new Promise((resolve, reject) => {
-        this.currentActive.getNext().then(resolve).catch(reject);
-      });
+  /**
+   * Send NFT
+   */
+  send(to, token) {
+    let raw;
+    this.contract = new this.web3.eth.Contract(ABI);
+    if (token.contract.includes(configs.cryptoKittiesContract)) {
+      raw = this.cryptoKittiesTransfer(to, token);
+    } else {
+      raw = this.safeTransferFrom(to, token);
     }
-    return Promise.resolve();
+
+    raw.from = this.address;
+    return this.web3.eth.sendTransaction(raw);
   }
 
-  hasPriorPage() {
-    return this.currentActive.hasPrevious();
+  safeTransferFrom(to, token) {
+    this.contract.options.address = token.contract;
+    return {
+      to: token.contract,
+      data: this.contract.methods
+        .safeTransferFrom(this.address, to, token.token_id)
+        .encodeABI()
+    };
   }
 
-  priorPage() {
-    return this.currentActive.getPrevious();
+  cryptoKittiesTransfer(to, token) {
+    this.contract.options.address = token.contract;
+    return {
+      to: token.contract,
+      data: this.contract.methods.transfer(to, token.token_id).encodeABI()
+    };
   }
 
-  selectNftsToShow() {
-    return this.currentActive.selectNftsToShow();
+  /**
+   * Pagination
+   */
+
+  totalPages(count) {
+    return Math.ceil(new BigNumber(count).div(this.countPerPage).toNumber());
   }
 
-  setAvailableContracts(contracts) {
-    this.availableContracts = contracts;
+  hasPages(count) {
+    return this.countPerPage < count;
   }
 
-  getImageUrl(tokenId, contract) {
-    if (!contract) contract = this.currentActive.contract;
-    if (!tokenId) return '';
-    if (tokenId.slice(0, 2) === '0x') {
+  startIndex() {
+    return this.currentPage * this.countPerPage - this.countPerPage;
+  }
+
+  endIndex(count) {
+    const endIdx = this.currentPage * this.countPerPage;
+    if (count > endIdx) {
+      return endIdx;
+    }
+    return count;
+  }
+
+  setCurrentPage(page) {
+    this.currentPage = page;
+  }
+
+  goToFirstPage() {
+    this.currentPage = 1;
+  }
+
+  /**
+   * Get Nft Image
+   */
+
+  getImageUrl(contract, tokenId) {
+    const nftUrl = `${configs.url}/getImage`;
+    if (tokenId && tokenId.slice(0, 2) === '0x') {
       tokenId = tokenId.slice(2);
     }
-    return this.currentActive.getImageUrl(contract, tokenId);
+    return `${nftUrl}?contract=${contract}&tokenId=${tokenId}`;
   }
 }

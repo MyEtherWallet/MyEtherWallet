@@ -78,6 +78,7 @@
       </div>
     </div>
     <module-access-wallet-hardware
+      v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
       :switch-address="isHardware"
@@ -95,11 +96,13 @@ import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWall
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-
+import {
+  formatFiatValue,
+  formatBalanceEthValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceAddressPaperWallet,
@@ -128,9 +131,9 @@ export default {
     },
     convertedBalance() {
       if (this.isEthNetwork) {
-        return `${'$' + this.balanceFiatValue.toFixed(2).toString()}`;
+        return `${'$' + formatFiatValue(this.balanceFiatValue).value}`;
       }
-      return `${BigNumber(this.balanceInETH).toFixed(2)} ${
+      return `${formatBalanceEthValue(this.balanceInETH).value} ${
         this.network.type.currencyName
       }`;
     }
