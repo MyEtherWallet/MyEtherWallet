@@ -1,17 +1,31 @@
+import BigNumber from 'bignumber.js';
+import { fromWei } from 'web3-utils';
 /**
- * Number Format Helper
- * taken from EthVM
+ * ---------------------------------
+ * Number Format Helper.
+ * Used to format numerical strings in the UI
+ * ---------------------------------
  */
-/* Constants: */
-const SmallUsdBreakpoint = 0.04;
-const SmallNumberBreakpoint = 0.0000001;
-const SmallGweiBreakpoint = 0.00001;
 
+/** FormatterNumber Object:
+ * {
+ *    value: '< 0.0000001', //string
+ *    tooltipText: '0.0000000001' //string || undefined,
+ *    unit: 'eth' // string || undefined,
+ * };
+ */
+
+/**
+ * ---------------------------------
+ * Constants
+ * ---------------------------------
+ */
+const SmallNumberBreakpoint = 0.000001;
+const SmallFiatBreakpoint = 0.01;
 const TenThousand = 1e4;
-// const HundredThousand = 1e5;
 const OneMillion = 1e6;
 const OneBillion = 1e9;
-// const HundredBillion = 1e11;
+const TenBillion = 1e10;
 const OneTrillion = 1e12;
 const OneQuadrillion = 1e15;
 
@@ -23,45 +37,79 @@ const FormattedNumberUnit = {
   USD: '$',
   B: 'B',
   T: 'T',
-  Q: 'Q'
+  Q: 'Q',
+  M: 'M',
+  FIAT: 'fiat'
+};
+
+/*  Set the global formatting options */
+const fmt = {
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3
+};
+BigNumber.config({ FORMAT: fmt });
+BigNumber.config({ ROUNDING_MODE: 1 }); // equivalent
+
+/**
+ * ---------------------------------
+ * CORE Functions
+ * ---------------------------------
+ */
+
+/**
+ * GROUP I: Format number
+ * Converts an integer value to a formatted string using BigNumber.js
+ * @param {any} _value - number to convert takes BigNumber || string || number 1000
+ * @return {string} formatter number as a string ie: '1,000'
+ */
+
+const formatIntegerToString = _value => {
+  return new BigNumber(_value).toFormat();
 };
 
 /**
- * GROUP I: Formatted integers
- * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 billion
- * @param value: BigNumber
- * @return FormattedNumber
+ * GROUP II: Formatted integers
+ * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 million
+ * @param _value BigNumber || string || number}
+ * @return {object} FormattedNumber
  */
-function formatIntegerValue(value) {
+const formatIntegerValue = _value => {
+  const value = new BigNumber(_value);
   /* Case I: value >= 1,000,000,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneQuadrillion)) {
-    return this.convertToQuadrillion(value);
+    return convertToQuadrillion(value);
   }
 
   /* Case II: value >= 1,000,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneTrillion)) {
-    return this.convertToTrillions(value);
+    return convertToTrillions(value);
   }
 
   /* Case III: value >= 1,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneBillion)) {
-    return this.convertToBillions(value);
+    return convertToBillions(value);
   }
 
-  /* Case IV: value < 1,000,000,000 */
+  /* Case IV: value >= 1,000,000 */
+  if (value.isGreaterThanOrEqualTo(OneMillion)) {
+    return convertToMillions(value);
+  }
+
+  /* Case V: value < 1,000,000,000 */
   return { value: value.toFormat() };
-}
+};
 
 /**
- * GROUP II: Floating point values
- * Converts a floating point value to a FormattedNumber object
- * Use cases: Token Balances / Quantities / Non Detail page for floating numbers
- * @param value BigNumber
- * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
+ * GROUP III: Floating point values
+ * Converts a floating point value to a FormattedNumber object. Returns formatted value, unless the value is less then 0.000001.
+ * Show upto 6 decimal points or to the last decimal point. Ie: 1.3 should be shown as 1.3. Follows Group II (formatIntegerValue) if value is greater than 1 million.
+ * Use cases: Token Balances / Quantities / Tx fee/ Tx amount
+ * @param {any} _value number to convert takes BigNumber || string || number
+ * @returns {object} FormattedNumber with value as formatted string, and tooltipText
  */
-function formatFloatingPointValue(value) {
-  const dps = value.decimalPlaces();
-
+function formatFloatingPointValue(_value) {
+  const value = new BigNumber(_value);
   /**
    * Case I: value === 0
    * Return: "0"
@@ -71,27 +119,19 @@ function formatFloatingPointValue(value) {
   }
 
   /**
-   * Case II: value >= 1,000,000,000
+   * Case II: value >= 1,000,000
    * Return: formated integer value with tooltip
    */
-  if (value.isGreaterThanOrEqualTo(OneBillion)) {
-    return this.formatIntegerValue(value);
-  }
-
-  /**
-   * Case III: value >= 1,000,000
-   * Return: round number and tooltip with full value if there are decimal places
-   */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return this.getRoundNumber(value, 0, dps);
+    return formatIntegerValue(value);
   }
 
   /**
-   * Case IV: value >= 10,000
+   * Case III: value >= 10,000
    * Return: a number, rounded to 2 decimal points and tooltip with full value if > 2 decimal places
    */
   if (value.isGreaterThanOrEqualTo(TenThousand)) {
-    return this.getRoundNumber(value, 2, dps);
+    return getRoundNumber(value, 2);
   }
 
   /**
@@ -99,7 +139,7 @@ function formatFloatingPointValue(value) {
    * Return: a number, rounded to 4 decimal points and tooltip with full value if > 4 decimal places
    */
   if (value.isGreaterThanOrEqualTo(1)) {
-    return this.getRoundNumber(value, 4, dps);
+    return getRoundNumber(value, 4);
   }
 
   /**
@@ -107,162 +147,343 @@ function formatFloatingPointValue(value) {
    * Return: a number, rounded up to 7 decimal places and tooltip with full value if > 7 decimal places
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return this.getRoundNumber(value, 7, dps);
+    return getRoundNumber(value, 6);
   }
 
   /**
-   * Case V: value < 0.0000001
-   * Return: string "< 0.0000001" and tooltip with full value
+   * Case V: value < 0.000001
+   * Return: string "< 0.000001" and tooltip with full value
    */
   return {
-    value: '< 0.0000001',
-    tooltipText: dps ? value.toFormat() : undefined
+    value: `< ${SmallNumberBreakpoint}`,
+    tooltipText: value.toFormat()
   };
 }
 
 /**
- * GROUP III: USD Values
- * Converts a USD value to a FormattedNumber
- * @param value: BigNumber
- * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
+ * GROUP IV: Balance ETH Value
+ * Converts a floating point WEI value to a FormattedNumber object. Returns formatted value in ETH, Gwei or wei.
+ * Show upto 6 decimal points or to the last decimal point. Ie: 1.3 should be shown as 1.3. Follows Group II (formatIntegerValue) if value is greater than 1 million.
+ * Use cases: Dashboard ETH balance / Swap & Send Transaction Balance /Access Wallet with Mnemonic type wallet, in address table
+ * @param {any} _value MUST BE IN WEI number to convert takes BigNumber || string || number
+ * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
  */
-function formatUsdValue(value) {
-  const unit = FormattedNumberUnit.USD;
+const formatBalanceEthValue = _value => {
+  const value = new BigNumber(_value);
+  const ethValue = new BigNumber(fromWei(_value.toString()));
+
+  /**
+   * Case I: value === 0
+   * Return: "0 ETH"
+   */
+  if (value.isZero()) {
+    return { value: '0', unit: FormattedNumberUnit.ETH };
+  }
+  /**
+   * Case II: value < 10,000 wei
+   * Return: small values in WEI (no conversion) and tooltip with ETH value
+   */
+  if (value.isLessThan(TenThousand)) {
+    return {
+      value: value.toFormat(),
+      unit: FormattedNumberUnit.WEI,
+      tooltipText: `${ethValue.toFormat()}`
+    };
+  }
+  /**
+   * Case III: value < 10 Billion Wei OR value < 10 Gwei
+   * Return: Gwei value
+   */
+  if (value.isLessThan(TenBillion)) {
+    return {
+      value: new BigNumber(fromWei(_value.toString(), 'gwei')).toFormat(),
+      unit: FormattedNumberUnit.GWEI,
+      tooltipText: `${ethValue.toFormat()}`
+    };
+  }
+  /**
+   * Case IV: 0.00000001 ETH <= x < 0.000001 ETH
+   * Return: rounded number to 8 dps
+   */
+  if (value.isLessThan(OneTrillion)) {
+    const formatted = getRoundNumber(ethValue, 8);
+    return {
+      value: formatted.value,
+      unit: FormattedNumberUnit.ETH,
+      tooltipText: formatted.tooltipText
+    };
+  }
+
+  /**
+   * Case V: x >= 0.000001 ETH
+   * Return: formatFloatingPointValue
+   */
+  const formatted = formatFloatingPointValue(ethValue, 8);
+  return {
+    value: formatted.value,
+    unit: FormattedNumberUnit.ETH,
+    tooltipText: formatted.tooltipText
+  };
+};
+/**
+ * GROUP V: Gwei (gas) values
+ * Converts a floating point WEI value to a FormattedNumber object. Returns formatted value in ETH, Gwei or wei.
+ * Show upto 6 decimal points or to the last decimal point. Ie: 1.3 should be shown as 1.3. Follows Group II (formatIntegerValue) if value is greater than 1 million.
+ * Use cases: Token Balances / Quantities / Tx fee/ Tx amount
+ * @param {any} _value MUST BE IN WEI number to convert takes BigNumber || string || number
+ * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
+ */
+const formatGasValue = _value => {
+  const value = new BigNumber(_value);
+  const gweiValue = new BigNumber(fromWei(_value.toString(), 'gwei'));
+  const ethValue = new BigNumber(fromWei(_value.toString()));
+  const unit = FormattedNumberUnit.GWEI;
+
+  /**
+   * Case I: value === 0
+   * Return: "0 Gwei"
+   */
+  if (value.isZero()) {
+    return { value: '0', unit };
+  }
+
+  /**
+   * Case II: x < 0.00001 Gwei
+   * Return: number in wei and show tooltip with Gwei value
+   */
+  if (value.isLessThan(TenThousand)) {
+    return {
+      value: value.toFormat(),
+      unit: FormattedNumberUnit.WEI,
+      tooltipText: `${ethValue.toFormat()}`
+    };
+  }
+
+  /**
+   * Case III:  0.00001 Gwei =< X < 1 mil Gwei
+   * Return: number in Gwei
+   */
+
+  if (gweiValue.isLessThan(OneMillion)) {
+    return {
+      value: formatFloatingPointValue(gweiValue).value,
+      unit: unit,
+      tooltipText: `${ethValue.toFormat()}`
+    };
+  }
+
+  /**
+   * Case IV: x >= 1 mill
+   * Return: number in eth and show tooltip with Gwei value
+   */
+  const formatted = formatFloatingPointValue(ethValue);
+  return {
+    value: formatted.value,
+    unit: FormattedNumberUnit.ETH,
+    tooltipText: `${formatted.tooltipText}`
+  };
+};
+/**
+ * GROUP VI: Percentage values
+ * Converts a percentage value to a FormattedNumber
+ * @param {any} _value number to convert takes string || number
+ * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
+ */
+const formatPercentageValue = _value => {
+  /* Strip '%' if necessary */
+  const value = new BigNumber(_value.toString().replaceAll('%', ''));
+  const unit = FormattedNumberUnit.PERCENT;
+  /**
+   * Case I: value === 0
+   * Return: "0%"
+   */
+  if (value.isZero()) {
+    return { value: '0', unit };
+  }
+
+  const isNegative = value.isNegative(); // Record whether value is negative
+  const absoluteValue = value.absoluteValue(); // Get Absolute value
+
+  /**
+   * Case II: |value| > 10000
+   * Return: >10,000% or <-10000% and tooltip
+   */
+  if (absoluteValue.isGreaterThan(TenThousand)) {
+    const result = isNegative ? '< -10,000%' : '> 10,000%';
+    return {
+      value: result,
+      unit: unit,
+      tooltipText: `${value.toFormat()}%`
+    };
+  }
+
+  /**
+   * Case III: |value| >= 1000
+   * Return: whole number and tooltips if has decimal points
+   */
+  if (absoluteValue.isGreaterThanOrEqualTo(1000)) {
+    const dps = value.decimalPlaces();
+    return {
+      value: `${value.toFormat(0)}%`,
+      unit: unit,
+      tooltipText: dps ? `${value.toFormat()}%` : undefined
+    };
+  }
+
+  /**
+   * Case IV: |value| >= 0.01
+   * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
+   */
+  if (absoluteValue.isGreaterThanOrEqualTo(0.01)) {
+    return { value: `${getRoundNumber(value, 2, true).value}%`, unit: unit };
+  }
+
+  /**
+   * Case V: |value| >= 0.01
+   * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
+   */
+  if (absoluteValue.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
+    return { value: `${getRoundNumber(value, 6).value}%`, unit: unit };
+  }
+
+  /**
+   * Case VI: If |value| < 0.000001
+   * Return: '>-0.000001' '<0.000001'r and tooltip
+   */
+  const result = isNegative ? '> -0.000001%' : '< 0.000001%';
+  return { value: result, unit: unit, tooltipText: `${value.toFormat()}%` };
+};
+
+/**
+ * GROUP VII: Fiat Values
+ * Converts a fiat value to a FormattedNumber
+ * Shows upto 6 decimal points or to the last decimal point on 0.000001 <= X < 0.01.
+ * Shows 2 decimal points or to the last decimal point on 0.01 <= X < 1,000,000.
+ * @param _value: BigNumber
+ * @returns Object FormattedNumber with value as formatted string and tooltipText
+ */
+const formatFiatValue = _value => {
+  const value = new BigNumber(_value);
   /**
    * Case I: value === 0
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero()) {
-    return { value: '$0.00', unit };
+    return { value: '0.00' };
   }
 
   /**
-   * Case II: value >= 1 Quadrillion
-   * Return:  value converted to Quadrillions"
-   */
-  if (value.isGreaterThanOrEqualTo(OneQuadrillion)) {
-    const result = this.convertToQuadrillion(value);
-    return {
-      value: `$${result.value}`,
-      unit,
-      tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined
-    };
-  }
-
-  /**
-   * Case II: value >= 1 Trillion
-   * Return:  value converted to trillions"
-   */
-  if (value.isGreaterThanOrEqualTo(OneTrillion)) {
-    const result = this.convertToTrillions(value);
-    return {
-      value: `$${result.value}`,
-      unit,
-      tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined
-    };
-  }
-
-  /**
-   * Case III: value >= 1 Billion
-   * Return: value converted to billions"
-   */
-  if (value.isGreaterThanOrEqualTo(OneBillion)) {
-    const result = this.convertToBillions(value);
-    return {
-      value: `$${result.value}`,
-      unit,
-      tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined
-    };
-  }
-
-  /**
-   * Case IV: value >= 1 Million.
-   * Return: rounded number and tolltip if has decimal points"
+   * Case II: value >= 1,000,000
+   * Return: formated integer value with tooltip
    */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    const result = this.getRoundNumber(value, 0, value.decimalPlaces());
-    return {
-      value: `$${result.value}`,
-      unit,
-      tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined
-    };
+    return formatIntegerValue(value);
   }
 
   /**
    * Case V: value > 0.04
-   * Return: rounded number up to 2 decimal points and tolltip if > 2 decimal points"
+   * Return: rounded number up to 2 decimal points,  no tooltip
    */
-  if (value.isGreaterThan(SmallUsdBreakpoint)) {
-    return {
-      value: `$${value.toFormat(2)}`,
-      unit,
-      tooltipText:
-        value.decimalPlaces() > 2 ? `$${value.toFormat()}` : undefined
-    };
+  if (value.isGreaterThanOrEqualTo(SmallFiatBreakpoint)) {
+    return { value: getRoundNumber(value, 2, true).value };
   }
 
   /**
-   * Case VI: 0.00001 <= value <= 0.04
-   * Return: rounded number up to 5 decimal points and tooltip if > 5 decimal points"
+   * Case VI: 0.000001  <= value < 0.01
+   * Return: rounded number up to 6 decimal points", no tooltip
    */
-  if (value.isGreaterThanOrEqualTo(SmallGweiBreakpoint)) {
-    const formatted = value.toFormat(Math.min(5, value.decimalPlaces()));
-    return {
-      value: `$${formatted}`,
-      unit,
-      tooltipText:
-        value.decimalPlaces() > 5 ? `$${value.toFormat()}` : undefined
-    };
+  if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
+    return { value: getRoundNumber(value, 6).value };
   }
 
   /**
    * Case V: value < 0.0000001
-   * Return: string "< $0.0000001" and tooltip with full value
+   * Return: string "< $0.0000001" and tooltip with full value with tooltip
    */
-  return { value: '< $0.0000001', unit, tooltipText: `$${value.toFixed()}` };
-}
+  return { value: `< ${SmallNumberBreakpoint}`, tooltipText: value.toFormat() };
+};
 
-/* Helper functions */
+/**
+ * ---------------------------------
+ * Helper Functions
+ * Do not export then to use in formatting strings
+ * ---------------------------------
+ */
 
-function convertToBillions(value) {
+/**
+ * Helper function. Converts a value to Millions in FormattedNumber object
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number 1000
+ * @return {object} - FormatterNumber
+ */
+const convertToMillions = value => {
+  const result = value.dividedBy(OneMillion);
+  return {
+    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.M}`,
+    tooltipText: value.toFormat()
+  };
+};
+
+/**
+ * Helper function. Converts a value to Billions in FormattedNumber object
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number
+ * @return {object} - FormatterNumber
+ */
+const convertToBillions = value => {
   const result = value.dividedBy(OneBillion);
   return {
-    value: `${result.toFormat(Math.min(3, result.decimalPlaces()))}B`,
-    unit: FormattedNumberUnit.B,
+    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.B}`,
     tooltipText: value.toFormat()
   };
-}
-
-function convertToTrillions(value) {
+};
+/**
+ * Helper function. Converts a value to Trillions in FormattedNumber object
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number
+ * @return {object} - FormatterNumber
+ */
+const convertToTrillions = value => {
   const result = value.dividedBy(OneTrillion);
   return {
-    value: `${result.toFormat(Math.min(3, result.decimalPlaces()))}T`,
-    unit: FormattedNumberUnit.T,
+    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.T}`,
     tooltipText: value.toFormat()
   };
-}
+};
 
-function convertToQuadrillion(value) {
+/**
+ * Helper function. returns Quadrillion in FormattedNumber object
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number
+ * @return {object} - FormatterNumber
+ */
+const convertToQuadrillion = value => {
   return {
     value: '> 1Q',
     unit: FormattedNumberUnit.Q,
     tooltipText: value.toFormat()
   };
-}
+};
 
-function getRoundNumber(value, round, dp) {
+/**
+ * Helper function. Rounds a value to specified decimal points and tooltip with full value if > more decimal points then round
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number
+ * @param {number} round - how many decimal points to round the number
+ * @param {boolean} hasTrailingZeros - set this to true, if you want to dispaly trailing zeros ie: desired result 12.3000 instead of 12.3
+ * @return {object} - FormatterNumber
+ */
+const getRoundNumber = (value, round, hasTrailingZeros = false) => {
+  const dps = value.decimalPlaces();
   return {
-    value: value.toFormat(Math.min(round, dp)),
-    tooltipText: dp > round ? value.toFormat() : undefined
+    value: hasTrailingZeros
+      ? value.decimalPlaces(round).toFormat(round)
+      : value.decimalPlaces(round).toFormat(),
+    tooltipText: dps > round ? value.toFormat() : undefined
   };
-}
+};
 
-export default {
+export {
+  formatIntegerToString,
   formatIntegerValue,
   formatFloatingPointValue,
-  formatUsdValue,
-  convertToBillions,
-  convertToTrillions,
-  convertToQuadrillion,
-  getRoundNumber
+  formatFiatValue,
+  formatBalanceEthValue,
+  formatPercentageValue,
+  formatGasValue
 };

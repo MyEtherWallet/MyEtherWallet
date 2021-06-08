@@ -12,7 +12,7 @@ import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { AddressEventType } from '@/apollo/global/globalTypes.js';
 import BigNumber from 'bignumber.js';
 import ethImg from '@/assets/images/networks/eth.svg';
-import numberFormatHelper from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 const tokens = {
   eth: 'ethereum'
@@ -186,7 +186,7 @@ export default {
       let n = new BigNumber(balance);
       if (decimals) {
         n = n.div(new BigNumber(10).pow(decimals));
-        n = numberFormatHelper.formatFloatingPointValue(n);
+        n = formatFloatingPointValue(n);
       }
       return n;
     }
