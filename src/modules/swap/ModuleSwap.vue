@@ -56,14 +56,18 @@
                 @input="setTokenInValue"
             /></v-col>
 
-            <v-col cols="12" sm="2" class="pt-0 pt-sm-3">
-              <swap-btn
-                :class="[
-                  enableTokenSwitch ? 'cursor--pointer' : 'pointer-event--none',
-                  'd-flex align-center justify-center'
-                ]"
-                @click.stop="switchTokens"
-              />
+            <v-col cols="12" sm="2" class="mt-n5">
+              <div class="d-flex align-center justify-center">
+                <swap-btn
+                  :class="[
+                    enableTokenSwitch
+                      ? 'cursor--pointer'
+                      : 'pointer-event--none',
+                    'd-flex align-center justify-center'
+                  ]"
+                  @click.native="switchTokens"
+                />
+              </div>
             </v-col>
 
             <v-col cols="12" sm="5">
@@ -372,10 +376,17 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    /**
+     * checks whether both token fields are empty
+     */
     enableTokenSwitch() {
-      return !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      const isNotEmpty =
+        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      return isNotEmpty;
     },
     /**
+     * Fetched tokens from all providers(?) + specific tokens
+     * Returns an @Array
      * Check if fromTokenType is Eth
      */
     isFromTokenEth() {
@@ -555,12 +566,9 @@ export default {
      */
     notEnoughEth() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth =
-        this.fromTokenType.value === 'Ethereum'
-          ? this.tokenInValue !== ''
-            ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-            : false
-          : balanceAfterFees.isNeg();
+      const isNotEnoughEth = this.isFromTokenEth
+        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+        : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
     /**
