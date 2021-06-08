@@ -3,6 +3,8 @@
 ### Devop
 
 * Add swap token switch [#3103](https://github.com/MyEtherWallet/MyEtherWallet/pull/3103)
+* Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
+* Fix swap current balance [#3118](https://github.com/MyEtherWallet/MyEtherWallet/pull/3118)
 * Fix ENS icons [#3110](https://github.com/MyEtherWallet/MyEtherWallet/pull/3110)
 * Fix Swap store BTC on ETH message [#3106](https://github.com/MyEtherWallet/MyEtherWallet/pull/3106)
 * Fix mew-select border issue [#3091](https://github.com/MyEtherWallet/MyEtherWallet/pull/3091)

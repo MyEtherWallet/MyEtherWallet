@@ -125,7 +125,7 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            formatFloatingPointValue(item.tokenBalance.value).value +
+            formatFloatingPointValue(item.tokenBalance).value +
               ' ' +
               item.symbol,
             '$' + formatFiatValue(item.usdBalance).value
