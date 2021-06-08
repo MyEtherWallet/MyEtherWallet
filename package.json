@@ -173,7 +173,8 @@
     "bl": "4.0.3",
     "elliptic": "6.5.3",
     "dns-packet": "5.2.2",
-    "trim-newlines": "3.0.1"
+    "trim-newlines": "3.0.1",
+    "css-what": "5.0.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
