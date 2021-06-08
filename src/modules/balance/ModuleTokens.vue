@@ -48,8 +48,12 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import numberFormatHelper from '@/core/helpers/numberFormatHelper';
-
+import {
+  formatFiatValue,
+  formatPercentageValue,
+  formatFloatingPointValue,
+  formatIntegerToString
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceEmptyBlock
@@ -121,17 +125,18 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            item.tokenBalance + ' ' + item.symbol,
-            numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
-              .value
+            formatFloatingPointValue(item.tokenBalance).value +
+              ' ' +
+              item.symbol,
+            '$' + formatFiatValue(item.usdBalance).value
           ];
           newObj.token = item.symbol;
-          newObj.cap = new BigNumber(item.market_cap).toFormat();
-          newObj.change = new BigNumber(
+          newObj.cap = formatIntegerToString(item.market_cap);
+          newObj.change = formatPercentageValue(
             item.price_change_percentage_24h
-          ).toFixed(2);
+          ).value.replaceAll('%', '');
           newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-          newObj.price = '$' + new BigNumber(item.price).toFixed(2);
+          newObj.price = '$' + formatFiatValue(item.price).value;
           newObj.tokenImg = item.img;
           newObj.callToAction = [
             {
@@ -147,7 +152,7 @@ export default {
         });
     },
     totalTokensValue() {
-      return new BigNumber(
+      return formatFiatValue(
         this.tokensList.reduce((total, currentVal) => {
           const balance =
             currentVal.usdBalance !== null &&
@@ -157,7 +162,7 @@ export default {
               : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
-      ).toFixed(2);
+      ).value;
     }
   }
 };
