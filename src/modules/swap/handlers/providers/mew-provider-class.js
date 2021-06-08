@@ -73,7 +73,7 @@ class MEWPClass {
         });
       })
       .catch(e => {
-        if (e.response.data.msg === 'No matching swap pairs found') return [];
+        if (e.response?.data.msg === 'No matching swap pairs found') return [];
         return e;
       });
   }

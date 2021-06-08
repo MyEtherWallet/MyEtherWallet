@@ -6,6 +6,7 @@ import {
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
 import { fromWei, toWei } from 'web3-utils';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const gasPriceMixin = {
   data() {
@@ -58,21 +59,27 @@ const gasPriceMixin = {
           icon: 'bicycle',
           title: gasPriceTypes.ECONOMY,
           gas: `${economy}`,
-          usd: `$ ${BigNumber(this.fiatValue).times(economyEth).toFixed(9)}`
+          usd: `$ ${
+            formatFiatValue(BigNumber(this.fiatValue).times(economyEth)).value
+          }`
           // time: '< 30 min'
         },
         {
           icon: 'car',
           title: gasPriceTypes.REGULAR,
           gas: `${regular}`,
-          usd: `$ ${BigNumber(this.fiatValue).times(regularEth).toFixed(9)}`
+          usd: `$ ${
+            formatFiatValue(BigNumber(this.fiatValue).times(regularEth)).value
+          }`
           // time: '< 10 min'
         },
         {
           icon: 'rocket',
           title: gasPriceTypes.FAST,
           gas: `${fast}`,
-          usd: `$ ${BigNumber(this.fiatValue).times(fastEth).toFixed(9)}`
+          usd: `$ ${
+            formatFiatValue(BigNumber(this.fiatValue).times(fastEth)).value
+          }`
           // time: '< 5 min'
         }
       ];
