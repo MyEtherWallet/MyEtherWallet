@@ -1,44 +1,63 @@
 <template>
   <div class="mt-5 mb-10">
     <v-row justify="space-between" align="start">
-      <v-col cols="4" class="mb-n3">
-        <p class="mew-heading-3">Network Fee</p>
+      <v-col cols="12" sm="3" class="pb-0">
+        <p class="mew-heading-3 mb-0">Network Fee</p>
       </v-col>
-      <v-col cols="7">
-        <div class="d-flex justify-space-around align-center">
-          <div class="d-flex justify-space-around align-center">
-            <mew-icon :icon-name="icon" :img-height="30" />
-            <span class="capitalize">{{ gasPriceType }}</span>
-          </div>
-          <span v-show="!gettingFee && showFee"
-            >{{ actualFees }} {{ network.type.currencyName }}
-          </span>
-          <span :class="[hasError ? 'error--text' : '']">{{ feesInUsd }}</span>
-          <v-skeleton-loader
-            v-show="gettingFee || !showFee"
-            type="text"
-            width="250px"
-          />
+      <v-spacer class="d-none d-sm-flex" />
+      <v-col class="d-flex justify-end align-center">
+        <v-row dense>
+          <v-col cols="12 py-0">
+            <div class="d-flex justify-start align-center">
+              <div class="d-flex justify-space-around align-center">
+                <mew-icon :icon-name="icon" :img-height="30" />
+                <span class="capitalize pl-2 mew-heading-4">{{
+                  gasPriceType
+                }}</span>
+              </div>
+              <span
+                v-show="!gettingFee && showFee"
+                class="pl-2 mew-heading-4 textSecondary--text d-flex eth-fee"
+                >{{ actualFeeFormatted }} {{ network.type.currencyName }}
+              </span>
+              <span
+                :class="[hasError ? 'error--text' : '', 'px-2 mew-heading-4']"
+                >{{ feesInUsd }}</span
+              >
+              <v-skeleton-loader
+                v-show="gettingFee || !showFee"
+                type="text"
+                width="250px"
+              />
+            </div>
+          </v-col>
+
+          <v-col v-if="!gettingFee || hasError" cols="12">
+            <p :class="[hasError ? 'error--text' : '', 'mew-label mb-0']">
+              {{ message }}
+            </p>
+          </v-col>
+          <v-col cols="12" class="pt-0">
+            <div class="d-flex align-center justify-start pt-2">
+              <a rel="noopener noreferrer" class="mr-3" target="_blank"
+                >Why are the fees so high?</a
+              >
+              <a
+                v-if="notEnoughEth"
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://ccswap.myetherwallet.com/#/"
+                >Buy more ETH</a
+              >
+            </div>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="1">
+        <div class="d-flex justify-end align-center">
           <div class="icon-holder primary" @click="openGasPriceModal">
             <v-icon size="small" color="white">mdi-pencil</v-icon>
           </div>
-        </div>
-        <p
-          v-if="!gettingFee || hasError"
-          :class="[hasError ? 'error--text' : '']"
-        >
-          {{ message }}
-        </p>
-        <div v-if="notEnoughEth" class="d-flex align-center justify-start">
-          <a rel="noopener noreferrer" class="mr-3" target="_blank"
-            >Why are the fees so high?</a
-          >
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://ccswap.myetherwallet.com/#/"
-            >Buy more ETH</a
-          >
         </div>
       </v-col>
     </v-row>
@@ -49,6 +68,10 @@
 import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 
 const GAS_TYPE_ICONS = {
   economy: 'bicycle',
@@ -101,8 +124,13 @@ export default {
     actualFees() {
       return fromWei(this.totalFees).toString();
     },
+    actualFeeFormatted() {
+      return formatFloatingPointValue(this.actualFees).value;
+    },
     feesInUsd() {
-      const value = BigNumber(this.actualFees).times(this.fiatValue).toFixed(2);
+      const value = formatFiatValue(
+        BigNumber(this.actualFees).times(this.fiatValue).toFixed(2)
+      ).value;
       return `~${'$' + value}`;
     },
     hasError() {
@@ -117,5 +145,8 @@ export default {
   padding: 3px 6px;
   border-radius: 50%;
   cursor: pointer;
+}
+.eth-fee {
+  white-space: nowrap;
 }
 </style>

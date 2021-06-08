@@ -1017,9 +1017,8 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        const message = `This provider transaction fee is ${this.exPannel[0].subtext}, which exceed's your ${this.balanceInETH} ETH wallet balance.`;
-        const ethError = `${message} Try to swap a smaller ETH amount to use this provider.`;
-        this.feeError = this.isFromTokenEth ? ethError : message;
+        this.feeError =
+          'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
       }
     },
     openSettings() {
