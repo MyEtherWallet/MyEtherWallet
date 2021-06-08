@@ -58,7 +58,7 @@
 
             <v-col cols="12" sm="2" class="mt-n5">
               <div class="d-flex align-center justify-center">
-                <swap-btn @click.stop="switchTokens" />
+                <swap-btn @click.native="switchTokens" />
               </div>
             </v-col>
 
