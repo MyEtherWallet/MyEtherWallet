@@ -1,9 +1,9 @@
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
-import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44/index.js';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import {
   getSignTransactionObject,
   calculateChainIdFromV

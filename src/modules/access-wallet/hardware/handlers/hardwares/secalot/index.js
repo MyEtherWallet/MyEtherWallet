@@ -3,7 +3,7 @@ import SecalotEth from './secalotEth';
 import SecalotUsb from './secalotUsb';
 import { WALLET_TYPES } from '../../configs/configWalletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import {
   getSignTransactionObject,

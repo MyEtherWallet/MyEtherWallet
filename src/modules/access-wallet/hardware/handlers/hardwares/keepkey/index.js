@@ -6,7 +6,7 @@ import {
 } from '@keepkey/keepkey.js';
 import { WALLET_TYPES } from '../../configs/configWalletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import { getUint8Tx } from './utils';
 import {
   getBufferFromHex,

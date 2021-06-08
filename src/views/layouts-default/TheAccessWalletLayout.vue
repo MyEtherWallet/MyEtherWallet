@@ -95,7 +95,7 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { Web3Wallet } from '@/modules/access-wallet/software/handlers';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';

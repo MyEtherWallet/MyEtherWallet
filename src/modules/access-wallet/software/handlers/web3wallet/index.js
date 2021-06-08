@@ -1,5 +1,5 @@
-import { WALLET_TYPES } from '../../../../access-wallet/hardware/handlers/configs/configWalletTypes';
-import WalletInterface from '@/modules/wallets/utils/WalletInterface.js';
+import { WALLET_TYPES } from '../../../hardware/handlers/configs/configWalletTypes';
+import WalletInterface from '@/modules/access-wallet/common/WalletInterface';
 import Web3 from 'web3';
 import { getBufferFromHex } from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';

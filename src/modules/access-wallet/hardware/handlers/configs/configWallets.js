@@ -6,7 +6,7 @@ import keepkeyWallet from '@/modules/access-wallet/hardware/handlers/hardwares/k
 import ledgerWallet from '@/modules/access-wallet/hardware/handlers/hardwares/ledger';
 import secalotWallet from '@/modules/access-wallet/hardware/handlers/hardwares/secalot';
 import trezorWallet from '@/modules/access-wallet/hardware/handlers/hardwares/trezor';
-import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
+import mewconnectWallet from '@/modules/access-wallet/hybrid/handlers/MEWconnect';
 
 import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
 

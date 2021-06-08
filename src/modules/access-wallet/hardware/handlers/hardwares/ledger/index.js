@@ -5,7 +5,7 @@ import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { WALLET_TYPES } from '../../configs/configWalletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
 import store from '@/core/store';

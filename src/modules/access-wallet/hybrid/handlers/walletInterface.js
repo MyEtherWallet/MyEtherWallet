@@ -1,4 +1,4 @@
-import WalletInterface from '@/modules/wallets/utils/WalletInterface.js';
+import WalletInterface from '@/modules/access-wallet/common/WalletInterface';
 
 class HybridWalletInterface extends WalletInterface {
   constructor(

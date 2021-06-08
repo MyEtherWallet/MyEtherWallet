@@ -1,6 +1,6 @@
 import { Transaction } from 'ethereumjs-tx';
 import { WALLET_TYPES } from '../../configs/configWalletTypes';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';

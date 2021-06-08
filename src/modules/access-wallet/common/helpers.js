@@ -1,5 +1,5 @@
 import Wallet from 'ethereumjs-wallet';
-import walletConfigs from '@/modules/wallets/utils/walletConfigs.js';
+import walletConfigs from './walletConfigs';
 
 import { bufferToInt } from 'ethereumjs-util';
 /* These needs to be changed further due to the new async library */
