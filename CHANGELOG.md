@@ -2,13 +2,7 @@
 
 ### Devop
 
-<<<<<<< HEAD
-
 * Remove tokens from to selection if it is selected on from and vice versa [#3107](https://github.com/MyEtherWallet/MyEtherWallet/pull/3107)
-  \=======
-
-> > > > > > > ff00eac21c3d454399dad04e78c1e443b24b769b
-
 * Add swap token switch [#3103](https://github.com/MyEtherWallet/MyEtherWallet/pull/3103)
 * Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
 * Fix swap current balance [#3118](https://github.com/MyEtherWallet/MyEtherWallet/pull/3118)

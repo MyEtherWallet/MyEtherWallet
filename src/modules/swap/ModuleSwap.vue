@@ -25,7 +25,8 @@
               <div class="position--relative">
                 <app-button-balance
                   :loading="isLoading"
-                  :balance="balanceInETH"
+                  :balance="displayBalance"
+                  :is-eth="isFromTokenEth"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -44,7 +45,8 @@
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
                 :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance
+                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                  amountErrorMessage === errorMsgs.amountEthIsTooLow
                     ? 'Buy more.'
                     : null
                 "
@@ -94,8 +96,8 @@
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-          <user-msg-block
-            v-if="notEnoughEth && !isLoading"
+          <app-user-msg-block
+            v-if="!hasMinEth"
             class="mt-5"
             :message="msg.storeBitcoin"
           >
@@ -116,7 +118,7 @@
                 @click.native="buyEth"
               />
             </div>
-          </user-msg-block>
+          </app-user-msg-block>
 
           <!--
             =====================================================================================
@@ -135,7 +137,7 @@
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-          <wallet-user-msg-block
+          <app-user-msg-block
             v-if="
               toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
@@ -201,7 +203,7 @@
                 </v-expansion-panel>
               </v-expansion-panels>
             </div>
-          </wallet-user-msg-block>
+          </app-user-msg-block>
 
           <!--
             =====================================================================================
@@ -214,7 +216,7 @@
             :set-provider="setProvider"
             :to-token-symbol="toTokenType.symbol"
             :to-token-icon="toTokenType.img"
-            :message="providersMessage"
+            :is-loading="isLoadingProviders"
           />
           <!--
             =====================================================================================
@@ -250,7 +252,7 @@
 <script>
 import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
-import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -277,6 +279,7 @@ const tokens = {
 };
 
 const errorMsgs = {
+  amountEthIsTooLow: 'You do not have enough ETH to swap',
   amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
   amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
   amountLessThan0: 'Swap amount must be greater than 0',
@@ -288,7 +291,7 @@ export default {
   components: {
     SwapBtn,
     AppButtonBalance,
-    WalletUserMsgBlock,
+    AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
@@ -360,10 +363,7 @@ export default {
         }
       ],
       swapIcon: SwapIcon,
-      providersMessage: {
-        title: 'Loading Tokens Data',
-        subtitle: ''
-      },
+      isLoadingProviders: false,
       addressValue: {},
       gasPriceModal: false,
       selectedProvider: {},
@@ -376,7 +376,31 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    ...mapGetters('wallet', [
+      'balanceInETH',
+      'tokensList',
+      'initialLoad',
+      'balanceInWei'
+    ]),
+    /**
+     * Switches displayed balance
+     * depending on selected currency balance
+     */
+    selectedBalance() {
+      if (
+        _.isEmpty(this.fromTokenType) ||
+        this.fromTokenType.symbol === this.network.type.currencyName
+      ) {
+        return this.balanceInETH;
+      }
+
+      const token = this.tokensList.find(item => {
+        return item.symbol === this.fromTokenType.symbol;
+      });
+      return token
+        ? this.getTokenBalance(token.balance, token.decimals).toFixed()
+        : this.balanceInETH;
+    },
     /**
      * checks whether both token fields are empty
      */
@@ -395,6 +419,14 @@ export default {
         this.fromTokenType.name &&
         this.fromTokenType.name.toLowerCase() === tokens.eth
       );
+    },
+    /**
+     * Returns correct balance to be dispalyed above From Selection field
+     */
+    displayBalance() {
+      return this.isFromTokenEth
+        ? this.balanceInWei.toString()
+        : this.availableBalance.toString();
     },
     /**
      * Returns the dropdown token data
@@ -556,7 +588,7 @@ export default {
     totalGasLimit() {
       if (this.currentTrade) {
         let totalGas = toBN(0);
-        this.currentTrade.transactions.forEach(tx => {
+        this.currentTrade.transactions?.forEach(tx => {
           totalGas = totalGas.add(toBN(tx.gas));
         });
         return totalGas.toString();
@@ -571,6 +603,14 @@ export default {
       if (this.toTokenType.isEth) return true;
       return this.addressValue.isValid;
     },
+    /**
+     * Checks whether or not teh user has a minimum eth balance to swap:
+     * @returns{boolean}
+     */
+    hasMinEth() {
+      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+    },
+
     /**
      * Checks whether the user has enough
      * balance for the transaction
@@ -655,33 +695,36 @@ export default {
      */
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading) {
+        /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenEth
-            ? this.errorMsgs.amountExceedsEthBalance
+            ? this.errorMsgs.amountEthIsTooLow
             : this.errorMsgs.doNotOwnToken;
         }
-        if (
-          !this.isFromTokenEth &&
-          this.availableBalance.lte(fromWei(MIN_GAS_WEI))
-        ) {
-          return this.errorMsgs.amountExceedsTxFee;
+        /*Eth Balance is to low to send a transaction*/
+        if (!this.hasMinEth) {
+          return this.errorMsgs.amountEthIsTooLow;
         }
         if (this.tokenInValue && this.tokenInValue !== '') {
+          /* Amount entered < 0 */
           if (new BigNumber(this.tokenInValue).lt(0)) {
             return this.errorMsgs.amountLessThan0;
           }
+          /* ETH only: Amount entered > (ETH Balance - Gas Price )*/
           if (
-            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
-            this.isFromTokenEth
+            this.isFromTokenEth &&
+            this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return this.errorMsgs.amountExceedsEthBalance;
           }
+          /*ERC20 Only: Amount entered > Balance  */
           if (
-            this.availableBalance.lt(new BigNumber(this.tokenInValue)) &&
-            !this.isFromTokenEth
+            !this.isFromTokenEth &&
+            this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
+          /* Changelly Errors: */
           if (this.selectedProvider.exchange === 'changelly') {
             if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
               return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
@@ -806,6 +849,7 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
       this.tokenOutValue = '0';
@@ -817,31 +861,15 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-      if (
-        !value ||
-        this.hasAmountErrors ||
-        this.fromTokenType.name === this.toTokenType.name
-      ) {
-        this.providersMessage = {
-          title: 'Select token and enter amount to see rates.',
-          subtitle:
-            'MEW finds the best price for you across multiple DEXs and Exchange services.'
-        };
-        return;
-      }
-      if (value || !this.hasAmountErrors || !_.isEmpty(this.toTokenType)) {
-        this.providersMessage = {
-          title: '',
-          subtitle: ''
-        };
-      }
 
       this.feeError = '';
       if (
         this.tokenInValue !== '' &&
+        this.tokenInValue > 0 &&
         this.toTokenType.symbol &&
         !_.isEmpty(this.toTokenType)
       ) {
+        this.isLoadingProviders = true;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -871,20 +899,20 @@ export default {
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
-            } else {
-              this.providersMessage = {
-                title:
-                  'There are no available Providers at this time, please try another pair.',
-                subtitle: ''
-              };
             }
+            this.isLoadingProviders = false;
           });
       }
     }, 500),
     setProvider(idx) {
+      this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
-          q.isSelected = event;
+          q.isSelected = true;
+          if (q?.rateId === 'belowMin') {
+            this.belowMinError = q.minAmount;
+            return;
+          }
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
           this.selectedProvider = q;
@@ -895,7 +923,7 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      if (this.allTrades[idx]) {
+      if (this.allTrades.length > 0 && this.allTrades[idx]) {
         this.currentTrade = this.allTrades[idx];
         this.currentTrade.gasPrice =
           this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
@@ -921,6 +949,11 @@ export default {
           )
         })
         .then(trade => {
+          if (trade instanceof Error) {
+            this.feeError = 'Provider issue';
+            return;
+          }
+
           this.currentTrade = trade;
           this.currentTrade.gasPrice =
             this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
