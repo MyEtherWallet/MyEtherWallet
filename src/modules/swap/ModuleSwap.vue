@@ -58,7 +58,7 @@
 
             <v-col cols="12" sm="2" class="mt-n5">
               <div class="d-flex align-center justify-center">
-                <swap-btn />
+                <swap-btn @click.native="switchTokens" />
               </div>
             </v-col>
 
@@ -369,6 +369,16 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
     /**
+     * checks whether both token fields are empty
+     */
+    enableTokenSwitch() {
+      const isNotEmpty =
+        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      return isNotEmpty;
+    },
+    /**
+     * Fetched tokens from all providers(?) + specific tokens
+     * Returns an @Array
      * Check if fromTokenType is Eth
      */
     isFromTokenEth() {
@@ -695,6 +705,12 @@ export default {
     },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+    },
+    switchTokens() {
+      const fromToken = _.clone(this.fromTokenType);
+      const toToken = _.clone(this.toTokenType);
+      this.setFromToken(toToken);
+      this.setToToken(fromToken);
     },
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
