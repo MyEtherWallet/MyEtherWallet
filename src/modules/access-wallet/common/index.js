@@ -14,7 +14,7 @@ import {
   MewConnectWallet,
   WalletConnectWallet,
   WalletLinkWallet
-} from './hybrid';
+} from '../hybrid/handlers';
 
 export {
   LedgerWallet,

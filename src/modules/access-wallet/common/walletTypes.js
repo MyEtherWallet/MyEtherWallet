@@ -18,4 +18,4 @@ const WALLET_TYPES = {
   COOL_WALLET: 'coolWallet',
   WALLET_LINK: 'walletLink'
 };
-export { WALLET_TYPES };
+export default WALLET_TYPES;

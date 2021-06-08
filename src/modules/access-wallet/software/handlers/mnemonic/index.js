@@ -1,13 +1,13 @@
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import {
   getSignTransactionObject,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';

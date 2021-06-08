@@ -1,7 +1,7 @@
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';

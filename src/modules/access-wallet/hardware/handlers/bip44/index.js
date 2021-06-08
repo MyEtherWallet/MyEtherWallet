@@ -1,4 +1,4 @@
-import { WALLET_TYPES } from '../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ledgerPaths from './ledgerPaths';
 import trezorPaths from './trezorPaths';
 import bitboxPaths from './bitboxPaths';

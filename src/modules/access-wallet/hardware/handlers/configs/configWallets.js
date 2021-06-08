@@ -1,21 +1,22 @@
-import bcvaultWallet from '@/modules/access-wallet/hardware/handlers/hardwares/bcvault';
-import bitboxWallet from '@/modules/access-wallet/hardware/handlers/hardwares/bitbox';
-import bitbox02Wallet from '@/modules/access-wallet/hardware/handlers/hardwares/bitbox02';
-import coolwalletWallet from '@/modules/access-wallet/hardware/handlers/hardwares/coolwallet';
-import keepkeyWallet from '@/modules/access-wallet/hardware/handlers/hardwares/keepkey';
-import ledgerWallet from '@/modules/access-wallet/hardware/handlers/hardwares/ledger';
-import secalotWallet from '@/modules/access-wallet/hardware/handlers/hardwares/secalot';
-import trezorWallet from '@/modules/access-wallet/hardware/handlers/hardwares/trezor';
-import mewconnectWallet from '@/modules/access-wallet/hybrid/handlers/MEWconnect';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  BitBoxWallet,
+  BitBox02Wallet,
+  SecalotWallet,
+  KeepkeyWallet,
+  BCVaultWallet,
+  CoolWallet
+} from '@/modules/access-wallet/common';
 
 /**
  * different types of available hardware wallets
  */
 export default {
   [WALLET_TYPES.LEDGER]: {
-    create: ledgerWallet,
+    create: LedgerWallet,
     when: 1,
     hasPaths: true,
     requiresPassword: false,
@@ -27,7 +28,7 @@ export default {
     }
   },
   [WALLET_TYPES.TREZOR]: {
-    create: trezorWallet,
+    create: TrezorWallet,
     when: 1,
     hasPaths: true,
     requiresPassword: false,
@@ -39,7 +40,7 @@ export default {
     }
   },
   [WALLET_TYPES.BITBOX]: {
-    create: bitboxWallet,
+    create: BitBoxWallet,
     when: 4,
     hasPaths: true,
     requiresPassword: true,
@@ -53,7 +54,7 @@ export default {
     }
   },
   [WALLET_TYPES.BITBOX2]: {
-    create: bitbox02Wallet,
+    create: BitBox02Wallet,
     when: 3,
     hasPaths: true,
     requiresPassword: false,
@@ -61,13 +62,12 @@ export default {
     accountOnly: false,
     titles: {
       1: 'Select BitBox Wallet',
-      // 2: 'Match your encryption pairing code',
       2: 'Connect with BitBox',
       3: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.SECALOT]: {
-    create: secalotWallet,
+    create: SecalotWallet,
     when: 2,
     hasPaths: true,
     requiresPassword: true,
@@ -80,7 +80,7 @@ export default {
     }
   },
   [WALLET_TYPES.KEEPKEY]: {
-    create: keepkeyWallet,
+    create: KeepkeyWallet,
     when: 2,
     hasPaths: true,
     requiresPassword: false,
@@ -92,29 +92,8 @@ export default {
       3: 'Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.FINNEY]: {
-    create: mewconnectWallet,
-    when: 1,
-    hasPaths: false,
-    requiresPassword: false,
-    needsQr: true,
-    titles: {
-      1: 'Connect with Finney'
-    }
-  },
-  [WALLET_TYPES.XWALLET]: {
-    create: mewconnectWallet,
-    when: 1,
-    hasPaths: false,
-    requiresPassword: false,
-    needsQr: true,
-    accountOnly: false,
-    titles: {
-      1: 'Connect with XWallet'
-    }
-  },
   [WALLET_TYPES.BCVAULT]: {
-    create: bcvaultWallet,
+    create: BCVaultWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: false,
@@ -125,7 +104,7 @@ export default {
     }
   },
   [WALLET_TYPES.COOL_WALLET]: {
-    create: coolwalletWallet,
+    create: CoolWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: true,

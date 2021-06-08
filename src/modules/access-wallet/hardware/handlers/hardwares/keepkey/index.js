@@ -4,7 +4,7 @@ import {
   KeepKey,
   bip32ToAddressNList
 } from '@keepkey/keepkey.js';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import { getUint8Tx } from './utils';
@@ -13,7 +13,7 @@ import {
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import HDKey from 'hdkey';
 import toBuffer from '@/core/helpers/toBuffer';
 import { Transaction } from 'ethereumjs-tx';

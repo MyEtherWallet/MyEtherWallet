@@ -1,7 +1,7 @@
-import { WALLET_TYPES } from '../../../hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import WalletInterface from '@/modules/access-wallet/common/WalletInterface';
 import Web3 from 'web3';
-import { getBufferFromHex } from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+import { getBufferFromHex } from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
 
 class Web3Wallet extends WalletInterface {

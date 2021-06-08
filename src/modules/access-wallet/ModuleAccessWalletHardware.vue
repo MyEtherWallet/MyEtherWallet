@@ -82,16 +82,6 @@
               />
               <!--
             =====================================================================================
-             Qr Step (Finney , XWallet)
-            =====================================================================================
-            -->
-              <access-wallet-qr-code
-                v-else-if="onQrCode"
-                :on-xwallet="onXwallet"
-                :qr-code="qrCode"
-              />
-              <!--
-            =====================================================================================
              Bitbox
             =====================================================================================
             -->
@@ -223,7 +213,6 @@ Paths Step (Ledger, Trezor)
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
-import AccessWalletQrCode from './hardware/components/AccessWalletQrCode';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 import AccessWalletPassword from './hardware/components/AccessWalletPassword';
@@ -234,14 +223,13 @@ import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const MAX_ADDRESSES = 5;
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletBcVault,
-    AccessWalletQrCode,
     AccessWalletBitbox,
     AccessWalletNetworkAddresses,
     AccessWalletPassword,
@@ -292,11 +280,6 @@ export default {
           type: WALLET_TYPES.BITBOX
         },
         {
-          label: 'FINNEY',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          type: WALLET_TYPES.FINNEY
-        },
-        {
           label: 'Secalot',
           icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
           type: WALLET_TYPES.SECALOT
@@ -320,11 +303,6 @@ export default {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
           type: WALLET_TYPES.BCVAULT
-        },
-        {
-          label: 'XWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          type: WALLET_TYPES.XWALLET
         }
       ],
       panelItems: [

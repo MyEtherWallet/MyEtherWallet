@@ -1,5 +1,5 @@
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
@@ -15,7 +15,7 @@ import {
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;

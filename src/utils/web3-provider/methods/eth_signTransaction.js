@@ -1,5 +1,5 @@
 import EthCalls from '../web3Calls';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { toPayload } from '../jsonrpc';
 import EventNames from '../events';
 import { getSanitizedTx } from './utils';
