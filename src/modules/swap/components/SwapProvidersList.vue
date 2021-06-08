@@ -7,9 +7,7 @@
       Providers Message
     =====================================================================================
     -->
-    <user-msg-block v-if="step == 0 && message != ''" :message="message">
-    </user-msg-block>
-
+    <app-user-msg-block v-if="step == 0 && message != ''" :message="message" />
     <!--
     =====================================================================================
       Sceleton Loader
@@ -177,12 +175,12 @@
   </div>
 </template>
 <script>
-import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
   components: {
-    UserMsgBlock
+    AppUserMsgBlock
   },
   props: {
     step: {

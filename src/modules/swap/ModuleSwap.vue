@@ -127,7 +127,7 @@
             User Message Block: store your Bitcoin on Ethereum
           =====================================================================================
           -->
-          <wallet-user-msg-block
+          <app-user-msg-block
             v-if="
               toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
@@ -193,7 +193,7 @@
                 </v-expansion-panel>
               </v-expansion-panels>
             </div>
-          </wallet-user-msg-block>
+          </app-user-msg-block>
 
           <!--
             =====================================================================================
@@ -242,7 +242,7 @@
 <script>
 import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
-import WalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
@@ -279,7 +279,7 @@ export default {
   components: {
     SwapBtn,
     AppButtonBalance,
-    WalletUserMsgBlock,
+    AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
