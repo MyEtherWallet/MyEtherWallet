@@ -1049,6 +1049,7 @@ export default {
       this.gasPriceModal = false;
     },
     closeGasPrice() {
+      console.log('close gasPrice');
       this.gasPriceModal = false;
     },
     setWrappedBtc(symbol) {
