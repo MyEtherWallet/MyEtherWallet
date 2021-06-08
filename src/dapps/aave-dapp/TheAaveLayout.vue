@@ -315,7 +315,7 @@ import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
-import AaveCalls from './apollo/queries/queries';
+// import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
@@ -387,7 +387,9 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
       if (!this.handler) true;
-      return this.handler.isLoading;
+      console.error('this', this.handler);
+      // return this.handler.isLoading;
+      return false;
     },
     loanValue() {
       if (!this.handler) return `0%`;
@@ -565,7 +567,7 @@ export default {
   watch: {
     isEthNetwork(newVal) {
       if (newVal) {
-        this.setCallerAndHandler();
+        this.handler = new handlerAave();
       } else {
         this.handler = null;
         this.caller = null;
@@ -573,7 +575,7 @@ export default {
     }
   },
   mounted() {
-    this.setCallerAndHandler();
+    this.handler = new handlerAave();
   },
   methods: {
     callDeposit(e) {
@@ -709,19 +711,6 @@ export default {
     closeAprTypeOverlay() {
       this.requestToken = {};
       this.showAprTypeOverlay = false;
-    },
-    setCallerAndHandler() {
-      this.handler = new handlerAave();
-      this.caller = new AaveCalls(this.$apollo);
-      this.caller.getUserData(res => {
-        this.handler._userDataHandler(res);
-      });
-      this.caller.getUsdPriceEth(res => {
-        this.handler._usdPriceHandler(res);
-      });
-      this.caller.getReserveData(res => {
-        this.handler._reserveDataHandler(res);
-      });
     }
   }
 };

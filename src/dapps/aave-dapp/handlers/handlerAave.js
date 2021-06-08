@@ -224,6 +224,7 @@ export default class AaveHandler {
   getReserveBalances() {
     const tokensList = this.tokensList();
     const ethBalance = this.balanceInETH();
+    console.error('in here');
     if (this.reservesData.length > 0) {
       this.reservesData.forEach(reserve => {
         reserve.tokenBalance = 0;

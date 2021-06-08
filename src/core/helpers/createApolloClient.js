@@ -14,12 +14,10 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
     uri: httpsEndpoint
   });
 
-  const subscriptionClient = new SubscriptionClient(
-    wsEndpoint,
-    { lazy: true, reconnect: true },
-    null,
-    []
-  );
+  const subscriptionClient = new SubscriptionClient(wsEndpoint, {
+    lazy: true,
+    reconnect: true
+  });
 
   const websocket = new WebSocketLink(subscriptionClient);
 
