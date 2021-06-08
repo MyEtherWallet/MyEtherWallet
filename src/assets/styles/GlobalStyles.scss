@@ -255,6 +255,14 @@ h6 {
     transform: rotate(90deg);
   }
 }
+.btn-circle {
+  cursor: pointer;
+  transition: filter 0.2s linear;
+  height: 30px;
+  &:hover {
+    filter: brightness(90%);
+  }
+}
 
 .custom-scroll-bar {
   &::-webkit-scrollbar {

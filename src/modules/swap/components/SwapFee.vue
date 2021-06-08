@@ -5,10 +5,10 @@
         <p class="mew-heading-3">Network Fee</p>
       </v-col>
       <v-col cols="7">
-        <div class="d-flex justify-space-around align-center">
-          <div class="d-flex justify-space-around align-center">
+        <div class="d-flex align-center">
+          <div class="d-flex align-center">
             <mew-icon :icon-name="icon" :img-height="30" />
-            <span class="capitalize">{{ gasPriceType }}</span>
+            <span class="capitalize ml-2">{{ gasPriceType }}</span>
           </div>
           <span v-show="!gettingFee && showFee"
             >{{ actualFees }} {{ network.type.currencyName }}
@@ -16,15 +16,19 @@
           <span :class="[hasError ? 'error--text' : '']">{{ feesInUsd }}</span>
           <v-skeleton-loader
             v-show="gettingFee || !showFee"
+            class="mx-2 mb-n1"
             type="text"
-            width="250px"
+            width="150px"
           />
-          <div class="icon-holder primary" @click="openGasPriceModal">
-            <v-icon size="small" color="white">mdi-pencil</v-icon>
-          </div>
+          <img
+            class="btn-circle"
+            src="@/assets/images/icons/icon-edit-btn.svg"
+            alt="edit"
+            @click="openGasPriceModal"
+          />
         </div>
         <p
-          v-if="!gettingFee || hasError"
+          v-if="(!gettingFee || hasError) && message"
           :class="[hasError ? 'error--text' : '']"
         >
           {{ message }}
