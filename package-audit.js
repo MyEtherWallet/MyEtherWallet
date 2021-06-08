@@ -1,6 +1,6 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = ['underscore'];
+const AUDIT_EXCEPTIONS = ['css-what', 'underscore'];
 const execute = (command, callback) => {
   exec(
     command,
