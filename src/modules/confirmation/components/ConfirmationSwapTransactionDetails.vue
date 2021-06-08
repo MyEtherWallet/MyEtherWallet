@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <p>
-          <b>Please doublecheck everything.</b> MEW team will not be able to
+          <b>Please double-check everything.</b> MEW team will not be able to
           reverse your transaction once its submitted. You will still be charged
           gas fees even if the transaction fails. <a>Learn more.</a>
         </p>
