@@ -14,13 +14,19 @@ import {
 /**
  * different types of available hardware wallets
  */
+const LAYOUT_STEPS = {
+  ENTER_PASSWORD: 'enter_password',
+  PATH_SELECT: 'path_select',
+  NETWORK_ACCOUNT_SELECT: 'network_account_select'
+};
+export { LAYOUT_STEPS };
 export default {
   [WALLET_TYPES.LEDGER]: {
     create: LedgerWallet,
-    when: 1,
+    when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with Ledger',
@@ -30,9 +36,9 @@ export default {
   [WALLET_TYPES.TREZOR]: {
     create: TrezorWallet,
     when: 1,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with Trezor',
@@ -42,9 +48,13 @@ export default {
   [WALLET_TYPES.BITBOX]: {
     create: BitBoxWallet,
     when: 4,
+    steps: [
+      LAYOUT_STEPS.ENTER_PASSWORD,
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: true,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Select BitBox Wallet',
@@ -56,9 +66,9 @@ export default {
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
     when: 3,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Select BitBox Wallet',
@@ -69,9 +79,13 @@ export default {
   [WALLET_TYPES.SECALOT]: {
     create: SecalotWallet,
     when: 2,
+    steps: [
+      LAYOUT_STEPS.ENTER_PASSWORD,
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: true,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Enter your password',
@@ -82,9 +96,9 @@ export default {
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,
     when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with KeepKey',
@@ -95,9 +109,9 @@ export default {
   [WALLET_TYPES.BCVAULT]: {
     create: BCVaultWallet,
     when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: true,
     titles: {
       1: 'Connect with BC Vault'
@@ -106,9 +120,13 @@ export default {
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
     when: 2,
+    steps: [
+      LAYOUT_STEPS.ENTER_PASSWORD,
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: false,
     requiresPassword: true,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with CoolWallet',

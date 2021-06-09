@@ -55,7 +55,7 @@
                   right-icon-type="img"
                   :right-icon="button.icon"
                   :right-icon-height="45"
-                  @click.native="nextStep(button.type)"
+                  @click.native="setWalletInstance(button.type)"
                 />
               </v-col>
             </v-row>
@@ -220,7 +220,9 @@ import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 import AccessWalletPin from './hardware/components/AccessWalletPin';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
-import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
+import wallets, {
+  LAYOUT_STEPS
+} from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -275,14 +277,9 @@ export default {
           type: WALLET_TYPES.LEDGER
         },
         {
-          label: 'Bitbox',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.BITBOX
-        },
-        {
-          label: 'Secalot',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          type: WALLET_TYPES.SECALOT
+          label: 'Trezor',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
+          type: WALLET_TYPES.TREZOR
         },
         {
           label: 'KeepKey',
@@ -290,9 +287,9 @@ export default {
           type: WALLET_TYPES.KEEPKEY
         },
         {
-          label: 'Trezor',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          type: WALLET_TYPES.TREZOR
+          label: 'Bitbox',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
+          type: WALLET_TYPES.BITBOX
         },
         {
           label: 'CoolWallet',
@@ -303,6 +300,11 @@ export default {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
           type: WALLET_TYPES.BCVAULT
+        },
+        {
+          label: 'Secalot',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
+          type: WALLET_TYPES.SECALOT
         }
       ],
       panelItems: [
@@ -322,6 +324,7 @@ export default {
       wallets: wallets,
       // resettable
       step: 0,
+      currentStep: '',
       steps: {},
       hwWalletInstance: {},
       selectedPath: {},
@@ -382,11 +385,7 @@ export default {
       ];
     },
     onNetworkAddresses() {
-      return (
-        Object.keys(this.hwWalletInstance).length > 0 &&
-        this.step >= 1 &&
-        this.step > this.wallets[this.walletType].when
-      );
+      return this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
     },
     /**
      * Returns the correct network icon
@@ -428,23 +427,6 @@ export default {
       return this.walletType === WALLET_TYPES.COOL_WALLET;
     },
     /**
-     * on QrCode
-     */
-    onQrCode() {
-      return (
-        this.walletType !== '' &&
-        this.wallets[this.walletType] &&
-        this.wallets[this.walletType].needsQr &&
-        this.step === this.wallets[this.walletType].when
-      );
-    },
-    /**
-     * On XWallet
-     */
-    onXwallet() {
-      return this.walletType === WALLET_TYPES.XWALLET;
-    },
-    /**
      * On Password step
      */
     onPassword() {
@@ -459,14 +441,7 @@ export default {
      * On Paths step
      */
     onPaths() {
-      if (this.enterPin) return false;
-      return (
-        (this.step >= 1 && this.step <= 3) ||
-        (this.walletType !== '' &&
-          this.wallets[this.walletType] &&
-          this.wallets[this.walletType].hasPaths &&
-          this.step < this.wallets[this.walletType].when)
-      );
+      return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
     },
     paths() {
       const newArr = [];
@@ -576,7 +551,22 @@ export default {
       this.reset();
       this.close('showHardware');
     },
-    nextStep(str) {
+    setWalletInstance(str) {
+      this.walletType = str;
+      this.step = 0;
+      this.incrementStep();
+    },
+    incrementStep() {
+      this.currentStep = this.wallets[this.walletType].steps[this.step];
+      this.step++;
+    },
+    nextStep() {
+      if (this.walletType) {
+        this[`${this.walletType}Unlock`]();
+        this.incrementStep();
+      }
+    },
+    nextStep2(str) {
       try {
         const actualString =
           typeof str === 'string' && str !== '' ? str : this.walletType;
@@ -610,7 +600,6 @@ export default {
      * Unlock the hardware wallets
      */
     ledgerUnlock() {
-      this.selectedLedgerApp = this.ledgerApps[0];
       this.unlockPathOnly();
     },
     trezorUnlock() {
@@ -625,12 +614,6 @@ export default {
     secalotUnlock() {
       this.unlockPathAndPassword(this.hasPath, this.password);
     },
-    finneyUnlock(wallet) {
-      this.unlockQrcode(wallet);
-    },
-    xwalletUnlock(wallet) {
-      this.unlockQrcode(wallet);
-    },
     bcVaultUnlock(address) {
       const actualAddress = address ? address : this.selectedAddress;
       const _wallet = this.walletInstance.getAccount(actualAddress);
@@ -642,7 +625,7 @@ export default {
         this.callback = callback;
       });
 
-      this.unlockPathOnly(() => {
+      this.unlockPathOnly().then(() => {
         this.step += 1;
       });
     },
@@ -650,24 +633,18 @@ export default {
       this.unlockPathAndPassword(null, this.password);
     },
     /**
-     * Unlocks the qr code step
-     */
-    unlockQrcode(wallet) {
-      this.setHardwareWallet(wallet);
-    },
-    /**
      * Unlock only the path step
      */
-    unlockPathOnly(cb = () => {}) {
-      this.wallets[this.walletType]
+    unlockPathOnly() {
+      return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
-          cb();
           this.hwWalletInstance = _hwWallet;
+          return _hwWallet;
         })
         .catch(err => {
+          this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
-          Toast(err.message, {}, ERROR);
         });
     },
     /**
@@ -680,8 +657,8 @@ export default {
           this.hwWalletInstance = _hwWallet;
         })
         .catch(err => {
+          this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
-          Toast(err.message, {}, ERROR);
         });
     },
     /**
@@ -809,7 +786,8 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        this.hwWalletInstance.errorHandler(e);
+        this.wallets[this.walletType].create.errorHandler(e);
+        this.reset();
       }
     },
     nextAddressSet() {

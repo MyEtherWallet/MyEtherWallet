@@ -36,7 +36,6 @@ class ledgerWallet {
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.transport = await getLedgerTransport();
     this.ledger = new Ledger(this.transport);
-    this.appConfig = await getLedgerAppConfig(this.ledger);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -156,10 +155,7 @@ const getLedgerTransport = async () => {
   }
   return transport;
 };
-const getLedgerAppConfig = async _ledger => {
-  const appConfig = await _ledger.getAppConfiguration();
-  return appConfig;
-};
+
 const getRootPubKey = async (_ledger, _path) => {
   const pubObj = await _ledger.getAddress(_path, false, true);
   return {
