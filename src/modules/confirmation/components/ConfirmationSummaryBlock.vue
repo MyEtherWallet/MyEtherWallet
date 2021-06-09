@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length > 0">
+  <div v-if="items.length > 0" class="my-5">
     <v-row
       v-for="(item, index) in items"
       :key="index"

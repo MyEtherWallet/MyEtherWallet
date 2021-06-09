@@ -11,7 +11,7 @@
         Summary
       =====================================================================================
     -->
-    <confirmation-summary-block :items="summaryItems" class="mt-9">
+    <confirmation-summary-block :items="summaryItems" class="mt-5">
       <template #rightColItem0>
         <div class="mew-body">
           1 <span class="searchText--text">{{ fromType }}</span> =

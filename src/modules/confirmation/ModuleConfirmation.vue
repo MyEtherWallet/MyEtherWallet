@@ -9,6 +9,7 @@
       :close-only="true"
       :width="'450'"
       @close="reset"
+      class="pa-8"
     >
       <template #dialogBody>
         <div class="px-5">
@@ -104,7 +105,7 @@
               warning
               textSecondary--text
               border-radius--5px
-              mb-4
+              mb-5
             "
           >
             <b>Make sure all the information is correct.</b> Canceling or
