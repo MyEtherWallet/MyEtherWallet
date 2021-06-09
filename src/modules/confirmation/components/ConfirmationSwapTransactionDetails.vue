@@ -25,26 +25,39 @@
         Summary
       =====================================================================================
     -->
-    <v-row class="my-4">
-      <v-col cols="6" class="text-left">
-        Exchange rate <br />
-        Transaction fee
-      </v-col>
-      <v-col cols="6" class="text-right">
-        1 {{ fromType }} = {{ toFixed(provider.rate) }} {{ toType }} <br />
-        <span class="capitalize">{{ gasPriceType }}</span>
-        {{ convertedFees }} {{ txFeeUSD }}
-      </v-col>
-    </v-row>
+    <confirmation-summary-block :items="summaryItems" class="mt-9">
+      <template #rightColItem0>
+        <div class="mew-body">
+          1 <span class="searchText--text">{{ fromType }}</span> =
+          {{ toFixed(provider.rate) }}
+          <span class="searchText--text">{{ toType }}</span>
+        </div>
+      </template>
+      <template #rightColItem1>
+        <div class="mew-body">
+          {{ convertedFees.value }}
+          <span class="searchText--text">{{ convertedFees.unit }}</span>
+          ~{{ txFeeUSD }}
+        </div>
+      </template>
+    </confirmation-summary-block>
   </div>
 </template>
 
 <script>
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue,
+  formatGasValue
+} from '@/core/helpers/numberFormatHelper';
+import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 export default {
+  components: {
+    ConfirmationSummaryBlock
+  },
   props: {
     provider: {
       type: Object,
@@ -112,14 +125,24 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['fiatValue']),
+    ...mapGetters('external', ['fiatValue']),
     convertedFees() {
-      return fromWei(this.txFee);
+      return formatGasValue(this.txFee);
     },
     txFeeUSD() {
-      return `$ ${BigNumber(this.convertedFees)
-        .times(formatFiatValue(this.fiatValue).value)
-        .toFixed(2)}`;
+      const feeETH = BigNumber(fromWei(this.txFee));
+      console.log(this.fiatValue);
+      console.log(formatFiatValue(feeETH.times(this.fiatValue)).value);
+      return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
+    },
+    summaryItems() {
+      return ['Exchange rate', 'Transaction fee'];
+    },
+    formattedToVal() {
+      return formatFloatingPointValue(this.toVal).val;
+    },
+    formattedFromVal() {
+      return formatFloatingPointValue(this.fromVal).val;
     }
   },
   methods: {
