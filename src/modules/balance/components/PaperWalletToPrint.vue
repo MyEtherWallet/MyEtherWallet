@@ -64,7 +64,7 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <VueQrcode :value="key" :options="{ size: 140 }"></VueQrcode>
+          <qr-code :value="key" :options="{ size: 140 }"></qr-code>
         </v-col>
       </v-row>
 
@@ -92,7 +92,7 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <VueQrcode :value="key" :options="{ size: 140 }" />
+          <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>
     </v-container>
@@ -102,16 +102,12 @@
 </template>
 
 <script>
-import VueQrcode from '@xkeshi/vue-qrcode';
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
-  components: {
-    VueQrcode
-  },
   data() {
     return {
       blockieSize: '70px',
