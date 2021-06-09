@@ -22,7 +22,6 @@ import { mapState } from 'vuex';
 import ledger from '@/assets/images/hardware-wallets/logo-ledger.svg';
 import trezor from '@/assets/images/hardware-wallets/logo-trezor.svg';
 import keepkey from '@/assets/images/hardware-wallets/logo-keepkey.png';
-import secalot from '@/assets/images/hardware-wallets/logo-secalot.png';
 
 export default {
   props: {
@@ -39,7 +38,6 @@ export default {
         trezor: 'Trezor',
         bitbox: 'BitBox',
         bitbox02: 'BitBox 02',
-        secalot: 'Secalot',
         keepkey: 'KeepKey',
         mewconnect: 'MewConnect',
         walletConnect: 'Wallet Connect',
@@ -58,7 +56,6 @@ export default {
       return {
         ledger: ledger,
         trezor: trezor,
-        secalot: secalot,
         keepkey: keepkey
       };
     },

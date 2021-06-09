@@ -5,7 +5,6 @@ import {
   TrezorWallet,
   BitBoxWallet,
   BitBox02Wallet,
-  SecalotWallet,
   KeepkeyWallet,
   BCVaultWallet,
   CoolWallet
@@ -17,7 +16,8 @@ import {
 const LAYOUT_STEPS = {
   ENTER_PASSWORD: 'enter_password',
   PATH_SELECT: 'path_select',
-  NETWORK_ACCOUNT_SELECT: 'network_account_select'
+  NETWORK_ACCOUNT_SELECT: 'network_account_select',
+  BITBOX_SELECT: 'bitbox_select'
 };
 export { LAYOUT_STEPS };
 export default {
@@ -35,7 +35,7 @@ export default {
   },
   [WALLET_TYPES.TREZOR]: {
     create: TrezorWallet,
-    when: 1,
+    when: 2,
     steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
@@ -49,6 +49,7 @@ export default {
     create: BitBoxWallet,
     when: 4,
     steps: [
+      LAYOUT_STEPS.BITBOX_SELECT,
       LAYOUT_STEPS.ENTER_PASSWORD,
       LAYOUT_STEPS.PATH_SELECT,
       LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
@@ -66,30 +67,17 @@ export default {
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
     when: 3,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    steps: [
+      LAYOUT_STEPS.BITBOX_SELECT,
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,
     titles: {
       1: 'Select BitBox Wallet',
       2: 'Connect with BitBox',
-      3: 'Confirm Network & Address'
-    }
-  },
-  [WALLET_TYPES.SECALOT]: {
-    create: SecalotWallet,
-    when: 2,
-    steps: [
-      LAYOUT_STEPS.ENTER_PASSWORD,
-      LAYOUT_STEPS.PATH_SELECT,
-      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
-    ],
-    hasPaths: true,
-    requiresPassword: true,
-    accountOnly: false,
-    titles: {
-      1: 'Enter your password',
-      2: 'Connect with Secalot',
       3: 'Confirm Network & Address'
     }
   },

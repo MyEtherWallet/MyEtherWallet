@@ -3,7 +3,6 @@ import {
   TrezorWallet,
   BitBoxWallet,
   BitBox02Wallet,
-  SecalotWallet,
   KeepkeyWallet,
   BCVaultWallet,
   CoolWallet
@@ -21,7 +20,6 @@ export {
   TrezorWallet,
   BitBoxWallet,
   BitBox02Wallet,
-  SecalotWallet,
   KeepkeyWallet,
   CoolWallet,
   MewConnectWallet,

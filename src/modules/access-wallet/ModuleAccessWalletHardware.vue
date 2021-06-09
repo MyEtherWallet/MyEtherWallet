@@ -91,7 +91,7 @@
               />
               <!--
             =====================================================================================
-            Password Step (Coolwallet, Secalot)
+            Password Step (Coolwallet)
             =====================================================================================
             -->
               <access-wallet-password
@@ -176,7 +176,7 @@ Paths Step (Ledger, Trezor)
               <div>
                 <!--
                 =====================================================================================
-                Password Step (Coolwallet, Secalot)
+                Password Step (Coolwallet)
                 =====================================================================================
                 -->
                 <access-wallet-password
@@ -300,11 +300,6 @@ export default {
           label: 'BC Vault',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
           type: WALLET_TYPES.BCVAULT
-        },
-        {
-          label: 'Secalot',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          type: WALLET_TYPES.SECALOT
         }
       ],
       panelItems: [
@@ -404,9 +399,7 @@ export default {
      * On Bitbox
      */
     onBitbox() {
-      return (
-        this.walletType && this.walletType.includes('bitbox') && this.step === 1
-      );
+      return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
     },
     /**
      * On Bc Vault
@@ -496,18 +489,6 @@ export default {
     }
   },
   mounted() {
-    // watcher was falling into an infinite loop with keepkey
-    this.unwatch = this.$watch('hwWalletInstance', function (newVal) {
-      if (Object.keys(newVal).length > 0) {
-        try {
-          this.setAddresses();
-        } catch (e) {
-          newVal.errorHandler(e);
-        }
-        this.unwatch();
-      }
-    });
-
     if (this.switchAddress) {
       this.nextStep(this.identifier);
       this.walletType = this.identifier;
@@ -544,7 +525,7 @@ export default {
       !this.step
         ? (this.close('showHardware'), delete this.steps[this.step + 1])
         : (this.step -= 1);
-
+      this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 0 ? this.reset() : '';
     },
     overlayClose() {
@@ -557,13 +538,17 @@ export default {
       this.incrementStep();
     },
     incrementStep() {
+      console.log(this.wallets, this.walletType);
       this.currentStep = this.wallets[this.walletType].steps[this.step];
       this.step++;
     },
     nextStep() {
       if (this.walletType) {
-        this[`${this.walletType}Unlock`]();
         this.incrementStep();
+        console.log(this.step);
+        if (this.step === this.wallets[this.walletType].when) {
+          this[`${this.walletType}Unlock`]();
+        }
       }
     },
     nextStep2(str) {
@@ -611,9 +596,6 @@ export default {
     bitbox02Unlock() {
       this.unlockPathOnly();
     },
-    secalotUnlock() {
-      this.unlockPathAndPassword(this.hasPath, this.password);
-    },
     bcVaultUnlock(address) {
       const actualAddress = address ? address : this.selectedAddress;
       const _wallet = this.walletInstance.getAccount(actualAddress);
@@ -636,13 +618,29 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
+      console.log('here 1');
       return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
-          this.hwWalletInstance = _hwWallet;
+          console.log(_hwWallet.status);
+          if (this.walletType === WALLET_TYPES.BITBOX2) {
+            setTimeout(() => {
+              if (_hwWallet.status === 'unpaired') {
+                _hwWallet.pairingConfirmationResolve();
+              }
+            }, 5000);
+            _hwWallet.init(this.hasPath).then(() => {
+              this.hwWalletInstance = _hwWallet;
+              this.setAddresses();
+            });
+          } else {
+            this.hwWalletInstance = _hwWallet;
+            this.setAddresses();
+          }
           return _hwWallet;
         })
         .catch(err => {
+          console.log(err);
           this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
         });
@@ -766,6 +764,7 @@ export default {
      * Network Address step
      */
     async setAddresses() {
+      console.log('here');
       try {
         this.accounts = [];
         for (
@@ -774,6 +773,7 @@ export default {
           i++
         ) {
           const account = await this.hwWalletInstance.getAccount(i);
+          console.log(account);
           this.accounts.push({
             address: account.getAddressString(),
             account: account,

@@ -135,7 +135,6 @@ class BitBox02Wallet {
 const createWallet = async () => {
   const _bb02Wallet = new BitBox02Wallet();
   await _bb02Wallet.connect();
-  _bb02Wallet.errorHandler = errorHandler;
   return _bb02Wallet;
 };
 createWallet.errorHandler = errorHandler;

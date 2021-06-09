@@ -3,7 +3,6 @@ const WALLET_TYPES = {
   TREZOR: 'trezor',
   BITBOX: 'bitbox',
   BITBOX2: 'bitbox02',
-  SECALOT: 'secalot',
   KEEPKEY: 'keepkey',
   MEW_CONNECT: 'mewconnect',
   WALLET_CONNECT: 'walletConnect',
