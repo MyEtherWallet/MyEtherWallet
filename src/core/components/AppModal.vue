@@ -29,7 +29,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2" justify="space-around">
+      <v-row v-if="hasButtons" class="mt-2" justify="space-around">
         <v-col v-if="!closeOnly" cols="5" class="text-right">
           <mew-button
             btn-style="outline"
@@ -93,6 +93,10 @@ export default {
     width: {
       type: String,
       default: '600'
+    },
+    hasButtons: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

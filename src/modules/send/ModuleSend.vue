@@ -7,6 +7,40 @@
   >
     <template #moduleBody>
       <div class="full-width px-lg-3 pb-6">
+        <app-modal
+          :has-buttons="false"
+          :show="showBarcodeModal"
+          :close="handleBarcodeClose"
+          title="My public address to receive funds"
+        >
+          <template #dialogBody>
+            <v-row>
+              <v-col cols="12">
+                <v-row dense class="pa-1">
+                  <v-col cols="5"></v-col>
+                  <v-col cols="7">
+                    <div class="d-flex">
+                      <mew-blockie
+                        :address="address"
+                        width="30px"
+                        height="30px"
+                      />
+                      <p class="ma-0 mew-heading-3">My main account</p>
+                    </div>
+                    <p class="ma-0 address-overflow caption">{{ address }}</p>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="12">
+                <p class="caption modal-caption">
+                  To receive {{ currencyName }} from another account, send
+                  {{ currencyName }}
+                  from that account to this address.
+                </p>
+              </v-col>
+            </v-row>
+          </template>
+        </app-modal>
         <v-row>
           <v-col cols="12" md="6">
             <p class="ma-0" />
@@ -35,6 +69,41 @@
               }"
               @input="setAmount"
             />
+          </v-col>
+        </v-row>
+        <v-row v-if="true" class="mb-5 pa-2 selectHeaderBg border-radius--5px">
+          <v-col cols="12">
+            <v-row align-content="center" justify="space-around">
+              <v-col cols="12">
+                <p class="mew-heading-3 ma-0">
+                  <v-icon> mdi-information-outline </v-icon>
+                  Your {{ currencyName }} balance is too low
+                </p>
+              </v-col>
+              <v-col cols="6">
+                <p class="mew-body">
+                  Every transaction requires a small amount of
+                  {{ currencyName }} to execute. Even if you have tokens to
+                  swap, when your {{ currencyName }} balance is close to zero,
+                  you won't be able to send anything until you fund your
+                  account.
+                </p>
+              </v-col>
+              <v-col cols="6" class="d-flex flex-column">
+                <div class="mew-body link-color" @click="openBarcodeModal">
+                  Transfer {{ currencyName }} from another account
+                </div>
+                <br />
+                <a
+                  class="mew-body"
+                  href="https://ccswap.myetherwallet.com/#/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Buy {{ network.type.currencyName }}
+                </a>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <module-address-book @setAddress="setAddress" />
@@ -121,10 +190,12 @@ import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import AppModal from '@/core/components/AppModal';
 
 export default {
   components: {
-    ModuleAddressBook
+    ModuleAddressBook,
+    AppModal
   },
   props: {
     prefilledAmount: {
@@ -163,6 +234,7 @@ export default {
       data: '0x',
       clearAll: false,
       userInputType: '',
+      showBarcodeModal: false,
       expandPanel: [
         {
           name: this.$t('common.advanced'),
@@ -177,6 +249,9 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    currencyName() {
+      return this.network.type.currencyName;
+    },
     showBalanceNotice() {
       const isZero = BigNumber(this.blanaceInEth).lte(0);
       const isLessThanTxFee =
@@ -367,6 +442,12 @@ export default {
     this.selectedCurrency = this.ethToken;
   },
   methods: {
+    openBarcodeModal() {
+      this.showBarcodeModal = true;
+    },
+    handleBarcodeClose() {
+      this.showBarcodeModal = false;
+    },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
@@ -487,5 +568,18 @@ export default {
   top: -15px;
   position: absolute;
   right: 15px;
+}
+
+.link-color {
+  color: var(--v-primary-base);
+  cursor: pointer;
+}
+
+.modal-caption {
+  color: var(--v-captionPrimary);
+}
+
+.address-overflow {
+  word-break: break-all;
 }
 </style>
