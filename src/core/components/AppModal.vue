@@ -1,5 +1,10 @@
 <template>
-  <v-dialog max-width="600" :value="show" @click:outside="handleClickOutside">
+  <v-dialog
+    max-width="600"
+    :value="show"
+    content-class="core--components--app-modal"
+    @click:outside="handleClickOutside"
+  >
     <v-sheet class="py-6 px-4">
       <!--
         =====================================================================================
@@ -29,7 +34,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2" justify="space-around">
+      <v-row v-if="!noBtn" class="mt-2" justify="space-around">
         <v-col v-if="!closeOnly" cols="5" class="text-right">
           <mew-button
             btn-style="outline"
@@ -90,6 +95,10 @@ export default {
       type: Boolean,
       default: false
     },
+    noBtn: {
+      type: Boolean,
+      default: false
+    },
     width: {
       type: String,
       default: '600'
@@ -97,11 +106,18 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      this.$emit('close');
+      //this.$emit('close');
+      this.close();
     }
   }
 };
 </script>
+
+<style lang="scss">
+.core--components--app-modal {
+  margin: 0 !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .header-container {
