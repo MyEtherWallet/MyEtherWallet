@@ -177,6 +177,18 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    showBalanceNotice() {
+      const isZero = BigNumber(this.blanaceInEth).lte(0);
+      const isLessThanTxFee =
+        BigNumber(this.balanceInETH).gt(0) &&
+        BigNumber(this.txFeeETH).gt(this.balanceInETH);
+
+      if (isZero || isLessThanTxFee) {
+        return true;
+      }
+
+      return false;
+    },
     ethToken() {
       return {
         contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
