@@ -1,5 +1,10 @@
 <template>
-  <v-dialog max-width="500" :value="show" @click:outside="handleClickOutside">
+  <v-dialog
+    max-width="600"
+    :value="show"
+    content-class="core--components--app-modal"
+    @click:outside="handleClickOutside"
+  >
     <v-sheet class="py-6 px-4">
       <!--
         =====================================================================================
@@ -29,13 +34,29 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2">
-        <v-col cols="12" class="text-center">
+      <v-row v-if="!noBtn" class="mt-2" justify="space-around">
+        <v-col v-if="!closeOnly" cols="5" class="text-right">
+          <mew-button
+            btn-style="outline"
+            btn-size="xlarge"
+            title="Cancel"
+            @click.native="close"
+          />
+        </v-col>
+        <v-col v-if="!closeOnly" cols="7" class="text-left">
           <mew-button
             btn-size="xlarge"
             :title="btnText"
             :disabled="!btnEnabled"
             @click.native="btnAction"
+          />
+        </v-col>
+        <v-col v-if="closeOnly" cols="12" class="text-left">
+          <mew-button
+            btn-size="xlarge"
+            title="Close"
+            :has-full-width="true"
+            @click.native="close"
           />
         </v-col>
       </v-row>
@@ -69,15 +90,34 @@ export default {
     btnText: {
       type: String,
       default: 'Confirm and Send'
+    },
+    closeOnly: {
+      type: Boolean,
+      default: false
+    },
+    noBtn: {
+      type: Boolean,
+      default: false
+    },
+    width: {
+      type: String,
+      default: '600'
     }
   },
   methods: {
     handleClickOutside() {
-      this.$emit('close');
+      //this.$emit('close');
+      this.close();
     }
   }
 };
 </script>
+
+<style lang="scss">
+.core--components--app-modal {
+  margin: 0 !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .header-container {

@@ -159,6 +159,7 @@ export default {
       selectedCurrency: {},
       data: '0x',
       clearAll: false,
+      userInputType: '',
       expandPanel: [
         {
           name: this.$t('common.advanced'),
@@ -291,7 +292,9 @@ export default {
       deep: true
     },
     toAddress() {
-      if (this.isValidAddress) this.sendTx.setTo(this.toAddress);
+      if (this.isValidAddress) {
+        this.sendTx.setTo(this.toAddress, this.userInputType);
+      }
     },
     amount() {
       this.sendTx.setValue(this.getCalculatedAmount);
@@ -315,9 +318,10 @@ export default {
     this.gasLimit = this.prefilledGasLimit;
   },
   methods: {
-    setAddress(addr, isValidAddress) {
+    setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
+      this.userInputType = userInputType;
     },
     toggleOverlay() {
       this.addMode = !this.addMode;

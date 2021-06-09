@@ -42,6 +42,10 @@ class WalletInterface {
       this.publicKey = _pubKey;
       this.isPubOnly = true;
     }
+    this.icon = {
+      type: 'mew-icon',
+      value: keystore ? 'keystore' : 'privateKey'
+    };
   }
   getPrivateKey() {
     if (this.isPubOnly) throw new Error('public key only wallet');

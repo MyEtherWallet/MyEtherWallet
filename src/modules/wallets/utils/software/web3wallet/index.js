@@ -3,6 +3,7 @@ import WalletInterface from '@/modules/wallets/utils/WalletInterface.js';
 import Web3 from 'web3';
 import { getBufferFromHex } from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
 import errorHandler from './errorHandler';
+import metamask from '@/assets/images/icons/wallets/metamask.svg';
 
 class Web3Wallet extends WalletInterface {
   static get errorHandler() {
@@ -17,6 +18,15 @@ class Web3Wallet extends WalletInterface {
       this.web3 = new Web3(window.web3.currentProvider);
     }
     if (!this.web3) throw new Error('No Web3 instance found');
+    const isMetamask = window.ethereum
+      ? window.ethereum.isMetaMask
+      : window.web3
+      ? window.web3.isMetaMask
+      : false;
+    this.icon = {
+      type: isMetamask ? 'img' : 'mew-icon',
+      value: isMetamask ? metamask : 'wallet'
+    };
   }
   signTransaction(tx) {
     tx.from = this.getAddressString();
