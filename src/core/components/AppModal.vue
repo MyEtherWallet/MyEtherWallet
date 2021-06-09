@@ -103,7 +103,7 @@ export default {
     },
     scrollable: {
       type: Boolean,
-      default: true
+      default: false
     },
     width: {
       type: String,
