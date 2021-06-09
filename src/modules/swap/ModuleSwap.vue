@@ -402,17 +402,10 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const imgs = [
-        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-        'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-        'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
-        'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
-        'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
-      ];
       const returnableTokens = [
         {
           text: 'Select Token',
-          imgs: imgs,
+          imgs: this.getPlaceholderImgs(),
           total: `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
@@ -426,20 +419,16 @@ export default {
         },
         ...this.toTokens
       ];
-      const fromTokenAddress = this.fromTokenType.hasOwnProperty(
-        'contract_address'
-      )
-        ? this.fromTokenType.contract_address
-        : this.fromTokenType.hasOwnProperty('contract')
-        ? this.fromTokenType.contract
-        : '';
+      const fromTokenAddress =
+        this.fromTokenType.contract_address ||
+        this.fromTokenType.contract ||
+        '';
       return returnableTokens.filter(item => {
-        const address = item.hasOwnProperty('contract_address')
-          ? item.contract_address
-          : item.hasOwnProperty('contract')
-          ? item.contract
-          : '';
-        if (address.toLowerCase() !== fromTokenAddress.toLowerCase())
+        const address = item.contract_address || item.contract || '';
+        if (
+          item.selectTokenLabel ||
+          address?.toLowerCase() !== fromTokenAddress?.toLowerCase()
+        )
           return item;
       });
     },
@@ -464,57 +453,66 @@ export default {
         });
     },
     /**
+     * Returns wallet tokens
+     * to swap from
+     */
+    walletTokens() {
+      const tokensOwned = [];
+      /**
+       * if Eth balance is < 0, add Buy Eth dropdown item
+       */
+      if (BigNumber(this.balanceInETH).lte(0)) {
+        tokensOwned.push({
+          hasNoEth: true,
+          disabled: true,
+          text: 'Your wallet is empty.',
+          linkText: 'Buy ETH',
+          link: 'https://ccswap.myetherwallet.com/#/'
+        });
+      } else if (
+        /**
+         * if Eth balance is > 0, add Eth wallet details
+         */
+        this.isFromTokenEth &&
+        BigNumber(this.balanceInETH).gt(0)
+      ) {
+        tokensOwned.push(this.fromTokenType);
+      }
+      return tokensOwned.concat(this.tokensList);
+    },
+    /**
      * Returns the dropdown token data
      * to swap from
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const tokensOwned = Object.assign(this.tokensList) || [];
-      const imgs = tokensOwned.map(item => {
-        return item.img;
-      });
-
-      BigNumber(this.balanceInETH).lte(0)
-        ? tokensOwned.unshift({
-            hasNoEth: true,
-            disabled: true,
-            text: 'Your wallet is empty.',
-            linkText: 'Buy ETH',
-            link: 'https://ccswap.myetherwallet.com/#/'
-          })
-        : this.isFromTokenEth
-        ? tokensOwned.unshift(this.fromTokenType)
-        : null;
       const returnableTokens = [
         {
           text: 'Select Token',
-          imgs: imgs,
-          total: `${this.toTokens.length}`,
+          imgs: this.getPlaceholderImgs(true),
+          total:
+            this.tokensList.length > 0
+              ? this.tokensList.length
+              : `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
         },
         {
           header: 'My Wallet'
         },
-        ...tokensOwned,
+        ...this.walletTokens,
         {
           header: 'Other Tokens'
         },
         ...this.fromTokens
       ];
 
-      const toTokenAddress = this.toTokenType.hasOwnProperty('contract_address')
-        ? this.toTokenType.contract_address
-        : this.toTokenType.hasOwnProperty('contract')
-        ? this.toTokenType.contract
-        : '';
+      const toTokenAddress =
+        this.toTokenType?.contract_address || this?.toTokenType.contract;
       return returnableTokens.filter(item => {
-        const address = item.hasOwnProperty('contract_address')
-          ? item.contract_address
-          : item.hasOwnProperty('contract')
-          ? item.contract
-          : '';
-        if (address.toLowerCase() !== toTokenAddress.toLowerCase()) return item;
+        const address = item?.contract_address || item?.contract;
+        if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
+          return item;
         return item;
       });
     },
@@ -600,7 +598,7 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType.name) {
+      if (!this.initialLoad && this.fromTokenType?.name) {
         if (!this.isFromTokenEth) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
@@ -658,7 +656,9 @@ export default {
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenEth
             ? this.errorMsgs.amountExceedsEthBalance
-            : this.errorMsgs.doNotOwnToken;
+            : this.tokensList.length > 0
+            ? this.errorMsgs.doNotOwnToken
+            : '';
         }
         if (
           !this.isFromTokenEth &&
@@ -746,12 +746,46 @@ export default {
     }
   },
   methods: {
+    /**
+     * Set the max available amount to swap from
+     */
     setMaxAmount() {
       this.tokenInValue = this.isFromTokenEth
         ? new BigNumber(this.availableBalance)
             .minus(fromWei(MIN_GAS_WEI))
             .toFixed()
         : this.availableBalance.toFixed();
+    },
+    /**
+     * Gets the default from token
+     */
+    getDefaultFromToken() {
+      if (
+        this.defaults.fromToken === ETH_TOKEN &&
+        this.availableBalance.gt(0)
+      ) {
+        const ethToken = Object.assign({}, this.trendingTokens[0]);
+        ethToken.tokenBalance = this.availableBalance;
+        return ethToken;
+      }
+      return this.actualFromTokens[0];
+    },
+    /**
+     * gets the select label placeholder token imgs
+     */
+    getPlaceholderImgs(isFromToken) {
+      if (isFromToken && this.tokensList.length > 0) {
+        return this.tokensList.slice(0, 5).map(item => {
+          return item.img;
+        });
+      }
+      return [
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+        'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+        'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
+        'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
+        'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
+      ];
     },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
@@ -782,11 +816,7 @@ export default {
     },
     setDefaults() {
       setImmediate(() => {
-        this.fromTokenType =
-          this.defaults.fromToken === ETH_TOKEN
-            ? Object.assign({}, this.trendingTokens[0])
-            : this.findCoinToken(this.defaults.fromToken);
-        this.fromTokenType.tokenBalance = this.availableBalance;
+        this.fromTokenType = this.getDefaultFromToken();
         this.toTokenType = this.actualToTokens[0];
         this.setTokenInValue(this.tokenInValue);
       });
@@ -820,7 +850,7 @@ export default {
       if (
         !value ||
         this.hasAmountErrors ||
-        this.fromTokenType.name === this.toTokenType.name
+        this.fromTokenType?.name === this.toTokenType?.name
       ) {
         this.providersMessage = {
           title: 'Select token and enter amount to see rates.',
