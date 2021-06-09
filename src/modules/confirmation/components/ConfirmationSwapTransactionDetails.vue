@@ -1,14 +1,5 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12">
-        <p>
-          <b>Please double-check everything.</b> MEW team will not be able to
-          reverse your transaction once its submitted. You will still be charged
-          gas fees even if the transaction fails. <a>Learn more.</a>
-        </p>
-      </v-col>
-    </v-row>
     <!--
       =====================================================================================
         Values
@@ -36,12 +27,10 @@
     -->
     <v-row class="my-4">
       <v-col cols="6" class="text-left">
-        Provider <br />
         Exchange rate <br />
         Transaction fee
       </v-col>
       <v-col cols="6" class="text-right">
-        <img :src="provider.exchangeInfo.img" height="25px" /> <br />
         1 {{ fromType }} = {{ toFixed(provider.rate) }} {{ toType }} <br />
         <span class="capitalize">{{ gasPriceType }}</span>
         {{ convertedFees }} {{ txFeeUSD }}
