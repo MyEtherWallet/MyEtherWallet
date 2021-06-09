@@ -261,7 +261,10 @@ import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 import {
@@ -377,6 +380,7 @@ export default {
     ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList', 'initialLoad']),
+    ...mapGetters('external', ['balanceFiatValue']),
     /**
      * checks whether both token fields are empty
      */
@@ -392,8 +396,8 @@ export default {
      */
     isFromTokenEth() {
       return (
-        this.fromTokenType.name &&
-        this.fromTokenType.name.toLowerCase() === tokens.eth
+        this.fromTokenType?.name &&
+        this.fromTokenType?.name.toLowerCase() === tokens.eth
       );
     },
     /**
@@ -562,11 +566,11 @@ export default {
       return '0';
     },
     toAddress() {
-      if (this.toTokenType.isEth) return this.address;
+      if (this.toTokenType?.isEth) return this.address;
       return this.addressValue.value;
     },
     isToAddressValid() {
-      if (this.toTokenType.isEth) return true;
+      if (this.toTokenType?.isEth) return true;
       return this.addressValue.isValid;
     },
     /**
@@ -586,13 +590,13 @@ export default {
     isToBtc() {
       return (
         (this.fromTokenType.symbol === this.network.type.currencyName ||
-          this.fromTokenType.isEth) &&
+          this.fromTokenType?.isEth) &&
         this.toTokenType.symbol === 'BTC'
       );
     },
     showToAddress() {
-      if (typeof this.toTokenType.isEth === 'undefined') return false;
-      return !this.toTokenType.isEth;
+      if (typeof this.toTokenType?.isEth === 'undefined') return false;
+      return !this.toTokenType?.isEth;
     },
     /**
      * @returns BigNumber of the available balance for the From Token
@@ -762,10 +766,13 @@ export default {
     getDefaultFromToken() {
       if (
         this.defaults.fromToken === ETH_TOKEN &&
-        this.availableBalance.gt(0)
+        new BigNumber(this.balanceInETH).gt(0)
       ) {
         const ethToken = Object.assign({}, this.trendingTokens[0]);
-        ethToken.tokenBalance = this.availableBalance;
+        ethToken.tokenBalance = formatFloatingPointValue(
+          this.availableBalance
+        ).value;
+        ethToken.totalBalance = formatFiatValue(this.balanceFiatValue).value;
         return ethToken;
       }
       return this.actualFromTokens[0];
