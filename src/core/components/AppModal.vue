@@ -26,9 +26,11 @@
           Dialog Body
         =====================================================================================
         -->
-      <slot name="dialogBody">
-        <div>This is a test value</div>
-      </slot>
+      <div :class="scrollable ? 'scrollable' : ''">
+        <slot name="dialogBody">
+          <div>This is a test value</div>
+        </slot>
+      </div>
       <!--
         =====================================================================================
           Dialog action
@@ -99,6 +101,10 @@ export default {
       type: Boolean,
       default: false
     },
+    scrollable: {
+      type: Boolean,
+      default: true
+    },
     width: {
       type: String,
       default: '600'
@@ -126,5 +132,14 @@ export default {
     right: 5px;
     position: absolute;
   }
+}
+
+.scrollable {
+  // Shift scroll bar to right of contents.
+  padding-right: 15px;
+  margin-right: -15px;
+
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
 }
 </style>
