@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--swap">
-    <swap-network-settings-modal
+    <app-network-settings-modal
       :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
@@ -257,7 +257,7 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapFee from './components/SwapFee.vue';
-import SwapNetworkSettingsModal from './components/SwapNetworkSettingsModal.vue';
+import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -294,7 +294,7 @@ export default {
     ModuleAddressBook,
     SwapProvidersList,
     SwapFee,
-    SwapNetworkSettingsModal
+    AppNetworkSettingsModal
   },
   props: {
     fromToken: {
