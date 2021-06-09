@@ -28,6 +28,7 @@
       height="150"
       :src="nft.image ? nft.image : getImageUrl(nft)"
       alt="nft image"
+      @error="onImgErr"
     />
     <div class="mb-4 mt-2">{{ nft.name }}</div>
     <module-address-book @setAddress="setAddress" />
@@ -44,6 +45,7 @@
 
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
 
 export default {
   components: {
@@ -95,12 +97,18 @@ export default {
         {
           name: this.$t('common.details')
         }
-      ]
+      ],
+      nftPlaceholder: nftPlaceholder
     };
   },
   computed: {
     backTxt() {
       return 'Back to ' + this.nftCategory;
+    }
+  },
+  methods: {
+    onImgErr(e) {
+      e.target.src = this.nftPlaceholder;
     }
   }
 };

@@ -1,26 +1,30 @@
 <template>
   <div class="my-5">
-    <div class="mew-heading-3 mb-5">Select a provider</div>
-
+    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
+      Select a provider
+    </div>
     <!--
     =====================================================================================
       Providers Message
     =====================================================================================
     -->
-    <user-msg-block v-if="step == 0 && message != ''" :message="message">
-    </user-msg-block>
-
+    <app-user-msg-block
+      v-if="step == 0 && !isLoading"
+      :message="providersMessage"
+      :is-alert="false"
+    />
     <!--
     =====================================================================================
       Sceleton Loader
     =====================================================================================
     -->
-    <v-row v-if="step === 0 && message.title === ''">
+
+    <v-row v-if="step === 0 && isLoading">
       <v-col cols="12" class="mb-n3">
         <v-card
           flat
           color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-5"
+          class="swap-providers-list-loading d-flex align-center px-5 py-5"
         >
           <v-skeleton-loader width="300px" type="chip" />
           <v-spacer />
@@ -177,12 +181,12 @@
   </div>
 </template>
 <script>
-import UserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
   components: {
-    UserMsgBlock
+    AppUserMsgBlock
   },
   props: {
     step: {
@@ -205,14 +209,19 @@ export default {
       type: String,
       default: ''
     },
-    message: {
-      type: Object,
-      default: () => {}
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      showMore: false
+      showMore: false,
+      providersMessage: {
+        title: 'Select token and enter amount to see rates.',
+        subtitle:
+          'MEW finds the best price for you across multiple DEXs and Exchange services.'
+      }
     };
   },
   computed: {

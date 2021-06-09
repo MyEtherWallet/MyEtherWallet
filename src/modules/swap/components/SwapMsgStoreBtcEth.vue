@@ -1,5 +1,5 @@
 <template>
-  <the-wallet-user-msg-block
+  <app-user-msg-block
     v-if="toTokenType && toTokenType.toLowerCase() == 'bitcoin'"
     class="mt-5"
     :message="message"
@@ -57,15 +57,15 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-  </the-wallet-user-msg-block>
+  </app-user-msg-block>
 </template>
 
 <script>
-import TheWalletUserMsgBlock from '@/views/components-wallet/TheWalletUserMsgBlock';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 
 export default {
   components: {
-    TheWalletUserMsgBlock
+    AppUserMsgBlock
   },
   props: {
     message: {

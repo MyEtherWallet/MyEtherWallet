@@ -55,14 +55,14 @@
                 priceChange ? 'primary--text' : 'error--text'
               ]"
             >
-              {{ ETHUSDValue.price_change_percentage_24h }}%
+              {{ formatChange }}
             </div>
             <v-icon
               :class="[priceChange ? 'primary--text' : 'error--text', 'body-2']"
               >{{ priceChangeArrow }}</v-icon
             >
             <div class="ml-5">
-              {{ '$' + fiatValue }} / 1 {{ network.type.currenyName }} ETH
+              {{ formatFiatPrice }} / 1 {{ network.type.name }}
             </div>
           </v-col>
           <v-col class="text-right">
@@ -94,8 +94,11 @@ import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-
+import {
+  formatFiatValue,
+  formatBalanceEthValue,
+  formatPercentageValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceChart,
@@ -115,8 +118,8 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
-    ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
@@ -128,15 +131,64 @@ export default {
     priceChange() {
       return this.ETHUSDValue.price_change_percentage_24h > 0;
     },
+    /**
+     * Computed property returns formated eth value of the wallet balance
+     * ie: $12.45 per 1 ETH
+     */
     title() {
-      return `${this.balanceInETH} ${this.network.type.name}`;
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
+        this.network.type.name
+      }`;
     },
     subtitle() {
       return `My ${this.network.type.name} Balance`;
     },
+    /**
+     * Computed property returns formated eth wallet balance value in USD
+     * ie: $12.45 per 1 ETH
+     */
     convertedBalance() {
-      const converted = BigNumber(this.balanceInETH).times(this.fiatValue);
-      return `$ ${converted.toFixed(2)}`;
+      if (this.fiatLoaded) {
+        return `${this.ETHUSDValue.symbol}${
+          formatFiatValue(this.balanceFiatValue).value
+        }`;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns formated 24 hours percentage change
+     * ie: $12.45 per 1 ETH
+     */
+    formatChange() {
+      if (this.fiatLoaded) {
+        return formatPercentageValue(
+          this.ETHUSDValue.price_change_percentage_24h
+        ).value;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns formats Fiat Price
+     * ie: $12.45 per 1 ETH
+     */
+    formatFiatPrice() {
+      if (this.fiatLoaded) {
+        return `${this.ETHUSDValue.symbol}${
+          formatFiatValue(this.fiatValue).value
+        }`;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns whether or not fiat info is loaded
+     */
+    fiatLoaded() {
+      return (
+        this.ETHUSDValue &&
+        this.ETHUSDValue.price_change_percentage_24h &&
+        this.balanceFiatValue &&
+        this.fiatValue
+      );
     }
   },
   watch: {

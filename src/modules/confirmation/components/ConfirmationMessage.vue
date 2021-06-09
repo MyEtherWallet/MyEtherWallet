@@ -21,10 +21,6 @@
 
 <script>
 export default {
-  components: {
-    // TransactionAddresses,
-    // TransactionBalance
-  },
   props: {
     msg: {
       type: String,

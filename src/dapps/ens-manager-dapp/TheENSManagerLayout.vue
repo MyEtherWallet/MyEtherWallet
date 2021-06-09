@@ -65,7 +65,7 @@
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
-              <span class="font-weight-regular">({{ myDomains.length }})</span>
+              <span class="font-weight-regular">({{ totalDomains }})</span>
             </span>
           </div>
           <mew-expand-panel
@@ -244,7 +244,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
 import { fromWei, toBN } from 'web3-utils';
-
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
@@ -337,6 +337,9 @@ export default {
         !this.ensDomainAvailable &&
         Object.keys(this.nameHandler).length !== 0
       );
+    },
+    totalDomains() {
+      return formatIntegerToString(this.myDomains.length);
     }
   },
   watch: {

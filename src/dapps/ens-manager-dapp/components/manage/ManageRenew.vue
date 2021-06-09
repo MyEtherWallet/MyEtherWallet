@@ -22,6 +22,10 @@
 </template>
 
 <script>
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   props: {
     getRentPrice: {
@@ -69,8 +73,8 @@ export default {
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
-          this.rentPriceETH = resp.eth;
-          this.rentPriceUSD = resp.usd;
+          this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
+          this.rentPriceUSD = formatFiatValue(resp.usd).value;
         }
       });
     },
