@@ -512,9 +512,9 @@ export default {
       ];
 
       const toTokenAddress =
-        this.toTokenType?.contract_address || this?.toTokenType.contract;
+        this.toTokenType?.contract_address || this?.toTokenType.contract || '';
       return returnableTokens.filter(item => {
-        const address = item?.contract_address || item?.contract;
+        const address = item?.contract_address || item?.contract || '';
         if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
           return item;
         return item;
