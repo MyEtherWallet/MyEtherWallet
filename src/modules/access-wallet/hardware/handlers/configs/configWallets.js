@@ -18,7 +18,8 @@ const LAYOUT_STEPS = {
   PATH_SELECT: 'path_select',
   NETWORK_ACCOUNT_SELECT: 'network_account_select',
   BITBOX_SELECT: 'bitbox_select',
-  BITBOX_POPUP: 'bitbox_popup'
+  BITBOX_POPUP: 'bitbox_popup',
+  KEEPKEY_POPUP: 'keepkey_popup'
 };
 export { LAYOUT_STEPS };
 export default {
@@ -80,7 +81,11 @@ export default {
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,
     when: 2,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    steps: [
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.KEEPKEY_POPUP,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,

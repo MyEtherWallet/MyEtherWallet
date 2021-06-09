@@ -571,6 +571,9 @@ export default {
               this.hwWalletInstance = _hwWallet;
               this.setAddresses();
             });
+          } else if (this.walletType === WALLET_TYPES.KEEPKEY) {
+            this.incrementStep();
+            this.setAddresses();
           } else {
             this.setAddresses();
           }
