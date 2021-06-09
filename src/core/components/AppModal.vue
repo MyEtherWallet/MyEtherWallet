@@ -5,7 +5,12 @@
     content-class="core--components--app-modal"
     @click:outside="handleClickOutside"
   >
-    <v-sheet class="py-6 px-4">
+    <v-sheet class="py-6 px-4 position--relative">
+      <v-btn icon class="header-close-icon">
+        <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          mdi-close
+        </v-icon>
+      </v-btn>
       <!--
         =====================================================================================
           Dialog Header
@@ -15,11 +20,6 @@
         <v-col cols="12" align-self="center">
           <p class="mew-heading-2 text-center">{{ title }}</p>
         </v-col>
-        <div class="header-close-icon">
-          <v-icon size="large" color="grey cursor--pointer" @click="close"
-            >mdi-close</v-icon
-          >
-        </div>
       </v-row>
       <!--
         =====================================================================================
@@ -103,7 +103,7 @@ export default {
     },
     scrollable: {
       type: Boolean,
-      default: false
+      default: true
     },
     width: {
       type: String,
@@ -126,12 +126,10 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.header-container {
-  position: relative;
-  .header-close-icon {
-    right: 5px;
-    position: absolute;
-  }
+.header-close-icon {
+  right: 10px;
+  top: 10px;
+  position: absolute;
 }
 
 .scrollable {
