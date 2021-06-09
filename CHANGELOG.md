@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Move component and update packages [#3141](https://github.com/MyEtherWallet/MyEtherWallet/pull/3141)
 * Remove tokens from to selection if it is selected on from and vice versa [#3107](https://github.com/MyEtherWallet/MyEtherWallet/pull/3107)
 * Add swap token switch [#3103](https://github.com/MyEtherWallet/MyEtherWallet/pull/3103)
 * Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
