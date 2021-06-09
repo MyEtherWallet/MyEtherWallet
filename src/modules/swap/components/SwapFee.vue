@@ -57,9 +57,12 @@
       </v-col>
       <v-col cols="1">
         <div class="d-flex justify-end align-center">
-          <div class="icon-holder primary" @click="openGasPriceModal">
-            <v-icon size="small" color="white">mdi-pencil</v-icon>
-          </div>
+          <img
+            class="btn-circle"
+            src="@/assets/images/icons/icon-edit-btn.svg"
+            alt="edit"
+            @click="openGasPriceModal"
+          />
         </div>
       </v-col>
     </v-row>
