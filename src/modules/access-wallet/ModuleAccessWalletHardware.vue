@@ -174,6 +174,10 @@ Paths Step (Ledger, Trezor)
             -->
             <template v-if="stepperStep === 4" #stepperContent4>
               <div>
+                <bit-box-popup
+                  v-if="onBitboxPopup"
+                  :device="hwWalletInstance"
+                />
                 <!--
                 =====================================================================================
                 Password Step (Coolwallet)
@@ -193,7 +197,7 @@ Paths Step (Ledger, Trezor)
                 =====================================================================================
                 -->
                 <access-wallet-network-addresses
-                  v-else
+                  v-else-if="onNetworkAddresses"
                   :accounts="accounts"
                   :next-address-set="nextAddressSet"
                   :previous-address-set="previousAddressSet"
@@ -214,6 +218,7 @@ Paths Step (Ledger, Trezor)
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
+import BitBoxPopup from './hardware/components/BitBoxPopup';
 import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 import AccessWalletPaths from './hardware/components/AccessWalletPaths';
@@ -223,7 +228,6 @@ import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets, {
   LAYOUT_STEPS
 } from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
-import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const MAX_ADDRESSES = 5;
@@ -236,7 +240,8 @@ export default {
     AccessWalletNetworkAddresses,
     AccessWalletPassword,
     AccessWalletPaths,
-    AccessWalletPin
+    AccessWalletPin,
+    BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -263,13 +268,6 @@ export default {
   },
   data() {
     return {
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Select Hardware Wallet'
-        }
-      ],
-      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
       buttons: [
         {
           label: 'Ledger',
@@ -287,27 +285,14 @@ export default {
           type: WALLET_TYPES.KEEPKEY
         },
         {
-          label: 'Bitbox',
+          label: 'Bitbox 02',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.BITBOX
+          type: WALLET_TYPES.BITBOX2
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
           type: WALLET_TYPES.COOL_WALLET
-        },
-        {
-          label: 'BC Vault',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          type: WALLET_TYPES.BCVAULT
-        }
-      ],
-      panelItems: [
-        {
-          name: 'Network'
-        },
-        {
-          name: 'Address to interact with'
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -392,7 +377,6 @@ export default {
         });
         return found ? found.network.icon : appPaths[0].network.icon;
       }
-
       return appPaths[0].network.icon;
     },
     /**
@@ -400,6 +384,9 @@ export default {
      */
     onBitbox() {
       return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
+    },
+    onBitboxPopup() {
+      return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
     },
     /**
      * On Bc Vault
@@ -501,7 +488,6 @@ export default {
      */
     reset() {
       this.step = 0;
-      this.steps = {};
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
       this.walletType = '';
@@ -538,47 +524,15 @@ export default {
       this.incrementStep();
     },
     incrementStep() {
-      console.log(this.wallets, this.walletType);
       this.currentStep = this.wallets[this.walletType].steps[this.step];
       this.step++;
     },
     nextStep() {
       if (this.walletType) {
         this.incrementStep();
-        console.log(this.step);
         if (this.step === this.wallets[this.walletType].when) {
           this[`${this.walletType}Unlock`]();
         }
-      }
-    },
-    nextStep2(str) {
-      try {
-        const actualString =
-          typeof str === 'string' && str !== '' ? str : this.walletType;
-        if (!this.step) {
-          this.walletType = actualString;
-        }
-        this.step = this.step += 1;
-        // bcvault initializes on step 1 but unlocks at step 2
-        this.wallets[actualString].accountOnly && this.step === 1
-          ? this.initBcVault(actualString)
-          : '';
-        this.steps[this.step] = actualString;
-        if (this.wallets[actualString].when === this.step) {
-          if (this.wallets[actualString].needsQr) {
-            new this.wallets[actualString].create(this.generateQr).then(
-              wallet => {
-                this[`${actualString}Unlock`](wallet);
-              }
-            );
-          } else {
-            this.selectedPath = this.paths[0];
-            this[`${actualString}Unlock`]();
-          }
-        }
-      } catch (e) {
-        this.reset();
-        Toast(e.message, {}, ERROR);
       }
     },
     /**
@@ -596,20 +550,8 @@ export default {
     bitbox02Unlock() {
       this.unlockPathOnly();
     },
-    bcVaultUnlock(address) {
-      const actualAddress = address ? address : this.selectedAddress;
-      const _wallet = this.walletInstance.getAccount(actualAddress);
-      this.setHardwareWallet(_wallet);
-    },
     keepkeyUnlock() {
-      EventBus.$on('showHardwarePinMatrix', callback => {
-        this.enterPin = true;
-        this.callback = callback;
-      });
-
-      this.unlockPathOnly().then(() => {
-        this.step += 1;
-      });
+      this.unlockPathOnly();
     },
     coolWalletUnlock() {
       this.unlockPathAndPassword(null, this.password);
@@ -618,29 +560,23 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
-      console.log('here 1');
       return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
-          console.log(_hwWallet.status);
+          this.hwWalletInstance = _hwWallet;
           if (this.walletType === WALLET_TYPES.BITBOX2) {
-            setTimeout(() => {
-              if (_hwWallet.status === 'unpaired') {
-                _hwWallet.pairingConfirmationResolve();
-              }
-            }, 5000);
+            this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
             _hwWallet.init(this.hasPath).then(() => {
+              this.currentStep = LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
               this.hwWalletInstance = _hwWallet;
               this.setAddresses();
             });
           } else {
-            this.hwWalletInstance = _hwWallet;
             this.setAddresses();
           }
           return _hwWallet;
         })
         .catch(err => {
-          console.log(err);
           this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
         });
@@ -703,38 +639,6 @@ export default {
       this.acceptTerms = boolean;
     },
     /**
-     * Inits Bc Vault Instance
-     */
-    initBcVault(str) {
-      this.bcVaultLoading = true;
-      this.walletInstance = this.wallets[str].create();
-      this.walletInstance
-        .init()
-        .then(res => {
-          if (res.length > 1) {
-            this.accounts = res;
-            this.bcVaultLoading = false;
-          } else if (res.length === 1) {
-            this[`unlock${str}`](res[0].userRawData + res[0].address);
-          }
-        })
-        .catch(() => {
-          this.bcVaultLoading = false;
-        });
-    },
-    /**
-     * Sets Bc Vault Address
-     */
-    setBCvaultAddress(address) {
-      this.selectedAddress = address;
-    },
-    /**
-     * Generates the Qr Code
-     */
-    generateQr(code) {
-      this.qrCode = code;
-    },
-    /**
      * Keepkey Actions
      */
     keepKeyClear() {
@@ -764,7 +668,6 @@ export default {
      * Network Address step
      */
     async setAddresses() {
-      console.log('here');
       try {
         this.accounts = [];
         for (
@@ -773,7 +676,6 @@ export default {
           i++
         ) {
           const account = await this.hwWalletInstance.getAccount(i);
-          console.log(account);
           this.accounts.push({
             address: account.getAddressString(),
             account: account,
