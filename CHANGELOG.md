@@ -2,7 +2,7 @@
 
 ### Devop
 
-- Fix gas fee not showing up [#3138](https://github.com/MyEtherWallet/MyEtherWallet/pull/3138)
+- Fix gas fee not showing up [#3139](https://github.com/MyEtherWallet/MyEtherWallet/pull/3139)
 - Remove tokens from to selection if it is selected on from and vice versa [#3107](https://github.com/MyEtherWallet/MyEtherWallet/pull/3107)
 - Add swap token switch [#3103](https://github.com/MyEtherWallet/MyEtherWallet/pull/3103)
 - Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
