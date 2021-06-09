@@ -5,21 +5,7 @@
         Values
       =====================================================================================
     -->
-    <v-row class="position--relative" justify="space-around">
-      <v-col cols="6" class="text-center value-container">
-        You Swap <br />
-        <img :src="fromImg" height="30px" /> <br />
-        {{ fromVal }} {{ fromType }}
-      </v-col>
-      <v-col cols="6" class="text-center value-container">
-        You will get <br />
-        <img :src="toImg" height="30px" /> <br />
-        {{ toVal }} {{ toType }}
-      </v-col>
-      <div class="icon d-flex align-center">
-        <v-icon> mdi-arrow-right </v-icon>
-      </div>
-    </v-row>
+    <confirmation-values-container :items="valueItems" is-swap />
     <!--
       =====================================================================================
         Summary
@@ -29,7 +15,7 @@
       <template #rightColItem0>
         <div class="mew-body">
           1 <span class="searchText--text">{{ fromType }}</span> =
-          {{ toFixed(provider.rate) }}
+          {{ formattedRate }}
           <span class="searchText--text">{{ toType }}</span>
         </div>
       </template>
@@ -51,12 +37,14 @@ import {
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
+import ConfirmationValuesContainer from './ConfirmationValuesContainer';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 export default {
   components: {
-    ConfirmationSummaryBlock
+    ConfirmationSummaryBlock,
+    ConfirmationValuesContainer
   },
   props: {
     provider: {
@@ -131,18 +119,35 @@ export default {
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      console.log(this.fiatValue);
-      console.log(formatFiatValue(feeETH.times(this.fiatValue)).value);
       return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
     },
     summaryItems() {
       return ['Exchange rate', 'Transaction fee'];
     },
     formattedToVal() {
-      return formatFloatingPointValue(this.toVal).val;
+      return formatFloatingPointValue(this.toVal).value;
     },
     formattedFromVal() {
-      return formatFloatingPointValue(this.fromVal).val;
+      return formatFloatingPointValue(this.fromVal).value;
+    },
+    formattedRate() {
+      return formatFloatingPointValue(this.provider.rate).value;
+    },
+    valueItems() {
+      return [
+        {
+          title: 'You Swap',
+          icon: this.fromImg,
+          value: this.formattedFromVal,
+          type: this.fromType
+        },
+        {
+          title: 'You will get',
+          icon: this.toImg,
+          value: this.formattedToVal,
+          type: this.toType
+        }
+      ];
     }
   },
   methods: {
@@ -155,21 +160,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.value-container {
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.icon {
-  width: 32px;
-  border-radius: 50%;
-  background-color: white;
-  height: 32px;
-  top: 30px;
-  position: absolute;
-  text-align: center;
-  padding-left: 5px;
-}
-</style>
