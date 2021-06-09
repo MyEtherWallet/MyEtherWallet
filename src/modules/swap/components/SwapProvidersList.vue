@@ -1,5 +1,5 @@
 <template>
-  <div class="my-5">
+  <div>
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
       Select a provider
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5 mb-10">
+  <div class="mb-10">
     <v-row justify="space-between" align="start">
       <v-col cols="4" class="mb-n3">
         <p class="mew-heading-3">Network Fee</p>
