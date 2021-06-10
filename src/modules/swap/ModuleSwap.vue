@@ -1037,7 +1037,6 @@ export default {
       this.setToToken(foundToken);
     },
     handleLocalGasPrice(e) {
-      console.log(e);
       this.localGasPrice = e.gasPrice;
       this.localGasType = e.gasType;
       if (!_.isEmpty(this.currentTrade)) {

@@ -6,7 +6,7 @@
     :has-indicator="true"
   >
     <template #moduleBody>
-      <div class="full-width px-lg-3 pb-6">
+      <div class="full-width px-lg-3">
         <v-row>
           <v-col cols="12" md="6">
             <p class="ma-0" />
@@ -35,6 +35,7 @@
                 disabled: false,
                 method: setEntireBal
               }"
+              :buy-more-str="buyMore"
               @input="setAmount"
             />
           </v-col>
@@ -46,7 +47,18 @@
         />
         <module-address-book @setAddress="setAddress" />
       </div>
-
+      <div>
+        <app-network-fee
+          :show-fee="showSelectedBalance"
+          :getting-fee="false"
+          :error="feeError"
+          :total-fees="txFee"
+          :gas-price-type="localGasType"
+          :message="feeError"
+          :not-enough-eth="!hasEnoughEth"
+          @onLocalGasPrice="handleLocalGasPrice"
+        />
+      </div>
       <v-container>
         <mew-expand-panel
           ref="expandPanel"
@@ -110,31 +122,27 @@
         </div>
       </div>
     </template>
-    <mew-toast
-      ref="toast"
-      :text="toastMsg"
-      :toast-type="toastType"
-      :duration="1000"
-    />
   </mew-module>
 </template>
 
 <script>
-import utils, { fromWei, toBN, isHexStrict, _ } from 'web3-utils';
+import utils, { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
+import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 
 export default {
   components: {
     ModuleAddressBook,
     SendLowBalanceNotice,
-    AppButtonBalance
+    AppButtonBalance,
+    AppNetworkFee
   },
   props: {
     prefilledAmount: {
@@ -161,8 +169,6 @@ export default {
   data() {
     return {
       addMode: false,
-      toastType: '',
-      toastMsg: '',
       gasLimit: '21000',
       toAddress: '',
       sendTx: null,
@@ -178,7 +184,9 @@ export default {
           name: this.$t('common.advanced'),
           subtext: this.$t('sendTx.data-gas')
         }
-      ]
+      ],
+      localGasPrice: '0',
+      localGasType: 'economy'
     };
   },
   computed: {
@@ -187,6 +195,26 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    buyMore() {
+      return this.currencyName === this.selectedCurrency.symbol
+        ? 'Buy more.'
+        : '';
+    },
+    hasEnoughEth() {
+      // Check whether user has enough eth to cover tx fee + amount to send
+      if (this.selectedCurrency.symbol === this.currencyName) {
+        return BigNumber(this.balanceInETH)
+          .minus(this.txFeeETH)
+          .gte(this.amount);
+      }
+      // Check whether user has enough eth to cover tx fee + user has enough token balance for the amount to send
+      return BigNumber(this.balanceInETH).gte(this.txFeeETH);
+    },
+    feeError() {
+      return !this.hasEnoughEth
+        ? `Not enough ${this.currencyName} to cover network fee.`
+        : '';
+    },
     showSelectedBalance() {
       return (
         !_.isEmpty(this.selectedCurrency) &&
@@ -267,7 +295,7 @@ export default {
       return [
         value => !!value || "Amount can't be empty!",
         value => {
-          return new BigNumber(value).gte(0) || "Amount can't be negative!";
+          return BigNumber(value).gte(0) || "Amount can't be negative!";
         },
         () => {
           if (this.sendTx && this.sendTx.currency) {
@@ -299,8 +327,8 @@ export default {
       ];
     },
     displayedGasPrice() {
-      const gasPrice = this.gasPrice.toString();
-      return new BigNumber(fromWei(gasPrice, 'gwei')).toFixed(2);
+      const gasPrice = this.actualGasPrice.toString();
+      return BigNumber(fromWei(gasPrice, 'gwei')).toFixed(2);
     },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
@@ -319,18 +347,21 @@ export default {
       );
     },
     txFeeETH() {
-      return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
+      return fromWei(this.txFee);
+    },
+    txFee() {
+      return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
     },
     txFeeUSD() {
-      return new BigNumber(
-        fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)))
+      return BigNumber(
+        fromWei(toBN(this.actualGasPrice).mul(toBN(this.gasLimit)))
       )
         .times(this.fiatValue)
         .toFixed(2);
     },
     getCalculatedAmount() {
-      const amount = new BigNumber(this.amount)
-        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+      const amount = BigNumber(this.amount)
+        .times(BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBN(amount);
     },
@@ -338,6 +369,12 @@ export default {
       if (this.sendTx && this.sendTx.currency)
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
       return false;
+    },
+    actualGasPrice() {
+      if (BigNumber(this.localGasPrice).eq(0)) {
+        return BigNumber(this.gasPrice);
+      }
+      return BigNumber(fromWei(this.localGasPrice));
     }
   },
   watch: {
@@ -383,6 +420,10 @@ export default {
     this.selectedCurrency = this.ethToken;
   },
   methods: {
+    handleLocalGasPrice(e) {
+      this.localGasPrice = toWei(e.gasPrice);
+      this.localGasType = e.gasType;
+    },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
@@ -424,9 +465,7 @@ export default {
         this.gasLimit = this.prefilledGasLimit;
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.$refs.expandPanel.setToggle(true);
-        this.toastType = 'warning';
-        this.toastMsg = this.$t('sendTx.prefilled-warning');
-        this.$refs.toast.showToast();
+        Toast(this.$t('sendTx.prefilled-warning'), {}, WARNING, 1000);
         this.clearPrefilled();
       }
     },
