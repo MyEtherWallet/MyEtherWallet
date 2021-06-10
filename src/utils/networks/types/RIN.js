@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-rin.json';
-import contracts from '@/_generated/contracts/contract-abi-rin.json';
 import rin from '@/assets/images/networks/network.svg';
 import { RIN } from '../tlds';
 
@@ -10,8 +8,8 @@ export default {
   blockExplorerTX: 'https://rinkeby.etherscan.io/tx/[[txHash]]',
   blockExplorerAddr: 'https://rinkeby.etherscan.io/address/[[address]]',
   chainID: 4,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: [],
+  contracts: [],
   isTestNetwork: true,
   ens: {
     resolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',

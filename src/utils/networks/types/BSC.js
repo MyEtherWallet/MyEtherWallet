@@ -1,5 +1,3 @@
-import tokens from '@/_generated/tokens/tokens-bsc.json';
-import contracts from '@/_generated/contracts/contract-abi-bsc.json';
 import bsc from '@/assets/images/networks/network.svg';
 
 export default {
@@ -9,8 +7,8 @@ export default {
   blockExplorerTX: 'https://bscscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
   chainID: 56,
-  tokens: tokens,
-  contracts: contracts,
+  tokens: [],
+  contracts: [],
   icon: bsc,
   currencyName: 'BNB',
   isTestNetwork: false,
