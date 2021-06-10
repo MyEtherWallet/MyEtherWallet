@@ -63,9 +63,6 @@ export default {
         this.device.status === 'connected' || this.device.status === 'unpaired'
       );
     }
-  },
-  mounted() {
-    console.log('dfsdfsfd', this.device);
   }
 };
 </script>
