@@ -7,12 +7,6 @@
   >
     <template #moduleBody>
       <div class="full-width px-lg-3 pb-6">
-        <send-funds-to-wallet-modal
-          :close="handleBarcodeClose"
-          :show="showBarcodeModal"
-          :address="address"
-          :currency-name="currencyName"
-        />
         <v-row>
           <v-col cols="12" md="6">
             <p class="ma-0" />
@@ -25,9 +19,11 @@
             />
           </v-col>
           <v-col cols="12" md="6" class="position--relative">
-            <p class="ma-0 text-right balance-container">
-              {{ selectedBalance }}
-            </p>
+            <app-button-balance
+              :balance="selectedBalance"
+              :is-eth="true"
+              :loading="!showSelectedBalance"
+            />
             <mew-input
               label="Amount"
               placeholder="0"
@@ -43,44 +39,11 @@
             />
           </v-col>
         </v-row>
-        <v-row v-if="true" class="mb-5 pa-2 selectHeaderBg border-radius--5px">
-          <v-col cols="12">
-            <v-row align-content="center" justify="space-around">
-              <v-col cols="12">
-                <p class="mew-heading-3 ma-0">
-                  <v-icon> mdi-information-outline </v-icon>
-                  Your {{ currencyName }} balance is too low
-                </p>
-              </v-col>
-              <v-col cols="6">
-                <p class="mew-body">
-                  Every transaction requires a small amount of
-                  {{ currencyName }} to execute. Even if you have tokens to
-                  swap, when your {{ currencyName }} balance is close to zero,
-                  you won't be able to send anything until you fund your
-                  account.
-                </p>
-              </v-col>
-              <v-col cols="6" class="d-flex flex-column">
-                <div
-                  class="mew-body primary--text cursor--pointer"
-                  @click="openBarcodeModal"
-                >
-                  Transfer {{ currencyName }} from another account
-                </div>
-                <br />
-                <a
-                  class="mew-body"
-                  href="https://ccswap.myetherwallet.com/#/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Buy {{ currencyName }}
-                </a>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+        <send-low-balance-notice
+          v-if="showBalanceNotice"
+          :address="address"
+          :currency-name="currencyName"
+        />
         <module-address-book @setAddress="setAddress" />
       </div>
 
@@ -164,12 +127,14 @@ import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SendFundsToWalletModal from './components/SendFundsToWalletModal.vue';
+import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
+import AppButtonBalance from '@/core/components/AppButtonBalance';
 
 export default {
   components: {
     ModuleAddressBook,
-    SendFundsToWalletModal
+    SendLowBalanceNotice,
+    AppButtonBalance
   },
   props: {
     prefilledAmount: {
@@ -208,7 +173,6 @@ export default {
       data: '0x',
       clearAll: false,
       userInputType: '',
-      showBarcodeModal: false,
       expandPanel: [
         {
           name: this.$t('common.advanced'),
@@ -222,7 +186,13 @@ export default {
     ...mapState('global', ['online']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    showSelectedBalance() {
+      return (
+        !_.isEmpty(this.selectedCurrency) &&
+        this.selectedCurrency.text !== 'Select Token'
+      );
+    },
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -259,12 +229,9 @@ export default {
         _.isEmpty(this.selectedCurrency) ||
         this.selectedCurrency.symbol === this.currencyName
       ) {
-        return this.balanceInETH;
+        return this.balanceInWei;
       }
-      return this.convertToDisplay(
-        BigNumber(this.selectedCurrency.balance).toFixed(),
-        this.selectedCurrency.decimals
-      );
+      return this.selectedCurrency.balance;
     },
     tokens() {
       const tokensList = this.tokensList || [];
@@ -416,12 +383,6 @@ export default {
     this.selectedCurrency = this.ethToken;
   },
   methods: {
-    openBarcodeModal() {
-      this.showBarcodeModal = true;
-    },
-    handleBarcodeClose() {
-      this.showBarcodeModal = false;
-    },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
@@ -526,10 +487,5 @@ export default {
   top: -15px;
   position: absolute;
   right: 15px;
-}
-
-.link-color {
-  color: var(--v-primary-base);
-  cursor: pointer;
 }
 </style>
