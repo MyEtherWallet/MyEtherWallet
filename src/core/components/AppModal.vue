@@ -5,7 +5,12 @@
     content-class="core--components--app-modal"
     @click:outside="handleClickOutside"
   >
-    <v-sheet class="py-6 px-4">
+    <v-sheet class="py-6 px-4 position--relative">
+      <v-btn icon class="header-close-icon">
+        <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          mdi-close
+        </v-icon>
+      </v-btn>
       <!--
         =====================================================================================
           Dialog Header
@@ -15,20 +20,17 @@
         <v-col cols="12" align-self="center">
           <p class="mew-heading-2 text-center">{{ title }}</p>
         </v-col>
-        <div class="header-close-icon">
-          <v-icon size="large" color="grey cursor--pointer" @click="close"
-            >mdi-close</v-icon
-          >
-        </div>
       </v-row>
       <!--
         =====================================================================================
           Dialog Body
         =====================================================================================
         -->
-      <slot name="dialogBody">
-        <div>This is a test value</div>
-      </slot>
+      <div :class="scrollable ? 'scrollable' : ''">
+        <slot name="dialogBody">
+          <div>This is a test value</div>
+        </slot>
+      </div>
       <!--
         =====================================================================================
           Dialog action
@@ -99,6 +101,10 @@ export default {
       type: Boolean,
       default: false
     },
+    scrollable: {
+      type: Boolean,
+      default: false
+    },
     width: {
       type: String,
       default: '600'
@@ -120,11 +126,18 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.header-container {
-  position: relative;
-  .header-close-icon {
-    right: 5px;
-    position: absolute;
-  }
+.header-close-icon {
+  right: 10px;
+  top: 10px;
+  position: absolute;
+}
+
+.scrollable {
+  // Shift scroll bar to right of contents.
+  padding-right: 15px;
+  margin-right: -15px;
+
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
 }
 </style>
