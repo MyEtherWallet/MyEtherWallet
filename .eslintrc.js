@@ -28,7 +28,9 @@ module.exports = {
     'security/detect-object-injection': 'off',
     'require-atomic-updates': 'off',
     'no-prototype-builtins': 'off',
-    'vue/custom-event-name-casing': 'off'
+    "no-irregular-whitespace": ["error", { "skipComments": true, "skipTemplates": true, "skipStrings": true, "skipRegExps": true }],
+    'vue/custom-event-name-casing': 'off',
+    
   },
   parserOptions: {
     parser: 'babel-eslint'

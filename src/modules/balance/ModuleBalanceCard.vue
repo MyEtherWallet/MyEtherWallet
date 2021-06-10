@@ -78,6 +78,7 @@
       </div>
     </div>
     <module-access-wallet-hardware
+      v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
       :switch-address="isHardware"
@@ -95,11 +96,13 @@ import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWall
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-
+import {
+  formatFiatValue,
+  formatBalanceEthValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceAddressPaperWallet,
@@ -115,7 +118,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -128,12 +131,9 @@ export default {
     },
     convertedBalance() {
       if (this.isEthNetwork) {
-        const balance = BigNumber(this.balanceInETH).times(
-          this.ETHUSDValue.value
-        );
-        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+        return `${'$' + formatFiatValue(this.balanceFiatValue).value}`;
       }
-      return `${BigNumber(this.balanceInETH).toFixed(2)} ${
+      return `${formatBalanceEthValue(this.balanceInETH).value} ${
         this.network.type.currencyName
       }`;
     }

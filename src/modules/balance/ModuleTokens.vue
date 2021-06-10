@@ -48,14 +48,19 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import numberFormatHelper from '@/core/helpers/numberFormatHelper';
-
+import {
+  formatFiatValue,
+  formatPercentageValue,
+  formatFloatingPointValue,
+  formatIntegerToString
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceEmptyBlock
   },
   data() {
     return {
+      tokensDataLoading: true,
       tableHeaders: [
         {
           text: 'Token',
@@ -94,7 +99,6 @@ export default {
           width: '15%'
         }
       ]
-      // loading: true
     };
   },
   computed: {
@@ -103,27 +107,36 @@ export default {
     ...mapGetters('global', ['isEthNetwork']),
 
     loading() {
-      return this.initialLoadTokens;
+      return this.initialLoadTokens || this.tokensDataLoading;
     },
     tokensData() {
       return this.tokensList
-        .filter(item => {
-          if (item.price_change_24h || item.market_cap) {
+        .filter((item, idx) => {
+          if (idx === this.tokensList.length - 1) {
+            setTimeout(() => {
+              this.tokensDataLoading = false;
+            }, 3000);
+          }
+
+          if (item.price_change_percentage_24h || item.market_cap) {
             return item;
           }
         })
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            this.getTokenValue(item).value + ' ' + item.symbol,
-            numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
-              .value
+            formatFloatingPointValue(item.tokenBalance.value).value +
+              ' ' +
+              item.symbol,
+            '$' + formatFiatValue(item.usdBalance).value
           ];
           newObj.token = item.symbol;
-          newObj.cap = new BigNumber(item.market_cap).toFormat();
-          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
-          newObj.status = item.price_change_24h > 0 ? '+' : '-';
-          newObj.price = '$' + new BigNumber(item.price).toFixed(2);
+          newObj.cap = formatIntegerToString(item.market_cap);
+          newObj.change = formatPercentageValue(
+            item.price_change_percentage_24h
+          ).value.replaceAll('%', '');
+          newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+          newObj.price = '$' + formatFiatValue(item.price).value;
           newObj.tokenImg = item.img;
           newObj.callToAction = [
             {
@@ -135,32 +148,21 @@ export default {
               colorTheme: 'primary'
             }
           ];
-          // this.loading = false;
           return newObj;
         });
     },
     totalTokensValue() {
-      return new BigNumber(
+      return formatFiatValue(
         this.tokensList.reduce((total, currentVal) => {
           const balance =
             currentVal.usdBalance !== null &&
-            (currentVal.price_change_24h !== null ||
+            (currentVal.price_change_percentage_24h !== null ||
               currentVal.market_cap !== 0)
               ? currentVal.usdBalance
               : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
-      ).toFixed(2);
-    }
-  },
-  methods: {
-    getTokenValue(_token) {
-      let n = new BigNumber(_token.balance);
-      if (_token.decimals) {
-        n = n.div(new BigNumber(10).pow(_token.decimals));
-        n = numberFormatHelper.formatFloatingPointValue(n);
-      }
-      return n;
+      ).value;
     }
   }
 };

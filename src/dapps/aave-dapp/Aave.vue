@@ -316,7 +316,7 @@ import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
@@ -381,7 +381,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
       if (!this.handler) true;
       return this.handler.isLoading;
@@ -407,7 +407,7 @@ export default {
         !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
           ? '0'
           : BigNumber(this.handler.userSummary.totalLiquidityETH)
-              .times(this.ETHUSDValue.value ? this.ETHUSDValue.value : 0)
+              .times(this.fiatValue ? this.fiatValue : 0)
               .toFixed(2);
 
       return {
