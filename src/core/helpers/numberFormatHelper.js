@@ -30,8 +30,8 @@ const OneTrillion = 1e12;
 const OneQuadrillion = 1e15;
 
 const FormattedNumberUnit = {
-  ETH: 'eth',
-  GWEI: 'gwei',
+  ETH: 'ETH',
+  GWEI: 'Gwei',
   WEI: 'wei',
   PERCENT: '%',
   USD: '$',

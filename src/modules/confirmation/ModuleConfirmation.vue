@@ -8,6 +8,7 @@
       :btn-enabled="disableBtn"
       :close-only="true"
       :width="'450'"
+      class="pa-8"
       @close="reset"
     >
       <template #dialogBody>
@@ -104,7 +105,7 @@
               warning
               textSecondary--text
               border-radius--5px
-              mb-4
+              mb-5
             "
           >
             <b>Make sure all the information is correct.</b> Canceling or
