@@ -1151,11 +1151,6 @@ export default {
       background-color: transparent !important;
     }
   }
-  .swap-providers-list-loading {
-    .v-skeleton-loader__chip {
-      width: 100% !important;
-    }
-  }
 }
 
 .wrapped-btc-text {
