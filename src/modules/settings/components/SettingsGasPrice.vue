@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <div v-if="!isSwap" class="mb-6">
+    <div v-if="!hasCustom" class="mb-6">
       Please select a default gas price for your transaction fee
     </div>
     <!--
@@ -36,7 +36,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
+      <v-row v-if="!hasCustom" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -46,7 +46,7 @@
        Custom Gas
       =====================================================================================
       -->
-      <div v-if="!isSwap" class="d-sm-flex text-center">
+      <div v-if="!hasCustom" class="d-sm-flex text-center">
         <mew-input
           v-model="customGasPrice"
           label="Customize"
@@ -58,10 +58,10 @@
           :title="customBtn.text"
           btn-size="xlarge"
           :btn-style="customBtn.style"
-          :has-full-width="isSwap"
+          :has-full-width="hasCustom"
           @click.native="setCustomGasPrice(customGasPrice)"
         />
-        <p v-if="isSwap" class="pt-2">
+        <p v-if="hasCustom" class="pt-2">
           To change the custom gas price, go to
           <span
             class="cursor--pointer go-to-global-text"
@@ -126,7 +126,7 @@ export default {
       type: Function,
       default: () => {}
     },
-    isSwap: {
+    hasCustom: {
       type: Boolean,
       default: false
     },
@@ -149,14 +149,11 @@ export default {
         fromWei(this.customGasPrice, 'ether')
       );
       return {
-        text: this.isSwap
+        text: this.hasCustom
           ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${usdValue}`
           : 'Confirm',
-        style: this.isSwap ? 'outline' : 'background'
+        style: this.hasCustom ? 'outline' : 'background'
       };
-    },
-    hasCustom() {
-      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
     }
   }
 };

@@ -231,7 +231,7 @@ export default {
       ) {
         return this.balanceInWei;
       }
-      return this.selectedCurrency.balance;
+      return BigNumber(this.selectedCurrency.balance).toString();
     },
     tokens() {
       const tokensList = this.tokensList || [];
