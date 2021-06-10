@@ -1,5 +1,31 @@
 <template>
   <div class="mt-5 mb-10">
+    <app-modal :show="openHighFeeNote" :close="closeHighFeeNote" no-btn>
+      <template #dialogBody>
+        <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
+        <div class="mew-heading-1">Are you guys out of your minds?</div>
+        <div class="mt-6 textPrimary--text">
+          The fees are indeed high these days. We feel your pain!
+          <br />
+          <br />
+          Transaction fees are charged by Ethereum miners, not MEW. We can't
+          influence them and we don't receive any part of the transaction fees
+          that you pay.
+          <br />
+          <br />
+          Ethereum is getting more and more popular, but its capacity is
+          limited, this is why when the network is congested, it can cost
+          $10-$20 to send a token, and a simple Swap transaction can se you back
+          $100 or even more.
+          <br />
+          <br />
+          Many teams in the Ethereum community are working hard to solve this
+          problem: Ethereum 2.0 is gradually being built, numerous Layer 2
+          solutions are getting launched. It is still very early days of
+          Ethereum, and this is the current state of the technology.
+        </div>
+      </template>
+    </app-modal>
     <v-row justify="space-between" align="start">
       <v-col cols="12" sm="3" class="pb-0">
         <p class="mew-heading-3 mb-0">Network Fee</p>
@@ -29,7 +55,7 @@
                 v-show="gettingFee || !showFee"
                 type="text"
                 width="150px"
-                class="mb-0 px-2"
+                class="mb-n2 px-2"
               />
             </div>
           </v-col>
@@ -41,9 +67,12 @@
           </v-col>
           <v-col cols="12" class="pt-0">
             <div class="d-flex align-center justify-start pt-2">
-              <a rel="noopener noreferrer" class="mr-3" target="_blank"
-                >Why are the fees so high?</a
+              <div
+                class="mr-3 primary--text cursor--pointer user-select--none"
+                @click="openHighFeeNote = true"
               >
+                Why are the fees so high?
+              </div>
               <a
                 v-if="notEnoughEth"
                 rel="noopener noreferrer"
@@ -57,9 +86,12 @@
       </v-col>
       <v-col cols="1">
         <div class="d-flex justify-end align-center">
-          <div class="icon-holder primary" @click="openGasPriceModal">
-            <v-icon size="small" color="white">mdi-pencil</v-icon>
-          </div>
+          <img
+            class="btn-circle"
+            src="@/assets/images/icons/icon-edit-btn.svg"
+            alt="edit"
+            @click="openGasPriceModal"
+          />
         </div>
       </v-col>
     </v-row>
@@ -67,6 +99,7 @@
 </template>
 
 <script>
+import AppModal from '@/core/components/AppModal';
 import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
@@ -83,6 +116,7 @@ const GAS_TYPE_ICONS = {
 };
 export default {
   name: 'SwapFee',
+  components: { AppModal },
   props: {
     showFee: {
       type: Boolean,
@@ -117,6 +151,9 @@ export default {
       default: ''
     }
   },
+  data: () => {
+    return { openHighFeeNote: false };
+  },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
@@ -137,6 +174,11 @@ export default {
     },
     hasError() {
       return this.error !== '';
+    }
+  },
+  methods: {
+    closeHighFeeNote() {
+      this.openHighFeeNote = false;
     }
   }
 };
