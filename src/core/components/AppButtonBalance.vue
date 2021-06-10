@@ -1,7 +1,7 @@
 <template>
-  <div class="mew-component--top-right-text">
+  <div class="core--components--app-button-balance">
     <v-skeleton-loader v-if="loading" type="text" width="100px" />
-    <div v-else class="d-flex">
+    <div v-else class="d-flex align-center justify-end">
       <div class="primary--text mew-body">
         Balance: {{ balanceFormatted.value }}
       </div>
@@ -49,9 +49,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mew-component--top-right-text {
+.core--components--app-button-balance {
   position: absolute;
-  top: -23px;
+  top: -25px;
   right: 0px;
 }
 </style>

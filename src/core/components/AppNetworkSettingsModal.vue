@@ -1,5 +1,10 @@
 <template>
-  <v-dialog :value="gasPriceModal" width="500" @close="handleClose">
+  <v-dialog
+    :value="gasPriceModal"
+    width="500"
+    @close="handleClose"
+    @click:outside="handleClose"
+  >
     <v-sheet class="py-6 px-4">
       <v-row>
         <v-col cols="12">
