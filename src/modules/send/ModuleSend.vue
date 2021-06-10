@@ -7,40 +7,12 @@
   >
     <template #moduleBody>
       <div class="full-width px-lg-3 pb-6">
-        <app-modal
-          :has-buttons="false"
-          :show="showBarcodeModal"
+        <send-funds-to-wallet-modal
           :close="handleBarcodeClose"
-          title="My public address to receive funds"
-        >
-          <template #dialogBody>
-            <v-row>
-              <v-col cols="12">
-                <v-row dense class="pa-1">
-                  <v-col cols="5"></v-col>
-                  <v-col cols="7">
-                    <div class="d-flex">
-                      <mew-blockie
-                        :address="address"
-                        width="30px"
-                        height="30px"
-                      />
-                      <p class="ma-0 mew-heading-3">My main account</p>
-                    </div>
-                    <p class="ma-0 address-overflow caption">{{ address }}</p>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col cols="12">
-                <p class="caption modal-caption">
-                  To receive {{ currencyName }} from another account, send
-                  {{ currencyName }}
-                  from that account to this address.
-                </p>
-              </v-col>
-            </v-row>
-          </template>
-        </app-modal>
+          :show="showBarcodeModal"
+          :address="address"
+          :currency-name="currencyName"
+        />
         <v-row>
           <v-col cols="12" md="6">
             <p class="ma-0" />
@@ -90,7 +62,10 @@
                 </p>
               </v-col>
               <v-col cols="6" class="d-flex flex-column">
-                <div class="mew-body link-color" @click="openBarcodeModal">
+                <div
+                  class="mew-body primary--text cursor--pointer"
+                  @click="openBarcodeModal"
+                >
                   Transfer {{ currencyName }} from another account
                 </div>
                 <br />
@@ -100,7 +75,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Buy {{ network.type.currencyName }}
+                  Buy {{ currencyName }}
                 </a>
               </v-col>
             </v-row>
@@ -187,15 +162,14 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import getService from '@/core/helpers/getService';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import AppModal from '@/core/components/AppModal';
+import SendFundsToWalletModal from './components/SendFundsToWalletModal.vue';
 
 export default {
   components: {
     ModuleAddressBook,
-    AppModal
+    SendFundsToWalletModal
   },
   props: {
     prefilledAmount: {
@@ -283,7 +257,7 @@ export default {
     selectedBalance() {
       if (
         _.isEmpty(this.selectedCurrency) ||
-        this.selectedCurrency.symbol === this.network.type.currencyName
+        this.selectedCurrency.symbol === this.currencyName
       ) {
         return this.balanceInETH;
       }
@@ -472,25 +446,9 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx
-        .submitTransaction()
-        .then(response => {
-          Toast(
-            'Cheers! Your transaction was mined. Check it in ',
-            {
-              title: `${getService(this.network.type.blockExplorerTX)}`,
-              url: this.network.type.blockExplorerTX.replace(
-                '[[txHash]]',
-                response.blockHash
-              )
-            },
-            SUCCESS,
-            5000
-          );
-        })
-        .catch(error => {
-          this.error = error;
-        });
+      this.sendTx.submitTransaction().catch(error => {
+        this.error = error;
+      });
     },
     prefillForm() {
       if (this.isPrefilled) {
@@ -521,7 +479,7 @@ export default {
       this.$refs.mewInput.clear();
       this.selectedCurrency = {
         name: this.network.type.name_long,
-        symbol: this.network.type.currencyName
+        symbol: this.currencyName
       };
     },
     convertToDisplay(amount, decimals) {
@@ -532,7 +490,7 @@ export default {
     setEntireBal() {
       if (
         _.isEmpty(this.selectedCurrency) ||
-        this.selectedCurrency.symbol === this.network.type.currencyName
+        this.selectedCurrency.symbol === this.currencyName
       ) {
         this.setAmount(
           BigNumber(this.balanceInETH).minus(this.txFeeETH).toFixed()
@@ -573,13 +531,5 @@ export default {
 .link-color {
   color: var(--v-primary-base);
   cursor: pointer;
-}
-
-.modal-caption {
-  color: var(--v-captionPrimary);
-}
-
-.address-overflow {
-  word-break: break-all;
 }
 </style>
