@@ -21,7 +21,7 @@
             =====================================================================================
             -->
           <v-row class="align-center justify-space-between mt-4">
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3">
+            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
               <div class="position--relative">
                 <app-button-balance
                   :loading="isLoading"
@@ -57,9 +57,8 @@
                 }"
                 @input="setTokenInValue"
             /></v-col>
-
-            <v-col cols="12" sm="2" class="mt-n5">
-              <div class="d-flex align-center justify-center">
+            <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+              <div class="d-flex align-center justify-center pb-sm-10">
                 <swap-btn
                   :class="[
                     enableTokenSwitch
@@ -71,8 +70,7 @@
                 />
               </div>
             </v-col>
-
-            <v-col cols="12" sm="5">
+            <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
               <mew-select
                 ref="toToken"
                 :value="toTokenType"
@@ -98,7 +96,7 @@
           -->
           <app-user-msg-block
             v-if="!hasMinEth"
-            class="mt-5"
+            class="mt-sm-5"
             :message="msg.storeBitcoin"
           >
             <div class="mt-3 mx-n1">
@@ -141,7 +139,7 @@
             v-if="
               toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
             "
-            class="mt-5"
+            class="mt-sm-5"
             :message="msg.lowBalance"
           >
             <div class="border-top mt-3">
@@ -217,6 +215,7 @@
             :to-token-symbol="toTokenType.symbol"
             :to-token-icon="toTokenType.img"
             :is-loading="isLoadingProviders"
+            class="mt-7"
           />
           <!--
             =====================================================================================
@@ -233,10 +232,11 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
+            class="mt-10 mt-sm-16"
           />
-          <div class="text-center">
+          <div class="text-center mt-10 mt-sm-15">
             <mew-button
-              title="Swap"
+              title="Next"
               :has-full-width="false"
               :disabled="step < 2 || feeError != ''"
               btn-size="xlarge"

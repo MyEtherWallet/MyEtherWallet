@@ -1,5 +1,9 @@
 <template>
+<<<<<<< HEAD
   <div class="modules--swap--components--swap-providers-list my-5">
+=======
+  <div>
+>>>>>>> v6/add-swap-low-balance-note
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
       Select a provider
     </div>
