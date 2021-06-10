@@ -1,6 +1,5 @@
 <template>
   <v-app class="walletBg">
-    <msg />
     <module-decision-tree />
     <router-view />
     <module-toast />
@@ -8,7 +7,6 @@
 </template>
 
 <script>
-import msg from '@/core/components/AppErrorMsg';
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
@@ -16,7 +14,7 @@ import currencyTypes from '@/core/configs/configCurrencyTypes';
 
 export default {
   name: 'App',
-  components: { msg, ModuleToast, ModuleDecisionTree },
+  components: { ModuleToast, ModuleDecisionTree },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
