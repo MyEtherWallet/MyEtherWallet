@@ -8,8 +8,8 @@
       :btn-enabled="disableBtn"
       :close-only="true"
       :width="'450'"
-      @close="reset"
       class="pa-8"
+      @close="reset"
     >
       <template #dialogBody>
         <div class="px-5">
