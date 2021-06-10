@@ -79,7 +79,7 @@
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "5.53.0",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
-    "@ledgerhq/hw-transport-webusb": "5.51.1",
+    "@ledgerhq/hw-transport-webusb": "5.53.1",
     "@mdi/font": "5.9.55",
     "@vue/babel-preset-app": "4.5.13",
     "@vue/cli-plugin-babel": "4.5.13",
@@ -172,7 +172,10 @@
     "y18n": "5.0.5",
     "bl": "4.0.3",
     "elliptic": "6.5.3",
-    "dns-packet": "5.2.2"
+    "dns-packet": "5.2.2",
+    "trim-newlines": "3.0.1",
+    "css-what": "5.0.1",
+    "normalize-url": "6.0.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
