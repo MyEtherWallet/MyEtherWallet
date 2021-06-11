@@ -1,7 +1,7 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
-    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
-      Select a provider
+    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
+      Select rate
     </div>
     <!--
     =====================================================================================
@@ -285,8 +285,8 @@ export default {
      */
     moreProvidersText() {
       if (this.providersCut > 0) {
-        const single = 'More Provider';
-        const multiple = 'More Providers';
+        const single = 'More Rate';
+        const multiple = 'More Rates';
         if (!this.showMore) {
           return this.providersCut === 1
             ? `${this.providersCut} ${single}`
