@@ -38,7 +38,6 @@ class CoolWallet {
       if (!window.navigator.bluetooth)
         return reject(new Error('browser not supported'));
       cwsTransportLib.listen((error, device) => {
-        console.log(error);
         if (error) reject(error);
         if (device) {
           cwsTransportLib.connect(device).then(_transport => {
