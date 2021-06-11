@@ -17,7 +17,6 @@ const ERRORS = {
 const WARNINGS = {};
 
 export default err => {
-  console.log(err);
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
