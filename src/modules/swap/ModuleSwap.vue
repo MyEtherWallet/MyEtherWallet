@@ -137,7 +137,9 @@
           -->
           <app-user-msg-block
             v-if="
-              toTokenType.value && toTokenType.value.toLowerCase() == 'bitcoin'
+              toTokenType &&
+              toTokenType.value &&
+              toTokenType.value.toLowerCase() == 'bitcoin'
             "
             class="mt-sm-5"
             :message="msg.lowBalance"
@@ -456,11 +458,12 @@ export default {
         ...this.toTokens
       ];
       const fromTokenAddress =
-        this.fromTokenType.contract_address ||
-        this.fromTokenType.contract ||
+        this.fromTokenType?.contract_address ||
+        this.fromTokenType?.contract ||
         '';
       return returnableTokens.filter(item => {
-        const address = item.contract_address || item.contract || '';
+        const address = item?.contract_address || item?.contract || '';
+
         if (
           item.selectTokenLabel ||
           address?.toLowerCase() !== fromTokenAddress?.toLowerCase()
@@ -544,7 +547,7 @@ export default {
       ];
 
       const toTokenAddress =
-        this.toTokenType?.contract_address || this?.toTokenType.contract || '';
+        this.toTokenType?.contract_address || this.toTokenType?.contract || '';
       return returnableTokens.filter(item => {
         const address = item?.contract_address || item?.contract || '';
         if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
