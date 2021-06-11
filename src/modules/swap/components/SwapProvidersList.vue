@@ -196,17 +196,15 @@
       Show More Providers Button
     =====================================================================================
     -->
-    <mew-button
+    <div
       v-if="step >= 1 && providersCut > 0"
-      :title="moreProvidersText"
-      btn-style="transparent"
-      btn-size="small"
-      :icon="moreProvidersIcon"
-      icon-type="mdi"
-      icon-align="right"
-      class="mt-5"
-      @click.native="showMore = !showMore"
-    />
+      class="cursor--pointer user-select--none primary--text mt-7 ml-4"
+      @click="showMore = !showMore"
+    >
+      {{ moreProvidersText }}
+      <v-icon v-show="!showMore" small color="primary">mdi-arrow-down</v-icon>
+      <v-icon v-show="showMore" small color="primary">mdi-arrow-up</v-icon>
+    </div>
   </div>
 </template>
 <script>
