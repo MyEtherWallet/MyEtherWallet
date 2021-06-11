@@ -84,7 +84,7 @@
 
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
+import browserExtensionOverlay from '@/modules/access-wallet/software/components/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
@@ -95,7 +95,7 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { Web3Wallet } from '@/modules/access-wallet/common';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';
@@ -160,7 +160,7 @@ export default {
         {
           color: 'basic',
           title: 'Hardware wallets',
-          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox, Secalot',
+          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',

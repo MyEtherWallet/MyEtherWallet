@@ -38,10 +38,10 @@
     "@ensdomains/dnsregistrar": "0.4.0",
     "@myetherwallet/mew-components": "0.5.78-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
-    "@sentry/browser": "6.4.1",
-    "@sentry/integrations": "6.4.1",
-    "@sentry/tracing": "6.4.1",
-    "@sentry/vue": "6.4.1",
+    "@sentry/browser": "6.5.1",
+    "@sentry/integrations": "6.5.1",
+    "@sentry/tracing": "6.5.1",
+    "@sentry/vue": "6.5.1",
     "@unstoppabledomains/resolution": "3.0.0",
     "@walletconnect/browser": "1.0.0",
     "@walletconnect/qrcode-modal": "1.4.1",
@@ -131,7 +131,6 @@
     "raw-loader": "4.0.2",
     "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
-    "rskjs-util": "1.0.3",
     "sass": "1.34.1",
     "sass-loader": "10.1.1",
     "sinon": "11.1.1",
@@ -175,7 +174,8 @@
     "dns-packet": "5.2.2",
     "trim-newlines": "3.0.1",
     "css-what": "5.0.1",
-    "normalize-url": "6.0.1"
+    "normalize-url": "6.0.1",
+    "scrypt.js": "0.3.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"

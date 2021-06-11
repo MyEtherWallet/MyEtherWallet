@@ -135,15 +135,6 @@ export default {
         link: 'https://shiftcrypto.ch/'
       },
       {
-        logoImg: require('@/assets/images/hardware-wallets/logo-secalot.png'),
-        walletImg: require('@/assets/images/hardware-wallets/secalot.png'),
-        priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
-        note: 'The most trusted hardware wallet in the world. Get yours today!',
-        link: 'https://www.secalot.com/'
-      },
-      {
         logoText: 'ETHER.CARDS',
         //logoImg: require('@/assets/images/hardware-wallets/logo-ethercards.png'),
         walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),

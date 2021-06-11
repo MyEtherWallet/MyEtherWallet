@@ -1,5 +1,5 @@
 import matic from '@/assets/images/networks/network.svg';
-
+import tokens from '@/_generated/tokens/tokens-matic.json';
 export default {
   name: 'MATIC',
   name_long: 'MATIC Network',
@@ -8,7 +8,7 @@ export default {
   blockExplorerAddr:
     'https://explorer-mainnet.maticvigil.com/address/[[address]]',
   chainID: 137,
-  tokens: [],
+  tokens: tokens,
   contracts: [],
   icon: matic,
   currencyName: 'MATIC',

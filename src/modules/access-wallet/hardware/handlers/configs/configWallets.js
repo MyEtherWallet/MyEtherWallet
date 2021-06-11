@@ -1,25 +1,34 @@
-import bcvaultWallet from '@/modules/access-wallet/hardware/handlers/hardwares/bcvault';
-import bitboxWallet from '@/modules/access-wallet/hardware/handlers/hardwares/bitbox';
-import bitbox02Wallet from '@/modules/access-wallet/hardware/handlers/hardwares/bitbox02';
-import coolwalletWallet from '@/modules/access-wallet/hardware/handlers/hardwares/coolwallet';
-import keepkeyWallet from '@/modules/access-wallet/hardware/handlers/hardwares/keepkey';
-import ledgerWallet from '@/modules/access-wallet/hardware/handlers/hardwares/ledger';
-import secalotWallet from '@/modules/access-wallet/hardware/handlers/hardwares/secalot';
-import trezorWallet from '@/modules/access-wallet/hardware/handlers/hardwares/trezor';
-import mewconnectWallet from '@/modules/wallets/utils/hybrid/MEWconnect';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  BitBoxWallet,
+  BitBox02Wallet,
+  KeepkeyWallet,
+  BCVaultWallet,
+  CoolWallet
+} from '@/modules/access-wallet/common';
 
 /**
  * different types of available hardware wallets
  */
+const LAYOUT_STEPS = {
+  ENTER_PASSWORD: 'enter_password',
+  PATH_SELECT: 'path_select',
+  NETWORK_ACCOUNT_SELECT: 'network_account_select',
+  BITBOX_SELECT: 'bitbox_select',
+  BITBOX_POPUP: 'bitbox_popup',
+  KEEPKEY_POPUP: 'keepkey_popup'
+};
+export { LAYOUT_STEPS };
 export default {
   [WALLET_TYPES.LEDGER]: {
-    create: ledgerWallet,
-    when: 1,
+    create: LedgerWallet,
+    when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with Ledger',
@@ -27,11 +36,11 @@ export default {
     }
   },
   [WALLET_TYPES.TREZOR]: {
-    create: trezorWallet,
-    when: 1,
+    create: TrezorWallet,
+    when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with Trezor',
@@ -39,11 +48,16 @@ export default {
     }
   },
   [WALLET_TYPES.BITBOX]: {
-    create: bitboxWallet,
+    create: BitBoxWallet,
     when: 4,
+    steps: [
+      LAYOUT_STEPS.BITBOX_SELECT,
+      LAYOUT_STEPS.ENTER_PASSWORD,
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: true,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Select BitBox Wallet',
@@ -53,38 +67,27 @@ export default {
     }
   },
   [WALLET_TYPES.BITBOX2]: {
-    create: bitbox02Wallet,
+    create: BitBox02Wallet,
     when: 3,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
-      1: 'Select BitBox Wallet',
-      // 2: 'Match your encryption pairing code',
-      2: 'Connect with BitBox',
-      3: 'Confirm Network & Address'
-    }
-  },
-  [WALLET_TYPES.SECALOT]: {
-    create: secalotWallet,
-    when: 2,
-    hasPaths: true,
-    requiresPassword: true,
-    needsQr: false,
-    accountOnly: false,
-    titles: {
-      1: 'Enter your password',
-      2: 'Connect with Secalot',
-      3: 'Confirm Network & Address'
+      1: 'Connect with BitBox',
+      2: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.KEEPKEY]: {
-    create: keepkeyWallet,
+    create: KeepkeyWallet,
     when: 2,
+    steps: [
+      LAYOUT_STEPS.PATH_SELECT,
+      LAYOUT_STEPS.KEEPKEY_POPUP,
+      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    ],
     hasPaths: true,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with KeepKey',
@@ -92,44 +95,23 @@ export default {
       3: 'Confirm Network & Address'
     }
   },
-  [WALLET_TYPES.FINNEY]: {
-    create: mewconnectWallet,
-    when: 1,
-    hasPaths: false,
-    requiresPassword: false,
-    needsQr: true,
-    titles: {
-      1: 'Connect with Finney'
-    }
-  },
-  [WALLET_TYPES.XWALLET]: {
-    create: mewconnectWallet,
-    when: 1,
-    hasPaths: false,
-    requiresPassword: false,
-    needsQr: true,
-    accountOnly: false,
-    titles: {
-      1: 'Connect with XWallet'
-    }
-  },
   [WALLET_TYPES.BCVAULT]: {
-    create: bcvaultWallet,
+    create: BCVaultWallet,
     when: 2,
+    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: false,
-    needsQr: false,
     accountOnly: true,
     titles: {
       1: 'Connect with BC Vault'
     }
   },
   [WALLET_TYPES.COOL_WALLET]: {
-    create: coolwalletWallet,
+    create: CoolWallet,
     when: 2,
+    steps: [LAYOUT_STEPS.ENTER_PASSWORD, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: true,
-    needsQr: false,
     accountOnly: false,
     titles: {
       1: 'Connect with CoolWallet',

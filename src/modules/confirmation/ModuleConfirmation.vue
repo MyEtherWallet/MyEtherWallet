@@ -85,7 +85,7 @@
 
 <script>
 import AppModal from '@/core/components/AppModal';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationTransaction from './components/ConfirmationTransaction';
 import ConfirmationMesssage from './components/ConfirmationMessage';
@@ -101,7 +101,7 @@ import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
-import { sanitizeHex } from '@/modules/wallets/utils/utils.js';
+import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 export default {
   name: 'ConfirmationContainer',
   components: {
