@@ -48,18 +48,19 @@
       -->
       <div v-if="global" class="d-sm-flex text-center">
         <mew-input
-          v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
           class="mr-0 mr-sm-3"
+          :value="localCustom"
+          @input="setCustomInput"
         />
         <mew-button
           :title="customBtn.text"
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="hasCustom"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          @click.native="setCustomGasPrice(localCustom)"
         />
         <p v-if="hasCustom" class="pt-2">
           To change the custom gas price, go to
@@ -76,7 +77,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="true"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          @click.native="setCustomGasPrice(localCustom)"
         />
         <p class="pt-2">
           To change the custom gas price, go to
@@ -141,8 +142,7 @@ export default {
   },
   data() {
     return {
-      customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
+      localCustom: '0'
     };
   },
   computed: {
@@ -150,14 +150,31 @@ export default {
     ...mapState('global', ['gasPriceType']),
     customBtn() {
       const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(this.customGasPrice, 'ether')
+        fromWei(this.localCustom, 'ether')
       );
       return {
         text: this.hasCustom
-          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${usdValue}`
+          ? `Custom: ${fromWei(this.localCustom, 'gwei')} Gwei $ ${usdValue}`
           : 'Confirm',
         style: this.hasCustom ? 'outline' : 'background'
       };
+    }
+  },
+  watch: {
+    selected(newVal) {
+      this.localCustom =
+        newVal === gasPriceTypes.STORED ? fromWei(this.gasPrice, 'gwei') : '0';
+    }
+  },
+  mounted() {
+    this.localCustom =
+      this.selected === gasPriceTypes.STORED
+        ? fromWei(this.gasPrice, 'gwei')
+        : '0';
+  },
+  methods: {
+    setCustomInput(e) {
+      this.localCustom = e;
     }
   }
 };

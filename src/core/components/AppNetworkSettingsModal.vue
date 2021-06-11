@@ -54,15 +54,15 @@ export default {
       default: () => {}
     }
   },
-  created() {
-    this.useGlobal = false;
-    this.fetchGasPrice();
-  },
   computed: {
     ...mapState('global', ['gasPriceType']),
     hasCustom() {
       return this.gasPriceType === gasPriceTypes.STORED;
     }
+  },
+  created() {
+    this.useGlobal = false;
+    this.fetchGasPrice();
   },
   methods: {
     setCustom(value) {
