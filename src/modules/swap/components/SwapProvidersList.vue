@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="modules--swap--components--swap-providers-list my-5">
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
       Select a provider
     </div>
@@ -13,28 +13,56 @@
       :message="providersMessage"
       :is-alert="false"
     />
+
     <!--
     =====================================================================================
-      Sceleton Loader
+      Sceleton Loader (desktop/mobile)
     =====================================================================================
     -->
+    <div
+      class="
+        loading
+        align-center
+        px-5
+        py-5
+        tableHeader
+        border-radius--10px
+        d-none d-sm-flex
+      "
+    >
+      <div class="d-flex align-center">
+        <v-skeleton-loader type="avatar" class="mr-3" />
+        <v-skeleton-loader type="heading" />
+      </div>
+      <v-spacer />
+      <div class="textSecondary--text font-weight-medium">
+        Finding best rates...
+      </div>
+      <v-spacer />
+      <div class="d-flex align-center">
+        <v-skeleton-loader type="heading" class="mr-3" />
+        <v-skeleton-loader type="avatar" />
+      </div>
+    </div>
 
-    <v-row v-if="step === 0 && isLoading">
-      <v-col cols="12" class="mb-n3">
-        <v-card
-          flat
-          color="selectorBg lighten-1"
-          class="swap-providers-list-loading d-flex align-center px-5 py-5"
-        >
-          <v-skeleton-loader width="300px" type="chip" />
-          <v-spacer />
-          <div class="d-flex align-center">
-            <v-skeleton-loader width="170px" type="chip" class="mr-5" />
-            <v-skeleton-loader width="32px" type="chip" />
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <div
+      class="
+        loading
+        align-center
+        px-5
+        py-5
+        tableHeader
+        border-radius--10px
+        d-flex d-sm-none
+      "
+    >
+      <div class="textSecondary--text font-weight-medium">
+        Finding best rates...
+      </div>
+      <v-spacer />
+      <v-skeleton-loader type="avatar" />
+    </div>
+
     <!--
     =====================================================================================
       Provider Rate Row
@@ -123,14 +151,12 @@
                       Best Rate Chip (hidden on xs)
                     =====================================================================================
                     -->
-                    <v-chip
+                    <div
                       v-if="bestRate !== null && bestRate === quote.rate"
-                      pill
-                      color="primary"
-                      class="d-none d-sm-block py-1 px-5"
+                      class="d-none d-sm-block primary--text font-weight-bold"
                     >
                       Best Rate
-                    </v-chip>
+                    </div>
                   </v-row>
                 </v-col>
                 <!--
@@ -143,6 +169,7 @@
                 <v-col cols="2" sm="5">
                   <v-row class="align-center justify-end">
                     <v-img
+                      v-if="false"
                       :class="[
                         $vuetify.theme.dark ? 'invert' : '',
                         'd-none d-sm-block'
@@ -294,6 +321,23 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.modules--swap--components--swap-providers-list {
+  .loading {
+    .v-skeleton-loader__avatar {
+      height: 30px !important;
+      width: 30px !important;
+    }
+    .v-skeleton-loader__heading {
+      height: 30px !important;
+      width: 120px !important;
+      border-radius: 15px !important;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .rate-chip-xs {
   border-radius: 10px;
