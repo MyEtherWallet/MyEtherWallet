@@ -214,8 +214,8 @@
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
-            :to-token-symbol="toTokenType.symbol"
-            :to-token-icon="toTokenType.img"
+            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+            :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
             class="mt-7"
           />
@@ -240,7 +240,7 @@
             <mew-button
               title="Next"
               :has-full-width="false"
-              :disabled="step < 2 || feeError != ''"
+              :disabled="step < 2 || feeError != '' || !hasSelectedProvider"
               btn-size="xlarge"
               @click.native="showConfirm"
             />
@@ -435,7 +435,7 @@ export default {
         : this.availableBalance.toString();
     },
     /**
-     * Returns the dropdown token data
+     * @returns object of all the token data
      * to swap to
      */
     actualToTokens() {
@@ -472,7 +472,7 @@ export default {
       });
     },
     /**
-     * Returns all the tokens
+     * @returns object of all the tokens
      * to swap to
      */
     toTokens() {
@@ -492,7 +492,7 @@ export default {
         });
     },
     /**
-     * Returns wallet tokens
+     * @returns object of wallet tokens
      * to swap from
      */
     walletTokens() {
@@ -520,7 +520,7 @@ export default {
       return tokensOwned.concat(this.tokensList);
     },
     /**
-     * Returns the dropdown token data
+     * @returns object of all token data
      * to swap from
      */
     actualFromTokens() {
@@ -556,7 +556,7 @@ export default {
       });
     },
     /**
-     * Returns other tokens
+     * @returns object of other tokens
      * to swap from
      */
     fromTokens() {
@@ -571,7 +571,7 @@ export default {
       });
     },
     /**
-     * Returns all trending tokens
+     * @returns all trending tokens
      * to swap to
      */
     trendingTokens() {
@@ -743,6 +743,13 @@ export default {
         }
       }
       return '';
+    },
+    /**
+     * Checks whether or not there is a selected provider
+     * @returns{boolean}
+     */
+    hasSelectedProvider() {
+      return !_.isEmpty(this.selectedProvider);
     }
   },
   watch: {
@@ -955,7 +962,7 @@ export default {
           }
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
-          this.selectedProvider = q;
+          this.selectedProvider = q !== this.selectedProvider ? q : {};
         }
       });
     },
