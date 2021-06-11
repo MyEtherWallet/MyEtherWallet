@@ -8,7 +8,7 @@ import {
   CoolWallet
 } from '@/modules/access-wallet/hardware/handlers';
 import WalletInterface from './WalletInterface';
-import { MnemonicWallet } from '../software/handlers';
+import { MnemonicWallet, Web3Wallet } from '../software/handlers';
 import {
   MewConnectWallet,
   WalletConnectWallet,
@@ -26,6 +26,7 @@ export {
   WalletConnectWallet,
   WalletLinkWallet,
   WalletInterface,
+  Web3Wallet,
   MnemonicWallet,
   BCVaultWallet
 };

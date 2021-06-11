@@ -109,17 +109,13 @@ export default {
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
     when: 2,
-    steps: [
-      LAYOUT_STEPS.ENTER_PASSWORD,
-      LAYOUT_STEPS.PATH_SELECT,
-      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
-    ],
+    steps: [LAYOUT_STEPS.ENTER_PASSWORD, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: true,
     accountOnly: false,
     titles: {
       1: 'Connect with CoolWallet',
-      2: 'Confirm Network & Address'
+      3: 'Confirm Network & Address'
     }
   }
 };
