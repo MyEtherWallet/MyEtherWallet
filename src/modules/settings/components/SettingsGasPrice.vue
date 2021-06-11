@@ -36,7 +36,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row v-if="!hasCustom" align="center" class="pt-3 pb-9 px-3">
+      <v-row v-if="hasCustom || global" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -46,7 +46,7 @@
        Custom Gas
       =====================================================================================
       -->
-      <div v-if="!hasCustom" class="d-sm-flex text-center">
+      <div v-if="global" class="d-sm-flex text-center">
         <mew-input
           v-model="customGasPrice"
           label="Customize"
@@ -133,6 +133,10 @@ export default {
     openGlobalSettings: {
       type: Function,
       default: () => {}
+    },
+    global: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

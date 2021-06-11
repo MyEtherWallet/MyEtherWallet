@@ -423,6 +423,7 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = toWei(e.gasPrice);
       this.localGasType = e.gasType;
+      this.sendTx.setLocalGasPrice(this.actualGasPrice);
     },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
