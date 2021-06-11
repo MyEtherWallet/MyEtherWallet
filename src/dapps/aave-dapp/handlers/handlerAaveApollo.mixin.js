@@ -2,35 +2,43 @@
  * The Aave Apollo Mixin
  */
 import {
-  Deposit,
-  Borrow,
-  Repay,
-  SwapBorrowRateMode,
-  Withdraw,
-  SetUsageAsCollateralMode,
-  LiquidityRateHistoryUpdate,
-  ReserveUpdateSubscription,
-  UserPositionUpdateSubscription
+  deposit,
+  borrow,
+  repay,
+  swapBorrowRateMode,
+  withdraw,
+  setUsageAsCollateralMode,
+  liquidityRateHistoryUpdate,
+  reserveUpdateSubscription,
+  userPositionUpdateSubscription,
+  usdPriceEth
 } from '@/dapps/aave-dapp/apollo/queries/aave.graphql';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
+import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
+import moment from 'moment';
+const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default {
   name: 'HandlerAaveApollo',
   data() {
     return {
-      ReserveUpdateSubscription: '',
-      LiquidityRateHistoryUpdate: '',
-      UserPositionUpdateSubscription: ''
+      reservesStable: [],
+      reservesData: [],
+      rawReserveData: [],
+      liquidityRateHistoryUpdate: '',
+      userReserveData: [],
+      usdPriceEth: '',
+      userSummary: {}
     };
   },
   apollo: {
     /**
-     * Apollo subscription for liquidity rate history
+     * Apollo subscription to get liquidity rate history
      */
     $subscribe: {
-      LiquidityRateHistoryUpdate: {
-        query: LiquidityRateHistoryUpdate,
+      liquidityRateHistoryUpdate: {
+        query: liquidityRateHistoryUpdate,
         variables() {
           return {
             owner: this.address
@@ -50,10 +58,10 @@ export default {
         }
       },
       /**
-       * Apollo subscription for reserve update
+       * Apollo subscription to get reserves
        */
-      ReserveUpdateSubscription: {
-        query: ReserveUpdateSubscription,
+      reserveUpdateSubscription: {
+        query: reserveUpdateSubscription,
         variables() {
           return {
             poolId: configs.POOL_ID
@@ -61,17 +69,22 @@ export default {
         },
         client: 'aave',
         result({ data }) {
-          console.error('data', data);
+          this.rawReserveData = data.reserves.map(item => {
+            // item['icon'] = this.getTokenIcon(item.aToken.id);
+            return item;
+          });
+          this.reservesData = formatReserves(this.rawReserveData).reverse();
+          this.setFormatUserSummaryData();
         },
         error(error) {
           Toast(error.message, {}, ERROR);
         }
       },
       /**
-       * Apollo subscription for user position update
+       * Apollo subscription to get user reserves
        */
-      UserPositionUpdateSubscription: {
-        query: UserPositionUpdateSubscription,
+      userPositionUpdateSubscription: {
+        query: userPositionUpdateSubscription,
         variables() {
           return {
             userAddress: this.address,
@@ -83,7 +96,26 @@ export default {
           return this.address === null || this.address === '';
         },
         result({ data }) {
-          console.error('user position', data);
+          this.userReserveData = data.userReserves.map(item => {
+            console.error('item', item);
+            // item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
+            return item;
+          });
+          this.setFormatUserSummaryData();
+        },
+        error(error) {
+          Toast(error.message, {}, ERROR);
+        }
+      },
+      /**
+       * Apollo subscription to get usd price
+       */
+      usdPriceEth: {
+        query: usdPriceEth,
+        client: 'aave',
+        result({ data }) {
+          this.usdPriceEth = data.priceOracle.usdPriceEth;
+          this.setFormatUserSummaryData();
         },
         error(error) {
           Toast(error.message, {}, ERROR);
@@ -98,7 +130,7 @@ export default {
     onDeposit(data) {
       this.$apollo
         .mutate({
-          mutation: Deposit,
+          mutation: deposit,
           variables: data,
           update: (store, { data: { deposit } }) => {
             console.log('store', store, deposit);
@@ -117,7 +149,7 @@ export default {
     onBorrow(data) {
       this.$apollo
         .mutate({
-          mutation: Borrow,
+          mutation: borrow,
           variables: data,
           update: (store, { data: { borrow } }) => {
             console.log('store', store, borrow);
@@ -136,7 +168,7 @@ export default {
     onRepay(data) {
       this.$apollo
         .mutate({
-          mutation: Repay,
+          mutation: repay,
           variables: data,
           update: (store, { data: { repay } }) => {
             console.log('store', store, repay);
@@ -155,7 +187,7 @@ export default {
     setBorrowRate(data) {
       this.$apollo
         .mutate({
-          mutation: SwapBorrowRateMode,
+          mutation: swapBorrowRateMode,
           variables: data,
           update: (store, { data: { swapBorrowRateMode } }) => {
             console.log('store', store, swapBorrowRateMode);
@@ -174,7 +206,7 @@ export default {
     onWithdraw(data) {
       this.$apollo
         .mutate({
-          mutation: Withdraw,
+          mutation: withdraw,
           variables: data,
           update: (store, { data: { withdraw } }) => {
             console.log('store', store, withdraw);
@@ -193,7 +225,7 @@ export default {
     setCollateral(data) {
       this.$apollo
         .mutate({
-          mutation: SetUsageAsCollateralMode,
+          mutation: setUsageAsCollateralMode,
           variables: data,
           update: (store, { data: { setUsageAsCollateralMode } }) => {
             console.log('store', store, setUsageAsCollateralMode);
@@ -205,6 +237,65 @@ export default {
         .catch(err => {
           console.error('err', err);
         });
+    },
+    /**
+     * Correctly formats all of the user data
+     */
+    setFormatUserSummaryData() {
+      if (
+        this.reservesData?.length > 0 &&
+        this.userReserveData &&
+        this.usdPriceEth
+      ) {
+        this.userSummary = formatUserSummaryData(
+          this.rawReserveData,
+          this.userReserveData,
+          this.address.toLowerCase(),
+          this.usdPriceEth,
+          Number(moment().format('X'))
+        );
+        this.mergeTheReserves();
+      }
+    },
+    /**
+     * Merges the user reserves data into this.reservesData
+     */
+    mergeTheReserves() {
+      if (this.userSummary.reservesData.length > 0) {
+        this.userSummary.reservesData.forEach(data => {
+          const foundReserve = this.reservesData.find(
+            elem => elem.name === data.reserve.name
+          );
+          foundReserve.user = data;
+        });
+      }
+      this.getReserveBalances();
+    },
+    /**
+     * Finds the reserves balances
+     */
+    getReserveBalances() {
+      if (this.reservesData.length > 0) {
+        this.reservesData.forEach(reserve => {
+          reserve.tokenBalance = 0;
+          reserve.user = reserve.user || {};
+          if (reserve.symbol === 'ETH') {
+            reserve.tokenBalance = this.balanceInEth;
+          }
+          const foundReserve = this.tokensList.find(
+            elem => elem.symbol === reserve.symbol
+          );
+          if (foundReserve) {
+            reserve.tokenBalance = foundReserve.balance;
+          }
+          if (this.reservesStable.length < 5) {
+            if (STABLE_COINS.findIndex(coin => coin === reserve.symbol) >= 0) {
+              this.reservesStable.push(reserve);
+            }
+          }
+        });
+      }
+      this.isLoading = false;
     }
   }
 };

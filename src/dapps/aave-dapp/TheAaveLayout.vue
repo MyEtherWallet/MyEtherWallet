@@ -383,75 +383,42 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
-      if (!this.handler) true;
-      console.error('this', this.handler);
-      // return this.handler.isLoading;
-      return false;
+      return this.$apollo.loading;
     },
     loanValue() {
-      if (!this.handler) return `0%`;
-      return `${BigNumber(this.handler.userSummary.currentLiquidationThreshold)
+      return `${BigNumber(this.userSummary.currentLiquidationThreshold)
         .times(100)
         .toFixed()}%`;
     },
     healthFactor() {
-      if (!this.handler) return '-';
-      return BigNumber(this.handler.userSummary.healthFactor).gt(0)
-        ? BigNumber(this.handler.userSummary.healthFactor).toFixed(3)
+      return BigNumber(this.userSummary.healthFactor).gt(0)
+        ? BigNumber(this.userSummary.healthFactor).toFixed(3)
         : `-`;
     },
     totalLiquidity() {
-      const eth =
-        !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
-          ? '0'
-          : this.handler.userSummary.totalLiquidityETH;
-      const usd =
-        !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
-          ? '0'
-          : BigNumber(this.handler.userSummary.totalLiquidityETH)
-              .times(this.fiatValue ? this.fiatValue : 0)
-              .toFixed(2);
-
       return {
-        eth: this.handler ? eth : '0',
-        usd: this.handler ? usd : '0'
+        eth: this.userSummary.totalLiquidityETH || '0',
+        usd: this.userSummary.totalLiquidityUSD || '0'
       };
     },
     totalCollateral() {
-      if (!this.handler)
-        return {
-          eth: `0 ETH`,
-          usd: `$ 0.00`
-        };
-
-      const eth = `${this.handler.userSummary.totalCollateralETH}`;
-      const usd = `${BigNumber(
-        this.handler.userSummary.totalCollateralUSD
-      ).toFixed(2)}`;
-
+      const usd = `${BigNumber(this.userSummary.totalCollateralUSD).toFixed(
+        2
+      )}`;
       return {
-        eth: eth,
-        usd: usd
+        eth: this.userSummary.totalCollateralETH || '0',
+        usd: usd || '0.00'
       };
     },
     totalBorrow() {
-      if (!this.handler)
-        return {
-          eth: `0 ETH`,
-          usd: `$ 0.00`
-        };
-
-      const eth = `${this.handler.userSummary.totalBorrowsETH}`;
-      const usd = `${BigNumber(
-        this.handler.userSummary.totalBorrowsUSD
-      ).toFixed(2)}`;
-
+      const usd = `${BigNumber(this.userSummary.totalBorrowsUSD).toFixed(2)}`;
       return {
-        eth: eth,
-        usd: usd
+        eth: this.userSummary.totalBorrowsETH || '0',
+        usd: usd || '0.00'
       };
     },
     compositionPercentage() {

@@ -1,46 +1,46 @@
-mutation Deposit($data: TransferFromInput!) {
+mutation deposit($data: TransferFromInput!) {
   deposit(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-mutation Borrow($data: BorrowInput!) {
+mutation borrow($data: BorrowInput!) {
   borrow(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-mutation Repay($data: TransferFromInput!) {
+mutation repay($data: TransferFromInput!) {
   repay(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-mutation SwapBorrowRateMode($data: ApproveInput!) {
+mutation swapBorrowRateMode($data: ApproveInput!) {
   swapBorrowRateMode(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-mutation Withdraw($data: RedeemInput!) {
+mutation withdraw($data: RedeemInput!) {
   redeem(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-mutation SetUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
+mutation setUsageAsCollateralMode($data: SetUsageAsCollateralInput!) {
   setUsageAsCollateral(data: $data) {
     ...EthTransaction
     __typename
   }
 }
 
-subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
+subscription liquidityRateHistoryUpdate($reserveAddress: String!) {
   reserveParamsHistoryItems(
     where: { reserve: $reserveAddress }
     first: 10
@@ -52,7 +52,7 @@ subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
   }
 }
 
-subscription ReserveUpdateSubscription($poolId: String!) {
+subscription reserveUpdateSubscription($poolId: String!) {
   reserves(where: { pool: $poolId }) {
     ...ReserveData
     __typename
@@ -60,7 +60,7 @@ subscription ReserveUpdateSubscription($poolId: String!) {
 }
 
 
-subscription UserPositionUpdateSubscription(
+subscription userPositionUpdateSubscription(
   $userAddress: String!
   $poolId: String!
 ) {
@@ -70,7 +70,7 @@ subscription UserPositionUpdateSubscription(
   }
 }
 
-subscription UsdPriceEth {
+subscription usdPriceEth {
   priceOracle(id: "1") {
     usdPriceEth
   }

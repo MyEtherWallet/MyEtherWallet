@@ -13,15 +13,9 @@ import { toChecksumAddress } from 'web3-utils';
 
 import vuexStore from '@/core/store';
 import { mapState, mapGetters } from 'vuex';
-import {
-  formatUserSummaryData,
-  formatReserves,
-  normalize
-} from '@aave/protocol-js';
+import { normalize } from '@aave/protocol-js';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
-
-const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default class AaveHandler {
   constructor() {
@@ -192,63 +186,63 @@ export default class AaveHandler {
 
   // setters (?)
 
-  setFormatUserSummaryData() {
-    if (
-      this.reservesData.length > 0 &&
-      this.userReserveData &&
-      this.usdPriceEth
-    ) {
-      this.userSummary = formatUserSummaryData(
-        this.rawReserveData,
-        this.userReserveData,
-        this.address().toLowerCase(),
-        this.usdPriceEth,
-        Number(moment().format('X'))
-      );
-      this.mergeTheReserves();
-    }
-  }
+  // setFormatUserSummaryData() {
+  //   if (
+  //     this.reservesData.length > 0 &&
+  //     this.userReserveData &&
+  //     this.usdPriceEth
+  //   ) {
+  //     this.userSummary = formatUserSummaryData(
+  //       this.rawReserveData,
+  //       this.userReserveData,
+  //       this.address().toLowerCase(),
+  //       this.usdPriceEth,
+  //       Number(moment().format('X'))
+  //     );
+  //     this.mergeTheReserves();
+  //   }
+  // }
 
-  mergeTheReserves() {
-    if (this.userSummary.reservesData.length > 0) {
-      this.userSummary.reservesData.forEach(data => {
-        const foundReserve = this.reservesData.find(
-          elem => elem.name === data.reserve.name
-        );
-        foundReserve.user = data;
-      });
-    }
-    this.getReserveBalances();
-  }
+  // mergeTheReserves() {
+  //   if (this.userSummary.reservesData.length > 0) {
+  //     this.userSummary.reservesData.forEach(data => {
+  //       const foundReserve = this.reservesData.find(
+  //         elem => elem.name === data.reserve.name
+  //       );
+  //       foundReserve.user = data;
+  //     });
+  //   }
+  //   this.getReserveBalances();
+  // }
 
-  getReserveBalances() {
-    const tokensList = this.tokensList();
-    const ethBalance = this.balanceInETH();
-    console.error('in here');
-    if (this.reservesData.length > 0) {
-      this.reservesData.forEach(reserve => {
-        reserve.tokenBalance = 0;
-        reserve.user = !reserve.user ? {} : reserve.user;
-        if (reserve.symbol === 'ETH') {
-          reserve.tokenBalance = ethBalance;
-        }
+  // getReserveBalances() {
+  //   const tokensList = this.tokensList();
+  //   const ethBalance = this.balanceInETH();
+  //   console.error('in here');
+  //   if (this.reservesData.length > 0) {
+  //     this.reservesData.forEach(reserve => {
+  //       reserve.tokenBalance = 0;
+  //       reserve.user = !reserve.user ? {} : reserve.user;
+  //       if (reserve.symbol === 'ETH') {
+  //         reserve.tokenBalance = ethBalance;
+  //       }
 
-        const foundReserve = tokensList.find(
-          elem => elem.symbol === reserve.symbol
-        );
-        if (foundReserve) {
-          reserve.tokenBalance = foundReserve.balance;
-        }
+  //       const foundReserve = tokensList.find(
+  //         elem => elem.symbol === reserve.symbol
+  //       );
+  //       if (foundReserve) {
+  //         reserve.tokenBalance = foundReserve.balance;
+  //       }
 
-        if (this.reservesStable.length < 5) {
-          if (STABLE_COINS.findIndex(coin => coin === reserve.symbol) >= 0) {
-            this.reservesStable.push(reserve);
-          }
-        }
-      });
-    }
-    this.isLoading = false;
-  }
+  //       if (this.reservesStable.length < 5) {
+  //         if (STABLE_COINS.findIndex(coin => coin === reserve.symbol) >= 0) {
+  //           this.reservesStable.push(reserve);
+  //         }
+  //       }
+  //     });
+  //   }
+  //   this.isLoading = false;
+  // }
 
   _liquidityRateHandler(res) {
     const data = res.data.userReserves;
@@ -273,30 +267,30 @@ export default class AaveHandler {
     this.rateHistory = rateHistory;
   }
 
-  _usdPriceHandler(res) {
-    const data = res.data.priceOracle.usdPriceEth;
-    this.usdPriceEth = data;
-    this.setFormatUserSummaryData();
-  }
+  // _usdPriceHandler(res) {
+  //   const data = res.data.priceOracle.usdPriceEth;
+  //   this.usdPriceEth = data;
+  //   this.setFormatUserSummaryData();
+  // }
 
-  _userDataHandler(res) {
-    const data = res.data.userReserves.map(item => {
-      item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
-      return item;
-    });
-    this.userReserveData = data;
-    this.setFormatUserSummaryData();
-  }
+  // _userDataHandler(res) {
+  //   const data = res.data.userReserves.map(item => {
+  //     item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
+  //     return item;
+  //   });
+  //   this.userReserveData = data;
+  //   this.setFormatUserSummaryData();
+  // }
 
-  _reserveDataHandler(res) {
-    const data = res.data.reserves.map(item => {
-      item['icon'] = this.getTokenIcon(item.aToken.id);
-      return item;
-    });
-    this.rawReserveData = data;
-    this.reservesData = formatReserves(data).reverse();
-    this.setFormatUserSummaryData();
-  }
+  // _reserveDataHandler(res) {
+  //   const data = res.data.reserves.map(item => {
+  //     item['icon'] = this.getTokenIcon(item.aToken.id);
+  //     return item;
+  //   });
+  //   this.rawReserveData = data;
+  //   this.reservesData = formatReserves(data).reverse();
+  //   this.setFormatUserSummaryData();
+  // }
   /**
    * finds token from network list
    * or masterfile and uses the icon found
