@@ -1,7 +1,5 @@
-import tokens from '@/_generated/tokens/tokens-bsc.json';
-import contracts from '@/_generated/contracts/contract-abi-bsc.json';
 import bsc from '@/assets/images/networks/network.svg';
-
+import tokens from '@/_generated/tokens/tokens-bsc.json';
 export default {
   name: 'BSC',
   name_long: 'Binance Smart Chain',
@@ -10,7 +8,7 @@ export default {
   blockExplorerAddr: 'https://bscscan.com/address/[[address]]',
   chainID: 56,
   tokens: tokens,
-  contracts: contracts,
+  contracts: [],
   icon: bsc,
   currencyName: 'BNB',
   isTestNetwork: false,
