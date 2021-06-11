@@ -18,6 +18,7 @@
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
+      :has-body-padding="false"
       :icon="network.type.icon"
       :caption="convertedBalance"
       :has-elevation="true"
@@ -42,35 +43,40 @@
         </div>
       </template>
       <template #moduleBody>
-        <balance-chart :data="chartData" class="full-width mt-5" />
-        <v-row class="align-center">
-          <v-col class="d-flex align-center justify-center">
-            <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-            <div
-              :class="[
-                'ml-2 font-weight-regular',
-                priceChange ? 'primary--text' : 'error--text'
-              ]"
-            >
-              {{ formatChange }}
-            </div>
-            <v-icon
-              :class="[priceChange ? 'primary--text' : 'error--text', 'body-2']"
-              >{{ priceChangeArrow }}</v-icon
-            >
-            <div class="ml-5">
-              {{ formatFiatPrice }} / 1 {{ network.type.name }}
-            </div>
-          </v-col>
-          <v-col class="text-right">
-            <mew-button
-              :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
-              @click.native="navigateToSend"
-            />
-          </v-col>
-        </v-row>
+        <div class="pa-7">
+          <balance-chart :data="chartData" class="full-width mt-5" />
+          <v-row class="align-center">
+            <v-col class="d-flex align-center justify-center">
+              <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+              <div
+                :class="[
+                  'ml-2 font-weight-regular',
+                  priceChange ? 'primary--text' : 'error--text'
+                ]"
+              >
+                {{ formatChange }}
+              </div>
+              <v-icon
+                :class="[
+                  priceChange ? 'primary--text' : 'error--text',
+                  'body-2'
+                ]"
+                >{{ priceChangeArrow }}</v-icon
+              >
+              <div class="ml-5">
+                {{ formatFiatPrice }} / 1 {{ network.type.name }}
+              </div>
+            </v-col>
+            <v-col class="text-right">
+              <mew-button
+                :has-full-width="false"
+                title="Send Transaction"
+                btn-size="xlarge"
+                @click.native="navigateToSend"
+              />
+            </v-col>
+          </v-row>
+        </div>
       </template>
     </mew-module>
     <!--
