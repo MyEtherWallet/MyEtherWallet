@@ -115,7 +115,7 @@ export default {
     accountOnly: false,
     titles: {
       1: 'Connect with CoolWallet',
-      3: 'Confirm Network & Address'
+      2: 'Confirm Network & Address'
     }
   }
 };
