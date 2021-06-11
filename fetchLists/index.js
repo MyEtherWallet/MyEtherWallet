@@ -127,6 +127,9 @@ const fetchMasterFile = async () => {
             if (!networkTokens[network][t.address]) {
               networkTokens[network][t.address] = t;
               tokens.push(t);
+            } else if (!networkTokens[network][t.address].icon) {
+              networkTokens[network][t.address].icon = t.icon;
+              networkTokens[network][t.address].icon_png = t.icon_png;
             }
           });
         }
@@ -137,6 +140,9 @@ const fetchMasterFile = async () => {
             if (!networkTokens[network][t.address]) {
               networkTokens[network][t.address] = t;
               tokens.push(t);
+            } else if (!networkTokens[network][t.address].icon) {
+              networkTokens[network][t.address].icon = t.icon;
+              networkTokens[network][t.address].icon_png = t.icon_png;
             }
           });
         }
