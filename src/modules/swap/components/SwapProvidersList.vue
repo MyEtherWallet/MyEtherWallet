@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
   <div class="modules--swap--components--swap-providers-list my-5">
-=======
-  <div>
->>>>>>> v6/add-swap-low-balance-note
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5">
       Select a provider
     </div>
@@ -20,19 +16,18 @@
 
     <!--
     =====================================================================================
-      Sceleton Loader
+      Sceleton Loader (desktop/mobile)
     =====================================================================================
     -->
     <div
-      v-if="step === 0 && isLoading"
       class="
         loading
-        d-flex
         align-center
         px-5
         py-5
         tableHeader
         border-radius--10px
+        d-none d-sm-flex
       "
     >
       <div class="d-flex align-center">
@@ -48,6 +43,24 @@
         <v-skeleton-loader type="heading" class="mr-3" />
         <v-skeleton-loader type="avatar" />
       </div>
+    </div>
+
+    <div
+      class="
+        loading
+        align-center
+        px-5
+        py-5
+        tableHeader
+        border-radius--10px
+        d-flex d-sm-none
+      "
+    >
+      <div class="textSecondary--text font-weight-medium">
+        Finding best rates...
+      </div>
+      <v-spacer />
+      <v-skeleton-loader type="avatar" />
     </div>
 
     <!--
@@ -318,7 +331,7 @@ export default {
     }
     .v-skeleton-loader__heading {
       height: 30px !important;
-      width: 100px !important;
+      width: 120px !important;
       border-radius: 15px !important;
     }
   }
