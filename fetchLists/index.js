@@ -87,6 +87,9 @@ const fetchMasterFile = async () => {
     if (!fs.existsSync(configs.MASTER_FILE_PATH)) {
       fs.mkdirSync(configs.MASTER_FILE_PATH);
     }
+    if (!fs.existsSync(configs.TOKENS_PATH)) {
+      fs.mkdirSync(configs.TOKENS_PATH);
+    }
     const oneInchTokens = await fetchOneInchLists();
     const response = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/master-file.json'
