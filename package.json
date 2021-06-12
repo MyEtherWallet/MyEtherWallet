@@ -37,7 +37,7 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.8",
-    "@sentry/browser": "6.3.5",
+    "@sentry/browser": "6.6.0",
     "@sentry/integrations": "6.3.5",
     "@unstoppabledomains/resolution": "2.1.1",
     "apollo-cache-inmemory": "1.6.6",
