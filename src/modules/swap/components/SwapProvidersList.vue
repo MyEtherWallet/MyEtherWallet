@@ -20,17 +20,7 @@
     =====================================================================================
     -->
     <div v-if="isLoading">
-      <div
-        class="
-          loading
-          align-center
-          px-5
-          py-5
-          tableHeader
-          border-radius--10px
-          d-none d-sm-flex
-        "
-      >
+      <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
         <div class="d-flex align-center">
           <v-skeleton-loader type="avatar" class="mr-3" />
           <v-skeleton-loader type="heading" />
@@ -57,7 +47,7 @@
           d-flex d-sm-none
         "
       >
-        <div class="textSecondary--text font-weight-medium">
+        <div class="textSecondary--text font-weight-medium mew-body">
           Finding best rates...
         </div>
         <v-spacer />
@@ -317,12 +307,12 @@ export default {
 .modules--swap--components--swap-providers-list {
   .loading {
     .v-skeleton-loader__avatar {
-      height: 30px !important;
-      width: 30px !important;
+      height: 25px !important;
+      width: 25px !important;
     }
     .v-skeleton-loader__heading {
-      height: 30px !important;
-      width: 120px !important;
+      height: 25px !important;
+      width: 100px !important;
       border-radius: 15px !important;
     }
   }
