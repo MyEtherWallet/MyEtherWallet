@@ -81,8 +81,8 @@
           <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
             <v-container
               :class="[
-                active ? 'rate-active' : 'rate',
-                'd-flex align-center border-radius--10px py-0 px-1'
+                active ? 'rate-active' : '',
+                'd-flex align-center rate py-0 px-1'
               ]"
               @click="
                 toggle();
@@ -331,12 +331,12 @@ export default {
 
 <style lang="scss" scoped>
 .rate-active {
-  border: 1px solid var(--v-primary-base);
-  background-color: var(--v-superPrimary-base);
-  min-height: 60px;
+  border: 1px solid var(--v-primary-base) !important;
+  background-color: var(--v-superPrimary-base) !important;
 }
 .rate {
   background-color: var(--v-tableHeader-base);
   min-height: 60px;
+  border-radius: 6px;
 }
 </style>
