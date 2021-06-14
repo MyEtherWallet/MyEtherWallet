@@ -29,11 +29,8 @@
           <div class="font-weight-medium d-flex align-center">
             <div class="text-shadow font-weight-bold">MY ACCOUNT VALUE</div>
           </div>
-          <div
-            v-show="convertedBalance !== 'undefinedNaN'"
-            class="text-shadow headline font-weight-bold monospace"
-          >
-            {{ convertedBalance }}
+          <div class="text-shadow headline font-weight-bold monospace">
+            {{ totalWalletBalance || '$0' }}
           </div>
         </div>
       </div>
@@ -103,6 +100,8 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
+
 export default {
   components: {
     BalanceAddressPaperWallet,
@@ -116,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
@@ -129,9 +128,21 @@ export default {
         this.address.length
       );
     },
-    convertedBalance() {
+    totalTokenBalance() {
+      return this.tokensList.reduce((total, currentVal) => {
+        const balance =
+          currentVal.totalBalanceRaw !== null &&
+          (currentVal.price_change_percentage_24h !== null ||
+            currentVal.market_cap !== 0)
+            ? currentVal.totalBalanceRaw
+            : 0;
+        return new BigNumber(total).plus(balance);
+      }, 0);
+    },
+    totalWalletBalance() {
       if (this.isEthNetwork) {
-        return `${'$' + formatFiatValue(this.balanceFiatValue).value}`;
+        const total = this.balanceFiatValue.plus(this.totalTokenBalance);
+        return `${'$' + formatFiatValue(total).value}`;
       }
       return `${formatBalanceEthValue(this.balanceInETH).value} ${
         this.network.type.currencyName

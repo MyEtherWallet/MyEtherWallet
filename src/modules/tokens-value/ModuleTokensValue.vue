@@ -37,9 +37,7 @@ export default {
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);
       return firstFive.map(item => {
-        return item.img?.includes('https')
-          ? `https://img.mewapi.io/?image=${item.img}`
-          : item.img;
+        return item.img;
       });
     }
   }
