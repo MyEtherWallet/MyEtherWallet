@@ -673,7 +673,7 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType.name) {
+      if (!this.initialLoad && this.fromTokenType?.name) {
         if (!this.isFromTokenETH) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
