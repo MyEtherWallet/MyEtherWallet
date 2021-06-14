@@ -4,7 +4,7 @@ import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
-import DNSRegistrar from '@ensdomains/dnsregistrar';
+import { DNSRegistrar } from '@ensdomains/ens-contracts';
 import contentHash from 'content-hash';
 const bip39 = require('bip39');
 const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
