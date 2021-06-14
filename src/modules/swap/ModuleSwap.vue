@@ -211,6 +211,7 @@
             =====================================================================================
             -->
           <swap-providers-list
+            v-show="hideProviders"
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
@@ -218,7 +219,6 @@
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
             class="mt-7"
-            v-show="hideProviders"
           />
           <!--
             =====================================================================================
