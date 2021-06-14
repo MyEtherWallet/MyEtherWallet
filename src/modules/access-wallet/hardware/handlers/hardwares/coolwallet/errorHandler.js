@@ -11,7 +11,8 @@ const ERRORS = {
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
-  MaxAppRegistered: 'coolWalletError.max-app-instance'
+  MaxAppRegistered: 'coolWalletError.max-app-instance',
+  'browser not supported': 'coolWalletError.no-bluetooth'
 };
 const WARNINGS = {};
 
@@ -19,18 +20,10 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNINGS);
   const foundError = errorValues.find(item => {
-    return (
-      (err.name && err.name.includes(item)) ||
-      item.includes(err.message) ||
-      err.includes(item)
-    );
+    return (err.name && err.name.includes(item)) || item.includes(err.message);
   });
   const foundWarning = warningValues.find(item => {
-    return (
-      (err.name && err.name.includes(item)) ||
-      item.includes(err.message) ||
-      err.includes(item)
-    );
+    return (err.name && err.name.includes(item)) || item.includes(err.message);
   });
 
   if (foundError) {

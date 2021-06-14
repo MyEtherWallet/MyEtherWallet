@@ -55,7 +55,7 @@
                   right-icon-type="img"
                   :right-icon="button.icon"
                   :right-icon-height="45"
-                  @click.native="nextStep(button.type)"
+                  @click.native="setWalletInstance(button.type)"
                 />
               </v-col>
             </v-row>
@@ -82,16 +82,6 @@
               />
               <!--
             =====================================================================================
-             Qr Step (Finney , XWallet)
-            =====================================================================================
-            -->
-              <access-wallet-qr-code
-                v-else-if="onQrCode"
-                :on-xwallet="onXwallet"
-                :qr-code="qrCode"
-              />
-              <!--
-            =====================================================================================
              Bitbox
             =====================================================================================
             -->
@@ -101,7 +91,7 @@
               />
               <!--
             =====================================================================================
-            Password Step (Coolwallet, Secalot)
+            Password Step (Coolwallet)
             =====================================================================================
             -->
               <access-wallet-password
@@ -184,9 +174,13 @@ Paths Step (Ledger, Trezor)
             -->
             <template v-if="stepperStep === 4" #stepperContent4>
               <div>
+                <bit-box-popup
+                  v-if="onBitboxPopup"
+                  :device="hwWalletInstance"
+                />
                 <!--
                 =====================================================================================
-                Password Step (Coolwallet, Secalot)
+                Password Step (Coolwallet)
                 =====================================================================================
                 -->
                 <access-wallet-password
@@ -203,7 +197,7 @@ Paths Step (Ledger, Trezor)
                 =====================================================================================
                 -->
                 <access-wallet-network-addresses
-                  v-else
+                  v-else-if="onNetworkAddresses"
                   :accounts="accounts"
                   :next-address-set="nextAddressSet"
                   :previous-address-set="previousAddressSet"
@@ -223,30 +217,31 @@ Paths Step (Ledger, Trezor)
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
-import AccessWalletQrCode from './hardware/components/AccessWalletQrCode';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
+import BitBoxPopup from './hardware/components/BitBoxPopup';
 import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 import AccessWalletPin from './hardware/components/AccessWalletPin';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
-import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
-import { EventBus } from '@/core/plugins/eventBus';
+import wallets, {
+  LAYOUT_STEPS
+} from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes.js';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const MAX_ADDRESSES = 5;
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletBcVault,
-    AccessWalletQrCode,
     AccessWalletBitbox,
     AccessWalletNetworkAddresses,
     AccessWalletPassword,
     AccessWalletPaths,
-    AccessWalletPin
+    AccessWalletPin,
+    BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -273,13 +268,6 @@ export default {
   },
   data() {
     return {
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Select Hardware Wallet'
-        }
-      ],
-      positions: ['7', '8', '9', '4', '5', '6', '1', '2', '3'],
       buttons: [
         {
           label: 'Ledger',
@@ -287,19 +275,9 @@ export default {
           type: WALLET_TYPES.LEDGER
         },
         {
-          label: 'Bitbox',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
-          type: WALLET_TYPES.BITBOX
-        },
-        {
-          label: 'FINNEY',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-finney.svg'),
-          type: WALLET_TYPES.FINNEY
-        },
-        {
-          label: 'Secalot',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-secalot.svg'),
-          type: WALLET_TYPES.SECALOT
+          label: 'Trezor',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
+          type: WALLET_TYPES.TREZOR
         },
         {
           label: 'KeepKey',
@@ -307,32 +285,14 @@ export default {
           type: WALLET_TYPES.KEEPKEY
         },
         {
-          label: 'Trezor',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-trezor.svg'),
-          type: WALLET_TYPES.TREZOR
+          label: 'Bitbox 02',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
+          type: WALLET_TYPES.BITBOX2
         },
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
           type: WALLET_TYPES.COOL_WALLET
-        },
-        {
-          label: 'BC Vault',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-bcvault.svg'),
-          type: WALLET_TYPES.BCVAULT
-        },
-        {
-          label: 'XWallet',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          type: WALLET_TYPES.XWALLET
-        }
-      ],
-      panelItems: [
-        {
-          name: 'Network'
-        },
-        {
-          name: 'Address to interact with'
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -344,6 +304,7 @@ export default {
       wallets: wallets,
       // resettable
       step: 0,
+      currentStep: '',
       steps: {},
       hwWalletInstance: {},
       selectedPath: {},
@@ -404,11 +365,7 @@ export default {
       ];
     },
     onNetworkAddresses() {
-      return (
-        Object.keys(this.hwWalletInstance).length > 0 &&
-        this.step >= 1 &&
-        this.step > this.wallets[this.walletType].when
-      );
+      return this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
     },
     /**
      * Returns the correct network icon
@@ -420,16 +377,16 @@ export default {
         });
         return found ? found.network.icon : appPaths[0].network.icon;
       }
-
       return appPaths[0].network.icon;
     },
     /**
      * On Bitbox
      */
     onBitbox() {
-      return (
-        this.walletType && this.walletType.includes('bitbox') && this.step === 1
-      );
+      return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
+    },
+    onBitboxPopup() {
+      return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
     },
     /**
      * On Bc Vault
@@ -450,23 +407,6 @@ export default {
       return this.walletType === WALLET_TYPES.COOL_WALLET;
     },
     /**
-     * on QrCode
-     */
-    onQrCode() {
-      return (
-        this.walletType !== '' &&
-        this.wallets[this.walletType] &&
-        this.wallets[this.walletType].needsQr &&
-        this.step === this.wallets[this.walletType].when
-      );
-    },
-    /**
-     * On XWallet
-     */
-    onXwallet() {
-      return this.walletType === WALLET_TYPES.XWALLET;
-    },
-    /**
      * On Password step
      */
     onPassword() {
@@ -481,14 +421,7 @@ export default {
      * On Paths step
      */
     onPaths() {
-      if (this.enterPin) return false;
-      return (
-        (this.step >= 1 && this.step <= 3) ||
-        (this.walletType !== '' &&
-          this.wallets[this.walletType] &&
-          this.wallets[this.walletType].hasPaths &&
-          this.step < this.wallets[this.walletType].when)
-      );
+      return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
     },
     paths() {
       const newArr = [];
@@ -543,18 +476,6 @@ export default {
     }
   },
   mounted() {
-    // watcher was falling into an infinite loop with keepkey
-    this.unwatch = this.$watch('hwWalletInstance', function (newVal) {
-      if (Object.keys(newVal).length > 0) {
-        try {
-          this.setAddresses();
-        } catch (e) {
-          newVal.errorHandler(e);
-        }
-        this.unwatch();
-      }
-    });
-
     if (this.switchAddress) {
       this.nextStep(this.identifier);
       this.walletType = this.identifier;
@@ -567,7 +488,6 @@ export default {
      */
     reset() {
       this.step = 0;
-      this.steps = {};
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
       this.walletType = '';
@@ -591,48 +511,34 @@ export default {
       !this.step
         ? (this.close('showHardware'), delete this.steps[this.step + 1])
         : (this.step -= 1);
-
+      this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 0 ? this.reset() : '';
     },
     overlayClose() {
       this.reset();
       this.close('showHardware');
     },
-    nextStep(str) {
-      try {
-        const actualString =
-          typeof str === 'string' && str !== '' ? str : this.walletType;
-        if (!this.step) {
-          this.walletType = actualString;
+    setWalletInstance(str) {
+      this.walletType = str;
+      this.step = 0;
+      this.incrementStep();
+    },
+    incrementStep() {
+      this.currentStep = this.wallets[this.walletType].steps[this.step];
+      this.step++;
+    },
+    nextStep() {
+      if (this.walletType) {
+        this.incrementStep();
+        if (this.step === this.wallets[this.walletType].when) {
+          this[`${this.walletType}Unlock`]();
         }
-        this.step = this.step += 1;
-        // bcvault initializes on step 1 but unlocks at step 2
-        this.wallets[actualString].accountOnly && this.step === 1
-          ? this.initBcVault(actualString)
-          : '';
-        this.steps[this.step] = actualString;
-        if (this.wallets[actualString].when === this.step) {
-          if (this.wallets[actualString].needsQr) {
-            new this.wallets[actualString].create(this.generateQr).then(
-              wallet => {
-                this[`${actualString}Unlock`](wallet);
-              }
-            );
-          } else {
-            this.selectedPath = this.paths[0];
-            this[`${actualString}Unlock`]();
-          }
-        }
-      } catch (e) {
-        this.reset();
-        Toast(e.message, {}, ERROR);
       }
     },
     /**
      * Unlock the hardware wallets
      */
     ledgerUnlock() {
-      this.selectedLedgerApp = this.ledgerApps[0];
       this.unlockPathOnly();
     },
     trezorUnlock() {
@@ -644,52 +550,38 @@ export default {
     bitbox02Unlock() {
       this.unlockPathOnly();
     },
-    secalotUnlock() {
-      this.unlockPathAndPassword(this.hasPath, this.password);
-    },
-    finneyUnlock(wallet) {
-      this.unlockQrcode(wallet);
-    },
-    xwalletUnlock(wallet) {
-      this.unlockQrcode(wallet);
-    },
-    bcVaultUnlock(address) {
-      const actualAddress = address ? address : this.selectedAddress;
-      const _wallet = this.walletInstance.getAccount(actualAddress);
-      this.setHardwareWallet(_wallet);
-    },
     keepkeyUnlock() {
-      EventBus.$on('showHardwarePinMatrix', callback => {
-        this.enterPin = true;
-        this.callback = callback;
-      });
-
-      this.unlockPathOnly(() => {
-        this.step += 1;
-      });
+      this.unlockPathOnly();
     },
     coolWalletUnlock() {
       this.unlockPathAndPassword(null, this.password);
     },
     /**
-     * Unlocks the qr code step
-     */
-    unlockQrcode(wallet) {
-      this.setHardwareWallet(wallet);
-    },
-    /**
      * Unlock only the path step
      */
-    unlockPathOnly(cb = () => {}) {
-      this.wallets[this.walletType]
+    unlockPathOnly() {
+      return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
-          cb();
           this.hwWalletInstance = _hwWallet;
+          if (this.walletType === WALLET_TYPES.BITBOX2) {
+            this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
+            _hwWallet.init(this.hasPath).then(() => {
+              this.currentStep = LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
+              this.hwWalletInstance = _hwWallet;
+              this.setAddresses();
+            });
+          } else if (this.walletType === WALLET_TYPES.KEEPKEY) {
+            this.incrementStep();
+            this.setAddresses();
+          } else {
+            this.setAddresses();
+          }
+          return _hwWallet;
         })
         .catch(err => {
+          this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
-          Toast(err.message, {}, ERROR);
         });
     },
     /**
@@ -702,8 +594,8 @@ export default {
           this.hwWalletInstance = _hwWallet;
         })
         .catch(err => {
+          this.wallets[this.walletType].create.errorHandler(err);
           this.reset();
-          Toast(err.message, {}, ERROR);
         });
     },
     /**
@@ -748,38 +640,6 @@ export default {
      */
     setTerms(boolean) {
       this.acceptTerms = boolean;
-    },
-    /**
-     * Inits Bc Vault Instance
-     */
-    initBcVault(str) {
-      this.bcVaultLoading = true;
-      this.walletInstance = this.wallets[str].create();
-      this.walletInstance
-        .init()
-        .then(res => {
-          if (res.length > 1) {
-            this.accounts = res;
-            this.bcVaultLoading = false;
-          } else if (res.length === 1) {
-            this[`unlock${str}`](res[0].userRawData + res[0].address);
-          }
-        })
-        .catch(() => {
-          this.bcVaultLoading = false;
-        });
-    },
-    /**
-     * Sets Bc Vault Address
-     */
-    setBCvaultAddress(address) {
-      this.selectedAddress = address;
-    },
-    /**
-     * Generates the Qr Code
-     */
-    generateQr(code) {
-      this.qrCode = code;
     },
     /**
      * Keepkey Actions
@@ -831,7 +691,8 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        this.hwWalletInstance.errorHandler(e);
+        this.wallets[this.walletType].create.errorHandler(e);
+        this.reset();
       }
     },
     nextAddressSet() {

@@ -332,8 +332,7 @@ export default {
           {
             label: 'Billfodl',
             link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
-          },
-          { label: 'Secalot', link: 'https://www.secalot.com/' }
+          }
         ]
       },
       {

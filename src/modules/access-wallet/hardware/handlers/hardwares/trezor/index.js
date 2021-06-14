@@ -1,7 +1,7 @@
 import Trezor from 'trezor-connect';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import {
@@ -9,7 +9,7 @@ import {
   getHexTxObject,
   getBufferFromHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
