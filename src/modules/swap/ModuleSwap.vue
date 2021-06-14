@@ -760,13 +760,12 @@ export default {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
           /* Changelly Errors: */
-          if (this.selectedProvider.exchange === 'changelly') {
-            if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-              return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
-            }
-            if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-              return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
-            }
+
+          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
+          }
+          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
           }
         }
       }
@@ -949,19 +948,18 @@ export default {
             )
           })
           .then(quotes => {
+            console.log(quotes, 'aaa');
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
-              if (q?.rateId === 'MinMax') {
-                this.minMaxError = {
-                  minFrom: q.minAmount,
-                  maxFrom: q.maxAmount
-                };
-              }
-              this.minMaxError = false;
+              this.minMaxError = {
+                minFrom: q.minAmount,
+                maxFrom: q.maxAmount
+              };
 
+              //     this.minMaxError = false;
               return q;
             });
             if (quotes.length) {
@@ -989,6 +987,7 @@ export default {
     },
     getTrade: _.debounce(function (idx) {
       if (!this.isToAddressValid) return;
+      console.log('here', this.availableQuotes[idx]);
       this.step = 1;
       this.feeError = '';
       if (this.allTrades.length > 0 && this.allTrades[idx]) {
@@ -1017,6 +1016,7 @@ export default {
           )
         })
         .then(trade => {
+          console.log(trade);
           if (trade instanceof Error) {
             this.feeError = 'Provider issue';
             return;
