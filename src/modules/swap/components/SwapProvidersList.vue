@@ -9,7 +9,7 @@
     =====================================================================================
     -->
     <app-user-msg-block
-      v-if="step == 0 && !isLoading"
+      v-if="(step == 0 && !isLoading) || !toTokenSymbol"
       :message="providersMessage"
       :is-alert="false"
     />
@@ -60,7 +60,7 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1">
+    <v-item-group v-if="step >= 1 && toTokenSymbol1">
       <v-row no-gutters>
         <v-col
           v-for="(quote, idx) in providersList"
@@ -163,7 +163,7 @@
     =====================================================================================
     -->
     <div
-      v-if="step >= 1 && providersCut > 0"
+      v-if="step >= 1 && providersCut > 0 && toTokenSymbol"
       class="cursor--pointer user-select--none primary--text mt-7 ml-4"
       @click="showMore = !showMore"
     >
