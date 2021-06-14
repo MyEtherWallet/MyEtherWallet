@@ -273,6 +273,7 @@ import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
 } from './handlers/configs/configTrendingTokens';
+
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -456,8 +457,10 @@ export default {
         ...this.toTokens
       ];
       const fromTokenAddress =
-        this.fromTokenType.contract_address ||
-        this.fromTokenType.contract ||
+        (this.fromTokenType?.hasOwnProperty('contract_address') &&
+          this.fromTokenType.contract_address) ||
+        (this.fromTokenType?.hasOwnProperty('contract') &&
+          this.fromTokenType.contract) ||
         '';
       return returnableTokens.filter(item => {
         const address = item.contract_address || item.contract || '';
@@ -544,7 +547,11 @@ export default {
       ];
 
       const toTokenAddress =
-        this.toTokenType?.contract_address || this?.toTokenType.contract || '';
+        (this.toTokenType?.hasOwnProperty('contract_address') &&
+          this.toTokenType.contract_address) ||
+        (this.toTokenType?.hasOwnProperty('contract') &&
+          this.toTokenType.contract) ||
+        '';
       return returnableTokens.filter(item => {
         const address = item?.contract_address || item?.contract || '';
         if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
@@ -916,7 +923,7 @@ export default {
             )
           })
           .then(quotes => {
-            quotes = quotes.map(q => {
+            this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
@@ -926,13 +933,11 @@ export default {
                   minFrom: q.minAmount,
                   maxFrom: q.maxAmount
                 };
-                return;
               }
               this.minMaxError = false;
 
               return q;
             });
-            this.availableQuotes = quotes;
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
@@ -1026,11 +1031,14 @@ export default {
       this.executeTrade();
     },
     isValidToAddress(address) {
-      return this.swapper.isValidToAddress({
-        provider: this.availableQuotes[0].provider,
-        toT: this.toTokenType,
-        address
-      });
+      if (this.availableQuotes.length > 0) {
+        return this.swapper.isValidToAddress({
+          provider: this.availableQuotes[0].provider,
+          toT: this.toTokenType,
+          address
+        });
+      }
+      return true;
     },
 
     executeTrade() {
