@@ -125,14 +125,6 @@ class Changelly {
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    console.log(
-      fromAddress,
-      toAddress,
-      quote,
-      fromT,
-      toT,
-      queryAmount.toString()
-    );
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
@@ -148,7 +140,6 @@ class Changelly {
         }
       })
       .then(async response => {
-        console.log(response.data.results);
         if (Array.isArray(response.data.result))
           return new Error('Invalid input');
         const txObj = {
