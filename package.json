@@ -177,7 +177,7 @@
     "trim-newlines": "3.0.1",
     "css-what": "5.0.1",
     "normalize-url": "6.0.1",
-    "scryptsy": "0.3.0"
+    "script.js": "0.3.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
