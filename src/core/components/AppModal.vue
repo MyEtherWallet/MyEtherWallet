@@ -1,5 +1,9 @@
 <template>
-  <v-dialog max-width="500" :value="show" @click:outside="handleClickOutside">
+  <v-dialog
+    :max-width="maxWidth"
+    :value="show"
+    @click:outside="handleClickOutside"
+  >
     <v-sheet class="py-6 px-4">
       <!--
         =====================================================================================
@@ -29,7 +33,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2">
+      <v-row v-if="hasButton" class="mt-2">
         <v-col cols="12" class="text-center">
           <mew-button
             btn-size="xlarge"
@@ -69,6 +73,14 @@ export default {
     btnText: {
       type: String,
       default: 'Confirm and Send'
+    },
+    hasButton: {
+      type: Boolean,
+      default: true
+    },
+    maxWidth: {
+      type: String,
+      default: '500px'
     }
   },
   methods: {
