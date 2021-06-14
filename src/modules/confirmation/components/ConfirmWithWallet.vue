@@ -49,7 +49,6 @@ export default {
         trezor: 'Trezor',
         bitbox: 'BitBox',
         bitbox02: 'BitBox 02',
-        secalot: 'Secalot',
         keepkey: 'KeepKey',
         mewconnect: 'MewConnect',
         walletConnect: 'Wallet Connect',

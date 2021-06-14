@@ -132,8 +132,7 @@
     "raw-loader": "4.0.2",
     "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
-    "rskjs-util": "1.0.3",
-    "sass": "1.34.0",
+    "sass": "1.34.1",
     "sass-loader": "10.1.1",
     "sinon": "11.1.1",
     "store": "2.0.12",
@@ -176,7 +175,8 @@
     "dns-packet": "5.2.2",
     "trim-newlines": "3.0.1",
     "css-what": "5.0.1",
-    "normalize-url": "6.0.1"
+    "normalize-url": "6.0.1",
+    "scrypt.js": "0.3.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"

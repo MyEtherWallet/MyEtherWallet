@@ -111,7 +111,7 @@ export default {
 
   Access_other: {
     title: "I'm using something else",
-    subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
+    subtitle: '(Bitbox, Keepkey, etc.)',
     breadcrumb: 'other',
     md: _Access_other
   },
@@ -260,7 +260,7 @@ export default {
 
   Find_other: {
     title: "I'm using something else",
-    subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
+    subtitle: '(Bitbox, Keepkey, etc.)',
     breadcrumb: 'other',
     md: _Find_other
   },

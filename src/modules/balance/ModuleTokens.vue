@@ -51,7 +51,8 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatFiatValue,
   formatPercentageValue,
-  formatIntegerToString
+  formatIntegerToString,
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -124,8 +125,10 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            item.tokenBalance + ' ' + item.symbol,
-            '$' + item.totalBalance
+            formatFloatingPointValue(item.tokenBalance.value).value +
+              ' ' +
+              item.symbol,
+            '$' + formatFiatValue(item.totalBalance).value
           ];
           newObj.token = item.symbol;
           newObj.cap = formatIntegerToString(item.market_cap);
