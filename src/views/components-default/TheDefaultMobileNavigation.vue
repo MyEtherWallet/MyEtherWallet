@@ -90,14 +90,10 @@
       <li v-for="(m, k) in menu" :key="k">
         <div class="menu-divider"></div>
 
-        <h2 v-if="!m.to" class="text-center font-weight-bold">
+        <h2 v-if="!m.to" class="text-center">
           {{ m.label }}
         </h2>
-        <h2
-          v-else
-          class="click-effect text-center font-weight-bold"
-          @click="pushRoute(m.to)"
-        >
+        <h2 v-else class="click-effect text-center" @click="pushRoute(m.to)">
           {{ m.label }}
         </h2>
 

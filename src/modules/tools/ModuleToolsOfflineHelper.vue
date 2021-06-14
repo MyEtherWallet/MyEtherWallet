@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="dialog" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
-        <h3 class="font-weight-bold mb-5 text-center">Transction status</h3>
+        <h3 class="mb-5 text-center">Transction status</h3>
         <div class="tableHeader pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
           <mew-transform-hash
