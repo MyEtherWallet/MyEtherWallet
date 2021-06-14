@@ -123,9 +123,7 @@
               indeterminate
               color="primary"
             ></v-progress-linear>
-            <h4 class="font-weight-bold text-center">
-              Processing the registration
-            </h4>
+            <h3 class="text-center">Processing the registration</h3>
             <v-sheet
               color="transparent"
               max-width="300px"

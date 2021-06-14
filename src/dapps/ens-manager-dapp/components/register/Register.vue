@@ -36,7 +36,7 @@
         icon-name="clock"
         :img-height="80"
       />
-      <span class="mew-subtitle primary--text">{{ ticker }}</span>
+      <span class="ticket-subtitle primary--text">{{ ticker }}</span>
       <div
         v-if="loadingCommit && !committed && !canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"
@@ -163,6 +163,9 @@ export default {
   }
   .desc-container {
     max-width: 300px;
+  }
+  .ticket-subtitle {
+    line-height: 34px;
   }
 }
 </style>

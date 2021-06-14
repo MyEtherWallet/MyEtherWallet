@@ -1,8 +1,10 @@
 <template>
   <div class="expandHeader pb-12">
     <v-container>
-      <app-block-title :data="titleData" />
-
+      <the-layout-header
+        title="Get a hardware wallet today!"
+        subtitle-line-one="The Hardware wallet offer the highest security for accessing your crypto."
+      />
       <v-sheet
         color="transparent"
         :max-width="!$vuetify.breakpoint.smAndDown ? '900px' : '470px'"
@@ -90,11 +92,11 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
 
 export default {
   name: 'TheBuyHardwareWalletLayout',
-  components: { AppBlockTitle },
+  components: { TheLayoutHeader },
   data: () => ({
     buttons: [
       {
