@@ -285,9 +285,9 @@ export default {
       const imgs = [
         'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
         'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-        'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
-        'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
-        'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
+        'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
+        'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
+        'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
       ];
       const trendingList = [
         {
