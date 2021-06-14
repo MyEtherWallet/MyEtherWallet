@@ -26,7 +26,7 @@
                 <app-button-balance
                   :loading="isLoading"
                   :balance="displayBalance"
-                  :is-eth="isFromTokenEth"
+                  :is-eth="isFromTokenETH"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -280,7 +280,7 @@ const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
 
 const tokens = {
-  eth: 'ethereum'
+  eth: 'ETH'
 };
 
 const errorMsgs = {
@@ -389,6 +389,18 @@ export default {
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
     /**
+     * @rejects object
+     * Gets the ETH token dropdown item details
+     */
+    ethTokenDetails() {
+      const ethToken = Object.assign({}, this.trendingTokens[0]);
+      ethToken.tokenBalance = formatFloatingPointValue(
+        this.availableBalance
+      ).value;
+      ethToken.totalBalance = formatFiatValue(this.balanceFiatValue).value;
+      return ethToken;
+    },
+    /**
      * Switches displayed balance
      * depending on selected currency balance
      */
@@ -418,19 +430,18 @@ export default {
     /**
      * Fetched tokens from all providers(?) + specific tokens
      * Returns an @Array
-     * Check if fromTokenType is Eth
+     * Check if fromTokenType is ETH
      */
-    isFromTokenEth() {
+    isFromTokenETH() {
       return (
-        this.fromTokenType?.name &&
-        this.fromTokenType?.name.toLowerCase() === tokens.eth
+        this.fromTokenType?.symbol && this.fromTokenType?.symbol === tokens.eth
       );
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
      */
     displayBalance() {
-      return this.isFromTokenEth
+      return this.isFromTokenETH
         ? this.balanceInWei.toString()
         : this.availableBalance.toString();
     },
@@ -486,8 +497,9 @@ export default {
           token.price = foundToken
             ? formatFiatValue(foundToken.current_price).value
             : '0.00';
-          token.subtext = token.name;
-          token.value = token.name;
+          token.subtext = foundToken ? foundToken.name : '';
+          token.value = foundToken ? foundToken.name : '';
+          token.name = token.symbol;
           return token;
         });
     },
@@ -498,7 +510,7 @@ export default {
     walletTokens() {
       const tokensOwned = [];
       /**
-       * if Eth balance is < 0, add Buy Eth dropdown item
+       * if ETH balance is < 0, add Buy ETH dropdown item
        */
       if (BigNumber(this.balanceInETH).lte(0)) {
         tokensOwned.push({
@@ -510,12 +522,20 @@ export default {
         });
       } else if (
         /**
-         * if Eth balance is > 0, add Eth wallet details
+         * if ETH balance is > 0, add ETH wallet details
          */
-        this.isFromTokenEth &&
+        this.isFromTokenETH &&
         BigNumber(this.balanceInETH).gt(0)
       ) {
         tokensOwned.push(this.fromTokenType);
+      } else if (
+        /**
+         * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
+         */
+        !this.isFromTokenETH &&
+        BigNumber(this.balanceInETH).gt(0)
+      ) {
+        tokensOwned.push(this.ethTokenDetails);
       }
       return tokensOwned.concat(this.tokensList);
     },
@@ -565,8 +585,9 @@ export default {
         token.price = foundToken
           ? formatFiatValue(foundToken.current_price).value
           : '0.00';
-        token.subtext = token.name;
-        token.value = token.name;
+        token.subtext = foundToken ? foundToken.name : '';
+        token.value = foundToken ? foundToken.name : '';
+        token.name = token.symbol;
         return token;
       });
     },
@@ -622,7 +643,7 @@ export default {
      */
     notEnoughEth() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth = this.isFromTokenEth
+      const isNotEnoughEth = this.isFromTokenETH
         ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
         : balanceAfterFees.isNeg();
       return isNotEnoughEth;
@@ -645,8 +666,8 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType?.name) {
-        if (!this.isFromTokenEth) {
+      if (!this.initialLoad && this.fromTokenType.name) {
+        if (!this.isFromTokenETH) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
           );
@@ -702,9 +723,9 @@ export default {
       if (!this.initialLoad && !this.isLoading) {
         /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
-          return this.isFromTokenEth
+          return this.isFromTokenETH
             ? this.errorMsgs.amountEthIsTooLow
-            : this.tokensList.length > 0
+            : this.tokensList.length > 0 && !this.isFromTokenETH
             ? this.errorMsgs.doNotOwnToken
             : '';
         }
@@ -719,14 +740,14 @@ export default {
           }
           /* ETH only: Amount entered > (ETH Balance - Gas Price )*/
           if (
-            this.isFromTokenEth &&
+            this.isFromTokenETH &&
             this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return this.errorMsgs.amountExceedsEthBalance;
           }
           /*ERC20 Only: Amount entered > Balance  */
           if (
-            !this.isFromTokenEth &&
+            !this.isFromTokenETH &&
             this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
@@ -807,7 +828,7 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      this.tokenInValue = this.isFromTokenEth
+      this.tokenInValue = this.isFromTokenETH
         ? new BigNumber(this.availableBalance)
             .minus(fromWei(MIN_GAS_WEI))
             .toFixed()
@@ -821,12 +842,7 @@ export default {
         this.defaults.fromToken === ETH_TOKEN &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
-        const ethToken = Object.assign({}, this.trendingTokens[0]);
-        ethToken.tokenBalance = formatFloatingPointValue(
-          this.availableBalance
-        ).value;
-        ethToken.totalBalance = formatFiatValue(this.balanceFiatValue).value;
-        return ethToken;
+        return this.ethTokenDetails;
       }
       return this.actualFromTokens[0];
     },
