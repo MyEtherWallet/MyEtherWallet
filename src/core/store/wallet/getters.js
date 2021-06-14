@@ -4,6 +4,11 @@ const balanceInETH = function (state) {
   return fromWei(state.balance);
 };
 
+const balanceInWei = function (state) {
+  if (!state.balance) state.balance = '0';
+  return state.balance.toString();
+};
+
 const totalOwnedDomains = function (state) {
   return state.ensDomains ? state.ensDomains.length : 0;
 };
@@ -28,6 +33,7 @@ const initialLoad = function (state) {
 
 export default {
   balanceInETH,
+  balanceInWei,
   totalOwnedDomains,
   tokensList,
   initialLoad

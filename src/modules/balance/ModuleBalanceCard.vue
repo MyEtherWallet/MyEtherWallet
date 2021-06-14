@@ -29,11 +29,8 @@
           <div class="font-weight-medium d-flex align-center">
             <div class="text-shadow font-weight-bold">MY ACCOUNT VALUE</div>
           </div>
-          <div
-            v-show="convertedBalance !== 'undefinedNaN'"
-            class="text-shadow headline font-weight-bold monospace"
-          >
-            {{ convertedBalance }}
+          <div class="text-shadow headline font-weight-bold monospace">
+            {{ totalWalletBalance || '$0' }}
           </div>
         </div>
       </div>
@@ -78,6 +75,7 @@
       </div>
     </div>
     <module-access-wallet-hardware
+      v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
       :switch-address="isHardware"
@@ -95,10 +93,14 @@ import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWall
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import {
+  formatFiatValue,
+  formatBalanceEthValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -113,9 +115,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -126,14 +128,23 @@ export default {
         this.address.length
       );
     },
-    convertedBalance() {
+    totalTokenBalance() {
+      return this.tokensList.reduce((total, currentVal) => {
+        const balance =
+          currentVal.totalBalanceRaw !== null &&
+          (currentVal.price_change_percentage_24h !== null ||
+            currentVal.market_cap !== 0)
+            ? currentVal.totalBalanceRaw
+            : 0;
+        return new BigNumber(total).plus(balance);
+      }, 0);
+    },
+    totalWalletBalance() {
       if (this.isEthNetwork) {
-        const balance = BigNumber(this.balanceInETH).times(
-          this.ETHUSDValue.value
-        );
-        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+        const total = this.balanceFiatValue.plus(this.totalTokenBalance);
+        return `${'$' + formatFiatValue(total).value}`;
       }
-      return `${BigNumber(this.balanceInETH).toFixed(2)} ${
+      return `${formatBalanceEthValue(this.balanceInETH).value} ${
         this.network.type.currencyName
       }`;
     }

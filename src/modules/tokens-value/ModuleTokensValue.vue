@@ -18,6 +18,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleTokensValue',
   computed: {
@@ -28,17 +29,15 @@ export default {
     totalTokenValues() {
       let total = BigNumber(0);
       this.tokensList.forEach(token => {
-        const value = token.usdBalance ? token.usdBalance : 0;
+        const value = token.totalBalanceRaw ? token.totalBalanceRaw : 0;
         total = total.plus(value);
       });
-      return total.toFixed(2);
+      return formatFiatValue(total).value;
     },
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);
       return firstFive.map(item => {
-        return item.img.includes('https')
-          ? `https://img.mewapi.io/?image=${item.img}`
-          : item.img;
+        return item.img;
       });
     }
   }

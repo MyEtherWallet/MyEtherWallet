@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { WALLET_TYPES } from '../handlers/helpers';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   name: 'CreateWalletSoftwareOverview',
   data: () => ({

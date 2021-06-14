@@ -17,7 +17,6 @@ import withoutWallet from './without-wallet/ru_RU';
 import errorsGlobal from './errors-global/ru_RU';
 import trezorError from './errors-trezor/ru_RU';
 import ledgerError from './errors-ledger/ru_RU';
-import secalotError from './errors-secalot/ru_RU';
 import keepkeyError from './errors-keepkey/ru_RU';
 import bitboxError from './errors-bitbox/ru_RU';
 import buyHardwareWallet from './other/buy-hardware-wallet/ru_RU';
@@ -57,7 +56,6 @@ const ru_RU = {
   errorsGlobal: errorsGlobal,
   trezorError: trezorError,
   ledgerError: ledgerError,
-  secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,

@@ -65,7 +65,7 @@
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
-              <span class="font-weight-regular">({{ myDomains.length }})</span>
+              <span class="font-weight-regular">({{ totalDomains }})</span>
             </span>
           </div>
           <mew-expand-panel
@@ -160,25 +160,24 @@
                     sm="6"
                     md="4"
                     lg="2"
-                    class="text-center"
                   >
-                    <mew-icon
-                      class="cursor-pointer"
-                      icon-name="ensManager"
-                      :img-height="70"
-                      @click.native="manage(option.type, idx)"
-                    />
-                    <div>{{ option.label }}</div>
                     <div
-                      v-if="domain.expiration && key === 1"
-                      class="orange--text"
+                      class="text-center cursor-pointer"
+                      @click="manage(option.type, idx)"
                     >
-                      <div>
-                        {{
-                          $t('ens.manage-domains.expire-at', {
-                            date: domain.expiration
-                          })
-                        }}
+                      <v-icon color="primary" x-large>{{ option.icon }}</v-icon>
+                      <div>{{ option.label }}</div>
+                      <div
+                        v-if="domain.expiration && key === 1"
+                        class="orange--text"
+                      >
+                        <div>
+                          {{
+                            $t('ens.manage-domains.expire-at', {
+                              date: domain.expiration
+                            })
+                          }}
+                        </div>
                       </div>
                     </div>
                   </v-col>
@@ -245,7 +244,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
 import { fromWei, toBN } from 'web3-utils';
-
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
@@ -263,22 +262,30 @@ export default {
       ensManager: {},
       onRegister: false,
       manageDomainOptions: [
-        { label: this.$t('ens.transfer-domain'), type: 'transfer' },
+        {
+          label: this.$t('ens.transfer-domain'),
+          type: 'transfer',
+          icon: 'mdi-account-arrow-right'
+        },
         {
           label: this.$t('ens.manage-domains.renew-domain'),
-          type: 'renew'
+          type: 'renew',
+          icon: 'mdi-autorenew'
         },
         {
           label: this.$t('ens.manage-domains.manage-multi'),
-          type: 'manageMulticoin'
+          type: 'manageMulticoin',
+          icon: 'mdi-link'
         },
         {
           label: this.$t('ens.manage-domains.manage-txt'),
-          type: 'manageTxtRecord'
+          type: 'manageTxtRecord',
+          icon: 'mdi-book-open'
         },
         {
           label: this.$t('ens.manage-domains.upload-site'),
-          type: 'manageUpload'
+          type: 'manageUpload',
+          icon: 'mdi-cloud-upload'
         }
       ],
       tabs: [
@@ -295,7 +302,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
     rules() {
       return [
@@ -330,6 +337,9 @@ export default {
         !this.ensDomainAvailable &&
         Object.keys(this.nameHandler).length !== 0
       );
+    },
+    totalDomains() {
+      return formatIntegerToString(this.myDomains.length);
     }
   },
   watch: {
@@ -531,9 +541,7 @@ export default {
           const priceFromWei = fromWei(toBN(resp));
           return {
             eth: new BigNumber(priceFromWei).toFixed(4),
-            usd: new BigNumber(priceFromWei)
-              .times(this.ETHUSDValue.value)
-              .toFixed(2)
+            usd: new BigNumber(priceFromWei).times(this.fiatValue).toFixed(2)
           };
         }
       });

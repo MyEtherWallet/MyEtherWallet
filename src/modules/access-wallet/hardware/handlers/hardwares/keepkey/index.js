@@ -4,16 +4,16 @@ import {
   KeepKey,
   bip32ToAddressNList
 } from '@keepkey/keepkey.js';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import { getUint8Tx } from './utils';
 import {
   getBufferFromHex,
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import HDKey from 'hdkey';
 import toBuffer from '@/core/helpers/toBuffer';
 import { Transaction } from 'ethereumjs-tx';
@@ -22,7 +22,7 @@ import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
-
+import keepkey from '@/assets/images/icons/wallets/keepkey.svg';
 const { MessageType } = Messages;
 const { MESSAGETYPE_PINMATRIXREQUEST, MESSAGETYPE_PASSPHRASEREQUEST } =
   MessageType;
@@ -35,6 +35,10 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
+    this.icon = {
+      type: 'img',
+      value: keepkey
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
@@ -43,9 +47,13 @@ class KeepkeyWallet {
     const device = new WebUSBDevice({ usbDevice });
     this.keepkey = KeepKey.withWebUSB(device);
     this.keepkey.device.events.on(String(MESSAGETYPE_PINMATRIXREQUEST), () => {
-      EventBus.$emit('showHardwarePinMatrix', pin => {
-        this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
-      });
+      EventBus.$emit(
+        'showHardwarePinMatrix',
+        { name: this.identifier },
+        pin => {
+          this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
+        }
+      );
     });
     this.keepkey.device.events.on(String(MESSAGETYPE_PASSPHRASEREQUEST), () => {
       EventBus.$emit(
@@ -136,7 +144,8 @@ class KeepkeyWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress
+      displayAddress,
+      this.icon
     );
   }
   getCurrentPath() {

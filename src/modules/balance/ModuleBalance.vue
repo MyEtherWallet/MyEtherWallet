@@ -1,15 +1,27 @@
 <template>
-  <div v-if="network.type.name === 'ETH'">
+  <div
+    v-if="network.type.name === 'ETH'"
+    class="mew6-component--module-balance"
+  >
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
   =====================================================================================
   -->
+    <v-skeleton-loader
+      v-if="loading"
+      class="mx-auto module-balance-loader"
+      width="100%"
+      min-height="352px"
+      max-width="100%"
+      type="card"
+    ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth"
+      v-if="!showBuyEth && !loading"
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
+      :has-body-padding="false"
       :icon="network.type.icon"
       :caption="convertedBalance"
       :has-elevation="true"
@@ -34,34 +46,40 @@
         </div>
       </template>
       <template #moduleBody>
-        <balance-chart :data="chartData" class="full-width mt-5" />
-        <v-row class="align-center">
-          <v-col class="d-flex align-center justify-center">
-            <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-            <div class="ml-2 font-weight-regular text-color--mew-green">
-              ${{ ETHUSDValue.price_change_24h }}
-            </div>
-            <v-icon
-              :class="[
-                priceChange ? 'primary--text' : 'light_red--text error-text',
-                'body-2'
-              ]"
-              >{{ priceChangeArrow }}</v-icon
-            >
-            <div class="ml-5">
-              {{ ETHUSDValue.symbol + ETHUSDValue.value }} / 1
-              {{ network.type.currenyName }} ETH
-            </div>
-          </v-col>
-          <v-col class="text-right">
-            <mew-button
-              :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
-              @click.native="navigateToSend"
-            />
-          </v-col>
-        </v-row>
+        <div class="pa-7">
+          <balance-chart :data="chartData" class="full-width mt-5" />
+          <v-row class="align-center">
+            <v-col class="d-flex align-center justify-center">
+              <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+              <div
+                :class="[
+                  'ml-2 font-weight-regular',
+                  priceChange ? 'primary--text' : 'error--text'
+                ]"
+              >
+                {{ formatChange }}
+              </div>
+              <v-icon
+                :class="[
+                  priceChange ? 'primary--text' : 'error--text',
+                  'body-2'
+                ]"
+                >{{ priceChangeArrow }}</v-icon
+              >
+              <div class="ml-5">
+                {{ formatFiatPrice }} / 1 {{ network.type.name }}
+              </div>
+            </v-col>
+            <v-col class="text-right">
+              <mew-button
+                :has-full-width="false"
+                title="Send Transaction"
+                btn-size="xlarge"
+                @click.native="navigateToSend"
+              />
+            </v-col>
+          </v-row>
+        </div>
       </template>
     </mew-module>
     <!--
@@ -70,7 +88,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-else
+      v-if="showBuyEth && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -80,48 +98,103 @@
 <script>
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import handlerBalance from './handlers/handlerBalance';
+import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-
+import {
+  formatFiatValue,
+  formatBalanceEthValue,
+  formatPercentageValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceChart,
     BalanceEmptyBlock
   },
+  mixins: [handlerBalanceHistory],
   data() {
     return {
       chartButtons: ['1D', '1W', '1M', '1Y'],
       chartData: [],
-      activeButton: 0
+      timeString: '',
+      scale: '',
+      activeButton: 0,
+      loading: true
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapState('external', ['ETHUSDValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
-      return this.balanceInETH <= 0;
+      return this.balanceInETH <= 0 && this.chartData.length <= 0;
     },
     priceChangeArrow() {
-      return this.priceChange > 0 ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
+      return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
-      return this.ETHUSDValue.price_change_24h > 0;
+      return this.ETHUSDValue.price_change_percentage_24h > 0;
     },
+    /**
+     * Computed property returns formated eth value of the wallet balance
+     * ie: $12.45 per 1 ETH
+     */
     title() {
-      return `${this.balanceInETH} ${this.network.type.name}`;
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
+        this.network.type.name
+      }`;
     },
     subtitle() {
       return `My ${this.network.type.name} Balance`;
     },
+    /**
+     * Computed property returns formated eth wallet balance value in USD
+     * ie: $12.45 per 1 ETH
+     */
     convertedBalance() {
-      const converted = BigNumber(this.balanceInETH).times(
-        this.ETHUSDValue.value
+      if (this.fiatLoaded) {
+        return `${this.ETHUSDValue.symbol}${
+          formatFiatValue(this.balanceFiatValue).value
+        }`;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns formated 24 hours percentage change
+     * ie: $12.45 per 1 ETH
+     */
+    formatChange() {
+      if (this.fiatLoaded) {
+        return formatPercentageValue(
+          this.ETHUSDValue.price_change_percentage_24h
+        ).value;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns formats Fiat Price
+     * ie: $12.45 per 1 ETH
+     */
+    formatFiatPrice() {
+      if (this.fiatLoaded) {
+        return `${this.ETHUSDValue.symbol}${
+          formatFiatValue(this.fiatValue).value
+        }`;
+      }
+      return '';
+    },
+    /**
+     * Computed property returns whether or not fiat info is loaded
+     */
+    fiatLoaded() {
+      return (
+        this.ETHUSDValue &&
+        this.ETHUSDValue.price_change_percentage_24h &&
+        this.balanceFiatValue &&
+        this.fiatValue
       );
-      return `$ ${converted.toFixed(2)}`;
     }
   },
   watch: {
@@ -131,73 +204,67 @@ export default {
     }
   },
   mounted() {
-    this.handlerBalance = new handlerBalance(this.$apollo, this.address);
     this.initChart();
   },
   methods: {
     initChart() {
       let count = 0;
       const checker = () => {
-        this.onToggle(this.chartButtons[count]).then(res => {
+        this.onToggle(this.chartButtons[count]);
+        setTimeout(() => {
           if (count >= 3) {
             this.onToggle(this.chartButtons[count]);
             this.activeButton = count;
+            this.loading = false;
             // a single point basically looks the same as an empty chart
-          } else if (res.length <= 1) {
+          } else if (this.chartData.length <= 1) {
             count++;
             checker();
           } else {
             this.activeButton = count;
+            this.loading = false;
           }
-        });
+        }, 1000);
       };
       checker();
     },
     onToggle(e) {
       switch (e) {
         case this.chartButtons[0]:
-          return this.setDataYesterday();
+          this.setDataYesterday();
+          break;
         case this.chartButtons[1]:
-          return this.setDataWeek();
+          this.setDataWeek();
+          break;
         case this.chartButtons[2]:
-          return this.setDataMonth();
+          this.setDataMonth();
+          break;
         case this.chartButtons[3]:
-          return this.setDataYear();
+          this.setDataYear();
+          break;
         default:
-          return this.setDataMonth();
+          this.setDataMonth();
       }
-    },
-    getBalanceHistory(interval, duration) {
-      return this.handlerBalance
-        .getBalanceHistory(interval, duration)
-        .then(res => {
-          this.chartData = res;
-          return res;
-        });
     },
     setDataMonth() {
       const timeString = new Date();
-      const lastMonth = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
-      this.key = '1m';
-      return this.getBalanceHistory(lastMonth, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 31;
+      this.scale = 'days';
     },
     setDataYear() {
       const timeString = new Date();
-      const lastYear = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
-      this.key = '1y';
-      return this.getBalanceHistory(lastYear, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 365;
+      this.scale = 'days';
     },
     setDataWeek() {
       const timeString = new Date();
-      const lastWeek = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
-      this.key = '1w';
-      return this.getBalanceHistory(lastWeek, 'days');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 7;
+      this.scale = 'days';
     },
     setDataYesterday() {
       const timeString = new Date();
-      const yesterday = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
-      this.key = '1d';
-      return this.getBalanceHistory(yesterday, 'hours');
+      this.timeString = timeString.getTime() - 1000 * 60 * 60 * 24 * 1;
+      this.scale = 'hours';
     },
     navigateToSend() {
       this.$router.push({ name: 'SendTX' });
@@ -205,9 +272,10 @@ export default {
   }
 };
 </script>
-<style class="scss">
-/* remove after updating mew-module */
-.auto-height {
-  height: auto !important;
+<style lang="scss">
+.module-balance-loader {
+  .v-skeleton-loader__image {
+    height: 352px;
+  }
 }
 </style>

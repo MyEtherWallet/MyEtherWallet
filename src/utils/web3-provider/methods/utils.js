@@ -1,5 +1,9 @@
 import { formatters } from 'web3-core-helpers';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
+import {
+  txTypes,
+  notificationTypes
+} from '@/modules/notifications/configs/configTypes';
 import { _ } from 'web3-utils';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
@@ -27,24 +31,14 @@ const getSanitizedTx = tx => {
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
   const newTxObj = _.clone(tx);
-  newTxObj['data'] = newTxObj.hasOwnProperty('input')
-    ? newTxObj.input
-    : newTxObj.data;
-  newTxObj.date = new Date().getTime();
-  const isExcempt = newTxObj.hasOwnProperty('handleNotification');
-  delete newTxObj['r'];
-  delete newTxObj['v'];
-  delete newTxObj['s'];
-  delete newTxObj['chainId'];
-  delete newTxObj['input'];
-  delete newTxObj['hash'];
-  delete newTxObj['__typename'];
+  newTxObj.type = notificationTypes.out;
+  const isExempt = newTxObj.hasOwnProperty('handleNotification');
 
   promiObj
     .once('transactionHash', hash => {
-      newTxObj.status = 'PENDING';
-      newTxObj.transactionHash = hash;
-      if (!isExcempt) {
+      newTxObj.status = txTypes.pending;
+      newTxObj.hash = hash;
+      if (!isExempt) {
         const notification = new Notification(newTxObj);
         dispatch('notifications/addNotification', notification, {
           root: true
@@ -52,21 +46,21 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('receipt', res => {
-      newTxObj.transactionHash = res.transactionHash;
-      newTxObj.status = 'SUCCESS';
-      if (!isExcempt) {
-        const notification = new Notification(newTxObj);
+      newTxObj.hash = res.hash;
+      newTxObj.status = txTypes.success;
+      const notification = new Notification(newTxObj);
+      if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
           root: true
         });
       }
     })
     .on('error', err => {
-      newTxObj.status = 'FAILED';
+      newTxObj.status = txTypes.failed;
       newTxObj.errMessage = err.message;
-      if (!isExcempt) {
-        const notification = new Notification(newTxObj);
-        dispatch('notifications/addNotification', notification, {
+      const notification = new Notification(newTxObj);
+      if (!isExempt) {
+        dispatch('notifications/updateNotification', notification, {
           root: true
         });
       }

@@ -45,7 +45,10 @@
 
 <script>
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
-import { WalletConnectWallet, WalletLinkWallet } from '@/modules/wallets/utils';
+import {
+  WalletConnectWallet,
+  WalletLinkWallet
+} from '@/modules/access-wallet/hybrid/handlers';
 import { mapActions } from 'vuex';
 export default {
   name: 'ModuleAccessWalletMobile',

@@ -8,6 +8,7 @@
       :btn-enabled="disableBtn"
       :close-only="true"
       :width="'450'"
+      class="pa-8"
       @close="reset"
     >
       <template #dialogBody>
@@ -75,7 +76,7 @@
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
             :value="value"
-            :value-usd="ETHUSDValue.value"
+            :value-usd="usdValue"
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
@@ -104,7 +105,7 @@
               warning
               textSecondary--text
               border-radius--5px
-              mb-4
+              mb-5
             "
           >
             <b>Make sure all the information is correct.</b> Canceling or
@@ -114,15 +115,15 @@
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
-            v-if="signing || signingPending"
-            :is-swap="isHardware"
+            v-if="showConfirmWithWallet"
             :tx-length="unsignedTxArr.length > 0 ? unsignedTxArr.length : 1"
             :signed="signingPending"
+            :error="error"
           />
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="transaction.to + transaction.from + i"
+              :key="transaction.title + transaction.value + i"
               class="expansion-border"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
@@ -203,13 +204,20 @@
 
 <script>
 import AppModal from '@/core/components/AppModal';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
 import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
-import utils from 'web3-utils';
+import {
+  fromWei,
+  _,
+  hexToNumberString,
+  hexToNumber,
+  toWei,
+  sha3
+} from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -217,7 +225,7 @@ import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
-import { sanitizeHex } from '@/modules/wallets/utils/utils.js';
+import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 
 const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 
@@ -249,7 +257,8 @@ export default {
       links: {
         ethvm: '',
         etherscan: ''
-      }
+      },
+      error: ''
     };
   },
   computed: {
@@ -260,9 +269,21 @@ export default {
       'identifier',
       'isHardware'
     ]),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    usdValue() {
+      return BigNumber(this.fiatValue).toNumber();
+    },
+    isWeb3Wallet() {
+      return this.identifier === WALLET_TYPES.WEB3_WALLET;
+    },
+    showConfirmWithWallet() {
+      return (
+        (this.isHardware || this.isWeb3Wallet) &&
+        (this.signing || this.signingPending)
+      );
+    },
     swapLabel() {
       switch (this.transactions.length) {
         case 1:
@@ -277,29 +298,24 @@ export default {
       const newArr =
         this.unsignedTxArr.length > 0
           ? [].concat(this.unsignedTxArr)
-          : utils._.isEmpty(this.tx)
+          : _.isEmpty(this.tx)
           ? []
           : [this.tx];
       return this.arrayParser(newArr);
     },
     allToDetails() {
       const toNickname = this.addressBook.find(item => {
-        return this.to?.toLowerCase() === item.address?.toLowerCase();
+        return this.tx.to?.toLowerCase() === item.address?.toLowerCase();
       });
       return {
-        ensName: this.toDetails.type === 'resolved' ? this.toDetails.value : '',
-        nickname:
-          this.toDetails.type === 'selected'
-            ? this.toDetails.value
-            : toNickname
-            ? toNickname.nickname
-            : '',
+        ensName: this.toDetails.type === 'RESOLVED' ? this.toDetails.value : '',
+        nickname: toNickname ? toNickname.nickname : '',
         selected: this.toDetails.type
       };
     },
     gasPrice() {
       const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
-      return utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei');
+      return fromWei(hexToNumberString(gasPrice), 'gwei');
     },
     gasLimit() {
       const gasLimit = this.tx.gasLimit
@@ -307,25 +323,25 @@ export default {
         : this.tx.gas
         ? this.tx.gas
         : '0x';
-      return utils.hexToNumberString(gasLimit);
+      return hexToNumberString(gasLimit);
     },
     nonce() {
-      return utils.hexToNumber(this.tx.nonce);
+      return hexToNumber(this.tx.nonce);
     },
     txFee() {
-      const parsedTxFee = BigNumber(utils.toWei(this.gasPrice, 'gwei'))
+      const parsedTxFee = BigNumber(toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
         .toString();
-      return utils.fromWei(parsedTxFee);
+      return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.ETHUSDValue.value).toFixed(2);
+      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
     },
     value() {
       const parsedValue = this.tx.value
         ? this.tx.hasOwnProperty('toTxData')
           ? this.tx.toTxData.amount
-          : utils.fromWei(utils.hexToNumberString(this.tx.value))
+          : fromWei(hexToNumberString(this.tx.value))
         : '0x';
       return parsedValue;
     },
@@ -338,14 +354,15 @@ export default {
       );
     },
     disableBtn() {
+      if (this.error !== '') return true;
       if (!this.signing) return true;
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
-        : !utils._.isEmpty(this.signedTxObject);
+        : !_.isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !utils._.isEmpty(this.swapInfo);
+      return !_.isEmpty(this.swapInfo);
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -354,7 +371,19 @@ export default {
       if (this.isBatch) {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
-      return !utils._.isEmpty(this.signedTxObject);
+      return !_.isEmpty(this.signedTxObject);
+    }
+  },
+  watch: {
+    signedTxArray: {
+      handler: function (newVal) {
+        if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
+          this.showTxOverlay = false;
+          this.showSuccess(newVal);
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   created() {
@@ -462,6 +491,11 @@ export default {
       this.sendCurrency = {};
       this.toDetails = {};
       this.signing = false;
+      this.links = {
+        etherscan: '',
+        ethvm: ''
+      };
+      this.error = '';
     },
     parseRawData(tx) {
       let tokenData = '';
@@ -484,48 +518,43 @@ export default {
       }
       tx.type = 'OUT';
       tx.network = this.network.type.name;
-      tx.transactionFee = this.txFee;
     },
     async sendBatchTransaction() {
       const web3 = this.web3;
-      const _method =
-        this.identifier === WALLET_TYPES.WEB3_WALLET
-          ? 'sendTransaction'
-          : 'sendSignedTransaction';
+      const _method = 'sendSignedTransaction';
       const _arr = this.signedTxArray;
-      const promises = _arr.map(tx => {
+      const promises = _arr.map((tx, idx) => {
         const _tx = tx.tx;
         _tx.from = this.address;
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
-        _tx.gasPrice = utils.fromWei(
-          utils.hexToNumberString(_tx.gasPrice),
-          'gwei'
-        );
-        _tx.transactionFee = utils.fromWei(
-          BigNumber(utils.toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+        _tx.gasPrice = fromWei(hexToNumberString(_tx.gasPrice), 'gwei');
+        _tx.transactionFee = fromWei(
+          BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
-        promiEvent.once('transactionHash', () => {
-          const localStoredObj = locStore.get(web3.utils.sha3(this.address));
-          locStore.set(web3.utils.sha3(this.address), {
+        promiEvent.once('transactionHash', hash => {
+          const localStoredObj = locStore.get(sha3(this.address));
+          locStore.set(sha3(this.address), {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),
             timestamp: localStoredObj.timestamp
           });
+          if (idx + 1 === _arr.length) {
+            this.reset();
+            this.showSuccess(hash);
+          }
         });
         return promiEvent;
       });
-      // this.resolver(promises);
-      this.reset();
-      this.showSuccess(promises[promises.length - 1]);
+      this.resolver(promises);
     },
     sendSignedTx() {
       const hash = this.signedTxObject.tx.hash;
-      // this.resolver(this.signedTxObject);
+      this.resolver(this.signedTxObject);
       this.reset();
       this.showSuccess(hash);
     },
@@ -534,7 +563,7 @@ export default {
       this.reset();
     },
     showSuccess(param) {
-      if (utils._.isArray(param)) {
+      if (_.isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
           ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
@@ -563,56 +592,97 @@ export default {
       this.showSuccessModal = true;
     },
     async signTx() {
-      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+      this.error = '';
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
-      await this.instance
-        .signTransaction(this.tx)
-        .then(res => {
-          this.signedTxObject = res;
-        })
-        .catch(e => {
-          this.instance.errorHandler(e);
-          this.signedTxObject = {};
-          this.signing = false;
-        });
+      }
+      if (this.isWeb3Wallet) {
+        const event = this.instance.signTransaction(this.tx);
+        event
+          .on('transactionHash', res => {
+            this.showTxOverlay = false;
+            this.showSuccess(res);
+          })
+          .catch(e => {
+            this.signedTxObject = {};
+            this.error = e.message;
+          });
+        this.resolver(event);
+      } else {
+        await this.instance
+          .signTransaction(this.tx)
+          .then(res => {
+            this.signedTxObject = res;
+          })
+          .catch(e => {
+            this.signedTxObject = {};
+            this.error = e.message;
+          });
+      }
     },
     async signBatchTx() {
+      this.error = '';
       const signed = [];
-      if (this.isHardware || this.identifier === WALLET_TYPES.WEB3_WALLET)
+      const batchTxEvents = [];
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
+      }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
         try {
-          const _signedTx = await this.instance.signTransaction(
-            this.unsignedTxArr[i]
-          );
-          if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
-            _signedTx.tx['handleNotification'] =
-              this.unsignedTxArr[i].handleNotification;
+          if (!this.isWeb3Wallet) {
+            const _signedTx = await this.instance.signTransaction(
+              this.unsignedTxArr[i]
+            );
+            if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
+              _signedTx.tx['handleNotification'] =
+                this.unsignedTxArr[i].handleNotification;
+            }
+            _signedTx.tx['type'] = this.unsignedTxArr[i].type
+              ? this.unsignedTxArr[i].type
+              : 'OUT';
+            signed.push(_signedTx);
+          } else {
+            const event = this.instance.signTransaction(this.unsignedTxArr[i]);
+            batchTxEvents.push(event);
+            event
+              .on('transactionHash', res => {
+                signed.push({
+                  tx: {
+                    hash: res
+                  }
+                });
+              })
+              .catch(e => {
+                throw new Error(e);
+              });
           }
-          _signedTx.tx['type'] = this.unsignedTxArr[i].type
-            ? this.unsignedTxArr[i].type
-            : 'OUT';
-          signed.push(_signedTx);
           this.signedTxArray = signed;
+          if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
+          this.error = err.message ? err.message : err;
           this.signedTxArray = [];
-          this.signing = false;
-          this.instance.errorHandler(err);
           return;
         }
       }
-      this.signing = false;
+      if (!this.isWeb3Wallet && !this.isHardware) {
+        this.signing = false;
+      }
     },
     btnAction() {
-      if (!this.signing) {
-        this.isHardware
-          ? this.isBatch
-            ? this.signBatchTx()
-            : this.signTx()
-          : this.sendSignedTx();
+      if (!this.isWeb3Wallet) {
+        if (
+          (this.signedTxArray.length === 0 ||
+            this.signedTxArray.length < this.unsignedTxArr.length) &&
+          _.isEmpty(this.signedTxObject)
+        ) {
+          this.isBatch ? this.signBatchTx() : this.signTx();
+          return;
+        }
+
+        this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
         return;
       }
-      this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
+      this.isBatch ? this.signBatchTx() : this.signTx();
     },
     copyToClipboard() {
       this.$refs.messageConfirmationContainer.$refs.signatureContent.$refs.input.select();
@@ -622,7 +692,7 @@ export default {
       this.reset();
     },
     arrayParser(arr) {
-      return arr.map(item => {
+      const newArr = arr.map(item => {
         const gasLimit = item.gasLimit
           ? item.gasLimit
           : item.gas
@@ -657,12 +727,11 @@ export default {
           },
           {
             title: 'Gas Price',
-            value:
-              utils.fromWei(utils.hexToNumberString(gasPrice), 'gwei') + ' gwei'
+            value: fromWei(hexToNumberString(gasPrice), 'gwei') + ' gwei'
           },
           {
             title: 'Gas Limit',
-            value: utils.hexToNumberString(gasLimit)
+            value: hexToNumberString(gasLimit)
           },
           {
             title: 'Transaction fee',
@@ -670,14 +739,17 @@ export default {
           },
           {
             title: 'Nonce',
-            value: utils.hexToNumber(item.nonce)
+            value: hexToNumber(item.nonce)
           },
           {
             title: 'Data',
             value: item.data
           }
-        ];
+        ].filter(item => {
+          if (item.value !== '') return item;
+        });
       });
+      return newArr;
     }
   }
 };

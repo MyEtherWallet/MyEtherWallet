@@ -13,6 +13,7 @@ export default {
   contracts: contracts,
   icon: etc,
   currencyName: 'ETC',
+  isTestNetwork: false,
   isEthVMSupported: {
     supported: false,
     url: null,

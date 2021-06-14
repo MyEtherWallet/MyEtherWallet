@@ -46,13 +46,13 @@
        Custom Gas
       =====================================================================================
       -->
-      <v-row v-if="!isSwap" align="start" class="px-3">
+      <div v-if="!isSwap" class="d-sm-flex text-center">
         <mew-input
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
-          class="mr-3"
+          class="mr-0 mr-sm-3"
         />
         <mew-button
           :title="customBtn.text"
@@ -69,7 +69,7 @@
             >global settings</span
           >
         </p>
-      </v-row>
+      </div>
       <v-row v-if="hasCustom" align="start" class="px-3">
         <mew-button
           :title="customBtn.text"
@@ -94,7 +94,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 
 export default {
@@ -142,10 +142,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      const usdValue = BigNumber(this.ETHUSDValue.value).times(
+      const usdValue = BigNumber(this.fiatValue).times(
         fromWei(this.customGasPrice, 'ether')
       );
       return {
