@@ -60,7 +60,7 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1 && toTokenSymbol1">
+    <v-item-group v-if="step >= 1 && toTokenSymbol">
       <v-row no-gutters>
         <v-col
           v-for="(quote, idx) in providersList"

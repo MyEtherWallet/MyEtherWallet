@@ -218,6 +218,7 @@
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
             class="mt-7"
+            v-show="hideProviders"
           />
           <!--
             =====================================================================================
@@ -581,6 +582,19 @@ export default {
           return item;
         return item;
       });
+    },
+    /**
+     * @returns boolean to hide providers
+     * checks whether the provider is the only option,
+     * the provider selected is chaangelly,
+     * and there's an amount error
+     */
+    hideProviders() {
+      const hasError = this.amountErrorMessage !== '';
+      const onlyOption = this.availableQuotes.length === 1;
+      const isChangelly = this.selectedProvider.provider === 'changelly';
+
+      return !(hasError && onlyOption && isChangelly);
     },
     /**
      * @returns object of other tokens
@@ -948,18 +962,17 @@ export default {
             )
           })
           .then(quotes => {
-            console.log(quotes, 'aaa');
             this.availableQuotes = quotes.map(q => {
+              console.log(q);
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
               this.minMaxError = {
-                minFrom: q.minAmount,
-                maxFrom: q.maxAmount
+                minFrom: q.minFrom,
+                maxFrom: q.maxFrom
               };
 
-              //     this.minMaxError = false;
               return q;
             });
             if (quotes.length) {
@@ -967,7 +980,8 @@ export default {
               this.step = 1;
             }
             this.isLoadingProviders = false;
-          });
+          })
+          .catch(console.log);
       }
     }, 500),
     setProvider(idx) {
@@ -976,7 +990,7 @@ export default {
         if (_idx === idx) {
           q.isSelected = true;
           if (q?.rateId === 'belowMin') {
-            this.belowMinError = q.minAmount;
+            this.belowMinError = q.minFrom;
             return;
           }
           this.tokenOutValue = q.amount;
@@ -987,7 +1001,6 @@ export default {
     },
     getTrade: _.debounce(function (idx) {
       if (!this.isToAddressValid) return;
-      console.log('here', this.availableQuotes[idx]);
       this.step = 1;
       this.feeError = '';
       if (this.allTrades.length > 0 && this.allTrades[idx]) {

@@ -68,12 +68,8 @@ class Changelly {
       .then(response => {
         const result = response?.data?.result[0];
         return {
-          minFrom: new BigNumber(result?.minFrom)
-            .multipliedBy(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
-            .toFixed(),
-          maxFrom: new BigNumber(result?.maxFrom)
-            .multipliedBy(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
-            .toFixed()
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
         };
       });
   }
