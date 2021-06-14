@@ -379,7 +379,7 @@
 
 <script>
 import phraseBlock from '@/components/PhraseBlock';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import {
