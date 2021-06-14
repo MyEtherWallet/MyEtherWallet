@@ -28,7 +28,14 @@
     </app-modal>
     <v-row justify="space-between" align="start">
       <v-col cols="12" sm="3" class="pb-0">
-        <p class="mew-heading-3 mb-0">Network Fee</p>
+        <div class="d-flex align-center justify-start pl-4">
+          <p class="mew-heading-3 mb-0">Network Fee</p>
+
+          <mew-tooltip
+            class="pl-1"
+            text="Maximum possible transaction fee is shown. Actual fee is likely to be less once your swap is executed."
+          />
+        </div>
       </v-col>
       <v-spacer class="d-none d-sm-flex" />
       <v-col class="d-flex justify-end align-center">
