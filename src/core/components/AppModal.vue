@@ -18,7 +18,7 @@
         -->
       <v-row class="header-container">
         <v-col cols="12" align-self="center">
-          <p class="mew-heading-2 text-center">{{ title }}</p>
+          <div class="mew-heading-2 text-center mb-5 mb-sm-8">{{ title }}</div>
         </v-col>
       </v-row>
       <!--
