@@ -60,7 +60,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="hasCustom"
-          @click.native="setCustomGasPrice(localCustom)"
+          @click.native="useLocal"
         />
         <p v-if="hasCustom" class="pt-2">
           To change the custom gas price, go to
@@ -77,7 +77,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="true"
-          @click.native="setCustomGasPrice(localCustom)"
+          @click.native="useLocal"
         />
         <p class="pt-2">
           To change the custom gas price, go to
@@ -167,13 +167,28 @@ export default {
   },
   watch: {
     selected(newVal) {
-      this.localCustom =
-        newVal === gasPriceTypes.STORED ? fromWei(this.gasPrice, 'gwei') : '0';
+      if (newVal !== gasPriceTypes.STORED) {
+        this.localCustom = '0';
+      }
     }
+    // gasPriceType(e) {
+    //   if (e === gasPriceTypes.STORED && !this.global) {
+    //     this.setCustomGasPrice(this.gasPrice);
+    //   }
+    // },
+    // gasPrice(e) {
+    //   if (this.gasPriceType === gasPriceTypes.STORED && !this.global) {
+    //     this.setCustomGasPrice(e);
+    //   }
+    // }
   },
   methods: {
     setCustomInput(e) {
       this.localCustom = e;
+    },
+    useLocal() {
+      console.log(this.localCustom);
+      this.setCustomGasPrice(this.localCustom);
     }
   }
 };
