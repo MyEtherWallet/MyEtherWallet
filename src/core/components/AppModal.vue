@@ -36,20 +36,36 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row v-if="!noBtn" class="mt-2" justify="space-around">
-        <v-col v-if="!closeOnly" cols="5" class="text-right">
+      <v-row v-if="!noBtn" class="mt-9 mt-sm-4" justify="space-around" dense>
+        <v-col
+          v-if="!closeOnly"
+          cols="12"
+          sm="5"
+          class="text-right"
+          order="2"
+          order-sm="1"
+        >
           <mew-button
             btn-style="outline"
             btn-size="xlarge"
             title="Cancel"
+            :has-full-width="$vuetify.breakpoint.xs"
             @click.native="close"
           />
         </v-col>
-        <v-col v-if="!closeOnly" cols="7" class="text-left">
+        <v-col
+          v-if="!closeOnly"
+          cols="12"
+          sm="7"
+          class="text-left"
+          order="1"
+          order-sm="2"
+        >
           <mew-button
             btn-size="xlarge"
             :title="btnText"
             :disabled="!btnEnabled"
+            :has-full-width="$vuetify.breakpoint.xs"
             @click.native="btnAction"
           />
         </v-col>
@@ -91,7 +107,7 @@ export default {
     },
     btnText: {
       type: String,
-      default: 'Confirm and Send'
+      default: 'Confirm & Send'
     },
     closeOnly: {
       type: Boolean,
