@@ -70,7 +70,8 @@ export default {
         client: 'aave',
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
-            // item['icon'] = this.getTokenIcon(item.aToken.id);
+            // item['icon'] = this.findCoinToken(item.aToken.id).img;
+            console.error('item', item)
             return item;
           });
           this.reservesData = formatReserves(this.rawReserveData).reverse();
@@ -97,7 +98,6 @@ export default {
         },
         result({ data }) {
           this.userReserveData = data.userReserves.map(item => {
-            console.error('item', item);
             // item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
             return item;
           });
@@ -239,11 +239,22 @@ export default {
         });
     },
     /**
+     * @return object
+     * Find token from getLatestPrices query
+     * Data comes from coingecko
+     */
+    findCoinToken(hash) {
+      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
+        return this.coinGeckoTokens.get(hash.toLowerCase());
+      }
+    },
+    /**
+     * @return object
      * Correctly formats all of the user data
      */
     setFormatUserSummaryData() {
       if (
-        this.reservesData?.length > 0 &&
+        this.rawReserveData?.length > 0 &&
         this.userReserveData &&
         this.usdPriceEth
       ) {

@@ -318,7 +318,9 @@ import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
-
+import {
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
@@ -378,7 +380,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'coinGeckoTokens']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),
@@ -396,25 +398,22 @@ export default {
         : `-`;
     },
     totalLiquidity() {
+      console.error('userSummary', this.userSummary);
       return {
         eth: this.userSummary.totalLiquidityETH || '0',
-        usd: this.userSummary.totalLiquidityUSD || '0'
+        usd: formatFiatValue(this.userSummary.totalLiquidityUSD).value || '0'
       };
     },
     totalCollateral() {
-      const usd = `${BigNumber(this.userSummary.totalCollateralUSD).toFixed(
-        2
-      )}`;
       return {
         eth: this.userSummary.totalCollateralETH || '0',
-        usd: usd || '0.00'
+        usd: BigNumber(this.userSummary.totalCollateralUSD).toFixed(2) || '0.00'
       };
     },
     totalBorrow() {
-      const usd = `${BigNumber(this.userSummary.totalBorrowsUSD).toFixed(2)}`;
       return {
         eth: this.userSummary.totalBorrowsETH || '0',
-        usd: usd || '0.00'
+        usd: BigNumber(this.userSummary.totalBorrowsUSD).toFixed(2) || '0.00'
       };
     },
     compositionPercentage() {

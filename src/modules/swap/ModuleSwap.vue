@@ -709,7 +709,7 @@ export default {
      * Amount is rounded
      */
     availableBalanceHint() {
-      if (!this.initialLoad && this.fromTokenType.name) {
+      if (!this.initialLoad && this.fromTokenType?.symbol) {
         return `${this.availableBalance.toFixed()} ${
           this.fromTokenType.symbol
         }`;
