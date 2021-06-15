@@ -171,10 +171,13 @@
                   <div
                     v-for="txVal in transaction"
                     :key="txVal.title + txVal.value"
-                    class="d-flex justify-space-between"
+                    class="d-flex justify-space-between mb-4"
                   >
-                    <p class="ma-0">{{ txVal.title }}</p>
-                    <p class="ma-0 data-values">{{ txVal.value }}</p>
+                    <div class="ma-0">{{ txVal.title }}</div>
+
+                    <scroll-block>
+                      <div class="data-values">{{ txVal.value }}</div>
+                    </scroll-block>
                   </div>
                 </div>
               </v-expansion-panel-content>
@@ -203,6 +206,7 @@
 </template>
 
 <script>
+import ScrollBlock from '@/core/components/AppScrollBlock';
 import AppModal from '@/core/components/AppModal';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -232,6 +236,7 @@ const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 export default {
   name: 'ConfirmationContainer',
   components: {
+    ScrollBlock,
     ConfirmationMesssage,
     AppModal,
     ConfirmationSwapTransactionDetails,
