@@ -153,9 +153,9 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      const wei = toWei(this.localCustom, 'gwei');
+      const ether = fromWei(toWei(this.localCustom, 'gwei'), 'ether');
       const usdValue = formatFiatValue(
-        BigNumber(this.fiatValue).times(wei)
+        BigNumber(this.fiatValue).times(ether)
       ).value;
       return {
         text: this.hasCustom
