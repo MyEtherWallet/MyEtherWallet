@@ -51,7 +51,7 @@ import CreateWalletSoftwareOverview from './components/CreateWalletSoftwareOverv
 import CreateWalletKeystore from './components/CreateWalletKeystore';
 import CreateWalletMnemonicPhrase from './components/CreateWalletMnemonicPhrase';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { WALLET_TYPES } from './handlers/helpers';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import handlerCreateWallet from './handlers/handlerCreateWallet';
 
 export default {

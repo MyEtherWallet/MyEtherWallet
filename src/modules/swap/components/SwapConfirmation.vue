@@ -9,7 +9,7 @@
     <template #mewOverlayBody>
       <v-sheet max-width="600px" class="pa-8">
         <div class="text-center mb-5">
-          <h2 class="error--text font-weight-bold">{{ timeLeftStr }}</h2>
+          <h2 class="error--text">{{ timeLeftStr }}</h2>
           <div class="searchText--text font-weight-bold text-uppercase">
             Time Remaining
           </div>

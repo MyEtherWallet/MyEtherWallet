@@ -38,4 +38,7 @@ export default {
 .component-container {
   background-color: #f2fafa;
 }
+.line-height--0 {
+  line-height: 0 !important;
+}
 </style>
