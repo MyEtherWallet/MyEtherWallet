@@ -71,7 +71,7 @@ export default {
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
             // item['icon'] = this.findCoinToken(item.aToken.id).img;
-            console.error('item', item)
+            console.error('item', item);
             return item;
           });
           this.reservesData = formatReserves(this.rawReserveData).reverse();

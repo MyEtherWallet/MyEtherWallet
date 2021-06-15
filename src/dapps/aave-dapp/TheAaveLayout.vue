@@ -318,9 +318,7 @@ import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
-import {
-  formatFiatValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
