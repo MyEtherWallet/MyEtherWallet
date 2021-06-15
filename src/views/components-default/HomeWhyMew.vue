@@ -6,11 +6,9 @@
       <v-container>
         <v-sheet color="transparent" max-width="400px">
           <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
-            Why Mew
+            Why MEW
           </div>
-          <h2 class="font-weight--700 mb-9">
-            Make Ethereum Blockchain easy and secure
-          </h2>
+          <h1 class="mb-9">Make Ethereum Blockchain easy and secure</h1>
         </v-sheet>
 
         <div class="d-flex">
@@ -91,9 +89,7 @@
             <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
               Why Mew
             </h5>
-            <h1 class="font-weight--700">
-              Make Ethereum Blockchain easy and secure
-            </h1>
+            <h1>Make Ethereum Blockchain easy and secure</h1>
           </v-sheet>
 
           <mew-info-card

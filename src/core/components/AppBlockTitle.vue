@@ -29,9 +29,9 @@
       color="transparent"
       :class="data.centered ? 'mx-auto' : ''"
     >
-      <h2 v-if="data.title" :class="data.textProps">
+      <h1 v-if="data.title" :class="data.textProps">
         {{ data.title }}
-      </h2>
+      </h1>
     </v-sheet>
     <div class="mt-3" />
     <v-sheet

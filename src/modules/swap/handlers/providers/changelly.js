@@ -67,7 +67,10 @@ class Changelly {
       })
       .then(response => {
         const result = response?.data?.result[0];
-        return { minFrom: result?.minFrom, maxFrom: result?.maxFrom };
+        return {
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
+        };
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
@@ -75,25 +78,7 @@ class Changelly {
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    return this.getMinMaxAmount({ fromT, toT }).then(result => {
-      if (queryAmount.lte(result.minFrom) || queryAmount.gt(result.maxFrom)) {
-        return [
-          {
-            exchange: this.provider,
-            provider: this.provider,
-            amount: '0',
-            minAmount: new BigNumber(result.minFrom)
-              .times(0.01)
-              .plus(result.minFrom)
-              .toString(),
-            maxAmount: new BigNumber(result.maxFrom)
-              .times(0.01)
-              .plus(result.maxFrom)
-              .toString(),
-            rateId: 'MinMax'
-          }
-        ];
-      }
+    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
@@ -108,13 +93,20 @@ class Changelly {
           ]
         })
         .then(response => {
-          if (response.data.result[0].result === 0) return [];
           return [
             {
               exchange: this.provider,
               provider: this.provider,
-              amount: response.data.result[0].amountTo,
-              rateId: response.data.result[0].id
+              amount:
+                response.data.result[0].result === 0
+                  ? '0'
+                  : response.data.result[0].amountTo,
+              rateId:
+                response.data.result[0].result === 0
+                  ? ''
+                  : response.data.result[0].id,
+              minFrom: minmax.minFrom,
+              maxFrom: minmax.maxFrom
             }
           ];
         });

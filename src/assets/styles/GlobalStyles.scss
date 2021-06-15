@@ -8,17 +8,12 @@
 /* Limit minimum width */
 html {
   min-width: 320px !important;
+  font-size: 14px !important;
 }
 
 /* Limit maximum width */
 .container {
   max-width: 1185px !important;
-}
-
-@media (max-width: 1263px) {
-  html {
-    font-size: 14px !important;
-  }
 }
 
 /* Remove default background color */
@@ -73,27 +68,7 @@ html {
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
 }
-.corner-btn {
-  color: var(--v-primary-base);
-  font-weight: 500;
-  position: absolute;
-  top: -1.56rem;
-  right: 0.63rem;
-  cursor: pointer;
-  filter: brightness(1);
 
-  &:hover {
-    filter: brightness(1.15);
-  }
-}
-.mew-super-btn-shadow {
-  box-shadow: 0 7px 13px rgba(0, 0, 0, 0.04);
-}
-.v-application .v-input .v-label {
-  font-weight: 400 !important;
-  font-size: 0.88rem;
-  color: var(--v-titlePrimary-base) !important;
-}
 .v-application .v-btn.mew-button .v-btn__content span {
   text-transform: initial;
   font-size: 0.88rem !important;
@@ -107,12 +82,6 @@ html {
     padding: 1.8rem 0;
   }
 }
-.mew-subtitle {
-  line-height: 34px;
-}
-.mew-heading-1 {
-  line-height: 27px;
-}
 
 /* ========== CSS Style Reset ========== */
 .monospace {
@@ -122,55 +91,45 @@ i {
   font-family: 'Material Icons' !important;
 }
 div {
-  font-size: 0.88rem;
-  line-height: 1.3rem;
-  font-weight: 400;
   padding: 0;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.357rem;
+  font-weight: 400;
 }
 p {
-  font-size: 0.88rem;
-  line-height: 1.3rem;
-  font-weight: 400;
+  /* size - 14px,  height - 19px, normal */
+  @extend .mew-body;
 }
 h1 {
-  font-size: 2.1rem;
-  line-height: 2.5rem;
-  font-weight: 400;
+  /* size - 30px,  height - 36px, bold */
+  @extend .mew-subtitle;
 }
 h2 {
-  font-size: 1.88rem;
-  line-height: 2.31rem;
-  font-weight: 700;
+  /* size - 22px,  height - 26px, bold */
+  @extend .mew-heading-2;
 }
 h3 {
-  font-size: 1.5rem;
-  line-height: 1.8rem;
-  font-weight: 400;
+  /* size - 16px,  height - 22px, bold */
+  @extend .mew-heading-3;
 }
 h4 {
-  font-size: 1.38rem;
-  line-height: 1.6rem;
+  /* size - 16px,  height - 22px, normal */
+  @extend .mew-heading-4;
+
   font-weight: 400;
 }
-h5,
-.h5 {
-  font-size: 1rem;
-  line-height: 1.44rem;
-  font-weight: 400;
+h5 {
+  @extend .mew-body;
 }
 h6 {
-  font-size: 0.75rem;
-  line-height: 0.85rem;
-  font-weight: 400;
+  /* size - 12px,  height - 14px, normal */
+  @extend .mew-label;
 }
 
 /* ========== Text ========== */
 .color--inherit {
   color: inherit !important;
-}
-.line-height--0 {
-  line-height: 0 !important;
 }
 .text-transform--initial {
   text-transform: initial !important;
@@ -186,21 +145,6 @@ h6 {
 }
 .white-space--nowrap {
   white-space: nowrap !important;
-}
-.font-weight--400 {
-  font-weight: 400 !important;
-}
-.font-weight--500 {
-  font-weight: 500 !important;
-}
-.font-weight--600 {
-  font-weight: 600 !important;
-}
-.font-weight--700 {
-  font-weight: 700 !important;
-}
-.font-weight--800 {
-  font-weight: 800 !important;
 }
 
 /* ========== Cursor ========== */

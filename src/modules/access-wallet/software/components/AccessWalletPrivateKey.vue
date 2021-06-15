@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5">
     <mew6-white-sheet class="border-radius--10px pa-4 pa-sm-12">
-      <h4 class="font-weight-bold mb-6">Enter your private key</h4>
+      <h3 class="mb-6">Enter your private key</h3>
       <!--
       =====================================================================================
         Private Key Input
