@@ -12,7 +12,10 @@ import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { AddressEventType } from '@/apollo/global/globalTypes.js';
 import BigNumber from 'bignumber.js';
 import ethImg from '@/assets/images/networks/eth.svg';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 
 const tokens = {
   eth: 'ethereum'
@@ -161,8 +164,10 @@ export default {
               price_change_percentage_24h: foundToken
                 ? foundToken.price_change_percentage_24h
                 : null,
-              usdBalance: usdBalance,
-              price: price,
+              totalBalanceRaw: usdBalance,
+              totalBalance: formatFiatValue(usdBalance).value,
+              priceRaw: price,
+              price: formatFiatValue(price).value,
               tokenBalance: this._getTokenBalance(
                 token.balance,
                 token.tokenInfo.decimals

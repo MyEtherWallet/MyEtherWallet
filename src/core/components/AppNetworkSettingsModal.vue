@@ -33,7 +33,6 @@
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
-import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -55,7 +54,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('global', ['gasPriceType']),
     hasCustom() {
       return this.gasPriceType === gasPriceTypes.STORED;
     }
@@ -63,6 +61,7 @@ export default {
   created() {
     this.useGlobal = false;
     this.fetchGasPrice();
+    this.selected = this.gasPriceType;
   },
   methods: {
     setCustom(value) {

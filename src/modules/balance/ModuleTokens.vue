@@ -51,8 +51,8 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatFiatValue,
   formatPercentageValue,
-  formatFloatingPointValue,
-  formatIntegerToString
+  formatIntegerToString,
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -125,10 +125,10 @@ export default {
         .map(item => {
           const newObj = {};
           newObj.balance = [
-            formatFloatingPointValue(item.tokenBalance).value +
+            formatFloatingPointValue(item.tokenBalance.value).value +
               ' ' +
               item.symbol,
-            '$' + formatFiatValue(item.usdBalance).value
+            '$' + formatFiatValue(item.totalBalance).value
           ];
           newObj.token = item.symbol;
           newObj.cap = formatIntegerToString(item.market_cap);
@@ -136,7 +136,7 @@ export default {
             item.price_change_percentage_24h
           ).value.replaceAll('%', '');
           newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-          newObj.price = '$' + formatFiatValue(item.price).value;
+          newObj.price = '$' + item.price;
           newObj.tokenImg = item.img;
           newObj.callToAction = [
             {
@@ -155,10 +155,10 @@ export default {
       return formatFiatValue(
         this.tokensList.reduce((total, currentVal) => {
           const balance =
-            currentVal.usdBalance !== null &&
+            currentVal.totalBalanceRaw !== null &&
             (currentVal.price_change_percentage_24h !== null ||
               currentVal.market_cap !== 0)
-              ? currentVal.usdBalance
+              ? currentVal.totalBalanceRaw
               : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)

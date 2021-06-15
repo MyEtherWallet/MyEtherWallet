@@ -1,4 +1,4 @@
-## Using a BitBox, Secalot, KeepKey, etc.
+## Using a BitBox, KeepKey, etc.
 
 #### To get your hardware wallet working properly, please try all of the steps outlined below:
 

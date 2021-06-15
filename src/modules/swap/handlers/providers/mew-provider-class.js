@@ -30,6 +30,16 @@ class MEWPClass {
   isValidToAddress({ address }) {
     return Promise.resolve(isAddress(address));
   }
+  getMinMaxAmount({ fromT }) {
+    return Promise.resolve({
+      minFrom: new BigNumber(1)
+        .dividedBy(new BigNumber(10).pow(fromT.decimals))
+        .toFixed(),
+      maxFrom: new BigNumber(1)
+        .multipliedBy(new BigNumber(10).pow(fromT.decimals))
+        .toFixed()
+    });
+  }
   getQuote({ fromT, toT, fromAmount }) {
     const fromAddress = fromT.hasOwnProperty('contract_address')
       ? fromT.contract_address
@@ -48,34 +58,39 @@ class MEWPClass {
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    return axios
-      .get(`${HOST_URL}${GET_QUOTE}`, {
-        params: {
-          fromContractAddress: fromAddress,
-          toContractAddress: toAddress,
-          amount: queryAmount.toFixed(fromT.decimals),
-          excludeDexes:
-            this.provider === MEWPClass.supportedDexes.DEX_AG
-              ? MEWPClass.supportedDexes.ONE_INCH
-              : MEWPClass.supportedDexes.DEX_AG
-        }
-      })
-      .then(response => {
-        const quotes = response.data.quotes.filter(
-          q => q.dex === this.provider
-        );
-        return quotes.map(q => {
-          return {
-            exchange: q.exchange,
-            provider: this.provider,
-            amount: q.amount
-          };
+    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
+      return axios
+        .get(`${HOST_URL}${GET_QUOTE}`, {
+          params: {
+            fromContractAddress: fromAddress,
+            toContractAddress: toAddress,
+            amount: queryAmount.toFixed(fromT.decimals),
+            excludeDexes:
+              this.provider === MEWPClass.supportedDexes.DEX_AG
+                ? MEWPClass.supportedDexes.ONE_INCH
+                : MEWPClass.supportedDexes.DEX_AG
+          }
+        })
+        .then(response => {
+          const quotes = response.data.quotes.filter(
+            q => q.dex === this.provider
+          );
+          return quotes.map(q => {
+            return {
+              exchange: q.exchange,
+              provider: this.provider,
+              amount: q.amount,
+              minFrom: minmax.minFrom,
+              maxFrom: minmax.maxFrom
+            };
+          });
+        })
+        .catch(e => {
+          if (e.response?.data.msg === 'No matching swap pairs found')
+            return [];
+          return e;
         });
-      })
-      .catch(e => {
-        if (e.response?.data.msg === 'No matching swap pairs found') return [];
-        return e;
-      });
+    });
   }
   getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
     const contactFromAddress = fromT.hasOwnProperty('contract_address')

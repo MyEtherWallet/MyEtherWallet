@@ -1,61 +1,51 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12">
-        <p>
-          <b>Please double-check everything.</b> MEW team will not be able to
-          reverse your transaction once its submitted. You will still be charged
-          gas fees even if the transaction fails. <a>Learn more.</a>
-        </p>
-      </v-col>
-    </v-row>
     <!--
       =====================================================================================
         Values
       =====================================================================================
     -->
-    <v-row class="position--relative" justify="space-around">
-      <v-col cols="6" class="text-center value-container">
-        You Swap <br />
-        <img :src="fromImg" height="30px" /> <br />
-        {{ fromVal }} {{ fromType }}
-      </v-col>
-      <v-col cols="6" class="text-center value-container">
-        You will get <br />
-        <img :src="toImg" height="30px" /> <br />
-        {{ toVal }} {{ toType }}
-      </v-col>
-      <div class="icon d-flex align-center">
-        <v-icon> mdi-arrow-right </v-icon>
-      </div>
-    </v-row>
+    <confirmation-values-container :items="valueItems" is-swap />
     <!--
       =====================================================================================
         Summary
       =====================================================================================
     -->
-    <v-row class="my-4">
-      <v-col cols="6" class="text-left">
-        Provider <br />
-        Exchange rate <br />
-        Transaction fee
-      </v-col>
-      <v-col cols="6" class="text-right">
-        <img :src="provider.exchangeInfo.img" height="25px" /> <br />
-        1 {{ fromType }} = {{ toFixed(provider.rate) }} {{ toType }} <br />
-        <span class="capitalize">{{ gasPriceType }}</span>
-        {{ convertedFees }} {{ txFeeUSD }}
-      </v-col>
-    </v-row>
+    <confirmation-summary-block :items="summaryItems">
+      <template #rightColItem0>
+        <div class="mew-body">
+          1 <span class="searchText--text">{{ fromType }}</span> =
+          {{ formattedRate }}
+          <span class="searchText--text">{{ toType }}</span>
+        </div>
+      </template>
+      <template #rightColItem1>
+        <div class="mew-body">
+          {{ convertedFees.value }}
+          <span class="searchText--text">{{ convertedFees.unit }}</span>
+          ~{{ txFeeUSD }}
+        </div>
+      </template>
+    </confirmation-summary-block>
   </div>
 </template>
 
 <script>
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue,
+  formatGasValue
+} from '@/core/helpers/numberFormatHelper';
+import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
+import ConfirmationValuesContainer from './ConfirmationValuesContainer';
 import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 export default {
+  components: {
+    ConfirmationSummaryBlock,
+    ConfirmationValuesContainer
+  },
   props: {
     provider: {
       type: Object,
@@ -123,14 +113,41 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['fiatValue']),
+    ...mapGetters('external', ['fiatValue']),
     convertedFees() {
-      return fromWei(this.txFee);
+      return formatGasValue(this.txFee);
     },
     txFeeUSD() {
-      return `$ ${BigNumber(this.convertedFees)
-        .times(formatFiatValue(this.fiatValue).value)
-        .toFixed(2)}`;
+      const feeETH = BigNumber(fromWei(this.txFee));
+      return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
+    },
+    summaryItems() {
+      return ['Exchange rate', 'Transaction fee'];
+    },
+    formattedToVal() {
+      return formatFloatingPointValue(this.toVal).value;
+    },
+    formattedFromVal() {
+      return formatFloatingPointValue(this.fromVal).value;
+    },
+    formattedRate() {
+      return formatFloatingPointValue(this.provider.rate).value;
+    },
+    valueItems() {
+      return [
+        {
+          title: 'You Swap',
+          icon: this.fromImg,
+          value: this.formattedFromVal,
+          type: this.fromType
+        },
+        {
+          title: 'You will get',
+          icon: this.toImg,
+          value: this.formattedToVal,
+          type: this.toType
+        }
+      ];
     }
   },
   methods: {
@@ -143,21 +160,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.value-container {
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.icon {
-  width: 32px;
-  border-radius: 50%;
-  background-color: white;
-  height: 32px;
-  top: 30px;
-  position: absolute;
-  text-align: center;
-  padding-left: 5px;
-}
-</style>

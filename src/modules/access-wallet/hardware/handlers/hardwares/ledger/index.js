@@ -3,9 +3,9 @@ import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction } from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
 import store from '@/core/store';
@@ -15,7 +15,7 @@ import {
   getBufferFromHex,
   sanitizeHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
@@ -41,7 +41,6 @@ class ledgerWallet {
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.transport = await getLedgerTransport();
     this.ledger = new Ledger(this.transport);
-    this.appConfig = await getLedgerAppConfig(this.ledger);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
       this.hdKey = new HDKey();
@@ -162,10 +161,7 @@ const getLedgerTransport = async () => {
   }
   return transport;
 };
-const getLedgerAppConfig = async _ledger => {
-  const appConfig = await _ledger.getAppConfiguration();
-  return appConfig;
-};
+
 const getRootPubKey = async (_ledger, _path) => {
   const pubObj = await _ledger.getAddress(_path, false, true);
   return {

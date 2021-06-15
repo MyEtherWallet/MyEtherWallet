@@ -6,20 +6,13 @@
         Layout Title
       =====================================================================================
       -->
-      <app-block-title :data="titleData">
-        <h5 class="white--text ma-0">
-          Please select a method to access your wallet.
-        </h5>
-        <h5 class="white--text ma-0">
-          Don't have a wallet?
-          <router-link
-            :to="{ name: 'CreateWallet' }"
-            class="text-color--mew-green"
-          >
-            Get a new wallet
-          </router-link>
-        </h5>
-      </app-block-title>
+      <the-layout-header
+        title="Access My Wallet"
+        subtitle-line-one=" Please select a method to access your wallet."
+        subtitle-line-two="Don't have a wallet?"
+        :route-obj="titleRoute"
+        has-link
+      />
       <!--
       =====================================================================================
         Options
@@ -83,8 +76,7 @@
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-import browserExtensionOverlay from '@/modules/wallets/components/browser-extension-overlay/BrowserExtensionOverlay';
+import browserExtensionOverlay from '@/modules/access-wallet/software/components/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
@@ -95,18 +87,20 @@ import {
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
-import { Web3Wallet } from '@/modules/wallets/utils/software';
+import { Web3Wallet } from '@/modules/access-wallet/common';
 import { mapActions, mapState, mapGetters } from 'vuex';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';
+import TheLayoutHeader from '../components-default/TheLayoutHeader';
+
 export default {
   name: 'TheAccessWalletLayout',
   components: {
-    AppBlockTitle,
     browserExtensionOverlay,
     ModuleAccessWalletHardware,
     ModuleAccessWalletSoftware,
-    ModuleAccessWalletMobile
+    ModuleAccessWalletMobile,
+    TheLayoutHeader
   },
   props: {
     overlay: {
@@ -120,12 +114,9 @@ export default {
   },
   data() {
     return {
-      titleData: {
-        textProps: 'white--text',
-        toptitle: '',
-        title: 'Access My Wallet',
-        description: '',
-        centered: true
+      titleRoute: {
+        text: 'Create Wallet',
+        routeName: 'CreateWallet'
       },
       buttons: [
         /* MEW wallet Button */
@@ -160,7 +151,7 @@ export default {
         {
           color: 'basic',
           title: 'Hardware wallets',
-          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox, Secalot',
+          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',

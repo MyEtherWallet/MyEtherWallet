@@ -50,9 +50,7 @@
 
             <v-row>
               <v-col cols="6">
-                <h3 class="font-weight-bold">
-                  30.1234 <span class="mew-body">DAI</span>
-                </h3>
+                <h3>30.1234 <span class="mew-body">DAI</span></h3>
                 <div>$30.12</div>
               </v-col>
               <v-col cols="6">
@@ -116,15 +114,13 @@
               <v-col cols="6">
                 <div class="walletBg pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Total Collateral Locked</h5>
-                  <h3 class="font-weight-bold">$42.03</h3>
+                  <h3>$42.03</h3>
                 </div>
               </v-col>
               <v-col cols="6">
                 <div class="walletBg pa-5 border-radius--5px">
                   <h5 class="mb-2 font-weight-bold">Total DAI Debt</h5>
-                  <h3 class="font-weight-bold">
-                    30.20<span class="mew-body"> DAI</span>
-                  </h3>
+                  <h3>30.20<span class="mew-body"> DAI</span></h3>
                 </div>
               </v-col>
               <v-col cols="12" class="mt-6">

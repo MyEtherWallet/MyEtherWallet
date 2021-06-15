@@ -19,6 +19,7 @@ const ERRORS = {
     'ledgerError.cla-not-support-0x6e00',
   'Ledger Device is busy (lock getAddress)': 'ledgerError.device-busy-2',
   'Ledger device: INS_NOT_SUPPORTED (0x6d00)': 'ledgerError.wrong-wallet',
+  'Ledger device: UNKNOWN_ERROR (0x650f)': 'ledgerError.wrong-wallet',
   'Ledger Device is busy (lock provideERC20TokenInformation)':
     'ledgerError.device-busy-1',
   'Ledger Device is busy (lock signTransaction)': 'ledgerError.device-busy-1',
@@ -64,7 +65,6 @@ export default err => {
     if (err && err.message.includes(item)) return item;
     return item.includes(err.message) || item.includes(err);
   });
-
   if (foundError) {
     Toast(`${Vue.$i18n.t(ERRORS[foundError])}${expected}`, {}, ERROR);
   } else if (foundWarning) {

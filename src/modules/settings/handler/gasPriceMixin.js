@@ -14,7 +14,7 @@ const gasPriceMixin = {
       localGas: null,
       convertedGasPrice: '0',
       useGlobal: true,
-      selected: this.gasPriceType
+      selected: 'economy'
     };
   },
   computed: {
