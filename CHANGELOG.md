@@ -2,6 +2,7 @@
 
 ### Devop
 
+* btc address check [#3159](https://github.com/MyEtherWallet/MyEtherWallet/pull/3159)
 * Fix swap provider list [#3152](https://github.com/MyEtherWallet/MyEtherWallet/pull/3152)
 * Add scrollable option to app modal [#3145](https://github.com/MyEtherWallet/MyEtherWallet/pull/3145)
 * Fix gas fee not showing up [#3139](https://github.com/MyEtherWallet/MyEtherWallet/pull/3139)

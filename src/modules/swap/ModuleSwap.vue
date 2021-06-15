@@ -211,6 +211,7 @@
             =====================================================================================
             -->
           <swap-providers-list
+            v-show="hideProviders"
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
@@ -275,6 +276,7 @@ import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
 } from './handlers/configs/configTrendingTokens';
+
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
@@ -469,8 +471,10 @@ export default {
         ...this.toTokens
       ];
       const fromTokenAddress =
-        this.fromTokenType?.contract_address ||
-        this.fromTokenType?.contract ||
+        (this.fromTokenType?.hasOwnProperty('contract_address') &&
+          this.fromTokenType.contract_address) ||
+        (this.fromTokenType?.hasOwnProperty('contract') &&
+          this.fromTokenType.contract) ||
         '';
       return returnableTokens.filter(item => {
         const address = item?.contract_address || item?.contract || '';
@@ -567,13 +571,30 @@ export default {
       ];
 
       const toTokenAddress =
-        this.toTokenType?.contract_address || this.toTokenType?.contract || '';
+        (this.toTokenType?.hasOwnProperty('contract_address') &&
+          this.toTokenType.contract_address) ||
+        (this.toTokenType?.hasOwnProperty('contract') &&
+          this.toTokenType.contract) ||
+        '';
       return returnableTokens.filter(item => {
         const address = item?.contract_address || item?.contract || '';
         if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
           return item;
         return item;
       });
+    },
+    /**
+     * @returns boolean to hide providers
+     * checks whether the provider is the only option,
+     * the provider selected is chaangelly,
+     * and there's an amount error
+     */
+    hideProviders() {
+      const hasError = this.amountErrorMessage !== '';
+      const onlyOption = this.availableQuotes.length === 1;
+      const isChangelly = this.selectedProvider.provider === 'changelly';
+
+      return !(hasError && onlyOption && isChangelly);
     },
     /**
      * @returns object of other tokens
@@ -666,7 +687,7 @@ export default {
      * @returns BigNumber of the available balance for the From Token
      */
     availableBalance() {
-      if (!this.initialLoad && this.fromTokenType.name) {
+      if (!this.initialLoad && this.fromTokenType?.name) {
         if (!this.isFromTokenETH) {
           const hasBalance = this.tokensList.find(
             token => token.symbol === this.fromTokenType.symbol
@@ -753,13 +774,12 @@ export default {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
           /* Changelly Errors: */
-          if (this.selectedProvider.exchange === 'changelly') {
-            if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-              return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
-            }
-            if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-              return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
-            }
+
+          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
+          }
+          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
           }
         }
       }
@@ -942,23 +962,18 @@ export default {
             )
           })
           .then(quotes => {
-            quotes = quotes.map(q => {
+            this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
-              if (q?.rateId === 'MinMax') {
-                this.minMaxError = {
-                  minFrom: q.minAmount,
-                  maxFrom: q.maxAmount
-                };
-                return;
-              }
-              this.minMaxError = false;
+              this.minMaxError = {
+                minFrom: q.minFrom,
+                maxFrom: q.maxFrom
+              };
 
               return q;
             });
-            this.availableQuotes = quotes;
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
@@ -973,7 +988,7 @@ export default {
         if (_idx === idx) {
           q.isSelected = true;
           if (q?.rateId === 'belowMin') {
-            this.belowMinError = q.minAmount;
+            this.belowMinError = q.minFrom;
             return;
           }
           this.tokenOutValue = q.amount;
@@ -1052,11 +1067,14 @@ export default {
       this.executeTrade();
     },
     isValidToAddress(address) {
-      return this.swapper.isValidToAddress({
-        provider: this.availableQuotes[0].provider,
-        toT: this.toTokenType,
-        address
-      });
+      if (this.availableQuotes.length > 0) {
+        return this.swapper.isValidToAddress({
+          provider: this.availableQuotes[0].provider,
+          toT: this.toTokenType,
+          address
+        });
+      }
+      return true;
     },
 
     executeTrade() {
