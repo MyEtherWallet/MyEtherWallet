@@ -963,7 +963,6 @@ export default {
           })
           .then(quotes => {
             this.availableQuotes = quotes.map(q => {
-              console.log(q);
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
@@ -980,8 +979,7 @@ export default {
               this.step = 1;
             }
             this.isLoadingProviders = false;
-          })
-          .catch(console.log);
+          });
       }
     }, 500),
     setProvider(idx) {
@@ -1029,7 +1027,6 @@ export default {
           )
         })
         .then(trade => {
-          console.log(trade);
           if (trade instanceof Error) {
             this.feeError = 'Provider issue';
             return;
