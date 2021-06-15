@@ -23,8 +23,7 @@ class WSProvider {
     const keepAlive = () => {
       if (
         this.wsProvider.connectionId !==
-          VuexStore.state.wallet.web3.currentProvider.connectionId &&
-        this.lastMessage + 1 * 60 * 1000 < new Date().getTime()
+        VuexStore.state.wallet.web3.currentProvider.connectionId
       ) {
         this.wsProvider.disconnect();
         this.oWSProvider.disconnect();

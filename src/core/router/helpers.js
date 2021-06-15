@@ -74,7 +74,6 @@ const accessRouteGuard = (to, from, next) => {
         'coolwallet',
         'xwallet',
         'bitbox',
-        'secalot',
         'trezor',
         'bcvault'
       ];

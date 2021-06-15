@@ -46,13 +46,13 @@
        Custom Gas
       =====================================================================================
       -->
-      <v-row v-if="!isSwap" align="start" class="px-3">
+      <div v-if="!isSwap" class="d-sm-flex text-center">
         <mew-input
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
-          class="mr-3"
+          class="mr-0 mr-sm-3"
         />
         <mew-button
           :title="customBtn.text"
@@ -69,7 +69,7 @@
             >global settings</span
           >
         </p>
-      </v-row>
+      </div>
       <v-row v-if="hasCustom" align="start" class="px-3">
         <mew-button
           :title="customBtn.text"

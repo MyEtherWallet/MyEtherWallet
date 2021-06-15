@@ -325,7 +325,7 @@ export default {
                   ? roundNumber(userDeposited.currentUnderlyingBalance)
                   : '0',
                 apr: roundPercentage(item.liquidityRate),
-                tokenImg: `https://img.mewapi.io/?image=${item.icon}`,
+                tokenImg: `${item.icon}`,
                 address: item.aToken.id,
                 callToAction: [depositButton, this.btnSwap]
               };
@@ -352,7 +352,7 @@ export default {
                     .toString()
                 ),
 
-                tokenImg: `https://img.mewapi.io/?image=${item.icon}`,
+                tokenImg: `${item.icon}`,
                 address: item.aToken.id,
                 callToAction: [this.btnBorrow]
               };
@@ -365,7 +365,7 @@ export default {
             list = list.map(item => {
               return {
                 token: item.reserve.symbol,
-                tokenImg: `https://img.mewapi.io/?image=${item.reserve.icon}`,
+                tokenImg: `${item.reserve.icon}`,
                 balance: [
                   `${roundNumber(item.currentUnderlyingBalance)} ${
                     item.reserve.symbol
@@ -395,7 +395,7 @@ export default {
                 : false;
               return {
                 token: item.reserve.symbol,
-                tokenImg: `https://img.mewapi.io/?image=${item.reserve.icon}`,
+                tokenImg: `${item.reserve.icon}`,
                 balance: [
                   `${roundNumber(item.currentBorrows)} ${item.reserve.symbol}`,
                   `$${roundNumber(item.currentBorrowsUSD)}`

@@ -58,7 +58,7 @@ export default {
         }
       });
 
-      return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+      return hasBalance ? BigNumber(hasBalance.totalBalance).toFixed() : '0';
     },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;

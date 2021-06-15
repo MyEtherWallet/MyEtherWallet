@@ -121,9 +121,9 @@
             <v-sheet max-width="200px" class="mx-auto mt-10 text-center">
               <v-row>
                 <v-col v-for="(c, key) in pairingCode" :key="key" cols="6">
-                  <h4>
+                  <h3>
                     <strong class="monospace">{{ c }}</strong>
-                  </h4>
+                  </h3>
                 </v-col>
               </v-row>
             </v-sheet>

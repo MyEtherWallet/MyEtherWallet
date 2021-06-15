@@ -19,7 +19,7 @@
           class="px-0 text-center"
         >
           <v-img :src="t.img" />
-          <div class="mt-6 title font-weight--500">{{ t.name }}</div>
+          <div class="mt-6 title">{{ t.name }}</div>
           <div class="grey--text text--lighten-1 mt-1">{{ t.title }}</div>
           <div class="py-6" />
         </v-col>

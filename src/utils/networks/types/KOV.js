@@ -12,10 +12,13 @@ export default {
   tokens: tokens,
   contracts: contracts,
   icon: kov,
+  isTestNetwork: true,
   currencyName: 'KOV',
   isEthVMSupported: {
     supported: false,
     url: null,
+    blockExplorerTX: '',
+    blockExplorerAddr: '',
     websocket: null
   }
 };

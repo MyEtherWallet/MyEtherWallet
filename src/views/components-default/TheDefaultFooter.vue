@@ -148,7 +148,7 @@
           <v-expansion-panel-header>
             <v-container>
               <v-sheet color="transparent" max-width="500px" class="mx-auto">
-                <h3 class="font-weight--700">{{ mf.title }}</h3>
+                <h3>{{ mf.title }}</h3>
               </v-sheet>
             </v-container>
           </v-expansion-panel-header>
@@ -177,7 +177,7 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="font-weight--700 mb-3 d-flex align-center">
+            <h3 class="mb-3 d-flex align-center">
               Love
               <mew-icon
                 class="mx-1"
@@ -332,8 +332,7 @@ export default {
           {
             label: 'Billfodl',
             link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
-          },
-          { label: 'Secalot', link: 'https://www.secalot.com/' }
+          }
         ]
       },
       {

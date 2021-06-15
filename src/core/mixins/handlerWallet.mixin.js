@@ -12,7 +12,10 @@ import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { AddressEventType } from '@/apollo/global/globalTypes.js';
 import BigNumber from 'bignumber.js';
 import ethImg from '@/assets/images/networks/eth.svg';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 
 const tokens = {
   eth: 'ethereum'
@@ -78,7 +81,7 @@ export default {
     },
     /**
      * Apollo query to fetch latest tokens
-     * also set eth price for state
+     * also set the state for eth price
      */
     getLatestPrices: {
       query: getLatestPrices,
@@ -91,23 +94,22 @@ export default {
         if (data && data.getLatestPrices) {
           data.getLatestPrices.forEach(token => {
             const isEth = token.id === tokens.eth;
-            if (isEth || token.contract) {
-              if (isEth) {
-                const usd = {
-                  value: token.current_price,
-                  symbol: '$',
-                  name: 'USD',
-                  price_change_percentage_24h: token.price_change_percentage_24h
-                };
-                this.setETHUSDValue(usd);
-              }
-              this.tokensData.set(
-                token.contract ? token.contract.toLowerCase() : tokens.eth,
-                token
-              );
-              this.$apollo.queries.getOwnersERC20Tokens?.refetch();
+            if (isEth) {
+              const usd = {
+                value: token.current_price,
+                symbol: '$',
+                name: 'USD',
+                price_change_percentage_24h: token.price_change_percentage_24h
+              };
+              this.setETHUSDValue(usd);
             }
+            this.tokensData.set(
+              token.contract ? token.contract.toLowerCase() : token.id,
+              token
+            );
           });
+          this.setCoinGeckoTokens(this.tokensData);
+          this.$apollo.queries.getOwnersERC20Tokens?.refetch();
         }
       },
       error(error) {
@@ -115,7 +117,7 @@ export default {
       }
     },
     /**
-     * Apollo query to fetch owners erc20 tokens and set it to state
+     * Apollo query to fetch owners erc20 tokens and set the state
      */
     getOwnersERC20Tokens: {
       query: getOwnersERC20Tokens,
@@ -162,12 +164,14 @@ export default {
               price_change_percentage_24h: foundToken
                 ? foundToken.price_change_percentage_24h
                 : null,
-              usdBalance: usdBalance,
-              price: price,
+              totalBalanceRaw: usdBalance,
+              totalBalance: formatFiatValue(usdBalance).value,
+              priceRaw: price,
+              price: formatFiatValue(price).value,
               tokenBalance: this._getTokenBalance(
                 token.balance,
                 token.tokenInfo.decimals
-              )
+              ).value
             });
           });
           this.setTokens(formattedList);
