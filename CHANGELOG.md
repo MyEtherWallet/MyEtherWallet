@@ -2,6 +2,19 @@
 
 ### Devop
 
+* btc address check [#3159](https://github.com/MyEtherWallet/MyEtherWallet/pull/3159)
+* Fix swap provider list [#3152](https://github.com/MyEtherWallet/MyEtherWallet/pull/3152)
+* Add scrollable option to app modal [#3145](https://github.com/MyEtherWallet/MyEtherWallet/pull/3145)
+* Fix gas fee not showing up [#3139](https://github.com/MyEtherWallet/MyEtherWallet/pull/3139)
+* Move component and update packages [#3141](https://github.com/MyEtherWallet/MyEtherWallet/pull/3141)
+* Remove tokens from to selection if it is selected on from and vice versa [#3107](https://github.com/MyEtherWallet/MyEtherWallet/pull/3107)
+* Add swap token switch [#3103](https://github.com/MyEtherWallet/MyEtherWallet/pull/3103)
+* Fix swap button [#3116](https://github.com/MyEtherWallet/MyEtherWallet/pull/3116)
+* Fix swap current balance [#3118](https://github.com/MyEtherWallet/MyEtherWallet/pull/3118)
+* Fix ENS icons [#3110](https://github.com/MyEtherWallet/MyEtherWallet/pull/3110)
+* Fix Swap store BTC on ETH message [#3106](https://github.com/MyEtherWallet/MyEtherWallet/pull/3106)
+* Fix mew-select border issue [#3091](https://github.com/MyEtherWallet/MyEtherWallet/pull/3091)
+* Add user msg for swap [#3087](https://github.com/MyEtherWallet/MyEtherWallet/pull/3087)
 * Remove compiler [#3115](https://github.com/MyEtherWallet/MyEtherWallet/pull/3115)
 * Harmonize errors across wallets [#3051](https://github.com/MyEtherWallet/MyEtherWallet/pull/3051)
 * Fix ui issues for aave [#3079](https://github.com/MyEtherWallet/MyEtherWallet/pull/3079)

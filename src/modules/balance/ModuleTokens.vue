@@ -51,8 +51,8 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatFiatValue,
   formatPercentageValue,
-  formatFloatingPointValue,
-  formatIntegerToString
+  formatIntegerToString,
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -136,7 +136,7 @@ export default {
             item.price_change_percentage_24h
           ).value.replaceAll('%', '');
           newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-          newObj.price = '$' + formatFiatValue(item.price).value;
+          newObj.price = '$' + item.price;
           newObj.tokenImg = item.img;
           newObj.callToAction = [
             {

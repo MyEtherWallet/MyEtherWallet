@@ -52,7 +52,7 @@ class Changelly {
         return response.data.result.result;
       });
   }
-  getMinAmount({ fromT, toT }) {
+  getMinMaxAmount({ fromT, toT }) {
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
@@ -66,7 +66,11 @@ class Changelly {
         ]
       })
       .then(response => {
-        return response?.data?.result[0].minFrom;
+        const result = response?.data?.result[0];
+        return {
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
+        };
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
@@ -74,21 +78,7 @@ class Changelly {
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    return this.getMinAmount({ fromT, toT }).then(result => {
-      if (queryAmount.lte(result)) {
-        return [
-          {
-            exchange: this.provider,
-            provider: this.provider,
-            amount: '0',
-            minAmount: new BigNumber(result)
-              .times(0.01)
-              .plus(result)
-              .toString(),
-            rateId: 'belowMin'
-          }
-        ];
-      }
+    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
@@ -103,13 +93,20 @@ class Changelly {
           ]
         })
         .then(response => {
-          if (response.data.result[0].result === 0) return [];
           return [
             {
               exchange: this.provider,
               provider: this.provider,
-              amount: response.data.result[0].amountTo,
-              rateId: response.data.result[0].id
+              amount:
+                response.data.result[0].result === 0
+                  ? '0'
+                  : response.data.result[0].amountTo,
+              rateId:
+                response.data.result[0].result === 0
+                  ? ''
+                  : response.data.result[0].id,
+              minFrom: minmax.minFrom,
+              maxFrom: minmax.maxFrom
             }
           ];
         });

@@ -13,6 +13,7 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
+import mewwallet from '@/assets/images/icons/wallets/mewwallet.svg';
 
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
 const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
@@ -30,6 +31,11 @@ class MEWconnectWallet {
     });
     this.mewConnect.disconnect = () => {
       this.mewConnect.disconnectRTC();
+    };
+
+    this.icon = {
+      type: 'img',
+      value: mewwallet
     };
   }
   async init(qrcode) {
@@ -97,7 +103,8 @@ class MEWconnectWallet {
       txSigner,
       msgSigner,
       this.mewConnect,
-      errorHandler
+      errorHandler,
+      this.icon
     );
   }
 }

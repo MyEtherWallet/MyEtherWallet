@@ -6,7 +6,7 @@ class MEWProvider {
   constructor(host, options) {
     if (
       VuexStore.state.wallet &&
-      VuexStore.state.wallet.identifier == WALLET_TYPES.WEB3_WALLET
+      VuexStore.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET
     ) {
       return new GivenProvider(host, options);
     } else if (host && typeof host === 'string') {

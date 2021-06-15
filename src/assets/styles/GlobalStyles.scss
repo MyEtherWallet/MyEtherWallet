@@ -55,6 +55,15 @@ html {
   padding-left: 0 !important;
 }
 
+/* ========== Adjust vuetify ========== */
+.expansion-panels--remove-paddings {
+  .v-expansion-panel-header,
+  .v-expansion-panel-content__wrap {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
 /* ========== Fix MEW components ========== */
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
@@ -190,7 +199,14 @@ h6 {
     transform: rotate(90deg);
   }
 }
-
+.btn-circle {
+  cursor: pointer;
+  transition: filter 0.2s linear;
+  height: 30px;
+  &:hover {
+    filter: brightness(90%);
+  }
+}
 .custom-scroll-bar {
   &::-webkit-scrollbar {
     width: 2px;

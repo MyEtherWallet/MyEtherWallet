@@ -1,6 +1,16 @@
 <template>
-  <v-dialog max-width="500" :value="show" @click:outside="handleClickOutside">
-    <v-sheet class="py-6 px-4">
+  <v-dialog
+    max-width="600"
+    :value="show"
+    content-class="core--components--app-modal"
+    @click:outside="handleClickOutside"
+  >
+    <v-sheet class="py-6 px-4 position--relative">
+      <v-btn icon class="header-close-icon">
+        <v-icon size="x-large" color="grey cursor--pointer" @click="close">
+          mdi-close
+        </v-icon>
+      </v-btn>
       <!--
         =====================================================================================
           Dialog Header
@@ -10,32 +20,45 @@
         <v-col cols="12" align-self="center">
           <p class="mew-heading-2 text-center">{{ title }}</p>
         </v-col>
-        <div class="header-close-icon">
-          <v-icon size="large" color="grey cursor--pointer" @click="close"
-            >mdi-close</v-icon
-          >
-        </div>
       </v-row>
       <!--
         =====================================================================================
           Dialog Body
         =====================================================================================
         -->
-      <slot name="dialogBody">
-        <div>This is a test value</div>
-      </slot>
+      <div :class="scrollable ? 'scrollable' : ''">
+        <slot name="dialogBody">
+          <div>This is a test value</div>
+        </slot>
+      </div>
       <!--
         =====================================================================================
           Dialog action
         =====================================================================================
         -->
-      <v-row class="mt-2">
-        <v-col cols="12" class="text-center">
+      <v-row v-if="!noBtn" class="mt-2" justify="space-around">
+        <v-col v-if="!closeOnly" cols="5" class="text-right">
+          <mew-button
+            btn-style="outline"
+            btn-size="xlarge"
+            title="Cancel"
+            @click.native="close"
+          />
+        </v-col>
+        <v-col v-if="!closeOnly" cols="7" class="text-left">
           <mew-button
             btn-size="xlarge"
             :title="btnText"
             :disabled="!btnEnabled"
             @click.native="btnAction"
+          />
+        </v-col>
+        <v-col v-if="closeOnly" cols="12" class="text-left">
+          <mew-button
+            btn-size="xlarge"
+            title="Close"
+            :has-full-width="true"
+            @click.native="close"
           />
         </v-col>
       </v-row>
@@ -69,22 +92,52 @@ export default {
     btnText: {
       type: String,
       default: 'Confirm and Send'
+    },
+    closeOnly: {
+      type: Boolean,
+      default: false
+    },
+    noBtn: {
+      type: Boolean,
+      default: false
+    },
+    scrollable: {
+      type: Boolean,
+      default: false
+    },
+    width: {
+      type: String,
+      default: '600'
     }
   },
   methods: {
     handleClickOutside() {
-      this.$emit('close');
+      //this.$emit('close');
+      this.close();
     }
   }
 };
 </script>
 
+<style lang="scss">
+.core--components--app-modal {
+  margin: 0 !important;
+}
+</style>
+
 <style lang="scss" scoped>
-.header-container {
-  position: relative;
-  .header-close-icon {
-    right: 5px;
-    position: absolute;
-  }
+.header-close-icon {
+  right: 10px;
+  top: 10px;
+  position: absolute;
+}
+
+.scrollable {
+  // Shift scroll bar to right of contents.
+  padding-right: 15px;
+  margin-right: -15px;
+
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
 }
 </style>

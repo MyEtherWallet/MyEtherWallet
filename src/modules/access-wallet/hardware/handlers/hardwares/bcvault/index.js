@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import store from '@/core/store';
 import Vue from 'vue';
+import bcvault from '@/assets/images/icons/wallets/bcvault.png';
 
 import {
   getBufferFromHex,
@@ -26,6 +27,10 @@ class BCVault {
     this.bcWallet = new bc.BCJS(() => {});
     this.deviceNumber = null;
     this.bcWalletType = bc.WalletType.ethereum;
+    this.icon = {
+      type: 'img',
+      value: bcvault
+    };
   }
 
   async init() {
@@ -154,7 +159,9 @@ class BCVault {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      null,
+      this.icon
     );
   }
 }

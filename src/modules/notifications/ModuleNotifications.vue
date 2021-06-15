@@ -119,6 +119,7 @@ import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { txTypes, notificationTypes } from './configs/configTypes';
 import formatNotification from './helpers/formatNotification';
+import { EventBus } from '@/core/plugins/eventBus.js';
 
 export default {
   name: 'ModuleNotifications',
@@ -269,6 +270,11 @@ export default {
       });
       return unread.length;
     }
+  },
+  mounted() {
+    EventBus.$on('openNotifications', () => {
+      this.openNotifications = true;
+    });
   },
   methods: {
     ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),

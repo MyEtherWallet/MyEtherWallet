@@ -1,38 +1,49 @@
 <template>
-  <v-row>
-    <v-col cols="12" class="text-center">
+  <div class="mt-10">
+    <div class="text-center">
       <div>
         <mew-icon
-          v-if="!hasIcon"
+          v-if="instance.icon.type === 'mew-icon'"
           class="border-radius--5px custom-icon-style"
-          :icon-name="instance.identifier"
-          :img-height="50"
+          :icon-name="instance.icon.value"
+          :img-height="100"
         />
-        <img v-else :src="icons[instance.identifier]" height="50px" />
+        <img v-else :src="instance.icon.value" height="50px" />
       </div>
-    </v-col>
-    <v-col cols="12" class="text-center mb-5">
+    </div>
+    <div :class="[error !== '' ? 'error--text' : '', 'text-center mb-5']">
       <p>{{ bodyText }}</p>
-    </v-col>
-  </v-row>
+    </div>
+    <v-progress-linear
+      v-if="!signed"
+      indeterminate
+      color="primary"
+      class="mb-3"
+    ></v-progress-linear>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import ledger from '@/assets/images/hardware-wallets/logo-ledger.svg';
-import trezor from '@/assets/images/hardware-wallets/logo-trezor.svg';
-import keepkey from '@/assets/images/hardware-wallets/logo-keepkey.png';
-
 export default {
   props: {
-    isSwap: {
+    txLength: {
+      type: Number,
+      default: 1
+    },
+    signed: {
+      type: Boolean,
+      default: false
+    },
+    error: {
       type: String,
-      default: 'Swap'
+      default: ''
     }
   },
   computed: {
     ...mapState('wallet', ['instance']),
     bodyText() {
+      if (this.error !== '') return this.error;
       const walletNames = {
         ledger: 'Ledger',
         trezor: 'Trezor',
@@ -48,19 +59,9 @@ export default {
         coolWallet: 'Cool Wallet',
         walletLink: 'Wallet Link'
       };
-      return `Please confirm ${this.isSwap ? 'swap' : ''} transaction with ${
-        walletNames[this.instance.identifier]
-      }`;
-    },
-    icons() {
-      return {
-        ledger: ledger,
-        trezor: trezor,
-        keepkey: keepkey
-      };
-    },
-    hasIcon() {
-      return this.icons[this.instance.identifier];
+      return `Approve ${this.txLength} ${
+        this.txLength > 1 ? 'transactions' : 'transaction'
+      } on ${walletNames[this.instance.identifier]}.`;
     }
   }
 };

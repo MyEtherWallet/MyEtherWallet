@@ -19,6 +19,7 @@ import {
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
+import ledger from '@/assets/images/icons/wallets/ledger.svg';
 
 const NEED_PASSWORD = false;
 const OPEN_TIMEOUT = 10000;
@@ -30,6 +31,10 @@ class ledgerWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.LEDGER];
+    this.icon = {
+      type: 'img',
+      value: ledger
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
@@ -121,7 +126,8 @@ class ledgerWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress
+      displayAddress,
+      this.icon
     );
   }
   getCurrentPath() {

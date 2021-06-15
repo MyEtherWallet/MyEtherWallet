@@ -49,17 +49,21 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.hash = res.hash;
       newTxObj.status = txTypes.success;
       const notification = new Notification(newTxObj);
-      dispatch('notifications/updateNotification', notification, {
-        root: true
-      });
+      if (!isExempt) {
+        dispatch('notifications/updateNotification', notification, {
+          root: true
+        });
+      }
     })
     .on('error', err => {
       newTxObj.status = txTypes.failed;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);
-      dispatch('notifications/updateNotification', notification, {
-        root: true
-      });
+      if (!isExempt) {
+        dispatch('notifications/updateNotification', notification, {
+          root: true
+        });
+      }
     });
 };
 

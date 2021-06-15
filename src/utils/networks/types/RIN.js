@@ -22,6 +22,8 @@ export default {
   isEthVMSupported: {
     supported: false,
     url: null,
+    blockExplorerTX: '',
+    blockExplorerAddr: '',
     websocket: null
   }
 };

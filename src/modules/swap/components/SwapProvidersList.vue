@@ -1,86 +1,85 @@
 <template>
-  <div class="my-5">
-    <div class="mew-heading-3 mb-5">Select a provider</div>
-    <!--
-    =====================================================================================
-      Sceleton Loader
-    =====================================================================================
-    -->
-    <v-row v-if="step === 0 && message.title === ''">
-      <v-col cols="12" class="mb-n3">
-        <v-card
-          flat
-          color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-5"
-        >
-          <v-skeleton-loader width="300px" type="chip" />
-          <v-spacer />
-          <div class="d-flex align-center">
-            <v-skeleton-loader width="170px" type="chip" class="mr-5" />
-            <v-skeleton-loader width="32px" type="chip" />
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
+  <div class="modules--swap--components--swap-providers-list my-5">
+    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
+      Select rate
+    </div>
     <!--
     =====================================================================================
       Providers Message
     =====================================================================================
     -->
-    <v-row
-      v-if="step === 0 && (message.title !== '' || message.subtitle !== '')"
-    >
-      <v-col cols="12" class="mb-n3">
-        <v-card
-          flat
-          color="selectorBg lighten-1"
-          class="d-flex align-center px-5 py-4"
-          min-height="94px"
-        >
-          <v-card-text class="text-center">
-            <p v-show="message.title !== ''" class="mew-heading-1 pb-0">
-              {{ message.title }}
-            </p>
-            <p v-show="message.subtitle !== ''">{{ message.subtitle }}</p>
-          </v-card-text>
-        </v-card>
-      </v-col></v-row
-    >
+    <app-user-msg-block
+      v-if="(step == 0 && !isLoading) || !toTokenSymbol"
+      :message="providersMessage"
+      :is-alert="false"
+    />
+
+    <!--
+    =====================================================================================
+      Sceleton Loader (desktop/mobile)
+    =====================================================================================
+    -->
+    <div v-if="isLoading">
+      <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
+        <div class="d-flex align-center">
+          <v-skeleton-loader type="avatar" class="mr-3" />
+          <v-skeleton-loader type="heading" />
+        </div>
+        <v-spacer />
+        <div class="textSecondary--text font-weight-medium">
+          Finding best rates...
+        </div>
+        <v-spacer />
+        <div class="d-flex align-center">
+          <v-skeleton-loader type="heading" class="mr-3" />
+          <v-skeleton-loader type="avatar" />
+        </div>
+      </div>
+
+      <div
+        class="
+          loading
+          align-center
+          px-5
+          py-5
+          tableHeader
+          border-radius--10px
+          d-flex d-sm-none
+        "
+      >
+        <div class="textSecondary--text font-weight-medium mew-body">
+          Finding best rates...
+        </div>
+        <v-spacer />
+        <v-skeleton-loader type="avatar" />
+      </div>
+    </div>
+
     <!--
     =====================================================================================
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1">
-      <v-row>
+    <v-item-group v-if="step >= 1 && toTokenSymbol">
+      <v-row no-gutters>
         <v-col
           v-for="(quote, idx) in providersList"
           :key="`quote-${idx}`"
           cols="12"
-          class="mb-n3"
+          class="mb-1"
         >
           <v-item v-slot="{ active, toggle }" :ref="`card${idx}`">
-            <v-card
-              :style="
-                active ? 'border-color: var(--v-primary-base) !important' : ''
-              "
-              outlined
-              :color="active ? 'selectorBg' : 'selectorBg lighten-1'"
-              class="
-                d-flex
-                align-center
-                justify-space-between
-                border-radius--10px
-                pl-5
-                pr-2
-                py-1
-              "
+            <v-container
+              :class="[
+                active ? 'rate-active' : '',
+                'd-flex align-center rate py-0 px-1'
+              ]"
               @click="
                 toggle();
                 setProvider(idx);
               "
             >
-              <v-row dense class="align-center justify-start pa-2">
+              <v-row no-gutters class="align-center justify-start">
                 <!--
                 =====================================================================================
                   Token Image, Rate & Best Rate Chip
@@ -89,60 +88,56 @@
                 =====================================================================================
                 -->
                 <v-col cols="10" sm="7">
-                  <v-row class="align-center justify-start">
-                    <!--
-                    =====================================================================================
-                      Exchange Name and Best Rate Chip (Present on XS ONLY)
-                    =====================================================================================
-                    -->
-                    <v-col cols="12" class="d-sm-none pb-2">
-                      <v-row class="pl-10 align-center justify-start">
-                        <div class="textSecondary--text">
-                          {{ quote.exchangeInfo.name }}
-                        </div>
-                        <div
-                          v-if="bestRate !== null && bestRate === quote.rate"
-                          class="
-                            ml-3
-                            px-3
-                            rate-chip-xs
-                            align-center
-                            justify-center
-                          "
-                        >
-                          Best Rate
-                        </div>
-                      </v-row>
-                    </v-col>
-                    <!--
+                  <v-container class="pa-2">
+                    <v-row
+                      class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
+                    >
+                      <!--
                     =====================================================================================
                       Token Icon
                     =====================================================================================
                     -->
-                    <mew-token-container size="small" :icon="toTokenIcon" />
-                    <!--
-                    =====================================================================================
-                      Rate
-                    =====================================================================================
-                    -->
-                    <div class="mew-heading-2 font-weight-medium mx-2 mx-sm-4">
-                      {{ (Math.round(quote.rate * 100) / 100).toFixed(3) }}
-                      {{ toTokenSymbol }}
-                    </div>
-                    <!--
-                    =====================================================================================
-                      Best Rate Chip (hidden on xs)
-                    =====================================================================================
-                    -->
-                    <v-chip
-                      v-if="bestRate !== null && bestRate === quote.rate"
-                      pill
-                      color="primary"
-                      class="d-none d-sm-block py-1 px-5"
-                    >
-                      Best Rate
-                    </v-chip>
-                  </v-row>
+                      <mew-token-container size="small" :icon="toTokenIcon" />
+                      <!--
+                      =====================================================================================
+                        Rate
+                      =====================================================================================
+                      -->
+                      <div
+                        class="
+                          d-block d-sm-flex
+                          mx-2 mx-sm-4
+                          align-center
+                          justify-start
+                        "
+                      >
+                        <div
+                          v-if="bestRate !== null && bestRate === quote.rate"
+                          class="
+                            primary--text
+                            font-weight-medium
+                            mew-label
+                            order-sm-12
+                            pl-sm-2
+                          "
+                        >
+                          Best Rate
+                        </div>
+                        <div
+                          class="d-flex order-sm-1 justify-start align-center"
+                        >
+                          <div class="mb-0 mew-heading-3 font-weight-medium">
+                            {{ quote.rate }} {{ toTokenSymbol }}
+                          </div>
+                          <mew-tooltip
+                            v-if="quote.tooltip && quote.tooltip !== ''"
+                            class="pl-1"
+                            :text="quote.tooltip"
+                          />
+                        </div>
+                      </div>
+                    </v-row>
+                  </v-container>
                 </v-col>
                 <!--
                 =====================================================================================
@@ -152,23 +147,12 @@
                 =====================================================================================
                 -->
                 <v-col cols="2" sm="5">
-                  <v-row class="align-center justify-end">
-                    <v-img
-                      :class="[
-                        $vuetify.theme.dark ? 'invert' : '',
-                        'd-none d-sm-block'
-                      ]"
-                      :src="quote.exchangeInfo.img"
-                      :alt="quote.exchangeInfo.name"
-                      max-height="25"
-                      max-width="150"
-                      contain
-                    />
+                  <v-row class="align-center justify-end pr-3">
                     <mew-checkbox :value="active" />
                   </v-row>
                 </v-col>
               </v-row>
-            </v-card>
+            </v-container>
           </v-item>
         </v-col>
       </v-row>
@@ -178,23 +162,26 @@
       Show More Providers Button
     =====================================================================================
     -->
-    <mew-button
-      v-if="step >= 1 && providersCut > 0"
-      :title="moreProvidersText"
-      btn-style="transparent"
-      btn-size="small"
-      :icon="moreProvidersIcon"
-      icon-type="mdi"
-      icon-align="right"
-      class="mt-5"
-      @click.native="showMore = !showMore"
-    />
+    <div
+      v-if="step >= 1 && providersCut > 0 && toTokenSymbol"
+      class="cursor--pointer user-select--none primary--text mt-7 ml-4"
+      @click="showMore = !showMore"
+    >
+      {{ moreProvidersText }}
+      <v-icon v-show="!showMore" small color="primary">mdi-arrow-down</v-icon>
+      <v-icon v-show="showMore" small color="primary">mdi-arrow-up</v-icon>
+    </div>
   </div>
 </template>
 <script>
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
+  components: {
+    AppUserMsgBlock
+  },
   props: {
     step: {
       type: Number,
@@ -216,14 +203,19 @@ export default {
       type: String,
       default: ''
     },
-    message: {
-      type: Object,
-      default: () => {}
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      showMore: false
+      showMore: false,
+      providersMessage: {
+        title: 'Select token and enter amount to see rates.',
+        subtitle:
+          'MEW finds the best price for you across multiple DEXs and Exchange services.'
+      }
     };
   },
   computed: {
@@ -233,25 +225,39 @@ export default {
      * Used in best rate chip
      */
     bestRate() {
-      return this.availableQuotes.length > 0 && this.availableQuotes[0].rate
-        ? this.availableQuotes[0].rate
+      return this.providersList.length > 0 && this.providersList[0].rate
+        ? this.providersList[0].rate
         : null;
     },
     /**
      * Property returns quotes to be displaid on the ui
-     * If more then 3 qoutes found: the list will be sliced by max_providers
+     * If more then 3 quotes found: the list will be sliced by max_providers
+     * List Fitlers out null and undefined items
      * Used in Providers Rate Row
      */
     providersList() {
-      return !this.showMore && this.providersCut > 0
-        ? this.availableQuotes.slice(0, MAX_PROVIDERS)
-        : this.availableQuotes;
+      if (!this.isLoading && this.step > 0) {
+        const list =
+          !this.showMore && this.providersCut > 0
+            ? this.availableQuotes
+                .slice(0, MAX_PROVIDERS)
+                .filter(item => !!item)
+            : this.availableQuotes.filter(item => !!item);
+        return list.map(quote => {
+          const formatted = formatFloatingPointValue(quote.rate * 100);
+          return {
+            rate: formatted.value,
+            tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
+          };
+        });
+      }
+      return [];
     },
     /**
      * Property returns number of providers that was sliced on the ui
      */
     providersCut() {
-      return this.availableQuotes.length - MAX_PROVIDERS;
+      return this.availableQuotes.filter(item => !!item).length - MAX_PROVIDERS;
     },
     /**
      * Property returns a string for show more providers button
@@ -260,8 +266,8 @@ export default {
      */
     moreProvidersText() {
       if (this.providersCut > 0) {
-        const single = 'More Provider';
-        const multiple = 'More Providers';
+        const single = 'More Rate';
+        const multiple = 'More Rates';
         if (!this.showMore) {
           return this.providersCut === 1
             ? `${this.providersCut} ${single}`
@@ -296,12 +302,31 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.modules--swap--components--swap-providers-list {
+  .loading {
+    .v-skeleton-loader__avatar {
+      height: 25px !important;
+      width: 25px !important;
+    }
+    .v-skeleton-loader__heading {
+      height: 25px !important;
+      width: 100px !important;
+      border-radius: 15px !important;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
-.rate-chip-xs {
-  border-radius: 10px;
-  height: 16px;
-  background-color: var(--v-primary-base);
-  color: white;
-  font-size: 10px;
+.rate-active {
+  border: 1px solid var(--v-primary-base) !important;
+  background-color: var(--v-superPrimary-base) !important;
+}
+.rate {
+  background-color: var(--v-tableHeader-base);
+  min-height: 60px;
+  border-radius: 6px;
 }
 </style>

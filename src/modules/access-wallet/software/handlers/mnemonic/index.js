@@ -28,6 +28,10 @@ class MnemonicWallet {
     this.mnemonic = mnemonic;
     this.password = password;
     this.supportedPaths = bip44Paths[WALLET_TYPES.MNEMONIC];
+    this.icon = {
+      type: 'mew-icon',
+      value: 'mnemonic'
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

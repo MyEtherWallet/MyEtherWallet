@@ -11,7 +11,8 @@ const state = {
   ensDomains: null,
   tokens: [],
   initialLoadTokens: true,
-  initialLoadBalance: true
+  initialLoadBalance: true,
+  coinGeckoTokens: {}
 };
 
 export default state;

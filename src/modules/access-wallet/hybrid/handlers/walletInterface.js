@@ -8,7 +8,8 @@ class HybridWalletInterface extends WalletInterface {
     txSigner,
     msgSigner,
     connection,
-    errorHandler
+    errorHandler,
+    icon
   ) {
     super(pubkey, true, identifier);
     this.errorHandler = errorHandler;
@@ -16,6 +17,7 @@ class HybridWalletInterface extends WalletInterface {
     this.msgSigner = msgSigner;
     this.isHardware = isHardware;
     this.connection = connection;
+    this.icon = icon;
   }
   getConnection() {
     return this.connection;
