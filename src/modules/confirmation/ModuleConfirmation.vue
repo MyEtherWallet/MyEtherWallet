@@ -7,8 +7,7 @@
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :close-only="true"
-      :width="'450'"
-      class="pa-8"
+      width="450"
       @close="reset"
     >
       <template #dialogBody>
@@ -65,6 +64,8 @@
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :scrollable="true"
+      width="650"
       @close="reset"
     >
       <template #dialogBody>
@@ -230,7 +231,7 @@ import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 
 export default {
-  name: 'ConfirmationContainer',
+  name: 'ModuleConfirmation',
   components: {
     ConfirmationMesssage,
     AppModal,
