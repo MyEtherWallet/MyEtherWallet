@@ -15,7 +15,7 @@
 <script>
 import ModuleSend from '@/modules/send/ModuleSend';
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleTokensValue from '@/modules/tokens-value/ModuleTokensValue';
+import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
 import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 export default {
   components: {
