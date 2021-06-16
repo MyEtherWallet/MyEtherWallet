@@ -166,8 +166,13 @@ export default {
     }
   },
   watch: {
+    gasPrice(e) {
+      if (this.gasPriceType === gasPriceTypes.STORED) {
+        this.localCustom = fromWei(e, 'gwei');
+      }
+    },
     selected(newVal) {
-      if (newVal !== gasPriceTypes.STORED) {
+      if (newVal !== gasPriceTypes.STORED && !this.hasCustom) {
         this.localCustom = '0';
       }
     }

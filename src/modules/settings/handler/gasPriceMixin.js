@@ -88,6 +88,15 @@ const gasPriceMixin = {
   watch: {
     gasPrice() {
       this.fetchGasPrice();
+    },
+    gasPriceType(e) {
+      if (!this.useGlobal) {
+        if (e !== gasPriceTypes.STORED) {
+          this.setSelected(e);
+        } else {
+          this.setCustomGasPrice(this.gasPrice);
+        }
+      }
     }
   },
   methods: {

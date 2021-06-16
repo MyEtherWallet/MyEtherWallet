@@ -58,6 +58,11 @@ export default {
       return this.gasPriceType === gasPriceTypes.STORED;
     }
   },
+  watch: {
+    gasPriceType(e) {
+      this.selected = e;
+    }
+  },
   created() {
     this.useGlobal = false;
     this.fetchGasPrice();
