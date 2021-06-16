@@ -6,7 +6,7 @@
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
         <v-col cols="12">
-          <div class="mew-heading-3">$ {{ totalTokenValues }}</div>
+          <div class="mew-heading-3">${{ totalTokenValues }}</div>
         </v-col>
         <v-col v-if="showTokens" cols="12" class="mt-3">
           <v-row justify="start">
@@ -23,15 +23,19 @@
       </v-row>
     </mew6-white-sheet>
     <app-modal
-      title=""
+      title="My Tokens"
       :close="handleTokensPopup"
       :show="showPopup"
-      :has-button="false"
-      :width="600"
+      :no-btn="true"
+      scrollable
+      width="700"
       @close="handleTokensPopup"
     >
       <template #dialogBody>
-        <module-tokens />
+        <div class="mew-heading-3 mb-3 black--text">
+          Total Value: ${{ totalTokenValues }}
+        </div>
+        <module-tokens class="pa-0" dense />
       </template>
     </app-modal>
   </div>
