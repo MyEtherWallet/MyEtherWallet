@@ -123,7 +123,7 @@
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="transaction.title + transaction.value + i"
+              :key="`${transaction.title}${transaction.value}${i}`"
               class="expansion-border"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
@@ -170,7 +170,7 @@
                 <div>
                   <div
                     v-for="txVal in transaction"
-                    :key="txVal.title + txVal.value"
+                    :key="`${txVal.title}${txVal.value}`"
                     class="d-flex justify-space-between"
                   >
                     <p class="ma-0">{{ txVal.title }}</p>
