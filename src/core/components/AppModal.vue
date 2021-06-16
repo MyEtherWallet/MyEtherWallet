@@ -2,7 +2,7 @@
   <v-dialog
     :max-width="width"
     :value="show"
-    :fullscreen="$vuetify.breakpoint.xs"
+    :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
     @click:outside="handleClickOutside"
@@ -83,7 +83,7 @@
         </v-row>
       </v-card-actions>
     </v-card>
-    <v-sheet v-else class="py-6 px-4 position--relative">
+    <v-sheet v-else class="py-6 px-5 px-8 position--relative">
       <v-btn icon class="header-close-icon">
         <v-icon size="x-large" color="grey cursor--pointer" @click="close">
           mdi-close
@@ -96,7 +96,7 @@
         -->
       <v-row class="header-container">
         <v-col cols="12" align-self="center">
-          <div class="mew-heading-2 text-center mb-5 mb-sm-8">{{ title }}</div>
+          <div class="mew-heading-2 text-center">{{ title }}</div>
         </v-col>
       </v-row>
       <!--
@@ -114,7 +114,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row v-if="!noBtn" class="mt-9 mt-sm-4" justify="space-around" dense>
+      <v-row v-if="!noBtn" class="mt-5 mt-sm-8" justify="space-around" dense>
         <v-col
           v-if="!closeOnly"
           cols="12"

@@ -2,59 +2,73 @@
   <div>
     <app-modal
       :show="showSuccessModal"
-      title="Transaction initiated"
+      :title="successTitle"
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :close-only="true"
-      width="450"
+      width="480"
       @close="reset"
     >
       <template #dialogBody>
-        <div class="px-5">
+        <div>
+          <!--
+          ====================================================================================
+            Lottie or icon
+          =====================================================================================
+          -->
           <div
             v-if="showSuccessModal"
             v-lottie="'checkmark'"
-            style="height: 150px"
+            style="height: 120px"
           />
-          <div>
-            Once completed, the token amount will be deposited to the address
-            you provider. this should take a few minutes depending on how
-            congested the Ethereum network is.
+          <!--
+          ====================================================================================
+            Body
+          =====================================================================================
+          -->
+          <div class="mew-body">
+            {{ successBodyText }}
           </div>
-          <div
-            class="
-              d-flex
-              justify-space-around
-              flex-md-row flex-sm-column-reverse flex-xs-column-reverse
-              align-sm-center align-xs-center
-              my-3
-            "
-          >
-            <div>
+          <!--
+          ====================================================================================
+            Links
+          =====================================================================================
+          -->
+          <v-row class="justify-sm-space-between align-center pt-3" dense>
+            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
+              <a
+                class="d-flex justify-center justify-sm-end"
+                @click.stop="viewProgress"
+                >View Progress</a
+              >
+            </v-col>
+            <v-col cols="12" sm="auto" class="pb-2">
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.etherscan"
-                class="d-flex"
+                class="d-flex justify-center justify-sm-start"
                 >View on Etherscan
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div v-if="network.type.isEthVMSupported.supported">
+            </v-col>
+            <v-col
+              v-if="network.type.isEthVMSupported.supported"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.ethvm"
-                class="d-flex"
+                class="d-flex justify-center"
                 >View on EthVM
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div>
-              <a @click.stop="viewProgress">View Progress</a>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
         </div>
       </template>
     </app-modal>
@@ -373,6 +387,21 @@ export default {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
       return !_.isEmpty(this.signedTxObject);
+    },
+    /**
+     * Property returns string, deodning whether or not this is a swap or send
+     */
+    successTitle() {
+      console.log('IsSWAP', this.isSwap);
+      return this.isSwap ? 'Swap initiated' : 'Transaction initiated';
+    },
+    /**
+     * Property returns string, deodning whether or not this is a swap or send
+     */
+    successBodyText() {
+      return this.isSwap
+        ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
+        : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
     }
   },
   watch: {

@@ -28,7 +28,6 @@
       :show="showPopup"
       :has-button="false"
       :width="600"
-      scrollable
       @close="handleTokensPopup"
     >
       <template #dialogBody>
