@@ -962,18 +962,22 @@ export default {
             )
           })
           .then(quotes => {
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              this.minMaxError = {
-                minFrom: q.minFrom,
-                maxFrom: q.maxFrom
-              };
+            this.availableQuotes = quotes
+              .map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
+                this.minMaxError = {
+                  minFrom: q.minFrom,
+                  maxFrom: q.maxFrom
+                };
 
-              return q;
-            });
+                return q;
+              })
+              .filter(q => {
+                if (BigNumber(q.rate).gt(0)) return q;
+              });
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
