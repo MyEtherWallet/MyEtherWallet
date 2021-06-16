@@ -19,7 +19,7 @@
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import ModuleSwap from '@/modules/swap/ModuleSwap';
-import ModuleTokensValue from '@/modules/tokens-value/ModuleTokensValue';
+import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
 import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
