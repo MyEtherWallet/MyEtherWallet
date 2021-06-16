@@ -428,19 +428,27 @@ export default {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         const total = this.userSummary.totalLiquidityETH;
         const data = this.userSummary.reservesData.map(item => {
-          item['percentage'] = BigNumber(item.currentUnderlyingBalance)
-            .times(100)
-            .div(total)
-            .toFixed();
-          item['color'] = COLORS[item.reserve.symbol];
-          return item;
+          return {
+            percentage: BigNumber(item.currentUnderlyingBalanceETH)
+              .div(total)
+              .times(100)
+              .toFixed(),
+            color: COLORS[item.reserve.symbol],
+            title: item.reserve.symbol,
+            tooltip: item.currentUnderlyingBalance + ' ' + item.reserve.symbol,
+            amount: item.currentUnderlyingBalanceETH
+          };
         });
         const newObj = {
+          total: 100,
+          data: data
+        };
+        console.error('newObj', newObj);
+
+        return {
           total: total,
           data: data
         };
-
-        return newObj;
       }
 
       return {
