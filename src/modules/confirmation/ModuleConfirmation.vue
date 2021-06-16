@@ -573,7 +573,17 @@ export default {
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
+            /**
+             * keepSwap holds isSwap value
+             * before resetting and reassigns
+             * isSwap will be cleared after showSuccessModal is closed
+             */
+            let keepSwap;
+            if (this.isSwap) {
+              keepSwap = this.isSwap;
+            }
             this.reset();
+            this.isSwap = keepSwap;
             this.showSuccess(hash);
           }
         });
@@ -582,9 +592,19 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
+      /**
+       * keepSwap holds isSwap value
+       * before resetting and reassigns
+       * isSwap will be cleared after showSuccessModal is closed
+       */
+      let keepSwap;
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
+      if (this.isSwap) {
+        keepSwap = this.isSwap;
+      }
       this.reset();
+      this.isSwap = keepSwap;
       this.showSuccess(hash);
     },
     viewProgress() {
