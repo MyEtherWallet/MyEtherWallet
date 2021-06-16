@@ -171,23 +171,12 @@ export default {
         this.localCustom = '0';
       }
     }
-    // gasPriceType(e) {
-    //   if (e === gasPriceTypes.STORED && !this.global) {
-    //     this.setCustomGasPrice(this.gasPrice);
-    //   }
-    // },
-    // gasPrice(e) {
-    //   if (this.gasPriceType === gasPriceTypes.STORED && !this.global) {
-    //     this.setCustomGasPrice(e);
-    //   }
-    // }
   },
   methods: {
     setCustomInput(e) {
       this.localCustom = e;
     },
     useLocal() {
-      console.log(this.localCustom);
       this.setCustomGasPrice(this.localCustom);
     }
   }
