@@ -4,8 +4,6 @@
       :show="showSuccessModal"
       :title="successTitle"
       :close="resetSuccess"
-      :btn-action="btnAction"
-      :btn-enabled="disableBtn"
       :close-only="true"
       width="480"
       @close="resetSuccess"
