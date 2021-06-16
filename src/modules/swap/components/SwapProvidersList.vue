@@ -178,7 +178,7 @@
     =====================================================================================
     -->
     <app-user-msg-block
-      v-if="step >= 1 && hasProviderError"
+      v-if="step >= 1 && hasProviderError && !isLoading"
       :message="providersError"
       :is-alert="false"
       container-padding="pa-4 py-6"
@@ -315,7 +315,11 @@ export default {
   },
   watch: {
     providersList(newValue, oldVal) {
-      if (newValue.length > 0 && oldVal.length === 0) {
+      if (
+        newValue.length > 0 &&
+        oldVal.length === 0 &&
+        !this.hasProviderError
+      ) {
         const bestRate = newValue.findIndex(item => {
           return item.rate === this.bestRate;
         });

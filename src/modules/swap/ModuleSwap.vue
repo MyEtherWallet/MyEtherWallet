@@ -226,7 +226,7 @@
             =====================================================================================
           -->
           <swap-fee
-            v-if="step > 0"
+            v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
@@ -241,7 +241,12 @@
             <mew-button
               title="Next"
               :has-full-width="false"
-              :disabled="step < 2 || feeError != '' || !hasSelectedProvider"
+              :disabled="
+                step < 2 ||
+                feeError != '' ||
+                !hasSelectedProvider ||
+                providersErrorMsg.subtitle === ''
+              "
               btn-size="xlarge"
               @click.native="showConfirm"
             />
@@ -967,6 +972,8 @@ export default {
         !_.isEmpty(this.toTokenType)
       ) {
         this.isLoadingProviders = true;
+        this.selectedProvider = {};
+        this.minMaxError = false;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
