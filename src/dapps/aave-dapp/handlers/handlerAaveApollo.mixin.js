@@ -17,6 +17,8 @@ import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 import moment from 'moment';
+import eth from '@/assets/images/currencies/eth.png';
+
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default {
@@ -70,8 +72,9 @@ export default {
         client: 'aave',
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
-            // item['icon'] = this.findCoinToken(item.aToken.id).img;
-            console.error('item', item);
+            item['icon'] = this.findCoinToken(
+              item.reserve?.underlyingAsset
+            )?.image;
             return item;
           });
           this.reservesData = formatReserves(this.rawReserveData).reverse();
@@ -98,7 +101,9 @@ export default {
         },
         result({ data }) {
           this.userReserveData = data.userReserves.map(item => {
-            // item.reserve['icon'] = this.getTokenIcon(item.reserve.aToken.id);
+            item.reserve['icon'] = this.findCoinToken(
+              item.reserve?.underlyingAsset
+            )?.image;
             return item;
           });
           this.setFormatUserSummaryData();
@@ -245,8 +250,9 @@ export default {
      */
     findCoinToken(hash) {
       if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
-        return this.coinGeckoTokens.get(hash.toLowerCase());
+        return this.coinGeckoTokens.get(hash.toLowerCase()) || { image: eth };
       }
+      return { image: eth };
     },
     /**
      * @return object

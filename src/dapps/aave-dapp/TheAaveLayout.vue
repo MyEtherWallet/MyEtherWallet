@@ -26,7 +26,7 @@
           </div>
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="tableHeader pa-5 border-radius--5px">
+              <div class="superPrimary pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="">
                   $ {{ totalLiquidity.usd }}
@@ -68,7 +68,7 @@
             <v-col cols="12" md="6">
               <div
                 class="
-                  tableHeader
+                  superPrimary
                   pa-5
                   border-radius--5px
                   height-100
@@ -96,7 +96,9 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :table-header="depositsTableHeader"
-                :handler="handler"
+                :is-loading-data="isLoadingData"
+                :reserves-data="reservesData"
+                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedDeposit="openDepositOverlayWithToken"
@@ -237,7 +239,9 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :table-header="borrowTableHeader"
-                :handler="handler"
+                :is-loading-data="isLoadingData"
+                :reserves-data="reservesData"
+                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedBorrow="openBorrowOverlayWithToken"
@@ -318,7 +322,10 @@ import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
@@ -383,7 +390,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
-      return this.$apollo.loading;
+      return Object.keys(this.userSummary).length <= 0;
     },
     loanValue() {
       return `${BigNumber(this.userSummary.currentLiquidationThreshold)
@@ -396,32 +403,31 @@ export default {
         : `-`;
     },
     totalLiquidity() {
-      console.error('userSummary', this.userSummary);
       return {
-        eth: this.userSummary.totalLiquidityETH || '0',
-        usd: formatFiatValue(this.userSummary.totalLiquidityUSD).value || '0'
+        eth: formatFloatingPointValue(this.userSummary.totalLiquidityETH || '0')
+          .value,
+        usd: formatFiatValue(this.userSummary.totalLiquidityUSD || '0').value
       };
     },
     totalCollateral() {
       return {
-        eth: this.userSummary.totalCollateralETH || '0',
-        usd: BigNumber(this.userSummary.totalCollateralUSD).toFixed(2) || '0.00'
+        eth: formatFloatingPointValue(
+          this.userSummary.totalCollateralETH || '0'
+        ).value,
+        usd: formatFiatValue(this.userSummary.totalCollateralUSD || '0').value
       };
     },
     totalBorrow() {
       return {
-        eth: this.userSummary.totalBorrowsETH || '0',
-        usd: BigNumber(this.userSummary.totalBorrowsUSD).toFixed(2) || '0.00'
+        eth: formatFloatingPointValue(this.userSummary.totalBorrowsETH || '0')
+          .value,
+        usd: formatFiatValue(this.userSummary.totalBorrowsUSD || '0').value
       };
     },
     compositionPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const total = this.handler.userSummary.totalLiquidityETH;
-        const data = this.handler.userSummary.reservesData.map(item => {
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        const total = this.userSummary.totalLiquidityETH;
+        const data = this.userSummary.reservesData.map(item => {
           item['percentage'] = BigNumber(item.currentUnderlyingBalance)
             .times(100)
             .div(total)
@@ -443,13 +449,9 @@ export default {
       };
     },
     collateralPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const total = this.handler.userSummary.totalCollateralETH;
-        const data = this.handler.userSummary.reservesData.filter(item => {
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        const total = this.userSummary.totalCollateralETH;
+        const data = this.userSummary.reservesData.filter(item => {
           if (
             item.usageAsCollateralEnabledOnUser &&
             item.currentUnderlyingBalanceETH > 0
@@ -476,23 +478,15 @@ export default {
       };
     },
     borrowingsPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const borrowLimit = BigNumber(
-          this.handler.userSummary.availableBorrowsETH
-        )
-          .plus(this.handler.userSummary.borrowLimitBorrowsETH)
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        const borrowLimit = BigNumber(this.userSummary.availableBorrowsETH)
+          .plus(this.userSummary.borrowLimitBorrowsETH)
           .toFixed(4);
-        const percentageLeft = BigNumber(
-          this.handler.userSummary.availableBorrowsETH
-        )
+        const percentageLeft = BigNumber(this.userSummary.availableBorrowsETH)
           .times(100)
           .div(borrowLimit)
           .toFixed();
-        const data = this.handler.userSummary.reservesData.filter(item => {
+        const data = this.userSummary.reservesData.filter(item => {
           if (item.currentBorrowsETH > 0) {
             item['percentage'] = BigNumber(item.currentBorrowsETH)
               .times(100)
