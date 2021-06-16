@@ -3,12 +3,12 @@
     <app-modal
       :show="showSuccessModal"
       :title="successTitle"
-      :close="reset"
+      :close="resetSuccess"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :close-only="true"
       width="480"
-      @close="reset"
+      @close="resetSuccess"
     >
       <template #dialogBody>
         <div>
@@ -19,8 +19,8 @@
           -->
           <div
             v-if="showSuccessModal"
-            v-lottie="'checkmark'"
-            style="height: 120px"
+            v-lottie="successLottie"
+            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
           />
           <!--
           ====================================================================================
@@ -258,6 +258,7 @@ export default {
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
+      showSuccessSwap: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -392,15 +393,21 @@ export default {
      * Property returns string, deodning whether or not this is a swap or send
      */
     successTitle() {
-      return this.isSwap ? 'Swap initiated' : 'Transaction initiated';
+      return this.showSuccessSwap ? 'Swap initiated' : 'Transaction initiated';
     },
     /**
-     * Property returns string, deodning whether or not this is a swap or send
+     * Property returns string, depending whether or not this is a swap or send
      */
     successBodyText() {
-      return this.isSwap
+      return this.showSuccessSwap
         ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
         : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successLottie() {
+      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -505,6 +512,10 @@ export default {
     });
   },
   methods: {
+    resetSuccess() {
+      this.showSuccessSwap = false;
+      this.reset();
+    },
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
@@ -578,12 +589,10 @@ export default {
              * before resetting and reassigns
              * isSwap will be cleared after showSuccessModal is closed
              */
-            let keepSwap;
             if (this.isSwap) {
-              keepSwap = this.isSwap;
+              this.showSuccessSwap = true;
             }
             this.reset();
-            this.isSwap = keepSwap;
             this.showSuccess(hash);
           }
         });
@@ -597,14 +606,12 @@ export default {
        * before resetting and reassigns
        * isSwap will be cleared after showSuccessModal is closed
        */
-      let keepSwap;
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
       if (this.isSwap) {
-        keepSwap = this.isSwap;
+        this.showSuccessSwap = true;
       }
       this.reset();
-      this.isSwap = keepSwap;
       this.showSuccess(hash);
     },
     viewProgress() {
@@ -811,5 +818,9 @@ export default {
 .data-values {
   max-width: 350px;
   overflow-wrap: break-word;
+}
+
+.lottie {
+  height: 120px;
 }
 </style>
