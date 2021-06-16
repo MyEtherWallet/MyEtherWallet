@@ -2,60 +2,71 @@
   <div>
     <app-modal
       :show="showSuccessModal"
-      title="Transaction initiated"
-      :close="reset"
-      :btn-action="btnAction"
-      :btn-enabled="disableBtn"
+      :title="successTitle"
+      :close="resetSuccess"
       :close-only="true"
-      :width="'450'"
-      class="pa-8"
-      @close="reset"
+      width="480"
+      @close="resetSuccess"
     >
       <template #dialogBody>
-        <div class="px-5">
+        <div>
+          <!--
+          ====================================================================================
+            Lottie or icon
+          =====================================================================================
+          -->
           <div
             v-if="showSuccessModal"
-            v-lottie="'checkmark'"
-            style="height: 150px"
+            v-lottie="successLottie"
+            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
           />
-          <div>
-            Once completed, the token amount will be deposited to the address
-            you provider. this should take a few minutes depending on how
-            congested the Ethereum network is.
+          <!--
+          ====================================================================================
+            Body
+          =====================================================================================
+          -->
+          <div class="mew-body">
+            {{ successBodyText }}
           </div>
-          <div
-            class="
-              d-flex
-              justify-space-around
-              flex-md-row flex-sm-column-reverse flex-xs-column-reverse
-              align-sm-center align-xs-center
-              my-3
-            "
-          >
-            <div>
+          <!--
+          ====================================================================================
+            Links
+          =====================================================================================
+          -->
+          <v-row class="justify-sm-space-between align-center pt-3" dense>
+            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
+              <a
+                class="d-flex justify-center justify-sm-end"
+                @click.stop="viewProgress"
+                >View Progress</a
+              >
+            </v-col>
+            <v-col cols="12" sm="auto" class="pb-2">
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.etherscan"
-                class="d-flex"
+                class="d-flex justify-center justify-sm-start"
                 >View on Etherscan
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div v-if="network.type.isEthVMSupported.supported">
+            </v-col>
+            <v-col
+              v-if="network.type.isEthVMSupported.supported"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.ethvm"
-                class="d-flex"
+                class="d-flex justify-center"
                 >View on EthVM
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div>
-              <a @click.stop="viewProgress">View Progress</a>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
         </div>
       </template>
     </app-modal>
@@ -65,6 +76,8 @@
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :scrollable="true"
+      width="650"
       @close="reset"
     >
       <template #dialogBody>
@@ -234,7 +247,7 @@ import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 
 export default {
-  name: 'ConfirmationContainer',
+  name: 'ModuleConfirmation',
   components: {
     ScrollBlock,
     ConfirmationMesssage,
@@ -248,6 +261,7 @@ export default {
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
+      showSuccessSwap: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -377,6 +391,26 @@ export default {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
       return !_.isEmpty(this.signedTxObject);
+    },
+    /**
+     * Property returns string, deodning whether or not this is a swap or send
+     */
+    successTitle() {
+      return this.showSuccessSwap ? 'Swap initiated' : 'Transaction initiated';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successBodyText() {
+      return this.showSuccessSwap
+        ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
+        : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successLottie() {
+      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -481,6 +515,10 @@ export default {
     });
   },
   methods: {
+    resetSuccess() {
+      this.showSuccessSwap = false;
+      this.reset();
+    },
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
@@ -549,6 +587,14 @@ export default {
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
+            /**
+             * keepSwap holds isSwap value
+             * before resetting and reassigns
+             * isSwap will be cleared after showSuccessModal is closed
+             */
+            if (this.isSwap) {
+              this.showSuccessSwap = true;
+            }
             this.reset();
             this.showSuccess(hash);
           }
@@ -558,8 +604,16 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
+      /**
+       * keepSwap holds isSwap value
+       * before resetting and reassigns
+       * isSwap will be cleared after showSuccessModal is closed
+       */
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
+      if (this.isSwap) {
+        this.showSuccessSwap = true;
+      }
       this.reset();
       this.showSuccess(hash);
     },
@@ -767,5 +821,9 @@ export default {
 .data-values {
   max-width: 350px;
   overflow-wrap: break-word;
+}
+
+.lottie {
+  height: 120px;
 }
 </style>
