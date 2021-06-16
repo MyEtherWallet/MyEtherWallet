@@ -392,7 +392,6 @@ export default {
      * Property returns string, deodning whether or not this is a swap or send
      */
     successTitle() {
-      console.log('IsSWAP', this.isSwap);
       return this.isSwap ? 'Swap initiated' : 'Transaction initiated';
     },
     /**
