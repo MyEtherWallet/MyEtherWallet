@@ -181,6 +181,7 @@
       v-if="step >= 1 && hasProviderError"
       :message="providersError"
       :is-alert="false"
+      container-padding="pa-4 py-6"
     />
   </div>
 </template>

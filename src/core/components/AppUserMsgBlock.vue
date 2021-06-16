@@ -15,9 +15,12 @@
       <slot></slot>
       <slot name="expansion"></slot>
     </div>
-    <div v-else class="text-center textSecondary--text pa-4">
+    <div v-else :class="['text-center textSecondary--text', containerPadding]">
       <div class="mew-heading-3 pb-1">{{ message.title }}</div>
-      <div class="mew-body">{{ message.subtitle }}</div>
+      <div class="mew-body">
+        {{ message.subtitle }}
+        <span class="error--text">{{ message.subtitleError }}</span>
+      </div>
     </div>
   </v-sheet>
 </template>
@@ -33,6 +36,10 @@ export default {
     isAlert: {
       type: Boolean,
       default: true
+    },
+    containerPadding: {
+      type: String,
+      default: 'pa-4'
     }
   },
   data: () => ({})

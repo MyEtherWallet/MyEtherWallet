@@ -392,12 +392,15 @@ export default {
     ...mapGetters('external', ['balanceFiatValue']),
     providersErrorMsg() {
       let msg = '';
+      let subError = '';
       if (!this.isLoading) {
         if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-          msg = `The minimum requirement for this provider is ${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+          msg = 'The minimum requirement for this provider is';
+          subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
         }
         if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-          msg = `The maximum requirement for this provider is ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+          msg = 'The maximum requirement for this provider i';
+          subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
         }
         if (this.availableQuotes.length === 0) {
           msg =
@@ -405,7 +408,8 @@ export default {
         }
       }
       return {
-        subtitle: msg
+        subtitle: msg,
+        subtitleError: subError
       };
     },
     /**
@@ -1043,7 +1047,8 @@ export default {
         })
         .then(trade => {
           if (trade instanceof Error) {
-            this.feeError = 'Provider issue';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
             return;
           }
 
