@@ -211,13 +211,13 @@
             =====================================================================================
             -->
           <swap-providers-list
-            v-show="hideProviders"
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
             :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
+            :providers-error="providersErrorMsg"
             class="mt-7"
           />
           <!--
@@ -390,6 +390,24 @@ export default {
       'balanceInWei'
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
+    providersErrorMsg() {
+      let msg = '';
+      if (!this.isLoading) {
+        if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+          msg = `The minimum requirement for this provider is ${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+        }
+        if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+          msg = `The maximum requirement for this provider is ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+        }
+        if (this.availableQuotes.length === 0) {
+          msg =
+            'No providers found for this token pair. Select a different token pair or try again later.';
+        }
+      }
+      return {
+        subtitle: msg
+      };
+    },
     /**
      * @rejects object
      * Gets the ETH token dropdown item details
@@ -773,14 +791,6 @@ export default {
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
-          /* Changelly Errors: */
-
-          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
-          }
-          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
-          }
         }
       }
       return '';
@@ -968,10 +978,6 @@ export default {
                   .dividedBy(new BigNumber(this.tokenInValue))
                   .toString();
                 q.isSelected = false;
-                this.minMaxError = {
-                  minFrom: q.minFrom,
-                  maxFrom: q.maxFrom
-                };
 
                 return q;
               })
@@ -991,6 +997,11 @@ export default {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = true;
+          this.minMaxError = {
+            minFrom: q.minFrom,
+            maxFrom: q.maxFrom
+          };
+
           if (q?.rateId === 'belowMin') {
             this.belowMinError = q.minFrom;
             return;
@@ -1049,7 +1060,8 @@ export default {
         })
         .catch(e => {
           if (e) {
-            this.feeError = 'This provider is not available.';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
           }
         });
     }, 500),

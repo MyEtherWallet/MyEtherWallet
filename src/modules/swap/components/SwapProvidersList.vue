@@ -1,7 +1,7 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
-      Select rate
+      Select rate and provider
     </div>
     <!--
     =====================================================================================
@@ -60,7 +60,7 @@
       Provider Rate Row
     =====================================================================================
     -->
-    <v-item-group v-if="step >= 1 && toTokenSymbol">
+    <v-item-group v-if="step >= 1 && toTokenSymbol && !hasProviderError">
       <v-row no-gutters>
         <v-col
           v-for="(quote, idx) in providersList"
@@ -157,13 +157,14 @@
         </v-col>
       </v-row>
     </v-item-group>
+
     <!--
     =====================================================================================
       Show More Providers Button
     =====================================================================================
     -->
     <div
-      v-if="step >= 1 && providersCut > 0 && toTokenSymbol"
+      v-if="step >= 1 && providersCut > 0 && toTokenSymbol && !hasProviderError"
       class="cursor--pointer user-select--none primary--text mt-7 ml-4"
       @click="showMore = !showMore"
     >
@@ -171,6 +172,16 @@
       <v-icon v-show="!showMore" small color="primary">mdi-arrow-down</v-icon>
       <v-icon v-show="showMore" small color="primary">mdi-arrow-up</v-icon>
     </div>
+    <!--
+    =====================================================================================
+      Providers Message
+    =====================================================================================
+    -->
+    <app-user-msg-block
+      v-if="step >= 1 && hasProviderError"
+      :message="providersError"
+      :is-alert="false"
+    />
   </div>
 </template>
 <script>
@@ -206,6 +217,12 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    },
+    providersError: {
+      type: Object,
+      default: () => {
+        return { subtitle: '' };
+      }
     }
   },
   data() {
@@ -219,6 +236,16 @@ export default {
     };
   },
   computed: {
+    /**
+     * @Returns Boolean
+     * checks whether there's errors
+     * with the providers
+     */
+    hasProviderError() {
+      return (
+        this.availableQuotes.length === 0 || this.providersError.subtitle !== ''
+      );
+    },
     /**
      * Property returns best rate in the quotes
      * Or null id quotes not defined.
