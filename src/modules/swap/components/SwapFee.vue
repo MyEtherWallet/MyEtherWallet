@@ -1,6 +1,10 @@
 <template>
   <div class="mt-5 mb-10">
-    <app-modal :show="openHighFeeNote" :close="closeHighFeeNote" no-btn>
+    <app-modal
+      :show="openHighFeeNote"
+      :close="closeHighFeeNote"
+      :has-buttons="false"
+    >
       <template #dialogBody>
         <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
         <div class="mew-heading-1">Are you guys out of your minds?</div>
@@ -26,7 +30,13 @@
         </div>
       </template>
     </app-modal>
-    <v-row justify="space-between" align="start">
+
+    <!--
+      =====================================================
+      Desktop Network Fee selector
+      =====================================================
+    -->
+    <v-row justify="space-between" align="start" class="d-none d-sm-flex">
       <v-col cols="12" sm="3" class="pb-0">
         <div class="d-flex align-center justify-start pl-4">
           <p class="mew-heading-3 mb-0">Network Fee</p>
@@ -102,6 +112,79 @@
         </div>
       </v-col>
     </v-row>
+
+    <!--
+      =====================================================
+      Mobile Network Fee selector
+      =====================================================
+    -->
+    <div class="d-block d-sm-none">
+      <div class="d-flex align-center justify-start ml-4 mb-2">
+        <div class="mew-heading-3">Network Fee</div>
+        <mew-tooltip
+          class="pl-1"
+          text="Maximum possible transaction fee is shown. Actual fee is likely to be less once your swap is executed."
+        />
+      </div>
+
+      <div class="ml-0">
+        <div class="d-flex align-center">
+          <mew-icon :icon-name="icon" :img-height="30" />
+          <div class="capitalize ml-2 mew-heading-4">
+            {{ gasPriceType }}
+          </div>
+          <v-spacer />
+          <img
+            class="btn-circle ml-3"
+            src="@/assets/images/icons/icon-edit-btn.svg"
+            alt="edit"
+            @click="openGasPriceModal"
+          />
+        </div>
+
+        <div class="d-flex align-center">
+          <div
+            v-if="!gettingFee && showFee"
+            class="mew-heading-4 textSecondary--text mr-3"
+          >
+            {{ actualFeeFormatted }} {{ network.type.currencyName }}
+          </div>
+          <div
+            v-if="!gettingFee && showFee"
+            :class="[hasError ? 'error--text' : '', 'mew-heading-4']"
+          >
+            {{ feesInUsd }}
+          </div>
+          <v-skeleton-loader
+            v-show="gettingFee || !showFee"
+            type="text"
+            width="200px"
+            class="mt-2"
+          />
+        </div>
+        <div class="d-flex align-center justify-start pt-2">
+          <div
+            class="
+              primary--text
+              cursor--pointer
+              user-select--none
+              font-weight-medium
+            "
+            @click="openHighFeeNote = true"
+          >
+            Why are the fees so high?
+            <a
+              v-if="notEnoughEth"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://ccswap.myetherwallet.com/#/"
+            >
+              Buy more ETH
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
