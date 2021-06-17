@@ -114,7 +114,7 @@
           Dialog action
         =====================================================================================
         -->
-      <v-row v-if="!noBtn" class="mt-5 mt-sm-8" justify="space-around" dense>
+      <v-row v-if="hasButtons" class="mt-2" justify="space-around">
         <v-col
           v-if="!closeOnly"
           cols="12"
@@ -191,10 +191,6 @@ export default {
       type: Boolean,
       default: false
     },
-    noBtn: {
-      type: Boolean,
-      default: false
-    },
     scrollable: {
       type: Boolean,
       default: false
@@ -202,6 +198,10 @@ export default {
     width: {
       type: String,
       default: '600'
+    },
+    hasButtons: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
