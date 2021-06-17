@@ -121,7 +121,6 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { convertToFixed } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import {
   ACTION_TYPES,
@@ -182,7 +181,11 @@ export default {
         case ACTION_TYPES.deposit:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
-          console.error('helath', this.currentHealthFactor, this.nextHealthFactor)
+          console.error(
+            'helath',
+            this.currentHealthFactor,
+            this.nextHealthFactor
+          );
           details.push(
             {
               title: 'Current Health Factor',
@@ -219,7 +222,7 @@ export default {
     nextHealthFactor() {
       // doublecheck this
       const selectedToken = this.selectedToken;
-      let nextHealthFactor = convertToFixed(this.currentHealthFactor),
+      let nextHealthFactor = this.currentHealthFactor,
         collateralBalanceETH = this.userSummary.totalCollateralETH;
       const totalBorrowsETH = this.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {

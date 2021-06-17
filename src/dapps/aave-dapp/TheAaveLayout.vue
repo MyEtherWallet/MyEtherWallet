@@ -55,7 +55,7 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="compositionPercentage"
+                  :data="compositionPercentage"
                 />
                 <v-skeleton-loader
                   v-else
@@ -164,7 +164,7 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="borrowingsPercentage"
+                  :data="borrowingsPercentage"
                 />
                 <v-skeleton-loader
                   v-else
@@ -202,7 +202,7 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="collateralPercentage"
+                  :data="collateralPercentage"
                 />
                 <v-skeleton-loader
                   v-else
@@ -439,97 +439,78 @@ export default {
     compositionPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         const total = this.userSummary.totalLiquidityETH;
-        const data = this.userSummary.reservesData.map(item => {
+        return this.userSummary.reservesData.map(item => {
           return {
             percentage: BigNumber(item.currentUnderlyingBalanceETH)
               .div(total)
               .times(100)
               .toFixed(),
             color: COLORS[item.reserve.symbol],
-            title: item.reserve.symbol,
-            tooltip: item.currentUnderlyingBalance + ' ' + item.reserve.symbol,
-            amount: item.currentUnderlyingBalanceETH
+            tooltip:
+              formatFloatingPointValue(item.currentUnderlyingBalance).value +
+              ' ' +
+              item.reserve.symbol
           };
         });
-        return {
-          total: total,
-          data: data
-        };
       }
-
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     },
     collateralPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
-        const total = this.userSummary.totalCollateralETH;
-        const data = this.userSummary.reservesData.filter(item => {
+        return this.userSummary.reservesData.map(item => {
           if (
             item.usageAsCollateralEnabledOnUser &&
             item.currentUnderlyingBalanceETH > 0
           ) {
-            item['percentage'] = BigNumber(item.currentUnderlyingBalance)
-              .times(100)
-              .div(total)
-              .toFixed();
-            item['color'] = COLORS[item.reserve.symbol];
-            return item;
+            return {
+              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+                .times(100)
+                .div(this.userSummary.totalCollateralETH)
+                .toFixed(),
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                ' ' +
+                item.reserve.symbol
+            };
           }
         });
-        const newObj = {
-          total: total,
-          data: data
-        };
-
-        return newObj;
       }
-
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     },
     borrowingsPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
-        const borrowLimit = BigNumber(this.userSummary.availableBorrowsETH)
-          .plus(this.userSummary.borrowLimitBorrowsETH)
-          .toFixed(4);
-        const percentageLeft = BigNumber(this.userSummary.availableBorrowsETH)
-          .times(100)
-          .div(borrowLimit)
-          .toFixed();
+        let totalAvailablePercentage = 100;
         const data = this.userSummary.reservesData.filter(item => {
           if (item.currentBorrowsETH > 0) {
-            item['percentage'] = BigNumber(item.currentBorrowsETH)
+            const percentage = BigNumber(item.currentBorrowsETH)
               .times(100)
-              .div(borrowLimit)
+              .div(this.userSummary.totalBorrowsEth)
               .toFixed();
-            item['color'] = COLORS[item.reserve.symbol];
-            return item;
+            totalAvailablePercentage = totalAvailablePercentage - percentage;
+            return {
+              percentage: percentage,
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentBorrowsETH).value +
+                ' ' +
+                item.reserve.symbol
+            };
           }
         });
-        if (borrowLimit > 0 && percentageLeft > 0) {
+        if (totalAvailablePercentage > 0) {
           data.push({
-            symbol: 'Available',
-            amount: '',
-            percentage: percentageLeft,
-            color: '#c7c7c7'
+            percentage: totalAvailablePercentage,
+            color: '#c7c7c7',
+            tooltip:
+              formatFloatingPointValue(this.userSummary.availableBorrowsETH)
+                .value + ' Available to Borrow'
           });
         }
-        const newObj = {
-          total: borrowLimit,
-          data: data
-        };
-
-        return newObj;
+        return data;
       }
 
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     }
   },
   watch: {
