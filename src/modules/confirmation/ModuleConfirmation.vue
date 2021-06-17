@@ -138,7 +138,7 @@
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="`${transaction.title}${transaction.value}${i}`"
+              :key="`transactionValues${i}`"
               class="expansion-border"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
