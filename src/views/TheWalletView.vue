@@ -23,7 +23,6 @@ import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-import ethImg from '@/assets/images/networks/eth.svg';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -44,9 +43,11 @@ export default {
   },
   mixins: [handlerWallet],
   computed: {
-    ...mapState('wallet', ['address', 'web3', 'tokens', 'coinGeckoTokens']),
+    ...mapState('wallet', ['address', 'web3', 'tokens']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapGetters('global', ['network']),
+    ...mapState('external', ['coinGeckoTokens']),
+    ...mapGetters('external', ['contractToToken']),
     isTokenBalanceApiSupported() {
       return (
         this.network.type.name === BSC.name ||
@@ -80,16 +81,15 @@ export default {
     ...mapActions('wallet', [
       'setAccountBalance',
       'setBlockNumber',
-      'setTokens',
-      'setCoinGeckoTokens'
+      'setTokens'
     ]),
     ...mapActions('global', ['setGasPrice']),
-    ...mapActions('external', ['setETHUSDValue']),
+    ...mapActions('external', ['setETHUSDValue', 'setCoinGeckoTokens']),
     setTokensAndBalance() {
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));
       });
-      if (this.coinGeckoTokens.get) {
+      if (this.coinGeckoTokens?.get) {
         this.setTokenBalanceFromAPI();
       } else {
         this.setTokens([]);
@@ -116,39 +116,25 @@ export default {
         .then(tokens => {
           const formattedList = [];
           tokens.forEach(t => {
-            const token = this.getTokenInfoByAddress(t.contract);
+            const token = this.contractToToken(t.contract);
             if (!token) return;
-            const foundToken = this.coinGeckoTokens.get(
-              t.contract.toLowerCase()
-            );
             const denominator = new BigNumber(10).pow(token.decimals);
-            const usdBalance = foundToken
-              ? new BigNumber(t.balance)
-                  .div(denominator)
-                  .times(foundToken.current_price)
-                  .toString()
-              : null;
-            const price = foundToken ? foundToken.current_price : null;
-            formattedList.push({
-              name: token.symbol,
-              symbol: token.symbol,
-              subtext: token.name,
-              value: token.name,
-              balance: t.balance,
-              contract: token.address,
-              img: token.icon ? token.icon : ethImg,
-              decimals: token.decimals,
-              market_cap: foundToken ? foundToken.market_cap : null,
-              price_change_percentage_24h: foundToken
-                ? foundToken.price_change_percentage_24h
-                : null,
-              totalBalanceRaw: usdBalance,
-              totalBalance: formatFiatValue(usdBalance).value,
-              priceRaw: price,
-              price: formatFiatValue(price).value,
-              tokenBalance: this._getTokenBalance(t.balance, token.decimals)
-                .value
-            });
+            const usdBalance = new BigNumber(t.balance)
+              .div(denominator)
+              .times(token.price)
+              .toString();
+            formattedList.push(
+              Object.assign(
+                {
+                  balance: t.balance,
+                  balancef: this._getTokenBalance(t.balance, token.decimals)
+                    .value,
+                  usdBalance: usdBalance,
+                  usdBalancef: formatFiatValue(usdBalance).value
+                },
+                token
+              )
+            );
           });
           this.setTokens(formattedList);
         });

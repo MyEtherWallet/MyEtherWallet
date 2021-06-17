@@ -381,7 +381,8 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', [
       'balanceInETH',

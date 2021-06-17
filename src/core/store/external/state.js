@@ -3,7 +3,8 @@ const state = {
   darkList: {},
   path: '',
   currencyRate: {},
-  ETHUSDValue: {}
+  ETHUSDValue: {},
+  coinGeckoTokens: {}
 };
 
 export default state;

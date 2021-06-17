@@ -35,10 +35,14 @@ const setLastPath = function ({ commit }, val) {
 const setETHUSDValue = function ({ commit }, val) {
   commit('SET_ETH_USD_VALUE', val);
 };
+const setCoinGeckoTokens = function ({ commit }, params) {
+  commit('SET_COIN_GECKO_TOKENS', params);
+};
 
 export default {
   setDarkList,
   setLastPath,
   setCurrency,
-  setETHUSDValue
+  setETHUSDValue,
+  setCoinGeckoTokens
 };

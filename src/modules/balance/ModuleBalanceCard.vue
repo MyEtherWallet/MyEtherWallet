@@ -131,10 +131,10 @@ export default {
     totalTokenBalance() {
       return this.tokensList.reduce((total, currentVal) => {
         const balance =
-          currentVal.totalBalanceRaw !== null &&
+          currentVal.usdBalance !== null &&
           (currentVal.price_change_percentage_24h !== null ||
             currentVal.market_cap !== 0)
-            ? currentVal.totalBalanceRaw
+            ? currentVal.usdBalance
             : 0;
         return new BigNumber(total).plus(balance);
       }, 0);

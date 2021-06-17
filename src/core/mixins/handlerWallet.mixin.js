@@ -3,7 +3,6 @@
  */
 import { getLatestPrices } from '@/apollo/queries/wallets/wallets.graphql';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-
 const tokens = {
   eth: 'ethereum'
 };
@@ -28,6 +27,7 @@ export default {
         this.tokensData = new Map();
         if (data && data.getLatestPrices) {
           data.getLatestPrices.forEach(token => {
+            this.tokensData.set(token.id, token);
             const isEth = token.id === tokens.eth;
             if (isEth) {
               const usd = {
@@ -38,13 +38,8 @@ export default {
               };
               this.setETHUSDValue(usd);
             }
-            this.tokensData.set(
-              token.contract ? token.contract.toLowerCase() : token.id,
-              token
-            );
           });
           this.setCoinGeckoTokens(this.tokensData);
-          console.log(this.tokensData);
           this.$apollo.queries.getOwnersERC20Tokens?.refetch();
         }
       },
