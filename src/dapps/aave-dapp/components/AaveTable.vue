@@ -346,7 +346,9 @@ export default {
                       userDeposited.currentUnderlyingBalance
                     ).value
                   : '0',
-                apr: formatPercentageValue(item.liquidityRate).value,
+                apr: formatPercentageValue(
+                  new BigNumber(item.liquidityRate).multipliedBy(100).toString()
+                ).value,
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
                 callToAction: [depositButton, this.btnSwap]
@@ -398,8 +400,8 @@ export default {
                 ],
                 apy: formatPercentageValue(
                   new BigNumber(item.reserve.liquidityRate)
-                    .times(100)
-                    .toFixed(4)
+                    .multipliedBy(100)
+                    .toString()
                 ).value,
                 toggle: {
                   color: 'secondary',
@@ -426,14 +428,14 @@ export default {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
                 balance: [
-                  `${formatFloatingPointValue(item.currentBorrows)} ${
+                  `${formatFloatingPointValue(item.currentBorrows).value} ${
                     item.reserve.symbol
                   }`,
                   `$${formatFiatValue(item.currentBorrowsUSD).value}`
                 ],
                 apr: formatPercentageValue(
                   new BigNumber(item.borrowRate).multipliedBy(100).toString()
-                ),
+                ).value,
                 toggle: {
                   color: isVariable ? 'secondary' : 'primary',
                   method: this.onToggleAprType,

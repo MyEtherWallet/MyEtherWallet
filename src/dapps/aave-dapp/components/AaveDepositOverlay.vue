@@ -19,7 +19,9 @@
         class="border-radius--10px pa-4"
       >
         <aave-table
-          :handler="handler"
+          :is-loading-data="isLoadingData"
+          :reserves-data="reservesData"
+          :user-reserves-data="userSummary.reservesData"
           :table-header="depositHeader"
           @selectedDeposit="handleSelectedDeposit"
         />
@@ -32,7 +34,7 @@
       <div v-if="step === 1 || step === 3">
         <aave-summary
           :selected-token="selectedToken"
-          :handler="handler"
+          :user-summary="userSummary"
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
@@ -44,7 +46,6 @@
       <div v-if="step === 2">
         <aave-amount-form
           :selected-token="selectedToken"
-          :handler="handler"
           :show-toggle="aaveDepositForm.showToggle"
           :left-side-values="aaveDepositForm.leftSideValues"
           :right-side-values="aaveDepositForm.rightSideValues"

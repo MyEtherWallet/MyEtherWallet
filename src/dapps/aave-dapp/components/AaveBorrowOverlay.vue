@@ -18,7 +18,9 @@
         class="border-radius--10px pa-4"
       >
         <aave-table
-          :handler="handler"
+          :is-loading-data="isLoadingData"
+          :reserves-data="reservesData"
+          :user-reserves-data="userSummary.reservesData"
           :table-header="aaveTableHandler"
           @selectedBorrow="handleSelectedBorrow"
         />
@@ -31,7 +33,6 @@
       <div v-if="step === 1">
         <aave-amount-form
           :selected-token="selectedToken"
-          :handler="handler"
           :action-type="aaveTableHandler"
           :show-toggle="aaveBorrowForm.showToggle"
           :left-side-values="aaveBorrowForm.leftSideValues"
@@ -61,7 +62,6 @@
       <div v-if="step === 3">
         <aave-summary
           :selected-token="selectedToken"
-          :handler="handler"
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
@@ -105,9 +105,9 @@ export default {
       const borrowedUSD = hasBorrowed
         ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
         : `0 ETH`;
-      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
+      const eth = `${this.userSummary.totalCollateralETH} ETH`;
       const usd = `$ ${convertToFixed(
-        this.handler?.userSummary.totalCollateralUSD
+        this.userSummary.totalCollateralUSD
       )}`;
       return {
         showToggle: false,

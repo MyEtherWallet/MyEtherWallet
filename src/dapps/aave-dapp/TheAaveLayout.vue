@@ -261,6 +261,9 @@
       </template>
     </the-wrapper-dapp>
     <aave-deposit-overlay
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :pre-selected-token="requestToken"
@@ -271,7 +274,9 @@
       :pre-selected-token="requestToken"
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       @onConfirm="callBorrow"
     />
     <aave-collateral-overlay
@@ -439,12 +444,6 @@ export default {
             amount: item.currentUnderlyingBalanceETH
           };
         });
-        const newObj = {
-          total: 100,
-          data: data
-        };
-        console.error('newObj', newObj);
-
         return {
           total: total,
           data: data

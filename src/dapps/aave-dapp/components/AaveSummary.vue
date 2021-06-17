@@ -133,9 +133,8 @@ export default {
       type: String,
       default: ''
     },
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
+    userSummary: {
+      type: Object,
       default: () => {}
     },
     selectedToken: {
@@ -212,25 +211,25 @@ export default {
       return details;
     },
     currentHealthFactor() {
-      return new BigNumber(this.handler?.userSummary?.healthFactor).toFixed(3);
+      return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
       const selectedToken = this.actualToken;
       let nextHealthFactor = convertToFixed(this.currentHealthFactor),
-        collateralBalanceETH = this.handler?.userSummary.totalCollateralETH;
-      const totalBorrowsETH = this.handler?.userSummary.totalBorrowsETH;
+        collateralBalanceETH = this.userSummary.totalCollateralETH;
+      const totalBorrowsETH = this.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(
           selectedToken?.price?.priceInEth
         );
         collateralBalanceETH = new BigNumber(
-          this.handler.userSummary.totalCollateralETH
+          this.userSummary.totalCollateralETH
         ).plus(ethBalance);
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
           totalBorrowsETH,
-          this.handler.userSummary.totalFeesETH,
-          this.handler.userSummary.currentLiquidationThreshold
+          this.userSummary.totalFeesETH,
+          this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
       }
       return nextHealthFactor;
