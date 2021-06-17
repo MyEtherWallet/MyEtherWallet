@@ -29,7 +29,7 @@ export default {
     totalTokenValues() {
       let total = BigNumber(0);
       this.tokensList.forEach(token => {
-        const value = token.totalBalanceRaw ? token.totalBalanceRaw : 0;
+        const value = token.usdBalance ? token.usdBalance : 0;
         total = total.plus(value);
       });
       return formatFiatValue(total).value;

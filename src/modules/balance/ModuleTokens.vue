@@ -106,27 +106,30 @@ export default {
     ...mapGetters('global', ['isEthNetwork']),
 
     loading() {
-      return this.initialLoadTokens || this.tokensDataLoading;
+      return this.initialLoadTokens;
     },
     tokensData() {
-      return this.tokensList.map((item, idx) => {
-        if (idx === this.tokensList.length - 1) {
-          setTimeout(() => {
-            this.tokensDataLoading = false;
-          }, 3000);
-        }
+      if (!this.tokensList) return [];
+      const tokenList = this.tokensList.map(item => {
         const newObj = {};
         newObj.balance = [
-          item.tokenBalance + ' ' + item.symbol,
-          '$' + item.totalBalance
+          item.balancef + ' ' + item.symbol,
+          item.price !== '0' ? '$' + item.usdBalancef : ''
         ];
+        newObj.usdBalance = item.usdBalance;
         newObj.token = item.symbol;
-        newObj.cap = formatIntegerToString(item.market_cap || 0);
-        newObj.change = formatPercentageValue(
-          item.price_change_percentage_24h || 0
-        ).value.replaceAll('%', '');
+        newObj.cap =
+          parseInt(item.market_cap) !== 0
+            ? formatIntegerToString(item.market_cap || 0)
+            : '';
+        newObj.change =
+          item.price !== '0'
+            ? formatPercentageValue(
+                item.price_change_percentage_24h || 0
+              ).value.replaceAll('%', '')
+            : '';
         newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-        newObj.price = '$' + item.price;
+        newObj.price = item.price !== '0' ? '$' + item.price : '';
         newObj.tokenImg = item.img;
         newObj.callToAction = [
           {
@@ -140,14 +143,14 @@ export default {
         ];
         return newObj;
       });
+      tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
+      return tokenList;
     },
     totalTokensValue() {
       return formatFiatValue(
         this.tokensList.reduce((total, currentVal) => {
           const balance =
-            currentVal.totalBalanceRaw !== null
-              ? currentVal.totalBalanceRaw
-              : 0;
+            currentVal.usdBalance !== null ? currentVal.usdBalance : 0;
           return new BigNumber(total).plus(balance).toFixed();
         }, 0)
       ).value;

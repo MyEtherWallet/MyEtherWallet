@@ -5,11 +5,17 @@ import erc20Abi from '../abi/erc20';
 import Configs from '../configs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
+import { ETH } from '@/utils/networks/types';
 const HOST_URL = 'https://swap.mewapi.io/changelly';
 class Changelly {
-  constructor(web3) {
+  constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
+    this.supportednetworks = [ETH.name];
+    this.chain = chain;
+  }
+  isSupportedNetwork(chain) {
+    return this.supportednetworks.includes(chain);
   }
   getSupportedTokens() {
     return axios

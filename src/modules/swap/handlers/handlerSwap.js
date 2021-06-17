@@ -16,8 +16,13 @@ const mergeIfNotExists = (baseList, newList) => {
   return baseList;
 };
 class Swap {
-  constructor(web3) {
-    this.providers = [new OneInch(web3), new DexAg(web3), new Changelly(web3)];
+  constructor(web3, chain) {
+    this.providers = [
+      new OneInch(web3, chain),
+      new DexAg(web3, chain),
+      new Changelly(web3, chain)
+    ];
+    this.chain = chain;
   }
   getAllTokens() {
     let allTokens = [];
@@ -26,6 +31,7 @@ class Swap {
       return Promise.all(
         this.providers.map((p, idx) => {
           if (idx === 0) return Promise.resolve();
+          if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             allTokens = mergeIfNotExists(allTokens, tokens);
           });
@@ -46,6 +52,7 @@ class Swap {
     let allQuotes = [];
     return Promise.all(
       this.providers.map(p => {
+        if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
         return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
           allQuotes = allQuotes.concat(quotes);
         });

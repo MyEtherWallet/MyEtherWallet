@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet v-if="network.type.name === 'ETH'" :sideinfo="!mobile">
+  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -181,7 +181,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['isEthNetwork'])
   },
   watch: {
     web3(newVal) {
@@ -193,6 +193,7 @@ export default {
   },
   methods: {
     setSwapHandler(val) {
+      if (!this.isEthNetwork) return;
       this.swapHandler = new handlerSwap(val);
       this.fetchRates();
     },

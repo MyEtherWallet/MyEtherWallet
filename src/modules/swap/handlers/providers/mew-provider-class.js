@@ -1,31 +1,42 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://mainnet.mewwallet.dev/v2';
+const HOST_URL = 'https://development.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
 import { isAddress } from 'web3-utils';
 import Configs from '../configs';
 class MEWPClass {
-  constructor(providerName, web3) {
+  constructor(providerName, web3, supportednetworks, chain) {
     this.web3 = web3;
     this.provider = providerName;
+    this.supportednetworks = supportednetworks;
+    this.chain = chain;
+  }
+  isSupportedNetwork(chain) {
+    return this.supportednetworks.includes(chain);
   }
   getSupportedTokens() {
-    return axios.get(`${HOST_URL}${GET_LIST}`).then(response => {
-      const data = response.data;
-      return data.map(d => {
-        return {
-          contract_address: d.contract_address.toLowerCase(),
-          isEth: true,
-          decimals: parseInt(d.decimals),
-          img: `https://img.mewapi.io/?image=${d.icon}`,
-          name: d.name ? d.name : d.symbol,
-          symbol: d.symbol,
-          type: 'ERC20'
-        };
+    return axios
+      .get(`${HOST_URL}${GET_LIST}`, {
+        params: {
+          chain: this.chain
+        }
+      })
+      .then(response => {
+        const data = response.data;
+        return data.map(d => {
+          return {
+            contract_address: d.contract_address.toLowerCase(),
+            isEth: true,
+            decimals: parseInt(d.decimals),
+            img: `https://img.mewapi.io/?image=${d.icon}`,
+            name: d.name ? d.name : d.symbol,
+            symbol: d.symbol,
+            type: 'ERC20'
+          };
+        });
       });
-    });
   }
   isValidToAddress({ address }) {
     return Promise.resolve(isAddress(address));
@@ -65,6 +76,7 @@ class MEWPClass {
             fromContractAddress: fromAddress,
             toContractAddress: toAddress,
             amount: queryAmount.toFixed(fromT.decimals),
+            chain: this.chain,
             excludeDexes:
               this.provider === MEWPClass.supportedDexes.DEX_AG
                 ? MEWPClass.supportedDexes.ONE_INCH
@@ -117,7 +129,8 @@ class MEWPClass {
           platform: 'ios',
           fromContractAddress: contactFromAddress,
           toContractAddress: contractToAddress,
-          amount: queryAmount.toFixed(fromT.decimals)
+          amount: queryAmount.toFixed(fromT.decimals),
+          chain: this.chain
         }
       })
       .then(response => {

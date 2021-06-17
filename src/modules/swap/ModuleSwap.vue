@@ -381,7 +381,7 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -389,7 +389,7 @@ export default {
       'initialLoad',
       'balanceInWei'
     ]),
-    ...mapGetters('external', ['balanceFiatValue']),
+    ...mapGetters('external', ['balanceFiatValue', 'contractToToken']),
     /**
      * @rejects object
      * Gets the ETH token dropdown item details
@@ -497,12 +497,14 @@ export default {
           return !TRENDING_SYMBOLS.includes(token.symbol);
         })
         .map(token => {
-          const foundToken = this.findCoinToken(token.contract_address);
-          token.price = foundToken
-            ? formatFiatValue(foundToken.current_price).value
-            : '0.00';
-          token.subtext = foundToken ? foundToken.name : '';
-          token.value = foundToken ? foundToken.name : '';
+          const foundToken = this.contractToToken(token.contract_address);
+          if (foundToken) {
+            foundToken.isEth = token.isEth;
+            return foundToken;
+          }
+          token.price = '0.00';
+          token.subtext = token.name;
+          token.value = token.name;
           token.name = token.symbol;
           return token;
         });
@@ -602,12 +604,14 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.findCoinToken(token.contract_address);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.subtext = foundToken ? foundToken.name : '';
-        token.value = foundToken ? foundToken.name : '';
+        const foundToken = this.contractToToken(token.contract_address);
+        if (foundToken) {
+          foundToken.isEth = token.isEth;
+          return foundToken;
+        }
+        token.price = '0.00';
+        token.subtext = token.name;
+        token.value = token.name;
         token.name = token.symbol;
         return token;
       });
@@ -619,11 +623,9 @@ export default {
     trendingTokens() {
       return TRENDING_LIST.map(token => {
         const id = token.id || token.contract_address;
-        const foundToken = this.findCoinToken(id);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.img = foundToken ? foundToken.image : '';
+        const foundToken = this.contractToToken(id);
+        token.price = foundToken ? foundToken.pricef : '0.00';
+        token.img = foundToken ? foundToken.img : '';
         return token;
       });
     },
@@ -806,6 +808,17 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    network() {
+      this.isLoading = true;
+      this.swapper = new Swapper(this.web3, this.network.type.name);
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
+        });
     }
   },
   beforeMount() {
@@ -821,7 +834,7 @@ export default {
   mounted() {
     if (this.isEthNetwork) {
       this.isLoading = !this.prefetched;
-      this.swapper = new Swapper(this.web3);
+      this.swapper = new Swapper(this.web3, this.network.type.name);
       if (!this.prefetched) {
         this.swapper
           .getAllTokens()
@@ -895,12 +908,6 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
-    /* Find token from getLatestPrices query data */
-    findCoinToken(hash) {
-      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
-        return this.coinGeckoTokens.get(hash.toLowerCase());
-      }
-    },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       if (_.isUndefined(storeTokens)) {
@@ -1001,19 +1008,18 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      if (this.allTrades.length > 0 && this.allTrades[idx]) {
-        this.currentTrade = this.allTrades[idx];
-        this.currentTrade.gasPrice =
-          this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
-        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-          this.network.type.name
-        }`;
-        this.step = 2;
-        this.checkFeeBalance();
-        return;
-      }
+      // if (this.allTrades.length > 0 && this.allTrades[idx]) {
+      //   this.currentTrade = this.allTrades[idx];
+      //   this.currentTrade.gasPrice =
+      //     this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
+      //   this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+      //     this.network.type.name
+      //   }`;
+      //   this.step = 2;
+      //   this.checkFeeBalance();
+      //   return;
+      // }
       this.loadingFee = true;
-
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -1081,9 +1087,11 @@ export default {
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
+          console.log(res);
           this.swapNotificationFormatter(res);
         })
         .catch(err => {
+          console.log(err);
           this.swapNotificationFormatter(err, true);
         });
     },
@@ -1093,9 +1101,10 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
+      console.log(obj, isError);
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          transactionHash: !isError ? hash : '',
+          hash: !isError ? hash : '',
           transactionFee: fromWei(this.totalFees),
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,
