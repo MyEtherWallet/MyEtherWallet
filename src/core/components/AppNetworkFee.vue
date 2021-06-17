@@ -1,0 +1,151 @@
+<template>
+  <div>
+    <app-network-settings-modal
+      :open-settings="openSettings"
+      :close="closeGasPrice"
+      :gas-price-modal="gasPriceModal"
+      @onLocalGasPrice="handleLocalGasPrice"
+      @close="closeGasPrice"
+    />
+    <div class="mt-5 mb-10">
+      <v-row justify="space-between" align="start">
+        <v-col cols="4" class="mb-n3">
+          <p class="mew-heading-3">Network Fee</p>
+        </v-col>
+        <v-col cols="7">
+          <div class="d-flex justify-space-around align-center">
+            <div class="d-flex justify-space-around align-center">
+              <mew-icon :icon-name="icon" :img-height="30" />
+              <span class="capitalize">{{ gasPriceType }}</span>
+            </div>
+            <span v-show="!gettingFee && showFee"
+              >{{ actualFees }} {{ network.type.currencyName }}
+            </span>
+            <span :class="[hasError ? 'error--text' : '']">{{
+              feesInUsd
+            }}</span>
+            <v-skeleton-loader
+              v-show="gettingFee || !showFee"
+              type="text"
+              width="250px"
+            />
+            <div class="icon-holder primary" @click="openGasPriceModal">
+              <v-icon size="small" color="white">mdi-pencil</v-icon>
+            </div>
+          </div>
+          <p
+            v-if="!gettingFee || hasError"
+            :class="[hasError ? 'error--text' : '']"
+          >
+            {{ message }}
+          </p>
+          <div v-if="notEnoughEth" class="d-flex align-center justify-start">
+            <a rel="noopener noreferrer" class="mr-3" target="_blank"
+              >Why are the fees so high?</a
+            >
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://ccswap.myetherwallet.com/#/"
+              >Buy more ETH</a
+            >
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex';
+import { fromWei } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+import { EventBus } from '@/core/plugins/eventBus';
+import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
+
+const GAS_TYPE_ICONS = {
+  economy: 'bicycle',
+  regular: 'car',
+  fast: 'rocket',
+  stored: 'tags'
+};
+export default {
+  name: 'AppNetworkFee',
+  components: {
+    AppNetworkSettingsModal
+  },
+  props: {
+    showFee: {
+      type: Boolean,
+      default: false
+    },
+    gettingFee: {
+      type: Boolean,
+      default: false
+    },
+    error: {
+      type: String,
+      default: ''
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
+    },
+    totalFees: {
+      type: String,
+      default: '0'
+    },
+    gasPriceType: {
+      type: String,
+      default: 'economy'
+    },
+    message: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return { gasPriceModal: false };
+  },
+  computed: {
+    ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['network']),
+    icon() {
+      return GAS_TYPE_ICONS[this.gasPriceType];
+    },
+    actualFees() {
+      return fromWei(this.totalFees).toString();
+    },
+    feesInUsd() {
+      const value = BigNumber(this.actualFees).times(this.fiatValue).toFixed(2);
+      return `~${'$' + value}`;
+    },
+    hasError() {
+      return this.error !== '';
+    }
+  },
+  methods: {
+    openSettings() {
+      EventBus.$emit('toggleSettings');
+      this.gasPriceModal = false;
+    },
+    closeGasPrice() {
+      this.gasPriceModal = false;
+    },
+    openGasPriceModal() {
+      this.gasPriceModal = true;
+    },
+    handleLocalGasPrice(val) {
+      this.$emit('onLocalGasPrice', val);
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.icon-holder {
+  padding: 3px 6px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+</style>

@@ -14,7 +14,7 @@ const gasPriceMixin = {
       localGas: null,
       convertedGasPrice: '0',
       useGlobal: true,
-      selected: gasPriceTypes.ECONOMY
+      selected: 'economy'
     };
   },
   computed: {
@@ -88,6 +88,15 @@ const gasPriceMixin = {
   watch: {
     gasPrice() {
       this.fetchGasPrice();
+    },
+    gasPriceType(e) {
+      if (!this.useGlobal) {
+        if (e !== gasPriceTypes.STORED) {
+          this.setSelected(e);
+        } else {
+          this.setCustomGasPrice(this.gasPrice);
+        }
+      }
     }
   },
   methods: {
@@ -103,7 +112,7 @@ const gasPriceMixin = {
         }
       } else {
         this.selected = selected;
-        this.convertedGasPrice = getGasBasedOnType(this.gasPrice, selected);
+        this.convertedGasPrice = getGasBasedOnType(this.localGas, selected);
       }
     },
     setCustomGasPrice(customGasPrice) {

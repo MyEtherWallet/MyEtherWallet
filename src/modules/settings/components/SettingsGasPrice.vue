@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <div v-if="!isSwap" class="mb-6">
+    <div v-if="!hasCustom" class="mb-6">
       Please select a default gas price for your transaction fee
     </div>
     <!--
@@ -36,7 +36,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
+      <v-row v-if="hasCustom || global" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -46,22 +46,23 @@
        Custom Gas
       =====================================================================================
       -->
-      <div v-if="!isSwap" class="d-sm-flex text-center">
+      <div v-if="global" class="d-sm-flex text-center">
         <mew-input
-          v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
           class="mr-0 mr-sm-3"
+          :value="localCustom"
+          @input="setCustomInput"
         />
         <mew-button
           :title="customBtn.text"
           btn-size="xlarge"
           :btn-style="customBtn.style"
-          :has-full-width="isSwap"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          :has-full-width="hasCustom"
+          @click.native="useLocal"
         />
-        <p v-if="isSwap" class="pt-2">
+        <p v-if="hasCustom" class="pt-2">
           To change the custom gas price, go to
           <span
             class="cursor--pointer go-to-global-text"
@@ -76,7 +77,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="true"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          @click.native="useLocal"
         />
         <p class="pt-2">
           To change the custom gas price, go to
@@ -95,7 +96,8 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei } from 'web3-utils';
+import { fromWei, toWei } from 'web3-utils';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'SettingsGasPrice',
@@ -126,37 +128,61 @@ export default {
       type: Function,
       default: () => {}
     },
-    isSwap: {
+    hasCustom: {
       type: Boolean,
       default: false
     },
     openGlobalSettings: {
       type: Function,
       default: () => {}
+    },
+    global: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
+      localCustom:
+        this.selected === gasPriceTypes.STORED
+          ? fromWei(this.gasPrice, 'gwei')
+          : '0'
     };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(this.customGasPrice, 'ether')
-      );
+      const ether = fromWei(toWei(this.localCustom, 'gwei'), 'ether');
+      const usdValue = formatFiatValue(
+        BigNumber(this.fiatValue).times(ether)
+      ).value;
       return {
-        text: this.isSwap
-          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${usdValue}`
+        text: this.hasCustom
+          ? `Custom: ${this.localCustom} Gwei $ ${usdValue}`
           : 'Confirm',
-        style: this.isSwap ? 'outline' : 'background'
+        style: this.hasCustom ? 'outline' : 'background'
       };
+    }
+  },
+  watch: {
+    gasPrice(e) {
+      if (this.gasPriceType === gasPriceTypes.STORED) {
+        this.localCustom = fromWei(e, 'gwei');
+      }
     },
-    hasCustom() {
-      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
+    selected(newVal) {
+      if (newVal !== gasPriceTypes.STORED && !this.hasCustom) {
+        this.localCustom = '0';
+      }
+    }
+  },
+  methods: {
+    setCustomInput(e) {
+      this.localCustom = e;
+    },
+    useLocal() {
+      this.setCustomGasPrice(this.localCustom);
     }
   }
 };
