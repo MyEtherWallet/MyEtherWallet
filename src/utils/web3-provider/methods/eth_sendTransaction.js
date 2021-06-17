@@ -106,7 +106,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              res(err);
+              res(err, 'errored?');
             });
           if (!confirmInfo) {
             setEvents(_promiObj, _tx, store.dispatch);

@@ -669,7 +669,6 @@ export default {
           });
         this.resolver(event);
       } else {
-        console.log('i clicked thee');
         await this.instance
           .signTransaction(this.tx)
           .then(res => {
