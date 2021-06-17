@@ -106,9 +106,7 @@ export default {
         ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
         : `0 ETH`;
       const eth = `${this.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(
-        this.userSummary.totalCollateralUSD
-      )}`;
+      const usd = `$ ${convertToFixed(this.userSummary.totalCollateralUSD)}`;
       return {
         showToggle: false,
         leftSideValues: {
