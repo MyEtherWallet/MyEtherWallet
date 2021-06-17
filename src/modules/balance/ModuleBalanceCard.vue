@@ -140,7 +140,7 @@ export default {
       }, 0);
     },
     totalWalletBalance() {
-      if (this.isEthNetwork) {
+      if (this.fiatValue != 0) {
         const total = this.balanceFiatValue.plus(this.totalTokenBalance);
         return `${'$' + formatFiatValue(total).value}`;
       }
@@ -148,9 +148,6 @@ export default {
         this.network.type.currencyName
       }`;
     }
-  },
-  mounted() {
-    //this.animateBlockie();
   },
   methods: {
     animateBlockie() {

@@ -27,5 +27,6 @@ export default {
     blockExplorerTX: '',
     blockExplorerAddr: '',
     websocket: null
-  }
+  },
+  coingeckoID: null
 };

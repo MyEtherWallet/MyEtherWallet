@@ -84,7 +84,7 @@ export default {
       'setTokens'
     ]),
     ...mapActions('global', ['setGasPrice']),
-    ...mapActions('external', ['setETHUSDValue', 'setCoinGeckoTokens']),
+    ...mapActions('external', ['setCoinGeckoTokens']),
     setTokensAndBalance() {
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));

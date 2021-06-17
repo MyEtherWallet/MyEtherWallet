@@ -15,5 +15,6 @@ export default {
     supported: false,
     url: null,
     websocket: null
-  }
+  },
+  coingeckoID: 'matic-network'
 };

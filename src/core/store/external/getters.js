@@ -4,10 +4,10 @@ import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 /**
  * Get Eth Fiat value
  */
-const fiatValue = function (state) {
-  const ethUSDValue = state.ETHUSDValue.value || 0;
+const fiatValue = function (state, getters) {
+  const tokenUSDValue = getters.networkTokenUSDMarket.value;
   const rate = state.currencyRate.data?.exchange_rate || 1;
-  return new BigNumber(ethUSDValue).times(rate);
+  return new BigNumber(tokenUSDValue).times(rate);
 };
 
 /**
@@ -16,6 +16,34 @@ const fiatValue = function (state) {
 const balanceFiatValue = function (state, getters, rootState, rootGetters) {
   const balanceInETH = rootGetters['wallet/balanceInETH'];
   return new BigNumber(balanceInETH).times(getters.fiatValue);
+};
+
+/**
+ * Get main currency market info
+ */
+const networkTokenUSDMarket = function (
+  state,
+  getters,
+  rootState,
+  rootGetters
+) {
+  const cgid = rootGetters['global/network'].type.coingeckoID;
+  if (cgid) {
+    const token = state.coinGeckoTokens.get(cgid);
+    if (token)
+      return {
+        value: token.current_price,
+        symbol: '$',
+        name: 'USD',
+        price_change_percentage_24h: token.price_change_percentage_24h
+      };
+  }
+  return {
+    value: 0,
+    symbol: '$',
+    name: 'USD',
+    price_change_percentage_24h: 0
+  };
 };
 
 /**
@@ -53,5 +81,6 @@ const contractToToken =
 export default {
   fiatValue,
   balanceFiatValue,
-  contractToToken
+  contractToToken,
+  networkTokenUSDMarket
 };
