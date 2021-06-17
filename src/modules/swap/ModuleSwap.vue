@@ -382,7 +382,6 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -390,7 +389,7 @@ export default {
       'initialLoad',
       'balanceInWei'
     ]),
-    ...mapGetters('external', ['balanceFiatValue']),
+    ...mapGetters('external', ['balanceFiatValue', 'contractToToken']),
     /**
      * @rejects object
      * Gets the ETH token dropdown item details
@@ -498,17 +497,15 @@ export default {
           return !TRENDING_SYMBOLS.includes(token.symbol);
         })
         .map(token => {
-          const foundToken = this.findCoinToken(token.contract_address);
-          token.price = foundToken
-            ? formatFiatValue(
-                foundToken.current_price ? foundToken.current_price : '0'
-              ).value
-            : '0.00';
-          token.subtext = foundToken ? foundToken.name : '';
-          token.value = foundToken ? foundToken.name : '';
+          const foundToken = this.contractToToken(token.contract_address);
+          if (foundToken) {
+            foundToken.isEth = token.isEth;
+            return foundToken;
+          }
+          token.price = '0.00';
+          token.subtext = token.name;
+          token.value = token.name;
           token.name = token.symbol;
-          token.img = foundToken ? foundToken.icon : '';
-          console.log(token, foundToken);
           return token;
         });
     },
@@ -607,12 +604,14 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.findCoinToken(token.contract_address);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.subtext = foundToken ? foundToken.name : '';
-        token.value = foundToken ? foundToken.name : '';
+        const foundToken = this.contractToToken(token.contract_address);
+        if (foundToken) {
+          foundToken.isEth = token.isEth;
+          return foundToken;
+        }
+        token.price = '0.00';
+        token.subtext = token.name;
+        token.value = token.name;
         token.name = token.symbol;
         return token;
       });
@@ -624,11 +623,9 @@ export default {
     trendingTokens() {
       return TRENDING_LIST.map(token => {
         const id = token.id || token.contract_address;
-        const foundToken = this.findCoinToken(id);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.img = foundToken ? foundToken.image : '';
+        const foundToken = this.contractToToken(id);
+        token.price = foundToken ? foundToken.pricef : '0.00';
+        token.img = foundToken ? foundToken.img : '';
         return token;
       });
     },
@@ -911,12 +908,6 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
     ...mapActions('global', ['isEthNetwork']),
-    /* Find token from getLatestPrices query data */
-    findCoinToken(hash) {
-      for (const t of this.network.type.tokens)
-        if (t.address.toLowerCase() === hash.toLowerCase()) return t;
-      return null;
-    },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       if (_.isUndefined(storeTokens)) {
@@ -1017,19 +1008,18 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      if (this.allTrades.length > 0 && this.allTrades[idx]) {
-        this.currentTrade = this.allTrades[idx];
-        this.currentTrade.gasPrice =
-          this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
-        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-          this.network.type.name
-        }`;
-        this.step = 2;
-        this.checkFeeBalance();
-        return;
-      }
+      // if (this.allTrades.length > 0 && this.allTrades[idx]) {
+      //   this.currentTrade = this.allTrades[idx];
+      //   this.currentTrade.gasPrice =
+      //     this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
+      //   this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+      //     this.network.type.name
+      //   }`;
+      //   this.step = 2;
+      //   this.checkFeeBalance();
+      //   return;
+      // }
       this.loadingFee = true;
-
       this.swapper
         .getTrade({
           fromAddress: this.address,

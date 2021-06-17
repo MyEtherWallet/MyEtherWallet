@@ -310,7 +310,8 @@ export default {
       ],
       routeNetworks: {
         [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.dapps]: [ETH]
+        [routeNames.dapps]: [ETH],
+        [routeNames.nftmanager]: [ETH]
       }
     };
   },
