@@ -2,60 +2,71 @@
   <div>
     <app-modal
       :show="showSuccessModal"
-      title="Transaction initiated"
-      :close="reset"
-      :btn-action="btnAction"
-      :btn-enabled="disableBtn"
+      :title="successTitle"
+      :close="resetSuccess"
       :close-only="true"
-      :width="'450'"
-      class="pa-8"
-      @close="reset"
+      width="480"
+      @close="resetSuccess"
     >
       <template #dialogBody>
-        <div class="px-5">
+        <div>
+          <!--
+          ====================================================================================
+            Lottie or icon
+          =====================================================================================
+          -->
           <div
             v-if="showSuccessModal"
-            v-lottie="'checkmark'"
-            style="height: 150px"
+            v-lottie="successLottie"
+            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
           />
-          <div>
-            Once completed, the token amount will be deposited to the address
-            you provider. this should take a few minutes depending on how
-            congested the Ethereum network is.
+          <!--
+          ====================================================================================
+            Body
+          =====================================================================================
+          -->
+          <div class="mew-body">
+            {{ successBodyText }}
           </div>
-          <div
-            class="
-              d-flex
-              justify-space-around
-              flex-md-row flex-sm-column-reverse flex-xs-column-reverse
-              align-sm-center align-xs-center
-              my-3
-            "
-          >
-            <div>
+          <!--
+          ====================================================================================
+            Links
+          =====================================================================================
+          -->
+          <v-row class="justify-sm-space-between align-center pt-3" dense>
+            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
+              <a
+                class="d-flex justify-center justify-sm-end"
+                @click.stop="viewProgress"
+                >View Progress</a
+              >
+            </v-col>
+            <v-col cols="12" sm="auto" class="pb-2">
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.etherscan"
-                class="d-flex"
+                class="d-flex justify-center justify-sm-start"
                 >View on Etherscan
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div v-if="network.type.isEthVMSupported.supported">
+            </v-col>
+            <v-col
+              v-if="network.type.isEthVMSupported.supported"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.ethvm"
-                class="d-flex"
+                class="d-flex justify-center"
                 >View on EthVM
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div>
-              <a @click.stop="viewProgress">View Progress</a>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
         </div>
       </template>
     </app-modal>
@@ -65,53 +76,57 @@
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :scrollable="true"
+      width="650"
       @close="reset"
     >
       <template #dialogBody>
         <div>
-          <confirmation-send-transaction-details
-            v-if="!isSwap"
-            :to="tx.to"
-            :network="network"
-            :tx-fee="txFee"
-            :tx-fee-usd="txFeeUSD"
-            :value="value"
-            :value-usd="usdValue"
-            :to-tx-data="tx.toTxData"
-            :to-details="allToDetails"
-            :send-currency="sendCurrency"
-          />
-          <confirmation-swap-transaction-details
-            v-else
-            :to="swapInfo.to"
-            :from="swapInfo.from"
-            :from-img="swapInfo.fromImg"
-            :from-type="swapInfo.fromType"
-            :to-type="swapInfo.toType"
-            :to-img="swapInfo.toImg"
-            :from-val="swapInfo.fromVal"
-            :to-val="swapInfo.toVal"
-            :provider="swapInfo.selectedProvider"
-            :tx-fee="swapInfo.totalFees"
-            :gas-price-type="swapInfo.gasPriceType"
-            :is-hardware="isHardware"
-          />
-          <!-- Warning Sheet -->
-          <div
-            class="
-              px-4
-              py-6
-              pr-6
-              warning
-              textSecondary--text
-              border-radius--5px
-              mb-5
-            "
-          >
-            <b>Make sure all the information is correct.</b> Canceling or
-            reversing a transaction cannot be guaranteed. You will still be
-            charged gas fee even if transaction fails.
-            <a rel="noopener noreferrer">Learn more.</a>
+          <div>
+            <confirmation-send-transaction-details
+              v-if="!isSwap"
+              :to="tx.to"
+              :network="network"
+              :tx-fee="txFee"
+              :tx-fee-usd="txFeeUSD"
+              :value="value"
+              :value-usd="usdValue"
+              :to-tx-data="tx.toTxData"
+              :to-details="allToDetails"
+              :send-currency="sendCurrency"
+            />
+            <confirmation-swap-transaction-details
+              v-else
+              :to="swapInfo.to"
+              :from="swapInfo.from"
+              :from-img="swapInfo.fromImg"
+              :from-type="swapInfo.fromType"
+              :to-type="swapInfo.toType"
+              :to-img="swapInfo.toImg"
+              :from-val="swapInfo.fromVal"
+              :to-val="swapInfo.toVal"
+              :provider="swapInfo.selectedProvider"
+              :tx-fee="swapInfo.totalFees"
+              :gas-price-type="swapInfo.gasPriceType"
+              :is-hardware="isHardware"
+            />
+            <!-- Warning Sheet -->
+            <div
+              class="
+                px-4
+                py-6
+                pr-6
+                warning
+                textSecondary--text
+                border-radius--5px
+                mb-5
+              "
+            >
+              <b>Make sure all the information is correct.</b> Canceling or
+              reversing a transaction cannot be guaranteed. You will still be
+              charged gas fee even if transaction fails.
+              <a rel="noopener noreferrer">Learn more.</a>
+            </div>
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
@@ -123,7 +138,7 @@
           <v-expansion-panels accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="transaction.title + transaction.value + i"
+              :key="`${transaction.title}${transaction.value}${i}`"
               class="expansion-border"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
@@ -170,7 +185,7 @@
                 <div>
                   <div
                     v-for="txVal in transaction"
-                    :key="txVal.title + txVal.value"
+                    :key="`${txVal.title}${txVal.value}`"
                     class="d-flex justify-space-between"
                   >
                     <p class="ma-0">{{ txVal.title }}</p>
@@ -230,7 +245,7 @@ import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 
 export default {
-  name: 'ConfirmationContainer',
+  name: 'ModuleConfirmation',
   components: {
     ConfirmationMesssage,
     AppModal,
@@ -243,6 +258,7 @@ export default {
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
+      showSuccessSwap: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -278,9 +294,12 @@ export default {
     isWeb3Wallet() {
       return this.identifier === WALLET_TYPES.WEB3_WALLET;
     },
+    isMewConnect() {
+      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    },
     showConfirmWithWallet() {
       return (
-        (this.isHardware || this.isWeb3Wallet) &&
+        (this.isHardware || this.isWeb3Wallet || this.isMewConnect) &&
         (this.signing || this.signingPending)
       );
     },
@@ -372,6 +391,26 @@ export default {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
       return !_.isEmpty(this.signedTxObject);
+    },
+    /**
+     * Property returns string, deodning whether or not this is a swap or send
+     */
+    successTitle() {
+      return this.showSuccessSwap ? 'Swap initiated' : 'Transaction initiated';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successBodyText() {
+      return this.showSuccessSwap
+        ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
+        : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successLottie() {
+      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -476,6 +515,10 @@ export default {
     });
   },
   methods: {
+    resetSuccess() {
+      this.showSuccessSwap = false;
+      this.reset();
+    },
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
@@ -544,6 +587,14 @@ export default {
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
+            /**
+             * keepSwap holds isSwap value
+             * before resetting and reassigns
+             * isSwap will be cleared after showSuccessModal is closed
+             */
+            if (this.isSwap) {
+              this.showSuccessSwap = true;
+            }
             this.reset();
             this.showSuccess(hash);
           }
@@ -553,8 +604,16 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
+      /**
+       * keepSwap holds isSwap value
+       * before resetting and reassigns
+       * isSwap will be cleared after showSuccessModal is closed
+       */
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
+      if (this.isSwap) {
+        this.showSuccessSwap = true;
+      }
       this.reset();
       this.showSuccess(hash);
     },
@@ -593,7 +652,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isHardware || this.isWeb3Wallet || this.isMewConnect) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -606,9 +665,11 @@ export default {
           .catch(e => {
             this.signedTxObject = {};
             this.error = e.message;
+            this.signing = false;
           });
         this.resolver(event);
       } else {
+        console.log('i clicked thee');
         await this.instance
           .signTransaction(this.tx)
           .then(res => {
@@ -616,7 +677,12 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            this.error = e.message;
+            if (this.isMewConnect) {
+              this.error = 'User declined action';
+            } else {
+              this.error = e.message;
+            }
+            this.signing = false;
           });
       }
     },
@@ -624,7 +690,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isHardware || this.isWeb3Wallet || this.isMewConnect) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -659,12 +725,16 @@ export default {
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          this.error = err.message ? err.message : err;
+          if (this.isMewConnect) {
+            this.error = 'User declined action';
+          } else {
+            this.error = err.message ? err.message : err;
+          }
           this.signedTxArray = [];
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
         this.signing = false;
       }
     },
@@ -762,5 +832,9 @@ export default {
 .data-values {
   max-width: 350px;
   overflow-wrap: break-word;
+}
+
+.lottie {
+  height: 120px;
 }
 </style>

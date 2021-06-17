@@ -50,7 +50,7 @@ export default {
         bitbox: 'BitBox',
         bitbox02: 'BitBox 02',
         keepkey: 'KeepKey',
-        mewconnect: 'MewConnect',
+        mew_connect: 'MEW Wallet',
         walletConnect: 'Wallet Connect',
         web3Wallet: 'Web3 Wallet',
         finney: 'Finney',

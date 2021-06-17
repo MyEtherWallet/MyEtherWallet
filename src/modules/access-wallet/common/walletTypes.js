@@ -4,7 +4,7 @@ const WALLET_TYPES = {
   BITBOX: 'bitbox',
   BITBOX2: 'bitbox02',
   KEEPKEY: 'keepkey',
-  MEW_CONNECT: 'mewconnect',
+  MEW_CONNECT: 'mew_connect',
   WALLET_CONNECT: 'walletConnect',
   KEYSTORE: 'keystore',
   MNEMONIC: 'mnemonic',

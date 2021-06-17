@@ -15,7 +15,7 @@
             <a>Learn More </a>
           </p>
           <settings-gas-price
-            :is-swap="true"
+            :has-custom="hasCustom"
             :buttons="gasButtons"
             :selected="selected"
             :set-selected="setGas"
@@ -32,6 +32,7 @@
 <script>
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 
 export default {
   components: {
@@ -52,26 +53,35 @@ export default {
       default: () => {}
     }
   },
+  computed: {
+    hasCustom() {
+      return this.gasPriceType === gasPriceTypes.STORED;
+    }
+  },
+  watch: {
+    gasPriceType(e) {
+      this.selected = e;
+    }
+  },
   created() {
     this.useGlobal = false;
     this.fetchGasPrice();
+    this.selected = this.gasPriceType;
   },
   methods: {
     setCustom(value) {
-      const newObj = {
-        gasType: value,
-        gasPrice: this.convertedGasPrice
-      };
       this.setCustomGasPrice(value, false);
-      this.$emit('onLocalGasPrice', newObj);
-      this.close();
+      this.emitResult(value);
     },
     setGas(value) {
+      this.setSelected(value, false);
+      this.emitResult(value);
+    },
+    emitResult(val) {
       const newObj = {
-        gasType: value,
+        gasType: val,
         gasPrice: this.convertedGasPrice
       };
-      this.setSelected(value, false);
       this.$emit('onLocalGasPrice', newObj);
       this.close();
     },

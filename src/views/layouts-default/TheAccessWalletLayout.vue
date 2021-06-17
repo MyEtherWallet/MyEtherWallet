@@ -92,6 +92,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import mewwallet from '@/assets/images/icons/wallets/mewwallet.svg';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -296,6 +297,11 @@ export default {
         const mc = new MewConnect.Initiator({ newPopupCreator: true });
         mc.createWalletOnly(this.network)
           .then(_newWallet => {
+            // Temporary until library gets updated
+            _newWallet['icon'] = {
+              type: 'img',
+              value: mewwallet
+            };
             this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });

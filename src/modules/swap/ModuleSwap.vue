@@ -1,12 +1,5 @@
 <template>
   <div class="mew-component--swap">
-    <app-network-settings-modal
-      :open-settings="openSettings"
-      :close="closeGasPrice"
-      :gas-price-modal="gasPriceModal"
-      @onLocalGasPrice="handleLocalGasPrice"
-      @close="closeGasPrice"
-    />
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -211,13 +204,13 @@
             =====================================================================================
             -->
           <swap-providers-list
-            v-show="hideProviders"
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
             :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
+            :providers-error="providersErrorMsg"
             class="mt-7"
           />
           <!--
@@ -225,23 +218,23 @@
              Swap Fee
             =====================================================================================
           -->
-          <swap-fee
-            v-if="step > 0"
+          <app-network-fee
+            v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
             :total-fees="totalFees"
-            :open-gas-price-modal="openGasPriceModal"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
             class="mt-10 mt-sm-16"
+            @onLocalGasPrice="handleLocalGasPrice"
           />
           <div class="text-center mt-10 mt-sm-15">
             <mew-button
               title="Next"
               :has-full-width="false"
-              :disabled="step < 2 || feeError != '' || !hasSelectedProvider"
+              :disabled="disableNext"
               btn-size="xlarge"
               @click.native="showConfirm"
             />
@@ -259,8 +252,7 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
-import SwapFee from './components/SwapFee.vue';
-import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
+import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -270,7 +262,6 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 import {
   TRENDING_SYMBOLS,
@@ -301,8 +292,7 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
-    SwapFee,
-    AppNetworkSettingsModal
+    AppNetworkFee
   },
   props: {
     fromToken: {
@@ -372,7 +362,6 @@ export default {
       swapIcon: SwapIcon,
       isLoadingProviders: false,
       addressValue: {},
-      gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
       localGasType: 'economy',
@@ -390,6 +379,39 @@ export default {
       'balanceInWei'
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
+    disableNext() {
+      return (
+        this.step < 2 ||
+        this.feeError !== '' ||
+        !this.hasSelectedProvider ||
+        this.providersErrorMsg.subtitle !== ''
+      );
+    },
+    providersErrorMsg() {
+      let msg = '';
+      let subError = '';
+      if (!this.isLoading) {
+        if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+          msg = 'The minimum requirement for this provider is';
+          subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+        } else if (
+          new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)
+        ) {
+          msg = 'The maximum requirement for this provider i';
+          subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+        } else if (this.availableQuotes.length === 0) {
+          msg =
+            'No providers found for this token pair. Select a different token pair or try again later.';
+        } else {
+          msg = '';
+          subError = '';
+        }
+      }
+      return {
+        subtitle: msg,
+        subtitleError: subError
+      };
+    },
     /**
      * @rejects object
      * Gets the ETH token dropdown item details
@@ -773,14 +795,6 @@ export default {
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
-          /* Changelly Errors: */
-
-          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
-          }
-          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
-          }
         }
       }
       return '';
@@ -907,9 +921,6 @@ export default {
         this.setSwapTokens(tokens);
       }
     },
-    openGasPriceModal() {
-      this.gasPriceModal = true;
-    },
     setDefaults() {
       setImmediate(() => {
         this.fromTokenType = this.getDefaultFromToken();
@@ -953,6 +964,8 @@ export default {
         !_.isEmpty(this.toTokenType)
       ) {
         this.isLoadingProviders = true;
+        this.selectedProvider = {};
+        this.minMaxError = false;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -962,18 +975,18 @@ export default {
             )
           })
           .then(quotes => {
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              this.minMaxError = {
-                minFrom: q.minFrom,
-                maxFrom: q.maxFrom
-              };
+            this.availableQuotes = quotes
+              .map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
 
-              return q;
-            });
+                return q;
+              })
+              .filter(q => {
+                if (BigNumber(q.rate).gt(0)) return q;
+              });
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
@@ -987,6 +1000,11 @@ export default {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = true;
+          this.minMaxError = {
+            minFrom: q.minFrom,
+            maxFrom: q.maxFrom
+          };
+
           if (q?.rateId === 'belowMin') {
             this.belowMinError = q.minFrom;
             return;
@@ -1028,7 +1046,8 @@ export default {
         })
         .then(trade => {
           if (trade instanceof Error) {
-            this.feeError = 'Provider issue';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
             return;
           }
 
@@ -1045,7 +1064,8 @@ export default {
         })
         .catch(e => {
           if (e) {
-            this.feeError = 'This provider is not available.';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
           }
         });
     }, 500),
@@ -1093,7 +1113,7 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
-      obj.hashes.forEach((hash, idx) => {
+      obj?.hashes?.forEach((hash, idx) => {
         const notification = {
           transactionHash: !isError ? hash : '',
           transactionFee: fromWei(this.totalFees),
@@ -1134,13 +1154,6 @@ export default {
         this.feeError =
           'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
       }
-    },
-    openSettings() {
-      EventBus.$emit('toggleSettings');
-      this.gasPriceModal = false;
-    },
-    closeGasPrice() {
-      this.gasPriceModal = false;
     },
     setWrappedBtc(symbol) {
       const foundToken = this.toTokens.find(

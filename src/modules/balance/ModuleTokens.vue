@@ -11,7 +11,7 @@
       type="table"
     />
     <mew-module
-      v-if="!loading && tokensData.length > 0"
+      v-if="!loading && tokensData.length > 0 && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
@@ -32,6 +32,12 @@
         </div>
       </template>
     </mew-module>
+    <mew-table
+      v-if="!loading && tokensData.length > 0 && dense"
+      :has-color="false"
+      :table-headers="tableHeaders"
+      :table-data="tokensData"
+    />
     <!--
     =====================================================================================
       display if the user has no tokens
@@ -57,6 +63,12 @@ import {
 export default {
   components: {
     BalanceEmptyBlock
+  },
+  props: {
+    dense: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
