@@ -1,12 +1,5 @@
 <template>
   <div class="mew-component--swap">
-    <app-network-settings-modal
-      :open-settings="openSettings"
-      :close="closeGasPrice"
-      :gas-price-modal="gasPriceModal"
-      @onLocalGasPrice="handleLocalGasPrice"
-      @close="closeGasPrice"
-    />
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -225,17 +218,17 @@
              Swap Fee
             =====================================================================================
           -->
-          <swap-fee
+          <app-network-fee
             v-if="step > 0"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
             :total-fees="totalFees"
-            :open-gas-price-modal="openGasPriceModal"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
             class="mt-10 mt-sm-16"
+            @onLocalGasPrice="handleLocalGasPrice"
           />
           <div class="text-center mt-10 mt-sm-15">
             <mew-button
@@ -259,8 +252,7 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
-import SwapFee from './components/SwapFee.vue';
-import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.vue';
+import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -270,7 +262,6 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, WARNING } from '../toast/handler/handlerToast';
 import {
   TRENDING_SYMBOLS,
@@ -301,8 +292,7 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
-    SwapFee,
-    AppNetworkSettingsModal
+    AppNetworkFee
   },
   props: {
     fromToken: {
@@ -372,7 +362,6 @@ export default {
       swapIcon: SwapIcon,
       isLoadingProviders: false,
       addressValue: {},
-      gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
       localGasType: 'economy',
@@ -907,9 +896,6 @@ export default {
         this.setSwapTokens(tokens);
       }
     },
-    openGasPriceModal() {
-      this.gasPriceModal = true;
-    },
     setDefaults() {
       setImmediate(() => {
         this.fromTokenType = this.getDefaultFromToken();
@@ -1134,13 +1120,6 @@ export default {
         this.feeError =
           'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
       }
-    },
-    openSettings() {
-      EventBus.$emit('toggleSettings');
-      this.gasPriceModal = false;
-    },
-    closeGasPrice() {
-      this.gasPriceModal = false;
     },
     setWrappedBtc(symbol) {
       const foundToken = this.toTokens.find(

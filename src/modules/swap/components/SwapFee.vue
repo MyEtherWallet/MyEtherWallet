@@ -1,6 +1,10 @@
 <template>
   <div class="mt-5 mb-10">
-    <app-modal :show="openHighFeeNote" :close="closeHighFeeNote" no-btn>
+    <app-modal
+      :show="openHighFeeNote"
+      :close="closeHighFeeNote"
+      :has-buttons="false"
+    >
       <template #dialogBody>
         <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
         <div class="mew-heading-1">Are you guys out of your minds?</div>
