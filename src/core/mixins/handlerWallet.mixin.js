@@ -44,6 +44,7 @@ export default {
             );
           });
           this.setCoinGeckoTokens(this.tokensData);
+          console.log(this.tokensData);
           this.$apollo.queries.getOwnersERC20Tokens?.refetch();
         }
       },

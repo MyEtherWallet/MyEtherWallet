@@ -106,15 +106,11 @@ export default {
     ...mapGetters('global', ['isEthNetwork']),
 
     loading() {
-      return this.initialLoadTokens || this.tokensDataLoading;
+      return this.initialLoadTokens;
     },
     tokensData() {
-      return this.tokensList.map((item, idx) => {
-        if (idx === this.tokensList.length - 1) {
-          setTimeout(() => {
-            this.tokensDataLoading = false;
-          }, 3000);
-        }
+      if (!this.tokensList) return [];
+      return this.tokensList.map(item => {
         const newObj = {};
         newObj.balance = [
           item.tokenBalance + ' ' + item.symbol,

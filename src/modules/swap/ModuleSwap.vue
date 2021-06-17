@@ -499,11 +499,15 @@ export default {
         .map(token => {
           const foundToken = this.findCoinToken(token.contract_address);
           token.price = foundToken
-            ? formatFiatValue(foundToken.current_price).value
+            ? formatFiatValue(
+                foundToken.current_price ? foundToken.current_price : '0'
+              ).value
             : '0.00';
           token.subtext = foundToken ? foundToken.name : '';
           token.value = foundToken ? foundToken.name : '';
           token.name = token.symbol;
+          token.img = foundToken ? foundToken.icon : '';
+          console.log(token, foundToken);
           return token;
         });
     },
@@ -806,6 +810,17 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    network() {
+      this.isLoading = true;
+      this.swapper = new Swapper(this.web3, this.network.type.name);
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
+        });
     }
   },
   beforeMount() {
@@ -821,7 +836,7 @@ export default {
   mounted() {
     if (this.isEthNetwork) {
       this.isLoading = !this.prefetched;
-      this.swapper = new Swapper(this.web3);
+      this.swapper = new Swapper(this.web3, this.network.type.name);
       if (!this.prefetched) {
         this.swapper
           .getAllTokens()
@@ -897,9 +912,9 @@ export default {
     ...mapActions('global', ['isEthNetwork']),
     /* Find token from getLatestPrices query data */
     findCoinToken(hash) {
-      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
-        return this.coinGeckoTokens.get(hash.toLowerCase());
-      }
+      for (const t of this.network.type.tokens)
+        if (t.address.toLowerCase() === hash.toLowerCase()) return t;
+      return null;
     },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
@@ -1081,9 +1096,11 @@ export default {
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
+          console.log(res);
           this.swapNotificationFormatter(res);
         })
         .catch(err => {
+          console.log(err);
           this.swapNotificationFormatter(err, true);
         });
     },
@@ -1093,9 +1110,10 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
+      console.log(obj, isError);
       obj.hashes.forEach((hash, idx) => {
         const notification = {
-          transactionHash: !isError ? hash : '',
+          hash: !isError ? hash : '',
           transactionFee: fromWei(this.totalFees),
           to: this.currentTrade.transactions[idx].to,
           from: this.confirmInfo.from,

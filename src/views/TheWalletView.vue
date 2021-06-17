@@ -63,7 +63,7 @@ export default {
       this.setTokensAndBalance();
     },
     coinGeckoTokens() {
-      if (this.isTokenBalanceApiSupported) this.setTokenBalanceFromAPI();
+      this.setTokenBalanceFromAPI();
     }
   },
   mounted() {
@@ -86,10 +86,14 @@ export default {
     ...mapActions('global', ['setGasPrice']),
     ...mapActions('external', ['setETHUSDValue']),
     setTokensAndBalance() {
-      this.setTokens(this.network.type.tokens);
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));
       });
+      if (this.coinGeckoTokens.get) {
+        this.setTokenBalanceFromAPI();
+      } else {
+        this.setTokens([]);
+      }
     },
     getTokenInfoByAddress(address) {
       for (const t of this.network.type.tokens) {
@@ -98,6 +102,10 @@ export default {
       return null;
     },
     setTokenBalanceFromAPI() {
+      if (!this.isTokenBalanceApiSupported) {
+        this.setTokens([]);
+        return;
+      }
       fetch(
         `${TOKEN_BALANCE_API}/${this.network.type.name.toLowerCase()}?address=${
           this.address

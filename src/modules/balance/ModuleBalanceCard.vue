@@ -115,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
@@ -144,7 +144,7 @@ export default {
         const total = this.balanceFiatValue.plus(this.totalTokenBalance);
         return `${'$' + formatFiatValue(total).value}`;
       }
-      return `${formatBalanceEthValue(this.balanceInETH).value} ${
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
         this.network.type.currencyName
       }`;
     }
