@@ -204,13 +204,13 @@
             =====================================================================================
             -->
           <swap-providers-list
-            v-show="hideProviders"
             :step="step"
             :available-quotes="availableQuotes"
             :set-provider="setProvider"
             :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
+            :providers-error="providersErrorMsg"
             class="mt-7"
           />
           <!--
@@ -219,7 +219,7 @@
             =====================================================================================
           -->
           <app-network-fee
-            v-if="step > 0"
+            v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
@@ -234,7 +234,7 @@
             <mew-button
               title="Next"
               :has-full-width="false"
-              :disabled="step < 2 || feeError != '' || !hasSelectedProvider"
+              :disabled="disableNext"
               btn-size="xlarge"
               @click.native="showConfirm"
             />
@@ -379,6 +379,39 @@ export default {
       'balanceInWei'
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
+    disableNext() {
+      return (
+        this.step < 2 ||
+        this.feeError !== '' ||
+        !this.hasSelectedProvider ||
+        this.providersErrorMsg.subtitle !== ''
+      );
+    },
+    providersErrorMsg() {
+      let msg = '';
+      let subError = '';
+      if (!this.isLoading) {
+        if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+          msg = 'The minimum requirement for this provider is';
+          subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+        } else if (
+          new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)
+        ) {
+          msg = 'The maximum requirement for this provider i';
+          subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+        } else if (this.availableQuotes.length === 0) {
+          msg =
+            'No providers found for this token pair. Select a different token pair or try again later.';
+        } else {
+          msg = '';
+          subError = '';
+        }
+      }
+      return {
+        subtitle: msg,
+        subtitleError: subError
+      };
+    },
     /**
      * @rejects object
      * Gets the ETH token dropdown item details
@@ -762,14 +795,6 @@ export default {
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
           }
-          /* Changelly Errors: */
-
-          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
-          }
-          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
-          }
         }
       }
       return '';
@@ -939,6 +964,8 @@ export default {
         !_.isEmpty(this.toTokenType)
       ) {
         this.isLoadingProviders = true;
+        this.selectedProvider = {};
+        this.minMaxError = false;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -948,18 +975,18 @@ export default {
             )
           })
           .then(quotes => {
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.tokenInValue))
-                .toString();
-              q.isSelected = false;
-              this.minMaxError = {
-                minFrom: q.minFrom,
-                maxFrom: q.maxFrom
-              };
+            this.availableQuotes = quotes
+              .map(q => {
+                q.rate = new BigNumber(q.amount)
+                  .dividedBy(new BigNumber(this.tokenInValue))
+                  .toString();
+                q.isSelected = false;
 
-              return q;
-            });
+                return q;
+              })
+              .filter(q => {
+                if (BigNumber(q.rate).gt(0)) return q;
+              });
             if (quotes.length) {
               this.tokenOutValue = quotes[0]?.amount;
               this.step = 1;
@@ -973,6 +1000,11 @@ export default {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = true;
+          this.minMaxError = {
+            minFrom: q.minFrom,
+            maxFrom: q.maxFrom
+          };
+
           if (q?.rateId === 'belowMin') {
             this.belowMinError = q.minFrom;
             return;
@@ -1014,7 +1046,8 @@ export default {
         })
         .then(trade => {
           if (trade instanceof Error) {
-            this.feeError = 'Provider issue';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
             return;
           }
 
@@ -1031,7 +1064,8 @@ export default {
         })
         .catch(e => {
           if (e) {
-            this.feeError = 'This provider is not available.';
+            this.feeError =
+              'Unable to estimate gas price. Select a different provider or token pair.';
           }
         });
     }, 500),
