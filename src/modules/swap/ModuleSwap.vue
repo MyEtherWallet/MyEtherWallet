@@ -391,12 +391,6 @@ export default {
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
     disableNext() {
-      console.log(
-        this.step < 2,
-        this.feeError !== '',
-        !this.hasSelectedProvider,
-        this.providersErrorMsg.subtitle !== ''
-      );
       return (
         this.step < 2 ||
         this.feeError !== '' ||
