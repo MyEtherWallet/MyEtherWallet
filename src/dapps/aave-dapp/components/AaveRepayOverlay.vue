@@ -15,7 +15,6 @@
       <div>
         <aave-amount-form
           :selected-token="preSelectedToken"
-          :handler="handler"
           :show-toggle="aaveRepayForm.showToggle"
           :left-side-values="aaveRepayForm.leftSideValues"
           :right-side-values="aaveRepayForm.rightSideValues"
@@ -58,10 +57,8 @@ export default {
       const borrowedUSD = hasBorrowed
         ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
         : `0 ETH`;
-      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(
-        this.handler?.userSummary.totalCollateralUSD
-      )}`;
+      const eth = `${this.userSummary.totalCollateralETH} ETH`;
+      const usd = `$ ${convertToFixed(this.userSummary.totalCollateralUSD)}`;
       return {
         showToggle: true,
         leftSideValues: {

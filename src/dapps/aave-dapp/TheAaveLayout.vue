@@ -267,7 +267,6 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :pre-selected-token="requestToken"
-      :handler="handler"
       @onConfirm="callDeposit"
     />
     <aave-borrow-overlay
@@ -281,28 +280,36 @@
     />
     <aave-collateral-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
       @onConfirm="callSwitchCollateral"
     />
     <aave-withdraw-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
       @onConfirm="callWithdraw"
     />
     <aave-repay-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
       @onConfirm="callRepay"
     />
     <aave-set-apr-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
       @onConfirm="callSwitchInterest"

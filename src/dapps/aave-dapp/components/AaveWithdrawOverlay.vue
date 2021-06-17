@@ -14,7 +14,6 @@
       <div>
         <aave-amount-form
           :selected-token="preSelectedToken"
-          :handler="handler"
           :show-toggle="aaveWithdrawForm.showToggle"
           :left-side-values="aaveWithdrawForm.leftSideValues"
           :right-side-values="aaveWithdrawForm.rightSideValues"

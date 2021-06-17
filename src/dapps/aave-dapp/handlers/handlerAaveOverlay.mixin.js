@@ -1,5 +1,5 @@
 import { _ } from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 const handlerAaveOverlay = {
@@ -33,6 +33,7 @@ const handlerAaveOverlay = {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('external', ['fiatValue']),
     actualSelectedToken() {
       const selectedTokens = _.isEmpty(this.selectedToken)
         ? _.isEmpty(this.preSelectedToken)
@@ -52,7 +53,9 @@ const handlerAaveOverlay = {
       return {};
     },
     selectedTokenUSDValue() {
-      return this.actualToken ? this.actualToken?.price?.priceInEth : 0;
+      return new BigNumber(this.actualToken?.price?.priceInEth || 0).times(
+        this.fiatValue
+      );
     },
     selectedTokenInUserSummary() {
       return this.userSummary?.reservesData?.find(item => {

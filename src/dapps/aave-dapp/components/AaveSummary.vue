@@ -18,7 +18,7 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit && step === 3"
+      v-if="isDeposit && step === 2"
       class="d-flex align-center justify-space-between pa-7 mb-6"
       flat
       color="overlayBg"
@@ -182,6 +182,7 @@ export default {
         case ACTION_TYPES.deposit:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
+          console.error('helath', this.currentHealthFactor, this.nextHealthFactor)
           details.push(
             {
               title: 'Current Health Factor',
@@ -197,13 +198,15 @@ export default {
               tooltip: 'Tooltip text',
               value: this.nextHealthFactor,
               class:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'error--text'
-                  : 'primary--text',
+                this.currentHealthFactor <= this.nextHealthFactor
+                  ? 'primary--text'
+                  : 'error--text',
               indicator:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'mdi-arrow-down-bold'
-                  : 'mdi-arrow-up-bold'
+                this.currentHealthFactor == this.nextHealthFactor
+                  ? ''
+                  : this.currentHealthFactor < this.nextHealthFactor
+                  ? 'mdi-arrow-up-bold'
+                  : 'mdi-arrow-down-bold'
             }
           );
           return details;
@@ -214,7 +217,8 @@ export default {
       return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
-      const selectedToken = this.actualToken;
+      // doublecheck this
+      const selectedToken = this.selectedToken;
       let nextHealthFactor = convertToFixed(this.currentHealthFactor),
         collateralBalanceETH = this.userSummary.totalCollateralETH;
       const totalBorrowsETH = this.userSummary.totalBorrowsETH;
@@ -250,11 +254,7 @@ export default {
   },
   methods: {
     confirm() {
-      if (this.step === 1) {
-        this.$emit('confirmed');
-      } else {
-        this.$emit('onConfirm');
-      }
+      this.$emit('onConfirm');
     },
     getInterestTypeClass(type) {
       if (type.toLowerCase() === INTEREST_TYPES.stable) {

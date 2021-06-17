@@ -12,7 +12,6 @@
   >
     <template #mewOverlayBody>
       <aave-summary
-        :handler="handler"
         :selected-token="preSelectedToken"
         :action-type="collateral"
         @onConfirm="callSwitchCollateral"

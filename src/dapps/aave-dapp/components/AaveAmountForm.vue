@@ -84,6 +84,7 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+
 export default {
   name: 'AaveAmountForm',
   props: {
@@ -142,7 +143,9 @@ export default {
   },
   mounted() {
     if (this.showToggle) {
-      this.onToggle('50%');
+      setTimeout(() => {
+        this.onToggle(this.group[1]);
+      }, 0);
     }
   },
   methods: {
