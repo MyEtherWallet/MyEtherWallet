@@ -241,12 +241,7 @@
             <mew-button
               title="Next"
               :has-full-width="false"
-              :disabled="
-                step < 2 ||
-                feeError != '' ||
-                !hasSelectedProvider ||
-                providersErrorMsg.subtitle === ''
-              "
+              :disabled="disableNext"
               btn-size="xlarge"
               @click.native="showConfirm"
             />
@@ -395,6 +390,20 @@ export default {
       'balanceInWei'
     ]),
     ...mapGetters('external', ['balanceFiatValue']),
+    disableNext() {
+      console.log(
+        this.step < 2,
+        this.feeError !== '',
+        !this.hasSelectedProvider,
+        this.providersErrorMsg.subtitle !== ''
+      );
+      return (
+        this.step < 2 ||
+        this.feeError !== '' ||
+        !this.hasSelectedProvider ||
+        this.providersErrorMsg.subtitle !== ''
+      );
+    },
     providersErrorMsg() {
       let msg = '';
       let subError = '';
@@ -402,14 +411,17 @@ export default {
         if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
           msg = 'The minimum requirement for this provider is';
           subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
-        }
-        if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
+        } else if (
+          new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)
+        ) {
           msg = 'The maximum requirement for this provider i';
           subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
-        }
-        if (this.availableQuotes.length === 0) {
+        } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
+        } else {
+          msg = '';
+          subError = '';
         }
       }
       return {
