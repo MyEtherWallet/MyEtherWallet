@@ -13,10 +13,14 @@
     =====================================================================================
     -->
     <mew-banner
+      v-if="false"
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
       @closeBanner="onClose"
     />
+
+    <app-block-header></app-block-header>
+
     <!--
     =====================================================================================
       Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
@@ -51,8 +55,10 @@
 
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import AppBlockHeader from '@/core/components/AppBlockHeader';
 
 export default {
+  components: { AppBlockHeader },
   props: {
     hasExitBtn: {
       default: false,
