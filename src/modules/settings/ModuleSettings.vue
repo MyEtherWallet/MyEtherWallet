@@ -161,9 +161,6 @@ export default {
         {
           name: 'Contact Addresses'
         }
-        // {
-        //   name: 'Notifications'
-        // }
       ];
     },
     onMode() {

@@ -4,6 +4,7 @@
       :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
+      :selected="localGasType"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -382,7 +383,8 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -832,31 +834,29 @@ export default {
     }
   },
   mounted() {
-    if (this.isEthNetwork) {
-      this.isLoading = !this.prefetched;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      if (!this.prefetched) {
-        this.swapper
-          .getAllTokens()
-          .then(this.processTokens)
-          .then(() => {
-            this.setDefaults();
-            this.isLoading = false;
-          });
-      } else {
-        this.processTokens(this.swapTokens, false);
-        this.setDefaults();
-        this.isLoading = false;
-      }
+    this.isLoading = !this.prefetched;
+    this.swapper = new Swapper(this.web3, this.network.type.name);
+    if (!this.prefetched) {
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
+        });
     } else {
-      Toast(
-        'Swap feature only supports Ethereum Network right now! Please Make sure to set your node to an ETH node',
-        {},
-        WARNING
-      );
+      this.processTokens(this.swapTokens, false);
+      this.setDefaults();
+      this.isLoading = false;
     }
+    this.handleLocalGasPrice({
+      gasType: this.gasPriceType,
+      gasPrice: this.gasPrice
+    });
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
+    ...mapActions('swap', ['setSwapTokens']),
     /**
      * Set the max available amount to swap from
      */
@@ -905,9 +905,6 @@ export default {
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
-    ...mapActions('notifications', ['addNotification']),
-    ...mapActions('swap', ['setSwapTokens']),
-    ...mapActions('global', ['isEthNetwork']),
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       if (_.isUndefined(storeTokens)) {
@@ -1008,17 +1005,6 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      // if (this.allTrades.length > 0 && this.allTrades[idx]) {
-      //   this.currentTrade = this.allTrades[idx];
-      //   this.currentTrade.gasPrice =
-      //     this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
-      //   this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-      //     this.network.type.name
-      //   }`;
-      //   this.step = 2;
-      //   this.checkFeeBalance();
-      //   return;
-      // }
       this.loadingFee = true;
       this.swapper
         .getTrade({
@@ -1037,10 +1023,8 @@ export default {
             this.feeError = 'Provider issue';
             return;
           }
-
           this.currentTrade = trade;
-          this.currentTrade.gasPrice =
-            this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
+          this.currentTrade.gasPrice = this.localGasPrice;
           this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
             this.network.type.name
           }`;
@@ -1084,6 +1068,7 @@ export default {
     },
 
     executeTrade() {
+      console.log(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
@@ -1101,7 +1086,6 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
-      console.log(obj, isError);
       obj.hashes.forEach((hash, idx) => {
         const notification = {
           hash: !isError ? hash : '',
@@ -1160,9 +1144,6 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e.gasPrice;
       this.localGasType = e.gasType;
-      if (!_.isEmpty(this.currentTrade)) {
-        this.currentTrade.gasPrice = e.gasPrice;
-      }
     }
   }
 };

@@ -32,7 +32,10 @@
 <script>
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
-
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper';
 export default {
   components: {
     SettingsGasPrice
@@ -50,28 +53,31 @@ export default {
     close: {
       type: Function,
       default: () => {}
+    },
+    selected: {
+      type: String,
+      default: gasPriceTypes.ECONOMY
     }
   },
-  created() {
-    this.useGlobal = false;
+  mounted() {
     this.fetchGasPrice();
+    console.log(this.selected);
   },
   methods: {
     setCustom(value) {
       const newObj = {
         gasType: value,
-        gasPrice: this.convertedGasPrice
+        gasPrice: this.value
       };
-      this.setCustomGasPrice(value, false);
       this.$emit('onLocalGasPrice', newObj);
       this.close();
     },
     setGas(value) {
       const newObj = {
         gasType: value,
-        gasPrice: this.convertedGasPrice
+        gasPrice: getGasBasedOnType(this.baseGasPrice, value)
       };
-      this.setSelected(value, false);
+      console.log('gasp', newObj, this.baseGasPrice);
       this.$emit('onLocalGasPrice', newObj);
       this.close();
     },

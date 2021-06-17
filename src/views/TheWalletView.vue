@@ -28,10 +28,7 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
-import {
-  getGasBasedOnType,
-  gasPriceTypes
-} from '@/core/helpers/gasPriceHelper.js';
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io/';
 export default {
@@ -143,10 +140,8 @@ export default {
       this.web3.eth.getGasPrice().then(res => {
         if (this.gasPriceType === gasPriceTypes.STORED) {
           this.setGasPrice(this.baseGasPrice);
-        } else if (this.gasPriceType) {
-          this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
         } else {
-          this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
+          this.setGasPrice(res);
         }
       });
     },

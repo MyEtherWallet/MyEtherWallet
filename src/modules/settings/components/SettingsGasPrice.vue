@@ -96,7 +96,7 @@ import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
-
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -137,20 +137,22 @@ export default {
   },
   data() {
     return {
-      customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
+      customGasPrice: '0'
     };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
+      if (!this.customGasPrice) return {};
       const usdValue = BigNumber(this.fiatValue).times(
         fromWei(this.customGasPrice, 'ether')
       );
       return {
         text: this.isSwap
-          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${usdValue}`
+          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${
+              formatFiatValue(usdValue).value
+            }`
           : 'Confirm',
         style: this.isSwap ? 'outline' : 'background'
       };
@@ -158,6 +160,12 @@ export default {
     hasCustom() {
       return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
     }
+  },
+  mounted() {
+    this.customGasPrice =
+      this.gasPriceType === gasPriceTypes.STORED
+        ? fromWei(this.gasPrice, 'gwei')
+        : '0';
   }
 };
 </script>

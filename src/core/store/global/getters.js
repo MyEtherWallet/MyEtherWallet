@@ -7,7 +7,6 @@ const Networks = function () {
 };
 const network = function (state) {
   let network = nodeList['ETH'][0];
-
   const iteratableArr = nodeList[state.currentNetwork.type.name];
   network = state.currentNetwork;
   network.type = nodeList[state.currentNetwork.type.name][0].type;
