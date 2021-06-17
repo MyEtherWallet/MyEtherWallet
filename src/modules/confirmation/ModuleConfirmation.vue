@@ -146,7 +146,7 @@
                     {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
                   </span>
                   <br />
-                  <span v-if="isSwap" class="ma-0"
+                  <span v-if="isSwap" class="ma-0 mew-label searchText--text"
                     >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
                   >
                 </p>
@@ -184,9 +184,11 @@
                   <div
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
-                    class="d-flex justify-space-between"
+                    class="d-flex justify-space-between pb-3"
                   >
-                    <div class="ma-0">{{ txVal.title }}</div>
+                    <div class="d-flex d-sm-block ma-0 searchText--text">
+                      {{ txVal.title }}
+                    </div>
 
                     <scroll-block>
                       <div class="data-values">{{ txVal.value }}</div>
