@@ -1079,7 +1079,7 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
-      obj.hashes.forEach((hash, idx) => {
+      obj?.hashes?.forEach((hash, idx) => {
         const notification = {
           transactionHash: !isError ? hash : '',
           transactionFee: fromWei(this.totalFees),
