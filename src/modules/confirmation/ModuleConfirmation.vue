@@ -77,11 +77,12 @@
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :scrollable="true"
+      :anchored="true"
       width="650"
       @close="reset"
     >
       <template #dialogBody>
-        <div>
+        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="tx.to"
@@ -133,11 +134,12 @@
             :signed="signingPending"
             :error="error"
           />
-          <v-expansion-panels accordion multiple flat>
+          <v-expansion-panels v-model="panel" accordion multiple flat>
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
               :key="`${transaction.title}${transaction.value}${i}`"
               class="expansion-border"
+              @click="scrollToElement(i)"
             >
               <v-expansion-panel-header :disable-icon-rotate="signing">
                 <p class="ma-0">
@@ -179,7 +181,7 @@
                   </v-icon>
                 </template>
               </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              <v-expansion-panel-content :id="i">
                 <div>
                   <div
                     v-for="txVal in transaction"
@@ -198,7 +200,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-        </div>
+        </v-card-text>
       </template>
     </app-modal>
     <mew-overlay
@@ -279,7 +281,8 @@ export default {
         ethvm: '',
         etherscan: ''
       },
-      error: ''
+      error: '',
+      panel: []
     };
   },
   computed: {
@@ -517,6 +520,20 @@ export default {
     });
   },
   methods: {
+    /**
+     * Methods scrolls to an element if element is open on click.
+     * Has To be a timeoute, on order to wait for the element to be open
+     */
+    scrollToElement(_id) {
+      setTimeout(() => {
+        if (this.panel.includes(_id)) {
+          const panel = document.getElementById(_id);
+          const wrapper = this.$refs.scrollableContent;
+          const options = { duration: 500, offset: -60 };
+          this.$vuetify.goTo(panel, { container: wrapper, ...options });
+        }
+      }, 500);
+    },
     resetSuccess() {
       this.showSuccessSwap = false;
       this.reset();
