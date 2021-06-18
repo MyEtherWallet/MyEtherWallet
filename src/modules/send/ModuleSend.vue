@@ -13,6 +13,7 @@
             <mew-select
               ref="mewSelect"
               :items="tokens"
+              :is-swap="true"
               class="mr-3"
               :value="selectedCurrency"
               @input="setCurrency"
@@ -136,7 +137,10 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
-
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     ModuleAddressBook,
@@ -192,7 +196,7 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online']),
-    ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     buyMore() {
@@ -248,8 +252,9 @@ export default {
         type: 'ERC20',
         value: 'Ethereum',
         id: 'ethereum',
-        price: BigNumber(this.fiatValue),
-        tokenBalance: this.balance
+        price: formatFiatValue(this.fiatValue).value,
+        tokenBalance: formatFloatingPointValue(this.balanceInETH).value,
+        totalBalance: formatFiatValue(this.balanceFiatValue).value
       };
     },
     selectedBalance() {
@@ -266,8 +271,8 @@ export default {
       const imgs = tokensList.map(item => {
         return item.img;
       });
-      const ethToken = [this.ethToken];
-      const mergedList = ethToken.concat(tokensList);
+      const _ethToken = [this.ethToken];
+      const mergedList = _ethToken.concat(tokensList);
       BigNumber(this.balanceInETH).lte(0)
         ? mergedList.unshift({
             hasNoEth: true,
