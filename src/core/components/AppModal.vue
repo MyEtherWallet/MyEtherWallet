@@ -39,7 +39,7 @@
       =====================================================================================
       -->
       <v-card-actions class="py-5 py-md-8">
-        <v-row v-if="!noBtn" class="pa-0" justify="space-around" dense>
+        <v-row v-if="hasButtons" class="pa-0" justify="space-around" dense>
           <v-col
             v-if="!closeOnly"
             cols="12"
