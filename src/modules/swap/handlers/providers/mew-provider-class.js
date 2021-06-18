@@ -91,7 +91,7 @@ class MEWPClass {
             return {
               exchange: q.exchange,
               provider: this.provider,
-              amount: q.amount,
+              amount: new BigNumber(q.amount).toFixed(),
               minFrom: minmax.minFrom,
               maxFrom: minmax.maxFrom
             };

@@ -1,9 +1,9 @@
 import { formatters } from 'web3-core-helpers';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 import {
-  txTypes,
-  notificationTypes
-} from '@/modules/notifications/configs/configTypes';
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from '@/modules/notifications/handlers/handlerNotification';
 import { _ } from 'web3-utils';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
@@ -31,12 +31,12 @@ const getSanitizedTx = tx => {
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
   const newTxObj = _.clone(tx);
-  newTxObj.type = notificationTypes.out;
+  newTxObj.type = NOTIFICATION_TYPES.OUT;
   const isExempt = newTxObj.hasOwnProperty('handleNotification');
 
   promiObj
     .once('transactionHash', hash => {
-      newTxObj.status = txTypes.pending;
+      newTxObj.status = NOTIFICATION_STATUS.PENDING;
       newTxObj.hash = hash;
       if (!isExempt) {
         const notification = new Notification(newTxObj);
@@ -45,9 +45,8 @@ const setEvents = (promiObj, tx, dispatch) => {
         });
       }
     })
-    .on('receipt', res => {
-      newTxObj.hash = res.hash;
-      newTxObj.status = txTypes.success;
+    .once('receipt', () => {
+      newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
       const notification = new Notification(newTxObj);
       if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
@@ -56,7 +55,8 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      newTxObj.status = txTypes.failed;
+      console.log(err, 'dsdfsfsfd');
+      newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);
       if (!isExempt) {

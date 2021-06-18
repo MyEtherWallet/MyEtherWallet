@@ -57,6 +57,7 @@ const setWeb3Instance = function (
   const web3Instance = new web3(
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
+  web3Instance.eth.transactionConfirmationBlocks = 1;
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {

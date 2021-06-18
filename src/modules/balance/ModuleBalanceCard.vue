@@ -178,8 +178,8 @@ export default {
       this.openPaperWallet = false;
     },
     copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      clipboardCopy(this.getChecksumAddressString);
+      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     }
   }
 };

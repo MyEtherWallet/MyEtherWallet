@@ -265,14 +265,17 @@ import AppNetworkSettingsModal from '@/core/components/AppNetworkSettingsModal.v
 import Swapper from './handlers/handlerSwap';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from '@/modules/notifications/handlers/handlerNotification';
+import Notification, {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
 import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { EventBus } from '@/core/plugins/eventBus';
-import { Toast, WARNING } from '../toast/handler/handlerToast';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import {
   TRENDING_SYMBOLS,
   TRENDING_LIST
@@ -979,7 +982,8 @@ export default {
               return q;
             });
             if (quotes.length) {
-              this.tokenOutValue = quotes[0]?.amount;
+              console.log(quotes[0].amount);
+              this.tokenOutValue = quotes[0].amount;
               this.step = 1;
             }
             this.isLoadingProviders = false;
@@ -1069,6 +1073,7 @@ export default {
 
     executeTrade() {
       console.log(this.currentTrade);
+      console.log(this.confirmInfo, 'confirm info');
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
@@ -1077,7 +1082,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.swapNotificationFormatter(err, true);
+          Toast(err.message, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {
@@ -1086,39 +1091,33 @@ export default {
       );
     },
     swapNotificationFormatter(obj, isError) {
+      console.log(obj, isError);
       obj.hashes.forEach((hash, idx) => {
-        const notification = {
-          hash: !isError ? hash : '',
-          transactionFee: fromWei(this.totalFees),
-          to: this.currentTrade.transactions[idx].to,
-          from: this.confirmInfo.from,
-          gas: this.currentTrade.transactions[idx].gas,
-          gasPrice: this.currentTrade.transactions[idx].gasPrice,
-          gasLimit: this.totalGasLimit,
-          data: this.currentTrade.transactions[idx].data,
-          value: this.currentTrade.transactions[idx].value,
-          type: 'SWAP',
-          read: false,
-          network: this.network.type.name,
-          date: new Date().getTime(),
-          status: isError ? 'FAILED' : 'PENDING',
-          fromTxData: {
-            currency: this.confirmInfo.fromType,
-            amount: this.confirmInfo.fromVal,
-            icon: this.confirmInfo.fromImg
+        const notif = Object.assign(
+          {
+            hash,
+            from: this.address,
+            type: NOTIFICATION_TYPES.SWAP,
+            network: this.network.type.name,
+            status: NOTIFICATION_STATUS.PENDING,
+            fromTxData: {
+              currency: this.confirmInfo.fromType,
+              amount: this.confirmInfo.fromVal,
+              icon: this.confirmInfo.fromImg
+            },
+            toTxData: {
+              currency: this.confirmInfo.toType,
+              amount: this.confirmInfo.toVal,
+              icon: this.confirmInfo.toImg,
+              to: this.confirmInfo.to
+                ? this.confirmInfo.to
+                : this.currentTrade.transactions[idx].to
+            },
+            swapObj: obj
           },
-          toTxData: {
-            currency: this.confirmInfo.toType,
-            amount: this.confirmInfo.toVal,
-            icon: this.confirmInfo.toImg,
-            to: this.confirmInfo.to
-              ? this.confirmInfo.to
-              : this.currentTrade.transactions[idx].to
-          },
-          swapObj: obj,
-          errMessage: isError ? hash : ''
-        };
-        this.addNotification(new Notification(notification));
+          this.currentTrade.transactions[idx]
+        );
+        this.addNotification(new Notification(notif));
       });
     },
     checkFeeBalance() {
@@ -1142,7 +1141,9 @@ export default {
       this.setToToken(foundToken);
     },
     handleLocalGasPrice(e) {
+      console.log(e);
       this.localGasPrice = e.gasPrice;
+      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
     }
   }

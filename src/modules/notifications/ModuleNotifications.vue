@@ -117,7 +117,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification from './handlers/handlerNotification';
 import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import { txTypes, notificationTypes } from './configs/configTypes';
+import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from './handlers/handlerNotification';
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
@@ -169,11 +172,11 @@ export default {
      */
     formattedCurrentNotifications() {
       return this.currentNotifications.map(notification => {
-        const type = notification.type.toLowerCase();
+        const type = notification.type;
         /**
          * Check swap status if it is a swap notification
          */
-        if (type === notificationTypes.swap) {
+        if (type === NOTIFICATION_TYPES.SWAP) {
           notification.checkSwapStatus(this.swapper);
         }
         /**
@@ -181,8 +184,8 @@ export default {
          * and query getTransactionByHash
          */
         if (
-          type === notificationTypes.out &&
-          notification.status.toLowerCase() === txTypes.pending
+          type === NOTIFICATION_TYPES.OUT &&
+          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
           this.txHash = notification.hash;
           if (this.getTransactionByHash) {
@@ -249,11 +252,11 @@ export default {
      */
     notificationsByType() {
       switch (this.selected) {
-        case notificationTypes.in:
+        case NOTIFICATION_TYPES.IN:
           return this.incomingTxNotifications.slice(0, 20);
-        case notificationTypes.out:
+        case NOTIFICATION_TYPES.OUT:
           return this.outgoingTxNotifications.slice(0, 20);
-        case notificationTypes.swap:
+        case NOTIFICATION_TYPES.SWAP:
           return this.swapNotifications.slice(0, 20);
         default:
           return this.allNotifications;
@@ -290,8 +293,8 @@ export default {
           delete res.notification;
           const type = notification.type.toLowerCase();
           if (
-            type === notificationTypes.out ||
-            type === notificationTypes.swap
+            type === NOTIFICATION_TYPES.OUT ||
+            type === NOTIFICATION_TYPES.SWAP
           ) {
             this.updateNotification(new Notification(res));
           } else {
