@@ -30,10 +30,15 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
+import { ACTION_TYPES } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import { mapGetters } from 'vuex';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     AaveAmountForm
@@ -61,17 +66,25 @@ export default {
     },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
-      const depositedBalance = `${convertToFixed(
-        hasDeposit ? hasDeposit?.currentUnderlyingBalance : 0,
-        6
-      )} ${this.preSelectedToken.token}`;
-      const depositedBalanceInUSD = `$ ${BigNumber(this.selectedTokenUSDValue)
-        .times(hasDeposit?.currentUnderlyingBalance)
-        .toFixed(2)}`;
-      const tokenBalance = `${this.tokenBalance} ${this.preSelectedToken.token}`;
-      const usd = `$ ${BigNumber(this.tokenBalance)
-        .times(this.selectedTokenUSDValue)
-        .toFixed(2)}`;
+      const depositedBalance = `${
+        formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
+          .value
+      } ${this.preSelectedToken.token}`;
+      const depositedBalanceInUSD = `$ ${
+        formatFiatValue(
+          BigNumber(this.selectedTokenUSDValue).times(
+            hasDeposit?.currentUnderlyingBalance
+          )
+        ).value
+      }`;
+      const tokenBalance = `${
+        formatFloatingPointValue(this.tokenBalance).value
+      } ${this.preSelectedToken.token}`;
+      const usd = `$ ${
+        formatFiatValue(
+          BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
+        ).value
+      }`;
       return {
         showToggle: true,
         leftSideValues: {

@@ -30,9 +30,14 @@
 </template>
 
 <script>
-import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
+import { ACTION_TYPES } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     AaveAmountForm
@@ -52,13 +57,19 @@ export default {
     aaveRepayForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
-        ? `${hasBorrowed.currentBorrows} ${this.preSelectedToken.token}`
+        ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
+            this.preSelectedToken.token
+          }`
         : `$ 0.00`;
       const borrowedUSD = hasBorrowed
-        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
         : `0 ETH`;
-      const eth = `${this.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(this.userSummary.totalCollateralUSD)}`;
+      const eth = `${
+        formatFloatingPointValue(this.userSummary.totalCollateralETH).value
+      } ETH`;
+      const usd = `$ ${
+        formatFiatValue(this.userSummary.totalCollateralUSD).value
+      }`;
       return {
         showToggle: true,
         leftSideValues: {

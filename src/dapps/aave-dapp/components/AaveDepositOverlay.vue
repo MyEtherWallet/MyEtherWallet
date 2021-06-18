@@ -130,7 +130,6 @@ export default {
       const tokenBalance = `${
         formatFloatingPointValue(this.tokenBalance).value
       } ${this.selectedToken.token}`;
-      console.error('this', this.selectedTokenUSDValue);
       const usd = `$ ${
         formatFiatValue(
           BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
@@ -169,6 +168,7 @@ export default {
   },
   methods: {
     handleSelectedDeposit(val) {
+      console.error('val', val)
       this.selectedToken = val;
       this.step = 1;
     },

@@ -439,29 +439,36 @@ export default {
     compositionPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         const total = this.userSummary.totalLiquidityETH;
-        return this.userSummary.reservesData.map(item => {
-          return {
-            percentage: BigNumber(item.currentUnderlyingBalanceETH)
-              .div(total)
-              .times(100)
-              .toFixed(),
-            color: COLORS[item.reserve.symbol],
-            tooltip:
-              formatFloatingPointValue(item.currentUnderlyingBalance).value +
-              ' ' +
-              item.reserve.symbol
-          };
-        });
+        return this.userSummary.reservesData
+          .filter(item => {
+            return item.currentUnderlyingBalance > 0.00001;
+          })
+          .map(item => {
+            return {
+              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+                .div(total)
+                .times(100)
+                .toFixed(),
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                ' ' +
+                item.reserve.symbol
+            };
+          });
       }
       return [];
     },
     collateralPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
-        return this.userSummary.reservesData.map(item => {
-          if (
-            item.usageAsCollateralEnabledOnUser &&
-            item.currentUnderlyingBalanceETH > 0
-          ) {
+        return this.userSummary.reservesData
+          .filter(item => {
+            return (
+              item.usageAsCollateralEnabledOnUser &&
+              item.currentUnderlyingBalanceETH > 0
+            );
+          })
+          .map(item => {
             return {
               percentage: BigNumber(item.currentUnderlyingBalanceETH)
                 .times(100)
@@ -473,16 +480,18 @@ export default {
                 ' ' +
                 item.reserve.symbol
             };
-          }
-        });
+          });
       }
       return [];
     },
     borrowingsPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         let totalAvailablePercentage = 100;
-        const data = this.userSummary.reservesData.filter(item => {
-          if (item.currentBorrowsETH > 0) {
+        const data = this.userSummary.reservesData
+          .filter(item => {
+            return item.currentBorrowsETH > 0.001;
+          })
+          .map(item => {
             const percentage = BigNumber(item.currentBorrowsETH)
               .times(100)
               .div(this.userSummary.totalBorrowsEth)
@@ -496,8 +505,7 @@ export default {
                 ' ' +
                 item.reserve.symbol
             };
-          }
-        });
+          });
         if (totalAvailablePercentage > 0) {
           data.push({
             percentage: totalAvailablePercentage,

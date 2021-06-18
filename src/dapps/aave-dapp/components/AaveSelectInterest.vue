@@ -61,7 +61,7 @@
       class="my-8"
       title="Continue"
       btn-size="xlarge"
-      :disabled="type === ''"
+      :disabled="apr.type === ''"
       @click.native="onContinue"
     />
     <mew-warning-sheet
@@ -74,8 +74,10 @@
 </template>
 
 <script>
-import { INTEREST_TYPES, roundPercentage } from '../handlers/helpers';
+import { INTEREST_TYPES } from '../handlers/helpers';
 import BigNumber from 'bignumber.js';
+import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
+
 export default {
   props: {
     selectedToken: {
@@ -85,7 +87,7 @@ export default {
   },
   data() {
     return {
-      type: ''
+      apr: {}
     };
   },
   computed: {
@@ -93,20 +95,22 @@ export default {
       return this.selectedToken?.usageAsCollateralEnabled || false;
     },
     rates() {
-      const stable = this.selectedToken?.stableBorrowRateEnabled
-        ? roundPercentage(
-            new BigNumber(this.selectedToken.stableBorrowRate)
-              .multipliedBy(100)
-              .toString()
-          )
-        : '--';
-      const variable = this.selectedToken
-        ? roundPercentage(
-            new BigNumber(this.selectedToken.variableBorrowRate)
-              .multipliedBy(100)
-              .toString()
-          )
-        : '--';
+      const stable =
+        this.selectedToken?.stableBorrowRate > 0
+          ? formatPercentageValue(
+              new BigNumber(this.selectedToken.stableBorrowRate).multipliedBy(
+                100
+              )
+            ).value
+          : '0%';
+      const variable =
+        this.selectedToken.variableBorrowRate > 0
+          ? formatPercentageValue(
+              new BigNumber(this.selectedToken.variableBorrowRate).multipliedBy(
+                100
+              )
+            ).value
+          : '0%';
       return {
         stable,
         variable
@@ -122,13 +126,20 @@ export default {
   methods: {
     setTypeToStable() {
       this.type = INTEREST_TYPES.stable;
+      this.apr = {
+        type: INTEREST_TYPES.stable,
+        percentage: this.rates.stable
+      };
     },
     setTypeToVariable() {
-      this.type = INTEREST_TYPES.variable;
+      this.apr = {
+        type: INTEREST_TYPES.variable,
+        percentage: this.rates.variable
+      };
     },
     onContinue() {
-      const type = this.type.charAt(0).toUpperCase() + this.type.slice(1);
-      this.$emit('continue', type);
+      console.error("this", this.apr)
+      this.$emit('continue', this.apr);
     }
   }
 };

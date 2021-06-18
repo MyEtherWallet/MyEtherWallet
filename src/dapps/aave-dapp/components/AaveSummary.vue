@@ -18,16 +18,15 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit && step === 2"
+      v-if="isDeposit || isBorrow"
       class="d-flex align-center justify-space-between pa-7 mb-6"
       flat
       color="overlayBg"
     >
       <div class="d-flex flex-column align-start">
         <span class="mew-heading-3 textPrimaryModule--text mb-2"
-          >Amount to Deposit</span
+          >Amount to {{ actionTitle }}</span
         >
-        <!-- dummy data -->
         <span class="mew-heading-1 mb-2"
           >{{ amount }} {{ selectedToken.token }}</span
         >
@@ -132,6 +131,10 @@ export default {
       type: String,
       default: ''
     },
+    interestType: {
+      type: String,
+      default: ''
+    },
     userSummary: {
       type: Object,
       default: () => {}
@@ -154,6 +157,15 @@ export default {
     }
   },
   computed: {
+    actionTitle() {
+      if (this.isBorrow) {
+        return 'Borrow';
+      }
+      if (this.isRepay) {
+        return 'Repay';
+      }
+      return 'Deposit';
+    },
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },
@@ -181,11 +193,6 @@ export default {
         case ACTION_TYPES.deposit:
         case ACTION_TYPES.collateral:
           details = this.step === 1 && this.isDeposit ? [] : details;
-          console.error(
-            'helath',
-            this.currentHealthFactor,
-            this.nextHealthFactor
-          );
           details.push(
             {
               title: 'Current Health Factor',
@@ -213,6 +220,17 @@ export default {
             }
           );
           return details;
+        case ACTION_TYPES.borrow: 
+          details = [
+            {
+              title: 'Interest APR',
+              value: ''
+            },
+            {
+              title: 'Interest rate type',
+              value: this.interestType
+            }
+          ]
       }
       return details;
     },
@@ -220,18 +238,27 @@ export default {
       return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
-      // doublecheck this
       const selectedToken = this.selectedToken;
       let nextHealthFactor = this.currentHealthFactor,
-        collateralBalanceETH = this.userSummary.totalCollateralETH;
-      const totalBorrowsETH = this.userSummary.totalBorrowsETH;
+        collateralBalanceETH = this.userSummary.totalCollateralETH,
+        totalBorrowsETH = this.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(
           selectedToken?.price?.priceInEth
         );
-        collateralBalanceETH = new BigNumber(
-          this.userSummary.totalCollateralETH
-        ).plus(ethBalance);
+        if (this.isDeposit) {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          ).plus(ethBalance);
+        } else if (this.isWithdraw) {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          ).minus(ethBalance);
+        } else if (this.isRepay) {
+          totalBorrowsETH = new BigNumber(
+            this.userSummary.totalBorrowsETH
+          ).minus(ethBalance);
+        }
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
           totalBorrowsETH,

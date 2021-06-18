@@ -7,7 +7,11 @@
       =====================================================================================
       -->
       <v-col v-if="hasSearch" cols="12" sm="6">
-        <mew-search placeholder="Search Token Symbol" :value="searchInput" />
+        <mew-search
+          placeholder="Search Token Symbol"
+          :value="searchInput"
+          @input="setSearchInput"
+        />
       </v-col>
       <!--
       =====================================================================================
@@ -34,6 +38,7 @@
           :has-color="false"
           :table-headers="header"
           :table-data="listData"
+          no-data-text="You currently don't have any tokens."
           :loading="isLoading"
         />
       </v-col>
@@ -337,6 +342,7 @@ export default {
                 ? BigNumber(userBalance).lte(0)
                 : true;
               return {
+                price: item.price,
                 token: item.symbol,
                 available: userBalance
                   ? formatFloatingPointValue(userBalance).value
@@ -364,18 +370,18 @@ export default {
                 token: item.symbol,
                 available: formatFloatingPointValue(item.availableLiquidity)
                   .value,
-                stableApr: item.stableBorrowRateEnabled
-                  ? formatPercentageValue(
-                      new BigNumber(item.stableBorrowRate)
-                        .multipliedBy(100)
-                        .toString()
-                    ).value
-                  : '--',
-                variableApr: formatPercentageValue(
-                  new BigNumber(item.variableBorrowRate)
-                    .multipliedBy(100)
-                    .toString()
-                ).value,
+                stableApr:
+                  item.stableBorrowRate > 0
+                    ? formatPercentageValue(
+                        new BigNumber(item.stableBorrowRate).multipliedBy(100)
+                      ).value
+                    : '0%',
+                variableApr:
+                  item.variableBorrowRate > 0
+                    ? formatPercentageValue(
+                        new BigNumber(item.variableBorrowRate).multipliedBy(100)
+                      ).value
+                    : '0%',
 
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
@@ -531,6 +537,13 @@ export default {
 
     onToggleAprType(newVal) {
       this.$emit('changeAprType', newVal);
+    },
+    /**
+     * Method sets the search value
+     */
+    setSearchInput(val) {
+      console.error('val', val);
+      this.searchInput = val;
     }
   }
 };

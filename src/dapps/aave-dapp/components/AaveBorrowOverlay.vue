@@ -39,7 +39,7 @@
           :right-side-values="aaveBorrowForm.rightSideValues"
           :form-text="aaveBorrowForm.formText"
           :button-title="aaveBorrowForm.buttonTitle"
-          @cancelDeposit="handleCancel"
+          @cancel="handleCancel"
           @emitValues="handleValues"
         />
       </div>
@@ -65,6 +65,8 @@
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
+          :type="type"
+          :user-summary="userSummary"
           :action-type="aaveTableHandler"
           @onConfirm="handleConfirm"
         />
@@ -78,10 +80,14 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
-import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
+import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { _ } from 'web3-utils';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
@@ -100,13 +106,19 @@ export default {
     aaveBorrowForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
-        ? `${hasBorrowed.currentBorrows} ${this.selectedToken.token}`
+        ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
+            this.selectedToken.token
+          }`
         : `$ 0.00`;
       const borrowedUSD = hasBorrowed
-        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
         : `0 ETH`;
-      const eth = `${this.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(this.userSummary.totalCollateralUSD)}`;
+      const eth = `${
+        formatFloatingPointValue(this.userSummary.totalCollateralETH).value
+      } ETH`;
+      const usd = `$ ${
+        formatFiatValue(this.userSummary.totalCollateralUSD).value
+      }`;
       return {
         showToggle: false,
         leftSideValues: {
@@ -132,9 +144,10 @@ export default {
     header() {
       switch (this.step) {
         case 1:
-        case 3:
           return 'Borrow';
         case 2:
+          return 'Select Interest';
+        case 3:
           return 'Confirmation';
         default:
           return 'Select the token you want to borrow';
@@ -165,6 +178,7 @@ export default {
       this.selectedToken = {};
       this.aaveTableHandler = AAVE_TABLE_HEADER.BORROW;
       this.amount = '0';
+      console.error('in here')
       this.close();
     },
     handleContinue(e) {

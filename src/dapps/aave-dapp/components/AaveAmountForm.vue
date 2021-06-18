@@ -47,7 +47,7 @@
           label="Amount"
           :right-label="selectedToken.token"
           :hide-clear-btn="true"
-          :rules="[checkIfNumerical]"
+          :rules="checkIfNumerical"
           @input="setAmount"
         />
       </v-sheet>
@@ -139,6 +139,11 @@ export default {
   computed: {
     hasAmount() {
       return BigNumber(this.amount).gt(0);
+    },
+    checkIfNumerical() {
+      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
+      const test = regex.test(this.amount);
+      return [test || 'Please enter a valid value!'];
     }
   },
   mounted() {
@@ -170,12 +175,6 @@ export default {
           this.startingIdx = 3;
           this.amount = this.calculatedAmt(1);
       }
-    },
-    checkIfNumerical(value) {
-      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
-      const test = regex.test(value);
-      if (value !== '' && !test) return 'Please enter a valid value!';
-      return test;
     },
     cancel() {
       this.$emit('cancel');
