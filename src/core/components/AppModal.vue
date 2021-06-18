@@ -7,7 +7,7 @@
     :scrollable="scrollable"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-11">
+    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
       <!--
       =====================================================================================
         Dialog Header
