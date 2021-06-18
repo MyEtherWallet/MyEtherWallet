@@ -17,7 +17,7 @@ export default {
 <style lang="scss" scoped>
 .core--components--app-scroll-block {
   overflow-y: auto;
-  max-height: 80px;
+  max-height: 90px;
   padding-right: 12px;
   margin-right: -12px;
 }

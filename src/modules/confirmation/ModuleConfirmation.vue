@@ -206,19 +206,28 @@
               </v-expansion-panel-header>
               <v-expansion-panel-content :id="i">
                 <div>
-                  <div
+                  <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
-                    class="d-flex justify-space-between pb-3"
+                    class="d-flex justify-space-between"
+                    no-gutters
                   >
-                    <div class="d-flex d-sm-block ma-0 searchText--text">
+                    <v-col
+                      cols="12"
+                      md="3"
+                      class="d-flex d-sm-block ma-0 searchText--text"
+                    >
                       {{ txVal.title }}
-                    </div>
+                    </v-col>
 
-                    <scroll-block>
-                      <div class="data-values">{{ txVal.value }}</div>
-                    </scroll-block>
-                  </div>
+                    <v-col cols="12" md="9">
+                      <app-scroll-block>
+                        <div class="data-values text-md-right">
+                          {{ txVal.value }}
+                        </div>
+                      </app-scroll-block>
+                    </v-col>
+                  </v-row>
                 </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -246,7 +255,7 @@
 </template>
 
 <script>
-import ScrollBlock from '@/core/components/AppScrollBlock';
+import AppScrollBlock from '@/core/components/AppScrollBlock';
 import AppModal from '@/core/components/AppModal';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -276,7 +285,7 @@ const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 export default {
   name: 'ModuleConfirmation',
   components: {
-    ScrollBlock,
+    AppScrollBlock,
     ConfirmationMesssage,
     AppModal,
     ConfirmationSwapTransactionDetails,
@@ -863,7 +872,6 @@ $borderPanels: 1px solid var(--v-selectBorder-base) !important;
 }
 
 .data-values {
-  max-width: 350px;
   overflow-wrap: break-word;
 }
 .expansion-header {
