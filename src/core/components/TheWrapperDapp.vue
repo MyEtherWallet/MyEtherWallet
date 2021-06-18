@@ -19,7 +19,24 @@
       @closeBanner="onClose"
     />
 
-    <app-block-header></app-block-header>
+    <app-block-header
+      :text-obj="bannerTextObj"
+      :banner-img="bannerImg"
+      @closeBanner="onClose"
+    >
+      <template #body>
+        <divider />
+        <div class="d-flex flex-wrap align-center justify-center">
+          <div class="text-uppercase textPrimary--text font-weight-bold">
+            Total Staked: <span class="primary--text">4,202,920 ETH</span>
+          </div>
+          <v-icon color="textPrimary">mdi-circle-medium</v-icon>
+          <div class="text-uppercase textPrimary--text font-weight-bold">
+            Current APR: <span class="primary--text">7.64%</span>
+          </div>
+        </div>
+      </template>
+    </app-block-header>
 
     <!--
     =====================================================================================
@@ -56,9 +73,10 @@
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import AppBlockHeader from '@/core/components/AppBlockHeader';
+import Divider from '@/core/components/AppDivider';
 
 export default {
-  components: { AppBlockHeader },
+  components: { Divider, AppBlockHeader },
   props: {
     hasExitBtn: {
       default: false,

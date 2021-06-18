@@ -3,7 +3,7 @@
     <the-wrapper-dapp
       :has-exit-btn="true"
       :banner-img="stakedLogo"
-      :banner-text="{ title: 'staked', subtext: 'stake' }"
+      :banner-text="header"
       :tab-items="tabs"
       :active-tab="activeTab"
     >
@@ -85,7 +85,7 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import Staked from './handlers/staked';
-import stakedLogo from '@/assets/images/icons/staked.png';
+import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
 import stepTwo from './stepper/steps/Upload/Upload';
@@ -107,6 +107,11 @@ export default {
   },
   data() {
     return {
+      header: {
+        title: 'Ethereum 2.0 staking',
+        subtext:
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.'
+      },
       activeTab: 0,
       staked: {},
       myValidators: [],
