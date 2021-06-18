@@ -26,7 +26,7 @@
       title="My Tokens"
       :close="handleTokensPopup"
       :show="showPopup"
-      :no-btn="true"
+      :has-buttons="false"
       scrollable
       width="700"
       @close="handleTokensPopup"
