@@ -6,8 +6,9 @@
       :style="{ backgroundImage: `url(${bannerImg})` }"
     >
       <v-row>
-        <v-col cols="3">
+        <v-col cols="12" md="3">
           <span
+            v-if="!noBackBtn"
             class="
               captionPrimary--text
               mew-heading-3
@@ -21,33 +22,52 @@
             Dapp center
           </span>
         </v-col>
-        <v-col cols="6" class="py-6">
-          <div class="d-flex align-center justify-center">
-            <img
-              src="@/assets/images/icons/icon-colorful-eth.svg"
-              height="40"
-              alt="Eth"
-              class="mr-3"
-            />
-            <div class="white--text mew-subtitle font-weight-bold">
-              {{ textObj.title }}
+        <v-col
+          cols="12"
+          md="6"
+          class="py-6 d-flex align-center justify-center"
+          style="min-height: 150px"
+        >
+          <div>
+            <div
+              class="d-block d-sm-flex align-center justify-center text-center"
+            >
+              <img
+                v-if="titleIcon"
+                :src="titleIcon"
+                height="40"
+                alt="Icon"
+                class="mr-sm-3"
+              />
+              <div
+                class="white--text mew-subtitle font-weight-bold text-center"
+              >
+                {{ textObj.title }}
+              </div>
             </div>
-          </div>
-          <div
-            style="max-width: 450px"
-            class="textPrimary--text text-center mt-1 mx-auto"
-          >
-            {{ textObj.subtext }}
-          </div>
+            <div
+              v-if="textObj.subtext"
+              style="max-width: 450px"
+              class="text-center mt-1 mx-auto"
+              :class="
+                textObj.subtextClass ? textObj.subtextClass : 'white--text'
+              "
+            >
+              {{ textObj.subtextClass }}
+              {{ textObj.subtext }}
+            </div>
 
-          <!--
+            <!--
             ===================================
             Body slot contents
             ===================================
           -->
-          <slot name="body" />
+            <slot name="body" />
+          </div>
         </v-col>
-        <v-col cols="3">3</v-col>
+        <v-col cols="12" md="3">
+          <slot name="right" />
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -63,7 +83,12 @@ export default {
     textObj: {
       type: Object,
       default: () => {
-        return { title: '', subtext: '', exit: '' };
+        return {
+          title: '',
+          subtext: '',
+          subtextClass: '',
+          exit: ''
+        };
       }
     },
     /**
@@ -72,6 +97,14 @@ export default {
     bannerImg: {
       type: [String, Array],
       default: ''
+    },
+    titleIcon: {
+      type: String,
+      default: ''
+    },
+    noBackBtn: {
+      default: false,
+      type: Boolean
     }
   },
   data: () => ({}),

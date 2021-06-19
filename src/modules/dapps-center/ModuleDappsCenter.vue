@@ -4,7 +4,11 @@
       Dapp Center Module
     =====================================================================================
     -->
-  <the-wrapper-dapp :banner-img="bannerImage" :banner-text="bannerText">
+  <the-wrapper-dapp
+    :banner-img="bannerImage"
+    :banner-text="bannerText"
+    no-back-btn
+  >
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
       <v-row>

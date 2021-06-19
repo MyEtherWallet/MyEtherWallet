@@ -19,24 +19,20 @@
       @closeBanner="onClose"
     />
 
-    <app-block-header
+    <block-header
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
+      :title-icon="titleIcon"
+      :no-back-btn="noBackBtn"
       @closeBanner="onClose"
     >
       <template #body>
-        <divider />
-        <div class="d-flex flex-wrap align-center justify-center">
-          <div class="text-uppercase textPrimary--text font-weight-bold">
-            Total Staked: <span class="primary--text">4,202,920 ETH</span>
-          </div>
-          <v-icon color="textPrimary">mdi-circle-medium</v-icon>
-          <div class="text-uppercase textPrimary--text font-weight-bold">
-            Current APR: <span class="primary--text">7.64%</span>
-          </div>
-        </div>
+        <slot name="HeaderBody" />
       </template>
-    </app-block-header>
+      <template #right>
+        <slot name="HeaderRight" />
+      </template>
+    </block-header>
 
     <!--
     =====================================================================================
@@ -72,11 +68,10 @@
 
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
-import AppBlockHeader from '@/core/components/AppBlockHeader';
-import Divider from '@/core/components/AppDivider';
+import BlockHeader from '@/core/components/AppBlockHeader';
 
 export default {
-  components: { Divider, AppBlockHeader },
+  components: { BlockHeader },
   props: {
     hasExitBtn: {
       default: false,
@@ -97,6 +92,14 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    },
+    titleIcon: {
+      default: '',
+      type: String
+    },
+    noBackBtn: {
+      default: false,
+      type: Boolean
     }
   },
   data() {

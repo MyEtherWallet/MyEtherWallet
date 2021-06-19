@@ -3,10 +3,64 @@
     <the-wrapper-dapp
       :has-exit-btn="true"
       :banner-img="stakedLogo"
+      :title-icon="titleIcon"
       :banner-text="header"
       :tab-items="tabs"
       :active-tab="activeTab"
     >
+      <template #HeaderBody>
+        <divider />
+        <div class="d-flex flex-wrap align-center justify-center">
+          <div class="text-uppercase textPrimary--text font-weight-bold">
+            Total Staked: <span class="primary--text">4,202,920 ETH</span>
+          </div>
+          <v-icon color="textPrimary">mdi-circle-medium</v-icon>
+          <div class="text-uppercase textPrimary--text font-weight-bold">
+            Current APR: <span class="primary--text">7.64%</span>
+          </div>
+        </div>
+        <div class="d-flex align-center justify-center mt-3">
+          <v-btn-toggle
+            v-model="selectedStake"
+            mandatory
+            borderless
+            active-class="active-btn"
+            background-color="transparent"
+          >
+            <v-btn
+              class="px-md-9 white--text text-transform--initial"
+              color="#00182c"
+            >
+              New stake
+            </v-btn>
+            <v-btn
+              class="px-md-9 white--text text-transform--initial"
+              color="#00182c"
+            >
+              <div>
+                <div class="white--text font-weight-medium">My stake</div>
+                <div class="mew-label textPrimary--text font-weight-bold">
+                  32.245234 ETH
+                </div>
+              </div>
+            </v-btn>
+          </v-btn-toggle>
+        </div>
+      </template>
+
+      <template #HeaderRight>
+        <div class="text-right">
+          <a
+            href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/#:~:text=MEW%20has%20integrated%20Staked.us,least%2032%20ETH%20to%20stake."
+            target="_blank"
+            class="primary--text font-weight-medium text-right"
+          >
+            New to staking? Learn more
+            <v-icon class="ml-1" small color="primary">mdi-open-in-new</v-icon>
+          </a>
+        </div>
+      </template>
+
       <template #tabContent1>
         <v-sheet
           min-height="500px"
@@ -83,6 +137,8 @@
 </template>
 
 <script>
+import titleIcon from '@/assets/images/icons/icon-colorful-eth.svg';
+import Divider from '@/core/components/AppDivider';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import Staked from './handlers/staked';
 import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
@@ -97,6 +153,7 @@ import status from './components/status/Status';
 export default {
   name: 'ModuleStaked',
   components: {
+    Divider,
     TheWrapperDapp,
     stepOne,
     stepTwo,
@@ -107,10 +164,13 @@ export default {
   },
   data() {
     return {
+      selectedStake: 0,
+      titleIcon: titleIcon,
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.'
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
+        subtextClass: 'textPrimary--text'
       },
       activeTab: 0,
       staked: {},
@@ -362,4 +422,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.mew-label {
+  font-size: 12px;
+}
+
+.active-btn {
+  background-color: #003583 !important;
+}
+</style>
