@@ -320,7 +320,8 @@ export default {
       return BigNumber(this.selectedCurrency.balance).toString();
     },
     tokens() {
-      const tokensList = this.tokensList || [];
+      // no ref copy
+      const tokensList = JSON.parse(JSON.stringify(this.tokensList)) || [];
       const imgs = tokensList.map(item => {
         return item.img;
       });
@@ -444,9 +445,13 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    tokensList: {
+    tokens: {
       handler: function (newVal) {
-        this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
+        const ethToken = newVal.find(item => {
+          if(item.symbol === this.currencyName) return item;
+        })
+        console.log(ethToken)
+        this.selectedCurrency = newVal.length > 0 ? ethToken  ? ethToken: newVal[0] : {};
       },
       deep: true
     },
@@ -458,9 +463,14 @@ export default {
     amount() {
       this.sendTx.setValue(this.getCalculatedAmount);
     },
-    selectedCurrency() {
-      this.sendTx.setCurrency(this.selectedCurrency);
-      this.data = '0x';
+    selectedCurrency: {
+      handler: function (newVal) {
+        console.log(newVal);
+        this.sendTx.setCurrency(newVal);
+        this.data = '0x';
+      },
+      immediate: true,
+      deep: true
     },
     data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
@@ -475,7 +485,6 @@ export default {
   mounted() {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
-    this.selectedCurrency = this.ethToken;
   },
   methods: {
     handleLocalGasPrice(e) {
