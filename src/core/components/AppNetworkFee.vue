@@ -12,7 +12,7 @@
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
-    <div class="mt-5 mb-10">
+    <div class="mt-5 mb-8">
       <!--
       =====================================================
         High fees pop up

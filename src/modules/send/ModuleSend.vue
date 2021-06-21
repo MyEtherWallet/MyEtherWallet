@@ -1,29 +1,42 @@
 <template>
   <mew-module
     class="d-flex flex-grow-1 pt-6"
-    :title="$t('sendTx.send-tx')"
+    title="Send"
     :has-elevation="true"
     :has-indicator="true"
   >
     <template #moduleBody>
-      <div class="full-width px-lg-3">
-        <v-row>
-          <v-col cols="12" md="6">
-            <p class="ma-0" />
-            <mew-select
-              ref="mewSelect"
-              :items="tokens"
-              :is-swap="true"
-              class="mr-3"
-              :value="selectedCurrency"
-              @input="setCurrency"
-            />
-          </v-col>
-          <v-col cols="12" md="6" class="position--relative">
+      <!--
+      =====================================================================================
+        Tokens / Amount to Swap / Token Balance
+      =====================================================================================
+      -->
+      <v-row class="mt-5">
+        <v-col cols="12" md="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
+          <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
               :is-eth="true"
               :loading="!showSelectedBalance"
+              class="d-sm-none"
+            />
+            <mew-select
+              ref="mewSelect"
+              label="Token"
+              :items="tokens"
+              :is-swap="true"
+              :value="selectedCurrency"
+              @input="setCurrency"
+            />
+          </div>
+        </v-col>
+        <v-col cols="12" md="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
+          <div class="position--relative">
+            <app-button-balance
+              :balance="selectedBalance"
+              :is-eth="true"
+              :loading="!showSelectedBalance"
+              class="d-none d-sm-block"
             />
             <mew-input
               label="Amount"
@@ -39,48 +52,88 @@
               :buy-more-str="buyMore"
               @input="setAmount"
             />
-          </v-col>
-        </v-row>
-        <send-low-balance-notice
-          v-if="showBalanceNotice"
-          :address="address"
-          :currency-name="currencyName"
-        />
-        <module-address-book @setAddress="setAddress" />
-      </div>
-      <div>
-        <app-network-fee
-          :show-fee="showSelectedBalance"
-          :getting-fee="false"
-          :error="feeError"
-          :total-fees="txFee"
-          :gas-price-type="localGasType"
-          :message="feeError"
-          :not-enough-eth="!hasEnoughEth"
-          @onLocalGasPrice="handleLocalGasPrice"
-        />
-      </div>
-      <v-container>
-        <mew-expand-panel
-          ref="expandPanel"
-          is-toggle
-          has-dividers
-          :panel-items="expandPanel"
-        >
-          <template #panelBody1>
-            <div class="d-flex justify-space-between px-5 border-bottom pb-5">
-              <div class="mew-body font-weight-medium d-flex align-center">
-                {{ $t('sendTx.tx-fee') }}
-                <mew-tooltip class="ml-1" text="" />
+          </div>
+        </v-col>
+        <!--
+        =====================================================================================
+          Low Balance Notice
+        =====================================================================================
+        -->
+        <v-col v-if="showBalanceNotice" cols="12" class="py-2 py-sm-4">
+          <send-low-balance-notice
+            :address="address"
+            :currency-name="currencyName"
+            class="pa-3"
+          />
+        </v-col>
+        <!--
+        =====================================================================================
+          Input Address
+        =====================================================================================
+        -->
+        <v-col cols="12" class="pt-4 pb-2">
+          <module-address-book @setAddress="setAddress" />
+        </v-col>
+        <!--
+      =====================================================================================
+        Network Fee (Note: comes with mt-5(20px) mb-8(32px)))
+      =====================================================================================
+      -->
+        <v-col cols="12" class="py-0">
+          <app-network-fee
+            :show-fee="showSelectedBalance"
+            :getting-fee="false"
+            :error="feeError"
+            :total-fees="txFee"
+            :gas-price-type="localGasType"
+            :message="feeError"
+            :not-enough-eth="!hasEnoughEth"
+            @onLocalGasPrice="handleLocalGasPrice"
+          />
+        </v-col>
+        <!--
+      =====================================================================================
+        Advanced:
+      =====================================================================================
+      -->
+        <v-col cols="12" class="py-4">
+          <mew-expand-panel
+            ref="expandPanel"
+            is-toggle
+            has-dividers
+            :panel-items="expandPanel"
+          >
+            <template #panelBody1>
+              <!-- Warning Sheet -->
+              <div
+                class="pa-5 warning textBlack2--text border-radius--5px mb-8"
+              >
+                <div class="d-flex font-weight-bold mb-2">
+                  <v-icon class="textBlack2--text mew-body mr-1">
+                    mdi-alert-outline</v-icon
+                  >For advanced users only
+                </div>
+                <div>
+                  Please don’t edit these fields unless you are an expert user &
+                  know what you’re doing. Entering the wrong information could
+                  result in your transaction failing or getting stuck.
+                </div>
               </div>
-              <div v-show="isEthNetwork">
-                <i18n path="sendTx.cost-eth-usd" tag="div">
-                  <span slot="eth">{{ txFeeETH }}</span>
-                  <span slot="usd">{{ txFeeUSD }}</span>
-                </i18n>
+              <div
+                class="
+                  d-flex
+                  align-center
+                  justify-end
+                  mew-body
+                  primary--text
+                  pb-3
+                  cursor--pointer
+                "
+                @click="setGasLimit(prefilledGasLimit)"
+              >
+                Reset to default: 21,000
               </div>
-            </div>
-            <div>
+
               <mew-input
                 :value="gasLimit"
                 :label="$t('common.gas.limit')"
@@ -88,24 +141,24 @@
                 :rules="gasLimitRules"
                 @input="setGasLimit"
               />
-            </div>
 
-            <mew-input
-              v-show="!isToken"
-              v-model="data"
-              :label="$t('sendTx.add-data')"
-              placeholder="0x..."
-              :rules="dataRules"
-              class="mt-10 mb-n5"
-            />
-          </template>
-        </mew-expand-panel>
-      </v-container>
+              <mew-input
+                v-show="!isToken"
+                v-model="data"
+                :label="$t('sendTx.add-data')"
+                placeholder="0x..."
+                :rules="dataRules"
+                class="mb-8"
+              />
+            </template>
+          </mew-expand-panel>
+        </v-col>
+      </v-row>
 
       <div class="d-flex flex-column mt-12">
         <div class="text-center">
           <mew-button
-            :title="$t('sendTx.send')"
+            title="Next"
             :has-full-width="false"
             btn-size="xlarge"
             :disabled="!allValidInputs"
@@ -186,7 +239,7 @@ export default {
       expandPanel: [
         {
           name: this.$t('common.advanced'),
-          subtext: this.$t('sendTx.data-gas')
+          subtext: 'Gas Limit & Data'
         }
       ],
       localGasPrice: '0',
