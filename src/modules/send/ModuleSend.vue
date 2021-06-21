@@ -448,10 +448,10 @@ export default {
     tokens: {
       handler: function (newVal) {
         const ethToken = newVal.find(item => {
-          if(item.symbol === this.currencyName) return item;
-        })
-        console.log(ethToken)
-        this.selectedCurrency = newVal.length > 0 ? ethToken  ? ethToken: newVal[0] : {};
+          if (item.symbol === this.currencyName) return item;
+        });
+        this.selectedCurrency =
+          newVal.length > 0 ? (ethToken ? ethToken : newVal[0]) : {};
       },
       deep: true
     },
@@ -465,7 +465,6 @@ export default {
     },
     selectedCurrency: {
       handler: function (newVal) {
-        console.log(newVal);
         this.sendTx.setCurrency(newVal);
         this.data = '0x';
       },
