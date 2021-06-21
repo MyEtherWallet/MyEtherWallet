@@ -129,9 +129,9 @@
                   pb-3
                   cursor--pointer
                 "
-                @click="setGasLimit(prefilledGasLimit)"
+                @click="setGasLimit(defaultGasLimit)"
               >
-                Reset to default: 21,000
+                Reset to default: {{ formattedDefaultGasLimit }}
               </div>
 
               <mew-input
@@ -139,6 +139,7 @@
                 :label="$t('common.gas.limit')"
                 placeholder=""
                 :rules="gasLimitRules"
+                type="number"
                 @input="setGasLimit"
               />
 
@@ -192,7 +193,8 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  formatIntegerToString
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -243,7 +245,8 @@ export default {
         }
       ],
       localGasPrice: '0',
-      localGasType: 'economy'
+      localGasType: 'economy',
+      defaultGasLimit: '21000'
     };
   },
   computed: {
@@ -372,10 +375,22 @@ export default {
     },
     gasLimitRules() {
       return [
-        value => {
-          return !!value && new utils.BN(value).gte(21000);
-        }
+        value => !!value || 'Required',
+        value => BigNumber(value).gt(0) || 'Gas limit must be greater then 0',
+        value =>
+          BigNumber(value).dp() < 1 || 'Gas limit can not have decimals points',
+        value =>
+          toBN(value).gte(toBN(21000)) ||
+          'Amount too low. Are you sure you want to proceed? Transaction could fail or get stuck.'
       ];
+    },
+    gasLimitIsValid() {
+      return (
+        this.gasLimit &&
+        BigNumber(this.gasLimit).gt(0) &&
+        BigNumber(this.gasLimit).dp() < 1 &&
+        toBN(this.gasLimit).gte(toBN(21000))
+      );
     },
     dataRules() {
       return [
@@ -424,7 +439,7 @@ export default {
       return toBN(amount);
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.sendTx && this.sendTx.currency && this.gasLimitIsValid)
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
       return false;
     },
@@ -433,6 +448,9 @@ export default {
         return BigNumber(this.gasPrice);
       }
       return BigNumber(fromWei(this.localGasPrice));
+    },
+    formattedDefaultGasLimit() {
+      return formatIntegerToString(this.defaultGasLimit);
     }
   },
   watch: {
@@ -466,7 +484,9 @@ export default {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
     gasLimit() {
-      this.sendTx.setGasLimit(this.gasLimit);
+      if (this.gasLimitIsValid) {
+        this.sendTx.setGasLimit(this.gasLimit);
+      }
     },
     network() {
       this.setSendTransaction();
@@ -498,6 +518,7 @@ export default {
       this.sendTx
         .estimateGas()
         .then(res => {
+          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
           this.sendTx.setGasLimit(res);
         })
