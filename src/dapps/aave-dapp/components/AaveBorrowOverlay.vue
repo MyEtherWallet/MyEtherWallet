@@ -65,7 +65,7 @@
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
-          :type="type"
+          :apr="apr"
           :user-summary="userSummary"
           :action-type="aaveTableHandler"
           @onConfirm="handleConfirm"
@@ -98,7 +98,7 @@ export default {
       selectedToken: {},
       aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
       amount: '0',
-      type: ''
+      apr: {}
     };
   },
   computed: {
@@ -178,11 +178,10 @@ export default {
       this.selectedToken = {};
       this.aaveTableHandler = AAVE_TABLE_HEADER.BORROW;
       this.amount = '0';
-      console.error('in here')
       this.close();
     },
-    handleContinue(e) {
-      this.type = e;
+    handleContinue(apr) {
+      this.apr = apr;
       this.step = 3;
     },
     handleConfirm() {
@@ -192,7 +191,7 @@ export default {
         amount: this.amount,
         referralCode: '14',
         reserve: this.actualToken.underlyingAsset,
-        interestRateMode: this.type
+        interestRateMode: this.apr.type
       };
 
       this.$emit('onConfirm', param);

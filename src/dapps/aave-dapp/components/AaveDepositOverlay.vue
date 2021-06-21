@@ -168,7 +168,6 @@ export default {
   },
   methods: {
     handleSelectedDeposit(val) {
-      console.error('val', val)
       this.selectedToken = val;
       this.step = 1;
     },

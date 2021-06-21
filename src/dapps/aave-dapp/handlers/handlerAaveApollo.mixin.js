@@ -11,13 +11,16 @@ import {
   liquidityRateHistoryUpdate,
   reserveUpdateSubscription,
   userPositionUpdateSubscription,
-  usdPriceEth
+  usdPriceEth,
+  reservesRates30DaysAgo
 } from '@/dapps/aave-dapp/apollo/queries/aave.graphql';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
-import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
-import moment from 'moment';
+import { v1 } from '@aave/protocol-js';
+// import moment from 'moment';
 import eth from '@/assets/images/currencies/eth.png';
+// import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
+// import BigNumber from 'bignumber.js';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -30,6 +33,7 @@ export default {
       rawReserveData: [],
       liquidityRateHistoryUpdate: '',
       userReserveData: [],
+      reservesRates30DaysAgo: [],
       usdPriceEth: '',
       userSummary: {}
     };
@@ -77,8 +81,7 @@ export default {
             )?.image;
             return item;
           });
-          this.reservesData = formatReserves(this.rawReserveData).reverse();
-          this.setFormatUserSummaryData();
+          this.getReservesData();
         },
         error(error) {
           Toast(error.message, {}, ERROR);
@@ -125,10 +128,39 @@ export default {
         error(error) {
           Toast(error.message, {}, ERROR);
         }
+      },
+      reservesRates30DaysAgo: {
+        query: reservesRates30DaysAgo,
+        client: 'aave',
+        update: data => data.reserves,
+        variables() {
+          return {
+            pool: configs.POOL_ID,
+            timestamp: Math.floor(Date.now() / 1000)
+          };
+        },
+        result({ data }) {
+          this.reservesRates30DaysAgo = data.reserves;
+          this.getReservesData();
+        },
+        error(error) {
+          Toast(error.message, {}, ERROR);
+        }
       }
     }
   },
   methods: {
+    getReservesData() {
+      this.reservesData = v1
+        .formatReserves(this.rawReserveData, this.reservesRates30DaysAgo)
+        .reverse();
+      this.setFormatUserSummaryData();
+      console.error('reservesData', this.reservesData);
+      // if (rawReserves.length > 0 && reservesIndexed30DaysAgo.length > 30) {
+      // }
+
+      // console.error('variables', rawReserves, reservesIndexed30DaysAgo);
+    },
     /**
      * Apollo mutation to deposit funds
      */
@@ -264,12 +296,12 @@ export default {
         this.userReserveData &&
         this.usdPriceEth
       ) {
-        this.userSummary = formatUserSummaryData(
+        this.userSummary = v1.formatUserSummaryData(
           this.rawReserveData,
           this.userReserveData,
           this.address.toLowerCase(),
           this.usdPriceEth,
-          Number(moment().format('X'))
+          Math.floor(Date.now() / 1000)
         );
         this.mergeTheReserves();
       }
@@ -283,7 +315,9 @@ export default {
           const foundReserve = this.reservesData.find(
             elem => elem.name === data.reserve.name
           );
-          foundReserve.user = data;
+          if (foundReserve) {
+            foundReserve.user = data;
+          }
         });
       }
       this.getReserveBalances();
@@ -292,8 +326,27 @@ export default {
      * Finds the reserves balances
      */
     getReserveBalances() {
+      // const rayDecimals = 27;
+
       if (this.reservesData.length > 0) {
         this.reservesData.forEach(reserve => {
+          // console.error('reserve', reserve)
+          // reserve.stableBorrowRateFormatted = formatPercentageValue(
+          //   new BigNumber(
+          //     v1.normalize(reserve.stableBorrowRate, rayDecimals)
+          //   ).times(100)
+          // ).value;
+          // // reserve.variableBorrowRateFormatted = formatPercentageValue(
+          // //   new BigNumber(
+          // //     normalize(reserve.variableBorrowRate, rayDecimals)
+          // //   ).times(100)
+          // // ).value;
+          // reserve.variableBorrowRateFormatted = new BigNumber(
+          //   v1.normalize(reserve.variableBorrowRate, rayDecimals)
+          // )
+          //   .times(100)
+          //   .toFixed(2);
+          // console.error('reserve', v1.normalize(BigNumber(reserve.variableBorrowRate), rayDecimals) );
           reserve.tokenBalance = 0;
           reserve.user = reserve.user || {};
           if (reserve.symbol === 'ETH') {

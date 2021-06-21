@@ -19,7 +19,6 @@ const EXCEPTIONS = [
   'vuetify',
   'sass-loader',
   'husky',
-  '@aave/protocol-js',
   '@unstoppabledomains/resolution',
   'sass',
   'scryptsy'

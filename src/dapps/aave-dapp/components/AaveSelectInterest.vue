@@ -22,11 +22,11 @@
   =====================================================================================
   -->
       <v-card
-        v-if="rates.stable !== '--'"
+        :disabled="rates.stable === '--'"
         :flat="isStable"
         :color="isStable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8"
-        @click.native="setTypeToStable"
+        @click.native="setType(interestTypes.stable)"
       >
         <v-icon color="secondary">mdi-arrow-right-circle</v-icon>
         <span class="textSecondary--text my-2">Stable</span>
@@ -38,11 +38,11 @@
   =====================================================================================
   -->
       <v-card
-        v-if="rates.variable !== '--'"
+        :disabled="rates.variable === '--'"
         :flat="isVariable"
         :color="isVariable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8 ml-5"
-        @click.native="setTypeToVariable"
+        @click.native="setType(interestTypes.variable)"
       >
         <!-- need to update this icon once we have it -->
         <v-icon x-large color="warning darken-1">mdi-arrow-right-circle</v-icon>
@@ -61,7 +61,7 @@
       class="my-8"
       title="Continue"
       btn-size="xlarge"
-      :disabled="apr.type === ''"
+      :disabled="!apr.type"
       @click.native="onContinue"
     />
     <mew-warning-sheet
@@ -87,7 +87,8 @@ export default {
   },
   data() {
     return {
-      apr: {}
+      apr: {},
+      interestTypes: INTEREST_TYPES
     };
   },
   computed: {
@@ -95,14 +96,11 @@ export default {
       return this.selectedToken?.usageAsCollateralEnabled || false;
     },
     rates() {
-      const stable =
-        this.selectedToken?.stableBorrowRate > 0
-          ? formatPercentageValue(
-              new BigNumber(this.selectedToken.stableBorrowRate).multipliedBy(
-                100
-              )
-            ).value
-          : '0%';
+      const stable = this.selectedToken?.stableBorrowRateEnabled
+        ? formatPercentageValue(
+            new BigNumber(this.selectedToken.stableBorrowRate).multipliedBy(100)
+          ).value
+        : '--';
       const variable =
         this.selectedToken.variableBorrowRate > 0
           ? formatPercentageValue(
@@ -110,35 +108,30 @@ export default {
                 100
               )
             ).value
-          : '0%';
+          : '--';
       return {
         stable,
         variable
       };
     },
     isStable() {
-      return this.type === INTEREST_TYPES.stable;
+      return this.apr.type === INTEREST_TYPES.stable;
     },
     isVariable() {
-      return this.type === INTEREST_TYPES.variable;
+      return this.apr.type === INTEREST_TYPES.variable;
     }
   },
   methods: {
-    setTypeToStable() {
-      this.type = INTEREST_TYPES.stable;
+    setType(type) {
       this.apr = {
-        type: INTEREST_TYPES.stable,
-        percentage: this.rates.stable
-      };
-    },
-    setTypeToVariable() {
-      this.apr = {
-        type: INTEREST_TYPES.variable,
-        percentage: this.rates.variable
+        type: type,
+        percentage:
+          type === INTEREST_TYPES.stable
+            ? this.rates.stable
+            : this.rates.variable
       };
     },
     onContinue() {
-      console.error("this", this.apr)
       this.$emit('continue', this.apr);
     }
   }

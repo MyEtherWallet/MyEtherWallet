@@ -131,9 +131,9 @@ export default {
       type: String,
       default: ''
     },
-    interestType: {
-      type: String,
-      default: ''
+    apr: {
+      type: Object,
+      default: () => {}
     },
     userSummary: {
       type: Object,
@@ -220,17 +220,25 @@ export default {
             }
           );
           return details;
-        case ACTION_TYPES.borrow: 
+        case ACTION_TYPES.borrow:
           details = [
             {
               title: 'Interest APR',
-              value: ''
+              value: this.apr.percentage,
+              class:
+                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                  ? 'secondary--text'
+                  : 'warning--text text--darken-1'
             },
             {
               title: 'Interest rate type',
-              value: this.interestType
+              value: this.apr.type,
+              class:
+                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                  ? 'secondary--text capitalize'
+                  : 'warning--text text--darken-1 capitalize'
             }
-          ]
+          ];
       }
       return details;
     },
@@ -285,12 +293,6 @@ export default {
   methods: {
     confirm() {
       this.$emit('onConfirm');
-    },
-    getInterestTypeClass(type) {
-      if (type.toLowerCase() === INTEREST_TYPES.stable) {
-        return 'secondary--text';
-      }
-      return 'warning--text text--darken-1';
     }
   }
 };
