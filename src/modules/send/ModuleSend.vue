@@ -42,6 +42,7 @@
               label="Amount"
               placeholder="0"
               :value="amount"
+              type="number"
               :persistent-hint="true"
               :rules="amtRules"
               :max-btn-obj="{
@@ -233,7 +234,6 @@ export default {
       sendTx: null,
       isValidAddress: false,
       amount: '0',
-      amountErrorMessage: '0',
       selectedCurrency: {},
       data: '0x',
       clearAll: false,
@@ -355,7 +355,7 @@ export default {
     },
     amtRules() {
       return [
-        value => !!value || "Amount can't be empty!",
+        value => !!value || 'Required!',
         value => {
           return BigNumber(value).gte(0) || "Amount can't be negative!";
         },
@@ -367,12 +367,33 @@ export default {
           }
           return true;
         },
-        value =>
-          SendTransaction.helpers.hasValidDecimals(
-            value,
-            this.selectedCurrency.decimals
-          ) || 'Invalid decimal points'
+        value => {
+          if (value) {
+            return (
+              SendTransaction.helpers.hasValidDecimals(
+                value,
+                this.selectedCurrency.decimals
+              ) || 'Invalid decimal points'
+            );
+          }
+          return 'Required';
+        }
       ];
+    },
+    isValidAmount() {
+      if (this.amount) {
+        console.log('inside');
+        if (BigNumber(this.amount).gte(0)) {
+          if (this.sendTx && this.sendTx.currency)
+            return this.sendTx.hasEnoughBalance();
+          return SendTransaction.helpers.hasValidDecimals(
+            this.amount,
+            this.selectedCurrency.decimals
+          );
+        }
+        return false;
+      }
+      return false;
     },
     gasLimitRules() {
       return this.gasLimitError;
@@ -469,7 +490,9 @@ export default {
       }
     },
     amount() {
-      this.sendTx.setValue(this.getCalculatedAmount);
+      if (this.isValidAmount) {
+        this.sendTx.setValue(this.getCalculatedAmount);
+      }
     },
     selectedCurrency() {
       this.sendTx.setCurrency(this.selectedCurrency);
