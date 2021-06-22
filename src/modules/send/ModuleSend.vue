@@ -365,8 +365,11 @@ export default {
         .toFixed(0);
       return toBN(amount);
     },
+    hasSelectedToken() {
+      return !_.isEmpty(this.selectedCurrency) && this.selectedCurrency.hasOwnProperty('symbol')
+    },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.hasSelectedToken && this.sendTx && this.sendTx.currency)
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
       return false;
     },
