@@ -77,11 +77,12 @@
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
       :scrollable="true"
+      :anchored="true"
       width="650"
       @close="reset"
     >
       <template #dialogBody>
-        <div>
+        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="tx.to"
@@ -133,67 +134,105 @@
             :signed="signingPending"
             :error="error"
           />
-          <v-expansion-panels accordion multiple flat>
+          <v-expansion-panels
+            v-model="panel"
+            accordion
+            multiple
+            flat
+            class="expansion-border"
+          >
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
               :key="`${transaction.title}${transaction.value}${i}`"
-              class="expansion-border"
+              :class="{
+                'expansion-panel-border-bottom':
+                  transactions.length > 1 && i !== transactions.length - 1
+              }"
+              @click="scrollToElement(i)"
             >
-              <v-expansion-panel-header :disable-icon-rotate="signing">
-                <p class="ma-0">
-                  <span class="font-weight-bold"
-                    >Transaction
-                    {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
-                  </span>
-                  <br />
-                  <span v-if="isSwap" class="ma-0"
-                    >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
-                  >
-                </p>
-                <template v-if="signing" #actions>
-                  <v-progress-circular
-                    v-show="isBatch && signedTxArray.length < i + 1"
-                    indeterminate
-                    color="primary"
-                  />
-                  <v-progress-circular
-                    v-show="
-                      !isBatch && Object.keys(signedTxObject).length === 0
-                    "
-                    indeterminate
-                    color="primary"
-                  />
-                  <v-icon
-                    v-show="
-                      !isBatch && Object.keys(signedTxObject).length !== 0
-                    "
-                    color="primary"
-                  >
-                    mdi-check
-                  </v-icon>
-                  <v-icon
-                    v-show="isBatch && signedTxArray.length >= i + 1"
-                    color="primary"
-                  >
-                    mdi-check
-                  </v-icon>
-                </template>
+              <v-expansion-panel-header
+                :disable-icon-rotate="signing"
+                class="expansion-header"
+              >
+                <v-row class="align-center pr-7 pl-2">
+                  <p class="ma-0 pl-1">
+                    <span class="font-weight-bold"
+                      >Transaction
+                      {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                    </span>
+                    <br />
+                    <span
+                      v-if="isSwap && transactions.length > 1"
+                      class="ma-0 mew-label searchText--text"
+                      >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
+                    >
+                  </p>
+                  <v-spacer />
+                  <div v-if="signing">
+                    <v-progress-circular
+                      v-show="isBatch && signedTxArray.length < i + 1"
+                      indeterminate
+                      color="primary"
+                      size="20"
+                      width="2"
+                      class="pr-7"
+                    />
+                    <v-progress-circular
+                      v-show="
+                        !isBatch && Object.keys(signedTxObject).length === 0
+                      "
+                      indeterminate
+                      color="primary"
+                      size="20"
+                      width="2"
+                      class="pr-7"
+                    />
+                    <v-icon
+                      v-show="
+                        !isBatch && Object.keys(signedTxObject).length !== 0
+                      "
+                      color="primary"
+                    >
+                      mdi-check
+                    </v-icon>
+                    <v-icon
+                      v-show="isBatch && signedTxArray.length >= i + 1"
+                      color="primary"
+                    >
+                      mdi-check
+                    </v-icon>
+                  </div>
+                </v-row>
               </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              <v-expansion-panel-content :id="i">
                 <div>
-                  <div
+                  <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
                     class="d-flex justify-space-between"
+                    no-gutters
                   >
-                    <p class="ma-0">{{ txVal.title }}</p>
-                    <p class="ma-0 data-values">{{ txVal.value }}</p>
-                  </div>
+                    <v-col
+                      cols="12"
+                      md="3"
+                      class="d-flex d-sm-block ma-0 searchText--text"
+                    >
+                      {{ txVal.title }}
+                    </v-col>
+
+                    <v-col cols="12" md="9">
+                      <app-scroll-block>
+                        <div class="data-values text-md-right">
+                          {{ txVal.value }}
+                        </div>
+                      </app-scroll-block>
+                    </v-col>
+                  </v-row>
                 </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-        </div>
+        </v-card-text>
       </template>
     </app-modal>
     <mew-overlay
@@ -216,6 +255,7 @@
 </template>
 
 <script>
+import AppScrollBlock from '@/core/components/AppScrollBlock';
 import AppModal from '@/core/components/AppModal';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -245,6 +285,7 @@ const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 export default {
   name: 'ModuleConfirmation',
   components: {
+    AppScrollBlock,
     ConfirmationMesssage,
     AppModal,
     ConfirmationSwapTransactionDetails,
@@ -272,7 +313,8 @@ export default {
         ethvm: '',
         etherscan: ''
       },
-      error: ''
+      error: '',
+      panel: []
     };
   },
   computed: {
@@ -510,6 +552,20 @@ export default {
     });
   },
   methods: {
+    /**
+     * Methods scrolls to an element if element is open on click.
+     * Has To be a timeoute, on order to wait for the element to be open
+     */
+    scrollToElement(_id) {
+      setTimeout(() => {
+        if (this.panel.includes(_id)) {
+          const panel = document.getElementById(_id);
+          const wrapper = this.$refs.scrollableContent;
+          const options = { duration: 500, offset: -60 };
+          this.$vuetify.goTo(panel, { container: wrapper, ...options });
+        }
+      }, 500);
+    },
     resetSuccess() {
       this.showSuccessSwap = false;
       this.reset();
@@ -809,15 +865,21 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$borderPanels: 1px solid var(--v-selectBorder-base) !important;
 .expansion-border {
-  border: 1px solid var(--v-selectBorder-base) !important;
+  border: $borderPanels;
+  border-radius: 8px;
 }
 
 .data-values {
-  max-width: 350px;
   overflow-wrap: break-word;
 }
-
+.expansion-header {
+  height: 60px;
+}
+.expansion-panel-border-bottom {
+  border-bottom: $borderPanels;
+}
 .lottie {
   height: 120px;
 }
