@@ -60,7 +60,7 @@
           Low Balance Notice
         =====================================================================================
         -->
-        <v-col v-if="showBalanceNotice" cols="12" class="py-2 py-sm-4">
+        <v-col v-if="showBalanceNotice" cols="12" class="pt-0 pb-4">
           <send-low-balance-notice
             :address="address"
             :currency-name="currencyName"
