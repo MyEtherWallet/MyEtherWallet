@@ -12,7 +12,7 @@
       =====================================================================================
       -->
       <v-row class="mt-5">
-        <v-col cols="12" md="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
+        <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
@@ -30,7 +30,7 @@
             />
           </div>
         </v-col>
-        <v-col cols="12" md="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
+        <v-col cols="12" sm="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
@@ -138,7 +138,7 @@
                 :value="gasLimit"
                 :label="$t('common.gas.limit')"
                 placeholder=""
-                :rules="gasLimitRules"
+                :error-messages="gasLimitError"
                 type="number"
                 @input="setGasLimit"
               />
@@ -162,7 +162,7 @@
             title="Next"
             :has-full-width="false"
             btn-size="xlarge"
-            :disabled="!allValidInputs && !gasLimitIsValid"
+            :disabled="!allValidInputs || !isValidGasLimit"
             @click.native="send()"
           />
         </div>
@@ -246,7 +246,8 @@ export default {
       ],
       localGasPrice: '0',
       localGasType: 'economy',
-      defaultGasLimit: '21000'
+      defaultGasLimit: '21000',
+      gasLimitError: ''
     };
   },
   computed: {
@@ -374,17 +375,9 @@ export default {
       ];
     },
     gasLimitRules() {
-      return [
-        value => !!value || 'Required',
-        value => BigNumber(value).gt(0) || 'Gas limit must be greater then 0',
-        value =>
-          BigNumber(value).dp() < 1 || 'Gas limit can not have decimals points',
-        value =>
-          toBN(value).gte(toBN(this.defaultGasLimit)) ||
-          'Amount too low. Are you sure you want to proceed? Transaction could fail or get stuck.'
-      ];
+      return this.gasLimitError;
     },
-    gasLimitIsValid() {
+    isValidGasLimit() {
       if (this.gasLimit) {
         return (
           BigNumber(this.gasLimit).gt(0) &&
@@ -485,10 +478,12 @@ export default {
     data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
-    gasLimit() {
-      if (this.gasLimitIsValid) {
+    gasLimit(newVal) {
+      if (this.isValidGasLimit) {
         this.sendTx.setGasLimit(this.gasLimit);
       }
+      this.gasLimitError = '';
+      this.debouncedGasLimitError(newVal);
     },
     network() {
       this.setSendTransaction();
@@ -499,7 +494,27 @@ export default {
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.ethToken;
   },
+  created() {
+    this.debouncedGasLimitError = _.debounce(value => {
+      this.setGasLimitError(value);
+    }, 1000);
+  },
   methods: {
+    setGasLimitError(value) {
+      if (value) {
+        if (BigNumber(value).lte(0))
+          this.gasLimitError = 'Gas limit must be greater then 0';
+        else if (BigNumber(value).dp() > 0)
+          this.gasLimitError = 'Gas limit can not have decimals points';
+        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
+          this.gasLimitError = 'Amount too low. Transaction will fail';
+        else {
+          this.gasLimitError = '';
+        }
+      } else {
+        this.gasLimitError = 'Required';
+      }
+    },
     handleLocalGasPrice(e) {
       this.localGasPrice = toWei(e.gasPrice);
       this.localGasType = e.gasType;
@@ -522,6 +537,7 @@ export default {
         .then(res => {
           this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
+          this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
         })
         .catch(e => {
