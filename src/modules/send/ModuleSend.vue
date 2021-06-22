@@ -293,18 +293,18 @@ export default {
 
       return false;
     },
-    ethToken() {
+    networkCurrencyToken() {
       return {
         contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         decimals: 18,
-        img: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+        img: this.network.type.icon,
         isEth: true,
-        name: 'Ethereum',
-        subtext: 'Ethereum',
-        symbol: 'ETH',
+        name: this.network.type.name_long,
+        subtext: this.network.type.name_long,
+        symbol: this.network.type.name,
         type: 'ERC20',
-        value: 'Ethereum',
-        id: 'ethereum',
+        value: this.network.type.name_long,
+        id: this.network.type.name_long.toLowerCase(),
         price: formatFiatValue(this.fiatValue).value,
         tokenBalance: formatFloatingPointValue(this.balanceInETH).value,
         totalBalance: formatFiatValue(this.balanceFiatValue).value
@@ -325,7 +325,7 @@ export default {
       const imgs = tokensList.map(item => {
         return item.img;
       });
-      const _ethToken = [this.ethToken];
+      const _ethToken = [this.networkCurrencyToken];
       const mergedList = _ethToken.concat(tokensList);
       BigNumber(this.balanceInETH).lte(0)
         ? mergedList.unshift({
@@ -447,13 +447,14 @@ export default {
     },
     tokens: {
       handler: function (newVal) {
-        const ethToken = newVal.find(item => {
+        const networkCurrencyToken = newVal.find(item => {
           if (item.symbol === this.currencyName) return item;
         });
         this.selectedCurrency =
-          newVal.length > 0 ? (ethToken ? ethToken : newVal[0]) : {};
+          newVal.length > 0 ? (networkCurrencyToken ? networkCurrencyToken : newVal[0]) : {};
       },
-      deep: true
+      deep: true,
+      immediate: true
     },
     toAddress() {
       if (this.isValidAddress) {
@@ -465,7 +466,9 @@ export default {
     },
     selectedCurrency: {
       handler: function (newVal) {
-        this.sendTx.setCurrency(newVal);
+        if(this.sendTx) {
+          this.sendTx.setCurrency(newVal);
+        }
         this.data = '0x';
       },
       immediate: true,
