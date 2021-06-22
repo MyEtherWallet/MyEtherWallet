@@ -12,7 +12,7 @@
       =====================================================================================
       -->
       <v-row class="mt-5">
-        <v-col cols="12" md="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
+        <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
@@ -30,7 +30,7 @@
             />
           </div>
         </v-col>
-        <v-col cols="12" md="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
+        <v-col cols="12" sm="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
@@ -42,6 +42,7 @@
               label="Amount"
               placeholder="0"
               :value="amount"
+              type="number"
               :persistent-hint="true"
               :rules="amtRules"
               :max-btn-obj="{
@@ -59,7 +60,7 @@
           Low Balance Notice
         =====================================================================================
         -->
-        <v-col v-if="showBalanceNotice" cols="12" class="py-2 py-sm-4">
+        <v-col v-if="showBalanceNotice" cols="12" class="pt-0 pb-4">
           <send-low-balance-notice
             :address="address"
             :currency-name="currencyName"
@@ -129,16 +130,17 @@
                   pb-3
                   cursor--pointer
                 "
-                @click="setGasLimit(prefilledGasLimit)"
+                @click="setGasLimit(defaultGasLimit)"
               >
-                Reset to default: 21,000
+                Reset to default: {{ formattedDefaultGasLimit }}
               </div>
 
               <mew-input
                 :value="gasLimit"
                 :label="$t('common.gas.limit')"
                 placeholder=""
-                :rules="gasLimitRules"
+                :error-messages="gasLimitError"
+                type="number"
                 @input="setGasLimit"
               />
 
@@ -161,7 +163,7 @@
             title="Next"
             :has-full-width="false"
             btn-size="xlarge"
-            :disabled="!allValidInputs"
+            :disabled="!allValidInputs || !isValidGasLimit"
             @click.native="send()"
           />
         </div>
@@ -192,7 +194,8 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  formatIntegerToString
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -231,7 +234,6 @@ export default {
       sendTx: null,
       isValidAddress: false,
       amount: '0',
-      amountErrorMessage: '0',
       selectedCurrency: {},
       data: '0x',
       clearAll: false,
@@ -243,7 +245,9 @@ export default {
         }
       ],
       localGasPrice: '0',
-      localGasType: 'economy'
+      localGasType: 'economy',
+      defaultGasLimit: '21000',
+      gasLimitError: ''
     };
   },
   computed: {
@@ -352,7 +356,7 @@ export default {
     },
     amtRules() {
       return [
-        value => !!value || "Amount can't be empty!",
+        value => !!value || 'Required!',
         value => {
           return BigNumber(value).gte(0) || "Amount can't be negative!";
         },
@@ -364,19 +368,45 @@ export default {
           }
           return true;
         },
-        value =>
-          SendTransaction.helpers.hasValidDecimals(
-            value,
-            this.selectedCurrency.decimals
-          ) || 'Invalid decimal points'
-      ];
-    },
-    gasLimitRules() {
-      return [
         value => {
-          return !!value && new utils.BN(value).gte(21000);
+          if (value) {
+            return (
+              SendTransaction.helpers.hasValidDecimals(
+                value,
+                this.selectedCurrency.decimals
+              ) || 'Invalid decimal points'
+            );
+          }
+          return 'Required';
         }
       ];
+    },
+    isValidAmount() {
+      if (this.amount) {
+        if (BigNumber(this.amount).gte(0)) {
+          if (this.sendTx && this.sendTx.currency)
+            return this.sendTx.hasEnoughBalance();
+          return SendTransaction.helpers.hasValidDecimals(
+            this.amount,
+            this.selectedCurrency.decimals
+          );
+        }
+        return false;
+      }
+      return false;
+    },
+    gasLimitRules() {
+      return this.gasLimitError;
+    },
+    isValidGasLimit() {
+      if (this.gasLimit) {
+        return (
+          BigNumber(this.gasLimit).gt(0) &&
+          BigNumber(this.gasLimit).dp() < 1 &&
+          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
+        );
+      }
+      return false;
     },
     dataRules() {
       return [
@@ -434,6 +464,9 @@ export default {
         return BigNumber(this.gasPrice);
       }
       return BigNumber(fromWei(this.localGasPrice));
+    },
+    formattedDefaultGasLimit() {
+      return formatIntegerToString(this.defaultGasLimit);
     }
   },
   watch: {
@@ -466,7 +499,9 @@ export default {
       }
     },
     amount() {
-      this.sendTx.setValue(this.getCalculatedAmount);
+      if (this.isValidAmount) {
+        this.sendTx.setValue(this.getCalculatedAmount);
+      }
     },
     selectedCurrency: {
       handler: function (newVal) {
@@ -481,8 +516,12 @@ export default {
     data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
     },
-    gasLimit() {
-      this.sendTx.setGasLimit(this.gasLimit);
+    gasLimit(newVal) {
+      if (this.isValidGasLimit) {
+        this.sendTx.setGasLimit(this.gasLimit);
+      }
+      this.gasLimitError = '';
+      this.debouncedGasLimitError(newVal);
     },
     network() {
       this.setSendTransaction();
@@ -492,7 +531,27 @@ export default {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
   },
+  created() {
+    this.debouncedGasLimitError = _.debounce(value => {
+      this.setGasLimitError(value);
+    }, 1000);
+  },
   methods: {
+    setGasLimitError(value) {
+      if (value) {
+        if (BigNumber(value).lte(0))
+          this.gasLimitError = 'Gas limit must be greater then 0';
+        else if (BigNumber(value).dp() > 0)
+          this.gasLimitError = 'Gas limit can not have decimals points';
+        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
+          this.gasLimitError = 'Amount too low. Transaction will fail';
+        else {
+          this.gasLimitError = '';
+        }
+      } else {
+        this.gasLimitError = 'Required';
+      }
+    },
     handleLocalGasPrice(e) {
       this.localGasPrice = toWei(e.gasPrice);
       this.localGasType = e.gasType;
@@ -513,7 +572,9 @@ export default {
       this.sendTx
         .estimateGas()
         .then(res => {
+          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
+          this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
         })
         .catch(e => {
