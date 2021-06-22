@@ -3,6 +3,7 @@
 ### Devop
 
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
+* Fix swap verification data field [#3162](https://github.com/MyEtherWallet/MyEtherWallet/pull/3162)
 * hide provider with 0 rates [#3167](https://github.com/MyEtherWallet/MyEtherWallet/pull/3167)
 * fix console errors [#3168](https://github.com/MyEtherWallet/MyEtherWallet/pull/3168)
 * btc address check [#3159](https://github.com/MyEtherWallet/MyEtherWallet/pull/3159)
