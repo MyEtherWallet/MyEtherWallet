@@ -297,18 +297,18 @@ export default {
 
       return false;
     },
-    ethToken() {
+    networkCurrencyToken() {
       return {
         contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         decimals: 18,
-        img: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+        img: this.network.type.icon,
         isEth: true,
-        name: 'Ethereum',
-        subtext: 'Ethereum',
-        symbol: 'ETH',
+        name: this.network.type.name_long,
+        subtext: this.network.type.name_long,
+        symbol: this.network.type.name,
         type: 'ERC20',
-        value: 'Ethereum',
-        id: 'ethereum',
+        value: this.network.type.name_long,
+        id: this.network.type.name_long.toLowerCase(),
         price: formatFiatValue(this.fiatValue).value,
         tokenBalance: formatFloatingPointValue(this.balanceInETH).value,
         totalBalance: formatFiatValue(this.balanceFiatValue).value
@@ -324,11 +324,12 @@ export default {
       return BigNumber(this.selectedCurrency.balance).toString();
     },
     tokens() {
-      const tokensList = this.tokensList || [];
+      // no ref copy
+      const tokensList = JSON.parse(JSON.stringify(this.tokensList)) || [];
       const imgs = tokensList.map(item => {
         return item.img;
       });
-      const _ethToken = [this.ethToken];
+      const _ethToken = [this.networkCurrencyToken];
       const mergedList = _ethToken.concat(tokensList);
       BigNumber(this.balanceInETH).lte(0)
         ? mergedList.unshift({
@@ -477,11 +478,20 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    tokensList: {
+    tokens: {
       handler: function (newVal) {
-        this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
+        const networkCurrencyToken = newVal.find(item => {
+          if (item.symbol === this.currencyName) return item;
+        });
+        this.selectedCurrency =
+          newVal.length > 0
+            ? networkCurrencyToken
+              ? networkCurrencyToken
+              : newVal[0]
+            : {};
       },
-      deep: true
+      deep: true,
+      immediate: true
     },
     toAddress() {
       if (this.isValidAddress) {
@@ -493,9 +503,15 @@ export default {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
     },
-    selectedCurrency() {
-      this.sendTx.setCurrency(this.selectedCurrency);
-      this.data = '0x';
+    selectedCurrency: {
+      handler: function (newVal) {
+        if (this.sendTx) {
+          this.sendTx.setCurrency(newVal);
+        }
+        this.data = '0x';
+      },
+      immediate: true,
+      deep: true
     },
     data() {
       if (isHexStrict(this.data)) this.sendTx.setData(this.data);
@@ -514,7 +530,6 @@ export default {
   mounted() {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
-    this.selectedCurrency = this.ethToken;
   },
   created() {
     this.debouncedGasLimitError = _.debounce(value => {

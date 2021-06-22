@@ -105,7 +105,7 @@ class SendTransaction {
     });
   }
   isToken() {
-    return this.currency.symbol !== this.network().type.currencyName;
+    return this.currency?.symbol !== this.network().type.currencyName;
   }
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
