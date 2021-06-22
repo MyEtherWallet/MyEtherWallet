@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
 * Fix swap verification data field [#3162](https://github.com/MyEtherWallet/MyEtherWallet/pull/3162)
 * hide provider with 0 rates [#3167](https://github.com/MyEtherWallet/MyEtherWallet/pull/3167)
 * fix console errors [#3168](https://github.com/MyEtherWallet/MyEtherWallet/pull/3168)
