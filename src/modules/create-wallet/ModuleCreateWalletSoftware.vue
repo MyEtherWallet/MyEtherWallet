@@ -83,13 +83,16 @@ export default {
   }),
   computed: {
     isOverview() {
-      return this.walletType !== this.types.MNEMONIC && this.walletType !== this.types.KEYSTORE
+      return (
+        this.walletType !== this.types.MNEMONIC &&
+        this.walletType !== this.types.KEYSTORE
+      );
     },
     isKeystore() {
-      return this.walletType === this.types.KEYSTORE
+      return this.walletType === this.types.KEYSTORE;
     },
     isMnemonic() {
-      return this.walletType === this.types.MNEMONIC
+      return this.walletType === this.types.MNEMONIC;
     },
     /**
      * @returns correct title of the overlay according to the wallet type selected
@@ -106,7 +109,7 @@ export default {
      * if overview, button text is empty
      */
     backBtnText() {
-      return this.isMnemonic ||  this.isKeystore ? '' : 'Back to Software';
+      return this.isMnemonic || this.isKeystore ? '' : 'Back to Software';
     }
   },
   mounted() {
