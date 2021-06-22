@@ -162,7 +162,7 @@
             title="Next"
             :has-full-width="false"
             btn-size="xlarge"
-            :disabled="!allValidInputs"
+            :disabled="!allValidInputs && !gasLimitIsValid"
             @click.native="send()"
           />
         </div>
@@ -380,17 +380,19 @@ export default {
         value =>
           BigNumber(value).dp() < 1 || 'Gas limit can not have decimals points',
         value =>
-          toBN(value).gte(toBN(21000)) ||
+          toBN(value).gte(toBN(this.defaultGasLimit)) ||
           'Amount too low. Are you sure you want to proceed? Transaction could fail or get stuck.'
       ];
     },
     gasLimitIsValid() {
-      return (
-        this.gasLimit &&
-        BigNumber(this.gasLimit).gt(0) &&
-        BigNumber(this.gasLimit).dp() < 1 &&
-        toBN(this.gasLimit).gte(toBN(21000))
-      );
+      if (this.gasLimit) {
+        return (
+          BigNumber(this.gasLimit).gt(0) &&
+          BigNumber(this.gasLimit).dp() < 1 &&
+          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
+        );
+      }
+      return false;
     },
     dataRules() {
       return [
@@ -439,7 +441,7 @@ export default {
       return toBN(amount);
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency && this.gasLimitIsValid)
+      if (this.sendTx && this.sendTx.currency)
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
       return false;
     },
