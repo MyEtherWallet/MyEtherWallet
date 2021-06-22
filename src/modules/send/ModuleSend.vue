@@ -451,7 +451,11 @@ export default {
           if (item.symbol === this.currencyName) return item;
         });
         this.selectedCurrency =
-          newVal.length > 0 ? (networkCurrencyToken ? networkCurrencyToken : newVal[0]) : {};
+          newVal.length > 0
+            ? networkCurrencyToken
+              ? networkCurrencyToken
+              : newVal[0]
+            : {};
       },
       deep: true,
       immediate: true
@@ -466,7 +470,7 @@ export default {
     },
     selectedCurrency: {
       handler: function (newVal) {
-        if(this.sendTx) {
+        if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
         }
         this.data = '0x';
