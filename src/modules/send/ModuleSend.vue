@@ -366,7 +366,10 @@ export default {
       return toBN(amount);
     },
     hasSelectedToken() {
-      return !_.isEmpty(this.selectedCurrency) && this.selectedCurrency.hasOwnProperty('symbol')
+      return (
+        !_.isEmpty(this.selectedCurrency) &&
+        this.selectedCurrency.hasOwnProperty('symbol')
+      );
     },
     allValidInputs() {
       if (this.hasSelectedToken && this.sendTx && this.sendTx.currency)
