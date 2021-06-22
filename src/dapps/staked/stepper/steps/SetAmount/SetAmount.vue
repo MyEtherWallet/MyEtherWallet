@@ -42,51 +42,136 @@
       </div>
     </div>
   </div>-->
-  <div>
-    <v-row class="mx-0 bottom-pad">
-      <v-col class="pr-0" cols="12">
-        <mew-input
-          :error-messages="getErrorMessage"
-          :value="amount"
-          :has-clear-btn="true"
-          :rules="rules"
-          :label="$t('ens.register.domain-name')"
-          :placeholder="$t('ens.ph.three-char')"
-          class="mr-3 flex-grow-1"
-          @input="setAmount"
-        />
-        <div class="percentage-container pt-2">
-          <div :class="isActive(0) ? 'active' : ''" @click="setAmount(0)">
-            32 {{ $t('common.currency.eth') }}
-          </div>
-          <div :class="isActive(1) ? 'active' : ''" @click="setAmount(1)">
-            64 {{ $t('common.currency.eth') }}
-          </div>
-          <div :class="isActive(2) ? 'active' : ''" @click="setAmount(2)">
-            96 {{ $t('common.currency.eth') }}
-          </div>
-          <div :class="isActive(3) ? 'active' : ''" @click="setAmount(3)">
-            128 {{ $t('common.currency.eth') }}
-          </div>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row class="mx-0">
-      <v-col class="pl-4" cols="8">
-        <mew-button
-          :loading="false"
-          :disabled="getErrorMessage !== null"
-          :has-full-width="true"
-          btn-size="xlarge"
-          :title="$t('common.next')"
-          @click.native="doNext"
-        />
-      </v-col>
-    </v-row>
-    <!--    <v-row class="mx-0">-->
-    <!--      <v-col class="pr-0" cols="8"> status </v-col>-->
-    <!--      <v-col class="pl-0" cols="4"> status </v-col>-->
-    <!--    </v-row>-->
+
+  <div
+    class="dapps--staked--stepper--steps--set-amount mx-auto pb-15"
+    style="max-width: 550px"
+  >
+    <div class="mew-heading-2 py-12 text-center">
+      Select ETH amount to stake
+    </div>
+
+    <mew-select
+      v-model="amount"
+      label="Staking amount"
+      :items="items"
+      outlined
+    />
+
+    <!--
+    ===================================================
+    Staking APR and fee
+    ===================================================
+    -->
+    <div class="mb-15">
+      <v-row>
+        <v-col
+          cols="12"
+          md="6"
+          class="py-1 text-uppercase captionPrimary--text font-weight-bold"
+        >
+          Current APR
+        </v-col>
+        <v-col cols="12" md="6" class="py-1 text-right primary--text">
+          9.38%
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          cols="12"
+          md="6"
+          class="
+            py-1
+            text-uppercase
+            captionPrimary--text
+            font-weight-bold
+            d-flex
+            align-center
+          "
+        >
+          Staking Fee
+          <mew-tooltip class="ml-1" :text="toolTipFee" />
+        </v-col>
+        <v-col cols="12" md="6" class="py-1 text-right">
+          0.72% <span class="textSecondary--text">0.3 ETH min</span>
+        </v-col>
+      </v-row>
+    </div>
+
+    <!--
+    ===================================================
+    Deposit value growth forecast
+    ===================================================
+    -->
+    <div>
+      <div class="mew-heading-3 mb-8">Deposit value growth forecast</div>
+
+      <div class="mb-6">
+        <v-row>
+          <v-col cols="12" md="6" class="py-1">In 3 months</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right textSecondary--text">
+            $15,840.00
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="6" class="py-1 primary--text">2.1952 ETH</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right">34.1952 ETH</v-col>
+        </v-row>
+      </div>
+
+      <div class="mb-6">
+        <v-row>
+          <v-col cols="12" md="6" class="py-1">In 3 months</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right textSecondary--text">
+            $15,840.00
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="6" class="py-1 primary--text">2.1952 ETH</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right">34.1952 ETH</v-col>
+        </v-row>
+      </div>
+
+      <div class="mb-6">
+        <v-row>
+          <v-col cols="12" md="6" class="py-1">In 3 months</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right textSecondary--text">
+            $15,840.00
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="6" class="py-1 primary--text">2.1952 ETH</v-col>
+          <v-col cols="12" md="6" class="py-1 text-right">34.1952 ETH</v-col>
+        </v-row>
+      </div>
+    </div>
+
+    <!--
+    ===================================================
+    User information
+    ===================================================
+    -->
+    <v-sheet color="overlayBg" class="px-12 py-8 mt-15 border-radius--10px">
+      <ul class="user-info">
+        <li>Your ETH is staked with our partner Staked.us</li>
+        <li>Staked.us will create and maintain Eth2 validators for you</li>
+        <li>Earn up to 21% Annualized rewards</li>
+        <li class="warning--text text--darken-2">
+          You can neither spend nor transfer your Eth2 funds until an unknown
+          data in the future when transfers are enabled on the Eth2 chain
+        </li>
+      </ul>
+    </v-sheet>
+
+    <mew-button
+      class="mx-auto d-block mt-10"
+      :loading="false"
+      :disabled="getErrorMessage !== null"
+      :has-full-width="false"
+      btn-size="xlarge"
+      title="Next: Eth2 address"
+      @click.native="doNext"
+    />
   </div>
 </template>
 
@@ -107,7 +192,10 @@ export default {
   },
   data() {
     return {
-      amount: '0',
+      toolTipFee:
+        '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
+      items: types,
+      amount: '32',
       ethPrice: '',
       balance: 0
     };
@@ -230,28 +318,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import 'SetAmount.scss';
-.percentage-container {
-  align-items: center;
-  display: flex;
+.user-info {
+  list-style-type: '◆';
+  li {
+    padding-left: 15px;
+    margin-bottom: 20px;
 
-  div {
-    color: gray;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px;
-    width: 100%;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
-
-  .active {
-    border-radius: 4px;
-    border: 1px solid green;
-    color: green;
-  }
-}
-
-.bottom-pad {
-  padding-bottom: 40px;
 }
 </style>

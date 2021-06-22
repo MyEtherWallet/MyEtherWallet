@@ -7,6 +7,7 @@
       :banner-text="header"
       :tab-items="tabs"
       :active-tab="activeTab"
+      top-strip
     >
       <template #HeaderBody>
         <divider />
@@ -21,7 +22,7 @@
         </div>
         <div class="d-flex align-center justify-center mt-3">
           <v-btn-toggle
-            v-model="selectedStake"
+            v-model="activeTab"
             mandatory
             borderless
             active-class="active-btn"
@@ -66,48 +67,42 @@
           min-height="500px"
           max-width="700px"
           color="transparent"
-          class="py-15 mx-auto"
+          class="mx-auto"
         >
-          <div class="mb-5">
-            <div class="mew-heading-2 mb-8 ml-2">
-              {{ $t('ens.search-domain') }}
-            </div>
-            {{ getCurrentStep }}
-            <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
-              <template v-if="isStepActive(0)" #stepperContent1>
-                <step-one :next="nextStep" @completed="proceed" />
-              </template>
-              <template v-if="isStepActive(1)" #stepperContent2>
-                <step-two
-                  :back="backStep"
-                  :next="nextStep"
-                  @completed="proceed"
-                />
-              </template>
-              <template v-if="isStepActive(2)" #stepperContent3>
-                <step-three
-                  :details="details"
-                  :back="backStep"
-                  :next="nextStep"
-                  @completed="proceed"
-                />
-              </template>
-              <template v-if="isStepActive(3)" #stepperContent4>
-                <step-four
-                  :details="details"
-                  :next="nextStep"
-                  @completed="proceed"
-                />
-              </template>
-              <template v-if="isStepActive(4)" #stepperContent5>
-                <step-five
-                  :amt="details.amount ? details.amount.toString() : '0'"
-                  :hash="txHash"
-                  @completed="proceed"
-                />
-              </template>
-            </mew-stepper>
-          </div>
+          <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
+            <template v-if="isStepActive(0)" #stepperContent1>
+              <step-one :next="nextStep" @completed="proceed" />
+            </template>
+            <template v-if="isStepActive(1)" #stepperContent2>
+              <step-two
+                :back="backStep"
+                :next="nextStep"
+                @completed="proceed"
+              />
+            </template>
+            <template v-if="isStepActive(2)" #stepperContent3>
+              <step-three
+                :details="details"
+                :back="backStep"
+                :next="nextStep"
+                @completed="proceed"
+              />
+            </template>
+            <template v-if="isStepActive(3)" #stepperContent4>
+              <step-four
+                :details="details"
+                :next="nextStep"
+                @completed="proceed"
+              />
+            </template>
+            <template v-if="isStepActive(4)" #stepperContent5>
+              <step-five
+                :amt="details.amount ? details.amount.toString() : '0'"
+                :hash="txHash"
+                @completed="proceed"
+              />
+            </template>
+          </mew-stepper>
         </v-sheet>
       </template>
       <template #tabContent2>
@@ -164,7 +159,6 @@ export default {
   },
   data() {
     return {
-      selectedStake: 0,
       titleIcon: titleIcon,
       header: {
         title: 'Ethereum 2.0 staking',

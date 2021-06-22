@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--block-header">
-    <div class="top-strip" />
+    <div v-if="topStrip" class="top-strip" />
     <v-container
       class="contents"
       :style="{ backgroundImage: `url(${bannerImg})` }"
@@ -53,7 +53,6 @@
                 textObj.subtextClass ? textObj.subtextClass : 'white--text'
               "
             >
-              {{ textObj.subtextClass }}
               {{ textObj.subtext }}
             </div>
 
@@ -61,7 +60,7 @@
             ===================================
             Body slot contents
             ===================================
-          -->
+            -->
             <slot name="body" />
           </div>
         </v-col>
@@ -105,6 +104,10 @@ export default {
     noBackBtn: {
       default: false,
       type: Boolean
+    },
+    topStrip: {
+      default: false,
+      type: Boolean
     }
   },
   data: () => ({}),
@@ -122,6 +125,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mew-component--block-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+}
+
 .contents {
   background-size: cover;
   background-position: center center;
@@ -130,8 +139,6 @@ export default {
 .top-strip {
   height: 8px;
   width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   background: rgb(255, 188, 239);
   background: linear-gradient(
     90deg,

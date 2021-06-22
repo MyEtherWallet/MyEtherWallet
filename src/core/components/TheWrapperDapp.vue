@@ -1,10 +1,10 @@
 <template>
   <!--
-    =====================================================================================
-      DAPP WRAPPER:
-    =====================================================================================
-    -->
-  <mew6-white-sheet>
+  =====================================================================================
+    DAPP WRAPPER:
+  =====================================================================================
+  -->
+  <mew6-white-sheet class="core--components--the-wrapper-dapp">
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -24,6 +24,7 @@
       :banner-img="bannerImg"
       :title-icon="titleIcon"
       :no-back-btn="noBackBtn"
+      :top-strip="topStrip"
       @closeBanner="onClose"
     >
       <template #body>
@@ -55,6 +56,7 @@
         <slot :name="'tabContent' + (idx + 1)" />
       </template>
     </mew-tabs>
+
     <!--
     =====================================================================================
      Slot: content, used to place body content if not using tabs.
@@ -100,6 +102,10 @@ export default {
     noBackBtn: {
       default: false,
       type: Boolean
+    },
+    topStrip: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -122,3 +128,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.core--components--the-wrapper-dapp {
+  .v-tabs {
+    display: none;
+  }
+}
+</style>
