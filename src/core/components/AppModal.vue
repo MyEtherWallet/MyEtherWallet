@@ -7,7 +7,7 @@
     :scrollable="scrollable"
     @click:outside="handleClickOutside"
   >
-    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-11">
+    <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
       <!--
       =====================================================================================
         Dialog Header
@@ -25,14 +25,20 @@
       </v-card-title>
       <!--
       =====================================================================================
-        Dialog Body
+        Dialog Body: Scrollable
       =====================================================================================
       -->
-      <v-card-text class="py-0 px-5 px-md-0">
+      <v-card-text v-if="!anchored" class="py-0 px-5 px-md-0">
         <slot name="dialogBody">
           <div>This is a test value</div>
         </slot>
       </v-card-text>
+      <!--
+      =====================================================================================
+        Dialog Body: Anchored
+      =====================================================================================
+      -->
+      <slot v-else name="dialogBody" />
       <!--
       =====================================================================================
         Dialog action
@@ -202,6 +208,21 @@ export default {
     hasButtons: {
       type: Boolean,
       default: true
+    },
+    /**
+     * NOTE:
+     * This prop will allow scroll anchoring for vuetify.goTo() inside scrollable content
+     * Important if you are using this prop please put v-card-text inside slot dgialogBody.
+     * For an example on how to use vuetify.goTo() see ModuleConfirmation.
+     *    <template #dialogBody>
+     *        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+     *          ...... your content ....
+     *        </v-card-text>
+     * <template>
+     */
+    anchored: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
