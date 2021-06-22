@@ -382,7 +382,6 @@ export default {
     },
     isValidAmount() {
       if (this.amount) {
-        console.log('inside');
         if (BigNumber(this.amount).gte(0)) {
           if (this.sendTx && this.sendTx.currency)
             return this.sendTx.hasEnoughBalance();
