@@ -3,7 +3,7 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
+import { hashPersonalMessage, toBuffer, publicToAddress} from 'ethereumjs-util';
 import {
   getSignTransactionObject,
   getBufferFromHex,
@@ -142,8 +142,10 @@ class SatochipWallet {
         requestID: this.requestID++,
         action: 'sign_tx_hash',
         tx: tx_info.tx_serialized, 
-        hash: tx_info.tx_hash_false, // EIP155 enabled
-        //hash: tx_info.tx_hash_true, // EIP155 disabled
+        hash: tx_info.tx_hash_false, // includeSignature:False
+        //hash: tx_info.tx_hash_true, // includeSignature:True
+        chainId: tx_info.chainId,
+        from:  tx_info.address,
         path: path
       };
       const request = JSON.stringify(msg);
@@ -168,6 +170,7 @@ class SatochipWallet {
   
   signMessage= function(msg, path) {
     console.log('Satochip: signMessage() START');
+    // message is a hex-string prefixed with 0x
     if (!msg) {
       throw Error('No message to sign');
     }
@@ -213,10 +216,12 @@ class SatochipWallet {
       });
       const networkId = tx.getChainId();
       const tx_serialized= tx.serialize().toString('hex')
-      const tx_hash_true= tx.hash(true).toString('hex') // legacy
-      const tx_hash_false= tx.hash(false).toString('hex') // EIP155
+      const tx_hash_true= tx.hash(true).toString('hex') // includeSignature:True
+      const tx_hash_false= tx.hash(false).toString('hex') // includeSignature:False
       const path= this.basePath + '/' + idx;
-      const tx_info= {tx_serialized:tx_serialized, tx_hash_true:tx_hash_true, tx_hash_false:tx_hash_false, chainId:networkId}; // debugsatochip
+      const pubkey= this.hdKey.derive('m/' + idx).publicKey;
+      const address= publicToAddress(pubkey, true).toString('hex');
+      const tx_info= {tx_serialized:tx_serialized, tx_hash_true:tx_hash_true, tx_hash_false:tx_hash_false, chainId:networkId, address: address}; // debugsatochip
       //console.log('Satochip: txSigner: tx_info:' + tx_info);
       const result= await this.signRawTransaction(path, tx, tx_info)
       console.log('Satochip: txSigner: result:' + result);
