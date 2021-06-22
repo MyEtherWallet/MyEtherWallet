@@ -22,7 +22,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
   } else {
     cached = locstore.get(storeKey);
   }
-
   const timeDiff =
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
   if (timeDiff > 1) {

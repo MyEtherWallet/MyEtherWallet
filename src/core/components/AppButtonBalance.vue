@@ -15,10 +15,7 @@
 </template>
 
 <script>
-import {
-  formatBalanceEthValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {},
   props: {
@@ -29,10 +26,6 @@ export default {
     balance: {
       type: String,
       default: ''
-    },
-    isEth: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
@@ -40,9 +33,7 @@ export default {
   },
   computed: {
     balanceFormatted() {
-      return this.isEth
-        ? formatBalanceEthValue(this.balance)
-        : formatFloatingPointValue(this.balance);
+      return formatFloatingPointValue(this.balance);
     }
   }
 };

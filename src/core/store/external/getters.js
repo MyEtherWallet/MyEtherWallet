@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import platformList from '@/_generated/platformlist.json';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 /**
  * Get Eth Fiat value
  */
@@ -52,7 +53,27 @@ const networkTokenUSDMarket = function (
 const contractToToken =
   (state, getters, rootState, rootGetters) => contractAdress => {
     contractAdress = contractAdress.toLowerCase();
-    const tokenId = platformList[contractAdress];
+    let tokenId = platformList[contractAdress];
+    if (contractAdress === MAIN_TOKEN_ADDRESS) {
+      tokenId = rootGetters['global/network'].type.coingeckoID;
+      cgToken = state.coinGeckoTokens.get(tokenId);
+      if (!cgToken) return null;
+      return {
+        name: cgToken.symbol.toUpperCase(),
+        symbol: cgToken.symbol.toUpperCase(),
+        subtext: cgToken.name,
+        value: cgToken.name,
+        contract: MAIN_TOKEN_ADDRESS,
+        img: cgToken.image,
+        decimals: 18,
+        market_cap: cgToken ? cgToken.market_cap : '0',
+        price_change_percentage_24h: cgToken
+          ? cgToken.price_change_percentage_24h
+          : '0',
+        price: cgToken ? cgToken.current_price : '0',
+        pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+      };
+    }
     let cgToken;
     if (tokenId) {
       cgToken = state.coinGeckoTokens.get(tokenId);

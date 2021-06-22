@@ -6,10 +6,7 @@ const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
       if (bl.name.toLowerCase() === t.name.toLowerCase()) return;
-      if (
-        bl.contract_address.toLowerCase() === t.contract_address.toLowerCase()
-      )
-        return;
+      if (bl.contract.toLowerCase() === t.contract.toLowerCase()) return;
     }
     baseList.push(t);
   });
@@ -42,7 +39,7 @@ class Swap {
           return -1;
         });
         return {
-          fromTokens: sorted.filter(t => isAddress(t.contract_address)),
+          fromTokens: sorted.filter(t => isAddress(t.contract)),
           toTokens: sorted
         };
       });

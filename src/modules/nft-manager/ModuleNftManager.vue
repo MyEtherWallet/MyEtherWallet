@@ -172,7 +172,6 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'online']),
-    ...mapGetters('external', ['networkTokenUSDMarket']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPrice']),
     /**
      * Get Tabs

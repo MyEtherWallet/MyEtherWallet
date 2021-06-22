@@ -135,12 +135,12 @@ export default {
   },
   data() {
     return {
-      selected: 'all',
+      selected: NOTIFICATION_TYPES.ALL,
       items: [
-        { label: 'All', val: 'all' },
-        { label: 'In', val: 'in' },
-        { label: 'Out', val: 'out' },
-        { label: 'Swap', val: 'swap' }
+        { label: 'All', val: NOTIFICATION_TYPES.ALL },
+        { label: 'In', val: NOTIFICATION_TYPES.IN },
+        { label: 'Out', val: NOTIFICATION_TYPES.OUT },
+        { label: 'Swap', val: NOTIFICATION_TYPES.SWAP }
       ],
       page: null,
       openNotifications: false
@@ -154,7 +154,6 @@ export default {
     ]),
     ...mapGetters('global', ['network', 'isEthNetwork']),
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('notifications', ['lastFetched']),
     hasNotifications() {
       return this.allNotifications.length > 0;
     },
@@ -228,9 +227,8 @@ export default {
             return notification.to === this.address;
           })
           .map(notification => {
-            if (!notification.formatted) {
-              notification.lastFetched = this.lastFetched;
-            }
+            notification.type = NOTIFICATION_TYPES.IN;
+            notification.read = true;
             notification = new Notification(notification);
             return formatNotification(notification, this.network);
           })
@@ -253,11 +251,15 @@ export default {
     notificationsByType() {
       switch (this.selected) {
         case NOTIFICATION_TYPES.IN:
-          return this.incomingTxNotifications.slice(0, 20);
+          return this.incomingTxNotifications
+            .slice(0, 20)
+            .sort(this.sortByDate);
         case NOTIFICATION_TYPES.OUT:
-          return this.outgoingTxNotifications.slice(0, 20);
+          return this.outgoingTxNotifications
+            .slice(0, 20)
+            .sort(this.sortByDate);
         case NOTIFICATION_TYPES.SWAP:
-          return this.swapNotifications.slice(0, 20);
+          return this.swapNotifications.slice(0, 20).sort(this.sortByDate);
         default:
           return this.allNotifications;
       }
@@ -280,7 +282,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions('notifications', ['updateNotification', 'setFetchedTime']),
+    ...mapActions('notifications', ['updateNotification']),
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },

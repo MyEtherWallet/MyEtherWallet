@@ -219,8 +219,8 @@ export default {
     },
     goToSwap(data) {
       const obj = {
-        fromToken: data.fromT.contract_address,
-        toToken: data.toT.contract_address,
+        fromToken: data.fromT.contract,
+        toToken: data.toT.contract,
         amount: '1'
       };
 

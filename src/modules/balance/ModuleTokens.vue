@@ -104,7 +104,6 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'initialLoadTokens']),
     ...mapGetters('global', ['isEthNetwork']),
-
     loading() {
       return this.initialLoadTokens;
     },

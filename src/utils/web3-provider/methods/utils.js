@@ -55,7 +55,6 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      console.log(err, 'dsdfsfsfd');
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);

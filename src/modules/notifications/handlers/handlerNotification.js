@@ -46,7 +46,8 @@ const NOTIFICATION_TYPES = {
   SWAP: 'swap',
   IN: 'in',
   OUT: 'out',
-  ERROR: 'error'
+  ERROR: 'error',
+  ALL: 'all'
 };
 /**
  * Transaction status
@@ -106,6 +107,11 @@ export default class Notification {
       network: obj.network ? obj.network : '',
       formatted: true
     };
+    if (notification.status === '0x1' || notification.status === '0x0')
+      notification.status =
+        notification.status === '0x1'
+          ? NOTIFICATION_STATUS.SUCCESS
+          : NOTIFICATION_STATUS.FAILED;
     this.validateNotificationObj(notification);
   }
   /**

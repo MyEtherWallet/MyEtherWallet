@@ -27,7 +27,7 @@ class MEWPClass {
         const data = response.data;
         return data.map(d => {
           return {
-            contract_address: d.contract_address.toLowerCase(),
+            contract: d.contract_address.toLowerCase(),
             isEth: true,
             decimals: parseInt(d.decimals),
             img: `https://img.mewapi.io/?image=${d.icon}`,
@@ -52,17 +52,8 @@ class MEWPClass {
     });
   }
   getQuote({ fromT, toT, fromAmount }) {
-    const fromAddress = fromT.hasOwnProperty('contract_address')
-      ? fromT.contract_address
-      : fromT.hasOwnProperty('contract')
-      ? fromT.contract
-      : '';
-    const toAddress = toT.hasOwnProperty('contract_address')
-      ? toT.contract_address
-      : toT.hasOwnProperty('contract')
-      ? toT.contract
-      : '';
-
+    const fromAddress = fromT.contract;
+    const toAddress = toT.contract;
     if (!isAddress(fromAddress) || !isAddress(toAddress))
       return Promise.resolve([]);
     const fromAmountBN = new BigNumber(fromAmount);
@@ -105,16 +96,8 @@ class MEWPClass {
     });
   }
   getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
-    const contactFromAddress = fromT.hasOwnProperty('contract_address')
-      ? fromT.contract_address
-      : fromT.hasOwnProperty('contract')
-      ? fromT.contract
-      : '';
-    const contractToAddress = toT.hasOwnProperty('contract_address')
-      ? toT.contract_address
-      : toT.hasOwnProperty('contract')
-      ? toT.contract
-      : '';
+    const contactFromAddress = fromT.contract;
+    const contractToAddress = toT.contract;
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
