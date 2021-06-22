@@ -20,7 +20,7 @@
         =====================================================================================
         -->
         <create-wallet-software-overview
-          v-if="walletType === types[2]"
+          v-if="isOverview"
           @typeSelect="setType"
         />
         <!--
@@ -29,7 +29,7 @@
         =====================================================================================
         -->
         <create-wallet-keystore
-          v-else-if="walletType === types[0]"
+          v-else-if="isKeystore"
           :handler-create-wallet="walletHandler"
         />
         <!--
@@ -38,7 +38,7 @@
         =====================================================================================
         -->
         <create-wallet-mnemonic-phrase
-          v-else-if="walletType === types[1]"
+          v-else-if="isMnemonic"
           :handler-create-wallet="walletHandler"
         />
       </template>
@@ -82,22 +82,31 @@ export default {
     walletHandler: {}
   }),
   computed: {
+    isOverview() {
+      return this.walletType !== this.types.MNEMONIC && this.walletType !== this.types.KEYSTORE
+    },
+    isKeystore() {
+      return this.walletType === this.types.KEYSTORE
+    },
+    isMnemonic() {
+      return this.walletType === this.types.MNEMONIC
+    },
     /**
      * @returns correct title of the overlay according to the wallet type selected
      */
     typeTitle() {
-      return this.walletType === WALLET_TYPES[2]
-        ? 'Create wallet using software'
-        : this.walletType === WALLET_TYPES[0]
+      return this.walletType === this.types.MNEMONIC
+        ? 'Create Wallet with Mnemonic Phrase'
+        : this.walletType === this.types.KEYSTORE
         ? 'Create Wallet with Keystore File'
-        : 'Create Wallet with Mnemonic Phrase';
+        : 'Create wallet using software';
     },
     /**
      * @returns back button text
      * if overview, button text is empty
      */
     backBtnText() {
-      return this.walletType === WALLET_TYPES[2] ? '' : 'Back to Software';
+      return this.isMnemonic ||  this.isKeystore ? '' : 'Back to Software';
     }
   },
   mounted() {
@@ -113,7 +122,7 @@ export default {
      * Used in overlay back button
      */
     goBack() {
-      if (this.walletType !== WALLET_TYPES[2]) {
+      if (this.isOverview) {
         try {
           this.$router.push({
             query: { type: 'overview' }
@@ -126,7 +135,7 @@ export default {
     /**
      * Sets a wallet type and the step according to the provided wallet type
      * This method is used in create overview component
-     * @type - must be one of the WALLET_TYPES or an empty string (this will reset step to 0)
+     * @type - must be one of the this.types or an empty string (this will reset step to 0)
      */
     setType(newType) {
       try {

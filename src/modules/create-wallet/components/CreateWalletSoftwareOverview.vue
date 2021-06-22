@@ -17,7 +17,7 @@
       title-icon-class="primary--text"
       right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-keystore-file.svg')"
-      @click.native="selectWalletType(walletTypes[0])"
+      @click.native="selectWalletType(walletTypes.KEYSTORE)"
     />
     <!--
     =====================================================================================
@@ -36,7 +36,7 @@
       title-icon-class="primary--text"
       right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
-      @click.native="selectWalletType(walletTypes[1])"
+      @click.native="selectWalletType(walletTypes.MNEMONIC)"
     />
     <!--
     =====================================================================================
