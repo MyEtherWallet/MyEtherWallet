@@ -339,8 +339,8 @@ export default {
     },
     showConfirmWithWallet() {
       return (
-        (this.isHardware || this.isWeb3Wallet || this.isMewConnect) &&
-        (this.signing || this.signingPending)
+        (this.isHardware || this.isWeb3Wallet) &&
+        (this.signing || this.error !== '')
       );
     },
     swapLabel() {
@@ -415,6 +415,9 @@ export default {
     disableBtn() {
       if (this.error !== '') return true;
       if (!this.signing) return true;
+      return this.txSigned;
+    },
+    txSigned() {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
@@ -706,7 +709,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isHardware || this.isWeb3Wallet || this.isMewConnect) {
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -727,6 +730,9 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           })
           .catch(e => {
             this.signedTxObject = {};
@@ -743,7 +749,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isHardware || this.isWeb3Wallet || this.isMewConnect) {
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -760,6 +766,9 @@ export default {
               ? this.unsignedTxArr[i].type
               : 'OUT';
             signed.push(_signedTx);
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           } else {
             const event = this.instance.signTransaction(this.unsignedTxArr[i]);
             batchTxEvents.push(event);
@@ -801,7 +810,6 @@ export default {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;
         }
-
         this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
         return;
       }
