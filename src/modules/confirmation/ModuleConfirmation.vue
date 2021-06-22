@@ -116,7 +116,7 @@
               py-6
               pr-6
               warning
-              textBlack2--text--text
+              textBlack2--text
               border-radius--5px
               mb-5
             "
