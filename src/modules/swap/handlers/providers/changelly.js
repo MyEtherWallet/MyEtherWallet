@@ -7,6 +7,7 @@ import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
 import { ETH } from '@/utils/networks/types';
 const HOST_URL = 'https://swap.mewapi.io/changelly';
+const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 class Changelly {
   constructor(web3, chain) {
     this.web3 = web3;
@@ -19,8 +20,8 @@ class Changelly {
   }
   getSupportedTokens() {
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
+      .post(`${REQUEST_CACHER}${HOST_URL}`, {
+        id: '1',
         jsonrpc: '2.0',
         method: 'getCurrenciesFull',
         params: {}

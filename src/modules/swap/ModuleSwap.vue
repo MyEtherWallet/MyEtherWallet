@@ -569,7 +569,7 @@ export default {
       });
       const tradebleWalletTokens = this.walletTokens.filter(item => {
         for (const vt of validFromTokens) {
-          if (vt.contract.toLowerCase() === item.contract.toLowerCase())
+          if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
             return item;
         }
       });
@@ -823,6 +823,9 @@ export default {
           this.setDefaults();
           this.isLoading = false;
         });
+    },
+    mainTokenDetails() {
+      this.setDefaults();
     }
   },
   beforeMount() {

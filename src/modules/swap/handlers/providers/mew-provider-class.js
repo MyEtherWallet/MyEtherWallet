@@ -4,6 +4,7 @@ const HOST_URL = 'https://development.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
+const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
 import Configs from '../configs';
 class MEWPClass {
@@ -18,11 +19,7 @@ class MEWPClass {
   }
   getSupportedTokens() {
     return axios
-      .get(`${HOST_URL}${GET_LIST}`, {
-        params: {
-          chain: this.chain
-        }
-      })
+      .get(`${REQUEST_CACHER}${HOST_URL}${GET_LIST}?chain=${this.chain}`)
       .then(response => {
         const data = response.data;
         return data.map(d => {
