@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import platformList from '@/_generated/platformlist.json';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+const tempTokenCache = {};
 /**
  * Get Eth Fiat value
  */
@@ -94,9 +95,12 @@ const contractToToken =
     if (tokenId) {
       cgToken = state.coinGeckoTokens.get(tokenId);
     }
-    const networkToken = rootGetters['global/network'].type.tokens.filter(
-      t => t.address.toLowerCase() === contractAdress
-    )[0];
+    let networkToken = tempTokenCache[contractAdress];
+    if (!networkToken) {
+      networkToken = rootGetters['global/network'].type.tokens.find(
+        t => t.address.toLowerCase() === contractAdress
+      );
+    }
     if (!networkToken) return null;
     return {
       name: networkToken.symbol,

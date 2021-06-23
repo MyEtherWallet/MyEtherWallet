@@ -906,9 +906,9 @@ export default {
     },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
-      if (_.isUndefined(storeTokens)) {
-        this.setSwapTokens(tokens);
-      }
+      // if (_.isUndefined(storeTokens)) {
+      //   this.setSwapTokens(tokens);
+      // }
     },
     openGasPriceModal() {
       this.gasPriceModal = true;

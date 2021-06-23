@@ -27,7 +27,7 @@ class Swap {
       allTokens = allTokens.concat(baseList);
       return Promise.all(
         this.providers.map((p, idx) => {
-          if (idx === 0) return Promise.resolve();
+          if (idx < 2) return Promise.resolve();
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             allTokens = mergeIfNotExists(allTokens, tokens);
