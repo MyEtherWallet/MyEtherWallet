@@ -966,16 +966,12 @@ export default {
             )
           })
           .then(quotes => {
+            this.selectedProvider = {};
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(this.tokenInValue))
                 .toString();
               q.isSelected = false;
-              this.minMaxError = {
-                minFrom: q.minFrom,
-                maxFrom: q.maxFrom
-              };
-
               return q;
             });
             if (quotes.length) {
@@ -990,6 +986,11 @@ export default {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
+          this.minMaxError = {
+            minFrom: q.minFrom,
+            maxFrom: q.maxFrom
+          };
+
           q.isSelected = true;
           if (q?.rateId === 'belowMin') {
             this.belowMinError = q.minFrom;
