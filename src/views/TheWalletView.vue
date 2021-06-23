@@ -31,7 +31,7 @@ import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io/';
+const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io';
 export default {
   components: {
     TheWalletSideMenu,

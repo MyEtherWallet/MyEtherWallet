@@ -256,10 +256,6 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
 import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
@@ -411,10 +407,6 @@ export default {
      */
     mainTokenDetails() {
       const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      ethToken.tokenBalance = formatFloatingPointValue(
-        this.availableBalance
-      ).value;
-      ethToken.totalBalance = formatFiatValue(this.balanceFiatValue).value;
       return ethToken;
     },
     /**
@@ -643,8 +635,7 @@ export default {
       return TRENDING_LIST[this.network.type.name].map(token => {
         const id = token.id || token.contract;
         const foundToken = this.contractToToken(id);
-        token.price = foundToken ? foundToken.pricef : '0.00';
-        token.img = foundToken ? foundToken.img : token.img;
+        if (foundToken) token = Object.assign(token, foundToken);
         return token;
       });
     },
@@ -931,6 +922,7 @@ export default {
         value,
         isValid
       };
+      if (isValid) this.setProvider(0);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1011,6 +1003,7 @@ export default {
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
+      if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -1024,19 +1017,8 @@ export default {
           )
         })
         .then(trade => {
-          if (trade instanceof Error) {
-            this.feeError = 'Provider issue';
-            return;
-          }
-          this.currentTrade = trade;
-          this.currentTrade.gasPrice = this.localGasPrice;
-          this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-            this.network.type.name
-          }`;
           this.allTrades[idx] = trade;
-          this.step = 2;
-          this.loadingFee = false;
-          this.checkFeeBalance();
+          this.setupTrade(trade);
         })
         .catch(e => {
           if (e) {
@@ -1044,6 +1026,20 @@ export default {
           }
         });
     }, 500),
+    setupTrade(trade) {
+      if (trade instanceof Error) {
+        this.feeError = 'Provider issue';
+        return;
+      }
+      this.currentTrade = trade;
+      this.currentTrade.gasPrice = this.localGasPrice;
+      this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+        this.network.type.name
+      }`;
+      this.step = 2;
+      this.loadingFee = false;
+      this.checkFeeBalance();
+    },
     showConfirm() {
       this.confirmInfo = {
         from: this.address,
