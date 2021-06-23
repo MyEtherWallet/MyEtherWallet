@@ -3,7 +3,7 @@ const state = {
   darkList: {},
   path: '',
   currencyRate: {},
-  coinGeckoTokens: new Map()
+  coinGeckoTokens: new Map() //map of {coingeckoId: coingeckotokeninfo}
 };
 
 export default state;

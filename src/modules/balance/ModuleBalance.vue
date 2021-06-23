@@ -102,8 +102,7 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
   formatFiatValue,
-  formatBalanceEthValue,
-  formatPercentageValue
+  formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -170,9 +169,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return formatPercentageValue(
-          this.networkTokenUSDMarket.price_change_percentage_24h
-        ).value;
+        this.networkTokenUSDMarket.price_change_percentage_24hf;
       }
       return '';
     },

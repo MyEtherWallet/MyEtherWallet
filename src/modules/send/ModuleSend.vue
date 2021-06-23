@@ -185,11 +185,7 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-  formatIntegerToString
-} from '@/core/helpers/numberFormatHelper';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   components: {
@@ -310,8 +306,10 @@ export default {
     },
     tokens() {
       // no ref copy
-      const tokensList = JSON.parse(JSON.stringify(this.tokensList)) || [];
+      const tokensList = this.tokensList;
       const imgs = tokensList.map(item => {
+        item.totalBalance = item.usdBalancef;
+        item.tokenBalance = item.balancef;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -515,6 +513,14 @@ export default {
     }, 1000);
   },
   methods: {
+    formatTokensForSelect(tokens) {
+      if (!Array.isArray(tokens)) return [];
+      return tokens.map(t => {
+        t.totalBalance = t.usdBalancef;
+        t.tokenBalance = t.balancef;
+        return t;
+      });
+    },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
      */

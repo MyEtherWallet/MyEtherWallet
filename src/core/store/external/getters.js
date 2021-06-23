@@ -1,6 +1,10 @@
 import BigNumber from 'bignumber.js';
 import platformList from '@/_generated/platformlist.json';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatPercentageValue,
+  formatIntegerValue
+} from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 const tempTokenCache = {};
 /**
@@ -83,12 +87,14 @@ const contractToToken =
         contract: MAIN_TOKEN_ADDRESS,
         img: cgToken.image,
         decimals: 18,
-        market_cap: cgToken ? cgToken.market_cap : '0',
-        price_change_percentage_24h: cgToken
-          ? cgToken.price_change_percentage_24h
+        market_cap: cgToken.market_cap,
+        market_capf: formatIntegerValue(cgToken.market_cap).value,
+        price_change_percentage_24h: cgToken.price_change_percentage_24h,
+        price_change_percentage_24hf: cgToken.price_change_percentage_24h
+          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
           : '0',
-        price: cgToken ? cgToken.current_price : '0',
-        pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+        price: cgToken.current_price,
+        pricef: formatFiatValue(cgToken.current_price).value
       };
     }
     let cgToken;
@@ -112,9 +118,14 @@ const contractToToken =
       img: networkToken.icon ? networkToken.icon : '',
       decimals: networkToken.decimals,
       market_cap: cgToken ? cgToken.market_cap : '0',
+      market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
       price_change_percentage_24h: cgToken
         ? cgToken.price_change_percentage_24h
         : '0',
+      price_change_percentage_24hf:
+        cgToken && cgToken.price_change_percentage_24h
+          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+          : '0',
       price: cgToken ? cgToken.current_price : '0',
       pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
     };

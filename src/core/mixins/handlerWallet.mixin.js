@@ -26,7 +26,6 @@ export default {
             this.tokensData.set(token.id, token);
           });
           this.setCoinGeckoTokens(this.tokensData);
-          this.$apollo.queries.getOwnersERC20Tokens?.refetch();
         }
       },
       error(error) {

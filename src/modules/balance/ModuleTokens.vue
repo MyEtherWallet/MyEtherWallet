@@ -55,7 +55,6 @@ import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
   formatFiatValue,
-  formatPercentageValue,
   formatIntegerToString
 } from '@/core/helpers/numberFormatHelper';
 export default {
@@ -135,9 +134,7 @@ export default {
             : '';
         newObj.change =
           item.price !== '0'
-            ? formatPercentageValue(
-                item.price_change_percentage_24h || 0
-              ).value.replaceAll('%', '')
+            ? item.price_change_percentage_24hf.replaceAll('%', '')
             : '';
         newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
         newObj.price = item.price !== '0' ? '$' + item.price : '';

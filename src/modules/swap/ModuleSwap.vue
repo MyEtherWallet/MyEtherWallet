@@ -442,9 +442,7 @@ export default {
      */
     isFromTokenMain() {
       if (this.isLoading) return false;
-      return (
-        this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS
-      );
+      return this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS;
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
@@ -535,14 +533,6 @@ export default {
         });
       } else if (
         /**
-         * if ETH balance is > 0, add ETH wallet details
-         */
-        this.isFromTokenMain &&
-        BigNumber(this.balanceInETH).gt(0)
-      ) {
-        tokensOwned.push(this.fromTokenType);
-      } else if (
-        /**
          * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
          */
         !this.isFromTokenMain &&
@@ -565,12 +555,13 @@ export default {
         )
           return item;
       });
-      const tradebleWalletTokens = this.walletTokens.filter(item => {
+      let tradebleWalletTokens = this.walletTokens.filter(item => {
         for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
             return item;
         }
       });
+      tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       const returnableTokens = [
         {
           text: 'Select Token',
@@ -860,6 +851,14 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    formatTokensForSelect(tokens) {
+      if (!Array.isArray(tokens)) return [];
+      return tokens.map(t => {
+        t.totalBalance = t.usdBalancef;
+        t.tokenBalance = t.balancef;
+        return t;
+      });
+    },
     /**
      * Set the max available amount to swap from
      */
