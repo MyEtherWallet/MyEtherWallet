@@ -36,6 +36,7 @@ import {
   getGasBasedOnType,
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
+import { toWei } from 'web3-utils';
 export default {
   components: {
     SettingsGasPrice
@@ -65,8 +66,8 @@ export default {
   methods: {
     setCustom(value) {
       const newObj = {
-        gasType: value,
-        gasPrice: this.value
+        gasType: gasPriceTypes.STORED,
+        gasPrice: toWei(value, 'gwei')
       };
       this.$emit('onLocalGasPrice', newObj);
       this.close();
@@ -74,7 +75,7 @@ export default {
     setGas(value) {
       const newObj = {
         gasType: value,
-        gasPrice: getGasBasedOnType(this.baseGasPrice, value)
+        gasPrice: getGasBasedOnType(this.localGas, value)
       };
       this.$emit('onLocalGasPrice', newObj);
       this.close();

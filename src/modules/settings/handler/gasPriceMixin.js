@@ -71,16 +71,10 @@ const gasPriceMixin = {
   watch: {
     gasPrice() {
       this.fetchGasPrice();
-    },
-    gasPriceType(e) {
-      if (!this.useGlobal) {
-        if (e !== gasPriceTypes.STORED) {
-          this.setSelected(e);
-        } else {
-          this.setCustomGasPrice(this.gasPrice);
-        }
-      }
     }
+  },
+  mounted() {
+    this.fetchGasPrice();
   },
   methods: {
     ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
@@ -102,6 +96,7 @@ const gasPriceMixin = {
     },
     fetchGasPrice() {
       this.web3.eth.getGasPrice().then(gp => {
+        console.log(gp);
         this.localGas = gp;
       });
     }

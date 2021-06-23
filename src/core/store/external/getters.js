@@ -19,6 +19,22 @@ const balanceFiatValue = function (state, getters, rootState, rootGetters) {
   return new BigNumber(balanceInETH).times(getters.fiatValue);
 };
 
+const totalTokenFiatValue = function (state, getters, rootState, rootGetters) {
+  const tokenList = rootGetters['wallet/tokensList'];
+  const rate = state.currencyRate.data?.exchange_rate || 1;
+  if (!tokenList.length) return new BigNumber(0);
+  const totalValue = tokenList.reduce((total, currentVal) => {
+    const balance =
+      currentVal.usdBalance !== null &&
+      (currentVal.price_change_percentage_24h !== null ||
+        currentVal.market_cap !== 0)
+        ? currentVal.usdBalance
+        : 0;
+    return new BigNumber(total).plus(balance);
+  }, 0);
+  return totalValue.times(rate);
+};
+
 /**
  * Get main currency market info
  */
@@ -103,5 +119,6 @@ export default {
   fiatValue,
   balanceFiatValue,
   contractToToken,
-  networkTokenUSDMarket
+  networkTokenUSDMarket,
+  totalTokenFiatValue
 };

@@ -9,6 +9,7 @@
       :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
+      :selected="gasPriceType"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />

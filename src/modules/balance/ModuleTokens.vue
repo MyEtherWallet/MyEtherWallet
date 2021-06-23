@@ -51,7 +51,6 @@
   </div>
 </template>
 <script>
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import {
@@ -116,6 +115,7 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'initialLoadTokens']),
     ...mapGetters('global', ['isEthNetwork']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
       return this.initialLoadTokens;
     },
@@ -158,13 +158,7 @@ export default {
       return tokenList;
     },
     totalTokensValue() {
-      return formatFiatValue(
-        this.tokensList.reduce((total, currentVal) => {
-          const balance =
-            currentVal.usdBalance !== null ? currentVal.usdBalance : 0;
-          return new BigNumber(total).plus(balance).toFixed();
-        }, 0)
-      ).value;
+      return formatFiatValue(this.totalTokenFiatValue).value;
     }
   }
 };

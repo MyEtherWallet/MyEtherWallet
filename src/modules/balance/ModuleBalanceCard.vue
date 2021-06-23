@@ -100,7 +100,6 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -117,7 +116,11 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'totalTokenFiatValue'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -129,15 +132,7 @@ export default {
       );
     },
     totalTokenBalance() {
-      return this.tokensList.reduce((total, currentVal) => {
-        const balance =
-          currentVal.usdBalance !== null &&
-          (currentVal.price_change_percentage_24h !== null ||
-            currentVal.market_cap !== 0)
-            ? currentVal.usdBalance
-            : 0;
-        return new BigNumber(total).plus(balance);
-      }, 0);
+      return this.totalTokenFiatValue;
     },
     totalWalletBalance() {
       if (this.fiatValue != 0) {

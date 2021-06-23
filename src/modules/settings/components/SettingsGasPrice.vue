@@ -59,7 +59,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="isSwap"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          @click.native="setCPrice"
         />
         <p v-if="isSwap" class="pt-2">
           To change the custom gas price, go to
@@ -76,7 +76,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="true"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          @click.native="setCPrice"
         />
         <p class="pt-2">
           To change the custom gas price, go to
@@ -150,7 +150,7 @@ export default {
       );
       return {
         text: this.isSwap
-          ? `Custom: ${fromWei(this.customGasPrice, 'gwei')} Gwei $ ${
+          ? `Custom: ${this.customGasPrice} Gwei $ ${
               formatFiatValue(usdValue).value
             }`
           : 'Confirm',
@@ -166,6 +166,11 @@ export default {
       this.gasPriceType === gasPriceTypes.STORED
         ? fromWei(this.gasPrice, 'gwei')
         : '0';
+  },
+  methods: {
+    setCPrice() {
+      this.setCustomGasPrice(this.customGasPrice);
+    }
   }
 };
 </script>
