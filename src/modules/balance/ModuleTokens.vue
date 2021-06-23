@@ -124,20 +124,17 @@ export default {
         const newObj = {};
         newObj.balance = [
           item.balancef + ' ' + item.symbol,
-          item.price !== '0' ? '$' + item.usdBalancef : ''
+          '$' + item.usdBalancef
         ];
         newObj.usdBalance = item.usdBalance;
         newObj.token = item.symbol;
-        newObj.cap =
-          parseInt(item.market_cap) !== 0
-            ? formatIntegerToString(item.market_cap || 0)
-            : '';
+        newObj.cap = item.market_capf !== '0' ? item.market_capf : '';
         newObj.change =
-          item.price !== '0'
+          item.price_change_percentage_24hf !== '0'
             ? item.price_change_percentage_24hf.replaceAll('%', '')
             : '';
         newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-        newObj.price = item.price !== '0' ? '$' + item.price : '';
+        newObj.price = item.pricef !== '0' ? '$' + item.pricef : '';
         newObj.tokenImg = item.img;
         newObj.callToAction = [
           {
