@@ -306,7 +306,7 @@ export default {
     },
     tokens() {
       // no ref copy
-      const tokensList = this.tokensList;
+      const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
         item.totalBalance = item.usdBalancef;
         item.tokenBalance = item.balancef;
