@@ -2,60 +2,71 @@
   <div>
     <app-modal
       :show="showSuccessModal"
-      title="Transaction initiated"
-      :close="reset"
-      :btn-action="btnAction"
-      :btn-enabled="disableBtn"
+      :title="successTitle"
+      :close="resetSuccess"
       :close-only="true"
-      :width="'450'"
-      class="pa-8"
-      @close="reset"
+      width="480"
+      @close="resetSuccess"
     >
       <template #dialogBody>
-        <div class="px-5">
+        <div>
+          <!--
+          ====================================================================================
+            Lottie or icon
+          =====================================================================================
+          -->
           <div
             v-if="showSuccessModal"
-            v-lottie="'checkmark'"
-            style="height: 150px"
+            v-lottie="successLottie"
+            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
           />
-          <div>
-            Once completed, the token amount will be deposited to the address
-            you provider. this should take a few minutes depending on how
-            congested the Ethereum network is.
+          <!--
+          ====================================================================================
+            Body
+          =====================================================================================
+          -->
+          <div class="mew-body">
+            {{ successBodyText }}
           </div>
-          <div
-            class="
-              d-flex
-              justify-space-around
-              flex-md-row flex-sm-column-reverse flex-xs-column-reverse
-              align-sm-center align-xs-center
-              my-3
-            "
-          >
-            <div>
+          <!--
+          ====================================================================================
+            Links
+          =====================================================================================
+          -->
+          <v-row class="justify-sm-space-between align-center pt-3" dense>
+            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
+              <a
+                class="d-flex justify-center justify-sm-end"
+                @click.stop="viewProgress"
+                >View Progress</a
+              >
+            </v-col>
+            <v-col cols="12" sm="auto" class="pb-2">
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.etherscan"
-                class="d-flex"
+                class="d-flex justify-center justify-sm-start"
                 >View on Etherscan
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div v-if="network.type.isEthVMSupported.supported">
+            </v-col>
+            <v-col
+              v-if="network.type.isEthVMSupported.supported"
+              cols="12"
+              sm="auto"
+              class="pb-2"
+            >
               <a
                 rel="noopener noreferrer"
                 target="_blank"
                 :href="links.ethvm"
-                class="d-flex"
+                class="d-flex justify-center"
                 >View on EthVM
                 <v-icon color="primary" small>mdi-launch</v-icon></a
               >
-            </div>
-            <div>
-              <a @click.stop="viewProgress">View Progress</a>
-            </div>
-          </div>
+            </v-col>
+          </v-row>
         </div>
       </template>
     </app-modal>
@@ -65,10 +76,13 @@
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :scrollable="true"
+      :anchored="true"
+      width="650"
       @close="reset"
     >
       <template #dialogBody>
-        <div>
+        <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="tx.to"
@@ -120,67 +134,105 @@
             :signed="signingPending"
             :error="error"
           />
-          <v-expansion-panels accordion multiple flat>
+          <v-expansion-panels
+            v-model="panel"
+            accordion
+            multiple
+            flat
+            class="expansion-border"
+          >
             <v-expansion-panel
               v-for="(transaction, i) in transactions"
-              :key="transaction.title + transaction.value + i"
-              class="expansion-border"
+              :key="`${transaction.title}${transaction.value}${i}`"
+              :class="{
+                'expansion-panel-border-bottom':
+                  transactions.length > 1 && i !== transactions.length - 1
+              }"
+              @click="scrollToElement(i)"
             >
-              <v-expansion-panel-header :disable-icon-rotate="signing">
-                <p class="ma-0">
-                  <span class="font-weight-bold"
-                    >Transaction
-                    {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
-                  </span>
-                  <br />
-                  <span v-if="isSwap" class="ma-0"
-                    >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
-                  >
-                </p>
-                <template v-if="signing" #actions>
-                  <v-progress-circular
-                    v-show="isBatch && signedTxArray.length < i + 1"
-                    indeterminate
-                    color="primary"
-                  />
-                  <v-progress-circular
-                    v-show="
-                      !isBatch && Object.keys(signedTxObject).length === 0
-                    "
-                    indeterminate
-                    color="primary"
-                  />
-                  <v-icon
-                    v-show="
-                      !isBatch && Object.keys(signedTxObject).length !== 0
-                    "
-                    color="primary"
-                  >
-                    mdi-check
-                  </v-icon>
-                  <v-icon
-                    v-show="isBatch && signedTxArray.length >= i + 1"
-                    color="primary"
-                  >
-                    mdi-check
-                  </v-icon>
-                </template>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div>
-                  <div
-                    v-for="txVal in transaction"
-                    :key="txVal.title + txVal.value"
-                    class="d-flex justify-space-between"
-                  >
-                    <p class="ma-0">{{ txVal.title }}</p>
-                    <p class="ma-0 data-values">{{ txVal.value }}</p>
+              <v-expansion-panel-header
+                :disable-icon-rotate="signing"
+                class="expansion-header"
+              >
+                <v-row class="align-center pr-7 pl-2">
+                  <p class="ma-0 pl-1">
+                    <span class="font-weight-bold"
+                      >Transaction
+                      {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                    </span>
+                    <br />
+                    <span
+                      v-if="isSwap && transactions.length > 1"
+                      class="ma-0 mew-label searchText--text"
+                      >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
+                    >
+                  </p>
+                  <v-spacer />
+                  <div v-if="signing">
+                    <v-progress-circular
+                      v-show="isBatch && signedTxArray.length < i + 1"
+                      indeterminate
+                      color="primary"
+                      size="20"
+                      width="2"
+                      class="pr-7"
+                    />
+                    <v-progress-circular
+                      v-show="
+                        !isBatch && Object.keys(signedTxObject).length === 0
+                      "
+                      indeterminate
+                      color="primary"
+                      size="20"
+                      width="2"
+                      class="pr-7"
+                    />
+                    <v-icon
+                      v-show="
+                        !isBatch && Object.keys(signedTxObject).length !== 0
+                      "
+                      color="primary"
+                    >
+                      mdi-check
+                    </v-icon>
+                    <v-icon
+                      v-show="isBatch && signedTxArray.length >= i + 1"
+                      color="primary"
+                    >
+                      mdi-check
+                    </v-icon>
                   </div>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content :id="i">
+                <div>
+                  <v-row
+                    v-for="txVal in transaction"
+                    :key="`${txVal.title}${txVal.value}`"
+                    class="d-flex justify-space-between"
+                    no-gutters
+                  >
+                    <v-col
+                      cols="12"
+                      md="3"
+                      class="d-flex d-sm-block ma-0 searchText--text"
+                    >
+                      {{ txVal.title }}
+                    </v-col>
+
+                    <v-col cols="12" md="9">
+                      <app-scroll-block>
+                        <div class="data-values text-md-right">
+                          {{ txVal.value }}
+                        </div>
+                      </app-scroll-block>
+                    </v-col>
+                  </v-row>
                 </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-        </div>
+        </v-card-text>
       </template>
     </app-modal>
     <mew-overlay
@@ -203,6 +255,7 @@
 </template>
 
 <script>
+import AppScrollBlock from '@/core/components/AppScrollBlock';
 import AppModal from '@/core/components/AppModal';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '@/utils/web3-provider/events.js';
@@ -230,8 +283,9 @@ import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
 
 export default {
-  name: 'ConfirmationContainer',
+  name: 'ModuleConfirmation',
   components: {
+    AppScrollBlock,
     ConfirmationMesssage,
     AppModal,
     ConfirmationSwapTransactionDetails,
@@ -243,6 +297,7 @@ export default {
       showTxOverlay: false,
       showSignOverlay: false,
       showSuccessModal: false,
+      showSuccessSwap: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -258,7 +313,8 @@ export default {
         ethvm: '',
         etherscan: ''
       },
-      error: ''
+      error: '',
+      panel: []
     };
   },
   computed: {
@@ -372,6 +428,26 @@ export default {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
       return !_.isEmpty(this.signedTxObject);
+    },
+    /**
+     * Property returns string, deodning whether or not this is a swap or send
+     */
+    successTitle() {
+      return this.showSuccessSwap ? 'Swap initiated' : 'Transaction initiated';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successBodyText() {
+      return this.showSuccessSwap
+        ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
+        : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
+    },
+    /**
+     * Property returns string, depending whether or not this is a swap or send
+     */
+    successLottie() {
+      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -476,6 +552,24 @@ export default {
     });
   },
   methods: {
+    /**
+     * Methods scrolls to an element if element is open on click.
+     * Has To be a timeoute, on order to wait for the element to be open
+     */
+    scrollToElement(_id) {
+      setTimeout(() => {
+        if (this.panel.includes(_id)) {
+          const panel = document.getElementById(_id);
+          const wrapper = this.$refs.scrollableContent;
+          const options = { duration: 500, offset: -60 };
+          this.$vuetify.goTo(panel, { container: wrapper, ...options });
+        }
+      }, 500);
+    },
+    resetSuccess() {
+      this.showSuccessSwap = false;
+      this.reset();
+    },
     reset() {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
@@ -544,6 +638,14 @@ export default {
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
+            /**
+             * keepSwap holds isSwap value
+             * before resetting and reassigns
+             * isSwap will be cleared after showSuccessModal is closed
+             */
+            if (this.isSwap) {
+              this.showSuccessSwap = true;
+            }
             this.reset();
             this.showSuccess(hash);
           }
@@ -553,8 +655,16 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
+      /**
+       * keepSwap holds isSwap value
+       * before resetting and reassigns
+       * isSwap will be cleared after showSuccessModal is closed
+       */
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
+      if (this.isSwap) {
+        this.showSuccessSwap = true;
+      }
       this.reset();
       this.showSuccess(hash);
     },
@@ -755,12 +865,22 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$borderPanels: 1px solid var(--v-selectBorder-base) !important;
 .expansion-border {
-  border: 1px solid var(--v-selectBorder-base) !important;
+  border: $borderPanels;
+  border-radius: 8px;
 }
 
 .data-values {
-  max-width: 350px;
   overflow-wrap: break-word;
+}
+.expansion-header {
+  height: 60px;
+}
+.expansion-panel-border-bottom {
+  border-bottom: $borderPanels;
+}
+.lottie {
+  height: 120px;
 }
 </style>

@@ -180,7 +180,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .value-container {
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #f9f9f9;
 }
 .arrow-icon {

@@ -7,7 +7,7 @@
       <div class="titlePrimary--text subtitle-1 font-weight-bold mb-2">
         {{ title }}
       </div>
-      <vue-qr-code :value="value" :options="{ size: 140 }"></vue-qr-code>
+      <qr-code :data="value" :height="140" :width="140" />
       <v-card flat max-width="160px" class="monospace mt-1">
         {{ value }}
       </v-card>
@@ -16,11 +16,8 @@
 </template>
 
 <script>
-import vueQrCode from '@xkeshi/vue-qrcode';
-
 export default {
   name: 'BalanceAddressQrCode',
-  components: { vueQrCode },
   props: {
     title: {
       type: String,

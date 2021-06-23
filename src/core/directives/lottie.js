@@ -1,7 +1,9 @@
 import lottie from 'lottie-web';
 import checkmark from '@/assets/images/icons/lottie/checkmark.json';
+import swap from '@/assets/images/icons/lottie/swap.json';
 const ICONS = {
-  checkmark: checkmark
+  checkmark: checkmark,
+  swap: swap
 };
 const LottieAnimation = {
   bind: function (element, binding) {

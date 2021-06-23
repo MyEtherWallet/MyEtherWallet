@@ -13,6 +13,7 @@ class SendTransaction {
     Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
     Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
     this.currency = null;
+    this.localGasPrice = '0';
     this.TX = {
       from: '0x',
       to: '0x',
@@ -41,10 +42,16 @@ class SendTransaction {
     else throw ErrorList.INVALID_FROM_ADDRESS;
   }
   _setGasPrice() {
-    this.TX.gasPrice = toHex(toBN(this.gasPrice()));
+    this.TX.gasPrice =
+      this.localGasPrice === '0'
+        ? toHex(toBN(this.gasPrice()))
+        : toHex(toBN(this.localGasPrice));
   }
   setGasLimit(_gasLimit) {
     this.TX.gas = toHex(toBN(_gasLimit));
+  }
+  setLocalGasPrice(gasPrice) {
+    this.localGasPrice = toHex(toBN(gasPrice));
   }
   setValue(_value) {
     const _valueBN = toBN(_value);

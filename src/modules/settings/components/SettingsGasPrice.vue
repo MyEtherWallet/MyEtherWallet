@@ -180,14 +180,12 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid transparent;
-
   &.active {
     border: 1px solid var(--v-primary-base);
     background-color: #f2fafa;
     opacity: 1;
   }
 }
-
 .go-to-global-text {
   color: var(--v-primary-base);
 }
