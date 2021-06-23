@@ -139,7 +139,7 @@ import Staked from './handlers/staked';
 import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
-import stepTwo from './stepper/steps/Upload/Upload';
+import stepTwo from './stepper/steps/GenerateEth2Address/GenerateEth2Address';
 import stepThree from './stepper/steps/Review/Review';
 import stepFour from './stepper/steps/InProgress/InProgress';
 import stepFive from './stepper/steps/Done/Done';
@@ -190,15 +190,15 @@ export default {
         },
         {
           step: 2,
-          name: 'Upload your Keystore File'
+          name: 'Generate Eth2 address'
         },
         {
           step: 3,
-          name: 'Review & Enable'
+          name: 'Upload keystore file'
         },
         {
           step: 4,
-          name: 'Stake on Eth2'
+          name: 'Review & stake'
         },
         {
           step: 5,
