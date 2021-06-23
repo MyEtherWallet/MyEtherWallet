@@ -71,6 +71,9 @@ const gasPriceMixin = {
   watch: {
     gasPrice() {
       this.fetchGasPrice();
+    },
+    web3() {
+      this.fetchGasPrice();
     }
   },
   mounted() {
@@ -96,7 +99,6 @@ const gasPriceMixin = {
     },
     fetchGasPrice() {
       this.web3.eth.getGasPrice().then(gp => {
-        console.log(gp);
         this.localGas = gp;
       });
     }
