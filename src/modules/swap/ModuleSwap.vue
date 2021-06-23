@@ -104,13 +104,6 @@
               <mew-button
                 btn-size="small"
                 btn-style="outline"
-                title="Swap Your Bitcoin to Ether"
-                class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
-              />
-              <mew-button
-                btn-size="small"
-                btn-style="outline"
                 title="Buy Ether"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
@@ -140,7 +133,8 @@
             v-if="
               toTokenType &&
               toTokenType.value &&
-              toTokenType.value.toLowerCase() == 'bitcoin'
+              toTokenType.value.toLowerCase() == 'bitcoin' &&
+              isEthNetwork
             "
             class="mt-sm-5"
             :message="msg.lowBalance"
@@ -518,10 +512,11 @@ export default {
        */
       if (BigNumber(this.balanceInETH).lte(0)) {
         tokensOwned.push({
+          contract: MAIN_TOKEN_ADDRESS,
           hasNoEth: true,
           disabled: true,
           text: 'Your wallet is empty.',
-          linkText: 'Buy ETH',
+          linkText: 'Buy ' + this.network.type.currencyName,
           link: 'https://ccswap.myetherwallet.com/#/'
         });
       } else if (
@@ -557,9 +552,10 @@ export default {
           return item;
       });
       const tradebleWalletTokens = this.walletTokens.filter(item => {
-        for (const vt of validFromTokens)
+        for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item.contract.toLowerCase())
             return item;
+        }
       });
       const returnableTokens = [
         {

@@ -118,7 +118,6 @@ import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import getService from '@/core/helpers/getService';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-
 export default {
   components: {
     ModuleAddressBook,
@@ -217,7 +216,8 @@ export default {
       return this.network.type.name === ETH.name;
     },
     isToken() {
-      if (this.sendTx) return this.sendTx.isToken();
+      if (this.sendTx && this.selectedCurrency?.contract)
+        return this.sendTx.isToken();
       return false;
     },
     multiwatch() {
@@ -230,29 +230,16 @@ export default {
       );
     },
     currencyBalance() {
-      if (this.selectedCurrency.balance)
+      if (this.selectedCurrency?.balance) {
         return this.convertToDisplay(
           this.selectedCurrency.balance,
           this.selectedCurrency.decimals
         );
+      }
       return '0';
     },
     tokens() {
-      const eth = {
-        name: this.network.type.name,
-        symbol: this.network.type.name,
-        subtext: this.network.type.name_long,
-        value: this.network.type.name_long,
-        balance: this.balance,
-        img: this.network.type.icon,
-        decimals: 18,
-        market_cap: null,
-        price_change_percentage_24h: null
-      };
-
-      const copiedTokens = this.tokensList.slice();
-      copiedTokens.unshift(eth);
-      return copiedTokens;
+      return this.tokensList;
     },
     txFeeETH() {
       return fromWei(toBN(this.gasPrice).mul(toBN(this.gasLimit)));
@@ -265,14 +252,15 @@ export default {
         .toFixed(2);
     },
     getCalculatedAmount() {
-      const amount = new BigNumber(this.amount)
+      const amount = new BigNumber(this.amount ? this.amount : 0)
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBN(amount);
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.sendTx && this.sendTx.currency) {
         return this.sendTx.hasEnoughBalance() && this.isValidAddress;
+      }
       return false;
     }
   },
@@ -285,11 +273,10 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    tokensList: {
-      handler: function (newVal) {
-        this.selectedCurrency = newVal.length > 0 ? newVal[0] : {};
-      },
-      deep: true
+    tokensList() {
+      this.selectedCurrency =
+        this.tokensList.length > 0 ? this.tokensList[0] : {};
+      this.sendTx.setCurrency(this.selectedCurrency);
     },
     toAddress() {
       if (this.isValidAddress) {
@@ -310,6 +297,7 @@ export default {
       this.sendTx.setGasLimit(this.gasLimit);
     },
     network() {
+      this.clear();
       this.setSendTransaction();
     }
   },
@@ -384,15 +372,11 @@ export default {
     clear() {
       this.data = '';
       this.amount = '0';
+      this.isValidAddress = false;
       this.toAddress = '';
-      this.$refs.expandPanel.setToggle(false);
       this.$refs.mewSelect.clear();
-      this.$refs.addressSelect.clear();
       this.$refs.mewInput.clear();
-      this.selectedCurrency = {
-        name: this.network.type.name_long,
-        symbol: this.network.type.currencyName
-      };
+      this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
       return BigNumber(amount.toString())

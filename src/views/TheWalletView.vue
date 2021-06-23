@@ -41,7 +41,7 @@ export default {
   },
   mixins: [handlerWallet],
   computed: {
-    ...mapState('wallet', ['address', 'web3', 'tokens']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapGetters('global', ['network']),
     ...mapState('external', ['coinGeckoTokens']),
@@ -56,8 +56,10 @@ export default {
     }
   },
   watch: {
-    web3() {
+    network() {
       this.web3.eth.clearSubscriptions();
+    },
+    web3() {
       this.subscribeToBlockNumber();
       this.setGas();
       this.setTokensAndBalance();
@@ -87,12 +89,12 @@ export default {
     setTokensAndBalance() {
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));
+        if (this.coinGeckoTokens?.get) {
+          this.setTokenBalanceFromAPI();
+        } else {
+          this.setTokens([]);
+        }
       });
-      if (this.coinGeckoTokens?.get) {
-        this.setTokenBalanceFromAPI();
-      } else {
-        this.setTokens([]);
-      }
     },
     getTokenInfoByAddress(address) {
       for (const t of this.network.type.tokens) {
@@ -102,7 +104,25 @@ export default {
     },
     setTokenBalanceFromAPI() {
       if (!this.isTokenBalanceApiSupported) {
-        this.setTokens([]);
+        this.setTokens([
+          {
+            name: this.network.type.name,
+            symbol: this.network.type.name,
+            subtext: this.network.type.name_long,
+            value: this.network.type.name_long,
+            contract: MAIN_TOKEN_ADDRESS,
+            balance: this.balanceInWei,
+            img: this.network.type.icon,
+            decimals: 18,
+            market_cap: '0',
+            price_change_percentage_24h: '0',
+            price: '0',
+            pricef: '0',
+            balancef: this._getTokenBalance(this.balanceInWei, 18).value,
+            usdBalance: '0',
+            usdBalancef: '0'
+          }
+        ]);
         return;
       }
       fetch(
@@ -138,6 +158,13 @@ export default {
                 token
               )
             );
+          });
+          formattedList.sort(function (x, y) {
+            return x.contract == MAIN_TOKEN_ADDRESS
+              ? -1
+              : y.contract == MAIN_TOKEN_ADDRESS
+              ? 1
+              : 0;
           });
           this.setTokens(formattedList);
         });

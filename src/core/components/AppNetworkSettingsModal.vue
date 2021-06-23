@@ -61,7 +61,6 @@ export default {
   },
   mounted() {
     this.fetchGasPrice();
-    console.log(this.selected);
   },
   methods: {
     setCustom(value) {
@@ -77,7 +76,6 @@ export default {
         gasType: value,
         gasPrice: getGasBasedOnType(this.baseGasPrice, value)
       };
-      console.log('gasp', newObj, this.baseGasPrice);
       this.$emit('onLocalGasPrice', newObj);
       this.close();
     },

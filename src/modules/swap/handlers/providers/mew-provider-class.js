@@ -128,10 +128,8 @@ class MEWPClass {
     const gasPrice = tradeObj.gasPrice
       ? tradeObj.gasPrice
       : await this.web3.eth.getGasPrice();
-    console.log(from, gasPrice);
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
-        console.log('herere');
         this.web3.eth
           .sendTransaction(
             Object.assign(tradeObj.transactions[0], {

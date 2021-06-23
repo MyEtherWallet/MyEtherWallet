@@ -141,7 +141,7 @@ export default {
     },
     totalWalletBalance() {
       if (this.fiatValue != 0) {
-        const total = this.balanceFiatValue.plus(this.totalTokenBalance);
+        const total = this.totalTokenBalance;
         return `${'$' + formatFiatValue(total).value}`;
       }
       return `${formatBalanceEthValue(this.balanceInWei).value} ${
