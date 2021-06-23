@@ -53,10 +53,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import {
-  formatFiatValue,
-  formatIntegerToString
-} from '@/core/helpers/numberFormatHelper';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceEmptyBlock

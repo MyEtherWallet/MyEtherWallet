@@ -856,6 +856,7 @@ export default {
       return tokens.map(t => {
         t.totalBalance = t.usdBalancef;
         t.tokenBalance = t.balancef;
+        t.price = t.pricef;
         return t;
       });
     },
