@@ -121,18 +121,12 @@
                 </div>
               </div>
               <div
-                class="
-                  d-flex
-                  align-center
-                  justify-end
-                  mew-body
-                  primary--text
-                  pb-3
-                  cursor--pointer
-                "
+                class="d-flex align-center justify-end pb-3"
                 @click="setGasLimit(defaultGasLimit)"
               >
-                Reset to default: {{ formattedDefaultGasLimit }}
+                <div class="mew-body primary--text cursor--pointer">
+                  Reset to default: {{ formattedDefaultGasLimit }}
+                </div>
               </div>
 
               <mew-input
