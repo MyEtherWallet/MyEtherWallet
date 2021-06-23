@@ -103,6 +103,7 @@
             is-toggle
             has-dividers
             :panel-items="expandPanel"
+            @toggled="closeToggle"
           >
             <template #panelBody1>
               <!-- Warning Sheet -->
@@ -532,6 +533,15 @@ export default {
     }, 1000);
   },
   methods: {
+    /**
+     * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
+     */
+    closeToggle() {
+      if (!this.isValidGasLimit) {
+        this.gasLimit = this.defaultGasLimit;
+        this.setGasLimitError(this.gasLimit);
+      }
+    },
     /**
      * Method sets amountError based on the user input
      * Has to be set manualy and debouned otherwise error message is not displayed when tokens are switched and amount input component is out of focus
