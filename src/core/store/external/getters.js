@@ -100,6 +100,7 @@ const contractToToken =
       networkToken = rootGetters['global/network'].type.tokens.find(
         t => t.address.toLowerCase() === contractAdress
       );
+      tempTokenCache[contractAdress] = networkToken;
     }
     if (!networkToken) return null;
     return {
