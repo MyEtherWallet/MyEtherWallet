@@ -115,7 +115,7 @@ const contractToToken =
       subtext: networkToken.name,
       value: networkToken.name,
       contract: networkToken.address,
-      img: networkToken.icon ? networkToken.icon : '',
+      img: networkToken.icon_png ? networkToken.icon_png : '',
       decimals: networkToken.decimals,
       market_cap: cgToken ? cgToken.market_cap : '0',
       market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
