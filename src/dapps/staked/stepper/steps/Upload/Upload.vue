@@ -1,65 +1,52 @@
 <template>
-  <div class="upload-step d-flex">
-    <h4 class="title">{{ $t('dappsStaked.upload') }}</h4>
-    <p class="subtitle">{{ $t('dappsStaked.upload-desc') }}</p>
-    <i18n path="dappsStaked.do-not-have-eth2">
-      <router-link
-        slot="generate"
-        class="generate"
-        :to="{ path: '/generate-eth2-keystore' }"
-        target="_blank"
-      >
-        {{ $t('dappsStaked.generate') }}
-      </router-link>
-    </i18n>
-    <div class="upload-container d-flex">
-      <div class="d-flex">
-        <img class="mx-3" :src="printerIcon" alt="printer-icon" />
-        <span class="filename">{{
-          fileName ? fileName : $t('dappsStaked.upload')
-        }}</span>
+  <div
+    class="dapps--staked--stepper--steps--upload mx-auto pb-15"
+    style="max-width: 550px"
+  >
+    <div class="mew-heading-2 py-12 text-center">
+      Here is your new Eth2 address
+    </div>
+
+    <div
+      class="
+        overlayBg
+        py-3
+        px-7
+        border-radius--10px
+        d-flex
+        align-center
+        justify-space-between
+      "
+    >
+      <div>Already have Eth2 address?</div>
+      <div class="primary--text cursor--pointer d-flex align-center pa-2 mr-n2">
+        Skip this step
+        <img
+          height="20"
+          class="ml-2"
+          src="@/assets/images/icons/button-circle-right-arrow.svg"
+          alt="right button"
+        />
       </div>
-      <label class="d-flex" for="keystore">{{
-        $t('dappsStaked.choose-file')
-      }}</label>
-      <input id="keystore" type="file" @change="upload" />
     </div>
-    <div v-if="hasError" class="error mt-2">
-      {{ $t('dappsStaked.error-keystore') }}
+
+    <div class="mt-8">
+      <div class="mew-heading-3 mb-5">1. Write down your recovery phrase</div>
+      <phrase-block>
+        <mnemonic-phrase-table :data="phrase" />
+      </phrase-block>
     </div>
-    <div v-if="address" class="address-container mt-3 pa-3 d-flex">
-      <span class="title">{{ $t('dappsStaked.withdraw-title') }}</span>
-      <span class="address mt-2">{{ address }}</span>
-    </div>
-    <v-row class="mx-0 top-pad">
-      <v-col class="pl-4" cols="6">
-        <mew-button
-          :loading="false"
-          :has-full-width="true"
-          btn-size="xlarge"
-          :title="$t('common.back')"
-          @click.native="back"
-        />
-      </v-col>
-      <v-col class="pl-4" cols="6">
-        <mew-button
-          :disabled="address === ''"
-          :loading="false"
-          :has-full-width="true"
-          btn-size="xlarge"
-          :title="$t('common.next')"
-          @click.native="doNext"
-        />
-      </v-col>
-    </v-row>
   </div>
 </template>
 
 <script>
-import printerIcon from '@/assets/images/icons/staked-upload-icon.svg';
+import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
+import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import handlerCreateWallet from '@/modules/create-wallet/handlers/handlerCreateWallet';
 
 export default {
+  components: { mnemonicPhraseTable, phraseBlock },
   props: {
     next: {
       type: Function,
@@ -72,55 +59,78 @@ export default {
   },
   data() {
     return {
-      amount: '',
-      disabled: false,
-      fileName: '',
-      address: '',
-      hasError: false,
-      printerIcon: printerIcon
+      phraseSize: 12,
+      phrase: [],
+      generatedVerification: []
     };
   },
-  methods: {
-    upload(e) {
-      const self = this;
-      const reader = new FileReader();
-      reader.onloadend = function (evt) {
-        try {
-          self.file = JSON.parse(evt.target.result);
-          if (
-            self.file.version === 4 &&
-            self.file.pubkey &&
-            self.file.pubkey.length === 96
-          ) {
-            self.address = self.file.pubkey;
-            self.hasError = false;
-          } else {
-            self.hasError = true;
-            self.address = '';
-          }
-          self.$emit('completed', !self.hasError, {
-            key: 'address',
-            value: self.address
-          });
-        } catch (e) {
-          Toast(e, ERROR);
-        }
-      };
-      reader.readAsBinaryString(e.target.files[0]);
-      this.fileName = e.target.files[0].name;
+  computed: {
+    canVerify() {
+      return this.isValidMnemonic && this.extraWordMatch;
     },
-    doNext() {
-      console.log('do next'); // todo remove dev item
-      this.next();
+    isValidMnemonic() {
+      return this.phrase.length === this.phraseSize;
+    },
+    extraWordMatch() {
+      return this.extraWord === this.extraWordVerification;
+    },
+    stepTwoText() {
+      return this.extraWord === ''
+        ? 'Please select correct words based on their numbers.'
+        : 'Please select correct words based on their numbers, and enter your extra word.';
+    }
+  },
+  watch: {
+    phraseSize: {
+      deep: true,
+      handler: function (newVal) {
+        this.phraseSize = newVal;
+        this.setPhrase();
+      }
+    },
+    phrase: {
+      deep: true,
+      handler: function () {}
+    }
+  },
+  mounted() {
+    this.walletHandler = new handlerCreateWallet();
+    this.setPhrase();
+  },
+  destroyed() {
+    this.walletHandler = {};
+  },
+  methods: {
+    generateVerification() {
+      this.generatedVerification = this.handlerCreateWallet.getVerification();
+      this.generatedVerification.sort(function (a, b) {
+        return a.itemNumber - b.itemNumber;
+      });
+    },
+    setPhrase() {
+      this.handlerCreateWallet
+        .generateMnemonic(this.phraseSize)
+        .then(res => {
+          this.phrase = res;
+          this.generateVerification();
+        })
+        .catch(e => {
+          this.generateVerification();
+          Toast(e, {}, ERROR);
+        });
+    },
+    verify() {
+      this.handlerCreateWallet
+        .validateMnemonic(this.validateMnemonicValues)
+        .then(() => {
+          this.updateStep(3);
+        })
+        .catch(e => {
+          Toast(e, {}, ERROR);
+        });
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-@import 'Upload.scss';
-
-.top-pad {
-  padding-top: 40px;
-}
-</style>
+<style lang="scss" scoped></style>

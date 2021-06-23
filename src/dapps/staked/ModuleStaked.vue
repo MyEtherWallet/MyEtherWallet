@@ -73,7 +73,7 @@
             <template v-if="isStepActive(0)" #stepperContent1>
               <step-one :next="nextStep" @completed="proceed" />
             </template>
-            <template v-if="isStepActive(1)" #stepperContent2>
+            <template v-if="isStepActive(0)" #stepperContent2>
               <step-two
                 :back="backStep"
                 :next="nextStep"

@@ -151,7 +151,7 @@
     User information
     ===================================================
     -->
-    <v-sheet color="overlayBg" class="px-12 py-8 mt-15 border-radius--10px">
+    <div class="overlayBg px-12 py-8 mt-15 border-radius--10px">
       <ul class="user-info">
         <li>Your ETH is staked with our partner Staked.us</li>
         <li>Staked.us will create and maintain Eth2 validators for you</li>
@@ -161,7 +161,7 @@
           data in the future when transfers are enabled on the Eth2 chain
         </li>
       </ul>
-    </v-sheet>
+    </div>
 
     <mew-button
       class="mx-auto d-block mt-10"
@@ -181,7 +181,12 @@ import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
-const types = ['32', '64', '96', '128'];
+const types = [
+  { name: '32', value: 32 },
+  { name: '64', value: 64 },
+  { name: '96', value: 96 },
+  { name: '128', value: 128 }
+];
 
 export default {
   props: {
@@ -195,7 +200,7 @@ export default {
       toolTipFee:
         '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
       items: types,
-      amount: '32',
+      amount: {},
       ethPrice: '',
       balance: 0
     };
