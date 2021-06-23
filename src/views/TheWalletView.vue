@@ -104,24 +104,23 @@ export default {
     },
     setTokenBalanceFromAPI() {
       if (!this.isTokenBalanceApiSupported) {
+        const token = this.contractToToken(MAIN_TOKEN_ADDRESS);
+        const denominator = new BigNumber(10).pow(token.decimals);
+        const usdBalance = new BigNumber(this.balanceInWei)
+          .div(denominator)
+          .times(token.price)
+          .toString();
         this.setTokens([
-          {
-            name: this.network.type.name,
-            symbol: this.network.type.name,
-            subtext: this.network.type.name_long,
-            value: this.network.type.name_long,
-            contract: MAIN_TOKEN_ADDRESS,
-            balance: this.balanceInWei,
-            img: this.network.type.icon,
-            decimals: 18,
-            market_cap: '0',
-            price_change_percentage_24h: '0',
-            price: '0',
-            pricef: '0',
-            balancef: this._getTokenBalance(this.balanceInWei, 18).value,
-            usdBalance: '0',
-            usdBalancef: '0'
-          }
+          Object.assign(
+            {
+              balance: this.balanceInWei,
+              balancef: this._getTokenBalance(this.balanceInWei, token.decimals)
+                .value,
+              usdBalance: usdBalance,
+              usdBalancef: formatFiatValue(usdBalance).value
+            },
+            token
+          )
         ]);
         return;
       }

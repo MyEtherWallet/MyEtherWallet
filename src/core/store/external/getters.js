@@ -77,24 +77,29 @@ const contractToToken =
     let tokenId = platformList[contractAdress];
     if (contractAdress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
+      const networkType = rootGetters['global/network'].type;
       cgToken = state.coinGeckoTokens.get(tokenId);
-      if (!cgToken) return null;
       return {
-        name: cgToken.symbol.toUpperCase(),
-        symbol: cgToken.symbol.toUpperCase(),
-        subtext: cgToken.name,
-        value: cgToken.name,
+        name: cgToken ? cgToken.symbol.toUpperCase() : networkType.name,
+        symbol: cgToken ? cgToken.symbol.toUpperCase() : networkType.name,
+        subtext: cgToken ? cgToken.name : networkType.name_long,
+        value: cgToken ? cgToken.name : networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,
-        img: cgToken.image,
+        img: cgToken ? cgToken.image : networkType.icon,
         decimals: 18,
-        market_cap: cgToken.market_cap,
-        market_capf: formatIntegerValue(cgToken.market_cap).value,
-        price_change_percentage_24h: cgToken.price_change_percentage_24h,
-        price_change_percentage_24hf: cgToken.price_change_percentage_24h
-          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+        market_cap: cgToken ? cgToken.market_cap : '0',
+        market_capf: cgToken
+          ? formatIntegerValue(cgToken.market_cap).value
           : '0',
-        price: cgToken.current_price,
-        pricef: formatFiatValue(cgToken.current_price).value
+        price_change_percentage_24h: cgToken
+          ? cgToken.price_change_percentage_24h
+          : '0',
+        price_change_percentage_24hf:
+          cgToken && cgToken.price_change_percentage_24h
+            ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+            : '0',
+        price: cgToken ? cgToken.current_price : '0',
+        pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
       };
     }
     let cgToken;
