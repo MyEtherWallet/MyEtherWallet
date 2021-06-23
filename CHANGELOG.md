@@ -1,3 +1,9 @@
+### v5.8.1
+
+### Devop
+
+- update packages and token images [#3177](https://github.com/MyEtherWallet/MyEtherWallet/pull/3177)
+
 ### v5.8.0
 
 ### Bug
