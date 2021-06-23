@@ -267,7 +267,7 @@
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :pre-selected-token="requestToken"
-      @onConfirm="callDeposit"
+      @onConfirm="onDeposit"
     />
     <aave-borrow-overlay
       :pre-selected-token="requestToken"
@@ -276,7 +276,7 @@
       :is-loading-data="isLoadingData"
       :reserves-data="reservesData"
       :user-summary="userSummary"
-      @onConfirm="callBorrow"
+      @onConfirm="onBorrow"
     />
     <aave-collateral-overlay
       :pre-selected-token="requestToken"
@@ -285,7 +285,7 @@
       :user-summary="userSummary"
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
-      @onConfirm="callSwitchCollateral"
+      @onConfirm="setCollateral"
     />
     <aave-withdraw-overlay
       :pre-selected-token="requestToken"
@@ -294,7 +294,7 @@
       :user-summary="userSummary"
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
-      @onConfirm="callWithdraw"
+      @onConfirm="onWithdraw"
     />
     <aave-repay-overlay
       :pre-selected-token="requestToken"
@@ -303,7 +303,7 @@
       :user-summary="userSummary"
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
-      @onConfirm="callRepay"
+      @onConfirm="onRepay"
     />
     <aave-set-apr-overlay
       :pre-selected-token="requestToken"
@@ -312,7 +312,7 @@
       :user-summary="userSummary"
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
-      @onConfirm="callSwitchInterest"
+      @onConfirm="setBorrowRate"
     />
   </div>
 </template>
@@ -326,13 +326,10 @@ import AaveRepayOverlay from './components/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import handlerAave from './handlers/handlerAave';
-// import AaveCalls from './apollo/queries/queries';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
 import {
   formatFiatValue,
@@ -521,100 +518,7 @@ export default {
       return [];
     }
   },
-  watch: {
-    isEthNetwork(newVal) {
-      if (newVal) {
-        this.handler = new handlerAave();
-      } else {
-        this.handler = null;
-        this.caller = null;
-      }
-    }
-  },
-  mounted() {
-    this.handler = new handlerAave();
-  },
   methods: {
-    callDeposit(e) {
-      this.handler
-        .deposit(e)
-        .then(() => {
-          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callSwitchCollateral(e) {
-      this.handler
-        .switchCollateral(e)
-        .then(() => {
-          Toast(
-            'Success! Your collateral is being switched and will display shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callBorrow(e) {
-      this.handler
-        .borrow(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callWithdraw(e) {
-      this.handler
-        .withdraw(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callRepay(e) {
-      this.handler
-        .repay(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callSwitchInterest(e) {
-      this.handler
-        .switchRate(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
     openDepositOverlayWithToken(token) {
       this.requestToken = token;
       this.showDepositOverlay = true;

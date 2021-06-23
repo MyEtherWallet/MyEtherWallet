@@ -31,8 +31,8 @@ const ACTION_TYPES = {
 };
 
 const INTEREST_TYPES = {
-  stable: 'stable',
-  variable: 'variable'
+  stable: 'Stable',
+  variable: 'Variable'
 };
 
 export {

@@ -49,6 +49,7 @@ module.exports = [
   'https://rpc.ethercore.io:443',
   'https://sai-mainnet.makerfoundation.com:443',
   'wss://api.thegraph.com:443',
+  'https://api.thegraph.com:443',
   'https://ambrpay.io:443',
   'https://nft2.mewapi.io:443',
   'wss://connect.mewapi.io:443',

@@ -64,12 +64,6 @@
       :disabled="!apr.type"
       @click.native="onContinue"
     />
-    <mew-warning-sheet
-      v-if="showError"
-      class="mt-4"
-      description="You cannot choose stable for reserves being
-    used as collateral. Disable the collateral usage and try again."
-    />
   </v-sheet>
 </template>
 

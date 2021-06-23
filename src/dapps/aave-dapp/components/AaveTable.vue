@@ -47,7 +47,10 @@
 </template>
 
 <script>
-import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
+import {
+  AAVE_TABLE_HEADER,
+  INTEREST_TYPES
+} from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import {
@@ -365,28 +368,28 @@ export default {
            * Case: Aave Borrow Table used in Overlay
            */
           case AAVE_TABLE_HEADER.BORROW:
-            list = list.map(item => {
-              return {
-                token: item.symbol,
-                available: formatFloatingPointValue(item.availableLiquidity)
-                  .value,
-                stableApr: item.stableBorrowRateEnabled
-                  ? formatPercentageValue(
-                      new BigNumber(item.stableBorrowRate).multipliedBy(100)
-                    ).value
-                  : '--',
-                variableApr:
-                  item.variableBorrowRate > 0
+            list = list
+              .filter(item => {
+                return item.variableBorrowRate > 0;
+              })
+              .map(item => {
+                return {
+                  token: item.symbol,
+                  available: formatFloatingPointValue(item.availableLiquidity)
+                    .value,
+                  stableApr: item.stableBorrowRateEnabled
                     ? formatPercentageValue(
-                        new BigNumber(item.variableBorrowRate).multipliedBy(100)
+                        new BigNumber(item.stableBorrowRate).multipliedBy(100)
                       ).value
                     : '--',
-
-                tokenImg: `${item.icon}`,
-                address: item.aToken.id,
-                callToAction: [this.btnBorrow]
-              };
-            });
+                  variableApr: formatPercentageValue(
+                    new BigNumber(item.variableBorrowRate).multipliedBy(100)
+                  ).value,
+                  tokenImg: `${item.icon}`,
+                  address: item.aToken.id,
+                  callToAction: [this.btnBorrow]
+                };
+              });
             break;
           /**
            * Case: Aave Exhisting Deposits Table
@@ -422,7 +425,8 @@ export default {
            */
           case AAVE_TABLE_HEADER.BALANCE_BORROW:
             list = list.map(item => {
-              const isVariable = item.borrowRateMode === 'Variable';
+              const isVariable =
+                item.borrowRateMode === INTEREST_TYPES.variable;
               const reserve = this.reservesData.find(reserve => {
                 return reserve.symbol === item.reserve.symbol;
               });
@@ -445,7 +449,9 @@ export default {
                   color: isVariable ? 'secondary' : 'primary',
                   method: this.onToggleAprType,
                   value: isVariable,
-                  label: isVariable ? 'variable' : 'stable',
+                  label: isVariable
+                    ? INTEREST_TYPES.variable
+                    : INTEREST_TYPES.stable,
                   disabled: enableToggle
                 },
                 callToAction: [this.btnBorrow, this.btnRepay]
