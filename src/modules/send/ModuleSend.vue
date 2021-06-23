@@ -16,7 +16,7 @@
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
-              :is-eth="true"
+              :is-eth="currencyName === selectedCurrency.symbol"
               :loading="!showSelectedBalance"
               class="d-sm-none"
             />
@@ -34,7 +34,7 @@
           <div class="position--relative">
             <app-button-balance
               :balance="selectedBalance"
-              :is-eth="true"
+              :is-eth="currencyName === selectedCurrency.symbol"
               :loading="!showSelectedBalance"
               class="d-none d-sm-block"
             />
@@ -44,7 +44,7 @@
               :value="amount"
               type="number"
               :persistent-hint="true"
-              :rules="amtRules"
+              :error-messages="amountError"
               :max-btn-obj="{
                 title: 'Max',
                 disabled: false,
@@ -83,7 +83,7 @@
         <v-col cols="12" class="py-0">
           <app-network-fee
             :show-fee="showSelectedBalance"
-            :getting-fee="false"
+            :getting-fee="!txFeeIsReady"
             :error="feeError"
             :total-fees="txFee"
             :gas-price-type="localGasType"
@@ -247,7 +247,8 @@ export default {
       localGasPrice: '0',
       localGasType: 'economy',
       defaultGasLimit: '21000',
-      gasLimitError: ''
+      gasLimitError: '',
+      amountError: ''
     };
   },
   computed: {
@@ -257,7 +258,8 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     buyMore() {
-      return this.currencyName === this.selectedCurrency.symbol
+      return this.currencyName === this.selectedCurrency.symbol &&
+        this.amountError === 'Not enough balance to send!'
         ? 'Buy more.'
         : '';
     },
@@ -321,7 +323,11 @@ export default {
       ) {
         return this.balanceInWei;
       }
-      return BigNumber(this.selectedCurrency.balance).toString();
+      const balance = this.convertToDisplay(
+        this.selectedCurrency.balance,
+        this.selectedCurrency.decimals
+      );
+      return BigNumber(balance).toString();
     },
     tokens() {
       // no ref copy
@@ -354,49 +360,25 @@ export default {
         ...mergedList
       ];
     },
-    amtRules() {
-      return [
-        value => !!value || 'Required!',
-        value => {
-          return BigNumber(value).gte(0) || "Amount can't be negative!";
-        },
-        () => {
-          if (this.sendTx && this.sendTx.currency) {
-            return (
-              this.sendTx.hasEnoughBalance() || 'Not enough balance to send!'
-            );
-          }
-          return true;
-        },
-        value => {
-          if (value) {
-            return (
-              SendTransaction.helpers.hasValidDecimals(
-                value,
-                this.selectedCurrency.decimals
-              ) || 'Invalid decimal points'
-            );
-          }
-          return 'Required';
-        }
-      ];
-    },
+    /**
+     * Property checks if user input valid amount
+     * Results to false if amount is empty, amount is negative, has invalid decimal points
+     * @returns {boolean} true or false based on above params
+     */
     isValidAmount() {
-      if (this.amount) {
-        if (BigNumber(this.amount).gte(0)) {
-          if (this.sendTx && this.sendTx.currency)
-            return this.sendTx.hasEnoughBalance();
-          return SendTransaction.helpers.hasValidDecimals(
-            this.amount,
-            this.selectedCurrency.decimals
-          );
-        }
+      /** !amount */
+      if (!this.amount) {
         return false;
       }
-      return false;
-    },
-    gasLimitRules() {
-      return this.gasLimitError;
+      /** amount is negative */
+      if (BigNumber(this.amount).lt(0)) {
+        return false;
+      }
+      /** return amount has valid decimals */
+      return SendTransaction.helpers.hasValidDecimals(
+        this.amount,
+        this.selectedCurrency.decimals
+      );
     },
     isValidGasLimit() {
       if (this.gasLimit) {
@@ -448,6 +430,14 @@ export default {
         .times(this.fiatValue)
         .toFixed(2);
     },
+    /**
+     * Computed property determines whether or no show the loading state of the fee
+     * Fee is loaded when: invalid amount, invalid gas limit, not enough balance to send
+     * @return {boolean} true of false based on the above params
+     */
+    txFeeIsReady() {
+      return this.isValidAmount && this.isValidGasLimit;
+    },
     getCalculatedAmount() {
       const amount = BigNumber(this.amount)
         .times(BigNumber(10).pow(this.selectedCurrency.decimals))
@@ -456,7 +446,11 @@ export default {
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency)
-        return this.sendTx.hasEnoughBalance() && this.isValidAddress;
+        return (
+          this.isValidAmount &&
+          this.sendTx.hasEnoughBalance() &&
+          this.isValidAddress
+        );
       return false;
     },
     actualGasPrice() {
@@ -498,15 +492,18 @@ export default {
         this.sendTx.setTo(this.toAddress, this.userInputType);
       }
     },
-    amount() {
+    amount(newVal) {
       if (this.isValidAmount) {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
+      this.amountError = '';
+      this.debounceAmountError(newVal);
     },
     selectedCurrency: {
       handler: function (newVal) {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
+          this.setAmountError(this.amount);
         }
         this.data = '0x';
       },
@@ -535,8 +532,43 @@ export default {
     this.debouncedGasLimitError = _.debounce(value => {
       this.setGasLimitError(value);
     }, 1000);
+    this.debounceAmountError = _.debounce(value => {
+      this.setAmountError(value);
+    }, 1000);
   },
   methods: {
+    /**
+     * Method sets amountError based on the user input
+     * Has to be set manualy and debouned otherwise error message is not displayed when tokens are switched and amount input component is out of focus
+     * @param value {string}
+     */
+    setAmountError(value) {
+      if (value) {
+        if (BigNumber(value).lt(0)) {
+          this.amountError = "Amount can't be negative!";
+        } else if (
+          !SendTransaction.helpers.hasValidDecimals(
+            value,
+            this.selectedCurrency.decimals
+          )
+        ) {
+          this.amountError = 'Invalid decimal points';
+        } else if (value && this.sendTx && this.sendTx.currency) {
+          this.amountError = this.sendTx.hasEnoughBalance()
+            ? ''
+            : 'Not enough balance to send!';
+        } else {
+          this.amountError = '';
+        }
+      } else {
+        this.amountError = 'Required';
+      }
+    },
+    /**
+     * Method sets gasLimitError based on the user input
+     * Has to be set manualy and debouned otherwise error message is not displayed when tokens are switched and gas limit input component is out of focus
+     * @param value {string}
+     */
     setGasLimitError(value) {
       if (value) {
         if (BigNumber(value).lte(0))
@@ -618,9 +650,10 @@ export default {
       };
     },
     convertToDisplay(amount, decimals) {
-      return BigNumber(amount.toString())
-        .div(BigNumber(10).pow(decimals))
-        .toString();
+      const amt = toBN(amount).toString();
+      return decimals
+        ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
+        : amt;
     },
     setEntireBal() {
       if (
@@ -633,7 +666,7 @@ export default {
       } else {
         this.setAmount(
           this.convertToDisplay(
-            BigNumber(this.selectedCurrency.balance),
+            this.selectedCurrency.balance,
             this.selectedCurrency.decimals
           )
         );

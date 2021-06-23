@@ -26,10 +26,12 @@ export default {
       type: Boolean,
       default: true
     },
+    /** Set this proerty to wei if you are dispalying ETH balance vs erc20 tokens*/
     balance: {
       type: String,
       default: ''
     },
+    /** Set this proerty to true if you are dispalying ETH balance vs erc20 tokens */
     isEth: {
       type: Boolean,
       default: true
