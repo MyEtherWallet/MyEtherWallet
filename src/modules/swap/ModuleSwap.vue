@@ -19,7 +19,6 @@
                 <app-button-balance
                   :loading="isLoading"
                   :balance="displayBalance"
-                  :is-eth="isFromTokenMain"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -444,8 +443,7 @@ export default {
     isFromTokenMain() {
       if (this.isLoading) return false;
       return (
-        this.fromTokenType?.symbol ===
-        this.contractToToken(MAIN_TOKEN_ADDRESS)?.symbol
+        this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS
       );
     },
     /**
