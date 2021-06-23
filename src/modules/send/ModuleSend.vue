@@ -120,11 +120,11 @@
                   result in your transaction failing or getting stuck.
                 </div>
               </div>
-              <div
-                class="d-flex align-center justify-end pb-3"
-                @click="setGasLimit(defaultGasLimit)"
-              >
-                <div class="mew-body primary--text cursor--pointer">
+              <div class="d-flex align-center justify-end pb-3">
+                <div
+                  class="mew-body primary--text cursor--pointer"
+                  @click="setGasLimit(defaultGasLimit)"
+                >
                   Reset to default: {{ formattedDefaultGasLimit }}
                 </div>
               </div>
