@@ -60,9 +60,6 @@ export default {
       default: gasPriceTypes.ECONOMY
     }
   },
-  mounted() {
-    this.fetchGasPrice();
-  },
   methods: {
     setCustom(value) {
       const newObj = {

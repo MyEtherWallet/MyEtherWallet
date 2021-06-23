@@ -183,11 +183,6 @@ export default {
       handler: function () {
         this.getAddressBookTableData();
       }
-    },
-    onSettings(newVal) {
-      if (newVal) {
-        this.fetchGasPrice();
-      }
     }
   },
   mounted() {
@@ -195,7 +190,6 @@ export default {
   },
   created() {
     this.settingsHandler = new handlerSettings();
-    this.fetchGasPrice();
   },
   methods: {
     getAddressBookTableData() {
