@@ -157,7 +157,7 @@
             title="Next"
             :has-full-width="false"
             btn-size="xlarge"
-            :disabled="!allValidInputs || !isValidGasLimit"
+            :disabled="isDisabledNextBtn"
             @click.native="send()"
           />
         </div>
@@ -251,6 +251,11 @@ export default {
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    isDisabledNextBtn() {
+      return (
+        this.feeError !== '' || !this.isValidGasLimit || !this.allValidInputs
+      );
+    },
     buyMore() {
       return this.currencyName === this.selectedCurrency.symbol &&
         this.amountError === 'Not enough balance to send!'
@@ -415,18 +420,14 @@ export default {
       return fromWei(this.txFee);
     },
     txFee() {
-      return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
-    },
-    txFeeUSD() {
-      return BigNumber(
-        fromWei(toBN(this.actualGasPrice).mul(toBN(this.gasLimit)))
-      )
-        .times(this.fiatValue)
-        .toFixed(2);
+      if (this.isValidGasLimit) {
+        return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
+      }
+      return '0';
     },
     /**
      * Computed property determines whether or no show the loading state of the fee
-     * Fee is loaded when: invalid amount, invalid gas limit, not enough balance to send
+     * Fee is loaded when: invalid amount, invalid gas limit
      * @return {boolean} true of false based on the above params
      */
     txFeeIsReady() {
