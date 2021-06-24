@@ -96,7 +96,7 @@ export default {
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
-      if (!obj.hasOwnProperty('price')) obj['price'] = this.valueUsd;
+      if (!obj.hasOwnProperty('priceRaw')) obj['priceRaw'] = this.valueUsd;
       return obj;
     },
     feeFormatted() {
@@ -115,12 +115,13 @@ export default {
         const amountToUsd = BigNumber(this.value).times(this.valueUsd);
         return formatFiatValue(BigNumber(amountToUsd).plus(ethFeeToUsd)).value;
       }
-      const tokenPrice = BigNumber(this.currency.price).times(this.value);
+      const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
       return formatFiatValue(tokenPrice.plus(ethFeeToUsd)).value;
     },
     usdAmount() {
-      return formatFiatValue(BigNumber(this.value).times(this.currency.price))
-        .value;
+      return formatFiatValue(
+        BigNumber(this.value).times(this.currency.priceRaw)
+      ).value;
     },
     summaryItems() {
       return ['Transaction Fee', 'Total'];
@@ -131,7 +132,7 @@ export default {
           amount: formatFloatingPointValue(this.currency.amount).value,
           icon: this.currency.img,
           usd: this.usdAmount,
-          type: this.currency.name
+          type: this.currency.symbol
         },
         {
           avatar: this.avatar,

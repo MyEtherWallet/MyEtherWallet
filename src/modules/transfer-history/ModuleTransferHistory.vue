@@ -3,12 +3,6 @@
     <div class="px-5 px-lg-3 pt-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ actualTitle }}</span>
-        <mew-button
-          btn-style="transparent"
-          button-size="small"
-          title="EthVM"
-          @click.native="() => navigateToEthvm()"
-        />
       </div>
     </div>
     <div class="pa-1 history-container">

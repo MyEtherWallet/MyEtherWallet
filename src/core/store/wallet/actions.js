@@ -8,12 +8,12 @@ import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
-    state.instance &&
-    (state.instance.identifier === WALLET_TYPES.MEW_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_LINK)
+    state.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     state.instance.getConnection().disconnect();
+  } else if (state.identifier === WALLET_TYPES.MEW_CONNECT) {
+    state.instance.getConnection().disconnectRTC();
   }
   commit('REMOVE_WALLET');
 };
@@ -24,10 +24,6 @@ const setWallet = function ({ commit, dispatch }, params) {
 };
 const setTokens = function ({ commit }, params) {
   commit('SET_TOKENS', params);
-};
-
-const setCoinGeckoTokens = function ({ commit }, params) {
-  commit('SET_COIN_TOKENS', params);
 };
 
 const setAccountBalance = function ({ commit }, balance) {
@@ -61,6 +57,7 @@ const setWeb3Instance = function (
   const web3Instance = new web3(
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
+  web3Instance.eth.transactionConfirmationBlocks = 1;
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
@@ -125,6 +122,5 @@ export default {
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,
-  setTokens,
-  setCoinGeckoTokens
+  setTokens
 };
