@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dapps--staked--stepper--steps--upload mx-auto pb-15"
+    class="dapps--staked--stepper--steps--Generate-Eth2-Address mx-auto pb-15"
     style="max-width: 550px"
   >
     <div class="mew-heading-2 py-12 text-center">

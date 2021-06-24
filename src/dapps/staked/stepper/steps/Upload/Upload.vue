@@ -1,4 +1,5 @@
 <template>
+  <!--
   <div class="upload-step d-flex">
     <h4 class="title">{{ $t('dappsStaked.upload') }}</h4>
     <p class="subtitle">{{ $t('dappsStaked.upload-desc') }}</p>
@@ -53,13 +54,87 @@
       </v-col>
     </v-row>
   </div>
+  -->
+  <div
+    class="dapps--staked--stepper--steps--Generate-Eth2-Address mx-auto pb-15"
+    style="max-width: 550px"
+  >
+    <div class="mew-heading-2 py-12 text-center">Upload your keystore file</div>
+    <div>
+      Please upload your Eth2 keystore file, so we can check its integrity. Your
+      rewards will be withdrawable to this address.
+    </div>
+
+    <phrase-block
+      class="d-block d-sm-flex align-center justify-space-between mt-9"
+    >
+      <div class="d-flex align-center">
+        <img
+          src="@/assets/images/icons/icon-keystore-file.svg"
+          alt="Keystore file"
+        />
+        <div class="ml-2">
+          <div class="mew-heading-4 textSecondary--text">
+            Upload your keystore file
+          </div>
+        </div>
+      </div>
+      <mew-button
+        class="my-2"
+        btn-size="small"
+        title="Browse..."
+        btn-style="outline"
+        :has-full-width="$vuetify.breakpoint.xs"
+        @click.native="isOpenDownloadKeystore = true"
+      />
+    </phrase-block>
+
+    <message-block class="mt-4">
+      <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
+      <div class="word-wrap--break-word">
+        0x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da175253902
+      </div>
+    </message-block>
+
+    <mew-warning-sheet
+      class="mt-4"
+      :title="addressWarning.title"
+      :description="addressWarning.description"
+    />
+
+    <div
+      class="
+        mt-8
+        d-flex
+        flex-column-reverse flex-md-row
+        align-center
+        justify-center
+      "
+    >
+      <mew-button
+        btn-size="xlarge"
+        class="d-block ma-2"
+        title="Back"
+        btn-style="outline"
+      />
+      <mew-button
+        btn-size="xlarge"
+        class="d-block ma-2"
+        title="Next: Review my stake"
+      >
+      </mew-button>
+    </div>
+  </div>
 </template>
 
 <script>
+import MessageBlock from '@/core/components/AppMessageBlock';
+import PhraseBlock from '@/components/PhraseBlock';
 import printerIcon from '@/assets/images/icons/staked-upload-icon.svg';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
+  components: { PhraseBlock, MessageBlock },
   props: {
     next: {
       type: Function,
@@ -72,6 +147,11 @@ export default {
   },
   data() {
     return {
+      addressWarning: {
+        title: 'Is this your Eth2 address?',
+        description:
+          'Please ensure that you are using correct Eth2 keystore file, and that your Eth2 address is correct before proceeding.'
+      },
       amount: '',
       disabled: false,
       fileName: '',
@@ -117,10 +197,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import 'Upload.scss';
-
-.top-pad {
-  padding-top: 40px;
-}
-</style>
+<style lang="scss" scoped></style>

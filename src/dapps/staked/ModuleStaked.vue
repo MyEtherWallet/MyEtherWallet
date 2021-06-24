@@ -73,14 +73,14 @@
             <template v-if="isStepActive(0)" #stepperContent1>
               <step-one :next="nextStep" @completed="proceed" />
             </template>
-            <template v-if="isStepActive(0)" #stepperContent2>
+            <template v-if="isStepActive(1)" #stepperContent2>
               <step-two
                 :back="backStep"
                 :next="nextStep"
                 @completed="proceed"
               />
             </template>
-            <template v-if="isStepActive(2)" #stepperContent3>
+            <template v-if="isStepActive(0)" #stepperContent3>
               <step-three
                 :details="details"
                 :back="backStep"
@@ -140,7 +140,7 @@ import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
 import stepTwo from './stepper/steps/GenerateEth2Address/GenerateEth2Address';
-import stepThree from './stepper/steps/Review/Review';
+import stepThree from './stepper/steps/Upload/Upload';
 import stepFour from './stepper/steps/InProgress/InProgress';
 import stepFive from './stepper/steps/Done/Done';
 import status from './components/status/Status';
