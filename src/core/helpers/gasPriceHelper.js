@@ -61,6 +61,8 @@ const getGasBasedOnType = (gasPrice, gasPriceType) => {
       return getRegular(gasPrice);
     case gasPriceTypes.FAST:
       return getFast(gasPrice);
+    case gasPriceTypes.STORED:
+      return gasPrice;
     default:
       return getEconomy(gasPrice);
   }

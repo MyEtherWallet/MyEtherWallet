@@ -200,9 +200,7 @@
         <template #tabContent2>
           <div class="pa-12">
             <div class="d-flex align-center justify-space-between mb-7">
-              <h4 class="font-weight-bold">
-                My domains <span class="font-weight-regular">(1)</span>
-              </h4>
+              <h3>My domains <span class="font-weight-regular">(1)</span></h3>
               <mew-button
                 btn-style="outline"
                 title="+ Add domain you own"

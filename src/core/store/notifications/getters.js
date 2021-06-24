@@ -1,4 +1,4 @@
-import { notificationTypes } from '@/modules/notifications/configs/configTypes';
+import { NOTIFICATION_TYPES } from '@/modules/notifications/handlers/handlerNotification';
 
 const currentNotifications = function (state, _, rootState, rootGetters) {
   const address = rootState.wallet.address;
@@ -19,7 +19,7 @@ const txNotifications = function (state, _, rootState, rootGetters) {
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
-      item.type === notificationTypes.out &&
+      item.type === NOTIFICATION_TYPES.OUT &&
       item.network === currentNetworkType
     )
       return item;
@@ -33,7 +33,7 @@ const swapNotifications = function (state, _, rootState, rootGetters) {
   const filteredArray = state.notifications.filter(item => {
     if (
       item.from?.toLowerCase() === address?.toLowerCase() &&
-      item.type === notificationTypes.swap &&
+      item.type === NOTIFICATION_TYPES.SWAP &&
       item.network === currentNetworkType
     )
       return item;

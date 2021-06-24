@@ -1,8 +1,8 @@
 <template>
   <mew6-white-sheet class="px-5 px-lg-7 py-5 d-flex justify-space-between">
     <div>
-      <h3 class="mew-heading-1">{{ tokenTitle }}</h3>
-      <p class="mew-heading-2">$ {{ totalTokenValues }}</p>
+      <h2 class="pb-3">{{ tokenTitle }}</h2>
+      <h2 class="pb-3">$ {{ totalTokenValues }}</h2>
       <v-row justify="space-around">
         <v-col v-for="(img, idx) in tokenImages" :key="idx + img" cols="2">
           <img :src="img" height="32px" />
@@ -37,9 +37,7 @@ export default {
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);
       return firstFive.map(item => {
-        return item.img.includes('https')
-          ? `https://img.mewapi.io/?image=${item.img}`
-          : item.img;
+        return item.img;
       });
     }
   }

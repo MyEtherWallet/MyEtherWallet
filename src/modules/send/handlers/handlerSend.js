@@ -6,12 +6,14 @@ import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
     Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
     Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
     this.currency = null;
+    this.localGasPrice = '0';
     this.TX = {
       from: '0x',
       to: '0x',
@@ -24,9 +26,11 @@ class SendTransaction {
       data: '0x'
     };
   }
-  setTo(_to) {
-    if (isAddress(_to)) this.TX.destination = _to;
-    else throw ErrorList.INVALID_TO_ADDRESS;
+  setTo(_to, _type) {
+    if (isAddress(_to)) {
+      this.TX.destination = _to;
+      this.TX.toDetails = _type;
+    } else throw ErrorList.INVALID_TO_ADDRESS;
   }
   _setTo() {
     this.TX.to = this.isToken()
@@ -38,10 +42,16 @@ class SendTransaction {
     else throw ErrorList.INVALID_FROM_ADDRESS;
   }
   _setGasPrice() {
-    this.TX.gasPrice = toHex(toBN(this.gasPrice()));
+    this.TX.gasPrice =
+      this.localGasPrice === '0'
+        ? toHex(toBN(this.gasPrice()))
+        : toHex(toBN(this.localGasPrice));
   }
   setGasLimit(_gasLimit) {
     this.TX.gas = toHex(toBN(_gasLimit));
+  }
+  setLocalGasPrice(gasPrice) {
+    this.localGasPrice = toHex(toBN(gasPrice));
   }
   setValue(_value) {
     const _valueBN = toBN(_value);
@@ -96,12 +106,12 @@ class SendTransaction {
     });
   }
   isToken() {
-    return this.currency.symbol !== this.network().type.currencyName;
+    return this.currency?.contract !== MAIN_TOKEN_ADDRESS;
   }
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
-    if (this.isToken()) {
-      const hasAmountToken = amount.lte(this.currency.balance);
+    if (this.isToken() && this.currency.balance) {
+      const hasAmountToken = amount.lte(toBN(this.currency.balance));
       const hasGas = this.txFee().lte(this.balance());
       return hasAmountToken && hasGas;
     }
@@ -138,6 +148,8 @@ class SendTransaction {
       const _tx = new Transaction(this.TX);
       const json = _tx.toJSON(true);
       json.from = this.address();
+      json.currency = this.currency;
+      json.toDetails = this.TX.toDetails;
       return this.web3().eth.sendTransaction(json);
     } catch (e) {
       return e;

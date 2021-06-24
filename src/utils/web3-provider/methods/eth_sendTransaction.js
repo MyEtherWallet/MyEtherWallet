@@ -1,6 +1,6 @@
 import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import EventNames from '../events';
 import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
@@ -14,9 +14,19 @@ export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
+  let currency;
+  let toDetails;
   if (tx.hasOwnProperty('confirmInfo')) {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
+  }
+  if (tx.hasOwnProperty('currency')) {
+    currency = tx['currency'];
+    delete tx['currency'];
+  }
+  if (tx.hasOwnProperty('toDetails')) {
+    toDetails = tx['toDetails'];
+    delete tx['toDetails'];
   }
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
@@ -41,11 +51,17 @@ export default async ({ payload, store, requestManager }, res, next) => {
     : tx.chainId;
   getSanitizedTx(tx)
     .then(_tx => {
+      const event = confirmInfo
+        ? EventNames.SHOW_SWAP_TX_MODAL
+        : EventNames.SHOW_TX_CONFIRM_MODAL;
+      const params = confirmInfo
+        ? [_tx, confirmInfo]
+        : [_tx, toDetails, currency];
       if (
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
       ) {
-        EventBus.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
+        EventBus.$emit(event, params, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
@@ -61,75 +77,35 @@ export default async ({ payload, store, requestManager }, res, next) => {
          * Checks whether confirmInfo is true
          * if true, assume transaction is a swap
          */
-        if (confirmInfo) {
-          EventBus.$emit(
-            EventNames.SHOW_SWAP_TX_MODAL,
-            [_tx, confirmInfo],
-            _response => {
-              const _promiObj =
-                store.state.wallet.web3.eth.sendSignedTransaction(
-                  _response.rawTransaction
-                );
-              _promiObj
-                .once('transactionHash', hash => {
-                  if (store.state.wallet.instance !== null) {
-                    const localStoredObj = locStore.get(
-                      utils.sha3(
-                        store.state.wallet.instance.getChecksumAddressString()
-                      )
-                    );
-                    locStore.set(
-                      utils.sha3(
-                        store.state.wallet.instance.getChecksumAddressString()
-                      ),
-                      {
-                        nonce: sanitizeHex(
-                          BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                        ),
-                        timestamp: localStoredObj.timestamp
-                      }
-                    );
-                  }
-                  res(null, toPayload(payload.id, hash));
-                })
-                .on('error', err => {
-                  res(err);
-                });
-            }
+        EventBus.$emit(event, params, _response => {
+          const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
+            _response.rawTransaction
           );
-        } else {
-          EventBus.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-            const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
-              _response.rawTransaction
-            );
-            _promiObj
-              .once('transactionHash', hash => {
-                if (store.state.wallet.instance !== null) {
-                  const localStoredObj = locStore.get(
-                    utils.sha3(
-                      store.state.wallet.instance.getChecksumAddressString()
-                    )
-                  );
-                  locStore.set(
-                    utils.sha3(
-                      store.state.wallet.instance.getChecksumAddressString()
-                    ),
-                    {
-                      nonce: sanitizeHex(
-                        BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                      ),
-                      timestamp: localStoredObj.timestamp
-                    }
-                  );
-                }
-                res(null, toPayload(payload.id, hash));
-              })
-              .on('error', err => {
-                res(err);
-              });
-            setEvents(_promiObj, _tx, store.dispatch);
-          });
-        }
+          setEvents(_promiObj, _tx, store.dispatch);
+          _promiObj
+            .once('transactionHash', hash => {
+              if (store.state.wallet.instance !== null) {
+                const storeKey = utils.sha3(
+                  `${
+                    store.getters['global/network'].type.name
+                  }-${store.state.wallet.instance
+                    .getChecksumAddressString()
+                    .toLowerCase()}`
+                );
+                const localStoredObj = locStore.get(storeKey);
+                locStore.set(storeKey, {
+                  nonce: sanitizeHex(
+                    BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                  ),
+                  timestamp: localStoredObj.timestamp
+                });
+              }
+              res(null, toPayload(payload.id, hash));
+            })
+            .on('error', err => {
+              res(err);
+            });
+        });
       }
     })
     .catch(e => {

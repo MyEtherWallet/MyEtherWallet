@@ -103,7 +103,7 @@ export default {
   data() {
     return {
       resolvedAddr: '',
-      nameResolver: {},
+      nameResolver: null,
       currentIdx: null,
       nickname: '',
       addressToAdd: ''
@@ -179,7 +179,8 @@ export default {
     }
   },
   mounted() {
-    this.nameResolver = new NameResolver(this.network);
+    if (this.network.type.ens)
+      this.nameResolver = new NameResolver(this.network);
     if (this.addMode && this.toAddress) {
       this.addressToAdd = this.toAddress;
     }

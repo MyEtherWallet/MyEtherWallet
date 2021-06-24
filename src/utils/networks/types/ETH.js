@@ -12,6 +12,7 @@ export default {
   chainID: 1,
   tokens: tokens,
   contracts: contracts,
+  isTestNetwork: false,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
@@ -23,6 +24,9 @@ export default {
   isEthVMSupported: {
     supported: true,
     url: 'http://api.ethvm.com/',
+    blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
+    blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
     websocket: null
-  }
+  },
+  coingeckoID: 'ethereum'
 };

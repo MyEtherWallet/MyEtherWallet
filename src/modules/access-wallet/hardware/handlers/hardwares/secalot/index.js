@@ -15,6 +15,7 @@ import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
+import secalot from '@/assets/images/icons/wallets/secalot.png';
 
 const NEED_PASSWORD = true;
 
@@ -25,6 +26,10 @@ class SecalotWallet {
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.SECALOT];
     this.password = password;
+    this.icon = {
+      type: 'icon',
+      value: secalot
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

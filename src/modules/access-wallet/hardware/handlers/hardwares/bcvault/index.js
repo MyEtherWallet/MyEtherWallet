@@ -1,20 +1,21 @@
 import { Transaction } from 'ethereumjs-tx';
 import { bufferToHex } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
 import BigNumber from 'bignumber.js';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import store from '@/core/store';
 import Vue from 'vue';
+import bcvault from '@/assets/images/icons/wallets/bcvault.png';
 
 import {
   getBufferFromHex,
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '@/modules/wallets/utils/utils.js';
+} from '@/modules/access-wallet/common/utils';
 
 const NEED_PASSWORD = false;
 
@@ -26,6 +27,10 @@ class BCVault {
     this.bcWallet = new bc.BCJS(() => {});
     this.deviceNumber = null;
     this.bcWalletType = bc.WalletType.ethereum;
+    this.icon = {
+      type: 'img',
+      value: bcvault
+    };
   }
 
   async init() {
@@ -154,7 +159,9 @@ class BCVault {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      null,
+      this.icon
     );
   }
 }

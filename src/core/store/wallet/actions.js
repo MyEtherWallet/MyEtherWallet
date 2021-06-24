@@ -1,20 +1,19 @@
 import url from 'url';
 import web3 from 'web3';
 import MEWProvider from '@/utils/web3-provider';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { formatters } from 'web3-core-helpers';
-import BigNumber from 'bignumber.js';
 import EventNames from '@/utils/web3-provider/events';
 
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
-    state.instance &&
-    (state.instance.identifier === WALLET_TYPES.MEW_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_LINK)
+    state.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     state.instance.getConnection().disconnect();
+  } else if (state.identifier === WALLET_TYPES.MEW_CONNECT) {
+    state.instance.getConnection().disconnectRTC();
   }
   commit('REMOVE_WALLET');
 };
@@ -58,6 +57,7 @@ const setWeb3Instance = function (
   const web3Instance = new web3(
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
+  web3Instance.eth.transactionConfirmationBlocks = 1;
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
@@ -78,7 +78,7 @@ const setWeb3Instance = function (
         const nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(state.address)
           : arr[i].nonce);
-        arr[i].nonce = BigNumber(nonce + i).toFixed();
+        arr[i].nonce = web3.utils.toBN(nonce).addn(i).toString();
         arr[i].gas = gas;
         arr[i].chainId = !arr[i].chainId
           ? rootState.global.currentNetwork.type.chainID

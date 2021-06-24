@@ -29,11 +29,8 @@
           <div class="font-weight-medium d-flex align-center">
             <div class="text-shadow font-weight-bold">MY ACCOUNT VALUE</div>
           </div>
-          <div
-            v-show="convertedBalance !== 'undefinedNaN'"
-            class="text-shadow headline font-weight-bold monospace"
-          >
-            {{ convertedBalance }}
+          <div class="text-shadow headline font-weight-bold monospace">
+            {{ totalWalletBalance || '$0' }}
           </div>
         </div>
       </div>
@@ -103,6 +100,7 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     BalanceAddressPaperWallet,
@@ -116,9 +114,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'totalTokenFiatValue'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -129,17 +131,18 @@ export default {
         this.address.length
       );
     },
-    convertedBalance() {
-      if (this.isEthNetwork) {
-        return `${'$' + formatFiatValue(this.balanceFiatValue).value}`;
+    totalTokenBalance() {
+      return this.totalTokenFiatValue;
+    },
+    totalWalletBalance() {
+      if (this.fiatValue != 0) {
+        const total = this.totalTokenBalance;
+        return `${'$' + formatFiatValue(total).value}`;
       }
-      return `${formatBalanceEthValue(this.balanceInETH).value} ${
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
         this.network.type.currencyName
       }`;
     }
-  },
-  mounted() {
-    //this.animateBlockie();
   },
   methods: {
     animateBlockie() {
@@ -170,8 +173,8 @@ export default {
       this.openPaperWallet = false;
     },
     copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      clipboardCopy(this.getChecksumAddressString);
+      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     }
   }
 };

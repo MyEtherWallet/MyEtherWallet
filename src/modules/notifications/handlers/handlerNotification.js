@@ -1,8 +1,7 @@
 import { isAddress, isHexStrict } from 'web3-utils';
 import vuexStore from '@/core/store';
-import { txTypes, notificationTypes } from '../configs/configTypes';
 import BigNumber from 'bignumber.js';
-import { hexToNumberString, hexToNumber, fromWei, toBN } from 'web3-utils';
+import { toBN, numberToHex, isBN } from 'web3-utils';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -40,7 +39,28 @@ const VALID_ARGUMENTS = [
   'swapResolver',
   'formatted' //boolean
 ];
+/**
+ * Notification types
+ */
+const NOTIFICATION_TYPES = {
+  SWAP: 'swap',
+  IN: 'in',
+  OUT: 'out',
+  ERROR: 'error',
+  ALL: 'all'
+};
+/**
+ * Transaction status
+ */
+const NOTIFICATION_STATUS = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  UNKNOWN: 'unknown'
+};
 
+export { NOTIFICATION_TYPES, NOTIFICATION_STATUS };
 export default class Notification {
   constructor(obj) {
     this.read = obj['read'] ? obj['read'] : false;
@@ -63,55 +83,35 @@ export default class Notification {
     const date = obj.timestamp
       ? new BigNumber(obj.timestamp).times(1000).toFixed()
       : new Date().getTime();
-    const value = isHexStrict(obj.value)
-      ? hexToNumberString(obj.value)
-      : obj.value;
-    const gasPrice = isHexStrict(obj.gasPrice)
-      ? hexToNumberString(obj.gasPrice)
-      : obj.gasPrice
-      ? obj.gasPrice
-      : 0;
-    const gas = isHexStrict(obj.gas) ? hexToNumberString(obj.gas) : obj.gas;
-    const status =
-      isHexStrict(obj.status) && hexToNumber(obj.status)
-        ? txTypes.success
-        : obj.status
-        ? obj.status
-        : txTypes.pending;
     /**
      * The Notification Obj
      */
     const notification = {
       from: obj.from,
       to: obj.to,
-      gasLimit: isHexStrict(obj.gasLimit)
-        ? hexToNumberString(obj.gasLimit)
-        : obj.gasLimit
-        ? obj.gasLimit
-        : obj.gas
-        ? obj.gas
-        : '0x',
-      data: obj.input ? obj.input : obj.data,
       hash: obj.hash,
-      gas: fromWei(gas, 'gwei'),
-      gasPrice: fromWei(toBN(gasPrice), 'gwei'),
-      nonce: isHexStrict(obj.nonce)
-        ? fromWei(hexToNumberString(obj.nonce), 'gwei')
-        : obj.nonce,
-      transactionFee: obj.transactionFee
-        ? obj.transactionFee
-        : this._getTxFee(gasPrice, obj.gasUsed ? obj.gasUsed : gas),
-      status: status,
-      type: obj.type ? obj.type : notificationTypes.in,
-      value: toBN(value) ? fromWei(toBN(value), 'ether') : value,
+      gas: isBN(obj.gas) ? numberToHex(obj.gas) : obj.gas,
+      gasPrice: isBN(obj.gasPrice) ? numberToHex(obj.gasPrice) : obj.gasPrice,
+      nonce: obj.nonce,
+      transactionFee: numberToHex(
+        this._getTxFee(obj.gasPrice, obj.gasUsed ? obj.gasUsed : obj.gas)
+      ),
+      status: obj.status,
+      type: obj.type,
+      value: isBN(obj.value) ? numberToHex(obj.value) : obj.value,
       date: date,
-      read: !obj.read ? date < obj.lastFetched : obj.read,
+      read: !obj.read ? false : obj.read,
       swapObj: obj.swapObj ? obj.swapObj : '',
       fromTxData: obj.fromTxData ? obj.fromTxData : {},
       toTxData: obj.toTxData ? obj.toTxData : {},
       network: obj.network ? obj.network : '',
       formatted: true
     };
+    if (notification.status === '0x1' || notification.status === '0x0')
+      notification.status =
+        notification.status === '0x1'
+          ? NOTIFICATION_STATUS.SUCCESS
+          : NOTIFICATION_STATUS.FAILED;
     this.validateNotificationObj(notification);
   }
   /**
@@ -124,12 +124,14 @@ export default class Notification {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'type' &&
-        !Object.values(notificationTypes).includes(obj['type'].toLowerCase())
+        !Object.values(NOTIFICATION_TYPES).includes(obj['type'].toLowerCase())
       ) {
         this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'status' &&
-        !Object.values(txTypes).includes(obj['status'].toLowerCase())
+        !Object.values(NOTIFICATION_STATUS).includes(
+          obj['status'].toLowerCase()
+        )
       ) {
         this._invalidType(keysArray[i]);
       } else if (
@@ -158,20 +160,20 @@ export default class Notification {
    * Check swap status
    */
   checkSwapStatus(swapper) {
-    if (this.status.toLowerCase() === txTypes.pending) {
+    if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
       const _this = this;
       _this.swapResolver = setInterval(() => {
         swapper.getStatus(_this.swapObj).then(res => {
           const formattedStatus = res.toLowerCase();
           _this.status =
-            formattedStatus === txTypes.completed
-              ? txTypes.success.toUpperCase()
-              : formattedStatus === txTypes.failed ||
-                formattedStatus === txTypes.unknown
-              ? txTypes.failed.toUpperCase()
+            formattedStatus === NOTIFICATION_STATUS.COMPLETED
+              ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
+              : formattedStatus === NOTIFICATION_STATUS.FAILED ||
+                formattedStatus === NOTIFICATION_STATUS.UNKNOWN
+              ? NOTIFICATION_STATUS.FAILED.toUpperCase()
               : res;
         });
-        if (_this.status.toLowerCase() !== txTypes.pending) {
+        if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
           _this.read = false;
           vuexStore.dispatch('notifications/updateNotification', _this);
           clearInterval(_this.swapResolver);
@@ -210,12 +212,6 @@ export default class Notification {
    */
   _getTxFee(gasPrice, gas) {
     const gasFee = toBN(gasPrice).mul(toBN(gas));
-    return fromWei(gasFee, 'ether');
-  }
-  /**
-   * Get Transaction Status
-   */
-  _getTxStatus(status) {
-    return hexToNumber(status) ? txTypes.success : txTypes.failed;
+    return gasFee;
   }
 }

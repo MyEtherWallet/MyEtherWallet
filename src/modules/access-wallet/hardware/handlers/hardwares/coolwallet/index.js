@@ -1,6 +1,6 @@
 import { Transaction } from 'ethereumjs-tx';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
 import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
@@ -8,6 +8,7 @@ import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
+import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 
 import store from '@/core/store';
 import {
@@ -15,7 +16,7 @@ import {
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
@@ -31,10 +32,16 @@ class CoolWallet {
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
+    this.icon = {
+      type: 'img',
+      value: coolwallet
+    };
   }
   init(password) {
     const _this = this;
     return new Promise((resolve, reject) => {
+      if (!window.navigator.bluetooth)
+        return reject(new Error('browser not supported'));
       cwsTransportLib.listen((error, device) => {
         if (error) reject(error);
         if (device) {
@@ -131,7 +138,8 @@ class CoolWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      null
+      null,
+      this.icon
     );
   }
 

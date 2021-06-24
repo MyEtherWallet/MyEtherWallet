@@ -2,7 +2,6 @@
   <div>
     <mew-address-select
       ref="addressSelect"
-      :value="inputAddr"
       :resolved-addr="resolvedAddr"
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
@@ -40,6 +39,7 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
+import { _ } from 'web3-utils';
 
 export default {
   components: {
@@ -60,7 +60,7 @@ export default {
       addMode: false,
       resolvedAddr: '',
       inputAddr: '',
-      nameResolver: {},
+      nameResolver: null,
       isValidAddress: false
     };
   },
@@ -101,7 +101,8 @@ export default {
     }
   },
   mounted() {
-    this.nameResolver = new NameResolver(this.network);
+    if (this.network.type.ens)
+      this.nameResolver = new NameResolver(this.network);
   },
   methods: {
     toggleOverlay() {
@@ -112,25 +113,41 @@ export default {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
             this.resolvedAddr = addr;
-            this.$emit('setAddress', this.resolvedAddr, true);
+            this.isValidAddress = true;
+            this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+              type: 'RESOLVED',
+              value: this.inputAddr
+            });
           });
           // eslint-disable-next-line no-empty
         } catch (e) {}
       }
     },
-    setAddress(value) {
+    setAddress(value, inputType) {
       if (value) {
+        const typeVal =
+          inputType === 'typed'
+            ? value
+            : this.addressBookWithMyAddress.find(item => {
+                return value.toLowerCase() === item.address.toLowerCase();
+              });
         this.inputAddr = value.address ? value.address : value;
         this.resolvedAddr = '';
         const isAddValid = this.isValidAddressFunc(this.inputAddr);
         if (isAddValid instanceof Promise) {
           isAddValid.then(res => {
             this.isValidAddress = res;
-            this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+            this.$emit('setAddress', value, this.isValidAddress, {
+              type: inputType,
+              value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+            });
           });
         } else {
           this.isValidAddress = isAddValid;
-          this.$emit('setAddress', this.inputAddr, this.isValidAddress);
+          this.$emit('setAddress', value, this.isValidAddress, {
+            type: inputType,
+            value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+          });
         }
         if (!this.isValidAddress) {
           this.resolveName();

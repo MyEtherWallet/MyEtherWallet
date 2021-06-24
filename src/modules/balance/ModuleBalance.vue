@@ -1,5 +1,8 @@
 <template>
-  <div v-if="network.type.name === 'ETH'">
+  <div
+    v-if="network.type.name === 'ETH'"
+    class="mew6-component--module-balance"
+  >
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
@@ -18,6 +21,7 @@
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
+      :has-body-padding="false"
       :icon="network.type.icon"
       :caption="convertedBalance"
       :has-elevation="true"
@@ -42,35 +46,40 @@
         </div>
       </template>
       <template #moduleBody>
-        <balance-chart :data="chartData" class="full-width mt-5" />
-        <v-row class="align-center">
-          <v-col class="d-flex align-center justify-center">
-            <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
-            <div
-              :class="[
-                'ml-2 font-weight-regular',
-                priceChange ? 'primary--text' : 'error--text'
-              ]"
-            >
-              {{ formatChange }}
-            </div>
-            <v-icon
-              :class="[priceChange ? 'primary--text' : 'error--text', 'body-2']"
-              >{{ priceChangeArrow }}</v-icon
-            >
-            <div class="ml-5">
-              {{ formatFiatPrice }} / 1 {{ network.type.name }}
-            </div>
-          </v-col>
-          <v-col class="text-right">
-            <mew-button
-              :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
-              @click.native="navigateToSend"
-            />
-          </v-col>
-        </v-row>
+        <div class="pa-7">
+          <balance-chart :data="chartData" class="full-width mt-5" />
+          <v-row class="align-center">
+            <v-col class="d-flex align-center justify-center">
+              <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+              <div
+                :class="[
+                  'ml-2 font-weight-regular',
+                  priceChange ? 'primary--text' : 'error--text'
+                ]"
+              >
+                {{ formatChange }}
+              </div>
+              <v-icon
+                :class="[
+                  priceChange ? 'primary--text' : 'error--text',
+                  'body-2'
+                ]"
+                >{{ priceChangeArrow }}</v-icon
+              >
+              <div class="ml-5">
+                {{ formatFiatPrice }} / 1 {{ network.type.name }}
+              </div>
+            </v-col>
+            <v-col class="text-right">
+              <mew-button
+                :has-full-width="false"
+                title="Send Transaction"
+                btn-size="xlarge"
+                @click.native="navigateToSend"
+              />
+            </v-col>
+          </v-row>
+        </div>
       </template>
     </mew-module>
     <!--
@@ -93,8 +102,7 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
   formatFiatValue,
-  formatBalanceEthValue,
-  formatPercentageValue
+  formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -116,8 +124,11 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'networkTokenUSDMarket'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
       return this.balanceInETH <= 0 && this.chartData.length <= 0;
@@ -126,7 +137,7 @@ export default {
       return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
-      return this.ETHUSDValue.price_change_percentage_24h > 0;
+      return this.networkTokenUSDMarket.price_change_percentage_24h > 0;
     },
     /**
      * Computed property returns formated eth value of the wallet balance
@@ -146,7 +157,7 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return `${this.ETHUSDValue.symbol}${
+        return `${this.networkTokenUSDMarket.symbol}${
           formatFiatValue(this.balanceFiatValue).value
         }`;
       }
@@ -158,9 +169,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return formatPercentageValue(
-          this.ETHUSDValue.price_change_percentage_24h
-        ).value;
+        this.networkTokenUSDMarket.price_change_percentage_24hf;
       }
       return '';
     },
@@ -170,7 +179,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return `${this.ETHUSDValue.symbol}${
+        return `${this.networkTokenUSDMarket.symbol}${
           formatFiatValue(this.fiatValue).value
         }`;
       }
@@ -181,8 +190,8 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.ETHUSDValue &&
-        this.ETHUSDValue.price_change_percentage_24h &&
+        this.networkTokenUSDMarket &&
+        this.networkTokenUSDMarket.price_change_percentage_24h &&
         this.balanceFiatValue &&
         this.fiatValue
       );
