@@ -306,10 +306,11 @@ export default {
     },
     tokens() {
       // no ref copy
-      const tokensList = this.tokensList;
+      const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
         item.totalBalance = item.usdBalancef;
         item.tokenBalance = item.balancef;
+        item.price = item.pricef;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -513,14 +514,6 @@ export default {
     }, 1000);
   },
   methods: {
-    formatTokensForSelect(tokens) {
-      if (!Array.isArray(tokens)) return [];
-      return tokens.map(t => {
-        t.totalBalance = t.usdBalancef;
-        t.tokenBalance = t.balancef;
-        return t;
-      });
-    },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
      */

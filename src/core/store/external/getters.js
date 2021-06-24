@@ -67,7 +67,27 @@ const networkTokenUSDMarket = function (
     price_change_percentage_24h: 0
   };
 };
-
+const getCoinGeckoTokenById = state => cgid => {
+  const cgToken = state.coinGeckoTokens.get(cgid);
+  return {
+    name: cgToken ? cgToken.symbol.toUpperCase() : '',
+    symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
+    subtext: cgToken ? cgToken.name : '',
+    value: cgToken ? cgToken.name : '',
+    img: cgToken ? cgToken.image : '',
+    market_cap: cgToken ? cgToken.market_cap : '0',
+    market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
+    price_change_percentage_24h: cgToken
+      ? cgToken.price_change_percentage_24h
+      : '0',
+    price_change_percentage_24hf:
+      cgToken && cgToken.price_change_percentage_24h
+        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+        : '0',
+    price: cgToken ? cgToken.current_price : '0',
+    pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+  };
+};
 /**
  * Get Token info including market data if exists
  */
@@ -77,30 +97,20 @@ const contractToToken =
     let tokenId = platformList[contractAdress];
     if (contractAdress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
-      cgToken = state.coinGeckoTokens.get(tokenId);
-      if (!cgToken) return null;
-      return {
-        name: cgToken.symbol.toUpperCase(),
-        symbol: cgToken.symbol.toUpperCase(),
-        subtext: cgToken.name,
-        value: cgToken.name,
+      const networkType = rootGetters['global/network'].type;
+      cgToken = getters.getCoinGeckoTokenById(tokenId);
+      return Object.assign(cgToken, {
+        name: networkType.name,
+        symbol: networkType.name,
+        subtext: networkType.name_long,
+        value: networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,
-        img: cgToken.image,
-        decimals: 18,
-        market_cap: cgToken.market_cap,
-        market_capf: formatIntegerValue(cgToken.market_cap).value,
-        price_change_percentage_24h: cgToken.price_change_percentage_24h,
-        price_change_percentage_24hf: cgToken.price_change_percentage_24h
-          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-          : '0',
-        price: cgToken.current_price,
-        pricef: formatFiatValue(cgToken.current_price).value
-      };
+        img: cgToken.img !== '' ? cgToken.img : networkType.icon,
+        decimals: 18
+      });
     }
     let cgToken;
-    if (tokenId) {
-      cgToken = state.coinGeckoTokens.get(tokenId);
-    }
+    cgToken = getters.getCoinGeckoTokenById(tokenId);
     let networkToken = tempTokenCache[contractAdress];
     if (!networkToken) {
       networkToken = rootGetters['global/network'].type.tokens.find(
@@ -109,26 +119,15 @@ const contractToToken =
       tempTokenCache[contractAdress] = networkToken;
     }
     if (!networkToken) return null;
-    return {
+    return Object.assign(cgToken, {
       name: networkToken.symbol,
       symbol: networkToken.symbol,
       subtext: networkToken.name,
       value: networkToken.name,
       contract: networkToken.address,
-      img: networkToken.icon ? networkToken.icon : '',
-      decimals: networkToken.decimals,
-      market_cap: cgToken ? cgToken.market_cap : '0',
-      market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
-      price_change_percentage_24h: cgToken
-        ? cgToken.price_change_percentage_24h
-        : '0',
-      price_change_percentage_24hf:
-        cgToken && cgToken.price_change_percentage_24h
-          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-          : '0',
-      price: cgToken ? cgToken.current_price : '0',
-      pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
-    };
+      img: networkToken.icon_png ? networkToken.icon_png : '',
+      decimals: networkToken.decimals
+    });
   };
 
 export default {
@@ -136,5 +135,6 @@ export default {
   balanceFiatValue,
   contractToToken,
   networkTokenUSDMarket,
-  totalTokenFiatValue
+  totalTokenFiatValue,
+  getCoinGeckoTokenById
 };

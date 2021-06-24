@@ -23,15 +23,8 @@ import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io';
 export default {
   components: {
     TheWalletSideMenu,
@@ -65,7 +58,7 @@ export default {
       this.setTokensAndBalance();
     },
     coinGeckoTokens() {
-      this.setTokenBalanceFromAPI();
+      this.setTokenBalance();
     }
   },
   mounted() {
@@ -85,12 +78,12 @@ export default {
       'setTokens'
     ]),
     ...mapActions('global', ['setGasPrice']),
-    ...mapActions('external', ['setCoinGeckoTokens']),
+    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenBalance']),
     setTokensAndBalance() {
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));
         if (this.coinGeckoTokens?.get) {
-          this.setTokenBalanceFromAPI();
+          this.setTokenBalance();
         } else {
           this.setTokens([]);
         }
@@ -101,73 +94,6 @@ export default {
         if (t.address.toLowerCase() === address.toLowerCase()) return t;
       }
       return null;
-    },
-    setTokenBalanceFromAPI() {
-      if (!this.isTokenBalanceApiSupported) {
-        this.setTokens([
-          {
-            name: this.network.type.name,
-            symbol: this.network.type.name,
-            subtext: this.network.type.name_long,
-            value: this.network.type.name_long,
-            contract: MAIN_TOKEN_ADDRESS,
-            balance: this.balanceInWei,
-            img: this.network.type.icon,
-            decimals: 18,
-            market_cap: '0',
-            price_change_percentage_24h: '0',
-            price: '0',
-            pricef: '0',
-            balancef: this._getTokenBalance(this.balanceInWei, 18).value,
-            usdBalance: '0',
-            usdBalancef: '0'
-          }
-        ]);
-        return;
-      }
-      fetch(
-        `${TOKEN_BALANCE_API}/${this.network.type.name.toLowerCase()}?address=${
-          this.address
-        }`
-      )
-        .then(res => res.json())
-        .then(res => res.result)
-        .then(tokens => {
-          tokens.push({
-            contract: MAIN_TOKEN_ADDRESS,
-            balance: this.balanceInWei
-          });
-          const formattedList = [];
-          tokens.forEach(t => {
-            const token = this.contractToToken(t.contract);
-            if (!token) return;
-            const denominator = new BigNumber(10).pow(token.decimals);
-            const usdBalance = new BigNumber(t.balance)
-              .div(denominator)
-              .times(token.price)
-              .toString();
-            formattedList.push(
-              Object.assign(
-                {
-                  balance: t.balance,
-                  balancef: this._getTokenBalance(t.balance, token.decimals)
-                    .value,
-                  usdBalance: usdBalance,
-                  usdBalancef: formatFiatValue(usdBalance).value
-                },
-                token
-              )
-            );
-          });
-          formattedList.sort(function (x, y) {
-            return x.contract == MAIN_TOKEN_ADDRESS
-              ? -1
-              : y.contract == MAIN_TOKEN_ADDRESS
-              ? 1
-              : 0;
-          });
-          this.setTokens(formattedList);
-        });
     },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
@@ -185,17 +111,6 @@ export default {
       this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
         this.setBlockNumber(res.number);
       });
-    },
-    /**
-     * Get token balance
-     */
-    _getTokenBalance(balance, decimals) {
-      let n = new BigNumber(balance);
-      if (decimals) {
-        n = n.div(new BigNumber(10).pow(decimals));
-        n = formatFloatingPointValue(n);
-      }
-      return n;
     }
   }
 };
