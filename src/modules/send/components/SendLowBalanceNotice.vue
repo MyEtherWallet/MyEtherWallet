@@ -9,7 +9,7 @@
       <template #dialogBody>
         <v-row class="px-12">
           <v-col cols="12">
-            <v-row dense class="info-container border-radius--5px pa-2">
+            <v-row dense class="info-container border-radius--5px pa-2 pa-sm-3">
               <v-col cols="5">
                 <qr-code :data="address" :height="150" :width="150" />
               </v-col>
@@ -40,33 +40,35 @@
         </v-row>
       </template>
     </app-modal>
-    <v-row class="mb-5 pa-2 selectHeaderBg border-radius--5px">
+    <v-row class="pa-2 selectHeaderBg border-radius--5px">
       <v-col cols="12">
         <v-row align-content="center" justify="space-around">
-          <v-col cols="12">
-            <p class="mew-heading-3 ma-0">
-              <v-icon> mdi-information-outline </v-icon>
+          <v-col cols="12" class="pb-0">
+            <p class="font-weight-bold ma-0">
+              <v-icon class="black--text mew-body">
+                mdi-information-outline
+              </v-icon>
               Your {{ currencyName }} balance is too low
             </p>
           </v-col>
-          <v-col cols="6">
-            <p class="mew-body">
+          <v-col cols="12" sm="6">
+            <div class="mew-body textBlack2--text">
               Every transaction requires a small amount of
               {{ currencyName }} to execute. Even if you have tokens to swap,
               when your {{ currencyName }} balance is close to zero, you won't
               be able to send anything until you fund your account.
-            </p>
+            </div>
           </v-col>
-          <v-col cols="6" class="d-flex flex-column">
+          <v-col cols="12" sm="6" class="d-flex flex-column">
             <div
-              class="mew-body primary--text cursor--pointer"
+              class="mew-body primary--text font-weight-medium cursor--pointer"
               @click="openBarcodeModal"
             >
               Transfer {{ currencyName }} from another account
             </div>
             <br />
             <a
-              class="mew-body"
+              class="mew-body font-weight-medium"
               href="https://ccswap.myetherwallet.com/#/"
               target="_blank"
               rel="noopener noreferrer"

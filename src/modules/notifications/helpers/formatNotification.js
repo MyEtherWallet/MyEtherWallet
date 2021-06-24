@@ -1,5 +1,5 @@
 import timeAgo from '@/core/helpers/timeAgo';
-import { toBN } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 /**
  * Formatted notification for mew-notification component
  */
@@ -11,15 +11,17 @@ const formatNotification = (obj, network) => {
       link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },
     gasPrice: {
-      value: `${obj.gasPrice ? obj.gasPrice : 0} Gwei`,
+      value: `${fromWei(obj.gasPrice, 'gwei')} Gwei`,
       string: 'Gas Price'
     },
     gasLimit: {
-      value: obj.gasLimit ? obj.gasLimit : obj.gas ? obj.gas : '0x',
+      value: toBN(obj.gas).toString(),
       string: 'Gas Limit'
     },
     total: {
-      value: `${obj.transactionFee} ${network.type.currencyName}`,
+      value: `${fromWei(obj.transactionFee, 'ether')} ${
+        network.type.currencyName
+      }`,
       string: 'Total Transaction fee'
     },
     to: {
@@ -31,7 +33,7 @@ const formatNotification = (obj, network) => {
       string: 'From'
     },
     amount: {
-      value: `${obj.value} ${network.type.currencyName}`,
+      value: `${fromWei(obj.value, 'ether')} ${network.type.currencyName}`,
       string: 'Amount'
     },
     timestamp: {

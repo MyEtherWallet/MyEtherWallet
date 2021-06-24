@@ -7,7 +7,7 @@ describe('DexAG Swap', () => {
       expect(tokens).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+            contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
             img: 'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
             decimals: 18,
             name: 'Ethereum',
@@ -42,12 +42,12 @@ describe('DexAG Swap', () => {
       .getQuote({
         toT: {
           symbol: 'DAI',
-          contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f'
+          contract: '0x6b175474e89094c44da98b954eedeac495271d0f'
         },
         fromT: {
           symbol: 'ETH',
           decimals: 18,
-          contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+          contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
         },
         fromAmount: '100000000000000000'
       })
