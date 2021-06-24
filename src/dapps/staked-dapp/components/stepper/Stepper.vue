@@ -1,119 +1,25 @@
 <template>
-  <!--  <div class="stepper-box">
-    <div class="top">
-      <div
-        class="divider-line"
-        :style="{ width: `${(100 / steps.length) * (steps.length - 1) - 10}%` }"
-      ></div>
-      <div class="steps-wrapper">
-        <template v-for="(step, index) in steps">
-          <div
-            :key="index"
-            :class="[
-              'step',
-              isStepActive(index)
-                ? 'activated'
-                : index > currentStep.index
-                ? 'deactivated'
-                : 'completed'
-            ]"
-            :style="{ width: `${100 / steps.length}%` }"
-          >
-            <div class="circle mb-2">
-              <span v-if="index >= currentStep.index">{{ step.name }}</span>
-              <i v-if="index < currentStep.index" class="fa fa-check" />
-            </div>
-            <div class="step-title">
-              <span>{{ step.title }}</span>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
-    <div class="content pt-5">
-      <transition
-        :enter-active-class="enterAnimation"
-        :leave-active-class="leaveAnimation"
-        mode="out-in"
-      >
-        <step-one v-if="isStepActive(0)" @completed="proceed" />
-        <step-two v-if="isStepActive(1)" @completed="proceed" />
-        <step-three
-          v-if="isStepActive(2)"
-          :details="details"
-          @completed="proceed"
-        />
-        <step-four
-          v-if="isStepActive(3)"
-          :details="details"
-          @completed="proceed"
-        />
-        <step-five
-          v-if="isStepActive(4)"
-          :amt="details.amount ? details.amount : 0"
-          :hash="txHash"
-          @completed="proceed"
-        />
-      </transition>
-    </div>
-    <div class="button-container">
-      <button
-        v-if="currentStep.index > 0 && currentStep.index < 3"
-        :class="'mt-3 stepper-button previous'"
-        @click="backStep()"
-      >
-        {{ $t('common.back') }}
-      </button>
-      <button
-        :class="[
-          'large-round-button-green-filled mt-3 stepper-button next',
-          !canContinue ? 'deactivated' : '',
-          currentStep.index === 0 ? 'only-next' : ''
-        ]"
-        @click="nextStep()"
-      >
-        {{
-          finalStep && currentStep.index !== 4
-            ? $t('dappsStaked.steps.4')
-            : currentStep.index === 2
-            ? $t('dappsStaked.enable-staking')
-            : currentStep.index === 3
-            ? $t('dappsStaked.stake-on-eth2')
-            : currentStep.index === 4
-            ? $t('dappsStaked.stake-again')
-            : $t('common.next')
-        }}
-      </button>
-    </div>
-    <div v-if="isStepActive(1)" class="what-is-eth2">
-      <i18n path="dappsStaked.what-is-eth2">
-        <a
-          slot="learn-more"
-          href="https://kb.myetherwallet.com/en/diving-deeper/eth2-address/"
-          target="_blank"
-        >
-          {{ $t('common.learn-more') }}
-        </a>
-      </i18n>
-    </div>
-  </div>-->
-
   <div>
     <mew-stepper :items="stepperItems" :on-step="currentStepIdx">
+      <!--
+    ===================================================
+    Step 1: Select Amount 
+    ===================================================
+    -->
       <template v-if="isStepActive(0)" #stepperContent1>
-        <step-one :next="nextStep" @completed="proceed" />
+        <set-amount :next="nextStep" @completed="proceed" />
       </template>
       <template v-if="isStepActive(1)" #stepperContent2>
-        <step-two :next="nextStep" @completed="proceed" />
+        <upload :next="nextStep" @completed="proceed" />
       </template>
       <template v-if="isStepActive(2)" #stepperContent3>
-        <step-three :details="details" :next="nextStep" @completed="proceed" />
+        <review :details="details" :next="nextStep" @completed="proceed" />
       </template>
       <template v-if="isStepActive(3)" #stepperContent4>
-        <step-four :details="details" @completed="proceed" />
+        <in-progress :details="details" @completed="proceed" />
       </template>
       <template v-if="isStepActive(4)" #stepperContent5>
-        <step-five
+        <done
           :amt="details.amount ? details.amount : 0"
           :hash="txHash"
           @completed="proceed"
@@ -124,19 +30,19 @@
 </template>
 
 <script>
-import stepOne from './steps/SetAmount/SetAmount';
-import stepTwo from './steps/Upload/Upload';
-import stepThree from './steps/Review/Review';
-import stepFour from './steps/InProgress/InProgress';
-import stepFive from './steps/Done/Done';
+import SetAmount from './steps/SetAmount/SetAmount';
+import Upload from './steps/Upload/Upload';
+import Review from './steps/Review/Review';
+import InProgress from './steps/InProgress/InProgress';
+import Done from './steps/Done/Done';
 
 export default {
   components: {
-    stepOne,
-    stepTwo,
-    stepThree,
-    stepFour,
-    stepFive
+    SetAmount,
+    Upload,
+    Review,
+    InProgress,
+    Done
   },
   props: {
     steps: {

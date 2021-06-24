@@ -1,71 +1,55 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import { mapGetters, mapState } from 'vuex';
-import stakeConfigs from './configs';
+import configs from './configs';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import vuexStore from '@/core/store';
-import EventEmitter from 'events';
+// import EventEmitter from 'events';
 
-export default class Staked extends EventEmitter {
-  constructor() {
-    super();
-    try {
-      this.$store = vuexStore;
-      Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-      Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
-      const stakedLogo = '';
-      this.settingUp = true;
-      this.transactionInProgress = false;
-      this.myValidators = [];
-      this.priorValidators = [];
-      this.transactionData = {};
-      this.details = {};
-      this.totalStaked = '';
-      this.apr = '';
-      this.eth2ContractAddress = '';
-      this.endpoint = '';
-      this.batchContract = '';
-      this.txHash = '';
-      this.currentStepIdx = 0;
-      this.resetStepper = false;
-      this.stakedLogo = stakedLogo;
-      this.loadingValidators = true;
-      this.activeValidatorsTab = false;
-      this.networkName = this.network().type.name;
-      this.steps = [
-        {
-          name: 1,
-          // title: this.$t('dappsStaked.steps.1'),
-          completed: false
-        },
-        {
-          name: 2,
-          // title: this.$t('dappsStaked.steps.2'),
-          completed: false
-        },
-        {
-          name: 3,
-          // title: this.$t('dappsStaked.steps.3'),
-          completed: false
-        },
-        {
-          name: 4,
-          // title: this.$t('dappsStaked.steps.4'),
-          completed: false
-        },
-        {
-          name: 5,
-          // title: this.$t('dappsStaked.steps.5'),
-          completed: false
-        }
-      ];
-    } catch (e) {
-      console.log(e); // todo remove dev item
-    }
+export default class Staked {
+  constructor(web3, network) {
+    /**
+     * set up the variables
+     */
+    this.web3 = web3;
+    this.network = network;
+    this.totalStaked = '';
+    this.apr = '';
+    /**
+     * get the total staked and apr
+     */
     this.setup();
   }
+  /**
+   * Get the Total Staked and APR
+   */
+  setup() {
+    this.eth2ContractAddress =
+      configs.network[this.network.type.name].depositAddress;
+    this.endpoint = configs.network[this.network.type.name].endpoint;
+    this.batchContract = configs.network[this.network.type.name].batchContract;
 
+    this.web3.eth
+      .getBalance(this.eth2ContractAddress)
+      .then(res => {
+        const raw = this.web3.utils.fromWei(res, 'ether');
+        this.totalStaked = new BigNumber(raw).toFormat(0);
+        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+          .times(100)
+          .toFixed(2);
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
+      });
+    // this.getValidators().then(() => {
+    //   this.settingUp = false;
+    // });
+  }
+  getTotalStakedAndApr() {
+    return {
+      totalStaked: this.totalStaked,
+      apr: this.apr
+    };
+  }
   validatorsCount() {
     if (this.details.amount) {
       return new BigNumber(this.details.amount).dividedBy(32).toFixed();
@@ -129,33 +113,6 @@ export default class Staked extends EventEmitter {
     this.endpoint = '';
     this.batchContract = '';
     this.setup();
-  }
-  setup() {
-    try {
-      this.eth2ContractAddress =
-        stakeConfigs.network[this.networkName].depositAddress;
-      this.endpoint = stakeConfigs.network[this.networkName].endpoint;
-      this.batchContract = stakeConfigs.network[this.networkName].batchContract;
-
-      this.web3()
-        .eth.getBalance(this.eth2ContractAddress)
-        .then(res => {
-          const raw = this.web3().utils.fromWei(res, 'ether');
-          this.totalStaked = new BigNumber(raw).toFormat(0);
-          this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
-            .times(100)
-            .toFixed(2);
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
-      this.getValidators().then(() => {
-        this.settingUp = false;
-      });
-    } catch (e) {
-      // eslint-disable-next-line
-            console.error(e);
-    }
   }
   allValidatorsStaked() {
     const validatorStaked = this.details.amount / 32;

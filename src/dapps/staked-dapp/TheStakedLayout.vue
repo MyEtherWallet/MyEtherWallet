@@ -1,134 +1,132 @@
 <template>
-  <div>
-    <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="stakedLogo"
-      :title-icon="titleIcon"
-      :banner-text="header"
-      :tab-items="tabs"
-      :active-tab="activeTab"
-      top-strip
-    >
-      <template #HeaderBody>
-        <divider />
-        <div class="d-flex flex-wrap align-center justify-center">
-          <div class="text-uppercase textPrimary--text font-weight-bold">
-            Total Staked: <span class="primary--text">4,202,920 ETH</span>
-          </div>
-          <v-icon color="textPrimary">mdi-circle-medium</v-icon>
-          <div class="text-uppercase textPrimary--text font-weight-bold">
-            Current APR: <span class="primary--text">7.64%</span>
-          </div>
+  <!--
+    ===================================================
+    The Staked Layout
+    ===================================================
+    -->
+  <the-wrapper-dapp
+    :has-exit-btn="true"
+    :banner-img="stakedLogo"
+    :title-icon="titleIcon"
+    :banner-text="header"
+    :tab-items="tabs"
+    :active-tab="activeTab"
+    top-strip
+  >
+    <template #HeaderBody>
+      <v-divider class="textPrimary" />
+      <div class="d-flex flex-wrap align-center justify-center">
+        <div class="text-uppercase textPrimary--text font-weight-bold">
+          Total Staked: <span class="primary--text">4,202,920 ETH</span>
         </div>
-        <div class="d-flex align-center justify-center mt-3">
-          <v-btn-toggle
-            v-model="activeTab"
-            mandatory
-            borderless
-            active-class="active-btn"
-            background-color="transparent"
+        <v-icon color="textPrimary">mdi-circle-medium</v-icon>
+        <div class="text-uppercase textPrimary--text font-weight-bold">
+          Current APR: <span class="primary--text">7.64%</span>
+        </div>
+      </div>
+      <div class="d-flex align-center justify-center mt-3">
+        <v-btn-toggle
+          v-model="activeTab"
+          mandatory
+          borderless
+          active-class="active-btn"
+          background-color="transparent"
+        >
+          <v-btn
+            class="px-md-9 white--text text-transform--initial"
+            color="#00182c"
           >
-            <v-btn
-              class="px-md-9 white--text text-transform--initial"
-              color="#00182c"
-            >
-              New stake
-            </v-btn>
-            <v-btn
-              class="px-md-9 white--text text-transform--initial"
-              color="#00182c"
-            >
-              <div>
-                <div class="white--text font-weight-medium">My stake</div>
-                <div class="mew-label textPrimary--text font-weight-bold">
-                  32.245234 ETH
-                </div>
+            New stake
+          </v-btn>
+          <v-btn
+            class="px-md-9 white--text text-transform--initial"
+            color="#00182c"
+          >
+            <div>
+              <div class="white--text font-weight-medium">My stake</div>
+              <div class="mew-label textPrimary--text font-weight-bold">
+                32.245234 ETH
               </div>
-            </v-btn>
-          </v-btn-toggle>
-        </div>
-      </template>
-
-      <template #HeaderRight>
-        <div class="text-right">
-          <a
-            href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/#:~:text=MEW%20has%20integrated%20Staked.us,least%2032%20ETH%20to%20stake."
-            target="_blank"
-            class="primary--text font-weight-medium text-right"
-          >
-            New to staking? Learn more
-            <v-icon class="ml-1" small color="primary">mdi-open-in-new</v-icon>
-          </a>
-        </div>
-      </template>
-
-      <template #tabContent1>
-        <v-sheet
-          min-height="500px"
-          max-width="700px"
-          color="transparent"
-          class="mx-auto"
-        >
-          <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
-            <template v-if="isStepActive(0)" #stepperContent1>
-              <step-one :next="nextStep" @completed="proceed" />
-            </template>
-            <template v-if="isStepActive(1)" #stepperContent2>
-              <step-two
-                :back="backStep"
-                :next="nextStep"
-                @completed="proceed"
-              />
-            </template>
-            <template v-if="isStepActive(2)" #stepperContent3>
-              <step-three
-                :details="details"
-                :back="backStep"
-                :next="nextStep"
-                @completed="proceed"
-              />
-            </template>
-            <template v-if="isStepActive(0)" #stepperContent4>
-              <step-four
-                :details="details"
-                :next="nextStep"
-                @completed="proceed"
-              />
-            </template>
-          </mew-stepper>
-        </v-sheet>
-      </template>
-      <template #tabContent2>
-        <v-sheet
-          min-height="500px"
-          max-width="700px"
-          color="transparent"
-          class="py-15 mx-auto"
-        >
-          <div class="mb-5">
-            <div class="mew-heading-2 mb-8 ml-2">
-              {{ $t('ens.search-domain') }}
             </div>
-            <v-row class="mx-0">
-              <v-col class="pr-0" cols="12">
-                <status
-                  :validators="myValidators"
-                  :loading="loadingValidators"
-                ></status>
-              </v-col>
-            </v-row>
+          </v-btn>
+        </v-btn-toggle>
+      </div>
+    </template>
+
+    <template #HeaderRight>
+      <div class="text-right">
+        <a
+          href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/#:~:text=MEW%20has%20integrated%20Staked.us,least%2032%20ETH%20to%20stake."
+          target="_blank"
+          class="primary--text font-weight-medium text-right"
+        >
+          New to staking? Learn more
+          <v-icon class="ml-1" small color="primary">mdi-open-in-new</v-icon>
+        </a>
+      </div>
+    </template>
+
+    <template #tabContent1>
+      <v-sheet
+        min-height="500px"
+        max-width="700px"
+        color="transparent"
+        class="mx-auto"
+      >
+        <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
+          <template v-if="isStepActive(0)" #stepperContent1>
+            <step-one :next="nextStep" @completed="proceed" />
+          </template>
+          <template v-if="isStepActive(1)" #stepperContent2>
+            <step-two :back="backStep" :next="nextStep" @completed="proceed" />
+          </template>
+          <template v-if="isStepActive(2)" #stepperContent3>
+            <step-three
+              :details="details"
+              :back="backStep"
+              :next="nextStep"
+              @completed="proceed"
+            />
+          </template>
+          <template v-if="isStepActive(0)" #stepperContent4>
+            <step-four
+              :details="details"
+              :next="nextStep"
+              @completed="proceed"
+            />
+          </template>
+        </mew-stepper>
+      </v-sheet>
+    </template>
+    <template #tabContent2>
+      <v-sheet
+        min-height="500px"
+        max-width="700px"
+        color="transparent"
+        class="py-15 mx-auto"
+      >
+        <div class="mb-5">
+          <div class="mew-heading-2 mb-8 ml-2">
+            {{ $t('ens.search-domain') }}
           </div>
-        </v-sheet>
-      </template>
-    </the-wrapper-dapp>
-  </div>
+          <v-row class="mx-0">
+            <v-col class="pr-0" cols="12">
+              <status
+                :validators="myValidators"
+                :loading="loadingValidators"
+              ></status>
+            </v-col>
+          </v-row>
+        </div>
+      </v-sheet>
+    </template>
+  </the-wrapper-dapp>
 </template>
 
 <script>
 import titleIcon from '@/assets/images/icons/icon-colorful-eth.svg';
-import Divider from '@/core/components/AppDivider';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import Staked from './handlers/staked';
+import handlerStaked from './handlers/handlerStaked';
 import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
@@ -140,7 +138,6 @@ import status from './components/status/Status';
 export default {
   name: 'TheStakedLayout',
   components: {
-    Divider,
     TheWrapperDapp,
     stepOne,
     stepTwo,
@@ -158,7 +155,7 @@ export default {
         subtextClass: 'textPrimary--text'
       },
       activeTab: 0,
-      staked: {},
+      handlerStaked: {},
       myValidators: [],
       transactionData: {},
       details: {},
@@ -237,6 +234,10 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     getCurrentStep() {
       return this.currentStep.index + 1;
+    },
+    totalStakedAndApr() {
+      console.error('staked', this.handlerStaked.getTotalStakedAndApr());
+      return this.handlerStaked.getTotalStakedAndApr();
     }
   },
   watch: {
@@ -271,27 +272,27 @@ export default {
     this.init();
   },
   mounted() {
-    this.staked = new Staked();
-    this.staked.on('setData', data => {
+    this.handlerStaked = new handlerStaked();
+    this.handlerStaked.on('setData', data => {
       console.log(data); // todo remove dev item
       this.setData(data);
     });
-    this.staked.on('myValidators', validators => {
+    this.handlerStaked.on('myValidators', validators => {
       this.myValidators = validators;
       this.loadingValidators = false;
     });
 
-    this.staked.on('transaction', () => {
+    this.handlerStaked.on('transaction', () => {
       console.log('transaction sent'); // todo remove dev item
     });
-    this.staked.on('txHash', txHash => {
+    this.handlerStaked.on('txHash', txHash => {
       console.log('txHash', txHash); // todo remove dev item
       this.txHash = txHash;
     });
   },
   methods: {
     validatorsCount() {
-      return this.staked.validatorsCount();
+      return this.handlerStaked.validatorsCount();
     },
     resetStepperDone() {
       this.resetStepper = false;
@@ -305,19 +306,19 @@ export default {
       this.eth2ContractAddress = '';
       this.endpoint = '';
       this.batchContract = '';
-      this.staked.reset();
+      this.handlerStaked.reset();
     },
     goToGenerate() {
       this.$router.push('/generate-eth2-keystore');
     },
     async startProvision() {
-      await this.staked.startProvision();
+      await this.handlerStaked.startProvision();
     },
     startPolling(uuid) {
-      this.staked.startPolling(uuid);
+      this.handlerStaked.startPolling(uuid);
     },
     sendTransaction() {
-      this.staked.sendTransaction();
+      this.handlerStaked.sendTransaction();
     },
     setData(data) {
       if (this.details.hasOwnProperty(data.key)) {
@@ -325,7 +326,7 @@ export default {
       } else {
         this.$set(this.details, data.key, data.value);
       }
-      // this.staked.setData(data);
+      // this.handlerStaked.setData(data);
       console.log('this.details', this.details); // todo remove dev item
     },
     isStepActive(index) {
@@ -390,9 +391,9 @@ export default {
     proceed(canContinue, param, ethPrice) {
       console.log('proceed', canContinue, param, ethPrice); // todo remove dev item
       this.canContinue = canContinue;
-      this.staked.setData(param);
+      this.handlerStaked.setData(param);
       if (ethPrice) {
-        this.staked.setData({ key: 'ethPrice', value: ethPrice });
+        this.handlerStaked.setData({ key: 'ethPrice', value: ethPrice });
       }
     },
     init() {

@@ -1,52 +1,10 @@
 <template>
-  <!--  <div class="amount-step d-flex">
-    <span class="title">{{ $t('dappsStaked.amount-stake') }}</span>
-    <i18n class="subtitle" path="dappsStaked.validator-required-eth-per">
-      <span slot="number">1</span>
-    </i18n>
-    <div class="action-container">
-      <div class="input-container">
-        <img
-          :alt="$t('common.currency.ethereum')"
-          class="currency-icon"
-          src="@/assets/images/currencies/eth.png"
-        />
-        <input
-          v-model="amount"
-          type="number"
-          placeholder="0"
-          @keyup="setAmount"
-          @change="setAmount"
-        />
-        <span class="usd-amount">{{ '$' + usdPrice }}</span>
-      </div>
-      <div v-if="notValidMultiple" class="error mt-2">
-        {{ $t('dappsStaked.error-set-amount') }}
-      </div>
-      <div v-if="hasError && notEnoughBalance" class="error mt-2">
-        {{ $t('dappsStaked.error-not-enough-bal') }}
-      </div>
-      <div class="percentage-container pt-2">
-        <div :class="isActive(0) ? 'active' : ''" @click="setAmount(0)">
-          32 {{ $t('common.currency.eth') }}
-        </div>
-        <div :class="isActive(1) ? 'active' : ''" @click="setAmount(1)">
-          64 {{ $t('common.currency.eth') }}
-        </div>
-        <div :class="isActive(2) ? 'active' : ''" @click="setAmount(2)">
-          96 {{ $t('common.currency.eth') }}
-        </div>
-        <div :class="isActive(3) ? 'active' : ''" @click="setAmount(3)">
-          128 {{ $t('common.currency.eth') }}
-        </div>
-      </div>
-    </div>
-  </div>-->
-
-  <div
-    class="dapps--staked--stepper--steps--set-amount mx-auto pb-15"
-    style="max-width: 550px"
-  >
+  <div class="mx-auto pb-15" style="max-width: 550px">
+    <!--
+    ===================================================
+    Select Amount 
+    ===================================================
+    -->
     <div class="mew-heading-2 py-12 text-center">
       Select ETH amount to stake
     </div>
@@ -54,7 +12,8 @@
     <mew-select
       v-model="amount"
       label="Staking amount"
-      :items="items"
+      :items="selectItems"
+      is-swap
       outlined
     />
 
@@ -180,6 +139,8 @@ import { toBN, toWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import eth from '@/assets/images/currencies/eth.png';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const types = [
   { name: '32', value: 32 },
@@ -199,15 +160,36 @@ export default {
     return {
       toolTipFee:
         '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
-      items: types,
       amount: {},
       ethPrice: '',
-      balance: 0
+      balance: 0,
+      eth: eth
     };
   },
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('external', ['networkTokenUSDMarket']),
+    /**
+     * @returns array
+     * Mew select dropdown items
+     */
+    selectItems() {
+      const items = [];
+      for (let i = 1; i <= 4000; i++) {
+        if (i % 32 === 0) {
+          items.push({
+            name: i + ' ETH',
+            value: i,
+            img: this.eth,
+            price: formatFiatValue(
+              new BigNumber(i).times(this.networkTokenUSDMarket.value)
+            ).value
+          });
+        }
+      }
+      return items;
+    },
     hasError() {
       return this.notValidMultiple || this.notEnoughBalance;
     },
