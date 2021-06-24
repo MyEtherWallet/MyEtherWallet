@@ -457,10 +457,13 @@ export default {
     isPrefilled() {
       this.prefillForm();
     },
-    tokensList() {
-      this.selectedCurrency =
-        this.tokensList.length > 0 ? this.tokensList[0] : {};
-      this.sendTx.setCurrency(this.selectedCurrency);
+    tokensList: {
+      handler: function (val) {
+        this.selectedCurrency = val.length > 0 ? val[0] : {};
+        this.sendTx.setCurrency(this.selectedCurrency);
+      },
+      deep: true,
+      immediate: true
     },
     toAddress() {
       if (this.isValidAddress) {
