@@ -60,7 +60,7 @@ export default {
       addMode: false,
       resolvedAddr: '',
       inputAddr: '',
-      nameResolver: {},
+      nameResolver: null,
       isValidAddress: false
     };
   },
@@ -101,7 +101,8 @@ export default {
     }
   },
   mounted() {
-    this.nameResolver = new NameResolver(this.network);
+    if (this.network.type.ens)
+      this.nameResolver = new NameResolver(this.network);
   },
   methods: {
     toggleOverlay() {

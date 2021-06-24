@@ -77,20 +77,7 @@ export default {
       },
       result({ data }) {
         if (data && data.getTransactionsByHashes) {
-          let ethTransfersIncoming = [];
-          if (this.initialLoad) {
-            ethTransfersIncoming = data.getTransactionsByHashes;
-            this.txHashes =
-              this.txHashes.length > 10 ? this.txHashes.slice(10, 20) : [];
-            this.initialLoad = false;
-          } else {
-            ethTransfersIncoming = this.ethTransfersIncoming.concat(
-              data.getTransactionsByHashes
-            );
-            this.txHashes = [];
-          }
-          this.setFetchedTime();
-          this.ethTransfersIncoming = ethTransfersIncoming;
+          this.ethTransfersIncoming = data.getTransactionsByHashes;
         }
       },
       error(error) {

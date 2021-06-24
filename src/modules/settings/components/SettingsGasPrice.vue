@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <div v-if="!hasCustom" class="mb-6">
+    <div v-if="!isSwap" class="mb-6">
       Please select a default gas price for your transaction fee
     </div>
     <!--
@@ -36,7 +36,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row v-if="hasCustom || global" align="center" class="pt-3 pb-9 px-3">
+      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -46,23 +46,22 @@
        Custom Gas
       =====================================================================================
       -->
-      <div v-if="global" class="d-sm-flex text-center">
+      <div v-if="!isSwap" class="d-sm-flex text-center">
         <mew-input
+          v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
           class="mr-0 mr-sm-3"
-          :value="localCustom"
-          @input="setCustomInput"
         />
         <mew-button
           :title="customBtn.text"
           btn-size="xlarge"
           :btn-style="customBtn.style"
-          :has-full-width="hasCustom"
-          @click.native="useLocal"
+          :has-full-width="isSwap"
+          @click.native="setCPrice"
         />
-        <p v-if="hasCustom" class="pt-2">
+        <p v-if="isSwap" class="pt-2">
           To change the custom gas price, go to
           <span
             class="cursor--pointer go-to-global-text"
@@ -77,7 +76,7 @@
           btn-size="xlarge"
           :btn-style="customBtn.style"
           :has-full-width="true"
-          @click.native="useLocal"
+          @click.native="setCPrice"
         />
         <p class="pt-2">
           To change the custom gas price, go to
@@ -96,9 +95,8 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei, toWei } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -128,61 +126,50 @@ export default {
       type: Function,
       default: () => {}
     },
-    hasCustom: {
+    isSwap: {
       type: Boolean,
       default: false
     },
     openGlobalSettings: {
       type: Function,
       default: () => {}
-    },
-    global: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
-      localCustom:
-        this.selected === gasPriceTypes.STORED
-          ? fromWei(this.gasPrice, 'gwei')
-          : '0'
+      customGasPrice: '0'
     };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      const ether = fromWei(toWei(this.localCustom, 'gwei'), 'ether');
-      const usdValue = formatFiatValue(
-        BigNumber(this.fiatValue).times(ether)
-      ).value;
+      if (!this.customGasPrice) return {};
+      const usdValue = BigNumber(this.fiatValue).times(
+        fromWei(this.customGasPrice, 'ether')
+      );
       return {
-        text: this.hasCustom
-          ? `Custom: ${this.localCustom} Gwei $ ${usdValue}`
+        text: this.isSwap
+          ? `Custom: ${this.customGasPrice} Gwei $ ${
+              formatFiatValue(usdValue).value
+            }`
           : 'Confirm',
-        style: this.hasCustom ? 'outline' : 'background'
+        style: this.isSwap ? 'outline' : 'background'
       };
+    },
+    hasCustom() {
+      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
     }
   },
-  watch: {
-    gasPrice(e) {
-      if (this.gasPriceType === gasPriceTypes.STORED) {
-        this.localCustom = fromWei(e, 'gwei');
-      }
-    },
-    selected(newVal) {
-      if (newVal !== gasPriceTypes.STORED && !this.hasCustom) {
-        this.localCustom = '0';
-      }
-    }
+  mounted() {
+    this.customGasPrice =
+      this.gasPriceType === gasPriceTypes.STORED
+        ? fromWei(this.gasPrice, 'gwei')
+        : '0';
   },
   methods: {
-    setCustomInput(e) {
-      this.localCustom = e;
-    },
-    useLocal() {
-      this.setCustomGasPrice(this.localCustom);
+    setCPrice() {
+      this.setCustomGasPrice(this.customGasPrice);
     }
   }
 };
@@ -198,14 +185,12 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid transparent;
-
   &.active {
     border: 1px solid var(--v-primary-base);
     background-color: #f2fafa;
     opacity: 1;
   }
 }
-
 .go-to-global-text {
   color: var(--v-primary-base);
 }

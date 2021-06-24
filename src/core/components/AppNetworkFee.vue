@@ -9,10 +9,11 @@
       :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
+      :selected="gasPriceType"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
-    <div class="mt-5 mb-10">
+    <div class="mt-5 mb-8">
       <!--
       =====================================================
         High fees pop up

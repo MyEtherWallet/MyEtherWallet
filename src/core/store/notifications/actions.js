@@ -8,13 +8,8 @@ const deleteNotification = ({ commit }, val) => {
   commit('DELETE_NOTIFICATION', val);
 };
 
-const setFetchedTime = ({ commit }) => {
-  commit('SET_FETCHED_TIME');
-};
-
 export default {
   addNotification,
   updateNotification,
-  deleteNotification,
-  setFetchedTime
+  deleteNotification
 };

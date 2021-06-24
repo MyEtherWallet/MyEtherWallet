@@ -27,5 +27,6 @@ export default {
     blockExplorerTX: 'https://ethvm.com/tx/[[txHash]]',
     blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
     websocket: null
-  }
+  },
+  coingeckoID: 'ethereum'
 };
