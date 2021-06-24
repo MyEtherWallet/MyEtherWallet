@@ -10,4 +10,5 @@ const isInt = num => {
 const stringToArray = str => {
   return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
 };
-export { isInt, stringToArray };
+const MAIN_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+export { isInt, stringToArray, MAIN_TOKEN_ADDRESS };

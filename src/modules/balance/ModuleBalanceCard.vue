@@ -100,7 +100,6 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -115,9 +114,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'totalTokenFiatValue'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
@@ -129,28 +132,17 @@ export default {
       );
     },
     totalTokenBalance() {
-      return this.tokensList.reduce((total, currentVal) => {
-        const balance =
-          currentVal.totalBalanceRaw !== null &&
-          (currentVal.price_change_percentage_24h !== null ||
-            currentVal.market_cap !== 0)
-            ? currentVal.totalBalanceRaw
-            : 0;
-        return new BigNumber(total).plus(balance);
-      }, 0);
+      return this.totalTokenFiatValue;
     },
     totalWalletBalance() {
-      if (this.isEthNetwork) {
-        const total = this.balanceFiatValue.plus(this.totalTokenBalance);
+      if (this.fiatValue != 0) {
+        const total = this.totalTokenBalance;
         return `${'$' + formatFiatValue(total).value}`;
       }
-      return `${formatBalanceEthValue(this.balanceInETH).value} ${
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
         this.network.type.currencyName
       }`;
     }
-  },
-  mounted() {
-    //this.animateBlockie();
   },
   methods: {
     animateBlockie() {
@@ -181,8 +173,8 @@ export default {
       this.openPaperWallet = false;
     },
     copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      clipboardCopy(this.getChecksumAddressString);
+      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     }
   }
 };

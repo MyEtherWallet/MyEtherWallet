@@ -12,6 +12,7 @@ Sentry.init({
   maxBreadcrumbs: 0,
   environment: 'web',
   requestBodies: 'small',
+  autoSessionTracking: false,
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network = store.getters['global/network']

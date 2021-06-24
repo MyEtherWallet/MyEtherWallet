@@ -7,7 +7,7 @@ import * as locStore from 'store';
 import { getSanitizedTx, setEvents } from './utils';
 import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
-
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
@@ -15,22 +15,22 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const tx = Object.assign({}, payload.params[0]);
   console.error("tx", tx)
   let confirmInfo;
-  let currency;
   let toDetails;
   if (tx.hasOwnProperty('confirmInfo')) {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
   }
-
-  if (tx.hasOwnProperty('currency')) {
-    currency = tx['currency'];
-    delete tx['currency'];
-  }
-
   if (tx.hasOwnProperty('toDetails')) {
     toDetails = tx['toDetails'];
     delete tx['toDetails'];
+  } else {
+    toDetails = {
+      type: 'TYPED'
+    };
   }
+  let currency = store.getters['external/contractToToken'](tx.to);
+  if (!currency)
+    currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
     : BigNumber(store.getters['global/gasPrice']).toFixed();
@@ -87,26 +87,25 @@ export default async ({ payload, store, requestManager }, res, next) => {
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
+          setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
               console.error('hash', hash)
               if (store.state.wallet.instance !== null) {
-                const localStoredObj = locStore.get(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
-                  )
+                const storeKey = utils.sha3(
+                  `${
+                    store.getters['global/network'].type.name
+                  }-${store.state.wallet.instance
+                    .getChecksumAddressString()
+                    .toLowerCase()}`
                 );
-                locStore.set(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
+                const localStoredObj = locStore.get(storeKey);
+                locStore.set(storeKey, {
+                  nonce: sanitizeHex(
+                    BigNumber(localStoredObj.nonce).plus(1).toString(16)
                   ),
-                  {
-                    nonce: sanitizeHex(
-                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                    ),
-                    timestamp: localStoredObj.timestamp
-                  }
-                );
+                  timestamp: localStoredObj.timestamp
+                });
               }
               res(null, toPayload(payload.id, hash));
             })
@@ -114,9 +113,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
               console.error('err??', err)
               res(err);
             });
-          if (!confirmInfo) {
-            setEvents(_promiObj, _tx, store.dispatch);
-          }
         });
       }
     })
