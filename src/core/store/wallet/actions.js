@@ -19,7 +19,6 @@ const removeWallet = function ({ commit, state }) {
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
-  console.log(params);
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
 };
