@@ -138,7 +138,7 @@ import stepFour from './stepper/steps/Review/Review';
 import status from './components/status/Status';
 
 export default {
-  name: 'ModuleStaked',
+  name: 'TheStakedLayout',
   components: {
     Divider,
     TheWrapperDapp,

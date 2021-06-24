@@ -4,7 +4,7 @@ import Aave from './aave-dapp/Aave';
 import Ambrpay from './ambrpay-dapp/TheAmbrpayLayout';
 import UnstoppableDomain from './unstoppable-domains/UnstoppableDomain';
 import Dapps from '@/modules/dapps-center/ModuleDappsCenter';
-import Staked from './staked/ModuleStaked';
+import Staked from './staked-dapp/TheStakedLayout';
 
 export default [
   {
