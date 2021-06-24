@@ -20,5 +20,6 @@ export default {
     blockExplorerTX: '',
     blockExplorerAddr: '',
     websocket: null
-  }
+  },
+  coingeckoID: 'ethereum-classic'
 };

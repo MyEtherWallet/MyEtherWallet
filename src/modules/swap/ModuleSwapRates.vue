@@ -1,5 +1,5 @@
 <template>
-  <mew6-white-sheet v-if="network.type.name === 'ETH'" :sideinfo="!mobile">
+  <mew6-white-sheet v-if="isEthNetwork" :sideinfo="!mobile">
     <div class="px-5 px-lg-7 py-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
@@ -88,11 +88,11 @@ const STATIC_PAIRS = [
   {
     toT: {
       symbol: 'BTC',
-      contract_address: '0xbtc'
+      contract: '0xbtc'
     },
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -100,12 +100,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'USDT',
-      contract_address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
     fromAmount: '100000000000000000'
@@ -113,12 +113,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'KNC',
-      contract_address: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+      contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       toT: 18
     },
     fromAmount: '100000000000000000'
@@ -126,12 +126,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'DAI',
-      contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -139,12 +139,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'LINK',
-      contract_address: '0x514910771af9ca656af840dff83e8264ecf986ca',
+      contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -152,12 +152,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'USDC',
-      contract_address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       decimals: 6
     },
     fromAmount: '100000000000000000'
@@ -181,7 +181,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['isEthNetwork'])
   },
   watch: {
     web3(newVal) {
@@ -193,6 +193,7 @@ export default {
   },
   methods: {
     setSwapHandler(val) {
+      if (!this.isEthNetwork) return;
       this.swapHandler = new handlerSwap(val);
       this.fetchRates();
     },
@@ -218,8 +219,8 @@ export default {
     },
     goToSwap(data) {
       const obj = {
-        fromToken: data.fromT.contract_address,
-        toToken: data.toT.contract_address,
+        fromToken: data.fromT.contract,
+        toToken: data.toT.contract,
         amount: '1'
       };
 

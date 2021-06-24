@@ -166,9 +166,29 @@ const fetchMasterFile = async () => {
     console.error(e); // Not captured by sentry
   }
 };
-
+const fetchPlatformCoinList = async () => {
+  const list = await fetch(
+    'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
+  )
+    .then(res => res.json())
+    .then(l => {
+      const idmap = {};
+      l.forEach(t => {
+        const vals = Object.values(t.platforms);
+        vals.forEach(val => {
+          if (val) idmap[val] = t.id;
+        });
+      });
+      return idmap;
+    })
+    .catch(console.error);
+  fs.writeFileSync(
+    configs.MASTER_FILE_PATH + '/platformlist.json',
+    JSON.stringify(list)
+  );
+};
 const run = async () => {
-  await fetchContracts().then(fetchMasterFile);
+  await fetchContracts().then(fetchMasterFile).then(fetchPlatformCoinList);
 };
 
 (async () => {

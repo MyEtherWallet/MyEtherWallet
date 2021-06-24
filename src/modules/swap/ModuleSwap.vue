@@ -19,7 +19,6 @@
                 <app-button-balance
                   :loading="isLoading"
                   :balance="displayBalance"
-                  :is-eth="isFromTokenETH"
                 />
                 <mew-select
                   :value="fromTokenType"
@@ -96,13 +95,6 @@
               <mew-button
                 btn-size="small"
                 btn-style="outline"
-                title="Swap Your Bitcoin to Ether"
-                class="ma-1"
-                :has-full-width="$vuetify.breakpoint.xsOnly"
-              />
-              <mew-button
-                btn-size="small"
-                btn-style="outline"
                 title="Buy Ether"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
@@ -132,7 +124,8 @@
             v-if="
               toTokenType &&
               toTokenType.value &&
-              toTokenType.value.toLowerCase() == 'bitcoin'
+              toTokenType.value.toLowerCase() == 'bitcoin' &&
+              isEthNetwork
             "
             class="mt-sm-5"
             :message="msg.lowBalance"
@@ -253,29 +246,21 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import Swapper from './handlers/handlerSwap';
+import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from '@/modules/notifications/handlers/handlerNotification';
+import Notification, {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import {
-  formatFiatValue,
-  formatFloatingPointValue
-} from '@/core/helpers/numberFormatHelper';
-import { Toast, WARNING } from '../toast/handler/handlerToast';
-import {
-  TRENDING_SYMBOLS,
-  TRENDING_LIST
-} from './handlers/configs/configTrendingTokens';
+import { EventBus } from '@/core/plugins/eventBus';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
-const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const MIN_GAS_WEI = '800000000000000';
-
-const tokens = {
-  eth: 'ETH'
-};
 
 const errorMsgs = {
   amountEthIsTooLow: 'You do not have enough ETH to swap',
@@ -298,11 +283,11 @@ export default {
   props: {
     fromToken: {
       type: String,
-      default: ETH_TOKEN
+      default: MAIN_TOKEN_ADDRESS
     },
     toToken: {
       type: String,
-      default: DAI_TOKEN
+      default: ''
     },
     amount: {
       type: String,
@@ -347,7 +332,6 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
-      minMaxError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken
@@ -363,6 +347,7 @@ export default {
       swapIcon: SwapIcon,
       isLoadingProviders: false,
       addressValue: {},
+      gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
       localGasType: 'economy',
@@ -371,15 +356,20 @@ export default {
   },
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
-    ...mapState('wallet', ['web3', 'address', 'balance', 'coinGeckoTokens']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
       'initialLoad',
       'balanceInWei'
     ]),
-    ...mapGetters('external', ['balanceFiatValue']),
+    ...mapGetters('external', [
+      'balanceFiatValue',
+      'contractToToken',
+      'getCoinGeckoTokenById'
+    ]),
     disableNext() {
       return (
         this.step < 2 ||
@@ -392,14 +382,16 @@ export default {
       let msg = '';
       let subError = '';
       if (!this.isLoading) {
-        if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+        if (
+          new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
+        ) {
           msg = 'The minimum requirement for this provider is';
-          subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType.symbol}`;
         } else if (
-          new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)
+          new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
         ) {
           msg = 'The maximum requirement for this provider i';
-          subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol}`;
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
@@ -417,12 +409,8 @@ export default {
      * @rejects object
      * Gets the ETH token dropdown item details
      */
-    ethTokenDetails() {
-      const ethToken = Object.assign({}, this.trendingTokens[0]);
-      ethToken.tokenBalance = formatFloatingPointValue(
-        this.availableBalance
-      ).value;
-      ethToken.totalBalance = formatFiatValue(this.balanceFiatValue).value;
+    mainTokenDetails() {
+      const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
       return ethToken;
     },
     /**
@@ -457,18 +445,15 @@ export default {
      * Returns an @Array
      * Check if fromTokenType is ETH
      */
-    isFromTokenETH() {
-      return (
-        this.fromTokenType?.symbol && this.fromTokenType?.symbol === tokens.eth
-      );
+    isFromTokenMain() {
+      if (this.isLoading) return false;
+      return this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS;
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
      */
     displayBalance() {
-      return this.isFromTokenETH
-        ? this.balanceInWei.toString()
-        : this.availableBalance.toString();
+      return this.availableBalance.toString();
     },
     /**
      * @returns object of all the token data
@@ -476,38 +461,42 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      const returnableTokens = [
+      const validToTokens = this.toTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() !==
+          this.fromTokenType?.contract?.toLowerCase()
+        )
+          return item;
+      });
+      let returnableTokens = [
         {
           text: 'Select Token',
           imgs: this.getPlaceholderImgs(),
           total: `${this.toTokens.length}`,
           divider: true,
           selectTokenLabel: true
-        },
-        {
-          header: 'Trending'
-        },
-        ...this.trendingTokens,
-        {
-          header: 'All'
-        },
-        ...this.toTokens
+        }
       ];
-      const fromTokenAddress =
-        (this.fromTokenType?.hasOwnProperty('contract_address') &&
-          this.fromTokenType.contract_address) ||
-        (this.fromTokenType?.hasOwnProperty('contract') &&
-          this.fromTokenType.contract) ||
-        '';
-      return returnableTokens.filter(item => {
-        const address = item?.contract_address || item?.contract || '';
-
-        if (
-          item.selectTokenLabel ||
-          address?.toLowerCase() !== fromTokenAddress?.toLowerCase()
-        )
-          return item;
-      });
+      if (this.trendingTokens.length) {
+        returnableTokens = returnableTokens.concat([
+          {
+            header: 'Trending'
+          },
+          ...this.trendingTokens,
+          {
+            header: 'All'
+          },
+          ...validToTokens
+        ]);
+      } else {
+        returnableTokens = returnableTokens.concat([
+          {
+            header: 'All'
+          },
+          ...validToTokens
+        ]);
+      }
+      return returnableTokens;
     },
     /**
      * @returns object of all the tokens
@@ -515,20 +504,20 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      return this.availableTokens.toTokens
-        .filter(token => {
-          return !TRENDING_SYMBOLS.includes(token.symbol);
-        })
-        .map(token => {
-          const foundToken = this.findCoinToken(token.contract_address);
-          token.price = foundToken
-            ? formatFiatValue(foundToken.current_price).value
-            : '0.00';
-          token.subtext = foundToken ? foundToken.name : '';
-          token.value = foundToken ? foundToken.name : '';
-          token.name = token.symbol;
-          return token;
-        });
+      return this.availableTokens.toTokens.map(token => {
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          foundToken.contract = token.contract;
+          foundToken.price = foundToken.pricef;
+          foundToken.isEth = token.isEth;
+          return foundToken;
+        }
+        token.price = '';
+        token.subtext = token.name;
+        token.value = token.name;
+        token.name = token.symbol;
+        return token;
+      });
     },
     /**
      * @returns object of wallet tokens
@@ -541,28 +530,21 @@ export default {
        */
       if (BigNumber(this.balanceInETH).lte(0)) {
         tokensOwned.push({
+          contract: MAIN_TOKEN_ADDRESS,
           hasNoEth: true,
           disabled: true,
           text: 'Your wallet is empty.',
-          linkText: 'Buy ETH',
+          linkText: 'Buy ' + this.network.type.currencyName,
           link: 'https://ccswap.myetherwallet.com/#/'
         });
       } else if (
         /**
-         * if ETH balance is > 0, add ETH wallet details
-         */
-        this.isFromTokenETH &&
-        BigNumber(this.balanceInETH).gt(0)
-      ) {
-        tokensOwned.push(this.fromTokenType);
-      } else if (
-        /**
          * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
          */
-        !this.isFromTokenETH &&
+        !this.isFromTokenMain &&
         BigNumber(this.balanceInETH).gt(0)
       ) {
-        tokensOwned.push(this.ethTokenDetails);
+        tokensOwned.push(this.mainTokenDetails);
       }
       return tokensOwned.concat(this.tokensList);
     },
@@ -572,6 +554,20 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
+      const validFromTokens = this.fromTokens.filter(item => {
+        if (
+          item.contract.toLowerCase() !==
+          this.toTokenType?.contract?.toLowerCase()
+        )
+          return item;
+      });
+      let tradebleWalletTokens = this.walletTokens.filter(item => {
+        for (const vt of validFromTokens) {
+          if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
+            return item;
+        }
+      });
+      tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
       const returnableTokens = [
         {
           text: 'Select Token',
@@ -586,25 +582,13 @@ export default {
         {
           header: 'My Wallet'
         },
-        ...this.walletTokens,
+        ...tradebleWalletTokens,
         {
           header: 'Other Tokens'
         },
-        ...this.fromTokens
+        ...validFromTokens
       ];
-
-      const toTokenAddress =
-        (this.toTokenType?.hasOwnProperty('contract_address') &&
-          this.toTokenType.contract_address) ||
-        (this.toTokenType?.hasOwnProperty('contract') &&
-          this.toTokenType.contract) ||
-        '';
-      return returnableTokens.filter(item => {
-        const address = item?.contract_address || item?.contract || '';
-        if (address?.toLowerCase() !== toTokenAddress?.toLowerCase())
-          return item;
-        return item;
-      });
+      return returnableTokens;
     },
     /**
      * @returns boolean to hide providers
@@ -625,12 +609,14 @@ export default {
      */
     fromTokens() {
       return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.findCoinToken(token.contract_address);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.subtext = foundToken ? foundToken.name : '';
-        token.value = foundToken ? foundToken.name : '';
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          foundToken.isEth = token.isEth;
+          return foundToken;
+        }
+        token.price = '0.00';
+        token.subtext = token.name;
+        token.value = token.name;
         token.name = token.symbol;
         return token;
       });
@@ -640,13 +626,18 @@ export default {
      * to swap to
      */
     trendingTokens() {
-      return TRENDING_LIST.map(token => {
-        const id = token.id || token.contract_address;
-        const foundToken = this.findCoinToken(id);
-        token.price = foundToken
-          ? formatFiatValue(foundToken.current_price).value
-          : '0.00';
-        token.img = foundToken ? foundToken.image : '';
+      if (!TRENDING_LIST[this.network.type.name]) return [];
+      return TRENDING_LIST[this.network.type.name].map(token => {
+        if (token.cgid) {
+          const foundToken = this.getCoinGeckoTokenById(token.cgid);
+          foundToken.price = foundToken.pricef;
+          return Object.assign(token, foundToken);
+        }
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          token = Object.assign(token, foundToken);
+          token.price = token.pricef;
+        }
         return token;
       });
     },
@@ -687,7 +678,7 @@ export default {
      */
     notEnoughEth() {
       const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth = this.isFromTokenETH
+      const isNotEnoughEth = this.isFromTokenMain
         ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
         : balanceAfterFees.isNeg();
       return isNotEnoughEth;
@@ -711,18 +702,12 @@ export default {
      */
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType?.name) {
-        if (!this.isFromTokenETH) {
-          const hasBalance = this.tokensList.find(
-            token => token.symbol === this.fromTokenType.symbol
-          );
-          return hasBalance && hasBalance.balance && hasBalance.decimals
-            ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
-            : new BigNumber(0);
-        }
-        return BigNumber.max(
-          new BigNumber(this.balanceInETH).minus(fromWei(MIN_GAS_WEI)),
-          0
+        const hasBalance = this.tokensList.find(
+          token => token.symbol === this.fromTokenType.symbol
         );
+        return hasBalance && hasBalance.balance && hasBalance.decimals
+          ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
+          : new BigNumber(0);
       }
       return new BigNumber(0);
     },
@@ -767,9 +752,9 @@ export default {
       if (!this.initialLoad && !this.isLoading) {
         /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
-          return this.isFromTokenETH
+          return this.isFromTokenMain
             ? this.errorMsgs.amountEthIsTooLow
-            : this.tokensList.length > 0 && !this.isFromTokenETH
+            : this.tokensList.length > 0 && !this.isFromTokenMain
             ? this.errorMsgs.doNotOwnToken
             : '';
         }
@@ -784,17 +769,29 @@ export default {
           }
           /* ETH only: Amount entered > (ETH Balance - Gas Price )*/
           if (
-            this.isFromTokenETH &&
+            this.isFromTokenMain &&
             this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return this.errorMsgs.amountExceedsEthBalance;
           }
           /*ERC20 Only: Amount entered > Balance  */
           if (
-            !this.isFromTokenETH &&
+            !this.isFromTokenMain &&
             this.availableBalance.lt(new BigNumber(this.tokenInValue))
           ) {
             return `Amount exceeds your ${this.fromTokenType.symbol} balance.`;
+          }
+          /* Changelly Errors: */
+
+          if (
+            new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
+          ) {
+            return `Amount below ${this.selectedProvider.minFrom} ${this.fromTokenType.symbol} min`;
+          }
+          if (
+            new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
+          ) {
+            return `Amount over ${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol} max`;
           }
         }
       }
@@ -821,6 +818,20 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    network() {
+      this.isLoading = true;
+      this.swapper = new Swapper(this.web3, this.network.type.name);
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
+        });
+    },
+    mainTokenDetails() {
+      this.setDefaults();
     }
   },
   beforeMount() {
@@ -834,36 +845,43 @@ export default {
     }
   },
   mounted() {
-    if (this.isEthNetwork) {
-      this.isLoading = !this.prefetched;
-      this.swapper = new Swapper(this.web3);
-      if (!this.prefetched) {
-        this.swapper
-          .getAllTokens()
-          .then(this.processTokens)
-          .then(() => {
-            this.setDefaults();
-            this.isLoading = false;
-          });
-      } else {
-        this.processTokens(this.swapTokens, false);
-        this.setDefaults();
-        this.isLoading = false;
-      }
+    this.isLoading = !this.prefetched;
+    this.swapper = new Swapper(this.web3, this.network.type.name);
+    if (!this.prefetched) {
+      this.swapper
+        .getAllTokens()
+        .then(this.processTokens)
+        .then(() => {
+          this.setDefaults();
+          this.isLoading = false;
+        });
     } else {
-      Toast(
-        'Swap feature only supports Ethereum Network right now! Please Make sure to set your node to an ETH node',
-        {},
-        WARNING
-      );
+      this.processTokens(this.swapTokens, false);
+      this.setDefaults();
+      this.isLoading = false;
     }
+    this.handleLocalGasPrice({
+      gasType: this.gasPriceType,
+      gasPrice: this.gasPrice
+    });
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
+    ...mapActions('swap', ['setSwapTokens']),
+    formatTokensForSelect(tokens) {
+      if (!Array.isArray(tokens)) return [];
+      return tokens.map(t => {
+        t.totalBalance = t.usdBalancef;
+        t.tokenBalance = t.balancef;
+        t.price = t.pricef;
+        return t;
+      });
+    },
     /**
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      this.tokenInValue = this.isFromTokenETH
+      this.tokenInValue = this.isFromTokenMain
         ? new BigNumber(this.availableBalance)
             .minus(fromWei(MIN_GAS_WEI))
             .toFixed()
@@ -874,29 +892,23 @@ export default {
      */
     getDefaultFromToken() {
       if (
-        this.defaults.fromToken === ETH_TOKEN &&
+        this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
-        return this.ethTokenDetails;
+        return this.mainTokenDetails;
       }
       return this.actualFromTokens[0];
     },
     /**
      * gets the select label placeholder token imgs
      */
-    getPlaceholderImgs(isFromToken) {
-      if (isFromToken && this.tokensList.length > 0) {
+    getPlaceholderImgs() {
+      if (this.tokensList.length > 0) {
         return this.tokensList.slice(0, 5).map(item => {
           return item.img;
         });
       }
-      return [
-        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
-        'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-        'https://assets.coingecko.com/coins/images/11731/large/aMKR.png?1593084715',
-        'https://assets.coingecko.com/coins/images/863/large/0x.png?1547034672',
-        'https://assets.coingecko.com/coins/images/947/large/logo-kncl.png?1618984814'
-      ];
+      return [];
     },
     buyEth() {
       window.open('https://ccswap.myetherwallet.com/#/', '_blank');
@@ -907,33 +919,28 @@ export default {
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
-    ...mapActions('notifications', ['addNotification']),
-    ...mapActions('swap', ['setSwapTokens']),
-    ...mapActions('global', ['isEthNetwork']),
-    /* Find token from getLatestPrices query data */
-    findCoinToken(hash) {
-      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
-        return this.coinGeckoTokens.get(hash.toLowerCase());
-      }
-    },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
     },
+    openGasPriceModal() {
+      this.gasPriceModal = true;
+    },
     setDefaults() {
-      setImmediate(() => {
+      setTimeout(() => {
         this.fromTokenType = this.getDefaultFromToken();
         this.toTokenType = this.actualToTokens[0];
         this.setTokenInValue(this.tokenInValue);
-      });
+      }, 500);
     },
     setToAddress(value, isValid) {
       this.addressValue = {
         value,
         isValid
       };
+      if (isValid) this.setProvider(0);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -965,8 +972,6 @@ export default {
         !_.isEmpty(this.toTokenType)
       ) {
         this.isLoadingProviders = true;
-        this.selectedProvider = {};
-        this.minMaxError = false;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -976,20 +981,16 @@ export default {
             )
           })
           .then(quotes => {
-            this.availableQuotes = quotes
-              .map(q => {
-                q.rate = new BigNumber(q.amount)
-                  .dividedBy(new BigNumber(this.tokenInValue))
-                  .toString();
-                q.isSelected = false;
-
-                return q;
-              })
-              .filter(q => {
-                if (BigNumber(q.rate).gt(0)) return q;
-              });
+            this.selectedProvider = {};
+            this.availableQuotes = quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.tokenInValue))
+                .toString();
+              q.isSelected = false;
+              return q;
+            });
             if (quotes.length) {
-              this.tokenOutValue = quotes[0]?.amount;
+              this.tokenOutValue = quotes[0].amount;
               this.step = 1;
             }
             this.isLoadingProviders = false;
@@ -1001,15 +1002,6 @@ export default {
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
           q.isSelected = true;
-          this.minMaxError = {
-            minFrom: q.minFrom,
-            maxFrom: q.maxFrom
-          };
-
-          if (q?.rateId === 'belowMin') {
-            this.belowMinError = q.minFrom;
-            return;
-          }
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
           this.selectedProvider = q !== this.selectedProvider ? q : {};
@@ -1020,19 +1012,8 @@ export default {
       if (!this.isToAddressValid) return;
       this.step = 1;
       this.feeError = '';
-      if (this.allTrades.length > 0 && this.allTrades[idx]) {
-        this.currentTrade = this.allTrades[idx];
-        this.currentTrade.gasPrice =
-          this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
-        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-          this.network.type.name
-        }`;
-        this.step = 2;
-        this.checkFeeBalance();
-        return;
-      }
       this.loadingFee = true;
-
+      if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
       this.swapper
         .getTrade({
           fromAddress: this.address,
@@ -1046,30 +1027,29 @@ export default {
           )
         })
         .then(trade => {
-          if (trade instanceof Error) {
-            this.feeError =
-              'Unable to estimate gas price. Select a different provider or token pair.';
-            return;
-          }
-
-          this.currentTrade = trade;
-          this.currentTrade.gasPrice =
-            this.localGasPrice !== '0' ? this.localGasPrice : this.gasPrice;
-          this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-            this.network.type.name
-          }`;
           this.allTrades[idx] = trade;
-          this.step = 2;
-          this.loadingFee = false;
-          this.checkFeeBalance();
+          this.setupTrade(trade);
         })
         .catch(e => {
           if (e) {
-            this.feeError =
-              'Unable to estimate gas price. Select a different provider or token pair.';
+            this.feeError = 'This provider is not available.';
           }
         });
     }, 500),
+    setupTrade(trade) {
+      if (trade instanceof Error) {
+        this.feeError = 'Provider issue';
+        return;
+      }
+      this.currentTrade = trade;
+      this.currentTrade.gasPrice = this.localGasPrice;
+      this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+        this.network.type.name
+      }`;
+      this.step = 2;
+      this.loadingFee = false;
+      this.checkFeeBalance();
+    },
     showConfirm() {
       this.confirmInfo = {
         from: this.address,
@@ -1105,7 +1085,7 @@ export default {
           this.swapNotificationFormatter(res);
         })
         .catch(err => {
-          this.swapNotificationFormatter(err, true);
+          Toast(err.message, {}, ERROR);
         });
     },
     getTokenBalance(balance, decimals) {
@@ -1113,40 +1093,33 @@ export default {
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj, isError) {
-      obj?.hashes?.forEach((hash, idx) => {
-        const notification = {
-          transactionHash: !isError ? hash : '',
-          transactionFee: fromWei(this.totalFees),
-          to: this.currentTrade.transactions[idx].to,
-          from: this.confirmInfo.from,
-          gas: this.currentTrade.transactions[idx].gas,
-          gasPrice: this.currentTrade.transactions[idx].gasPrice,
-          gasLimit: this.totalGasLimit,
-          data: this.currentTrade.transactions[idx].data,
-          value: this.currentTrade.transactions[idx].value,
-          type: 'SWAP',
-          read: false,
-          network: this.network.type.name,
-          date: new Date().getTime(),
-          status: isError ? 'FAILED' : 'PENDING',
-          fromTxData: {
-            currency: this.confirmInfo.fromType,
-            amount: this.confirmInfo.fromVal,
-            icon: this.confirmInfo.fromImg
+    swapNotificationFormatter(obj) {
+      obj.hashes.forEach((hash, idx) => {
+        const notif = Object.assign(
+          {
+            hash,
+            from: this.address,
+            type: NOTIFICATION_TYPES.SWAP,
+            network: this.network.type.name,
+            status: NOTIFICATION_STATUS.PENDING,
+            fromTxData: {
+              currency: this.confirmInfo.fromType,
+              amount: this.confirmInfo.fromVal,
+              icon: this.confirmInfo.fromImg
+            },
+            toTxData: {
+              currency: this.confirmInfo.toType,
+              amount: this.confirmInfo.toVal,
+              icon: this.confirmInfo.toImg,
+              to: this.confirmInfo.to
+                ? this.confirmInfo.to
+                : this.currentTrade.transactions[idx].to
+            },
+            swapObj: obj
           },
-          toTxData: {
-            currency: this.confirmInfo.toType,
-            amount: this.confirmInfo.toVal,
-            icon: this.confirmInfo.toImg,
-            to: this.confirmInfo.to
-              ? this.confirmInfo.to
-              : this.currentTrade.transactions[idx].to
-          },
-          swapObj: obj,
-          errMessage: isError ? hash : ''
-        };
-        this.addNotification(new Notification(notification));
+          this.currentTrade.transactions[idx]
+        );
+        this.addNotification(new Notification(notif));
       });
     },
     checkFeeBalance() {
@@ -1156,6 +1129,13 @@ export default {
           'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
       }
     },
+    openSettings() {
+      EventBus.$emit('toggleSettings');
+      this.gasPriceModal = false;
+    },
+    closeGasPrice() {
+      this.gasPriceModal = false;
+    },
     setWrappedBtc(symbol) {
       const foundToken = this.toTokens.find(
         item => item.symbol.toLowerCase() === symbol.toLowerCase()
@@ -1164,10 +1144,8 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e.gasPrice;
+      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
-      if (!_.isEmpty(this.currentTrade)) {
-        this.currentTrade.gasPrice = e.gasPrice;
-      }
     }
   }
 };
