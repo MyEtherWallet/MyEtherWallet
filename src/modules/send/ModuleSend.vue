@@ -466,7 +466,9 @@ export default {
     tokensList: {
       handler: function (val) {
         this.selectedCurrency = val.length > 0 ? val[0] : {};
-        this.sendTx.setCurrency(this.selectedCurrency);
+        if (this.sendTx) {
+          this.sendTx.setCurrency(this.selectedCurrency);
+        }
       },
       deep: true,
       immediate: true

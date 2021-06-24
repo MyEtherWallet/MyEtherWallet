@@ -7,27 +7,29 @@ import * as locStore from 'store';
 import { getSanitizedTx, setEvents } from './utils';
 import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
-
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { EventBus } from '@/core/plugins/eventBus';
 
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
   let confirmInfo;
-  let currency;
   let toDetails;
   if (tx.hasOwnProperty('confirmInfo')) {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
   }
-  if (tx.hasOwnProperty('currency')) {
-    currency = tx['currency'];
-    delete tx['currency'];
-  }
   if (tx.hasOwnProperty('toDetails')) {
     toDetails = tx['toDetails'];
     delete tx['toDetails'];
+  } else {
+    toDetails = {
+      type: 'TYPED'
+    };
   }
+  let currency = store.getters['external/contractToToken'](tx.to);
+  if (!currency)
+    currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
   tx.gasPrice = tx.gasPrice
     ? tx.gasPrice
     : BigNumber(store.getters['global/gasPrice']).toFixed();
