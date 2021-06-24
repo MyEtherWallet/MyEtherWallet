@@ -46,6 +46,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .once('receipt', () => {
+      console.log('receipt', newTxObj);
       newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
       const notification = new Notification(newTxObj);
       dispatch(
@@ -62,6 +63,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
+      console.log(err);
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);

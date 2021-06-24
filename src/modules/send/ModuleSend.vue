@@ -640,7 +640,6 @@ export default {
       this.isValidAddress = false;
       this.toAddress = '';
       this.$refs.mewSelect.clear();
-      this.$refs.mewInput.clear();
       this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
