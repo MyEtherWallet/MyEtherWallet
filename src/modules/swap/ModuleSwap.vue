@@ -841,7 +841,6 @@ export default {
         fromToken,
         toToken
       };
-      console.log(fromToken, toToken, amount, this.default);
       this.tokenInValue = `${amount}`;
     }
   },
