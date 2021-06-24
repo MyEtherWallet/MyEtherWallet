@@ -105,7 +105,7 @@ const contractToToken =
         subtext: networkType.name_long,
         value: networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,
-        img: networkType.icon,
+        img: cgToken.img !== '' ? cgToken.img : networkType.icon,
         decimals: 18
       });
     }
