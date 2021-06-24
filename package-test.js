@@ -20,8 +20,7 @@ const EXCEPTIONS = [
   '@aave/protocol-js',
   '@unstoppabledomains/resolution',
   'sass',
-  'scryptsy',
-  '@xkeshi/vue-qrcode'
+  'scryptsy'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
