@@ -1,7 +1,8 @@
-import { MnemonicWallet } from '@/modules/wallets/utils/software';
-import WalletInterface from '@/modules/wallets/utils/WalletInterface';
-import { WALLET_TYPES } from '@/modules/access-wallet/hardware/handlers/configs/configWalletTypes';
-import { unlockKeystore } from '@/modules/wallets/utils/helpers.js';
+import { MnemonicWallet } from '@/modules/access-wallet/software/handlers';
+import WalletInterface from '@/modules/access-wallet/common/WalletInterface';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import { unlockKeystore } from '@/modules/access-wallet/common/helpers';
+import errorHandler from './errorHandler';
 
 export default class AccessWallet {
   constructor() {
@@ -31,6 +32,7 @@ export default class AccessWallet {
         '',
         JSON.stringify(obj)
       );
+      this.walletInstance.errorHandler = errorHandler;
       return this.walletInstance;
     });
   }
@@ -44,6 +46,7 @@ export default class AccessWallet {
       false,
       WALLET_TYPES.PRIV_KEY
     );
+    this.walletInstance.errorHandler = errorHandler;
   }
 
   /**

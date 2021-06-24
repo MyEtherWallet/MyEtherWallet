@@ -12,6 +12,7 @@ export default {
   chainID: 3,
   tokens: tokens,
   contracts: contracts,
+  isTestNetwork: true,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'test',
@@ -23,6 +24,9 @@ export default {
   isEthVMSupported: {
     supported: false,
     url: null,
+    blockExplorerTX: '',
+    blockExplorerAddr: '',
     websocket: null
-  }
+  },
+  coingeckoID: null
 };

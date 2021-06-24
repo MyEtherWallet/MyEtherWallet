@@ -11,7 +11,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
@@ -28,7 +28,7 @@
             <v-col cols="12" md="6">
               <div class="tableHeader pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
+                <h3 v-if="!isLoadingData" class="">
                   $ {{ totalLiquidity.usd }}
                 </h3>
                 <v-skeleton-loader
@@ -119,7 +119,7 @@
         <v-sheet
           color="transparent"
           max-width="724px"
-          class="mx-auto py-6 px-5 px-md-3"
+          class="mx-auto py-6 px-2 px-md-3"
         >
           <div class="d-flex align-center justify-end">
             <div class="mr-3">Health factor</div>
@@ -137,9 +137,7 @@
             <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
-                  $ {{ totalBorrow.usd }}
-                </h3>
+                <h3 v-if="!isLoadingData">$ {{ totalBorrow.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
@@ -177,9 +175,7 @@
             <v-col cols="12" md="6">
               <div class="progressBar pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
-                <h3 v-if="!isLoadingData" class="font-weight-bold">
-                  $ {{ totalCollateral.usd }}
-                </h3>
+                <h3 v-if="!isLoadingData">$ {{ totalCollateral.usd }}</h3>
                 <v-skeleton-loader
                   v-else
                   height="20px"
@@ -316,7 +312,7 @@ import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
@@ -381,7 +377,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
       if (!this.handler) true;
       return this.handler.isLoading;
@@ -407,7 +403,7 @@ export default {
         !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
           ? '0'
           : BigNumber(this.handler.userSummary.totalLiquidityETH)
-              .times(this.ETHUSDValue.value ? this.ETHUSDValue.value : 0)
+              .times(this.fiatValue ? this.fiatValue : 0)
               .toFixed(2);
 
       return {

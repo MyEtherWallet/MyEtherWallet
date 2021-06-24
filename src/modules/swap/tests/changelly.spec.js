@@ -1,12 +1,12 @@
 import Changelly from '../handlers/providers/changelly';
 const changelly = new Changelly();
-xdescribe('Changelly Swap', () => {
+describe('Changelly Swap', () => {
   test('it should return supported tokens including ETH', () => {
     return changelly.getSupportedTokens().then(tokens => {
       expect(tokens).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            contract_address: '0xeth',
+            contract: '0xeth',
             decimals: 18,
             img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/eth.png',
             name: 'Ethereum',

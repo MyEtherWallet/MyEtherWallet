@@ -1,18 +1,26 @@
 <template>
   <div class="pa-6">
-    <div>Please select a default gas price for your transaction fee</div>
+    <div v-if="!isSwap" class="mb-6">
+      Please select a default gas price for your transaction fee
+    </div>
     <!--
     =====================================================================================
       Economic / Regular / Fast
     =====================================================================================
     -->
     <v-sheet color="transparent" max-width="500px" class="mx-auto">
-      <v-row class="mt-6">
+      <v-row>
         <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
           <div
-            class="text-center group-button pb-5 pt-2"
-            :class="selected === b.title ? 'active' : ''"
-            @click="setSelected(b.title)"
+            :class="[
+              selected === b.title ? 'active' : '',
+              'text-center group-button pb-5 pt-2'
+            ]"
+            @click.stop="
+              () => {
+                setSelected(b.title);
+              }
+            "
           >
             <mew-icon :icon-name="b.icon" :img-height="80" />
             <h5 class="font-weight-bold mb-2 text-capitalize">{{ b.title }}</h5>
@@ -28,7 +36,7 @@
         Divider
       =====================================================================================
       -->
-      <v-row align="center" class="pt-3 pb-9 px-3">
+      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
         <v-divider />
         <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
         <v-divider />
@@ -38,19 +46,46 @@
        Custom Gas
       =====================================================================================
       -->
-      <v-row align="start" class="px-3">
+      <div v-if="!isSwap" class="d-sm-flex text-center">
         <mew-input
           v-model="customGasPrice"
           label="Customize"
           placeholder=" "
           right-label="Gwei"
-          class="mr-3"
+          class="mr-0 mr-sm-3"
         />
         <mew-button
-          title="Confirm"
+          :title="customBtn.text"
           btn-size="xlarge"
-          @click.native="setCustomGasPrice(customGasPrice)"
+          :btn-style="customBtn.style"
+          :has-full-width="isSwap"
+          @click.native="setCPrice"
         />
+        <p v-if="isSwap" class="pt-2">
+          To change the custom gas price, go to
+          <span
+            class="cursor--pointer go-to-global-text"
+            @click="openGlobalSettings"
+            >global settings</span
+          >
+        </p>
+      </div>
+      <v-row v-if="hasCustom" align="start" class="px-3">
+        <mew-button
+          :title="customBtn.text"
+          btn-size="xlarge"
+          :btn-style="customBtn.style"
+          :has-full-width="true"
+          @click.native="setCPrice"
+        />
+        <p class="pt-2">
+          To change the custom gas price, go to
+          <span
+            class="cursor--pointer go-to-global-text"
+            @click="openGlobalSettings"
+            >global settings</span
+          >
+        </p>
       </v-row>
     </v-sheet>
   </div>
@@ -59,6 +94,9 @@
 <script>
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
+import { mapState, mapGetters } from 'vuex';
+import { fromWei } from 'web3-utils';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -87,13 +125,52 @@ export default {
     setCustomGasPrice: {
       type: Function,
       default: () => {}
+    },
+    isSwap: {
+      type: Boolean,
+      default: false
+    },
+    openGlobalSettings: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
     return {
-      customGasPrice:
-        this.selected === gasPriceTypes.STORED ? this.gasPrice : '0'
+      customGasPrice: '0'
     };
+  },
+  computed: {
+    ...mapGetters('external', ['fiatValue']),
+    ...mapState('global', ['gasPriceType']),
+    customBtn() {
+      if (!this.customGasPrice) return {};
+      const usdValue = BigNumber(this.fiatValue).times(
+        fromWei(this.customGasPrice, 'ether')
+      );
+      return {
+        text: this.isSwap
+          ? `Custom: ${this.customGasPrice} Gwei $ ${
+              formatFiatValue(usdValue).value
+            }`
+          : 'Confirm',
+        style: this.isSwap ? 'outline' : 'background'
+      };
+    },
+    hasCustom() {
+      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
+    }
+  },
+  mounted() {
+    this.customGasPrice =
+      this.gasPriceType === gasPriceTypes.STORED
+        ? fromWei(this.gasPrice, 'gwei')
+        : '0';
+  },
+  methods: {
+    setCPrice() {
+      this.setCustomGasPrice(this.customGasPrice);
+    }
   }
 };
 </script>
@@ -108,11 +185,13 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid transparent;
-
   &.active {
     border: 1px solid var(--v-primary-base);
     background-color: #f2fafa;
     opacity: 1;
   }
+}
+.go-to-global-text {
+  color: var(--v-primary-base);
 }
 </style>

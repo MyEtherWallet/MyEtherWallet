@@ -19,7 +19,6 @@ import trezorError from './errors-trezor/en_US';
 import bcvaultError from './errors-bcvault/en_US';
 import coolWalletError from './errors-coolwallet/en_US';
 import ledgerError from './errors-ledger/en_US';
-import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import bitbox02Error from './errors-bitbox02/en_US';
@@ -65,7 +64,6 @@ const en_US = {
   coolWalletError: coolWalletError,
   ledgerError: ledgerError,
   bcvaultError: bcvaultError,
-  secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   bitbox02Error: bitbox02Error,

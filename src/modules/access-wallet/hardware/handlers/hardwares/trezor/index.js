@@ -1,7 +1,7 @@
 import Trezor from 'trezor-connect';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
 import {
@@ -9,12 +9,13 @@ import {
   getHexTxObject,
   getBufferFromHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
+import trezor from '@/assets/images/icons/wallets/trezor.svg';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
@@ -28,6 +29,10 @@ class TrezorWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.TREZOR];
+    this.icon = {
+      type: 'img',
+      value: trezor
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;

@@ -2,8 +2,8 @@ const state = {
   localStore: false,
   darkList: {},
   path: '',
-  forexRates: {},
-  ETHUSDValue: {}
+  currencyRate: {},
+  coinGeckoTokens: new Map() //map of {coingeckoId: coingeckotokeninfo}
 };
 
 export default state;

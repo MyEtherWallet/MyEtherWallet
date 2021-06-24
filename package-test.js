@@ -5,12 +5,10 @@
 const package = require('./package.json');
 const packageJson = require('package-json');
 const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
-//@xkeshi/vue-qrcode no longer maintained, forked out to mew
 // webpack has a major update
 // copy-webpack-plugin major update
 // holding off on husky changes as the cli still has some weird necessary changes to run commitlint
 const EXCEPTIONS = [
-  '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
   'postcss-import',
   'postcss-url',
@@ -20,8 +18,10 @@ const EXCEPTIONS = [
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  'eslint',
-  'sass'
+  '@unstoppabledomains/resolution',
+  'sass',
+  'scryptsy',
+  '@xkeshi/vue-qrcode'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -67,7 +67,12 @@ const looper = () => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
       if (ALL_PACKAGES[_name] !== latestVersion) {
-        if (_name === "@myetherwallet/mew-components" && new Date(latestVersionTime).getTime() < new Date().getTime() || new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME) {
+        if (
+          (_name === '@myetherwallet/mew-components' &&
+            new Date(latestVersionTime).getTime() < new Date().getTime()) ||
+          new Date(latestVersionTime).getTime() <
+            new Date().getTime() - SAFE_TIME
+        ) {
           console.error(
             'ERROR: Update ' +
               _name +

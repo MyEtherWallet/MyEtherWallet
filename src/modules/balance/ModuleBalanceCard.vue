@@ -29,11 +29,8 @@
           <div class="font-weight-medium d-flex align-center">
             <div class="text-shadow font-weight-bold">MY ACCOUNT VALUE</div>
           </div>
-          <div
-            v-show="convertedBalance !== 'undefinedNaN'"
-            class="text-shadow headline font-weight-bold monospace"
-          >
-            {{ convertedBalance }}
+          <div class="text-shadow headline font-weight-bold monospace">
+            {{ totalWalletBalance || '$0' }}
           </div>
         </div>
       </div>
@@ -78,9 +75,10 @@
       </div>
     </div>
     <module-access-wallet-hardware
+      v-if="isHardware"
       :open="openChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="true"
+      :switch-address="isHardware"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -95,10 +93,13 @@ import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWall
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import {
+  formatFiatValue,
+  formatBalanceEthValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: {
@@ -113,15 +114,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
     ...mapState('wallet', ['address', 'isHardware', 'identifier']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'totalTokenFiatValue'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
-    },
-    canSwitch() {
-      return this.isHardware;
     },
     lastFour() {
       return this.address.substring(
@@ -129,20 +131,18 @@ export default {
         this.address.length
       );
     },
-    convertedBalance() {
-      if (this.isEthNetwork) {
-        const balance = BigNumber(this.balanceInETH).times(
-          this.ETHUSDValue.value
-        );
-        return `${this.ETHUSDValue.symbol + balance.toFixed(2).toString()}`;
+    totalTokenBalance() {
+      return this.totalTokenFiatValue;
+    },
+    totalWalletBalance() {
+      if (this.fiatValue != 0) {
+        const total = this.totalTokenBalance;
+        return `${'$' + formatFiatValue(total).value}`;
       }
-      return `${BigNumber(this.balanceInETH).toFixed(2)} ${
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
         this.network.type.currencyName
       }`;
     }
-  },
-  mounted() {
-    //this.animateBlockie();
   },
   methods: {
     animateBlockie() {
@@ -173,8 +173,8 @@ export default {
       this.openPaperWallet = false;
     },
     copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
+      clipboardCopy(this.getChecksumAddressString);
+      Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     }
   }
 };

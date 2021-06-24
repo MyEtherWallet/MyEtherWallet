@@ -11,7 +11,7 @@
       type="table"
     />
     <mew-module
-      v-if="!loading && tokensData.length > 0"
+      v-if="!loading && tokensData.length > 0 && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
@@ -32,6 +32,12 @@
         </div>
       </template>
     </mew-module>
+    <mew-table
+      v-if="!loading && tokensData.length > 0 && dense"
+      :has-color="false"
+      :table-headers="tableHeaders"
+      :table-data="tokensData"
+    />
     <!--
     =====================================================================================
       display if the user has no tokens
@@ -45,17 +51,22 @@
   </div>
 </template>
 <script>
-import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
-import numberFormatHelper from '@/core/helpers/numberFormatHelper';
-
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     BalanceEmptyBlock
   },
+  props: {
+    dense: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
+      tokensDataLoading: true,
       tableHeaders: [
         {
           text: 'Token',
@@ -94,73 +105,51 @@ export default {
           width: '15%'
         }
       ]
-      // loading: true
     };
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'initialLoadTokens']),
     ...mapGetters('global', ['isEthNetwork']),
-
+    ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
       return this.initialLoadTokens;
     },
     tokensData() {
-      return this.tokensList
-        .filter(item => {
-          if (item.price_change_24h || item.market_cap) {
-            return item;
+      if (!this.tokensList) return [];
+      const tokenList = this.tokensList.map(item => {
+        const newObj = {};
+        newObj.balance = [
+          item.balancef + ' ' + item.symbol,
+          '$' + item.usdBalancef
+        ];
+        newObj.usdBalance = item.usdBalance;
+        newObj.token = item.symbol;
+        newObj.cap = item.market_capf !== '0' ? item.market_capf : '';
+        newObj.change =
+          item.price_change_percentage_24hf !== '0'
+            ? item.price_change_percentage_24hf.replaceAll('%', '')
+            : '';
+        newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+        newObj.price = item.pricef !== '0' ? '$' + item.pricef : '';
+        newObj.tokenImg = item.img;
+        newObj.callToAction = [
+          {
+            title: 'Trade',
+            method: () => {
+              this.$router.push({ name: 'Swap' });
+            },
+            btnStyle: 'outline',
+            colorTheme: 'primary'
           }
-        })
-        .map(item => {
-          const newObj = {};
-          newObj.balance = [
-            this.getTokenValue(item).value + ' ' + item.symbol,
-            numberFormatHelper.formatUsdValue(new BigNumber(item.usdBalance))
-              .value
-          ];
-          newObj.token = item.symbol;
-          newObj.cap = new BigNumber(item.market_cap).toFormat();
-          newObj.change = new BigNumber(item.price_change_24h).toFixed(2);
-          newObj.status = item.price_change_24h > 0 ? '+' : '-';
-          newObj.price = '$' + new BigNumber(item.price).toFixed(2);
-          newObj.tokenImg = item.img;
-          newObj.callToAction = [
-            {
-              title: 'Trade',
-              method: () => {
-                this.$router.push({ name: 'Swap' });
-              },
-              btnStyle: 'outline',
-              colorTheme: 'primary'
-            }
-          ];
-          // this.loading = false;
-          return newObj;
-        });
+        ];
+        return newObj;
+      });
+      tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
+      return tokenList;
     },
     totalTokensValue() {
-      return new BigNumber(
-        this.tokensList.reduce((total, currentVal) => {
-          const balance =
-            currentVal.usdBalance !== null &&
-            (currentVal.price_change_24h !== null ||
-              currentVal.market_cap !== 0)
-              ? currentVal.usdBalance
-              : 0;
-          return new BigNumber(total).plus(balance).toFixed();
-        }, 0)
-      ).toFixed(2);
-    }
-  },
-  methods: {
-    getTokenValue(_token) {
-      let n = new BigNumber(_token.balance);
-      if (_token.decimals) {
-        n = n.div(new BigNumber(10).pow(_token.decimals));
-        n = numberFormatHelper.formatFloatingPointValue(n);
-      }
-      return n;
+      return formatFiatValue(this.totalTokenFiatValue).value;
     }
   }
 };

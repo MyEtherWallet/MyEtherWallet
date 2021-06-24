@@ -76,19 +76,18 @@
 <script>
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
-
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 const STATIC_PAIRS = [
   {
     toT: {
       symbol: 'BTC',
-      contract_address: '0xbtc'
+      contract: '0xbtc'
     },
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -96,12 +95,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'USDT',
-      contract_address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
     fromAmount: '100000000000000000'
@@ -109,12 +108,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'KNC',
-      contract_address: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+      contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       toT: 18
     },
     fromAmount: '100000000000000000'
@@ -122,12 +121,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'DAI',
-      contract_address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -135,12 +134,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'LINK',
-      contract_address: '0x514910771af9ca656af840dff83e8264ecf986ca',
+      contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
       decimals: 18
     },
     fromAmount: '100000000000000000'
@@ -148,12 +147,12 @@ const STATIC_PAIRS = [
   {
     fromT: {
       symbol: 'ETH',
-      contract_address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
     toT: {
       symbol: 'USDC',
-      contract_address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       decimals: 6
     },
     fromAmount: '100000000000000000'
@@ -202,9 +201,7 @@ export default {
             itm['rate'] =
               res[idx].length === 0
                 ? false
-                : new BigNumber(res[idx][0].amount).lte(1)
-                ? res[idx][0].amount
-                : new BigNumber(res[idx][0].amount).toFixed(2);
+                : formatFloatingPointValue(res[idx][0].amount).value;
             return itm;
           });
           this.loading = false;
@@ -217,8 +214,8 @@ export default {
     },
     goToSwap(data) {
       const obj = {
-        fromToken: data.fromT.contract_address,
-        toToken: data.toT.contract_address,
+        fromToken: data.fromT.contract,
+        toToken: data.toT.contract,
         amount: '1'
       };
 

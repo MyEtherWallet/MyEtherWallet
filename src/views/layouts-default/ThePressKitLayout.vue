@@ -3,7 +3,7 @@
     <v-container>
       <div class="page-container">
         <div class="page-title text-center">
-          <h1 class="font-weight-bold">{{ $t('footer.press-kit.header') }}</h1>
+          <h1>{{ $t('footer.press-kit.header') }}</h1>
           <i18n
             path="footer.press-kit.subtext"
             tag="div"

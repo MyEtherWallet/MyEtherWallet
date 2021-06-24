@@ -5,16 +5,23 @@ import erc20Abi from '../abi/erc20';
 import Configs from '../configs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
+import { ETH } from '@/utils/networks/types';
 const HOST_URL = 'https://swap.mewapi.io/changelly';
+const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 class Changelly {
-  constructor(web3) {
+  constructor(web3, chain) {
     this.web3 = web3;
     this.provider = 'changelly';
+    this.supportednetworks = [ETH.name];
+    this.chain = chain;
+  }
+  isSupportedNetwork(chain) {
+    return this.supportednetworks.includes(chain);
   }
   getSupportedTokens() {
     return axios
-      .post(`${HOST_URL}`, {
-        id: uuidv4(),
+      .post(`${REQUEST_CACHER}${HOST_URL}`, {
+        id: '1',
         jsonrpc: '2.0',
         method: 'getCurrenciesFull',
         params: {}
@@ -22,11 +29,11 @@ class Changelly {
       .then(response => {
         const data = response.data.result.filter(d => d.fixRateEnabled);
         return data.map(d => {
-          const contract_address = d.contractAddress
+          const contract = d.contractAddress
             ? d.contractAddress.toLowerCase()
             : '0x' + d.ticker;
           return {
-            contract_address,
+            contract,
             decimals: 18,
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
@@ -52,7 +59,7 @@ class Changelly {
         return response.data.result.result;
       });
   }
-  getMinAmount({ fromT, toT }) {
+  getMinMaxAmount({ fromT, toT }) {
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
@@ -66,7 +73,11 @@ class Changelly {
         ]
       })
       .then(response => {
-        return response?.data?.result[0].minFrom;
+        const result = response?.data?.result[0];
+        return {
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
+        };
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
@@ -74,21 +85,8 @@ class Changelly {
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
-    return this.getMinAmount({ fromT, toT }).then(result => {
-      if (queryAmount.lte(result)) {
-        return [
-          {
-            exchange: this.provider,
-            provider: this.provider,
-            amount: '0',
-            minAmount: new BigNumber(result)
-              .times(0.01)
-              .plus(result)
-              .toString(),
-            rateId: 'belowMin'
-          }
-        ];
-      }
+    return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
+      if (!minmax.minFrom) return [];
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
@@ -103,13 +101,20 @@ class Changelly {
           ]
         })
         .then(response => {
-          if (response.data.result[0].result === 0) return [];
           return [
             {
               exchange: this.provider,
               provider: this.provider,
-              amount: response.data.result[0].amountTo,
-              rateId: response.data.result[0].id
+              amount:
+                response.data.result[0].result === 0
+                  ? '0'
+                  : response.data.result[0].amountTo,
+              rateId:
+                response.data.result[0].result === 0
+                  ? ''
+                  : response.data.result[0].id,
+              minFrom: minmax.minFrom,
+              maxFrom: minmax.maxFrom
             }
           ];
         });
@@ -143,7 +148,7 @@ class Changelly {
           value: '0x0',
           gas: '0x0'
         };
-        if (fromT.contract_address === Configs.ETH) {
+        if (fromT.contract === Configs.ETH) {
           txObj.to = response.data.result.payinAddress;
           txObj.value = toHex(
             toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
@@ -158,7 +163,7 @@ class Changelly {
           txObj.data = erc20contract.methods
             .transfer(response.data.result.payinAddress, amountBN)
             .encodeABI();
-          txObj.to = toT.contract_address;
+          txObj.to = toT.contract;
         }
         return this.web3.eth.estimateGas(txObj).then(gas => {
           txObj.gas = gas;
@@ -170,7 +175,7 @@ class Changelly {
         });
       });
   }
-  async executeTrade(tradeObj) {
+  async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = await this.web3.eth.getGasPrice();
 
@@ -180,7 +185,8 @@ class Changelly {
           Object.assign(tradeObj.transactions[0], {
             from,
             gasPrice,
-            handleNotification: false
+            handleNotification: false,
+            confirmInfo: confirmInfo
           })
         )
         .on('transactionHash', hash => {

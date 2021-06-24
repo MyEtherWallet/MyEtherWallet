@@ -36,7 +36,7 @@
       "button-buy": "Buy Now",
       "button-choose": "Continue"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
   },
   "bitbox": {
     "modal": {

@@ -1,175 +1,72 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 const configs = require('./configs');
-const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
-
+const IMAGE_PROXY = 'https://img.mewapi.io/?image=';
 if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
   fs.mkdirSync(configs.GENERATED_FOLDER_PATH);
 }
-
-const fetchTokens = async () => {
-  try {
-    if (!fs.existsSync(configs.TOKENS_PATH)) {
-      fs.mkdirSync(configs.TOKENS_PATH);
-    }
-    const tokenFileURL =
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
-    if (tokenList !== undefined && tokenList.length > 0) {
-      for (let i = 0; i < tokenList.length; i++) {
-        const tokenFile = tokenList[i];
-        const tokensCollection = await fetch(
-          `${tokenFileURL + tokenFile.name}/tokens-${tokenFile.name}.json`
-        )
-          .then(res => res.json())
-          .catch(err => console.log(err));
-        if (tokensCollection !== undefined) {
-          console.log('Writing tokens for the network: ' + tokenFile.name);
-          fs.writeFileSync(
-            `${configs.TOKENS_PATH}/tokens-${tokenFile.name}.json`,
-            JSON.stringify(tokensCollection)
-          );
-        }
-      }
-    }
-  } catch (e) {
-    console.error(e); // Not captured by sentry
-  }
-};
-
-const fetchAddressDarkList = async () => {
-  try {
-    if (!fs.existsSync(configs.ADDRESS_DARKLIST_PATH)) {
-      fs.mkdirSync(configs.ADDRESS_DARKLIST_PATH);
-    }
-
-    const darkList = await fetch(
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
-    )
-      .then(res => res.json())
-      .catch(console.log);
-    const jsonToStore = {
-      data: darkList,
-      timestamp: Date.now()
-    };
-    console.log('Writing address darklist');
-    fs.writeFileSync(
-      `${configs.ADDRESS_DARKLIST_PATH}/address-darklist.json`,
-      JSON.stringify(jsonToStore)
-    );
-  } catch (e) {
-    console.error(e); // Not captured by sentry
-  }
-};
-
-const fetchUrlDarklist = async () => {
-  const sources = [
-    {
-      repo:
-        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
-      identifier: 'eal'
-    },
-    {
-      repo:
-        'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
-      identifier: 'phishfort'
-    },
-    {
-      repo:
-        'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-darklist.json',
-      identifier: 'mew'
-    }
-  ];
-  try {
-    const promises = [];
-    if (!fs.existsSync(configs.URL_DARKLIST_PATH)) {
-      fs.mkdirSync(configs.URL_DARKLIST_PATH);
-    }
-
-    for (let i = 0; i < sources.length; i++) {
-      console.log(`Writing url darklist from ${sources[i].identifier}`);
-      const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
-      promises.push(fetchedProm);
-    }
-
-    await Promise.all(promises).then(values => {
-      values.forEach((res, idx) => {
-        if (sources[idx].identifier === 'mew') {
-          const newRes = res.map(item => {
-            return item.id;
-          });
-
-          fs.writeFileSync(
-            `${configs.URL_DARKLIST_PATH}/${sources[idx].identifier}-blacklisted-domains.json`,
-            JSON.stringify(newRes)
-          );
-        } else {
-          fs.writeFileSync(
-            `${configs.URL_DARKLIST_PATH}/${sources[idx].identifier}-blacklisted-domains.json`,
-            JSON.stringify(res)
-          );
-        }
+const getFormattedList = async (url, network) => {
+  const tokens = await fetch(url)
+    .then(res => res.json())
+    .then(tokens => {
+      tokens = Object.values(tokens.tokens).map(t => {
+        t.contract_address = t.address.toLowerCase();
+        t.icon = IMAGE_PROXY + t.logoURI;
+        t.icon_png = IMAGE_PROXY + t.logoURI;
+        t.network = network;
+        delete t.logoURI;
+        delete t.chainId;
+        return t;
       });
+      tokens = tokens.filter(
+        t => t.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      );
+      return tokens;
     });
-  } catch (e) {
-    console.error(e); // Not captured by sentry
-  }
+  return tokens;
 };
-
-const fetchUrlLightlist = async () => {
-  const sources = [
-    {
-      repo:
-        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
-      identifier: 'eal'
-    },
-    {
-      repo:
-        'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-lightlist.json',
-      identifier: 'mew'
-    }
-  ];
-  try {
-    const promises = [];
-    if (!fs.existsSync(configs.URL_LIGHTLIST_PATH)) {
-      fs.mkdirSync(configs.URL_LIGHTLIST_PATH);
-    }
-    for (let i = 0; i < sources.length; i++) {
-      console.log(`Writing url lightlist from ${sources[i].identifier}`);
-      const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
-      promises.push(fetchedProm);
-    }
-
-    await Promise.all(promises).then(values => {
-      values.forEach((res, idx) => {
-        if (sources[idx].identifier === 'mew') {
-          const newRes = res.map(item => {
-            return item.id;
-          });
-
-          fs.writeFileSync(
-            `${configs.URL_LIGHTLIST_PATH}/${sources[idx].identifier}-whitelisted-domains.json`,
-            JSON.stringify(newRes)
-          );
-        } else {
-          fs.writeFileSync(
-            `${configs.URL_LIGHTLIST_PATH}/${sources[idx].identifier}-whitelisted-domains.json`,
-            JSON.stringify(res)
-          );
-        }
-      });
-    });
-  } catch (e) {
-    console.error(e); // Not captured by sentry
-  }
+const fetchOneInchLists = async () => {
+  const ethTokens = await getFormattedList(
+    'https://api.1inch.exchange/v3.0/1/tokens',
+    'eth'
+  );
+  const bscTokens = await getFormattedList(
+    'https://api.1inch.exchange/v3.0/56/tokens',
+    'bsc'
+  );
+  const maticTokens = await getFormattedList(
+    'https://api.1inch.exchange/v3.0/137/tokens',
+    'matic'
+  );
+  return {
+    eth: ethTokens,
+    bsc: bscTokens,
+    matic: maticTokens
+  };
 };
-
+const fetchCGtokenList = async () => {
+  const bscTokens = await getFormattedList(
+    'https://tokens.coingecko.com/binance-smart-chain/all.json',
+    'bsc'
+  );
+  const maticTokens = await getFormattedList(
+    'https://tokens.coingecko.com/polygon-pos/all.json',
+    'matic'
+  );
+  return {
+    bsc: bscTokens,
+    matic: maticTokens
+  };
+};
 const fetchContracts = async () => {
   try {
     if (!fs.existsSync(configs.CONTRACTS_PATH)) {
       fs.mkdirSync(configs.CONTRACTS_PATH);
     }
-
+    if (!fs.existsSync(configs.TOKENS_PATH)) {
+      fs.mkdirSync(configs.TOKENS_PATH);
+    }
     const contractFileURL =
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
@@ -181,6 +78,10 @@ const fetchContracts = async () => {
           }.json`
         )
           .then(res => res.json())
+          .then(json => {
+            if (json.length === 1 && json[0].name === 'TEST') return [];
+            return json;
+          })
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
           console.log('Writing contract for the network: ' + contractFile.name);
@@ -201,11 +102,60 @@ const fetchMasterFile = async () => {
     if (!fs.existsSync(configs.MASTER_FILE_PATH)) {
       fs.mkdirSync(configs.MASTER_FILE_PATH);
     }
-
+    const oneInchTokens = await fetchOneInchLists();
+    const CGTokens = await fetchCGtokenList();
     const response = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/master-file.json'
     )
       .then(res => res.json())
+      .then(tokens => {
+        const networkTokens = {};
+        tokens.forEach(token => {
+          token.address = token.contract_address;
+          if (token.icon !== '') {
+            token.icon = IMAGE_PROXY + token.icon;
+            token.icon_png = IMAGE_PROXY + token.icon_png;
+          }
+          delete token.link;
+          if (!networkTokens[token.network]) networkTokens[token.network] = {};
+          networkTokens[token.network][token.address] = token;
+        });
+        const oneInchNetworks = Object.keys(oneInchTokens);
+        for (const network of oneInchNetworks) {
+          if (!networkTokens[network]) networkTokens[network] = {};
+          oneInchTokens[network].forEach(t => {
+            if (!networkTokens[network][t.address]) {
+              networkTokens[network][t.address] = t;
+              tokens.push(t);
+            } else if (!networkTokens[network][t.address].icon) {
+              networkTokens[network][t.address].icon = t.icon;
+              networkTokens[network][t.address].icon_png = t.icon_png;
+            }
+          });
+        }
+        const CGNetworks = Object.keys(CGTokens);
+        for (const network of CGNetworks) {
+          if (!networkTokens[network]) networkTokens[network] = {};
+          CGTokens[network].forEach(t => {
+            if (!networkTokens[network][t.address]) {
+              networkTokens[network][t.address] = t;
+              tokens.push(t);
+            } else if (!networkTokens[network][t.address].icon) {
+              networkTokens[network][t.address].icon = t.icon;
+              networkTokens[network][t.address].icon_png = t.icon_png;
+            }
+          });
+        }
+        const networks = Object.keys(networkTokens);
+        for (const network of networks) {
+          console.log('Writing tokens for the network: ' + network);
+          fs.writeFileSync(
+            `${configs.TOKENS_PATH}/tokens-${network}.json`,
+            JSON.stringify(Object.values(networkTokens[network]))
+          );
+        }
+        return tokens;
+      })
       .catch(console.log);
     console.log('Writing masterfile');
     fs.writeFileSync(
@@ -216,14 +166,29 @@ const fetchMasterFile = async () => {
     console.error(e); // Not captured by sentry
   }
 };
-
+const fetchPlatformCoinList = async () => {
+  const list = await fetch(
+    'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
+  )
+    .then(res => res.json())
+    .then(l => {
+      const idmap = {};
+      l.forEach(t => {
+        const vals = Object.values(t.platforms);
+        vals.forEach(val => {
+          if (val) idmap[val] = t.id;
+        });
+      });
+      return idmap;
+    })
+    .catch(console.error);
+  fs.writeFileSync(
+    configs.MASTER_FILE_PATH + '/platformlist.json',
+    JSON.stringify(list)
+  );
+};
 const run = async () => {
-  await fetchTokens()
-    .then(fetchContracts)
-    .then(fetchAddressDarkList)
-    .then(fetchUrlDarklist)
-    .then(fetchUrlLightlist)
-    .then(fetchMasterFile);
+  await fetchContracts().then(fetchMasterFile).then(fetchPlatformCoinList);
 };
 
 (async () => {

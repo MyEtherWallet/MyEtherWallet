@@ -22,9 +22,19 @@ class WSProvider {
     this.connectionRetries = 0;
     const keepAlive = () => {
       if (
+        this.wsProvider.connection.readyState == this.wsProvider.connection.OPEN
+      ) {
+        this.wsProvider.connection.send('');
+      }
+      if (
+        this.oWSProvider.connection.readyState ==
+        this.oWSProvider.connection.OPEN
+      ) {
+        this.oWSProvider.connection.send('');
+      }
+      if (
         this.wsProvider.connectionId !==
-          VuexStore.state.wallet.web3.currentProvider.connectionId &&
-        this.lastMessage + 1 * 60 * 1000 < new Date().getTime()
+        VuexStore.state.wallet.web3.currentProvider.connectionId
       ) {
         this.wsProvider.disconnect();
         this.oWSProvider.disconnect();

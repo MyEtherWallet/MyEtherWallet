@@ -2,9 +2,9 @@ import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
-import { WALLET_TYPES } from '../../configs/configWalletTypes';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
-import HDWalletInterface from '@/modules/wallets/utils/HDWalletInterface.js';
+import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface.js';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
@@ -15,7 +15,7 @@ import {
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
-} from '@/modules/access-wallet/hardware/handlers/helpers/helperHex';
+} from '@/modules/access-wallet/common/helpers';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import Vue from 'vue';
 
@@ -28,6 +28,10 @@ class BitBoxWallet {
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX];
     this.password = password;
+    this.icon = {
+      type: 'mew-icon',
+      value: 'bitbox'
+    };
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
@@ -87,7 +91,8 @@ class BitBoxWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      null
+      null,
+      this.icon
     );
   }
   getCurrentPath() {

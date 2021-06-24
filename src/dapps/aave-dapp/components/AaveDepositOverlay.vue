@@ -95,7 +95,6 @@ export default {
           return item;
         }
       });
-
       return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
     },
     header() {
