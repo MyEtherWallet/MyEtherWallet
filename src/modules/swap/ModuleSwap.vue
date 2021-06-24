@@ -366,7 +366,11 @@ export default {
       'initialLoad',
       'balanceInWei'
     ]),
-    ...mapGetters('external', ['balanceFiatValue', 'contractToToken']),
+    ...mapGetters('external', [
+      'balanceFiatValue',
+      'contractToToken',
+      'getCoinGeckoTokenById'
+    ]),
     disableNext() {
       return (
         this.step < 2 ||
@@ -503,10 +507,11 @@ export default {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
           foundToken.contract = token.contract;
+          foundToken.price = foundToken.pricef;
           foundToken.isEth = token.isEth;
           return foundToken;
         }
-        token.price = '0.00';
+        token.price = '';
         token.subtext = token.name;
         token.value = token.name;
         token.name = token.symbol;
@@ -622,9 +627,16 @@ export default {
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name].map(token => {
-        const id = token.id || token.contract;
-        const foundToken = this.contractToToken(id);
-        if (foundToken) token = Object.assign(token, foundToken);
+        if (token.cgid) {
+          const foundToken = this.getCoinGeckoTokenById(token.cgid);
+          foundToken.price = foundToken.pricef;
+          return Object.assign(token, foundToken);
+        }
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          token = Object.assign(token, foundToken);
+          token.price = token.pricef;
+        }
         return token;
       });
     },

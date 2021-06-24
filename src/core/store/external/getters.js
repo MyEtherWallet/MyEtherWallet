@@ -67,7 +67,27 @@ const networkTokenUSDMarket = function (
     price_change_percentage_24h: 0
   };
 };
-
+const getCoinGeckoTokenById = state => cgid => {
+  const cgToken = state.coinGeckoTokens.get(cgid);
+  return {
+    name: cgToken ? cgToken.symbol.toUpperCase() : '',
+    symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
+    subtext: cgToken ? cgToken.name : '',
+    value: cgToken ? cgToken.name : '',
+    img: cgToken ? cgToken.image : '',
+    market_cap: cgToken ? cgToken.market_cap : '0',
+    market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
+    price_change_percentage_24h: cgToken
+      ? cgToken.price_change_percentage_24h
+      : '0',
+    price_change_percentage_24hf:
+      cgToken && cgToken.price_change_percentage_24h
+        ? formatPercentageValue(cgToken.price_change_percentage_24h).value
+        : '0',
+    price: cgToken ? cgToken.current_price : '0',
+    pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
+  };
+};
 /**
  * Get Token info including market data if exists
  */
@@ -78,34 +98,19 @@ const contractToToken =
     if (contractAdress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
       const networkType = rootGetters['global/network'].type;
-      cgToken = state.coinGeckoTokens.get(tokenId);
-      return {
-        name: cgToken ? cgToken.symbol.toUpperCase() : networkType.name,
-        symbol: cgToken ? cgToken.symbol.toUpperCase() : networkType.name,
-        subtext: cgToken ? cgToken.name : networkType.name_long,
-        value: cgToken ? cgToken.name : networkType.name_long,
+      cgToken = getters.getCoinGeckoTokenById(tokenId);
+      return Object.assign(cgToken, {
+        name: networkType.name,
+        symbol: networkType.name,
+        subtext: networkType.name_long,
+        value: networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,
-        img: cgToken ? cgToken.image : networkType.icon,
-        decimals: 18,
-        market_cap: cgToken ? cgToken.market_cap : '0',
-        market_capf: cgToken
-          ? formatIntegerValue(cgToken.market_cap).value
-          : '0',
-        price_change_percentage_24h: cgToken
-          ? cgToken.price_change_percentage_24h
-          : '0',
-        price_change_percentage_24hf:
-          cgToken && cgToken.price_change_percentage_24h
-            ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-            : '0',
-        price: cgToken ? cgToken.current_price : '0',
-        pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
-      };
+        img: networkType.icon,
+        decimals: 18
+      });
     }
     let cgToken;
-    if (tokenId) {
-      cgToken = state.coinGeckoTokens.get(tokenId);
-    }
+    cgToken = getters.getCoinGeckoTokenById(tokenId);
     let networkToken = tempTokenCache[contractAdress];
     if (!networkToken) {
       networkToken = rootGetters['global/network'].type.tokens.find(
@@ -114,26 +119,15 @@ const contractToToken =
       tempTokenCache[contractAdress] = networkToken;
     }
     if (!networkToken) return null;
-    return {
+    return Object.assign(cgToken, {
       name: networkToken.symbol,
       symbol: networkToken.symbol,
       subtext: networkToken.name,
       value: networkToken.name,
       contract: networkToken.address,
       img: networkToken.icon_png ? networkToken.icon_png : '',
-      decimals: networkToken.decimals,
-      market_cap: cgToken ? cgToken.market_cap : '0',
-      market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
-      price_change_percentage_24h: cgToken
-        ? cgToken.price_change_percentage_24h
-        : '0',
-      price_change_percentage_24hf:
-        cgToken && cgToken.price_change_percentage_24h
-          ? formatPercentageValue(cgToken.price_change_percentage_24h).value
-          : '0',
-      price: cgToken ? cgToken.current_price : '0',
-      pricef: cgToken ? formatFiatValue(cgToken.current_price).value : '0'
-    };
+      decimals: networkToken.decimals
+    });
   };
 
 export default {
@@ -141,5 +135,6 @@ export default {
   balanceFiatValue,
   contractToToken,
   networkTokenUSDMarket,
-  totalTokenFiatValue
+  totalTokenFiatValue,
+  getCoinGeckoTokenById
 };

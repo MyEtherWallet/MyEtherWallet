@@ -11,7 +11,7 @@ const TRENDING_LIST = {
       name: 'BTC',
       subtext: 'Bitcoin',
       value: 'Bitcoin',
-      id: 'bitcoin'
+      cgid: 'bitcoin'
     },
     {
       contract: '0xc713e5e149d5d0715dcd1c156a020976e7e56b88',
