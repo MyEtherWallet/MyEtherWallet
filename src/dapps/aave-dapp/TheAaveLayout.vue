@@ -206,8 +206,8 @@
                 />
                 <v-skeleton-loader
                   v-else
+                  class="mt-2"
                   height="12px"
-                  width="30px"
                   type="text"
                 />
               </div>
@@ -394,7 +394,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'coinGeckoTokens']),
+    ...mapState('wallet', ['address', 'coinGeckoTokens', 'web3']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),

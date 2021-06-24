@@ -73,7 +73,7 @@ export default {
       const depositedBalanceInUSD = `$ ${
         formatFiatValue(
           BigNumber(this.selectedTokenUSDValue).times(
-            hasDeposit?.currentUnderlyingBalance
+            hasDeposit?.currentUnderlyingBalance || 0
           )
         ).value
       }`;

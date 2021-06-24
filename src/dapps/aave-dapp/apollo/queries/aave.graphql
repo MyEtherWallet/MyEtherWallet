@@ -28,38 +28,10 @@ subscription userPositionUpdateSubscription(
   }
 }
 
-subscription reservesRates30DaysAgo(
-  $timestamp: Int!
-  $pool: String!
-) {
-  reserves(where: { pool: $pool }) {
-    id
-    symbol
-    paramsHistory(where: {timestamp_lte: $timestamp}, first: 1,  orderBy: timestamp, orderDirection: desc) {
-      variableBorrowIndex
-      liquidityIndex
-      timestamp
-    }
-  }
-}
-
 subscription usdPriceEth {
   priceOracle(id: "1") {
     usdPriceEth
   }
-}
-
-fragment EthTransaction on EthereumTransactionModelExtended {
-  tx {
-    from
-    to
-    gas
-    data
-    value
-    __typename
-  }
-  txType
-  __typename
 }
 
 fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {

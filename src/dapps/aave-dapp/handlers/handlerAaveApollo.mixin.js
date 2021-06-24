@@ -113,18 +113,7 @@ export default {
     async onDeposit(data) {
       try {
         return await depositDetails(data).then(res => {
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.deposit.forEach(data => {
-              txArr.push(data.tx);
-            });
-            return this.sendTransaction(txArr);
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
+          this.formatTxData(res, 'deposit');
         });
       } catch (e) {
         throw new Error(e);
@@ -134,23 +123,10 @@ export default {
      * Apollo mutation to borrow funds
      */
     async onBorrow(data) {
-      console.error('param', data);
       data.referralCode = '14';
       try {
         return await borrowDetails(data).then(res => {
-          console.error('res', res);
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.borrow.forEach(data => {
-              txArr.push(data.tx);
-            });
-            return this.sendTransaction(txArr);
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
+          this.formatTxData(res, 'borrow');
         });
       } catch (e) {
         throw new Error(e);
@@ -162,18 +138,7 @@ export default {
     async onRepay(data) {
       try {
         return await repayDetails(data).then(res => {
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.repay.forEach(data => {
-              txArr.push(data.tx);
-            });
-            return this.sendTransaction(txArr);
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
+          this.formatTxData(res, 'repay');
         });
       } catch (e) {
         throw new Error(e);
@@ -185,18 +150,7 @@ export default {
     async setBorrowRate(data) {
       try {
         return await swapBorrowRateDetails(data).then(res => {
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.swapBorrowRateMode.forEach(data => {
-              txArr.push(data.tx);
-            });
-            return this.sendTransaction(txArr);
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
+          this.formatTxData(res, 'swapBorrowRateMode');
         });
       } catch (e) {
         throw new Error(e);
@@ -208,18 +162,7 @@ export default {
     async onWithdraw(data) {
       try {
         return await withdrawDetails(data).then(res => {
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.redeem.forEach(data => {
-              txArr.push(data.tx);
-            });
-            return this.sendTransaction(txArr);
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
+          this.formatTxData(res, 'redeem');
         });
       } catch (e) {
         throw new Error(e);
@@ -231,42 +174,49 @@ export default {
     async setCollateral(data) {
       try {
         return await setUsageAsCollateralDetails(data).then(res => {
-          const txArr = [];
-          if (res.data.length !== 0) {
-            res.data.setUsageAsCollateral.forEach(data => {
-              txArr.push(data.tx);
-            });
-          }
-          if (res.errors.length !== 0) {
-            throw new Error(
-              'You may not have enough token balance or eth to execute transaction!'
-            );
-          }
-
-          return this.sendTransaction(txArr);
+          this.formatTxData(res, 'setUsageAsCollateral');
         });
       } catch (e) {
         throw new Error(e);
       }
     },
-    sendTransaction(param) {
-      if (param) {
-        if (param.length > 1) {
-          return this.web3.mew.sendBatchTransactions(param).then(() => {
-            Toast(
-              'Success! Your transaction will be displayed shortly',
-              {},
-              SUCCESS
-            );
-          });
-        }
-        return this.web3.eth.sendTransaction(param[0]).then(() => {
+    /**
+     * Check and prepare data to send tx
+     * or errors out
+     */
+    formatTxData(res, kind) {
+      if (res.errors?.length > 0) {
+        throw new Error(
+          'You may not have enough token balance or eth to execute transaction!'
+        );
+      }
+      const txArr = [];
+      if (res.data[kind].length > 0) {
+        res.data[kind].forEach(data => {
+          txArr.push(data.tx);
+        });
+      }
+      this.sendTransaction(txArr)
+        .then(() => {
           Toast(
             'Success! Your transaction will be displayed shortly',
             {},
             SUCCESS
           );
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
+    },
+    /**
+     * Sends the tx
+     */
+    sendTransaction(param) {
+      if (param) {
+        if (param.length > 1) {
+          return this.web3.mew.sendBatchTransactions(param);
+        }
+        return this.web3.eth.sendTransaction(param[0]);
       }
       return new Error('No Parameters sent!');
     },

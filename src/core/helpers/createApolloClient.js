@@ -16,6 +16,7 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
 
   const subscriptionClient = new SubscriptionClient(wsEndpoint, {
     lazy: true,
+    timeout: 30000,
     reconnect: true
   });
 
