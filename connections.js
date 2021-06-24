@@ -87,6 +87,7 @@ module.exports = [
   'https://tx.info.aquacha.in:443/api', // aqua
   'https://rpc.xdaichain.com:443',
   'https://mainnet.mewwallet.dev:443',
+  'https://staging.mewwallet.dev:443',
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443'
