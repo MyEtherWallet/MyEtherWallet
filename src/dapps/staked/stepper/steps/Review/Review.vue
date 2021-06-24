@@ -1,4 +1,5 @@
 <template>
+  <!--
   <div class="review-step d-flex">
     <h4 class="main-title">{{ $t('dappsStaked.review-enable') }}</h4>
     <div class="review-container">
@@ -90,14 +91,228 @@
 
     {{ details }}
   </div>
+  -->
+  <div
+    class="dapps--staked--stepper--steps--review mx-auto pb-15"
+    style="max-width: 550px"
+  >
+    <div class="mew-heading-2 py-12 text-center">Review and stake</div>
+
+    <v-row>
+      <v-col>
+        <div class="overlayBg pa-5 d-flex align-center">
+          <div class="mr-4">
+            <img
+              src="@/assets/images/icons/icon-colorful-eth.svg"
+              height="40"
+              alt="Eth2"
+            />
+          </div>
+          <div>
+            <div>Staking</div>
+            <div>32 ETH</div>
+            <div>$123,965.45</div>
+          </div>
+        </div>
+      </v-col>
+      <v-col>
+        <div class="overlayBg pa-5 d-flex align-center">
+          <div class="mr-4">
+            <img
+              src="@/assets/images/icons/icon-colorful-eth.svg"
+              height="40"
+              alt="Eth2"
+            />
+          </div>
+          <div>
+            <div>Your withdrawal address</div>
+            <div>Ethereum 2.0</div>
+            <div>0x8634534344236234634</div>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+
+    <div class="mt-7">
+      <div class="d-flex align-center justify-space-between">
+        <div>Network fee</div>
+        <div>0.013234 ETH / $93.12</div>
+      </div>
+      <div class="d-flex align-center justify-space-between">
+        <div>Service fee</div>
+        <div>0.013234 ETH / $93.12</div>
+      </div>
+      <div class="d-flex align-center justify-space-between">
+        <div>Total</div>
+        <div>0.013234 ETH / $93.12</div>
+      </div>
+    </div>
+
+    <message-block class="mt-12">
+      <mew-checkbox
+        label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
+      ></mew-checkbox>
+      <mew-checkbox
+        label="I understand that staking involves slashing risks and my funds can be lost."
+      ></mew-checkbox>
+      <mew-checkbox
+        label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
+      ></mew-checkbox>
+    </message-block>
+
+    <phrase-block class="mt-10 text-center">
+      <div>
+        We will prepare validators for you. After that you can confirm and stale
+        your ETH.
+      </div>
+      <mew-button
+        btn-size="xlarge"
+        class="mt-3"
+        title="Prepare for staking"
+      ></mew-button>
+    </phrase-block>
+
+    <phrase-block class="mt-10 text-center">
+      <div>Preparing validators</div>
+      <div>
+        This usually takes ~20 seconds, in rare cases it can take up to 10 min.
+      </div>
+      <v-progress-linear
+        class="mt-4"
+        indeterminate
+        color="primary"
+      ></v-progress-linear>
+    </phrase-block>
+
+    <phrase-block class="mt-10 text-center mew-heading-4">
+      <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
+      Ready to stake
+    </phrase-block>
+
+    <div
+      class="
+        mt-10
+        d-flex
+        flex-column-reverse flex-md-row
+        align-center
+        justify-center
+      "
+    >
+      <mew-button
+        btn-size="xlarge"
+        class="d-block ma-2"
+        title="Back"
+        btn-style="outline"
+      />
+      <mew-button
+        btn-size="xlarge"
+        class="d-block ma-2"
+        title="Stake 32 ETH"
+        @click.native="isOpenVerify = true"
+      >
+      </mew-button>
+    </div>
+
+    <!--
+    ======================================================
+    Download keystore file popup window
+    ======================================================
+    -->
+    <popup v-model="isOpenVerify" title="Verify transaction">
+      <v-row>
+        <v-col>
+          <div class="overlayBg pa-5 d-flex align-center">
+            <div class="mr-4">
+              <img
+                src="@/assets/images/icons/icon-colorful-eth.svg"
+                height="40"
+                alt="Eth2"
+              />
+            </div>
+            <div>
+              <div>Staking</div>
+              <div>32 ETH</div>
+              <div>$123,965.45</div>
+            </div>
+          </div>
+        </v-col>
+        <v-col>
+          <div class="overlayBg pa-5 d-flex align-center">
+            <div class="mr-4">
+              <img
+                src="@/assets/images/icons/icon-colorful-eth.svg"
+                height="40"
+                alt="Eth2"
+              />
+            </div>
+            <div>
+              <div>Your withdrawal address</div>
+              <div>Ethereum 2.0</div>
+              <div>0x8634534344236234634</div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+
+      <div class="mt-7">
+        <div class="d-flex align-center justify-space-between">
+          <div>Network fee</div>
+          <div>0.013234 ETH / $93.12</div>
+        </div>
+        <div class="d-flex align-center justify-space-between">
+          <div>Service fee</div>
+          <div>0.013234 ETH / $93.12</div>
+        </div>
+        <div class="d-flex align-center justify-space-between">
+          <div>Total</div>
+          <div>0.013234 ETH / $93.12</div>
+        </div>
+      </div>
+
+      <mew-warning-sheet
+        class="mt-4 mb-5"
+        description="Make sure all the information is correct. Canceling or reversing a transaction cannot be guaranteed. You will still be charged gas fee even if transaction fails."
+      />
+
+      <mew-expand-panel :panel-items="txDetails"></mew-expand-panel>
+
+      <div
+        class="
+          mt-10
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
+      >
+        <mew-button
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Back"
+          btn-style="outline"
+        />
+        <mew-button
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Confirm and send"
+          @click.native="isOpenVerify = true"
+        >
+        </mew-button>
+      </div>
+    </popup>
+  </div>
 </template>
 
 <script>
+import Popup from '@/core/components/AppPopup.vue';
+import PhraseBlock from '@/components/PhraseBlock';
+import MessageBlock from '@/core/components/AppMessageBlock';
 import BigNumber from 'bignumber.js';
 import stakeConfigs from '../../../handlers/configs';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
+  components: { Popup, MessageBlock, PhraseBlock },
   props: {
     details: {
       type: Object,
@@ -114,6 +329,12 @@ export default {
   },
   data() {
     return {
+      txDetails: [
+        {
+          name: 'Transaction details'
+        }
+      ],
+      isOpenVerify: false,
       oneTimeFee: '',
       agreed: false,
       agreedBeaconChain: false,
@@ -144,6 +365,7 @@ export default {
     }
   },
   mounted() {
+    /*
     this.getFees();
     // "multiwatch" watcher
     this.$watch(
@@ -168,6 +390,7 @@ export default {
         immediate: true
       }
     );
+    */
   },
   methods: {
     async getFees() {
@@ -227,5 +450,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'Review.scss';
+//@import 'Review.scss';
 </style>

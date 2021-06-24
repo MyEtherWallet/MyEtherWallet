@@ -80,7 +80,7 @@
                 @completed="proceed"
               />
             </template>
-            <template v-if="isStepActive(0)" #stepperContent3>
+            <template v-if="isStepActive(2)" #stepperContent3>
               <step-three
                 :details="details"
                 :back="backStep"
@@ -88,17 +88,10 @@
                 @completed="proceed"
               />
             </template>
-            <template v-if="isStepActive(3)" #stepperContent4>
+            <template v-if="isStepActive(0)" #stepperContent4>
               <step-four
                 :details="details"
                 :next="nextStep"
-                @completed="proceed"
-              />
-            </template>
-            <template v-if="isStepActive(4)" #stepperContent5>
-              <step-five
-                :amt="details.amount ? details.amount.toString() : '0'"
-                :hash="txHash"
                 @completed="proceed"
               />
             </template>
@@ -141,8 +134,7 @@ import { mapGetters, mapState } from 'vuex';
 import stepOne from './stepper/steps/SetAmount/SetAmount';
 import stepTwo from './stepper/steps/GenerateEth2Address/GenerateEth2Address';
 import stepThree from './stepper/steps/Upload/Upload';
-import stepFour from './stepper/steps/InProgress/InProgress';
-import stepFive from './stepper/steps/Done/Done';
+import stepFour from './stepper/steps/Review/Review';
 import status from './components/status/Status';
 
 export default {
@@ -154,7 +146,6 @@ export default {
     stepTwo,
     stepThree,
     stepFour,
-    stepFive,
     status
   },
   data() {

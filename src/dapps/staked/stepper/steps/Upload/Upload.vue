@@ -104,7 +104,7 @@
 
     <div
       class="
-        mt-8
+        mt-10
         d-flex
         flex-column-reverse flex-md-row
         align-center

@@ -1,4 +1,5 @@
 <template>
+  <!--
   <div class="d-flex confirmation-container">
     <i class="check-icon fa fa-check" aria-hidden="true" />
     <h2 class="title">{{ $t('confirmation.success') }}</h2>
@@ -21,6 +22,15 @@
           })
         }}
       </a>
+    </div>
+  </div>
+  -->
+  <div
+    class="dapps--staked--stepper--steps--Generate-Eth2-Address mx-auto pb-15"
+    style="max-width: 550px"
+  >
+    <div class="mew-heading-2 py-12 text-center">
+      Here is your new Eth2 address
     </div>
   </div>
 </template>
@@ -74,6 +84,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-//@import 'Done.scss';
-</style>
+<style lang="scss" scoped></style>
