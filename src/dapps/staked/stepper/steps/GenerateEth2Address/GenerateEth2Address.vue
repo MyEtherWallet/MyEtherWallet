@@ -7,17 +7,7 @@
       Here is your new Eth2 address
     </div>
 
-    <div
-      class="
-        overlayBg
-        py-3
-        px-7
-        border-radius--10px
-        d-flex
-        align-center
-        justify-space-between
-      "
-    >
+    <message-block class="d-flex align-center justify-space-between">
       <div>Already have Eth2 address?</div>
       <div class="primary--text cursor--pointer d-flex align-center pa-2 mr-n2">
         Skip this step
@@ -28,7 +18,7 @@
           alt="right button"
         />
       </div>
-    </div>
+    </message-block>
 
     <div class="mt-8">
       <div class="mew-heading-3 mb-5">1. Write down your recovery phrase</div>
@@ -36,17 +26,96 @@
         <mnemonic-phrase-table :data="phrase" />
       </phrase-block>
     </div>
+
+    <div class="mt-10">
+      <div class="mew-heading-3 mb-5">2. Download your keystore file</div>
+      <phrase-block
+        class="d-block d-sm-flex align-center justify-space-between"
+      >
+        <div class="d-flex align-center">
+          <img
+            src="@/assets/images/icons/icon-keystore-file.svg"
+            alt="Keystore file"
+          />
+          <div class="ml-2">
+            <div class="mew-heading-4">Keystore file</div>
+            <div class="textSecondary--text">
+              keystore-file-for-your-wallet.json
+            </div>
+          </div>
+        </div>
+        <mew-button
+          class="my-2"
+          btn-size="small"
+          title="Download"
+          btn-style="outline"
+          :has-full-width="$vuetify.breakpoint.xs"
+          @click.native="isOpenDownloadKeystore = true"
+        />
+      </phrase-block>
+
+      <mew-warning-sheet class="mt-4" :description="keystoreFileWarning" />
+
+      <div
+        class="
+          mt-10
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
+      >
+        <mew-button
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Back"
+          btn-style="outline"
+        />
+        <mew-button
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Continue after downloading keystore file"
+        >
+        </mew-button>
+      </div>
+    </div>
+
+    <!--
+    ======================================================
+    Download keystore file popup window
+    ======================================================
+    -->
+    <popup v-model="isOpenDownloadKeystore" title="Choose password">
+      <div>Protect your keystore file with password</div>
+      <mew-input class="mt-8" label="New password" />
+      <mew-input class="mt-2" label="Confirm password" />
+
+      <message-block class="mt-1">
+        <mew-checkbox
+          v-model="userWarning"
+          :label="userWarningLabel"
+        ></mew-checkbox>
+      </message-block>
+
+      <mew-button
+        class="d-block mx-auto mt-10"
+        btn-size="xlarge"
+        title="Download keystore file"
+      />
+    </popup>
   </div>
 </template>
 
 <script>
-import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
-import phraseBlock from '@/components/PhraseBlock';
+import MessageBlock from '@/core/components/AppMessageBlock';
+import Popup from '@/core/components/AppPopup.vue';
+import MnemonicPhraseTable from '@/components/MnemonicPhraseTable';
+import PhraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handlerCreateWallet from '@/modules/create-wallet/handlers/handlerCreateWallet';
 
 export default {
-  components: { mnemonicPhraseTable, phraseBlock },
+  components: { Popup, MessageBlock, MnemonicPhraseTable, PhraseBlock },
   props: {
     next: {
       type: Function,
@@ -59,6 +128,12 @@ export default {
   },
   data() {
     return {
+      userWarning: false,
+      userWarningLabel:
+        'I understand that MEW has no control over any assets I choose to associate with these keys and willingly assume all risk of loss, including those coming as a result of protocol or key failure.',
+      isOpenDownloadKeystore: false,
+      keystoreFileWarning:
+        "Don't loose your Keystore file / password and Recovery phrase. They hold your keys and are necessary future access. MEW will not be able to recover them for you so make sure to keep them safe.",
       phraseSize: 12,
       phrase: [],
       generatedVerification: [],
