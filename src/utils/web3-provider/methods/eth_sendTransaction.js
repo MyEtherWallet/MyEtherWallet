@@ -13,7 +13,6 @@ import { EventBus } from '@/core/plugins/eventBus';
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  console.error("tx", tx)
   let confirmInfo;
   let toDetails;
   if (tx.hasOwnProperty('confirmInfo')) {
@@ -60,7 +59,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
       const params = confirmInfo
         ? [_tx, confirmInfo]
         : [_tx, toDetails, currency];
-      console.error('sanitized tx', event , params)
       if (
         store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
         store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
@@ -76,21 +74,18 @@ export default async ({ payload, store, requestManager }, res, next) => {
             });
         });
       } else {
-        console.error('in here')
         /**
          * confirmInfo is @Boolean
          * Checks whether confirmInfo is true
          * if true, assume transaction is a swap
          */
         EventBus.$emit(event, params, _response => {
-          console.error("event emitted", event)
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
-              console.error('hash', hash)
               if (store.state.wallet.instance !== null) {
                 const storeKey = utils.sha3(
                   `${
@@ -110,7 +105,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
-              console.error('err??', err)
               res(err);
             });
         });
