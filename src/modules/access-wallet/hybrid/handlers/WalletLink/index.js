@@ -30,9 +30,10 @@ class WalletLinkWallet {
       'realrpcurlnotrequired',
       0
     );
-    this.connection._relay.storage.clear();
+    console.log(this.connection);
+    this.connection._storage.clear();
     this.connection.disconnect = () => {
-      this.connection._relay.storage.clear();
+      this.connection._storage.clear();
     };
     this.icon = {
       type: 'img',

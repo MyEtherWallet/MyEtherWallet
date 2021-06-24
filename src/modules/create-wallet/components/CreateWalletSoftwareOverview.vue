@@ -12,12 +12,11 @@
       title="Keystore File"
       subtitle="Keystore file contains all the sensitive information of your wallet.
                   We don't recommand using this method to create your wallet."
-      title-icon="mdi-shield-check"
       title-icon-type="mdi"
       title-icon-class="primary--text"
       right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-keystore-file.svg')"
-      @click.native="selectWalletType(walletTypes[0])"
+      @click.native="selectWalletType(walletTypes.KEYSTORE)"
     />
     <!--
     =====================================================================================
@@ -36,7 +35,7 @@
       title-icon-class="primary--text"
       right-icon-type="img"
       :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
-      @click.native="selectWalletType(walletTypes[1])"
+      @click.native="selectWalletType(walletTypes.MNEMONIC)"
     />
     <!--
     =====================================================================================
