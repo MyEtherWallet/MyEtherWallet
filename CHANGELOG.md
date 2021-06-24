@@ -3,6 +3,7 @@
 ### Devop
 
 * minor fixes to mew wallet flow [#3170](https://github.com/MyEtherWallet/MyEtherWallet/pull/3170)
+* fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
 * Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
 * set eth as currency default [#3171](https://github.com/MyEtherWallet/MyEtherWallet/pull/3171)
 * Fix swap verification data field [#3162](https://github.com/MyEtherWallet/MyEtherWallet/pull/3162)
