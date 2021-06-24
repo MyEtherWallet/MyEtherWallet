@@ -202,8 +202,9 @@ import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const routeNames = {
   dashboard: 'Dashboard',
   sendtx: 'SendTX',
@@ -316,12 +317,23 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['instance'])
   },
   mounted() {
     EventBus.$on('toggleSettings', () => {
       this.toggleSettings();
     });
+    if (this.instance.identifier === WALLET_TYPES.MEW_CONNECT) {
+      this.instance.mewConnect.on('RtcClosedEvent', () => {
+        if (this.instance.mewConnect.getConnectonState()) {
+          EventBus.$emit('mewConnectDisconnected');
+          this.removeWallet().then(() => {
+            this.$router.push({ name: 'Home' });
+          });
+        }
+      });
+    }
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),

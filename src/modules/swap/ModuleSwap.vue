@@ -332,7 +332,6 @@ export default {
       allTrades: [],
       isLoading: false,
       loadingFee: false,
-      minMaxError: false,
       feeError: '',
       defaults: {
         fromToken: this.fromToken
@@ -379,14 +378,16 @@ export default {
       let msg = '';
       let subError = '';
       if (!this.isLoading) {
-        if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
+        if (
+          new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
+        ) {
           msg = 'The minimum requirement for this provider is';
-          subError = `${this.minMaxError.minFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.minFrom} ${this.fromTokenType.symbol}`;
         } else if (
-          new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)
+          new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
         ) {
           msg = 'The maximum requirement for this provider i';
-          subError = `${this.minMaxError.maxFrom} ${this.fromTokenType.symbol}`;
+          subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol}`;
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
@@ -770,11 +771,15 @@ export default {
           }
           /* Changelly Errors: */
 
-          if (new BigNumber(this.tokenInValue).lt(this.minMaxError.minFrom)) {
-            return `Amount below ${this.minMaxError.minFrom} ${this.fromTokenType.symbol} min`;
+          if (
+            new BigNumber(this.tokenInValue).lt(this.selectedProvider.minFrom)
+          ) {
+            return `Amount below ${this.selectedProvider.minFrom} ${this.fromTokenType.symbol} min`;
           }
-          if (new BigNumber(this.tokenInValue).gt(this.minMaxError.maxFrom)) {
-            return `Amount over ${this.minMaxError.maxFrom} ${this.fromTokenType.symbol} max`;
+          if (
+            new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
+          ) {
+            return `Amount over ${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol} max`;
           }
         }
       }
@@ -983,16 +988,7 @@ export default {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
         if (_idx === idx) {
-          this.minMaxError = {
-            minFrom: q.minFrom,
-            maxFrom: q.maxFrom
-          };
-
           q.isSelected = true;
-          if (q?.rateId === 'belowMin') {
-            this.belowMinError = q.minFrom;
-            return;
-          }
           this.tokenOutValue = q.amount;
           this.getTrade(idx);
           this.selectedProvider = q !== this.selectedProvider ? q : {};

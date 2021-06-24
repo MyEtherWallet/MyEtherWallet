@@ -8,17 +8,18 @@ import EventNames from '@/utils/web3-provider/events';
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
-    state.instance &&
-    (state.instance.identifier === WALLET_TYPES.MEW_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_CONNECT ||
-      state.instance.identifier === WALLET_TYPES.WALLET_LINK)
+    state.identifier === WALLET_TYPES.WALLET_CONNECT ||
+    state.identifier === WALLET_TYPES.WALLET_LINK
   ) {
     state.instance.getConnection().disconnect();
+  } else if (state.identifier === WALLET_TYPES.MEW_CONNECT) {
+    state.instance.getConnection().disconnectRTC();
   }
   commit('REMOVE_WALLET');
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
+  console.log(params);
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
 };
