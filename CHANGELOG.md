@@ -2,6 +2,7 @@
 
 ### Devop
 
+* fix wallet link, fix trade, remove shield icon [#3181](https://github.com/MyEtherWallet/MyEtherWallet/pull/3181)
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
 * Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
 * set eth as currency default [#3171](https://github.com/MyEtherWallet/MyEtherWallet/pull/3171)
