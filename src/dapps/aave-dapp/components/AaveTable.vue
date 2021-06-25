@@ -356,7 +356,7 @@ export default {
                     ).value
                   : '0',
                 apr: formatPercentageValue(
-                  new BigNumber(item.liquidityRate).multipliedBy(100).toString()
+                  new BigNumber(item.liquidityRate).times(100)
                 ).value,
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,

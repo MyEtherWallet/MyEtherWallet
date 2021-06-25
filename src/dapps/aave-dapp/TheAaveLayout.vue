@@ -332,6 +332,7 @@ import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
 import {
+  formatPercentageValue,
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
@@ -402,13 +403,13 @@ export default {
       return Object.keys(this.userSummary).length <= 0;
     },
     loanValue() {
-      return `${BigNumber(this.userSummary.currentLiquidationThreshold)
-        .times(100)
-        .toFixed()}%`;
+      return formatPercentageValue(
+        BigNumber(this.userSummary.currentLiquidationThreshold).times(100)
+      ).value;
     },
     healthFactor() {
       return BigNumber(this.userSummary.healthFactor).gt(0)
-        ? BigNumber(this.userSummary.healthFactor).toFixed(3)
+        ? formatFloatingPointValue(this.userSummary.healthFactor).value
         : `-`;
     },
     totalLiquidity() {
