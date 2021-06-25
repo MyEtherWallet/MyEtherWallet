@@ -429,6 +429,12 @@ export default {
         .toFixed(0);
       return toBN(amount);
     },
+    hasSelectedToken() {
+      return (
+        !_.isEmpty(this.selectedCurrency) &&
+        this.selectedCurrency.hasOwnProperty('symbol')
+      );
+    },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency)
         return (
