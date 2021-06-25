@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
 * Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
 * set eth as currency default [#3171](https://github.com/MyEtherWallet/MyEtherWallet/pull/3171)
