@@ -118,6 +118,7 @@ export default {
     tokensData() {
       if (!this.tokensList) return [];
       const tokenList = this.tokensList.map(item => {
+        console.log(item);
         const newObj = {};
         newObj.balance = [
           item.balancef + ' ' + item.symbol,

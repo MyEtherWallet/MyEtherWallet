@@ -12,7 +12,6 @@ import contentHash from 'content-hash';
 import { toChecksumAddress } from 'web3-utils';
 
 const REGISTRAR_TYPES = {
-  FIFS: 'fifs',
   PERMANENT: 'permanent'
 };
 export default class ENSManagerInterface {
@@ -54,11 +53,14 @@ export default class ENSManagerInterface {
     this._init();
   }
 
-  setController(address) {
+  setController(address, returnObj = false) {
     const actualToAddress = address === '' ? this.address : address;
-    return this.registrarContract.methods
-      .reclaim(this.labelHash, actualToAddress)
-      .send({ from: this.address });
+    const tx = this.registrarContract.methods.reclaim(
+      this.labelHash,
+      actualToAddress
+    );
+    if (returnObj) return tx;
+    return tx.send({ from: this.address });
   }
 
   migrate() {
@@ -182,9 +184,11 @@ export default class ENSManagerInterface {
     const abi = BaseRegistrarAbi;
     this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
     try {
+      console.log(this.tld);
       this.contractControllerAddress = await this.ens
         .resolver(this.tld, ResolverAbi)
         .interfaceImplementer(registrarInterface.CONTROLLER);
+      console.log(this.contractControllerAddress);
       this.registrarControllerContract = new web3.eth.Contract(
         RegistrarControllerAbi,
         this.contractControllerAddress
@@ -196,15 +200,14 @@ export default class ENSManagerInterface {
   }
 
   async _isDomainAvailable() {
-    const type = this.network.type.ens.registrarType;
     const isSubDomain = this.name.split('.').length > 2;
 
-    if (type === REGISTRAR_TYPES.FIFS && !isSubDomain) {
+    if (!isSubDomain) {
       const expiryTime = await this.registrarContract.methods
         .expiryTimes(this.labelHash)
         .call();
       this.isAvailable = expiryTime * 1000 < new Date().getTime();
-    } else if (type === REGISTRAR_TYPES.PERMANENT && !isSubDomain) {
+    } else {
       this.isAvailable = await this.registrarControllerContract.methods
         .available(this.parsedHostName)
         .call();
