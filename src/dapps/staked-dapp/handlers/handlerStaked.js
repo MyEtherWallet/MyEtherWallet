@@ -29,7 +29,8 @@ export default class Staked {
     this.eth2ContractAddress =
       configNetworkTypes.network[this.network.type.name].depositAddress;
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
-    this.batchContract = configNetworkTypes.network[this.network.type.name].batchContract;
+    this.batchContract =
+      configNetworkTypes.network[this.network.type.name].batchContract;
 
     this.web3.eth
       .getBalance(this.eth2ContractAddress)

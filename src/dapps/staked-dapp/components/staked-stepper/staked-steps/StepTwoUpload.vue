@@ -88,13 +88,13 @@
         @click.native="isOpenDownloadKeystore = true"
       />
     </phrase-block>
-
+    <!-- 
     <message-block class="mt-4">
       <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
       <div class="word-wrap--break-word">
         0x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da1752539020x9B4A9C1Ac1cA0CbF0d16f79893494da175253902
       </div>
-    </message-block>
+    </message-block> -->
 
     <mew-warning-sheet
       class="mt-4"
@@ -128,13 +128,13 @@
 </template>
 
 <script>
-import MessageBlock from '@/core/components/AppMessageBlock';
+// import MessageBlock from '@/core/components/AppMessageBlock';
 import PhraseBlock from '@/components/PhraseBlock';
 import printerIcon from '@/assets/images/icons/staked-upload-icon.svg';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
 export default {
-  components: { PhraseBlock, MessageBlock },
+  components: { PhraseBlock },
   props: {
     next: {
       type: Function,

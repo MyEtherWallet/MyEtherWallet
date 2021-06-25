@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <message-block class="mt-12">
+    <!-- <message-block class="mt-12">
       <mew-checkbox
         label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
       ></mew-checkbox>
@@ -158,7 +158,7 @@
       <mew-checkbox
         label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
       ></mew-checkbox>
-    </message-block>
+    </message-block> -->
 
     <phrase-block class="mt-10 text-center">
       <div>
@@ -218,7 +218,7 @@
     Download keystore file popup window
     ======================================================
     -->
-    <popup v-model="isOpenVerify" title="Verify transaction">
+    <!-- <popup v-model="isOpenVerify" title="Verify transaction">
       <v-row>
         <v-col>
           <div class="overlayBg pa-5 d-flex align-center">
@@ -299,20 +299,19 @@
         >
         </mew-button>
       </div>
-    </popup>
+    </popup> -->
   </div>
 </template>
 
 <script>
-import Popup from '@/core/components/AppPopup.vue';
+// import Popup from '@/core/components/AppPopup.vue';
 import PhraseBlock from '@/components/PhraseBlock';
-import MessageBlock from '@/core/components/AppMessageBlock';
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
-  components: { Popup, MessageBlock, PhraseBlock },
+  components: { PhraseBlock },
   props: {
     details: {
       type: Object,

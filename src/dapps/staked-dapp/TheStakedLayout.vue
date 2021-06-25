@@ -155,7 +155,7 @@ export default {
       resetStepper: false,
       stakedLogo: stakedLogo,
       loadingValidators: true,
-      tabs: [{ name: 'stake' }, { name: 'status' }],
+      tabs: [{ name: 'stake' }, { name: 'status' }]
     };
   },
   computed: {
@@ -199,7 +199,11 @@ export default {
     /**
      * Initiate Stake Handler
      */
-    this.handlerStaked = new handlerStaked(this.web3, this.network, this.address);
+    this.handlerStaked = new handlerStaked(
+      this.web3,
+      this.network,
+      this.address
+    );
   },
   methods: {
     validatorsCount() {

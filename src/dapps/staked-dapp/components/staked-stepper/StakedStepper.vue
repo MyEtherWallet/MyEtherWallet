@@ -20,7 +20,7 @@
     ===================================================
     -->
       <template v-if="onStep === 2" #stepperContent2>
-        <step-two-upload :next="nextStep" @completed="proceed" />
+        <step-two-generate :next="nextStep" @onContinue="nextStep" />
       </template>
       <template v-if="onStep === 3" #stepperContent3>
         <step-three-review
@@ -45,18 +45,16 @@
 
 <script>
 import StepOneAmount from './staked-steps/StepOneAmount';
-import StepTwoUpload from './staked-steps/StepTwoUpload';
+import StepTwoGenerate from './staked-steps/StepTwoGenerate';
 import StepThreeReview from './staked-steps/StepThreeReview';
 import StepFourInProgress from './staked-steps/StepFourInProgress';
-import StepFiveDone from './staked-steps/StepFiveDone';
 
 export default {
   components: {
     StepOneAmount,
-    StepTwoUpload,
+    StepTwoGenerate,
     StepThreeReview,
-    StepFourInProgress,
-    StepFiveDone
+    StepFourInProgress
   },
   props: {
     currentApr: {
@@ -66,8 +64,8 @@ export default {
   },
   data() {
     return {
-      amount: '',
-      onStep: 3,
+      amount: 0,
+      onStep: 1,
       stepperItems: [
         {
           step: 1,
@@ -75,26 +73,22 @@ export default {
         },
         {
           step: 2,
-          name: 'Upload your Keystore File'
+          name: 'Generate Eth2 address'
         },
         {
           step: 3,
-          name: 'Review & Enable'
+          name: 'Upload keystore file'
         },
         {
           step: 4,
-          name: 'Stake on Eth2'
-        },
-        {
-          step: 5,
-          name: 'Done'
+          name: 'Review & stake'
         }
       ]
     };
   },
   methods: {
     /**
-     * Sets the value and next step
+     * Sets the value and continues to next step
      */
     nextStep(obj) {
       if (obj.onStep === 1) {

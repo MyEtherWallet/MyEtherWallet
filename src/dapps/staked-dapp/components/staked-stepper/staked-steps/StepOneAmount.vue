@@ -15,7 +15,7 @@
     </div>
 
     <mew-select
-      v-model="amount"
+      v-model="selectedItem"
       label="Staking amount"
       :items="selectItems"
       is-swap
@@ -73,7 +73,7 @@
 
       <div
         v-for="(forecast, idx) in depositForecast"
-        :key="forecase + idx"
+        :key="forecast + idx"
         class="mb-6"
       >
         <v-row>
@@ -87,7 +87,7 @@
             forecast.earningsETH
           }}</v-col>
           <v-col cols="12" md="6" class="py-1 text-right">{{
-            forecase.balanceETH
+            forecast.balanceETH
           }}</v-col>
         </v-row>
       </div>
@@ -143,7 +143,8 @@ export default {
     return {
       toolTipFee:
         '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
-      amount: {},
+      amount: 0,
+      selectedItem: {},
       eth: eth,
       depositForecast: [
         {

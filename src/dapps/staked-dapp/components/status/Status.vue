@@ -143,7 +143,9 @@ export default {
   },
   methods: {
     getUrl(key) {
-      return configNetworkTypes.network[this.network.type.name].url + '0x' + key;
+      return (
+        configNetworkTypes.network[this.network.type.name].url + '0x' + key
+      );
     },
     details(info) {
       const details = [
