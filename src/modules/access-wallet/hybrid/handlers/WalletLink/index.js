@@ -30,7 +30,6 @@ class WalletLinkWallet {
       'realrpcurlnotrequired',
       0
     );
-    console.log(this.connection);
     this.connection._storage.clear();
     this.connection.disconnect = () => {
       this.connection._storage.clear();
