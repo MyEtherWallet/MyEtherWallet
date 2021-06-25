@@ -187,7 +187,7 @@ export default {
           notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
           this.txHash = notification.hash;
-          if (this.getTransactionByHash) {
+          if (this.getTransactionByHash && notification) {
             const notif = Object.assign(
               notification,
               this.getTransactionByHash

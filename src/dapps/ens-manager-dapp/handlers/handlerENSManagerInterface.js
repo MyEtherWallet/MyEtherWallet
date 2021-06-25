@@ -3,7 +3,6 @@ import { decodeCoinAddress } from './helpers/helperMulticoin';
 import RegistryAbi from './abi/abiRegistry.js';
 import BaseRegistrarAbi from './abi/abiBaseRegistrar.js';
 import ResolverAbi from './abi/abiResolver.js';
-import FifsRegistrarAbi from './abi/abiFifsRegistrar.js';
 import RegistrarControllerAbi from './abi/abiRegistrarController.js';
 import multicoins from './handlerMulticoins';
 import textrecords from './handlerTextRecords';
@@ -16,12 +15,11 @@ const REGISTRAR_TYPES = {
   PERMANENT: 'permanent'
 };
 export default class ENSManagerInterface {
-  constructor(name, address, network, web3, ens, gasPrice) {
+  constructor(name, address, network, web3, ens) {
     this.address = address ? address : '0x';
     this.network = network ? network : null;
     this.web3 = web3 ? web3 : null;
     this.ens = ens ? ens : null;
-    this.gasPrice = gasPrice ? gasPrice : null;
     // Returned value
     this.tld = getTld(name, network);
     this.parsedHostName = getHostName(name);
@@ -54,29 +52,14 @@ export default class ENSManagerInterface {
   }
 
   setController(address) {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
     const actualToAddress = address === '' ? this.address : address;
-    const setControllerTx = {
-      from: this.address,
-      to: this.registrarAddress,
-      data: this.registrarContract.methods
-        .reclaim(this.labelHash, actualToAddress)
-        .encodeABI(),
-      value: 0
-    };
-    return this.web3.eth.estimateGas(setControllerTx).then(gas => {
-      setControllerTx.gas = gas;
-      return this.web3.eth.sendTransaction(setControllerTx);
-    });
+    console.log(this.registrarContract);
+    return this.registrarContract.methods
+      .reclaim(this.labelHash, actualToAddress)
+      .send({ from: this.address });
   }
 
   migrate() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-
     if (this.publicResolverAddress === this.resolverAddress) {
       return false;
     }
@@ -93,30 +76,17 @@ export default class ENSManagerInterface {
       return this._migrateCoinsAndRecords();
     });
   }
-  async setMulticoin(coin) {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
+  async setMulticoin(coins) {
     const isMigrate = await this.migrate();
     if (isMigrate) return;
-
-    const addr = coin.map(item => {
+    const coinaddresses = coins.map(item => {
       return this.publicResolverContract.methods
         .setAddr(this.nameHash, item.id, decodeCoinAddress(item))
         .encodeABI();
     });
-
-    const setAddrTx = {
-      from: this.address,
-      to: this.publicResolverAddress,
-      data: this.publicResolverContract.methods.multicall(addr).encodeABI(),
-      value: 0
-    };
-
-    return this.web3.eth.estimateGas(setAddrTx).then(gas => {
-      setAddrTx.gas = gas;
-      return this.web3.eth.sendTransaction(setAddrTx);
-    });
+    return this.publicResolverContract.methods
+      .multicall(coinaddresses)
+      .send({ from: this.address });
   }
 
   async setTxtRecord(obj) {
@@ -219,23 +189,18 @@ export default class ENSManagerInterface {
 
   async _setRegistrarContracts() {
     const web3 = this.web3;
-    const abi =
-      this.network.type.ens.registrarType === REGISTRAR_TYPES.FIFS
-        ? FifsRegistrarAbi
-        : BaseRegistrarAbi;
+    const abi = BaseRegistrarAbi;
     this.registrarContract = new web3.eth.Contract(abi, this.registrarAddress);
-    if (this.network.type.ens.registrarType === REGISTRAR_TYPES.PERMANENT) {
-      try {
-        this.contractControllerAddress = await this.ens
-          .resolver(this.tld, ResolverAbi)
-          .interfaceImplementer(registrarInterface.CONTROLLER);
-        this.registrarControllerContract = new web3.eth.Contract(
-          RegistrarControllerAbi,
-          this.contractControllerAddress
-        );
-      } catch (e) {
-        throw new Error(e);
-      }
+    try {
+      this.contractControllerAddress = await this.ens
+        .resolver(this.tld, ResolverAbi)
+        .interfaceImplementer(registrarInterface.CONTROLLER);
+      this.registrarControllerContract = new web3.eth.Contract(
+        RegistrarControllerAbi,
+        this.contractControllerAddress
+      );
+    } catch (e) {
+      throw new Error(e);
     }
     this._isDomainAvailable();
   }
@@ -376,7 +341,7 @@ export default class ENSManagerInterface {
             if (address) {
               multicoins[coinTypes[idx]].value = multicoins[
                 coinTypes[idx]
-              ].encode(new Buffer(address.replace('0x', ''), 'hex'));
+              ].encode(Buffer.from(address.replace('0x', ''), 'hex'));
             }
           });
         });
@@ -404,7 +369,6 @@ export default class ENSManagerInterface {
           );
         }
       }
-
       for (const txt in this.txtRecords) {
         if (this.txtRecords[txt]) {
           multicallRecords.push(
@@ -414,59 +378,11 @@ export default class ENSManagerInterface {
           );
         }
       }
-
-      const txObj = {
-        from: this.address,
-        to: this.publicResolverAddress,
-        data: this.publicResolverContract.methods
-          .multicall(multicallRecords)
-          .encodeABI(),
-        value: 0
-      };
-
-      return this.web3.eth.sendTransaction(txObj);
+      this.publicResolverContract.methods
+        .multicall(multicallRecords)
+        .send({ from: this.address });
     } catch (e) {
       throw new Error(e);
-    }
-  }
-
-  async _setRecords() {
-    try {
-      const supportsMulticoin = await this.resolverContract.methods
-        .supportsInterface(registrarInterface.MULTICOIN)
-        .call();
-      for (const type in multicoins) {
-        multicoins[type].value = '';
-      }
-
-      if (supportsMulticoin) {
-        const types = Object.keys(multicoins);
-        const promises = types.map(type => {
-          return this.ens
-            .resolver(this.name, ResolverAbi)
-            .addr(multicoins[type].id);
-        });
-        this.multicoinSupport = supportsMulticoin;
-        this.multiCoin = {};
-        await Promise.all(promises).then(vals => {
-          vals.forEach((address, idx) => {
-            if (address) {
-              multicoins[types[idx]].value = multicoins[types[idx]].encode(
-                new Buffer(address.replace('0x', ''), 'hex')
-              );
-            }
-          });
-        });
-        this.multiCoin = multicoins;
-      } else {
-        this.multicoinSupport = supportsMulticoin;
-        this.multiCoin = multicoins;
-        this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
-      }
-    } catch (e) {
-      this.multicoinSupport = false;
-      this.multiCoin = multicoins;
-      this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
     }
   }
 }

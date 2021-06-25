@@ -203,7 +203,7 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI, RIN } from '@/utils/networks/types';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const routeNames = {
   dashboard: 'Dashboard',
@@ -311,7 +311,7 @@ export default {
       ],
       routeNetworks: {
         [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.dapps]: [ETH],
+        [routeNames.dapps]: [ETH, GOERLI, RIN],
         [routeNames.nftmanager]: [ETH]
       }
     };

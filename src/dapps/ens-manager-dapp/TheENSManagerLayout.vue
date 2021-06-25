@@ -194,6 +194,7 @@
     =====================================================================================
     -->
     <module-register-domain
+      v-if="onRegister"
       ref="registerDomain"
       :on-register="onRegister"
       :close="closeRegister"
@@ -238,12 +239,10 @@ import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/core/plugins/eventBus';
-import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
-import { fromWei, toBN } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
@@ -360,6 +359,7 @@ export default {
       ens,
       this.gasPrice
     );
+
     this.getDomains();
   },
   methods: {
@@ -391,7 +391,6 @@ export default {
                 }
               : '';
           });
-
           this.myDomains = res;
         })
         .catch(err => {
@@ -468,26 +467,16 @@ export default {
      * Register Domain
      */
     findDomain() {
-      /**
-       * make sure there is no empty string after '.'
-       */
-      const strLength = this.name.length;
-      const name =
-        this.name[strLength - 1] === '.'
-          ? this.name.substring(0, strLength - 1)
-          : this.name;
-      this.ensManager
-        .searchName(name)
-        .then(res => {
-          this.nameHandler = res;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      try {
+        this.nameHandler = this.ensManager.searchName(this.name);
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     },
     closeRegister() {
       this.onRegister = false;
       this.committed = false;
+      this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
       this.$refs.registerDomain.reset();
@@ -498,31 +487,34 @@ export default {
       }
       this.name = name;
     },
-    register() {
+    register(duration) {
       this.nameHandler
-        .register(this.duration, this.balanceToWei)
-        .then(this.closeRegister)
-        .catch(err => {
+        .register(duration, this.balanceToWei)
+        .on('transactionHash', () => {
+          Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
+          this.closeRegister();
+        })
+        .on('error', err => {
           Toast(err, {}, ERROR);
         });
     },
     commit() {
-      this.nameHandler.getMinimumAge().then(resp => {
-        this.minimumAge = resp;
-      });
-      /**
-       * start timer after confirming tx
-       */
-      EventBus.$on(EventNames.CONFIRMED_TX, () => {
-        this.loadingCommit = true;
-      });
       this.nameHandler
         .createCommitment()
-        .then(() => {
-          this.loadingCommit = false;
-          this.committed = true;
+        .on('transactionHash', () => {
+          this.nameHandler.getMinimumAge().then(resp => {
+            this.minimumAge = resp;
+          });
         })
-        .catch(err => {
+        .on('receipt', () => {
+          this.loadingCommit = true;
+          this.committed = false;
+          setTimeout(() => {
+            this.committed = true;
+            this.loadingCommit = false;
+          }, 60 * 1000);
+        })
+        .on('error', err => {
           this.closeRegister();
           Toast(err, {}, ERROR);
         });
@@ -538,10 +530,11 @@ export default {
         : this.nameHandler;
       return handler.getRentPrice(duration).then(resp => {
         if (resp) {
-          const priceFromWei = fromWei(toBN(resp));
+          const ethValue = fromWei(resp);
           return {
-            eth: new BigNumber(priceFromWei).toFixed(4),
-            usd: new BigNumber(priceFromWei).times(this.fiatValue).toFixed(2)
+            wei: resp,
+            eth: ethValue,
+            usd: new BigNumber(ethValue).times(this.fiatValue).toFixed(2)
           };
         }
       });
