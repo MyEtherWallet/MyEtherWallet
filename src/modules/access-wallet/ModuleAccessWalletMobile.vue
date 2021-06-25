@@ -105,7 +105,6 @@ export default {
       try {
         WalletLinkWallet()
           .then(_newWallet => {
-            console.log(_newWallet);
             this.setWallet([_newWallet]).then(() => {
               this.$router.push({ name: 'Dashboard' });
             });
