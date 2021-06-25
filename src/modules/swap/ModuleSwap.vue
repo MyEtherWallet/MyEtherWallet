@@ -891,13 +891,16 @@ export default {
      * Gets the default from token
      */
     getDefaultFromToken() {
+      const findToken = this.actualFromTokens.find(item => {
+        if (item.contract === this.defaults.fromToken) return item;
+      });
       if (
         this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
         return this.mainTokenDetails;
       }
-      return this.actualFromTokens[0];
+      return findToken ? findToken : this.actualFromTokens[0];
     },
     /**
      * gets the select label placeholder token imgs
