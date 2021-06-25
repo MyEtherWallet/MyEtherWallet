@@ -13,7 +13,6 @@ const fetchLists = async () => {
     JSON.stringify(contractList)
   );
 };
-
 (async () => {
   try {
     await fetchLists();

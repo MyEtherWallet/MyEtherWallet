@@ -20,12 +20,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     confirmInfo = tx['confirmInfo'];
     delete tx['confirmInfo'];
   }
-
   if (tx.hasOwnProperty('currency')) {
     currency = tx['currency'];
     delete tx['currency'];
   }
-
   if (tx.hasOwnProperty('toDetails')) {
     toDetails = tx['toDetails'];
     delete tx['toDetails'];
@@ -83,34 +81,30 @@ export default async ({ payload, store, requestManager }, res, next) => {
           const _promiObj = store.state.wallet.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
+          setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
-                const localStoredObj = locStore.get(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
-                  )
+                const storeKey = utils.sha3(
+                  `${
+                    store.getters['global/network'].type.name
+                  }-${store.state.wallet.instance
+                    .getChecksumAddressString()
+                    .toLowerCase()}`
                 );
-                locStore.set(
-                  utils.sha3(
-                    store.state.wallet.instance.getChecksumAddressString()
+                const localStoredObj = locStore.get(storeKey);
+                locStore.set(storeKey, {
+                  nonce: sanitizeHex(
+                    BigNumber(localStoredObj.nonce).plus(1).toString(16)
                   ),
-                  {
-                    nonce: sanitizeHex(
-                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                    ),
-                    timestamp: localStoredObj.timestamp
-                  }
-                );
+                  timestamp: localStoredObj.timestamp
+                });
               }
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
               res(err);
             });
-          if (!confirmInfo) {
-            setEvents(_promiObj, _tx, store.dispatch);
-          }
         });
       }
     })

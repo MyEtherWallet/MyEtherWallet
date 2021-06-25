@@ -6,18 +6,20 @@ const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
       if (bl.name.toLowerCase() === t.name.toLowerCase()) return;
-      if (
-        bl.contract_address.toLowerCase() === t.contract_address.toLowerCase()
-      )
-        return;
+      if (bl.contract.toLowerCase() === t.contract.toLowerCase()) return;
     }
     baseList.push(t);
   });
   return baseList;
 };
 class Swap {
-  constructor(web3) {
-    this.providers = [new OneInch(web3), new DexAg(web3), new Changelly(web3)];
+  constructor(web3, chain) {
+    this.providers = [
+      new OneInch(web3, chain),
+      new DexAg(web3, chain),
+      new Changelly(web3, chain)
+    ];
+    this.chain = chain;
   }
   getAllTokens() {
     let allTokens = [];
@@ -25,7 +27,8 @@ class Swap {
       allTokens = allTokens.concat(baseList);
       return Promise.all(
         this.providers.map((p, idx) => {
-          if (idx === 0) return Promise.resolve();
+          if (idx < 2) return Promise.resolve();
+          if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             allTokens = mergeIfNotExists(allTokens, tokens);
           });
@@ -36,7 +39,7 @@ class Swap {
           return -1;
         });
         return {
-          fromTokens: sorted.filter(t => isAddress(t.contract_address)),
+          fromTokens: sorted.filter(t => isAddress(t.contract)),
           toTokens: sorted
         };
       });
@@ -46,6 +49,7 @@ class Swap {
     let allQuotes = [];
     return Promise.all(
       this.providers.map(p => {
+        if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
         return p.getQuote({ fromT, toT, fromAmount }).then(quotes => {
           allQuotes = allQuotes.concat(quotes);
         });

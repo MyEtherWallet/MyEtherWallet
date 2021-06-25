@@ -102,8 +102,7 @@ import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
   formatFiatValue,
-  formatBalanceEthValue,
-  formatPercentageValue
+  formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
@@ -125,8 +124,11 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', [
+      'fiatValue',
+      'balanceFiatValue',
+      'networkTokenUSDMarket'
+    ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     showBuyEth() {
       return this.balanceInETH <= 0 && this.chartData.length <= 0;
@@ -135,7 +137,7 @@ export default {
       return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
     priceChange() {
-      return this.ETHUSDValue.price_change_percentage_24h > 0;
+      return this.networkTokenUSDMarket.price_change_percentage_24h > 0;
     },
     /**
      * Computed property returns formated eth value of the wallet balance
@@ -155,7 +157,7 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return `${this.ETHUSDValue.symbol}${
+        return `${this.networkTokenUSDMarket.symbol}${
           formatFiatValue(this.balanceFiatValue).value
         }`;
       }
@@ -167,9 +169,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return formatPercentageValue(
-          this.ETHUSDValue.price_change_percentage_24h
-        ).value;
+        this.networkTokenUSDMarket.price_change_percentage_24hf;
       }
       return '';
     },
@@ -179,7 +179,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return `${this.ETHUSDValue.symbol}${
+        return `${this.networkTokenUSDMarket.symbol}${
           formatFiatValue(this.fiatValue).value
         }`;
       }
@@ -190,8 +190,8 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.ETHUSDValue &&
-        this.ETHUSDValue.price_change_percentage_24h &&
+        this.networkTokenUSDMarket &&
+        this.networkTokenUSDMarket.price_change_percentage_24h &&
         this.balanceFiatValue &&
         this.fiatValue
       );

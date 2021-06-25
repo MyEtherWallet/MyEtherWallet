@@ -140,10 +140,21 @@
             />
           </v-list-item-content>
         </v-list-item>
-
-        <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <theme-switch />
-          <div class="searchText--text">v{{ version }}</div>
+        <div class="mt-3 px-8">
+          <div class="matomo-tracking-switch">
+            <v-switch
+              :value="consentToTrack"
+              inset
+              :label="`${consentToTrack ? 'Disable' : 'Enable'} Tracking`"
+              color="gray"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <theme-switch />
+            <div class="searchText--text">v{{ version }}</div>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -202,8 +213,20 @@ import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
-import { mapActions, mapGetters } from 'vuex';
-
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+const routeNames = {
+  dashboard: 'Dashboard',
+  sendtx: 'SendTX',
+  nftmanager: 'NFTManager',
+  swap: 'Swap',
+  dapps: 'Dapps',
+  deploycontract: 'DeployContract',
+  interactcontract: 'InteractWithContract',
+  signmsg: 'SignMessage',
+  verifymsg: 'verifyMessage'
+};
 export default {
   components: {
     AppBtnMenu,
@@ -216,7 +239,7 @@ export default {
     return {
       navOpen: null,
       menuSelected: 0,
-      version: process.env.VERSION,
+      version: VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
@@ -233,27 +256,27 @@ export default {
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
-          route: { name: 'Dashboard' },
+          route: { name: routeNames.dashboard },
           icon: dashboard
         },
         {
           title: this.$t('sendTx.send-tx'),
-          route: { name: 'SendTX' },
+          route: { name: routeNames.sendtx },
           icon: send
         },
         {
           title: this.$t('interface.menu.nft'),
-          route: { name: 'NFTManager' },
+          route: { name: routeNames.nftmanager },
           icon: nft
         },
         {
           title: this.$t('common.swap'),
-          route: { name: 'Swap' },
+          route: { name: routeNames.swap },
           icon: swap
         },
         {
           title: this.$t('interface.menu.dapps'),
-          route: { name: 'Dapps' },
+          route: { name: routeNames.dapps },
           icon: dapp
         },
         {
@@ -262,11 +285,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.deploy'),
-              route: { name: 'DeployContract' }
+              route: { name: routeNames.deploycontract }
             },
             {
               title: this.$t('interface.menu.interact-contract'),
-              route: { name: 'InteractWithContract' }
+              route: { name: routeNames.interactcontract }
             }
           ]
         },
@@ -276,11 +299,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.sign-message'),
-              route: { name: 'SignMessage' }
+              route: { name: routeNames.signmsg }
             },
             {
               title: this.$t('interface.menu.verify-message'),
-              route: { name: 'verifyMessage' }
+              route: { name: routeNames.verifymsg }
             }
           ]
         }
@@ -296,28 +319,51 @@ export default {
           icon: logout,
           fn: this.toggleLogout
         }
-      ]
+      ],
+      routeNetworks: {
+        [routeNames.swap]: [ETH, BSC, MATIC],
+        [routeNames.dapps]: [ETH],
+        [routeNames.nftmanager]: [ETH]
+      }
     };
   },
   computed: {
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['instance']),
+    ...mapState('global', ['consentToTrack'])
   },
   mounted() {
     EventBus.$on('toggleSettings', () => {
       this.toggleSettings();
     });
+    if (this.instance.identifier === WALLET_TYPES.MEW_CONNECT) {
+      this.instance.mewConnect.on('RtcClosedEvent', () => {
+        if (this.instance.mewConnect.getConnectonState()) {
+          EventBus.$emit('mewConnectDisconnected');
+          this.removeWallet().then(() => {
+            this.$router.push({ name: 'Home' });
+          });
+        }
+      });
+    }
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    ...mapActions('global', ['setTrackingConsent']),
     shouldShow(route) {
-      const onlyEth = ['Dapps', 'Swap'];
-      if (this.network.type.name !== 'ETH') {
-        return !onlyEth.includes(route.name);
+      if (this.routeNetworks[route.name]) {
+        for (const net of this.routeNetworks[route.name]) {
+          if (net.name === this.network.type.name) return true;
+        }
+        return false;
       }
       return true;
     },
     openNavigation() {
       this.navOpen = true;
+    },
+    setConsent() {
+      this.setTrackingConsent(!this.consentToTrack);
     },
     toggleSettings() {
       this.onSettings = !this.onSettings;

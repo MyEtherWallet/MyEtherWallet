@@ -6,6 +6,7 @@ import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
@@ -105,12 +106,12 @@ class SendTransaction {
     });
   }
   isToken() {
-    return this.currency.symbol !== this.network().type.currencyName;
+    return this.currency?.contract !== MAIN_TOKEN_ADDRESS;
   }
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
     if (this.isToken() && this.currency.balance) {
-      const hasAmountToken = amount.lte(this.currency.balance);
+      const hasAmountToken = amount.lte(toBN(this.currency.balance));
       const hasGas = this.txFee().lte(this.balance());
       return hasAmountToken && hasGas;
     }

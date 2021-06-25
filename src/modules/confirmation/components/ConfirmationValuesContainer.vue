@@ -121,7 +121,7 @@
                   {{ item.type }}
                 </span>
               </div>
-              <div class="mew-heading-4">${{ item.usd }}</div>
+              <div class="mew-heading-4 textBlack2--text">${{ item.usd }}</div>
             </div>
             <!--
             =====================================================================================
@@ -139,9 +139,9 @@
                 <mew-transform-hash
                   v-if="item.nickname !== ''"
                   :hash="item.address"
-                  class="textPrimary--text mew-body"
+                  class="textBlack2--text mew-body"
                 />
-                <p v-else class="text-wrap textPrimary--text mew-body mb-0">
+                <p v-else class="text-wrap textBlack2--text mew-body mb-0">
                   {{ item.address }}
                 </p>
               </div>
@@ -180,7 +180,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .value-container {
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #f9f9f9;
 }
 .arrow-icon {

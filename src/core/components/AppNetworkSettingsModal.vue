@@ -15,7 +15,7 @@
             <a>Learn More </a>
           </p>
           <settings-gas-price
-            :has-custom="hasCustom"
+            :is-swap="true"
             :buttons="gasButtons"
             :selected="selected"
             :set-selected="setGas"
@@ -32,8 +32,11 @@
 <script>
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
-
+import {
+  getGasBasedOnType,
+  gasPriceTypes
+} from '@/core/helpers/gasPriceHelper';
+import { toWei } from 'web3-utils';
 export default {
   components: {
     SettingsGasPrice
@@ -51,36 +54,25 @@ export default {
     close: {
       type: Function,
       default: () => {}
+    },
+    selected: {
+      type: String,
+      default: gasPriceTypes.ECONOMY
     }
-  },
-  computed: {
-    hasCustom() {
-      return this.gasPriceType === gasPriceTypes.STORED;
-    }
-  },
-  watch: {
-    gasPriceType(e) {
-      this.selected = e;
-    }
-  },
-  created() {
-    this.useGlobal = false;
-    this.fetchGasPrice();
-    this.selected = this.gasPriceType;
   },
   methods: {
     setCustom(value) {
-      this.setCustomGasPrice(value, false);
-      this.emitResult(value);
+      const newObj = {
+        gasType: gasPriceTypes.STORED,
+        gasPrice: toWei(value, 'gwei')
+      };
+      this.$emit('onLocalGasPrice', newObj);
+      this.close();
     },
     setGas(value) {
-      this.setSelected(value, false);
-      this.emitResult(value);
-    },
-    emitResult(val) {
       const newObj = {
-        gasType: val,
-        gasPrice: this.convertedGasPrice
+        gasType: value,
+        gasPrice: getGasBasedOnType(this.localGas, value)
       };
       this.$emit('onLocalGasPrice', newObj);
       this.close();

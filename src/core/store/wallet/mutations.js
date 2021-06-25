@@ -50,10 +50,6 @@ const SET_TOKENS = function (state, tokens) {
   }
 };
 
-const SET_COIN_TOKENS = function (state, tokens) {
-  state.coinGeckoTokens = tokens;
-};
-
 export default {
   REMOVE_WALLET,
   SET_WALLET,
@@ -62,6 +58,5 @@ export default {
   SET_WEB3_INSTANCE,
   SET_BLOCK_NUMBER,
   SET_OWNED_DOMAINS,
-  SET_TOKENS,
-  SET_COIN_TOKENS
+  SET_TOKENS
 };

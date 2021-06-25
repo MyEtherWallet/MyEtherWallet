@@ -26,7 +26,7 @@
       title="My Tokens"
       :close="handleTokensPopup"
       :show="showPopup"
-      :no-btn="true"
+      :has-buttons="false"
       scrollable
       width="700"
       @close="handleTokensPopup"
@@ -43,7 +43,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
@@ -56,16 +55,12 @@ export default {
   data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      let total = BigNumber(0);
-      this.tokensList.forEach(token => {
-        const value = token.totalBalanceRaw ? token.totalBalanceRaw : 0;
-        total = total.plus(value);
-      });
-      return formatFiatValue(total).value;
+      return formatFiatValue(this.totalTokenFiatValue).value;
     },
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);

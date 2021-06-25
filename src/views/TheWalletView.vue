@@ -22,12 +22,9 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
-import {
-  getGasBasedOnType,
-  gasPriceTypes
-} from '@/core/helpers/gasPriceHelper.js';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 export default {
   components: {
     TheWalletSideMenu,
@@ -39,23 +36,34 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['isEthNetwork', 'network'])
+    ...mapGetters('global', ['network']),
+    ...mapState('external', ['coinGeckoTokens']),
+    ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('wallet', ['balanceInWei']),
+    isTokenBalanceApiSupported() {
+      return (
+        this.network.type.name === BSC.name ||
+        this.network.type.name === ETH.name ||
+        this.network.type.name === MATIC.name
+      );
+    }
   },
   watch: {
-    web3() {
+    network() {
       this.web3.eth.clearSubscriptions();
+    },
+    web3() {
       this.subscribeToBlockNumber();
       this.setGas();
-      if (!this.isEthNetwork) {
-        this.setTokensAndBalance();
-      }
+      this.setTokensAndBalance();
+    },
+    coinGeckoTokens() {
+      this.setTokenBalance();
     }
   },
   mounted() {
     if (this.online) {
-      if (!this.isEthNetwork) {
-        this.setTokensAndBalance();
-      }
+      this.setTokensAndBalance();
       this.setGas();
       this.subscribeToBlockNumber();
     }
@@ -67,25 +75,32 @@ export default {
     ...mapActions('wallet', [
       'setAccountBalance',
       'setBlockNumber',
-      'setTokens',
-      'setCoinGeckoTokens'
+      'setTokens'
     ]),
     ...mapActions('global', ['setGasPrice']),
-    ...mapActions('external', ['setETHUSDValue']),
+    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenBalance']),
     setTokensAndBalance() {
-      this.setTokens(this.network.type.tokens);
       this.web3.eth.getBalance(this.address).then(res => {
         this.setAccountBalance(toBN(res));
+        if (this.coinGeckoTokens?.get) {
+          this.setTokenBalance();
+        } else {
+          this.setTokens([]);
+        }
       });
+    },
+    getTokenInfoByAddress(address) {
+      for (const t of this.network.type.tokens) {
+        if (t.address.toLowerCase() === address.toLowerCase()) return t;
+      }
+      return null;
     },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
         if (this.gasPriceType === gasPriceTypes.STORED) {
           this.setGasPrice(this.baseGasPrice);
-        } else if (this.gasPriceType) {
-          this.setGasPrice(getGasBasedOnType(res, this.gasPriceType));
         } else {
-          this.setGasPrice(getGasBasedOnType(res, gasPriceTypes.ECONOMY));
+          this.setGasPrice(res);
         }
       });
     },

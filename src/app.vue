@@ -4,6 +4,7 @@
     <router-view />
     <module-toast />
     <module-global-modals />
+    <module-analytics />
   </v-app>
 </template>
 
@@ -12,10 +13,16 @@ import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
+import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
 import currencyTypes from '@/core/configs/configCurrencyTypes';
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleDecisionTree, ModuleGlobalModals },
+  components: {
+    ModuleToast,
+    ModuleDecisionTree,
+    ModuleGlobalModals,
+    ModuleAnalytics
+  },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {

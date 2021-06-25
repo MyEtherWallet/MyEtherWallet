@@ -1,7 +1,6 @@
 import TheWalletView from '@/views/TheWalletView';
 import Dashboard from '@/views/layouts-wallet/TheDashboardLayout';
 import Send from '@/views/layouts-wallet/TheSendTransactionLayout';
-// import SendOffline from '@/modules/wallets/pages/send/send-offline/SendOffline';
 import NftManager from '@/views/layouts-wallet/TheNFTManagerLayout';
 import Swap from '@/views/layouts-wallet/TheSwapLayout';
 import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
@@ -32,11 +31,6 @@ export default {
       component: Send,
       props: true
     },
-    // {
-    //   path: 'offline',
-    //   name: 'SendOffline',
-    //   component: SendOffline
-    // },
     {
       path: 'nft',
       name: 'NFTManager',

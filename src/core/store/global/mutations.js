@@ -67,6 +67,10 @@ const SET_TRACKING_CONSENT = function (state, val) {
   state.consentToTrack = val;
 };
 
+const NEVER_SHOW_TRACKING = function (state) {
+  state.displayedTrackingPopup = true;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -79,5 +83,6 @@ export default {
   DELETE_CUSTOM_PATH,
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
-  SET_TRACKING_CONSENT
+  SET_TRACKING_CONSENT,
+  NEVER_SHOW_TRACKING
 };
