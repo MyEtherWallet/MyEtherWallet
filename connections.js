@@ -91,5 +91,6 @@ module.exports = [
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
-  'https://api.thegraph.com:443/subgraphs/name/ensdomains/'
+  'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
+  'https://api.wallet.coinbase.com:443'
 ];
