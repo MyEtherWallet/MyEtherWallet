@@ -7,25 +7,18 @@
       overlay-opacity="0"
       content-class="matomo-dialog"
     >
-      <v-card>
+      <v-sheet>
         <!-- change depending on when something is opened -->
-        <v-card-title
-          v-if="!expanded"
-          class="pa-4 mew-heading-2 font-weight-regular"
-        >
-          <p class="ma-0">
+        <div v-if="!expanded" class="pa-4">
+          <h2 class="ma-0 mew-heading-2 font-weight-regular">
             Help us make MEW better by allowing us to measure a few things?
-          </p>
-        </v-card-title>
-        <v-card-title
-          v-else
-          class="pa-4 mew-heading-2 font-weight-regular cursor--pointer"
-          @click="backToOverview"
-        >
-          <p class="ma-0">
-            <v-icon size="large"> mdi-chevron-left </v-icon> Back to overview
-          </p>
-        </v-card-title>
+          </h2>
+        </div>
+        <div v-else class="pa-4 cursor--pointer" @click="backToOverview">
+          <h2 class="ma-0 mew-heading-2 font-weight-regular">
+            <v-icon size="xlarge"> mdi-chevron-left </v-icon> Back to overview
+          </h2>
+        </div>
         <!-- Contains scrollable content -->
         <v-virtual-scroll
           v-show="!expanded"
@@ -125,7 +118,7 @@
             Don't allow
           </p>
         </div>
-      </v-card>
+      </v-sheet>
     </v-dialog>
   </div>
 </template>

@@ -145,7 +145,7 @@
             <v-switch
               :value="consentToTrack"
               inset
-              :label="`${consentToTrack ? 'Disable' : 'Enable'} Tracking`"
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
               color="gray"
               off-icon="mdi-alert-circle"
               @change="setConsent"
