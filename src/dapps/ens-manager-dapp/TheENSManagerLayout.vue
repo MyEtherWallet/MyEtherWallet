@@ -99,8 +99,10 @@
                     <a
                       class="address-link"
                       :href="
-                        'https://www.ethvm.com/address/' +
-                        domain.registrarAddress
+                        network.type.blockExplorerAddr.replace(
+                          '[[address]]',
+                          domain.registrarAddress
+                        )
                       "
                       target="_blank"
                     >
@@ -127,8 +129,10 @@
                     <a
                       class="address-link"
                       :href="
-                        'https://www.ethvm.com/address/' +
-                        domain.controllerAddress
+                        network.type.blockExplorerAddr.replace(
+                          '[[address]]',
+                          domain.controllerAddress
+                        )
                       "
                       target="_blank"
                     >

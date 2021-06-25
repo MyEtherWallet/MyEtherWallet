@@ -136,7 +136,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const minimumAge = await this.registrarControllerContract.methods
       .minCommitmentAge()
       .call();
-    return `${parseInt(minimumAge)}`;
+    return `${parseInt(minimumAge) + 30}`;
   }
 
   async _initModule() {
