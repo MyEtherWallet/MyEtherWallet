@@ -348,7 +348,11 @@ export default {
           },
           { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' }
+          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
+          {
+            label: 'MEW Telegram Channel',
+            link: 'https://t.me/myetherwallet'
+          }
         ]
       },
       {
