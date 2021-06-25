@@ -13,15 +13,21 @@
     :active-tab="activeTab"
     top-strip
   >
+    <!--
+    ===================================================
+    The Staked Header/Banner
+    ===================================================
+    -->
     <template #HeaderBody>
       <v-divider class="textPrimary" />
       <div class="d-flex flex-wrap align-center justify-center">
         <div class="text-uppercase textPrimary--text font-weight-bold">
-          Total Staked: <span class="primary--text">4,202,920 ETH</span>
+          Total Staked:
+          <span class="primary--text">{{ totalStaked }}</span>
         </div>
         <v-icon color="textPrimary">mdi-circle-medium</v-icon>
         <div class="text-uppercase textPrimary--text font-weight-bold">
-          Current APR: <span class="primary--text">7.64%</span>
+          Current APR: <span class="primary--text">{{ currentAPR }}</span>
         </div>
       </div>
       <div class="d-flex align-center justify-center mt-3">
@@ -66,6 +72,11 @@
       </div>
     </template>
 
+    <!--
+    ===================================================
+    New Stake Tab
+    ===================================================
+    -->
     <template #tabContent1>
       <v-sheet
         min-height="500px"
@@ -73,31 +84,14 @@
         color="transparent"
         class="mx-auto"
       >
-        <mew-stepper :items="stepperItems" :on-step="getCurrentStep">
-          <template v-if="isStepActive(0)" #stepperContent1>
-            <step-one :next="nextStep" @completed="proceed" />
-          </template>
-          <template v-if="isStepActive(1)" #stepperContent2>
-            <step-two :back="backStep" :next="nextStep" @completed="proceed" />
-          </template>
-          <template v-if="isStepActive(2)" #stepperContent3>
-            <step-three
-              :details="details"
-              :back="backStep"
-              :next="nextStep"
-              @completed="proceed"
-            />
-          </template>
-          <template v-if="isStepActive(0)" #stepperContent4>
-            <step-four
-              :details="details"
-              :next="nextStep"
-              @completed="proceed"
-            />
-          </template>
-        </mew-stepper>
+        <staked-stepper :current-apr="currentAPR" />
       </v-sheet>
     </template>
+    <!--
+    ===================================================
+    My Stake tab
+    ===================================================
+    -->
     <template #tabContent2>
       <v-sheet
         min-height="500px"
@@ -129,20 +123,14 @@ import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import handlerStaked from './handlers/handlerStaked';
 import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
-import stepOne from './stepper/steps/SetAmount/SetAmount';
-import stepTwo from './stepper/steps/GenerateEth2Address/GenerateEth2Address';
-import stepThree from './stepper/steps/Upload/Upload';
-import stepFour from './stepper/steps/Review/Review';
+import StakedStepper from './components/staked-stepper/StakedStepper';
 import status from './components/status/Status';
 
 export default {
   name: 'TheStakedLayout',
   components: {
     TheWrapperDapp,
-    stepOne,
-    stepTwo,
-    stepThree,
-    stepFour,
+    StakedStepper,
     status
   },
   data() {
@@ -159,85 +147,33 @@ export default {
       myValidators: [],
       transactionData: {},
       details: {},
-      totalStaked: '',
       apr: '',
       eth2ContractAddress: '',
       endpoint: '',
       batchContract: '',
       txHash: '',
-      currentStepIdx: 0,
       resetStepper: false,
       stakedLogo: stakedLogo,
       loadingValidators: true,
-      activeValidatorsTab: false,
       tabs: [{ name: 'stake' }, { name: 'status' }],
-      stepperItems: [
-        {
-          step: 1,
-          name: 'Stake Amount'
-        },
-        {
-          step: 2,
-          name: 'Generate Eth2 address'
-        },
-        {
-          step: 3,
-          name: 'Upload keystore file'
-        },
-        {
-          step: 4,
-          name: 'Review & stake'
-        },
-        {
-          step: 5,
-          name: 'Done'
-        }
-      ],
-      steps: [
-        {
-          name: 1,
-          title: '1', //this.$t('dappsStaked.steps.1'),
-          completed: false
-        },
-        {
-          name: 2,
-          title: '2', //this.$t('dappsStaked.steps.2'),
-          completed: false
-        },
-        {
-          name: 3,
-          title: '3', //this.$t('dappsStaked.steps.3'),
-          completed: false
-        },
-        {
-          name: 4,
-          title: '4', //this.$t('dappsStaked.steps.4'),
-          completed: false
-        },
-        {
-          name: 5,
-          title: '5', //this.$t('dappsStaked.steps.5'),
-          completed: false
-        }
-      ],
-      currentStep: { index: '0' },
-      previousStep: {},
-      nextButton: {},
-      canContinue: false,
-      finalStep: false,
-      presentStep: 0,
-      canProceed: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapGetters('global', ['network', 'gasPrice']),
-    getCurrentStep() {
-      return this.currentStep.index + 1;
+    /**
+     * Total Staked
+     * @returns string
+     */
+    totalStaked() {
+      return this.handlerStaked.totalStaked + ' ETH';
     },
-    totalStakedAndApr() {
-      console.error('staked', this.handlerStaked.getTotalStakedAndApr());
-      return this.handlerStaked.getTotalStakedAndApr();
+    /**
+     * Current APR
+     * @returns string
+     */
+    currentAPR() {
+      return this.handlerStaked.apr;
     }
   },
   watch: {
@@ -252,15 +188,6 @@ export default {
       deep: true,
       immediate: true
     },
-    currentStep: {
-      handler: function (newVal, oldVal) {
-        if (newVal.index === 0 && oldVal.index === 4) {
-          this.reset();
-        }
-      },
-      deep: true,
-      immediate: true
-    },
     txHash(val) {
       console.log('txhash watcher', val); // todo remove dev item
       if (val && val !== '') {
@@ -268,27 +195,11 @@ export default {
       }
     }
   },
-  created() {
-    this.init();
-  },
   mounted() {
-    this.handlerStaked = new handlerStaked();
-    this.handlerStaked.on('setData', data => {
-      console.log(data); // todo remove dev item
-      this.setData(data);
-    });
-    this.handlerStaked.on('myValidators', validators => {
-      this.myValidators = validators;
-      this.loadingValidators = false;
-    });
-
-    this.handlerStaked.on('transaction', () => {
-      console.log('transaction sent'); // todo remove dev item
-    });
-    this.handlerStaked.on('txHash', txHash => {
-      console.log('txHash', txHash); // todo remove dev item
-      this.txHash = txHash;
-    });
+    /**
+     * Initiate Stake Handler
+     */
+    this.handlerStaked = new handlerStaked(this.web3, this.network, this.address);
   },
   methods: {
     validatorsCount() {
@@ -300,7 +211,6 @@ export default {
     reset() {
       this.transactionData = {};
       this.details = {};
-      this.totalStaked = '';
       this.apr = '';
       this.resetStepper = true;
       this.eth2ContractAddress = '';
@@ -329,59 +239,24 @@ export default {
       // this.handlerStaked.setData(data);
       console.log('this.details', this.details); // todo remove dev item
     },
-    isStepActive(index) {
-      if (this.currentStep.index === index) {
-        return true;
-      }
-      return false;
-    },
-    activateStep(index) {
-      console.log('activateStep'); // todo remove dev item
-      if (this.steps[index]) {
-        this.previousStep = this.currentStep;
-        this.currentStep = {
-          name: this.steps[index].name,
-          index: index
-        };
-        if (index + 1 === this.steps.length) {
-          this.finalStep = true;
-        } else {
-          this.finalStep = false;
-        }
-      }
-      this.$emit('active-step', this.currentStep);
-    },
-    nextStepAction() {
-      console.log('nextStepAction'); // todo remove dev item
-      console.log(this.canContinue); // todo remove dev item
-
-      this.nextButton[this.currentStep.name] = true;
-      if (this.canContinue) {
-        const currentIndex =
-          +this.currentStep.index + 1 === 5 ? 0 : this.currentStep.index + 1;
-        this.activateStep(currentIndex);
-      }
-      this.canContinue = false;
-      this.$forceUpdate();
-    },
-    nextStep() {
-      console.log('nextStep', this.currentStep.index); // todo remove dev item
-      if (this.currentStep.index === 2) {
-        console.log('startProvision'); // todo remove dev item
-        this.startProvision();
-        // this.$emit('stakeEth2');
-      }
-      if (this.currentStep.index === 3) {
-        console.log('sendTransaction'); // todo remove dev item
-        // this.$emit('sendTransaction');``
-        this.sendTransaction();
-        return;
-      }
-      if (!this.$listeners || !this.$listeners['before-next-step']) {
-        this.nextStepAction();
-      }
-      this.canContinue = false;
-    },
+    // nextStep() {
+    //   console.log('nextStep', this.currentStep.index); // todo remove dev item
+    //   if (this.currentStep.index === 2) {
+    //     console.log('startProvision'); // todo remove dev item
+    //     this.startProvision();
+    //     // this.$emit('stakeEth2');
+    //   }
+    //   if (this.currentStep.index === 3) {
+    //     console.log('sendTransaction'); // todo remove dev item
+    //     // this.$emit('sendTransaction');``
+    //     this.sendTransaction();
+    //     return;
+    //   }
+    //   if (!this.$listeners || !this.$listeners['before-next-step']) {
+    //     this.nextStepAction();
+    //   }
+    //   this.canContinue = false;
+    // },
     backStep() {
       const currentIndex = this.currentStep.index - 1;
       if (currentIndex >= 0) {
@@ -395,14 +270,6 @@ export default {
       if (ethPrice) {
         this.handlerStaked.setData({ key: 'ethPrice', value: ethPrice });
       }
-    },
-    init() {
-      // Initiate stepper
-      this.activateStep(0);
-      this.canContinue = false;
-      this.steps.forEach(step => {
-        this.nextButton[step.name] = false;
-      });
     }
   }
 };

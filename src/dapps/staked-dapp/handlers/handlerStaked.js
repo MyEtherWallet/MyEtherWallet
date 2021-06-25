@@ -1,104 +1,82 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import configs from './configs';
+import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 // import EventEmitter from 'events';
 
 export default class Staked {
-  constructor(web3, network) {
+  constructor(web3, network, address) {
     /**
      * set up the variables
      */
     this.web3 = web3;
     this.network = network;
+    this.address = address;
     this.totalStaked = '';
     this.apr = '';
     /**
-     * get the total staked and apr
+     * get the initial data (total staked, apr, validators)
      */
-    this.setup();
+    this.getTotalStakedAndAPR();
+    this.getValidators();
   }
   /**
-   * Get the Total Staked and APR
+   * Get the total staked and current APR
    */
-  setup() {
+  getTotalStakedAndAPR() {
     this.eth2ContractAddress =
-      configs.network[this.network.type.name].depositAddress;
-    this.endpoint = configs.network[this.network.type.name].endpoint;
-    this.batchContract = configs.network[this.network.type.name].batchContract;
+      configNetworkTypes.network[this.network.type.name].depositAddress;
+    this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
+    this.batchContract = configNetworkTypes.network[this.network.type.name].batchContract;
 
     this.web3.eth
       .getBalance(this.eth2ContractAddress)
       .then(res => {
         const raw = this.web3.utils.fromWei(res, 'ether');
         this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
-          .times(100)
-          .toFixed(2);
+        this.apr = formatPercentageValue(
+          new BigNumber(calculateEth2Rewards({ totalAtStake: raw })).times(100)
+        ).value;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
       });
-    // this.getValidators().then(() => {
-    //   this.settingUp = false;
-    // });
   }
-  getTotalStakedAndApr() {
-    return {
-      totalStaked: this.totalStaked,
-      apr: this.apr
-    };
+  /**
+   * Get users validators
+   */
+  getValidators() {
+    this.loadingValidators = true;
+    return axios
+      .get(`${this.endpoint}/history?address=${this.address}`, {
+        header: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(resp => {
+        this.myValidators = resp.data;
+        this.loadingValidators = false;
+      })
+      .catch(err => {
+        this.loadingValidators = false;
+        this.myValidators = [];
+        if (
+          err.response &&
+          err.response.status === 404 &&
+          err.response.data.msg === 'No matching history found'
+        ) {
+          return;
+        }
+        Toast(err, {}, ERROR);
+      });
   }
   validatorsCount() {
     if (this.details.amount) {
       return new BigNumber(this.details.amount).dividedBy(32).toFixed();
     }
     return 0;
-  }
-
-  getValidators() {
-    this.loadingValidators = true;
-    return (
-      axios
-        .get(`${this.endpoint}/history?address=${this.address()}`, {
-          header: {
-            'Content-Type': 'application/json'
-          }
-        })
-        // return axios
-        //   .get(`${this.endpoint}/history?address=0xed561e40A66e791988977c21fDC7f083E9Bf24B0`, {
-        //     header: {
-        //       'Content-Type': 'application/json'
-        //     }
-        //   })
-        .then(resp => {
-          this.myValidators = resp.data;
-          if (this.settingUp) {
-            this.priorValidators = resp.data;
-          }
-          this.loadingValidators = false;
-          this.emit('myValidators', resp.data);
-          return resp;
-        })
-        .catch(err => {
-          this.loadingValidators = false;
-          this.myValidators = [];
-          if (this.settingUp) {
-            this.priorValidators = [];
-          }
-          this.emit('myValidators', []);
-          if (
-            err.response &&
-            err.response.status === 404 &&
-            err.response.data.msg === 'No matching history found'
-          ) {
-            return err;
-          }
-          // Toast(err, {}, ERROR);
-          return err;
-        })
-    );
   }
   resetStepperDone() {
     this.resetStepper = false;
@@ -120,7 +98,7 @@ export default class Staked {
   }
   async startProvision() {
     const params = {
-      address: this.address(),
+      address: this.address,
       withdrawalKey: this.details.address,
       validatorsCount: this.validatorsCount()
     };
@@ -203,7 +181,7 @@ export default class Staked {
     if (!this.transactionInProgress) {
       console.log('SENDING========================'); // todo remove dev item
       this.transactionInProgress = true;
-      this.transactionData.from = this.address();
+      this.transactionData.from = this.address;
       this.transactionData.to = this.batchContract;
       this.transactionData.gasPrice = new BigNumber(
         this.web3().utils.toWei(this.gasPrice(), 'gwei')
@@ -239,7 +217,7 @@ export default class Staked {
     });
   }
   isStepActive(payload) {
-    this.currentStepIdx = payload.index;
+    // this.currentStepIdx = payload.index;
     this.steps.forEach(step => {
       if (step.name === payload.name) {
         if (step.completed === true) {

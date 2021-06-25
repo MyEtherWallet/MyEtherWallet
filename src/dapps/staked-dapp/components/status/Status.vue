@@ -103,7 +103,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
-import stakeConfigs from '../../handlers/configs';
+import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters } from 'vuex';
 import exitedPopup from '../ExitedPopup/ExitedPopup';
 
@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     getUrl(key) {
-      return stakeConfigs.network[this.network.type.name].url + '0x' + key;
+      return configNetworkTypes.network[this.network.type.name].url + '0x' + key;
     },
     details(info) {
       const details = [

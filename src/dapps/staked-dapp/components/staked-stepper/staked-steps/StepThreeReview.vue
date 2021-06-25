@@ -308,7 +308,7 @@ import Popup from '@/core/components/AppPopup.vue';
 import PhraseBlock from '@/components/PhraseBlock';
 import MessageBlock from '@/core/components/AppMessageBlock';
 import BigNumber from 'bignumber.js';
-import stakeConfigs from '../../../handlers/configs';
+import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
@@ -395,7 +395,7 @@ export default {
   methods: {
     async getFees() {
       const batchContract =
-        stakeConfigs.network[this.network.type.name].batchContract;
+        configNetworkTypes.network[this.network.type.name].batchContract;
       const abi = [
         {
           inputs: [
