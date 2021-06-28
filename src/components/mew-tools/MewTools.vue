@@ -18,7 +18,7 @@
         >
           <mew-button
             class="px-2"
-            :title="$vuetify.breakpoint.mdAndUp ? 'MEW tools' : ''"
+            :title="$vuetify.breakpoint.mdAndUp ? 'MEW Hub' : ''"
             color-theme="primary"
             :has-full-width="false"
             btn-size="large"
@@ -45,7 +45,7 @@
         >
           <img
             src="@/assets/images/icons/icon-grid-dot.png"
-            alt="Mew Tools"
+            alt="Mew Hub"
             height="20"
           />
         </v-btn>
