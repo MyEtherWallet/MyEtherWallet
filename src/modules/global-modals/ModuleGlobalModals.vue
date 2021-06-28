@@ -17,6 +17,12 @@
         />
       </template>
     </app-modal>
+    <app-error-msg
+      :show="openError"
+      :close="reset"
+      :resolve="send"
+      :error="errors"
+    />
   </div>
 </template>
 
@@ -24,15 +30,18 @@
 import EnterPinMatrix from './components/EnterPinMatrix.vue';
 import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
+import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import { _ } from 'web3-utils';
 const OPEN_MATRIX = 'showHardwarePinMatrix';
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
+const ISSUE_MODAL = 'issueModal';
 export default {
   components: {
     AppModal,
     EnterPinMatrix,
-    HardwarePasswordModal
+    HardwarePasswordModal,
+    AppErrorMsg
   },
   data() {
     return {
@@ -40,8 +49,10 @@ export default {
       callback: () => {},
       openHardwarePassword: false,
       openMatrix: false,
+      openError: false,
       password: '',
-      acceptTerms: false
+      acceptTerms: false,
+      errors: {}
     };
   },
   computed: {
@@ -62,6 +73,11 @@ export default {
     }
   },
   created() {
+    EventBus.$on(ISSUE_MODAL, (errors, callback) => {
+      this.errors = errors;
+      this.callback = callback;
+      this.openError = true;
+    });
     EventBus.$on(OPEN_MATRIX, (deviceInfo, callback) => {
       this.callback = callback;
       this.deviceInfo = deviceInfo;
@@ -79,6 +95,7 @@ export default {
       this.callback = () => {};
       this.identifier = '';
       this.openHardwarePassword = false;
+      this.openError = false;
       this.openMatrix = false;
       this.password = '';
       this.acceptTerms = false;
@@ -92,6 +109,10 @@ export default {
     },
     setTerms(e) {
       this.acceptTerms = e;
+    },
+    send(bool) {
+      this.callback(bool);
+      this.reset();
     }
   }
 };
