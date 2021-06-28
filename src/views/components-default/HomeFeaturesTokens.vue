@@ -3,7 +3,9 @@
     class="mew-component--features-tokens pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">We support tokens</div>
+    <div class="mew-heading-1 mb-3">
+      MEW supports ETH and all ERC-20 tokens!
+    </div>
     <div>We support many tokens including ERC-20.</div>
     <div class="mt-10">
       <v-row>
