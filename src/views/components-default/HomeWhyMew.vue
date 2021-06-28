@@ -41,7 +41,7 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Hardware wallets support"
+              title="Hardware wallet support"
               desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
               :link="{
                 title: 'Learn more',
@@ -117,7 +117,7 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Hardware wallets support"
+            title="Hardware wallet support"
             desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
             :link="{
               title: 'Learn more',
