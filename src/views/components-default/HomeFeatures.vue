@@ -54,7 +54,7 @@
           <v-tabs-items v-model="mobileTab">
             <v-tab-item v-for="item in mewTabs" :key="item.tab">
               <div class="mt-10 mb-5">
-                <home-features-send v-if="item.name === 'Send'" />
+                <home-features-send v-if="item.name === 'ETH'" />
                 <home-features-swap v-if="item.name === 'Swap'" />
                 <home-features-dapps v-if="item.name === 'Dapps'" />
                 <home-features-tokens v-if="item.name === 'Tokens'" />
@@ -86,7 +86,7 @@ export default {
     mobileTab: null,
     mobileItems: [
       {
-        tab: 'Send',
+        tab: 'ETH',
         img: require('@/assets/images/snippets/mobile/mobile-features-send.svg')
       },
       {
@@ -104,7 +104,7 @@ export default {
     ],
     mewTabs: [
       {
-        name: 'Send'
+        name: 'ETH'
       },
       {
         name: 'Swap'
