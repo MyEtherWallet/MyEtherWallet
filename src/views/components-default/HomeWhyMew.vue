@@ -28,7 +28,7 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Swap easily"
+              title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
               desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
               :link="{
                 title: 'Learn more',
@@ -105,7 +105,7 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Swap easily"
+            title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
             desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
             :link="{
               title: 'Learn more',
