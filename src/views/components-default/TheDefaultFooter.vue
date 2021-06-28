@@ -301,10 +301,10 @@ export default {
       {
         title: 'Hardware Wallets',
         data: [
-          { label: 'Ledger wallet', link: 'https://www.ledger.com/?r=fa4b' },
+          { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
           { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
           {
-            label: 'Ether card',
+            label: 'Ether Cards',
             link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
           },
           { label: 'Trezor', link: 'https://trezor.io/' },
