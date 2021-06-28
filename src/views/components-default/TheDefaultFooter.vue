@@ -346,7 +346,7 @@ export default {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'
           },
-          { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
+          { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' }
         ]

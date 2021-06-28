@@ -115,7 +115,7 @@ export default {
           link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
         },
         {
-          label: 'MEW topia',
+          label: 'MEWtopia',
           img: require('@/assets/images/icons/icon-puppy-mew.svg'),
           link: 'https://www.mewtopia.com/'
         },
