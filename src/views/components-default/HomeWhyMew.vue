@@ -17,9 +17,9 @@
           <mew-info-card
             class="d-flex align-end block-box-shadow"
             title="Friendly to use"
-            desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
+            desc="Access the Ethereum blockchain's original and most-trusted wallet, now with a host of new features all contained in an elegant and friendly interface."
             :link="{
-              title: 'Learn more',
+              title: 'Start exploring',
               url: 'www.myetherwallet.com'
             }"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
