@@ -8,7 +8,9 @@
           <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
             Why MEW
           </div>
-          <h1 class="mb-9">Make Ethereum Blockchain easy and secure</h1>
+          <h1 class="mb-9">
+            Easy and secure access to the Ethereum Blockchain
+          </h1>
         </v-sheet>
 
         <div class="d-flex">
