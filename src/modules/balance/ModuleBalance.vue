@@ -18,7 +18,6 @@
     ></v-skeleton-loader>
     <mew-module
       v-if="!showBuyEth && !loading"
-      class="pa-7"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"
@@ -29,7 +28,7 @@
       icon-align="left"
     >
       <template #rightHeaderContainer>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
             :on-toggle-btn-idx="activeButton"
@@ -46,8 +45,8 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="pa-7">
-          <balance-chart :data="chartData" class="full-width mt-5" />
+        <balance-chart :data="chartData" class="full-width mt-5 pa-md-3" />
+        <div class="pa-3 pa-sm-7">
           <v-row class="align-center">
             <v-col class="d-flex align-center justify-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
