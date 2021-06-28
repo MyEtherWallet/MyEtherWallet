@@ -10,7 +10,7 @@
         <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Features
         </div>
-        <h1 class="mb-9">Your All-In-One Gateway to the Ethereum Blockchain</h1>
+        <h1 class="mb-9">Your Gateway to the Ethereum Blockchain</h1>
       </v-sheet>
       <div class="features-tabs-container">
         <v-container>
@@ -43,9 +43,7 @@
           <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
             Features
           </h5>
-          <h1 class="mb-10">
-            Your All-In-One Gateway to the Ethereum Blockchain
-          </h1>
+          <h1 class="mb-10">Your Gateway to the Ethereum Blockchain</h1>
 
           <v-tabs v-model="mobileTab" fixed-tabs>
             <v-tab v-for="item in mobileItems" :key="item.tab">
