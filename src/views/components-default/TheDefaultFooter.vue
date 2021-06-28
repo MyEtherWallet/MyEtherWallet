@@ -21,18 +21,11 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              Love
-              <mew-icon
-                class="mx-1"
-                icon-name="love"
-                icon-type="mew"
-                :img-height="30"
-              />
-              MEW? Donate!
+              Love MEW?
             </div>
             <p>
-              MEW is a open-source and free to the community. Your donations go
-              a long way towards making that possible.
+              Help us keep MEW free and open-source, your donations go a long
+              way towards making that possible.
             </p>
             <a
               class="color--inherit d-flex align-center mb-3"
@@ -177,19 +170,10 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="mb-3 d-flex align-center">
-              Love
-              <mew-icon
-                class="mx-1"
-                icon-name="love"
-                icon-type="mew"
-                :img-height="30"
-              />
-              MEW? Donate!
-            </h3>
+            <h3 class="mb-3 d-flex align-center">Love MEW?</h3>
             <p>
-              MEW is a open-source and free to the community. Your donations go
-              a long way towards making that possible.
+              Help us keep MEW free and open-source, your donations go a long
+              way towards making that possible.
             </p>
             <a
               class="color--inherit d-flex align-center mb-1"
