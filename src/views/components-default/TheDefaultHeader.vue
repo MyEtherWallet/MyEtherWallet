@@ -20,7 +20,7 @@
             class="white--text text-decoration--none"
             :to="{ name: 'HowItWorks' }"
           >
-            How it works
+            What is MEW
           </router-link>
           <mew-menu
             text-color="white--text"
