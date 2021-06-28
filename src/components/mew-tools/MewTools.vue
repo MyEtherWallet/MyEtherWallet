@@ -100,7 +100,7 @@ export default {
           link: 'https://www.myetherwallet.com/'
         },
         {
-          label: 'MEW wallet App',
+          label: 'MEW wallet app',
           img: require('@/assets/images/icons/icon-mew-wallet.png'),
           link: 'https://www.mewwallet.com/'
         },
