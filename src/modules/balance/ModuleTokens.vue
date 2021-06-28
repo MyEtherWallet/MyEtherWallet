@@ -137,7 +137,12 @@ export default {
           {
             title: 'Trade',
             method: () => {
-              this.$router.push({ name: 'Swap' });
+              const obj = {
+                fromToken: item.contract,
+                toToken: '',
+                amount: item.balancef
+              };
+              this.$router.push({ name: 'Swap', query: obj });
             },
             btnStyle: 'outline',
             colorTheme: 'primary'
