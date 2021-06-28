@@ -320,7 +320,7 @@ export default {
         ]
       },
       {
-        title: 'Mew',
+        title: 'MEW',
         data: [
           { label: 'About us', routerLink: 'CompanyPage' },
           { label: 'How it works', routerLink: 'HowItWorks' },
