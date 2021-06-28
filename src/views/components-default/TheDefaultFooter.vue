@@ -299,7 +299,7 @@ export default {
   data: () => ({
     footers: [
       {
-        title: 'Hardware Wallets',
+        title: 'Affiliate Hardware Wallets',
         data: [
           { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
           { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
