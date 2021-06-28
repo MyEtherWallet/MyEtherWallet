@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/vue';
 import { Integrations } from '@sentry/tracing';
 import Vue from 'vue';
-// import { EventBus } from '@/core/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 import store from '@/core/store';
 
 // Sentry
@@ -27,13 +27,10 @@ Sentry.init({
       service: service,
       walletType: identifier
     };
-    // eslint-disable-next-line
-    console.log(event);
-    return event;
-    // return new Promise(resolve => {
-    //   EventBus.$emit('issueModal', event, resolve);
-    // }).then(res => {
-    //   return res === true ? event : null;
-    // });
+    return new Promise(resolve => {
+      EventBus.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
   }
 });
