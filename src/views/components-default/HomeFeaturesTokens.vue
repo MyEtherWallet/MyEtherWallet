@@ -6,7 +6,6 @@
     <div class="mew-heading-1 mb-3">
       MEW supports ETH and all ERC-20 tokens!
     </div>
-    <div>We support many tokens including ERC-20.</div>
     <div class="mt-10">
       <v-row>
         <v-col v-for="(t, k) in tokens" :key="k" cols="12" lg="4" sm="6">
