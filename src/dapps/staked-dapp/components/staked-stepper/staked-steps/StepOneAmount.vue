@@ -215,7 +215,7 @@ export default {
      * Emits onContinue to go to next step
      */
     onContinue() {
-      this.$emit('onContinue', { onStep: 1, value: this.amount });
+      this.$emit('onContinue', { onStep: 1, amount: this.amount });
     },
     /**
      * Sets the amount

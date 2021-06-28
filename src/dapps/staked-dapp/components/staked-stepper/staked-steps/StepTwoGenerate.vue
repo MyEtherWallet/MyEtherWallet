@@ -26,7 +26,9 @@
     ===================================================
     -->
       <span>Already have Eth2 address?</span>
-      <span class="d-flex align-center primary--text"
+      <span
+        class="d-flex align-center primary--text cursor-pointer"
+        @click="onContinue(true)"
         >Skip this step
         <img
           height="17"
@@ -37,14 +39,14 @@
       </span>
     </div>
     <div class="details-container mt-4 pa-5">
-      <div class="overlayBg rounded pa-5">
-        <!--
+      <!--
     ===================================================
    Eth2 Address
     ===================================================
     -->
+      <div class="overlayBg rounded pa-5">
         <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
-        <div class="word-wrap--break-word">
+        <div class="break-word mew-address">
           {{ eth2Address }}
         </div>
       </div>
@@ -90,7 +92,17 @@
                   >mdi-checkbox-marked-circle</v-icon
                 >
               </div>
-              <div class="textSecondary--text">
+              <v-progress-circular
+                v-if="downloadingKeystore && !downloadedKeystore"
+                color="primary"
+                indeterminate
+                width="3"
+                size="16"
+              />
+              <div
+                v-if="downloadedKeystore && keystoreName"
+                class="textSecondary--text"
+              >
                 {{ keystoreName }}
               </div>
             </div>
@@ -101,13 +113,13 @@
             title="Download"
             btn-style="outline"
             :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="onCreatePassword = true"
+            @click.native="onDownload"
           />
         </div>
 
         <mew-warning-sheet
           v-if="downloadedKeystore"
-          class="mt-4"
+          class="my-4"
           :description="keystoreFileWarning"
         />
       </div>
@@ -131,14 +143,15 @@
         class="d-block ma-2"
         title="Back"
         btn-style="outline"
+        @click.native="onBack"
       />
       <mew-button
         btn-size="xlarge"
         class="d-block ma-2"
         title="Continue after downloading keystore file"
         :disabled="!downloadedKeystore"
-      >
-      </mew-button>
+        @click.native="onContinue(false)"
+      />
     </div>
 
     <!--
@@ -168,12 +181,13 @@ export default {
       mnemonic: [],
       eth2Address: '',
       downloadedKeystore: false,
+      downloadingKeystore: false,
       keystoreFileWarning:
         "Don't lose your Keystore file / password and Recovery phrase. They hold your keys and are necessary future access. MEW will not be able to recover them for you so make sure to keep them safe.",
       keystoreJson: '',
       keystoreName: '',
-      password: '',
-      onCreatePassword: false
+      onCreatePassword: false,
+      link: {}
     };
   },
   mounted() {
@@ -201,14 +215,25 @@ export default {
       this.mnemonic = mnemonic.split(' ');
     },
     /**
+     * Gets triggered from clicking the Download button
+     * if keystore has not been downloaded, then create pw modal will pop up
+     * otherwise will download the same keystore file
+     */
+    onDownload() {
+      if (this.downloadedKeystore) {
+        this.downloadKeystore();
+        return;
+      }
+      this.onCreatePassword = true;
+    },
+    /**
      * Generate keystore json
      */
     async generateKeystore(pw) {
-      this.password = pw;
+      const password = pw;
+      this.downloadingKeystore = true;
       this.onCreatePassword = false;
-      const toWithdrawalKeystore = await this.ks.toWithdrawalKeystore(
-        this.password
-      );
+      const toWithdrawalKeystore = await this.ks.toWithdrawalKeystore(password);
       this.keystoreJson = createBlob(toWithdrawalKeystore, 'mime');
       this.keystoreName =
         'keystore-' +
@@ -217,21 +242,41 @@ export default {
         Date.now() +
         '.json';
       this.downloadKeystore();
-      // verify keystore
-      await verifyKeystore(toWithdrawalKeystore, this.password).catch(error => {
-        Toast(error, ERROR);
+      /**
+       * Verify keystore
+       */
+      await verifyKeystore(toWithdrawalKeystore, password).catch(error => {
+        Toast(error, {}, ERROR);
       });
     },
     /**
      * Download keystore file
      */
     downloadKeystore() {
-      const link = document.createElement('a');
-      link.href = this.keystoreJson;
-      link.download = this.keystoreName;
-      link.click();
-      URL.revokeObjectURL(link.href);
+      this.link = document.createElement('a');
+      this.link.href = this.keystoreJson;
+      this.link.download = this.keystoreName;
+      this.link.click();
       this.downloadedKeystore = true;
+    },
+    /**
+     * Emits back to go to previous step
+     */
+    onBack() {
+      this.$emit('back');
+    },
+    /**
+     * Emits onContinue to go to next step
+     * if skipped @returns true means do not need to generate
+     * a new keystore
+     */
+    onContinue(skipped) {
+      this.$emit('onContinue', {
+        onStep: 2,
+        isSkipped: skipped,
+        address: this.eth2Address
+      });
+      URL.revokeObjectURL(this.link.href);
     }
   }
 };

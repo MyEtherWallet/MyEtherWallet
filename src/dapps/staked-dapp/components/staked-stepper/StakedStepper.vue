@@ -20,24 +20,27 @@
     ===================================================
     -->
       <template v-if="onStep === 2" #stepperContent2>
-        <step-two-generate :next="nextStep" @onContinue="nextStep" />
+        <step-two-generate
+          :skipped="skipped"
+          @onContinue="nextStep"
+          @back="back"
+        />
       </template>
+      <!--
+    ===================================================
+    Step 3: Upload Keystore file
+    ===================================================
+    -->
       <template v-if="onStep === 3" #stepperContent3>
-        <step-three-review
-          :details="details"
-          :next="nextStep"
-          @completed="proceed"
+        <step-three-upload
+          :skipped="skipped"
+          :address="address"
+          @onContinue="nextStep"
+          @back="back"
         />
       </template>
       <template v-if="onStep === 4" #stepperContent4>
-        <step-four-in-progress :details="details" @completed="proceed" />
-      </template>
-      <template v-if="onStep === 5" #stepperContent5>
-        <step-five-done
-          :amt="details.amount ? details.amount : 0"
-          :hash="txHash"
-          @completed="proceed"
-        />
+        <step-four-in-progress />
       </template>
     </mew-stepper>
   </div>
@@ -46,15 +49,16 @@
 <script>
 import StepOneAmount from './staked-steps/StepOneAmount';
 import StepTwoGenerate from './staked-steps/StepTwoGenerate';
-import StepThreeReview from './staked-steps/StepThreeReview';
+// import StepThreeReview from './staked-steps/StepThreeReview';
 import StepFourInProgress from './staked-steps/StepFourInProgress';
+import StepThreeUpload from './staked-steps/StepThreeUpload';
 
 export default {
   components: {
     StepOneAmount,
     StepTwoGenerate,
-    StepThreeReview,
-    StepFourInProgress
+    StepFourInProgress,
+    StepThreeUpload
   },
   props: {
     currentApr: {
@@ -83,18 +87,36 @@ export default {
           step: 4,
           name: 'Review & stake'
         }
-      ]
+      ],
+      skipped: false
     };
   },
   methods: {
     /**
-     * Sets the value and continues to next step
+     * Sets the correct values and continues to next step
      */
     nextStep(obj) {
-      if (obj.onStep === 1) {
-        this.amount = obj.value;
+      switch (obj.onStep) {
+        case 1:
+          this.amount = obj.amount;
+          break;
+        case 2:
+          this.address = obj.address;
+          this.skipped = obj.isSkipped;
+          break;
+        case 3:
+          this.address = obj.address;
+          break;
+        default:
+          break;
       }
       this.onStep += 1;
+    },
+    /**
+     * Goes back a step
+     */
+    back() {
+      this.onStep -= 1;
     }
   }
 };
