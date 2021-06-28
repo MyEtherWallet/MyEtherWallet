@@ -16,7 +16,7 @@
         </v-col>
       </v-row>
       <mew-button
-        title="Buy tokens"
+        title="Get tokens"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
         @click.native="$router.push({ name: 'AccessWallet', params: {} })"
