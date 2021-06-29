@@ -39,8 +39,13 @@
           @back="back"
         />
       </template>
+      <!--
+    ===================================================
+    Step 4: Review & Stake
+    ===================================================
+    -->
       <template v-if="onStep === 4" #stepperContent4>
-        <step-four-in-progress />
+        <step-four-review :amount="amount" :address="address" />
       </template>
     </mew-stepper>
   </div>
@@ -49,16 +54,15 @@
 <script>
 import StepOneAmount from './staked-steps/StepOneAmount';
 import StepTwoGenerate from './staked-steps/StepTwoGenerate';
-// import StepThreeReview from './staked-steps/StepThreeReview';
-import StepFourInProgress from './staked-steps/StepFourInProgress';
+import StepFourReview from './staked-steps/StepFourReview';
 import StepThreeUpload from './staked-steps/StepThreeUpload';
 
 export default {
   components: {
     StepOneAmount,
     StepTwoGenerate,
-    StepFourInProgress,
-    StepThreeUpload
+    StepThreeUpload,
+    StepFourReview
   },
   props: {
     currentApr: {
@@ -88,7 +92,8 @@ export default {
           name: 'Review & stake'
         }
       ],
-      skipped: false
+      skipped: false,
+      address: ''
     };
   },
   methods: {
@@ -121,5 +126,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="scss"></style>
