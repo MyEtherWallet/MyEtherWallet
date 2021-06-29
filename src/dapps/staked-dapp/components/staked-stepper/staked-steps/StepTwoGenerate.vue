@@ -12,6 +12,7 @@
       class="
         skip-container
         d-flex
+        flex-column flex-sm-row
         rounded
         align-center
         justify-space-between
@@ -25,20 +26,22 @@
     Already have Eth2 Address
     ===================================================
     -->
-      <span>Already have Eth2 address?</span>
-      <span
+      <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
+      <div
         class="d-flex align-center primary--text cursor-pointer"
         @click="onContinue(true)"
-        >Skip this step
+      >
+        Skip this step
         <img
           height="17"
           class="ml-2"
           src="@/assets/images/icons/button-circle-right-arrow.svg"
           alt="right arrow"
         />
-      </span>
+      </div>
     </div>
-    <div class="details-container mt-4 pa-5">
+
+    <border-block class="mt-4 pa-3 pa-sm-5">
       <!--
     ===================================================
    Eth2 Address
@@ -57,9 +60,9 @@
     -->
       <div class="mt-8">
         <div class="mew-heading-3 mb-5">1. Write down your recovery phrase</div>
-        <div class="mnemonic-container px-7 py-4">
+        <border-block class="px-3 px-sm-7 py-4">
           <mnemonic-phrase-table :data="mnemonic" />
-        </div>
+        </border-block>
       </div>
       <!--
     ===================================================
@@ -123,7 +126,7 @@
           :description="keystoreFileWarning"
         />
       </div>
-    </div>
+    </border-block>
     <!--
     ======================================================
     Back + Continue buttons
@@ -167,6 +170,7 @@
 </template>
 
 <script>
+import BorderBlock from '@/components/BorderBlock';
 import StakedCreatePasswordDialog from '../StakedCreatePasswordDialog.vue';
 import MnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -174,7 +178,7 @@ import KeyStore, { verifyKeystore } from '@myetherwallet/eth2-keystore';
 import { createBlob } from '@/modules/create-wallet/handlers/helpers';
 
 export default {
-  components: { StakedCreatePasswordDialog, MnemonicPhraseTable },
+  components: { BorderBlock, StakedCreatePasswordDialog, MnemonicPhraseTable },
   data() {
     return {
       ks: {},
@@ -283,9 +287,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.skip-container {
-  height: 50px;
-}
 .details-container {
   border: 1px solid var(--v-inputBorder-base);
 }
