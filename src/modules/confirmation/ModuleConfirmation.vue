@@ -85,7 +85,7 @@
         <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
           <confirmation-send-transaction-details
             v-if="!isSwap"
-            :to="tx.to"
+            :to="txTo"
             :network="network"
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
@@ -269,7 +269,8 @@ import {
   hexToNumberString,
   hexToNumber,
   toWei,
-  sha3
+  sha3,
+  isHex
 } from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -327,6 +328,10 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    txTo() {
+      if (!this.isBatch) return this.tx.to;
+      return this.unsignedTxArr[0].to;
+    },
     usdValue() {
       return BigNumber(this.fiatValue).toNumber();
     },
@@ -369,16 +374,31 @@ export default {
       };
     },
     gasPrice() {
-      const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
-      return fromWei(hexToNumberString(gasPrice), 'gwei');
+      if (!this.isBatch) {
+        const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
+        return fromWei(hexToNumberString(gasPrice), 'gwei');
+      }
+      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
+        console.log(currentValue);
+        return acc.plus(currentValue.gasPrice);
+      }, BigNumber(0));
+      return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {
-      const gasLimit = this.tx.gasLimit
-        ? this.tx.gasLimit
-        : this.tx.gas
-        ? this.tx.gas
-        : '0x';
-      return hexToNumberString(gasLimit);
+      if (!this.isBatch) {
+        const gasLimit = this.tx.gasLimit
+          ? this.tx.gasLimit
+          : this.tx.gas
+          ? this.tx.gas
+          : '0x';
+        return hexToNumberString(gasLimit);
+      }
+
+      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
+        console.log(currentValue);
+        return acc.plus(currentValue.gas);
+      }, BigNumber(0));
+      return hexToNumberString(batchGasPrice);
     },
     nonce() {
       return hexToNumber(this.tx.nonce);
@@ -393,12 +413,16 @@ export default {
       return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
     },
     value() {
-      const parsedValue = this.tx.value
-        ? this.tx.hasOwnProperty('toTxData')
-          ? this.tx.toTxData.amount
-          : fromWei(hexToNumberString(this.tx.value))
-        : '0x';
-      return parsedValue;
+      if (!this.isBatch) {
+        const parsedValue = this.tx.value
+          ? this.tx.hasOwnProperty('toTxData')
+            ? this.tx.toTxData.amount
+            : fromWei(hexToNumberString(this.tx.value))
+          : '0x';
+        return parsedValue;
+      }
+
+      return '0';
     },
     isSoftwareWallet() {
       return (
@@ -601,7 +625,9 @@ export default {
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
-        _tx.gasPrice = fromWei(hexToNumberString(_tx.gasPrice), 'gwei');
+        _tx.gasPrice = isHex(_tx.gasPrice)
+          ? fromWei(hexToNumberString(_tx.gasPrice), 'gwei')
+          : _tx.gasPrice;
         _tx.transactionFee = fromWei(
           BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
         );
@@ -616,11 +642,6 @@ export default {
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
-            /**
-             * keepSwap holds isSwap value
-             * before resetting and reassigns
-             * isSwap will be cleared after showSuccessModal is closed
-             */
             if (this.isSwap) {
               this.showSuccessSwap = true;
             }
@@ -633,11 +654,6 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
-      /**
-       * keepSwap holds isSwap value
-       * before resetting and reassigns
-       * isSwap will be cleared after showSuccessModal is closed
-       */
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
       if (this.isSwap) {
@@ -787,6 +803,17 @@ export default {
           ? item.gas
           : '0x';
         const gasPrice = item.gasPrice ? item.gasPrice : '0x';
+        const data = item.data
+          ? item.data
+          : item.hasOwnProperty('encodeABI')
+          ? item.encodeABI()
+          : '0x';
+        const value =
+          data !== '0x'
+            ? !this.isSwap && !this.isBatch
+              ? `${this.value} ${this.sendCurrency.symbol}`
+              : `0 ${this.network.type.currencyName}`
+            : `${this.value} ${this.sendCurrency.symbol}`;
         return [
           {
             title: 'Network',
@@ -798,20 +825,18 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from
+            value: item.from ? item.from : this.address
           },
           {
-            title: item.data !== '0x' ? 'Via Contract Address' : 'To address',
-            value: item.to
+            title:
+              data !== '0x' && !this.isBatch
+                ? 'Via Contract Address'
+                : 'To address',
+            value: item.to ? item.to : this.txTo
           },
           {
             title: 'Sending',
-            value:
-              item.data !== '0x'
-                ? !this.isSwap
-                  ? `${this.value} ${this.sendCurrency.symbol}`
-                  : `0 ${this.network.type.currencyName}`
-                : `${this.value} ${this.sendCurrency.symbol}`
+            value: value
           },
           {
             title: 'Gas Price',
@@ -831,7 +856,7 @@ export default {
           },
           {
             title: 'Data',
-            value: item.data
+            value: data
           }
         ].filter(item => {
           if (item.value !== '') return item;
