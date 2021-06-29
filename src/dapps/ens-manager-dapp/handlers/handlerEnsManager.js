@@ -68,7 +68,7 @@ export default class ENSManager {
     return this.fetchAllNames().then(names => {
       return names.map(item => {
         return new PermanentNameModule(
-          item.labelName,
+          item.name,
           this.address,
           this.network,
           this.web3,

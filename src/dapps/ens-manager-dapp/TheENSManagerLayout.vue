@@ -47,7 +47,12 @@
                 <v-col class="pl-0" cols="4">
                   <mew-button
                     :loading="loading"
-                    :disabled="!name || (name && name.length < 3) || loading"
+                    :disabled="
+                      !name ||
+                      (name && name.length < 3) ||
+                      loading ||
+                      name.split('.').length > 2
+                    "
                     :has-full-width="true"
                     btn-size="xlarge"
                     :title="$t('ens.register.name')"
@@ -315,7 +320,9 @@ export default {
       return [
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
+        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
+        this.name.split('.').length <= 2 ||
+          this.$t('ens.warning.invalid-symbol')
       ];
     },
     hasInvalidChars() {
@@ -412,7 +419,11 @@ export default {
     transfer(address) {
       this.manageDomainHandler
         .transfer(address)
-        .then(this.getDomains)
+        .then(() => {
+          setTimeout(() => {
+            this.getDomains();
+          }, 15000);
+        })
         .catch(err => {
           Toast(err, {}, ERROR);
         });
@@ -501,6 +512,11 @@ export default {
         .on('transactionHash', () => {
           Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
           this.closeRegister();
+        })
+        .on('receipt', () => {
+          setTimeout(() => {
+            this.getDomains();
+          }, 15000);
         })
         .on('error', err => {
           Toast(err, {}, ERROR);
