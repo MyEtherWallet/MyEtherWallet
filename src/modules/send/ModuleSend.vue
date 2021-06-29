@@ -243,7 +243,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
@@ -436,12 +436,13 @@ export default {
       );
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.sendTx && this.sendTx.currency) {
         return (
           this.isValidAmount &&
           this.sendTx.hasEnoughBalance() &&
           this.isValidAddress
         );
+      }
       return false;
     },
     actualGasPrice() {
@@ -515,6 +516,11 @@ export default {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
+    this.sendTx.setCurrency(this.selectedCurrency);
+    this.handleLocalGasPrice({
+      gasType: this.gasPriceType,
+      gasPrice: this.gasPrice
+    });
   },
   created() {
     this.debouncedGasLimitError = _.debounce(value => {
