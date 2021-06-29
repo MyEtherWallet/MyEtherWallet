@@ -45,7 +45,14 @@
     ===================================================
     -->
       <template v-if="onStep === 4" #stepperContent4>
-        <step-four-review :amount="amount" :address="address" />
+        <step-four-review
+          :amount="amount"
+          :eth2-address="address"
+          :start-provision="startProvision"
+          :polling-status="pollingStatus"
+          @readyToStake="readyToStake"
+          @back="back"
+        />
       </template>
     </mew-stepper>
   </div>
@@ -68,6 +75,18 @@ export default {
     currentApr: {
       type: String,
       default: ''
+    },
+    startProvision: {
+      type: Function,
+      default: () => {}
+    },
+    sendTransaction: {
+      type: Function,
+      default: () => {}
+    },
+    pollingStatus: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -122,6 +141,17 @@ export default {
      */
     back() {
       this.onStep -= 1;
+    },
+    /**
+     * Emits 'readyToStake' to trigger send transaction
+     * and reset the page
+     */
+    readyToStake() {
+      this.onStep = 1;
+      this.address = '';
+      this.amount = 0;
+      this.skipped = false;
+      this.$emit('readyToStake');
     }
   }
 };

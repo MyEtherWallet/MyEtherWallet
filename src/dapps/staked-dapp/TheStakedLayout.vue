@@ -30,33 +30,37 @@
           Current APR: <span class="primary--text">{{ currentAPR }}</span>
         </div>
       </div>
-      <div class="d-flex align-center justify-center mt-3">
-        <v-btn-toggle
-          v-model="activeTab"
-          mandatory
-          borderless
-          active-class="active-btn"
-          background-color="transparent"
+      <v-btn-toggle
+        v-model="activeTab"
+        class="d-flex align-center justify-center mt-3"
+        mandatory
+        borderless
+        active-class="expandHeader font-weight-medium"
+        background-color="transparent"
+      >
+        <v-btn
+          class="
+            px-md-9
+            white--text
+            text-transform--initial
+            font-weight-regular
+          "
+          color="titlePrimary"
         >
-          <v-btn
-            class="px-md-9 white--text text-transform--initial"
-            color="#00182c"
-          >
-            New stake
-          </v-btn>
-          <v-btn
-            class="px-md-9 white--text text-transform--initial"
-            color="#00182c"
-          >
-            <div>
-              <div class="white--text font-weight-medium">My stake</div>
-              <div class="mew-label textPrimary--text font-weight-bold">
-                32.245234 ETH
-              </div>
+          New stake
+        </v-btn>
+        <v-btn
+          class="px-md-9 white--text text-transform--initial"
+          color="titlePrimary"
+        >
+          <div>
+            <div class="white--text font-weight-regular">My stake</div>
+            <div class="mew-caption textPrimary--text font-weight-bold">
+              32.245234 ETH
             </div>
-          </v-btn>
-        </v-btn-toggle>
-      </div>
+          </div>
+        </v-btn>
+      </v-btn-toggle>
     </template>
 
     <template #HeaderRight>
@@ -84,7 +88,12 @@
         color="transparent"
         class="mx-auto"
       >
-        <staked-stepper :current-apr="currentAPR" />
+        <staked-stepper
+          :current-apr="currentAPR"
+          :start-provision="startProvision"
+          :polling-status="pollingStatus"
+          @readyToStake="sendTransaction"
+        />
       </v-sheet>
     </template>
     <!--
@@ -145,22 +154,14 @@ export default {
       activeTab: 0,
       handlerStaked: {},
       myValidators: [],
-      transactionData: {},
-      details: {},
-      apr: '',
-      eth2ContractAddress: '',
-      endpoint: '',
-      batchContract: '',
-      txHash: '',
-      resetStepper: false,
       stakedLogo: stakedLogo,
       loadingValidators: true,
       tabs: [{ name: 'stake' }, { name: 'status' }]
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapGetters('global', ['network']),
     /**
      * Total Staked
      * @returns string
@@ -174,25 +175,13 @@ export default {
      */
     currentAPR() {
       return this.handlerStaked.apr;
-    }
-  },
-  watch: {
-    resetStepper: {
-      handler: function (val) {
-        if (val === true) {
-          this.init();
-          this.previousStep = {};
-          this.$emit('resetStepperDone');
-        }
-      },
-      deep: true,
-      immediate: true
     },
-    txHash(val) {
-      console.log('txhash watcher', val); // todo remove dev item
-      if (val && val !== '') {
-        this.nextStepAction();
-      }
+    /**
+     * Gets the status after polling (happens on step4)
+     * @returns object
+     */
+    pollingStatus() {
+      return this.handlerStaked.pollingStatus;
     }
   },
   mounted() {
@@ -206,85 +195,25 @@ export default {
     );
   },
   methods: {
-    validatorsCount() {
-      return this.handlerStaked.validatorsCount();
+    /**
+     * Start provisioning
+     */
+    startProvision(params) {
+      return this.handlerStaked.startProvision(params);
     },
-    resetStepperDone() {
-      this.resetStepper = false;
-    },
-    reset() {
-      this.transactionData = {};
-      this.details = {};
-      this.apr = '';
-      this.resetStepper = true;
-      this.eth2ContractAddress = '';
-      this.endpoint = '';
-      this.batchContract = '';
-      this.handlerStaked.reset();
-    },
-    goToGenerate() {
-      this.$router.push('/generate-eth2-keystore');
-    },
-    async startProvision() {
-      await this.handlerStaked.startProvision();
-    },
-    startPolling(uuid) {
-      this.handlerStaked.startPolling(uuid);
-    },
+    /**
+     * Send transaction to confirm staking
+     */
     sendTransaction() {
+      this.activeTab = 1;
       this.handlerStaked.sendTransaction();
-    },
-    setData(data) {
-      if (this.details.hasOwnProperty(data.key)) {
-        this.details[data.key] = data.value;
-      } else {
-        this.$set(this.details, data.key, data.value);
-      }
-      // this.handlerStaked.setData(data);
-      console.log('this.details', this.details); // todo remove dev item
-    },
-    // nextStep() {
-    //   console.log('nextStep', this.currentStep.index); // todo remove dev item
-    //   if (this.currentStep.index === 2) {
-    //     console.log('startProvision'); // todo remove dev item
-    //     this.startProvision();
-    //     // this.$emit('stakeEth2');
-    //   }
-    //   if (this.currentStep.index === 3) {
-    //     console.log('sendTransaction'); // todo remove dev item
-    //     // this.$emit('sendTransaction');``
-    //     this.sendTransaction();
-    //     return;
-    //   }
-    //   if (!this.$listeners || !this.$listeners['before-next-step']) {
-    //     this.nextStepAction();
-    //   }
-    //   this.canContinue = false;
-    // },
-    backStep() {
-      const currentIndex = this.currentStep.index - 1;
-      if (currentIndex >= 0) {
-        this.activateStep(currentIndex, true);
-      }
-    },
-    proceed(canContinue, param, ethPrice) {
-      console.log('proceed', canContinue, param, ethPrice); // todo remove dev item
-      this.canContinue = canContinue;
-      this.handlerStaked.setData(param);
-      if (ethPrice) {
-        this.handlerStaked.setData({ key: 'ethPrice', value: ethPrice });
-      }
+      // .then(resp => {
+      //   console.error('resp', resp);
+      // })
+      // .catch(err => {
+      //   console.error('err', err);
+      // });
     }
   }
 };
 </script>
-
-<style scoped>
-.mew-label {
-  font-size: 12px;
-}
-
-.active-btn {
-  background-color: #003583 !important;
-}
-</style>
