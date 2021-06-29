@@ -4,11 +4,7 @@
       <mew-input
         :id="idx"
         class="mb-2"
-        :rules="[
-          v =>
-            record.validate(v) ||
-            $t('ens.text-record-error', { name: record.name })
-        ]"
+        :error-messages="errors[record.name]"
         :value="record.value"
         :label="record.name"
         :placeholder="record.name"
@@ -19,6 +15,7 @@
       <mew-button
         :title="$t('common.save')"
         btn-size="xlarge"
+        :disabled="hasError"
         @click.native="setTextRecords(setRecords)"
       />
     </div>
@@ -38,10 +35,24 @@ export default {
     }
   },
   data() {
+    const errors = {};
+    textRecords.forEach(item => {
+      errors[item.name] = '';
+    });
     return {
+      errors: errors,
       textRecords: textRecords,
       setRecords: {}
     };
+  },
+  computed: {
+    hasError() {
+      return (
+        Object.values(this.errors).filter(item => {
+          if (item !== '') return item;
+        }).length > 0
+      );
+    }
   },
   methods: {
     setRecord(value, id) {
@@ -49,6 +60,13 @@ export default {
       if (record.validate(value)) {
         record.value = value;
         this.setRecords[record.name] = record;
+      } else {
+        this.errors[this.textRecords[id].name] = this.$t(
+          'ens.text-record-error',
+          {
+            name: record.name
+          }
+        );
       }
     }
   }
