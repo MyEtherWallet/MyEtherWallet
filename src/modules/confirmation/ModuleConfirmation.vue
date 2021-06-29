@@ -158,13 +158,17 @@
                   <p class="ma-0 pl-1">
                     <span class="font-weight-bold"
                       >Transaction
-                      {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                      {{ transactions.length > 1 ? `${i + 1}` : `details` }}
                     </span>
                     <br />
+                    <span v-if="isBatch" class="ma-0 mew-label searchText--text"
+                      >{{ isSwap ? 'Swap ' : '' }} part {{ i + 1 }} -
+                      {{ dataToAction(unsignedTxArr[i]) }}</span
+                    >
                     <span
-                      v-if="isSwap && transactions.length > 1"
+                      v-else-if="dataToAction(tx) !== ''"
                       class="ma-0 mew-label searchText--text"
-                      >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
+                      >{{ dataToAction(tx) }}</span
                     >
                   </p>
                   <v-spacer />
@@ -279,8 +283,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/utils';
-
-const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
+import dataToAction from './handlers/dataToAction';
 
 export default {
   name: 'ModuleConfirmation',
@@ -343,16 +346,6 @@ export default {
         (this.isHardware || this.isWeb3Wallet) &&
         (this.signing || this.signingPending)
       );
-    },
-    swapLabel() {
-      switch (this.transactions.length) {
-        case 1:
-          return SWAP_LABELS.slice(2);
-        case 2:
-          return SWAP_LABELS.slice(1);
-        default:
-          return SWAP_LABELS;
-      }
     },
     transactions() {
       const newArr =
@@ -574,6 +567,9 @@ export default {
     });
   },
   methods: {
+    dataToAction(data) {
+      return dataToAction(data);
+    },
     /**
      * Methods scrolls to an element if element is open on click.
      * Has To be a timeoute, on order to wait for the element to be open
