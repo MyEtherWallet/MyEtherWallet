@@ -34,7 +34,7 @@
               {{ addrlastFour }}
             </div>
           </template>
-          <span class="titlePrimary--text">{{ address }}</span>
+          <span class="titlePrimary--text">{{ getChecksumAddressString }}</span>
         </v-tooltip>
         <!--
         =====================================================================================
@@ -57,15 +57,36 @@
           <span class="titlePrimary--text">Print account info</span>
         </v-tooltip>
       </div>
-      <div class="mew-subtitle text-shadow white--text mt-5 mb-4 ml-n5">
-        <span style="padding-right: 2px">$</span>{{ totalWalletBalance }}
+      <!--
+      =====================================================================================
+        Total Wallet FIAT balance OR if Test network Chain Balance
+      =====================================================================================
+      -->
+      <div
+        :class="[
+          { 'ml-n5': !isTestNetwork },
+          'mew-subtitle text-shadow white--text mt-5 mb-4'
+        ]"
+      >
+        <span v-if="!isTestNetwork" style="padding-right: 2px">$</span
+        >{{ totalWalletBalance }}
       </div>
       <div class="d-flex justify-space-between align-center">
         <div class="justify-start">
-          <div class="info-container--text-chain-balance">
+          <!--
+          =====================================================================================
+            Total Wallet chain balance: prensent if not Test network
+          =====================================================================================
+          -->
+          <div v-if="!isTestNetwork" class="info-container--text-chain-balance">
             {{ walletChainBalance }}
           </div>
-          <div class="info-container--text">
+          <!--
+          =====================================================================================
+            Total Tokens: present if tokens found
+          =====================================================================================
+          -->
+          <div v-if="nonChainTokensCount > 0" class="info-container--text">
             and {{ nonChainTokensCount }} Tokens
           </div>
         </div>
@@ -167,7 +188,7 @@ export default {
       'balanceFiatValue',
       'totalTokenFiatValue'
     ]),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
     },
@@ -176,7 +197,7 @@ export default {
       return this.totalTokenFiatValue;
     },
     totalWalletBalance() {
-      if (this.fiatValue != 0) {
+      if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
         return formatFiatValue(total).value;
       }
@@ -187,24 +208,33 @@ export default {
         this.network.type.currencyName
       }`;
     },
+    /**
+     * @returns {string} first 6 letters in the address
+     */
     addrFirstSix() {
       return this.address.substring(0, 6);
     },
+    /**
+     * @returns {string} lat 4 letters in the address
+     */
     addrlastFour() {
       return this.address.substring(
         this.address.length - 4,
         this.address.length
       );
     },
+    /**
+     * @returns {number} count of non chain tokens
+     */
     nonChainTokensCount() {
-      return 8;
+      return this.tokensList.length - 1;
     },
     /**
      * NOTE: implemnt this once we have support on different languages
      * Margin exhist if symbol is displayed on the right
      */
     hasMargin() {
-      return true;
+      return !this.isTestNetwork;
     }
   },
   methods: {
