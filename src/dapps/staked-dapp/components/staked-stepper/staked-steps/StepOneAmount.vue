@@ -14,91 +14,95 @@
       Select ETH amount to stake
     </div>
 
-    <mew-select
-      v-model="selectedItem"
-      label="Staking amount"
-      :items="selectItems"
-      is-swap
-      outlined
-      @input="setAmount"
-    />
+    <border-block class="pt-9 pb-0 px-3 px-sm-5">
+      <mew-select
+        v-model="selectedItem"
+        label="Staking amount"
+        :items="selectItems"
+        is-swap
+        outlined
+        @input="setAmount"
+      />
 
-    <!--
+      <!--
     ===================================================
     Staking APR and fee
     ===================================================
     -->
-    <div class="mb-15">
-      <v-row>
-        <v-col
-          cols="12"
-          md="6"
-          class="py-1 text-uppercase captionPrimary--text font-weight-bold"
-        >
-          Current APR
-        </v-col>
-        <v-col cols="12" md="6" class="py-1 text-right primary--text">
-          {{ currentApr }}
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          cols="12"
-          md="6"
-          class="
-            py-1
-            text-uppercase
-            captionPrimary--text
-            font-weight-bold
-            d-flex
-            align-center
-          "
-        >
-          Staking Fee
-          <mew-tooltip class="ml-1" :text="toolTipFee" />
-        </v-col>
-        <v-col cols="12" md="6" class="py-1 text-right">
-          0.72% <span class="textSecondary--text">0.3 ETH min</span>
-        </v-col>
-      </v-row>
-    </div>
-
-    <!--
-    ===================================================
-    Deposit value growth forecast
-    ===================================================
-    -->
-    <div>
-      <div class="mew-heading-3 mb-8">Deposit value growth forecast</div>
-
-      <div
-        v-for="(forecast, idx) in depositForecast"
-        :key="forecast + idx"
-        class="mb-6"
-      >
+      <div>
         <v-row>
-          <v-col cols="12" md="6" class="py-1">{{ forecast.duration }}</v-col>
-          <v-col cols="12" md="6" class="py-1 text-right textSecondary--text">
-            {{ forecast.balanceUSD }}
+          <v-col
+            cols="6"
+            md="6"
+            class="py-1 text-uppercase captionPrimary--text font-weight-bold"
+          >
+            Current APR
+          </v-col>
+          <v-col cols="6" md="6" class="py-1 text-right primary--text">
+            {{ currentApr }}
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" md="6" class="py-1 primary--text">{{
-            forecast.earningsETH
-          }}</v-col>
-          <v-col cols="12" md="6" class="py-1 text-right">{{
-            forecast.balanceETH
-          }}</v-col>
+          <v-col
+            cols="6"
+            md="6"
+            class="
+              py-1
+              text-uppercase
+              captionPrimary--text
+              font-weight-bold
+              d-flex
+              align-center
+            "
+          >
+            Staking Fee
+            <mew-tooltip class="ml-1" :text="toolTipFee" />
+          </v-col>
+          <v-col cols="6" md="6" class="py-1 text-right">
+            0.72% <span class="textSecondary--text">0.3 ETH min</span>
+          </v-col>
         </v-row>
       </div>
-    </div>
+
+      <v-divider class="inputBorder my-6" />
+
+      <!--
+      ===================================================
+      Deposit value growth forecast
+      ===================================================
+      -->
+      <div>
+        <div class="mew-heading-3 mb-8">Deposit value growth forecast</div>
+
+        <div
+          v-for="(forecast, idx) in depositForecast"
+          :key="forecast + idx"
+          class="mb-6"
+        >
+          <v-row>
+            <v-col cols="6" md="6" class="py-1">{{ forecast.duration }}</v-col>
+            <v-col cols="6" md="6" class="py-1 text-right textSecondary--text">
+              {{ forecast.balanceUSD }}
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6" md="6" class="py-1 primary--text">{{
+              forecast.earningsETH
+            }}</v-col>
+            <v-col cols="6" md="6" class="py-1 text-right">{{
+              forecast.balanceETH
+            }}</v-col>
+          </v-row>
+        </div>
+      </div>
+    </border-block>
 
     <!--
     ===================================================
     User information
     ===================================================
     -->
-    <div class="tableHeader px-12 py-8 mt-15 border-radius--10px">
+    <div class="tableHeader px-6 px-sm-12 py-8 mt-2 border-radius--10px">
       <ul class="user-info">
         <li>Your ETH is staked with our partner Staked.us</li>
         <li>Staked.us will create and maintain Eth2 validators for you</li>
@@ -115,7 +119,7 @@
     ===================================================
     -->
     <mew-button
-      class="mx-auto d-block mt-10"
+      class="mx-auto d-block mt-9"
       :loading="false"
       :has-full-width="false"
       btn-size="xlarge"
@@ -126,6 +130,7 @@
 </template>
 
 <script>
+import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
 import eth from '@/assets/images/currencies/eth.png';
@@ -133,6 +138,7 @@ import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 // TODO: need to add rules on component side for mew select, add :disabled="!hasEnoughBalance" to mew button and
 // get the deposit rates
 export default {
+  components: { BorderBlock },
   props: {
     currentApr: {
       type: String,
