@@ -96,7 +96,7 @@
       </div>
     </div>
     <!--    {{validators}}-->
-    <exited-popup ref="exitedPopup" />
+    <!-- <exited-popup ref="exitedPopup" /> -->
   </div>
 </template>
 
@@ -105,12 +105,12 @@ import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters } from 'vuex';
-import exitedPopup from '../ExitedPopup/ExitedPopup';
+// import exitedPopup from '../ExitedPopup/ExitedPopup';
 
 const types = ['pending', 'deposited', 'active', 'created', 'exited'];
 export default {
   components: {
-    exitedPopup
+    // exitedPopup
   },
   props: {
     validators: {

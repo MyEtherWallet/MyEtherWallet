@@ -30,39 +30,48 @@
           Current APR: <span class="primary--text">{{ currentAPR }}</span>
         </div>
       </div>
+      <!--
+    ===================================================
+    Menu tabs
+    ===================================================
+    -->
       <v-btn-toggle
         v-model="activeTab"
-        class="d-flex align-center justify-center mt-3"
+        class="d-flex align-center justify-center mt-3 white--text"
         mandatory
         borderless
         active-class="expandHeader font-weight-medium"
         background-color="transparent"
       >
         <v-btn
-          class="
-            px-md-9
-            white--text
-            text-transform--initial
-            font-weight-regular
-          "
+          class="px-md-9 white--text text-transform--initial"
           color="titlePrimary"
         >
           New stake
         </v-btn>
         <v-btn
-          class="px-md-9 white--text text-transform--initial"
+          class="
+            px-md-9
+            white--text
+            text-transform--initial
+            d-flex
+            flex-column
+            align-center
+          "
           color="titlePrimary"
         >
           <div>
-            <div class="white--text font-weight-regular">My stake</div>
-            <div class="mew-caption textPrimary--text font-weight-bold">
-              32.245234 ETH
-            </div>
+            <div class="white--text">My stake</div>
+            <div class="mew-caption tagLabel--text">32.245234 ETH</div>
           </div>
         </v-btn>
       </v-btn-toggle>
     </template>
-
+    <!--
+    ===================================================
+    Info Link
+    ===================================================
+    -->
     <template #HeaderRight>
       <div class="text-right">
         <a
@@ -108,19 +117,10 @@
         color="transparent"
         class="py-15 mx-auto"
       >
-        <div class="mb-5">
-          <div class="mew-heading-2 mb-8 ml-2">
-            {{ $t('ens.search-domain') }}
-          </div>
-          <v-row class="mx-0">
-            <v-col class="pr-0" cols="12">
-              <status
-                :validators="myValidators"
-                :loading="loadingValidators"
-              ></status>
-            </v-col>
-          </v-row>
-        </div>
+        <status
+          :validators="myValidators"
+          :loading="loadingValidators"
+        ></status>
       </v-sheet>
     </template>
   </the-wrapper-dapp>

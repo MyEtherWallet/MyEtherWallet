@@ -181,11 +181,11 @@ export default class Staked {
     this.web3.eth
       .sendTransaction(this.transactionData)
       .on('transactionHash', res => {
-        console.error('res', res)
+        console.error('res', res);
         this.txHash = res;
       })
       .catch(err => {
-        console.error("err", err)
+        console.error('err', err);
       });
   }
 }
