@@ -379,7 +379,6 @@ export default {
         return fromWei(hexToNumberString(gasPrice), 'gwei');
       }
       const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        console.log(currentValue);
         return acc.plus(currentValue.gasPrice);
       }, BigNumber(0));
       return fromWei(hexToNumberString(batchGasPrice), 'gwei');
@@ -395,7 +394,6 @@ export default {
       }
 
       const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        console.log(currentValue);
         return acc.plus(currentValue.gas);
       }, BigNumber(0));
       return hexToNumberString(batchGasPrice);
