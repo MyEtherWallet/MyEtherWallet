@@ -53,10 +53,18 @@
         class="d-flex align-center justify-space-between"
       >
         <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
-        <div>{{ fee.value }}</div>
+        <div>
+          {{ fee.ethValue }} <span class="captionPrimary--text">ETH /</span>
+          {{ fee.usdValue }}
+        </div>
       </div>
     </div>
-    <div class="mt-12 tableHeader">
+    <!--
+    ===================================================
+    Terms & Conditions
+    ===================================================
+    -->
+    <div class="mt-12 pa-5 tableHeader">
       <mew-checkbox
         label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
       ></mew-checkbox>
@@ -67,36 +75,55 @@
         label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
       ></mew-checkbox>
     </div>
-
-    <phrase-block class="mt-10 text-center">
+    <div class="stake-container mt-10 text-center rounded-lg py-6 px-12">
+      <!--
+    ===================================================
+    Prepare to stake (Step 1)
+    ===================================================
+    -->
       <div>
-        We will prepare validators for you. After that you can confirm and stale
-        your ETH.
+        <div class="textBlack2--text">
+          We will prepare validators for you. After that you can confirm and
+          stake your ETH.
+        </div>
+        <mew-button
+          btn-size="xlarge"
+          class="mt-3"
+          title="Prepare for staking"
+        ></mew-button>
       </div>
-      <mew-button
-        btn-size="xlarge"
-        class="mt-3"
-        title="Prepare for staking"
-      ></mew-button>
-    </phrase-block>
-
-    <phrase-block class="mt-10 text-center">
-      <div>Preparing validators</div>
-      <div>
-        This usually takes ~20 seconds, in rare cases it can take up to 10 min.
+      <!--
+    ===================================================
+    Preparing validators (Step 2)
+    ===================================================
+    -->
+      <div v-if="false">
+        <div>Preparing validators</div>
+        <div>
+          This usually takes ~20 seconds, in rare cases it can take up to 10
+          min.
+        </div>
+        <v-progress-linear
+          class="mt-4"
+          indeterminate
+          color="primary"
+        ></v-progress-linear>
       </div>
-      <v-progress-linear
-        class="mt-4"
-        indeterminate
-        color="primary"
-      ></v-progress-linear>
-    </phrase-block>
-
-    <phrase-block class="mt-10 text-center mew-heading-4">
-      <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
-      Ready to stake
-    </phrase-block>
-
+      <!--
+    ===================================================
+    Ready to stake (Step 3)
+    ===================================================
+    -->
+      <div v-if="false">
+        <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
+        Ready to stake
+      </div>
+    </div>
+    <!--
+    ===================================================
+    Back & Stake buttons
+    ===================================================
+    -->
     <div
       class="
         mt-10
@@ -124,7 +151,6 @@
 </template>
 
 <script>
-import PhraseBlock from '@/components/PhraseBlock';
 import BigNumber from 'bignumber.js';
 // import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
@@ -133,7 +159,6 @@ import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
-  components: { PhraseBlock },
   props: {
     amount: {
       type: Number,
@@ -186,9 +211,9 @@ export default {
      */
     fees() {
       return [
-        { title: 'Network fee', value: '0.013234 ETH / $93.12' },
-        { title: 'Service fee', value: '0.013234 ETH / $93.12' },
-        { title: 'Total', value: '0.013234 ETH / $93.12' }
+        { title: 'Network fee', ethValue: '0.013234', usdValue: '$93.12' },
+        { title: 'Service fee', ethValue: '0.013234', usdValue: '$93.12' },
+        { title: 'Total', ethValue: '0.013234', usdValue: '$93.12' }
       ];
     },
     // getTotal() {
@@ -306,5 +331,8 @@ export default {
 }
 .detail-title {
   font-weight: 600;
+}
+.stake-container {
+  border: 1px solid var(--v-inputBorder-base);
 }
 </style>
