@@ -285,16 +285,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.details-container {
-  border: 1px solid var(--v-inputBorder-base);
-}
-.mnemonic-container {
-  border: 1px solid var(--v-inputBorder-base);
-  border-radius: 6px;
-}
-.terms-container {
-  border-radius: 6px;
-}
-</style>

@@ -1,10 +1,10 @@
 <template>
   <!--
-    =====================================================================================
-      DAPP WRAPPER:
-    =====================================================================================
-    -->
-  <mew6-white-sheet>
+  =====================================================================================
+    DAPP WRAPPER:
+  =====================================================================================
+  -->
+  <mew6-white-sheet class="core--components--the-wrapper-dapp">
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
@@ -13,10 +13,28 @@
     =====================================================================================
     -->
     <mew-banner
+      v-if="false"
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
       @closeBanner="onClose"
     />
+
+    <block-header
+      :text-obj="bannerTextObj"
+      :banner-img="bannerImg"
+      :title-icon="titleIcon"
+      :no-back-btn="noBackBtn"
+      :top-strip="topStrip"
+      @closeBanner="onClose"
+    >
+      <template #body>
+        <slot name="HeaderBody" />
+      </template>
+      <template #right>
+        <slot name="HeaderRight" />
+      </template>
+    </block-header>
+
     <!--
     =====================================================================================
       Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
@@ -39,6 +57,7 @@
         <slot :name="'tabContent' + (idx + 1)" />
       </template>
     </mew-tabs>
+
     <!--
     =====================================================================================
      Slot: content, used to place body content if not using tabs.
@@ -52,8 +71,10 @@
 
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import BlockHeader from '@/core/components/AppBlockHeader';
 
 export default {
+  components: { BlockHeader },
   props: {
     hasExitBtn: {
       default: false,
@@ -74,6 +95,18 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    },
+    titleIcon: {
+      default: '',
+      type: String
+    },
+    noBackBtn: {
+      default: false,
+      type: Boolean
+    },
+    topStrip: {
+      default: false,
+      type: Boolean
     },
     onTab: {
       default: () => {},
@@ -100,3 +133,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.core--components--the-wrapper-dapp {
+  .v-tabs {
+    display: none;
+  }
+}
+</style>
