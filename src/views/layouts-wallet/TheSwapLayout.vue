@@ -10,7 +10,7 @@
     <template #rightColItem1>
       <module-tokens-value />
     </template>
-    <template #rightColItem2>
+    <template v-if="hasHistory" #rightColItem2>
       <module-transfer-history :is-swap="true" />
     </template>
   </the-wrapper-wallet>
@@ -21,6 +21,8 @@ import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import ModuleSwap from '@/modules/swap/ModuleSwap';
 import ModuleTokensValue from '@/modules/balance/ModuleTokensValue';
 import ModuleTransferHistory from '@/modules/transfer-history/ModuleTransferHistory';
+import { mapGetters } from 'vuex';
+
 const ETH_TOKEN = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const DAI_TOKEN = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
@@ -43,6 +45,12 @@ export default {
     amount: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    ...mapGetters('notifications', ['swapNotifications']),
+    hasHistory() {
+      return this.swapNotifications && this.swapNotifications.length > 0;
     }
   }
 };
