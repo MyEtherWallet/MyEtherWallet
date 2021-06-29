@@ -1,9 +1,5 @@
 <template>
-  <v-sheet
-    class="mew-component--mnemonic-phrase"
-    max-width="800px"
-    color="transparent"
-  >
+  <div class="mew-component--create--mnemonic-phrase" style="max-width: 800px">
     <mew-stepper class="mx-md-0" :items="steppers" :on-step="step">
       <!--
       =====================================================================================
@@ -11,7 +7,7 @@
       =====================================================================================
       -->
       <template v-if="step === 1" #stepperContent1>
-        <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+        <mew6-white-sheet class="pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
           <div class="headline font-weight-bold mb-5">
             Write down these words
@@ -23,8 +19,15 @@
           -->
           <div class="d-flex align-center justify-end pb-4">
             <div
-              class="primary--text cursor--pointer d-flex align-center mr-4"
-              @click.native="setPhrase"
+              class="
+                primary--text
+                cursor--pointer
+                d-flex
+                align-center
+                mr-2
+                pa-2
+              "
+              @click="setPhrase"
             >
               <v-icon small color="primary" class="mr-1">mdi-sync</v-icon>
               <div class="font-weight-medium">Update</div>
@@ -87,9 +90,9 @@
               @click.native="updateStep(2)"
             />
           </div>
-        </v-sheet>
+        </mew6-white-sheet>
         <mew-warning-sheet
-          class="mt-4 mb-0"
+          class="mt-5 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -100,7 +103,7 @@
       =====================================================================================
       -->
       <template v-if="step === 2" #stepperContent2>
-        <v-sheet color="white" class="border-radius--10px pa-4 pa-sm-12">
+        <mew6-white-sheet class="pa-4 pa-sm-12">
           <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
           <div class="headline font-weight-bold">Verification</div>
           <div class="mb-5">
@@ -172,9 +175,9 @@
               @click.native="verify"
             />
           </div>
-        </v-sheet>
+        </mew6-white-sheet>
         <mew-warning-sheet
-          class="mt-4 mb-0"
+          class="mt-5 mb-0"
           title="NOT RECOMMENDED"
           description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
         />
@@ -185,11 +188,7 @@
       =====================================================================================
       -->
       <template v-if="step === 3" #stepperContent3>
-        <v-sheet
-          v-if="step === 3"
-          color="white"
-          class="border-radius--10px pa-4 pa-sm-12"
-        >
+        <mew6-white-sheet v-if="step === 3" class="pa-4 pa-sm-12">
           <div class="d-flex align-center">
             <div>
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
@@ -226,10 +225,10 @@
               src="@/assets/images/icons/icon-keystore-mew.png"
             />
           </div>
-        </v-sheet>
+        </mew6-white-sheet>
       </template>
     </mew-stepper>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -389,8 +388,14 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.mew-component--create--mnemonic-phrase .v-input--radio-group__input {
+  flex-wrap: nowrap !important;
+}
+</style>
+
 <style lang="scss" scoped>
-.mew-component--mnemonic-phrase .mew-stepper.v-stepper {
+.mew-component--create--mnemonic-phrase .mew-stepper.v-stepper {
   background: transparent !important;
 }
 
