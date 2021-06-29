@@ -66,12 +66,15 @@
     -->
     <div class="mt-12 pa-5 tableHeader">
       <mew-checkbox
+        v-model="firstCondition"
         label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
       ></mew-checkbox>
       <mew-checkbox
+        v-model="secondCondition"
         label="I understand that staking involves slashing risks and my funds can be lost."
       ></mew-checkbox>
       <mew-checkbox
+        v-model="thirdCondition"
         label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
       ></mew-checkbox>
     </div>
@@ -81,15 +84,24 @@
     Prepare to stake (Step 1)
     ===================================================
     -->
-      <div>
+      <div v-if="stakedStep === 1">
         <div class="textBlack2--text">
-          We will prepare validators for you. After that you can confirm and
-          stake your ETH.
+          {{ stakedStep1Title.message }}
+          <a
+            v-if="stakedStep1Title.showContactSupport"
+            class="cursor-pointer primary--text text-lowercase"
+            href="mailto:support@myetherwallet.com"
+            target="_blank"
+          >
+            {{ $t('common.contact-support') }} </a
+          >.
         </div>
         <mew-button
           btn-size="xlarge"
           class="mt-3"
           title="Prepare for staking"
+          :disabled="!firstCondition || !secondCondition || !thirdCondition"
+          @click.native="prepareToStake"
         ></mew-button>
       </div>
       <!--
@@ -97,9 +109,9 @@
     Preparing validators (Step 2)
     ===================================================
     -->
-      <div v-if="false">
-        <div>Preparing validators</div>
-        <div>
+      <div v-if="stakedStep === 2">
+        <div class="mew-heading-4 font-weight-medium">Preparing validators</div>
+        <div class="textBlack2--text">
           This usually takes ~20 seconds, in rare cases it can take up to 10
           min.
         </div>
@@ -114,7 +126,7 @@
     Ready to stake (Step 3)
     ===================================================
     -->
-      <div v-if="false">
+      <div v-if="stakedStep === 3">
         <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
         Ready to stake
       </div>
@@ -138,12 +150,14 @@
         class="d-block ma-2"
         title="Back"
         btn-style="outline"
+        @click.native="onBack"
       />
       <mew-button
         btn-size="xlarge"
         class="d-block ma-2"
         title="Stake 32 ETH"
-        @click.native="isOpenVerify = true"
+        :disabled="!readyToStake"
+        @click.native="onReadyToStake"
       >
       </mew-button>
     </div>
@@ -152,11 +166,15 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-// import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
+import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
 import eth from '@/assets/images/currencies/eth.png';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatBalanceEthValue
+} from '@/core/helpers/numberFormatHelper';
+import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 
 export default {
   props: {
@@ -164,24 +182,38 @@ export default {
       type: Number,
       default: 0
     },
-    address: {
+    eth2Address: {
       type: String,
       default: ''
+    },
+    startProvision: {
+      type: Function,
+      default: () => {}
+    },
+    pollingStatus: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
-      isOpenVerify: false,
-      oneTimeFee: '',
-      agreed: false,
-      agreedBeaconChain: false,
-      agreedFundsLost: false
+      firstCondition: false,
+      secondCondition: false,
+      thirdCondition: false,
+      readyToStake: false,
+      serviceFees: {},
+      stakedStep: 1,
+      stakedStep1Title: {
+        message:
+          'We will prepare validators for you. After that you can confirm and stake your ETH'
+      }
     };
   },
   computed: {
-    ...mapGetters('external', ['networkTokenUSDMarket']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
+    ...mapGetters('global', ['gasPrice']),
     /**
      * @returns array
      * Staking details to display (including amount and eth2 address)
@@ -193,130 +225,142 @@ export default {
           subtitle: 'Staking',
           title: this.amount + ' ETH',
           desc: formatFiatValue(
-            new BigNumber(this.amount).times(this.networkTokenUSDMarket.value)
+            new BigNumber(this.amount).times(this.fiatValue)
           ).value
         },
         {
           img: iconColorfulETH,
           subtitle: 'Your Withdrawal Address',
           title: 'Ethereum 2.0',
-          desc: this.address,
+          desc: this.eth2Address,
           isAddress: true
         }
       ];
     },
     /**
      * @returns array
-     * Includes network and service fees + total
+     * Includes network, service fees, total
      */
     fees() {
       return [
-        { title: 'Network fee', ethValue: '0.013234', usdValue: '$93.12' },
-        { title: 'Service fee', ethValue: '0.013234', usdValue: '$93.12' },
-        { title: 'Total', ethValue: '0.013234', usdValue: '$93.12' }
+        {
+          title: 'Network fee',
+          ethValue: this.networkFees.eth,
+          usdValue: '$' + this.networkFees.usd
+        },
+        {
+          title: 'Service fee',
+          ethValue: this.serviceFees.eth,
+          usdValue: this.serviceFees.usd
+        },
+        {
+          title: 'Total',
+          ethValue: this.totalFees.eth,
+          usdValue: this.totalFees.usd
+        }
       ];
     },
-    // getTotal() {
-    //   return new BigNumber(this.oneTimeFee)
-    //     .plus(this.details.amount)
-    //     .toFixed(4);
-    // },
-    // validatorPl() {
-    //   const isPlural = this.details.amount / 32 > 1 ? 2 : 1;
-    //   return this.$tc('dappsStaked.validator', isPlural);
-    // },
-    emitWhenAllIsValid() {
-      if (this.agreed && this.agreedBeaconChain && this.agreedBeaconChain) {
-        this.$emit('completed', true, {
-          key: 'review',
-          value: true
-        });
-        return false;
+    /**
+     * @returns object
+     * Network fees in ETH and usd
+     */
+    networkFees() {
+      const gasPriceETH = formatBalanceEthValue(this.gasPrice).value;
+      return {
+        eth: gasPriceETH,
+        usd: formatFiatValue(BigNumber(this.fiatValue).times(gasPriceETH)).value
+      };
+    },
+    /**
+     * @returns object
+     * Total fees in ETH and usd
+     */
+    totalFees() {
+      const totalETH = new BigNumber(this.networkFees.eth)
+        .plus(this.serviceFees.eth)
+        .toFixed();
+      return {
+        eth: totalETH,
+        usd: new BigNumber(this.fiatValue).times(totalETH).toFixed()
+      };
+    },
+    /**
+     * @returns how many validators are needed to stake x amount of eth
+     */
+    validatorsCount() {
+      if (this.amount) {
+        return new BigNumber(this.amount).dividedBy(32).toFixed();
       }
-      return true;
+      return 0;
+    }
+  },
+  watch: {
+    /**
+     * Watches the status of polling
+     * if successful -> then its ready to stake
+     * else will error out
+     */
+    pollingStatus(newVal) {
+      if (newVal.success) {
+        this.stakedStep += 1;
+        this.readyToStake = true;
+      } else {
+        this.stakedStep -= 1;
+        if (newVal.error.status === 406) {
+          this.stakedStep1Title = {
+            message:
+              'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds'
+          };
+        } else {
+          this.stakedStep1Title = {
+            message:
+              'Something went wrong. Please try again in a few minutes. If the problem persists,',
+            showContactSupport: true
+          };
+        }
+      }
     }
   },
   mounted() {
-    console.error('asdfasdf', this.detailsText);
-    /*
-    this.getFees();
-    // "multiwatch" watcher
-    this.$watch(
-      () => {
-        // returns the value to callback when this changes
-        return this.agreed && this.agreedBeaconChain && this.agreedFundsLost;
-      },
-      function (val) {
-        if (val) {
-          this.$emit('completed', true, {
-            key: 'review',
-            value: true
-          });
-        } else {
-          this.$emit('completed', false, {
-            key: 'review',
-            value: false
-          });
-        }
-      },
-      {
-        immediate: true
-      }
-    );
-    */
+    this.getServiceFees();
   },
   methods: {
-    // async getFees() {
-    //   const batchContract =
-    //     configNetworkTypes.network[this.network.type.name].batchContract;
-    //   const abi = [
-    //     {
-    //       inputs: [
-    //         {
-    //           internalType: 'uint256',
-    //           name: 'numValidators',
-    //           type: 'uint256'
-    //         }
-    //       ],
-    //       name: 'getFees',
-    //       outputs: [
-    //         {
-    //           internalType: 'uint256',
-    //           name: '',
-    //           type: 'uint256'
-    //         }
-    //       ],
-    //       stateMutability: 'view',
-    //       type: 'function'
-    //     }
-    //   ];
-    //   const contract = new this.web3.eth.Contract(abi, batchContract);
-    //   const fees = await contract.methods
-    //     .getFees(this.details.amount / 32)
-    //     .call();
-    //   this.oneTimeFee = this.web3.utils.fromWei(
-    //     new BigNumber(fees).toString(),
-    //     'ether'
-    //   );
-    // },
-    // usdPrice(amount) {
-    //   if (this.details.ethPrice) {
-    //     return new BigNumber(this.details.ethPrice).times(amount);
-    //   }
-    //   return 0;
-    // },
-    agree() {
-      this.agreed = !this.agreed;
+    /**
+     * @returns object
+     * Gets service fees (calls contract and abi to get exact fee)
+     */
+    async getServiceFees() {
+      const batchContract =
+        configNetworkTypes.network[this.network.type.name].batchContract;
+      const contract = new this.web3.eth.Contract(ABI_GET_FEES, batchContract);
+      const feesWEI = await contract.methods.getFees(this.amount / 32).call();
+      const feesETH = formatBalanceEthValue(feesWEI).value;
+      this.serviceFees = {
+        eth: feesETH,
+        usd: formatFiatValue(BigNumber(this.fiatValue).times(feesETH)).value
+      };
     },
-    agreeBeaconChain() {
-      this.agreedBeaconChain = !this.agreedBeaconChain;
+    /**
+     * Emits back to go to previous step
+     */
+    onBack() {
+      this.$emit('back');
     },
-    agreeFundsLost() {
-      this.agreedFundsLost = !this.agreedFundsLost;
+    /**
+     * Start provisioning and polling (step 1: prepare to stake)
+     */
+    prepareToStake() {
+      this.stakedStep += 1;
+      this.startProvision({
+        eth2Address: this.eth2Address,
+        count: this.validatorsCount
+      });
     },
-    doNext() {
-      console.log('do next'); // todo remove dev item
-      this.next();
+    /**
+     * Sends the transaction to confirm eth stake
+     */
+    onReadyToStake() {
+      this.$emit('readyToStake');
     }
   }
 };

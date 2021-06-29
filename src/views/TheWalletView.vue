@@ -89,12 +89,6 @@ export default {
         }
       });
     },
-    getTokenInfoByAddress(address) {
-      for (const t of this.network.type.tokens) {
-        if (t.address.toLowerCase() === address.toLowerCase()) return t;
-      }
-      return null;
-    },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
         if (this.gasPriceType === gasPriceTypes.STORED) {

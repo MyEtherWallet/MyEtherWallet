@@ -7,17 +7,30 @@ const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
 const Toast = (text, link, type, duration) => {
-  const acceptableTypes = ['success', 'error', 'warning', 'info', 'sentry'];
+  const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
   if (!type && !acceptableTypes.includes(type)) {
-    throw new Error(
-      "Provided type is empty or not valid. Please provide one of the following as type: 'success', 'error', 'warning', 'sentry'"
+    EventBus.$emit(
+      ToastEvents[type],
+      'Provided type is empty or not valid. Please provide one of the following as type: ' +
+        acceptableTypes.join(','),
+      link,
+      duration
     );
+    return;
   }
-  if (!text || text === '') throw new Error('Please provide text to display!');
-  if (
-    type === 'sentry' ||
-    (typeof text === 'object' && text instanceof Error)
-  ) {
+  if (text instanceof Error) {
+    text = text.message;
+  }
+  if (!text || text === '') {
+    EventBus.$emit(
+      ToastEvents[type],
+      'Please provide text to display!',
+      link,
+      duration
+    );
+    return;
+  }
+  if (type === SENTRY) {
     Sentry.captureException(text);
     return;
   }
