@@ -95,11 +95,6 @@ export default {
       top: undefined,
       tools: [
         {
-          label: 'MEW web',
-          img: require('@/assets/images/icons/icon-mew-logo.png'),
-          link: 'https://www.myetherwallet.com/'
-        },
-        {
           label: 'MEW wallet app',
           img: require('@/assets/images/icons/icon-mew-wallet.png'),
           link: 'https://www.mewwallet.com/'
@@ -108,11 +103,6 @@ export default {
           label: 'EthVM',
           img: require('@/assets/images/icons/icon-ethvm.png'),
           link: 'https://www.ethvm.com/'
-        },
-        {
-          label: 'MEW CX',
-          img: require('@/assets/images/icons/icon-mew-cx.png'),
-          link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
         },
         {
           label: 'MEWtopia',
