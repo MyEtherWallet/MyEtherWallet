@@ -279,7 +279,6 @@ import {
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
-import parseTokenData from '@/core/helpers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
@@ -486,7 +485,8 @@ export default {
      * arr[2] is the selected currency
      */
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
-      this.parseRawData(tx[0]);
+      tx[0].type = 'OUT';
+      tx[0].network = this.network.type.name;
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
       _self.resolver = resolver;
@@ -608,23 +608,6 @@ export default {
         ethvm: ''
       };
       this.error = '';
-    },
-    parseRawData(tx) {
-      let tokenData = '';
-      if (tx.to && tx.data && tx.data !== '0x') {
-        tokenData = parseTokenData(tx.data, tx.to);
-        tx.fromTxData = {
-          currency: this.network.type.currencyName,
-          amount: tx.amount
-        };
-        tx.toTxData = {
-          currency: tokenData.tokenSymbol,
-          amount: tokenData.tokenTransferVal,
-          to: tokenData.tokenTransferTo
-        };
-      }
-      tx.type = 'OUT';
-      tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
       const web3 = this.web3;
