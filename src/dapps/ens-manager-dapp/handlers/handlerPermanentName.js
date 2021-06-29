@@ -32,11 +32,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   transfer(toAddress) {
-    return this.setController(toAddress).then(() => {
-      return this.registrarContract.methods
-        .transferFrom(this.address, toAddress, this.labelHash)
-        .send({ from: this.address });
+    const transferMethod = this.registrarContract.methods.transferFrom(
+      this.address,
+      toAddress,
+      this.labelHash
+    );
+    const baseTx = {
+      to: this.registrarAddress,
+      from: this.address
+    };
+
+    const tx1 = Object.assign({}, baseTx, {
+      data: this.setController(toAddress, true).encodeABI()
     });
+    const tx2 = Object.assign({}, baseTx, {
+      data: transferMethod.encodeABI()
+    });
+    return this.web3.mew.sendBatchTransactions([tx1, tx2]);
   }
 
   getActualDuration(duration) {
