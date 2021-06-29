@@ -4,14 +4,10 @@
       <mew-input
         :id="idx"
         class="mb-2"
-        :rules="[
-          v =>
-            coin.validator.validate(v) ||
-            $t('ens.ens-resolver.invalid-addr', { coin: coin.name })
-        ]"
         :value="coin.value"
         :label="coin.symbol"
         :placeholder="coin.name + ' ' + $t('common.addr')"
+        :error-messages="errors[coin.symbol]"
         @input="setCoin"
       />
       <span v-if="coin.error" class="error--text">{{ coin.error }}</span>
@@ -20,6 +16,7 @@
       <mew-button
         :title="$t('common.save')"
         btn-size="xlarge"
+        :disabled="hasError"
         @click.native="setMulticoin(setCoins)"
       />
     </div>
@@ -39,8 +36,13 @@ export default {
     }
   },
   data() {
+    const errors = {};
+    for (const type in multicoins) {
+      errors[type] = '';
+    }
     return {
-      setCoins: []
+      setCoins: [],
+      errors: errors
     };
   },
   computed: {
@@ -50,6 +52,13 @@ export default {
         coins.push(multicoins[type]);
       }
       return coins;
+    },
+    hasError() {
+      return (
+        Object.values(this.errors).filter(item => {
+          if (item !== '') return item;
+        }).length > 0
+      );
     }
   },
   methods: {
@@ -58,6 +67,10 @@ export default {
       if (coin.validator.validate(value)) {
         coin.value = value;
         this.setCoins.push(coin);
+      } else {
+        this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
+          coin: coin.name
+        });
       }
     }
   }

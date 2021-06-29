@@ -4,11 +4,7 @@
       <mew-input
         :id="idx"
         class="mb-2"
-        :rules="[
-          v =>
-            record.validate(v) ||
-            $t('ens.text-record-error', { name: record.name })
-        ]"
+        :error-messages="errors[record.name]"
         :value="record.value"
         :label="record.name"
         :placeholder="record.name"
@@ -38,17 +34,28 @@ export default {
     }
   },
   data() {
+    const errors = {};
+    textRecords.forEach(item => {
+      errors[item] = '';
+    });
     return {
+      errors: errors,
       textRecords: textRecords,
       setRecords: {}
     };
   },
   methods: {
     setRecord(value, id) {
+      console.log(value, id);
       const record = this.textRecords[id];
       if (record.validate(value)) {
         record.value = value;
         this.setRecords[record.name] = record;
+      } else {
+        console.log(this.textRecords[id]);
+        this.errors[this.textRecords[id]] = this.$t('ens.text-record-error', {
+          name: record.name
+        });
       }
     }
   }
