@@ -267,6 +267,7 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
   _,
@@ -836,14 +837,18 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from ? item.from : this.address
+            value: item.from
+              ? toChecksumAddress(item.from)
+              : toChecksumAddress(this.address)
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: item.to ? item.to : this.txTo
+            value: item.to
+              ? toChecksumAddress(item.to)
+              : toChecksumAddress(this.txTo)
           },
           {
             title: 'Sending',
