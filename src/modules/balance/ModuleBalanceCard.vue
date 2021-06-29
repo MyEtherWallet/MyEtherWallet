@@ -105,6 +105,7 @@
                 color="white"
                 v-bind="attrs"
                 v-on="on"
+                @click="openQR = true"
                 ><v-icon class="info-container--icon" size="18px"
                   >mdi-qrcode</v-icon
                 ></v-btn
@@ -148,17 +149,15 @@
       :open="openPaperWallet"
       :close="closePaperWallet"
     />
-    <!-- <balance-address-qr-code title="Address QR Code" :value="address">
-      <img src="@/assets/images/icons/icon-qr-code-mew.svg" />
-    </balance-address-qr-code> -->
+    <app-dialog-addr-qr :show-qr="openQR" :close-qr="closeQR" />
   </div>
 </template>
 
 <script>
 import anime from 'animejs/lib/anime.es.js';
+import AppDialogAddrQr from '@/core/components/AppDialogAddrQr';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
-// import BalanceAddressQrCode from './components/BalanceAddressQrCode';
 import { mapGetters, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -171,13 +170,14 @@ import {
 export default {
   components: {
     BalanceAddressPaperWallet,
-    // BalanceAddressQrCode,
+    AppDialogAddrQr,
     ModuleAccessWalletHardware
   },
   data() {
     return {
       openChangeAddress: false,
-      openPaperWallet: false
+      openPaperWallet: false,
+      openQR: false
     };
   },
   computed: {
@@ -258,6 +258,9 @@ export default {
     copyAddress() {
       clipboardCopy(this.getChecksumAddressString);
       Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
+    },
+    closeQR() {
+      this.openQR = false;
     }
   }
 };
