@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     setRecord(value, id) {
-      console.log(value, id);
       const record = this.textRecords[id];
       if (record.validate(value)) {
         record.value = value;
