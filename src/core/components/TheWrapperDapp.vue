@@ -48,6 +48,7 @@
       :is-centered="true"
       :active-tab="activeTab"
       has-underline
+      @onTab="onTab"
     >
       <template
         v-for="(item, idx) in tabItems"
@@ -95,17 +96,9 @@ export default {
       default: 0,
       type: Number
     },
-    titleIcon: {
-      default: '',
-      type: String
-    },
-    noBackBtn: {
-      default: false,
-      type: Boolean
-    },
-    topStrip: {
-      default: false,
-      type: Boolean
+    onTab: {
+      default: () => {},
+      type: Function
     }
   },
   data() {
