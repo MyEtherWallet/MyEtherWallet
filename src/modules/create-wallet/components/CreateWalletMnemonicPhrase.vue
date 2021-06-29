@@ -22,16 +22,13 @@
           =====================================================================================
           -->
           <div class="d-flex align-center justify-end pb-4">
-            <mew-button
-              btn-size="medium"
-              icon="mdi-sync"
-              icon-type="mdi"
-              icon-align="left"
-              title="Update"
-              btn-style="transparent"
-              color-theme="primary"
+            <div
+              class="primary--text cursor--pointer d-flex align-center mr-4"
               @click.native="setPhrase"
-            />
+            >
+              <v-icon small color="primary" class="mr-1">mdi-sync</v-icon>
+              <div class="font-weight-medium">Update</div>
+            </div>
             <v-select
               v-model="phraseSize"
               style="max-width: 150px"
