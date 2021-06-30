@@ -152,7 +152,7 @@
             />
           </div>
           <div class="d-flex align-center justify-space-between">
-            <theme-switch />
+            <!-- <theme-switch /> -->
             <div class="searchText--text">v{{ version }}</div>
           </div>
         </div>
@@ -211,10 +211,10 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
-import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
+// import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, GOERLI, RIN, ROP } from '@/utils/networks/types';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const routeNames = {
   dashboard: 'Dashboard',
@@ -232,7 +232,6 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ThemeSwitch,
     ModuleNotifications
   },
   data() {
@@ -322,7 +321,7 @@ export default {
       ],
       routeNetworks: {
         [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.dapps]: [ETH],
+        [routeNames.dapps]: [ETH, GOERLI, RIN, ROP],
         [routeNames.nftmanager]: [ETH]
       }
     };

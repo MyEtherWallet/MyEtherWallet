@@ -9,7 +9,7 @@
     <div v-if="loading" class="d-flex align-center justify-center">
       <v-progress-circular indeterminate color="primary" />
     </div>
-    <div v-if="!loading" class="d-flex align-center pa-6 rounded superPrimary'">
+    <div v-if="!loading" class="d-flex align-center pa-6 superPrimary rounded">
       <v-icon size="80" color="primary" class="mr-3">
         mdi-check-circle-outline
       </v-icon>
@@ -24,7 +24,7 @@
       {{ $t('ens.request.about-domain') }}
     </div>
     <mew-select
-      :has-filter="false"
+      :has-filter="true"
       :label="$t('ens.request.choose-term')"
       :items="items"
       @input="setDuration"
@@ -36,7 +36,7 @@
     </div>
     <div class="d-flex justify-center my-6">
       <mew-button
-        :title="$t('ens.request.request-registr')"
+        :title="$t('common.next')"
         btn-size="xlarge"
         @click.native="onClick"
       />
@@ -83,14 +83,9 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
+        items.push({ name: i + 1 + ' ' + 'year', value: (i + 1).toString() });
       }
       return items;
-    }
-  },
-  watch: {
-    duration() {
-      this.rentPrice();
     }
   },
   mounted() {
@@ -111,7 +106,8 @@ export default {
       this.$emit('onRequest', this.duration);
     },
     setDuration(item) {
-      this.duration = item.value;
+      this.duration = parseInt(item.value);
+      this.rentPrice();
     }
   }
 };

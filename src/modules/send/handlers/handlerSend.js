@@ -148,7 +148,6 @@ class SendTransaction {
       const _tx = new Transaction(this.TX);
       const json = _tx.toJSON(true);
       json.from = this.address();
-      json.currency = this.currency;
       json.toDetails = this.TX.toDetails;
       return this.web3().eth.sendTransaction(json);
     } catch (e) {

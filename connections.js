@@ -88,7 +88,10 @@ module.exports = [
   'https://rpc.xdaichain.com:443',
   'https://myetherwallet.matomo.cloud:443',
   'https://mainnet.mewwallet.dev:443',
+  'https://staging.mewwallet.dev:443',
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
-  'https://requestcache.mewapi.io:443'
+  'https://requestcache.mewapi.io:443',
+  'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
+  'https://api.wallet.coinbase.com:443'
 ];

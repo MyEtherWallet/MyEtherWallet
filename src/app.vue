@@ -15,6 +15,13 @@ import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
 import currencyTypes from '@/core/configs/configCurrencyTypes';
+import { PWA_EVENTS } from '@/core/helpers/common';
+import {
+  Toast,
+  ERROR,
+  SUCCESS,
+  INFO
+} from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'App',
   components: {
@@ -22,6 +29,20 @@ export default {
     ModuleDecisionTree,
     ModuleGlobalModals,
     ModuleAnalytics
+  },
+  created() {
+    const succMsg = this.$t('common.updates.new');
+    const updateMsg = this.$t('common.updates.update-found');
+    const errMsg = this.$t('common.updates.update-error');
+    window.addEventListener(PWA_EVENTS.PWA_UPDATED, () => {
+      Toast(succMsg, {}, SUCCESS);
+    });
+    window.addEventListener(PWA_EVENTS.PWA_MOUNT_ERROR, () => {
+      Toast(errMsg, {}, ERROR);
+    });
+    window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
+      Toast(updateMsg, {}, INFO);
+    });
   },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);

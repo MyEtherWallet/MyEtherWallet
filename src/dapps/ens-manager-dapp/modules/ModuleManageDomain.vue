@@ -21,16 +21,19 @@
         <manage-multicoins
           v-if="isManageMulticoin"
           :set-multicoin="setMulticoin"
+          :multicoin="multicoin"
         />
         <manage-txt-records
           v-if="isManageTxtRecord"
           :set-text-records="setTextRecords"
+          :text-records="textRecords"
         />
         <manage-upload-website
           v-if="isManageUpload"
           :setting-ipfs="settingIpfs"
           :set-ipfs="setIpfs"
           :upload-file="uploadFile"
+          :uploaded-hash="uploadedHash"
         />
       </v-sheet>
     </template>
@@ -108,6 +111,10 @@ export default {
       },
       type: Function
     },
+    uploadedHash: {
+      default: '',
+      type: String
+    },
     onManage: { default: false, type: Boolean },
     close: {
       default: function () {
@@ -120,6 +127,14 @@ export default {
         return {};
       },
       type: Function
+    },
+    multicoin: {
+      type: [Object, null],
+      default: null
+    },
+    textRecords: {
+      type: [Object, null],
+      default: null
     }
   },
   computed: {

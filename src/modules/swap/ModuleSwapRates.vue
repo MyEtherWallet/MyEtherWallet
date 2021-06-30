@@ -108,7 +108,7 @@ const STATIC_PAIRS = [
       contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
-    fromAmount: '100000000000000000'
+    fromAmount: '1000000000000000000'
   },
   {
     fromT: {
@@ -202,6 +202,7 @@ export default {
         this.swapData = null;
         this.loading = true;
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
+          console.log(res);
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
               res[idx].length === 0
