@@ -32,10 +32,6 @@ export default {
         return {};
       },
       type: Function
-    },
-    onManage: {
-      default: false,
-      type: Boolean
     }
   },
   data() {
@@ -58,13 +54,6 @@ export default {
       );
     }
   },
-  watch: {
-    onManage(newVal) {
-      if (!newVal) {
-        this.setRecords = {};
-      }
-    }
-  },
   methods: {
     setRecord(value, id) {
       const record = this.textRecords[id];
@@ -72,6 +61,7 @@ export default {
         record.value = value;
         this.setRecords[record.name] = record;
       } else {
+        console.log(record.validate(value));
         this.errors[this.textRecords[id].name] = this.$t(
           'ens.text-record-error',
           {
