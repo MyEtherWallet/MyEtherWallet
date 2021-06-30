@@ -236,6 +236,7 @@
       :transfer="transfer"
       :renew="renew"
       :upload-file="uploadFile"
+      :uploaded-hash="manageDomainHandler.contentHash"
       :set-text-records="setTextRecords"
       :set-multicoin="setMulticoin"
       :multicoin="manageDomainHandler.multiCoin"
@@ -462,7 +463,9 @@ export default {
       this.settingIpfs = true;
       this.manageDomainHandler
         .uploadFile(file)
-        .then(this.manageDomainHandler.setIPFSHash)
+        .then(res => {
+          this.manageDomainHandler.setIPFSHash(res);
+        })
         .then(resp => {
           this.settingIpfs = false;
           this.uploadedHash = resp;

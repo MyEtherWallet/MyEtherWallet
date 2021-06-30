@@ -33,6 +33,7 @@
           :setting-ipfs="settingIpfs"
           :set-ipfs="setIpfs"
           :upload-file="uploadFile"
+          :uploaded-hash="uploadedHash"
         />
       </v-sheet>
     </template>
@@ -109,6 +110,10 @@ export default {
         return {};
       },
       type: Function
+    },
+    uploadedHash: {
+      default: '',
+      type: String
     },
     onManage: { default: false, type: Boolean },
     close: {
