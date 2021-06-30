@@ -125,6 +125,7 @@
             =====================================================================================
             -->
             <template v-if="stepperStep === 3" #stepperContent3>
+              <bit-box-popup v-if="onBitboxPopup" :device="hwWalletInstance" />
               <!--
               =====================================================================================
               Pin Step
@@ -174,10 +175,6 @@ Paths Step (Ledger, Trezor)
             -->
             <template v-if="stepperStep === 4" #stepperContent4>
               <div>
-                <bit-box-popup
-                  v-if="onBitboxPopup"
-                  :device="hwWalletInstance"
-                />
                 <!--
                 =====================================================================================
                 Password Step (Coolwallet)
