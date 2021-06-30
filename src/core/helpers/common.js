@@ -11,4 +11,9 @@ const stringToArray = str => {
   return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
 };
 const MAIN_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-export { isInt, stringToArray, MAIN_TOKEN_ADDRESS };
+const PWA_EVENTS = {
+  PWA_UPDATED: 'PWA_UPDATED',
+  PWA_MOUNT_ERROR: 'PWA_MOUNT_ERROR',
+  PWA_UPDATE_FOUND: 'PWA_UPDATE_FOUND'
+};
+export { isInt, stringToArray, MAIN_TOKEN_ADDRESS, PWA_EVENTS };
