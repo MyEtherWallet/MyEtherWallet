@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 
 /**
  * ABI to get fees
@@ -63,9 +62,9 @@ export default class Staked {
       .then(res => {
         const raw = this.web3.utils.fromWei(res, 'ether');
         this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = formatPercentageValue(
-          new BigNumber(calculateEth2Rewards({ totalAtStake: raw })).times(100)
-        ).value;
+        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+          .times(100)
+          .toFixed();
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -75,7 +74,7 @@ export default class Staked {
    * Get clients validators
    */
   getValidators() {
-    this.loadingValidators = true;
+    // this.loadingValidators = true;
     return axios
       .get(`${this.endpoint}/history?address=${this.address}`, {
         header: {
@@ -84,11 +83,10 @@ export default class Staked {
       })
       .then(resp => {
         this.myValidators = resp.data;
-        console.error('myValidators', this.myValidators);
-        this.loadingValidators = false;
+        // this.loadingValidators = false;
       })
       .catch(err => {
-        this.loadingValidators = false;
+        // this.loadingValidators = false;
         this.myValidators = [];
         if (
           err.response &&
@@ -151,7 +149,6 @@ export default class Staked {
             response.data.raw.length === parseInt(this.validatorsCount)
           ) {
             this.pollingStatus = { success: true };
-            console.error('response', response);
             this.transactionData = response.data.transaction;
             clearInterval(interval);
           }
@@ -181,9 +178,8 @@ export default class Staked {
     this.transactionData.from = this.address;
     this.web3.eth
       .sendTransaction(this.transactionData)
-      .on('transactionHash', res => {
-        console.error('res', res);
-        this.txHash = res;
+      .on('transactionHash', () => {
+        // this.txHash = res;
       })
       .catch(err => {
         Toast(err, {}, ERROR);

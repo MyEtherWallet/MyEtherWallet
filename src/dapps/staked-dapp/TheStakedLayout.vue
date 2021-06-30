@@ -27,7 +27,8 @@
         </div>
         <v-icon color="textPrimary">mdi-circle-medium</v-icon>
         <div class="text-uppercase textPrimary--text font-weight-bold">
-          Current APR: <span class="primary--text">{{ currentAPR }}</span>
+          Current APR:
+          <span class="primary--text">{{ currentAprFormatted }}</span>
         </div>
       </div>
       <!--
@@ -98,7 +99,7 @@
         class="mx-auto"
       >
         <staked-stepper
-          :current-apr="currentAPR"
+          :current-apr="handlerStaked.apr"
           :start-provision="startProvision"
           :polling-status="pollingStatus"
           @readyToStake="sendTransaction"
@@ -117,10 +118,7 @@
         color="transparent"
         class="py-15 mx-auto"
       >
-        <staked-status
-          :validators="validators"
-          :loading="loadingValidators"
-        />
+        <staked-status :validators="validators" />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
@@ -134,6 +132,7 @@ import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
 import StakedStatus from './components/StakedStatus';
+import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'TheStakedLayout',
@@ -168,11 +167,14 @@ export default {
       return this.handlerStaked.totalStaked + ' ETH';
     },
     /**
-     * Current APR
+     * Current APR Formatted
      * @returns string
      */
-    currentAPR() {
-      return this.handlerStaked.apr;
+    currentAprFormatted() {
+      if (this.currentApr > 0) {
+        return formatPercentageValue(this.currentApr).value;
+      }
+      return '--';
     },
     /**
      * Gets the status after polling (happens on step4)
