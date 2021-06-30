@@ -68,7 +68,6 @@ export default {
   watch: {
     onManage(newVal) {
       if (!newVal) {
-        console.log('shouldve been called');
         this.setCoins.splice(0);
       }
     }

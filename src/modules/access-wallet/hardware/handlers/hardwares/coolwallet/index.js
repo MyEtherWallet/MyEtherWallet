@@ -77,9 +77,7 @@ class CoolWallet {
   }
 
   async getAccount(idx) {
-    console.log('i get here', idx);
     const address = await this.deviceInstance.getAddress(idx);
-    console.log('heres the damn address', address);
     const txSigner = async tx => {
       tx = new Transaction(tx, {
         common: commonGenerator(store.getters['global/network'])
