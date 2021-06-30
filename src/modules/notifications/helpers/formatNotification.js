@@ -1,6 +1,9 @@
 import timeAgo from '@/core/helpers/timeAgo';
 import { fromWei, toBN } from 'web3-utils';
-import { formatFloatingPointValue, formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatIntegerToString
+} from '@/core/helpers/numberFormatHelper';
 /**
  * Formatted notification for mew-notification component
  */
@@ -20,9 +23,9 @@ const formatNotification = (obj, network) => {
       string: 'Gas Limit'
     },
     total: {
-      value: `${formatFloatingPointValue(fromWei(obj.transactionFee, 'ether')).value} ${
-        network.type.currencyName
-      }`,
+      value: `${
+        formatFloatingPointValue(fromWei(obj.transactionFee, 'ether')).value
+      } ${network.type.currencyName}`,
       string: 'Total Transaction fee'
     },
     to: {
@@ -34,7 +37,9 @@ const formatNotification = (obj, network) => {
       string: 'From'
     },
     amount: {
-      value: `${formatFloatingPointValue(fromWei(obj.value, 'ether')).value} ${network.type.currencyName}`,
+      value: `${formatFloatingPointValue(fromWei(obj.value, 'ether')).value} ${
+        network.type.currencyName
+      }`,
       string: 'Amount'
     },
     timestamp: {
