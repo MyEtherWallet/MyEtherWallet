@@ -52,12 +52,15 @@
           />
         </div>
         <div class="info-container d-flex align-center justify-start pa-3">
-          <qr-code
-            :data="address"
-            :height="116"
-            :width="116"
-            class="d-inline-block"
-          />
+          <div class="qr-container pa-1">
+            <qr-code
+              :data="address"
+              :height="132"
+              :width="132"
+              :margin="-4"
+              class="d-inline-block"
+            />
+          </div>
 
           <div class="d-inline-block pl-3">
             <div class="d-block monospace titlePrimary-text container-qr--addr">
@@ -122,7 +125,7 @@ export default {
   text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.24), 0px 1px 4px rgba(0, 0, 0, 0.24);
 
   @media (max-width: 370px) {
-    max-width: 100px;
+    max-width: 90px;
   }
 }
 
@@ -154,6 +157,12 @@ export default {
     left: 0;
     z-index: 1;
     flex-wrap: nowrap;
+  }
+  .qr-container {
+    border-radius: 8px;
+    background-color: white;
+    height: 140px;
+    width: 140px;
   }
 }
 </style>
