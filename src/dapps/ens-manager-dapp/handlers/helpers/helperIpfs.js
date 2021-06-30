@@ -32,6 +32,7 @@ const uploadFileToIpfs = async _file => {
     body: formData
   }).then(res => {
     if (!res.ok) {
+      console.log(res);
       return new Error('File upload Error');
     }
     return content.body.hashResponse;

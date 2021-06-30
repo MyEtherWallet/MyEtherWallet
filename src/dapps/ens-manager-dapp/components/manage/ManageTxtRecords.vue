@@ -32,6 +32,10 @@ export default {
         return {};
       },
       type: Function
+    },
+    onManage: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -52,6 +56,13 @@ export default {
           if (item !== '') return item;
         }).length > 0
       );
+    }
+  },
+  watch: {
+    onManage(newVal) {
+      if (!newVal) {
+        this.setRecords = {};
+      }
     }
   },
   methods: {

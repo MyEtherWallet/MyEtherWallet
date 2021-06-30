@@ -21,10 +21,12 @@
         <manage-multicoins
           v-if="isManageMulticoin"
           :set-multicoin="setMulticoin"
+          :on-manage="onManage"
         />
         <manage-txt-records
           v-if="isManageTxtRecord"
           :set-text-records="setTextRecords"
+          :on-manage="onManage"
         />
         <manage-upload-website
           v-if="isManageUpload"
@@ -120,6 +122,10 @@ export default {
         return {};
       },
       type: Function
+    },
+    multicoin: {
+      type: [Object, null],
+      default: null
     }
   },
   computed: {

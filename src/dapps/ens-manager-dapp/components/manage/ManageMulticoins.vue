@@ -33,6 +33,10 @@ export default {
         return {};
       },
       type: Function
+    },
+    onManage: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -61,16 +65,28 @@ export default {
       );
     }
   },
+  watch: {
+    onManage(newVal) {
+      if (!newVal) {
+        console.log('shouldve been called');
+        this.setCoins.splice(0);
+      }
+    }
+  },
   methods: {
     setCoin(value, id) {
       const coin = this.coins[id];
       if (coin.validator.validate(value)) {
-        coin.value = value;
-        this.setCoins.push(coin);
+        const newObj = Object.assign({}, coin, { value: value });
+        this.setCoins.push(newObj);
       } else {
-        this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
-          coin: coin.name
-        });
+        if (value !== '') {
+          this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
+            coin: coin.name
+          });
+        } else {
+          this.errors[coin.symbol] = '';
+        }
       }
     }
   }
