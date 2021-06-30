@@ -1,58 +1,93 @@
 <template>
-  <app-modal :show="showQr" :close="closeQr" :has-buttons="false" width="560px">
+  <app-modal :show="showQr" :close="closeQr" :has-buttons="false" width="400px">
     <template #dialogBody>
-      <div class="mew-heading-2 text-center mt-6 mb-9">
-        My public address to receive funds
-      </div>
-      <div class="container-qr mx-auto">
-        <div class="d-flex align-start justify-start container-qr-info pa-1">
-          <qr-code :data="address" :height="116" :width="116" />
-          <div class="pl-3">
-            <div class="d-flex align-center justify-start mb-2">
-              <mew-blockie
-                :address="address"
-                width="22px"
-                height="22px"
-                class="inline-block"
-              />
-              <div class="pl-1 mew-body font-weight-bold inline-block">
-                My Main Account
-              </div>
-            </div>
-            <div class="d-block monospace titlePrimary-text container-qr--addr">
-              {{ getChecksumAddressString }}
-            </div>
-            <mew-button
-              title="Copy"
-              color-theme="primary"
-              btn-size="xsmall"
-              btn-style="transparent"
-              class="ml-n4"
-              @click.native="copyAddress"
-            />
-            <v-row class="pa-0 ma-0 align-start justify-start mt-2">
-              <div
-                v-for="i in ensDomains"
-                :key="i"
-                class="pa-1 searchText--text container-qr--addr"
-              >
-                {{ i }}
-              </div>
-            </v-row>
-          </div>
-        </div>
-        <v-row class="px-2 py-1 ma-0 align-center justify-start mt-3 mb-6">
+      <v-row class="align-start justify-start" dense>
+        <!--
+        =====================================================================================
+          Title
+        =====================================================================================
+        -->
+        <v-col cols="10">
+          <div class="mew-heading-2">My public address to receive funds</div>
+        </v-col>
+        <!--
+        =====================================================================================
+          Subtext
+        =====================================================================================
+        -->
+        <v-col cols="12">
           <div class="textPrimary--text">
             To receive ETH from another account, send ETH from that account to
             this address.
           </div>
-        </v-row>
-      </div>
+        </v-col>
+        <!--
+        =====================================================================================
+          Identicon and acount
+        =====================================================================================
+        -->
+        <v-col cols="12" class="pt-5 mb-4">
+          <div class="d-flex align-center justify-start">
+            <mew-blockie
+              :address="address"
+              width="22px"
+              height="22px"
+              class="inline-block"
+            />
+            <div class="pl-1 mew-body font-weight-bold inline-block">
+              My Main Account
+            </div>
+          </div>
+        </v-col>
+        <!--
+        =====================================================================================
+          QR / Address / Card
+        =====================================================================================
+        -->
+        <v-col cols="12" class="mb-4">
+          <div class="component--wallet-card">
+            <div class="mew-card">
+              <img
+                :src="'https://mewcard.mewapi.io/?address=' + address"
+                alt="MEW Card"
+                @load="animateMewCard()"
+              />
+            </div>
+            <div class="info-container d-flex pa-3">
+              <qr-code
+                :data="address"
+                :height="116"
+                :width="116"
+                class="d-inline-block"
+              />
+
+              <div class="d-inline-block pl-3">
+                <div
+                  class="d-block monospace titlePrimary-text container-qr--addr"
+                >
+                  {{ getChecksumAddressString }}
+                </div>
+                <mew-button
+                  title="Copy"
+                  color-theme="white"
+                  btn-size="small"
+                  btn-style="transparent"
+                  icon="mdi-content-copy"
+                  icon-type="mdi"
+                  class="ml-n4 mt-3 mew-label"
+                  @click.native="copyAddress"
+                />
+              </div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
     </template>
   </app-modal>
 </template>
 
 <script>
+import anime from 'animejs/lib/anime.es.js';
 import AppModal from './AppModal.vue';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -73,22 +108,10 @@ export default {
       default: false
     }
   },
-
   computed: {
     ...mapState('wallet', ['address']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
-    },
-    ensDomains() {
-      return [
-        'olchik.eth',
-        'olchikmew.eth',
-        'olchik.crypto',
-        'oclhikmew.crypto',
-        'crazypersonwithalongensname.eth',
-        'anothersuperlongnamethatsomeonemigthavelalalalalalalalalala.eth',
-        'helloworld.ens'
-      ];
     }
   },
   methods: {
@@ -101,21 +124,62 @@ export default {
     },
     close() {
       this.show = false;
+    },
+    animateMewCard() {
+      const el = document.querySelector('.mew-card');
+      el.style.opacity = 0;
+      anime({
+        targets: el,
+        opacity: 1,
+        delay: 1300,
+        duration: 500,
+        easing: 'easeInOutQuad'
+      });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.container-qr {
-  max-width: 340px;
-  .container-qr-info {
-    border: 1px solid var(--v-boxShadow-base);
-    border-radius: 8px;
+.container-qr--addr {
+  max-width: 160px;
+  overflow-wrap: break-word;
+  color: white;
+  text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.24), 0px 1px 4px rgba(0, 0, 0, 0.24);
+
+  @media (max-width: 370px) {
+    max-width: 100px;
   }
-  .container-qr--addr {
-    overflow-wrap: break-word;
-    max-width: 200px;
+}
+
+.component--wallet-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  position: relative;
+  width: 100%;
+  .mew-card {
+    border-radius: 16px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    height: 100%;
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .info-container {
+    background-color: rgba(0, 0, 0, 0.08);
+    min-height: 144px;
+    width: 100%;
+    border-radius: 16px;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    flex-wrap: nowrap;
   }
 }
 </style>
