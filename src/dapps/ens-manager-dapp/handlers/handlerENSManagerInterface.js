@@ -81,7 +81,8 @@ export default class ENSManagerInterface {
     });
     return this.publicResolverContract.methods
       .multicall(coinaddresses)
-      .send({ from: this.address });
+      .send({ from: this.address })
+      .on('receipt', this._setMulticoins);
   }
 
   async setTxtRecord(obj) {

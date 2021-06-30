@@ -21,6 +21,7 @@
         <manage-multicoins
           v-if="isManageMulticoin"
           :set-multicoin="setMulticoin"
+          :multicoin="multicoin"
           :on-manage="onManage"
         />
         <manage-txt-records

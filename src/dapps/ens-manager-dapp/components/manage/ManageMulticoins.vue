@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import multicoins from '@/dapps/ens-manager-dapp/handlers/handlerMulticoins';
-
 export default {
   props: {
     setMulticoin: {
@@ -34,14 +32,14 @@ export default {
       },
       type: Function
     },
-    onManage: {
-      type: Boolean,
-      default: false
+    multicoin: {
+      type: [Object, null],
+      default: null
     }
   },
   data() {
     const errors = {};
-    for (const type in multicoins) {
+    for (const type in this.multicoin) {
       errors[type] = '';
     }
     return {
@@ -52,8 +50,8 @@ export default {
   computed: {
     coins() {
       const coins = [];
-      for (const type in multicoins) {
-        coins.push(multicoins[type]);
+      for (const type in this.multicoin) {
+        coins.push(this.multicoin[type]);
       }
       return coins;
     },
@@ -63,13 +61,6 @@ export default {
           if (item !== '') return item;
         }).length > 0
       );
-    }
-  },
-  watch: {
-    onManage(newVal) {
-      if (!newVal) {
-        this.setCoins.splice(0);
-      }
     }
   },
   methods: {
