@@ -3,10 +3,8 @@
     class="mew-component--features-send pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">Send transaction</div>
-    <div>
-      MEW puts the Ethereum Blockchain at your fingertips, use MEW to send the
-      transaction in a simple way.
+    <div class="mew-heading-1 mb-3">
+      Buy, send and receive ETH and ERC20 tokens.
     </div>
     <div class="mt-10">
       <v-row>

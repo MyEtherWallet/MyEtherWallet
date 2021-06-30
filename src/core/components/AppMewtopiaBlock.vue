@@ -13,10 +13,10 @@
           "
         >
           <div>
-            <h1 class="white--text">Newbie in crypto? Explore MEWtopia!</h1>
+            <h1 class="white--text">New to crypto? Explore MEWtopia!</h1>
             <p class="white--text mt-3">
-              Our media platform where you can learn about crypto, share ideas,
-              and become part of a supportive community.
+              Learn how to get the most out of Ethereum with our free library of
+              resources!
             </p>
           </div>
           <mew-button
@@ -36,11 +36,11 @@
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-8">
-            <h1 class="white--text pb-2">Newbie in crypto?</h1>
+            <h1 class="white--text pb-2">New to crypto?</h1>
             <h1 class="white--text">Explore MEWtopia!</h1>
             <p class="white--text mt-3">
-              Our media platform where you can learn about crypto, share ideas,
-              and become part of a supportive community.
+              Learn how to get the most out of Ethereum with our free library of
+              resources!
             </p>
           </div>
           <mew-button
