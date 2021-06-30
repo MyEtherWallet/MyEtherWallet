@@ -221,14 +221,13 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    // ThemeSwitch,
     ModuleNotifications
   },
   data() {
     return {
       navOpen: null,
       menuSelected: 0,
-      version: process.env.VERSION,
+      version: VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
