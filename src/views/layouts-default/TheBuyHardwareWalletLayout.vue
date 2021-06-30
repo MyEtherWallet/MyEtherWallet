@@ -171,7 +171,7 @@ export default {
       toptitle: '',
       title: 'Get a hardware wallet today!',
       description:
-        'The Hardware wallet offer the highest security for accessing your crypto.',
+        'A Hardware wallet offers the highest security for accessing your crypto.',
       centered: true
     }
   })
