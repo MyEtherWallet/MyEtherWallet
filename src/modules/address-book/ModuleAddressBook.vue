@@ -124,7 +124,7 @@ export default {
       }
     },
     setAddress(value, inputType) {
-      if (value) {
+      if (typeof value === 'string') {
         const typeVal =
           inputType === 'typed'
             ? value

@@ -11,6 +11,21 @@ const signatures = {
   },
   '0x7c025200': () => {
     return 'Swap';
+  },
+  '0x28ed4f6c': () => {
+    return 'Set ENS controller';
+  },
+  '0x23b872dd': () => {
+    return 'Transfer ENS name';
+  },
+  '0xacf1a841': () => {
+    return 'Renew ENS name';
+  },
+  '0xac9650d8': () => {
+    return 'Set ENS coins/text records';
+  },
+  '0xa9059cbb': () => {
+    return 'Transfer Tokens';
   }
 };
 const getSignature = data => data.substr(0, 10);
