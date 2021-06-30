@@ -149,13 +149,23 @@
       :open="openPaperWallet"
       :close="closePaperWallet"
     />
-    <app-dialog-addr-qr :show-qr="openQR" :close-qr="closeQR" />
+    <app-modal
+      :show="openQR"
+      :close="closeQR"
+      :has-buttons="false"
+      width="400px"
+    >
+      <template #dialogBody>
+        <app-addr-qr />
+      </template>
+    </app-modal>
   </div>
 </template>
 
 <script>
 import anime from 'animejs/lib/anime.es.js';
-import AppDialogAddrQr from '@/core/components/AppDialogAddrQr';
+import AppModal from '@/core/components/AppModal';
+import AppAddrQr from '@/core/components/AppAddrQr';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { mapGetters, mapState } from 'vuex';
@@ -170,7 +180,8 @@ import {
 export default {
   components: {
     BalanceAddressPaperWallet,
-    AppDialogAddrQr,
+    AppModal,
+    AppAddrQr,
     ModuleAccessWalletHardware
   },
   data() {

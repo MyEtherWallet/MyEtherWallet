@@ -1,6 +1,15 @@
 <template>
   <div>
-    <app-dialog-addr-qr :show-qr="openQR" :close-qr="closeQR" />
+    <app-modal
+      :show="openQR"
+      :close="closeQR"
+      :has-buttons="false"
+      width="400px"
+    >
+      <template #dialogBody>
+        <app-addr-qr />
+      </template>
+    </app-modal>
     <v-row class="pa-2 selectHeaderBg border-radius--5px">
       <v-col cols="12">
         <v-row align-content="center" justify="space-around">
@@ -45,11 +54,13 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import AppDialogAddrQr from '@/core/components/AppDialogAddrQr';
+import AppModal from '@/core/components/AppModal';
+import AppAddrQr from '@/core/components/AppAddrQr';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 export default {
   components: {
-    AppDialogAddrQr
+    AppModal,
+    AppAddrQr
   },
   props: {
     address: {
