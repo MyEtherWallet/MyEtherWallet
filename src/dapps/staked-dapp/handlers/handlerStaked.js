@@ -84,6 +84,7 @@ export default class Staked {
       })
       .then(resp => {
         this.myValidators = resp.data;
+        console.error('myValidators', this.myValidators);
         this.loadingValidators = false;
       })
       .catch(err => {
@@ -185,7 +186,7 @@ export default class Staked {
         this.txHash = res;
       })
       .catch(err => {
-        console.error('err', err);
+        Toast(err, {}, ERROR);
       });
   }
 }

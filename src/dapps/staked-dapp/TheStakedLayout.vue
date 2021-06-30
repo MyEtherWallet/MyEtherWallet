@@ -6,8 +6,8 @@
     -->
   <the-wrapper-dapp
     :has-exit-btn="true"
-    :banner-img="stakedLogo"
-    :title-icon="titleIcon"
+    :banner-img="bgDappsStake"
+    :title-icon="iconColorfulETH"
     :banner-text="header"
     :tab-items="tabs"
     :active-tab="activeTab"
@@ -117,34 +117,34 @@
         color="transparent"
         class="py-15 mx-auto"
       >
-        <status
-          :validators="myValidators"
+        <staked-status
+          :validators="validators"
           :loading="loadingValidators"
-        ></status>
+        />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
 </template>
 
 <script>
-import titleIcon from '@/assets/images/icons/icon-colorful-eth.svg';
+import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import handlerStaked from './handlers/handlerStaked';
-import stakedLogo from '@/assets/images/backgrounds/bg-dapps-stake.svg';
+import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
-import status from './components/status/Status';
+import StakedStatus from './components/StakedStatus';
 
 export default {
   name: 'TheStakedLayout',
   components: {
     TheWrapperDapp,
     StakedStepper,
-    status
+    StakedStatus
   },
   data() {
     return {
-      titleIcon: titleIcon,
+      iconColorfulETH: iconColorfulETH,
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
@@ -153,9 +153,7 @@ export default {
       },
       activeTab: 0,
       handlerStaked: {},
-      myValidators: [],
-      stakedLogo: stakedLogo,
-      loadingValidators: true,
+      bgDappsStake: bgDappsStake,
       tabs: [{ name: 'stake' }, { name: 'status' }]
     };
   },
@@ -182,6 +180,13 @@ export default {
      */
     pollingStatus() {
       return this.handlerStaked.pollingStatus;
+    },
+    /**
+     * Gets the clients validators
+     * @returns array
+     */
+    validators() {
+      return this.handlerStaked.myValidators;
     }
   },
   mounted() {
@@ -207,12 +212,6 @@ export default {
     sendTransaction() {
       this.activeTab = 1;
       this.handlerStaked.sendTransaction();
-      // .then(resp => {
-      //   console.error('resp', resp);
-      // })
-      // .catch(err => {
-      //   console.error('err', err);
-      // });
     }
   }
 };
