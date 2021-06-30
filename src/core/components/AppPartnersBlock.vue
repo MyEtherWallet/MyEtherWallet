@@ -5,7 +5,7 @@
         Partners
       </div>
     </v-sheet>
-    <v-row class="mt-md-8 px-4">
+    <v-row class="mt-2 px-4">
       <v-col
         v-for="(p, key) in partners"
         :key="key"
