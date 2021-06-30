@@ -591,10 +591,6 @@ export default {
       this.wallets[this.walletType]
         .create(path, password)
         .then(_hwWallet => {
-          console.log(
-            'shouldve gotten here too with wallet instance',
-            _hwWallet
-          );
           this.hwWalletInstance = _hwWallet;
           this.setAddresses();
         })
