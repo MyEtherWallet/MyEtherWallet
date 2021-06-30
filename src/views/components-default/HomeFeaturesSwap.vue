@@ -5,8 +5,8 @@
   >
     <div class="mew-heading-1 mb-3">Swap with MEW</div>
     <div>
-      MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to
-      allow users to swap fiat to crypto, ETH and BTC, ETH, ERC-20, ERC-721.
+      Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated
+      partners 1inch, DEX AG, Changelly, Bity, and Simplex.
     </div>
     <div class="mt-10">
       <v-row v-if="!loading && !error">
