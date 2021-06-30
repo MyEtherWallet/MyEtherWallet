@@ -68,7 +68,7 @@ export default {
   },
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
-    when: 3,
+    when: 2,
     steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
