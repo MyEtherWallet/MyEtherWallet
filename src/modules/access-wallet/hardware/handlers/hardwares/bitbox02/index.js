@@ -27,7 +27,6 @@ class BitBox02Wallet {
       type: 'mew-icon',
       value: 'bitbox'
     };
-    console.log('here');
   }
   async connect() {
     const devicePath = await getDevicePath();

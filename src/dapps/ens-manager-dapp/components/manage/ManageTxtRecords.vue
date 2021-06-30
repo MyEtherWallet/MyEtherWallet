@@ -61,7 +61,6 @@ export default {
         record.value = value;
         this.setRecords[record.name] = record;
       } else {
-        console.log(record.validate(value));
         this.errors[this.textRecords[id].name] = this.$t(
           'ens.text-record-error',
           {
