@@ -992,6 +992,9 @@ export default {
               q.isSelected = false;
               return q;
             });
+            if (this.availableQuotes.length > 1) {
+              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
               this.step = 1;
