@@ -239,6 +239,7 @@
       :set-text-records="setTextRecords"
       :set-multicoin="setMulticoin"
       :multicoin="manageDomainHandler.multiCoin"
+      :text-records="manageDomainHandler.txtRecords"
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"

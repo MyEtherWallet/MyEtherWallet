@@ -106,7 +106,8 @@ export default class ENSManagerInterface {
     }
     return this.resolverContract.methods
       .multicall(multicalls)
-      .send({ from: this.address });
+      .send({ from: this.address })
+      .on('receipt', this._setTxtRecords);
   }
 
   async _init() {

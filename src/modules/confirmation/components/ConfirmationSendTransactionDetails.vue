@@ -137,7 +137,7 @@ export default {
         },
         {
           avatar: this.avatar,
-          address: toChecksumAddress(this.to),
+          address: this.to ? toChecksumAddress(this.to) : '',
           nickname:
             this.toDetails && this.toDetails.nickname
               ? this.toDetails.nickname
