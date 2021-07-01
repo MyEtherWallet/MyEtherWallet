@@ -1,10 +1,9 @@
-name: run on pull request
+name: run on pull request [v5]
 
 on:
   pull_request:
     branches:
-      - master
-      - develop
+      - v5/master
 
 jobs:
   run-on-pr:
