@@ -8,7 +8,7 @@
     <v-sheet class="py-6 px-4">
       <v-row>
         <v-col cols="12">
-          <p class="mew-heading-1">Network Fee</p>
+          <p class="mew-heading-1">Network fee</p>
           <p class="mew-body">
             This fee is calculated by multiplying the gas price and gas limit
             for your transaction. Higher fees result in faster transactions.
