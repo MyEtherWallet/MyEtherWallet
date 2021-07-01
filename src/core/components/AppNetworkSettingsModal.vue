@@ -15,7 +15,7 @@
             <a
               href="https://kb.myetherwallet.com/en/transactions/what-is-gas/"
               target="_blank"
-              >Learn More
+              >Learn more
             </a>
           </p>
           <settings-gas-price
