@@ -9,7 +9,7 @@ import textrecords from './handlerTextRecords';
 import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
-import { toChecksumAddress } from 'web3-utils';
+import { toChecksumAddress, _ } from 'web3-utils';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -81,7 +81,8 @@ export default class ENSManagerInterface {
     });
     return this.publicResolverContract.methods
       .multicall(coinaddresses)
-      .send({ from: this.address });
+      .send({ from: this.address })
+      .on('receipt', this._setMulticoins);
   }
 
   async setTxtRecord(obj) {
@@ -105,7 +106,8 @@ export default class ENSManagerInterface {
     }
     return this.resolverContract.methods
       .multicall(multicalls)
-      .send({ from: this.address });
+      .send({ from: this.address })
+      .on('receipt', this._setTxtRecords);
   }
 
   async _init() {
@@ -168,6 +170,11 @@ export default class ENSManagerInterface {
       throw new Error(e);
     }
   }
+
+  /**
+   * Internal methods
+   * Convert to private methods once transitioned to Typescript
+   */
   async _setRegistar() {
     const web3 = this.web3;
     const registryAddress = this.network.type.ens.registry;
@@ -305,47 +312,55 @@ export default class ENSManagerInterface {
       });
   }
   async _setMulticoins() {
+    const newObj = {};
+    Object.keys(multicoins).forEach(item => {
+      newObj[item] = _.clone(multicoins[item]);
+    });
+    this.multiCoin = newObj;
     try {
       const supportMultiCoin = await this.resolverContract.methods
         .supportsInterface(registrarInterface.MULTICOIN)
         .call();
-      for (const type in multicoins) multicoins[type].value = '';
+      for (const type in this.multiCoin) this.multiCoin[type].value = '';
       if (supportMultiCoin) {
+        this.multicoinSupport = supportMultiCoin;
         const promises = [];
-        const coinTypes = Object.keys(multicoins);
+        const coinTypes = Object.keys(this.multiCoin);
         coinTypes.forEach(type => {
           promises.push(
-            this.ens.resolver(this.name, ResolverAbi).addr(multicoins[type].id)
+            this.ens
+              .resolver(this.name, ResolverAbi)
+              .addr(this.multiCoin[type].id)
           );
         });
         await Promise.all(promises).then(vals => {
           vals.forEach((address, idx) => {
             if (address) {
-              multicoins[coinTypes[idx]].value = multicoins[
+              this.multiCoin[coinTypes[idx]].value = this.multiCoin[
                 coinTypes[idx]
               ].encode(Buffer.from(address.replace('0x', ''), 'hex'));
             }
           });
         });
       } else {
-        multicoins.ETH.value = await this.ens.resolver(this.name).addr();
+        this.multiCoin.ETH.value = await this.ens.resolver(this.name).addr();
       }
     } catch (e) {
-      multicoins.ETH.value = '0x';
+      this.multiCoin.ETH.value = '0x';
     }
   }
 
   async _migrateCoinsAndRecords() {
     const multicallRecords = [];
     try {
-      for (const coin in multicoins) {
-        if (multicoins[coin].value) {
+      for (const coin in this.multiCoin) {
+        if (this.multiCoin[coin].value) {
           multicallRecords.push(
             this.publicResolverContract.methods
               .setAddr(
                 this.nameHash,
-                multicoins[coin].id,
-                decodeCoinAddress(multicoins[coin])
+                this.multiCoin[coin].id,
+                decodeCoinAddress(this.multiCoin[coin])
               )
               .encodeABI()
           );

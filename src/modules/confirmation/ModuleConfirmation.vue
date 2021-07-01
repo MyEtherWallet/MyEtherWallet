@@ -267,6 +267,7 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
   _,
@@ -279,6 +280,7 @@ import {
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
@@ -485,8 +487,7 @@ export default {
      * arr[2] is the selected currency
      */
     EventBus.$on(EventNames.SHOW_TX_CONFIRM_MODAL, async (tx, resolver) => {
-      tx[0].type = 'OUT';
-      tx[0].network = this.network.type.name;
+      this.parseRawData(tx[0]);
       _self.title = 'Transaction Confirmation';
       _self.tx = tx[0];
       _self.resolver = resolver;
@@ -608,6 +609,23 @@ export default {
         ethvm: ''
       };
       this.error = '';
+    },
+    parseRawData(tx) {
+      let tokenData = '';
+      if (tx.to && tx.data && tx.data !== '0x') {
+        tokenData = parseTokenData(tx.data, tx.to);
+        tx.fromTxData = {
+          currency: this.network.type.currencyName,
+          amount: tx.amount
+        };
+        tx.toTxData = {
+          currency: tokenData.tokenSymbol,
+          amount: tokenData.tokenTransferVal,
+          to: tokenData.tokenTransferTo
+        };
+      }
+      tx.type = 'OUT';
+      tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
       const web3 = this.web3;
@@ -819,14 +837,18 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from ? item.from : this.address
+            value: item.from
+              ? toChecksumAddress(item.from)
+              : toChecksumAddress(this.address)
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: item.to ? item.to : this.txTo
+            value: item.to
+              ? toChecksumAddress(item.to)
+              : toChecksumAddress(this.txTo)
           },
           {
             title: 'Sending',
