@@ -161,7 +161,7 @@ export default {
   data() {
     return {
       iconColorfulETH: iconColorfulETH,
-      amount: '',
+      amount: 0,
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:

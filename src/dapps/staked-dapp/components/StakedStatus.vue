@@ -145,6 +145,7 @@
     -->
             <div class="d-flex mt-6">
               <a
+                v-if="pending.etherscanUrl"
                 rel="noopener noreferrer"
                 class="font-weight-medium"
                 :href="pending.etherscanUrl"
@@ -153,6 +154,7 @@
                 <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
               >
               <a
+                v-if="pending.ethVmUrl && !onGoerli"
                 rel="noopener noreferrer"
                 class="font-weight-medium ml-5"
                 :href="pending.ethVmUrl"
@@ -276,8 +278,8 @@ export default {
       default: true
     },
     amount: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -342,8 +344,12 @@ export default {
               new BigNumber(raw.amount).times(this.fiatValue)
             ).value,
             status: raw.status,
-            ethVmUrl: 'https://etherscan.io/address/' + this.address,
-            etherscanUrl: 'https://www.ethvm.com/address/' + this.address,
+            ethVmUrl:
+              configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
+              this.address,
+            etherscanUrl:
+              configNetworkTypes.network[this.network.type.name]
+                .etherscanAddrUrl + this.address,
             url: raw.address
               ? configNetworkTypes.network[this.network.type.name].url +
                 '0x' +
@@ -364,17 +370,20 @@ export default {
      * displays after step 4 of New Stake tab
      */
     justStakedValidator() {
-      if (this.amount > 0 && this.pendingTxHash) {
+      if (this.amount > 0) {
         return [
           {
             amount: formatFloatingPointValue(this.amount).value,
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
-            status: STATUS_TYPES.created,
-
-            ethVmUrl: 'https://etherscan.io/tx/' + this.pendingTxHash,
-            etherscanUrl: 'https://www.ethvm.com/tx/' + this.pendingTxHash
+            status: STATUS_TYPES.CREATED,
+            ethVmUrl:
+              configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
+              this.pendingTxHash,
+            etherscanUrl:
+              configNetworkTypes.network[this.network.type.name]
+                .etherscanTxUrl + this.pendingTxHash
           }
         ];
       }
@@ -386,7 +395,18 @@ export default {
      * including pending validators from api and just staked validator
      */
     allPendingValidators() {
-      return this.pendingValidators.concat(this.justStakedValidator);
+      return this.justStakedValidator.concat(this.pendingValidators);
+    }
+  },
+  /**
+   * @watches pendingTxHash
+   * comes after the user confirms on step 4 of new stake
+   */
+  watch: {
+    pendingTxHash(newVal) {
+      if (newVal) {
+        this.expand(0);
+      }
     }
   },
   methods: {
@@ -423,6 +443,13 @@ export default {
      */
     isExpanded(idx) {
       return this.expanded === idx;
+    },
+    /**
+     * @returns boolean
+     * Checks if its goerli
+     */
+    onGoerli() {
+      return this.network.type.name === 'GOERLI';
     },
     /**
      * @returns string
