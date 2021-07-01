@@ -89,7 +89,7 @@ export default {
   methods: {
     onClose() {
       this.$router.push({
-        name: 'Dapps'
+        name: 'DApps'
       });
     }
   }
