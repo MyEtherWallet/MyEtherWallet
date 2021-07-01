@@ -113,7 +113,7 @@ export default {
      * only happens on home page
      */
     setDonationAddress() {
-      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0])
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
     },
     toggleOverlay() {
       this.addMode = !this.addMode;
