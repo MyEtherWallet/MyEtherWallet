@@ -93,7 +93,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   setIPFSHash(hash) {
-    const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
+    const ipfsToHash = hash !== '' ? `0x${contentHash.fromIpfs(hash)}` : '0x';
     return this.resolverContract.methods
       .setContenthash(this.nameHash, ipfsToHash)
       .send({ from: this.address })

@@ -30,7 +30,6 @@
         :label="$t('ens.content-hash')"
         :placeholder="$t('ens.enter-hash')"
         :error-messages="error"
-        :rules="rules"
         @input="setHash"
       />
     </div>
@@ -80,15 +79,16 @@ export default {
   },
   computed: {
     isValidIPFS() {
-      return isIpfs.multihash(this.ipfs);
-    },
-    rules() {
-      return [value => !!value || this.$t('ens.hash-required')];
+      if (this.ipfs !== '') return isIpfs.multihash(this.ipfs);
+      return true;
     }
   },
   watch: {
     uploadedHash(newVal) {
       this.ipfs = newVal;
+    },
+    ipfs(newVal) {
+      if (!newVal) this.ipfs = '';
     }
   },
   methods: {
@@ -126,9 +126,12 @@ export default {
       this.uploadFile(e.target.files[0]);
     },
     setHash(val) {
-      this.error = isIpfs.multihash(val)
-        ? ''
-        : this.$t('ens.error.empty-invalid-ipfs');
+      this.error =
+        val === ''
+          ? ''
+          : isIpfs.multihash(val)
+          ? ''
+          : this.$t('ens.error.empty-invalid-ipfs');
     }
   }
 };
