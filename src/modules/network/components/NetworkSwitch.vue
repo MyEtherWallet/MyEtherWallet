@@ -135,6 +135,8 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+import { _ } from 'web3-utils';
+
 export default {
   name: 'NetworkSwitch',
   components: { AppUserMsgBlock },
@@ -216,31 +218,27 @@ export default {
     }
   },
   watch: {
-    networkSelected(value, oldVal) {
-      const found = Object.values(this.nodes).filter(item => {
-        if (item.type.name === value) {
-          return item;
-        }
-      });
-      if (oldVal) {
-        try {
-          this.setNetwork(found[0]).then(() => {
-            this.setWeb3Instance();
-            Toast(
-              `Switched network to: ${found[0].type.name} - ${found[0].service}`,
-              {},
-              SUCCESS
-            );
-            this.close();
-          });
-        } catch (e) {
-          Toast(`Could not switch network`, {}, ERROR);
-        }
+    networkSelected(value) {
+      if (value && value !== this.network.type.name) {
+        this.setNetworkDebounced(value);
       }
     },
     searchInput(newVal, oldVal) {
       if (newVal != oldVal && (!oldVal || oldVal === '')) {
         this.toggleType = 2;
+      }
+    },
+    /**
+     * Set networkSelected on toggle change, if network is in the list
+     */
+    toggleType() {
+      if (!this.networkSelected) {
+        if (
+          this.networks.filter(item => item.name === this.network.type.name)
+            .length > 0
+        ) {
+          this.networkSelected = this.network.type.name;
+        }
       }
     }
   },
@@ -266,7 +264,31 @@ export default {
      */
     setSearch(newVal) {
       this.searchInput = newVal;
-    }
+    },
+    /**
+     * Debounce network switch from user input
+     * @return {void}
+     */
+    setNetworkDebounced: _.debounce(function (value) {
+      const found = Object.values(this.nodes).filter(item => {
+        if (item.type.name === value) {
+          return item;
+        }
+      });
+      try {
+        this.setNetwork(found[0]).then(() => {
+          this.setWeb3Instance();
+          Toast(
+            `Switched network to: ${found[0].type.name} - ${found[0].service}`,
+            {},
+            SUCCESS
+          );
+          this.close();
+        });
+      } catch (e) {
+        Toast(`Could not switch network`, {}, ERROR);
+      }
+    }, 1000)
   }
 };
 </script>
