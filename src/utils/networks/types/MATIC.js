@@ -1,4 +1,4 @@
-import matic from '@/assets/images/networks/network.svg';
+import matic from '@/assets/images/networks/matic.svg';
 import tokens from '@/_generated/tokens/tokens-matic.json';
 export default {
   name: 'MATIC',

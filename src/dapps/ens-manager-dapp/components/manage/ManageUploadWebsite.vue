@@ -13,7 +13,7 @@
     <div v-if="!settingIpfs" class="d-flex flex-column">
       <div class="d-flex justify-end">
         <input
-          ref="file"
+          ref="zipInput"
           type="file"
           style="display: none"
           accept=".zip"
@@ -22,7 +22,7 @@
         <mew-button
           btn-style="transparent"
           :title="$t('ens.upload-my-website')"
-          @click.native="$refs.file.click()"
+          @click.native="$refs.zipInput.click()"
         />
       </div>
       <mew-input
