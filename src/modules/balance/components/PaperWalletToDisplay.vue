@@ -144,7 +144,7 @@ export default {
       return null;
     },
     getChecksumAddressString() {
-      return toChecksumAddress(this.address);
+      return this.address ? toChecksumAddress(this.address) : '';
     },
     showPrivateKey() {
       return !this.isHardware || !this.instance.isPubOnly;

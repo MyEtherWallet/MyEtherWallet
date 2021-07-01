@@ -201,9 +201,8 @@ export default {
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
     getChecksumAddressString() {
-      return toChecksumAddress(this.address);
+      return this.address ? toChecksumAddress(this.address) : '';
     },
-
     totalTokenBalance() {
       return this.totalTokenFiatValue;
     },
@@ -223,16 +222,15 @@ export default {
      * @returns {string} first 6 letters in the address
      */
     addrFirstSix() {
-      return this.address.substring(0, 6);
+      return this.address ? this.address.substring(0, 6) : '';
     },
     /**
      * @returns {string} lat 4 letters in the address
      */
     addrlastFour() {
-      return this.address.substring(
-        this.address.length - 4,
-        this.address.length
-      );
+      return this.address
+        ? this.address.substring(this.address.length - 4, this.address.length)
+        : '';
     },
     /**
      * @returns {number} count of non chain tokens
@@ -249,16 +247,30 @@ export default {
     }
   },
   methods: {
+    animateBlockie() {
+      const el = document.querySelector('.blockie-img');
+      if (el) {
+        el.style.transform = 'scale(0)';
+        anime({
+          targets: el,
+          keyframes: [{ scale: 0 }, { scale: 3 }, { scale: 1 }],
+          delay: 1500,
+          duration: 2000
+        });
+      }
+    },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
-      el.style.opacity = 0;
-      anime({
-        targets: el,
-        opacity: 1,
-        delay: 1300,
-        duration: 500,
-        easing: 'easeInOutQuad'
-      });
+      if (el) {
+        el.style.opacity = 0;
+        anime({
+          targets: el,
+          opacity: 1,
+          delay: 1300,
+          duration: 500,
+          easing: 'easeInOutQuad'
+        });
+      }
     },
     closeChangeAddress() {
       this.openChangeAddress = false;

@@ -123,7 +123,7 @@ export default {
       return null;
     },
     getChecksumAddressString() {
-      return toChecksumAddress(this.address);
+      return this.address ? toChecksumAddress(this.address) : '';
     }
   },
   mounted() {
