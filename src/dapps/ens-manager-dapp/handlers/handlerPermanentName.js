@@ -8,8 +8,9 @@ import EventEmitter from 'events';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
-  constructor(name, address, network, web3, ens) {
+  constructor(name, address, network, web3, ens, expiry) {
     super(name, address, network, web3, ens);
+    this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
     this.expired = false;
@@ -183,12 +184,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async _setExpiry() {
     if (!this.isAvailable) {
-      const expiryTime = await this.registrarContract.methods
-        .nameExpires(this.labelHash)
-        .call();
-      this.expired = expiryTime * 1000 < new Date().getTime();
+      this.expired = this.expiryTime * 1000 < new Date().getTime();
       if (!this.expired) {
-        const date = new Date(expiryTime * 1000);
+        const date = new Date(this.expiryTime * 1000);
         this.expiration =
           date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
       }
