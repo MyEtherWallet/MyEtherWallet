@@ -46,20 +46,17 @@
       >
         <v-btn
           class="px-md-9 white--text text-transform--initial"
-          color="titlePrimary"
+          :class="activeTab === 0 ? '' : 'staked-tab-inactive'"
+          color=""
         >
           New stake
         </v-btn>
         <v-btn
-          class="
-            px-md-9
-            white--text
-            text-transform--initial
-            d-flex
-            flex-column
-            align-center
-          "
-          color="titlePrimary"
+          :class="[
+            'px-md-9 white--text text-transform--initial d-flex  flex-column align-center',
+            activeTab === 1 ? '' : 'staked-tab-inactive'
+          ]"
+          color=""
         >
           <div>
             <div
@@ -248,10 +245,15 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
-      this.activeTab = 1;
       this.amount = amountETH;
+      this.activeTab = 1;
       this.handlerStaked.sendTransaction();
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.staked-tab-inactive {
+  background-color: rgba(0, 0, 0, 0.24) !important;
+}
+</style>

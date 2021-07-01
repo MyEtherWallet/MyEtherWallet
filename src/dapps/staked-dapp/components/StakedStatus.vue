@@ -27,7 +27,7 @@
     ===================================================
     -->
       <div v-if="validators.length === 0">
-        You currently are not staking any eth.
+        You are currently not staking any eth.
       </div>
       <!--
     ===================================================
@@ -269,7 +269,7 @@ export default {
       type: Array,
       default: () => []
     },
-    pendingTxHash: {
+    pendingHash: {
       type: String,
       default: ''
     },
@@ -286,7 +286,7 @@ export default {
     return {
       iconETHBlue: iconETHBlue,
       timer: [],
-      expanded: null,
+      expanded: 0,
       STATUS_TYPES: STATUS_TYPES
     };
   },
@@ -370,7 +370,7 @@ export default {
      * displays after step 4 of New Stake tab
      */
     justStakedValidator() {
-      if (this.amount > 0) {
+      if (this.pendingHash) {
         return [
           {
             amount: formatFloatingPointValue(this.amount).value,
@@ -378,12 +378,14 @@ export default {
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
             status: STATUS_TYPES.CREATED,
-            ethVmUrl:
-              configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
-              this.pendingTxHash,
-            etherscanUrl:
-              configNetworkTypes.network[this.network.type.name]
-                .etherscanTxUrl + this.pendingTxHash
+            ethVmUrl: this.pendingHash
+              ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
+                this.pendingHash
+              : null,
+            etherscanUrl: this.pendingHash
+              ? configNetworkTypes.network[this.network.type.name]
+                  .etherscanTxUrl + this.pendingHash
+              : null
           }
         ];
       }
@@ -396,17 +398,6 @@ export default {
      */
     allPendingValidators() {
       return this.justStakedValidator.concat(this.pendingValidators);
-    }
-  },
-  /**
-   * @watches pendingTxHash
-   * comes after the user confirms on step 4 of new stake
-   */
-  watch: {
-    pendingTxHash(newVal) {
-      if (newVal) {
-        this.expand(0);
-      }
     }
   },
   methods: {
