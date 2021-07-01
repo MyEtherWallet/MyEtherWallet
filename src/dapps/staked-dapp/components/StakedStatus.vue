@@ -294,6 +294,10 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
+    /**
+     * @returns array
+     * Returns all the raw objects in all the validators
+     */
     validatorsRaw() {
       const allRawValidators = [];
       this.validators.map(validator => {
