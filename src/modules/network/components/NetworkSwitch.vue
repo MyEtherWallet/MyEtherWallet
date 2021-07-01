@@ -218,7 +218,7 @@ export default {
   watch: {
     networkSelected(value, oldVal) {
       const found = Object.values(this.nodes).filter(item => {
-        if (item.url === value) {
+        if (item.type.name === value) {
           return item;
         }
       });
@@ -245,7 +245,7 @@ export default {
     }
   },
   mounted() {
-    this.networkSelected = this.network.url;
+    this.networkSelected = this.network.type.name;
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
