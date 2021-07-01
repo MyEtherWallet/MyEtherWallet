@@ -294,17 +294,25 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
+    validatorsRaw() {
+      const allRawValidators = [];
+      this.validators.map(validator => {
+        validator.raw.map(raw => {
+          allRawValidators.push(raw);
+        });
+      });
+      return allRawValidators;
+    },
     /**
      * @returns array
      * Returns all the active validators with correct info
      */
     activeValidators() {
-      return this.validators
-        .filter(validator => {
-          return validator.raw[0].status.toLowerCase() === STATUS_TYPES.ACTIVE;
+      return this.validatorsRaw
+        .filter(raw => {
+          return raw.status.toLowerCase() === STATUS_TYPES.ACTIVE;
         })
-        .map(validator => {
-          const raw = validator.raw[0];
+        .map(raw => {
           const totalBalanceETH = this.convertToEth1(raw.balance);
           const earning = new BigNumber(totalBalanceETH).minus(raw.amount);
           return {
@@ -328,16 +336,15 @@ export default {
      * Returns all the pending validators with correct info
      */
     pendingValidators() {
-      return this.validators
-        .filter(validator => {
+      return this.validatorsRaw
+        .filter(raw => {
           return (
-            validator.raw[0].status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-            validator.raw[0].status.toLowerCase() === STATUS_TYPES.PENDING ||
-            validator.raw[0].status.toLowerCase() === STATUS_TYPES.FAILED
+            raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+            raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+            raw.status.toLowerCase() === STATUS_TYPES.FAILED
           );
         })
-        .map(validator => {
-          const raw = validator.raw[0];
+        .map(raw => {
           return {
             amount: formatFloatingPointValue(raw.amount).value,
             amountFiat: formatFiatValue(
