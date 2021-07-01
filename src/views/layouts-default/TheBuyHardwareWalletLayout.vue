@@ -70,15 +70,13 @@
                   </div>
                 </div>
 
-                <div v-if="!$vuetify.breakpoint.xs" class="pl-4">
-                  <v-img
-                    :src="b.walletImg"
-                    alt="Hardware Wallet"
-                    max-width="90px"
-                    max-height="100px"
-                    contain
-                  />
-                </div>
+                <v-img
+                  :src="b.walletImg"
+                  alt="Hardware Wallet"
+                  max-width="90px"
+                  max-height="100px"
+                  contain
+                />
               </v-card>
             </a>
           </v-col>
