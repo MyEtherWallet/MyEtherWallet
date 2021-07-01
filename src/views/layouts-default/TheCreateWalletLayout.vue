@@ -29,7 +29,7 @@
             font-class="mew-heading-2"
             class="mb-5"
             color-theme="basic"
-            title="Get MEW wallet App"
+            title="Get MEW wallet app"
             subtitle="Download our official app and connect to MEW web using your mobile phone. Available on iOS and Android."
             title-icon="mdi-shield-check"
             title-icon-type="mdi"

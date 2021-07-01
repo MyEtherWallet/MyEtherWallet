@@ -1,27 +1,20 @@
-import OldEnsAbi from './abi/abiOldEns.js';
-import OldDeedAbi from './abi/abiOldDeed.js';
 import { getHashFromFile, uploadFileToIpfs } from './helpers/helperIpfs.js';
 import BigNumber from 'bignumber.js';
 import ENSManagerInterface from './handlerENSManagerInterface.js';
 import * as nameHashPckg from 'eth-ens-namehash';
 import { DNSRegistrar } from '@ensdomains/ens-contracts';
 import contentHash from 'content-hash';
+import EventEmitter from 'events';
 const bip39 = require('bip39');
-const OLD_ENS_ADDRESS = '0x6090a6e47849629b7245dfa1ca21d94cd15878ef';
-const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
     super(name, address, network, web3, ens);
-    this.deed = 0;
-    this.deedOwner = '0x';
     this.secretPhrase = '';
     this.expiration = null;
     this.expired = false;
     this.redeemable = false;
     // Contracts
-    this.oldEnsContract = null;
-    this.oldDeedContract = null;
     this.dnsRegistrarContract = null;
     this.dnsClaim = null;
     this.dnsStatus = '';
@@ -39,19 +32,23 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   transfer(toAddress) {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-    return this.setController(toAddress).then(() => {
-      return this.web3.eth.sendTransaction({
-        from: this.address,
-        to: this.network.type.ens.registry,
-        data: this.registrarContract.methods
-          .transferFrom(this.address, toAddress, this.labelHash)
-          .encodeABI(),
-        value: 0
-      });
+    const transferMethod = this.registrarContract.methods.transferFrom(
+      this.address,
+      toAddress,
+      this.labelHash
+    );
+    const baseTx = {
+      to: this.registrarAddress,
+      from: this.address
+    };
+
+    const tx1 = Object.assign({}, baseTx, {
+      data: this.setController(toAddress, true).encodeABI()
     });
+    const tx2 = Object.assign({}, baseTx, {
+      data: transferMethod.encodeABI()
+    });
+    return this.web3.mew.sendBatchTransactions([tx1, tx2]);
   }
 
   getActualDuration(duration) {
@@ -72,67 +69,21 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async renew(duration, balance) {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-
     const rentPrice = await this.getRentPrice(duration);
-
     const hasBalance = new BigNumber(rentPrice).lte(balance);
     if (!hasBalance) {
       throw new Error('Not enough balance');
     }
-    const data = this.registrarControllerContract.methods
-      .renew(this.parsedHostName, this.getActualDuration(duration))
-      .encodeABI();
     const withFivePercent = BigNumber(rentPrice)
       .times(1.05)
       .integerValue()
       .toFixed();
-
-    const txObj = {
-      to: this.contractControllerAddress,
-      from: this.address,
-      data: data,
-      value: withFivePercent
-    };
-    return this.web3.eth.sendTransaction(txObj);
-  }
-
-  releaseDeed() {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-
-    if (!this.redeemable) {
-      throw new Error('Name has no releasable deed!');
-    }
-
-    if (this.deedOwner !== this.address) {
-      throw new Error('Redeeming address provided is not the owner!');
-    }
-    const data = this.oldDeedContract.methods
-      .releaseDeed(this.labelHash)
-      .encodeABI();
-    const obj = {
-      from: this.address,
-      to: OLD_ENS_ADDRESS,
-      data: data,
-      value: 0
-    };
-
-    return this.web3.eth.sendTransaction(obj);
+    return this.registrarControllerContract.methods
+      .renew(this.parsedHostName, this.getActualDuration(duration))
+      .send({ from: this.address, value: withFivePercent });
   }
 
   uploadFile(file) {
-    if (this.owner === '0x') {
-      throw new Error('Owner not set! Please initialize module properly!');
-    }
-
-    if (this.network.type.name !== 'ETH') {
-      throw new Error('Ipfs not supported in this network!');
-    }
-
     return uploadFileToIpfs(file)
       .then(getHashFromFile)
       .then(hash => {
@@ -142,16 +93,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   setIPFSHash(hash) {
     const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
-    const tx = {
-      from: this.address,
-      to: this.resolverAddress,
-      data: this.resolverContract.methods
-        .setContentHash(this.nameHash, ipfsToHash)
-        .encodeABI(),
-      value: 0
-    };
-
-    return this.web3.eth.sendTransaction(tx);
+    return this.resolverContract.methods
+      .setContenthash(this.nameHash, ipfsToHash)
+      .send({ from: this.address })
+      .on('receipt', () => {
+        this._setContentHash();
+      });
   }
 
   // DNS claim name method
@@ -174,28 +121,30 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.secretPhrase = words.join(' ');
   }
 
-  async createCommitment() {
+  createCommitment() {
     const utils = this.web3.utils;
     const txObj = { from: this.address };
-    try {
-      const commitment = await this.registrarControllerContract.methods
-        .makeCommitmentWithConfig(
-          this.parsedHostName,
-          this.address,
-          utils.sha3(this.secretPhrase),
-          this.publicResolverAddress,
-          this.address
-        )
-        .call();
-      return this.web3.eth.estimateGas(txObj).then(gas => {
-        txObj.gas = gas;
+    const promiEvent = new EventEmitter();
+    this.registrarControllerContract.methods
+      .makeCommitmentWithConfig(
+        this.parsedHostName,
+        this.address,
+        utils.sha3(this.secretPhrase),
+        this.publicResolverAddress,
+        this.address
+      )
+      .call()
+      .then(commitment => {
         return this.registrarControllerContract.methods
           .commit(commitment)
-          .send(txObj);
+          .send(txObj)
+          .on('transactionHash', hash =>
+            promiEvent.emit('transactionHash', hash)
+          )
+          .on('error', err => promiEvent.emit('error', err))
+          .on('receipt', receipt => promiEvent.emit('receipt', receipt));
       });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return promiEvent;
   }
 
   async getMinimumAge() {
@@ -208,15 +157,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
   async _initModule() {
     // initial value for the variables
     const values = {
-      deed: 'deed',
-      deedOwner: 'deedOwner',
       secretPhrase: 'secretPhrase',
       expiration: 'expiration',
       expired: 'expired',
       redeemable: 'redeemable',
       // Contracts
-      oldEnsContract: 'oldEnsContract',
-      oldDeedContract: 'oldDeedContract',
       dnsRegistrarContract: 'dnsRegistrarContract',
       dnsClaim: 'dnsClaim',
       dnsStatus: 'dnsStatus'
@@ -233,11 +178,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
         }
       });
     });
-    try {
-      return this._setEnsContracts();
-    } catch (e) {
-      throw new Error(e);
-    }
+    this._setExpiry();
   }
 
   async _setExpiry() {
@@ -255,13 +196,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this._setDnsContract();
   }
 
-  async _setEnsContracts() {
-    const web3 = this.web3;
-    // this._setContracts();
-    this.oldEnsContract = new web3.eth.Contract(OldEnsAbi, OLD_ENS_ADDRESS);
-    this._setDeeds();
-  }
-
   async _setDnsContract() {
     if (this.tld && this.tld !== this.network.type.ens.registrarTLD) {
       this.dnsRegistrarContract = new DNSRegistrar(
@@ -271,10 +205,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
       this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
       this._setDnsInfo();
     }
-
     return;
   }
-
   async _setDnsInfo() {
     const _owner = await this.ens.owner(this.parsedDomainName);
     const isInNewRegistry = await this.registryContract.methods
@@ -296,59 +228,37 @@ export default class PermanentNameModule extends ENSManagerInterface {
     }
   }
 
-  async _setDeeds() {
-    if (this.network.type.name === 'ETH') {
-      const web3 = this.web3;
-      const entries = await this.oldEnsContract.methods
-        .entries(this.labelHash)
-        .call();
-      if (entries[1] !== BURNER_ADDRESS) {
-        this.redeemable = true;
-        this.oldDeedContract = new web3.eth.Contract(OldDeedAbi, entries[1]);
-        this.deedOwner = await this.oldDeedContract.methods.owner().call();
-        this.deed = await this.oldDeedContract.methods.value().call();
-      } else {
-        this.redeemable = false;
-      }
-    }
-    return this._setExpiry();
-  }
-
-  async _registerWithDuration(duration, balance) {
+  _registerWithDuration(duration, balance) {
     const utils = this.web3.utils;
-    try {
-      const rentPrice = await this.getRentPrice(duration);
-
-      const hasBalance = new BigNumber(rentPrice).gte(balance);
-
+    const promiEvent = new EventEmitter();
+    this.getRentPrice(duration).then(rentPrice => {
+      const hasBalance = new BigNumber(balance).gte(rentPrice);
       if (!hasBalance) {
-        throw new Error('Not enough balance');
+        promiEvent.emit('error', new Error('Not enough balance'));
+        return;
       }
       const withFivePercent = BigNumber(rentPrice)
         .times(1.05)
         .integerValue()
         .toFixed();
-
       const txObj = {
         from: this.address,
         value: withFivePercent
       };
-
-      return this.web3.eth.estimateGas(txObj).then(gas => {
-        txObj.gas = gas;
-        return this.registrarControllerContract.methods
-          .registerWithConfig(
-            this.parsedHostName,
-            this.address,
-            this.getActualDuration(duration),
-            utils.sha3(this.secretPhrase),
-            this.publicResolverAddress,
-            this.address
-          )
-          .send(txObj);
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+      this.registrarControllerContract.methods
+        .registerWithConfig(
+          this.parsedHostName,
+          this.address,
+          this.getActualDuration(duration),
+          utils.sha3(this.secretPhrase),
+          this.publicResolverAddress,
+          this.address
+        )
+        .send(txObj)
+        .on('transactionHash', hash => promiEvent.emit('transactionHash', hash))
+        .on('error', err => promiEvent.emit('error', err))
+        .on('receipt', receipt => promiEvent.emit('receipt', receipt));
+    });
+    return promiEvent;
   }
 }

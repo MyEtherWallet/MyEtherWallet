@@ -5,7 +5,6 @@
     :rounded="true"
     class="pa-5"
     width="100%"
-    max-width="400px"
   >
     <div
       v-if="device.status === 'connected'"

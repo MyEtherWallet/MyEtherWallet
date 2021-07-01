@@ -245,7 +245,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
@@ -447,12 +447,13 @@ export default {
       );
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.sendTx && this.sendTx.currency) {
         return (
           this.isValidAmount &&
           this.sendTx.hasEnoughBalance() &&
           this.isValidAddress
         );
+      }
       return false;
     },
     actualGasPrice() {
@@ -477,7 +478,9 @@ export default {
     tokensList: {
       handler: function (val) {
         this.selectedCurrency = val.length > 0 ? val[0] : {};
-        this.sendTx.setCurrency(this.selectedCurrency);
+        if (this.sendTx) {
+          this.sendTx.setCurrency(this.selectedCurrency);
+        }
       },
       deep: true,
       immediate: true
@@ -524,6 +527,11 @@ export default {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
+    this.sendTx.setCurrency(this.selectedCurrency);
+    this.handleLocalGasPrice({
+      gasType: this.gasPriceType,
+      gasPrice: this.gasPrice
+    });
   },
   created() {
     this.debouncedGasLimitError = _.debounce(value => {
@@ -657,7 +665,6 @@ export default {
       this.isValidAddress = false;
       this.toAddress = '';
       this.$refs.mewSelect.clear();
-      this.$refs.mewInput.clear();
       this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {

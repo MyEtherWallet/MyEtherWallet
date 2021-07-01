@@ -20,7 +20,7 @@
                 <g id="Send-Transaction" transform="translate(23.000000, 429.000000)">
                     <path d="M6,0 L334,0 C337.313708,-6.08718376e-16 340,2.6862915 340,6 L340,56 C340,59.3137085 337.313708,62 334,62 L6,62 C2.6862915,62 4.05812251e-16,59.3137085 0,56 L0,6 C-4.05812251e-16,2.6862915 2.6862915,6.08718376e-16 6,0 Z" id="Unlock-wallet" fill="#05C0A5"></path>
                     <text id="Buy-Tokens" font-family="SFProText-Medium, SF Pro Text" font-size="14" font-weight="400" fill="#FFFFFF">
-                        <tspan x="130.563477" y="36.12">Buy Tokens</tspan>
+                        <tspan x="130.563477" y="36.12">Get tokens</tspan>
                     </text>
                 </g>
                 <text id="Customize-my-token-l" font-family="SFProText-Regular, SF Pro Text" font-size="14" font-weight="normal" line-spacing="20" fill="#334758">
