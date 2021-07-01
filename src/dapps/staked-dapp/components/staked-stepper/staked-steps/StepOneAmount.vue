@@ -23,7 +23,24 @@
         outlined
         @input="setAmount"
       />
-
+      <!--
+    ===================================================
+    TODO: add rules to mew-select and remove this
+    ===================================================
+    -->
+      <div
+        v-if="!hasEnoughBalance && rules"
+        class="mt-n6 pb-6 mew-label error--text font-weight-medium"
+      >
+        {{ rules }}.
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          href="https://ccswap.myetherwallet.com/#/"
+          class="mew-label font-weight-medium"
+          >Buy more ETH</a
+        >
+      </div>
       <!--
     ===================================================
     Staking APR and fee
@@ -124,6 +141,7 @@
       :has-full-width="false"
       btn-size="xlarge"
       title="Next: Eth2 address"
+      :disabled="!hasEnoughBalance"
       @click.native="onContinue"
     />
   </div>
@@ -139,7 +157,6 @@ import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-// TODO: need to add rules on component side for mew select, add :disabled="!hasEnoughBalance" to mew button
 export default {
   components: { BorderBlock },
   props: {
@@ -195,9 +212,10 @@ export default {
      * Validates amount
      */
     rules() {
-      return [
-        this.hasEnoughBalance || this.$t('dappsStaked.error-not-enough-bal')
-      ];
+      if (!this.hasEnoughBalance) {
+        return 'Not enough funds. Staking requires 32 ETH per validator.';
+      }
+      return null;
     },
     /**
      * @returns boolean

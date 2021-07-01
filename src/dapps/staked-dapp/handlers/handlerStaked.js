@@ -58,6 +58,7 @@ export default class Staked {
     this.myValidators = [];
     this.loadingValidators = false;
     this.myETHTotalStaked = 0;
+    this.pendingTxHash = '';
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
     /**
      * get the initial data (total staked, apr, validators)
@@ -201,8 +202,8 @@ export default class Staked {
     this.transactionData.from = this.address;
     this.web3.eth
       .sendTransaction(this.transactionData)
-      .on('transactionHash', () => {
-        // this.txHash = res;
+      .on('transactionHash', res => {
+        this.pendingTxHash = res;
       })
       .catch(err => {
         Toast(err, {}, ERROR);

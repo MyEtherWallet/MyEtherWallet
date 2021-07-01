@@ -89,6 +89,7 @@
           {{ stakedStep1Title.message }}
           <a
             v-if="stakedStep1Title.showContactSupport"
+            rel="noopener noreferrer"
             class="cursor-pointer primary--text text-lowercase"
             href="mailto:support@myetherwallet.com"
             target="_blank"
@@ -224,9 +225,7 @@ export default {
           img: iconETHBlue,
           subtitle: 'Staking',
           title: this.amount + ' ETH',
-          desc: formatFiatValue(
-            new BigNumber(this.amount).times(this.fiatValue)
-          ).value
+          desc: this.amountFiat
         },
         {
           img: iconColorfulETH,
@@ -293,6 +292,13 @@ export default {
         return new BigNumber(this.amount).dividedBy(32).toFixed();
       }
       return 0;
+    },
+    /**
+     * @returns eth staking amount in fiat
+     */
+    amountFiat() {
+      return formatFiatValue(new BigNumber(this.amount).times(this.fiatValue))
+        .value;
     }
   },
   watch: {

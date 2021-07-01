@@ -34,10 +34,10 @@
     Pending Validators
     ===================================================
     -->
-      <div v-if="pendingValidators.length > 0" class="pb-8">
+      <div v-if="allPendingValidators.length > 0" class="pb-8">
         <span class="mew-heading-3">Pending</span>
         <div
-          v-for="(pending, idx) in pendingValidators"
+          v-for="(pending, idx) in allPendingValidators"
           :key="pending + idx"
           class="
             mt-4
@@ -67,7 +67,7 @@
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
                 <div class="textPrimary--text mt-1">
-                  {{ '$' + pending.amountUSD }}
+                  {{ '$' + pending.amountFiat }}
                 </div>
               </div>
             </div>
@@ -145,15 +145,17 @@
     -->
             <div class="d-flex mt-6">
               <a
+                rel="noopener noreferrer"
                 class="font-weight-medium"
-                :href="'https://etherscan.io/address/' + address"
+                :href="pending.etherscanUrl"
                 target="_blank"
                 >View on Etherscan
                 <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
               >
               <a
+                rel="noopener noreferrer"
                 class="font-weight-medium ml-5"
-                :href="'https://www.ethvm.com/address/' + address"
+                :href="pending.ethVmUrl"
                 target="_blank"
                 >View on EthVM
                 <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
@@ -186,6 +188,7 @@
               </span>
               <a
                 v-if="pending.url"
+                rel="noopener noreferrer"
                 class="font-weight-medium mt-5"
                 :href="pending.url"
                 target="_blank"
@@ -231,7 +234,11 @@
               </div>
             </div>
           </div>
-          <a class="font-weight-medium" :href="active.url" target="_blank"
+          <a
+            rel="noopener noreferrer"
+            class="font-weight-medium"
+            :href="active.url"
+            target="_blank"
             >View Eth2 address
             <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
           >
@@ -260,9 +267,17 @@ export default {
       type: Array,
       default: () => []
     },
+    pendingTxHash: {
+      type: String,
+      default: ''
+    },
     loading: {
       type: Boolean,
       default: true
+    },
+    amount: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -314,17 +329,21 @@ export default {
       return this.validators
         .filter(validator => {
           return (
-            validator.raw[0].status.toLowerCase() === STATUS_TYPES.DEPOSITED
+            validator.raw[0].status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+            validator.raw[0].status.toLowerCase() === STATUS_TYPES.PENDING ||
+            validator.raw[0].status.toLowerCase() === STATUS_TYPES.FAILED
           );
         })
         .map(validator => {
           const raw = validator.raw[0];
           return {
             amount: formatFloatingPointValue(raw.amount).value,
-            amountUSD: formatFiatValue(
+            amountFiat: formatFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
             ).value,
             status: raw.status,
+            ethVmUrl: 'https://etherscan.io/address/' + this.address,
+            etherscanUrl: 'https://www.ethvm.com/address/' + this.address,
             url: raw.address
               ? configNetworkTypes.network[this.network.type.name].url +
                 '0x' +
@@ -338,6 +357,36 @@ export default {
                 : '~'
           };
         });
+    },
+    /**
+     * @returns array
+     * Returns the validator that was just staked
+     * displays after step 4 of New Stake tab
+     */
+    justStakedValidator() {
+      if (this.amount > 0 && this.pendingTxHash) {
+        return [
+          {
+            amount: formatFloatingPointValue(this.amount).value,
+            amountFiat: formatFiatValue(
+              new BigNumber(this.amount).times(this.fiatValue)
+            ).value,
+            status: STATUS_TYPES.created,
+
+            ethVmUrl: 'https://etherscan.io/tx/' + this.pendingTxHash,
+            etherscanUrl: 'https://www.ethvm.com/tx/' + this.pendingTxHash
+          }
+        ];
+      }
+      return [];
+    },
+    /**
+     * @returns array
+     * Returns ALL the pending validators
+     * including pending validators from api and just staked validator
+     */
+    allPendingValidators() {
+      return this.pendingValidators.concat(this.justStakedValidator);
     }
   },
   methods: {

@@ -71,7 +71,7 @@
               My stake
             </div>
             <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
-              {{ !loadingValidators ? myETHTotalStaked : '~' }}
+              {{ !loadingValidators ? myETHTotalStaked : '--' }}
             </div>
           </div>
         </v-btn>
@@ -127,7 +127,12 @@
         color="transparent"
         class="py-13 mx-auto"
       >
-        <staked-status :validators="validators" :loading="loadingValidators" />
+        <staked-status
+          :pending-hash="handlerStaked.pendingTxHash"
+          :validators="validators"
+          :loading="loadingValidators"
+          :amount="amount"
+        />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
@@ -156,6 +161,7 @@ export default {
   data() {
     return {
       iconColorfulETH: iconColorfulETH,
+      amount: '',
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
@@ -239,9 +245,11 @@ export default {
     },
     /**
      * Send transaction to confirm staking
+     * and set amount value for staked status
      */
-    sendTransaction() {
+    sendTransaction(amountETH) {
       this.activeTab = 1;
+      this.amount = amountETH;
       this.handlerStaked.sendTransaction();
     }
   }
