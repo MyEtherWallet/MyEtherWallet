@@ -101,6 +101,10 @@ export default {
     }
   },
   watch: {
+    /**
+     * @watches opened
+     * sets the value to v-model value: onCreatePassword immediately
+     */
     opened(newVal) {
       this.onCreatePassword = newVal;
     }
@@ -109,6 +113,9 @@ export default {
     this.onCreatePassword = this.opened;
   },
   methods: {
+    /**
+     * @emits generate with password
+     */
     generateKeystore() {
       this.$emit('generate', this.password);
     }

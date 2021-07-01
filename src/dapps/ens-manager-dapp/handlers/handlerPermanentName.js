@@ -94,8 +94,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
   setIPFSHash(hash) {
     const ipfsToHash = `0x${contentHash.fromIpfs(hash)}`;
     return this.resolverContract.methods
-      .setContentHash(this.nameHash, ipfsToHash)
-      .send({ from: this.address });
+      .setContenthash(this.nameHash, ipfsToHash)
+      .send({ from: this.address })
+      .on('receipt', () => {
+        this._setContentHash();
+      });
   }
 
   // DNS claim name method

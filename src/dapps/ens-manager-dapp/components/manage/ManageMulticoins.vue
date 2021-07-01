@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import multicoins from '@/dapps/ens-manager-dapp/handlers/handlerMulticoins';
-
 export default {
   props: {
     setMulticoin: {
@@ -33,11 +31,15 @@ export default {
         return {};
       },
       type: Function
+    },
+    multicoin: {
+      type: [Object, null],
+      default: null
     }
   },
   data() {
     const errors = {};
-    for (const type in multicoins) {
+    for (const type in this.multicoin) {
       errors[type] = '';
     }
     return {
@@ -48,8 +50,8 @@ export default {
   computed: {
     coins() {
       const coins = [];
-      for (const type in multicoins) {
-        coins.push(multicoins[type]);
+      for (const type in this.multicoin) {
+        coins.push(this.multicoin[type]);
       }
       return coins;
     },
@@ -65,12 +67,16 @@ export default {
     setCoin(value, id) {
       const coin = this.coins[id];
       if (coin.validator.validate(value)) {
-        coin.value = value;
-        this.setCoins.push(coin);
+        const newObj = Object.assign({}, coin, { value: value });
+        this.setCoins.push(newObj);
       } else {
-        this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
-          coin: coin.name
-        });
+        if (value !== '') {
+          this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
+            coin: coin.name
+          });
+        } else {
+          this.errors[coin.symbol] = '';
+        }
       }
     }
   }

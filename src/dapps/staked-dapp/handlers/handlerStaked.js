@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
 
 /**
  * ABI to get fees
@@ -31,7 +30,18 @@ const ABI_GET_FEES = [
   }
 ];
 
-export { ABI_GET_FEES };
+/**
+ * Validator status types
+ */
+const STATUS_TYPES = {
+  PENDING: 'pending',
+  ACTIVE: 'active',
+  CREATED: 'created',
+  DEPOSITED: 'deposited',
+  FAILED: 'failed'
+};
+
+export { ABI_GET_FEES, STATUS_TYPES };
 export default class Staked {
   constructor(web3, network, address) {
     /**
@@ -45,6 +55,10 @@ export default class Staked {
     this.validatorsCount = '';
     this.pollingStatus = {};
     this.transactionData = {};
+    this.myValidators = [];
+    this.loadingValidators = false;
+    this.myETHTotalStaked = 0;
+    this.pendingTxHash = '';
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
     /**
      * get the initial data (total staked, apr, validators)
@@ -63,9 +77,9 @@ export default class Staked {
       .then(res => {
         const raw = this.web3.utils.fromWei(res, 'ether');
         this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = formatPercentageValue(
-          new BigNumber(calculateEth2Rewards({ totalAtStake: raw })).times(100)
-        ).value;
+        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+          .times(100)
+          .toFixed();
       })
       .catch(err => {
         Toast(err, {}, ERROR);
@@ -73,6 +87,7 @@ export default class Staked {
   }
   /**
    * Get clients validators
+   * and get clients total staked
    */
   getValidators() {
     this.loadingValidators = true;
@@ -84,7 +99,14 @@ export default class Staked {
       })
       .then(resp => {
         this.myValidators = resp.data;
-        console.error('myValidators', this.myValidators);
+        this.myETHTotalStaked = resp.data.reduce((total, val) => {
+          const raw = val.raw[0];
+          const balanceETH =
+            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE && raw.balance
+              ? this.convertToEth1(raw.balance).toFixed()
+              : 0;
+          return new BigNumber(total).plus(balanceETH);
+        }, 0);
         this.loadingValidators = false;
       })
       .catch(err => {
@@ -151,7 +173,6 @@ export default class Staked {
             response.data.raw.length === parseInt(this.validatorsCount)
           ) {
             this.pollingStatus = { success: true };
-            console.error('response', response);
             this.transactionData = response.data.transaction;
             clearInterval(interval);
           }
@@ -182,11 +203,17 @@ export default class Staked {
     this.web3.eth
       .sendTransaction(this.transactionData)
       .on('transactionHash', res => {
-        console.error('res', res);
-        this.txHash = res;
+        this.pendingTxHash = res;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
       });
+  }
+  /**
+   * @returns BigNumber
+   * Converts the unit to ETH1 from ETH2
+   */
+  convertToEth1(balance) {
+    return new BigNumber(balance).div(new BigNumber(10).pow(9));
   }
 }

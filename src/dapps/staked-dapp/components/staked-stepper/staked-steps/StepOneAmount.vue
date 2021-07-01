@@ -23,7 +23,24 @@
         outlined
         @input="setAmount"
       />
-
+      <!--
+    ===================================================
+    TODO: add rules to mew-select and remove this
+    ===================================================
+    -->
+      <div
+        v-if="!hasEnoughBalance && rules"
+        class="mt-n6 pb-6 mew-label error--text font-weight-medium"
+      >
+        {{ rules }}.
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          href="https://ccswap.myetherwallet.com/#/"
+          class="mew-label font-weight-medium"
+          >Buy more ETH</a
+        >
+      </div>
       <!--
     ===================================================
     Staking APR and fee
@@ -39,7 +56,7 @@
             Current APR
           </v-col>
           <v-col cols="6" md="6" class="py-1 text-right primary--text">
-            {{ currentApr }}
+            {{ currentAprFormatted }}
           </v-col>
         </v-row>
         <v-row>
@@ -82,15 +99,15 @@
           <v-row>
             <v-col cols="6" md="6" class="py-1">{{ forecast.duration }}</v-col>
             <v-col cols="6" md="6" class="py-1 text-right textSecondary--text">
-              {{ forecast.balanceUSD }}
+              {{ '$' + forecast.balanceFiat }}
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="6" md="6" class="py-1 primary--text">{{
-              forecast.earningsETH
+              forecast.earningsETH + ' ETH'
             }}</v-col>
             <v-col cols="6" md="6" class="py-1 text-right">{{
-              forecast.balanceETH
+              forecast.balanceETH + ' ETH'
             }}</v-col>
           </v-row>
         </div>
@@ -124,6 +141,7 @@
       :has-full-width="$vuetify.breakpoint.smAndDown"
       btn-size="xlarge"
       title="Next: Eth2 address"
+      :disabled="!hasEnoughBalance"
       @click.native="onContinue"
     />
   </div>
@@ -134,9 +152,11 @@ import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
 import eth from '@/assets/images/currencies/eth.png';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-// TODO: need to add rules on component side for mew select, add :disabled="!hasEnoughBalance" to mew button and
-// get the deposit rates
+import {
+  formatFiatValue,
+  formatPercentageValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   components: { BorderBlock },
   props: {
@@ -151,33 +171,23 @@ export default {
         '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
       amount: 0,
       selectedItem: {},
-      eth: eth,
-      depositForecast: [
-        {
-          duration: 'In 3 months',
-          balanceUSD: ' $15,840.00',
-          balanceETH: '34.1952 ETH',
-          earningsETH: '2.1952 ETH'
-        },
-        {
-          duration: 'In 1 year',
-          balanceUSD: ' $15,840.00',
-          balanceETH: '34.1952 ETH',
-          earningsETH: '2.1952 ETH'
-        },
-        {
-          duration: 'In 2 years',
-          balanceUSD: ' $15,840.00',
-          balanceETH: '34.1952 ETH',
-          earningsETH: '2.1952 ETH'
-        }
-      ]
+      eth: eth
     };
   },
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('external', ['networkTokenUSDMarket']),
+    ...mapGetters('external', ['networkTokenUSDMarket', 'fiatValue']),
+    /**
+     * Current APR Formatted
+     * @returns string
+     */
+    currentAprFormatted() {
+      if (this.currentApr > 0) {
+        return formatPercentageValue(this.currentApr).value;
+      }
+      return '--';
+    },
     /**
      * @returns array
      * Mew select dropdown items
@@ -190,9 +200,7 @@ export default {
             name: i + ' ETH',
             value: i,
             img: this.eth,
-            price: formatFiatValue(
-              new BigNumber(i).times(this.networkTokenUSDMarket.value)
-            ).value
+            price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
           });
         }
       }
@@ -204,9 +212,10 @@ export default {
      * Validates amount
      */
     rules() {
-      return [
-        this.hasEnoughBalance || this.$t('dappsStaked.error-not-enough-bal')
-      ];
+      if (!this.hasEnoughBalance) {
+        return 'Not enough funds. Staking requires 32 ETH per validator.';
+      }
+      return null;
     },
     /**
      * @returns boolean
@@ -214,6 +223,80 @@ export default {
      */
     hasEnoughBalance() {
       return BigNumber(this.balanceInETH).gte(this.amount);
+    },
+    /**
+     * @returns array
+     * Calculates the deposit growth forecast
+     */
+    depositForecast() {
+      /**
+       * 3 Months Forecast
+       */
+      const threeMonthsAPR = new BigNumber(this.currentApr)
+        .dividedBy(100)
+        .dividedBy(12)
+        .times(3)
+        .toFixed();
+      const threeMonthsEarning = new BigNumber(this.amount)
+        .times(threeMonthsAPR)
+        .toFixed();
+      /**
+       * 1 year forecast
+       */
+      const oneYearAPR = new BigNumber(this.currentApr)
+        .dividedBy(100)
+        .toFixed();
+      const oneYearEarnings = new BigNumber(this.amount)
+        .times(oneYearAPR)
+        .toFixed();
+      /**
+       * 2 year forecast
+       */
+      const twoYearAPR = new BigNumber(this.currentApr)
+        .dividedBy(100)
+        .times(2)
+        .toFixed();
+      const twoYearEarnings = new BigNumber(this.amount)
+        .times(twoYearAPR)
+        .toFixed();
+      return [
+        {
+          duration: 'In 3 months',
+          balanceFiat: formatFiatValue(
+            new BigNumber(this.amount)
+              .plus(threeMonthsEarning)
+              .times(this.fiatValue)
+          ).value,
+          balanceETH: formatFloatingPointValue(
+            new BigNumber(this.amount).plus(threeMonthsEarning)
+          ).value,
+          earningsETH: formatFloatingPointValue(threeMonthsEarning).value
+        },
+        {
+          duration: 'In 1 year',
+          balanceFiat: formatFiatValue(
+            new BigNumber(this.amount)
+              .plus(oneYearEarnings)
+              .times(this.fiatValue)
+          ).value,
+          balanceETH: formatFloatingPointValue(
+            new BigNumber(this.amount).plus(oneYearEarnings)
+          ).value,
+          earningsETH: formatFloatingPointValue(oneYearEarnings).value
+        },
+        {
+          duration: 'In 2 years',
+          balanceFiat: formatFiatValue(
+            new BigNumber(this.amount)
+              .plus(twoYearEarnings)
+              .times(this.fiatValue)
+          ).value,
+          balanceETH: formatFloatingPointValue(
+            new BigNumber(this.amount).plus(twoYearEarnings)
+          ).value,
+          earningsETH: formatFloatingPointValue(twoYearEarnings).value
+        }
+      ];
     }
   },
   methods: {

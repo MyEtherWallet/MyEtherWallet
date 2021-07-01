@@ -22,7 +22,7 @@ export default {
     return {
       text: '',
       linkObj: {},
-      duration: 3000
+      duration: 6000
     };
   },
   computed: {
@@ -48,7 +48,7 @@ export default {
       EventBus.$on(ToastEvents[item], (text, obj, duration) => {
         this.text = text;
         this.linkObj = obj;
-        this.duration = duration ? duration : 3000;
+        this.duration = duration ? duration : 6000;
         this.callToast(ToastEvents[item]);
       });
     });
@@ -58,7 +58,7 @@ export default {
       EventBus.$off(ToastEvents[item], () => {
         this.text = '';
         this.linkObj = {};
-        this.duration = 3000;
+        this.duration = 6000;
       });
     });
   },
@@ -66,7 +66,7 @@ export default {
     onClose() {
       this.text = '';
       this.linkObj = {};
-      this.duration = 3000;
+      this.duration = 6000;
     },
     getRef(obj) {
       return Object.keys(obj)[0];

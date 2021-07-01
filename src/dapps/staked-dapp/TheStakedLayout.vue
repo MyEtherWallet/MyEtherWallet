@@ -27,7 +27,8 @@
         </div>
         <v-icon color="textPrimary">mdi-circle-medium</v-icon>
         <div class="text-uppercase textPrimary--text font-weight-bold">
-          Current APR: <span class="primary--text">{{ currentAPR }}</span>
+          Current APR:
+          <span class="primary--text">{{ currentAprFormatted }}</span>
         </div>
       </div>
       <!--
@@ -40,29 +41,35 @@
         class="d-flex align-center justify-center mt-3 white--text"
         mandatory
         borderless
-        active-class="active-btn font-weight-medium"
+        active-class="expandHeader font-weight-bold"
         background-color="transparent"
       >
         <v-btn
           class="px-md-9 white--text text-transform--initial"
-          color="#00182c"
+          :class="activeTab === 0 ? 'staked-tab-active' : 'staked-tab-inactive'"
+          color=""
         >
           New stake
         </v-btn>
         <v-btn
-          class="
-            px-md-9
-            white--text
-            text-transform--initial
-            d-flex
-            flex-column
-            align-center
-          "
-          color="#00182c"
+          :class="[
+            'px-md-9 white--text text-transform--initial d-flex  flex-column align-center',
+            activeTab === 1 ? 'staked-tab-active' : 'staked-tab-inactive'
+          ]"
+          color=""
         >
           <div>
-            <div class="white--text">My stake</div>
-            <div class="mew-caption tagLabel--text">32.245234 ETH</div>
+            <div
+              :class="[
+                'white--text',
+                activeTab === 1 ? 'font-weight-medium' : ''
+              ]"
+            >
+              My stake
+            </div>
+            <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
+              {{ !loadingValidators ? myETHTotalStaked : '--' }}
+            </div>
           </div>
         </v-btn>
       </v-btn-toggle>
@@ -98,7 +105,7 @@
         class="mx-auto"
       >
         <staked-stepper
-          :current-apr="currentAPR"
+          :current-apr="handlerStaked.apr"
           :start-provision="startProvision"
           :polling-status="pollingStatus"
           @readyToStake="sendTransaction"
@@ -115,9 +122,14 @@
         min-height="500px"
         max-width="700px"
         color="transparent"
-        class="py-15 mx-auto"
+        class="py-13 mx-auto"
       >
-        <staked-status :validators="validators" :loading="loadingValidators" />
+        <staked-status
+          :pending-hash="handlerStaked.pendingTxHash"
+          :validators="validators"
+          :loading="loadingValidators"
+          :amount="amount"
+        />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
@@ -131,6 +143,10 @@ import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
 import StakedStatus from './components/StakedStatus';
+import {
+  formatPercentageValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'TheStakedLayout',
@@ -142,6 +158,7 @@ export default {
   data() {
     return {
       iconColorfulETH: iconColorfulETH,
+      amount: 0,
       header: {
         title: 'Ethereum 2.0 staking',
         subtext:
@@ -158,6 +175,16 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network']),
     /**
+     * Total staked by user
+     * @returns string
+     */
+    myETHTotalStaked() {
+      return (
+        formatFloatingPointValue(this.handlerStaked.myETHTotalStaked).value +
+        ' ETH'
+      );
+    },
+    /**
      * Total Staked
      * @returns string
      */
@@ -165,11 +192,14 @@ export default {
       return this.handlerStaked.totalStaked + ' ETH';
     },
     /**
-     * Current APR
+     * Current APR Formatted
      * @returns string
      */
-    currentAPR() {
-      return this.handlerStaked.apr;
+    currentAprFormatted() {
+      if (this.handlerStaked.apr > 0) {
+        return formatPercentageValue(this.handlerStaked.apr).value;
+      }
+      return '--';
     },
     /**
      * Gets the status after polling (happens on step4)
@@ -184,6 +214,13 @@ export default {
      */
     validators() {
       return this.handlerStaked.myValidators;
+    },
+    /**
+     * Checks if validators are loading
+     * @returns boolean
+     */
+    loadingValidators() {
+      return this.handlerStaked.loadingValidators;
     }
   },
   mounted() {
@@ -205,8 +242,10 @@ export default {
     },
     /**
      * Send transaction to confirm staking
+     * and set amount value for staked status
      */
-    sendTransaction() {
+    sendTransaction(amountETH) {
+      this.amount = amountETH;
       this.activeTab = 1;
       this.handlerStaked.sendTransaction();
     }
@@ -214,8 +253,11 @@ export default {
 };
 </script>
 
-<style scoped>
-.active-btn {
-  background-color: #001f74 !important;
+<style lang="scss" scoped>
+.staked-tab-inactive {
+  background-color: rgba(0, 0, 0, 0.24) !important;
+}
+.staked-tab-active::before {
+  opacity: 0 !important;
 }
 </style>

@@ -1,4 +1,4 @@
-import bsc from '@/assets/images/networks/network.svg';
+import bsc from '@/assets/images/networks/bsc.svg';
 import tokens from '@/_generated/tokens/tokens-bsc.json';
 export default {
   name: 'BSC',
