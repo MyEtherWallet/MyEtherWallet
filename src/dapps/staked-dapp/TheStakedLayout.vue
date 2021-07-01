@@ -19,7 +19,7 @@
     ===================================================
     -->
     <template #HeaderBody>
-      <v-divider class="textPrimary" />
+      <v-divider class="textPrimary my-3" />
       <div class="d-flex flex-wrap align-center justify-center">
         <div class="text-uppercase textPrimary--text font-weight-bold">
           Total Staked:
@@ -40,12 +40,12 @@
         class="d-flex align-center justify-center mt-3 white--text"
         mandatory
         borderless
-        active-class="expandHeader font-weight-medium"
+        active-class="active-btn font-weight-medium"
         background-color="transparent"
       >
         <v-btn
           class="px-md-9 white--text text-transform--initial"
-          color="titlePrimary"
+          color="#00182c"
         >
           New stake
         </v-btn>
@@ -58,7 +58,7 @@
             flex-column
             align-center
           "
-          color="titlePrimary"
+          color="#00182c"
         >
           <div>
             <div class="white--text">My stake</div>
@@ -213,3 +213,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.active-btn {
+  background-color: #001f74 !important;
+}
+</style>
