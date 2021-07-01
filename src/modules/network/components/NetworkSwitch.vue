@@ -8,8 +8,6 @@
   >
     <template #mewOverlayBody>
       <v-sheet color="white" max-width="740px" width="100%" class="mx-auto">
-        <!-- <h2 class="text-center mt-13 mb-8">Select Network</h2> -->
-
         <v-sheet
           color="transparent"
           max-width="516px"
@@ -54,9 +52,24 @@
             =====================================================================================
             -->
             <v-col cols="12" sm="7" class="order-sm-1">
-              <mew-search placeholder="Find Network" :value="searchInput" />
+              <mew-search
+                placeholder="Find Network"
+                :value="searchInput"
+                @input="setSearch"
+              />
             </v-col>
           </v-row>
+          <!--
+          =====================================================================================
+            Empty Search Message
+          =====================================================================================
+          -->
+          <app-user-msg-block
+            v-if="showEmptySearch"
+            :message="emptySearchMes"
+            :is-alert="false"
+            class="mt-5"
+          />
           <!--
           =====================================================================================
             Networks
@@ -67,8 +80,9 @@
               v-for="(network, i) in networks"
               :key="network.name"
               :class="[
-                { 'network-border-bottom': i + 1 < networks.length },
-                'py-4 px-5'
+                { 'network-border-first': i === 0 },
+                { 'network-border-last': i + 1 === networks.length },
+                'py-4 px-5 network-border'
               ]"
             >
               <v-row class="pa-0 mew-body align-center justify-start">
@@ -119,9 +133,11 @@
 import * as nodes from '@/utils/networks/nodes';
 import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
-import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
+import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 export default {
   name: 'NetworkSwitch',
+  components: { AppUserMsgBlock },
   props: {
     open: { type: Boolean, default: false },
     close: { type: Function, default: () => {} }
@@ -137,31 +153,66 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
+    /**
+     * Property returns sorted network names alphabeticaly in this order: ETH, main and then test networks
+     * @returns {string[]}
+     */
     typeNames() {
-      const typeNames = Object.keys(types);
-      typeNames.splice(typeNames.indexOf('ETH'), 1);
-      typeNames.unshift('ETH');
-      return typeNames;
+      const unsorted = Object.keys(types);
+      unsorted.splice(unsorted.indexOf('ETH'), 1);
+      unsorted.sort();
+      const test = unsorted.filter(item => {
+        return types[item].isTestNetwork;
+      });
+      const main = unsorted.filter(item => {
+        return !types[item].isTestNetwork;
+      });
+      const sorted = main.concat(test);
+      sorted.unshift('ETH');
+      return sorted;
     },
-
+    /**
+     * Property returns filter networks list based on search input and toggle  type
+     * @returns {object[]}
+     */
     networks() {
       const allNetworks = [];
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      console.log(allNetworks);
+      if (this.searchInput && this.searchInput !== '') {
+        return allNetworks.filter(item =>
+          this.hasString(item.name, item.name_long)
+        );
+      }
+      if (this.toggleType === 0) {
+        return allNetworks.filter(item => !item.isTestNetwork);
+      }
+      if (this.toggleType === 1) {
+        return allNetworks.filter(item => item.isTestNetwork);
+      }
       return allNetworks;
-
-      // Object.keys(this.nodes).forEach(item => {
-      //   if (this.nodes[item]) {
-      //     newObj[this.nodes[item].type.name].push({
-      //       name: this.nodes[item].service,
-      //       value: this.nodes[item].url
-      //     });
-      //   }
-      // });
-
-      // return newObj;
+    },
+    /**
+     * Property shows invalid search if user inlcuded input and networks length is 0
+     * @returns {boolean}
+     */
+    showEmptySearch() {
+      return (
+        this.searchInput &&
+        this.searchInput !== '' &&
+        this.networks.length === 0
+      );
+    },
+    /**
+     * Property shows search input string
+     * @returns {object}
+     */
+    emptySearchMes() {
+      return {
+        title: `You entered: ${this.searchInput}`,
+        subtitle: 'We do not have a network with this name.'
+      };
     }
   },
   watch: {
@@ -183,8 +234,13 @@ export default {
             this.close();
           });
         } catch (e) {
-          Toast(`Couldn't network`, {}, SUCCESS);
+          Toast(`Could not switch network`, {}, ERROR);
         }
+      }
+    },
+    searchInput(newVal, oldVal) {
+      if (newVal != oldVal && (!oldVal || oldVal === '')) {
+        this.toggleType = 2;
       }
     }
   },
@@ -193,26 +249,44 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
-    ...mapActions('global', ['setNetwork'])
+    ...mapActions('global', ['setNetwork']),
+    /**
+     * Method checks whther symbol or name has searchInput substring
+     * @returns {boolean}
+     */
+    hasString(symbol, name) {
+      return (
+        symbol.toLowerCase().includes(this.searchInput.toLowerCase()) ||
+        name.toLowerCase().includes(this.searchInput.toLowerCase())
+      );
+    },
+    /**
+     * Method sets SearchInout on mew-search input event
+     * @returns {boolean}
+     */
+    setSearch(newVal) {
+      this.searchInput = newVal;
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
+$borderNetwork: 1px solid #ececec;
 .networks-container {
   max-width: 516px;
 }
-
-.network-border-bottom {
-  border-bottom: 1px solid #ececec;
+.network-border {
+  border-bottom: $borderNetwork;
+  border-right: $borderNetwork;
+  border-left: $borderNetwork;
 }
 
-.v-radio label {
-  left: -8px !important;
+.network-border-first {
+  border-top: $borderNetwork;
+  border-radius: 4px 4px 0px 0px;
 }
 
-.v-input--radio-group__input {
-  border: 1px solid #ececec;
-  box-sizing: border-box;
-  border-radius: 4px;
+.network-border-last {
+  border-radius: 0px 0px 4px 4px;
 }
 </style>
