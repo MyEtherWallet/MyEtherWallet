@@ -48,7 +48,6 @@ module.exports = [
   'https://node.mainnet.lightstreams.io:443',
   'https://rpc.ethercore.io:443',
   'https://sai-mainnet.makerfoundation.com:443',
-  'wss://api.thegraph.com:443',
   'https://ambrpay.io:443',
   'https://nft2.mewapi.io:443',
   'wss://connect.mewapi.io:443',
@@ -57,7 +56,7 @@ module.exports = [
   'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
-  'https://localhost:1991', // server for bcvault
+  'https://localhost:1991',
   'https://rpc.atheios.org:443',
   'wss://bridge.walletconnect.org:443',
   'https://dexag.mewapi.io:443',
@@ -83,8 +82,8 @@ module.exports = [
   'https://api.avax-test.network:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
-  'https://c.onical.org:443', // aqua
-  'https://tx.info.aquacha.in:443/api', // aqua
+  'https://c.onical.org:443',
+  'https://tx.info.aquacha.in:443/api',
   'https://rpc.xdaichain.com:443',
   'https://mainnet.mewwallet.dev:443',
   'https://staging.mewwallet.dev:443',
@@ -92,5 +91,8 @@ module.exports = [
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
-  'https://api.wallet.coinbase.com:443'
+  'https://api.wallet.coinbase.com:443',
+  'https://api.exchangeratesapi.io:443',
+  'https://api.commerce.coinbase.com:443',
+  'https://rpc-mainnet.maticvigil.com:443'
 ];
