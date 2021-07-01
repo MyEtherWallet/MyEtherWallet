@@ -30,7 +30,18 @@ const ABI_GET_FEES = [
   }
 ];
 
-export { ABI_GET_FEES };
+/**
+ * Validator status types
+ */
+const STATUS_TYPES = {
+  PENDING: 'pending',
+  ACTIVE: 'active',
+  CREATED: 'created',
+  DEPOSITED: 'deposited',
+  FAILED: 'failed'
+};
+
+export { ABI_GET_FEES, STATUS_TYPES };
 export default class Staked {
   constructor(web3, network, address) {
     /**
@@ -44,6 +55,9 @@ export default class Staked {
     this.validatorsCount = '';
     this.pollingStatus = {};
     this.transactionData = {};
+    this.myValidators = [];
+    this.loadingValidators = false;
+    this.myETHTotalStaked = 0;
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
     /**
      * get the initial data (total staked, apr, validators)
@@ -72,9 +86,10 @@ export default class Staked {
   }
   /**
    * Get clients validators
+   * and get clients total staked
    */
   getValidators() {
-    // this.loadingValidators = true;
+    this.loadingValidators = true;
     return axios
       .get(`${this.endpoint}/history?address=${this.address}`, {
         header: {
@@ -83,10 +98,18 @@ export default class Staked {
       })
       .then(resp => {
         this.myValidators = resp.data;
-        // this.loadingValidators = false;
+        this.myETHTotalStaked = resp.data.reduce((total, val) => {
+          const raw = val.raw[0];
+          const balanceETH =
+            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE && raw.balance
+              ? this.convertToEth1(raw.balance).toFixed()
+              : 0;
+          return new BigNumber(total).plus(balanceETH);
+        }, 0);
+        this.loadingValidators = false;
       })
       .catch(err => {
-        // this.loadingValidators = false;
+        this.loadingValidators = false;
         this.myValidators = [];
         if (
           err.response &&
@@ -184,5 +207,12 @@ export default class Staked {
       .catch(err => {
         Toast(err, {}, ERROR);
       });
+  }
+  /**
+   * @returns BigNumber
+   * Converts the unit to ETH1 from ETH2
+   */
+  convertToEth1(balance) {
+    return new BigNumber(balance).div(new BigNumber(10).pow(9));
   }
 }

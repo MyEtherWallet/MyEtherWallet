@@ -55,7 +55,7 @@
         <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
         <div>
           {{ fee.ethValue }} <span class="captionPrimary--text">ETH /</span>
-          {{ fee.usdValue }}
+          {{ fee.fiatValue }}
         </div>
       </div>
     </div>
@@ -168,7 +168,7 @@
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import eth from '@/assets/images/currencies/eth.png';
+import iconETHBlue from '@/assets/images/currencies/icon-eth-blue.svg';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import {
   formatFiatValue,
@@ -221,7 +221,7 @@ export default {
     details() {
       return [
         {
-          img: eth,
+          img: iconETHBlue,
           subtitle: 'Staking',
           title: this.amount + ' ETH',
           desc: formatFiatValue(
@@ -246,34 +246,35 @@ export default {
         {
           title: 'Network fee',
           ethValue: this.networkFees.eth,
-          usdValue: '$' + this.networkFees.usd
+          fiatValue: '$' + this.networkFees.fiat
         },
         {
           title: 'Service fee',
           ethValue: this.serviceFees.eth,
-          usdValue: this.serviceFees.usd
+          fiatValue: this.serviceFees.fiat
         },
         {
           title: 'Total',
           ethValue: this.totalFees.eth,
-          usdValue: this.totalFees.usd
+          fiatValue: this.totalFees.fiat
         }
       ];
     },
     /**
      * @returns object
-     * Network fees in ETH and usd
+     * Network fees in ETH and fiat
      */
     networkFees() {
       const gasPriceETH = formatBalanceEthValue(this.gasPrice).value;
       return {
         eth: gasPriceETH,
-        usd: formatFiatValue(BigNumber(this.fiatValue).times(gasPriceETH)).value
+        fiat: formatFiatValue(BigNumber(this.fiatValue).times(gasPriceETH))
+          .value
       };
     },
     /**
      * @returns object
-     * Total fees in ETH and usd
+     * Total fees in ETH and fiat
      */
     totalFees() {
       const totalETH = new BigNumber(this.networkFees.eth)
@@ -281,7 +282,7 @@ export default {
         .toFixed();
       return {
         eth: totalETH,
-        usd: new BigNumber(this.fiatValue).times(totalETH).toFixed()
+        fiat: new BigNumber(this.fiatValue).times(totalETH).toFixed()
       };
     },
     /**
@@ -337,7 +338,7 @@ export default {
       const feesETH = formatBalanceEthValue(feesWEI).value;
       this.serviceFees = {
         eth: feesETH,
-        usd: formatFiatValue(BigNumber(this.fiatValue).times(feesETH)).value
+        fiat: formatFiatValue(BigNumber(this.fiatValue).times(feesETH)).value
       };
     },
     /**

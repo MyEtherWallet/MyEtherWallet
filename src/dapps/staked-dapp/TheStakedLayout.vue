@@ -19,7 +19,7 @@
     ===================================================
     -->
     <template #HeaderBody>
-      <v-divider class="textPrimary" />
+      <v-divider class="textPrimary my-3" />
       <div class="d-flex flex-wrap align-center justify-center">
         <div class="text-uppercase textPrimary--text font-weight-bold">
           Total Staked:
@@ -62,8 +62,17 @@
           color="titlePrimary"
         >
           <div>
-            <div class="white--text">My stake</div>
-            <div class="mew-caption tagLabel--text">32.245234 ETH</div>
+            <div
+              :class="[
+                'white--text',
+                activeTab === 1 ? 'font-weight-medium' : ''
+              ]"
+            >
+              My stake
+            </div>
+            <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
+              {{ !loadingValidators ? myETHTotalStaked : '~' }}
+            </div>
           </div>
         </v-btn>
       </v-btn-toggle>
@@ -116,9 +125,9 @@
         min-height="500px"
         max-width="700px"
         color="transparent"
-        class="py-15 mx-auto"
+        class="py-13 mx-auto"
       >
-        <staked-status :validators="validators" />
+        <staked-status :validators="validators" :loading="loadingValidators" />
       </v-sheet>
     </template>
   </the-wrapper-dapp>
@@ -132,7 +141,10 @@ import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
 import StakedStatus from './components/StakedStatus';
-import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatPercentageValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'TheStakedLayout',
@@ -160,6 +172,16 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network']),
     /**
+     * Total staked by user
+     * @returns string
+     */
+    myETHTotalStaked() {
+      return (
+        formatFloatingPointValue(this.handlerStaked.myETHTotalStaked).value +
+        ' ETH'
+      );
+    },
+    /**
      * Total Staked
      * @returns string
      */
@@ -171,8 +193,8 @@ export default {
      * @returns string
      */
     currentAprFormatted() {
-      if (this.currentApr > 0) {
-        return formatPercentageValue(this.currentApr).value;
+      if (this.handlerStaked.apr > 0) {
+        return formatPercentageValue(this.handlerStaked.apr).value;
       }
       return '--';
     },
@@ -189,6 +211,13 @@ export default {
      */
     validators() {
       return this.handlerStaked.myValidators;
+    },
+    /**
+     * Checks if validators are loading
+     * @returns boolean
+     */
+    loadingValidators() {
+      return this.handlerStaked.loadingValidators;
     }
   },
   mounted() {

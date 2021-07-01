@@ -82,7 +82,7 @@
           <v-row>
             <v-col cols="6" md="6" class="py-1">{{ forecast.duration }}</v-col>
             <v-col cols="6" md="6" class="py-1 text-right textSecondary--text">
-              {{ '$' + forecast.balanceUSD }}
+              {{ '$' + forecast.balanceFiat }}
             </v-col>
           </v-row>
           <v-row>
@@ -244,7 +244,7 @@ export default {
       return [
         {
           duration: 'In 3 months',
-          balanceUSD: formatFiatValue(
+          balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(threeMonthsEarning)
               .times(this.fiatValue)
@@ -256,7 +256,7 @@ export default {
         },
         {
           duration: 'In 1 year',
-          balanceUSD: formatFiatValue(
+          balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(oneYearEarnings)
               .times(this.fiatValue)
@@ -268,7 +268,7 @@ export default {
         },
         {
           duration: 'In 2 years',
-          balanceUSD: formatFiatValue(
+          balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(twoYearEarnings)
               .times(this.fiatValue)
