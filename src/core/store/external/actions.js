@@ -99,10 +99,6 @@ const setTokenBalance = function ({
     .then(res => res.json())
     .then(res => res.result)
     .then(tokens => {
-      tokens.push({
-        contract: MAIN_TOKEN_ADDRESS,
-        balance: balanceInWei
-      });
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);

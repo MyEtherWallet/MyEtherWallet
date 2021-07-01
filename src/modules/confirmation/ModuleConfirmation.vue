@@ -33,7 +33,7 @@
             Links
           =====================================================================================
           -->
-          <v-row class="justify-sm-space-between align-center pt-3" dense>
+          <v-row class="justify-sm-space-around align-center pt-3" dense>
             <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
               <a
                 class="d-flex justify-center justify-sm-end"
@@ -469,7 +469,11 @@ export default {
   watch: {
     signedTxArray: {
       handler: function (newVal) {
-        if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
+        if (
+          this.isWeb3Wallet &&
+          newVal.length !== 0 &&
+          newVal.length === this.unsignedTxArr.length
+        ) {
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
@@ -638,10 +642,10 @@ export default {
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
         _tx.gasPrice = isHex(_tx.gasPrice)
-          ? fromWei(hexToNumberString(_tx.gasPrice), 'gwei')
+          ? hexToNumberString(_tx.gasPrice)
           : _tx.gasPrice;
         _tx.transactionFee = fromWei(
-          BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+          BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);

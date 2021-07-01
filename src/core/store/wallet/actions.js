@@ -65,6 +65,7 @@ const setWeb3Instance = function (
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
         const gasPrice = rootGetters['global/gasPrice'];
+
         const localTx = {
           to: arr[i].to,
           data: arr[i].data,
