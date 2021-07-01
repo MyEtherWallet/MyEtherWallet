@@ -21,21 +21,24 @@ const setDarkList = async function ({ commit }) {
   });
 };
 const setCurrency = async function ({ commit }, val) {
-  const rates = await fetch(
-    'https://mainnet.mewwallet.dev/v2/prices/exchange-rates'
-  )
+  fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
     .then(res => res.json())
+    .then(rates => {
+      const currentRate = rates
+        ? rates.find(rate => rate.fiat_currency === val)
+        : {};
+      commit('SET_CURRENCY_RATE', {
+        data: currentRate,
+        timestamp: Date.now()
+      });
+    })
     .catch(e => {
+      commit('SET_CURRENCY_RATE', {
+        data: {},
+        timestamp: Date.now()
+      });
       Toast(e.message, {}, ERROR);
     });
-  const currentRate =
-    rates && Array.isArray(rates)
-      ? rates.find(rate => rate.fiat_currency === val)
-      : [];
-  commit('SET_CURRENCY_RATE', {
-    data: currentRate,
-    timestamp: Date.now()
-  });
 };
 const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
