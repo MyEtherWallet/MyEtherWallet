@@ -50,7 +50,7 @@
                       mew-caption
                       text-uppercase
                       font-weight-bold
-                      primary--text
+                      #667f9b--text
                       text--lighten-1
                     "
                   >
@@ -65,9 +65,6 @@
                       {{ b.price }}
                     </div>
                   </div>
-                  <div>
-                    {{ b.note }}
-                  </div>
                   <div class="mt-3 primary--text font-weight-medium">
                     Learn more >
                   </div>
@@ -78,7 +75,7 @@
                     :src="b.walletImg"
                     alt="Hardware Wallet"
                     max-width="90px"
-                    max-height="110px"
+                    max-height="100px"
                     contain
                   />
                 </div>
@@ -171,7 +168,7 @@ export default {
       toptitle: '',
       title: 'Get a hardware wallet today!',
       description:
-        'The Hardware wallet offer the highest security for accessing your crypto.',
+        'A Hardware wallet offers the highest security for accessing your crypto.',
       centered: true
     }
   })

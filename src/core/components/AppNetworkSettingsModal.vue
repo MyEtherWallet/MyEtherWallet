@@ -8,11 +8,15 @@
     <v-sheet class="py-6 px-4">
       <v-row>
         <v-col cols="12">
-          <p class="mew-heading-1">Network Fee</p>
+          <p class="mew-heading-1">Network fee</p>
           <p class="mew-body">
             This fee is calculated by multiplying the gas price and gas limit
-            for your transaction. Higher fees results in faster transactions.
-            <a>Learn More </a>
+            for your transaction. Higher fees result in faster transactions.
+            <a
+              href="https://kb.myetherwallet.com/en/transactions/what-is-gas/"
+              target="_blank"
+              >Learn more
+            </a>
           </p>
           <settings-gas-price
             :is-swap="true"
