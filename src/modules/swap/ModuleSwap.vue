@@ -89,7 +89,7 @@
           <app-user-msg-block
             v-if="!hasMinEth"
             class="mt-sm-5"
-            :message="msg.storeBitcoin"
+            :message="msg.lowBalance"
           >
             <div class="mt-3 mx-n1">
               <mew-button
@@ -128,7 +128,7 @@
               isEthNetwork
             "
             class="mt-sm-5"
-            :message="msg.lowBalance"
+            :message="msg.storeBitcoin"
           >
             <div class="border-top mt-3">
               <v-expansion-panels
@@ -315,18 +315,6 @@ export default {
         subtitle:
           'Please select ETH, BSC or MATIC networks to use this feature.'
       },
-      msg: {
-        storeBitcoin: {
-          title: 'Your Ether balance is too low',
-          subtitle:
-            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
-        },
-        lowBalance: {
-          title: 'Did you know? You can store your Bitcoin on Ethereum',
-          subtitle:
-            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
-        }
-      },
       step: 0,
       confirmInfo: {
         to: '',
@@ -389,6 +377,21 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     * Property returns correct mes
+     */
+    msg() {
+      return {
+        lowBalance: {
+          title: `Your ${this.network.type.name} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+        },
+        storeBitcoin: {
+          title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
+          subtitle: `To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your ${this.network.type.name_long} wallet.`
+        }
+      };
+    },
     disableNext() {
       return (
         this.step < 2 ||

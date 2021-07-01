@@ -212,7 +212,7 @@ export default {
      */
     emptySearchMes() {
       return {
-        title: `You entered: ${this.searchInput}`,
+        title: '',
         subtitle: 'We do not have a network with this name.'
       };
     }
