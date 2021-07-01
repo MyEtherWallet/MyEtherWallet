@@ -63,7 +63,7 @@
   "transfer-domain": "Transfer Domain",
   "release-deed": "Return Deed",
   "hang-on": "Hang on tight!",
-  "hang-on-committing": "Please do not close your browser or exit this Dapp, we are creating a commitment for your domain.",
+  "hang-on-committing": "Please do not close your browser or exit this Dapp, we are creating a commitment for your domain. Timer will start once your transaction is confirmed",
   "finalize-registration": "We are finalizing the registration for ",
   "register-progress": "Registration in progress for",
   "domain-old": "{domain} is still in the old registrar!",
@@ -123,7 +123,7 @@
   },
   "request": {
     "request-registr": "Request registration",
-    "choose-term": "Choose the term to keep your domain",
+    "select-duration": "Select Duration",
     "estimated-price": "Estimated Price",
     "about-domain": "Once you have a domain name, you can tell your friends to send ETH to your domain name instead of your address."
   },

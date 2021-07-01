@@ -27,7 +27,7 @@
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <mew-icon icon-name="ETH" :img-height="65" />
+      <img height="65" :src="network.type.icon" />
     </mew6-white-sheet>
   </div>
 </template>
