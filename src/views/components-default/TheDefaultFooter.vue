@@ -21,18 +21,11 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              Love
-              <mew-icon
-                class="mx-1"
-                icon-name="love"
-                icon-type="mew"
-                :img-height="30"
-              />
-              MEW? Donate!
+              Love MEW?
             </div>
             <p>
-              MEW is a open-source and free to the community. Your donations go
-              a long way towards making that possible.
+              Help us keep MEW free and open-source, your donations go a long
+              way towards making that possible.
             </p>
             <a
               class="color--inherit d-flex align-center mb-3"
@@ -177,19 +170,10 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="mb-3 d-flex align-center">
-              Love
-              <mew-icon
-                class="mx-1"
-                icon-name="love"
-                icon-type="mew"
-                :img-height="30"
-              />
-              MEW? Donate!
-            </h3>
+            <h3 class="mb-3 d-flex align-center">Love MEW?</h3>
             <p>
-              MEW is a open-source and free to the community. Your donations go
-              a long way towards making that possible.
+              Help us keep MEW free and open-source, your donations go a long
+              way towards making that possible.
             </p>
             <a
               class="color--inherit d-flex align-center mb-1"
@@ -320,12 +304,12 @@ export default {
     version: VERSION,
     footers: [
       {
-        title: 'Hardware Wallets',
+        title: 'Affiliate Hardware Wallets',
         data: [
-          { label: 'Ledger wallet', link: 'https://www.ledger.com/?r=fa4b' },
+          { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
           { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
           {
-            label: 'Ether card',
+            label: 'Ether Cards',
             link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
           },
           { label: 'Trezor', link: 'https://trezor.io/' },
@@ -341,7 +325,7 @@ export default {
         ]
       },
       {
-        title: 'Mew',
+        title: 'MEW',
         data: [
           { label: 'About us', routerLink: 'CompanyPage' },
           { label: 'How it works', routerLink: 'HowItWorks' },
@@ -351,7 +335,7 @@ export default {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'
           },
-          { label: 'MEW topia', link: 'https://www.mewtopia.com/' },
+          { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' }
         ]

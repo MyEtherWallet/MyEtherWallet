@@ -1,12 +1,11 @@
 <template>
   <v-container class="mew-component--partners py-7 py-md-12 mb-6">
-    <v-sheet color="transparent" max-width="400px">
+    <v-sheet color="transparent" align="center">
       <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
         Partners
       </div>
-      <h1 class="mb-md-9">Connect with the powerful crypto communities</h1>
     </v-sheet>
-    <v-row class="mt-md-8 px-4">
+    <v-row class="mt-2 px-4">
       <v-col
         v-for="(p, key) in partners"
         :key="key"

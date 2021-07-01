@@ -17,8 +17,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "preinstall": "bash checklockconflicts.sh && npx npm-force-resolutions",
-    "postinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists",
@@ -74,7 +73,6 @@
     "subscriptions-transport-ws": "0.9.19",
     "vue": "2.6.14",
     "vue-apollo": "3.0.7",
-    "vue-matomo": "4.0.1",
     "vue-router": "3.5.2",
     "vuex": "3.6.2",
     "walletlink": "2.1.5"
@@ -126,8 +124,8 @@
     "marked": "2.0.7",
     "multicoin-address-validator": "0.4.5",
     "node-fetch": "2.6.1",
-    "node-sass": "6.0.0",
-    "package-json": "6.5.0",
+    "node-sass": "6.0.1",
+    "package-json": "7.0.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
     "prettier": "2.3.1",
@@ -178,7 +176,8 @@
     "dns-packet": "5.2.2",
     "trim-newlines": "3.0.1",
     "css-what": "5.0.1",
-    "normalize-url": "6.0.1"
+    "normalize-url": "6.0.1",
+    "scrypt.js": "0.3.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"

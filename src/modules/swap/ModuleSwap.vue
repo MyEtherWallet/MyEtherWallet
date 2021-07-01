@@ -520,35 +520,6 @@ export default {
       });
     },
     /**
-     * @returns object of wallet tokens
-     * to swap from
-     */
-    walletTokens() {
-      const tokensOwned = [];
-      /**
-       * if ETH balance is < 0, add Buy ETH dropdown item
-       */
-      if (BigNumber(this.balanceInETH).lte(0)) {
-        tokensOwned.push({
-          contract: MAIN_TOKEN_ADDRESS,
-          hasNoEth: true,
-          disabled: true,
-          text: 'Your wallet is empty.',
-          linkText: 'Buy ' + this.network.type.currencyName,
-          link: 'https://ccswap.myetherwallet.com/#/'
-        });
-      } else if (
-        /**
-         * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
-         */
-        !this.isFromTokenMain &&
-        BigNumber(this.balanceInETH).gt(0)
-      ) {
-        tokensOwned.push(this.mainTokenDetails);
-      }
-      return tokensOwned.concat(this.tokensList);
-    },
-    /**
      * @returns object of all token data
      * to swap from
      */
@@ -561,7 +532,7 @@ export default {
         )
           return item;
       });
-      let tradebleWalletTokens = this.walletTokens.filter(item => {
+      let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
             return item;
