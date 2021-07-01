@@ -21,7 +21,7 @@
         />
         <mew-button
           btn-style="transparent"
-          title="Clean all"
+          title="Clear All"
           btn-size="small"
           class="display--block mx-auto mt-5"
           @click.native="clearAll"
