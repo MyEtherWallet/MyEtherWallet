@@ -813,15 +813,17 @@ export default {
       immediate: true
     },
     network() {
-      this.isLoading = true;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+      if (this.isAvailable) {
+        this.isLoading = true;
+        this.swapper = new Swapper(this.web3, this.network.type.name);
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      }
     },
     mainTokenDetails() {
       this.setDefaults();
