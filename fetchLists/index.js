@@ -111,6 +111,7 @@ const fetchMasterFile = async () => {
       .then(tokens => {
         const networkTokens = {};
         tokens.forEach(token => {
+          token.contract_address = token.contract_address.toLowerCase();
           token.address = token.contract_address;
           if (token.icon !== '') {
             token.icon = IMAGE_PROXY + token.icon;
@@ -124,6 +125,7 @@ const fetchMasterFile = async () => {
         for (const network of oneInchNetworks) {
           if (!networkTokens[network]) networkTokens[network] = {};
           oneInchTokens[network].forEach(t => {
+            t.address = t.address.toLowerCase();
             if (!networkTokens[network][t.address]) {
               networkTokens[network][t.address] = t;
               tokens.push(t);
@@ -137,6 +139,7 @@ const fetchMasterFile = async () => {
         for (const network of CGNetworks) {
           if (!networkTokens[network]) networkTokens[network] = {};
           CGTokens[network].forEach(t => {
+            t.address = t.address.toLowerCase();
             if (!networkTokens[network][t.address]) {
               networkTokens[network][t.address] = t;
               tokens.push(t);

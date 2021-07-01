@@ -73,7 +73,8 @@
     "show-error-details": "Show error details"
   },
   "updates": {
-    "new": "New update found! Please refresh your browser to receive the most updated version",
+    "new": "New update downloaded! Please refresh your browser to receive the most updated version",
+    "update-found": "New update found! Downloading...",
     "update-error": "Something went wrong with our service workers!"
   },
   "wallet": {

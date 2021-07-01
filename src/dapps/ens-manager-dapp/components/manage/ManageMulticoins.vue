@@ -4,14 +4,10 @@
       <mew-input
         :id="idx"
         class="mb-2"
-        :rules="[
-          v =>
-            coin.validator.validate(v) ||
-            $t('ens.ens-resolver.invalid-addr', { coin: coin.name })
-        ]"
         :value="coin.value"
         :label="coin.symbol"
         :placeholder="coin.name + ' ' + $t('common.addr')"
+        :error-messages="errors[coin.symbol]"
         @input="setCoin"
       />
       <span v-if="coin.error" class="error--text">{{ coin.error }}</span>
@@ -20,6 +16,7 @@
       <mew-button
         :title="$t('common.save')"
         btn-size="xlarge"
+        :disabled="hasError"
         @click.native="setMulticoin(setCoins)"
       />
     </div>
@@ -27,8 +24,6 @@
 </template>
 
 <script>
-import multicoins from '@/dapps/ens-manager-dapp/handlers/handlerMulticoins';
-
 export default {
   props: {
     setMulticoin: {
@@ -36,28 +31,52 @@ export default {
         return {};
       },
       type: Function
+    },
+    multicoin: {
+      type: [Object, null],
+      default: null
     }
   },
   data() {
+    const errors = {};
+    for (const type in this.multicoin) {
+      errors[type] = '';
+    }
     return {
-      setCoins: []
+      setCoins: [],
+      errors: errors
     };
   },
   computed: {
     coins() {
       const coins = [];
-      for (const type in multicoins) {
-        coins.push(multicoins[type]);
+      for (const type in this.multicoin) {
+        coins.push(this.multicoin[type]);
       }
       return coins;
+    },
+    hasError() {
+      return (
+        Object.values(this.errors).filter(item => {
+          if (item !== '') return item;
+        }).length > 0
+      );
     }
   },
   methods: {
     setCoin(value, id) {
       const coin = this.coins[id];
       if (coin.validator.validate(value)) {
-        coin.value = value;
-        this.setCoins.push(coin);
+        const newObj = Object.assign({}, coin, { value: value });
+        this.setCoins.push(newObj);
+      } else {
+        if (value !== '') {
+          this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
+            coin: coin.name
+          });
+        } else {
+          this.errors[coin.symbol] = '';
+        }
       }
     }
   }

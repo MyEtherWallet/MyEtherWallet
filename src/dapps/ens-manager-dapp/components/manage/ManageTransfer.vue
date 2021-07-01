@@ -1,11 +1,12 @@
 <template>
   <div>
-    <addressBook @setResolvedAddr="setResolvedAddr" @setToAddr="setToAddr" />
+    <addressBook @setAddress="setAddress" />
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
         :title="$t('ens.transfer')"
         btn-size="xlarge"
-        @click.native="transfer(address)"
+        :disabled="!isvalid"
+        @click.native="transfer(resolvedAddr)"
       />
     </div>
   </div>
@@ -13,7 +14,6 @@
 
 <script>
 import addressBook from '@/modules/address-book/ModuleAddressBook';
-// import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   components: {
     addressBook
@@ -29,24 +29,17 @@ export default {
   data() {
     return {
       resolvedAddr: '',
-      toAddress: ''
+      isvalid: false
     };
-  },
-  computed: {
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.toAddress;
-    }
   },
   mounted() {
     this.toAddress = '';
     this.resolvedAddr = '';
   },
   methods: {
-    setResolvedAddr(newVal) {
+    setAddress(newVal, isvalid) {
       this.resolvedAddr = newVal;
-    },
-    setToAddr(newVal) {
-      this.toAddress = newVal;
+      this.isvalid = isvalid;
     }
   }
 };

@@ -30,6 +30,7 @@
       :is-centered="true"
       :active-tab="activeTab"
       has-underline
+      @onTab="onTab"
     >
       <template
         v-for="(item, idx) in tabItems"
@@ -73,6 +74,10 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    },
+    onTab: {
+      default: () => {},
+      type: Function
     }
   },
   data() {

@@ -35,6 +35,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
@@ -136,7 +137,7 @@ export default {
         },
         {
           avatar: this.avatar,
-          address: this.to,
+          address: this.to ? toChecksumAddress(this.to) : '',
           nickname:
             this.toDetails && this.toDetails.nickname
               ? this.toDetails.nickname
