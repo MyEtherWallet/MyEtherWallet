@@ -469,7 +469,11 @@ export default {
   watch: {
     signedTxArray: {
       handler: function (newVal) {
-        if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
+        if (
+          this.isWeb3Wallet &&
+          newVal.length !== 0 &&
+          newVal.length === this.unsignedTxArr.length
+        ) {
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
