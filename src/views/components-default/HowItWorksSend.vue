@@ -82,9 +82,8 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Send Your Funds',
-      description:
-        'Sending with MEW is as easy as accessing your wallet and pressing a button.',
+      title: 'Send ETH, ERC20 tokens & NFT',
+      description: 'Send your funds with the press of a button.',
       centered: false
     }
   })
