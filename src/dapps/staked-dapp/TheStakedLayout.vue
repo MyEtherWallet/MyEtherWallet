@@ -41,12 +41,12 @@
         class="d-flex align-center justify-center mt-3 white--text"
         mandatory
         borderless
-        active-class="expandHeader font-weight-medium"
+        active-class="expandHeader font-weight-bold"
         background-color="transparent"
       >
         <v-btn
           class="px-md-9 white--text text-transform--initial"
-          :class="activeTab === 0 ? '' : 'staked-tab-inactive'"
+          :class="activeTab === 0 ? 'staked-tab-active' : 'staked-tab-inactive'"
           color=""
         >
           New stake
@@ -54,7 +54,7 @@
         <v-btn
           :class="[
             'px-md-9 white--text text-transform--initial d-flex  flex-column align-center',
-            activeTab === 1 ? '' : 'staked-tab-inactive'
+            activeTab === 1 ? 'staked-tab-active' : 'staked-tab-inactive'
           ]"
           color=""
         >
@@ -252,8 +252,12 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .staked-tab-inactive {
   background-color: rgba(0, 0, 0, 0.24) !important;
+}
+.staked-tab-active::before {
+  opacity: 0 !important;
 }
 </style>
