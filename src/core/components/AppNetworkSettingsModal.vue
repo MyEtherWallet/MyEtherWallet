@@ -11,7 +11,7 @@
           <p class="mew-heading-1">Network Fee</p>
           <p class="mew-body">
             This fee is calculated by multiplying the gas price and gas limit
-            for your transaction. Higher fees results in faster transactions.
+            for your transaction. Higher fees result in faster transactions.
             <a>Learn More </a>
           </p>
           <settings-gas-price
