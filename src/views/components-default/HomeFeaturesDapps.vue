@@ -4,10 +4,7 @@
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">Dapps center</div>
-    <div>
-      Using the most popular Ethereum Dapps by accessing my wallet with just one
-      step.
-    </div>
+    <div>Explore the most popular Ethereum Dapps right from your wallet.</div>
     <div class="mt-6">
       <v-row>
         <v-col v-for="(d, k) in dapps" :key="k" cols="12" lg="4" sm="6">

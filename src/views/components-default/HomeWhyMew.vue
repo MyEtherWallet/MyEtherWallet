@@ -8,16 +8,18 @@
           <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
             Why MEW
           </div>
-          <h1 class="mb-9">Make Ethereum Blockchain easy and secure</h1>
+          <h1 class="mb-9">
+            Easy and secure access to the Ethereum Blockchain
+          </h1>
         </v-sheet>
 
         <div class="d-flex">
           <mew-info-card
             class="d-flex align-end block-box-shadow"
             title="Friendly to use"
-            desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
+            desc="Access the Ethereum blockchain's original and most-trusted wallet, now with a host of new features all contained in an elegant and friendly interface."
             :link="{
-              title: 'Learn more',
+              title: 'Start exploring',
               url: 'www.myetherwallet.com'
             }"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
@@ -28,7 +30,7 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Swap easily"
+              title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
               desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
               :link="{
                 title: 'Learn more',
@@ -39,7 +41,7 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Hardware wallets support"
+              title="Hardware wallet support"
               desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
               :link="{
                 title: 'Learn more',
@@ -105,7 +107,7 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Swap easily"
+            title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
             desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
             :link="{
               title: 'Learn more',
@@ -115,7 +117,7 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Hardware wallets support"
+            title="Hardware wallet support"
             desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
             :link="{
               title: 'Learn more',
