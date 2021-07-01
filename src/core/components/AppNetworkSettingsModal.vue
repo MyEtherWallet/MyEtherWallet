@@ -12,7 +12,11 @@
           <p class="mew-body">
             This fee is calculated by multiplying the gas price and gas limit
             for your transaction. Higher fees result in faster transactions.
-            <a>Learn More </a>
+            <a
+              href="https://kb.myetherwallet.com/en/transactions/what-is-gas/"
+              target="_blank"
+              >Learn More
+            </a>
           </p>
           <settings-gas-price
             :is-swap="true"
