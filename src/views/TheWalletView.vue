@@ -24,7 +24,6 @@ import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
 export default {
   components: {
     TheWalletSideMenu,
@@ -39,14 +38,7 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapGetters('wallet', ['balanceInWei']),
-    isTokenBalanceApiSupported() {
-      return (
-        this.network.type.name === BSC.name ||
-        this.network.type.name === ETH.name ||
-        this.network.type.name === MATIC.name
-      );
-    }
+    ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
     network() {
