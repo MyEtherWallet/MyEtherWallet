@@ -3,12 +3,12 @@
     <div v-for="(key, idx) in keys" :key="`${key}${idx}`">
       <mew-input
         :id="idx"
+        v-model="setRecords[key]"
         class="mb-2"
         :error-messages="errors[key]"
-        :value="setRecords[key]"
         :label="key"
         :placeholder="key"
-        @input="setRecord"
+        @input="validateRecord"
       />
     </div>
     <div class="d-flex align-center justify-center mt-3">
@@ -37,6 +37,10 @@ export default {
     textRecords: {
       type: [Object, null],
       default: null
+    },
+    onManage: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -71,22 +75,26 @@ export default {
       handler: function (newVal) {
         Object.keys(newVal).forEach(item => {
           this.setRecords[item] = newVal[item];
+          this.errors[item] = '';
         });
-      }
-    },
-    deep: true,
-    immediate: true
+      },
+      deep: true,
+      immediate: true
+    }
   },
   methods: {
-    setRecord(value, id) {
+    validateRecord(value, id) {
       const name = this.keys[id];
       try {
         if (textValidator[id].validate(value)) {
           this.errors[name] = '';
         } else {
-          this.errors[name] = this.$t('ens.text-record-error', {
-            name: name
-          });
+          this.errors[name] =
+            value !== ''
+              ? this.$t('ens.text-record-error', {
+                  name: name
+                })
+              : '';
         }
       } catch (e) {
         this.errors[name] = e;

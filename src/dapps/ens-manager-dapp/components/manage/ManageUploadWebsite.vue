@@ -26,10 +26,11 @@
         />
       </div>
       <mew-input
-        :value="ipfs"
-        :rules="rules"
+        v-model="ipfs"
         :label="$t('ens.content-hash')"
         :placeholder="$t('ens.enter-hash')"
+        :error-messages="error"
+        :rules="rules"
         @input="setHash"
       />
     </div>
@@ -73,7 +74,8 @@ export default {
   },
   data() {
     return {
-      ipfs: '' || this.uploadedHash
+      ipfs: '' || this.uploadedHash,
+      error: ''
     };
   },
   computed: {
@@ -81,10 +83,12 @@ export default {
       return isIpfs.multihash(this.ipfs);
     },
     rules() {
-      return [
-        this.isValidIPFS || this.$t('ens.error.empty-invalid-ipfs'),
-        value => !!value || this.$t('ens.hash-required')
-      ];
+      return [value => !!value || this.$t('ens.hash-required')];
+    }
+  },
+  watch: {
+    uploadedHash(newVal) {
+      this.ipfs = newVal;
     }
   },
   methods: {
@@ -122,7 +126,9 @@ export default {
       this.uploadFile(e.target.files[0]);
     },
     setHash(val) {
-      this.ipfs = val;
+      this.error = isIpfs.multihash(val)
+        ? ''
+        : this.$t('ens.error.empty-invalid-ipfs');
     }
   }
 };
