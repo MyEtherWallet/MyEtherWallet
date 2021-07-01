@@ -105,11 +105,11 @@ export default {
       stepperItems: [
         {
           step: 1,
-          name: 'STEP 1. Request registration'
+          name: 'STEP 1. Select Duration'
         },
         {
           step: 2,
-          name: 'STEP 2. Register domain'
+          name: 'STEP 2. Create Commitment'
         },
         {
           step: 3,

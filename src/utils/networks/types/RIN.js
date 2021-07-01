@@ -1,4 +1,4 @@
-import rin from '@/assets/images/networks/network.svg';
+import rin from '@/assets/images/networks/eth.svg';
 import { RIN } from '../tlds';
 
 export default {
@@ -12,10 +12,12 @@ export default {
   contracts: [],
   isTestNetwork: true,
   ens: {
-    resolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-    registrarTLD: 'test',
-    registrarType: 'fifs',
-    supportedTld: RIN
+    registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    registrarTLD: 'eth',
+    registrarType: 'permanent',
+    supportedTld: RIN,
+    subgraphPath:
+      'https://api.thegraph.com/subgraphs/name/ensdomains/ensrinkeby'
   },
   icon: rin,
   currencyName: 'RIN',

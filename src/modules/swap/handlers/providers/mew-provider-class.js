@@ -1,6 +1,6 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://development.mewwallet.dev/v3';
+const HOST_URL = 'https://staging.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
@@ -106,7 +106,7 @@ class MEWPClass {
           recipient: toAddress,
           dex: this.provider,
           exchange: quote.exchange,
-          platform: 'ios',
+          platform: 'web',
           fromContractAddress: contactFromAddress,
           toContractAddress: contractToAddress,
           amount: queryAmount.toFixed(fromT.decimals),
