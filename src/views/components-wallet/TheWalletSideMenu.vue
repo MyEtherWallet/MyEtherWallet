@@ -140,10 +140,21 @@
             />
           </v-list-item-content>
         </v-list-item>
-
-        <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <!-- <theme-switch /> -->
-          <div class="searchText--text">v{{ version }}</div>
+        <div class="mt-3 px-8">
+          <div class="matomo-tracking-switch">
+            <v-switch
+              :value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="gray"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <!-- <theme-switch /> -->
+            <div class="searchText--text">v{{ version }}</div>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -317,7 +328,8 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['instance'])
+    ...mapState('wallet', ['instance']),
+    ...mapState('global', ['consentToTrack'])
   },
   mounted() {
     EventBus.$on('toggleSettings', () => {
@@ -336,6 +348,7 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    ...mapActions('global', ['setTrackingConsent']),
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -347,6 +360,9 @@ export default {
     },
     openNavigation() {
       this.navOpen = true;
+    },
+    setConsent() {
+      this.setTrackingConsent(!this.consentToTrack);
     },
     toggleSettings() {
       this.onSettings = !this.onSettings;

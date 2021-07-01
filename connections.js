@@ -86,6 +86,7 @@ module.exports = [
   'https://c.onical.org:443', // aqua
   'https://tx.info.aquacha.in:443/api', // aqua
   'https://rpc.xdaichain.com:443',
+  'https://myetherwallet.matomo.cloud:443',
   'https://mainnet.mewwallet.dev:443',
   'https://staging.mewwallet.dev:443',
   'https://development.mewwallet.dev:443',
