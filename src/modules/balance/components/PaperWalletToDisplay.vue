@@ -76,7 +76,7 @@
           </div>
         </v-col>
         <v-col cols="auto">
-          <qr-code :data="key" :height="140" :width="140" />
+          <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 

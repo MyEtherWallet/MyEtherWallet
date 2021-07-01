@@ -64,7 +64,7 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <qr-code :value="key" :options="{ size: 140 }"></qr-code>
+          <qr-code :value="address" :options="{ size: 140 }"></qr-code>
         </v-col>
       </v-row>
 
