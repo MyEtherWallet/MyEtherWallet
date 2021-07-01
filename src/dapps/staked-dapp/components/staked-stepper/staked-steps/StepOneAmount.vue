@@ -4,7 +4,7 @@
     Step one: Select Amount
     ===================================================
     -->
-  <div class="mx-auto pb-15" style="max-width: 550px">
+  <div class="mx-auto mb-3" style="max-width: 550px">
     <!--
     ===================================================
     Select Amount to stake
@@ -121,7 +121,7 @@
     <mew-button
       class="mx-auto d-block mt-9"
       :loading="false"
-      :has-full-width="false"
+      :has-full-width="$vuetify.breakpoint.smAndDown"
       btn-size="xlarge"
       title="Next: Eth2 address"
       @click.native="onContinue"

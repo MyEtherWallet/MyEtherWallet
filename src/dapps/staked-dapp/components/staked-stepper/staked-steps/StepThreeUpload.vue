@@ -4,7 +4,7 @@
     Step three: Upload keystore
     ===================================================
     -->
-  <div class="mx-auto pb-15" style="max-width: 550px">
+  <div class="mx-auto mb-3" style="max-width: 550px">
     <div class="mew-heading-2 pt-12 pb-7 text-center">
       {{ titleDetails.title }}
     </div>
@@ -13,33 +13,32 @@
     Upload keystore container
     ===================================================
     -->
-    <div
-      class="
-        upload-container
-        rounded
-        d-block d-sm-flex
-        align-center
-        flex-column
-        justify-space-between
-        px-10
-      "
-    >
+    <div class="upload-container rounded pa-3 pa-sm-8">
       <!--
-    ===================================================
-    Title on mount (uploading and uploaded = false)
-    ===================================================
-    -->
+      ===================================================
+      Title on mount (uploading and uploaded = false)
+      ===================================================
+      -->
+
       <div
         v-if="!uploading && !uploaded"
         :class="[
-          'd-flex align-center flex-column text-center mew-heading-3 mt-14',
+          'd-flex align-center flex-column text-center',
           skipped ? 'mb-12' : 'mb-6'
         ]"
       >
-        {{ titleDetails.subtitle }}
+        <img
+          src="@/assets/images/icons/icon-shield.svg"
+          alt="Shield"
+          height="50"
+          class="mb-7 mx-auto d-block"
+        />
+        <div class="mew-heading-3">
+          {{ titleDetails.subtitle }}
+        </div>
         <span v-if="!skipped" class="mew-body mt-2">
-          {{ titleDetails.desc }}</span
-        >
+          {{ titleDetails.desc }}
+        </span>
       </div>
       <!--
     ===================================================
@@ -48,7 +47,7 @@
     -->
       <v-progress-linear
         v-if="uploading && !uploaded"
-        class="mt-14 mb-12"
+        class="mb-12"
         indeterminate
       />
       <!--
@@ -64,24 +63,42 @@
           align-center
           flex-column
           font-weight-bold
-          mt-8
           mb-6
         "
       >
+        <img
+          v-if="hasError"
+          src="@/assets/images/icons/icon-shield-crossed.svg"
+          alt="Shield"
+          height="50"
+          class="mb-7 mx-auto d-block"
+        />
+
+        <img
+          v-if="!hasError"
+          src="@/assets/images/icons/icon-shield-checked.svg"
+          alt="Shield"
+          height="50"
+          class="mb-7 mx-auto d-block"
+        />
+
         <span
           :class="[
             'mew-heading-3',
             hasError ? 'error--text' : 'titlePrimary--text'
           ]"
-          >{{ uploadedText.title }}</span
         >
-        <span
+          {{ uploadedText.title }}
+        </span>
+        <div
+          style="max-width: 300px"
           :class="[
             'mt-2 mew-body',
             hasError ? 'error--text' : 'warning--text text--darken-2'
           ]"
-          >{{ uploadedText.desc }}</span
         >
+          {{ uploadedText.desc }}
+        </div>
       </div>
       <!--
     ===================================================
@@ -91,31 +108,28 @@
       <div
         class="
           tableHeader
-          d-flex
+          d-block d-sm-flex
           rounded
           align-center
           justify-space-between
           pa-5
-          mb-8
-          input-container
         "
       >
         <div class="d-flex align-center">
           <mew-icon :img-height="32" icon-name="keystore" />
           <div
-            class="
-              ml-3
-              file-name-container
-              mew-heading-4
-              textSecondary--text
-              truncate
-            "
+            class="ml-3 file-name-container mew-heading-4 textSecondary--text"
           >
             {{ inputTitle }}
           </div>
-          <v-icon v-if="uploaded && !hasError" size="16" color="primary"
-            >mdi-checkbox-marked-circle</v-icon
+          <v-icon
+            v-if="uploaded && !hasError"
+            size="16"
+            color="primary"
+            class="ml-2"
           >
+            mdi-checkbox-marked-circle
+          </v-icon>
         </div>
         <mew-button
           class="my-2"
@@ -160,6 +174,7 @@
       "
     >
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Back"
@@ -167,6 +182,7 @@
         @click.native="onBack"
       />
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Next: Review my stake"
@@ -323,10 +339,6 @@ export default {
   }
   .v-progress-linear {
     width: 420px;
-  }
-  .input-container {
-    width: 436px;
-    height: 76px;
   }
 }
 </style>

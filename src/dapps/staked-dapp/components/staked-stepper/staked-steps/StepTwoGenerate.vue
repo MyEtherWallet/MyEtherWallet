@@ -4,7 +4,7 @@
     Step two: Generate Eth2 Address
     ===================================================
     -->
-  <div class="mx-auto pb-15" style="max-width: 550px">
+  <div class="mx-auto mb-3" style="max-width: 550px">
     <div class="mew-heading-2 py-12 text-center">
       Here is your new Eth2 Address
     </div>
@@ -22,10 +22,10 @@
       "
     >
       <!--
-    ===================================================
-    Already have Eth2 Address
-    ===================================================
-    -->
+      ===================================================
+      Already have Eth2 Address
+      ===================================================
+      -->
       <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
       <div
         class="d-flex align-center primary--text cursor-pointer"
@@ -111,7 +111,7 @@
             </div>
           </div>
           <mew-button
-            class="my-2 mr-1"
+            class="my-2"
             btn-size="small"
             title="Download"
             btn-style="outline"
@@ -122,7 +122,7 @@
 
         <mew-warning-sheet
           v-if="downloadedKeystore"
-          class="my-4"
+          class="mt-4 mb-1"
           :description="keystoreFileWarning"
         />
       </div>
@@ -142,6 +142,7 @@
       "
     >
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Back"
@@ -149,6 +150,7 @@
         @click.native="onBack"
       />
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Continue after downloading keystore file"

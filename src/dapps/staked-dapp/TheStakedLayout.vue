@@ -117,10 +117,7 @@
         color="transparent"
         class="py-15 mx-auto"
       >
-        <staked-status
-          :validators="validators"
-          :loading="loadingValidators"
-        />
+        <staked-status :validators="validators" :loading="loadingValidators" />
       </v-sheet>
     </template>
   </the-wrapper-dapp>

@@ -4,7 +4,7 @@
     max-width="600px"
     content-class="staked-create-pw-dialog"
   >
-    <div class="white pa-8 position--relative">
+    <div class="white pa-3 pa-sm-8 position--relative">
       <v-btn icon class="close-button" @click="onCreatePassword = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -38,6 +38,7 @@
           ></mew-checkbox>
         </div>
         <mew-button
+          :has-full-width="$vuetify.breakpoint.smAndDown"
           class="d-block mx-auto mt-8"
           btn-size="xlarge"
           :disabled="

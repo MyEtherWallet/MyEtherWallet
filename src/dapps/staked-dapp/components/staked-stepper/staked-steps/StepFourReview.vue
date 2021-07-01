@@ -4,7 +4,7 @@
     Step 4: Review & Stake
     ===================================================
     -->
-  <div class="mx-auto pb-15" style="max-width: 550px">
+  <div class="mx-auto pb-3" style="max-width: 550px">
     <div class="mew-heading-2 py-12 text-center">Review and stake</div>
     <v-row>
       <!--
@@ -12,10 +12,15 @@
     Stake details
     ===================================================
     -->
-      <v-col v-for="(detail, idx) in details" :key="detail + idx" cols="6">
+      <v-col
+        v-for="(detail, idx) in details"
+        :key="detail + idx"
+        cols="12"
+        sm="6"
+      >
         <div class="tableHeader pa-5 d-flex align-center rounded-lg">
           <div class="mr-3 mt-1">
-            <img :src="detail.img" height="22" alt="eth icon" />
+            <img :src="detail.img" height="25" alt="eth icon" />
           </div>
           <div>
             <div
@@ -50,7 +55,12 @@
       <div
         v-for="(fee, idx) in fees"
         :key="fee + idx"
-        class="d-flex align-center justify-space-between"
+        class="
+          d-block d-sm-flex
+          align-center
+          justify-space-between
+          mb-3 mb-sm-2
+        "
       >
         <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
         <div>
@@ -78,14 +88,15 @@
         label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
       ></mew-checkbox>
     </div>
-    <div class="stake-container mt-10 text-center rounded-lg py-6 px-12">
+
+    <border-block class="mt-10 text-center rounded-lg pa-6">
       <!--
-    ===================================================
-    Prepare to stake (Step 1)
-    ===================================================
-    -->
+      ===================================================
+      Prepare to stake (Step 1)
+      ===================================================
+      -->
       <div v-if="stakedStep === 1">
-        <div class="textBlack2--text">
+        <div class="textBlack2--text mx-auto" style="max-width: 300px">
           {{ stakedStep1Title.message }}
           <a
             v-if="stakedStep1Title.showContactSupport"
@@ -93,8 +104,8 @@
             href="mailto:support@myetherwallet.com"
             target="_blank"
           >
-            {{ $t('common.contact-support') }} </a
-          >.
+            {{ $t('common.contact-support') }}
+          </a>
         </div>
         <mew-button
           btn-size="xlarge"
@@ -110,16 +121,21 @@
     ===================================================
     -->
       <div v-if="stakedStep === 2">
-        <div class="mew-heading-4 font-weight-medium">Preparing validators</div>
-        <div class="textBlack2--text">
+        <div class="mew-heading-4 font-weight-medium mb-2">
+          Preparing validators
+        </div>
+        <div class="textBlack2--text mx-auto" style="max-width: 300px">
           This usually takes ~20 seconds, in rare cases it can take up to 10
           min.
         </div>
-        <v-progress-linear
-          class="mt-4"
-          indeterminate
-          color="primary"
-        ></v-progress-linear>
+        <div class="px-5">
+          <v-progress-linear
+            style="max-width: 350px"
+            class="mt-4 mx-auto"
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
+        </div>
       </div>
       <!--
     ===================================================
@@ -130,7 +146,7 @@
         <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
         Ready to stake
       </div>
-    </div>
+    </border-block>
     <!--
     ===================================================
     Back & Stake buttons
@@ -146,6 +162,7 @@
       "
     >
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Back"
@@ -153,6 +170,7 @@
         @click.native="onBack"
       />
       <mew-button
+        :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
         title="Stake 32 ETH"
@@ -165,10 +183,11 @@
 </template>
 
 <script>
+import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import eth from '@/assets/images/currencies/eth.png';
+import eth from '@/assets/images/currencies/eth-dark-navy.svg';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import {
   formatFiatValue,
@@ -177,6 +196,7 @@ import {
 import { ABI_GET_FEES } from '@/dapps/staked-dapp/handlers/handlerStaked';
 
 export default {
+  components: { BorderBlock },
   props: {
     amount: {
       type: Number,
@@ -205,7 +225,7 @@ export default {
       stakedStep: 1,
       stakedStep1Title: {
         message:
-          'We will prepare validators for you. After that you can confirm and stake your ETH'
+          'We will prepare validators for you. After that you can confirm and stake your ETH.'
       }
     };
   },
@@ -375,8 +395,5 @@ export default {
 }
 .detail-title {
   font-weight: 600;
-}
-.stake-container {
-  border: 1px solid var(--v-inputBorder-base);
 }
 </style>
