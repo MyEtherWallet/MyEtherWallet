@@ -6,7 +6,7 @@
     -->
   <the-wrapper-dapp :banner-img="bannerImage" :banner-text="bannerText">
     <template #content>
-      <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
+      <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
           <mew-super-button
@@ -37,7 +37,7 @@ export default {
     return {
       bannerImage: bannerImage,
       bannerText: {
-        title: 'Explore MEW Dapps'
+        title: 'Explore MEW DApps'
       },
       dapps: [
         {

@@ -57,7 +57,7 @@ export default {
         xwallet: 'Xwallet',
         bcVault: 'BC Vault',
         coolWallet: 'Cool Wallet',
-        walletLink: 'Wallet Link'
+        walletLink: 'WalletLink'
       };
       return `Approve ${this.txLength} ${
         this.txLength > 1 ? 'transactions' : 'transaction'

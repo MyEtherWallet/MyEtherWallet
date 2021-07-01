@@ -3,8 +3,8 @@
     class="mew-component--features-dapps pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">Dapps center</div>
-    <div>Explore the most popular Ethereum Dapps right from your wallet.</div>
+    <div class="mew-heading-1 mb-3">DApps center</div>
+    <div>Explore the most popular Ethereum DApps right from your wallet.</div>
     <div class="mt-6">
       <v-row>
         <v-col v-for="(d, k) in dapps" :key="k" cols="12" lg="4" sm="6">
@@ -15,7 +15,7 @@
         </v-col>
       </v-row>
       <mew-button
-        title="Explore Dapps"
+        title="Explore DApps"
         btn-size="xlarge"
         class="mx-auto mt-10 d-block"
         @click.native="$router.push({ name: 'AccessWallet', params: {} })"

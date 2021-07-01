@@ -136,8 +136,8 @@ export default {
             to: { name: 'SendTX' }
           },
           {
-            label: 'Explore Dapps',
-            to: { name: 'Dapps' }
+            label: 'Explore DApps',
+            to: { name: 'DApps' }
           },
           {
             label: 'Swap tokens',

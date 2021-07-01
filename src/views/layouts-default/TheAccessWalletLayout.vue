@@ -123,7 +123,7 @@ export default {
         {
           color: 'basic',
           title: 'MEWwallet',
-          subtitle: 'Use MEWwallet to access my wallet',
+          subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
@@ -137,7 +137,7 @@ export default {
         {
           color: 'basic',
           title: 'Browser Extension',
-          subtitle: 'Use Browser Extension to access my wallet',
+          subtitle: 'Use your web3 wallet with MEW.',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
           titleIcon: 'mdi-shield-check',
@@ -150,7 +150,7 @@ export default {
         /* Hardware Wallet */
         {
           color: 'basic',
-          title: 'Hardware wallets',
+          title: 'Hardware Wallets',
           subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
@@ -165,7 +165,7 @@ export default {
         {
           color: 'basic',
           title: 'Mobile Apps',
-          subtitle: 'WalletConnect, Wallet Link',
+          subtitle: 'WalletConnect, WalletLink',
           note: '',
           rightIcons: [
             require('@/assets/images/icons/icon-wallet-connect.svg'),

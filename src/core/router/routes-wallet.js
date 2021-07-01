@@ -44,7 +44,7 @@ export default {
       beforeEnter: swapRouterGuard
     },
     {
-      path: 'dapps',
+      path: 'DApps',
       component: Dapps,
       children: DappRoutes
     },

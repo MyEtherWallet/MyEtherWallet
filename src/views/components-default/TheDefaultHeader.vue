@@ -64,8 +64,8 @@ export default {
               to: { name: 'SendTX' }
             },
             {
-              title: 'Explore Dapps',
-              to: { name: 'Dapps' }
+              title: 'Explore DApps',
+              to: { name: 'DApps' }
             },
             {
               title: 'Swap tokens',
