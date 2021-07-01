@@ -1,4 +1,4 @@
-name: deploy v5 live
+name: deploy live [v5]
 
 on:
   push:
