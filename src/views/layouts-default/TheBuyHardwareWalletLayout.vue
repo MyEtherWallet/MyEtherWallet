@@ -70,13 +70,15 @@
                   </div>
                 </div>
 
-                <v-img
-                  :src="b.walletImg"
-                  alt="Hardware Wallet"
-                  max-width="90px"
-                  max-height="100px"
-                  contain
-                />
+                <div class="pl-4">
+                  <v-img
+                    :src="b.walletImg"
+                    alt="Hardware Wallet"
+                    max-width="90px"
+                    max-height="100px"
+                    contain
+                  />
+                </div>
               </v-card>
             </a>
           </v-col>
