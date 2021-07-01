@@ -33,7 +33,7 @@
             Links
           =====================================================================================
           -->
-          <v-row class="justify-sm-space-between align-center pt-3" dense>
+          <v-row class="justify-sm-space-around align-center pt-3" dense>
             <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
               <a
                 class="d-flex justify-center justify-sm-end"
