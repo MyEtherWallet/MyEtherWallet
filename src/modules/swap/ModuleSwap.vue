@@ -7,7 +7,7 @@
         class="d-flex flex-grow-1 pt-6"
         title="Swap"
       >
-        <template #moduleBody>
+        <template v-if="isAvailable" #moduleBody>
           <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
@@ -234,6 +234,16 @@
             />
           </div>
         </template>
+        <!--
+          =====================================================================================
+           Message is SWAP NOT Available
+          =====================================================================================
+        -->
+        <template v-else #moduleBody>
+          <div class="swap-not-available">
+            <app-user-msg-block :message="swapNotAvailableMes" />
+          </div>
+        </template>
       </mew-module>
     </mew6-white-sheet>
   </div>
@@ -292,10 +302,19 @@ export default {
     amount: {
       type: String,
       default: '0'
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
+      swapNotAvailableMes: {
+        title: `Swap is not available on this network`,
+        subtitle:
+          'Please select ETH, BSC or MATIC networks to use this feature.'
+      },
       msg: {
         storeBitcoin: {
           title: 'Your Ether balance is too low',
@@ -1209,5 +1228,11 @@ export default {
 
 .border-top {
   border-top: 1px solid var(--v-inputBorder-base);
+}
+
+.swap-not-available {
+  @media (min-width: 960px) {
+    min-height: 45vh;
+  }
 }
 </style>
