@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
-function parseTokensData(data, to, networkToken, web3) {
-  const token = networkToken.find(el => {
-    return el.address.toLowerCase() === to.toLowerCase();
-  });
+import store from '@/core/store';
+import Web3 from 'web3';
+function parseTokensData(data, to) {
+  const web3 = new Web3();
+  const token = store.getters['external/contractToToken'](to);
   const jsonInterface = {
     constant: false,
     inputs: [

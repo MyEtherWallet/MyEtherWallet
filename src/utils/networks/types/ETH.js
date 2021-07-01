@@ -17,7 +17,8 @@ export default {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
     registrarType: 'permanent',
-    supportedTld: ETH
+    supportedTld: ETH,
+    subgraphPath: 'https://api.thegraph.com/subgraphs/name/ensdomains/ens'
   },
   icon: eth,
   currencyName: 'ETH',

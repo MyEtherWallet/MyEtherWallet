@@ -28,30 +28,39 @@
             <div class="mew-heading-2 mb-8 ml-2">
               {{ $t('ens.search-domain') }}
             </div>
-            <v-row class="mx-0">
-              <v-col class="pr-0" cols="8">
-                <mew-input
-                  :error-messages="domainTaken ? $t('ens.domain-taken') : null"
-                  :value="name"
-                  :has-clear-btn="true"
-                  :rules="rules"
-                  :label="$t('ens.register.domain-name')"
-                  :placeholder="$t('ens.ph.three-char')"
-                  class="mr-3 flex-grow-1"
-                  @input="setName"
-                />
-              </v-col>
-              <v-col class="pl-0" cols="4">
-                <mew-button
-                  :loading="loading"
-                  :disabled="(name && name.length === 0) || loading"
-                  :has-full-width="true"
-                  btn-size="xlarge"
-                  :title="$t('ens.register-domain')"
-                  @click.native="findDomain"
-                />
-              </v-col>
-            </v-row>
+            <form @submit.prevent="findDomain">
+              <v-row class="mx-0">
+                <v-col class="pr-0" cols="8">
+                  <mew-input
+                    :error-messages="
+                      domainTaken ? $t('ens.domain-taken') : null
+                    "
+                    :value="name"
+                    :has-clear-btn="true"
+                    :rules="rules"
+                    :label="$t('ens.register.domain-name')"
+                    :placeholder="$t('ens.ph.three-char')"
+                    class="mr-3 flex-grow-1"
+                    @input="setName"
+                  />
+                </v-col>
+                <v-col class="pl-0" cols="4">
+                  <mew-button
+                    :loading="loading"
+                    :disabled="
+                      !name ||
+                      (name && name.length < 3) ||
+                      loading ||
+                      name.split('.').length > 2
+                    "
+                    :has-full-width="true"
+                    btn-size="xlarge"
+                    :title="$t('ens.register.name')"
+                    @click.native="findDomain"
+                  />
+                </v-col>
+              </v-row>
+            </form>
           </div>
         </v-sheet>
       </template>
@@ -99,8 +108,10 @@
                     <a
                       class="address-link"
                       :href="
-                        'https://www.ethvm.com/address/' +
-                        domain.registrarAddress
+                        network.type.blockExplorerAddr.replace(
+                          '[[address]]',
+                          domain.registrarAddress
+                        )
                       "
                       target="_blank"
                     >
@@ -127,8 +138,10 @@
                     <a
                       class="address-link"
                       :href="
-                        'https://www.ethvm.com/address/' +
-                        domain.controllerAddress
+                        network.type.blockExplorerAddr.replace(
+                          '[[address]]',
+                          domain.controllerAddress
+                        )
                       "
                       target="_blank"
                     >
@@ -139,11 +152,11 @@
 
                 <div
                   class="
-                    mt-3
                     d-flex
                     align-center
                     justify-space-between
-                    py-5
+                    pb-5
+                    pt-8
                     px-7
                   "
                 >
@@ -194,6 +207,7 @@
     =====================================================================================
     -->
     <module-register-domain
+      v-if="onRegister"
       ref="registerDomain"
       :on-register="onRegister"
       :close="closeRegister"
@@ -222,8 +236,11 @@
       :transfer="transfer"
       :renew="renew"
       :upload-file="uploadFile"
+      :uploaded-hash="manageDomainHandler.contentHash"
       :set-text-records="setTextRecords"
       :set-multicoin="setMulticoin"
+      :multicoin="manageDomainHandler.multiCoin"
+      :text-records="manageDomainHandler.txtRecords"
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
@@ -238,12 +255,10 @@ import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
 import { mapGetters, mapState } from 'vuex';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/core/plugins/eventBus';
-import EventNames from '@/utils/web3-provider/events.js';
 import ENS from 'ethereum-ens';
-import { fromWei, toBN } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
@@ -308,7 +323,9 @@ export default {
       return [
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
-        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol')
+        !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
+        this.name.split('.').length <= 2 ||
+          this.$t('ens.warning.invalid-symbol')
       ];
     },
     hasInvalidChars() {
@@ -360,6 +377,7 @@ export default {
       ens,
       this.gasPrice
     );
+
     this.getDomains();
   },
   methods: {
@@ -391,7 +409,6 @@ export default {
                 }
               : '';
           });
-
           this.myDomains = res;
         })
         .catch(err => {
@@ -405,7 +422,11 @@ export default {
     transfer(address) {
       this.manageDomainHandler
         .transfer(address)
-        .then(this.getDomains)
+        .then(() => {
+          setTimeout(() => {
+            this.getDomains();
+          }, 15000);
+        })
         .catch(err => {
           Toast(err, {}, ERROR);
         });
@@ -442,7 +463,9 @@ export default {
       this.settingIpfs = true;
       this.manageDomainHandler
         .uploadFile(file)
-        .then(this.manageDomainHandler.setIPFSHash)
+        .then(res => {
+          this.manageDomainHandler.setIPFSHash(res);
+        })
         .then(resp => {
           this.settingIpfs = false;
           this.uploadedHash = resp;
@@ -468,26 +491,16 @@ export default {
      * Register Domain
      */
     findDomain() {
-      /**
-       * make sure there is no empty string after '.'
-       */
-      const strLength = this.name.length;
-      const name =
-        this.name[strLength - 1] === '.'
-          ? this.name.substring(0, strLength - 1)
-          : this.name;
-      this.ensManager
-        .searchName(name)
-        .then(res => {
-          this.nameHandler = res;
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      try {
+        this.nameHandler = this.ensManager.searchName(this.name);
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     },
     closeRegister() {
       this.onRegister = false;
       this.committed = false;
+      this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
       this.$refs.registerDomain.reset();
@@ -498,31 +511,39 @@ export default {
       }
       this.name = name;
     },
-    register() {
+    register(duration) {
       this.nameHandler
-        .register(this.duration, this.balanceToWei)
-        .then(this.closeRegister)
-        .catch(err => {
+        .register(duration, this.balanceToWei)
+        .on('transactionHash', () => {
+          Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
+          this.closeRegister();
+        })
+        .on('receipt', () => {
+          setTimeout(() => {
+            this.getDomains();
+          }, 15000);
+        })
+        .on('error', err => {
           Toast(err, {}, ERROR);
         });
     },
     commit() {
-      this.nameHandler.getMinimumAge().then(resp => {
-        this.minimumAge = resp;
-      });
-      /**
-       * start timer after confirming tx
-       */
-      EventBus.$on(EventNames.CONFIRMED_TX, () => {
-        this.loadingCommit = true;
-      });
       this.nameHandler
         .createCommitment()
-        .then(() => {
-          this.loadingCommit = false;
-          this.committed = true;
+        .on('transactionHash', () => {
+          this.nameHandler.getMinimumAge().then(resp => {
+            this.minimumAge = resp;
+          });
         })
-        .catch(err => {
+        .on('receipt', () => {
+          this.loadingCommit = true;
+          this.committed = false;
+          setTimeout(() => {
+            this.committed = true;
+            this.loadingCommit = false;
+          }, 60 * 1000);
+        })
+        .on('error', err => {
           this.closeRegister();
           Toast(err, {}, ERROR);
         });
@@ -538,10 +559,11 @@ export default {
         : this.nameHandler;
       return handler.getRentPrice(duration).then(resp => {
         if (resp) {
-          const priceFromWei = fromWei(toBN(resp));
+          const ethValue = fromWei(resp);
           return {
-            eth: new BigNumber(priceFromWei).toFixed(4),
-            usd: new BigNumber(priceFromWei).times(this.fiatValue).toFixed(2)
+            wei: resp,
+            eth: ethValue,
+            usd: new BigNumber(ethValue).times(this.fiatValue).toFixed(2)
           };
         }
       });
