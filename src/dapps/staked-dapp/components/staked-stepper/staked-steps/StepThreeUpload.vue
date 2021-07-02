@@ -4,195 +4,202 @@
     Step three: Upload keystore
     ===================================================
     -->
-  <div class="mx-auto mb-3" style="max-width: 550px">
-    <div class="mew-heading-2 pt-12 pb-7 text-center">
-      {{ titleDetails.title }}
-    </div>
-    <!--
+  <div>
+    <v-divider />
+
+    <div class="mx-auto mb-3" style="max-width: 550px">
+      <div class="mew-heading-2 pt-8 pb-7 text-center">
+        {{ titleDetails.title }}
+      </div>
+      <!--
     ===================================================
     Upload keystore container
     ===================================================
     -->
-    <div class="upload-container rounded pa-3 pa-sm-8">
-      <!--
+      <div class="upload-container rounded pa-3 pa-sm-8">
+        <!--
       ===================================================
       Title on mount (uploading and uploaded = false)
       ===================================================
       -->
 
-      <div
-        v-if="!uploading && !uploaded"
-        :class="[
-          'd-flex align-center flex-column text-center',
-          skipped ? 'mb-12' : 'mb-6'
-        ]"
-      >
-        <img
-          src="@/assets/images/icons/icon-shield.svg"
-          alt="Shield"
-          height="50"
-          class="mb-7 mx-auto d-block"
-        />
-        <div class="mew-heading-3">
-          {{ titleDetails.subtitle }}
+        <div
+          v-if="!uploading && !uploaded"
+          :class="[
+            'd-flex align-center flex-column text-center',
+            skipped ? 'mb-12' : 'mb-6'
+          ]"
+        >
+          <img
+            src="@/assets/images/icons/icon-shield.svg"
+            alt="Shield"
+            height="50"
+            class="mb-7 mx-auto d-block"
+          />
+          <div class="mew-heading-3">
+            {{ titleDetails.subtitle }}
+          </div>
+          <span v-if="!skipped" class="mew-body mt-2">
+            {{ titleDetails.desc }}
+          </span>
         </div>
-        <span v-if="!skipped" class="mew-body mt-2">
-          {{ titleDetails.desc }}
-        </span>
-      </div>
-      <!--
+        <!--
     ===================================================
     Uploading progress bar (uploading = true and uploaded = false)
     ===================================================
     -->
-      <v-progress-linear
-        v-if="uploading && !uploaded"
-        class="mb-12"
-        indeterminate
-      />
-      <!--
+        <v-progress-linear
+          v-if="uploading && !uploaded"
+          class="mb-12"
+          indeterminate
+        />
+        <!--
     ===================================================
     Title on uploaded  (uploaded = true)
     ===================================================
     -->
-      <div
-        v-if="uploaded"
-        class="
-          text-center
-          d-flex
-          align-center
-          flex-column
-          font-weight-bold
-          mb-6
-        "
-      >
-        <img
-          v-if="hasError"
-          src="@/assets/images/icons/icon-shield-crossed.svg"
-          alt="Shield"
-          height="50"
-          class="mb-7 mx-auto d-block"
-        />
-
-        <img
-          v-if="!hasError"
-          src="@/assets/images/icons/icon-shield-checked.svg"
-          alt="Shield"
-          height="50"
-          class="mb-7 mx-auto d-block"
-        />
-
-        <span
-          :class="[
-            'mew-heading-3',
-            hasError ? 'error--text' : 'titlePrimary--text'
-          ]"
-        >
-          {{ uploadedText.title }}
-        </span>
         <div
-          style="max-width: 300px"
-          :class="[
-            'mt-2 mew-body',
-            hasError ? 'error--text' : 'warning--text text--darken-2'
-          ]"
+          v-if="uploaded"
+          class="
+            text-center
+            d-flex
+            align-center
+            flex-column
+            font-weight-bold
+            mb-6
+          "
         >
-          {{ uploadedText.desc }}
+          <img
+            v-if="hasError"
+            src="@/assets/images/icons/icon-shield-crossed.svg"
+            alt="Shield"
+            height="50"
+            class="mb-7 mx-auto d-block"
+          />
+
+          <img
+            v-if="!hasError"
+            src="@/assets/images/icons/icon-shield-checked.svg"
+            alt="Shield"
+            height="50"
+            class="mb-7 mx-auto d-block"
+          />
+
+          <span
+            :class="[
+              'mew-heading-3',
+              hasError ? 'error--text' : 'titlePrimary--text'
+            ]"
+          >
+            {{ uploadedText.title }}
+          </span>
+          <div
+            style="max-width: 300px"
+            :class="[
+              'mt-2 mew-body',
+              hasError ? 'error--text' : 'warning--text text--darken-2'
+            ]"
+          >
+            {{ uploadedText.desc }}
+          </div>
         </div>
-      </div>
-      <!--
+        <!--
     ===================================================
     Upload input
     ===================================================
     -->
-      <div
-        class="
-          tableHeader
-          mb-8
-          input-container
-          d-block d-sm-flex
-          rounded
-          align-center
-          justify-space-between
-          pa-5
-        "
-      >
-        <div class="d-flex align-center">
-          <mew-icon :img-height="32" icon-name="keystore" />
-          <div
-            class="
-              ml-3
-              file-name-container
-              mew-heading-4
-              textSecondary--text
-              truncate
-            "
-          >
-            {{ inputTitle }}
+        <div
+          class="
+            tableHeader
+            mb-8
+            input-container
+            d-block d-sm-flex
+            rounded
+            align-center
+            justify-space-between
+            pa-5
+          "
+        >
+          <div class="d-flex align-center">
+            <mew-icon :img-height="32" icon-name="keystore" />
+            <div
+              class="
+                ml-3
+                file-name-container
+                mew-heading-4
+                textSecondary--text
+                truncate
+              "
+            >
+              {{ inputTitle }}
+            </div>
+            <v-icon v-if="uploaded && !hasError" size="16" color="primary"
+              >mdi-checkbox-marked-circle</v-icon
+            >
           </div>
-          <v-icon v-if="uploaded && !hasError" size="16" color="primary"
-            >mdi-checkbox-marked-circle</v-icon
-          >
+          <mew-button
+            class="my-2"
+            btn-size="small"
+            title="Browse..."
+            btn-style="outline"
+            :has-full-width="$vuetify.breakpoint.xs"
+            @click.native="$refs.inputUpload.click()"
+          />
+          <input
+            v-show="false"
+            ref="inputUpload"
+            type="file"
+            accept=".json"
+            @change="upload"
+          />
         </div>
-        <mew-button
-          class="my-2"
-          btn-size="small"
-          title="Browse..."
-          btn-style="outline"
-          :has-full-width="$vuetify.breakpoint.xs"
-          @click.native="$refs.inputUpload.click()"
-        />
-        <input
-          v-show="false"
-          ref="inputUpload"
-          type="file"
-          accept=".json"
-          @change="upload"
-        />
       </div>
-    </div>
-    <!--
+      <!--
     ===================================================
     Eth2 Address
     ===================================================
     -->
-    <div v-if="newEth2Address && uploaded" class="overlayBg rounded pa-5 mt-2">
-      <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
-      <div class="break-word mew-address">
-        {{ newEth2Address }}
+      <div
+        v-if="newEth2Address && uploaded"
+        class="overlayBg rounded pa-5 mt-2"
+      >
+        <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
+        <div class="break-word mew-address">
+          {{ newEth2Address }}
+        </div>
       </div>
-    </div>
-    <!--
+      <!--
     ===================================================
     Back/Continue Buttons
     ===================================================
     -->
-    <div
-      class="
-        mt-7
-        d-flex
-        flex-column-reverse flex-md-row
-        align-center
-        justify-center
-      "
-    >
-      <mew-button
-        :has-full-width="$vuetify.breakpoint.smAndDown"
-        btn-size="xlarge"
-        class="d-block ma-2"
-        title="Back"
-        btn-style="outline"
-        @click.native="onBack"
-      />
-      <mew-button
-        :has-full-width="$vuetify.breakpoint.smAndDown"
-        btn-size="xlarge"
-        class="d-block ma-2"
-        title="Next: Review my stake"
-        :disabled="!newEth2Address || !uploaded || hasError"
-        @click.native="onContinue"
+      <div
+        class="
+          mt-7
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
       >
-      </mew-button>
+        <mew-button
+          :has-full-width="$vuetify.breakpoint.smAndDown"
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Back"
+          btn-style="outline"
+          @click.native="onBack"
+        />
+        <mew-button
+          :has-full-width="$vuetify.breakpoint.smAndDown"
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Next: Review my stake"
+          :disabled="!newEth2Address || !uploaded || hasError"
+          @click.native="onContinue"
+        >
+        </mew-button>
+      </div>
     </div>
   </div>
 </template>

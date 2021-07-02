@@ -9,7 +9,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
-      <div class="mew-heading-2 text-center mt-4">Choose password</div>
+      <div class="mew-heading-2 text-center">Choose password</div>
 
       <div class="mt-8">
         <div>Protect your keystore file with password</div>
