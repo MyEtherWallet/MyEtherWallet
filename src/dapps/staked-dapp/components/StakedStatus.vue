@@ -26,7 +26,7 @@
     No Validators: 
     ===================================================
     -->
-      <div v-if="validators.length === 0">
+      <div v-if="validators.length === 0 && justStakedValidator.length === 0">
         You are currently not staking any eth.
       </div>
       <!--
@@ -61,7 +61,7 @@
             ]"
           >
             <div class="left-container d-flex">
-              <img :src="iconETHBlue" height="22" alt="ethereum" />
+              <img :src="iconETHNavy" height="22" alt="ethereum" />
               <div class="ml-3">
                 <div class="mew-heading-3">
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
@@ -95,7 +95,7 @@
             <div class="mt-5 mb-8 font-weight-bold">More Info</div>
             <!--
     ===================================================
-    Pending Status (Created - Sending)
+    Pending Status (Created - Processing)
     ===================================================
     -->
             <div
@@ -109,7 +109,9 @@
                 color="primary"
                 indeterminate
               />
-              <span class="ml-2">Sending</span>
+              <span class="ml-2">{{
+                !pending.justStaked || txReceipt ? 'Processing' : 'Sending'
+              }}</span>
             </div>
             <!--
     ===================================================
@@ -221,7 +223,7 @@
           "
         >
           <div class="left-container d-flex">
-            <img :src="iconETHBlue" height="26" alt="ethereum" />
+            <img :src="iconETHNavy" height="26" alt="ethereum" />
             <div class="left-container-details ml-3">
               <div class="mew-heading-2">
                 {{ active.totalBalanceETH + ' ETH' }}
@@ -253,7 +255,7 @@
 <script>
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters, mapState } from 'vuex';
-import iconETHBlue from '@/assets/images/currencies/icon-eth-blue.svg';
+import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -274,6 +276,10 @@ export default {
       type: String,
       default: ''
     },
+    txReceipt: {
+      type: Boolean,
+      default: true
+    },
     loading: {
       type: Boolean,
       default: true
@@ -285,7 +291,7 @@ export default {
   },
   data() {
     return {
-      iconETHBlue: iconETHBlue,
+      iconETHNavy: iconETHNavy,
       timer: [],
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES
@@ -311,11 +317,15 @@ export default {
     /**
      * @returns array
      * Returns all the active validators with correct info
+     * includes status: ACTIVE, EXITED
      */
     activeValidators() {
       return this.validatorsRaw
         .filter(raw => {
-          return raw.status.toLowerCase() === STATUS_TYPES.ACTIVE;
+          return (
+            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+            raw.status.toLowerCase() === STATUS_TYPES.EXITED
+          );
         })
         .map(raw => {
           const totalBalanceETH = this.convertToEth1(raw.balance);
@@ -339,6 +349,7 @@ export default {
     /**
      * @returns array
      * Returns all the pending validators with correct info
+     * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
       return this.validatorsRaw
@@ -356,6 +367,7 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
             ).value,
+            justStaked: true,
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
