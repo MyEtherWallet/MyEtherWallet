@@ -25,7 +25,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template #rightHeaderContainer>
+      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
         <div class="d-flex align-center">
           <mew-toggle
             :button-group="chartButtons"
