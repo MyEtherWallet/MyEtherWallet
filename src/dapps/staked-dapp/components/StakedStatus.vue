@@ -264,6 +264,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import moment from 'moment';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
+import { GOERLI } from '@/utils/networks/types';
 
 export default {
   props: {
@@ -366,6 +367,7 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
             ).value,
+            justStaked: true,
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
@@ -400,7 +402,6 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
-            justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
               ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
@@ -464,31 +465,21 @@ export default {
      * Checks if its goerli
      */
     onGoerli() {
-      return this.network.type.name === 'GOERLI';
+      return this.network.type.name === GOERLI.name;
     },
     /**
      * @returns string
      * Returns the exact estimated wait time till activation in days, hours, minutes
      */
     getEstimatedDuration(timestamp) {
-      const now = moment();
+      const now = moment().utc();
       const activationTime = moment(timestamp);
-      const days = activationTime.diff(now, 'days');
-      const hours = activationTime.subtract(days, 'days').diff(now, 'hours');
-      const minutes = activationTime
-        .subtract(hours, 'hours')
-        .diff(now, 'minutes');
-      const timeLeft = '';
-      if (days > 0) {
-        timeLeft.push += days + ' Days ';
-      }
-      if (hours > 0) {
-        timeLeft.push += hours + ' Hours ';
-      }
-      if (minutes > 0) {
-        timeLeft.push += minutes + ' Minutes ';
-      }
-      return timeLeft.length > 0 ? timeLeft : '~';
+      if (now.unix() === activationTime.unix())
+        return 'Should activate momentarily';
+      return `${activationTime.diff(now, 'days')} days ${activationTime.diff(
+        now,
+        'hours'
+      )} hours and ${activationTime.diff(now, 'minutes')} minutes`;
     }
   }
 };
