@@ -186,7 +186,6 @@ export default {
             img: this.eth,
             price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
           });
-          console.error('items', items)
         }
       }
       return items;
