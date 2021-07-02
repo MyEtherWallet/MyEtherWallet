@@ -1,5 +1,5 @@
 import nodeList from '@/utils/networks';
-import { ETH } from '@/utils/networks/types';
+import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper';
 
 const Networks = function () {
@@ -26,6 +26,9 @@ const gasPrice = function (state) {
 const isEthNetwork = function (state) {
   return state.currentNetwork.type.name === ETH.name;
 };
+const isTestNetwork = function (state) {
+  return state.currentNetwork.type.isTestNetwork;
+};
 
 const localContracts = function (state) {
   return state.localContracts[state.currentNetwork.type.name]
@@ -33,10 +36,16 @@ const localContracts = function (state) {
     : [];
 };
 
+const hasSwap = function (state) {
+  const name = state.currentNetwork.type.name;
+  return name === ETH.name || name === BSC.name || name === MATIC.name;
+};
 export default {
   Networks,
   network,
   gasPrice,
   isEthNetwork,
-  localContracts
+  localContracts,
+  isTestNetwork,
+  hasSwap
 };

@@ -1,7 +1,7 @@
 import VueApollo from 'vue-apollo';
 import Vue from 'vue';
 
-import { aave } from '@/dapps/apollo-dapps.js';
+import { aave } from '@/dapps/aave-dapp/apollo-dapps';
 import { createApolloClient } from '@/core/helpers/createApolloClient';
 
 const main = createApolloClient(
