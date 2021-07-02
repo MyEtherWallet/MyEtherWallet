@@ -44,6 +44,8 @@
     "@sentry/integrations": "6.6.0",
     "@sentry/tracing": "6.6.0",
     "@sentry/vue": "6.6.0",
+    "@shapeshiftoss/hdwallet-core": "1.15.4",
+    "@shapeshiftoss/hdwallet-keepkey-webusb": "1.15.4",
     "@unstoppabledomains/resolution": "3.0.0",
     "@walletconnect/browser": "1.0.0",
     "@walletconnect/qrcode-modal": "1.4.1",
@@ -80,7 +82,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",
-    "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "6.0.2",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
     "@ledgerhq/hw-transport-webusb": "6.0.2",
