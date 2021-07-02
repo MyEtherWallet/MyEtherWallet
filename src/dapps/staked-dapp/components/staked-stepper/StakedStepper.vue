@@ -11,7 +11,7 @@
     Step 1: Select Amount 
     ===================================================
     -->
-      <template v-if="onStep === 1" #stepperContent1>
+      <template v-if="onStep === 2" #stepperContent1>
         <step-one-amount :current-apr="currentApr" @onContinue="nextStep" />
       </template>
       <!--
@@ -44,7 +44,7 @@
     Step 4: Review & Stake
     ===================================================
     -->
-      <template v-if="onStep === 4" #stepperContent4>
+      <template v-if="onStep === 1" #stepperContent4>
         <step-four-review
           :amount="amount"
           :eth2-address="address"

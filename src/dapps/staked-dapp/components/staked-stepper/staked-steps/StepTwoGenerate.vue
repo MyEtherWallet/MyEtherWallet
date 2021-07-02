@@ -4,170 +4,176 @@
     Step two: Generate Eth2 Address
     ===================================================
     -->
-  <div class="mx-auto mb-3" style="max-width: 550px">
-    <div class="mew-heading-2 py-12 text-center">
-      Here is your new Eth2 Address
-    </div>
-    <div
-      class="
-        skip-container
-        d-flex
-        flex-column flex-sm-row
-        rounded
-        align-center
-        justify-space-between
-        tableHeader
-        px-5
-        py-4
-      "
-    >
-      <!--
+  <div>
+    <v-divider />
+
+    <div class="mx-auto mb-3" style="max-width: 550px">
+      <div class="mew-heading-2 py-12 text-center">
+        Here is your new Eth2 Address
+      </div>
+      <div
+        class="
+          skip-container
+          d-flex
+          flex-column flex-sm-row
+          rounded
+          align-center
+          justify-space-between
+          tableHeader
+          px-5
+          py-4
+        "
+      >
+        <!--
       ===================================================
       Already have Eth2 Address
       ===================================================
       -->
-      <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
-      <div
-        class="d-flex align-center primary--text cursor-pointer"
-        @click="onContinue(true)"
-      >
-        Skip this step
-        <img
-          height="17"
-          class="ml-2"
-          src="@/assets/images/icons/button-circle-right-arrow.svg"
-          alt="right arrow"
-        />
+        <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
+        <div
+          class="d-flex align-center primary--text cursor-pointer"
+          @click="onContinue(true)"
+        >
+          Skip this step
+          <img
+            height="17"
+            class="ml-2"
+            src="@/assets/images/icons/button-circle-right-arrow.svg"
+            alt="right arrow"
+          />
+        </div>
       </div>
-    </div>
 
-    <border-block class="mt-4 pa-3 pa-sm-5">
-      <!--
+      <border-block class="mt-4 pa-3 pa-sm-5">
+        <!--
     ===================================================
    Eth2 Address
     ===================================================
     -->
-      <div class="overlayBg rounded pa-5">
-        <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
-        <div class="break-word mew-address">
-          {{ eth2Address }}
+        <div class="overlayBg rounded pa-5">
+          <div class="mew-heading-3 mb-3">Your Eth2 Address</div>
+          <div class="break-word mew-address">
+            {{ eth2Address }}
+          </div>
         </div>
-      </div>
-      <!--
+        <!--
     ===================================================
     Recovery phrase
     ===================================================
     -->
-      <div class="mt-8">
-        <div class="mew-heading-3 mb-5">1. Write down your recovery phrase</div>
-        <border-block class="px-3 px-sm-7 py-4">
-          <mnemonic-phrase-table :data="mnemonic" />
-        </border-block>
-      </div>
-      <!--
+        <div class="mt-8">
+          <div class="mew-heading-3 mb-5">
+            1. Write down your recovery phrase
+          </div>
+          <border-block class="px-3 px-sm-7 py-4">
+            <mnemonic-phrase-table :data="mnemonic" />
+          </border-block>
+        </div>
+        <!--
     ===================================================
     Keystore
     ===================================================
     -->
 
-      <div class="mt-10">
-        <div class="mew-heading-3 mb-5">2. Download your keystore file</div>
-        <div
-          class="
-            d-block d-sm-flex
-            align-center
-            justify-space-between
-            tableHeader
-            py-5
-            px-3
-            rounded
-          "
-        >
-          <div class="d-flex align-center">
-            <img
-              src="@/assets/images/icons/icon-keystore-file.svg"
-              alt="Keystore file"
-            />
-            <div class="ml-2">
-              <div class="mew-heading-4">
-                Keystore file
-                <v-icon v-if="downloadedKeystore" size="16" color="primary"
-                  >mdi-checkbox-marked-circle</v-icon
-                >
-              </div>
-              <v-progress-circular
-                v-if="downloadingKeystore && !downloadedKeystore"
-                color="primary"
-                indeterminate
-                width="3"
-                size="16"
+        <div class="mt-10">
+          <div class="mew-heading-3 mb-5">2. Download your keystore file</div>
+          <div
+            class="
+              d-block d-sm-flex
+              align-center
+              justify-space-between
+              tableHeader
+              py-5
+              px-3
+              rounded
+            "
+          >
+            <div class="d-flex align-center">
+              <img
+                src="@/assets/images/icons/icon-keystore-file.svg"
+                alt="Keystore file"
               />
-              <div
-                v-if="downloadedKeystore && keystoreName"
-                class="textSecondary--text"
-              >
-                {{ keystoreName }}
+              <div class="ml-2">
+                <div class="mew-heading-4">
+                  Keystore file
+                  <v-icon v-if="downloadedKeystore" size="16" color="primary"
+                    >mdi-checkbox-marked-circle</v-icon
+                  >
+                </div>
+                <v-progress-circular
+                  v-if="downloadingKeystore && !downloadedKeystore"
+                  color="primary"
+                  indeterminate
+                  width="3"
+                  size="16"
+                />
+                <div
+                  v-if="downloadedKeystore && keystoreName"
+                  class="textSecondary--text"
+                >
+                  {{ keystoreName }}
+                </div>
               </div>
             </div>
+            <mew-button
+              class="my-2"
+              btn-size="small"
+              title="Download"
+              btn-style="outline"
+              :has-full-width="$vuetify.breakpoint.xs"
+              @click.native="onDownload"
+            />
           </div>
-          <mew-button
-            class="my-2"
-            btn-size="small"
-            title="Download"
-            btn-style="outline"
-            :has-full-width="$vuetify.breakpoint.xs"
-            @click.native="onDownload"
+
+          <mew-warning-sheet
+            v-if="downloadedKeystore"
+            class="mt-4 mb-1"
+            :description="keystoreFileWarning"
           />
         </div>
-
-        <mew-warning-sheet
-          v-if="downloadedKeystore"
-          class="mt-4 mb-1"
-          :description="keystoreFileWarning"
-        />
-      </div>
-    </border-block>
-    <!--
+      </border-block>
+      <!--
     ======================================================
     Back + Continue buttons
     ======================================================
     -->
-    <div
-      class="
-        mt-10
-        d-flex
-        flex-column-reverse flex-md-row
-        align-center
-        justify-center
-      "
-    >
-      <mew-button
-        :has-full-width="$vuetify.breakpoint.smAndDown"
-        btn-size="xlarge"
-        class="d-block ma-2"
-        title="Back"
-        btn-style="outline"
-        @click.native="onBack"
-      />
-      <mew-button
-        :has-full-width="$vuetify.breakpoint.smAndDown"
-        btn-size="xlarge"
-        class="d-block ma-2"
-        title="Continue after downloading keystore file"
-        :disabled="!downloadedKeystore"
-        @click.native="onContinue(false)"
-      />
-    </div>
+      <div
+        class="
+          mt-10
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
+      >
+        <mew-button
+          :has-full-width="$vuetify.breakpoint.smAndDown"
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Back"
+          btn-style="outline"
+          @click.native="onBack"
+        />
+        <mew-button
+          :has-full-width="$vuetify.breakpoint.smAndDown"
+          btn-size="xlarge"
+          class="d-block ma-2"
+          title="Continue after downloading keystore file"
+          :disabled="!downloadedKeystore"
+          @click.native="onContinue(false)"
+        />
+      </div>
 
-    <!--
+      <!--
     ======================================================
     Create password + download keystore dialog
     ======================================================
     -->
-    <staked-create-password-dialog
-      :opened="onCreatePassword"
-      @generate="generateKeystore"
-    />
+      <staked-create-password-dialog
+        :opened="onCreatePassword"
+        @generate="generateKeystore"
+      />
+    </div>
   </div>
 </template>
 
