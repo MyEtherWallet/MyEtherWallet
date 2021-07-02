@@ -125,6 +125,7 @@
         class="py-13 mx-auto"
       >
         <staked-status
+          :tx-receipt="handlerStaked.txReceipt"
           :pending-hash="handlerStaked.pendingTxHash"
           :validators="validators"
           :loading="loadingValidators"

@@ -26,7 +26,7 @@
     No Validators: 
     ===================================================
     -->
-      <div v-if="validators.length === 0">
+      <div v-if="validators.length === 0 && justStakedValidator.length === 0">
         You are currently not staking any eth.
       </div>
       <!--
@@ -95,7 +95,7 @@
             <div class="mt-5 mb-8 font-weight-bold">More Info</div>
             <!--
     ===================================================
-    Pending Status (Created - Sending)
+    Pending Status (Created - Processing)
     ===================================================
     -->
             <div
@@ -109,7 +109,9 @@
                 color="primary"
                 indeterminate
               />
-              <span class="ml-2">Sending</span>
+              <span class="ml-2">{{
+                !pending.justStaked || txReceipt ? 'Processing' : 'Sending'
+              }}</span>
             </div>
             <!--
     ===================================================
@@ -273,6 +275,10 @@ export default {
       type: String,
       default: ''
     },
+    txReceipt: {
+      type: Boolean,
+      default: true
+    },
     loading: {
       type: Boolean,
       default: true
@@ -310,11 +316,15 @@ export default {
     /**
      * @returns array
      * Returns all the active validators with correct info
+     * includes status: ACTIVE, EXITED
      */
     activeValidators() {
       return this.validatorsRaw
         .filter(raw => {
-          return raw.status.toLowerCase() === STATUS_TYPES.ACTIVE;
+          return (
+            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
+            raw.status.toLowerCase() === STATUS_TYPES.EXITED
+          );
         })
         .map(raw => {
           const totalBalanceETH = this.convertToEth1(raw.balance);
@@ -338,6 +348,7 @@ export default {
     /**
      * @returns array
      * Returns all the pending validators with correct info
+     * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
       return this.validatorsRaw
@@ -388,6 +399,7 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
+            justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
               ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +

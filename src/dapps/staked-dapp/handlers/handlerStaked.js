@@ -38,7 +38,8 @@ const STATUS_TYPES = {
   ACTIVE: 'active',
   CREATED: 'created',
   DEPOSITED: 'deposited',
-  FAILED: 'failed'
+  FAILED: 'failed',
+  EXITED: 'exited'
 };
 
 export { ABI_GET_FEES, STATUS_TYPES };
@@ -59,6 +60,7 @@ export default class Staked {
     this.loadingValidators = false;
     this.myETHTotalStaked = 0;
     this.pendingTxHash = '';
+    this.txReceipt = false;
     this.endpoint = configNetworkTypes.network[this.network.type.name].endpoint;
     /**
      * get the initial data (total staked, apr, validators)
@@ -123,7 +125,8 @@ export default class Staked {
       });
   }
   /**
-   * Start provisioning and get the provisoning request uuid to start polling
+   * Start provisioning and get the
+   * provisoning request uuid to start polling
    */
   async startProvision(params) {
     this.validatorsCount = params.count;
@@ -205,9 +208,13 @@ export default class Staked {
       .on('transactionHash', res => {
         this.pendingTxHash = res;
       })
+      .on('receipt', () => {
+        this.txReceipt = true;
+      })
       .catch(err => {
         Toast(err, {}, ERROR);
       });
+    this.getValidators();
   }
   /**
    * @returns BigNumber

@@ -30,9 +30,16 @@
     -->
       <div
         v-if="!hasEnoughBalance && rules"
-        class="mt-n6 pb-6 mew-label error--text font-weight-medium"
+        class="
+          mt-n6
+          pb-6
+          mew-label
+          error--text
+          font-weight-medium
+          cursor-pointer
+        "
       >
-        {{ rules }}.
+        {{ rules }}
         <a
           rel="noopener noreferrer"
           target="_blank"
