@@ -483,9 +483,6 @@ export default {
         this.currentIdx -= MAX_ADDRESSES;
         this.setAddresses();
       }
-    },
-    selectedAddress(val) {
-      console.log(val);
     }
   },
   mounted() {
