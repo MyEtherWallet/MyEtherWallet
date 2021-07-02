@@ -224,7 +224,7 @@
                     <p class="">Adddress</p>
                   </v-col>
                   <v-col cols="4" sm="3">
-                    <p>ETH Balance</p>
+                    <p>{{ network.type.name }} Balance</p>
                   </v-col>
                 </v-row>
                 <!--
@@ -369,6 +369,7 @@ import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
 
 const MAX_ADDRESSES = 5;
 
@@ -416,6 +417,7 @@ export default {
         return this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
+        console.log(data);
         if (data && data.getEthBalance) {
           if (this.accounts[this.onAccountIndex]) {
             /**
@@ -665,16 +667,18 @@ export default {
      * Used in STEP 2 and 3
      */
     async setAddresses() {
+      const web3 = new Web3(this.network.url);
       this.accounts = [];
       for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
         const account = await this.handlerAccessWallet
           .getWalletInstance()
           .getAccount(i);
+        const balance = await web3.eth.getBalance(account.getAddressString());
         this.accounts.push({
           address: account.getAddressString(),
           account: account,
           idx: i,
-          balance: 'Loading..'
+          balance: fromWei(balance)
         });
       }
       this.currentIdx += MAX_ADDRESSES;

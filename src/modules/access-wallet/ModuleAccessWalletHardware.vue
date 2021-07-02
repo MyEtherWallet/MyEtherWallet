@@ -227,6 +227,7 @@ import wallets, {
 } from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import Web3 from 'web3';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -669,6 +670,7 @@ export default {
      * Network Address step
      */
     async setAddresses() {
+      const web3 = new Web3(this.network.url);
       try {
         this.accounts = [];
         for (
@@ -677,11 +679,12 @@ export default {
           i++
         ) {
           const account = await this.hwWalletInstance.getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
           this.accounts.push({
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: 'Loading..',
+            balance: balance,
             tokens: 'Loading..'
           });
         }
