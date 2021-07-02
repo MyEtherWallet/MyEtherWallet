@@ -11,8 +11,8 @@
     <template #rightColItem1>
       <module-tokens-value />
     </template>
-    <template v-if="hasSwap" #rightColItem2>
-      <module-transfer-history :is-custom="true" />
+    <template v-if="hasHistory && hasSwap" #rightColItem2>
+      <module-transfer-history :is-swap="true" />
     </template>
   </the-wrapper-wallet>
 </template>
@@ -49,7 +49,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('global', ['hasSwap'])
+    ...mapGetters('global', ['hasSwap']),
+    ...mapGetters('notifications', ['swapNotifications']),
+    hasHistory() {
+      return this.swapNotifications && this.swapNotifications.length > 0;
+    }
   }
 };
 </script>
