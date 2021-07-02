@@ -9,4 +9,15 @@ const getUint8Tx = tx => {
     gasPrice: new Uint8Array(tx.gasPrice)
   };
 };
-export { getUint8Tx };
+const getHexTx = tx => {
+  return {
+    to: '0x' + tx.to.toString('hex'),
+    value: '0x' + tx.value.toString('hex'),
+    data: '0x' + tx.data.toString('hex'),
+    chainId: tx.getChainId(),
+    nonce: '0x' + tx.nonce.toString('hex'),
+    gasLimit: '0x' + tx.gasLimit.toString('hex'),
+    gasPrice: '0x' + tx.gasPrice.toString('hex')
+  };
+};
+export { getUint8Tx, getHexTx };

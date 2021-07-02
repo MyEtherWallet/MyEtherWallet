@@ -414,7 +414,6 @@ export default {
           : '0x';
         return parsedValue;
       }
-
       return '0';
     },
     isSoftwareWallet() {
@@ -615,8 +614,8 @@ export default {
       this.error = '';
     },
     parseRawData(tx) {
-      let tokenData = '';
-      if (tx.to && tx.data && tx.data !== '0x') {
+      let tokenData = {};
+      if (tx.to && tx.data && tx.data.substr(0, 10) === '0xa9059cbb') {
         tokenData = parseTokenData(tx.data, tx.to);
         tx.fromTxData = {
           currency: this.network.type.currencyName,
@@ -650,8 +649,11 @@ export default {
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
-          const localStoredObj = locStore.get(sha3(this.address));
-          locStore.set(sha3(this.address), {
+          const storeKey = sha3(
+            `${this.network.type.name}-${this.address.toLowerCase()}`
+          );
+          const localStoredObj = locStore.get(storeKey);
+          locStore.set(storeKey, {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),
