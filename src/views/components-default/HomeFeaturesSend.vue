@@ -1,6 +1,6 @@
 <template>
   <mew6-white-sheet
-    class="mew-component--features-send pa-6 pa-md-10"
+    class="mew-component--features-send pa-6 pa-md-10 no-pointer-events"
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">
@@ -15,19 +15,13 @@
           <mew-input
             v-model="data"
             placeholder="0x..."
-            :label="$t('sendTx.add-data')"
+            :label="$t('sendTx.amount')"
           />
         </v-col>
         <v-col cols="12" class="mt-n5">
           <module-address-book is-home-page />
         </v-col>
       </v-row>
-      <mew-button
-        title="Send"
-        btn-size="xlarge"
-        class="mx-auto mt-5 d-block"
-        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
-      />
     </div>
   </mew6-white-sheet>
 </template>
@@ -40,7 +34,7 @@ export default {
   name: 'HomeFeaturesSend',
   components: { ModuleAddressBook },
   data: () => ({
-    data: '0'
+    data: '1337'
   }),
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
