@@ -7,7 +7,7 @@
         class="d-flex flex-grow-1 pt-6"
         title="Swap"
       >
-        <template #moduleBody>
+        <template v-if="isAvailable" #moduleBody>
           <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
@@ -24,7 +24,7 @@
                   :value="fromTokenType"
                   label="From"
                   :items="actualFromTokens"
-                  :is-swap="true"
+                  :is-custom="true"
                   :loading="isLoading"
                   @input="setFromToken"
                 />
@@ -67,7 +67,7 @@
                 ref="toToken"
                 :value="toTokenType"
                 :items="actualToTokens"
-                :is-swap="true"
+                :is-custom="true"
                 :loading="isLoading"
                 label="To"
                 @input="setToToken"
@@ -89,7 +89,7 @@
           <app-user-msg-block
             v-if="!hasMinEth"
             class="mt-sm-5"
-            :message="msg.storeBitcoin"
+            :message="msg.lowBalance"
           >
             <div class="mt-3 mx-n1">
               <mew-button
@@ -128,7 +128,7 @@
               isEthNetwork
             "
             class="mt-sm-5"
-            :message="msg.lowBalance"
+            :message="msg.storeBitcoin"
           >
             <div class="border-top mt-3">
               <v-expansion-panels
@@ -220,7 +220,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
-            is-swap
+            is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />
@@ -232,6 +232,16 @@
               btn-size="xlarge"
               @click.native="showConfirm"
             />
+          </div>
+        </template>
+        <!--
+          =====================================================================================
+           Message is SWAP NOT Available
+          =====================================================================================
+        -->
+        <template v-else #moduleBody>
+          <div class="swap-not-available">
+            <app-user-msg-block :message="swapNotAvailableMes" />
           </div>
         </template>
       </mew-module>
@@ -292,21 +302,18 @@ export default {
     amount: {
       type: String,
       default: '0'
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      msg: {
-        storeBitcoin: {
-          title: 'Your Ether balance is too low',
-          subtitle:
-            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
-        },
-        lowBalance: {
-          title: 'Did you know? You can store your Bitcoin on Ethereum',
-          subtitle:
-            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
-        }
+      swapNotAvailableMes: {
+        title: `Swap is not available on this network`,
+        subtitle:
+          'Please select ETH, BSC or MATIC networks to use this feature.'
       },
       step: 0,
       confirmInfo: {
@@ -370,6 +377,21 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     * Property returns correct mes
+     */
+    msg() {
+      return {
+        lowBalance: {
+          title: `Your ${this.network.type.name} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+        },
+        storeBitcoin: {
+          title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
+          subtitle: `To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your ${this.network.type.name_long} wallet.`
+        }
+      };
+    },
     disableNext() {
       return (
         this.step < 2 ||
@@ -520,35 +542,6 @@ export default {
       });
     },
     /**
-     * @returns object of wallet tokens
-     * to swap from
-     */
-    walletTokens() {
-      const tokensOwned = [];
-      /**
-       * if ETH balance is < 0, add Buy ETH dropdown item
-       */
-      if (BigNumber(this.balanceInETH).lte(0)) {
-        tokensOwned.push({
-          contract: MAIN_TOKEN_ADDRESS,
-          hasNoEth: true,
-          disabled: true,
-          text: 'Your wallet is empty.',
-          linkText: 'Buy ' + this.network.type.currencyName,
-          link: 'https://ccswap.myetherwallet.com/#/'
-        });
-      } else if (
-        /**
-         * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
-         */
-        !this.isFromTokenMain &&
-        BigNumber(this.balanceInETH).gt(0)
-      ) {
-        tokensOwned.push(this.mainTokenDetails);
-      }
-      return tokensOwned.concat(this.tokensList);
-    },
-    /**
      * @returns object of all token data
      * to swap from
      */
@@ -561,7 +554,7 @@ export default {
         )
           return item;
       });
-      let tradebleWalletTokens = this.walletTokens.filter(item => {
+      let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
             return item;
@@ -820,15 +813,17 @@ export default {
       immediate: true
     },
     network() {
-      this.isLoading = true;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+      if (this.isAvailable) {
+        this.isLoading = true;
+        this.swapper = new Swapper(this.web3, this.network.type.name);
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      }
     },
     mainTokenDetails() {
       this.setDefaults();
@@ -992,6 +987,9 @@ export default {
               q.isSelected = false;
               return q;
             });
+            if (this.availableQuotes.length > 1) {
+              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
               this.step = 1;
@@ -1209,5 +1207,11 @@ export default {
 
 .border-top {
   border-top: 1px solid var(--v-inputBorder-base);
+}
+
+.swap-not-available {
+  @media (min-width: 960px) {
+    min-height: 45vh;
+  }
 }
 </style>

@@ -43,9 +43,7 @@ class MEWconnectWallet {
     const txSigner = async tx => {
       let tokenInfo;
       if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        tokenInfo = store.getters['global/network'].type.tokens.find(
-          entry => entry.address.toLowerCase() === tx.to.toLowerCase()
-        );
+        tokenInfo = store.getters['external/contractToToken'](tx.to);
         if (tokenInfo) {
           tx.currency = {
             symbol: tokenInfo.symbol,

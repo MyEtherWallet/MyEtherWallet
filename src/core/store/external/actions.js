@@ -6,35 +6,27 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { toBN } from 'web3-utils';
 
-const setDarkList = async function ({ commit }) {
-  const darkList = await fetch(
-    'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
-  )
-    .then(res => res.json())
-    .catch(e => {
-      Toast(e.message, {}, ERROR);
-    });
-  commit('SET_DARK_LIST', {
-    data: darkList,
-    timestamp: Date.now()
-  });
-};
 const setCurrency = async function ({ commit }, val) {
-  const rates = await fetch(
-    'https://mainnet.mewwallet.dev/v2/prices/exchange-rates'
-  )
+  fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
     .then(res => res.json())
+    .then(rates => {
+      const currentRate = rates
+        ? rates.find(rate => rate.fiat_currency === val)
+        : {};
+      commit('SET_CURRENCY_RATE', {
+        data: currentRate,
+        timestamp: Date.now()
+      });
+    })
     .catch(e => {
+      commit('SET_CURRENCY_RATE', {
+        data: {},
+        timestamp: Date.now()
+      });
       Toast(e.message, {}, ERROR);
     });
-  const currentRate = rates
-    ? rates.find(rate => rate.fiat_currency === val)
-    : {};
-  commit('SET_CURRENCY_RATE', {
-    data: currentRate,
-    timestamp: Date.now()
-  });
 };
 const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
@@ -42,18 +34,19 @@ const setLastPath = function ({ commit }, val) {
 const setCoinGeckoTokens = function ({ commit }, params) {
   commit('SET_COIN_GECKO_TOKENS', params);
 };
-const setTokenBalance = function ({
+const setTokenAndEthBalance = function ({
   rootGetters,
   getters,
   dispatch,
+  commit,
   rootState
 }) {
+  commit('wallet/SET_LOADING_WALLET_INFO', true, { root: true });
   const network = rootGetters['global/network'];
   const isTokenBalanceApiSupported =
     network.type.name === BSC.name ||
     network.type.name === ETH.name ||
     network.type.name === MATIC.name;
-  const balanceInWei = rootGetters['wallet/balanceInWei'];
   const address = rootState.wallet.address;
   const TOKEN_BALANCE_API = 'https://tokenbalance.mewapi.io';
 
@@ -66,42 +59,50 @@ const setTokenBalance = function ({
     return n;
   };
   if (!isTokenBalanceApiSupported) {
-    const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
-    const denominator = new BigNumber(10).pow(token.decimals);
-    const usdBalance = new BigNumber(balanceInWei)
-      .div(denominator)
-      .times(token.price)
-      .toString();
-    dispatch(
-      'wallet/setTokens',
-      [
-        Object.assign(
-          {
-            balance: balanceInWei,
-            balancef: _getTokenBalance(balanceInWei, token.decimals).value,
-            usdBalance: usdBalance,
-            usdBalancef: formatFiatValue(usdBalance).value
-          },
-          token
+    rootState.wallet.web3.eth.getBalance(address).then(res => {
+      const token = getters.contractToToken(MAIN_TOKEN_ADDRESS);
+      const denominator = new BigNumber(10).pow(token.decimals);
+      const usdBalance = new BigNumber(res)
+        .div(denominator)
+        .times(token.price)
+        .toString();
+      dispatch(
+        'wallet/setTokens',
+        [
+          Object.assign(
+            {
+              balance: res,
+              balancef: _getTokenBalance(res, token.decimals).value,
+              usdBalance: usdBalance,
+              usdBalancef: formatFiatValue(usdBalance).value
+            },
+            token
+          )
+        ],
+        { root: true }
+      )
+        .then(() =>
+          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
         )
-      ],
-      { root: true }
-    );
+        .then(() =>
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true })
+        );
+    });
     return;
   }
+  let mainTokenBalance = toBN('0');
   fetch(
     `${TOKEN_BALANCE_API}/${network.type.name.toLowerCase()}?address=${address}`
   )
     .then(res => res.json())
     .then(res => res.result)
     .then(tokens => {
-      tokens.push({
-        contract: MAIN_TOKEN_ADDRESS,
-        balance: balanceInWei
-      });
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
+        if (t.contract === MAIN_TOKEN_ADDRESS) {
+          mainTokenBalance = toBN(t.balance);
+        }
         if (!token) return;
         const denominator = new BigNumber(10).pow(token.decimals);
         const usdBalance = new BigNumber(t.balance)
@@ -127,13 +128,18 @@ const setTokenBalance = function ({
           ? 1
           : 0;
       });
-      dispatch('wallet/setTokens', formattedList, { root: true });
+      dispatch('wallet/setTokens', formattedList, { root: true }).then(() =>
+        dispatch('wallet/setAccountBalance', mainTokenBalance, {
+          root: true
+        }).then(() =>
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true })
+        )
+      );
     });
 };
 export default {
-  setDarkList,
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
-  setTokenBalance
+  setTokenAndEthBalance
 };

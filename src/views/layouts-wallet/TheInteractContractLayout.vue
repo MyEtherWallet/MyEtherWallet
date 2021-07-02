@@ -20,8 +20,7 @@ export default {
     ModuleContractInteract,
     ModuleSwapRates,
     TheWrapperWallet
-  },
-  data() {}
+  }
 };
 </script>
 

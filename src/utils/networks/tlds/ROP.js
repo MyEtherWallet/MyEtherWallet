@@ -1,1 +1,1 @@
-export default ['test', 'xyz'];
+export default ['eth', 'xyz'];

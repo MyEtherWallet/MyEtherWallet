@@ -1,4 +1,4 @@
-import matic from '@/assets/images/networks/network.svg';
+import matic from '@/assets/images/networks/matic.svg';
 import tokens from '@/_generated/tokens/tokens-matic.json';
 export default {
   name: 'MATIC',
@@ -10,6 +10,7 @@ export default {
   tokens: tokens,
   contracts: [],
   icon: matic,
+  isTestNetwork: false,
   currencyName: 'MATIC',
   isEthVMSupported: {
     supported: false,
