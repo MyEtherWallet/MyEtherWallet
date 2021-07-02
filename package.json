@@ -37,10 +37,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/ens-contracts": "0.0.4",
-<<<<<<< HEAD
-=======
     "@myetherwallet/eth2-keystore": "0.2.3",
->>>>>>> v6/develop
     "@myetherwallet/mew-components": "0.5.86-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.6.0",

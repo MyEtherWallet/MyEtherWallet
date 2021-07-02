@@ -160,7 +160,7 @@
                   Why are the fees so high?
                 </div>
                 <a
-                  v-if="notEnoughEth"
+                  v-if="isEthNetwork && notEnoughEth"
                   rel="noopener noreferrer"
                   target="_blank"
                   href="https://ccswap.myetherwallet.com/#/"
@@ -251,7 +251,8 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEthNetwork']),
+
     icon() {
       return GAS_TYPE_ICONS[this.gasPriceType];
     },

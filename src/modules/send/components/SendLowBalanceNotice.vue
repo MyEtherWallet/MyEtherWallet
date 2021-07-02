@@ -68,6 +68,7 @@
             </div>
             <br />
             <a
+              v-if="isEthNetwork"
               class="mew-body font-weight-medium"
               href="https://ccswap.myetherwallet.com/#/"
               target="_blank"
@@ -86,6 +87,8 @@
 import clipboardCopy from 'clipboard-copy';
 import AppModal from '@/core/components/AppModal';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
     AppModal
@@ -104,6 +107,9 @@ export default {
     return {
       show: false
     };
+  },
+  computed: {
+    ...mapGetters('global', ['isEthNetwork'])
   },
   methods: {
     copyAddress() {

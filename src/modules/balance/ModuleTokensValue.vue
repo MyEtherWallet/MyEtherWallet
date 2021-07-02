@@ -63,7 +63,7 @@ export default {
   data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-        ...mapState('wallet', [ 'loadingWalletInfo']),
+    ...mapState('wallet', ['loadingWalletInfo']),
 
     ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
