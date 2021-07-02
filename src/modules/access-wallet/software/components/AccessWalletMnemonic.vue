@@ -120,11 +120,6 @@
             <div class="headline font-weight-bold">
               Select HD Derivation Path
             </div>
-            <p class="mb-5">
-              Please select HD Derivation Path that you you want to interact
-              with or enter a custom one.
-            </p>
-
             <mew-select
               v-model="selectedPath"
               label="Select Path"

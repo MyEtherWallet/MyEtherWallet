@@ -151,7 +151,7 @@ export default {
         {
           color: 'basic',
           title: 'Hardware wallets',
-          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox',
+          subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',
@@ -165,7 +165,7 @@ export default {
         {
           color: 'basic',
           title: 'Mobile Apps',
-          subtitle: 'WalletConnect, Wallet Link',
+          subtitle: 'WalletConnect, WalletLink',
           note: '',
           rightIcons: [
             require('@/assets/images/icons/icon-wallet-connect.svg'),

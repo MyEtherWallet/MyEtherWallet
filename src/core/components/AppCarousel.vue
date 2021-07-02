@@ -28,7 +28,7 @@
             @click="$router.push({ name: 'BuyHardwareWallet' })"
           >
             <div class="title font-weight-bold mb-n1">Hardware wallets</div>
-            <div class="mb-2">Take a look at our hardware wallets!</div>
+            <div class="mb-2">Buy a hardware wallet!</div>
             <div class="d-flex align-center">
               <img
                 class="mr-2"

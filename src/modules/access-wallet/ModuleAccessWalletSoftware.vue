@@ -70,7 +70,7 @@
         -->
         <mew-warning-sheet
           title="Not Recommended"
-          description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
           :link-obj="warningSheetObj"
           class="mt-6"
         />
