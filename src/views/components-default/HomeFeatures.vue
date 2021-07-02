@@ -110,7 +110,7 @@ export default {
         name: 'Swap'
       },
       {
-        name: 'DApps'
+        name: 'Dapps'
       },
       {
         name: 'Tokens'

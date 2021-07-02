@@ -137,7 +137,7 @@ export default {
           },
           {
             label: 'Explore DApps',
-            to: { name: 'DApps' }
+            to: { name: 'Dapps' }
           },
           {
             label: 'Swap tokens',

@@ -65,7 +65,7 @@ export default {
             },
             {
               title: 'Explore DApps',
-              to: { name: 'DApps' }
+              to: { name: 'Dapps' }
             },
             {
               title: 'Swap tokens',

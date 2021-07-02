@@ -8,7 +8,7 @@ import Dapps from '@/modules/dapps-center/ModuleDappsCenter';
 export default [
   {
     path: '',
-    name: 'DApps',
+    name: 'Dapps',
     component: Dapps
   },
   {
