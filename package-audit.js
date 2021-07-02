@@ -18,7 +18,8 @@ const AUDIT_EXCEPTIONS = [
   'dns-packet', // added 5-25-21 (could be related to an @ensdomains internal dependency)
   'normalize-url', // added 6/23/21
   'css-what', // added 6/23/21
-  'trim-newlines' // added 6/23/21
+  'trim-newlines', // added 6/23/21
+  'socket.io-parser' // added 7/2/21
 ];
 
 const execute = (command, callback) => {
