@@ -345,7 +345,8 @@ export default {
           return (
             raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
             raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-            raw.status.toLowerCase() === STATUS_TYPES.FAILED
+            raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+            raw.status.toLowerCase() === STATUS_TYPES.CREATED
           );
         })
         .map(raw => {
