@@ -9,6 +9,7 @@
     :banner-img="bgDappsStake"
     :title-icon="iconColorfulETH"
     :banner-text="header"
+    :hide-default-tab-header="true"
     :tab-items="tabs"
     :active-tab="activeTab"
     top-strip

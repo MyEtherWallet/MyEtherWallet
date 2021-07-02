@@ -4,21 +4,13 @@
     DAPP WRAPPER:
   =====================================================================================
   -->
-  <mew6-white-sheet class="core--components--the-wrapper-dapp">
+  <mew6-white-sheet>
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
-      TODO: we currently do not have all the custom dapp banner images, so will use the default for
-      now if there is none available.
+      TODO: Add block header to mew banner component
     =====================================================================================
     -->
-    <mew-banner
-      v-if="false"
-      :text-obj="bannerTextObj"
-      :banner-img="bannerImg"
-      @closeBanner="onClose"
-    />
-
     <block-header
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
@@ -39,11 +31,12 @@
     =====================================================================================
       Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
       tab content (tabContent + tab number )
+      TODO: remove hideDefaultTabHeader prop and refactor
     =====================================================================================
     -->
     <mew-tabs
       v-if="tabItems.length > 0"
-      class="pt-5"
+      :class="['pt-5', hideDefaultTabHeader ? 'hide-default-tab-header' : '']"
       :items="tabItems"
       :is-centered="true"
       :active-tab="activeTab"
@@ -111,6 +104,10 @@ export default {
     onTab: {
       default: () => {},
       type: Function
+    },
+    hideDefaultTabHeader: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -135,7 +132,7 @@ export default {
 </script>
 
 <style lang="scss">
-.core--components--the-wrapper-dapp {
+.hide-default-tab-header {
   .v-tabs {
     display: none;
   }
