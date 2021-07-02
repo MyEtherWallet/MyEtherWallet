@@ -228,6 +228,7 @@ import wallets, {
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
+import { fromWei } from 'web3-utils';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -670,8 +671,8 @@ export default {
      * Network Address step
      */
     async setAddresses() {
-      const web3 = new Web3(this.network.url);
       try {
+        const web3 = new Web3(this.network.url);
         this.accounts = [];
         for (
           let i = this.currentIdx;
@@ -684,7 +685,7 @@ export default {
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: balance,
+            balance: fromWei(balance),
             tokens: 'Loading..'
           });
         }
