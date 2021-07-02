@@ -74,7 +74,7 @@ const getCoinGeckoTokenById = state => cgid => {
     symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
     subtext: cgToken ? cgToken.name : '',
     value: cgToken ? cgToken.name : '',
-    img: cgToken ? cgToken.image : '',
+    img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
     market_cap: cgToken ? cgToken.market_cap : '0',
     market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
     price_change_percentage_24h: cgToken
