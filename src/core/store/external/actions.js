@@ -8,19 +8,6 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 
-const setDarkList = async function ({ commit }) {
-  const darkList = await fetch(
-    'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
-  )
-    .then(res => res.json())
-    .catch(e => {
-      Toast(e.message, {}, ERROR);
-    });
-  commit('SET_DARK_LIST', {
-    data: darkList,
-    timestamp: Date.now()
-  });
-};
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
     .then(res => res.json())
@@ -151,7 +138,6 @@ const setTokenAndEthBalance = function ({
     });
 };
 export default {
-  setDarkList,
   setLastPath,
   setCurrency,
   setCoinGeckoTokens,
