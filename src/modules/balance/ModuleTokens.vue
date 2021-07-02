@@ -109,11 +109,11 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
-    ...mapState('wallet', ['web3', 'initialLoadTokens']),
+    ...mapState('wallet', ['web3', 'loadingWalletInfo']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
-      return this.initialLoadTokens;
+      return this.loadingWalletInfo;
     },
     tokensData() {
       if (!this.tokensList) return [];
