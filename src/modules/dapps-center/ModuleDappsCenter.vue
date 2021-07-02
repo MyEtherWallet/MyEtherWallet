@@ -61,8 +61,9 @@ export default {
           path: 'Aave'
         },
         {
-          title: 'Staked',
-          subtitle: 'stake',
+          title: 'Stake on Eth2',
+          subtitle:
+            'Stake your ETH on Ethereum 2.0 and watch your rewards grow',
           tag: '#DeFi',
           rightIconType: 'mew',
           rightIcon: 'stake',
