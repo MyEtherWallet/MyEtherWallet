@@ -6,7 +6,15 @@
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
         <v-col cols="12">
-          <div class="mew-heading-3">${{ totalTokenValues }}</div>
+          <div v-if="!initialLoadTokens" class="mew-heading-3">
+            ${{ totalTokenValues }}
+          </div>
+          <v-skeleton-loader
+            v-else
+            v-bind="attrs"
+            type="image"
+            height="100px"
+          ></v-skeleton-loader>
         </v-col>
         <v-col v-if="showTokens" cols="12" class="mt-3">
           <v-row justify="start">
@@ -54,7 +62,7 @@ export default {
   },
   data: () => ({ showPopup: false }),
   computed: {
-    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('wallet', ['tokensList', 'initialLoadTokens']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
@@ -72,7 +80,7 @@ export default {
       return this.tokensList.length - this.tokenImages.length;
     },
     showTokens() {
-      return this.tokensList.length > 0;
+      return this.tokensList.length > 0 && !this.initialLoadTokens;
     },
     getText() {
       if (this.showTokens) {
