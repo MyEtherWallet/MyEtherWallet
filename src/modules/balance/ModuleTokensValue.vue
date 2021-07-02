@@ -6,7 +6,7 @@
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
         <v-col cols="12">
-          <div v-if="!loadingWalletInfo" class="mew-heading-3">
+          <div v-if="!initialLoad" class="mew-heading-3">
             ${{ totalTokenValues }}
           </div>
           <v-skeleton-loader
@@ -63,7 +63,7 @@ export default {
   data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapState('wallet', ['loadingWalletInfo']),
+    ...mapState('wallet', ['initialLoad']),
 
     ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
@@ -82,7 +82,7 @@ export default {
       return this.tokensList.length - this.tokenImages.length;
     },
     showTokens() {
-      return this.tokensList.length > 0 && !this.loadingWalletInfo;
+      return this.tokensList.length > 0 && !this.initialLoad;
     },
     getText() {
       if (this.showTokens) {
