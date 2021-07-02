@@ -188,7 +188,7 @@ import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import iconETHBlue from '@/assets/images/currencies/eth-dark-navy.svg';
+import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import {
   formatFiatValue,
@@ -242,7 +242,7 @@ export default {
     details() {
       return [
         {
-          img: iconETHBlue,
+          img: iconETHNavy,
           subtitle: 'Staking',
           title: this.amount + ' ETH',
           desc: this.amountFiat

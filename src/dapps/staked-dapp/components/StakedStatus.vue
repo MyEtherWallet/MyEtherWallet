@@ -61,7 +61,7 @@
             ]"
           >
             <div class="left-container d-flex">
-              <img :src="iconETHBlue" height="22" alt="ethereum" />
+              <img :src="iconETHNavy" height="22" alt="ethereum" />
               <div class="ml-3">
                 <div class="mew-heading-3">
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
@@ -221,7 +221,7 @@
           "
         >
           <div class="left-container d-flex">
-            <img :src="iconETHBlue" height="26" alt="ethereum" />
+            <img :src="iconETHNavy" height="26" alt="ethereum" />
             <div class="left-container-details ml-3">
               <div class="mew-heading-2">
                 {{ active.totalBalanceETH + ' ETH' }}
@@ -253,7 +253,7 @@
 <script>
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters, mapState } from 'vuex';
-import iconETHBlue from '@/assets/images/currencies/icon-eth-blue.svg';
+import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -284,7 +284,7 @@ export default {
   },
   data() {
     return {
-      iconETHBlue: iconETHBlue,
+      iconETHNavy: iconETHNavy,
       timer: [],
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES
