@@ -262,6 +262,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import moment from 'moment';
 import { STATUS_TYPES } from '@/dapps/staked-dapp/handlers/handlerStaked';
+import { GOERLI } from '@/utils/networks/types';
 
 export default {
   props: {
@@ -452,7 +453,7 @@ export default {
      * Checks if its goerli
      */
     onGoerli() {
-      return this.network.type.name === 'GOERLI';
+      return this.network.type.name === GOERLI.name;
     },
     /**
      * @returns string
