@@ -4,7 +4,11 @@
       Dapp Center Module
     =====================================================================================
     -->
-  <the-wrapper-dapp :banner-img="bannerImage" :banner-text="bannerText">
+  <the-wrapper-dapp
+    :banner-img="bannerImage"
+    :banner-text="bannerText"
+    no-back-btn
+  >
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
       <v-row>
@@ -23,41 +27,50 @@
           />
         </v-col>
       </v-row>
+      <v-row v-if="!dapps.length">
+        <div class="swap-not-available">
+          <app-user-msg-block :message="noDappsAvailable" />
+        </div>
+      </v-row>
+    </template>
+    <template #moduleBody>
+      <div class="swap-not-available">
+        <app-user-msg-block message="sdfsdfsdfsdf" />
+      </div>
     </template>
   </the-wrapper-dapp>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
-
+import dappsMeta from '@/dapps/metainfo-dapps';
+import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 export default {
-  components: { TheWrapperDapp },
+  components: { TheWrapperDapp, AppUserMsgBlock },
   data() {
     return {
       bannerImage: bannerImage,
       bannerText: {
         title: 'Explore MEW Dapps'
       },
-      dapps: [
-        {
-          title: 'ENS manager',
-          subtitle: 'Migrate or register ENS domain / subdomain',
-          tag: '#Property',
-          rightIconType: 'mew',
-          rightIcon: 'ensManager',
-          path: 'ENSManager'
-        },
-        {
-          title: 'Aave V1',
-          subtitle: 'Earn passive income on your deposits and borrow assets',
-          tag: '#DeFi',
-          rightIconType: 'mew',
-          rightIcon: 'aave',
-          path: 'Aave'
-        }
-      ]
+      noDappsAvailable: {
+        title: `No dapps available on this network`,
+        subtitle: 'Please select a different network'
+      }
     };
+  },
+  computed: {
+    ...mapGetters('global', ['network']),
+    dapps() {
+      return Object.values(dappsMeta).filter(val => {
+        for (const n of val.networks) {
+          if (n.name === this.network.type.name) return true;
+        }
+        return false;
+      });
+    }
   },
   methods: {
     routeTo(path) {

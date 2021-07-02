@@ -15,7 +15,7 @@
             <a>Learn More </a>
           </p>
           <settings-gas-price
-            :is-swap="true"
+            :is-custom="true"
             :buttons="gasButtons"
             :selected="selected"
             :set-selected="setGas"

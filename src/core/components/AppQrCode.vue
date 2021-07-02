@@ -35,7 +35,7 @@ export default {
      */
     cornersSquareStyle: {
       type: String,
-      default: 'none'
+      default: 'square'
     },
     cornersSquareColor: {
       type: String,
@@ -92,8 +92,8 @@ export default {
           color: this.backgroundColor
         },
         cornersSquareOptions: {
-          color: this.cornerSquareColor,
-          type: this.cornerSquareStyle
+          color: this.cornersSquareColor,
+          type: this.cornersSquareStyle
         },
         cornersDotsOptions: {
           color: this.cornerDotColor,

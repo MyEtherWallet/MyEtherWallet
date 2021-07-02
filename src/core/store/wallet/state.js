@@ -10,8 +10,7 @@ const state = {
   web3: {},
   ensDomains: null,
   tokens: [],
-  initialLoadTokens: true,
-  initialLoadBalance: true
+  loadingWalletInfo: true
 };
 
 export default state;

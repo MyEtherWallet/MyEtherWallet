@@ -91,7 +91,8 @@ class TrezorWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress
+      displayAddress,
+      this.icon
     );
   }
   getCurrentPath() {
