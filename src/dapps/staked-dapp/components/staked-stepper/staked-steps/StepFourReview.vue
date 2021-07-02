@@ -8,7 +8,7 @@
     <v-divider />
 
     <div class="mx-auto pb-3" style="max-width: 550px">
-      <div class="mew-heading-2 py-12 text-center">Review and stake</div>
+      <div class="mew-heading-2 py-8 text-center">Review and stake</div>
       <v-row>
         <!--
     ===================================================

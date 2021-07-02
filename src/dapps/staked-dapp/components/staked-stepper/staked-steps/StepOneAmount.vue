@@ -13,7 +13,7 @@
     Select Amount to stake
     ===================================================
     -->
-      <div class="mew-heading-2 py-12 text-center">
+      <div class="mew-heading-2 py-8 text-center">
         Select ETH amount to stake
       </div>
 
