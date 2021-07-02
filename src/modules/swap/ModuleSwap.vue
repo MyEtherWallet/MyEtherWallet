@@ -1014,7 +1014,7 @@ export default {
       });
     },
     getTrade: _.debounce(function (idx) {
-      if (!this.isToAddressValid) return;
+      if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
