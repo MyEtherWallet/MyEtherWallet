@@ -1,15 +1,15 @@
 <template>
-  <mew6-white-sheet>
-    <div class="px-5 px-lg-3 pt-5">
-      <div class="d-flex align-center justify-space-between">
-        <span class="mew-heading-2">{{ actualTitle }}</span>
-      </div>
-    </div>
-    <div class="pa-1 history-container">
-      <div v-for="(data, key) in actualNotifications" :key="key">
-        <mew-notification :notification="data.notification" class="px-0" />
-      </div>
-    </div>
+  <mew6-white-sheet class="px-5 px-lg-7 py-5 justify-space-between">
+    <v-row dense>
+      <v-col cols="12">
+        <div class="mew-heading-2 mb-3">{{ actualTitle }}</div>
+      </v-col>
+      <v-col cols="12" class="px-0">
+        <div v-for="(data, key) in actualNotifications" :key="key">
+          <mew-notification :notification="data.notification" class="px-0" />
+        </div>
+      </v-col>
+    </v-row>
   </mew6-white-sheet>
 </template>
 
