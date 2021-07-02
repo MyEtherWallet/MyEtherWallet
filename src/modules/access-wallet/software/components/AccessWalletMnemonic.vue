@@ -195,9 +195,6 @@
             <div class="headline font-weight-bold">
               Select Address and Network
             </div>
-            <p class="mb-5">
-              Please select address that you want to interact with and network.
-            </p>
           </v-col>
         </v-row>
         <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
