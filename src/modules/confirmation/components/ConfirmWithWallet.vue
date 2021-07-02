@@ -43,7 +43,6 @@ export default {
   computed: {
     ...mapState('wallet', ['instance']),
     bodyText() {
-      console.log(this.instance, this.error);
       if (this.error !== '') return this.error;
       const walletNames = {
         ledger: 'Ledger',

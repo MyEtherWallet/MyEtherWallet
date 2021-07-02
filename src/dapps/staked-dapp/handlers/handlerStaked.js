@@ -230,7 +230,6 @@ export default class Staked {
     this.transactionData.from = this.address;
     this.transactionData.to =
       configNetworkTypes.network[this.network.type.name].batchContract;
-    console.log(this.transactionData);
     this.web3.eth
       .sendTransaction(this.transactionData)
       .on('transactionHash', res => {
