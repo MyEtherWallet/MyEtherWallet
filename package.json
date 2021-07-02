@@ -37,6 +37,10 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/ens-contracts": "0.0.4",
+<<<<<<< HEAD
+=======
+    "@myetherwallet/eth2-keystore": "0.2.3",
+>>>>>>> v6/develop
     "@myetherwallet/mew-components": "0.5.86-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.6.0",
@@ -177,7 +181,8 @@
     "trim-newlines": "3.0.1",
     "css-what": "5.0.1",
     "normalize-url": "6.0.1",
-    "scrypt.js": "0.3.0"
+    "scrypt.js": "0.3.0",
+    "socket.io-parser": "3.4.1"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
