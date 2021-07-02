@@ -1,9 +1,16 @@
 <template>
   <div class="mew-component--side-info-network">
-    <network-switch
-      :open="openNetworkOverlay"
-      @close="openNetworkOverlay = false"
-    />
+    <mew-overlay
+      :show-overlay="openNetworkOverlay"
+      title="Select Network"
+      left-btn-text=""
+      right-btn-text="Close"
+      @closeOverlay="openNetworkOverlay = false"
+    >
+      <template #mewOverlayBody>
+        <network-switch />
+      </template>
+    </mew-overlay>
 
     <mew6-white-sheet
       :sideinfo="!mobile"

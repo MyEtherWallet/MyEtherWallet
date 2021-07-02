@@ -320,31 +320,7 @@
           =====================================================================================
           -->
           <template #panelBody2>
-            <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
-              <v-radio-group v-model="selectedNetwork">
-                <div v-for="(type, i) in networkTypes" :key="type">
-                  <h5 class="text-capitalize font-weight-bold">
-                    {{ type }}
-                  </h5>
-                  <v-container>
-                    <v-row dense align="center" justify="space-between">
-                      <v-col
-                        v-for="(item, idx) in Networks[type]"
-                        :key="item.service + idx"
-                        cols="12"
-                        sm="6"
-                      >
-                        <v-radio :label="item.service" :value="item.url" />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <v-divider
-                    v-if="networkTypes.length != i + 1"
-                    class="mt-0 mb-5"
-                  />
-                </div>
-              </v-radio-group>
-            </div>
+            <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
           </template>
         </mew-expand-panel>
         <!--
@@ -390,6 +366,7 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import { checkCustomPath } from '../handlers/pathHelper';
 import AppBtnRow from '@/core/components/AppBtnRow';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { fromWei } from 'web3-utils';
 
@@ -413,7 +390,8 @@ export default {
   },
   components: {
     phraseBlock,
-    AppBtnRow
+    AppBtnRow,
+    NetworkSwitch
   },
   props: {
     handlerAccessWallet: {
@@ -506,7 +484,6 @@ export default {
         url: 'https://www.myetherwallet.com/terms-of-service'
       },
       /*Network Items: */
-      selectedNetwork: '',
       panelNetworkSubstring: '',
       /* Mnemonic Addresses */
       selectedAddress: '',
@@ -517,7 +494,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['Networks', 'network']),
+    ...mapGetters('global', ['network']),
     ...mapState('global', ['customPaths']),
     /**
      * Property returns the index of the account of the accountAddress
@@ -625,26 +602,6 @@ export default {
         }
       ];
     },
-
-    /**
-     * Property returns default network and nodes items
-     * Property Interface:
-     * {  name = string -> Name of the Path,
-     *    subtext = string --> Derivation Path,
-     *    value = tring --> Derivation Path
-     * }
-     */
-    networkTypes() {
-      const showFirst = ['ETH', 'ROP', 'RIN'];
-      const typeArr = Object.keys(this.Networks).filter(item => {
-        if (!showFirst.includes(item)) {
-          return item;
-        }
-      });
-      typeArr.unshift('ETH', 'ROP', 'RIN');
-      return typeArr;
-    },
-
     /**
      * Property returns default network and nodes items
      * Property Interface:
@@ -665,17 +622,6 @@ export default {
     }
   },
   watch: {
-    selectedNetwork(newVal) {
-      Object.values(this.Networks).forEach(itm => {
-        const found = itm.find(network => {
-          return network.url === newVal;
-        });
-        if (found) {
-          this.panelNetworkSubstring = `${found.type.name} - ${found.service}`;
-          this.setNetwork(found);
-        }
-      });
-    },
     phrase: {
       deep: true,
       handler: function (newval) {
@@ -698,11 +644,10 @@ export default {
     }
   },
   mounted() {
-    this.selectedNetwork = this.network.url;
-    this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
+    this.setNetworkPanel();
   },
   methods: {
-    ...mapActions('global', ['setNetwork', 'addCustomPath']),
+    ...mapActions('global', ['addCustomPath']),
     /**
      * Method that launches new tab to an explorer with address clicked
      * Used in STEP 3, Address Row
@@ -859,6 +804,14 @@ export default {
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }
+    },
+    /**
+     * Methods sets panelNetworkSubstring  based on the
+     * Used in STEP 3
+     * @return {void}
+     */
+    setNetworkPanel() {
+      this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.type.name_long}`;
     }
   }
 };
