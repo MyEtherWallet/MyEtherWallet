@@ -43,6 +43,7 @@ import phishing from './other/phishing/en_US';
 import aave from './dapps-aave/en_US';
 import header from './header/en_US';
 import mcdMaker from './dapps-mcd-maker/en_US';
+import dappsStaked from './dapps-staked/en_US';
 
 const en_US = {
   common: common,
@@ -88,6 +89,7 @@ const en_US = {
   phishing: phishing,
   aave: aave,
   header: header,
-  mcdMaker: mcdMaker
+  mcdMaker: mcdMaker,
+  dappsStaked: dappsStaked
 };
 export default en_US;

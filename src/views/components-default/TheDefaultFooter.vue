@@ -30,7 +30,7 @@
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
-              href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+              :href="`https://etherscan.io/address/${ethDonationAddress}`"
             >
               <mew-icon
                 icon-name="eth"
@@ -41,14 +41,14 @@
               <div>
                 <div>ETH Donation</div>
                 <div v-show="false" class="overline">
-                  Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
+                  Address: {{ ethDonationAddress }}
                 </div>
               </div>
             </a>
             <a
               class="color--inherit d-flex align-center"
               target="_blank"
-              href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+              :href="`https://blockchain.info/address/${btcDonationAddress}`"
             >
               <mew-icon
                 icon-name="btc"
@@ -59,7 +59,7 @@
               <div>
                 <div>BTC Donation</div>
                 <div v-show="false" class="overline">
-                  Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
+                  Address: {{ btcDonationAddress }}
                 </div>
               </div>
             </a>
@@ -106,7 +106,7 @@
       <v-sheet color="titlePrimary" class="py-2">
         <v-container>
           <div class="d-flex align-center">
-            <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
+            <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
               ©2021 MyEtherWallet. All rights reserved. Pricing taken from
@@ -178,7 +178,7 @@
             <a
               class="color--inherit d-flex align-center mb-1"
               target="_blank"
-              href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+              :href="`https://etherscan.io/address/${ethDonationAddress}`"
             >
               <mew-icon
                 icon-name="eth"
@@ -189,14 +189,14 @@
               <div>
                 <div>ETH Donation</div>
                 <div v-show="false" class="overline">
-                  Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
+                  Address: {{ ethDonationAddress }}
                 </div>
               </div>
             </a>
             <a
               class="color--inherit d-flex align-center"
               target="_blank"
-              href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+              :href="`https://blockchain.info/address/${btcDonationAddress}`"
             >
               <mew-icon
                 icon-name="btc"
@@ -207,7 +207,7 @@
               <div>
                 <div>BTC Donation</div>
                 <div v-show="false" class="overline">
-                  Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
+                  Address: {{ btcDonationAddress }}
                 </div>
               </div>
             </a>
@@ -261,7 +261,7 @@
         <v-container>
           <v-sheet color="transparent" max-width="500px" class="mx-auto">
             <div class="d-flex align-center justify-space-between">
-              <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
+              <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
               <v-sheet width="150" color="transparent">
                 <!-- <v-select
                   v-model="select"
@@ -297,6 +297,11 @@
 export default {
   name: 'TheDefaultFooter',
   data: () => ({
+    // eslint-disable-next-line
+    ethDonationAddress: ETH_DONATION_ADDRESS,
+    // eslint-disable-next-line
+    btcDonationAddress: BTC_DONATION_ADDRESS,
+    version: VERSION,
     footers: [
       {
         title: 'Affiliate Hardware Wallets',

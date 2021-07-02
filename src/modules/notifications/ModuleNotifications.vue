@@ -188,11 +188,13 @@ export default {
         ) {
           this.txHash = notification.hash;
           if (this.getTransactionByHash && notification) {
-            const notif = Object.assign(
-              notification,
-              this.getTransactionByHash
-            );
-            const notification = new Notification(notif);
+            if (this.getTransactionByHash.status) {
+              this.getTransactionByHash.status =
+                this.getTransactionByHash.status === '0x1'
+                  ? NOTIFICATION_STATUS.SUCCESS
+                  : NOTIFICATION_STATUS.FAILED;
+              notification.status = this.getTransactionByHash.status;
+            }
             this.updateNotification(notification);
           }
         }
