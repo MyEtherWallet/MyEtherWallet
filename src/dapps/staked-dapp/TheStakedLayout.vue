@@ -190,7 +190,9 @@ export default {
      * @returns string
      */
     totalStaked() {
-      return this.handlerStaked.totalStaked + ' ETH';
+      return (
+        formatFloatingPointValue(this.handlerStaked.totalStaked).value + ' ETH'
+      );
     },
     /**
      * Current APR Formatted

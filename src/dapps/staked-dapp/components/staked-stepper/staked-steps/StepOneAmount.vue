@@ -83,7 +83,7 @@
             <mew-tooltip class="ml-1" :text="toolTipFee" />
           </v-col>
           <v-col cols="6" md="6" class="py-1 text-right">
-            0.72% <span class="textSecondary--text">0.3 ETH min</span>
+            0.75% <span class="textSecondary--text">0.3 ETH min</span>
           </v-col>
         </v-row>
       </div>
@@ -133,7 +133,7 @@
         <li>Earn up to 21% Annualized rewards</li>
         <li class="warning--text text--darken-2">
           You can neither spend nor transfer your Eth2 funds until an unknown
-          data in the future when transfers are enabled on the Eth2 chain
+          date in the future when transfers are enabled on the Eth2 chain
         </li>
       </ul>
     </div>
@@ -184,7 +184,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('external', ['networkTokenUSDMarket', 'fiatValue']),
+    ...mapGetters('external', ['fiatValue']),
     /**
      * Current APR Formatted
      * @returns string
@@ -239,33 +239,15 @@ export default {
       /**
        * 3 Months Forecast
        */
-      const threeMonthsAPR = new BigNumber(this.currentApr)
-        .dividedBy(100)
-        .dividedBy(12)
-        .times(3)
-        .toFixed();
-      const threeMonthsEarning = new BigNumber(this.amount)
-        .times(threeMonthsAPR)
-        .toFixed();
+      const threeMonthsEarning = this.getEarnings(3);
       /**
        * 1 year forecast
        */
-      const oneYearAPR = new BigNumber(this.currentApr)
-        .dividedBy(100)
-        .toFixed();
-      const oneYearEarnings = new BigNumber(this.amount)
-        .times(oneYearAPR)
-        .toFixed();
+      const oneYearEarnings = this.getEarnings(12);
       /**
        * 2 year forecast
        */
-      const twoYearAPR = new BigNumber(this.currentApr)
-        .dividedBy(100)
-        .times(2)
-        .toFixed();
-      const twoYearEarnings = new BigNumber(this.amount)
-        .times(twoYearAPR)
-        .toFixed();
+      const twoYearEarnings = this.getEarnings(24);
       return [
         {
           duration: 'In 3 months',
@@ -307,6 +289,16 @@ export default {
     }
   },
   methods: {
+    /**
+     * get earning based on months
+     */
+    getEarnings(months) {
+      const apr = new BigNumber(this.currentApr)
+        .dividedBy(100) // 12*100
+        .times(months / 12)
+        .toFixed();
+      return new BigNumber(this.amount).times(apr).toFixed();
+    },
     /**
      * Emits onContinue to go to next step
      */

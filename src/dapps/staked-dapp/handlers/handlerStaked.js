@@ -3,11 +3,27 @@ import BigNumber from 'bignumber.js';
 import configNetworkTypes from './configNetworkTypes';
 import calculateEth2Rewards from './helpers';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { toBN } from 'web3-utils';
 
 /**
  * ABI to get fees
  * from batch contract
  */
+const ABI_GET_VALIDATORS = [
+  {
+    inputs: [],
+    name: 'get_deposit_count',
+    outputs: [
+      {
+        internalType: 'bytes',
+        name: '',
+        type: 'bytes'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+];
 const ABI_GET_FEES = [
   {
     inputs: [
@@ -74,12 +90,21 @@ export default class Staked {
   getTotalStakedAndAPR() {
     this.eth2ContractAddress =
       configNetworkTypes.network[this.network.type.name].depositAddress;
-    this.web3.eth
-      .getBalance(this.eth2ContractAddress)
-      .then(res => {
-        const raw = this.web3.utils.fromWei(res, 'ether');
-        this.totalStaked = new BigNumber(raw).toFormat(0);
-        this.apr = new BigNumber(calculateEth2Rewards({ totalAtStake: raw }))
+    const depositContract = new this.web3.eth.Contract(
+      ABI_GET_VALIDATORS,
+      this.eth2ContractAddress
+    );
+    depositContract.methods
+      .get_deposit_count()
+      .call()
+      .then(lebytes => {
+        const numValidators = toBN(
+          '0x' + Buffer.from(lebytes.substr(2), 'hex').reverse().toString('hex')
+        );
+        this.totalStaked = numValidators.muln(32).toString();
+        this.apr = new BigNumber(
+          calculateEth2Rewards({ totalAtStake: this.totalStaked })
+        )
           .times(100)
           .toFixed();
       })
@@ -203,6 +228,8 @@ export default class Staked {
    */
   sendTransaction() {
     this.transactionData.from = this.address;
+    this.transactionData.to =
+      configNetworkTypes.network[this.network.type.name].batchContract;
     this.web3.eth
       .sendTransaction(this.transactionData)
       .on('transactionHash', res => {
