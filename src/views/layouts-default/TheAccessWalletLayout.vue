@@ -273,10 +273,6 @@ export default {
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, web3.currentProvider]);
-          window.ethereum.on('accountsChanged', acc => {
-            const wallet = new Web3Wallet(acc[0]);
-            this.setWallet([wallet, web3.currentProvider]);
-          });
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

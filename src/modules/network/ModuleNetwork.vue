@@ -13,6 +13,7 @@
         <div class="d-flex align-center">
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
           <v-btn
+            v-if="show"
             depressed
             color="secondary"
             class="title-button"
@@ -36,6 +37,7 @@
 import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '../access-wallet/common/walletTypes';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
@@ -51,7 +53,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['blockNumber']),
+    ...mapState('wallet', ['blockNumber', 'identifier']),
     ...mapGetters('global', ['network']),
     type() {
       return this.network.type.name;
@@ -61,6 +63,9 @@ export default {
     },
     lastBlock() {
       return formatIntegerToString(this.blockNumber);
+    },
+    show() {
+      return this.identifier !== WALLET_TYPES.WEB3_WALLET;
     }
   }
 };
