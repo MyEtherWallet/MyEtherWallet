@@ -49,7 +49,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
       const notification = new Notification(newTxObj);
       dispatch(
-        'external/setTokenBalance',
+        'external/setTokenAndEthBalance',
         {},
         {
           root: true
@@ -66,7 +66,7 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);
       dispatch(
-        'external/setTokenBalance',
+        'external/setTokenAndEthBalance',
         {},
         {
           root: true
