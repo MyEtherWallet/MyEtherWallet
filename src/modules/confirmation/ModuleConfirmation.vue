@@ -414,7 +414,6 @@ export default {
           : '0x';
         return parsedValue;
       }
-
       return '0';
     },
     isSoftwareWallet() {
@@ -615,8 +614,8 @@ export default {
       this.error = '';
     },
     parseRawData(tx) {
-      let tokenData = '';
-      if (tx.to && tx.data && tx.data !== '0x') {
+      let tokenData = {};
+      if (tx.to && tx.data && tx.data.substr(0, 10) === '0xa9059cbb') {
         tokenData = parseTokenData(tx.data, tx.to);
         tx.fromTxData = {
           currency: this.network.type.currencyName,
