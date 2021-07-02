@@ -477,7 +477,9 @@ export default {
   watch: {
     network: {
       deep: true,
-      handler: this.setAddresses
+      handler: function () {
+        this.setAddresses();
+      }
     }
   },
   mounted() {

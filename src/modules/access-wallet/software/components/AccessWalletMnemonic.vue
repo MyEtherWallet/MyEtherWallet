@@ -646,7 +646,9 @@ export default {
     },
     network: {
       deep: true,
-      handler: this.setAddresses
+      handler: function () {
+        this.setAddresses();
+      }
     }
   },
   mounted() {
