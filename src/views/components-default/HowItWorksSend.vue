@@ -2,7 +2,7 @@
   <div>
     <div class="py-3 py-md-7" />
     <v-container class="pb-12 pb-lg-0">
-      <v-row class="flex-column-reverse flex-lg-row">
+      <v-row class="flex-column flex-lg-row">
         <v-col cols="12" lg="5" class="text-content pr-12 mt-4 mt-lg-0">
           <app-block-title
             no-page-title
