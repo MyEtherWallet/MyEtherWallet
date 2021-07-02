@@ -182,7 +182,7 @@ export default {
         if (i % 32 === 0) {
           items.push({
             name: i + ' ETH',
-            value: i,
+            value: i + '', //change to string to make mew select filter work
             img: this.eth,
             price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
           });
@@ -284,9 +284,10 @@ export default {
     },
     /**
      * Sets the amount
+     * change from str -> integer to keep amount as integer
      */
     setAmount(item) {
-      this.amount = item.value;
+      this.amount = parseInt(item.value);
     }
   }
 };
