@@ -417,7 +417,6 @@ export default {
         return this.skipApollo || this.accountAddress === null;
       },
       result({ data }) {
-        console.log(data);
         if (data && data.getEthBalance) {
           if (this.accounts[this.onAccountIndex]) {
             /**
