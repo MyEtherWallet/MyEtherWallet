@@ -647,6 +647,9 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.addressPage -= 1;
+        this.selectedAddress = '';
+        this.accountAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
         this.setAddresses();
       }

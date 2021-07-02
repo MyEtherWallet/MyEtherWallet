@@ -478,9 +478,14 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.addressPage -= 1;
+        this.selectedAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
         this.setAddresses();
       }
+    },
+    selectedAddress(val) {
+      console.log(val);
     }
   },
   mounted() {
