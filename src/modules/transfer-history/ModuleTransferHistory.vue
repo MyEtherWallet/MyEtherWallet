@@ -5,10 +5,13 @@
         <span class="mew-heading-2">{{ actualTitle }}</span>
       </div>
     </div>
-    <div class="pa-1 history-container">
+    <div v-if="actualNotifications.length > 0" class="pa-1 history-container">
       <div v-for="(data, key) in actualNotifications" :key="key">
         <mew-notification :notification="data.notification" class="px-0" />
       </div>
+    </div>
+    <div v-else class="pa-3 history-container">
+      <p>No {{ actualTitle }} found.</p>
     </div>
   </mew6-white-sheet>
 </template>

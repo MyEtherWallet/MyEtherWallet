@@ -174,7 +174,9 @@
                   <v-spacer />
                   <div v-if="signing">
                     <v-progress-circular
-                      v-show="isBatch && signedTxArray.length < i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length < i + 1
+                      "
                       indeterminate
                       color="primary"
                       size="20"
@@ -200,7 +202,9 @@
                       mdi-check
                     </v-icon>
                     <v-icon
-                      v-show="isBatch && signedTxArray.length >= i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length >= i + 1
+                      "
                       color="primary"
                     >
                       mdi-check
@@ -473,6 +477,15 @@ export default {
     }
   },
   watch: {
+    error(newVal) {
+      /**
+       * Reset signed values if any of the tx in batch is declined
+       */
+      if (newVal !== '') {
+        this.signedTxArray = [];
+        this.signedTxObject = {};
+      }
+    },
     signedTxArray: {
       handler: function (newVal) {
         if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
@@ -652,7 +665,9 @@ export default {
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
-          const localStoredObj = locStore.get(sha3(this.address));
+          const localStoredObj = locStore.get(
+            sha3(`${this.network.type.name}-${this.address}`)
+          );
           locStore.set(sha3(this.address), {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)

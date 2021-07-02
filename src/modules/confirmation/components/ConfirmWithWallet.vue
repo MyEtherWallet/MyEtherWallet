@@ -15,7 +15,7 @@
       <p>{{ bodyText }}</p>
     </div>
     <v-progress-linear
-      v-if="!signed"
+      v-if="error === '' && !signed"
       indeterminate
       color="primary"
       class="mb-3"
