@@ -162,6 +162,9 @@ export default {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
+    buttonText() {
+      return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
+    },
     /**
      * Current APR Formatted
      * @returns string
