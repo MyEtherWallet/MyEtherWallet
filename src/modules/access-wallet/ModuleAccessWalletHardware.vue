@@ -474,6 +474,12 @@ export default {
             this.wallets[this.walletType].titles[this.step];
     }
   },
+  watch: {
+    network: {
+      deep: true,
+      handler: this.setAddresses
+    }
+  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);

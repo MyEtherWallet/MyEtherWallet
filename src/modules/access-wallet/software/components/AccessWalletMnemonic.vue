@@ -643,6 +643,10 @@ export default {
       handler: function (newVal) {
         this.accounts = newVal;
       }
+    },
+    network: {
+      deep: true,
+      handler: this.setAddresses
     }
   },
   mounted() {
@@ -692,7 +696,7 @@ export default {
         this.accountAddress = this.accounts[0].address;
       } catch (e) {
         // eslint-disable-next-line
-        console.log(e)
+        console.log(e);
       }
     },
     /**
