@@ -92,7 +92,7 @@
             class="mt-sm-5"
             :message="msg.lowBalance"
           >
-            <div class="mt-3 mx-n1" v-if="isEthNetwork">
+            <div v-if="isEthNetwork" class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"

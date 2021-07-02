@@ -144,7 +144,7 @@
               High Fees pop up button
             =====================================================
             -->
-            <v-col cols="12" class="pt-0">
+            <v-col v-if="isEthNetwork" cols="12" class="pt-0">
               <div class="d-flex align-center justify-start pt-1">
                 <div
                   class="
@@ -160,7 +160,7 @@
                   Why are the fees so high?
                 </div>
                 <a
-                  v-if="isEthNetwork && notEnoughEth"
+                  v-if="notEnoughEth"
                   rel="noopener noreferrer"
                   target="_blank"
                   href="https://ccswap.myetherwallet.com/#/"
