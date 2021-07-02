@@ -22,9 +22,6 @@
           <div class="headline font-weight-bold">
             {{ $t('accessWallet.network-addr.select-title') }}
           </div>
-          <p class="mb-5">
-            {{ $t('accessWallet.network-addr.select') }}
-          </p>
         </v-col>
       </v-row>
       <v-row align="center" justify="center">
