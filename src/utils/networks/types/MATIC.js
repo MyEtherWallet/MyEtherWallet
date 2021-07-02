@@ -10,6 +10,7 @@ export default {
   tokens: tokens,
   contracts: [],
   icon: matic,
+  isTestNetwork: false,
   currencyName: 'MATIC',
   isEthVMSupported: {
     supported: false,

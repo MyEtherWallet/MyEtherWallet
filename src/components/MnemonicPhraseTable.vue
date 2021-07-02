@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="(p, key) in data" :key="key" cols="6" lg="2" md="3" sm="4">
+    <v-col v-for="(p, key) in data" :key="key" cols="6" lg="3" md="3" sm="4">
       <div class="phrase">
         <span>{{ key + 1 }}.</span> {{ p }}
       </div>

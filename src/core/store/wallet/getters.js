@@ -28,7 +28,7 @@ const tokensList = function (state) {
 };
 
 const initialLoad = function (state) {
-  return state.initialLoadTokens || state.initialLoadBalance;
+  return state.loadingWalletInfo;
 };
 
 export default {
