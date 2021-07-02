@@ -127,7 +127,7 @@
       >
         <staked-status
           :tx-receipt="handlerStaked.txReceipt"
-          :pending-hash="handlerStaked.pendingTxHash"
+          :pending-hash="pendingTxHash"
           :validators="validators"
           :loading="loadingValidators"
           :amount="amount"
@@ -225,6 +225,24 @@ export default {
      */
     loadingValidators() {
       return this.handlerStaked.loadingValidators;
+    },
+    /**
+     * Checks for pending tx hash
+     * @returns string
+     */
+    pendingTxHash() {
+      return this.handlerStaked.pendingTxHash;
+    }
+  },
+  watch: {
+    /**
+     * @watches pendingTxHash (comes after send transaction)
+     * if it gets set then go to staked status
+     */
+    pendingTxHash(newVal) {
+      if (newVal !== '') {
+        this.activeTab = 1;
+      }
     }
   },
   mounted() {
@@ -249,9 +267,8 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
-      this.amount = amountETH;
-      this.activeTab = 1;
       this.handlerStaked.sendTransaction();
+      this.amount = amountETH;
     }
   }
 };

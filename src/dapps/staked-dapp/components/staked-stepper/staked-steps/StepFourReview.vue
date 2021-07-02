@@ -102,7 +102,13 @@
       ===================================================
       -->
         <div v-if="stakedStep === 1">
-          <div class="textBlack2--text mx-auto" style="max-width: 300px">
+          <div
+            :class="[
+              'mx-auto',
+              stakedStep1Title.error ? 'error--text' : 'textBlack2--text'
+            ]"
+            style="max-width: 300px"
+          >
             {{ stakedStep1Title.message }}
             <a
               v-if="stakedStep1Title.showContactSupport"
@@ -340,15 +346,20 @@ export default {
         this.readyToStake = true;
       } else {
         this.stakedStep -= 1;
-        if (newVal.error.status === 406) {
+        if (
+          newVal.error.status === 406 ||
+          newVal.error.message?.includes('406')
+        ) {
           this.stakedStep1Title = {
             message:
-              'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds'
+              'Oops. We don’t know how you got this far without enough ETH. Please start over and check your funds.',
+            error: true
           };
         } else {
           this.stakedStep1Title = {
             message:
               'Something went wrong. Please try again in a few minutes. If the problem persists,',
+            error: true,
             showContactSupport: true
           };
         }

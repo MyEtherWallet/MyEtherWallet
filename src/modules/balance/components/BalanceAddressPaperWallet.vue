@@ -7,7 +7,7 @@
       right-btn-text="Close"
       :close="close"
     >
-      <template #mewOverlayBody>
+      <template v-if="open" #mewOverlayBody>
         <v-sheet max-width="900px" color="transparent">
           <mew6-white-sheet class="pa-3 pa-md-12">
             <!--

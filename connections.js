@@ -31,5 +31,6 @@ module.exports = [
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
-  'https://api.wallet.coinbase.com:443'
+  'https://api.wallet.coinbase.com:443',
+  'data:'
 ];

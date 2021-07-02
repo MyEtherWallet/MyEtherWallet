@@ -133,7 +133,7 @@
         :loading="false"
         :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
-        title="Next: Eth2 address"
+        :title="buttonText"
         :disabled="!hasEnoughBalance"
         @click.native="onContinue"
       />
@@ -172,6 +172,9 @@ export default {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
+    buttonText() {
+      return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
+    },
     /**
      * Current APR Formatted
      * @returns string
