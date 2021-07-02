@@ -15,6 +15,7 @@ Sentry.init({
   autoSessionTracking: false,
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event, hint) {
+    // eslint-disable-next-line
     console.error(hint.originalException || hint.syntheticException);
     const network = store.getters['global/network']
       ? store.getters['global/network'].type.name
