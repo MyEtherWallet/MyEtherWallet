@@ -34,10 +34,14 @@
         <div class="mt-1 tableHeader terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
+            color-text="textBlack2--text"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>
         <mew-button
+          icon-type="mdi"
+          icon-align="left"
+          icon="mdi-download"
           :has-full-width="$vuetify.breakpoint.smAndDown"
           class="d-block mx-auto mt-8"
           btn-size="xlarge"
