@@ -156,6 +156,7 @@
             <template #panelBody2>
               <network-switch
                 :is-wallet="false"
+                :filter-types="filterNetworks"
                 @newNetwork="setNetworkPanel"
               />
             </template>
@@ -286,6 +287,13 @@ export default {
           hasActiveBorder: true
         }
       ];
+    },
+    /**
+     * Filter Nerworks based on the walletType
+     * @return {string[]}
+     */
+    filterNetworks() {
+      return [];
     }
   },
   watch: {

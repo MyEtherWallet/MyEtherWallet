@@ -10,7 +10,7 @@
     no-back-btn
   >
     <template #content>
-      <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
+      <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
           <mew-super-button
@@ -28,9 +28,9 @@
         </v-col>
       </v-row>
       <v-row v-if="!dapps.length">
-        <div class="swap-not-available">
+        <v-col cols="12" class="swap-not-available">
           <app-user-msg-block :message="noDappsAvailable" />
-        </div>
+        </v-col>
       </v-row>
     </template>
     <template #moduleBody>
@@ -56,7 +56,7 @@ export default {
         title: 'Explore MEW Dapps'
       },
       noDappsAvailable: {
-        title: `No dapps available on this network`,
+        title: `DApps are are not supported on this network`,
         subtitle: 'Please select a different network'
       }
     };

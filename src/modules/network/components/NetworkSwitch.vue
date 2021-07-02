@@ -7,7 +7,7 @@
       class="mx-auto pb-2 pb-am-8 px-3 pt-3 px-sm-0"
     >
       <v-row
-        v-if="!isSwapPage"
+        v-if="!isSwapPage && hasNetworks"
         class="align-end justify-center justify-sm-space-between px-0 pt-5 pt-3"
       >
         <!--
@@ -128,12 +128,15 @@ export default {
   props: {
     open: { type: Boolean, default: false },
     close: { type: Function, default: () => {} },
-    isWallet: { type: Boolean, default: true }
+    isWallet: { type: Boolean, default: true },
+    /** Set this prop to pass specific networks to be displayed */
+    filterTypes: { type: Array, default: () => [] },
+    /** Set this prop to false if device does not support networks */
+    hasNetworks: { type: Boolean, default: true }
   },
   data() {
     return {
       networkSelected: null,
-      types: types,
       nodes: nodes,
       toggleType: 0,
       searchInput: ''
@@ -146,18 +149,24 @@ export default {
      * @returns {string[]}
      */
     typeNames() {
-      const unsorted = Object.keys(types);
-      unsorted.splice(unsorted.indexOf('ETH'), 1);
-      unsorted.sort();
-      const test = unsorted.filter(item => {
-        return types[item].isTestNetwork;
-      });
-      const main = unsorted.filter(item => {
-        return !types[item].isTestNetwork;
-      });
-      const sorted = main.concat(test);
-      sorted.unshift('ETH');
-      return sorted;
+      if (this.hasNetworks) {
+        const unsorted =
+          this.filterTypes.length > 0
+            ? [...this.filterTypes]
+            : Object.keys(types);
+        unsorted.splice(unsorted.indexOf('ETH'), 1);
+        unsorted.sort();
+        const test = unsorted.filter(item => {
+          return types[item].isTestNetwork;
+        });
+        const main = unsorted.filter(item => {
+          return !types[item].isTestNetwork;
+        });
+        const sorted = main.concat(test);
+        sorted.unshift('ETH');
+        return sorted;
+      }
+      return [];
     },
     /**
      * Property returns filter networks list based on search input and toggle  type
@@ -205,6 +214,18 @@ export default {
      * @returns {object}
      */
     emptySearchMes() {
+      if (this.isSwapPage && this.typeNames.length === 0) {
+        return {
+          title: 'Swap is not supported on your device',
+          subtitle: ''
+        };
+      }
+      if (this.typeNames.length === 0) {
+        return {
+          title: 'Changing a network is not supported on your device',
+          subtitle: ''
+        };
+      }
       return {
         title: this.isSwapPage
           ? 'Swap is only available on these networks'

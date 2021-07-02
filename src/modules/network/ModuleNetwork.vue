@@ -8,7 +8,7 @@
       @closeOverlay="openNetworkOverlay = false"
     >
       <template #mewOverlayBody>
-        <network-switch />
+        <network-switch :filter-types="filterNetworks" />
       </template>
     </mew-overlay>
 
@@ -60,7 +60,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['blockNumber', 'identifier']),
+    ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapGetters('global', ['network']),
     type() {
       return this.network.type.name;
@@ -76,6 +76,16 @@ export default {
     },
     show() {
       return this.identifier !== WALLET_TYPES.WEB3_WALLET;
+    },
+    /**
+     * IMPORTANT TO DO:
+     * @returns {boolean}
+     */
+    filterNetworks() {
+      if (this.isHardware) {
+        return [];
+      }
+      return [];
     }
   }
 };
