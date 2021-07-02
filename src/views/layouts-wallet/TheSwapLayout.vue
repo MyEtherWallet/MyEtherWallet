@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('global', ['hasSwap'])
+    ...mapGetters('global', ['hasSwap']),
     ...mapGetters('notifications', ['swapNotifications']),
     hasHistory() {
       return this.swapNotifications && this.swapNotifications.length > 0;
