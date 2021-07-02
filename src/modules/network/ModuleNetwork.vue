@@ -24,11 +24,11 @@
         </div>
 
         <div class="mt-4">
-          <div class="mb-1">{{ type }} - {{ service }}</div>
+          <div class="mb-1">{{ type }} - {{ fullName }}</div>
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <img height="65" :src="network.type.icon" />
+      <v-img :src="icon" :max-height="65" :max-width="65" contain />
     </mew6-white-sheet>
   </div>
 </template>
@@ -58,11 +58,14 @@ export default {
     type() {
       return this.network.type.name;
     },
-    service() {
-      return this.network.service;
+    fullName() {
+      return this.network.type.name_long;
     },
     lastBlock() {
       return formatIntegerToString(this.blockNumber);
+    },
+    icon() {
+      return this.network.type.icon;
     },
     show() {
       return this.identifier !== WALLET_TYPES.WEB3_WALLET;

@@ -23,7 +23,7 @@
               ref="mewSelect"
               label="Token"
               :items="tokens"
-              :is-swap="true"
+              :is-custom="true"
               :value="selectedCurrency"
               @input="setCurrency"
             />
