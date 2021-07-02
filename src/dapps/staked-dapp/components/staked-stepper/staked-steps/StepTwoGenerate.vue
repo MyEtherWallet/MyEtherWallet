@@ -95,13 +95,6 @@
                   >mdi-checkbox-marked-circle</v-icon
                 >
               </div>
-              <v-progress-circular
-                v-if="downloadingKeystore && !downloadedKeystore"
-                color="primary"
-                indeterminate
-                width="3"
-                size="16"
-              />
               <div
                 v-if="downloadedKeystore && keystoreName"
                 class="textSecondary--text"
@@ -111,10 +104,12 @@
             </div>
           </div>
           <mew-button
-            class="my-2"
+            class="my-2 step-two-staked-download-button"
             btn-size="small"
             title="Download"
             btn-style="outline"
+            :loading="downloadingKeystore && !downloadedKeystore"
+            :disabled="downloadingKeystore && !downloadedKeystore"
             :has-full-width="$vuetify.breakpoint.xs"
             @click.native="onDownload"
           />
@@ -153,7 +148,7 @@
         :has-full-width="$vuetify.breakpoint.smAndDown"
         btn-size="xlarge"
         class="d-block ma-2"
-        title="Continue after downloading keystore file"
+        :title="buttonText"
         :disabled="!downloadedKeystore"
         @click.native="onContinue(false)"
       />
@@ -167,6 +162,7 @@
     <staked-create-password-dialog
       :opened="onCreatePassword"
       @generate="generateKeystore"
+      @onDialogStateChange="onDialogStateChange"
     />
   </div>
 </template>
@@ -196,6 +192,13 @@ export default {
       link: {}
     };
   },
+  computed: {
+    buttonText() {
+      return this.downloadedKeystore
+        ? 'Next: upload your keystore file'
+        : 'Continue after downloading keystore file';
+    }
+  },
   mounted() {
     /**
      * Create Keystore handler
@@ -221,6 +224,13 @@ export default {
       this.mnemonic = mnemonic.split(' ');
     },
     /**
+     * Gets triggered by emit from StakedCreatePasswordDialog
+     * stores the state of the dialog (opened or closed)
+     */
+    onDialogStateChange(newVal) {
+      this.onCreatePassword = newVal;
+    },
+    /**
      * Gets triggered from clicking the Download button
      * if keystore has not been downloaded, then create pw modal will pop up
      * otherwise will download the same keystore file
@@ -230,7 +240,7 @@ export default {
         this.downloadKeystore();
         return;
       }
-      this.onCreatePassword = true;
+      this.onCreatePassword = !this.onCreatePassword;
     },
     /**
      * Generate keystore json
@@ -287,3 +297,14 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+// TODO: add this style option to mew button component
+// and remove this
+.step-two-staked-download-button {
+  .v-btn__content {
+    .v-progress-circular {
+      color: var(--v-primary-base) !important;
+    }
+  }
+}
+</style>

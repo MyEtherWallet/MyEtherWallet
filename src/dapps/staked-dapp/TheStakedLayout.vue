@@ -225,6 +225,26 @@ export default {
      */
     loadingValidators() {
       return this.handlerStaked.loadingValidators;
+    },
+    /**
+     * Checks for pending tx hash
+     * @returns string
+     */
+    pendingTxHash() {
+      return this.handlerStaked.pendingTxHash;
+    }
+  },
+  watch: {
+    /**
+     * @watches pendingTxHash (comes after send transaction)
+     * if it gets set then go to staked status
+     */
+    pendingTxHash(newVal) {
+      console.error('in here', newVal)
+      if (newVal !== '') {
+        console.error(" in hurrrrr")
+        this.activeTab = 1;
+      }
     }
   },
   mounted() {
@@ -249,9 +269,8 @@ export default {
      * and set amount value for staked status
      */
     sendTransaction(amountETH) {
-      this.amount = amountETH;
-      this.activeTab = 1;
       this.handlerStaked.sendTransaction();
+      this.amount = amountETH;
     }
   }
 };

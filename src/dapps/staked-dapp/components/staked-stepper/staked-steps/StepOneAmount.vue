@@ -124,7 +124,7 @@
       :loading="false"
       :has-full-width="$vuetify.breakpoint.smAndDown"
       btn-size="xlarge"
-      title="Next: Eth2 address"
+      :title="buttonText"
       :disabled="!hasEnoughBalance"
       @click.native="onContinue"
     />
