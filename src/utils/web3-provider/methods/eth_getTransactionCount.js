@@ -14,7 +14,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
     `${store.getters['global/network'].type.name}-${addr}`
   );
   if (!locstore.get(storeKey)) {
-    console.log('gets here now');
     cached = {
       nonce: '0x00',
       timestamp: 0
