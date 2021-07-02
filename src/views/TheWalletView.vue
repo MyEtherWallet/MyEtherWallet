@@ -17,7 +17,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { toBN, hexToNumber } from 'web3-utils';
+import { hexToNumber } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -55,7 +55,7 @@ export default {
       this.setTokensAndBalance();
     },
     coinGeckoTokens() {
-      this.setTokenBalance();
+      this.setTokenAndEthBalance();
     }
   },
   mounted() {
@@ -71,27 +71,20 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', [
-      'setAccountBalance',
-      'setBlockNumber',
-      'setTokens'
-    ]),
+    ...mapActions('wallet', ['setBlockNumber', 'setTokens']),
     ...mapActions('global', ['setGasPrice', 'setNetwork']),
-    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenBalance']),
+    ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
       this.setTokensAndBalance();
       this.setGas();
       this.subscribeToBlockNumber();
     },
     setTokensAndBalance() {
-      this.web3.eth.getBalance(this.address).then(res => {
-        this.setAccountBalance(toBN(res));
-        if (this.coinGeckoTokens?.get) {
-          this.setTokenBalance();
-        } else {
-          this.setTokens([]);
-        }
-      });
+      if (this.coinGeckoTokens?.get) {
+        this.setTokenAndEthBalance();
+      } else {
+        this.setTokens([]);
+      }
     },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
