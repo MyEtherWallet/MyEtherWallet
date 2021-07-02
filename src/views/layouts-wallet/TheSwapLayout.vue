@@ -2,6 +2,7 @@
   <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
     <template #leftColItem1>
       <module-swap
+        :is-available="hasSwap"
         :from-token="fromToken"
         :to-token="toToken"
         :amount="amount"
@@ -10,7 +11,7 @@
     <template #rightColItem1>
       <module-tokens-value />
     </template>
-    <template v-if="hasHistory" #rightColItem2>
+    <template v-if="hasHistory && hasSwap" #rightColItem2>
       <module-transfer-history :is-swap="true" />
     </template>
   </the-wrapper-wallet>
@@ -48,6 +49,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('global', ['hasSwap'])
     ...mapGetters('notifications', ['swapNotifications']),
     hasHistory() {
       return this.swapNotifications && this.swapNotifications.length > 0;
