@@ -26,6 +26,9 @@ const gasPrice = function (state) {
 const isEthNetwork = function (state) {
   return state.currentNetwork.type.name === ETH.name;
 };
+const isTestNetwork = function (state) {
+  return state.currentNetwork.type.isTestNetwork;
+};
 
 const localContracts = function (state) {
   return state.localContracts[state.currentNetwork.type.name]
@@ -43,5 +46,6 @@ export default {
   gasPrice,
   isEthNetwork,
   localContracts,
+  isTestNetwork,
   hasSwap
 };
