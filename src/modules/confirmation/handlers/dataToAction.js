@@ -26,6 +26,9 @@ const signatures = {
   },
   '0xa9059cbb': () => {
     return 'Transfer Tokens';
+  },
+  '0xca0bfcce': () => {
+    return `Eth2 Staking`;
   }
 };
 const getSignature = data => data.substr(0, 10);

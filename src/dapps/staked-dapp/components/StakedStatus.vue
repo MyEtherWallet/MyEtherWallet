@@ -26,7 +26,7 @@
     No Validators: 
     ===================================================
     -->
-      <div v-if="validators.length === 0 && justStakedValidator.length === 0">
+      <div v-if="validators.length === 0">
         You are currently not staking any eth.
       </div>
       <!--
@@ -61,7 +61,7 @@
             ]"
           >
             <div class="left-container d-flex">
-              <img :src="iconETHNavy" height="22" alt="ethereum" />
+              <img :src="iconETHBlue" height="22" alt="ethereum" />
               <div class="ml-3">
                 <div class="mew-heading-3">
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
@@ -95,7 +95,7 @@
             <div class="mt-5 mb-8 font-weight-bold">More Info</div>
             <!--
     ===================================================
-    Pending Status (Created - Processing)
+    Pending Status (Created - Sending)
     ===================================================
     -->
             <div
@@ -109,9 +109,7 @@
                 color="primary"
                 indeterminate
               />
-              <span class="ml-2">{{
-                !pending.justStaked || txReceipt ? 'Processing' : 'Sending'
-              }}</span>
+              <span class="ml-2">Sending</span>
             </div>
             <!--
     ===================================================
@@ -223,7 +221,7 @@
           "
         >
           <div class="left-container d-flex">
-            <img :src="iconETHNavy" height="26" alt="ethereum" />
+            <img :src="iconETHBlue" height="26" alt="ethereum" />
             <div class="left-container-details ml-3">
               <div class="mew-heading-2">
                 {{ active.totalBalanceETH + ' ETH' }}
@@ -255,7 +253,7 @@
 <script>
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters, mapState } from 'vuex';
-import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
+import iconETHBlue from '@/assets/images/currencies/icon-eth-blue.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -275,10 +273,6 @@ export default {
       type: String,
       default: ''
     },
-    txReceipt: {
-      type: Boolean,
-      default: true
-    },
     loading: {
       type: Boolean,
       default: true
@@ -290,7 +284,7 @@ export default {
   },
   data() {
     return {
-      iconETHNavy: iconETHNavy,
+      iconETHBlue: iconETHBlue,
       timer: [],
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES
@@ -316,15 +310,11 @@ export default {
     /**
      * @returns array
      * Returns all the active validators with correct info
-     * includes status: ACTIVE, EXITED
      */
     activeValidators() {
       return this.validatorsRaw
         .filter(raw => {
-          return (
-            raw.status.toLowerCase() === STATUS_TYPES.ACTIVE ||
-            raw.status.toLowerCase() === STATUS_TYPES.EXITED
-          );
+          return raw.status.toLowerCase() === STATUS_TYPES.ACTIVE;
         })
         .map(raw => {
           const totalBalanceETH = this.convertToEth1(raw.balance);
@@ -348,7 +338,6 @@ export default {
     /**
      * @returns array
      * Returns all the pending validators with correct info
-     * includes status: DEPOSITED, PENDING, FAILED, CREATED
      */
     pendingValidators() {
       return this.validatorsRaw
@@ -400,7 +389,6 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
-            justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
               ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +
@@ -471,24 +459,14 @@ export default {
      * Returns the exact estimated wait time till activation in days, hours, minutes
      */
     getEstimatedDuration(timestamp) {
-      const now = moment();
+      const now = moment().utc();
       const activationTime = moment(timestamp);
-      const days = activationTime.diff(now, 'days');
-      const hours = activationTime.subtract(days, 'days').diff(now, 'hours');
-      const minutes = activationTime
-        .subtract(hours, 'hours')
-        .diff(now, 'minutes');
-      const timeLeft = '';
-      if (days > 0) {
-        timeLeft.push += days + ' Days ';
-      }
-      if (hours > 0) {
-        timeLeft.push += hours + ' Hours ';
-      }
-      if (minutes > 0) {
-        timeLeft.push += minutes + ' Minutes ';
-      }
-      return timeLeft.length > 0 ? timeLeft : '~';
+      if (now.unix() === activationTime.unix())
+        return 'Should activate momentarily';
+      return `${activationTime.diff(now, 'days')} days ${activationTime.diff(
+        now,
+        'hours'
+      )} hours and ${activationTime.diff(now, 'minutes')} minutes`;
     }
   }
 };
