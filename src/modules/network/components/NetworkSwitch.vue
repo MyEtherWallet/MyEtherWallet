@@ -15,6 +15,7 @@
           class="mx-auto pb-2 pb-am-8 px-3 pt-3 px-sm-0"
         >
           <v-row
+            v-if="!isSwapPage"
             class="
               align-end
               justify-center justify-sm-space-between
@@ -65,9 +66,9 @@
           =====================================================================================
           -->
           <app-user-msg-block
-            v-if="showEmptySearch"
+            v-if="showEmptySearch || isSwapPage"
             :message="emptySearchMes"
-            :is-alert="false"
+            :is-alert="isSwapPage"
             class="mt-5"
           />
           <!--
@@ -178,10 +179,18 @@ export default {
      * @returns {object[]}
      */
     networks() {
-      const allNetworks = [];
+      let allNetworks = [];
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
+      if (this.isSwapPage) {
+        allNetworks = allNetworks.filter(
+          item =>
+            item.name === types.ETH.name ||
+            item.name === types.BSC.name ||
+            item.name === types.MATIC.name
+        );
+      }
       if (this.searchInput && this.searchInput !== '') {
         return allNetworks.filter(item =>
           this.hasString(item.name, item.name_long)
@@ -212,9 +221,20 @@ export default {
      */
     emptySearchMes() {
       return {
-        title: '',
-        subtitle: 'We do not have a network with this name.'
+        title: this.isSwapPage
+          ? 'Swap is only available on these networks'
+          : '',
+        subtitle: this.isSwapPage
+          ? 'Select different feature to see all networks.'
+          : 'We do not have a network with this name.'
       };
+    },
+    /**
+     * Property returns whether or not you are on the swap page
+     * @returns {boolean}
+     */
+    isSwapPage() {
+      return this.$route.name === 'Swap';
     }
   },
   watch: {
