@@ -107,6 +107,13 @@ export default {
      */
     opened(newVal) {
       this.onCreatePassword = newVal;
+    },
+    /**
+     * @watches onCreatePassword
+     * emits the value back to step two generate
+     */
+    onCreatePassword(newVal) {
+      this.$emit('onDialogStateChange', newVal);
     }
   },
   mounted() {
