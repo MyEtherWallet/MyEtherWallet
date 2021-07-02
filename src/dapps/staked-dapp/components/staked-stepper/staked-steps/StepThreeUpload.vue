@@ -347,12 +347,5 @@ export default {
   .file-name-container {
     max-width: 212px;
   }
-  .v-progress-linear {
-    width: 420px;
-  }
-  .input-container {
-    width: 436px;
-    height: 76px;
-  }
 }
 </style>

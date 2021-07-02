@@ -62,7 +62,7 @@
     ===================================================
     -->
         <div class="mt-8">
-          <div class="mew-heading-3 mb-5">
+          <div class="mew-heading-3 mb-5 pl-md-5">
             1. Write down your recovery phrase
           </div>
           <border-block class="px-3 px-sm-7 py-4">
@@ -76,7 +76,9 @@
     -->
 
         <div class="mt-10">
-          <div class="mew-heading-3 mb-5">2. Download your keystore file</div>
+          <div class="mew-heading-3 mb-5 pl-md-5">
+            2. Download your keystore file
+          </div>
           <div
             class="
               d-block d-sm-flex
@@ -92,8 +94,9 @@
               <img
                 src="@/assets/images/icons/icon-keystore-file.svg"
                 alt="Keystore file"
+                height="32"
               />
-              <div class="ml-2">
+              <div class="ml-3">
                 <div class="mew-heading-4">
                   Keystore file
                   <v-icon v-if="downloadedKeystore" size="16" color="primary"
@@ -164,7 +167,7 @@
     ======================================================
     -->
       <staked-create-password-dialog
-        :opened="onCreatePassword"
+        :opened="true"
         @generate="generateKeystore"
         @onDialogStateChange="onDialogStateChange"
       />

@@ -19,7 +19,7 @@
     Step 2: Generate ETH2 Address
     ===================================================
     -->
-      <template v-if="onStep === 2" #stepperContent2>
+      <template v-if="onStep === 1" #stepperContent2>
         <step-two-generate
           :skipped="skipped"
           @onContinue="nextStep"
@@ -31,7 +31,7 @@
     Step 3: Upload Keystore file
     ===================================================
     -->
-      <template v-if="onStep === 3" #stepperContent3>
+      <template v-if="onStep === 1" #stepperContent3>
         <step-three-upload
           :skipped="skipped"
           :address="address"
@@ -44,7 +44,7 @@
     Step 4: Review & Stake
     ===================================================
     -->
-      <template v-if="onStep === 4" #stepperContent4>
+      <template v-if="onStep === 1" #stepperContent4>
         <step-four-review
           :amount="amount"
           :eth2-address="address"
