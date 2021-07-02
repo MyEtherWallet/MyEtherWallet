@@ -108,6 +108,8 @@
       <div
         class="
           tableHeader
+          mb-8
+          input-container
           d-block d-sm-flex
           rounded
           align-center
@@ -118,18 +120,19 @@
         <div class="d-flex align-center">
           <mew-icon :img-height="32" icon-name="keystore" />
           <div
-            class="ml-3 file-name-container mew-heading-4 textSecondary--text"
+            class="
+              ml-3
+              file-name-container
+              mew-heading-4
+              textSecondary--text
+              truncate
+            "
           >
             {{ inputTitle }}
           </div>
-          <v-icon
-            v-if="uploaded && !hasError"
-            size="16"
-            color="primary"
-            class="ml-2"
+          <v-icon v-if="uploaded && !hasError" size="16" color="primary"
+            >mdi-checkbox-marked-circle</v-icon
           >
-            mdi-checkbox-marked-circle
-          </v-icon>
         </div>
         <mew-button
           class="my-2"
@@ -339,6 +342,10 @@ export default {
   }
   .v-progress-linear {
     width: 420px;
+  }
+  .input-container {
+    width: 436px;
+    height: 76px;
   }
 }
 </style>

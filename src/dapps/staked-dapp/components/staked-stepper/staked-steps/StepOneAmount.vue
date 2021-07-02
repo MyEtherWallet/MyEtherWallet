@@ -19,41 +19,18 @@
         v-model="selectedItem"
         label="Staking amount"
         :items="selectItems"
-        is-swap
+        :error-messages="errorMessages"
+        :buy-more-str="errorMessages ? 'Buy more.' : null"
+        is-custom
         outlined
         @input="setAmount"
       />
       <!--
     ===================================================
-    TODO: add rules to mew-select and remove this
-    ===================================================
-    -->
-      <div
-        v-if="!hasEnoughBalance && rules"
-        class="
-          mt-n6
-          pb-6
-          mew-label
-          error--text
-          font-weight-medium
-          cursor-pointer
-        "
-      >
-        {{ rules }}
-        <a
-          rel="noopener noreferrer"
-          target="_blank"
-          href="https://ccswap.myetherwallet.com/#/"
-          class="mew-label font-weight-medium"
-          >Buy more ETH</a
-        >
-      </div>
-      <!--
-    ===================================================
     Staking APR and fee
     ===================================================
     -->
-      <div>
+      <div class="pt-6">
         <v-row>
           <v-col
             cols="6"
@@ -209,6 +186,7 @@ export default {
             img: this.eth,
             price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
           });
+          console.error('items', items)
         }
       }
       return items;
@@ -218,7 +196,7 @@ export default {
      * Used to show error messages
      * Validates amount
      */
-    rules() {
+    errorMessages() {
       if (!this.hasEnoughBalance) {
         return 'Not enough funds. Staking requires 32 ETH per validator.';
       }

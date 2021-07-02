@@ -24,7 +24,7 @@
                   :value="fromTokenType"
                   label="From"
                   :items="actualFromTokens"
-                  :is-swap="true"
+                  :is-custom="true"
                   :loading="isLoading"
                   @input="setFromToken"
                 />
@@ -67,7 +67,7 @@
                 ref="toToken"
                 :value="toTokenType"
                 :items="actualToTokens"
-                :is-swap="true"
+                :is-custom="true"
                 :loading="isLoading"
                 label="To"
                 @input="setToToken"
@@ -220,7 +220,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
-            is-swap
+            is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />

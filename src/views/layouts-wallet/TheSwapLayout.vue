@@ -12,7 +12,7 @@
       <module-tokens-value />
     </template>
     <template v-if="hasSwap" #rightColItem2>
-      <module-transfer-history :is-swap="true" />
+      <module-transfer-history :is-custom="true" />
     </template>
   </the-wrapper-wallet>
 </template>

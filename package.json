@@ -38,7 +38,7 @@
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/ens-contracts": "0.0.4",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.5.84-beta",
+    "@myetherwallet/mew-components": "0.5.86-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.6.0",
     "@sentry/integrations": "6.6.0",
