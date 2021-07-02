@@ -113,7 +113,7 @@
     ===================================================
     -->
       <div class="tableHeader px-6 px-sm-12 py-8 mt-2 border-radius--10px">
-        <ul class="user-info">
+        <ul class="user-info textBlack2--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>
           <li>Earn up to 21% Annualized rewards</li>
