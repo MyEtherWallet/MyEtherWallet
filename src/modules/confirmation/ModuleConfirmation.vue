@@ -649,8 +649,11 @@ export default {
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
-          const localStoredObj = locStore.get(sha3(this.address));
-          locStore.set(sha3(this.address), {
+          const storeKey = sha3(
+            `${this.network.type.name}-${this.address.toLowerCase()}`
+          );
+          const localStoredObj = locStore.get(storeKey);
+          locStore.set(storeKey, {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),
