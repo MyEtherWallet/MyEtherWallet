@@ -127,7 +127,7 @@
       >
         <staked-status
           :tx-receipt="handlerStaked.txReceipt"
-          :pending-hash="handlerStaked.pendingTxHash"
+          :pending-hash="pendingTxHash"
           :validators="validators"
           :loading="loadingValidators"
           :amount="amount"
@@ -240,9 +240,7 @@ export default {
      * if it gets set then go to staked status
      */
     pendingTxHash(newVal) {
-      console.error('in here', newVal)
       if (newVal !== '') {
-        console.error(" in hurrrrr")
         this.activeTab = 1;
       }
     }
