@@ -104,7 +104,7 @@
             </div>
           </div>
           <mew-button
-            class="my-2 step-two-staked-download-button"
+            class="my-2"
             btn-size="small"
             title="Download"
             btn-style="outline"
@@ -297,14 +297,3 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-// TODO: add this style option to mew button component
-// and remove this
-.step-two-staked-download-button {
-  .v-btn__content {
-    .v-progress-circular {
-      color: var(--v-primary-base) !important;
-    }
-  }
-}
-</style>

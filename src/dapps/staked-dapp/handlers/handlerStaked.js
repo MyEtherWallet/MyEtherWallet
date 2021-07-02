@@ -241,7 +241,6 @@ export default class Staked {
       .catch(err => {
         Toast(err, {}, ERROR);
       });
-    this.getValidators();
   }
   /**
    * @returns BigNumber
