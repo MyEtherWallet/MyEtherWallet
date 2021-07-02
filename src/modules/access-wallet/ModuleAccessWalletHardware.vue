@@ -478,6 +478,7 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.currentIdx -= MAX_ADDRESSES;
         this.setAddresses();
       }
     }
