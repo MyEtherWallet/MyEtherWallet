@@ -25,7 +25,6 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
-  console.log(to, from);
   // Check if user is coming from a path that needs auth
   if (
     !from.meta.hasOwnProperty('requiresAuth') &&
