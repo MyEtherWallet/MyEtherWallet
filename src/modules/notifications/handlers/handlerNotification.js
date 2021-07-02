@@ -37,7 +37,7 @@ const VALID_ARGUMENTS = [
   'errMessage', // string
   'swapObj', // obj
   'swapResolver',
-  'formatted' //boolean
+  'formatted' //boolean,
 ];
 /**
  * Notification types
