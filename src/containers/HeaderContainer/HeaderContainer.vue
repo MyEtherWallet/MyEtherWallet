@@ -40,6 +40,12 @@
           ]"
           class="fixed-header"
         >
+          <div class="v6-header">
+            Ready for something new? Check out &nbsp;
+            <a href="https://www.myetherwallet.com" rel="noopener noreferrer"
+              >MyEtherWallet V6</a
+            >
+          </div>
           <div
             :class="[
               (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -426,4 +432,15 @@ export default {
 
 <style lang="scss" scoped>
 @import 'HeaderContainer.scss';
+.v6-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $mew-green;
+  padding: 8px !important;
+
+  a {
+    color: $white !important;
+  }
+}
 </style>
