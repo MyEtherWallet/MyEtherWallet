@@ -23,7 +23,7 @@
               ref="mewSelect"
               label="Token"
               :items="tokens"
-              :is-swap="true"
+              :is-custom="true"
               :value="selectedCurrency"
               @input="setCurrency"
             />
@@ -491,6 +491,8 @@ export default {
       }
     },
     amount(newVal) {
+      // make sure amount never becomes null
+      if (!newVal) this.amount = '0';
       if (this.isValidAmount) {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
