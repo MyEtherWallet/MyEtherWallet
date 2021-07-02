@@ -24,7 +24,8 @@
         <div>
           <div class="font-weight-bold">MEWtopia</div>
           <div>
-            Getting started on Ethereum? Visit our blog MEWtopia for tips, resources and guides.
+            Getting started on Ethereum? Visit our blog MEWtopia for tips,
+            resources and guides.
             <a
               href="https://www.mewtopia.com/tag/getting-started/"
               rel="noopener noreferrer"
