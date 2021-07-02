@@ -642,10 +642,10 @@ export default {
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
         _tx.gasPrice = isHex(_tx.gasPrice)
-          ? fromWei(hexToNumberString(_tx.gasPrice), 'gwei')
+          ? hexToNumberString(_tx.gasPrice)
           : _tx.gasPrice;
         _tx.transactionFee = fromWei(
-          BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+          BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
