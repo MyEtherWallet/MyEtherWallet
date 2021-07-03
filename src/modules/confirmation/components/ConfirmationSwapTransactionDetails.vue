@@ -95,6 +95,14 @@ export default {
       type: String,
       default: ''
     },
+    fromUsd: {
+      type: String,
+      default: ''
+    },
+    toUsd: {
+      type: String,
+      default: ''
+    },
     show: {
       type: Boolean,
       default: false
@@ -139,21 +147,24 @@ export default {
           title: 'You Swap',
           icon: this.fromImg,
           value: this.formattedFromVal,
-          type: this.fromType
+          type: this.fromType,
+          address: this.from,
+          amount: formatFloatingPointValue(this.fromVal).value,
+          usd: formatFloatingPointValue(this.fromUsd).value
         },
         {
           title: 'You will get',
           icon: this.toImg,
           value: this.formattedToVal,
-          type: this.toType
+          type: this.toType,
+          address: this.to,
+          amount: formatFloatingPointValue(this.toVal).value,
+          usd: formatFloatingPointValue(this.toUsd).value
         }
       ];
     }
   },
   methods: {
-    toFixed(val) {
-      return `~${BigNumber(val).toFixed(2)}`;
-    },
     handleClose() {
       this.$emit('close');
     }

@@ -106,6 +106,8 @@
             :from-val="swapInfo.fromVal"
             :to-val="swapInfo.toVal"
             :provider="swapInfo.selectedProvider"
+            :to-usd="swapInfo.toUsdVal"
+            :from-usd="swapInfo.fromUsdVal"
             :tx-fee="swapInfo.totalFees"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
@@ -476,6 +478,13 @@ export default {
     }
   },
   watch: {
+    swapInfo: {
+      handler: function (newval) {
+        console.log(newval);
+      },
+      deep: true,
+      immediate: true
+    },
     error(newVal) {
       /**
        * Reset signed values if any of the tx in batch is declined
@@ -547,6 +556,7 @@ export default {
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
+        console.log('supposed to be here', arr);
         _self.isHardwareWallet = isHardware;
         if (arr[0].hasOwnProperty('confirmInfo')) {
           _self.swapInfo = arr[0].confirmInfo;
