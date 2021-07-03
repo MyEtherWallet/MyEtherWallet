@@ -1,7 +1,7 @@
 <template>
   <div>
     <mew-select
-      :has-filter="false"
+      :has-filter="true"
       :label="$t('ens.request.choose-term')"
       :items="items"
       @input="setDuration"
@@ -56,14 +56,9 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year', value: i + 1 });
+        items.push({ name: i + 1 + ' ' + 'year', value: (i + 1).toString() });
       }
       return items;
-    }
-  },
-  watch: {
-    duration() {
-      this.rentPrice();
     }
   },
   mounted() {
@@ -79,7 +74,8 @@ export default {
       });
     },
     setDuration(item) {
-      this.duration = item.value;
+      this.duration = parseInt(item.value);
+      this.rentPrice();
     },
     reset() {
       this.duration = 1;

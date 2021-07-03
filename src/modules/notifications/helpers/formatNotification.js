@@ -1,5 +1,9 @@
 import timeAgo from '@/core/helpers/timeAgo';
 import { fromWei, toBN } from 'web3-utils';
+import {
+  formatFloatingPointValue,
+  formatIntegerToString
+} from '@/core/helpers/numberFormatHelper';
 /**
  * Formatted notification for mew-notification component
  */
@@ -11,17 +15,17 @@ const formatNotification = (obj, network) => {
       link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },
     gasPrice: {
-      value: `${fromWei(obj.gasPrice, 'gwei')} Gwei`,
+      value: `${formatIntegerToString(fromWei(obj.gasPrice, 'gwei'))} Gwei`,
       string: 'Gas Price'
     },
     gasLimit: {
-      value: toBN(obj.gas).toString(),
+      value: formatIntegerToString(toBN(obj.gas).toString()),
       string: 'Gas Limit'
     },
     total: {
-      value: `${fromWei(obj.transactionFee, 'ether')} ${
-        network.type.currencyName
-      }`,
+      value: `${
+        formatFloatingPointValue(fromWei(obj.transactionFee, 'ether')).value
+      } ${network.type.currencyName}`,
       string: 'Total Transaction fee'
     },
     to: {
@@ -33,7 +37,9 @@ const formatNotification = (obj, network) => {
       string: 'From'
     },
     amount: {
-      value: `${fromWei(obj.value, 'ether')} ${network.type.currencyName}`,
+      value: `${formatFloatingPointValue(fromWei(obj.value, 'ether')).value} ${
+        network.type.currencyName
+      }`,
       string: 'Amount'
     },
     timestamp: {
@@ -52,6 +58,14 @@ const formatNotification = (obj, network) => {
     toObj: obj.toTxData,
     fromObj: obj.fromTxData
   };
+  if (newObj.toObj && newObj.toObj.amount) {
+    newObj.toObj.amount = formatFloatingPointValue(newObj.toObj.amount).value;
+  }
+  if (newObj.fromObj && newObj.fromObj.amount) {
+    newObj.fromObj.amount = formatFloatingPointValue(
+      newObj.fromObj.amount
+    ).value;
+  }
   obj.notification = newObj;
   return obj;
 };

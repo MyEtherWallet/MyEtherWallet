@@ -46,9 +46,18 @@
       </template>
       <template #moduleBody>
         <balance-chart :data="chartData" class="full-width mt-5 pa-md-3" />
-        <div class="pa-3 pa-sm-7">
-          <v-row class="align-center">
-            <v-col class="d-flex align-center justify-center">
+        <div
+          class="
+            pa-3 pa-sm-7
+            d-block d-md-flex
+            align-center
+            justify-space-between
+          "
+        >
+          <div
+            class="d-flex flex-column flex-sm-row align-center justify-center"
+          >
+            <div class="d-flex align-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
               <div
                 :class="[
@@ -65,19 +74,19 @@
                 ]"
                 >{{ priceChangeArrow }}</v-icon
               >
-              <div class="ml-5">
-                {{ formatFiatPrice }} / 1 {{ network.type.name }}
-              </div>
-            </v-col>
-            <v-col class="text-right">
-              <mew-button
-                :has-full-width="false"
-                title="Send Transaction"
-                btn-size="xlarge"
-                @click.native="navigateToSend"
-              />
-            </v-col>
-          </v-row>
+            </div>
+            <div class="ml-sm-5">
+              {{ formatFiatPrice }} / 1 {{ network.type.name }}
+            </div>
+          </div>
+          <div class="text-center text-md-right mt-4 mt-md-0">
+            <mew-button
+              :has-full-width="false"
+              title="Send Transaction"
+              btn-size="xlarge"
+              @click.native="navigateToSend"
+            />
+          </div>
         </div>
       </template>
     </mew-module>
@@ -168,7 +177,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        this.networkTokenUSDMarket.price_change_percentage_24hf;
+        return this.networkTokenUSDMarket.price_change_percentage_24h;
       }
       return '';
     },
@@ -189,10 +198,10 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.networkTokenUSDMarket &&
-        this.networkTokenUSDMarket.price_change_percentage_24h &&
-        this.balanceFiatValue &&
-        this.fiatValue
+        !!this.networkTokenUSDMarket &&
+        !!this.networkTokenUSDMarket.price_change_percentage_24h &&
+        !!this.balanceFiatValue &&
+        !!this.fiatValue
       );
     }
   },

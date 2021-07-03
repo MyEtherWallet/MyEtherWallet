@@ -114,7 +114,7 @@ function formatFloatingPointValue(_value) {
    * Case I: value === 0
    * Return: "0"
    */
-  if (value.isZero()) {
+  if (value.isZero() || value.isNaN()) {
     return { value: '0' };
   }
 
@@ -368,7 +368,7 @@ const formatFiatValue = _value => {
    * Case I: value === 0
    * Return: "$0.00"
    */
-  if (value === undefined || value.isZero()) {
+  if (value === undefined || value.isZero() || value.isNaN()) {
     return { value: '0.00' };
   }
 

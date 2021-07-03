@@ -18,7 +18,7 @@
         >
           <mew-button
             class="px-2"
-            :title="$vuetify.breakpoint.mdAndUp ? 'MEW tools' : ''"
+            :title="$vuetify.breakpoint.mdAndUp ? 'MEW Hub' : ''"
             color-theme="primary"
             :has-full-width="false"
             btn-size="large"
@@ -45,7 +45,7 @@
         >
           <img
             src="@/assets/images/icons/icon-grid-dot.png"
-            alt="Mew Tools"
+            alt="Mew Hub"
             height="20"
           />
         </v-btn>
@@ -95,12 +95,7 @@ export default {
       top: undefined,
       tools: [
         {
-          label: 'MEW web',
-          img: require('@/assets/images/icons/icon-mew-logo.png'),
-          link: 'https://www.myetherwallet.com/'
-        },
-        {
-          label: 'MEW wallet App',
+          label: 'MEW wallet app',
           img: require('@/assets/images/icons/icon-mew-wallet.png'),
           link: 'https://www.mewwallet.com/'
         },
@@ -110,12 +105,7 @@ export default {
           link: 'https://www.ethvm.com/'
         },
         {
-          label: 'MEW CX',
-          img: require('@/assets/images/icons/icon-mew-cx.png'),
-          link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
-        },
-        {
-          label: 'MEW topia',
+          label: 'MEWtopia',
           img: require('@/assets/images/icons/icon-puppy-mew.svg'),
           link: 'https://www.mewtopia.com/'
         },

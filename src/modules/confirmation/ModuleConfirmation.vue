@@ -33,7 +33,7 @@
             Links
           =====================================================================================
           -->
-          <v-row class="justify-sm-space-between align-center pt-3" dense>
+          <v-row class="justify-sm-space-around align-center pt-3" dense>
             <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
               <a
                 class="d-flex justify-center justify-sm-end"
@@ -85,7 +85,7 @@
         <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
           <confirmation-send-transaction-details
             v-if="!isSwap"
-            :to="tx.to"
+            :to="txTo"
             :network="network"
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
@@ -158,13 +158,17 @@
                   <p class="ma-0 pl-1">
                     <span class="font-weight-bold"
                       >Transaction
-                      {{ transactions.length > 1 ? `${i + 1}` : 'details' }}
+                      {{ transactions.length > 1 ? `${i + 1}` : `details` }}
                     </span>
                     <br />
+                    <span v-if="isBatch" class="ma-0 mew-label searchText--text"
+                      >{{ isSwap ? 'Swap ' : '' }} part {{ i + 1 }} -
+                      {{ dataToAction(unsignedTxArr[i]) }}</span
+                    >
                     <span
-                      v-if="isSwap && transactions.length > 1"
+                      v-else-if="dataToAction(tx) !== ''"
                       class="ma-0 mew-label searchText--text"
-                      >Swap part {{ i + 1 }} - {{ swapLabel[i] }}</span
+                      >{{ dataToAction(tx) }}</span
                     >
                   </p>
                   <v-spacer />
@@ -263,24 +267,25 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
   _,
   hexToNumberString,
   hexToNumber,
   toWei,
-  sha3
+  sha3,
+  isHex
 } from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
-import parseTokenData from '@/core/helpers/parseTokenData';
+import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/utils';
-
-const SWAP_LABELS = ['Reset Approval', 'Approval', 'Swap'];
+import dataToAction from './handlers/dataToAction';
 
 export default {
   name: 'ModuleConfirmation',
@@ -328,6 +333,10 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
+    txTo() {
+      if (!this.isBatch) return this.tx.to;
+      return this.unsignedTxArr[0].to;
+    },
     usdValue() {
       return BigNumber(this.fiatValue).toNumber();
     },
@@ -339,16 +348,6 @@ export default {
         (this.isHardware || this.isWeb3Wallet) &&
         (this.signing || this.signingPending)
       );
-    },
-    swapLabel() {
-      switch (this.transactions.length) {
-        case 1:
-          return SWAP_LABELS.slice(2);
-        case 2:
-          return SWAP_LABELS.slice(1);
-        default:
-          return SWAP_LABELS;
-      }
     },
     transactions() {
       const newArr =
@@ -370,16 +369,29 @@ export default {
       };
     },
     gasPrice() {
-      const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
-      return fromWei(hexToNumberString(gasPrice), 'gwei');
+      if (!this.isBatch) {
+        const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
+        return fromWei(hexToNumberString(gasPrice), 'gwei');
+      }
+      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
+        return acc.plus(currentValue.gasPrice);
+      }, BigNumber(0));
+      return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {
-      const gasLimit = this.tx.gasLimit
-        ? this.tx.gasLimit
-        : this.tx.gas
-        ? this.tx.gas
-        : '0x';
-      return hexToNumberString(gasLimit);
+      if (!this.isBatch) {
+        const gasLimit = this.tx.gasLimit
+          ? this.tx.gasLimit
+          : this.tx.gas
+          ? this.tx.gas
+          : '0x';
+        return hexToNumberString(gasLimit);
+      }
+
+      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
+        return acc.plus(currentValue.gas);
+      }, BigNumber(0));
+      return hexToNumberString(batchGasPrice);
     },
     nonce() {
       return hexToNumber(this.tx.nonce);
@@ -394,12 +406,15 @@ export default {
       return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
     },
     value() {
-      const parsedValue = this.tx.value
-        ? this.tx.hasOwnProperty('toTxData')
-          ? this.tx.toTxData.amount
-          : fromWei(hexToNumberString(this.tx.value))
-        : '0x';
-      return parsedValue;
+      if (!this.isBatch) {
+        const parsedValue = this.tx.value
+          ? this.tx.hasOwnProperty('toTxData')
+            ? this.tx.toTxData.amount
+            : fromWei(hexToNumberString(this.tx.value))
+          : '0x';
+        return parsedValue;
+      }
+      return '0';
     },
     isSoftwareWallet() {
       return (
@@ -453,7 +468,11 @@ export default {
   watch: {
     signedTxArray: {
       handler: function (newVal) {
-        if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
+        if (
+          this.isWeb3Wallet &&
+          newVal.length !== 0 &&
+          newVal.length === this.unsignedTxArr.length
+        ) {
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
@@ -552,6 +571,9 @@ export default {
     });
   },
   methods: {
+    dataToAction(data) {
+      return dataToAction(data);
+    },
     /**
      * Methods scrolls to an element if element is open on click.
      * Has To be a timeoute, on order to wait for the element to be open
@@ -592,14 +614,9 @@ export default {
       this.error = '';
     },
     parseRawData(tx) {
-      let tokenData = '';
-      if (tx.to && tx.data && tx.data !== '0x') {
-        tokenData = parseTokenData(
-          tx.data,
-          tx.to,
-          this.network.type.tokens,
-          this.web3
-        );
+      let tokenData = {};
+      if (tx.to && tx.data && tx.data.substr(0, 10) === '0xa9059cbb') {
+        tokenData = parseTokenData(tx.data, tx.to);
         tx.fromTxData = {
           currency: this.network.type.currencyName,
           amount: tx.amount
@@ -623,26 +640,26 @@ export default {
         const _rawTx = tx.rawTransaction;
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
-        _tx.gasPrice = fromWei(hexToNumberString(_tx.gasPrice), 'gwei');
+        _tx.gasPrice = isHex(_tx.gasPrice)
+          ? hexToNumberString(_tx.gasPrice)
+          : _tx.gasPrice;
         _tx.transactionFee = fromWei(
-          BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+          BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
-          const localStoredObj = locStore.get(sha3(this.address));
-          locStore.set(sha3(this.address), {
+          const storeKey = sha3(
+            `${this.network.type.name}-${this.address.toLowerCase()}`
+          );
+          const localStoredObj = locStore.get(storeKey);
+          locStore.set(storeKey, {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),
             timestamp: localStoredObj.timestamp
           });
           if (idx + 1 === _arr.length) {
-            /**
-             * keepSwap holds isSwap value
-             * before resetting and reassigns
-             * isSwap will be cleared after showSuccessModal is closed
-             */
             if (this.isSwap) {
               this.showSuccessSwap = true;
             }
@@ -655,11 +672,6 @@ export default {
       this.resolver(promises);
     },
     sendSignedTx() {
-      /**
-       * keepSwap holds isSwap value
-       * before resetting and reassigns
-       * isSwap will be cleared after showSuccessModal is closed
-       */
       const hash = this.signedTxObject.tx.hash;
       this.resolver(this.signedTxObject);
       if (this.isSwap) {
@@ -809,6 +821,17 @@ export default {
           ? item.gas
           : '0x';
         const gasPrice = item.gasPrice ? item.gasPrice : '0x';
+        const data = item.data
+          ? item.data
+          : item.hasOwnProperty('encodeABI')
+          ? item.encodeABI()
+          : '0x';
+        const value =
+          data !== '0x'
+            ? !this.isSwap && !this.isBatch
+              ? `${this.value} ${this.sendCurrency.symbol}`
+              : `0 ${this.network.type.currencyName}`
+            : `${this.value} ${this.sendCurrency.symbol}`;
         return [
           {
             title: 'Network',
@@ -821,19 +844,21 @@ export default {
           {
             title: 'From address',
             value: item.from
+              ? toChecksumAddress(item.from)
+              : toChecksumAddress(this.address)
           },
           {
-            title: item.data !== '0x' ? 'Via Contract Address' : 'To address',
+            title:
+              data !== '0x' && !this.isBatch
+                ? 'Via Contract Address'
+                : 'To address',
             value: item.to
+              ? toChecksumAddress(item.to)
+              : toChecksumAddress(this.txTo)
           },
           {
             title: 'Sending',
-            value:
-              item.data !== '0x'
-                ? !this.isSwap
-                  ? `${this.value} ${this.sendCurrency.symbol}`
-                  : `0 ${this.network.type.currencyName}`
-                : `${this.value} ${this.sendCurrency.symbol}`
+            value: value
           },
           {
             title: 'Gas Price',
@@ -853,7 +878,7 @@ export default {
           },
           {
             title: 'Data',
-            value: item.data
+            value: data
           }
         ].filter(item => {
           if (item.value !== '') return item;

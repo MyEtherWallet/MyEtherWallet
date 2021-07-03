@@ -23,7 +23,7 @@
               ref="mewSelect"
               label="Token"
               :items="tokens"
-              :is-swap="true"
+              :is-custom="true"
               :value="selectedCurrency"
               @input="setCurrency"
             />
@@ -42,7 +42,7 @@
               :value="amount"
               type="number"
               :persistent-hint="true"
-              :error-messages="amountError"
+              :error-messages="amountErrorMessage"
               :max-btn-obj="{
                 title: 'Max',
                 disabled: false,
@@ -175,12 +175,12 @@
 </template>
 
 <script>
-import utils, { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
+import { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, ERROR, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -238,18 +238,23 @@ export default {
       localGasType: 'economy',
       defaultGasLimit: '21000',
       gasLimitError: '',
-      amountError: ''
+      amountError: '',
+      gasEstimationError: '',
+      gasEstimationIsReady: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online']),
+    ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     isDisabledNextBtn() {
       return (
-        this.feeError !== '' || !this.isValidGasLimit || !this.allValidInputs
+        this.feeError !== '' ||
+        !this.isValidGasLimit ||
+        !this.allValidInputs ||
+        !this.gasEstimationIsReady
       );
     },
     buyMore() {
@@ -336,6 +341,12 @@ export default {
         ...tokensList
       ];
     },
+    /* Property returns either gas estimmation error or amount error*/
+    amountErrorMessage() {
+      return this.gasEstimationError !== ''
+        ? this.gasEstimationError
+        : this.amountError;
+    },
     /**
      * Property checks if user input valid amount
      * Results to false if amount is empty, amount is negative, has invalid decimal points
@@ -416,7 +427,7 @@ export default {
       return '0';
     },
     /**
-     * Computed property determines whether or no show the loading state of the fee
+     * Computed property determines whether or not show the loading state of the fee
      * Fee is loaded when: invalid amount, invalid gas limit
      * @return {boolean} true of false based on the above params
      */
@@ -436,12 +447,13 @@ export default {
       );
     },
     allValidInputs() {
-      if (this.sendTx && this.sendTx.currency)
+      if (this.sendTx && this.sendTx.currency) {
         return (
           this.isValidAmount &&
           this.sendTx.hasEnoughBalance() &&
           this.isValidAddress
         );
+      }
       return false;
     },
     actualGasPrice() {
@@ -455,18 +467,20 @@ export default {
     }
   },
   watch: {
-    multiwatch: utils._.debounce(function () {
-      if (this.allValidInputs) {
-        this.estimateAndSetGas();
-      }
-    }, 500),
+    multiwatch() {
+      this.gasEstimationIsReady = false;
+      this.debounceEstimateGas(this.allValidInputs);
+    },
+
     isPrefilled() {
       this.prefillForm();
     },
     tokensList: {
       handler: function (val) {
         this.selectedCurrency = val.length > 0 ? val[0] : {};
-        this.sendTx.setCurrency(this.selectedCurrency);
+        if (this.sendTx) {
+          this.sendTx.setCurrency(this.selectedCurrency);
+        }
       },
       deep: true,
       immediate: true
@@ -477,6 +491,8 @@ export default {
       }
     },
     amount(newVal) {
+      // make sure amount never becomes null
+      if (!newVal) this.amount = '0';
       if (this.isValidAmount) {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
@@ -513,6 +529,11 @@ export default {
     this.setSendTransaction();
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
+    this.sendTx.setCurrency(this.selectedCurrency);
+    this.handleLocalGasPrice({
+      gasType: this.gasPriceType,
+      gasPrice: this.gasPrice
+    });
   },
   created() {
     this.debouncedGasLimitError = _.debounce(value => {
@@ -521,6 +542,11 @@ export default {
     this.debounceAmountError = _.debounce(value => {
       this.setAmountError(value);
     }, 1000);
+    this.debounceEstimateGas = _.debounce(allValidInputs => {
+      if (allValidInputs) {
+        this.estimateAndSetGas();
+      }
+    }, 500);
   },
   methods: {
     /**
@@ -604,9 +630,12 @@ export default {
           this.gasLimit = toBN(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
+          this.gasEstimationError = '';
+          this.gasEstimationIsReady = true;
         })
         .catch(e => {
-          Toast(e, {}, ERROR);
+          this.gasEstimationError = e.message;
+          this.gasEstimationIsReady = false;
         });
     },
     send() {
@@ -638,7 +667,6 @@ export default {
       this.isValidAddress = false;
       this.toAddress = '';
       this.$refs.mewSelect.clear();
-      this.$refs.mewInput.clear();
       this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
