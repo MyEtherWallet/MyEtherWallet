@@ -1,25 +1,49 @@
 <template>
   <mew6-white-sheet
-    class="mew-component--features-dapps pa-6 pa-md-10"
+    class="mew-component--features-dapps px-6 pb-6 pt-5 pt-dm-4 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">Dapps center</div>
-    <div>Explore the most popular Ethereum Dapps right from your wallet.</div>
-    <div class="mt-6">
-      <v-row>
-        <v-col v-for="(d, k) in dapps" :key="k" cols="12" lg="4" sm="6">
-          <div class="d-flex align-center">
-            <img :src="d.icon" :alt="d.label" height="80" class="mr-2" />
-            <div>{{ d.label }}</div>
+    <v-row dense>
+      <v-col v-for="(d, k) in dapps" :key="k" cols="12" lg="4" sm="6">
+        <div
+          :class="[d.isAccessible ? 'align-center' : 'align-start', 'd-flex']"
+        >
+          <img
+            :src="d.icon"
+            :alt="d.label"
+            height="80"
+            class="mr-2"
+            :class="{ 'icon-disabled': !d.isAccessible }"
+          />
+          <div>
+            <div
+              v-if="!d.isAccessible"
+              class="badge mew-label disabled--text d-block text--center mt-3"
+            >
+              Coming soon
+            </div>
+            <v-spacer v-if="!d.isAccessible" />
+            <div
+              :class="[
+                d.isAccessible ? 'expandHeader--text ' : 'textBlack2--text'
+              ]"
+            >
+              {{ d.label }}
+            </div>
           </div>
-        </v-col>
-      </v-row>
-      <mew-button
-        title="Explore Dapps"
-        btn-size="xlarge"
-        class="mx-auto mt-10 d-block"
-        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
-      />
+        </div>
+      </v-col>
+    </v-row>
+    <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
+      <div class="message--text textBlack2--text text-center">
+        MEW team is working hard to update the DApps Center. Cant’s wait?
+        <a
+          href="https://v5.myetherwallet.com"
+          target="_blank"
+          class="primary--text"
+          >Access all DApps in MEW Version 5</a
+        >
+      </div>
     </div>
   </mew6-white-sheet>
 </template>
@@ -31,6 +55,16 @@ export default {
   data: () => ({
     dapps: [
       {
+        label: 'Stake on ETH 2.0',
+        icon: require('@/assets/images/icons/icon-dapp-eth20.png'),
+        isAccessible: true
+      },
+      {
+        label: 'ENS Manager',
+        icon: require('@/assets/images/icons/icon-dapp-ens-manager.png'),
+        isAccessible: true
+      },
+      {
         label: 'MakerDAO',
         icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
       },
@@ -38,10 +72,7 @@ export default {
         label: 'SafeSend transaction',
         icon: require('@/assets/images/icons/icon-dapp-lock.png')
       },
-      {
-        label: 'Stake on ETH 2.0',
-        icon: require('@/assets/images/icons/icon-dapp-eth20.png')
-      },
+
       {
         label: 'AAVE',
         icon: require('@/assets/images/icons/icon-dapp-aave.png')
@@ -61,14 +92,31 @@ export default {
       {
         label: 'Ambrpay',
         icon: require('@/assets/images/icons/icon-dapp-ambrpay.png')
-      },
-      {
-        label: 'ENS Manager',
-        icon: require('@/assets/images/icons/icon-dapp-ens-manager.png')
       }
     ]
   })
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+$greyBackground: var(--v-tableHeader-base);
+
+.icon-disabled {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+.badge {
+  background-color: $greyBackground;
+  padding: 3px;
+  border-radius: 4px;
+  height: 20px;
+  width: 83px;
+}
+.message {
+  background-color: $greyBackground;
+  border-radius: 4px;
+  .message--text {
+    max-width: 357px;
+  }
+}
+</style>

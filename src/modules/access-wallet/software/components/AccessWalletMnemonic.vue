@@ -384,7 +384,7 @@ import { checkCustomPath } from '../handlers/pathHelper';
 import AppBtnRow from '@/core/components/AppBtnRow';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { fromWei } from 'web3-utils';
-
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -435,9 +435,10 @@ export default {
             /**
              * Sets the balance of the account of accountAddress
              */
-            this.accounts[this.onAccountIndex].balance = fromWei(
-              data.getEthBalance.balance
-            );
+            this.accounts[this.onAccountIndex].balance =
+              formatFloatingPointValue(
+                fromWei(data.getEthBalance.balance)
+              ).value;
             /**
              * Find the next index and set the address of it to accountAddress
              */

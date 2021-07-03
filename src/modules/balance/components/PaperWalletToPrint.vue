@@ -64,11 +64,11 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <qr-code :value="key" :options="{ size: 140 }"></qr-code>
+          <qr-code :value="address" :options="{ size: 140 }"></qr-code>
         </v-col>
       </v-row>
 
-      <v-row v-if="!isHardware">
+      <v-row v-if="showPrivateKey">
         <v-col cols="8">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
@@ -117,13 +117,16 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {
-      if (!this.isHardware) {
+      if (this.address && !this.showPrivateKey) {
         return this.instance.getPrivateKeyString();
       }
       return null;
     },
     getChecksumAddressString() {
       return this.address ? toChecksumAddress(this.address) : '';
+    },
+    showPrivateKey() {
+      return !this.isHardware || !this.instance.isPubOnly;
     }
   },
   mounted() {
