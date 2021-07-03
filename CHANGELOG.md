@@ -3,6 +3,9 @@
 ### Devop
 
 * Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)
+* remove wallet on back [#3206](https://github.com/MyEtherWallet/MyEtherWallet/pull/3206)
+* listen and match metamask changes [#3203](https://github.com/MyEtherWallet/MyEtherWallet/pull/3203)
+* fix landing and create wallet ui issues [#3190](https://github.com/MyEtherWallet/MyEtherWallet/pull/3190)
 * Disable next button on gas estimation process or error [#3180](3180)
 * fix wallet link, fix trade, remove shield icon [#3181](https://github.com/MyEtherWallet/MyEtherWallet/pull/3181)
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)

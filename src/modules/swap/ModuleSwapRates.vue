@@ -108,7 +108,7 @@ const STATIC_PAIRS = [
       contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
-    fromAmount: '100000000000000000'
+    fromAmount: '1000000000000000000'
   },
   {
     fromT: {

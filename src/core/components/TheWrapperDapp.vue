@@ -1,35 +1,47 @@
 <template>
   <!--
-    =====================================================================================
-      DAPP WRAPPER:
-    =====================================================================================
-    -->
+  =====================================================================================
+    DAPP WRAPPER:
+  =====================================================================================
+  -->
   <mew6-white-sheet>
     <!--
     =====================================================================================
       Mew Banner - props: bannerText, bannerImg
-      TODO: we currently do not have all the custom dapp banner images, so will use the default for
-      now if there is none available.
+      TODO: Add block header to mew banner component
     =====================================================================================
     -->
-    <mew-banner
+    <block-header
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
+      :title-icon="titleIcon"
+      :no-back-btn="noBackBtn"
+      :top-strip="topStrip"
       @closeBanner="onClose"
-    />
+    >
+      <template #body>
+        <slot name="HeaderBody" />
+      </template>
+      <template #right>
+        <slot name="HeaderRight" />
+      </template>
+    </block-header>
+
     <!--
     =====================================================================================
       Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
       tab content (tabContent + tab number )
+      TODO: remove hideDefaultTabHeader prop and refactor
     =====================================================================================
     -->
     <mew-tabs
       v-if="tabItems.length > 0"
-      class="pt-5"
+      :class="['pt-5', hideDefaultTabHeader ? 'hide-default-tab-header' : '']"
       :items="tabItems"
       :is-centered="true"
       :active-tab="activeTab"
       has-underline
+      @onTab="onTab"
     >
       <template
         v-for="(item, idx) in tabItems"
@@ -38,6 +50,7 @@
         <slot :name="'tabContent' + (idx + 1)" />
       </template>
     </mew-tabs>
+
     <!--
     =====================================================================================
      Slot: content, used to place body content if not using tabs.
@@ -51,8 +64,10 @@
 
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
+import BlockHeader from '@/core/components/AppBlockHeader';
 
 export default {
+  components: { BlockHeader },
   props: {
     hasExitBtn: {
       default: false,
@@ -73,6 +88,26 @@ export default {
     activeTab: {
       default: 0,
       type: Number
+    },
+    titleIcon: {
+      default: '',
+      type: String
+    },
+    noBackBtn: {
+      default: false,
+      type: Boolean
+    },
+    topStrip: {
+      default: false,
+      type: Boolean
+    },
+    onTab: {
+      default: () => {},
+      type: Function
+    },
+    hideDefaultTabHeader: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
@@ -95,3 +130,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.hide-default-tab-header {
+  .v-tabs {
+    display: none;
+  }
+}
+</style>

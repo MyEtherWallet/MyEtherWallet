@@ -109,11 +109,11 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
-    ...mapState('wallet', ['web3', 'initialLoadTokens']),
-    ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('wallet', ['web3', 'loadingWalletInfo']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
-      return this.initialLoadTokens;
+      return this.loadingWalletInfo;
     },
     tokensData() {
       if (!this.tokensList) return [];
@@ -132,7 +132,7 @@ export default {
             : '';
         newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
         newObj.price = item.pricef !== '0' ? '$' + item.pricef : '';
-        newObj.tokenImg = item.img;
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
         newObj.callToAction = [
           {
             title: 'Trade',

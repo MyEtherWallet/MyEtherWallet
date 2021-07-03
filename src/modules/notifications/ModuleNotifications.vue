@@ -187,8 +187,14 @@ export default {
           notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
         ) {
           this.txHash = notification.hash;
-          if (this.getTransactionByHash) {
-            const notification = new Notification(this.getTransactionByHash);
+          if (this.getTransactionByHash && notification) {
+            if (this.getTransactionByHash.status) {
+              this.getTransactionByHash.status =
+                this.getTransactionByHash.status === '0x1'
+                  ? NOTIFICATION_STATUS.SUCCESS
+                  : NOTIFICATION_STATUS.FAILED;
+              notification.status = this.getTransactionByHash.status;
+            }
             this.updateNotification(notification);
           }
         }
@@ -224,11 +230,12 @@ export default {
       if (!this.loading) {
         return this.ethTransfersIncoming
           .filter(notification => {
-            return notification.to === this.address;
+            return notification.to.toLowerCase() === this.address.toLowerCase();
           })
           .map(notification => {
             notification.type = NOTIFICATION_TYPES.IN;
-            notification.read = true;
+            if (notification.status) notification.read = true;
+            else notification.read = false;
             notification = new Notification(notification);
             return formatNotification(notification, this.network);
           })
@@ -240,9 +247,10 @@ export default {
      * Returns all the notifications
      */
     allNotifications() {
-      const sorted = this.formattedCurrentNotifications
-        .concat(this.incomingTxNotifications)
-        .sort(this.sortByDate);
+      const sorted = this.formattedCurrentNotifications.concat(
+        this.incomingTxNotifications
+      );
+      sorted.sort(this.sortByDate);
       return sorted.slice(0, 20);
     },
     /**
@@ -291,23 +299,15 @@ export default {
      */
     markNotificationAsRead(notification) {
       if (!notification.read) {
-        notification.markAsRead().then(res => {
-          delete res.notification;
+        notification.markAsRead().then(() => {
           const type = notification.type.toLowerCase();
           if (
             type === NOTIFICATION_TYPES.OUT ||
             type === NOTIFICATION_TYPES.SWAP
           ) {
-            this.updateNotification(new Notification(res));
+            this.updateNotification(notification);
           } else {
-            this.ethTransfersIncoming = this.ethTransfersIncoming.map(
-              transfer => {
-                if (transfer.hash === res.hash) {
-                  return new Notification(res);
-                }
-                return transfer;
-              }
-            );
+            notification.read = true;
           }
         });
       }
