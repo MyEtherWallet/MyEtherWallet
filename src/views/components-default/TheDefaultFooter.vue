@@ -98,7 +98,13 @@
               target="_blank"
               class="ml-4"
             >
-              <mew-icon :img-height="20" :icon-name="i.icon" />
+              <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
+              <img
+                v-if="i.iconImage"
+                :src="i.iconImage"
+                alt="Social"
+                height="15"
+              />
             </a>
           </div>
         </div>
@@ -337,11 +343,7 @@ export default {
           },
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          {
-            label: 'MEW Telegram Channel',
-            link: 'https://t.me/myetherwallet'
-          }
+          { label: 'Security Policy', routerLink: 'SecurityPolicy' }
         ]
       },
       {
@@ -448,6 +450,10 @@ export default {
       {
         link: 'https://medium.com/@myetherwallet',
         icon: 'medium'
+      },
+      {
+        link: 'https://t.me/myetherwallet',
+        iconImage: require('@/assets/images/icons/icon-telegram.svg')
       }
     ]
   })
