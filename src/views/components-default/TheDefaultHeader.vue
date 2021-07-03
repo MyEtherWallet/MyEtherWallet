@@ -64,7 +64,7 @@ export default {
               to: { name: 'SendTX' }
             },
             {
-              title: 'Explore Dapps',
+              title: 'Explore DApps',
               to: { name: 'Dapps' }
             },
             {
