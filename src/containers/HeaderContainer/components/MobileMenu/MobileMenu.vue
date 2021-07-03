@@ -13,37 +13,48 @@
       :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
       class="mobile-menu-header"
     >
-      <router-link
-        to="/"
-        aria-label="Home"
-        @click.native="
-          scrollTop();
-          isMenuOpen = false;
-        "
-      >
-        <div
-          :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
-          class="logo-image--container"
+      <div class="v6-header">
+        A new version is available &nbsp;
+        <a href="https://www.myetherwallet.com" rel="noopener noreferrer"
+          >Try it out here</a
+        >&nbsp;&nbsp;
+        <a href="https://www.myetherwallet.com" rel="noopener noreferrer"
+          >Read about it here</a
         >
-          <img
-            :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
-            class="logo"
-            alt
-          />
-        </div>
-      </router-link>
-      <div class="mobile-menu-button--container">
-        <a
-          href="https://ccswap.myetherwallet.com/#/"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+      <div class="mobile-menu">
+        <router-link
+          to="/"
+          aria-label="Home"
+          @click.native="
+            scrollTop();
+            isMenuOpen = false;
+          "
         >
-          <div class="buy-eth">
-            <img src="@/assets/images/icons/buy-eth.svg" alt />
-            <p>{{ $t('common.buy-eth') }}</p>
+          <div
+            :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
+            class="logo-image--container"
+          >
+            <img
+              :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+              class="logo"
+              alt
+            />
           </div>
-        </a>
-        <mobile-menu-button :ismenuopen="false" @click.native="openMenu" />
+        </router-link>
+        <div class="mobile-menu-button--container">
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="buy-eth">
+              <img src="@/assets/images/icons/buy-eth.svg" alt />
+              <p>{{ $t('common.buy-eth') }}</p>
+            </div>
+          </a>
+          <mobile-menu-button :ismenuopen="false" @click.native="openMenu" />
+        </div>
       </div>
     </div>
     <!-- Mobile menu header (ENDS) -->
@@ -183,4 +194,19 @@ export default {
 
 <style lang="scss" scoped>
 @import 'MobileMenu.scss';
+
+.v6-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #22a7c0;
+  background-image: linear-gradient(to right, #22a7c0, #06c0a5);
+  padding: 8px !important;
+  color: $white !important;
+
+  a {
+    color: $white !important;
+    text-decoration: underline;
+  }
+}
 </style>
