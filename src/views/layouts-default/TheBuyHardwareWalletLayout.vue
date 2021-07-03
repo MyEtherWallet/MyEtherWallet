@@ -50,7 +50,7 @@
                       mew-caption
                       text-uppercase
                       font-weight-bold
-                      #667f9b--text
+                      textPrimary--text
                       text--lighten-1
                     "
                   >

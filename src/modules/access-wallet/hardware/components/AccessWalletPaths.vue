@@ -8,7 +8,9 @@
         =====================================================================================
         -->
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-        <div class="headline font-weight-bold">Select HD Derivation Path</div>
+        <div class="headline font-weight-bold mb-5">
+          Select HD Derivation Path
+        </div>
         <div>
           <mew-select
             v-if="onLedger"
