@@ -103,8 +103,18 @@ export default {
   mounted() {
     if (this.network.type.ens)
       this.nameResolver = new NameResolver(this.network);
+    if (this.isHomePage) {
+      this.setDonationAddress();
+    }
   },
   methods: {
+    /**
+     * Sets selected address to be MEW donation address
+     * only happens on home page
+     */
+    setDonationAddress() {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+    },
     toggleOverlay() {
       this.addMode = !this.addMode;
     },

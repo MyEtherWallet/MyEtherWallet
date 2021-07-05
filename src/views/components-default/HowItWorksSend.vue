@@ -18,9 +18,8 @@
                 Send Transactions
               </div>
               <p>
-                MEW enables users to send their ETH or ERC20 tokens with no
-                minimums to any other Ethereum wallet. Just pay the gas fee for
-                using the blockchain, and you’re done!
+                MEW gives you full control-send your funds to anyone, anywhere,
+                at any time, without middlemen, minimums, or limits.
               </p>
             </div>
           </div>
@@ -32,9 +31,8 @@
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
               <p>
-                Non-Fungible-Tokens (NFTs) are supported through our NFT
-                Manager, where you can send and manage your own NFTs right in
-                MEW!
+                View and manage all of your collectibles and domains in MEW’s
+                NFT Manager
               </p>
             </div>
           </div>
@@ -45,12 +43,12 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                Change Networks
+                Work with other chains
               </div>
               <p>
-                We have integrated other Ethereum-compatible networks, such as
-                Ethereum Classic (ETC) and the Binance Smart Chain (BSC), so
-                users can interact beyond Ethereum.
+                MEW supports additional Ethereum-compatible networks including
+                Ethereum Classic (ETC), Binance Smart Chain (BSC) and Polygon,
+                so that users can manage assets beyond the Ethereum mainnet.
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a
@@ -84,9 +82,8 @@ export default {
     titleData: {
       textProps: '',
       toptitle: '',
-      title: 'Send Your Funds',
-      description:
-        'Sending with MEW is as easy as accessing your wallet and pressing a button.',
+      title: 'Send ETH, ERC20 tokens & NFT',
+      description: 'Send your funds with the press of a button.',
       centered: false
     }
   })

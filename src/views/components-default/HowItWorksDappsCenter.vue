@@ -21,9 +21,10 @@
               <div class="mb-1 font-weight-bold subtitle-1">DApps Center</div>
               <p>
                 Explore our integrated DApps to fully experience Ethereum’s
-                capabilities. Our partners Aave and MakerDAO offer DeFi
-                services, or you can register a domain name for your wallet
-                through ENS or Unstoppable Domains.
+                capabilities. Take advantage of DeFi services with our partners
+                Aave and MakerDAO, and register a domain name for your wallet
+                through ENS or Unstoppable Domains. We are constantly adding
+                more DApps!
               </p>
             </div>
           </div>
@@ -37,9 +38,9 @@
                 Submit Your Own DApp!
               </div>
               <p>
-                MEW is a decentralized and open-source project, so we’re happy
-                to take new DApp integrations. You can fill out your details
-                through our
+                MEW is dedicated to being decentralized and open-source, so we
+                are excited about working with DApp developers and making DApp
+                integrations easy. You can fill out your details through our
                 <a
                   href="https://www.myetherwallet.com/dapp-submission"
                   target="_blank"
@@ -79,7 +80,7 @@ export default {
       toptitle: '',
       title: 'DApps',
       description:
-        'Decentralized Applications (DApps) are the backbone of what makes Ethereum special.',
+        'Decentralized Applications (DApps) are what makes Ethereum special.',
       centered: false
     }
   })
