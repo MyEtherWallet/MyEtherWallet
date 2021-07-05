@@ -36,7 +36,7 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.6",
-    "@ensdomains/ens-contracts": "0.0.4",
+    "@ensdomains/ens-contracts": "0.0.5",
     "@myetherwallet/eth2-keystore": "0.2.3",
     "@myetherwallet/mew-components": "0.5.87-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
