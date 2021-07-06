@@ -91,7 +91,8 @@
         <mew-checkbox
           v-model="thirdCondition"
           color-text="textBlack2--text"
-          label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
+          label="This Staking feature is provided by Staked.us, and MEW is not liable for it's services. I have read and agreed to"
+          :link="stakedTerms"
         ></mew-checkbox>
       </div>
 
@@ -239,6 +240,10 @@ export default {
       stakedStep1Title: {
         message:
           'We will prepare validators for you. After that you can confirm and stake your ETH.'
+      },
+      stakedTerms: {
+        title: 'Staked.us terms.',
+        url: 'https://staked.us/terms/'
       }
     };
   },
