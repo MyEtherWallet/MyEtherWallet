@@ -159,7 +159,7 @@ export default {
           type: this.toType,
           address: this.to,
           amount: formatFloatingPointValue(this.toVal).value,
-          usd: formatFloatingPointValue(this.toUsd).value
+          usd: formatFiatValue(this.toUsd).value
         }
       ];
     }
