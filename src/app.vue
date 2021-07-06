@@ -1,5 +1,20 @@
 <template>
   <v-app class="walletBg">
+    <div
+      class="
+        d-flex
+        align-center
+        justify-center
+        pa-2
+        tableHeader
+        textBlack2--text
+      "
+    >
+      Missing the old version? &nbsp;
+      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
+        You can find version 5 here</a
+      >
+    </div>
     <module-decision-tree />
     <router-view />
     <module-toast />
