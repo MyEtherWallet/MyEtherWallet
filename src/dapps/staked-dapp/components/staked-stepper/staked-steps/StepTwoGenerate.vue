@@ -167,7 +167,7 @@
     ======================================================
     -->
       <staked-create-password-dialog
-        :opened="true"
+        :opened="onCreatePassword"
         @generate="generateKeystore"
         @onDialogStateChange="onDialogStateChange"
       />
