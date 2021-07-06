@@ -74,8 +74,8 @@ export default {
           }
         },
         {
-          label: 'Wallet Link',
-          description: 'Connect wallet with Wallet Link ',
+          label: 'WalletLink',
+          description: 'Connect wallet with WalletLink ',
           icon: require('@/assets/images/icons/icon-wallet-link.png'),
           fn: () => {
             this.openWalletLink();
