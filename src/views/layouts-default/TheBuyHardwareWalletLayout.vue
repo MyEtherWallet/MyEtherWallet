@@ -1,10 +1,7 @@
 <template>
   <div class="expandHeader pb-12">
     <v-container>
-      <the-layout-header
-        title="Get a hardware wallet today!"
-        subtitle-line-one="The Hardware wallet offer the highest security for accessing your crypto."
-      />
+      <the-layout-header title="Get a hardware wallet today!" />
       <v-sheet
         color="transparent"
         :max-width="!$vuetify.breakpoint.smAndDown ? '900px' : '470px'"
@@ -167,8 +164,6 @@ export default {
       textProps: 'white--text',
       toptitle: '',
       title: 'Get a hardware wallet today!',
-      description:
-        'A Hardware wallet offers the highest security for accessing your crypto.',
       centered: true
     }
   })
