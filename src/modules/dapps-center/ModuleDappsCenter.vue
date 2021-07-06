@@ -10,7 +10,7 @@
     no-back-btn
   >
     <template #content>
-      <div class="mew-heading-1 px-4 mb-4">MEW Dapps</div>
+      <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
           <mew-super-button
@@ -53,7 +53,7 @@ export default {
     return {
       bannerImage: bannerImage,
       bannerText: {
-        title: 'Explore MEW Dapps'
+        title: 'Explore MEW DApps'
       },
       noDappsAvailable: {
         title: `No dapps available on this network`,
