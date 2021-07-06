@@ -34,7 +34,6 @@ function parseTokensData(data, to) {
       : value.toString();
     tokenData.tokenSymbol = token ? token.symbol : 'Unidentified Token';
   }
-
   return tokenData;
 }
 

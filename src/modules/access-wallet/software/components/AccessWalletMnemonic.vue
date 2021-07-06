@@ -444,8 +444,6 @@ export default {
   },
   data() {
     return {
-      /* Apollo */
-      getEthBalance: '',
       /* Stepper Items */
       step: 1,
       stepperItems: [
@@ -661,18 +659,6 @@ export default {
   },
   methods: {
     ...mapActions('global', ['addCustomPath']),
-    /**
-     * Method that launches new tab to an explorer with address clicked
-     * Used in STEP 3, Address Row
-     */
-    launchExplorrer(addr) {
-      // eslint-disable-next-line
-      window.open(
-        this.network.type.blockExplorerAddr.replace('[[address]]', addr),
-        '_blank'
-      );
-    },
-
     /**
      * Async method that gets accounts according to the pagination
      * Used in STEP 2 and 3

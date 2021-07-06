@@ -292,7 +292,6 @@ export default {
   data() {
     return {
       iconETHNavy: iconETHNavy,
-      timer: [],
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES
     };

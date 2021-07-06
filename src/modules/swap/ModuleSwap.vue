@@ -255,7 +255,6 @@ import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
@@ -266,7 +265,6 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
@@ -287,10 +285,6 @@ export default {
     fromToken: {
       type: String,
       default: MAIN_TOKEN_ADDRESS
-    },
-    toToken: {
-      type: String,
-      default: ''
     },
     amount: {
       type: String,
@@ -320,7 +314,6 @@ export default {
         selectedProvider: '',
         totalFees: ''
       },
-      wrappedBtc: ['renBTC', 'wBTC', 'PBTC'],
       swapper: null,
       toTokenType: {},
       fromTokenType: {},
@@ -344,10 +337,8 @@ export default {
             'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
         }
       ],
-      swapIcon: SwapIcon,
       isLoadingProviders: false,
       addressValue: {},
-      gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
       localGasType: 'economy'
@@ -438,25 +429,6 @@ export default {
     mainTokenDetails() {
       const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
       return ethToken;
-    },
-    /**
-     * Switches displayed balance
-     * depending on selected currency balance
-     */
-    selectedBalance() {
-      if (
-        _.isEmpty(this.fromTokenType) ||
-        this.fromTokenType.symbol === this.network.type.currencyName
-      ) {
-        return this.balanceInETH;
-      }
-
-      const token = this.tokensList.find(item => {
-        return item.symbol === this.fromTokenType.symbol;
-      });
-      return token
-        ? this.getTokenBalance(token.balance, token.decimals).toFixed()
-        : this.balanceInETH;
     },
     /**
      * checks whether both token fields are empty
@@ -588,19 +560,6 @@ export default {
       return returnableTokens;
     },
     /**
-     * @returns boolean to hide providers
-     * checks whether the provider is the only option,
-     * the provider selected is chaangelly,
-     * and there's an amount error
-     */
-    hideProviders() {
-      const hasError = this.amountErrorMessage !== '';
-      const onlyOption = this.availableQuotes.length === 1;
-      const isChangelly = this.selectedProvider.provider === 'changelly';
-
-      return !(hasError && onlyOption && isChangelly);
-    },
-    /**
      * @returns object of other tokens
      * to swap from
      */
@@ -680,16 +639,6 @@ export default {
         : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
-    /**
-     * Checks whether the swap is to BTC
-     */
-    isToBtc() {
-      return (
-        (this.fromTokenType.symbol === this.network.type.currencyName ||
-          this.fromTokenType?.isEth) &&
-        this.toTokenType.symbol === 'BTC'
-      );
-    },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
@@ -709,37 +658,11 @@ export default {
       return new BigNumber(0);
     },
     /**
-     * @return string for the available balance
-     * Used in hint for the From token amount
-     * Amount is rounded
-     */
-    availableBalanceHint() {
-      if (!this.initialLoad && this.fromTokenType.name) {
-        return `${this.availableBalance.toFixed()} ${
-          this.fromTokenType.symbol
-        }`;
-      }
-      return '';
-    },
-
-    /**
      * Determines whether or not to show swap fee panel
      * Fee is shown if provider was selected and no errors are passed
      */
     showSwapFee() {
       return this.step >= 2 && this.availableBalance.gt(0);
-    },
-
-    /**
-     * Return true Input Amount Error or input is empty
-     * Used to determine whether or not to fetch provider's list and show transaction fee
-     */
-    hasAmountErrors() {
-      return (
-        !this.tokenInValue ||
-        this.amountErrorMessage !== '' ||
-        this.tokenInValue === ''
-      );
     },
     /**
      * Method validates input for the From token amount against user input
@@ -926,9 +849,6 @@ export default {
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
-    },
-    openGasPriceModal() {
-      this.gasPriceModal = true;
     },
     setDefaults() {
       setTimeout(() => {
@@ -1133,19 +1053,6 @@ export default {
         const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
         this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
       }
-    },
-    openSettings() {
-      EventBus.$emit('toggleSettings');
-      this.gasPriceModal = false;
-    },
-    closeGasPrice() {
-      this.gasPriceModal = false;
-    },
-    setWrappedBtc(symbol) {
-      const foundToken = this.toTokens.find(
-        item => item.symbol.toLowerCase() === symbol.toLowerCase()
-      );
-      this.setToToken(foundToken);
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e.gasPrice;
