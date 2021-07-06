@@ -91,8 +91,7 @@
           class="mb-5"
           color-theme="outline"
           title="Software"
-          subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
-          they should only be used in offline settings by experienced users."
+          subtitle="Software methods like keystore file and mnemonic phrase should only be used in offline settings by experienced users."
           title-icon-class="warning--text text--darken-1"
           title-icon="mdi-alert"
           title-icon-type="mdi"
