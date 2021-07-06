@@ -16,7 +16,7 @@
         :title="$t('common.save')"
         btn-size="xlarge"
         :disabled="!isValid"
-        @click.native="setTextRecords(setRecords)"
+        @click.native="callSetRecords"
       />
     </div>
   </div>
@@ -25,6 +25,7 @@
 <script>
 import textValidator from '@/dapps/ens-manager-dapp/handlers/handlerTextRecords';
 import { _ } from 'web3-utils';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 export default {
   props: {
@@ -93,6 +94,26 @@ export default {
             });
       } else {
         this.errors[name] = '';
+      }
+    },
+    callSetRecords() {
+      const newObj = {};
+      Object.keys(this.setRecords)
+        .filter(item => {
+          // Filters out empty values and unchanged values
+          if (
+            this.setRecords[item] !== '' &&
+            this.textRecords[item] !== this.setRecords[item]
+          )
+            return item;
+        })
+        .forEach(item => {
+          newObj[item] = this.setRecords[item];
+        });
+      if (!_.isEmpty(newObj)) {
+        this.setTextRecords(newObj);
+      } else {
+        Toast('No changes found!', {}, WARNING);
       }
     }
   }

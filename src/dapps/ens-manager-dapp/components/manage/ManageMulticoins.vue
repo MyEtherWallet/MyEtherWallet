@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import { _ } from 'web3-utils';
 export default {
   props: {
@@ -101,10 +102,19 @@ export default {
           newItem.value = this.setCoins[item];
           return newItem;
         })
-        .filte(item => {
-          if (item.value && item.value !== '') return item;
+        .filter(item => {
+          if (
+            item.value &&
+            item.value !== '' &&
+            item.value !== this.multicoin[item.symbol].value
+          )
+            return item;
         });
-      this.setMulticoin(copyMulticoin);
+      if (copyMulticoin.length > 0) {
+        this.setMulticoin(copyMulticoin);
+      } else {
+        Toast('No changes were made', {}, WARNING);
+      }
     }
   }
 };
