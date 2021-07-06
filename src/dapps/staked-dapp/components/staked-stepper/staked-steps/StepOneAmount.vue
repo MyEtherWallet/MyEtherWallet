@@ -145,7 +145,6 @@
 import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import { mapState, mapGetters } from 'vuex';
-import eth from '@/assets/images/currencies/eth.png';
 import {
   formatFiatValue,
   formatPercentageValue,
@@ -164,14 +163,17 @@ export default {
       toolTipFee:
         '0.75% staking fee (or 0.3 ETH, whichever is higher) is covering staking until transfers are enabled on Eth2. Once transfers are enabled, you will have a choice to either continue staking your ETH for an additional fee, or withdraw your ETH and earned rewards and stop staking.',
       amount: 0,
-      selectedItem: {},
-      eth: eth
+      selectedItem: {}
     };
   },
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['network']),
+    networkImg() {
+      return this.network.type.icon;
+    },
     buttonText() {
       return !this.hasEnoughBalance ? 'Not enough funds' : 'Next: Eth2 address';
     },
@@ -196,7 +198,7 @@ export default {
           items.push({
             name: i + ' ETH',
             value: i + '', //change to string to make mew select filter work
-            img: this.eth,
+            img: this.networkImg,
             price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
           });
         }

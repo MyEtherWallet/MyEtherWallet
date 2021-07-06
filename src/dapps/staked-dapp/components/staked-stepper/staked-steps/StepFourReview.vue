@@ -201,7 +201,6 @@ import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import {
   formatFiatValue,
@@ -247,7 +246,15 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice']),
+    ...mapGetters('global', ['gasPrice', 'network']),
+
+    /**
+     * Returns current netork eth icon
+     * @return string
+     */
+    networkImg() {
+      return this.network.type.icon;
+    },
     /**
      * @returns array
      * Staking details to display (including amount and eth2 address)
@@ -255,7 +262,7 @@ export default {
     details() {
       return [
         {
-          img: iconETHNavy,
+          img: this.networkImg,
           subtitle: 'Staking',
           title: this.amount + ' ETH',
           desc: this.amountFiat
