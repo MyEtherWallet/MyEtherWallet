@@ -136,7 +136,7 @@ export default {
             to: { name: 'SendTX' }
           },
           {
-            label: 'Explore Dapps',
+            label: 'Explore DApps',
             to: { name: 'Dapps' }
           },
           {

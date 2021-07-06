@@ -227,6 +227,8 @@ import wallets, {
 } from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import Web3 from 'web3';
+import { fromWei } from 'web3-utils';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -472,6 +474,17 @@ export default {
             this.wallets[this.walletType].titles[this.step];
     }
   },
+  watch: {
+    network: {
+      deep: true,
+      handler: function () {
+        this.addressPage -= 1;
+        this.selectedAddress = '';
+        this.currentIdx -= MAX_ADDRESSES;
+        this.setAddresses();
+      }
+    }
+  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -670,6 +683,7 @@ export default {
      */
     async setAddresses() {
       try {
+        const web3 = new Web3(this.network.url);
         this.accounts = [];
         for (
           let i = this.currentIdx;
@@ -677,11 +691,12 @@ export default {
           i++
         ) {
           const account = await this.hwWalletInstance.getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
           this.accounts.push({
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: 'Loading..',
+            balance: fromWei(balance),
             tokens: 'Loading..'
           });
         }

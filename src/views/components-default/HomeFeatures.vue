@@ -56,7 +56,7 @@
               <div class="mt-10 mb-5">
                 <home-features-send v-if="item.name === 'ETH'" />
                 <home-features-swap v-if="item.name === 'Swap'" />
-                <home-features-dapps v-if="item.name === 'Dapps'" />
+                <home-features-dapps v-if="item.name === 'DApps'" />
                 <home-features-tokens v-if="item.name === 'Tokens'" />
               </div>
             </v-tab-item>
@@ -94,7 +94,7 @@ export default {
         img: require('@/assets/images/snippets/mobile/mobile-features-swap.svg')
       },
       {
-        tab: 'Dapps',
+        tab: 'DApps',
         img: require('@/assets/images/snippets/mobile/mobile-features-dapps.svg')
       },
       {

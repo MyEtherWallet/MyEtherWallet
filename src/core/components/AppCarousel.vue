@@ -23,40 +23,39 @@
           </a>
         </template>
         <template #slide2>
-          <div
-            class="ad2 px-5 d-flex flex-column justify-center"
-            @click="$router.push({ name: 'BuyHardwareWallet' })"
-          >
-            <div class="title font-weight-bold mb-n1">Hardware wallets</div>
-            <div class="mb-2">Take a look at our hardware wallets!</div>
-            <div class="d-flex align-center">
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/bitmap.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/bitbox.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/billfodl.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/finney.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/keepkey.png"
-              />
+          <router-link :to="{ name: 'BuyHardwareWallet' }" target="_blank">
+            <div class="ad2 px-5 d-flex flex-column justify-center">
+              <div class="title font-weight-bold mb-n1">Hardware wallets</div>
+              <div class="mb-2">Buy a hardware wallet!</div>
+              <div class="d-flex align-center">
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/bitmap.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/bitbox.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/billfodl.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/finney.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/keepkey.png"
+                />
+              </div>
             </div>
-          </div>
+          </router-link>
         </template>
       </mew-carousel>
     </mew6-white-sheet>

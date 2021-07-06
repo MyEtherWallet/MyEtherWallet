@@ -1,6 +1,6 @@
 import tokens from '@/_generated/tokens/tokens-kov.json';
 import contracts from '@/_generated/contracts/contract-abi-kov.json';
-import kov from '@/assets/images/networks/eth.svg';
+import kov from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'KOV',
