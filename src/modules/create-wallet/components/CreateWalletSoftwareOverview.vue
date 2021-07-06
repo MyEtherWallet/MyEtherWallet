@@ -10,8 +10,7 @@
       color-theme="basic"
       font-class="mew-heading-2"
       title="Keystore File"
-      subtitle="Keystore file contains all the sensitive information of your wallet.
-                  We don't recommand using this method to create your wallet."
+      subtitle="Using a keystore file online makes your wallet more vulnerable to loss of funds. We don’t recommend this method of wallet creation."
       title-icon-type="mdi"
       title-icon-class="primary--text"
       right-icon-type="img"
@@ -27,9 +26,8 @@
       class="mb-5"
       color-theme="basic"
       font-class="mew-heading-2"
-      title="Mnemonic phrase"
-      subtitle="Mnemonic Phrase can be lost or stolen by someone else. We don't
-                  recommand using this method to create your wallet."
+      title="Mnemonic Phrase"
+      subtitle="Using a keystore file online makes your wallet more vulnerable to loss of funds. We don’t recommend this method of wallet creation."
       title-mdi-icon="mdi-shield-check"
       title-icon-type="mdi"
       title-icon-class="primary--text"

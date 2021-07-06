@@ -71,7 +71,7 @@
           class="mb-5"
           color-theme="basic"
           title="Buy a Hardware Wallet"
-          subtitle="A hardware wallet offers the highest security for accessing your crypto"
+          subtitle="For the highest standard of security, buy a hardware wallet and use it with MEW."
           title-icon="mdi-shield-check"
           title-icon-type="mdi"
           title-icon-class="primary--text"

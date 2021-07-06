@@ -160,7 +160,7 @@ export default {
           name: 'Export configurations'
         },
         {
-          name: 'Contact Addresses'
+          name: 'Contact addresses'
         }
       ];
     },
