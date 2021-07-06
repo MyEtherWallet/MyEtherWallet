@@ -1,7 +1,6 @@
 <template>
   <div class="mew-component--why-mew">
     <div class="desktop-content d-none d-lg-block">
-      <div class="py-12" />
       <div class="py-6" />
       <v-container>
         <v-sheet color="transparent" max-width="400px">
