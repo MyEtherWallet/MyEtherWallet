@@ -6,7 +6,15 @@
           <div class="mew-heading-2 mb-3">{{ tokenTitle }}</div>
         </v-col>
         <v-col cols="12">
-          <div class="mew-heading-3">${{ totalTokenValues }}</div>
+          <div v-if="!initialLoad" class="mew-heading-3">
+            ${{ totalTokenValues }}
+          </div>
+          <v-skeleton-loader
+            v-else
+            v-bind="attrs"
+            type="image"
+            height="100px"
+          ></v-skeleton-loader>
         </v-col>
         <v-col v-if="showTokens" cols="12" class="mt-3">
           <v-row justify="start">
@@ -42,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import AppModal from '@/core/components/AppModal';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
@@ -55,6 +63,8 @@ export default {
   data: () => ({ showPopup: false }),
   computed: {
     ...mapGetters('wallet', ['tokensList']),
+    ...mapState('wallet', ['initialLoad']),
+
     ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
@@ -72,7 +82,7 @@ export default {
       return this.tokensList.length - this.tokenImages.length;
     },
     showTokens() {
-      return this.tokensList.length > 0;
+      return this.tokensList.length > 0 && !this.initialLoad;
     },
     getText() {
       if (this.showTokens) {
