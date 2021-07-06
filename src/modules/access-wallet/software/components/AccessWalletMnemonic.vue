@@ -117,14 +117,9 @@
             =====================================================================================
             -->
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-            <div class="headline font-weight-bold">
+            <div class="headline font-weight-bold mb-5">
               Select HD Derivation Path
             </div>
-            <p class="mb-5">
-              Please select HD Derivation Path that you you want to interact
-              with or enter a custom one.
-            </p>
-
             <mew-select
               v-model="selectedPath"
               label="Select Path"
@@ -197,12 +192,9 @@
             =====================================================================================
             -->
             <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-            <div class="headline font-weight-bold">
+            <div class="headline font-weight-bold mb-5">
               Select Address and Network
             </div>
-            <p class="mb-5">
-              Please select address that you want to interact with and network.
-            </p>
           </v-col>
         </v-row>
         <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
