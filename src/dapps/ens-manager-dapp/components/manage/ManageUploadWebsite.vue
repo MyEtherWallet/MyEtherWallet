@@ -126,12 +126,13 @@ export default {
       this.uploadFile(e.target.files[0]);
     },
     setHash(val) {
-      this.error =
-        val === ''
-          ? ''
-          : isIpfs.multihash(val)
+      if (val) {
+        this.error = isIpfs.multihash(val)
           ? ''
           : this.$t('ens.error.empty-invalid-ipfs');
+      } else {
+        this.error = '';
+      }
     }
   }
 };

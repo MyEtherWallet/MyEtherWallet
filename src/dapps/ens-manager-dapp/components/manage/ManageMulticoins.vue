@@ -86,22 +86,24 @@ export default {
     validateCoin(value, id) {
       const coin = this.coins[id];
       if (value && !this.multicoin[coin].validator.validate(value)) {
-        if (value !== '') {
-          this.errors[coin] = this.$t('ens.ens-resolver.invalid-addr', {
-            coin: coin
-          });
-        } else {
-          this.errors[coin] = '';
-        }
+        this.errors[coin] = this.$t('ens.ens-resolver.invalid-addr', {
+          coin: coin
+        });
+      } else {
+        this.errors[coin] = '';
       }
     },
     submit() {
       /** Creates a no reference clone to be submitted to the contract */
-      const copyMulticoin = Object.keys(this.multicoin).map(item => {
-        const newItem = Object.assign({}, _.clone(this.multicoin[item]));
-        newItem.value = this.setCoins[item];
-        return newItem;
-      });
+      const copyMulticoin = Object.keys(this.multicoin)
+        .map(item => {
+          const newItem = Object.assign({}, _.clone(this.multicoin[item]));
+          newItem.value = this.setCoins[item];
+          return newItem;
+        })
+        .filte(item => {
+          if (item.value && item.value !== '') return item;
+        });
       this.setMulticoin(copyMulticoin);
     }
   }

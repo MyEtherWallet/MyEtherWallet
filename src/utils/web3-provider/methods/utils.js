@@ -48,13 +48,15 @@ const setEvents = (promiObj, tx, dispatch) => {
     .once('receipt', () => {
       newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
       const notification = new Notification(newTxObj);
-      dispatch(
-        'external/setTokenBalance',
-        {},
-        {
-          root: true
-        }
-      );
+      setTimeout(() => {
+        dispatch(
+          'external/setTokenAndEthBalance',
+          {},
+          {
+            root: true
+          }
+        );
+      }, 3000); //give network some time to update
       if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
           root: true
@@ -65,13 +67,15 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);
-      dispatch(
-        'external/setTokenBalance',
-        {},
-        {
-          root: true
-        }
-      );
+      setTimeout(() => {
+        dispatch(
+          'external/setTokenAndEthBalance',
+          {},
+          {
+            root: true
+          }
+        );
+      }, 3000); //give network some time to update
       if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
           root: true

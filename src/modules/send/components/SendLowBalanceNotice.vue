@@ -1,43 +1,13 @@
 <template>
   <div>
     <app-modal
+      :show="openQR"
+      :close="closeQR"
       :has-buttons="false"
-      :close="close"
-      :show="show"
-      title="My public address to receive funds"
+      width="400px"
     >
       <template #dialogBody>
-        <v-row class="px-12">
-          <v-col cols="12">
-            <v-row dense class="info-container border-radius--5px pa-2 pa-sm-3">
-              <v-col cols="5">
-                <qr-code :data="address" :height="150" :width="150" />
-              </v-col>
-              <v-col cols="7">
-                <div class="d-flex">
-                  <mew-blockie :address="address" width="30px" height="30px" />
-                  <p class="ma-0 ml-2 mew-heading-3">My main account</p>
-                </div>
-                <p class="ma-0 address-overflow mew-heading-4">
-                  {{ address }}
-                </p>
-                <div
-                  class="mew-heading-4 primary--text cursor--pointer"
-                  @click="copyAddress"
-                >
-                  Copy
-                </div>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="12">
-            <p class="mew-body modal-caption">
-              To receive {{ currencyName }} from another account, send
-              {{ currencyName }}
-              from that account to this address.
-            </p>
-          </v-col>
-        </v-row>
+        <app-addr-qr />
       </template>
     </app-modal>
     <v-row class="pa-2 selectHeaderBg border-radius--5px">
@@ -68,6 +38,7 @@
             </div>
             <br />
             <a
+              v-if="isEthNetwork"
               class="mew-body font-weight-medium"
               href="https://ccswap.myetherwallet.com/#/"
               target="_blank"
@@ -85,10 +56,14 @@
 <script>
 import clipboardCopy from 'clipboard-copy';
 import AppModal from '@/core/components/AppModal';
+import AppAddrQr from '@/core/components/AppAddrQr';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { mapGetters } from 'vuex';
+
 export default {
   components: {
-    AppModal
+    AppModal,
+    AppAddrQr
   },
   props: {
     address: {
@@ -102,8 +77,11 @@ export default {
   },
   data() {
     return {
-      show: false
+      openQR: false
     };
+  },
+  computed: {
+    ...mapGetters('global', ['isEthNetwork'])
   },
   methods: {
     copyAddress() {
@@ -111,10 +89,10 @@ export default {
       Toast(`Copied ${this.address} successfully!`, {}, INFO);
     },
     openBarcodeModal() {
-      this.show = true;
+      this.openQR = true;
     },
-    close() {
-      this.show = false;
+    closeQR() {
+      this.openQR = false;
     }
   }
 };

@@ -7,7 +7,7 @@
         class="d-flex flex-grow-1 pt-6"
         title="Swap"
       >
-        <template #moduleBody>
+        <template v-if="isAvailable" #moduleBody>
           <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
@@ -24,7 +24,7 @@
                   :value="fromTokenType"
                   label="From"
                   :items="actualFromTokens"
-                  :is-swap="true"
+                  :is-custom="true"
                   :loading="isLoading"
                   @input="setFromToken"
                 />
@@ -37,8 +37,9 @@
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
                 :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                  amountErrorMessage === errorMsgs.amountEthIsTooLow
+                  isEthNetwork &&
+                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
                     ? 'Buy more.'
                     : null
                 "
@@ -67,7 +68,7 @@
                 ref="toToken"
                 :value="toTokenType"
                 :items="actualToTokens"
-                :is-swap="true"
+                :is-custom="true"
                 :loading="isLoading"
                 label="To"
                 @input="setToToken"
@@ -89,9 +90,9 @@
           <app-user-msg-block
             v-if="!hasMinEth"
             class="mt-sm-5"
-            :message="msg.storeBitcoin"
+            :message="msg.lowBalance"
           >
-            <div class="mt-3 mx-n1">
+            <div v-if="isEthNetwork" class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
@@ -128,7 +129,7 @@
               isEthNetwork
             "
             class="mt-sm-5"
-            :message="msg.lowBalance"
+            :message="msg.storeBitcoin"
           >
             <div class="border-top mt-3">
               <v-expansion-panels
@@ -220,7 +221,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
-            is-swap
+            is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />
@@ -232,6 +233,16 @@
               btn-size="xlarge"
               @click.native="showConfirm"
             />
+          </div>
+        </template>
+        <!--
+          =====================================================================================
+           Message is SWAP NOT Available
+          =====================================================================================
+        -->
+        <template v-else #moduleBody>
+          <div class="swap-not-available">
+            <app-user-msg-block :message="swapNotAvailableMes" />
           </div>
         </template>
       </mew-module>
@@ -262,14 +273,6 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
 const MIN_GAS_WEI = '800000000000000';
 
-const errorMsgs = {
-  amountEthIsTooLow: 'You do not have enough ETH to swap',
-  amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
-  amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
-  amountLessThan0: 'Swap amount must be greater than 0',
-  doNotOwnToken: 'You do not own this token'
-};
-
 export default {
   name: 'ModuleSwap',
   components: {
@@ -292,21 +295,18 @@ export default {
     amount: {
       type: String,
       default: '0'
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      msg: {
-        storeBitcoin: {
-          title: 'Your Ether balance is too low',
-          subtitle:
-            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
-        },
-        lowBalance: {
-          title: 'Did you know? You can store your Bitcoin on Ethereum',
-          subtitle:
-            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
-        }
+      swapNotAvailableMes: {
+        title: `Swap is not available on this network`,
+        subtitle:
+          'Please select ETH, BSC or MATIC networks to use this feature.'
       },
       step: 0,
       confirmInfo: {
@@ -350,8 +350,7 @@ export default {
       gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy',
-      errorMsgs: errorMsgs
+      localGasType: 'economy'
     };
   },
   computed: {
@@ -370,6 +369,33 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     *Returns errors messages based on netowrk
+     */
+    errorMsgs() {
+      return {
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
+        amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
+        amountLessThan0: 'Swap amount must be greater than 0',
+        doNotOwnToken: 'You do not own this token'
+      };
+    },
+    /**
+     * Property returns correct mes
+     */
+    msg() {
+      return {
+        lowBalance: {
+          title: `Your ${this.network.type.name} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+        },
+        storeBitcoin: {
+          title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
+          subtitle: `To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your ${this.network.type.name_long} wallet.`
+        }
+      };
+    },
     disableNext() {
       return (
         this.step < 2 ||
@@ -791,15 +817,17 @@ export default {
       immediate: true
     },
     network() {
-      this.isLoading = true;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+      if (this.isAvailable) {
+        this.isLoading = true;
+        this.swapper = new Swapper(this.web3, this.network.type.name);
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      }
     },
     mainTokenDetails() {
       this.setDefaults();
@@ -986,7 +1014,7 @@ export default {
       });
     },
     getTrade: _.debounce(function (idx) {
-      if (!this.isToAddressValid) return;
+      if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
@@ -1102,8 +1130,8 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        this.feeError =
-          'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
+        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
+        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
       }
     },
     openSettings() {
@@ -1183,5 +1211,11 @@ export default {
 
 .border-top {
   border-top: 1px solid var(--v-inputBorder-base);
+}
+
+.swap-not-available {
+  @media (min-width: 960px) {
+    min-height: 45vh;
+  }
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="network.type.name === 'ETH'"
-    class="mew6-component--module-balance"
-  >
+  <div class="mew6-component--module-balance">
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
@@ -17,7 +14,7 @@
       type="card"
     ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth && !loading"
+      v-if="hasBalance && !loading"
       class="pa-7"
       :subtitle="subtitle"
       :title="title"
@@ -28,7 +25,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template #rightHeaderContainer>
+      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
         <div class="d-flex align-center">
           <mew-toggle
             :button-group="chartButtons"
@@ -47,7 +44,11 @@
       </template>
       <template #moduleBody>
         <div class="pa-7">
-          <balance-chart :data="chartData" class="full-width mt-5" />
+          <balance-chart
+            v-if="network.type.name === 'ETH'"
+            :data="chartData"
+            class="full-width mt-5"
+          />
           <v-row class="align-center">
             <v-col class="d-flex align-center justify-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
@@ -88,7 +89,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-if="showBuyEth && !loading"
+      v-if="!hasBalance && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -104,6 +105,7 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
 export default {
   components: {
     BalanceChart,
@@ -169,7 +171,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        this.networkTokenUSDMarket.price_change_percentage_24hf;
+        return this.networkTokenUSDMarket.price_change_percentage_24h;
       }
       return '';
     },
@@ -190,11 +192,18 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.networkTokenUSDMarket &&
-        this.networkTokenUSDMarket.price_change_percentage_24h &&
-        this.balanceFiatValue &&
-        this.fiatValue
+        !!this.networkTokenUSDMarket &&
+        !!this.networkTokenUSDMarket.price_change_percentage_24h &&
+        !!this.balanceFiatValue &&
+        !!this.fiatValue
       );
+    },
+    /**
+     * Determines whether or not to show empty block
+     * @return {boolean}
+     */
+    hasBalance() {
+      return BigNumber(this.balanceInWei).gt(0);
     }
   },
   watch: {

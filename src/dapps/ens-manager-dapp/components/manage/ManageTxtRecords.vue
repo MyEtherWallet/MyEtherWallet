@@ -85,19 +85,14 @@ export default {
   methods: {
     validateRecord(value, id) {
       const name = this.keys[id];
-      try {
-        if (textValidator[id].validate(value)) {
-          this.errors[name] = '';
-        } else {
-          this.errors[name] =
-            value !== ''
-              ? this.$t('ens.text-record-error', {
-                  name: name
-                })
-              : '';
-        }
-      } catch (e) {
-        this.errors[name] = e;
+      if (value) {
+        this.errors[name] = textValidator[id].validate(value)
+          ? ''
+          : this.$t('ens.text-record-error', {
+              name: name
+            });
+      } else {
+        this.errors[name] = '';
       }
     }
   }

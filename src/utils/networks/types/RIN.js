@@ -1,4 +1,4 @@
-import rin from '@/assets/images/networks/eth.svg';
+import rin from '@/assets/images/networks/network.svg';
 import { RIN } from '../tlds';
 
 export default {
