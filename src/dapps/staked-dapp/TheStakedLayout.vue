@@ -106,6 +106,7 @@
         class="mx-auto"
       >
         <staked-stepper
+          ref="stakedStepper"
           :current-apr="handlerStaked.apr"
           :start-provision="startProvision"
           :polling-status="pollingStatus"
@@ -242,6 +243,9 @@ export default {
     pendingTxHash(newVal) {
       if (newVal !== '') {
         this.activeTab = 1;
+      }
+      if (this.$refs.stakedStepper) {
+        this.$refs.stakedStepper.reset();
       }
     }
   },
