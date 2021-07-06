@@ -210,7 +210,7 @@ const routeNames = {
   sendtx: 'SendTX',
   nftmanager: 'NFTManager',
   swap: 'Swap',
-  dapps: 'DApps',
+  dapps: 'Dapps',
   deploycontract: 'DeployContract',
   interactcontract: 'InteractWithContract',
   signmsg: 'SignMessage',

@@ -144,7 +144,7 @@
               High Fees pop up button
             =====================================================
             -->
-            <v-col cols="12" class="pt-0">
+            <v-col v-if="isEthNetwork" cols="12" class="pt-0">
               <div class="d-flex align-center justify-start pt-1">
                 <div
                   class="
@@ -251,7 +251,8 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEthNetwork']),
+
     icon() {
       return GAS_TYPE_ICONS[this.gasPriceType];
     },

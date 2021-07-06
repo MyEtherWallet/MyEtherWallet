@@ -247,7 +247,7 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     isDisabledNextBtn() {
       return (
@@ -258,7 +258,8 @@ export default {
       );
     },
     buyMore() {
-      return MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
+      return this.isEthNetwork &&
+        MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
         this.amountError === 'Not enough balance to send!'
         ? 'Buy more.'
         : '';
@@ -323,8 +324,8 @@ export default {
             hasNoEth: true,
             disabled: true,
             text: 'Your wallet is empty.',
-            linkText: 'Buy ETH',
-            link: 'https://ccswap.myetherwallet.com/#/'
+            linkText: this.isEthNetwork ? 'Buy ETH' : '',
+            link: this.isEthNetwork ? 'https://ccswap.myetherwallet.com/#/' : ''
           })
         : null;
       return [
