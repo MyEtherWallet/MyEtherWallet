@@ -77,22 +77,34 @@
     Terms & Conditions
     ===================================================
     -->
-      <div class="mt-12 pa-5 tableHeader">
+      <div class="mt-11 mt-sm-10 pa-5 tableHeader">
         <mew-checkbox
           v-model="firstCondition"
+          dense
+          class="mb-4"
           color-text="textBlack2--text"
           label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
-        ></mew-checkbox>
+        />
         <mew-checkbox
           v-model="secondCondition"
+          dense
           color-text="textBlack2--text"
           label="I understand that staking involves slashing risks and my funds can be lost."
-        ></mew-checkbox>
+        />
         <mew-checkbox
           v-model="thirdCondition"
+          dense
           color-text="textBlack2--text"
-          label="I have read and agreed to Staked.us terms of service. This Staking feature is provided by Staked.us, and MEW is not liable for it's services."
-        ></mew-checkbox>
+        >
+          <template #contentSlot>
+            <span
+              >I have read and agreed to
+              <a href="https://staked.us/terms/" target="_blank">Staked.us</a>
+              terms of service. This Staking feature is provided by Staked.us,
+              and MEW is not liable for it's services.</span
+            >
+          </template>
+        </mew-checkbox>
       </div>
 
       <border-block class="mt-10 text-center rounded-lg pa-6">
