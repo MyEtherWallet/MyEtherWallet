@@ -70,7 +70,7 @@
         -->
         <mew-warning-sheet
           title="Not Recommended"
-          description="This information is sensetive, and these options should only be used in offline settings by experienced crypto users."
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
           :link-obj="warningSheetObj"
           class="mt-6"
         />
@@ -121,7 +121,6 @@ export default {
         /* Keystore Button */
         {
           label: 'Keystore',
-          description: 'Access via Keystore',
           icon: 'keystore',
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
@@ -130,7 +129,6 @@ export default {
         /* Mnemonic */
         {
           label: 'Mnemonic Phrase',
-          description: 'Access via Mnemonic Phrase',
           icon: 'mnemonic',
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
@@ -139,7 +137,6 @@ export default {
         /* Private Key */
         {
           label: 'Private Key',
-          description: 'Access via Private Key',
           icon: 'privateKey',
           fn: () => {
             if (process.env.VUE_APP_PRIV_KEY) {
