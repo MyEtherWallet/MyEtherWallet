@@ -156,6 +156,7 @@
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
                         href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                        target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
                       </a>

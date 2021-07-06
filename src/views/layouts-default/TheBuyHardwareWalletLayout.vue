@@ -1,10 +1,7 @@
 <template>
   <div class="expandHeader pb-12">
     <v-container>
-      <the-layout-header
-        title="Get a hardware wallet today!"
-        subtitle-line-one="The Hardware wallet offer the highest security for accessing your crypto."
-      />
+      <the-layout-header title="Get a hardware wallet today!" />
       <v-sheet
         color="transparent"
         :max-width="!$vuetify.breakpoint.smAndDown ? '900px' : '470px'"
@@ -50,7 +47,7 @@
                       mew-caption
                       text-uppercase
                       font-weight-bold
-                      primary--text
+                      textPrimary--text
                       text--lighten-1
                     "
                   >
@@ -65,20 +62,17 @@
                       {{ b.price }}
                     </div>
                   </div>
-                  <div>
-                    {{ b.note }}
-                  </div>
                   <div class="mt-3 primary--text font-weight-medium">
                     Learn more >
                   </div>
                 </div>
 
-                <div v-if="!$vuetify.breakpoint.xs" class="pl-4">
+                <div class="pl-4">
                   <v-img
                     :src="b.walletImg"
                     alt="Hardware Wallet"
                     max-width="90px"
-                    max-height="110px"
+                    max-height="100px"
                     contain
                   />
                 </div>

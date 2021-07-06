@@ -19,12 +19,9 @@
           <div class="subtitle-1 font-weight-bold grey--text">
             STEP {{ step + 1 }}.
           </div>
-          <div class="headline font-weight-bold">
+          <div class="headline font-weight-bold mb-5">
             {{ $t('accessWallet.network-addr.select-title') }}
           </div>
-          <p class="mb-5">
-            {{ $t('accessWallet.network-addr.select') }}
-          </p>
         </v-col>
       </v-row>
       <v-row align="center" justify="center">
