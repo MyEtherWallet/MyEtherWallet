@@ -47,6 +47,7 @@
           btn-size="xlarge"
           :disabled="
             !password ||
+            confirmPassword === '' ||
             confirmPasswordErrMessages !== '' ||
             passwordErrMessages !== '' ||
             !userTermsAgreed
