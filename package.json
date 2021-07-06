@@ -60,7 +60,6 @@
     "bitbox02-api": "0.8.1",
     "clipboard-copy": "4.0.1",
     "graphql": "15.5.1",
-    "graphql-anywhere": "4.2.7",
     "graphql-tag": "2.12.5",
     "highcharts": "9.1.2",
     "highcharts-vue": "1.4.0",
