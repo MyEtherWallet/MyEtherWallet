@@ -37,8 +37,9 @@
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
                 :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                  amountErrorMessage === errorMsgs.amountEthIsTooLow
+                  isEthNetwork &&
+                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
                     ? 'Buy more.'
                     : null
                 "
@@ -91,7 +92,7 @@
             class="mt-sm-5"
             :message="msg.lowBalance"
           >
-            <div class="mt-3 mx-n1">
+            <div v-if="isEthNetwork" class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
@@ -273,14 +274,6 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
 const MIN_GAS_WEI = '800000000000000';
 
-const errorMsgs = {
-  amountEthIsTooLow: 'You do not have enough ETH to swap',
-  amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
-  amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
-  amountLessThan0: 'Swap amount must be greater than 0',
-  doNotOwnToken: 'You do not own this token'
-};
-
 export default {
   name: 'ModuleSwap',
   components: {
@@ -358,8 +351,7 @@ export default {
       gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy',
-      errorMsgs: errorMsgs
+      localGasType: 'economy'
     };
   },
   computed: {
@@ -378,6 +370,18 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     *Returns errors messages based on netowrk
+     */
+    errorMsgs() {
+      return {
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
+        amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
+        amountLessThan0: 'Swap amount must be greater than 0',
+        doNotOwnToken: 'You do not own this token'
+      };
+    },
     /**
      * Property returns correct mes
      */
@@ -1127,8 +1131,8 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        this.feeError =
-          'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
+        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
+        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
       }
     },
     openSettings() {

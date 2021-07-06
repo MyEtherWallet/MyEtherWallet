@@ -1,6 +1,6 @@
 import tokens from '@/_generated/tokens/tokens-rop.json';
 import contracts from '@/_generated/contracts/contract-abi-rop.json';
-import rop from '@/assets/images/networks/eth.svg';
+import rop from '@/assets/images/networks/network.svg';
 import { ROP } from '../tlds';
 
 export default {

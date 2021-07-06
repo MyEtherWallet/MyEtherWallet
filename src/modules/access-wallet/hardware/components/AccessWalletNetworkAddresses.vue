@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     :outlined="true"
-    color="transparent"
+    color="white"
     :rounded="true"
     :max-width="740"
     :min-width="475"
@@ -30,34 +30,12 @@
             :interactive-content="true"
             :panel-items="panelItems"
           >
-            <template #panelBody1>
-              <div class="network-container">
-                <v-radio-group v-model="selectedNetwork">
-                  <div v-for="type in networkTypes" :key="type">
-                    <p class="text-capitalize mew-header-block">
-                      {{ type }}
-                    </p>
-                    <v-container>
-                      <v-row align="center" justify="space-between">
-                        <v-col
-                          v-for="(item, idx) in Networks[type]"
-                          :key="item.service + idx"
-                          cols="6"
-                        >
-                          <v-radio :label="item.service" :value="item.url" />
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </div>
-                </v-radio-group>
-              </div>
-            </template>
             <!--
             =====================================================================================
-              Panel: Select Address
+             Panel: Select Address
             =====================================================================================
             -->
-            <template #panelBody2>
+            <template #panelBody1>
               <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
                 <v-radio-group v-model="selectedAddress">
                   <!--
@@ -167,7 +145,24 @@
                 </v-row>
               </div>
             </template>
+            <!--
+            =====================================================================================
+              Panel: Networks
+            =====================================================================================
+            -->
+            <template #panelBody2>
+              <network-switch
+                :is-wallet="false"
+                :filter-types="filterNetworks"
+                @newNetwork="setNetworkPanel"
+              />
+            </template>
           </mew-expand-panel>
+          <!--
+          =====================================================================================
+            Access Buttons
+          =====================================================================================
+          -->
           <div class="d-flex align-center flex-column">
             <mew-button
               :title="$t('accessWallet.access-my-wallet')"
@@ -193,9 +188,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 
 export default {
+  components: { NetworkSwitch },
   filters: {
     concatAddress(val) {
       // should probably be moved globablly
@@ -237,37 +234,15 @@ export default {
     return {
       acceptTerms: false,
       selectedAddress: '',
-      selectedNetwork: '',
       panelNetworkSubstring: '',
       link: {
         title: 'Terms',
         url: 'https://www.myetherwallet.com/terms-of-service'
       }
-      // panelItems: [
-      //   {
-      //     name: 'Network'
-      //   },
-      //   {
-      //     name: 'Address to interact with'
-      //   }
-      // ]
     };
   },
   computed: {
-    ...mapGetters('global', ['Networks', 'network']),
-    /**
-     * On Network Address step
-     */
-    networkTypes() {
-      const showFirst = ['ETH', 'ROP', 'RIN'];
-      const typeArr = Object.keys(this.Networks).filter(item => {
-        if (!showFirst.includes(item)) {
-          return item;
-        }
-      });
-      typeArr.unshift('ETH', 'ROP', 'RIN');
-      return typeArr;
-    },
+    ...mapGetters('global', ['network']),
     /**
      * Returns the selected address account
      */
@@ -297,18 +272,25 @@ export default {
     panelItems() {
       return [
         {
-          name: 'Network',
-          subtext: this.panelNetworkSubstring,
-          colorTheme: 'superPrimary',
-          hasActiveBorder: true
-        },
-        {
           name: 'Address',
           subtext: this.panelAddressSubstring,
           colorTheme: 'superPrimary',
           hasActiveBorder: true
+        },
+        {
+          name: 'Network',
+          subtext: this.panelNetworkSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
         }
       ];
+    },
+    /**
+     * Filter Nerworks based on the walletType
+     * @return {string[]}
+     */
+    filterNetworks() {
+      return [];
     }
   },
   watch: {
@@ -319,29 +301,12 @@ export default {
           this.selectedAddress = this.accounts[0].address;
         }
       }
-    },
-    /**
-     * Identifies the full network object for the selected network
-     * and sets it as the active network if it exists.
-     **/
-    selectedNetwork(newVal) {
-      Object.values(this.Networks).forEach(itm => {
-        const found = itm.find(network => {
-          return network.url === newVal;
-        });
-        if (found) {
-          this.panelNetworkSubstring = `${found.type.name} - ${found.service}`;
-          this.setNetwork(found);
-        }
-      });
     }
   },
   mounted() {
-    this.selectedNetwork = this.network.url;
-    this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
+    this.setNetworkPanel();
   },
   methods: {
-    ...mapActions('global', ['setNetwork']),
     /**
      * Method that launches new tab to an explorer with address clicked
      * Used in Address to interact with, Address Row
@@ -352,6 +317,14 @@ export default {
         this.network.type.blockExplorerAddr.replace('[[address]]', addr),
         '_blank'
       );
+    },
+    /**
+     * Methods sets panelNetworkSubstring  based on the
+     * Used Network Panel and on mounted
+     * @return {void}
+     */
+    setNetworkPanel() {
+      this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.type.name_long}`;
     }
   }
 };
