@@ -1088,7 +1088,6 @@ export default {
     },
 
     executeTrade() {
-      console.log(this.confirmInfo);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {

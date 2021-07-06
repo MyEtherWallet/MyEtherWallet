@@ -478,13 +478,6 @@ export default {
     }
   },
   watch: {
-    swapInfo: {
-      handler: function (newval) {
-        console.log(newval);
-      },
-      deep: true,
-      immediate: true
-    },
     error(newVal) {
       /**
        * Reset signed values if any of the tx in batch is declined
@@ -556,7 +549,6 @@ export default {
     EventBus.$on(
       EventNames.SHOW_BATCH_TX_MODAL,
       async (arr, resolver, isHardware) => {
-        console.log('supposed to be here', arr);
         _self.isHardwareWallet = isHardware;
         if (arr[0].hasOwnProperty('confirmInfo')) {
           _self.swapInfo = arr[0].confirmInfo;
@@ -822,11 +814,7 @@ export default {
           this.signedTxArray = signed;
           if (this.isWeb3Wallet) this.resolver(batchTxEvents);
         } catch (err) {
-          if (this.isMewConnect) {
-            this.error = 'User declined action';
-          } else {
-            this.error = err.message ? err.message : err;
-          }
+          this.error = err.message ? err.message : err;
           this.signedTxArray = [];
           return;
         }
