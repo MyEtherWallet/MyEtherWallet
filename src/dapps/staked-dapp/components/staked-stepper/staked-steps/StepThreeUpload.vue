@@ -94,7 +94,7 @@
             {{ uploadedText.title }}
           </span>
           <div
-            style="max-width: 300px"
+            style="max-width: 420px"
             :class="[
               'mt-2 mew-body',
               hasError ? 'error--text' : 'warning--text text--darken-2'

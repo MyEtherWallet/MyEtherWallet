@@ -2,7 +2,7 @@
   <v-dialog
     :max-width="width"
     :value="show"
-    :fullscreen="scrollable ? $vuetify.breakpoint.sm : false"
+    :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
     @click:outside="handleClickOutside"

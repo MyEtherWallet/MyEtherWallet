@@ -9,7 +9,7 @@
 
     <div class="mx-auto pb-3" style="max-width: 550px">
       <div class="mew-heading-2 py-8 text-center">Review and stake</div>
-      <v-row>
+      <v-row dense>
         <!--
     ===================================================
     Stake details
@@ -54,7 +54,7 @@
     Fees
     ===================================================
     -->
-      <div class="mt-7">
+      <div class="mt-5">
         <div
           v-for="(fee, idx) in fees"
           :key="fee + idx"
@@ -107,7 +107,7 @@
         </mew-checkbox>
       </div>
 
-      <border-block class="mt-10 text-center rounded-lg pa-6">
+      <border-block class="mt-6 mx-md-2 text-center rounded-lg pa-6">
         <!--
       ===================================================
       Prepare to stake (Step 1)
@@ -213,7 +213,6 @@ import BorderBlock from '@/components/BorderBlock';
 import BigNumber from 'bignumber.js';
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapState, mapGetters } from 'vuex';
-import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
 import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
 import {
   formatFiatValue,
@@ -259,7 +258,15 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice']),
+    ...mapGetters('global', ['gasPrice', 'network']),
+
+    /**
+     * Returns current netork eth icon
+     * @return string
+     */
+    networkImg() {
+      return this.network.type.icon;
+    },
     /**
      * @returns array
      * Staking details to display (including amount and eth2 address)
@@ -267,7 +274,7 @@ export default {
     details() {
       return [
         {
-          img: iconETHNavy,
+          img: this.networkImg,
           subtitle: 'Staking',
           title: this.amount + ' ETH',
           desc: this.amountFiat
