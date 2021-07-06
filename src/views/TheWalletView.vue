@@ -47,11 +47,7 @@ export default {
   },
   watch: {
     network() {
-      try {
-        this.web3.eth.clearSubscriptions();
-      } catch (e) {
-        console.log(e);
-      }
+      this.web3.eth.clearSubscriptions();
     },
     web3() {
       this.subscribeToBlockNumber();
@@ -72,11 +68,7 @@ export default {
     }
   },
   destroyed() {
-    try {
-      this.web3.eth.clearSubscriptions();
-    } catch (e) {
-      console.log(e);
-    }
+    this.web3.eth.clearSubscriptions();
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens']),
@@ -104,9 +96,7 @@ export default {
       });
     },
     subscribeToBlockNumber() {
-      console.log('here');
       this.web3.eth.getBlockNumber().then(res => {
-        console.log(res, 'blocknumber');
         this.setBlockNumber(res);
       });
       this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
