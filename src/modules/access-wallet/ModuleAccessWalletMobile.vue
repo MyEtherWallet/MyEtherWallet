@@ -66,8 +66,7 @@ export default {
     return {
       buttons: [
         {
-          label: 'WalletConnet',
-          description: 'Connect wallet with Walletconnet',
+          label: 'WalletConnect',
           icon: require('@/assets/images/icons/icon-wallet-connect.svg'),
           fn: () => {
             this.openWalletConnect();
@@ -75,7 +74,6 @@ export default {
         },
         {
           label: 'WalletLink',
-          description: 'Connect wallet with WalletLink ',
           icon: require('@/assets/images/icons/icon-wallet-link.png'),
           fn: () => {
             this.openWalletLink();
