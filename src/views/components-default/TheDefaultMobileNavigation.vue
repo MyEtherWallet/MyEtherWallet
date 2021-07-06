@@ -118,12 +118,6 @@ import AppBtnMenu from '@/core/components/AppBtnMenu';
 export default {
   name: 'MobileMenu',
   components: { AppBtnMenu },
-  props: {
-    value: {
-      default: false,
-      type: Boolean
-    }
-  },
   data: () => ({
     isOpen: false,
     menu: [

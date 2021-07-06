@@ -224,10 +224,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    addressPage: {
-      type: Number,
-      default: 0
-    },
     setHardwareWallet: {
       type: Function,
       default: () => {}

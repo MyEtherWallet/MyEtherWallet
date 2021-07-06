@@ -114,13 +114,13 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from './handlers/handlerNotification';
-import handlerNotification from './handlers/handlerNotification.mixin';
-import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import {
+import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from './handlers/handlerNotification';
+import handlerNotification from './handlers/handlerNotification.mixin';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 

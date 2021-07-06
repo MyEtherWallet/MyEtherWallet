@@ -254,20 +254,6 @@ export default {
     validateMnemonicValues: {},
     extraWord: '',
     extraWordVerification: '',
-    link: {
-      title: 'Learn more',
-      url: 'https://www.myetherwallet.com/terms-of-service'
-    },
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: 'Mnemonic phrase',
-      titleMaxWidth: '',
-      description:
-        'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
-      descriptionMaxWidth: '400px',
-      centered: true
-    },
     steppers: [
       {
         step: 1,
@@ -380,9 +366,6 @@ export default {
         this.setPhrase();
       }
       this.step = newStep;
-    },
-    randomNumberGenerator() {
-      return Math.floor(Math.random() * 24) + 1;
     }
   }
 };

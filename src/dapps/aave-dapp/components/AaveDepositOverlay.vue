@@ -63,11 +63,7 @@
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
-import {
-  AAVE_TABLE_HEADER,
-  ACTION_TYPES,
-  convertToFixed
-} from '../handlers/helpers';
+import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { _ } from 'web3-utils';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import BigNumber from 'bignumber.js';
@@ -80,8 +76,7 @@ export default {
       step: 0,
       selectedToken: {},
       amount: '0',
-      depositHeader: AAVE_TABLE_HEADER.DEPOSIT,
-      deposit: ACTION_TYPES.deposit
+      depositHeader: AAVE_TABLE_HEADER.DEPOSIT
     };
   },
   computed: {

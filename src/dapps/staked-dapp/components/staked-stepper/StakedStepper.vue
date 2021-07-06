@@ -80,10 +80,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    sendTransaction: {
-      type: Function,
-      default: () => {}
-    },
     pollingStatus: {
       type: Object,
       default: () => {}

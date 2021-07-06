@@ -41,10 +41,6 @@
 <script>
 export default {
   props: {
-    step: {
-      type: Number,
-      default: 0
-    },
     paths: {
       type: Array,
       default: () => []
@@ -60,10 +56,6 @@ export default {
     onLedger: {
       type: Boolean,
       default: false
-    },
-    icon: {
-      type: String,
-      default: ''
     }
   },
   data() {
