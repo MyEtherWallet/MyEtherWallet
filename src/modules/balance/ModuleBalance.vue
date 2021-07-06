@@ -169,7 +169,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        this.networkTokenUSDMarket.price_change_percentage_24hf;
+        return this.networkTokenUSDMarket.price_change_percentage_24h;
       }
       return '';
     },
@@ -190,10 +190,10 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.networkTokenUSDMarket &&
-        this.networkTokenUSDMarket.price_change_percentage_24h &&
-        this.balanceFiatValue &&
-        this.fiatValue
+        !!this.networkTokenUSDMarket &&
+        !!this.networkTokenUSDMarket.price_change_percentage_24h &&
+        !!this.balanceFiatValue &&
+        !!this.fiatValue
       );
     }
   },
