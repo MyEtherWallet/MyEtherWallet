@@ -67,7 +67,7 @@
                   </div>
                 </div>
 
-                <div v-if="!$vuetify.breakpoint.xs" class="pl-4">
+                <div class="pl-4">
                   <v-img
                     :src="b.walletImg"
                     alt="Hardware Wallet"
