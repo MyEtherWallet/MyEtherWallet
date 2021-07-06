@@ -60,7 +60,7 @@
               "
             >
               Staking Fee
-              <mew-tooltip class="ml-1" :text="toolTipFee" />
+              <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
             <v-col cols="6" md="6" class="py-1 text-right">
               0.75% <span class="textSecondary--text">0.3 ETH min</span>
