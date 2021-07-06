@@ -95,7 +95,7 @@
         ></mew-checkbox>
       </div>
 
-      <border-block class="mt-10 text-center rounded-lg pa-6">
+      <border-block class="mt-6 mx-md-2 text-center rounded-lg pa-6">
         <!--
       ===================================================
       Prepare to stake (Step 1)
