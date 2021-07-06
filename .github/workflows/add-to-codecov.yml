@@ -1,4 +1,4 @@
-name: add to codecov
+name: add to codecov [v6]
 
 on:
   push:

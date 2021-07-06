@@ -1,9 +1,9 @@
-name: create github release
+name: create github release [v6]
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v6.*'
 
 jobs:
   release:
@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: verify tag
         run: |
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
           git checkout $GITHUB_SHA
 
       - name: setup env

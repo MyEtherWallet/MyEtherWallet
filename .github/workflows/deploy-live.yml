@@ -1,23 +1,23 @@
-name: deploy live
+name: deploy live [v6]
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v6.*'
 
 jobs:
-  gh-pages:
+  deploy-live:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: verify tag
         run: |
           echo $GITHUB_SHA
           git branch --contains $GITHUB_SHA
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
           git checkout $GITHUB_SHA
 
       - name: setup env
