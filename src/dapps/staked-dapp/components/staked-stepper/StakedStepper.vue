@@ -148,6 +148,11 @@ export default {
      */
     readyToStake() {
       this.$emit('readyToStake', this.amount);
+    },
+    /**
+     * Resets the stepper
+     */
+    reset() {
       this.onStep = 1;
       this.address = '';
       this.amount = 0;

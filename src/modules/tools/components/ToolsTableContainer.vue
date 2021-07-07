@@ -10,9 +10,6 @@
       <div class="truncate">
         <div class="font-weight-medium">Elmo's wallet 04</div>
         <div class="d-flex align-center">
-          <div v-if="false" white class="truncate">
-            0x98d9964e1764654dtrhtrggfrv3049t04i
-          </div>
           <mew-transform-hash hash="0x98d9964e1764654dtrhtrggfrv3049t04i" />
           <mew-copy
             copy-value="0x98d9964e1764654dtrhtrggfrv3049t04i"

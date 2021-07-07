@@ -1,9 +1,9 @@
-name: deploy to gh-pages
+name: deploy to gh-pages [v6]
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v6.*'
 
 jobs:
   gh-pages:
@@ -11,27 +11,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: verify tag
         run: |
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
           git checkout $GITHUB_SHA
 
       - name: setup env
+        id: node-version
         run: |
           docker build -t mew-build-container .
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+        uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
+            ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"

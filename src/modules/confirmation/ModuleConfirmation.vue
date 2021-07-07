@@ -254,7 +254,6 @@
     >
       <template #mewOverlayBody>
         <confirmation-messsage
-          v-if="true"
           ref="messageConfirmationContainer"
           :msg="signature"
           :copy="copyToClipboard"
