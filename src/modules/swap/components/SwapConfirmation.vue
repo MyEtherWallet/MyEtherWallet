@@ -102,14 +102,7 @@ export default {
       sendEnabled: true,
       timeLeftTimer: null,
       warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
-      open: false,
-      panelItems: [
-        {
-          name: 'Details'
-        }
-      ],
-      activeTab: 0
+        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…'
     };
   },
   computed: {},

@@ -60,10 +60,6 @@ export default {
   methods: {
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
-    },
-    navigateToEthvm() {
-      // eslint-disable-next-line
-      window.open(`https://www.ethvm.com/address/${this.address}`, '_blank');
     }
   }
 };

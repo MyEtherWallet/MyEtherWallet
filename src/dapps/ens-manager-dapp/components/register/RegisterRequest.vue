@@ -66,10 +66,6 @@ export default {
     name: {
       default: '',
       type: String
-    },
-    hostName: {
-      default: '',
-      type: String
     }
   },
   data() {

@@ -114,13 +114,13 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
-import Notification from './handlers/handlerNotification';
-import handlerNotification from './handlers/handlerNotification.mixin';
-import handlerSwap from '@/modules/swap/handlers/handlerSwap';
-import {
+import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from './handlers/handlerNotification';
+import handlerNotification from './handlers/handlerNotification.mixin';
+import handlerSwap from '@/modules/swap/handlers/handlerSwap';
+
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
@@ -142,7 +142,6 @@ export default {
         { label: 'Out', val: NOTIFICATION_TYPES.OUT },
         { label: 'Swap', val: NOTIFICATION_TYPES.SWAP }
       ],
-      page: null,
       openNotifications: false
     };
   },
@@ -154,9 +153,6 @@ export default {
     ]),
     ...mapGetters('global', ['network', 'isEthNetwork']),
     ...mapState('wallet', ['address', 'web3']),
-    hasNotifications() {
-      return this.allNotifications.length > 0;
-    },
     loading() {
       return this.$apollo.loading;
     },
@@ -208,18 +204,6 @@ export default {
       return this.txNotifications
         .map(notification => {
           return formatNotification(notification, this.network);
-        })
-        .sort(this.sortByDate);
-    },
-    /**
-     * Formatted swap notifications
-     */
-    formattedSwapNotifications() {
-      return this.swapNotifications
-        .map(notification => {
-          const newObj = formatNotification(notification, this.network);
-          newObj.checkSwapStatus(this.swapper);
-          return newObj;
         })
         .sort(this.sortByDate);
     },

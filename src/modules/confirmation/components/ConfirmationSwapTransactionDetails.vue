@@ -59,10 +59,6 @@ export default {
         };
       }
     },
-    gasPriceType: {
-      type: String,
-      default: ''
-    },
     fromVal: {
       type: String,
       default: '0'
@@ -70,14 +66,6 @@ export default {
     toVal: {
       type: String,
       default: '0'
-    },
-    to: {
-      type: String,
-      default: ''
-    },
-    from: {
-      type: String,
-      default: ''
     },
     fromImg: {
       type: String,
@@ -103,21 +91,9 @@ export default {
       type: String,
       default: ''
     },
-    show: {
-      type: Boolean,
-      default: false
-    },
     txFee: {
       type: String,
       default: '0'
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    send: {
-      type: Function,
-      default: () => {}
     }
   },
   computed: {
@@ -162,11 +138,6 @@ export default {
           usd: formatFiatValue(this.toUsd).value
         }
       ];
-    }
-  },
-  methods: {
-    handleClose() {
-      this.$emit('close');
     }
   }
 };
