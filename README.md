@@ -1,4 +1,4 @@
-<img src="./src/assets/images/snippets/logo-mew.png" width="300px"/>
+<img src="./src/assets/images/presskit/logo-dark.png" width="300px"/>
 
 [![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com\&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
