@@ -25,7 +25,6 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
-  console.log(to);
   // Check if user is coming from a path that needs auth
   if (store.state.wallet.address && to.meta.hasOwnProperty('requiresAuth')) {
     store.dispatch('wallet/removeWallet');
@@ -35,6 +34,10 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
+      /** only resolve a new path when current path isn't accesswallet
+       * this is a little hacky but utilizes intended purpose.
+       * vue router notes: move on to the next hook in the pipeline. If no hooks are left, the navigation is confirmed.
+       */
       if (from.name !== 'AccessWallet') router.push({ name: 'AccessWallet' });
     } else {
       if (store.state.external.path !== '') {
@@ -46,17 +49,6 @@ router.beforeResolve((to, from, next) => {
       }
     }
   }
-  // if (!to.meta.hasOwnProperty('requiresAuth')) {
-  //   if (store.state.wallet.address === null) {
-  //     store.dispatch('external/setLastPath', to.path);
-  //     return next({ name: 'AccessWallet' });
-  //   }
-  //   if (store.state.external.path !== '') {
-  //     store.dispatch('external/setLastPath', '');
-  //   }
-  //   return next();
-  // }
-  // next();
 });
 
 export default router;
