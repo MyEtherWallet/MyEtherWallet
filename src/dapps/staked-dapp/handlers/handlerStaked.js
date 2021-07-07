@@ -175,7 +175,7 @@ export default class Staked {
           : Toast(this.$t('dappsStaked.error-try-again'), {}, ERROR);
       })
       .catch(err => {
-        Toast(err, {}, ERROR);
+        this.pollingStatus = { success: false, error: err };
       });
   }
   /**
@@ -241,7 +241,6 @@ export default class Staked {
       .catch(err => {
         Toast(err, {}, ERROR);
       });
-    this.getValidators();
   }
   /**
    * @returns BigNumber
