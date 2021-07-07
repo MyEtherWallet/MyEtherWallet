@@ -6,7 +6,7 @@
         <div class="d-flex align-center px-6">
           <div>
             <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
-            <div align="left" justify="space-around" class="mt-5">
+            <div align="left" class="mt-5">
               <a
                 href="https://apps.apple.com/app/id1464614025"
                 target="_blank"
@@ -60,7 +60,7 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-9">
             <h1 class="white--text">Ready to explore Ethereum?</h1>
-            <div align="left" justify="space-around" class="mt-5">
+            <div align="left" class="mt-5">
               <a
                 href="https://apps.apple.com/app/id1464614025"
                 target="_blank"
