@@ -3,27 +3,28 @@
     <div v-for="(coin, idx) in coins" :key="coin + idx">
       <mew-input
         :id="idx"
+        v-model="setCoins[coin]"
+        :label="coin"
         class="mb-2"
-        :value="coin.value"
-        :label="coin.symbol"
-        :placeholder="coin.name + ' ' + $t('common.addr')"
-        :error-messages="errors[coin.symbol]"
-        @input="setCoin"
+        :placeholder="coin + ' ' + $t('common.addr')"
+        :error-messages="errors[coin]"
+        @input="validateCoin"
       />
-      <span v-if="coin.error" class="error--text">{{ coin.error }}</span>
     </div>
     <div class="d-flex align-center justify-center mt-3">
       <mew-button
         :title="$t('common.save')"
         btn-size="xlarge"
-        :disabled="hasError"
-        @click.native="setMulticoin(setCoins)"
+        :disabled="!valid"
+        @click.native="submit"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { _ } from 'web3-utils';
 export default {
   props: {
     setMulticoin: {
@@ -39,21 +40,19 @@ export default {
   },
   data() {
     const errors = {};
+    const coins = {};
     for (const type in this.multicoin) {
       errors[type] = '';
+      coins[type] = this.multicoin[type].value;
     }
     return {
-      setCoins: [],
+      setCoins: coins,
       errors: errors
     };
   },
   computed: {
     coins() {
-      const coins = [];
-      for (const type in this.multicoin) {
-        coins.push(this.multicoin[type]);
-      }
-      return coins;
+      return Object.keys(this.setCoins);
     },
     hasError() {
       return (
@@ -61,22 +60,60 @@ export default {
           if (item !== '') return item;
         }).length > 0
       );
+    },
+    valid() {
+      const hasValues = Object.values(this.setCoins).filter(item => {
+        if (item && item.value !== '') return item;
+      });
+
+      return hasValues.length > 0 && !this.hasError;
+    }
+  },
+  watch: {
+    multicoin: {
+      handler: function (newVal) {
+        if (newVal) {
+          for (const type in newVal) {
+            this.setCoins[type] = newVal[type].value;
+            this.errors[type] = '';
+          }
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
-    setCoin(value, id) {
+    validateCoin(value, id) {
       const coin = this.coins[id];
-      if (coin.validator.validate(value)) {
-        const newObj = Object.assign({}, coin, { value: value });
-        this.setCoins.push(newObj);
+      if (value && !this.multicoin[coin].validator.validate(value)) {
+        this.errors[coin] = this.$t('ens.ens-resolver.invalid-addr', {
+          coin: coin
+        });
       } else {
-        if (value !== '') {
-          this.errors[coin.symbol] = this.$t('ens.ens-resolver.invalid-addr', {
-            coin: coin.name
-          });
-        } else {
-          this.errors[coin.symbol] = '';
-        }
+        this.errors[coin] = '';
+      }
+    },
+    submit() {
+      /** Creates a no reference clone to be submitted to the contract */
+      const copyMulticoin = Object.keys(this.multicoin)
+        .map(item => {
+          const newItem = Object.assign({}, _.clone(this.multicoin[item]));
+          newItem.value = this.setCoins[item];
+          return newItem;
+        })
+        .filter(item => {
+          if (
+            item.value &&
+            item.value !== '' &&
+            item.value !== this.multicoin[item.symbol].value
+          )
+            return item;
+        });
+      if (copyMulticoin.length > 0) {
+        this.setMulticoin(copyMulticoin);
+      } else {
+        Toast('No changes were made', {}, WARNING);
       }
     }
   }
