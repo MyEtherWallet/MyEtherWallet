@@ -690,7 +690,6 @@ export default {
           i < this.currentIdx + MAX_ADDRESSES;
           i++
         ) {
-          console.log(this.hwWalletInstance);
           const account = await this.hwWalletInstance.getAccount(i);
           const balance = await web3.eth.getBalance(account.getAddressString());
           this.accounts.push({
