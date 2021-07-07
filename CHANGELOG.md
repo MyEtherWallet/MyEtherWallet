@@ -2,6 +2,7 @@
 
 ### Devop
 
+* fix ipfs refetch once receipt, fix multicoin setting, fix txt record setting [#3198](https://github.com/MyEtherWallet/MyEtherWallet/pull/3198)
 * remove wallet on back [#3206](https://github.com/MyEtherWallet/MyEtherWallet/pull/3206)
 * listen and match metamask changes [#3203](https://github.com/MyEtherWallet/MyEtherWallet/pull/3203)
 * fix landing and create wallet ui issues [#3190](https://github.com/MyEtherWallet/MyEtherWallet/pull/3190)
