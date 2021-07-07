@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="network.type.name === 'ETH'"
-    class="mew6-component--module-balance"
-  >
+  <div class="mew6-component--module-balance">
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
@@ -27,7 +24,7 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template #rightHeaderContainer>
+      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
         <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
@@ -45,7 +42,11 @@
         </div>
       </template>
       <template #moduleBody>
-        <balance-chart :data="chartData" class="full-width mt-5 pa-md-3" />
+        <balance-chart
+          v-if="network.type.name === 'ETH'"
+          :data="chartData"
+          class="full-width mt-5 pa-md-3"
+        />
         <div
           class="
             pa-3 pa-sm-7
@@ -96,7 +97,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-if="showBuyEth && !loading"
+      v-if="!hasBalance && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -112,6 +113,7 @@ import {
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
 export default {
   components: {
     BalanceChart,
@@ -203,6 +205,13 @@ export default {
         !!this.balanceFiatValue &&
         !!this.fiatValue
       );
+    },
+    /**
+     * Determines whether or not to show empty block
+     * @return {boolean}
+     */
+    hasBalance() {
+      return BigNumber(this.balanceInWei).gt(0);
     }
   },
   watch: {

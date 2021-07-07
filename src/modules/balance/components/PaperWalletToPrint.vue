@@ -25,16 +25,6 @@
       </div>
     </div>
     <div class="mt-12 d-flex align-center">
-      <mew-blockie
-        v-if="false"
-        :address="address"
-        :size="8"
-        :scale="16"
-        :width="blockieSize"
-        :height="blockieSize"
-        class="mr-4 white"
-      />
-
       <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
 
       <div style="max-width: 400px">

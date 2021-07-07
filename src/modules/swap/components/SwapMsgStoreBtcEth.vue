@@ -23,7 +23,10 @@
               any other Ethereum asset: you can swap it to other tokens, use it
               as collateral in DeFi apps, etc. There are multiple kinds of
               wrapped Bitcoins, but they roughly do the same thing.
-              <a href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/">
+              <a
+                href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                target="_blank"
+              >
                 Learn more about Wrapped Bitcoin.
               </a>
             </div>
