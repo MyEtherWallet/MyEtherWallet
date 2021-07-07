@@ -32,6 +32,7 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 :value="tokenInValue"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
@@ -76,6 +77,7 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 disabled
                 :value="tokenOutValue"
               />
@@ -881,11 +883,13 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      this.tokenInValue = this.isFromTokenMain
-        ? new BigNumber(this.availableBalance)
-            .minus(fromWei(MIN_GAS_WEI))
-            .toFixed()
-        : this.availableBalance.toFixed();
+      const availableBalanceMinusGas = new BigNumber(this.availableBalance)
+        .minus(fromWei(MIN_GAS_WEI))
+        .toFixed();
+      this.tokenInValue =
+        this.isFromTokenMain && availableBalanceMinusGas > 0
+          ? availableBalanceMinusGas
+          : this.availableBalance.toFixed();
     },
     /**
      * Gets the default from token
