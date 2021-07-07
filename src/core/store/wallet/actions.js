@@ -4,7 +4,6 @@ import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { formatters } from 'web3-core-helpers';
 import EventNames from '@/utils/web3-provider/events';
-// import router from '@/core/router';
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
@@ -15,7 +14,6 @@ const removeWallet = function ({ commit, state }) {
     state.instance.getConnection().disconnect();
   }
   commit('REMOVE_WALLET');
-  // router.push({ name: 'Home' });
 };
 
 const setWallet = function ({ commit, dispatch }, params) {
