@@ -5,6 +5,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
+const sourceMapsConfig = {
+  filename: 'sourcemaps/[file].map'
+};
+if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
+  sourceMapsConfig.exclude = /vendors.*.*/;
 const webpackConfig = {
   devtool: false,
   node: {
@@ -29,10 +34,7 @@ const webpackConfig = {
     }
   },
   plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: 'sourcemaps/[file].map',
-      exclude: /vendors.*.*/
-    }),
+    new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',
@@ -89,6 +91,7 @@ const exportObj = {
     }
   },
   chainWebpack: config => {
+    2;
     // GraphQL Loader
     config.module
       .rule('graphql')

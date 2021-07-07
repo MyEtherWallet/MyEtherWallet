@@ -9,6 +9,7 @@
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
+    "build:history:sourcemaps": "ROUTER_MODE=history FULL_SOURCEMAPS=true npm run build",
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "juststart": "vue-cli-service serve --watch",
@@ -174,7 +175,9 @@
     "css-what": "5.0.1",
     "normalize-url": "6.0.1",
     "scrypt.js": "0.3.0",
-    "socket.io-parser": "3.4.1"
+    "socket.io-parser": "3.4.1",
+    "keccak": "3.0.1",
+    "diff": "3.5.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
