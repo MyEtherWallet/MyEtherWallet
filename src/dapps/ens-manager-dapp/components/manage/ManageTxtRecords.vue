@@ -3,12 +3,12 @@
     <div v-for="(key, idx) in keys" :key="`${key}${idx}`">
       <mew-input
         :id="idx"
+        v-model="setRecords[key]"
         class="mb-2"
         :error-messages="errors[key]"
-        :value="setRecords[key]"
         :label="key"
         :placeholder="key"
-        @input="setRecord"
+        @input="validateRecord"
       />
     </div>
     <div class="d-flex align-center justify-center mt-3">
@@ -16,7 +16,7 @@
         :title="$t('common.save')"
         btn-size="xlarge"
         :disabled="!isValid"
-        @click.native="setTextRecords(setRecords)"
+        @click.native="callSetRecords"
       />
     </div>
   </div>
@@ -25,6 +25,7 @@
 <script>
 import textValidator from '@/dapps/ens-manager-dapp/handlers/handlerTextRecords';
 import { _ } from 'web3-utils';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 export default {
   props: {
@@ -37,6 +38,10 @@ export default {
     textRecords: {
       type: [Object, null],
       default: null
+    },
+    onManage: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -71,25 +76,44 @@ export default {
       handler: function (newVal) {
         Object.keys(newVal).forEach(item => {
           this.setRecords[item] = newVal[item];
+          this.errors[item] = '';
         });
-      }
-    },
-    deep: true,
-    immediate: true
+      },
+      deep: true,
+      immediate: true
+    }
   },
   methods: {
-    setRecord(value, id) {
+    validateRecord(value, id) {
       const name = this.keys[id];
-      try {
-        if (textValidator[id].validate(value)) {
-          this.errors[name] = '';
-        } else {
-          this.errors[name] = this.$t('ens.text-record-error', {
-            name: name
-          });
-        }
-      } catch (e) {
-        this.errors[name] = e;
+      if (value) {
+        this.errors[name] = textValidator[id].validate(value)
+          ? ''
+          : this.$t('ens.text-record-error', {
+              name: name
+            });
+      } else {
+        this.errors[name] = '';
+      }
+    },
+    callSetRecords() {
+      const newObj = {};
+      Object.keys(this.setRecords)
+        .filter(item => {
+          // Filters out empty values and unchanged values
+          if (
+            this.setRecords[item] !== '' &&
+            this.textRecords[item] !== this.setRecords[item]
+          )
+            return item;
+        })
+        .forEach(item => {
+          newObj[item] = this.setRecords[item];
+        });
+      if (!_.isEmpty(newObj)) {
+        this.setTextRecords(newObj);
+      } else {
+        Toast('No changes found!', {}, WARNING);
       }
     }
   }
