@@ -28,7 +28,7 @@
           <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
           <div class="mew-heading-1">Are you guys out of your minds?</div>
           <div class="mt-6 textPrimary--text">
-            The fees are indeed high these days. We feel your pain!
+            Fees are indeed high these days. We feel your pain!
             <br />
             <br />
             Transaction fees are charged by Ethereum miners, not MEW. We can't
@@ -38,7 +38,7 @@
             <br />
             Ethereum is getting more and more popular, but its capacity is
             limited, this is why when the network is congested, it can cost
-            $10-$20 to send a token, and a simple Swap transaction can se you
+            $10-$20 to send a token, and a simple swap transaction can set you
             back $100 or even more.
             <br />
             <br />
@@ -144,7 +144,7 @@
               High Fees pop up button
             =====================================================
             -->
-            <v-col cols="12" class="pt-0">
+            <v-col v-if="isEthNetwork" cols="12" class="pt-0">
               <div class="d-flex align-center justify-start pt-1">
                 <div
                   class="
@@ -251,7 +251,8 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEthNetwork']),
+
     icon() {
       return GAS_TYPE_ICONS[this.gasPriceType];
     },

@@ -2,7 +2,7 @@ import matic from '@/assets/images/networks/matic.svg';
 import tokens from '@/_generated/tokens/tokens-matic.json';
 export default {
   name: 'MATIC',
-  name_long: 'MATIC Network',
+  name_long: 'Polygon (Matic)',
   homePage: 'https://polygonscan.com/',
   blockExplorerTX: 'https://polygonscan.com/tx/[[txHash]]',
   blockExplorerAddr: 'https://polygonscan.com/address/[[address]]',

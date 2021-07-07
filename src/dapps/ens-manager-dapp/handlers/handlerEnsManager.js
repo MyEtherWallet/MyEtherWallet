@@ -72,7 +72,8 @@ export default class ENSManager {
           this.address,
           this.network,
           this.web3,
-          this.ens
+          this.ens,
+          item.expiryDate
         );
       });
     });
