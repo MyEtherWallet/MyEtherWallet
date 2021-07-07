@@ -98,7 +98,13 @@
               target="_blank"
               class="ml-4"
             >
-              <mew-icon :img-height="20" :icon-name="i.icon" />
+              <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
+              <img
+                v-if="i.iconImage"
+                :src="i.iconImage"
+                alt="Social"
+                height="15"
+              />
             </a>
           </div>
         </div>
@@ -444,6 +450,10 @@ export default {
       {
         link: 'https://medium.com/@myetherwallet',
         icon: 'medium'
+      },
+      {
+        link: 'https://t.me/myetherwallet',
+        iconImage: require('@/assets/images/icons/icon-telegram.svg')
       }
     ]
   })
