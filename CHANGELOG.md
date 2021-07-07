@@ -1,3 +1,9 @@
+### v5.8.2
+
+### Devop
+
+- prep for v6 release move v5 to v5.myetherwallet.com [#3197](https://github.com/MyEtherWallet/MyEtherWallet/pull/3197)
+
 ### v5.8.1
 
 ### Devop
