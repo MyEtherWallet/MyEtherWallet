@@ -47,7 +47,6 @@
             cursor-pointer
             justify-space-between
           "
-          @click="expand(idx)"
         >
           <!--
     ===================================================
@@ -59,6 +58,7 @@
               'rounded-t-lg header-container tableHeader pa-5 full-width d-flex flex-row align-center justify-space-between',
               isExpanded(idx) ? 'rounded-t-lg' : 'rounded-lg'
             ]"
+            @click="expand(idx)"
           >
             <div class="left-container d-flex">
               <img :src="iconETHNavy" height="22" alt="ethereum" />
@@ -292,7 +292,6 @@ export default {
   data() {
     return {
       iconETHNavy: iconETHNavy,
-      timer: [],
       expanded: 0,
       STATUS_TYPES: STATUS_TYPES
     };
@@ -367,7 +366,6 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue)
             ).value,
-            justStaked: true,
             status: raw.status,
             ethVmUrl:
               configNetworkTypes.network[this.network.type.name].ethvmAddrUrl +
@@ -402,6 +400,7 @@ export default {
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue)
             ).value,
+            justStaked: true,
             status: STATUS_TYPES.CREATED,
             ethVmUrl: this.pendingHash
               ? configNetworkTypes.network[this.network.type.name].ethvmTxUrl +

@@ -150,8 +150,7 @@ export default {
           }
         }
       ],
-      accessHandler: {},
-      hwWalletInstance: {}
+      accessHandler: {}
     };
   },
 

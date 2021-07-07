@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
+import { convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 export default {
@@ -41,7 +41,6 @@ export default {
   mixins: [aaveOverlayMixin],
   data() {
     return {
-      repay: ACTION_TYPES.repay,
       amount: ''
     };
   },

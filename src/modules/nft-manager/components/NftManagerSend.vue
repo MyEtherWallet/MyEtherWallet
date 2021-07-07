@@ -82,10 +82,6 @@ export default {
       },
       type: Function
     },
-    disabled: {
-      default: false,
-      type: Boolean
-    },
     nftCategory: {
       default: '',
       type: String
@@ -93,11 +89,6 @@ export default {
   },
   data() {
     return {
-      expandPanel: [
-        {
-          name: this.$t('common.details')
-        }
-      ],
       nftPlaceholder: nftPlaceholder
     };
   },

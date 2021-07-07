@@ -161,12 +161,6 @@ const STATIC_PAIRS = [
 export default {
   name: 'HomeFeaturesSwap',
   components: {},
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       swapHandler: null,

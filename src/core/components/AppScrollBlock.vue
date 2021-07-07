@@ -7,9 +7,6 @@
 <script>
 export default {
   name: 'HoverExpandingBlock',
-  props: {
-    maxWidth: { default: '', type: String }
-  },
   data: () => ({})
 };
 </script>

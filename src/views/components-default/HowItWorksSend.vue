@@ -26,7 +26,7 @@
 
           <div class="mb-4 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
+              <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
@@ -39,7 +39,7 @@
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
+              <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">

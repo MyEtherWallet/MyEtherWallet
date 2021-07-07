@@ -119,10 +119,6 @@ export default {
     };
   },
   methods: {
-    reset() {
-      this.onStep = 1;
-      this.duration = 0;
-    },
     onRequest(val) {
       this.generateKeyPhrase();
       this.duration = val;

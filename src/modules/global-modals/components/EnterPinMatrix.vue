@@ -39,9 +39,6 @@ export default {
     }
   },
   methods: {
-    keepKeyPinEnterCall() {
-      this.keepKeyPinEnter(this.pin);
-    },
     keepKeyClear() {
       this.pin = '';
     }

@@ -238,28 +238,9 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
-    },
-    /**
-     * NOTE: implemnt this once we have support on different languages
-     * Margin exhist if symbol is displayed on the right
-     */
-    hasMargin() {
-      return !this.isTestNetwork;
     }
   },
   methods: {
-    animateBlockie() {
-      const el = document.querySelector('.blockie-img');
-      if (el) {
-        el.style.transform = 'scale(0)';
-        anime({
-          targets: el,
-          keyframes: [{ scale: 0 }, { scale: 3 }, { scale: 1 }],
-          delay: 1500,
-          duration: 2000
-        });
-      }
-    },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
       if (el) {

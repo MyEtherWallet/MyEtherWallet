@@ -39,10 +39,6 @@ export default {
         return {};
       },
       type: Function
-    },
-    hostName: {
-      default: '',
-      type: String
     }
   },
   data() {
@@ -76,9 +72,6 @@ export default {
     setDuration(item) {
       this.duration = parseInt(item.value);
       this.rentPrice();
-    },
-    reset() {
-      this.duration = 1;
     }
   }
 };

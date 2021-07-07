@@ -103,13 +103,7 @@
 <script>
 export default {
   props: {
-    open: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+    open: { default: false, type: Boolean }
   },
   data() {
     return {};

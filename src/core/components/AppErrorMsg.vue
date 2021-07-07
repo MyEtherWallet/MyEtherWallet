@@ -64,10 +64,6 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
     close: {
       type: Function,
       default: () => {}
