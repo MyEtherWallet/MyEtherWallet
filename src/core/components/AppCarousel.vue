@@ -11,12 +11,12 @@
                 <img
                   class="mr-1"
                   height="23"
-                  src="@/assets/images/icons/button-app-store.png"
+                  src="@/assets/images/icons/button-app-store.svg"
                 />
                 <img
                   class="mr-1"
                   height="23"
-                  src="@/assets/images/icons/button-play-store.png"
+                  src="@/assets/images/icons/button-play-store.svg"
                 />
               </div>
             </div>

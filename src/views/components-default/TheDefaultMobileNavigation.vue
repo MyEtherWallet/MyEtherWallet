@@ -172,5 +172,9 @@ export default {
   .v-list-item {
     border-top: 0 !important;
   }
+  .theme--dark.v-list-item:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    cursor: pointer;
+  }
 }
 </style>
