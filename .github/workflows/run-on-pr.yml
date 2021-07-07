@@ -20,7 +20,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: ~/.npm
+          path: .npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
