@@ -1,7 +1,7 @@
 ### Release v6.0.0
 
 ### Devop
-
+* Update team page [#3233](https://github.com/MyEtherWallet/MyEtherWallet/pull/3233)
 * Fix v6 workflows [#3226](https://github.com/MyEtherWallet/MyEtherWallet/pull/3226)
 * Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)
 * update readme [#3227](https://github.com/MyEtherWallet/MyEtherWallet/pull/3227)
