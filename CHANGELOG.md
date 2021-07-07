@@ -2,6 +2,7 @@
 
 ### Devop
 
+* fix overflow balance on card [3229](https://github.com/MyEtherWallet/MyEtherWallet/pull/3229)
 * remove wallet on back [#3206](https://github.com/MyEtherWallet/MyEtherWallet/pull/3206)
 * listen and match metamask changes [#3203](https://github.com/MyEtherWallet/MyEtherWallet/pull/3203)
 * fix landing and create wallet ui issues [#3190](https://github.com/MyEtherWallet/MyEtherWallet/pull/3190)
