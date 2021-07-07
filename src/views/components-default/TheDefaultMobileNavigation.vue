@@ -174,8 +174,6 @@ export default {
   }
   .theme--dark.v-list-item:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
-  }
-  v-list-item__content:hover {
     cursor: pointer;
   }
 }
