@@ -204,7 +204,6 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const routeNames = {
   dashboard: 'Dashboard',
   sendtx: 'SendTX',
@@ -322,16 +321,6 @@ export default {
     EventBus.$on('toggleSettings', () => {
       this.toggleSettings();
     });
-    if (this.instance.identifier === WALLET_TYPES.MEW_CONNECT) {
-      this.instance.mewConnect.on('RtcClosedEvent', () => {
-        if (this.instance.mewConnect.getConnectonState()) {
-          EventBus.$emit('mewConnectDisconnected');
-          this.removeWallet().then(() => {
-            this.$router.push({ name: 'Home' });
-          });
-        }
-      });
-    }
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
@@ -353,9 +342,7 @@ export default {
     onLogout(res) {
       this.showLogoutPopup = false;
       if (res.title === this.logout.btnRight.title) {
-        this.removeWallet().then(() => {
-          this.$router.push({ name: 'Home' });
-        });
+        this.removeWallet();
       }
     },
     toggleLogout() {

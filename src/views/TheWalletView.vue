@@ -46,6 +46,11 @@ export default {
     ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
+    address() {
+      if (!this.address) {
+        this.$router.push({ name: 'Home' });
+      }
+    },
     network() {
       this.web3.eth.clearSubscriptions();
     },

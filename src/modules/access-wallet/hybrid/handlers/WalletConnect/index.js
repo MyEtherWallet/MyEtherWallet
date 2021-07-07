@@ -14,7 +14,7 @@ import HybridWalletInterface from '../walletInterface';
 import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
-const IS_HARDWARE = true;
+const IS_HARDWARE = false;
 
 import { EventBus } from '@/core/plugins/eventBus';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
@@ -43,10 +43,12 @@ class WalletConnectWallet {
       this.isKilled = true;
       this.walletConnect.killSession();
     };
-
-    this.icon = {
-      type: 'img',
-      value: walletconnect
+    this.meta = {
+      name: 'Wallet Connect',
+      img: {
+        type: 'img',
+        value: walletconnect
+      }
     };
   }
   init() {
@@ -114,7 +116,7 @@ class WalletConnectWallet {
             msgSigner,
             this.walletConnect,
             errorHandler,
-            this.icon
+            this.meta
           )
         );
       });

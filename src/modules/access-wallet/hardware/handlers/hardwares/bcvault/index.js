@@ -27,9 +27,12 @@ class BCVault {
     this.bcWallet = new bc.BCJS(() => {});
     this.deviceNumber = null;
     this.bcWalletType = bc.WalletType.ethereum;
-    this.icon = {
-      type: 'img',
-      value: bcvault
+    this.meta = {
+      name: 'BC Vault',
+      img: {
+        type: 'img',
+        value: bcvault
+      }
     };
   }
 
@@ -161,7 +164,7 @@ class BCVault {
       txSigner,
       msgSigner,
       null,
-      this.icon
+      this.meta
     );
   }
 }

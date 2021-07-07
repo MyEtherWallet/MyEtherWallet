@@ -763,11 +763,7 @@ export default {
           })
           .catch(e => {
             this.signedTxObject = {};
-            if (this.isMewConnect) {
-              this.error = 'User declined action';
-            } else {
-              this.error = e.message;
-            }
+            this.error = e.message;
             this.signing = false;
           });
       }
