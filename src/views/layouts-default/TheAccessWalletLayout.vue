@@ -122,7 +122,7 @@ export default {
         /* MEW wallet Button */
         {
           color: 'basic',
-          title: 'MEWwallet',
+          title: 'MEW wallet',
           subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
