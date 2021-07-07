@@ -44,7 +44,7 @@ class WalletInterface {
     }
     this.meta = {
       name: keystore ? 'Key store' : 'Private Key',
-      icon: {
+      img: {
         type: 'mew-icon',
         value: keystore ? 'keystore' : 'privateKey'
       }
