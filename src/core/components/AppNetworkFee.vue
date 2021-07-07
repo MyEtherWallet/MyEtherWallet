@@ -63,7 +63,11 @@
         <v-col cols="12" sm="4" class="pb-0">
           <div class="d-flex align-center justify-start pl-4">
             <div class="mew-heading-3 mb-0">Network fee</div>
-            <mew-tooltip class="pl-1" :text="feeTitleTooltip" />
+            <mew-tooltip
+              class="pl-1"
+              :text="feeTitleTooltip"
+              max-width="300px"
+            />
           </div>
         </v-col>
         <v-spacer class="d-none d-sm-flex" />
