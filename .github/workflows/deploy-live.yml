@@ -39,7 +39,20 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
-        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
+        run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history:sourcemaps"
+
+      - name: deploy to sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_TOKEN}}
+          SENTRY_ORG: myetherwallet-inc
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          TAG=${{ steps.get_release_tag.outputs.VERSION }}
+          RELEASE=${TAG//v/}
+          sentry-cli releases new -p myetherwallet-web-v6 $RELEASE
+          sentry-cli releases -p myetherwallet-web-v6 files $RELEASE upload-sourcemaps ./dist/sourcemaps --url-prefix 'https://www.myetherwallet.com/sourcemaps' --rewrite --validate
+          sentry-cli releases set-commits $RELEASE --auto
+          sentry-cli releases finalize $RELEASE
 
       - name: deploy to production
         env:
