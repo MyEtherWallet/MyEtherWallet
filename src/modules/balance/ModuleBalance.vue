@@ -14,7 +14,7 @@
       type="card"
     ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth && !loading"
+      v-if="hasBalance && !loading"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"

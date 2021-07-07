@@ -25,11 +25,9 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
+  console.log(to);
   // Check if user is coming from a path that needs auth
-  if (
-    !from.meta.hasOwnProperty('requiresAuth') &&
-    to.meta.hasOwnProperty('requiresAuth')
-  ) {
+  if (store.state.wallet.address && to.meta.hasOwnProperty('requiresAuth')) {
     store.dispatch('wallet/removeWallet');
   }
   if (to.meta.hasOwnProperty('requiresAuth')) {
@@ -37,14 +35,28 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      next({ name: 'AccessWallet' });
+      router.push({ name: 'AccessWallet' });
     } else {
       if (store.state.external.path !== '') {
+        const localPath = store.state.main.path;
         store.dispatch('external/setLastPath', '');
+        next({ path: localPath });
+      } else {
+        next();
       }
-      next();
     }
   }
+  // if (!to.meta.hasOwnProperty('requiresAuth')) {
+  //   if (store.state.wallet.address === null) {
+  //     store.dispatch('external/setLastPath', to.path);
+  //     return next({ name: 'AccessWallet' });
+  //   }
+  //   if (store.state.external.path !== '') {
+  //     store.dispatch('external/setLastPath', '');
+  //   }
+  //   return next();
+  // }
+  // next();
 });
 
 export default router;
