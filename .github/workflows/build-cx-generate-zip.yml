@@ -1,4 +1,4 @@
-name: build cx and generate zip
+name: build cx and generate zip [v5]
 
 on:
   push:

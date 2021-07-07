@@ -1,9 +1,9 @@
-name: deploy live
+name: deploy live [v5]
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v5.*'
 
 jobs:
   gh-pages:
@@ -11,13 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: v5/master
 
       - name: verify tag
         run: |
           echo $GITHUB_SHA
           git branch --contains $GITHUB_SHA
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^master$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^v5/master$'
           git checkout $GITHUB_SHA
 
       - name: setup env
@@ -65,19 +65,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         run: |
           pip install --user awscli
-          aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public \
+          aws s3 sync dist/ s3://mewbuilds/v5/ --delete --cache-control max-age=172800,public \
             --acl public-read
-          aws s3 cp s3://mewbuilds/staging/service-worker.js s3://mewbuilds/staging/service-worker.js \
+          aws s3 cp s3://mewbuilds/v5/service-worker.js s3://mewbuilds/v5/service-worker.js \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type application/javascript --acl public-read
-          aws s3 cp s3://mewbuilds/staging/index.html s3://mewbuilds/staging/index.html \
+          aws s3 cp s3://mewbuilds/v5/index.html s3://mewbuilds/v5/index.html \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type text/html --acl public-read
-
-      - name: deploy to gh-pages-history
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          ACCESS_TOKEN: ${{ secrets.MEW_BOT_TOKEN }}
-          BRANCH: gh-pages-history
-          FOLDER: dist
-          CLEAN: true
