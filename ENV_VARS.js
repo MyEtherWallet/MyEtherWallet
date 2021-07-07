@@ -7,5 +7,6 @@ module.exports = {
   BTC_DONATION_ADDRESS: JSON.stringify('1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'),
   ETH_DONATION_ADDRESS: JSON.stringify(
     '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-  )
+  ),
+  FULL_SOURCEMAPS: JSON.stringify(process.env.FULL_SOURCEMAPS || 'false')
 };

@@ -131,7 +131,7 @@ export default {
           if (this.top === undefined) {
             this.top = parseInt(menu.style.top.replace('px', ''));
           }
-          menu.style.top = this.top + 15 + 'px';
+          menu.style.top = this.top + 5 + 'px';
           menu.classList.add('mew-tools-menu-container');
         }
       }, 100); // check every 100ms
