@@ -14,8 +14,7 @@
       type="card"
     ></v-skeleton-loader>
     <mew-module
-      v-if="hasBalance && !loading"
-      class="pa-7"
+      v-if="!showBuyEth && !loading"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"
@@ -26,7 +25,7 @@
       icon-align="left"
     >
       <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
             :on-toggle-btn-idx="activeButton"
@@ -43,14 +42,23 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="pa-7">
-          <balance-chart
-            v-if="network.type.name === 'ETH'"
-            :data="chartData"
-            class="full-width mt-5"
-          />
-          <v-row class="align-center">
-            <v-col class="d-flex align-center justify-center">
+        <balance-chart
+          v-if="network.type.name === 'ETH'"
+          :data="chartData"
+          class="full-width mt-5 pa-md-3"
+        />
+        <div
+          class="
+            pa-3 pa-sm-7
+            d-block d-md-flex
+            align-center
+            justify-space-between
+          "
+        >
+          <div
+            class="d-flex flex-column flex-sm-row align-center justify-center"
+          >
+            <div class="d-flex align-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
               <div
                 :class="[
@@ -67,19 +75,19 @@
                 ]"
                 >{{ priceChangeArrow }}</v-icon
               >
-              <div class="ml-5">
-                {{ formatFiatPrice }} / 1 {{ network.type.name }}
-              </div>
-            </v-col>
-            <v-col class="text-right">
-              <mew-button
-                :has-full-width="false"
-                title="Send Transaction"
-                btn-size="xlarge"
-                @click.native="navigateToSend"
-              />
-            </v-col>
-          </v-row>
+            </div>
+            <div class="ml-sm-5">
+              {{ formatFiatPrice }} / 1 {{ network.type.name }}
+            </div>
+          </div>
+          <div class="text-center text-md-right mt-4 mt-md-0">
+            <mew-button
+              :has-full-width="false"
+              title="Send Transaction"
+              btn-size="xlarge"
+              @click.native="navigateToSend"
+            />
+          </div>
         </div>
       </template>
     </mew-module>

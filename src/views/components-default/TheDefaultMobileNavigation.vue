@@ -85,30 +85,6 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-
-    <ul v-if="false" class="menu-content">
-      <li v-for="(m, k) in menu" :key="k">
-        <div class="menu-divider"></div>
-
-        <h2 v-if="!m.to" class="text-center">
-          {{ m.label }}
-        </h2>
-        <h2 v-else class="click-effect text-center" @click="pushRoute(m.to)">
-          {{ m.label }}
-        </h2>
-
-        <ul>
-          <li v-for="(s, sk) in m.sub" :key="sk" class="my-4">
-            <h5
-              class="click-effect text-center font-weight-bold"
-              @click="pushRoute(s.to)"
-            >
-              {{ s.label }}
-            </h5>
-          </li>
-        </ul>
-      </li>
-    </ul>
   </div>
 </template>
 

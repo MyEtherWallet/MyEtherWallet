@@ -144,10 +144,6 @@ export default {
      */
     readyToStake() {
       this.$emit('readyToStake', this.amount);
-      this.onStep = 1;
-      this.address = '';
-      this.amount = 0;
-      this.skipped = false;
     }
   }
 };
