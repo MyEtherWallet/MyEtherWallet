@@ -35,12 +35,12 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      router.push({ name: 'AccessWallet' });
+      if (from.name !== 'AccessWallet') router.push({ name: 'AccessWallet' });
     } else {
       if (store.state.external.path !== '') {
-        const localPath = store.state.main.path;
+        const localPath = store.state.external.path;
         store.dispatch('external/setLastPath', '');
-        next({ path: localPath });
+        router.push({ path: localPath });
       } else {
         next();
       }
