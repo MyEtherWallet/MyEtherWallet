@@ -38,7 +38,7 @@
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/ens-contracts": "0.0.5",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.5.87-beta",
+    "@myetherwallet/mew-components": "0.5.88-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.8.0",
     "@sentry/tracing": "6.8.0",
@@ -174,7 +174,8 @@
     "css-what": "5.0.1",
     "normalize-url": "6.0.1",
     "scrypt.js": "0.3.0",
-    "socket.io-parser": "3.4.1"
+    "socket.io-parser": "3.4.1",
+    "diff": "3.5.0"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
