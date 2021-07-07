@@ -90,10 +90,6 @@ export default {
       type: String,
       default: ''
     },
-    committed: {
-      type: Boolean,
-      default: false
-    },
     register: {
       default: function () {
         return {};

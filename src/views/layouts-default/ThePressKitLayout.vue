@@ -60,11 +60,6 @@ export default {
   components: {},
   data() {
     return {
-      pageTitle: {
-        title: 'footer.press-kit.header',
-        boldSubTitle: '',
-        textContent: []
-      },
       pressAssets: [
         {
           color: '',

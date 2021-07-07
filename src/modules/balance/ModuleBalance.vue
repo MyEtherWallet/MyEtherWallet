@@ -140,9 +140,6 @@ export default {
       'networkTokenUSDMarket'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
-    showBuyEth() {
-      return this.balanceInETH <= 0 && this.chartData.length <= 0;
-    },
     priceChangeArrow() {
       return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },

@@ -1,9 +1,9 @@
 import { formatters } from 'web3-core-helpers';
-import Notification from '@/modules/notifications/handlers/handlerNotification';
-import {
+import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
+
 import { _ } from 'web3-utils';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {

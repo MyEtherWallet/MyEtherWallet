@@ -49,10 +49,6 @@ export default {
       type: String,
       default: ''
     },
-    data: {
-      type: String,
-      default: ''
-    },
     network: {
       type: Object,
       default: () => {}
@@ -72,10 +68,6 @@ export default {
     valueUsd: {
       type: Number,
       default: 0
-    },
-    toTxData: {
-      type: Object,
-      default: () => {}
     },
     toDetails: {
       type: Object,

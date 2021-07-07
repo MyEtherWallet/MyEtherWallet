@@ -38,10 +38,6 @@ export default {
     textRecords: {
       type: [Object, null],
       default: null
-    },
-    onManage: {
-      type: Boolean,
-      default: false
     }
   },
   data() {

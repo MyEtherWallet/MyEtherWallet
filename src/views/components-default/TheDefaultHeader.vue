@@ -51,8 +51,6 @@ export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
-    mewTools: false,
-    openMobileMenu: false,
     menuObj: {
       name: 'Wallet actions',
       items: [
@@ -80,20 +78,6 @@ export default {
         {
           title: 'More actions',
           items: [
-            /*
-            {
-              title: 'Watch only address',
-              to: { name: 'Tools', query: { tab: '1' } }
-            },
-            {
-              title: 'Send offline helper',
-              to: { name: 'Tools', query: { tab: '2' } }
-            },
-            {
-              title: 'Convery units',
-              to: { name: 'Tools', query: { tab: '4' } }
-            },
-            */
             {
               title: 'Verify message',
               to: { name: 'Tools', query: { tab: '1' } }
@@ -106,9 +90,6 @@ export default {
   methods: {
     routeTo(route) {
       this.$router.push(route);
-    },
-    openMobile() {
-      this.openMobileMenu = true;
     }
   }
 };

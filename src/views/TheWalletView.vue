@@ -98,9 +98,9 @@ export default {
     subscribeToBlockNumber() {
       this.web3.eth.getBlockNumber().then(res => {
         this.setBlockNumber(res);
-      });
-      this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-        this.setBlockNumber(res.number);
+        this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+          this.setBlockNumber(res.number);
+        });
       });
     },
     /**
