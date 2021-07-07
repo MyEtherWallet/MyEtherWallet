@@ -3,19 +3,19 @@
     <div class="text-center">
       <div>
         <mew-icon
-          v-if="instance.icon.type === 'mew-icon'"
+          v-if="instance.meta.img.type === 'mew-icon'"
           class="border-radius--5px custom-icon-style"
-          :icon-name="instance.icon.value"
+          :icon-name="instance.meta.img.value"
           :img-height="100"
         />
-        <img v-else :src="instance.icon.value" height="50px" />
+        <img v-else :src="instance.meta.img.value" height="50px" />
       </div>
     </div>
     <div :class="[error !== '' ? 'error--text' : '', 'text-center mb-5']">
       <p>{{ bodyText }}</p>
     </div>
     <v-progress-linear
-      v-if="!signed"
+      v-if="error === '' && !signed"
       indeterminate
       color="primary"
       class="mb-3"
@@ -44,24 +44,9 @@ export default {
     ...mapState('wallet', ['instance']),
     bodyText() {
       if (this.error !== '') return this.error;
-      const walletNames = {
-        ledger: 'Ledger',
-        trezor: 'Trezor',
-        bitbox: 'BitBox',
-        bitbox02: 'BitBox 02',
-        keepkey: 'KeepKey',
-        mewconnect: 'MewConnect',
-        walletConnect: 'Wallet Connect',
-        web3Wallet: 'Web3 Wallet',
-        finney: 'Finney',
-        xwallet: 'Xwallet',
-        bcVault: 'BC Vault',
-        coolWallet: 'Cool Wallet',
-        walletLink: 'WalletLink'
-      };
       return `Approve ${this.txLength} ${
         this.txLength > 1 ? 'transactions' : 'transaction'
-      } on ${walletNames[this.instance.identifier]}.`;
+      } on ${this.instance.meta.name}.`;
     }
   }
 };

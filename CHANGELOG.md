@@ -2,6 +2,7 @@
 
 ### Devop
 
+* major wallet related refactor [#3170](https://github.com/MyEtherWallet/MyEtherWallet/pull/3170)
 * fix overflow balance on card [3229](https://github.com/MyEtherWallet/MyEtherWallet/pull/3229)
 * Fix v6 workflows [#3226](https://github.com/MyEtherWallet/MyEtherWallet/pull/3226)
 * Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)

@@ -19,7 +19,7 @@
             </a>
           </p>
           <settings-gas-price
-            :is-custom="true"
+            :is-swap="true"
             :buttons="gasButtons"
             :selected="selected"
             :set-selected="setGas"

@@ -23,9 +23,12 @@ class Web3Wallet extends WalletInterface {
       : window.web3
       ? window.web3.isMetaMask
       : false;
-    this.icon = {
-      type: isMetamask ? 'img' : 'mew-icon',
-      value: isMetamask ? metamask : 'wallet'
+    this.meta = {
+      name: 'Web3 Wallet',
+      img: {
+        type: isMetamask ? 'img' : 'mew-icon',
+        value: isMetamask ? metamask : 'wallet'
+      }
     };
   }
   signTransaction(tx) {
