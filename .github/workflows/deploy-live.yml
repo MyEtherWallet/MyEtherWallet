@@ -28,10 +28,10 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v2
         with:
-          path: .npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
