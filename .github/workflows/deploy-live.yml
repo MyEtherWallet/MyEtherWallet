@@ -21,6 +21,7 @@ jobs:
           git checkout $GITHUB_SHA
 
       - name: setup env
+        id: node-version
         run: |
           docker build -t mew-build-container .
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
