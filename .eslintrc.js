@@ -28,9 +28,24 @@ module.exports = {
     'security/detect-object-injection': 'off',
     'require-atomic-updates': 'off',
     'no-prototype-builtins': 'off',
-    "no-irregular-whitespace": ["error", { "skipComments": true, "skipTemplates": true, "skipStrings": true, "skipRegExps": true }],
+    'no-irregular-whitespace': [
+      'error',
+      {
+        skipComments: true,
+        skipTemplates: true,
+        skipStrings: true,
+        skipRegExps: true
+      }
+    ],
     'vue/custom-event-name-casing': 'off',
-    
+    'vue/no-unused-properties': [
+      'error',
+      {
+        groups: ['props', 'data', 'computed', 'methods', 'setup'],
+        deepData: false,
+        ignorePublicMembers: false
+      }
+    ]
   },
   parserOptions: {
     parser: 'babel-eslint'

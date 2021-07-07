@@ -75,9 +75,6 @@ export default {
           !!value || this.$t('interface.address-book.validations.addr-required')
       ];
     },
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
-    },
     addressBookWithMyAddress() {
       return this.isHomePage
         ? [

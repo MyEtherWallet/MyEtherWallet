@@ -100,7 +100,6 @@ export default {
   name: 'BalanceAddressPaperWallet',
   data() {
     return {
-      blockieSize: '70px',
       blockieImg: undefined
     };
   },

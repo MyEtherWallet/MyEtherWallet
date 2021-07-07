@@ -226,7 +226,6 @@ export default {
   data() {
     return {
       navOpen: null,
-      menuSelected: 0,
       version: VERSION,
       background: background,
       onSettings: false,

@@ -304,13 +304,6 @@ export default {
         return 'Show Less';
       }
       return '';
-    },
-    /**
-     * Property returns an icon for show more providers button,
-     * based on showMore property
-     */
-    moreProvidersIcon() {
-      return this.showMore ? 'mdi-arrow-up' : 'mdi-arrow-down';
     }
   },
   watch: {

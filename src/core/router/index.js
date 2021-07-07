@@ -26,10 +26,10 @@ const router = new Router({
 });
 router.beforeResolve((to, from, next) => {
   // Check if user is coming from a path that needs auth
-  if (store.state.wallet.address && to.meta.hasOwnProperty('requiresAuth')) {
+  if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
     store.dispatch('wallet/removeWallet');
   }
-  if (to.meta.hasOwnProperty('requiresAuth')) {
+  if (to.meta.noAuth) {
     next();
   } else {
     if (store.state.wallet.address === null) {

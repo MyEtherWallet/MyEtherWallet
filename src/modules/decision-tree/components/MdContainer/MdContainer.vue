@@ -1,7 +1,7 @@
 <template functional>
   <div class="md-container">
     <!--  eslint-disable-next-line vue/no-v-html -->
-    <div class="dynamic-content" v-html="props.md"></div>
+    <div class="dynamic-content" v-html="md"></div>
   </div>
 </template>
 

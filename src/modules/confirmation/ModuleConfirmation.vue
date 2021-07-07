@@ -392,9 +392,6 @@ export default {
       }, BigNumber(0));
       return hexToNumberString(batchGasPrice);
     },
-    nonce() {
-      return hexToNumber(this.tx.nonce);
-    },
     txFee() {
       const parsedTxFee = BigNumber(toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
@@ -414,14 +411,6 @@ export default {
         return parsedValue;
       }
       return '0';
-    },
-    isSoftwareWallet() {
-      return (
-        !this.instance.isHardware &&
-        (this.instance.identifier === WALLET_TYPES.KEYSTORE ||
-          this.instance.identifier === WALLET_TYPES.PRIV_KEY ||
-          this.instance.identifier === WALLET_TYPES.MNEMONIC)
-      );
     },
     disableBtn() {
       if (this.error !== '') return true;
