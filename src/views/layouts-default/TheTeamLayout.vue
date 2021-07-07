@@ -38,11 +38,9 @@ import Olga from '@/assets/images/team/olga.jpg';
 import Alex from '@/assets/images/team/alex.jpg';
 import Misha from '@/assets/images/team/misha.jpg';
 import Yel from '@/assets/images/team/gamaliel.jpg';
-import Steve from '@/assets/images/team/steve.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
 import Jessica from '@/assets/images/team/jessica.jpg';
 import David from '@/assets/images/team/david.jpg';
-import Stephen from '@/assets/images/team/stephen.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
 import Semaja from '@/assets/images/team/semaja.jpg';
@@ -67,11 +65,9 @@ export default {
       { img: Alex, name: 'Alex', title: 'Director of Mobile' },
       { img: Misha, name: 'Misha', title: 'Lead Mobile Developer' },
       { img: Yel, name: 'Yel', title: 'Full-Stack Developer' },
-      { img: Steve, name: 'Steve', title: 'Full-Stack Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: Stephen, name: 'Stephen', title: 'Educational Project Lead' },
       { img: Brittany, name: 'Brittany', title: 'Operations Coordinator' },
       {
         img: Richie,
