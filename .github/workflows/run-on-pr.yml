@@ -18,14 +18,12 @@ jobs:
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+        uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
+            ${{ runner.os }}-node-
 
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
