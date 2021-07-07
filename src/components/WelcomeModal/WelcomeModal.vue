@@ -36,9 +36,9 @@
               href="mailto:support@myetherwallet.com"
               rel="noopener noreferrer"
             >
-              {{ $t('welcomeMessage.v5-email-link') }}
-            </a>
-          </i18n>
+              {{ $t('welcomeMessage.v5-email-link') }}</a
+            ></i18n
+          >
           <p v-if="firstTimeRu">
             Если Вам удобнее общаться с нами и другими пользователями MEW на
             русском языке, присоединяйтесь к нашему сообществу в
