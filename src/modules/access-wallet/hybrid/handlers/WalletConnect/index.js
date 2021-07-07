@@ -15,10 +15,7 @@ import PromiEvent from 'web3-core-promievent';
 
 const BRIDGE_URL = 'https://bridge.walletconnect.org';
 const IS_HARDWARE = false;
-
-import { EventBus } from '@/core/plugins/eventBus';
 import walletconnect from '@/assets/images/icons/wallets/walletconnect.svg';
-
 class WalletConnectWallet {
   constructor() {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
@@ -34,7 +31,6 @@ class WalletConnectWallet {
     this.isKilled = true;
     this.walletConnect.on('disconnect', () => {
       if (!this.isKilled) {
-        EventBus.$emit('mewConnectDisconnected');
         store.dispatch('wallet/removeWallet');
       }
     });
