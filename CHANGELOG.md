@@ -2,6 +2,7 @@
 
 ### Devop
 
+* Fix v6 workflows [#3226](https://github.com/MyEtherWallet/MyEtherWallet/pull/3226)
 * Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)
 * update readme [#3227](https://github.com/MyEtherWallet/MyEtherWallet/pull/3227)
 * fix ipfs refetch once receipt, fix multicoin setting, fix txt record setting [#3198](https://github.com/MyEtherWallet/MyEtherWallet/pull/3198)
