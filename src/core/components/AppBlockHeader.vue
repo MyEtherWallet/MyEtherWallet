@@ -111,11 +111,6 @@ export default {
     }
   },
   data: () => ({}),
-  computed: {
-    hasBodySlot() {
-      return !!this.$slots.body;
-    }
-  },
   methods: {
     closeBanner() {
       this.$emit('closeBanner');

@@ -37,27 +37,6 @@ export default {
     HowItWorksTokens,
     HowItWorksMore,
     AppGetStarted
-  },
-  data() {
-    return {
-      mewTabs: [
-        {
-          name: 'send'
-        },
-        {
-          name: 'swap'
-        },
-        {
-          name: 'dapps'
-        },
-        {
-          name: 'tokens'
-        },
-        {
-          name: 'more'
-        }
-      ]
-    };
   }
 };
 </script>

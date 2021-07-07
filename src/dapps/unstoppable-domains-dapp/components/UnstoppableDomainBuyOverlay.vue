@@ -145,13 +145,7 @@
 export default {
   // components: { transactionConfirmation },
   props: {
-    open: { default: false, type: Boolean },
-    close: {
-      default: function () {
-        return {};
-      },
-      type: Function
-    }
+    open: { default: false, type: Boolean }
   },
   data() {
     return {};

@@ -47,36 +47,6 @@ const getType = inputType => {
   if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
   return { type: 'text', solidityType: string };
 };
-const formatInput = str => {
-  if (str[0] === '[') {
-    return JSON.parse(str);
-  }
-  const newArr = str.split(',');
-  return newArr.map(item => {
-    return item.replace(' ', '');
-  });
-};
-
-const validateABI = json => {
-  if (json === '') return false;
-  if (Array.isArray(json)) {
-    if (json.length > 0) {
-      return json.every(item => {
-        if (item.type === 'constructor') {
-          return !!item.type && !!item.inputs;
-        }
-        if (item.type === 'function') {
-          return !!item.type && !!item.inputs && !!item.outputs;
-        }
-        if (item.type !== 'function' || item.type !== 'constructor') {
-          return !!item.type;
-        }
-      });
-    }
-  }
-  return false;
-};
-
 const parseABI = json => {
   if (json === '') return false;
   try {
@@ -107,40 +77,4 @@ const parseJSON = json => {
     return false;
   }
 };
-
-const createTypeValidatingProxy = item => {
-  return new Proxy(item, {
-    set: (obj, prop, value) => {
-      if (prop === 'value' && value !== null) {
-        if (isContractArgValid(value, getType(obj.type).solidityType)) {
-          obj.valid = true;
-        } else {
-          obj.valid = false;
-        }
-      } else if (prop === 'value' && value === null) {
-        obj.valid = false;
-      } else if (prop === 'clear') {
-        obj.valid = false;
-      }
-      obj[prop] = value;
-      return true;
-    },
-    get: (target, prop) => {
-      if (prop === 'clear') {
-        target.value = null;
-        target.valid = false;
-        return true;
-      }
-      return target[prop];
-    }
-  });
-};
-export {
-  isContractArgValid,
-  parseJSON,
-  parseABI,
-  createTypeValidatingProxy,
-  validateABI,
-  formatInput,
-  getType
-};
+export { isContractArgValid, parseJSON, parseABI, getType };

@@ -54,20 +54,6 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    totalTransaction() {
-      let ethTxFeeTotal = 0;
-      let usdTxFeeTotal = 0;
-      this.transactions.forEach(item => {
-        const txFee = fromWei(toBN(item.gasPrice).mul(item.gas));
-        const usdTxFee = BigNumber(this.fiatValue).times(txFee).toFixed(2);
-        ethTxFeeTotal += txFee;
-        usdTxFeeTotal += usdTxFee;
-      });
-      return {
-        eth: ethTxFeeTotal,
-        usd: usdTxFeeTotal
-      };
-    },
     panelItems() {
       const copyTransactions = JSON.parse(JSON.stringify(this.transactions));
       return copyTransactions.map((item, idx) => {
