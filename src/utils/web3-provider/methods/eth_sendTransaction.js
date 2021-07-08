@@ -36,6 +36,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
+  tx.value = tx.value === '' || tx.value === '0x' ? '0' : tx.value;
   const ethCalls = new EthCalls(requestManager);
   try {
     tx.nonce = !tx.nonce
@@ -51,6 +52,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.chainId = !tx.chainId
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
+  tx.from = tx.from ? tx.from : store.state.wallet.address;
   getSanitizedTx(tx)
     .then(_tx => {
       const event = confirmInfo

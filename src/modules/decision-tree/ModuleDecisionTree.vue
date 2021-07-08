@@ -153,9 +153,7 @@ export default {
       index: mdIndex,
       currentIndex: mdIndex.ROOT,
       historyStack: [],
-      showCustomerSupport: false,
-      searchOptions: [],
-      searchSelect: {}
+      searchOptions: []
     };
   },
   computed: {
@@ -181,11 +179,6 @@ export default {
   },
   mounted() {},
   methods: {
-    getSearchItem(qa) {
-      this.historyStack.push(this.currentIndex);
-      this.currentIndex = qa;
-      this.$refs.mdList.scrollTop = 0;
-    },
     getSub(qa) {
       this.historyStack.push(this.currentIndex);
       this.currentIndex = qa;

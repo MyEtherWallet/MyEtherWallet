@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { ACTION_TYPES } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import {
@@ -45,7 +44,6 @@ export default {
   mixins: [handlerAaveOverlay],
   data() {
     return {
-      repay: ACTION_TYPES.repay,
       amount: ''
     };
   },

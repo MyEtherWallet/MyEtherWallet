@@ -1,7 +1,24 @@
 ### Release v6.0.0
 
+### Bug
+
+* fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
+
 ### Devop
 
+* Multiple fixes[#3236](https://github.com/MyEtherWallet/MyEtherWallet/pull/3236)
+* Update team page [#3233](https://github.com/MyEtherWallet/MyEtherWallet/pull/3233)
+* major wallet related refactor [#3170](https://github.com/MyEtherWallet/MyEtherWallet/pull/3170)
+* fix overflow balance on card [3229](https://github.com/MyEtherWallet/MyEtherWallet/pull/3229)
+* Fix v6 workflows [#3226](https://github.com/MyEtherWallet/MyEtherWallet/pull/3226)
+* Add telegram link to footer [#3184](https://github.com/MyEtherWallet/MyEtherWallet/pull/3184)
+* update readme [#3227](https://github.com/MyEtherWallet/MyEtherWallet/pull/3227)
+* fix ipfs refetch once receipt, fix multicoin setting, fix txt record setting [#3198](https://github.com/MyEtherWallet/MyEtherWallet/pull/3198)
+* remove wallet on back [#3206](https://github.com/MyEtherWallet/MyEtherWallet/pull/3206)
+* listen and match metamask changes [#3203](https://github.com/MyEtherWallet/MyEtherWallet/pull/3203)
+* fix landing and create wallet ui issues [#3190](https://github.com/MyEtherWallet/MyEtherWallet/pull/3190)
+* Disable next button on gas estimation process or error [#3180](3180)
+* fix wallet link, fix trade, remove shield icon [#3181](https://github.com/MyEtherWallet/MyEtherWallet/pull/3181)
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
 * Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
 * set eth as currency default [#3171](https://github.com/MyEtherWallet/MyEtherWallet/pull/3171)

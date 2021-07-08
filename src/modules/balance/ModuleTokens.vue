@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      tokensDataLoading: true,
       tableHeaders: [
         {
           text: 'Token',
@@ -109,11 +108,11 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
-    ...mapState('wallet', ['web3', 'initialLoadTokens']),
-    ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('wallet', ['web3', 'loadingWalletInfo']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
-      return this.initialLoadTokens;
+      return this.loadingWalletInfo;
     },
     tokensData() {
       if (!this.tokensList) return [];
@@ -132,17 +131,24 @@ export default {
             : '';
         newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
         newObj.price = item.pricef !== '0' ? '$' + item.pricef : '';
-        newObj.tokenImg = item.img;
-        newObj.callToAction = [
-          {
-            title: 'Trade',
-            method: () => {
-              this.$router.push({ name: 'Swap' });
-            },
-            btnStyle: 'outline',
-            colorTheme: 'primary'
-          }
-        ];
+        newObj.tokenImg = item.img ? item.img : this.network.type.icon;
+        if (this.hasSwap) {
+          newObj.callToAction = [
+            {
+              title: 'Trade',
+              method: () => {
+                const obj = {
+                  fromToken: item.contract,
+                  toToken: '',
+                  amount: item.balancef
+                };
+                this.$router.push({ name: 'Swap', query: obj });
+              },
+              btnStyle: 'outline',
+              colorTheme: 'primary'
+            }
+          ];
+        }
         return newObj;
       });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);

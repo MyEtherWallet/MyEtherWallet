@@ -373,8 +373,6 @@ export default {
   mixins: [handlerAaveApollo],
   data() {
     return {
-      handler: null,
-      caller: null,
       showDepositOverlay: false,
       requestToken: {},
       showBorrowOverlay: false,

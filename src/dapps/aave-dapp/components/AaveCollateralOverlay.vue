@@ -12,7 +12,9 @@
   >
     <template #mewOverlayBody>
       <aave-summary
+        :user-summary="userSummary"
         :selected-token="preSelectedToken"
+        :reserves-data="reservesData"
         :action-type="collateral"
         @onConfirm="callSwitchCollateral"
       />
@@ -28,6 +30,30 @@ import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 export default {
   components: { AaveSummary },
   mixins: [handlerAaveOverlay],
+  props: {
+    userSummary: {
+      type: Object,
+      default: () => {}
+    },
+    reservesData: {
+      type: Array,
+      default: () => []
+    },
+    preSelectedToken: {
+      default: () => {
+        return {};
+      },
+      type: Object
+    },
+    open: {
+      default: false,
+      type: Boolean
+    },
+    close: {
+      default: () => {},
+      type: Function
+    }
+  },
   data() {
     return {
       collateral: ACTION_TYPES.collateral

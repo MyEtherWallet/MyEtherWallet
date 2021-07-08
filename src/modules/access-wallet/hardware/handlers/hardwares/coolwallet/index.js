@@ -9,7 +9,7 @@ import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallets/transport-web-ble';
 import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
-
+import * as locstore from 'store';
 import store from '@/core/store';
 import {
   getSignTransactionObject,
@@ -20,22 +20,36 @@ import {
 import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
-const APP_NAME = 'MyEtherWalletV5';
+const APP_NAME = 'MyEtherWalletV6';
 
 class CoolWallet {
   constructor() {
     this.identifier = WALLET_TYPES.COOL_WALLET;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
-    this.appPrivateKey = '';
-    this.appPublicKey = '';
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
-    this.icon = {
-      type: 'img',
-      value: coolwallet
+    this.meta = {
+      name: 'Cool Wallet',
+      img: {
+        type: 'img',
+        value: coolwallet
+      }
     };
+    this.appId = locstore.get('coolWallet-appId')
+      ? locstore.get('coolWallet-appId')
+      : '';
+    this.appPrivateKey = locstore.get('coolWallet-appPrivateKey')
+      ? locstore.get('coolWallet-appPrivateKey')
+      : '';
+    this.appPublicKey = locstore.get('coolWallet-appPublicKey')
+      ? locstore.get('coolWallet-appPublicKey')
+      : '';
+    this.firstTimeConnecting =
+      this.appPrivateKey === '' &&
+      this.appPublicKey === '' &&
+      this.appId === '';
   }
   init(password) {
     const _this = this;
@@ -45,29 +59,39 @@ class CoolWallet {
       cwsTransportLib.listen((error, device) => {
         if (error) reject(error);
         if (device) {
-          cwsTransportLib.connect(device).then(_transport => {
+          cwsTransportLib.connect(device).then(async _transport => {
             _this.transport = _transport;
-            const { publicKey: appPublicKey, privateKey: appPrivateKey } =
-              generateKeyPair();
-            _this.appPrivateKey = appPrivateKey;
-            _this.appPublicKey = appPublicKey;
-            const coolWalletInstance = new cwsWallet(
-              _this.transport,
-              this.appPrivateKey
-            );
-            coolWalletInstance
-              .register(this.appPublicKey, password, APP_NAME)
-              .then(appId => {
-                _this.appId = appId;
-                coolWalletInstance.setAppId(appId);
-                _this.deviceInstance = new cwsETH(
-                  _this.transport,
-                  _this.appPrivateKey,
-                  _this.appId
-                );
-                resolve();
-              })
-              .catch(errorHandler);
+            try {
+              _this.deviceInstance = new cwsETH(
+                _this.transport,
+                _this.appPrivateKey,
+                _this.appId
+              );
+              await _this.deviceInstance.getAddress(0);
+              resolve();
+            } catch (e) {
+              const { publicKey: appPublicKey, privateKey: appPrivateKey } =
+                generateKeyPair();
+              _this.appPrivateKey = appPrivateKey;
+              _this.appPublicKey = appPublicKey;
+              const coolWalletInstance = new cwsWallet(
+                _this.transport,
+                _this.appPrivateKey
+              );
+              coolWalletInstance
+                .register(_this.appPublicKey, password, APP_NAME)
+                .then(appId => {
+                  _this.appId = appId;
+                  coolWalletInstance.setAppId(appId);
+                  _this.deviceInstance = new cwsETH(
+                    _this.transport,
+                    _this.appPrivateKey,
+                    _this.appId
+                  );
+                  resolve();
+                })
+                .catch(errorHandler);
+            }
           });
         } else {
           reject(new Error('no device'));
@@ -139,7 +163,7 @@ class CoolWallet {
       txSigner,
       msgSigner,
       null,
-      this.icon
+      this.meta
     );
   }
 

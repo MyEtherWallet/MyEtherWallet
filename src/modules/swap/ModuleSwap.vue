@@ -7,7 +7,7 @@
         class="d-flex flex-grow-1 pt-6"
         title="Swap"
       >
-        <template #moduleBody>
+        <template v-if="isAvailable" #moduleBody>
           <!--
             =====================================================================================
               From / Amount to Swap / To / Amount to Recieve
@@ -24,7 +24,7 @@
                   :value="fromTokenType"
                   label="From"
                   :items="actualFromTokens"
-                  :is-swap="true"
+                  :is-custom="true"
                   :loading="isLoading"
                   @input="setFromToken"
                 />
@@ -32,13 +32,15 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 :value="tokenInValue"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
                 :disabled="initialLoad"
                 :buy-more-str="
-                  amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                  amountErrorMessage === errorMsgs.amountEthIsTooLow
+                  isEthNetwork &&
+                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
                     ? 'Buy more.'
                     : null
                 "
@@ -67,7 +69,7 @@
                 ref="toToken"
                 :value="toTokenType"
                 :items="actualToTokens"
-                :is-swap="true"
+                :is-custom="true"
                 :loading="isLoading"
                 label="To"
                 @input="setToToken"
@@ -75,6 +77,7 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 disabled
                 :value="tokenOutValue"
               />
@@ -89,9 +92,9 @@
           <app-user-msg-block
             v-if="!hasMinEth"
             class="mt-sm-5"
-            :message="msg.storeBitcoin"
+            :message="msg.lowBalance"
           >
-            <div class="mt-3 mx-n1">
+            <div v-if="isEthNetwork" class="mt-3 mx-n1">
               <mew-button
                 btn-size="small"
                 btn-style="outline"
@@ -128,7 +131,7 @@
               isEthNetwork
             "
             class="mt-sm-5"
-            :message="msg.lowBalance"
+            :message="msg.storeBitcoin"
           >
             <div class="border-top mt-3">
               <v-expansion-panels
@@ -155,6 +158,7 @@
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
                         href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                        target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
                       </a>
@@ -220,7 +224,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
-            is-swap
+            is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />
@@ -234,6 +238,16 @@
             />
           </div>
         </template>
+        <!--
+          =====================================================================================
+           Message is SWAP NOT Available
+          =====================================================================================
+        -->
+        <template v-else #moduleBody>
+          <div class="swap-not-available">
+            <app-user-msg-block :message="swapNotAvailableMes" />
+          </div>
+        </template>
       </mew-module>
     </mew6-white-sheet>
   </div>
@@ -244,7 +258,6 @@ import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SwapIcon from '@/assets/images/icons/icon-swap.svg';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
@@ -255,20 +268,11 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/core/plugins/eventBus';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
-const MIN_GAS_WEI = '800000000000000';
-
-const errorMsgs = {
-  amountEthIsTooLow: 'You do not have enough ETH to swap',
-  amountExceedsEthBalance: 'Amount exceeds your ETH balance.',
-  amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
-  amountLessThan0: 'Swap amount must be greater than 0',
-  doNotOwnToken: 'You do not own this token'
-};
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -285,28 +289,21 @@ export default {
       type: String,
       default: MAIN_TOKEN_ADDRESS
     },
-    toToken: {
-      type: String,
-      default: ''
-    },
     amount: {
       type: String,
       default: '0'
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      msg: {
-        storeBitcoin: {
-          title: 'Your Ether balance is too low',
-          subtitle:
-            "Every transaction requires a small amount of Ether to execute. Even if you have tokens to swap, when your Ether balance is close to zero, you won't be able to send anything until you fund your account."
-        },
-        lowBalance: {
-          title: 'Did you know? You can store your Bitcoin on Ethereum',
-          subtitle:
-            'To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your Ethereum wallet.'
-        }
+      swapNotAvailableMes: {
+        title: `Swap is not available on this network`,
+        subtitle:
+          'Please select ETH, BSC or MATIC networks to use this feature.'
       },
       step: 0,
       confirmInfo: {
@@ -320,7 +317,6 @@ export default {
         selectedProvider: '',
         totalFees: ''
       },
-      wrappedBtc: ['renBTC', 'wBTC', 'PBTC'],
       swapper: null,
       toTokenType: {},
       fromTokenType: {},
@@ -344,14 +340,11 @@ export default {
             'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
         }
       ],
-      swapIcon: SwapIcon,
       isLoadingProviders: false,
       addressValue: {},
-      gasPriceModal: false,
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy',
-      errorMsgs: errorMsgs
+      localGasType: 'economy'
     };
   },
   computed: {
@@ -370,6 +363,33 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     *Returns errors messages based on netowrk
+     */
+    errorMsgs() {
+      return {
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
+        amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
+        amountLessThan0: 'Swap amount must be greater than 0',
+        doNotOwnToken: 'You do not own this token'
+      };
+    },
+    /**
+     * Property returns correct mes
+     */
+    msg() {
+      return {
+        lowBalance: {
+          title: `Your ${this.network.type.name} balance is too low`,
+          subtitle: `Every transaction requires a small amount of ${this.network.type.name} to execute. Even if you have tokens to swap, when your ${this.network.type.name} balance is close to zero, you won't be able to send anything until you fund your account.`
+        },
+        storeBitcoin: {
+          title: `Did you know? You can store your Bitcoin on ${this.network.type.name_long}`,
+          subtitle: `To swap to BTC you need a Bitcoin wallet, but you can swap to wrapped Bitcoin instead and store it in your ${this.network.type.name_long} wallet.`
+        }
+      };
+    },
     disableNext() {
       return (
         this.step < 2 ||
@@ -412,25 +432,6 @@ export default {
     mainTokenDetails() {
       const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
       return ethToken;
-    },
-    /**
-     * Switches displayed balance
-     * depending on selected currency balance
-     */
-    selectedBalance() {
-      if (
-        _.isEmpty(this.fromTokenType) ||
-        this.fromTokenType.symbol === this.network.type.currencyName
-      ) {
-        return this.balanceInETH;
-      }
-
-      const token = this.tokensList.find(item => {
-        return item.symbol === this.fromTokenType.symbol;
-      });
-      return token
-        ? this.getTokenBalance(token.balance, token.decimals).toFixed()
-        : this.balanceInETH;
     },
     /**
      * checks whether both token fields are empty
@@ -520,35 +521,6 @@ export default {
       });
     },
     /**
-     * @returns object of wallet tokens
-     * to swap from
-     */
-    walletTokens() {
-      const tokensOwned = [];
-      /**
-       * if ETH balance is < 0, add Buy ETH dropdown item
-       */
-      if (BigNumber(this.balanceInETH).lte(0)) {
-        tokensOwned.push({
-          contract: MAIN_TOKEN_ADDRESS,
-          hasNoEth: true,
-          disabled: true,
-          text: 'Your wallet is empty.',
-          linkText: 'Buy ' + this.network.type.currencyName,
-          link: 'https://ccswap.myetherwallet.com/#/'
-        });
-      } else if (
-        /**
-         * if ETH balance is > 0 and selected from token is not ETH, add ETH wallet details
-         */
-        !this.isFromTokenMain &&
-        BigNumber(this.balanceInETH).gt(0)
-      ) {
-        tokensOwned.push(this.mainTokenDetails);
-      }
-      return tokensOwned.concat(this.tokensList);
-    },
-    /**
      * @returns object of all token data
      * to swap from
      */
@@ -561,7 +533,7 @@ export default {
         )
           return item;
       });
-      let tradebleWalletTokens = this.walletTokens.filter(item => {
+      let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
           if (vt.contract.toLowerCase() === item?.contract?.toLowerCase())
             return item;
@@ -589,19 +561,6 @@ export default {
         ...validFromTokens
       ];
       return returnableTokens;
-    },
-    /**
-     * @returns boolean to hide providers
-     * checks whether the provider is the only option,
-     * the provider selected is chaangelly,
-     * and there's an amount error
-     */
-    hideProviders() {
-      const hasError = this.amountErrorMessage !== '';
-      const onlyOption = this.availableQuotes.length === 1;
-      const isChangelly = this.selectedProvider.provider === 'changelly';
-
-      return !(hasError && onlyOption && isChangelly);
     },
     /**
      * @returns object of other tokens
@@ -669,7 +628,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+      return toBN(this.balanceInWei).gt(
+        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -683,16 +644,6 @@ export default {
         : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
-    /**
-     * Checks whether the swap is to BTC
-     */
-    isToBtc() {
-      return (
-        (this.fromTokenType.symbol === this.network.type.currencyName ||
-          this.fromTokenType?.isEth) &&
-        this.toTokenType.symbol === 'BTC'
-      );
-    },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
@@ -703,7 +654,9 @@ export default {
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType?.name) {
         const hasBalance = this.tokensList.find(
-          token => token.symbol === this.fromTokenType.symbol
+          token =>
+            token.contract.toLowerCase() ===
+            this.fromTokenType.contract.toLowerCase()
         );
         return hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
@@ -712,37 +665,11 @@ export default {
       return new BigNumber(0);
     },
     /**
-     * @return string for the available balance
-     * Used in hint for the From token amount
-     * Amount is rounded
-     */
-    availableBalanceHint() {
-      if (!this.initialLoad && this.fromTokenType?.symbol) {
-        return `${this.availableBalance.toFixed()} ${
-          this.fromTokenType.symbol
-        }`;
-      }
-      return '';
-    },
-
-    /**
      * Determines whether or not to show swap fee panel
      * Fee is shown if provider was selected and no errors are passed
      */
     showSwapFee() {
       return this.step >= 2 && this.availableBalance.gt(0);
-    },
-
-    /**
-     * Return true Input Amount Error or input is empty
-     * Used to determine whether or not to fetch provider's list and show transaction fee
-     */
-    hasAmountErrors() {
-      return (
-        !this.tokenInValue ||
-        this.amountErrorMessage !== '' ||
-        this.tokenInValue === ''
-      );
     },
     /**
      * Method validates input for the From token amount against user input
@@ -757,6 +684,14 @@ export default {
             : this.tokensList.length > 0 && !this.isFromTokenMain
             ? this.errorMsgs.doNotOwnToken
             : '';
+        }
+        if (
+          !Swapper.helpers.hasValidDecimals(
+            this.tokenInValue,
+            this.fromTokenType.decimals
+          )
+        ) {
+          return `Provided amount exceeds valid decimal.`;
         }
         /*Eth Balance is to low to send a transaction*/
         if (!this.hasMinEth) {
@@ -820,15 +755,17 @@ export default {
       immediate: true
     },
     network() {
-      this.isLoading = true;
-      this.swapper = new Swapper(this.web3, this.network.type.name);
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
+      if (this.isAvailable) {
+        this.isLoading = true;
+        this.swapper = new Swapper(this.web3, this.network.type.name);
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      }
     },
     mainTokenDetails() {
       this.setDefaults();
@@ -881,23 +818,29 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
-        ? new BigNumber(this.availableBalance)
-            .minus(fromWei(MIN_GAS_WEI))
-            .toFixed()
+        ? availableBalanceMinusGas.gt(0)
+          ? availableBalanceMinusGas.toFixed()
+          : '0'
         : this.availableBalance.toFixed();
     },
     /**
      * Gets the default from token
      */
     getDefaultFromToken() {
+      const findToken = this.actualFromTokens.find(item => {
+        if (item.contract === this.defaults.fromToken) return item;
+      });
       if (
         this.defaults.fromToken === MAIN_TOKEN_ADDRESS &&
         new BigNumber(this.balanceInETH).gt(0)
       ) {
         return this.mainTokenDetails;
       }
-      return this.actualFromTokens[0];
+      return findToken ? findToken : this.actualFromTokens[0];
     },
     /**
      * gets the select label placeholder token imgs
@@ -905,7 +848,7 @@ export default {
     getPlaceholderImgs() {
       if (this.tokensList.length > 0) {
         return this.tokensList.slice(0, 5).map(item => {
-          return item.img;
+          return item.img ? item.img : this.network.type.icon;
         });
       }
       return [];
@@ -924,9 +867,6 @@ export default {
       if (_.isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
-    },
-    openGasPriceModal() {
-      this.gasPriceModal = true;
     },
     setDefaults() {
       setTimeout(() => {
@@ -989,6 +929,9 @@ export default {
               q.isSelected = false;
               return q;
             });
+            if (this.availableQuotes.length > 1) {
+              this.availableQuotes = quotes.filter(q => q.rate !== '0');
+            }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
               this.step = 1;
@@ -1009,7 +952,7 @@ export default {
       });
     },
     getTrade: _.debounce(function (idx) {
-      if (!this.isToAddressValid) return;
+      if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
@@ -1060,6 +1003,10 @@ export default {
         toImg: this.toTokenType.img,
         fromVal: this.tokenInValue,
         toVal: this.tokenOutValue,
+        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+          .times(this.tokenOutValue)
+          .toFixed(),
+        fromUsdVal: this.fromTokenType.usdBalance,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         totalFees: this.totalFees,
@@ -1125,22 +1072,9 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        this.feeError =
-          'Not enough ETH to cover network fee. Select a different provider or buy more ETH.';
+        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
+        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
       }
-    },
-    openSettings() {
-      EventBus.$emit('toggleSettings');
-      this.gasPriceModal = false;
-    },
-    closeGasPrice() {
-      this.gasPriceModal = false;
-    },
-    setWrappedBtc(symbol) {
-      const foundToken = this.toTokens.find(
-        item => item.symbol.toLowerCase() === symbol.toLowerCase()
-      );
-      this.setToToken(foundToken);
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e.gasPrice;
@@ -1206,5 +1140,11 @@ export default {
 
 .border-top {
   border-top: 1px solid var(--v-inputBorder-base);
+}
+
+.swap-not-available {
+  @media (min-width: 960px) {
+    min-height: 45vh;
+  }
 }
 </style>

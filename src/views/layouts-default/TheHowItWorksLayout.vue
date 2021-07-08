@@ -4,9 +4,7 @@
     <div class="py-7" />
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <h1 class="text-sm-center">
-          Your All-In-One Gateway to the Ethereum Blockchain
-        </h1>
+        <h1 class="text-sm-center">Your Gateway to The Ethereum Blockchain</h1>
       </v-sheet>
     </v-container>
 
@@ -39,27 +37,6 @@ export default {
     HowItWorksTokens,
     HowItWorksMore,
     AppGetStarted
-  },
-  data() {
-    return {
-      mewTabs: [
-        {
-          name: 'send'
-        },
-        {
-          name: 'swap'
-        },
-        {
-          name: 'dapps'
-        },
-        {
-          name: 'tokens'
-        },
-        {
-          name: 'more'
-        }
-      ]
-    };
   }
 };
 </script>

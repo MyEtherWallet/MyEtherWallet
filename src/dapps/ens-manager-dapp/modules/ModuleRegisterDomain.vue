@@ -105,11 +105,11 @@ export default {
       stepperItems: [
         {
           step: 1,
-          name: 'STEP 1. Request registration'
+          name: 'STEP 1. Select Duration'
         },
         {
           step: 2,
-          name: 'STEP 2. Register domain'
+          name: 'STEP 2. Create Commitment'
         },
         {
           step: 3,
@@ -119,10 +119,6 @@ export default {
     };
   },
   methods: {
-    reset() {
-      this.onStep = 1;
-      this.duration = 0;
-    },
     onRequest(val) {
       this.generateKeyPhrase();
       this.duration = val;

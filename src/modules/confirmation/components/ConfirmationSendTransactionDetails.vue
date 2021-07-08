@@ -35,6 +35,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
@@ -45,10 +46,6 @@ export default {
   },
   props: {
     to: {
-      type: String,
-      default: ''
-    },
-    data: {
       type: String,
       default: ''
     },
@@ -71,10 +68,6 @@ export default {
     valueUsd: {
       type: Number,
       default: 0
-    },
-    toTxData: {
-      type: Object,
-      default: () => {}
     },
     toDetails: {
       type: Object,
@@ -136,7 +129,7 @@ export default {
         },
         {
           avatar: this.avatar,
-          address: this.to,
+          address: this.to ? toChecksumAddress(this.to) : '',
           nickname:
             this.toDetails && this.toDetails.nickname
               ? this.toDetails.nickname

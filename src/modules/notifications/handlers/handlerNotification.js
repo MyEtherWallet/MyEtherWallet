@@ -1,7 +1,6 @@
-import { isAddress, isHexStrict } from 'web3-utils';
+import { isAddress, isHexStrict, toBN, numberToHex, isBN } from 'web3-utils';
 import vuexStore from '@/core/store';
 import BigNumber from 'bignumber.js';
-import { toBN, numberToHex, isBN } from 'web3-utils';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -37,7 +36,7 @@ const VALID_ARGUMENTS = [
   'errMessage', // string
   'swapObj', // obj
   'swapResolver',
-  'formatted' //boolean
+  'formatted' //boolean,
 ];
 /**
  * Notification types
@@ -81,7 +80,7 @@ export default class Notification {
      * Assigning values: date, value, gasPrice, gas, status
      */
     const date = obj.timestamp
-      ? new BigNumber(obj.timestamp).times(1000).toFixed()
+      ? new BigNumber(obj.timestamp).times(1000).toNumber()
       : new Date().getTime();
     /**
      * The Notification Obj
@@ -96,7 +95,7 @@ export default class Notification {
       transactionFee: numberToHex(
         this._getTxFee(obj.gasPrice, obj.gasUsed ? obj.gasUsed : obj.gas)
       ),
-      status: obj.status,
+      status: obj.status ? obj.status : NOTIFICATION_STATUS.PENDING,
       type: obj.type,
       value: isBN(obj.value) ? numberToHex(obj.value) : obj.value,
       date: date,

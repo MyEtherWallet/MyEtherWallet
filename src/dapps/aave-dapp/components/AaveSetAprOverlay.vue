@@ -52,10 +52,6 @@ export default {
         this.$emit('onConfirm', param);
         this.close();
       }
-    },
-    handleCancel() {
-      this.rateType = '';
-      this.close();
     }
   }
 };

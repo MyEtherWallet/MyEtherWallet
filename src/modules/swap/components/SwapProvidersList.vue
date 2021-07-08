@@ -232,7 +232,7 @@ export default {
       providersMessage: {
         title: 'Select token and enter amount to see rates.',
         subtitle:
-          'MEW finds the best price for you across multiple DEXs and Exchange services.'
+          'MEW finds the best price for you across multiple DEXs and exchange services.'
       }
     };
   },
@@ -304,13 +304,6 @@ export default {
         return 'Show Less';
       }
       return '';
-    },
-    /**
-     * Property returns an icon for show more providers button,
-     * based on showMore property
-     */
-    moreProvidersIcon() {
-      return this.showMore ? 'mdi-arrow-up' : 'mdi-arrow-down';
     }
   },
   watch: {

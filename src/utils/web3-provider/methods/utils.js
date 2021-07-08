@@ -1,9 +1,9 @@
 import { formatters } from 'web3-core-helpers';
-import Notification from '@/modules/notifications/handlers/handlerNotification';
-import {
+import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
+
 import { _ } from 'web3-utils';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
@@ -48,13 +48,15 @@ const setEvents = (promiObj, tx, dispatch) => {
     .once('receipt', () => {
       newTxObj.status = NOTIFICATION_STATUS.SUCCESS;
       const notification = new Notification(newTxObj);
-      dispatch(
-        'external/setTokenBalance',
-        {},
-        {
-          root: true
-        }
-      );
+      setTimeout(() => {
+        dispatch(
+          'external/setTokenAndEthBalance',
+          {},
+          {
+            root: true
+          }
+        );
+      }, 3000); //give network some time to update
       if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
           root: true
@@ -65,13 +67,15 @@ const setEvents = (promiObj, tx, dispatch) => {
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);
-      dispatch(
-        'external/setTokenBalance',
-        {},
-        {
-          root: true
-        }
-      );
+      setTimeout(() => {
+        dispatch(
+          'external/setTokenAndEthBalance',
+          {},
+          {
+            root: true
+          }
+        );
+      }, 3000); //give network some time to update
       if (!isExempt) {
         dispatch('notifications/updateNotification', notification, {
           root: true

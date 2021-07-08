@@ -15,9 +15,11 @@ export default {
   isTestNetwork: true,
   ens: {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-    registrarTLD: 'test',
-    registrarType: 'fifs',
-    supportedTld: ROP
+    registrarTLD: 'eth',
+    registrarType: 'permanent',
+    supportedTld: ROP,
+    subgraphPath:
+      'https://api.thegraph.com/subgraphs/name/ensdomains/ensropsten'
   },
   icon: rop,
   currencyName: 'ROP',

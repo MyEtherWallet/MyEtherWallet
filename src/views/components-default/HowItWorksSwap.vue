@@ -43,9 +43,9 @@
                 Competitive Rates
               </div>
               <p class="white--text">
-                DEX.AG is made up of several popular Decentralized exchanges,
-                allowing you to pick the provider that works best for your token
-                swap.
+                MEW works with decentralized exchange aggregators 1inch and
+                DEX.AG to find the best price on your token swap. This way you
+                don’t have to deal with multiple platforms to get the best rate.
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default {
       toptitle: '',
       title: 'Swap',
       description:
-        'MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for swaps including fiat-to-crypto, ETH, ERC20 tokens, BTC, and more!',
+        'MEW has partnered with 1inch, DEX AG, Changelly, Bity, and Simplex for easy crypto purchases and swaps. Buy ETH right in the wallet, swap ETH for ERC20 tokens, BTC and more!',
       centered: false
     }
   })

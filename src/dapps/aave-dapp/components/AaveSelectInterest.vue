@@ -86,9 +86,6 @@ export default {
     };
   },
   computed: {
-    showError() {
-      return this.selectedToken?.usageAsCollateralEnabled || false;
-    },
     rates() {
       const stable = this.selectedToken?.stableBorrowRateEnabled
         ? formatPercentageValue(

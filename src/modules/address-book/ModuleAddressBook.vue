@@ -75,9 +75,6 @@ export default {
           !!value || this.$t('interface.address-book.validations.addr-required')
       ];
     },
-    address() {
-      return this.resolvedAddr.length > 0 ? this.resolvedAddr : this.inputAddr;
-    },
     addressBookWithMyAddress() {
       return this.isHomePage
         ? [
@@ -103,8 +100,18 @@ export default {
   mounted() {
     if (this.network.type.ens)
       this.nameResolver = new NameResolver(this.network);
+    if (this.isHomePage) {
+      this.setDonationAddress();
+    }
   },
   methods: {
+    /**
+     * Sets selected address to be MEW donation address
+     * only happens on home page
+     */
+    setDonationAddress() {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+    },
     toggleOverlay() {
       this.addMode = !this.addMode;
     },
@@ -124,7 +131,7 @@ export default {
       }
     },
     setAddress(value, inputType) {
-      if (value) {
+      if (typeof value === 'string') {
         const typeVal =
           inputType === 'typed'
             ? value

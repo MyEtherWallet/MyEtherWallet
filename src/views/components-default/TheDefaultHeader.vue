@@ -20,7 +20,7 @@
             class="white--text text-decoration--none"
             :to="{ name: 'HowItWorks' }"
           >
-            How it works
+            What is MEW
           </router-link>
           <mew-menu
             text-color="white--text"
@@ -51,8 +51,6 @@ export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
-    mewTools: false,
-    openMobileMenu: false,
     menuObj: {
       name: 'Wallet actions',
       items: [
@@ -64,7 +62,7 @@ export default {
               to: { name: 'SendTX' }
             },
             {
-              title: 'Explore Dapps',
+              title: 'Explore DApps',
               to: { name: 'Dapps' }
             },
             {
@@ -80,20 +78,6 @@ export default {
         {
           title: 'More actions',
           items: [
-            /*
-            {
-              title: 'Watch only address',
-              to: { name: 'Tools', query: { tab: '1' } }
-            },
-            {
-              title: 'Send offline helper',
-              to: { name: 'Tools', query: { tab: '2' } }
-            },
-            {
-              title: 'Convery units',
-              to: { name: 'Tools', query: { tab: '4' } }
-            },
-            */
             {
               title: 'Verify message',
               to: { name: 'Tools', query: { tab: '1' } }
@@ -106,9 +90,6 @@ export default {
   methods: {
     routeTo(route) {
       this.$router.push(route);
-    },
-    openMobile() {
-      this.openMobileMenu = true;
     }
   }
 };

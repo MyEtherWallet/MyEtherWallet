@@ -3,8 +3,9 @@
     class="mew-component--features-tokens pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">We support tokens</div>
-    <div>We support many tokens including ERC-20.</div>
+    <div class="mew-heading-1 mb-3">
+      MEW supports ETH and all ERC-20 tokens!
+    </div>
     <div class="mt-10">
       <v-row>
         <v-col v-for="(t, k) in tokens" :key="k" cols="12" lg="4" sm="6">
@@ -15,7 +16,7 @@
         </v-col>
       </v-row>
       <mew-button
-        title="Buy tokens"
+        title="Get tokens"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
         @click.native="$router.push({ name: 'AccessWallet', params: {} })"
@@ -32,63 +33,63 @@ export default {
     tokens: [
       {
         label: 'Tether (USDT)',
-        icon: 'https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png'
       },
       {
         label: 'Uniswap (UNI)',
-        icon: 'https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png'
       },
       {
         label: 'Chainlink (LINK)',
-        icon: 'https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png'
       },
       {
         label: 'USD Coin (USDC)',
-        icon: 'https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png'
       },
       {
         label: 'Wrapped Bitcoin (WBTC)',
-        icon: 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png'
       },
       {
         label: 'Crypto.com Coin (CRO)',
-        icon: 'https://assets.coingecko.com/coins/images/7310/thumb/cypto.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/7310/thumb/cypto.png'
       },
       {
         label: 'Aave (AAVE)',
-        icon: 'https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png'
       },
       {
         label: 'OKB (OKB)',
-        icon: 'https://assets.coingecko.com/coins/images/4463/thumb/okb_token.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/4463/thumb/okb_token.png'
       },
       {
         label: 'Binance USD (BUSD)',
-        icon: 'https://assets.coingecko.com/coins/images/9576/thumb/BUSD.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9576/thumb/BUSD.png'
       },
       {
         label: 'FTX Token (FTT)',
-        icon: 'https://assets.coingecko.com/coins/images/9026/thumb/F.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9026/thumb/F.png'
       },
       {
         label: 'cUSDC (CUSDC)',
-        icon: 'https://assets.coingecko.com/coins/images/9442/thumb/Compound_USDC.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9442/thumb/Compound_USDC.png'
       },
       {
         label: 'Dai (DAI)',
-        icon: 'https://assets.coingecko.com/coins/images/9956/thumb/dai-multi-collateral-mcd.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9956/thumb/dai-multi-collateral-mcd.png'
       },
       {
         label: 'Chiliz (CHZ)',
-        icon: 'https://assets.coingecko.com/coins/images/8834/thumb/Chiliz.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/8834/thumb/Chiliz.png'
       },
       {
         label: 'cETH (CETH)',
-        icon: 'https://assets.coingecko.com/coins/images/10643/thumb/ceth2.JPG'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/10643/thumb/ceth2.JPG'
       },
       {
         label: 'cDAI (CDAI)',
-        icon: 'https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
+        icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
     ]
   })

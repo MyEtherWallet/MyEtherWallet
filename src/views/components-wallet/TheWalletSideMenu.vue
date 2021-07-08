@@ -142,7 +142,7 @@
         </v-list-item>
 
         <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <theme-switch />
+          <!-- <theme-switch /> -->
           <div class="searchText--text">v{{ version }}</div>
         </div>
       </v-list>
@@ -200,11 +200,10 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
-import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
+// import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 const routeNames = {
   dashboard: 'Dashboard',
   sendtx: 'SendTX',
@@ -221,14 +220,12 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ThemeSwitch,
     ModuleNotifications
   },
   data() {
     return {
       navOpen: null,
-      menuSelected: 0,
-      version: process.env.VERSION,
+      version: VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
@@ -311,7 +308,6 @@ export default {
       ],
       routeNetworks: {
         [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.dapps]: [ETH],
         [routeNames.nftmanager]: [ETH]
       }
     };
@@ -324,16 +320,6 @@ export default {
     EventBus.$on('toggleSettings', () => {
       this.toggleSettings();
     });
-    if (this.instance.identifier === WALLET_TYPES.MEW_CONNECT) {
-      this.instance.mewConnect.on('RtcClosedEvent', () => {
-        if (this.instance.mewConnect.getConnectonState()) {
-          EventBus.$emit('mewConnectDisconnected');
-          this.removeWallet().then(() => {
-            this.$router.push({ name: 'Home' });
-          });
-        }
-      });
-    }
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
@@ -355,9 +341,7 @@ export default {
     onLogout(res) {
       this.showLogoutPopup = false;
       if (res.title === this.logout.btnRight.title) {
-        this.removeWallet().then(() => {
-          this.$router.push({ name: 'Home' });
-        });
+        this.removeWallet();
       }
     },
     toggleLogout() {

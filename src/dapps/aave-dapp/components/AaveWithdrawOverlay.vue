@@ -30,7 +30,6 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { ACTION_TYPES } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import { mapGetters } from 'vuex';
@@ -44,12 +43,6 @@ export default {
     AaveAmountForm
   },
   mixins: [handlerAaveOverlay],
-  data() {
-    return {
-      withdraw: ACTION_TYPES.withdraw,
-      amount: ''
-    };
-  },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),

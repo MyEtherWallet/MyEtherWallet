@@ -26,62 +26,16 @@ export default {
       type: String,
       default: ''
     },
-    from: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: String,
-      default: ''
-    },
-    gasPrice: {
-      type: String,
-      default: ''
-    },
-    gasLimit: {
-      type: String,
-      default: ''
-    },
-    nonce: {
-      type: Number,
-      default: 0
-    },
-    network: {
-      type: Object,
-      default: () => {}
-    },
     copy: {
       type: Function,
       default: () => {}
-    },
-    txFee: {
-      type: String,
-      default: '0'
-    },
-    txFeeUSD: {
-      type: String,
-      default: '0'
-    },
-    value: {
-      type: String,
-      default: '0'
     }
   },
   data: function () {
     return {
       warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…',
-      open: false,
-      panelItems: [
-        {
-          name: 'Details'
-        }
-      ],
-      activeTab: 0
+        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…'
     };
-  },
-  methods: {
-    close: () => {}
   }
 };
 </script>

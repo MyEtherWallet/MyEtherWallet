@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" max-width="400px" class="border-radius--10px">
+  <v-dialog
+    :value="show"
+    max-width="400px"
+    class="border-radius--10px"
+    @close="close"
+    @click:outside="close"
+  >
     <v-img src="@/assets/images/backgrounds/bg-erroe-msg.svg">
       <div class="d-flex align-center justify-center height--full">
         <div class="mew-heading-2 white--text">
@@ -11,7 +17,7 @@
     <div style="background-color: white" class="py-6">
       <div class="px-6">
         <div>
-          Something goes wrong, would you want to inform to #MEWteam about this
+          Something went wrong, would you like to inform to #MEWteam about this
           error?
         </div>
         <v-row class="mt-4 mb-2">
@@ -20,11 +26,17 @@
               :has-full-width="true"
               btn-style="outline"
               btn-size="xlarge"
-              title="Ok"
+              title="No"
+              @click.native="resolve(false)"
             />
           </v-col>
           <v-col>
-            <mew-button :has-full-width="true" btn-size="xlarge" title="Send" />
+            <mew-button
+              :has-full-width="true"
+              btn-size="xlarge"
+              title="Send"
+              @click.native="resolve(true)"
+            />
           </v-col>
         </v-row>
       </div>
@@ -35,7 +47,13 @@
           <v-expansion-panel-header class="font-weight-bold">
             Error messages
           </v-expansion-panel-header>
-          <v-expansion-panel-content> </v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <textarea
+              v-model="errorDetails"
+              readonly
+              class="error-detail"
+            ></textarea>
+          </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
       <v-divider class="mx-6"></v-divider>
@@ -46,10 +64,6 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
     close: {
       type: Function,
       default: () => {}
@@ -57,13 +71,31 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    resolve: {
+      type: Function,
+      default: () => {}
+    },
+    error: {
+      type: Object,
+      default: () => {}
     }
   },
-  data: () => {
-    return { dialog: true };
-  },
-  methods: {}
+  computed: {
+    errorDetails() {
+      return JSON.stringify(this.error, null, 2);
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.error-detail {
+  width: 100%;
+  height: 150px;
+  border: 0;
+  color: black;
+  font-size: 12px;
+  resize: none;
+}
+</style>

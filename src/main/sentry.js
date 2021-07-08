@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/vue';
 import { Integrations } from '@sentry/tracing';
 import Vue from 'vue';
-// import { EventBus } from '@/core/plugins/eventBus';
+import { EventBus } from '@/core/plugins/eventBus';
 import store from '@/core/store';
 
 // Sentry
@@ -14,7 +14,9 @@ Sentry.init({
   requestBodies: 'small',
   autoSessionTracking: false,
   release: NODE_ENV === 'production' ? VERSION : 'develop',
-  beforeSend(event) {
+  beforeSend(event, hint) {
+    // eslint-disable-next-line
+    console.error(hint.originalException || hint.syntheticException);
     const network = store.getters['global/network']
       ? store.getters['global/network'].type.name
       : '';
@@ -27,13 +29,10 @@ Sentry.init({
       service: service,
       walletType: identifier
     };
-    // eslint-disable-next-line
-    console.log(event);
-    return event;
-    // return new Promise(resolve => {
-    //   EventBus.$emit('issueModal', event, resolve);
-    // }).then(res => {
-    //   return res === true ? event : null;
-    // });
+    return new Promise(resolve => {
+      EventBus.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
   }
 });

@@ -10,7 +10,7 @@
         <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
           Features
         </div>
-        <h1 class="mb-9">Your All-In-One Gateway to the Ethereum Blockchain</h1>
+        <h1 class="mb-9">Your Gateway to the Ethereum Blockchain</h1>
       </v-sheet>
       <div class="features-tabs-container">
         <v-container>
@@ -43,9 +43,7 @@
           <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
             Features
           </h5>
-          <h1 class="mb-10">
-            Your All-In-One Gateway to the Ethereum Blockchain
-          </h1>
+          <h1 class="mb-10">Your Gateway to the Ethereum Blockchain</h1>
 
           <v-tabs v-model="mobileTab" fixed-tabs>
             <v-tab v-for="item in mobileItems" :key="item.tab">
@@ -56,9 +54,9 @@
           <v-tabs-items v-model="mobileTab">
             <v-tab-item v-for="item in mewTabs" :key="item.tab">
               <div class="mt-10 mb-5">
-                <home-features-send v-if="item.name === 'Send'" />
+                <home-features-send v-if="item.name === 'ETH'" />
                 <home-features-swap v-if="item.name === 'Swap'" />
-                <home-features-dapps v-if="item.name === 'Dapps'" />
+                <home-features-dapps v-if="item.name === 'DApps'" />
                 <home-features-tokens v-if="item.name === 'Tokens'" />
               </div>
             </v-tab-item>
@@ -88,7 +86,7 @@ export default {
     mobileTab: null,
     mobileItems: [
       {
-        tab: 'Send',
+        tab: 'ETH',
         img: require('@/assets/images/snippets/mobile/mobile-features-send.svg')
       },
       {
@@ -96,7 +94,7 @@ export default {
         img: require('@/assets/images/snippets/mobile/mobile-features-swap.svg')
       },
       {
-        tab: 'Dapps',
+        tab: 'DApps',
         img: require('@/assets/images/snippets/mobile/mobile-features-dapps.svg')
       },
       {
@@ -106,13 +104,13 @@ export default {
     ],
     mewTabs: [
       {
-        name: 'Send'
+        name: 'ETH'
       },
       {
         name: 'Swap'
       },
       {
-        name: 'Dapps'
+        name: 'DApps'
       },
       {
         name: 'Tokens'

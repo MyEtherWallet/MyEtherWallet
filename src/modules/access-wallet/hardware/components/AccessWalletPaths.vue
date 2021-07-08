@@ -8,10 +8,9 @@
         =====================================================================================
         -->
         <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-        <div class="headline font-weight-bold">Select HD Derivation Path</div>
-        <p class="mb-5">
-          Please select HD Derivation Path that you you want to interact
-        </p>
+        <div class="headline font-weight-bold mb-5">
+          Select HD Derivation Path
+        </div>
         <div>
           <mew-select
             v-if="onLedger"
@@ -41,10 +40,6 @@
 <script>
 export default {
   props: {
-    step: {
-      type: Number,
-      default: 0
-    },
     paths: {
       type: Array,
       default: () => []
@@ -60,10 +55,6 @@ export default {
     onLedger: {
       type: Boolean,
       default: false
-    },
-    icon: {
-      type: String,
-      default: ''
     }
   },
   data() {
