@@ -1,3 +1,7 @@
+### Bug
+
+* fix show private key in paper wallet for non pupKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+
 ### Release v6.0.0
 
 ### Bug
