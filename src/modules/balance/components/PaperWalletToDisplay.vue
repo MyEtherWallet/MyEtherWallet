@@ -136,7 +136,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {
-      if (this.address && !this.showPrivateKey) {
+      if (this.address && this.showPrivateKey) {
         return this.instance.getPrivateKeyString();
       }
       return null;
