@@ -89,9 +89,9 @@ import {
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { mapActions, mapState, mapGetters } from 'vuex';
-import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import { MewConnectWallet } from '@/modules/access-wallet/common';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -122,7 +122,7 @@ export default {
         /* MEW wallet Button */
         {
           color: 'basic',
-          title: 'MEWwallet',
+          title: 'MEW wallet',
           subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
@@ -288,20 +288,15 @@ export default {
      * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
      */
     openMEWconnect() {
-      try {
-        const mc = new MewConnect.Initiator({ newPopupCreator: true });
-        mc.createWalletOnly(this.network)
-          .then(_newWallet => {
-            this.setWallet([_newWallet]).then(() => {
-              this.$router.push({ name: 'Dashboard' });
-            });
-          })
-          .catch(e => {
-            Toast(e.message, {}, SENTRY);
+      MewConnectWallet()
+        .then(_newWallet => {
+          this.setWallet([_newWallet]).then(() => {
+            this.$router.push({ name: 'Dashboard' });
           });
-      } catch (e) {
-        Toast(e.message, {}, SENTRY);
-      }
+        })
+        .catch(e => {
+          Toast(e.message, {}, SENTRY);
+        });
     }
   }
 };

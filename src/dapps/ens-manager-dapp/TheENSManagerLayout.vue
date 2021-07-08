@@ -168,6 +168,7 @@
                 <v-row class="pa-7">
                   <v-col
                     v-for="(option, key) in manageDomainOptions"
+                    v-show="!domain.expired || key === 1"
                     :key="key"
                     cols="6"
                     sm="6"

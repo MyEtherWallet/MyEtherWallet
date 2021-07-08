@@ -46,6 +46,11 @@ export default {
     ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
+    address() {
+      if (!this.address) {
+        this.$router.push({ name: 'Home' });
+      }
+    },
     network() {
       this.web3.eth.clearSubscriptions();
     },
@@ -71,7 +76,7 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setBlockNumber', 'setTokens']),
+    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
     ...mapActions('global', ['setGasPrice', 'setNetwork']),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
@@ -98,9 +103,9 @@ export default {
     subscribeToBlockNumber() {
       this.web3.eth.getBlockNumber().then(res => {
         this.setBlockNumber(res);
-      });
-      this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-        this.setBlockNumber(res.number);
+        this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+          this.setBlockNumber(res.number);
+        });
       });
     },
     /**

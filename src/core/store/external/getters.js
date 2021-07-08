@@ -100,8 +100,8 @@ const contractToToken =
       const networkType = rootGetters['global/network'].type;
       cgToken = getters.getCoinGeckoTokenById(tokenId);
       return Object.assign(cgToken, {
-        name: networkType.name,
-        symbol: networkType.name,
+        name: networkType.currencyName,
+        symbol: networkType.currencyName,
         subtext: networkType.name_long,
         value: networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,

@@ -5,7 +5,7 @@
         Partners
       </div>
     </v-sheet>
-    <v-row class="mt-2 px-4">
+    <v-row class="mt-2 px-4" align="center">
       <v-col
         v-for="(p, key) in partners"
         :key="key"
@@ -67,6 +67,14 @@ export default {
       {
         img: require('@/assets/images/partners/simplex.png'),
         link: 'https://www.simplex.com/'
+      },
+      {
+        img: require('@/assets/images/partners/1inchdark.png'),
+        link: 'https://app.1inch.io/'
+      },
+      {
+        img: require('@/assets/images/partners/dexag.png'),
+        link: 'https://dex.ag/'
       }
     ]
   })

@@ -9,7 +9,7 @@
       <v-row>
         <v-col cols="12" lg="7">
           <v-img
-            src="@/assets/images/snippets/my-tokens-table.png"
+            src="@/assets/images/snippets/my-tokens-table.svg"
             class="mb-n7"
           />
         </v-col>

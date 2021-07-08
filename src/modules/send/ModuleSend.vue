@@ -207,10 +207,6 @@ export default {
       type: String,
       default: ''
     },
-    prefilledTokenSymbol: {
-      type: String,
-      default: ''
-    },
     prefilledGasLimit: {
       type: String,
       default: '21000'
@@ -218,7 +214,6 @@ export default {
   },
   data() {
     return {
-      addMode: false,
       gasLimit: '21000',
       toAddress: '',
       sendTx: null,
@@ -226,7 +221,6 @@ export default {
       amount: '0',
       selectedCurrency: {},
       data: '0x',
-      clearAll: false,
       userInputType: '',
       expandPanel: [
         {
@@ -388,10 +382,6 @@ export default {
         }
       ];
     },
-    displayedGasPrice() {
-      const gasPrice = this.actualGasPrice.toString();
-      return BigNumber(fromWei(gasPrice, 'gwei')).toFixed(2);
-    },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
     },
@@ -408,15 +398,6 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
-    },
-    currencyBalance() {
-      if (this.selectedCurrency?.balance) {
-        return this.convertToDisplay(
-          this.selectedCurrency.balance,
-          this.selectedCurrency.decimals
-        );
-      }
-      return '0';
     },
     txFeeETH() {
       return fromWei(this.txFee);
@@ -440,12 +421,6 @@ export default {
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBN(amount);
-    },
-    hasSelectedToken() {
-      return (
-        !_.isEmpty(this.selectedCurrency) &&
-        this.selectedCurrency.hasOwnProperty('symbol')
-      );
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -616,9 +591,6 @@ export default {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
-    },
-    toggleOverlay() {
-      this.addMode = !this.addMode;
     },
     setSendTransaction() {
       this.sendTx = new SendTransaction(this.$store);

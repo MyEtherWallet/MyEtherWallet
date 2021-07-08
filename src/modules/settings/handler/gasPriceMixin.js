@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { SENTRY, Toast } from '@/modules/toast/handler/handlerToast';
+import { SENTRY, Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import {
   getGasBasedOnType,
   gasPriceTypes
@@ -94,6 +94,11 @@ const gasPriceMixin = {
       this.setGasPriceType(gasPriceTypes.STORED).then(() => {
         this.setGasPrice(
           getGasBasedOnType(toWei(customGasPrice, 'gwei'), gasPriceTypes.STORED)
+        );
+        Toast(
+          `You have set custom gas price at: ${customGasPrice}`,
+          {},
+          SUCCESS
         );
       });
     },

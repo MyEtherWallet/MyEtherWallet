@@ -403,10 +403,6 @@ export default {
           }
         }
       ],
-      warning: {
-        color: 'red',
-        text: 'Expire soon'
-      },
       BG: BG,
       topBanner: {
         title: 'Unstoppable Domain',

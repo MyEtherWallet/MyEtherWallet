@@ -42,9 +42,12 @@ class WalletInterface {
       this.publicKey = _pubKey;
       this.isPubOnly = true;
     }
-    this.icon = {
-      type: 'mew-icon',
-      value: keystore ? 'keystore' : 'privateKey'
+    this.meta = {
+      name: keystore ? 'Key store' : 'Private Key',
+      img: {
+        type: 'mew-icon',
+        value: keystore ? 'keystore' : 'privateKey'
+      }
     };
   }
   getPrivateKey() {
