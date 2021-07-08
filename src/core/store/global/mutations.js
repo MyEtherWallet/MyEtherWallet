@@ -28,7 +28,6 @@ const SET_NETWORK = function (state, networkObj) {
   _netObj.type = {
     name: networkObj.type.name
   };
-  console.log(_netObj);
   state.currentNetwork = _netObj;
 };
 const SET_GAS_PRICE_TYPE = function (state, type) {
