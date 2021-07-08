@@ -272,7 +272,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
-const MIN_GAS_WEI = '800000000000000';
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -628,7 +628,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+      return toBN(this.balanceInWei).gt(
+        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -652,7 +654,9 @@ export default {
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType?.name) {
         const hasBalance = this.tokensList.find(
-          token => token.symbol === this.fromTokenType.symbol
+          token =>
+            token.contract.toLowerCase() ===
+            this.fromTokenType.contract.toLowerCase()
         );
         return hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
@@ -814,16 +818,13 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      let availableBalanceMinusGas = new BigNumber(this.availableBalance).minus(
-        fromWei(MIN_GAS_WEI)
-      );
-
-      availableBalanceMinusGas = availableBalanceMinusGas.gt('0')
-        ? availableBalanceMinusGas
-        : '0';
-
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
-        ? availableBalanceMinusGas.toFixed()
+        ? availableBalanceMinusGas.gt(0)
+          ? availableBalanceMinusGas.toFixed()
+          : 0
         : this.availableBalance.toFixed();
     },
     /**
