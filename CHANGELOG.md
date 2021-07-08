@@ -1,6 +1,7 @@
 ### Release v6.0.0
 
 ### Bug
+
 * Ignore getTransactionByHash null error msg if it errors out less than 3x [#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
 * fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
 

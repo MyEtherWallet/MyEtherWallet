@@ -23,44 +23,37 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
 
   const websocket = new WebSocketLink(subscriptionClient);
 
+  function ignoreGetTxByHash(error) {
+    let count = 0;
+    // Ignore getTransactionByHash null error msg if it errors out less than 3x
+    if (
+      error.toLowerCase().includes(errorMsgs.cannotReturnNull.toLowerCase())
+    ) {
+      count += 1;
+      if (count <= 3) {
+        return true;
+      }
+      return false;
+    }
+  }
+
   const onErrorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        let count = 0;
-        // Ignore getTransactionByHash null error msg if it errors out less than 3x
-        if (
-          newError
-            .toLowerCase()
-            .includes(errorMsgs.cannotReturnNull.toLowerCase())
-        ) {
-          count += 1;
-          if (count <= 3) {
-            return;
-          }
+        if (!ignoreGetTxByHash(newError)) {
+          // eslint-disable-next-line
+          console.error(newError);
         }
-        // eslint-disable-next-line
-        console.error(newError);
       });
     }
 
     if (graphQLErrors && process.env.NODE_ENV === 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        let count = 0;
-
-        // Ignore getTransactionByHash null error msg if it errors out less than 3x
-        if (
-          newError
-            .toLowerCase()
-            .includes(errorMsgs.cannotReturnNull.toLowerCase())
-        ) {
-          count += 1;
-          if (count <= 3) {
-            return;
-          }
+        if (!ignoreGetTxByHash(newError)) {
+          Sentry.captureException(newError);
         }
-        Sentry.captureException(newError);
       });
     }
   });
