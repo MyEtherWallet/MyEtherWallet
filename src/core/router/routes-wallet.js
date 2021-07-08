@@ -9,7 +9,8 @@ import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
 import verifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
-import { swapProps, swapRouterGuard, ROUTES_WALLET } from './helpers';
+import { swapProps, swapRouterGuard } from './helpers';
+import { ROUTES_WALLET } from './config-routes';
 export default {
   path: '/wallet',
   component: TheWalletView,

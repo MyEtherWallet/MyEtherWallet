@@ -40,14 +40,18 @@
               class="mr-4"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: ROUTES.CreateWallet.Name })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.CreateWallet.Name })
+              "
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: ROUTES.AccessWallet.Name })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.AccessWallet.Name })
+              "
             />
           </div>
         </div>
@@ -90,7 +94,9 @@
                 has-full-width
                 title="Create a new wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: ROUTES.CreateWallet.Name })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.CreateWallet.Name })
+                "
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -99,7 +105,9 @@
                 btn-style="outline"
                 title="Access my wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: ROUTES.AccessWallet.Name })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.AccessWallet.Name })
+                "
               />
             </v-col>
           </v-row>
@@ -110,13 +118,13 @@
 </template>
 
 <script>
-import { ROUTES } from '../router/helpers';
+import { ROUTES_HOME } from '../router/config-routes';
 export default {
   name: 'GetStarted',
   components: {},
   data() {
     return {
-      ROUTES: ROUTES
+      ROUTES_HOME: ROUTES_HOME
     };
   }
 };

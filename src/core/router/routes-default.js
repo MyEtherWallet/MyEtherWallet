@@ -11,12 +11,12 @@ import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
+import { ROUTES_HOME } from './config-routes';
 import {
   createWalletProps,
   createRouteGuard,
   accessWalletProps,
-  accessRouteGuard,
-  ROUTES_HOME
+  accessRouteGuard
 } from './helpers';
 
 export default {
