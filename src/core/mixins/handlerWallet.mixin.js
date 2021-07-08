@@ -19,6 +19,9 @@ export default {
     getLatestPrices: {
       query: getLatestPrices,
       pollInterval: 600000,
+      skip() {
+        return !!this.isEthNetwork;
+      },
       result({ data }) {
         this.tokensData = new Map();
         if (data && data.getLatestPrices) {
