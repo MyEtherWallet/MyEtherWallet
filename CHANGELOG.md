@@ -1,3 +1,6 @@
+### Feature
+* Remove divider in Staked UI and replace Russ team member photo [3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
+
 ### Release v6.0.0
 
 ### Bug
