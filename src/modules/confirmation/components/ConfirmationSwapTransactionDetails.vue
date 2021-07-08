@@ -83,6 +83,14 @@ export default {
       type: String,
       default: ''
     },
+    fromUsd: {
+      type: String,
+      default: ''
+    },
+    toUsd: {
+      type: String,
+      default: ''
+    },
     txFee: {
       type: String,
       default: '0'
@@ -115,13 +123,19 @@ export default {
           title: 'You Swap',
           icon: this.fromImg,
           value: this.formattedFromVal,
-          type: this.fromType
+          type: this.fromType,
+          address: this.from,
+          amount: formatFloatingPointValue(this.fromVal).value,
+          usd: formatFloatingPointValue(this.fromUsd).value
         },
         {
           title: 'You will get',
           icon: this.toImg,
           value: this.formattedToVal,
-          type: this.toType
+          type: this.toType,
+          address: this.to,
+          amount: formatFloatingPointValue(this.toVal).value,
+          usd: formatFiatValue(this.toUsd).value
         }
       ];
     }

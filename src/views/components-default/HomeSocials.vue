@@ -2,23 +2,29 @@
   <v-container>
     <div class="py-7" />
     <v-sheet align="center">
-      <h2 class="titlePrimary--text pb-5">Join MEW Community</h2>
+      <h1 class="titlePrimary--text pb-5">Join MEW Community</h1>
     </v-sheet>
-    <v-sheet color="transparent" max-width="700px" class="mx-auto">
-      <v-row dense align="center" justify="center">
+    <v-sheet color="transparent" max-width="900px" class="mx-auto">
+      <v-row align="center" justify="center">
         <v-col
           v-for="(p, key) in socials"
           :key="key"
           align="center"
-          cols="auto"
-          sm="4"
-          md="4"
-          lg="1"
+          cols="4"
+          sm="2"
+          md="1"
         >
           <a :href="p.link" target="_blank">
-            <v-img :src="p.img" max-height="45px" max-width="45px" />
+            <v-img
+              :src="p.img"
+              max-height="40px"
+              max-width="40px"
+              contain
+              class="align-center justify-center"
+              style="border-radius: 50%"
+            />
           </a>
-          <div class="pt-2 textSecondary--text primary--text mew-label">
+          <div class="pt-2 textSecondary--text mew-label text-center">
             {{ p.label }}
           </div>
         </v-col>

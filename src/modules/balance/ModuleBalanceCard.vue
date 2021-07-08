@@ -143,10 +143,10 @@
     </div>
 
     <module-access-wallet-hardware
-      v-if="isHardware"
+      v-if="!!instance.path"
       :open="openChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="isHardware"
+      :switch-address="!!instance.path"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -196,7 +196,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
-    ...mapState('wallet', ['address', 'isHardware', 'identifier']),
+    ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',

@@ -114,7 +114,7 @@
 
           <mew-info-card
             class="mx-auto"
-            title="MEWwallet"
+            title="MEW wallet"
             desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
             :link="{
               title: 'Get the App',
