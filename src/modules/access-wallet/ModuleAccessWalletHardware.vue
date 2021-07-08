@@ -481,7 +481,7 @@ export default {
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
-        this.setAddresses();
+        if (this.hwWalletInstance) this.setAddresses();
       }
     }
   },
