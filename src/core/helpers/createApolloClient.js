@@ -27,13 +27,17 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        // Ignore getTransactionByHash null error msg
+        let count = 0;
+        // Ignore getTransactionByHash null error msg if it errors out less than 3x
         if (
           newError
             .toLowerCase()
             .includes(errorMsgs.cannotReturnNull.toLowerCase())
         ) {
-          return;
+          count += 1;
+          if (count <= 3) {
+            return;
+          }
         }
         // eslint-disable-next-line
         console.error(newError);
@@ -43,6 +47,19 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
     if (graphQLErrors && process.env.NODE_ENV === 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
+        let count = 0;
+
+        // Ignore getTransactionByHash null error msg if it errors out less than 3x
+        if (
+          newError
+            .toLowerCase()
+            .includes(errorMsgs.cannotReturnNull.toLowerCase())
+        ) {
+          count += 1;
+          if (count <= 3) {
+            return;
+          }
+        }
         Sentry.captureException(newError);
       });
     }
