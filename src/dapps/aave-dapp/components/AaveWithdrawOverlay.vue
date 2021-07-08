@@ -31,7 +31,7 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { ACTION_TYPES, convertToFixed } from '../handlers/helpers';
+import { convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import { mapGetters } from 'vuex';
@@ -40,12 +40,6 @@ export default {
     AaveAmountForm
   },
   mixins: [aaveOverlayMixin],
-  data() {
-    return {
-      withdraw: ACTION_TYPES.withdraw,
-      amount: ''
-    };
-  },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),

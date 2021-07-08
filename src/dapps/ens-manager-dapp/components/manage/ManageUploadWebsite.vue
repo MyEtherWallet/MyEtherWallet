@@ -92,9 +92,6 @@ export default {
     }
   },
   methods: {
-    reset() {
-      this.ipfs = '' || this.uploadedHash;
-    },
     fileChange(e) {
       const TYPES = [
         'application/zip',

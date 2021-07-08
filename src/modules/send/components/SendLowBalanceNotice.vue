@@ -54,10 +54,8 @@
 </template>
 
 <script>
-import clipboardCopy from 'clipboard-copy';
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -66,10 +64,6 @@ export default {
     AppAddrQr
   },
   props: {
-    address: {
-      type: String,
-      default: ''
-    },
     currencyName: {
       type: String,
       default: 'ETH'
@@ -84,10 +78,6 @@ export default {
     ...mapGetters('global', ['isEthNetwork'])
   },
   methods: {
-    copyAddress() {
-      clipboardCopy(this.address);
-      Toast(`Copied ${this.address} successfully!`, {}, INFO);
-    },
     openBarcodeModal() {
       this.openQR = true;
     },

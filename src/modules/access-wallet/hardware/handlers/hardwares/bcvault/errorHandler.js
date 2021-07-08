@@ -1,10 +1,5 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
-import Vue from 'vue';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
+
 const ERRORS = {
   27010: 'bcvaultError.invalid-device-pin-or-password',
   daemonError2: 'bcvaultError.closed-modal',
@@ -22,27 +17,4 @@ const WARNINGS = {
   jsErrormew4: 'bcvaultError.no-account-found',
   jsErrormew5: 'bcvaultError.no-device-found'
 };
-
-export default err => {
-  // web errors
-  if (err.hasOwnProperty('jsError')) {
-    Toast(Vue.$i18n.t(WARNINGS[`jsError${err.jsError}`]), {}, WARNING);
-    return;
-  } else if (err.hasOwnProperty('BCHttpResponse')) {
-    // request succeded but the device returned error
-    Toast(Vue.$i18n.t(ERRORS[err.BCHttpResponse.errorCode]), {}, ERROR);
-    return;
-  } else if (err.hasOwnProperty('HttpResponse')) {
-    // request when the server errors
-    Toast(err.HttpResponse, {}, SENTRY);
-  } else if (err.hasOwnProperty('DaemonHttpResponse')) {
-    Toast(
-      Vue.$i18n.t(ERRORS[`daemonError${err.DaemonHttpResponse.daemonError}`]),
-      {},
-      ERROR
-    );
-    return;
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

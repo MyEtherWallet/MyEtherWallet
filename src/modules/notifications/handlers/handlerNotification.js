@@ -1,7 +1,6 @@
-import { isAddress, isHexStrict } from 'web3-utils';
+import { isAddress, isHexStrict, toBN, numberToHex, isBN } from 'web3-utils';
 import vuexStore from '@/core/store';
 import BigNumber from 'bignumber.js';
-import { toBN, numberToHex, isBN } from 'web3-utils';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx

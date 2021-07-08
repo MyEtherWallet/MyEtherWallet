@@ -166,12 +166,8 @@ export default {
       interact: false,
       inputsValid: false,
       hasEnough: false,
-      activeContract: {},
-      hasInputs: false,
       abi: [],
-      abiInput: '',
       contractAddress: '',
-      contractType: [],
       selectedMethod: {
         inputs: [],
         outputs: []
@@ -211,9 +207,6 @@ export default {
         return this.hasEnough();
       }
       return true;
-    },
-    isNoInputViewFunction() {
-      return this.isViewFunction && this.selectedMethod.inputs.length === 0;
     },
     mergedContracts() {
       return [{ name: 'select a contract', abi: '', address: '' }].concat(

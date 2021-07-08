@@ -106,6 +106,8 @@
             :from-val="swapInfo.fromVal"
             :to-val="swapInfo.toVal"
             :provider="swapInfo.selectedProvider"
+            :to-usd="swapInfo.toUsdVal"
+            :from-usd="swapInfo.fromUsdVal"
             :tx-fee="swapInfo.totalFees"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
@@ -174,7 +176,9 @@
                   <v-spacer />
                   <div v-if="signing">
                     <v-progress-circular
-                      v-show="isBatch && signedTxArray.length < i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length < i + 1
+                      "
                       indeterminate
                       color="primary"
                       size="20"
@@ -200,7 +204,9 @@
                       mdi-check
                     </v-icon>
                     <v-icon
-                      v-show="isBatch && signedTxArray.length >= i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length >= i + 1
+                      "
                       color="primary"
                     >
                       mdi-check
@@ -342,10 +348,13 @@ export default {
     isWeb3Wallet() {
       return this.identifier === WALLET_TYPES.WEB3_WALLET;
     },
+    isMewConnect() {
+      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    },
     showConfirmWithWallet() {
       return (
         (this.isHardware || this.isWeb3Wallet) &&
-        (this.signing || this.signingPending)
+        (this.signing || this.error !== '')
       );
     },
     transactions() {
@@ -392,9 +401,6 @@ export default {
       }, BigNumber(0));
       return hexToNumberString(batchGasPrice);
     },
-    nonce() {
-      return hexToNumber(this.tx.nonce);
-    },
     txFee() {
       const parsedTxFee = BigNumber(toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
@@ -415,17 +421,12 @@ export default {
       }
       return '0';
     },
-    isSoftwareWallet() {
-      return (
-        !this.instance.isHardware &&
-        (this.instance.identifier === WALLET_TYPES.KEYSTORE ||
-          this.instance.identifier === WALLET_TYPES.PRIV_KEY ||
-          this.instance.identifier === WALLET_TYPES.MNEMONIC)
-      );
-    },
     disableBtn() {
       if (this.error !== '') return true;
       if (!this.signing) return true;
+      return this.txSigned;
+    },
+    txSigned() {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
@@ -465,6 +466,15 @@ export default {
     }
   },
   watch: {
+    error(newVal) {
+      /**
+       * Reset signed values if any of the tx in batch is declined
+       */
+      if (newVal !== '') {
+        this.signedTxArray = [];
+        this.signedTxObject = {};
+      }
+    },
     signedTxArray: {
       handler: function (newVal) {
         if (
@@ -727,6 +737,7 @@ export default {
           .catch(e => {
             this.signedTxObject = {};
             this.error = e.message;
+            this.signing = false;
           });
         this.resolver(event);
       } else {
@@ -734,10 +745,14 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           })
           .catch(e => {
             this.signedTxObject = {};
             this.error = e.message;
+            this.signing = false;
           });
       }
     },
@@ -762,6 +777,9 @@ export default {
               ? this.unsignedTxArr[i].type
               : 'OUT';
             signed.push(_signedTx);
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           } else {
             const event = this.instance.signTransaction(this.unsignedTxArr[i]);
             batchTxEvents.push(event);
@@ -785,7 +803,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
         this.signing = false;
       }
     },
@@ -799,7 +817,6 @@ export default {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;
         }
-
         this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
         return;
       }

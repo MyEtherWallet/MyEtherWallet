@@ -91,10 +91,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    handler: {
-      type: [Object, null],
-      default: () => {}
-    },
     showToggle: {
       type: Boolean,
       default: false

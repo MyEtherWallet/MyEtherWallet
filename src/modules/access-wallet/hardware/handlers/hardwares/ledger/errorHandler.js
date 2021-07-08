@@ -1,10 +1,5 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
-import Vue from 'vue';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
+
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
@@ -50,26 +45,4 @@ const WARNINGS = {
     'ledgerError.unsupported-browser-u2f'
 };
 
-export default err => {
-  const expected = err.message
-    ? err.message.substr(err.message.indexOf('Expected'), err.message.length)
-    : err.substr(err.indexOf('Expected'), err.message);
-  const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNINGS);
-  const foundError = errorValues.find(item => {
-    if (err && err.message.includes(item)) return item;
-    return item.includes(err.message) || item.includes(err);
-  });
-
-  const foundWarning = warningValues.find(item => {
-    if (err && err.message.includes(item)) return item;
-    return item.includes(err.message) || item.includes(err);
-  });
-  if (foundError) {
-    Toast(`${Vue.$i18n.t(ERRORS[foundError])}${expected}`, {}, ERROR);
-  } else if (foundWarning) {
-    Toast(`${Vue.$i18n.t(WARNINGS[foundWarning])}${expected}`, {}, WARNING);
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

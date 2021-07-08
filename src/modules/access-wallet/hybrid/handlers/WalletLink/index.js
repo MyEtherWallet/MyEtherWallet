@@ -15,7 +15,7 @@ import toBuffer from '@/core/helpers/toBuffer';
 import HybridWalletInterface from '../walletInterface';
 import walletlink from '@/assets/images/icons/wallets/walletlink.png';
 
-const IS_HARDWARE = true;
+const IS_HARDWARE = false;
 const APP_NAME = 'MEW';
 const APP_LOGO = 'https://www.myetherwallet.com/img/icons/icon192.png';
 class WalletLinkWallet {
@@ -34,9 +34,12 @@ class WalletLinkWallet {
     this.connection.disconnect = () => {
       this.connection._storage.clear();
     };
-    this.icon = {
-      type: 'img',
-      value: walletlink
+    this.meta = {
+      name: 'WalletLink',
+      img: {
+        type: 'img',
+        value: walletlink
+      }
     };
   }
   init() {

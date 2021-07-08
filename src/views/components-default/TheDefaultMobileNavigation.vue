@@ -94,12 +94,6 @@ import AppBtnMenu from '@/core/components/AppBtnMenu';
 export default {
   name: 'MobileMenu',
   components: { AppBtnMenu },
-  props: {
-    value: {
-      default: false,
-      type: Boolean
-    }
-  },
   data: () => ({
     isOpen: false,
     menu: [
@@ -171,6 +165,10 @@ export default {
   .v-list-group__header,
   .v-list-item {
     border-top: 0 !important;
+  }
+  .theme--dark.v-list-item:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    cursor: pointer;
   }
 }
 </style>
