@@ -848,7 +848,7 @@ export default {
     getPlaceholderImgs() {
       if (this.tokensList.length > 0) {
         return this.tokensList.slice(0, 5).map(item => {
-          return item.img;
+          return item.img ? item.img : this.network.type.icon;
         });
       }
       return [];
