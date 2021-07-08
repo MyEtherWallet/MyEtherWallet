@@ -9,31 +9,31 @@ import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
 import verifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
-import { swapProps, swapRouterGuard } from './helpers';
+import { swapProps, swapRouterGuard, ROUTES } from './helpers';
 export default {
   path: '/wallet',
   component: TheWalletView,
   props: true,
   children: [
     {
-      path: '',
-      name: 'Wallets',
+      path: ROUTES.Wallets.Path,
+      name: ROUTES.Wallets.Name,
       component: Dashboard,
       meta: {
         noAuth: false
       }
     },
     {
-      path: '/dashboard',
-      name: 'Dashboard',
+      path: ROUTES.Dashboard.Path,
+      name: ROUTES.Dashboard.Name,
       component: Dashboard,
       meta: {
         noAuth: false
       }
     },
     {
-      path: 'send-tx',
-      name: 'SendTX',
+      path: ROUTES.SendTX.Path,
+      name: ROUTES.SendTX.Name,
       component: Send,
       props: true,
       meta: {
@@ -41,16 +41,16 @@ export default {
       }
     },
     {
-      path: 'nft',
-      name: 'NFTManager',
+      path: ROUTES.NFTManager.Path,
+      name: ROUTES.NFTManager.Name,
       component: NftManager,
       meta: {
         noAuth: false
       }
     },
     {
-      path: 'swap',
-      name: 'Swap',
+      path: ROUTES.Swap.Path,
+      name: ROUTES.Swap.Name,
       component: Swap,
       props: swapProps,
       beforeEnter: swapRouterGuard,
@@ -59,7 +59,7 @@ export default {
       }
     },
     {
-      path: 'dapps',
+      path: ROUTES.Dapps.Path,
       component: Dapps,
       children: DappRoutes,
       meta: {
@@ -67,32 +67,32 @@ export default {
       }
     },
     {
-      path: 'deploy',
-      name: 'DeployContract',
+      path: ROUTES.DeployContract.Path,
+      name: ROUTES.DeployContract.Name,
       component: DeployContract,
       meta: {
         noAuth: false
       }
     },
     {
-      path: 'interact',
-      name: 'InteractWithContract',
+      path: ROUTES.InteractWithContract.Path,
+      name: ROUTES.InteractWithContract.Name,
       component: InteractContract,
       meta: {
         noAuth: false
       }
     },
     {
-      path: 'sign',
-      name: 'SignMessage',
+      path: ROUTES.SignMessage.Path,
+      name: ROUTES.SignMessage.Name,
       component: SignMessage,
       meta: {
         noAuth: false
       }
     },
     {
-      path: 'verify',
-      name: 'verifyMessage',
+      path: ROUTES.VerifyMessage.Path,
+      name: ROUTES.VerifyMessage.Name,
       component: verifyMessage,
       meta: {
         noAuth: false
