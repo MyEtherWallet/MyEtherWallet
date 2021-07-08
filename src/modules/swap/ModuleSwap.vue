@@ -274,7 +274,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
-const MIN_GAS_WEI = '800000000000000';
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -669,7 +669,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+      return toBN(this.balanceInWei).gt(
+        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -887,7 +889,7 @@ export default {
     setMaxAmount() {
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
-      ).minus(fromWei(MIN_GAS_WEI));
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.toFixed()
         : this.availableBalance.toFixed();
