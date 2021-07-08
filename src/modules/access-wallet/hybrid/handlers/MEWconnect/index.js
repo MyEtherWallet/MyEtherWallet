@@ -78,7 +78,7 @@ class MEWconnectWallet {
         });
         this.mewConnect.mewConnect.once('reject', () => {
           this.mewConnect.mewConnect.removeAllListeners('signTx');
-          reject({ reject: true });
+          reject('Transaction rejected');
         });
       });
     };

@@ -80,7 +80,7 @@ const setWeb3Instance = function (
         arr[i].nonce = web3.utils.toBN(nonce).addn(i).toString();
         arr[i].gas = gas;
         arr[i].chainId = !arr[i].chainId
-          ? rootState.global.currentNetwork.type.chainID
+          ? rootGetters['global/network'].type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;

@@ -70,11 +70,11 @@ export default {
       },
       {
         img: require('@/assets/images/partners/1inchdark.png'),
-        link: 'https://www.simplex.com/'
+        link: 'https://app.1inch.io/'
       },
       {
         img: require('@/assets/images/partners/dexag.png'),
-        link: 'https://www.simplex.com/'
+        link: 'https://dex.ag/'
       }
     ]
   })
