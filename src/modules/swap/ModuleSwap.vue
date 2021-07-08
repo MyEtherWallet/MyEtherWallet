@@ -883,13 +883,16 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      const availableBalanceMinusGas = new BigNumber(this.availableBalance)
+      let availableBalanceMinusGas = new BigNumber(this.availableBalance)
         .minus(fromWei(MIN_GAS_WEI))
         .toFixed();
-      this.tokenInValue =
-        this.isFromTokenMain && availableBalanceMinusGas > 0
-          ? availableBalanceMinusGas
-          : this.availableBalance.toFixed();
+
+      availableBalanceMinusGas =
+        availableBalanceMinusGas > '0' ? availableBalanceMinusGas : '0';
+
+      this.tokenInValue = this.isFromTokenMain
+        ? availableBalanceMinusGas
+        : this.availableBalance.toFixed();
     },
     /**
      * Gets the default from token
