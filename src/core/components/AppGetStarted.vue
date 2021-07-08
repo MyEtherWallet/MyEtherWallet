@@ -40,14 +40,14 @@
               class="mr-4"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'CreateWallet' })"
+              @click.native="$router.push({ name: ROUTES.CreateWallet.Name })"
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'AccessWallet' })"
+              @click.native="$router.push({ name: ROUTES.AccessWallet.Name })"
             />
           </div>
         </div>
@@ -90,7 +90,7 @@
                 has-full-width
                 title="Create a new wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'CreateWallet' })"
+                @click.native="$router.push({ name: ROUTES.CreateWallet.Name })"
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -99,7 +99,7 @@
                 btn-style="outline"
                 title="Access my wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'AccessWallet' })"
+                @click.native="$router.push({ name: ROUTES.AccessWallet.Name })"
               />
             </v-col>
           </v-row>
@@ -110,11 +110,14 @@
 </template>
 
 <script>
+import { ROUTES } from '../router/helpers';
 export default {
   name: 'GetStarted',
   components: {},
   data() {
-    return {};
+    return {
+      ROUTES: ROUTES
+    };
   }
 };
 </script>
