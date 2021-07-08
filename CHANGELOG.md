@@ -1,3 +1,7 @@
+### Devop
+
+* Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+
 ### Release v6.0.0
 
 ### Bug
