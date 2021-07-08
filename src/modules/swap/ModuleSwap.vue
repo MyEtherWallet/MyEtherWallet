@@ -703,7 +703,9 @@ export default {
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType?.name) {
         const hasBalance = this.tokensList.find(
-          token => token.symbol === this.fromTokenType.symbol
+          token =>
+            token.contract.toLowerCase() ===
+            this.fromTokenType.contract.toLowerCase()
         );
         return hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
@@ -883,13 +885,12 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
-      const availableBalanceMinusGas = new BigNumber(this.availableBalance)
-        .minus(fromWei(MIN_GAS_WEI))
-        .toFixed();
-      this.tokenInValue =
-        this.isFromTokenMain && availableBalanceMinusGas > 0
-          ? availableBalanceMinusGas
-          : this.availableBalance.toFixed();
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(MIN_GAS_WEI));
+      this.tokenInValue = this.isFromTokenMain
+        ? availableBalanceMinusGas.toFixed()
+        : this.availableBalance.toFixed();
     },
     /**
      * Gets the default from token
