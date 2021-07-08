@@ -2,7 +2,7 @@
 
 ### Bug
 
-* Ignore getTransactionByHash null error msg if it errors out less than 3x [#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
+* Ignore getTransactionByHash null error msg if it errors out less than 3x and skip apollo queries if it is not ETH network[#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
 * fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
 
 ### Devop
