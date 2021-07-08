@@ -681,6 +681,14 @@ export default {
             ? this.errorMsgs.doNotOwnToken
             : '';
         }
+        if (
+          !Swapper.helpers.hasValidDecimals(
+            this.tokenInValue,
+            this.fromTokenType.decimals
+          )
+        ) {
+          return `Provided amount exceeds valid decimal.`;
+        }
         /*Eth Balance is to low to send a transaction*/
         if (!this.hasMinEth) {
           return this.errorMsgs.amountEthIsTooLow;
