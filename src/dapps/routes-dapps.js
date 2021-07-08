@@ -10,7 +10,8 @@ export default [
     return {
       path: dm.path,
       name: dm.path,
-      component: dm.layout
+      component: dm.layout,
+      meta: dm.meta
     };
   })
 ];

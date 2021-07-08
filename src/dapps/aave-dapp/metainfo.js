@@ -7,5 +7,8 @@ export default {
   rightIcon: 'aave',
   path: 'aave',
   networks: [],
-  layout
+  layout,
+  meta: {
+    noAuth: false
+  }
 };

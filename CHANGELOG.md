@@ -1,5 +1,9 @@
 ### Release v6.0.0
 
+### Bug
+
+* fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
+
 ### Devop
 
 * major wallet related refactor [#3170](https://github.com/MyEtherWallet/MyEtherWallet/pull/3170)

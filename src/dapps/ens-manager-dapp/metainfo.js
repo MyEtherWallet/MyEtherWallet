@@ -8,5 +8,8 @@ export default {
   rightIcon: 'ensManager',
   path: 'ens-manager',
   networks: [ETH, GOERLI, RIN, ROP],
-  layout
+  layout,
+  meta: {
+    noAuth: false
+  }
 };
