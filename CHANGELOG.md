@@ -1,3 +1,9 @@
+### Release v6.0.1
+
+### Bug
+
+* fix prefilled swaps []()
+
 ### Release v6.0.0
 
 ### Bug
