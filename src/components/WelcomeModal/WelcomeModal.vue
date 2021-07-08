@@ -14,20 +14,31 @@
       <img src="@/assets/images/modal/garlands.png" alt />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
-          <h3>{{ $t('welcomeMessage.title') }}</h3>
-          <i18n
-            v-if="!firstTimeRu"
-            path="welcomeMessage.desc1"
-            tag="p"
-            for="welcomeMessage.link1"
-          >
+          <h3>{{ $t('welcomeMessage.v5-title') }}</h3>
+          <i18n v-if="!firstTimeRu" path="welcomeMessage.v5-desc1" tag="p">
             <a
-              href="https://medium.com/@myetherwallet/lets-make-it-official-mew5-myetherwallet-s-all-new-interface-is-here-2063117180a4"
+              slot="v6"
+              target="_blank"
+              href="https://www.myetherwallet.com/"
+              rel="noopener noreferrer"
+            >
+              {{ $t('welcomeMessage.v6-link') }}
+            </a>
+            <a
+              slot="twitter"
+              href="https://twitter.com/myetherwallet"
               target="_blank"
               rel="noopener noreferrer"
-              >{{ $t('welcomeMessage.link1') }}</a
+              >{{ $t('welcomeMessage.v5-twitter-link') }}</a
             >
-          </i18n>
+            <a
+              slot="email"
+              href="mailto:support@myetherwallet.com"
+              rel="noopener noreferrer"
+            >
+              {{ $t('welcomeMessage.v5-email-link') }}</a
+            ></i18n
+          >
           <p v-if="firstTimeRu">
             Если Вам удобнее общаться с нами и другими пользователями MEW на
             русском языке, присоединяйтесь к нашему сообществу в
