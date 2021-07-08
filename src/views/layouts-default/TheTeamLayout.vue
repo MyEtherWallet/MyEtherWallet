@@ -40,6 +40,7 @@ import Misha from '@/assets/images/team/misha.jpg';
 import Yel from '@/assets/images/team/gamaliel.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
 import placeholder from '@/assets/images/team/placeholder.jpg';
+import doggiePlaceholder from '@/assets/images/team/doggie.jpg';
 import David from '@/assets/images/team/david.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
@@ -70,7 +71,7 @@ export default {
       { img: placeholder, name: 'Ryan', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Andrew', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: placeholder, name: 'Russell', title: 'Product UI/UX' },
+      { img: doggiePlaceholder, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: placeholder, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Manager' },
