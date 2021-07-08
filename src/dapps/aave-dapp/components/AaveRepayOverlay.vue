@@ -49,8 +49,7 @@ export default {
   },
   computed: {
     totalBorrow() {
-      const borrows = this.selectedTokenInUserSummary?.currentBorrows;
-      return borrows ? borrows : '0';
+      return this.selectedTokenInUserSummary?.currentBorrows || '0';
     },
     aaveRepayForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;

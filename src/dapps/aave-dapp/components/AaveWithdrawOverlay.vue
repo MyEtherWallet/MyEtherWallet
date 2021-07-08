@@ -19,6 +19,7 @@
           :right-side-values="aaveWithdrawForm.rightSideValues"
           :form-text="aaveWithdrawForm.formText"
           :button-title="aaveWithdrawForm.buttonTitle"
+          :aave-balance="aaveBalance"
           :token-balance="tokenBalance"
           @cancel="handleCancel"
           @emitValues="handleWithdrawAmount"
@@ -55,6 +56,9 @@ export default {
         }
       });
       return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
+    },
+    aaveBalance() {
+      return this.selectedTokenInUserSummary?.currentUnderlyingBalance || '0';
     },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;

@@ -167,6 +167,12 @@ export default {
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },
+    isRepay() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.repay;
+    },
+    isBorrow() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.borrow;
+    },
     isInterest() {
       return this.actionType.toLowerCase() === ACTION_TYPES.interest;
     },

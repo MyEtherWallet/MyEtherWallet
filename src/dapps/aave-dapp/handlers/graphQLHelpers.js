@@ -18,7 +18,7 @@ export function depositDetails(param) {
     txType
     __typename
   
-  `;
+  }`;
 
   return fetchQuery(query, param);
 }

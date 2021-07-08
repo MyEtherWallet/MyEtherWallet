@@ -280,7 +280,6 @@
     />
     <aave-collateral-overlay
       :pre-selected-token="requestToken"
-      :is-loading-data="isLoadingData"
       :reserves-data="reservesData"
       :user-summary="userSummary"
       :open="showCollateralOverlay"

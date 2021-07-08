@@ -84,6 +84,7 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
 
 export default {
   name: 'AaveAmountForm',
@@ -127,6 +128,10 @@ export default {
     tokenBalance: {
       type: String,
       default: '0'
+    },
+    aaveBalance: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -141,7 +146,7 @@ export default {
       return BigNumber(this.amount).gt(0);
     },
     checkIfNumerical() {
-      const regex = new RegExp('^(0|[1-9][0-9]*)$');
+      const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
       const test = regex.test(this.amount);
       return [test || 'Please enter a valid value!'];
     }
@@ -183,8 +188,11 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      const amt = BigNumber(this.tokenBalance).times(per);
-      return amt.toFixed();
+      const amt =
+        this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+          ? this.aaveBalance
+          : this.tokenBalance;
+      return BigNumber(amt).times(per).toFixed();
     }
   }
 };
