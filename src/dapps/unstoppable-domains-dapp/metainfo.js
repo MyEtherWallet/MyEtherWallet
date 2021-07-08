@@ -7,5 +7,8 @@ export default {
   rightIcon: 'stake',
   path: 'unstoppable',
   networks: [],
-  layout
+  layout,
+  meta: {
+    noAuth: false
+  }
 };
