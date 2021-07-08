@@ -31,9 +31,12 @@ class ledgerWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.LEDGER];
-    this.icon = {
-      type: 'img',
-      value: ledger
+    this.meta = {
+      name: 'Ledger',
+      img: {
+        type: 'img',
+        value: ledger
+      }
     };
   }
   async init(basePath) {
@@ -127,7 +130,7 @@ class ledgerWallet {
       txSigner,
       msgSigner,
       displayAddress,
-      this.icon
+      this.meta
     );
   }
   getCurrentPath() {

@@ -28,9 +28,12 @@ class BitBoxWallet {
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX];
     this.password = password;
-    this.icon = {
-      type: 'mew-icon',
-      value: 'bitbox'
+    this.meta = {
+      name: 'BitBox',
+      img: {
+        type: 'mew-icon',
+        value: 'bitbox'
+      }
     };
   }
   async init(basePath) {
@@ -92,7 +95,7 @@ class BitBoxWallet {
       txSigner,
       msgSigner,
       null,
-      this.icon
+      this.meta
     );
   }
   getCurrentPath() {

@@ -9,7 +9,7 @@ class HDWalletInterface extends WalletInterface {
     txSigner,
     msgSigner,
     displayAddress,
-    icon
+    meta
   ) {
     super(pubkey, true, identifier);
     this.path = path;
@@ -18,7 +18,7 @@ class HDWalletInterface extends WalletInterface {
     this.isHardware = isHardware;
     this.errorHandler = errorHandler;
     this.displayAddress = displayAddress;
-    this.icon = icon;
+    this.meta = meta;
   }
   signTransaction(txParams) {
     return super.signTransaction(txParams, this.txSigner);

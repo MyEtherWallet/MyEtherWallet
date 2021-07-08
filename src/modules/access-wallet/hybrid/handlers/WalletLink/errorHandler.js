@@ -1,9 +1,5 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
+
 const ERRORS = {
   'User denied account authorization': 'user denied the authorization',
   'User denied transaction signature': 'user denied the transaction',
@@ -13,14 +9,4 @@ const ERRORS = {
 };
 const WARNINGS = {};
 
-export default err => {
-  const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNINGS);
-  if (errorValues.includes(err.message)) {
-    Toast(ERRORS[err.message], {}, ERROR);
-  } else if (warningValues.includes(err.message)) {
-    Toast(WARNINGS[err.message], {}, WARNING);
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

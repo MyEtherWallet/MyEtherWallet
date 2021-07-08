@@ -1,10 +1,4 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
-import Vue from 'vue';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 const ERRORS = {
   WrongPassword: 'coolWalletError.wrong-password',
   CardLocked: 'coolWalletError.card-locked',
@@ -15,22 +9,4 @@ const ERRORS = {
   'browser not supported': 'coolWalletError.no-bluetooth'
 };
 const WARNINGS = {};
-
-export default err => {
-  const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNINGS);
-  const foundError = errorValues.find(item => {
-    return (err.name && err.name.includes(item)) || item.includes(err.message);
-  });
-  const foundWarning = warningValues.find(item => {
-    return (err.name && err.name.includes(item)) || item.includes(err.message);
-  });
-
-  if (foundError) {
-    Toast(`${Vue.$i18n.t(ERRORS[foundError])}`, {}, ERROR);
-  } else if (foundWarning) {
-    Toast(`${Vue.$i18n.t(WARNINGS[foundWarning])}`, {}, WARNING);
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

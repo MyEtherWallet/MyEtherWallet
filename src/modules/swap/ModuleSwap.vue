@@ -986,6 +986,10 @@ export default {
         toImg: this.toTokenType.img,
         fromVal: this.tokenInValue,
         toVal: this.tokenOutValue,
+        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+          .times(this.tokenOutValue)
+          .toFixed(),
+        fromUsdVal: this.fromTokenType.usdBalance,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         totalFees: this.totalFees,

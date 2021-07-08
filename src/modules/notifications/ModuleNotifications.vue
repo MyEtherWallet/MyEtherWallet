@@ -214,7 +214,9 @@ export default {
       if (!this.loading) {
         return this.ethTransfersIncoming
           .filter(notification => {
-            return notification.to.toLowerCase() === this.address.toLowerCase();
+            return (
+              notification.to.toLowerCase() === this.address?.toLowerCase()
+            );
           })
           .map(notification => {
             notification.type = NOTIFICATION_TYPES.IN;
