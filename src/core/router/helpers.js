@@ -7,7 +7,7 @@ const ACCESS_VALID_OVERLAYS = {
   SOFTWARE: 'software'
 };
 
-const ROUTES = {
+const ROUTES_HOME = {
   Home: { Name: 'Home', Path: '' },
   HowItWorks: { Name: 'HowItWorks', Path: 'how-it-works' },
   SecurityPolicy: { Name: 'SecurityPolicy', Path: 'security-policy' },
@@ -20,6 +20,8 @@ const ROUTES = {
   PressKit: { Name: 'PressKit', Path: 'presskit' },
   CreateWallet: { Name: 'CreateWallet', Path: 'wallet/create/:overlay?' },
   AccessWallet: { Name: 'AccessWallet', Path: 'wallet/create/:overlay?' },
+};
+const ROUTES_WALLET = {
   Wallets: { Name: 'Wallets', Path: '' },
   Dashboard: { Name: 'Dashboard', Path: '/dashboard' },
   SendTX: { Name: 'SendTX', Path: 'send-tx' },
@@ -163,5 +165,6 @@ export {
   ACCESS_VALID_OVERLAYS,
   swapProps,
   swapRouterGuard,
-  ROUTES
+  ROUTES_HOME,
+  ROUTES_WALLET
 };

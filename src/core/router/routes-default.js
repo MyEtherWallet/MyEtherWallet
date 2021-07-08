@@ -16,7 +16,7 @@ import {
   createRouteGuard,
   accessWalletProps,
   accessRouteGuard,
-  ROUTES
+  ROUTES_HOME
 } from './helpers';
 
 export default {
@@ -25,88 +25,88 @@ export default {
   props: true,
   children: [
     {
-      path: ROUTES.Home.Path,
-      name: ROUTES.Home.Name,
+      path: ROUTES_HOME.Home.Path,
+      name: ROUTES_HOME.Home.Name,
       component: TheHomeLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.HowItWorks.Path,
-      name: ROUTES.HowItWorks.Name,
+      path: ROUTES_HOME.HowItWorks.Path,
+      name: ROUTES_HOME.HowItWorks.Name,
       component: TheHowItWorksLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.SecurityPolicy.Path,
-      name: ROUTES.SecurityPolicy.Name,
+      path: ROUTES_HOME.SecurityPolicy.Path,
+      name: ROUTES_HOME.SecurityPolicy.Name,
       component: TheSecurityPolicyLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.PrivacyPolicy.Path,
-      name: ROUTES.PrivacyPolicy.Name,
+      path: ROUTES_HOME.PrivacyPolicy.Path,
+      name: ROUTES_HOME.PrivacyPolicy.Name,
       component: ThePrivacyPolicyLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.TermsOfService.Path,
-      name: ROUTES.TermsOfService.Name,
+      path: ROUTES_HOME.TermsOfService.Path,
+      name: ROUTES_HOME.TermsOfService.Name,
       component: TheTermsOfServiceLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.Tools.Path,
-      name: ROUTES.Tools.Name,
+      path: ROUTES_HOME.Tools.Path,
+      name: ROUTES_HOME.Tools.Name,
       component: TheToolsLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.BuyHardwareWallet.Path,
-      name: ROUTES.BuyHardwareWallet.Name,
+      path: ROUTES_HOME.BuyHardwareWallet.Path,
+      name: ROUTES_HOME.BuyHardwareWallet.Name,
       component: TheBuyHardwareWalletLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.CompanyPage.Path,
-      name: ROUTES.CompanyPage.Name,
+      path: ROUTES_HOME.CompanyPage.Path,
+      name: ROUTES_HOME.CompanyPage.Name,
       component: TheCompanyLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.TeamPage.Path,
-      name: ROUTES.TeamPage.Name,
+      path: ROUTES_HOME.TeamPage.Path,
+      name: ROUTES_HOME.TeamPage.Name,
       component: TheTeamLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.PressKit.Path,
-      name: ROUTES.PressKit.Name,
+      path: ROUTES_HOME.PressKit.Path,
+      name: ROUTES_HOME.PressKit.Name,
       component: ThePressKitLayout,
       meta: {
         noAuth: true
       }
     },
     {
-      path: ROUTES.CreateWallet.Path,
-      name: ROUTES.CreateWallet.Name,
+      path: ROUTES_HOME.CreateWallet.Path,
+      name: ROUTES_HOME.CreateWallet.Name,
       component: TheCreateWalletLayout,
       props: createWalletProps,
       meta: {
@@ -115,8 +115,8 @@ export default {
       beforeEnter: createRouteGuard
     },
     {
-      path: ROUTES.AccessWallet.Path,
-      name: ROUTES.AccessWallet.Name,
+      path: ROUTES_HOME.AccessWallet.Path,
+      name: ROUTES_HOME.AccessWallet.Name,
       component: TheAccessWalletLayout,
       props: accessWalletProps,
       meta: {
