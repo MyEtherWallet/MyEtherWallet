@@ -141,7 +141,7 @@ export default {
       return BigNumber(this.amount).gt(0);
     },
     checkIfNumerical() {
-      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
+      const regex = new RegExp('^(0|[1-9][0-9]*)$');
       const test = regex.test(this.amount);
       return [test || 'Please enter a valid value!'];
     }
