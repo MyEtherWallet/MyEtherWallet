@@ -1,3 +1,9 @@
+### Release v6.0.1
+
+### Bug
+
+* fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
+
 ### Release v6.0.0
 
 ### Bug
