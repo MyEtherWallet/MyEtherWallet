@@ -1,3 +1,5 @@
+
+### v5.8.3
 ### Feat 
 - Update welcome modal text [#3232](https://github.com/MyEtherWallet/MyEtherWallet/pull/3232)
 ### v5.8.2
