@@ -824,7 +824,7 @@ export default {
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
-          : 0
+          : '0'
         : this.availableBalance.toFixed();
     },
     /**
