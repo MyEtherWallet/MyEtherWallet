@@ -159,13 +159,7 @@ export default {
         note: 'Unmatched physical security for your private keys.',
         link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
       }
-    ],
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: 'Get a hardware wallet today!',
-      centered: true
-    }
+    ]
   })
 };
 </script>

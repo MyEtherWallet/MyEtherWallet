@@ -151,9 +151,6 @@ export default {
         );
       }
       return false;
-    },
-    txValue() {
-      return sanitizeHex(toWei(this.value, 'ether').toString(16));
     }
   },
   watch: {

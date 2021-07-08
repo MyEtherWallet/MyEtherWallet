@@ -126,8 +126,6 @@ export default {
   name: 'NetworkSwitch',
   components: { AppUserMsgBlock },
   props: {
-    open: { type: Boolean, default: false },
-    close: { type: Function, default: () => {} },
     isWallet: { type: Boolean, default: true },
     /** Set this prop to pass specific networks to be displayed */
     filterTypes: { type: Array, default: () => [] },

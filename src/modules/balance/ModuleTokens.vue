@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      tokensDataLoading: true,
       tableHeaders: [
         {
           text: 'Token',

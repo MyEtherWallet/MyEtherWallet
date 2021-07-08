@@ -39,13 +39,13 @@
             <template #contentBelowTitle>
               <div class="mt-6">
                 <img
-                  src="@/assets/images/icons/button-app-store.png"
+                  src="@/assets/images/icons/button-app-store.svg"
                   alt="Apple app store"
                   style="height: 30px"
                   class="mr-2"
                 />
                 <img
-                  src="@/assets/images/icons/button-play-store.png"
+                  src="@/assets/images/icons/button-play-store.svg"
                   alt="Google play store"
                   style="height: 30px"
                 />

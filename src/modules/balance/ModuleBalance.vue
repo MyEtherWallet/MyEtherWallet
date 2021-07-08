@@ -14,7 +14,7 @@
       type="card"
     ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth && !loading"
+      v-if="hasBalance && !loading"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"
@@ -140,9 +140,6 @@ export default {
       'networkTokenUSDMarket'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
-    showBuyEth() {
-      return this.balanceInETH <= 0 && this.chartData.length <= 0;
-    },
     priceChangeArrow() {
       return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
