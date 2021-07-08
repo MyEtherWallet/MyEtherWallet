@@ -25,11 +25,10 @@ const SET_ADDRESS_BOOK = function (state, val) {
 };
 const SET_NETWORK = function (state, networkObj) {
   const _netObj = Object.assign({}, networkObj);
-  if (_netObj.type.name !== 'CUS') {
-    _netObj.type = {
-      name: networkObj.type.name
-    };
-  }
+  _netObj.type = {
+    name: networkObj.type.name
+  };
+  console.log(_netObj);
   state.currentNetwork = _netObj;
 };
 const SET_GAS_PRICE_TYPE = function (state, type) {
