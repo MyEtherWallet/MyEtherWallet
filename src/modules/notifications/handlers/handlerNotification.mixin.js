@@ -73,7 +73,7 @@ export default {
       },
       fetchPolicy: 'cache-and-network',
       skip() {
-        return this.txHashes.length === 0;
+        return this.txHashes.length === 0 || !this.isEthNetwork;
       },
       result({ data }) {
         if (data && data.getTransactionsByHashes) {
@@ -96,7 +96,12 @@ export default {
         };
       },
       skip() {
-        return !this.txHash || this.txHash === '' || this.txHash === null;
+        return (
+          !this.txHash ||
+          this.txHash === '' ||
+          this.txHash === null ||
+          !this.isEthNetwork
+        );
       },
       update: data => data.getTransactionByHash,
       result({ data }) {
@@ -135,7 +140,12 @@ export default {
           };
         },
         skip() {
-          return this.address === '' || this.address === null || this.loading;
+          return (
+            this.address === '' ||
+            this.address === null ||
+            this.loading ||
+            !this.isEthNetwork
+          );
         },
         result({ data }) {
           if (data && data.pendingTransaction) {
@@ -160,7 +170,12 @@ export default {
           };
         },
         skip() {
-          return !this.txHash || this.txHash === '' || this.txHash === null;
+          return (
+            !this.txHash ||
+            this.txHash === '' ||
+            this.txHash === null ||
+            !this.isEthNetwork
+          );
         },
         result() {
           this.$apollo.queries.getTransactionByHash?.refetch();

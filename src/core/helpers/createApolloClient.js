@@ -22,9 +22,9 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
   );
 
   const websocket = new WebSocketLink(subscriptionClient);
+  let count = 0;
 
   function ignoreGetTxByHash(error) {
-    let count = 0;
     // Ignore getTransactionByHash null error msg if it errors out less than 3x
     if (
       error.toLowerCase().includes(errorMsgs.cannotReturnNull.toLowerCase())
