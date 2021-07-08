@@ -73,7 +73,7 @@ export default {
       },
       fetchPolicy: 'cache-and-network',
       skip() {
-        return this.txHashes.length === 0 || !this.isEthNetwork;
+        return !this.isEthNetwork || this.txHashes.length === 0;
       },
       result({ data }) {
         if (data && data.getTransactionsByHashes) {
@@ -97,10 +97,10 @@ export default {
       },
       skip() {
         return (
+          !this.isEthNetwork ||
           !this.txHash ||
           this.txHash === '' ||
-          this.txHash === null ||
-          !this.isEthNetwork
+          this.txHash === null
         );
       },
       update: data => data.getTransactionByHash,
@@ -141,10 +141,10 @@ export default {
         },
         skip() {
           return (
+            !this.isEthNetwork ||
             this.address === '' ||
             this.address === null ||
-            this.loading ||
-            !this.isEthNetwork
+            this.loading
           );
         },
         result({ data }) {
@@ -171,10 +171,10 @@ export default {
         },
         skip() {
           return (
+            !this.isEthNetwork ||
             !this.txHash ||
             this.txHash === '' ||
-            this.txHash === null ||
-            !this.isEthNetwork
+            this.txHash === null
           );
         },
         result() {

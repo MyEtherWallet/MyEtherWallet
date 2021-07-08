@@ -3,16 +3,14 @@ import localStore from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
 const INIT_STORE = function (state) {
-  const fetchedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
-  if (fetchedStore) {
-    if (fetchedStore.notifications.length > 0) {
-      fetchedStore.notifications = fetchedStore.notifications.map(item => {
-        delete item.notification;
-        return new Notification(item);
-      });
-    }
-    if (fetchedStore.stateVersion === Configs.VERSION.notification) {
-      Object.assign(state, fetchedStore);
+  if (localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications)) {
+    const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
+    savedStore.notifications = savedStore.notifications.map(item => {
+      delete item.notification;
+      return new Notification(item);
+    });
+    if (savedStore.stateVersion === Configs.VERSION.notifications) {
+      Object.assign(state, savedStore);
     }
   }
 };

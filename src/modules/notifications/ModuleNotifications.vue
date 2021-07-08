@@ -142,7 +142,8 @@ export default {
         { label: 'Out', val: NOTIFICATION_TYPES.OUT },
         { label: 'Swap', val: NOTIFICATION_TYPES.SWAP }
       ],
-      openNotifications: false
+      openNotifications: false,
+      statusCheckTimer: null
     };
   },
   computed: {
@@ -161,41 +162,6 @@ export default {
      */
     swapper() {
       return new handlerSwap(this.web3);
-    },
-    /**
-     * Formatted current notifications
-     */
-    formattedCurrentNotifications() {
-      return this.currentNotifications.map(notification => {
-        const type = notification.type;
-        /**
-         * Check swap status if it is a swap notification
-         */
-        if (type === NOTIFICATION_TYPES.SWAP) {
-          notification.checkSwapStatus(this.swapper);
-        }
-        /**
-         * Check status if it is an outgoing pending tx
-         * and query getTransactionByHash
-         */
-        if (
-          type === NOTIFICATION_TYPES.OUT &&
-          notification.status.toLowerCase() === NOTIFICATION_STATUS.PENDING
-        ) {
-          this.txHash = notification.hash;
-          if (this.getTransactionByHash && notification) {
-            if (this.getTransactionByHash.status) {
-              this.getTransactionByHash.status =
-                this.getTransactionByHash.status === '0x1'
-                  ? NOTIFICATION_STATUS.SUCCESS
-                  : NOTIFICATION_STATUS.FAILED;
-              notification.status = this.getTransactionByHash.status;
-            }
-            this.updateNotification(notification);
-          }
-        }
-        return formatNotification(notification, this.network);
-      });
     },
     /**
      * Formatted outgoing tx notifications
@@ -232,7 +198,7 @@ export default {
      * Returns all the notifications
      */
     allNotifications() {
-      const sorted = this.formattedCurrentNotifications.concat(
+      const sorted = this.formattedCurrentNotifications().concat(
         this.incomingTxNotifications
       );
       sorted.sort(this.sortByDate);
@@ -273,11 +239,49 @@ export default {
     EventBus.$on('openNotifications', () => {
       this.openNotifications = true;
     });
+    this.statusCheckTimer = setInterval(() => {
+      this.currentNotifications.forEach(notification => {
+        this.checkAndSetNotificationStatus(notification);
+      });
+    }, 5000);
+  },
+  beforeUnmount() {
+    clearInterval(this.statusCheckTimer);
   },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
+    },
+    /**
+     * Formatted current notifications
+     */
+    formattedCurrentNotifications() {
+      return this.currentNotifications.map(notification =>
+        formatNotification(notification, this.network)
+      );
+    },
+    /**
+     * Check status if it is an outgoing pending tx
+     */
+    checkAndSetNotificationStatus(notification) {
+      const type = notification.type;
+      if (type === NOTIFICATION_TYPES.SWAP) {
+        notification.checkSwapStatus(this.swapper);
+      }
+      if (
+        type === NOTIFICATION_TYPES.OUT &&
+        notification.status === NOTIFICATION_STATUS.PENDING
+      ) {
+        this.web3.eth.getTransactionReceipt(notification.hash).then(receipt => {
+          if (receipt) {
+            notification.status = receipt.status
+              ? NOTIFICATION_STATUS.SUCCESS
+              : NOTIFICATION_STATUS.FAILED;
+            this.updateNotification(notification);
+          }
+        });
+      }
     },
     /**
      * Mark notification as read
