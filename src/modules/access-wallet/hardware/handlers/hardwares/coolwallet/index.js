@@ -30,11 +30,13 @@ class CoolWallet {
     this.transport = {};
     this.deviceInstance = {};
     this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
-    this.icon = {
-      type: 'img',
-      value: coolwallet
+    this.meta = {
+      name: 'Cool Wallet',
+      img: {
+        type: 'img',
+        value: coolwallet
+      }
     };
-
     this.appId = locstore.get('coolWallet-appId')
       ? locstore.get('coolWallet-appId')
       : '';
@@ -161,7 +163,7 @@ class CoolWallet {
       txSigner,
       msgSigner,
       null,
-      this.icon
+      this.meta
     );
   }
 

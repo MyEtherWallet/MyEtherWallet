@@ -28,7 +28,7 @@ export default {
       name: 'Home',
       component: TheHomeLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -36,7 +36,7 @@ export default {
       name: 'HowItWorks',
       component: TheHowItWorksLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -44,7 +44,7 @@ export default {
       name: 'SecurityPolicy',
       component: TheSecurityPolicyLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -52,7 +52,7 @@ export default {
       name: 'PrivacyPolicy',
       component: ThePrivacyPolicyLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -60,7 +60,7 @@ export default {
       name: 'TermsOfService',
       component: TheTermsOfServiceLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -68,7 +68,7 @@ export default {
       name: 'Tools',
       component: TheToolsLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -76,7 +76,7 @@ export default {
       name: 'BuyHardwareWallet',
       component: TheBuyHardwareWalletLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -84,7 +84,7 @@ export default {
       name: 'CompanyPage',
       component: TheCompanyLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -92,7 +92,7 @@ export default {
       name: 'TeamPage',
       component: TheTeamLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -100,7 +100,7 @@ export default {
       name: 'PressKit',
       component: ThePressKitLayout,
       meta: {
-        requiresAuth: false
+        noAuth: true
       }
     },
     {
@@ -109,7 +109,7 @@ export default {
       component: TheCreateWalletLayout,
       props: createWalletProps,
       meta: {
-        requiresAuth: false
+        noAuth: true
       },
       beforeEnter: createRouteGuard
     },
@@ -119,7 +119,7 @@ export default {
       component: TheAccessWalletLayout,
       props: accessWalletProps,
       meta: {
-        requiresAuth: false
+        noAuth: true
       },
       beforeEnter: accessRouteGuard
     }

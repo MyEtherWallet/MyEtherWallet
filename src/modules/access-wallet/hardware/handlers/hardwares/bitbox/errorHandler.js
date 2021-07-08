@@ -1,10 +1,4 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
-import Vue from 'vue';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 const ERRORS = {
   errorUnexpected: 'bitboxError.unexpected',
   errorInvalidPassword: 'bitboxError.invalid-password',
@@ -16,25 +10,4 @@ const ERRORS = {
 };
 const WARNINGS = {};
 
-export default err => {
-  const loginsRemaining = err.message
-    ? err.message.replace(/\D/g, '')
-    : err.replace(/\D/g, '');
-  const attempts = loginsRemaining.length > 0 ? loginsRemaining : '';
-  const errorValues = Object.keys(ERRORS);
-  const warningValues = Object.keys(WARNINGS);
-  const foundError = errorValues.find(item => {
-    return err.message ? err.message.includes(item) : err.includes(item);
-  });
-  const foundWarning = warningValues.find(item => {
-    return err.message ? err.message.includes(item) : err.includes(item);
-  });
-
-  if (foundError) {
-    Toast(`${Vue.$i18n.t(ERRORS[foundError])}${attempts}`, {}, ERROR);
-  } else if (foundWarning) {
-    Toast(`${Vue.$i18n.t(WARNINGS[foundWarning])}${attempts}`, {}, WARNING);
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

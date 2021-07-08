@@ -62,6 +62,7 @@
           <v-img
             class="block-image"
             src="@/assets/images/snippets/new-dapps-page.png"
+            contain
           />
         </v-col>
       </v-row>

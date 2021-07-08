@@ -35,9 +35,12 @@ class KeepkeyWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
-    this.icon = {
-      type: 'img',
-      value: keepkeyImg
+    this.meta = {
+      name: 'KeepKey',
+      img: {
+        type: 'img',
+        value: keepkeyImg
+      }
     };
   }
   async init(basePath) {
@@ -132,7 +135,7 @@ class KeepkeyWallet {
       txSigner,
       msgSigner,
       displayAddress,
-      this.icon
+      this.meta
     );
   }
   getCurrentPath() {

@@ -32,6 +32,7 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 :value="tokenInValue"
                 :persistent-hint="true"
                 :error-messages="amountErrorMessage"
@@ -76,6 +77,7 @@
               <mew-input
                 label="Amount"
                 placeholder="0"
+                type="number"
                 disabled
                 :value="tokenOutValue"
               />
@@ -270,7 +272,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 
-const MIN_GAS_WEI = '800000000000000';
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -626,7 +628,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return BigNumber(this.balanceInWei).gt(MIN_GAS_WEI);
+      return toBN(this.balanceInWei).gt(
+        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -650,7 +654,9 @@ export default {
     availableBalance() {
       if (!this.initialLoad && this.fromTokenType?.name) {
         const hasBalance = this.tokensList.find(
-          token => token.symbol === this.fromTokenType.symbol
+          token =>
+            token.contract.toLowerCase() ===
+            this.fromTokenType.contract.toLowerCase()
         );
         return hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
@@ -678,6 +684,14 @@ export default {
             : this.tokensList.length > 0 && !this.isFromTokenMain
             ? this.errorMsgs.doNotOwnToken
             : '';
+        }
+        if (
+          !Swapper.helpers.hasValidDecimals(
+            this.tokenInValue,
+            this.fromTokenType.decimals
+          )
+        ) {
+          return `Provided amount exceeds valid decimal.`;
         }
         /*Eth Balance is to low to send a transaction*/
         if (!this.hasMinEth) {
@@ -804,10 +818,13 @@ export default {
      * Set the max available amount to swap from
      */
     setMaxAmount() {
+      const availableBalanceMinusGas = new BigNumber(
+        this.availableBalance
+      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
-        ? new BigNumber(this.availableBalance)
-            .minus(fromWei(MIN_GAS_WEI))
-            .toFixed()
+        ? availableBalanceMinusGas.gt(0)
+          ? availableBalanceMinusGas.toFixed()
+          : '0'
         : this.availableBalance.toFixed();
     },
     /**
@@ -986,6 +1003,10 @@ export default {
         toImg: this.toTokenType.img,
         fromVal: this.tokenInValue,
         toVal: this.tokenOutValue,
+        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+          .times(this.tokenOutValue)
+          .toFixed(),
+        fromUsdVal: this.fromTokenType.usdBalance,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         totalFees: this.totalFees,

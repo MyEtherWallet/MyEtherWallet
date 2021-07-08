@@ -70,6 +70,9 @@
       >
         <span v-if="!isTestNetwork" style="padding-right: 2px">$</span
         >{{ totalWalletBalance }}
+        <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
+          network.type.currencyName
+        }}</span>
       </div>
       <div class="d-flex justify-space-between align-center">
         <div class="justify-start">
@@ -79,7 +82,7 @@
           =====================================================================================
           -->
           <div v-if="!isTestNetwork" class="info-container--text-chain-balance">
-            {{ walletChainBalance }}
+            {{ walletChainBalance }} {{ network.type.currencyName }}
           </div>
           <!--
           =====================================================================================
@@ -140,10 +143,10 @@
     </div>
 
     <module-access-wallet-hardware
-      v-if="isHardware"
+      v-if="!!instance.path"
       :open="openChangeAddress"
       :close="closeChangeAddress"
-      :switch-address="isHardware"
+      :switch-address="!!instance.path"
     />
     <balance-address-paper-wallet
       :open="openPaperWallet"
@@ -193,7 +196,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
-    ...mapState('wallet', ['address', 'isHardware', 'identifier']),
+    ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',
@@ -214,9 +217,7 @@ export default {
       return this.walletChainBalance;
     },
     walletChainBalance() {
-      return `${formatBalanceEthValue(this.balanceInWei).value} ${
-        this.network.type.currencyName
-      }`;
+      return `${formatBalanceEthValue(this.balanceInWei).value}`;
     },
     /**
      * @returns {string} first 6 letters in the address

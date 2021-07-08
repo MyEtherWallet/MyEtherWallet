@@ -211,10 +211,11 @@ export default {
      * Formatted incoming tx notifications
      */
     incomingTxNotifications() {
+      const address = this.address ? this.address.toLowerCase() : '';
       if (!this.loading) {
         return this.ethTransfersIncoming
           .filter(notification => {
-            return notification.to.toLowerCase() === this.address.toLowerCase();
+            return notification.to.toLowerCase() === address;
           })
           .map(notification => {
             notification.type = NOTIFICATION_TYPES.IN;

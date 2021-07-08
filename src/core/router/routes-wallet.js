@@ -18,55 +18,85 @@ export default {
     {
       path: '',
       name: 'Wallets',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'send-tx',
       name: 'SendTX',
       component: Send,
-      props: true
+      props: true,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'nft',
       name: 'NFTManager',
-      component: NftManager
+      component: NftManager,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'swap',
       name: 'Swap',
       component: Swap,
       props: swapProps,
-      beforeEnter: swapRouterGuard
+      beforeEnter: swapRouterGuard,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'dapps',
       component: Dapps,
-      children: DappRoutes
+      children: DappRoutes,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'deploy',
       name: 'DeployContract',
-      component: DeployContract
+      component: DeployContract,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'interact',
       name: 'InteractWithContract',
-      component: InteractContract
+      component: InteractContract,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'sign',
       name: 'SignMessage',
-      component: SignMessage
+      component: SignMessage,
+      meta: {
+        noAuth: false
+      }
     },
     {
       path: 'verify',
       name: 'verifyMessage',
-      component: verifyMessage
+      component: verifyMessage,
+      meta: {
+        noAuth: false
+      }
     }
   ]
 };

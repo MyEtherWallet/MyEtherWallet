@@ -8,5 +8,8 @@ export default {
   rightIcon: 'stake',
   path: 'staked',
   networks: [ETH, GOERLI],
-  layout
+  layout,
+  meta: {
+    noAuth: false
+  }
 };
