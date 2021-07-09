@@ -6,7 +6,6 @@ import { getMainDefinition } from 'apollo-utilities';
 import { onError } from 'apollo-link-error';
 import * as Sentry from '@sentry/vue';
 import ApolloClient from 'apollo-client';
-import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 export function createApolloClient(httpsEndpoint, wsEndpoint) {
@@ -22,38 +21,20 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
   );
 
   const websocket = new WebSocketLink(subscriptionClient);
-  let count = 0;
-
-  function ignoreGetTxByHash(error) {
-    // Ignore getTransactionByHash null error msg if it errors out less than 3x
-    if (
-      error.toLowerCase().includes(errorMsgs.cannotReturnNull.toLowerCase())
-    ) {
-      count += 1;
-      if (count <= 3) {
-        return true;
-      }
-      return false;
-    }
-  }
 
   const onErrorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        if (!ignoreGetTxByHash(newError)) {
-          // eslint-disable-next-line
+        // eslint-disable-next-line
           console.error(newError);
-        }
       });
     }
 
     if (graphQLErrors && process.env.NODE_ENV === 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        if (!ignoreGetTxByHash(newError)) {
-          Sentry.captureException(newError);
-        }
+        Sentry.captureException(newError);
       });
     }
   });
