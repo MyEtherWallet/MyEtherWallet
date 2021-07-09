@@ -24,7 +24,7 @@ const ROUTES_WALLET = {
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
-  VERIFY_MESSAGE: { NAME: 'verifyMessage', PATH: 'verify' }
+  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };
 
 export { ROUTES_HOME, ROUTES_WALLET };

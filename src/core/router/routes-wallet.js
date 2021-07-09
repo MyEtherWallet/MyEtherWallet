@@ -6,7 +6,7 @@ import Swap from '@/views/layouts-wallet/TheSwapLayout';
 import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
 import DeployContract from '@/views/layouts-wallet/TheDeployContractLayout';
 import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
-import verifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
+import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
 import { swapProps, swapRouterGuard } from './helpers';
@@ -94,7 +94,7 @@ export default {
     {
       path: ROUTES_WALLET.VERIFY_MESSAGE.PATH,
       name: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
-      component: verifyMessage,
+      component: VerifyMessage,
       meta: {
         noAuth: false
       }
