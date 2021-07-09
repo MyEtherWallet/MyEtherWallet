@@ -41,7 +41,7 @@
               title="Create a new wallet"
               btn-size="xlarge"
               @click.native="
-                $router.push({ name: ROUTES_HOME.CreateWallet.Name })
+                $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
               "
             />
             <mew-button
@@ -50,7 +50,7 @@
               title="Access my wallet"
               btn-size="xlarge"
               @click.native="
-                $router.push({ name: ROUTES_HOME.AccessWallet.Name })
+                $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
               "
             />
           </div>
@@ -95,7 +95,7 @@
                 title="Create a new wallet"
                 btn-size="xlarge"
                 @click.native="
-                  $router.push({ name: ROUTES_HOME.CreateWallet.Name })
+                  $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
                 "
               />
             </v-col>
@@ -106,7 +106,7 @@
                 title="Access my wallet"
                 btn-size="xlarge"
                 @click.native="
-                  $router.push({ name: ROUTES_HOME.AccessWallet.Name })
+                  $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
                 "
               />
             </v-col>

@@ -90,6 +90,7 @@
 
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/router/config-routes';
 
 export default {
   name: 'MobileMenu',
@@ -97,25 +98,25 @@ export default {
   data: () => ({
     isOpen: false,
     menu: [
-      { label: 'How it works', to: { name: 'HowItWorks' } },
+      { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
       {
         label: 'Popular',
         sub: [
           {
             label: 'Send transaction',
-            to: { name: 'SendTX' }
+            to: { name: ROUTES_WALLET.SEND_TX.NAME }
           },
           {
             label: 'Explore DApps',
-            to: { name: 'Dapps' }
+            to: { name: ROUTES_WALLET.DAPPS.NAME }
           },
           {
             label: 'Swap tokens',
-            to: { name: 'Swap' }
+            to: { name: ROUTES_WALLET.SWAP.NAME }
           },
           {
             label: 'Sign message',
-            to: { name: 'SignMessage' }
+            to: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
           }
         ]
       },
@@ -124,19 +125,19 @@ export default {
         sub: [
           {
             label: 'Watch only address',
-            to: { name: 'Tools', query: { tab: '1' } }
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
           },
           {
             label: 'Send offline helper',
-            to: { name: 'Tools', query: { tab: '2' } }
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '2' } }
           },
           {
             label: 'Verify message',
-            to: { name: 'Tools', query: { tab: '3' } }
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
           },
           {
             label: 'Convery units',
-            to: { name: 'Tools', query: { tab: '4' } }
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '4' } }
           }
         ]
       },

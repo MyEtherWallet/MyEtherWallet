@@ -188,6 +188,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/router/config-routes';
 
 export default {
   name: 'CreateWalletKeystore',
@@ -282,7 +283,7 @@ export default {
       this.updateStep(3);
     },
     goToAccess() {
-      this.$router.push({ name: 'AccessWallet' });
+      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
     /**
      * Update step

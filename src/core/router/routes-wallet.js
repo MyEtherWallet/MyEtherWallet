@@ -17,24 +17,24 @@ export default {
   props: true,
   children: [
     {
-      path: ROUTES_WALLET.Wallets.Path,
-      name: ROUTES_WALLET.Wallets.Name,
+      path: ROUTES_WALLET.WALLETS.PATH,
+      name: ROUTES_WALLET.WALLETS.NAME,
       component: Dashboard,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.Dashboard.Path,
-      name: ROUTES_WALLET.Dashboard.Name,
+      path: ROUTES_WALLET.DASHBOARD.PATH,
+      name: ROUTES_WALLET.DASHBOARD.NAME,
       component: Dashboard,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.SendTX.Path,
-      name: ROUTES_WALLET.SendTX.Name,
+      path: ROUTES_WALLET.SEND_TX.PATH,
+      name: ROUTES_WALLET.SEND_TX.NAME,
       component: Send,
       props: true,
       meta: {
@@ -42,16 +42,16 @@ export default {
       }
     },
     {
-      path: ROUTES_WALLET.NFTManager.Path,
-      name: ROUTES_WALLET.NFTManager.Name,
+      path: ROUTES_WALLET.NFT_MANAGER.PATH,
+      name: ROUTES_WALLET.NFT_MANAGER.NAME,
       component: NftManager,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.Swap.Path,
-      name: ROUTES_WALLET.Swap.Name,
+      path: ROUTES_WALLET.SWAP.PATH,
+      name: ROUTES_WALLET.SWAP.NAME,
       component: Swap,
       props: swapProps,
       beforeEnter: swapRouterGuard,
@@ -60,7 +60,7 @@ export default {
       }
     },
     {
-      path: ROUTES_WALLET.Dapps.Path,
+      path: ROUTES_WALLET.DAPPS.PATH,
       component: Dapps,
       children: DappRoutes,
       meta: {
@@ -68,32 +68,32 @@ export default {
       }
     },
     {
-      path: ROUTES_WALLET.DeployContract.Path,
-      name: ROUTES_WALLET.DeployContract.Name,
+      path: ROUTES_WALLET.DEPLOY_CONTRACT.PATH,
+      name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
       component: DeployContract,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.InteractWithContract.Path,
-      name: ROUTES_WALLET.InteractWithContract.Name,
+      path: ROUTES_WALLET.INTERACT_WITH_CONTRACT.PATH,
+      name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME,
       component: InteractContract,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.SignMessage.Path,
-      name: ROUTES_WALLET.SignMessage.Name,
+      path: ROUTES_WALLET.SIGN_MESSAGE.PATH,
+      name: ROUTES_WALLET.SIGN_MESSAGE.NAME,
       component: SignMessage,
       meta: {
         noAuth: false
       }
     },
     {
-      path: ROUTES_WALLET.VerifyMessage.Path,
-      name: ROUTES_WALLET.VerifyMessage.Name,
+      path: ROUTES_WALLET.VERIFY_MESSAGE.PATH,
+      name: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
       component: verifyMessage,
       meta: {
         noAuth: false

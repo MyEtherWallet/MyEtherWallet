@@ -50,6 +50,7 @@ import {
   WalletLinkWallet
 } from '@/modules/access-wallet/hybrid/handlers';
 import { mapActions } from 'vuex';
+import { ROUTES_WALLET } from '@/core/router/config-routes';
 export default {
   name: 'ModuleAccessWalletMobile',
   props: {
@@ -89,7 +90,7 @@ export default {
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.$router.push({ name: 'Dashboard' });
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
           .catch(e => {
@@ -104,7 +105,7 @@ export default {
         WalletLinkWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
-              this.$router.push({ name: 'Dashboard' });
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
           .catch(e => {

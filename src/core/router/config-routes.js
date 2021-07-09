@@ -1,28 +1,30 @@
 const ROUTES_HOME = {
-  Home: { Name: 'Home', Path: '' },
-  HowItWorks: { Name: 'HowItWorks', Path: 'how-it-works' },
-  SecurityPolicy: { Name: 'SecurityPolicy', Path: 'security-policy' },
-  PrivacyPolicy: { Name: 'PrivacyPolicy', Path: 'privacy-policy' },
-  TermsOfService: { Name: 'TermsOfService', Path: 'terms-of-service' },
-  Tools: { Name: 'Tools', Path: 'tools' },
-  BuyHardwareWallet: { Name: 'BuyHardwareWallet', Path: 'company' },
-  CompanyPage: { Name: 'CompanyPage', Path: 'company' },
-  TeamPage: { Name: 'TeamPage', Path: 'team' },
-  PressKit: { Name: 'PressKit', Path: 'presskit' },
-  CreateWallet: { Name: 'CreateWallet', Path: 'wallet/create/:overlay?' },
-  AccessWallet: { Name: 'AccessWallet', Path: 'wallet/create/:overlay?' }
+  HOME: { NAME: 'Home', PATH: '' },
+  //A-Z
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/create/:overlay?' },
+  BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'company' },
+  COMPANY_PAGE: { NAME: 'CompanyPage', PATH: 'company' },
+  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
+  HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
+  PRESS_KIT: { NAME: 'PressKit', PATH: 'presskit' },
+  PRIVACY_POLICY: { NAME: 'PrivacyPolicy', PATH: 'privacy-policy' },
+  SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
+  TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
+  TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
+  TOOLS: { NAME: 'Tools', PATH: 'tools' }
 };
 const ROUTES_WALLET = {
-  Wallets: { Name: 'Wallets', Path: '' },
-  Dashboard: { Name: 'Dashboard', Path: '/dashboard' },
-  SendTX: { Name: 'SendTX', Path: 'send-tx' },
-  NFTManager: { Name: 'NFTManager', Path: 'nft' },
-  Swap: { Name: 'Swap', Path: 'swap' },
-  Dapps: { Name: 'Dapps', Path: 'dapps' },
-  DeployContract: { Name: 'DeployContract', Path: 'deploy' },
-  InteractWithContract: { Name: 'InteractWithContract', Path: 'interact' },
-  SignMessage: { Name: 'SignMessage', Path: 'sign' },
-  VerifyMessage: { Name: 'verifyMessage', Path: 'verify' }
+  WALLETS: { NAME: 'Wallets', PATH: '' },
+  //A-Z
+  DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
+  DASHBOARD: { NAME: 'Dashboard', PATH: '/dashboard' },
+  DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
+  INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
+  NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
+  SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  SWAP: { NAME: 'Swap', PATH: 'swap' },
+  VERIFY_MESSAGE: { NAME: 'verifyMessage', PATH: 'verify' }
 };
 
 export { ROUTES_HOME, ROUTES_WALLET };

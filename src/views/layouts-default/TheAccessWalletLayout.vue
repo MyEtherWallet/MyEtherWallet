@@ -92,6 +92,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { MewConnectWallet } from '@/modules/access-wallet/common';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/router/config-routes';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -238,7 +239,7 @@ export default {
     close() {
       try {
         this.$router.push({
-          name: 'AccessWallet'
+          name: ROUTES_HOME.ACCESS_WALLET.NAME
         });
       } catch (e) {
         Toast(e, {}, ERROR);
@@ -252,7 +253,7 @@ export default {
     openOverlay(type) {
       try {
         this.$router.push({
-          name: 'AccessWallet',
+          name: ROUTES_HOME.ACCESS_WALLET.NAME,
           params: { overlay: type },
           query: { type: 'overview' }
         });
@@ -275,7 +276,7 @@ export default {
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: 'Wallets' });
+            this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
           }
         } catch (e) {
           Toast(e.message, {}, WARNING);
@@ -291,7 +292,7 @@ export default {
       MewConnectWallet()
         .then(_newWallet => {
           this.setWallet([_newWallet]).then(() => {
-            this.$router.push({ name: 'Dashboard' });
+            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           });
         })
         .catch(e => {

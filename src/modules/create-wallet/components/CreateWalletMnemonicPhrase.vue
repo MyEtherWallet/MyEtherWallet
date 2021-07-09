@@ -236,6 +236,7 @@
 import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/router/config-routes';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
@@ -355,7 +356,7 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
-      this.$router.push({ name: 'AccessWallet' });
+      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
 
     /**

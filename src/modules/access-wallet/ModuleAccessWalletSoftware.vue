@@ -212,7 +212,7 @@ export default {
             if (this.path !== '') {
               this.$router.push({ path: this.path });
             } else {
-              this.$router.push({ name: ROUTES_WALLET.Wallets.Name });
+              this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
           })
           .catch(e => {

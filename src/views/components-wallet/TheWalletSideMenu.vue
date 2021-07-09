@@ -11,7 +11,7 @@
       <template #prepend>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
-            <router-link :to="{ name: 'Dashboard' }">
+            <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
               <img width="120" src="@/assets/images/icons/logo-mew.png" />
             </router-link>
             <!--
@@ -175,7 +175,7 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: 'Dashboard' }">
+        <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
           <img width="80" src="@/assets/images/icons/logo-mew.png" />
         </router-link>
         <v-spacer />
@@ -204,17 +204,8 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-const routeNames = {
-  dashboard: 'Dashboard',
-  sendtx: 'SendTX',
-  nftmanager: 'NFTManager',
-  swap: 'Swap',
-  dapps: 'Dapps',
-  deploycontract: 'DeployContract',
-  interactcontract: 'InteractWithContract',
-  signmsg: 'SignMessage',
-  verifymsg: 'verifyMessage'
-};
+import { ROUTES_WALLET } from '@/core/router/config-routes';
+
 export default {
   components: {
     AppBtnMenu,
@@ -242,27 +233,27 @@ export default {
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
-          route: { name: routeNames.dashboard },
+          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
           icon: dashboard
         },
         {
           title: this.$t('sendTx.send-tx'),
-          route: { name: routeNames.sendtx },
+          route: { name: ROUTES_WALLET.SEND_TX.NAME },
           icon: send
         },
         {
           title: this.$t('interface.menu.nft'),
-          route: { name: routeNames.nftmanager },
+          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
           icon: nft
         },
         {
           title: this.$t('common.swap'),
-          route: { name: routeNames.swap },
+          route: { name: ROUTES_WALLET.SWAP.NAME },
           icon: swap
         },
         {
           title: this.$t('interface.menu.dapps'),
-          route: { name: routeNames.dapps },
+          route: { name: ROUTES_WALLET.DAPPS.NAME },
           icon: dapp
         },
         {
@@ -271,11 +262,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.deploy'),
-              route: { name: routeNames.deploycontract }
+              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
             },
             {
               title: this.$t('interface.menu.interact-contract'),
-              route: { name: routeNames.interactcontract }
+              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
             }
           ]
         },
@@ -285,11 +276,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.sign-message'),
-              route: { name: routeNames.signmsg }
+              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
             },
             {
               title: this.$t('interface.menu.verify-message'),
-              route: { name: routeNames.verifymsg }
+              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
             }
           ]
         }
@@ -307,9 +298,10 @@ export default {
         }
       ],
       routeNetworks: {
-        [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.nftmanager]: [ETH]
-      }
+        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
+      },
+      ROUTES_WALLET: ROUTES_WALLET
     };
   },
   computed: {

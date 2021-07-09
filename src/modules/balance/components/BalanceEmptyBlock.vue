@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { ROUTES_WALLET } from '@/core/router/config-routes';
 export default {
   name: 'BalanceEmptyBlock',
   props: {
@@ -93,7 +94,7 @@ export default {
      * Used in Empty Tokens Block
      */
     navigateToSwap() {
-      this.$router.push({ name: 'Swap' });
+      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }
 };
