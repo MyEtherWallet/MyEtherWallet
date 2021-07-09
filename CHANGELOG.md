@@ -1,6 +1,6 @@
 ### Release v6.0.1
 
-### Bug
+### Fix
 
 * fix show private key in paper wallet for non pubKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
 * Fix contract interaction[3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
@@ -16,7 +16,7 @@
 
 ### Release v6.0.0
 
-### Bug
+### Fix
 
 * fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
 
