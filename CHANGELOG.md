@@ -4,6 +4,7 @@
 
 * fix show private key in paper wallet for non pubKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
 * Fix contract interaction[3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
+* Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
 
 ### Feature
 
