@@ -92,7 +92,7 @@ import { mapActions, mapState, mapGetters } from 'vuex';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { MewConnectWallet } from '@/modules/access-wallet/common';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'TheAccessWalletLayout',

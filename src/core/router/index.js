@@ -3,7 +3,7 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
-import { ROUTES_HOME } from './config-routes';
+import { ROUTES_HOME } from '../configs/configRoutes';
 const routes = [routesDefault, routesWallet];
 
 const getLangBasePath = () => {

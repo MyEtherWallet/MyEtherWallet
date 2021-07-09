@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'BalanceEmptyBlock',
   props: {

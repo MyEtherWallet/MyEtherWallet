@@ -29,7 +29,7 @@ import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
-import { ROUTES_HOME } from '@/core/router/config-routes';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   components: {
     TheWalletSideMenu,

@@ -90,7 +90,7 @@
 
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'MobileMenu',

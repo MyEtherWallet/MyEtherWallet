@@ -114,7 +114,7 @@ import {
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceChart,

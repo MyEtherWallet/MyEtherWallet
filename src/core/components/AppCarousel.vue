@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '@/core/router/config-routes';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   data: () => ({

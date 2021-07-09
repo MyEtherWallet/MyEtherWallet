@@ -204,7 +204,7 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {

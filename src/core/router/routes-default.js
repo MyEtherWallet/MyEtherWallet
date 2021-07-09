@@ -11,7 +11,7 @@ import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
-import { ROUTES_HOME } from './config-routes';
+import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
   createRouteGuard,

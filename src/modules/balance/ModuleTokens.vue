@@ -54,7 +54,7 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceEmptyBlock

@@ -46,7 +46,7 @@
 <script>
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'TheDefaultHeader',

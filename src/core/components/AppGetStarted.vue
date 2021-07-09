@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '../router/config-routes';
+import { ROUTES_HOME } from '../configs/configRoutes';
 export default {
   name: 'GetStarted',
   components: {},

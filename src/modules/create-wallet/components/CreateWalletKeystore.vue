@@ -188,7 +188,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { ROUTES_HOME } from '@/core/router/config-routes';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'CreateWalletKeystore',

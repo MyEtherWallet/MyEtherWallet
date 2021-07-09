@@ -50,7 +50,7 @@ import {
   WalletLinkWallet
 } from '@/modules/access-wallet/hybrid/handlers';
 import { mapActions } from 'vuex';
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleAccessWalletMobile',
   props: {

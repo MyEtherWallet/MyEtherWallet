@@ -49,7 +49,7 @@ import {
 } from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
-import { ROUTES_WALLET } from '@/core/router/config-routes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'AaveTable',
