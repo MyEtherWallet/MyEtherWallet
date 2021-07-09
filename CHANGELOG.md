@@ -2,7 +2,7 @@
 
 ### Bug
 
-* fix show private key in paper wallet for non pubKeyOnly wallets [#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+* fix show private key in paper wallet for non pubKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
 
 ### Feature
 
@@ -11,7 +11,6 @@
 ### Devop
 
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
-
 
 ### Release v6.0.0
 
