@@ -323,7 +323,7 @@ export default {
       );
     },
     methodSelect(evt) {
-      if (evt.inputs && evt.outputs) {
+      if (evt && evt.inputs && evt.outputs) {
         this.selectedMethod = evt;
         this.selectedMethod.inputs.forEach(v => (v.value = ''));
         this.selectedMethod.outputs.forEach(v => (v.value = ''));
