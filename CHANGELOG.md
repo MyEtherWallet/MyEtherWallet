@@ -4,6 +4,10 @@
 
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 
+### Devop
+
+* Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+
 ### Release v6.0.0
 
 ### Bug
