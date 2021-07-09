@@ -1,5 +1,8 @@
-### Bug 
+### Release v6.0.1
 
+### Bug
+
+* fix show private key in paper wallet for non pubKeyOnly wallets [#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
 * Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
 
 ### Feature
@@ -9,7 +12,6 @@
 ### Devop
 
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
-
 
 ### Release v6.0.0
 
