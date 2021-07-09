@@ -178,8 +178,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3', 'balance']),
-    ...mapState('global', ['currentNetwork']),
-    ...mapGetters('global', ['gasPrice', 'localContracts']),
+    ...mapGetters('global', ['network', 'gasPrice', 'localContracts']),
     canProceed() {
       if (this.isPayableFunction) {
         if (!this.canPay) {
@@ -209,10 +208,9 @@ export default {
       return true;
     },
     mergedContracts() {
-      return [{ name: 'select a contract', abi: '', address: '' }].concat(
-        this.localContracts,
-        this.currentNetwork.type.contracts
-      );
+      return [
+        { text: 'Select a Contract', selectLabel: true, divider: true }
+      ].concat(this.localContracts, this.network.type.contracts);
     },
     methods() {
       if (this.canInteract) {
@@ -325,7 +323,7 @@ export default {
       );
     },
     methodSelect(evt) {
-      if (evt.inputs && evt.outputs) {
+      if (evt && evt.inputs && evt.outputs) {
         this.selectedMethod = evt;
         this.selectedMethod.inputs.forEach(v => (v.value = ''));
         this.selectedMethod.outputs.forEach(v => (v.value = ''));
