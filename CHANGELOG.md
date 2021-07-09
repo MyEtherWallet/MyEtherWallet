@@ -2,11 +2,16 @@
 
 ### Bug
 
-* fix show private key in paper wallet for non pupKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+* fix show private key in paper wallet for non pubKeyOnly wallets [#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+
+### Feature
+
+* Remove divider in Staked UI and replace Russ team member photo [3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
 
 ### Devop
 
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+
 
 ### Release v6.0.0
 
