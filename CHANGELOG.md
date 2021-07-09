@@ -1,4 +1,3 @@
-
 ### Feature
 
 * Remove divider in Staked UI and replace Russ team member photo [3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
@@ -7,6 +6,8 @@
 
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
 
+### Bug 
+* Fix contract interaction[3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
 
 ### Release v6.0.0
 
