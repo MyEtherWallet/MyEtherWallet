@@ -328,7 +328,7 @@ export default {
           imgs: imgs.splice(0, 5),
           total: `${this.tokensList.length}`,
           divider: true,
-          selectTokenLabel: true
+          selectLabel: true
         },
         {
           header: 'My Wallet'
