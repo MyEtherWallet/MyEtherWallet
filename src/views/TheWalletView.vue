@@ -40,7 +40,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['network', 'isEthNetwork']),
+    ...mapGetters('global', ['network']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['balanceInWei'])
