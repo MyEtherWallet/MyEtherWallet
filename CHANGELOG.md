@@ -1,9 +1,15 @@
 ### Bug 
+
 * Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
+
+### Feature
+
+* Remove divider in Staked UI and replace Russ team member photo [3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
 
 ### Devop
 
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+
 
 ### Release v6.0.0
 
