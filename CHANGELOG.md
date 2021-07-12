@@ -4,6 +4,7 @@
 
 ### Fix
 
+* fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 
 ### Release v6.0.1
