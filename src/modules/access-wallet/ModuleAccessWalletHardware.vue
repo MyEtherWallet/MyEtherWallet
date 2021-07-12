@@ -229,6 +229,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -622,7 +623,8 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            if (!this.switchAddress) this.$router.push({ name: 'Dashboard' });
+            if (!this.switchAddress)
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             else this.close();
           })
           .catch(e => {
