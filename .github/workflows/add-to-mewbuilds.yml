@@ -62,7 +62,7 @@ jobs:
           cd dist && zip -r ../MyEtherWallet-$GITHUB_SHA.zip * && cd ..
           VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://v6.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
                             https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
