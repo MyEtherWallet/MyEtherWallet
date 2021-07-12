@@ -16,6 +16,8 @@
 
 ### Devop
 
+* Remove getTransactionByHash null error msg check and skip balance history apollo query if it is not ETH network[#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
+
 * Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
 
 ### Release v6.0.0
