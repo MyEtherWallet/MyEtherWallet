@@ -1,7 +1,7 @@
 const ROUTES_HOME = {
   HOME: { NAME: 'Home', PATH: '' },
   //A-Z
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/create/:overlay?' },
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'company' },
   COMPANY_PAGE: { NAME: 'CompanyPage', PATH: 'company' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
