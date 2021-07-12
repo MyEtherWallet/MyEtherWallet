@@ -842,6 +842,18 @@ export default {
       }
       return findToken ? findToken : this.actualFromTokens[0];
     },
+    getDefaultToToken() {
+      const findToken = this.actualToTokens.find(item => {
+        if (item.contract === this.defaults.toToken) return item;
+      });
+      if (
+        this.defaults.toToken === MAIN_TOKEN_ADDRESS &&
+        new BigNumber(this.balanceInETH).gt(0)
+      ) {
+        return this.mainTokenDetails;
+      }
+      return findToken ? findToken : this.actualFromTokens[0];
+    },
     /**
      * gets the select label placeholder token imgs
      */
@@ -871,7 +883,9 @@ export default {
     setDefaults() {
       setTimeout(() => {
         this.fromTokenType = this.getDefaultFromToken();
-        this.toTokenType = this.actualToTokens[0];
+        if (this.defaults.toToken) {
+          this.toTokenType = this.getDefaultToToken();
+        }
         this.setTokenInValue(this.tokenInValue);
       }, 500);
     },
