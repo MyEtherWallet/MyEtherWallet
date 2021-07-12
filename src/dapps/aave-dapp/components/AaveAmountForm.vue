@@ -47,7 +47,7 @@
           label="Amount"
           :right-label="selectedToken.token"
           :hide-clear-btn="true"
-          :rules="[checkIfNumerical]"
+          :rules="checkIfNumerical"
           @input="setAmount"
         />
       </v-sheet>
@@ -84,6 +84,8 @@
 
 <script>
 import BigNumber from 'bignumber.js';
+import { ACTION_TYPES } from '@/dapps/aave-dapp/handlers/helpers';
+
 export default {
   name: 'AaveAmountForm',
   props: {
@@ -126,6 +128,10 @@ export default {
     tokenBalance: {
       type: String,
       default: '0'
+    },
+    aaveBalance: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -138,11 +144,18 @@ export default {
   computed: {
     hasAmount() {
       return BigNumber(this.amount).gt(0);
+    },
+    checkIfNumerical() {
+      const regex = new RegExp('^-?[0-9]+[.]?[0-9]*$');
+      const test = regex.test(this.amount);
+      return [test || 'Please enter a valid value!'];
     }
   },
   mounted() {
     if (this.showToggle) {
-      this.onToggle('50%');
+      setTimeout(() => {
+        this.onToggle(this.group[1]);
+      }, 0);
     }
   },
   methods: {
@@ -168,12 +181,6 @@ export default {
           this.amount = this.calculatedAmt(1);
       }
     },
-    checkIfNumerical(value) {
-      const regex = new RegExp('^-?[0-9]+.?[0-9]*$');
-      const test = regex.test(value);
-      if (value !== '' && !test) return 'Please enter a valid value!';
-      return test;
-    },
     cancel() {
       this.$emit('cancel');
     },
@@ -181,8 +188,11 @@ export default {
       this.$emit('emitValues', this.amount);
     },
     calculatedAmt(per) {
-      const amt = BigNumber(this.tokenBalance).times(per);
-      return amt.toFixed();
+      const amt =
+        this.buttonTitle.action.toLowerCase() === ACTION_TYPES.withdraw
+          ? this.aaveBalance
+          : this.tokenBalance;
+      return BigNumber(amt).times(per).toFixed();
     }
   }
 };

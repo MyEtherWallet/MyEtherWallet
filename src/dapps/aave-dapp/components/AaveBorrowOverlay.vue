@@ -18,7 +18,9 @@
         class="border-radius--10px pa-4"
       >
         <aave-table
-          :handler="handler"
+          :is-loading-data="isLoadingData"
+          :reserves-data="reservesData"
+          :user-reserves-data="userSummary.reservesData"
           :table-header="aaveTableHandler"
           @selectedBorrow="handleSelectedBorrow"
         />
@@ -31,14 +33,13 @@
       <div v-if="step === 1">
         <aave-amount-form
           :selected-token="selectedToken"
-          :handler="handler"
           :action-type="aaveTableHandler"
           :show-toggle="aaveBorrowForm.showToggle"
           :left-side-values="aaveBorrowForm.leftSideValues"
           :right-side-values="aaveBorrowForm.rightSideValues"
           :form-text="aaveBorrowForm.formText"
           :button-title="aaveBorrowForm.buttonTitle"
-          @cancelDeposit="handleCancel"
+          @cancel="handleCancel"
           @emitValues="handleValues"
         />
       </div>
@@ -61,10 +62,11 @@
       <div v-if="step === 3">
         <aave-summary
           :selected-token="selectedToken"
-          :handler="handler"
           :amount="amount"
           :amount-usd="amountUsd"
           :step="step"
+          :apr="apr"
+          :user-summary="userSummary"
           :action-type="aaveTableHandler"
           @onConfirm="handleConfirm"
         />
@@ -78,21 +80,25 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
-import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
+import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { _ } from 'web3-utils';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   data() {
     return {
       step: 0,
       selectedToken: {},
       aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
       amount: '0',
-      type: ''
+      apr: {}
     };
   },
   computed: {
@@ -100,15 +106,19 @@ export default {
     aaveBorrowForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
-        ? `${hasBorrowed.currentBorrows} ${this.selectedToken.token}`
+        ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
+            this.selectedToken.token
+          }`
         : `$ 0.00`;
       const borrowedUSD = hasBorrowed
-        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
         : `0 ETH`;
-      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(
-        this.handler?.userSummary.totalCollateralUSD
-      )}`;
+      const eth = `${
+        formatFloatingPointValue(this.userSummary.totalCollateralETH).value
+      } ETH`;
+      const usd = `$ ${
+        formatFiatValue(this.userSummary.totalCollateralUSD).value
+      }`;
       return {
         showToggle: false,
         leftSideValues: {
@@ -134,9 +144,10 @@ export default {
     header() {
       switch (this.step) {
         case 1:
-        case 3:
           return 'Borrow';
         case 2:
+          return 'Select Interest';
+        case 3:
           return 'Confirmation';
         default:
           return 'Select the token you want to borrow';
@@ -169,8 +180,8 @@ export default {
       this.amount = '0';
       this.close();
     },
-    handleContinue(e) {
-      this.type = e;
+    handleContinue(apr) {
+      this.apr = apr;
       this.step = 3;
     },
     handleConfirm() {
@@ -180,7 +191,7 @@ export default {
         amount: this.amount,
         referralCode: '14',
         reserve: this.actualToken.underlyingAsset,
-        interestRateMode: this.type
+        interestRateMode: this.apr.type
       };
 
       this.$emit('onConfirm', param);

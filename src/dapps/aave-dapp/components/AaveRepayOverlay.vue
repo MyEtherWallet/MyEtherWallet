@@ -15,7 +15,6 @@
       <div>
         <aave-amount-form
           :selected-token="preSelectedToken"
-          :handler="handler"
           :show-toggle="aaveRepayForm.showToggle"
           :left-side-values="aaveRepayForm.leftSideValues"
           :right-side-values="aaveRepayForm.rightSideValues"
@@ -31,14 +30,18 @@
 </template>
 
 <script>
-import { convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     AaveAmountForm
   },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   data() {
     return {
       amount: ''
@@ -46,21 +49,24 @@ export default {
   },
   computed: {
     totalBorrow() {
-      const borrows = this.selectedTokenInUserSummary?.currentBorrows;
-      return borrows ? borrows : '0';
+      return this.selectedTokenInUserSummary?.currentBorrows || '0';
     },
     aaveRepayForm() {
       const hasBorrowed = this.selectedTokenInUserSummary;
       const borrowedEth = hasBorrowed
-        ? `${hasBorrowed.currentBorrows} ${this.preSelectedToken.token}`
+        ? `${formatFloatingPointValue(hasBorrowed.currentBorrows).value} ${
+            this.preSelectedToken.token
+          }`
         : `$ 0.00`;
       const borrowedUSD = hasBorrowed
-        ? `$ ${convertToFixed(hasBorrowed.currentBorrowsUSD)}`
+        ? `$ ${formatFiatValue(hasBorrowed.currentBorrowsUSD).value}`
         : `0 ETH`;
-      const eth = `${this.handler?.userSummary.totalCollateralETH} ETH`;
-      const usd = `$ ${convertToFixed(
-        this.handler?.userSummary.totalCollateralUSD
-      )}`;
+      const eth = `${
+        formatFloatingPointValue(this.userSummary.totalCollateralETH).value
+      } ETH`;
+      const usd = `$ ${
+        formatFiatValue(this.userSummary.totalCollateralUSD).value
+      }`;
       return {
         showToggle: true,
         leftSideValues: {

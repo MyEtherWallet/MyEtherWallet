@@ -22,11 +22,11 @@
   =====================================================================================
   -->
       <v-card
-        v-if="rates.stable !== '--'"
+        :disabled="rates.stable === '--'"
         :flat="isStable"
         :color="isStable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8"
-        @click.native="setTypeToStable"
+        @click.native="setType(interestTypes.stable)"
       >
         <v-icon color="secondary">mdi-arrow-right-circle</v-icon>
         <span class="textSecondary--text my-2">Stable</span>
@@ -38,11 +38,11 @@
   =====================================================================================
   -->
       <v-card
-        v-if="rates.variable !== '--'"
+        :disabled="rates.variable === '--'"
         :flat="isVariable"
         :color="isVariable ? 'boxShadow' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8 ml-5"
-        @click.native="setTypeToVariable"
+        @click.native="setType(interestTypes.variable)"
       >
         <!-- need to update this icon once we have it -->
         <v-icon x-large color="warning darken-1">mdi-arrow-right-circle</v-icon>
@@ -61,21 +61,17 @@
       class="my-8"
       title="Continue"
       btn-size="xlarge"
-      :disabled="type === ''"
+      :disabled="!apr.type"
       @click.native="onContinue"
-    />
-    <mew-warning-sheet
-      v-if="showError"
-      class="mt-4"
-      description="You cannot choose stable for reserves being
-    used as collateral. Disable the collateral usage and try again."
     />
   </v-sheet>
 </template>
 
 <script>
-import { INTEREST_TYPES, roundPercentage } from '../handlers/helpers';
+import { INTEREST_TYPES } from '../handlers/helpers';
 import BigNumber from 'bignumber.js';
+import { formatPercentageValue } from '@/core/helpers/numberFormatHelper';
+
 export default {
   props: {
     selectedToken: {
@@ -85,50 +81,49 @@ export default {
   },
   data() {
     return {
-      type: ''
+      apr: {},
+      interestTypes: INTEREST_TYPES
     };
   },
   computed: {
-    showError() {
-      return this.selectedToken?.usageAsCollateralEnabled || false;
-    },
     rates() {
       const stable = this.selectedToken?.stableBorrowRateEnabled
-        ? roundPercentage(
-            new BigNumber(this.selectedToken.stableBorrowRate)
-              .multipliedBy(100)
-              .toString()
-          )
+        ? formatPercentageValue(
+            new BigNumber(this.selectedToken.stableBorrowRate).multipliedBy(100)
+          ).value
         : '--';
-      const variable = this.selectedToken
-        ? roundPercentage(
-            new BigNumber(this.selectedToken.variableBorrowRate)
-              .multipliedBy(100)
-              .toString()
-          )
-        : '--';
+      const variable =
+        this.selectedToken.variableBorrowRate > 0
+          ? formatPercentageValue(
+              new BigNumber(this.selectedToken.variableBorrowRate).multipliedBy(
+                100
+              )
+            ).value
+          : '--';
       return {
         stable,
         variable
       };
     },
     isStable() {
-      return this.type === INTEREST_TYPES.stable;
+      return this.apr.type === INTEREST_TYPES.stable;
     },
     isVariable() {
-      return this.type === INTEREST_TYPES.variable;
+      return this.apr.type === INTEREST_TYPES.variable;
     }
   },
   methods: {
-    setTypeToStable() {
-      this.type = INTEREST_TYPES.stable;
-    },
-    setTypeToVariable() {
-      this.type = INTEREST_TYPES.variable;
+    setType(type) {
+      this.apr = {
+        type: type,
+        percentage:
+          type === INTEREST_TYPES.stable
+            ? this.rates.stable
+            : this.rates.variable
+      };
     },
     onContinue() {
-      const type = this.type.charAt(0).toUpperCase() + this.type.slice(1);
-      this.$emit('continue', type);
+      this.$emit('continue', this.apr);
     }
   }
 };

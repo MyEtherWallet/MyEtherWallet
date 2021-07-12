@@ -18,16 +18,15 @@
   =====================================================================================
   -->
     <v-card
-      v-if="isDeposit && step === 3"
+      v-if="isDeposit || isBorrow"
       class="d-flex align-center justify-space-between pa-7 mb-6"
       flat
       color="overlayBg"
     >
       <div class="d-flex flex-column align-start">
         <span class="mew-heading-3 textPrimaryModule--text mb-2"
-          >Amount to Deposit</span
+          >Amount to {{ actionTitle }}</span
         >
-        <!-- dummy data -->
         <span class="mew-heading-1 mb-2"
           >{{ amount }} {{ selectedToken.token }}</span
         >
@@ -121,11 +120,7 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import {
-  convertToFixed,
-  ACTION_TYPES,
-  INTEREST_TYPES
-} from '../handlers/helpers';
+import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 
 export default {
@@ -134,9 +129,12 @@ export default {
       type: String,
       default: ''
     },
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
+    apr: {
+      type: Object,
+      default: () => {}
+    },
+    userSummary: {
+      type: Object,
       default: () => {}
     },
     selectedToken: {
@@ -157,8 +155,23 @@ export default {
     }
   },
   computed: {
+    actionTitle() {
+      if (this.isBorrow) {
+        return 'Borrow';
+      }
+      if (this.isRepay) {
+        return 'Repay';
+      }
+      return 'Deposit';
+    },
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
+    },
+    isRepay() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.repay;
+    },
+    isBorrow() {
+      return this.actionType.toLowerCase() === ACTION_TYPES.borrow;
     },
     isInterest() {
       return this.actionType.toLowerCase() === ACTION_TYPES.interest;
@@ -193,39 +206,70 @@ export default {
               tooltip: 'Tooltip text',
               value: this.nextHealthFactor,
               class:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'error--text'
-                  : 'primary--text',
+                this.currentHealthFactor <= this.nextHealthFactor
+                  ? 'primary--text'
+                  : 'error--text',
               indicator:
-                this.currentHealthFactor > this.nextHealthFactor
-                  ? 'mdi-arrow-down-bold'
-                  : 'mdi-arrow-up-bold'
+                this.currentHealthFactor == this.nextHealthFactor
+                  ? ''
+                  : this.currentHealthFactor < this.nextHealthFactor
+                  ? 'mdi-arrow-up-bold'
+                  : 'mdi-arrow-down-bold'
             }
           );
           return details;
+        case ACTION_TYPES.borrow:
+          details = [
+            {
+              title: 'Interest APR',
+              value: this.apr.percentage,
+              class:
+                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                  ? 'secondary--text'
+                  : 'warning--text text--darken-1'
+            },
+            {
+              title: 'Interest rate type',
+              value: this.apr.type,
+              class:
+                this.apr.type.toLowerCase() === INTEREST_TYPES.stable
+                  ? 'secondary--text capitalize'
+                  : 'warning--text text--darken-1 capitalize'
+            }
+          ];
       }
       return details;
     },
     currentHealthFactor() {
-      return new BigNumber(this.handler?.userSummary?.healthFactor).toFixed(3);
+      return new BigNumber(this.userSummary?.healthFactor).toFixed(3);
     },
     nextHealthFactor() {
-      const selectedToken = this.actualToken;
-      let nextHealthFactor = convertToFixed(this.currentHealthFactor),
-        collateralBalanceETH = this.handler?.userSummary.totalCollateralETH;
-      const totalBorrowsETH = this.handler?.userSummary.totalBorrowsETH;
+      const selectedToken = this.selectedToken;
+      let nextHealthFactor = this.currentHealthFactor,
+        collateralBalanceETH = this.userSummary.totalCollateralETH,
+        totalBorrowsETH = this.userSummary.totalBorrowsETH;
       if (selectedToken?.price && this.amount !== '0') {
         const ethBalance = BigNumber(this.amount).times(
           selectedToken?.price?.priceInEth
         );
-        collateralBalanceETH = new BigNumber(
-          this.handler.userSummary.totalCollateralETH
-        ).plus(ethBalance);
+        if (this.isDeposit) {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          ).plus(ethBalance);
+        } else if (this.isWithdraw) {
+          collateralBalanceETH = new BigNumber(
+            this.userSummary.totalCollateralETH
+          ).minus(ethBalance);
+        } else if (this.isRepay) {
+          totalBorrowsETH = new BigNumber(
+            this.userSummary.totalBorrowsETH
+          ).minus(ethBalance);
+        }
         nextHealthFactor = calculateHealthFactorFromBalancesBigUnits(
           collateralBalanceETH,
           totalBorrowsETH,
-          this.handler.userSummary.totalFeesETH,
-          this.handler.userSummary.currentLiquidationThreshold
+          this.userSummary.totalFeesETH,
+          this.userSummary.currentLiquidationThreshold
         ).toFixed(3);
       }
       return nextHealthFactor;
@@ -246,17 +290,7 @@ export default {
   },
   methods: {
     confirm() {
-      if (this.step === 1) {
-        this.$emit('confirmed');
-      } else {
-        this.$emit('onConfirm');
-      }
-    },
-    getInterestTypeClass(type) {
-      if (type.toLowerCase() === INTEREST_TYPES.stable) {
-        return 'secondary--text';
-      }
-      return 'warning--text text--darken-1';
+      this.$emit('onConfirm');
     }
   }
 };

@@ -1,4 +1,4 @@
-subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
+subscription liquidityRateHistoryUpdate($reserveAddress: String!) {
   reserveParamsHistoryItems(
     where: { reserve: $reserveAddress }
     first: 10
@@ -10,7 +10,7 @@ subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {
   }
 }
 
-subscription ReserveUpdateSubscription($poolId: String!) {
+subscription reserveUpdateSubscription($poolId: String!) {
   reserves(where: { pool: $poolId }) {
     ...ReserveData
     __typename
@@ -18,7 +18,7 @@ subscription ReserveUpdateSubscription($poolId: String!) {
 }
 
 
-subscription UserPositionUpdateSubscription(
+subscription userPositionUpdateSubscription(
   $userAddress: String!
   $poolId: String!
 ) {
@@ -28,12 +28,11 @@ subscription UserPositionUpdateSubscription(
   }
 }
 
-subscription UsdPriceEth {
+subscription usdPriceEth {
   priceOracle(id: "1") {
     usdPriceEth
   }
 }
-
 
 fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
   variableBorrowRate

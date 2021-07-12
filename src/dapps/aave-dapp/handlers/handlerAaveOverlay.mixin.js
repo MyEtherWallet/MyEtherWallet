@@ -1,13 +1,20 @@
 import { _ } from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 
-const aaveOverlayMixin = {
+const handlerAaveOverlay = {
   props: {
-    handler: {
-      type: [Object, null],
-      validator: item => typeof item === 'object' || null,
+    isLoadingData: {
+      type: Boolean,
+      default: true
+    },
+    userSummary: {
+      type: Object,
       default: () => {}
+    },
+    reservesData: {
+      type: Array,
+      default: () => []
     },
     preSelectedToken: {
       default: () => {
@@ -26,6 +33,7 @@ const aaveOverlayMixin = {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('external', ['fiatValue']),
     actualSelectedToken() {
       const selectedTokens = _.isEmpty(this.selectedToken)
         ? _.isEmpty(this.preSelectedToken)
@@ -35,8 +43,8 @@ const aaveOverlayMixin = {
       return selectedTokens;
     },
     actualToken() {
-      if (this.handler && !_.isEmpty(this.handler)) {
-        const token = this.handler?.reservesData.find(item => {
+      if (this.reservesData) {
+        const token = this.reservesData.find(item => {
           if (item.symbol === this.actualSelectedToken.token) return item;
         });
 
@@ -45,10 +53,12 @@ const aaveOverlayMixin = {
       return {};
     },
     selectedTokenUSDValue() {
-      return this.actualToken ? this.actualToken?.price?.priceInEth : 0;
+      return new BigNumber(this.actualToken?.price?.priceInEth || 0).times(
+        this.fiatValue
+      );
     },
     selectedTokenInUserSummary() {
-      return this.handler?.userSummary?.reservesData?.find(item => {
+      return this.userSummary?.reservesData?.find(item => {
         if (item.reserve.symbol === this.actualSelectedToken.token) {
           return item;
         }
@@ -63,4 +73,4 @@ const aaveOverlayMixin = {
   }
 };
 
-export default aaveOverlayMixin;
+export default handlerAaveOverlay;

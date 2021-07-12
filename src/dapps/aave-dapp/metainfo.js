@@ -1,4 +1,5 @@
-import layout from './Aave';
+import { ETH } from '@/utils/networks/types';
+import layout from './TheAaveLayout';
 export default {
   title: 'Aave V1',
   subtitle: 'Earn passive income on your deposits and borrow assets',
@@ -6,7 +7,7 @@ export default {
   rightIconType: 'mew',
   rightIcon: 'aave',
   path: 'aave',
-  networks: [],
+  networks: [ETH],
   layout,
   meta: {
     noAuth: false

@@ -1,3 +1,7 @@
+### Feature
+
+* Add Aave graphql mixin[#3133](https://github.com/MyEtherWallet/MyEtherWallet/pull/3133)
+
 ### Devop
 
 * Remove reference to master on checkBranch [#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)

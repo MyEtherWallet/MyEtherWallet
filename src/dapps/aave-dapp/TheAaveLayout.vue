@@ -26,7 +26,7 @@
           </div>
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="tableHeader pa-5 border-radius--5px">
+              <div class="superPrimary pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="">
                   $ {{ totalLiquidity.usd }}
@@ -55,7 +55,7 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="compositionPercentage"
+                  :data="compositionPercentage"
                 />
                 <v-skeleton-loader
                   v-else
@@ -68,7 +68,7 @@
             <v-col cols="12" md="6">
               <div
                 class="
-                  tableHeader
+                  superPrimary
                   pa-5
                   border-radius--5px
                   height-100
@@ -96,7 +96,9 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :table-header="depositsTableHeader"
-                :handler="handler"
+                :is-loading-data="isLoadingData"
+                :reserves-data="reservesData"
+                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedDeposit="openDepositOverlayWithToken"
@@ -162,7 +164,7 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="borrowingsPercentage"
+                  :data="borrowingsPercentage"
                 />
                 <v-skeleton-loader
                   v-else
@@ -200,12 +202,12 @@
                 <mew-progress-bar
                   v-if="!isLoadingData"
                   class="mt-2"
-                  :balance-obj="collateralPercentage"
+                  :data="collateralPercentage"
                 />
                 <v-skeleton-loader
                   v-else
+                  class="mt-2"
                   height="12px"
-                  width="30px"
                   type="text"
                 />
               </div>
@@ -237,7 +239,9 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :table-header="borrowTableHeader"
-                :handler="handler"
+                :is-loading-data="isLoadingData"
+                :reserves-data="reservesData"
+                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedBorrow="openBorrowOverlayWithToken"
@@ -257,46 +261,57 @@
       </template>
     </the-wrapper-dapp>
     <aave-deposit-overlay
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showDepositOverlay"
       :close="closeDepositOverlay"
       :pre-selected-token="requestToken"
-      :handler="handler"
-      @onConfirm="callDeposit"
+      @onConfirm="onDeposit"
     />
     <aave-borrow-overlay
       :pre-selected-token="requestToken"
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
-      :handler="handler"
-      @onConfirm="callBorrow"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
+      @onConfirm="onBorrow"
     />
     <aave-collateral-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
-      @onConfirm="callSwitchCollateral"
+      @onConfirm="setCollateral"
     />
     <aave-withdraw-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
-      @onConfirm="callWithdraw"
+      @onConfirm="onWithdraw"
     />
     <aave-repay-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
-      @onConfirm="callRepay"
+      @onConfirm="onRepay"
     />
     <aave-set-apr-overlay
       :pre-selected-token="requestToken"
-      :handler="handler"
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
-      @onConfirm="callSwitchInterest"
+      @onConfirm="setBorrowRate"
     />
   </div>
 </template>
@@ -310,14 +325,16 @@ import AaveRepayOverlay from './components/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
-import handlerAave from './handlers/handlerAave';
-import AaveCalls from './apollo/queries/queries';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
-import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
-
+import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
+import {
+  formatPercentageValue,
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 const COLORS = {
   ENJ: 'expandHeader',
   ETH: 'primary',
@@ -352,10 +369,9 @@ export default {
     AaveWithdrawOverlay,
     AaveSetAprOverlay
   },
+  mixins: [handlerAaveApollo],
   data() {
     return {
-      handler: null,
-      caller: null,
       showDepositOverlay: false,
       requestToken: {},
       showBorrowOverlay: false,
@@ -376,279 +392,131 @@ export default {
     };
   },
   computed: {
+    ...mapState('wallet', ['address', 'coinGeckoTokens', 'web3']),
+    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
-      if (!this.handler) true;
-      return this.handler.isLoading;
+      return Object.keys(this.userSummary).length <= 0;
     },
     loanValue() {
-      if (!this.handler) return `0%`;
-      return `${BigNumber(this.handler.userSummary.currentLiquidationThreshold)
-        .times(100)
-        .toFixed()}%`;
+      return formatPercentageValue(
+        BigNumber(this.userSummary.currentLiquidationThreshold).times(100)
+      ).value;
     },
     healthFactor() {
-      if (!this.handler) return '-';
-      return BigNumber(this.handler.userSummary.healthFactor).gt(0)
-        ? BigNumber(this.handler.userSummary.healthFactor).toFixed(3)
+      return BigNumber(this.userSummary.healthFactor).gt(0)
+        ? formatFloatingPointValue(this.userSummary.healthFactor).value
         : `-`;
     },
     totalLiquidity() {
-      const eth =
-        !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
-          ? '0'
-          : this.handler.userSummary.totalLiquidityETH;
-      const usd =
-        !this.handler || this.handler.userSummary.totalLiquidityETH === 'NaN'
-          ? '0'
-          : BigNumber(this.handler.userSummary.totalLiquidityETH)
-              .times(this.fiatValue ? this.fiatValue : 0)
-              .toFixed(2);
-
       return {
-        eth: this.handler ? eth : '0',
-        usd: this.handler ? usd : '0'
+        eth: formatFloatingPointValue(this.userSummary.totalLiquidityETH || '0')
+          .value,
+        usd: formatFiatValue(this.userSummary.totalLiquidityUSD || '0').value
       };
     },
     totalCollateral() {
-      if (!this.handler)
-        return {
-          eth: `0 ETH`,
-          usd: `$ 0.00`
-        };
-
-      const eth = `${this.handler.userSummary.totalCollateralETH}`;
-      const usd = `${BigNumber(
-        this.handler.userSummary.totalCollateralUSD
-      ).toFixed(2)}`;
-
       return {
-        eth: eth,
-        usd: usd
+        eth: formatFloatingPointValue(
+          this.userSummary.totalCollateralETH || '0'
+        ).value,
+        usd: formatFiatValue(this.userSummary.totalCollateralUSD || '0').value
       };
     },
     totalBorrow() {
-      if (!this.handler)
-        return {
-          eth: `0 ETH`,
-          usd: `$ 0.00`
-        };
-
-      const eth = `${this.handler.userSummary.totalBorrowsETH}`;
-      const usd = `${BigNumber(
-        this.handler.userSummary.totalBorrowsUSD
-      ).toFixed(2)}`;
-
       return {
-        eth: eth,
-        usd: usd
+        eth: formatFloatingPointValue(this.userSummary.totalBorrowsETH || '0')
+          .value,
+        usd: formatFiatValue(this.userSummary.totalBorrowsUSD || '0').value
       };
     },
     compositionPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const total = this.handler.userSummary.totalLiquidityETH;
-        const data = this.handler.userSummary.reservesData.map(item => {
-          item['percentage'] = BigNumber(item.currentUnderlyingBalance)
-            .times(100)
-            .div(total)
-            .toFixed();
-          item['color'] = COLORS[item.reserve.symbol];
-          return item;
-        });
-        const newObj = {
-          total: total,
-          data: data
-        };
-
-        return newObj;
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        const total = this.userSummary.totalLiquidityETH;
+        return this.userSummary.reservesData
+          .filter(item => {
+            return item.currentUnderlyingBalance > 0.00001;
+          })
+          .map(item => {
+            return {
+              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+                .div(total)
+                .times(100)
+                .toFixed(),
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                ' ' +
+                item.reserve.symbol
+            };
+          });
       }
-
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     },
     collateralPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const total = this.handler.userSummary.totalCollateralETH;
-        const data = this.handler.userSummary.reservesData.filter(item => {
-          if (
-            item.usageAsCollateralEnabledOnUser &&
-            item.currentUnderlyingBalanceETH > 0
-          ) {
-            item['percentage'] = BigNumber(item.currentUnderlyingBalance)
-              .times(100)
-              .div(total)
-              .toFixed();
-            item['color'] = COLORS[item.reserve.symbol];
-            return item;
-          }
-        });
-        const newObj = {
-          total: total,
-          data: data
-        };
-
-        return newObj;
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        return this.userSummary.reservesData
+          .filter(item => {
+            return (
+              item.usageAsCollateralEnabledOnUser &&
+              item.currentUnderlyingBalanceETH > 0
+            );
+          })
+          .map(item => {
+            return {
+              percentage: BigNumber(item.currentUnderlyingBalanceETH)
+                .times(100)
+                .div(this.userSummary.totalCollateralETH)
+                .toFixed(),
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentUnderlyingBalance).value +
+                ' ' +
+                item.reserve.symbol
+            };
+          });
       }
-
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     },
     borrowingsPercentage() {
-      if (
-        this.handler &&
-        this.handler.userSummary &&
-        Object.keys(this.handler.userSummary).length > 0
-      ) {
-        const borrowLimit = BigNumber(
-          this.handler.userSummary.availableBorrowsETH
-        )
-          .plus(this.handler.userSummary.borrowLimitBorrowsETH)
-          .toFixed(4);
-        const percentageLeft = BigNumber(
-          this.handler.userSummary.availableBorrowsETH
-        )
-          .times(100)
-          .div(borrowLimit)
-          .toFixed();
-        const data = this.handler.userSummary.reservesData.filter(item => {
-          if (item.currentBorrowsETH > 0) {
-            item['percentage'] = BigNumber(item.currentBorrowsETH)
+      if (this.userSummary && Object.keys(this.userSummary).length > 0) {
+        let totalAvailablePercentage = 100;
+        const data = this.userSummary.reservesData
+          .filter(item => {
+            return item.currentBorrowsETH > 0.001;
+          })
+          .map(item => {
+            const percentage = BigNumber(item.currentBorrowsETH)
               .times(100)
-              .div(borrowLimit)
+              .div(this.userSummary.totalBorrowsEth)
               .toFixed();
-            item['color'] = COLORS[item.reserve.symbol];
-            return item;
-          }
-        });
-        if (borrowLimit > 0 && percentageLeft > 0) {
+            totalAvailablePercentage = totalAvailablePercentage - percentage;
+            return {
+              percentage: percentage,
+              color: COLORS[item.reserve.symbol],
+              tooltip:
+                formatFloatingPointValue(item.currentBorrowsETH).value +
+                ' ' +
+                item.reserve.symbol
+            };
+          });
+        if (totalAvailablePercentage > 0) {
           data.push({
-            symbol: 'Available',
-            amount: '',
-            percentage: percentageLeft,
-            color: '#c7c7c7'
+            percentage: totalAvailablePercentage,
+            color: '#c7c7c7',
+            tooltip:
+              formatFloatingPointValue(this.userSummary.availableBorrowsETH)
+                .value + ' Available to Borrow'
           });
         }
-        const newObj = {
-          total: borrowLimit,
-          data: data
-        };
-
-        return newObj;
+        return data;
       }
 
-      return {
-        total: 0,
-        data: []
-      };
+      return [];
     }
-  },
-  watch: {
-    isEthNetwork(newVal) {
-      if (newVal) {
-        this.setCallerAndHandler();
-      } else {
-        this.handler = null;
-        this.caller = null;
-      }
-    }
-  },
-  mounted() {
-    this.setCallerAndHandler();
   },
   methods: {
-    callDeposit(e) {
-      this.handler
-        .deposit(e)
-        .then(() => {
-          Toast('Success! Your deposit will be displayed shortly', {}, SUCCESS);
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callSwitchCollateral(e) {
-      this.handler
-        .switchCollateral(e)
-        .then(() => {
-          Toast(
-            'Success! Your collateral is being switched and will display shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callBorrow(e) {
-      this.handler
-        .borrow(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callWithdraw(e) {
-      this.handler
-        .withdraw(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callRepay(e) {
-      this.handler
-        .repay(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
-    callSwitchInterest(e) {
-      this.handler
-        .switchRate(e)
-        .then(() => {
-          Toast(
-            'Success! Your borrowed token will be displayed shortly',
-            {},
-            SUCCESS
-          );
-        })
-        .catch(e => {
-          Toast(e.message, {}, ERROR);
-        });
-    },
     openDepositOverlayWithToken(token) {
       this.requestToken = token;
       this.showDepositOverlay = true;
@@ -702,19 +570,6 @@ export default {
     closeAprTypeOverlay() {
       this.requestToken = {};
       this.showAprTypeOverlay = false;
-    },
-    setCallerAndHandler() {
-      this.handler = new handlerAave();
-      this.caller = new AaveCalls(this.$apollo);
-      this.caller.getUserData(res => {
-        this.handler._userDataHandler(res);
-      });
-      this.caller.getUsdPriceEth(res => {
-        this.handler._usdPriceHandler(res);
-      });
-      this.caller.getReserveData(res => {
-        this.handler._reserveDataHandler(res);
-      });
     }
   }
 };

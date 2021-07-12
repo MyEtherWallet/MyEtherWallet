@@ -14,12 +14,12 @@
       <div>
         <aave-amount-form
           :selected-token="preSelectedToken"
-          :handler="handler"
           :show-toggle="aaveWithdrawForm.showToggle"
           :left-side-values="aaveWithdrawForm.leftSideValues"
           :right-side-values="aaveWithdrawForm.rightSideValues"
           :form-text="aaveWithdrawForm.formText"
           :button-title="aaveWithdrawForm.buttonTitle"
+          :aave-balance="aaveBalance"
           :token-balance="tokenBalance"
           @cancel="handleCancel"
           @emitValues="handleWithdrawAmount"
@@ -31,15 +31,19 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { convertToFixed } from '../handlers/helpers';
 import AaveAmountForm from './AaveAmountForm';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import { mapGetters } from 'vuex';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+
 export default {
   components: {
     AaveAmountForm
   },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),
@@ -53,19 +57,30 @@ export default {
       });
       return hasBalance ? BigNumber(hasBalance.usdBalance).toFixed() : '0';
     },
+    aaveBalance() {
+      return this.selectedTokenInUserSummary?.currentUnderlyingBalance || '0';
+    },
     aaveWithdrawForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
-      const depositedBalance = `${convertToFixed(
-        hasDeposit ? hasDeposit?.currentUnderlyingBalance : 0,
-        6
-      )} ${this.preSelectedToken.token}`;
-      const depositedBalanceInUSD = `$ ${BigNumber(this.selectedTokenUSDValue)
-        .times(hasDeposit?.currentUnderlyingBalance)
-        .toFixed(2)}`;
-      const tokenBalance = `${this.tokenBalance} ${this.preSelectedToken.token}`;
-      const usd = `$ ${BigNumber(this.tokenBalance)
-        .times(this.selectedTokenUSDValue)
-        .toFixed(2)}`;
+      const depositedBalance = `${
+        formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
+          .value
+      } ${this.preSelectedToken.token}`;
+      const depositedBalanceInUSD = `$ ${
+        formatFiatValue(
+          BigNumber(this.selectedTokenUSDValue).times(
+            hasDeposit?.currentUnderlyingBalance || 0
+          )
+        ).value
+      }`;
+      const tokenBalance = `${
+        formatFloatingPointValue(this.tokenBalance).value
+      } ${this.preSelectedToken.token}`;
+      const usd = `$ ${
+        formatFiatValue(
+          BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
+        ).value
+      }`;
       return {
         showToggle: true,
         leftSideValues: {

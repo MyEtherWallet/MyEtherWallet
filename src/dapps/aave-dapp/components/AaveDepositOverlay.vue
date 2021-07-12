@@ -9,7 +9,7 @@
     <template #mewOverlayBody>
       <!--
       =====================================================================================
-        Aave token deposit table
+        Step 1: Select a token to depost (Aave token deposit table)
       =====================================================================================
       -->
       <v-sheet
@@ -19,32 +19,21 @@
         class="border-radius--10px pa-4"
       >
         <aave-table
-          :handler="handler"
+          :is-loading-data="isLoadingData"
+          :reserves-data="reservesData"
+          :user-reserves-data="userSummary.reservesData"
           :table-header="depositHeader"
           @selectedDeposit="handleSelectedDeposit"
         />
       </v-sheet>
       <!--
         =====================================================================================
-          Aave Summary
+          Step 2: Select the amount to deposit
         =====================================================================================
         -->
-      <div v-if="step === 1 || step === 3">
-        <aave-summary
-          :selected-token="selectedToken"
-          :handler="handler"
-          :amount="amount"
-          :amount-usd="amountUsd"
-          :step="step"
-          :action-type="depositHeader"
-          @confirmed="handleConfirm"
-          @onConfirm="emitDeposit"
-        />
-      </div>
-      <div v-if="step === 2">
+      <div v-if="step === 1">
         <aave-amount-form
           :selected-token="selectedToken"
-          :handler="handler"
           :show-toggle="aaveDepositForm.showToggle"
           :left-side-values="aaveDepositForm.leftSideValues"
           :right-side-values="aaveDepositForm.rightSideValues"
@@ -55,6 +44,22 @@
           @emitValues="handleDepositAmount"
         />
       </div>
+      <!--
+        =====================================================================================
+          Step 3: Summary
+        =====================================================================================
+        -->
+      <div v-if="step === 2">
+        <aave-summary
+          :selected-token="selectedToken"
+          :user-summary="userSummary"
+          :amount="amount"
+          :amount-usd="amountUsd"
+          :step="step"
+          :action-type="depositHeader"
+          @onConfirm="emitDeposit"
+        />
+      </div>
     </template>
   </mew-overlay>
 </template>
@@ -63,14 +68,18 @@
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
-import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
+import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 import { _ } from 'web3-utils';
-import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
-  mixins: [aaveOverlayMixin],
+  mixins: [handlerAaveOverlay],
   data() {
     return {
       step: 0,
@@ -95,7 +104,6 @@ export default {
     header() {
       switch (this.step) {
         case 1:
-        case 3:
           return 'Deposit';
         case 2:
           return 'Confirmation';
@@ -105,18 +113,26 @@ export default {
     },
     aaveDepositForm() {
       const hasDeposit = this.selectedTokenInUserSummary;
-      const depositedBalance = `${convertToFixed(
-        hasDeposit ? hasDeposit?.currentUnderlyingBalance : 0,
-        6
-      )} ${this.selectedToken.token}`;
-      const depositedBalanceInUSD = `$ ${BigNumber(this.selectedTokenUSDValue)
-        .times(hasDeposit?.currentUnderlyingBalance)
-        .toFixed(2)}`;
+      const depositedBalance = `${
+        formatFloatingPointValue(hasDeposit?.currentUnderlyingBalance || 0)
+          .value
+      } ${this.selectedToken.token}`;
+      const depositedBalanceInUSD = `$ ${
+        formatFiatValue(
+          BigNumber(this.selectedTokenUSDValue).times(
+            hasDeposit?.currentUnderlyingBalance || 0
+          )
+        ).value
+      }`;
 
-      const tokenBalance = `${this.tokenBalance} ${this.selectedToken.token}`;
-      const usd = `$ ${BigNumber(this.tokenBalance)
-        .times(this.selectedTokenUSDValue)
-        .toFixed(2)}`;
+      const tokenBalance = `${
+        formatFloatingPointValue(this.tokenBalance).value
+      } ${this.selectedToken.token}`;
+      const usd = `$ ${
+        formatFiatValue(
+          BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
+        ).value
+      }`;
       return {
         showToggle: true,
         leftSideValues: {
@@ -153,11 +169,8 @@ export default {
       this.selectedToken = val;
       this.step = 1;
     },
-    handleConfirm() {
-      this.step += 1;
-    },
     handleDepositAmount(e) {
-      this.step = 3;
+      this.step = 2;
       this.amount = e;
     },
     handleCancel() {
