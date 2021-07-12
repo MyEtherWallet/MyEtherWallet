@@ -1,7 +1,13 @@
+### v5.8.4
+
+- update packages, and use v5 mewbuilds [#3256](https://github.com/MyEtherWallet/MyEtherWallet/pull/3256)
 
 ### v5.8.3
-### Feat 
+
+### Feat
+
 - Update welcome modal text [#3232](https://github.com/MyEtherWallet/MyEtherWallet/pull/3232)
+
 ### v5.8.2
 
 ### Devop
