@@ -1,4 +1,5 @@
-### Feature 
+### Feature
+
 * Add Aave graphql mixin[#3133](https://github.com/MyEtherWallet/MyEtherWallet/pull/3133)
 
 ### Devop
