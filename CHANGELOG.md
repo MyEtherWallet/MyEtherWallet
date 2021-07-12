@@ -1,3 +1,7 @@
+### Fix
+
+* fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
+
 ### Release v6.0.1
 
 ### Fix
