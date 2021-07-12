@@ -1,6 +1,6 @@
 ### Devop
 
-* Remove reference to master on checkBranch [#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
