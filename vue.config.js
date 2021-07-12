@@ -66,13 +66,8 @@ const webpackConfig = {
   ],
   optimization: {
     splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors'
-        }
-      }
+      minSize: 1000000,
+      maxSize: 20000000
     }
   }
 };
