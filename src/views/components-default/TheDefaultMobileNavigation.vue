@@ -123,6 +123,11 @@ export default {
         label: 'More',
         sub: [
           {
+            label: 'Verify message',
+            to: { name: 'Tools', query: { tab: '3' } }
+          }
+          /*
+          {
             label: 'Watch only address',
             to: { name: 'Tools', query: { tab: '1' } }
           },
@@ -131,13 +136,10 @@ export default {
             to: { name: 'Tools', query: { tab: '2' } }
           },
           {
-            label: 'Verify message',
-            to: { name: 'Tools', query: { tab: '3' } }
-          },
-          {
             label: 'Convery units',
             to: { name: 'Tools', query: { tab: '4' } }
           }
+          */
         ]
       },
       { label: 'Buy ETH', url: 'https://ccswap.myetherwallet.com' }
