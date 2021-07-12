@@ -475,7 +475,7 @@ export default {
           imgs: this.getPlaceholderImgs(),
           total: `${this.toTokens.length}`,
           divider: true,
-          selectTokenLabel: true
+          selectLabel: true
         }
       ];
       if (this.trendingTokens.length) {
@@ -549,7 +549,7 @@ export default {
               ? this.tokensList.length
               : `${this.toTokens.length}`,
           divider: true,
-          selectTokenLabel: true
+          selectLabel: true
         },
         {
           header: 'My Wallet'

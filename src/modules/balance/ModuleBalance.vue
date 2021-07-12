@@ -110,6 +110,7 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
+  formatPercentageValue,
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
@@ -176,7 +177,9 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return this.networkTokenUSDMarket.price_change_percentage_24h;
+        return formatPercentageValue(
+          this.networkTokenUSDMarket.price_change_percentage_24h
+        ).value;
       }
       return '';
     },
