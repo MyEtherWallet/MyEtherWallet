@@ -10,12 +10,12 @@ const nameResolver = new NameResolver({
 });
 
 describe('Ethereum Name Resolver', () => {
-  xtest('it should ens name: myetherwallet.eth', () => {
+  test('it should ens name: myetherwallet.eth', () => {
     return nameResolver.resolveName('myetherwallet.eth').then(addr => {
       expect(addr).toBe('0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D');
     });
   });
-  xtest('it should cns name: myetherwallet.crypto', () => {
+  test('it should cns name: myetherwallet.crypto', () => {
     return nameResolver.resolveName('myetherwallet.crypto').then(addr => {
       expect(addr).toBe('0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D');
     });
