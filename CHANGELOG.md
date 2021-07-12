@@ -1,6 +1,10 @@
 ### Devop
 
-* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Remove reference to master on checkBranch [#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+
+### Fix
+
+* fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 
 ### Release v6.0.1
 
