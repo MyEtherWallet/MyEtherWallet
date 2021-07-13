@@ -142,7 +142,9 @@ export default {
                   toToken: '',
                   amount: item.balancef
                 };
-                this.$router.push({ name: 'Swap', query: obj });
+                if (obj !== this.$route.query) {
+                  this.$router.push({ name: 'Swap', query: obj });
+                }
               },
               btnStyle: 'outline',
               colorTheme: 'primary'

@@ -139,12 +139,12 @@ export default {
      * @type - must be one of the this.types or an empty string (this will reset step to 0)
      */
     setType(newType) {
-      try {
-        this.$router.push({
-          query: { type: newType }
-        });
-      } catch (e) {
-        Toast(e, {}, ERROR);
+      if (this.$route.query.type !== newType) {
+        try {
+          this.$router.push({ query: { type: newType } });
+        } catch (e) {
+          Toast(e, {}, ERROR);
+        }
       }
     }
   }
