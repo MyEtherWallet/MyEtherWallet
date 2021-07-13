@@ -91,6 +91,15 @@
             @click.native="deploy"
           />
         </div>
+        <div class="text-center mt-4">
+          <mew-button
+            title="Clear all"
+            :has-full-width="false"
+            btn-size="small"
+            btn-style="transparent"
+            @click.native="resetDefaults()"
+          />
+        </div>
       </div>
     </template>
   </mew-module>
