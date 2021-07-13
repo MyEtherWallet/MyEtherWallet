@@ -1,11 +1,12 @@
 ### Devop
 
-* Remove reference to master on checkBranch [#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
+* fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
 
 ### Release v6.0.1
 

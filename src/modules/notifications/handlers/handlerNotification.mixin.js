@@ -49,7 +49,7 @@ export default {
         );
       },
       result({ data }) {
-        if (data.getEthTransfersV2.transfers) {
+        if (data && data.getEthTransfersV2.transfers) {
           data.getEthTransfersV2.transfers.forEach(transfer => {
             const hash = transfer.transfer.transactionHash;
             !this.txHashes.includes(hash) ? this.txHashes.push(hash) : null;
