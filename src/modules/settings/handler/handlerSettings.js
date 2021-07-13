@@ -42,6 +42,7 @@ export default class Settings {
     const body = document.body;
     const time = new Date();
     const filename = `Store-Export-${time.getTime()}.json`;
+    console.log(this, this.$store);
     const newObj = Object.assign({}, this.$store.state.global);
     const el = document.createElement('a');
     el.setAttribute(
