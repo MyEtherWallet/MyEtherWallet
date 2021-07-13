@@ -89,5 +89,6 @@ module.exports = [
   'https://rpc.xdaichain.com:443',
   'https://rpc-mainnet.maticvigil.com:443/',
   'wss://rpc-mainnet.maticvigil.com:443/ws',
-  'https://api.1inch.exchange:443'
+  'https://api.1inch.exchange:443',
+  'https://api.wallet.coinbase.com:443'
 ];
