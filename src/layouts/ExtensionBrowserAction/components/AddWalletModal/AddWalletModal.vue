@@ -742,6 +742,7 @@ export default {
         _self.step += 1;
         _self.loading = false;
         _self.password = '';
+        _self.selectedAddress = _self.wallet.getChecksumAddressString();
         worker.terminate();
       };
       worker.onerror = function (e) {
@@ -768,6 +769,7 @@ export default {
         this.wallet = new WalletInterface(parsedPrivKey, false, privKeyType);
         this.privKey = '';
         this.step += 1;
+        this.selectedAddress = this.wallet.getChecksumAddressString();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
