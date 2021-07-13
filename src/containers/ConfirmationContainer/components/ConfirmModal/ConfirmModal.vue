@@ -172,6 +172,11 @@ export default {
     showLowGasWarning: {
       type: Boolean,
       default: false
+    },
+    userTokens: {
+      type: [Array, null],
+      validator: item => Array.isArray(item) || null,
+      default: () => []
     }
   },
   data() {
@@ -215,7 +220,7 @@ export default {
         localVal,
         this.to,
         this.web3,
-        this.network.type.tokens,
+        this.userTokens ? this.userTokens : this.network.type.tokens,
         this.network.type.name
       );
       this.tokenTransferTo = tokenInfo.tokenTransferTo;

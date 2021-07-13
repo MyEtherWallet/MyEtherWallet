@@ -49,7 +49,6 @@ function parseTokensData(data, to, _web3, networkToken, networkName) {
       : value.toString();
     tokenData.tokenSymbol = token ? token.symbol : 'Unidentified Token';
   }
-
   return tokenData;
 }
 

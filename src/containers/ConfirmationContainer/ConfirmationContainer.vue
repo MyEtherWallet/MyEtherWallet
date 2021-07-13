@@ -16,6 +16,7 @@
       :nonce="nonce"
       :show-gas-warning="showGasWarning"
       :show-low-gas-warning="showLowGasWarning"
+      :user-tokens="userTokens"
     />
     <confirm-collection-modal
       v-if="fromAddress !== null"
@@ -170,7 +171,8 @@ export default {
         },
         fromValue: undefined,
         toValue: undefined
-      }
+      },
+      userTokens: null
     };
   },
   computed: {
@@ -230,6 +232,7 @@ export default {
         }
         return this.account.address;
       }
+      this.userTokens = null;
 
       return null;
     }
@@ -240,6 +243,9 @@ export default {
     });
   },
   created() {
+    this.$eventHub.$on('userTokens', tokens => {
+      this.userTokens = tokens;
+    });
     this.$eventHub.$on(
       'showSuccessModal',
       (message, linkMessage, txHashExlporrer) => {
@@ -513,7 +519,7 @@ export default {
           tx.data,
           tx.to,
           this.web3,
-          this.network.type.tokens,
+          this.userTokens ? this.userTokens : this.network.type.tokens,
           this.network.type.name
         );
         tx.tokenTransferTo = tokenData.tokenTransferTo;
