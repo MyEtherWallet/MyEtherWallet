@@ -19,6 +19,7 @@ const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
 const setNetwork = function ({ commit }, networkObj) {
+  console.log(networkObj);
   commit('SET_NETWORK', networkObj);
 };
 const addLocalContract = function ({ commit }, localContract) {
