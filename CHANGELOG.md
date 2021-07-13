@@ -1,6 +1,10 @@
+### Feature
+
+* Add 0x dex support [#3272]https://github.com/MyEtherWallet/MyEtherWallet/pull/3272)
+
 ### Devop
 
-* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Remove reference to master on checkBranch [#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
