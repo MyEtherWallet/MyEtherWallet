@@ -478,6 +478,7 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.accounts = [];
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
@@ -590,7 +591,7 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          this.wallets[this.walletType]?.create.errorHandler(err);
           this.reset();
         });
     },
@@ -605,7 +606,7 @@ export default {
           this.setAddresses();
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          this.wallets[this.walletType]?.create.errorHandler(err);
           this.reset();
         });
     },
@@ -704,7 +705,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        this.wallets[this.walletType].create.errorHandler(e);
+        this.wallets[this.walletType]?.create.errorHandler(e);
         this.reset();
       }
     },
