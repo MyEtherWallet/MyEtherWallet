@@ -10,7 +10,7 @@ module.exports = {
     },
     {
       code: 'devop',
-      gitmoji: 'hammer'
+      gitmoji: 'construction_worker'
     },
     {
       code: 'revert',
