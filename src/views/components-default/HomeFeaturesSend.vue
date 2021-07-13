@@ -4,7 +4,7 @@
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">
-      Buy, send and receive ETH and ERC20 tokens.
+      {{ $t('home.features.eth.title') }}
     </div>
     <div class="mt-10">
       <v-row>

@@ -2,15 +2,23 @@
   "tagline1": "Ethereum's",
   "tagline2": "Original Wallet",
   "subheading": "MEW (MyEtherWallet) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
-  "create-new-wallet": {
-    "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
-  },
-  "access-my-wallet": {
-    "text": "Connect to the blockchain using the wallet of your choice.",
-    "opt-1": "Send and Swap ETH & Tokens",
-    "opt-2": "Sign & Verify Messages",
-    "opt-3": "Interact with Contracts, ENS, DApps, and more!",
-    "button": "Access Now"
+  "features": {
+    "heading": "Your Gateway to the Ethereum Blockchain",
+    "subheading": "Features",
+    "eth": {
+      "title": "Buy, send and receive ETH and ERC20 tokens."
+    },
+    "swap": {
+      "heading": "Swap with MEW",
+      "title": "Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated partners 1inch, DEX AG, Changelly, Bity, and Simplexs."
+    },
+    "dapps": {
+      "text": "MEW team is working hard to update the DApps Center. Cant’s wait?",
+      "link-text": "Access all DApps in MEW Version 5"
+    },
+    "tokens": {
+      "heading": "MEW supports ETH and all ERC-20 tokens!"
+    }
   },
   "about-mew": {
     "title": "About MEW",

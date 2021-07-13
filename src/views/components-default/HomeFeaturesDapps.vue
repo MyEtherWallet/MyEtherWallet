@@ -36,12 +36,12 @@
     </v-row>
     <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
       <div class="message--text textBlack2--text text-center">
-        MEW team is working hard to update the DApps Center. Cant’s wait?
+        {{ $t('home.features.dapps.text') }}
         <a
           href="https://v5.myetherwallet.com"
           target="_blank"
           class="primary--text"
-          >Access all DApps in MEW Version 5</a
+          >{{ $t('home.features.dapps.link-text') }}</a
         >
       </div>
     </div>
