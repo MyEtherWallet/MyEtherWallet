@@ -1,6 +1,6 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://mainnet.mewwallet.dev/v3';
+const HOST_URL = 'https://development.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
@@ -66,9 +66,9 @@ class MEWPClass {
             amount: queryAmount.toFixed(fromT.decimals),
             chain: this.chain,
             excludeDexes:
-              this.provider === MEWPClass.supportedDexes.DEX_AG
+              this.provider === MEWPClass.supportedDexes.ZERO_X
                 ? MEWPClass.supportedDexes.ONE_INCH
-                : MEWPClass.supportedDexes.DEX_AG
+                : MEWPClass.supportedDexes.ZERO_X
           }
         })
         .then(response => {
@@ -216,7 +216,7 @@ class MEWPClass {
   }
 }
 MEWPClass.supportedDexes = {
-  DEX_AG: 'DEX_AG',
+  ZERO_X: 'ZERO_X',
   ONE_INCH: 'ONE_INCH'
 };
 export default MEWPClass;
