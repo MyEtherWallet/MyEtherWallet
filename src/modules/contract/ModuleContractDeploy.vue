@@ -86,7 +86,7 @@
           <mew-button
             title="Sign Transaction"
             :has-full-width="false"
-            button-size="xlarge"
+            btn-size="xlarge"
             :disabled="!canDeploy"
             @click.native="deploy"
           />
