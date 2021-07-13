@@ -4,6 +4,7 @@
 
 ### Fix
 
+* fix contract button size [#3263](https://github.com/MyEtherWallet/MyEtherWallet/pull/3263)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 
