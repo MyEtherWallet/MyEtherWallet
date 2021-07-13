@@ -1,0 +1,57 @@
+{
+  "string": "Schedule Transaction",
+  "title": "Schedule a transaction",
+  "dapp-desc": "Schedule a transaction using the decentralized Ethereum Alarm Clock protocol",
+  "warning": {
+    "not-enough-eth": " Not enough ETH on account to schedule",
+    "amount-higher-balance": "Amount higher than balance",
+    "min-bounty": "Please set a bounty of {min} or higher"
+  },
+  "at-least-blocks": "Should be at least {number} blocks in the future",
+  "at-least-minutes": " Make sure that the time is at least {min} minutes in the future",
+  "date-time": "Date & Time",
+  "timezone": "Timezone",
+  "time-bounty": {
+    "title": "Time Bounty",
+    "desc": "The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed.",
+    "caption": "Covers up to {gas} Gwei gas price on future execution"
+  },
+  "mode": "Scheduling mode",
+  "set": {
+    "exec-window": " Please set an execution window of {min} or higher",
+    "gas-price": "Please set a gas price of {min} or higher",
+    "gas-limit": "Please set a gas limit of 0 or higher",
+    "future-gas-limit": "Please set a future gas limit of 0 or higher"
+  },
+  "invalid-number": "Invalid deposit number",
+  "provide-data-in-hex": "Please provide the data in a hexadecimal format.",
+  "note": {
+    "string": "Note:",
+    "token-transfer": "You are scheduling a token transfer. Token transfers require 2 separate transactions. One for token scheduling and another one for token transfer approval.",
+    "approve-tx": "If this is taking too long, follow {this} link to approve the transaction.",
+    "this": "this"
+  },
+  "block-num": "Block Number",
+  "curr-block": "Current block number:",
+  "add-data": "Add Data",
+  "future-gas-price": "Future Gas Price (Gwei)",
+  "future-gas-limit": "Future Gas Limit",
+  "req-deposit": "Require a deposit",
+  "exec-window": "Execution Window",
+  "toast": {
+    "non-exist-tx": "Non-existing transaction detected",
+    "usdt-not-available": "USDT conversion no longer available. Please provide an alternative USD conversion method"
+  },
+  "tx-scheduled-hash": [
+    "Your TX has been scheduled with the transaction hash {hash}.",
+    "Your TX has been scheduled with the transaction hash {hash} and is waiting to be mined."
+  ],
+  "wait-for-mined": "Please wait for the transaction to be mined before approving...",
+  "approve": {
+    "string": "approve",
+    "desc": "The transaction has been mined. Please {approve} the token transfer now.",
+    "token-transfer": "Approve Token Transfer"
+  },
+  "approved": "Approved",
+  "scheduled": "Scheduled"
+}

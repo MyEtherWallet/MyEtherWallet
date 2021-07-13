@@ -1,0 +1,144 @@
+{
+  "mewconnect": {
+    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
+    "modal": {
+      "title": "Mobile Access",
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
+    },
+    "protocol": "MEWconnect Protocol",
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Mobile Access"
+    },
+    "mew-connect": "MEWconnect"
+  },
+  "finney": {
+    "scan-info": "要进行连接，请扫描 {finney-bc} 上 {wallet} 应用中的 QR 码",
+    "finney-wallet": "FinneyWallet",
+    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
+    "get-finney": "立即获取 {finney-title} ",
+    "finney-title": "FINNEY™",
+    "mobile": "移动客户端",
+    "finney-connect": "FINNEY Connect"
+  },
+  "hardware": {
+    "option-title": "硬件钱包",
+    "warning": {
+      "not-connected": "请确保您的设备已连接。"
+    },
+    "modal": {
+      "title": "通过硬件钱包访问我的钱包",
+      "button-buy": "立即购买",
+      "button-choose": "继续"
+    },
+    "examples": "Ledger Wallet，FINNEY，Trezor，BitBox，KeepKey，XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
+  },
+  "software": {
+    "option-title": "软件",
+    "option-text": "Keystore文件, 密钥，助记短语",
+    "modal": {
+      "title": "通过软件访问我的钱包",
+      "purchase-text": "购买硬件钱包，为您访问加密货币时获得最高的安全性。",
+      "purchase-link": "购买硬件钱包...."
+    }
+  },
+  "metamask": {
+    "option-title": "MetaMask",
+    "option-text": "使用 MetaMask 扩展来访问我的钱包",
+    "warning": {
+      "safari": "MetaMask仅适用于以下浏览器：",
+      "install-promt": "请安装 MetaMask 插件并刷新页面。",
+      "unlock": "无法访问钱包! 请通过 MetaMask 插件访问我的钱包"
+    },
+    "modal": {
+      "title": "通过 MetaMask 访问",
+      "text": "请在一个安全的 (SSL/HTTPS) 连接中使用 MyEtherWallet 来连接。",
+      "button-install": "安装 MetaMask",
+      "button-refresh": "刷新",
+      "terms": "访问我的电子钱包，表示我接受{terms}。"
+    }
+  },
+  "mnemonic": {
+    "string": "助记短语",
+    "value": "价值",
+    "modal": {
+      "title": "通过助记短语访问我的钱包",
+      "text": "请输入您的助记短语。"
+    }
+  },
+  "ledger": {
+    "modal": {
+      "title": "选择应用",
+      "text": "请选择您已在 Ledger 中打开的应用"
+    }
+  },
+  "private-key": {
+    "string": "私钥",
+    "modal": {
+      "title": "通过私钥访问我的钱包",
+      "placeholder": "输入私钥"
+    },
+    "do-not-share": "请{do-not}将您的私钥分享给任何人！如果分享，您可能会蒙受资金损失"
+  },
+  "network-addr": {
+    "string": "网络和地址",
+    "addr-to-interact": "互动地址",
+    "id": "身份码",
+    "icon": "图标"
+  },
+  "path": {
+    "string": "路径",
+    "hd-derivation": "高清衍生路径",
+    "custom": "自定义路径",
+    "add-custom": "添加自定义路径",
+    "ivalid-custom": "无效的自定义路径",
+    "invalid-desc": "路径: {path} 对此设备无效",
+    "alias": "别名"
+  },
+  "pin": {
+    "string": "PIN 码",
+    "enter": "输入您{device}的 PIN 码",
+    "layout": "您的硬件钱包中会显示 PIN 布局",
+    "access": "要访问我的钱包，",
+    "accept": "我接受",
+    "terms": "服务条款"
+  },
+  "json-file": "密钥库文件",
+  "accept-terms": "要访问我的电子钱包，我接受{terms}。",
+  "hd-derivation-path": "高清衍生路径",
+  "custom-paths": "自定义路径",
+  "add-custom-path": "添加自定义路径",
+  "interact-addr": "互动地址",
+  "id": "身份码",
+  "network-and-address": "网络和地址",
+  "please-type-in-mnemonic-phrase": "请输入您的助记短语。",
+  "password": "Password",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
+  "refresh": "刷新",
+  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
+  "try-again": "Try Again",
+  "invalid-path-desc": "路径: {path} 对此设备无效",
+  "wallet-info": "Wallet Information",
+  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
+  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
+  "xwallet-title": "Access by XWallet",
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
+}

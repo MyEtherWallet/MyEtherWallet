@@ -1,0 +1,14 @@
+{
+  "unexpected": "Неожиданная ошибка",
+  "user-abort": "Действие прервано пользователем.",
+  "not-initialized": "Ваш BitBox02 не инициализирован. Используйте Shift Cryptosecurity's BitBoxApp для настройки кошелька.",
+  "upgrade-firmware": "Пожалуйста, обновитесь до последней прошивки, используя приложение Shift Cryptosecurity's BitBox.",
+  "unsupported-firmware": "MyEtherWallet пока не поддерживает эту версию прошивки.",
+  "unsupported-origin": "Попытка подключения от непроверенного источника.",
+  "no-bridge": "BitBoxBridge не найден. Перейдите на shiftcrypto.ch/start и установите BitBoxBridge для подключения вашего BitBox02.",
+  "expected-one": "Подключите ваш BitBox02 и выберите ориентацию экрана, нажав на одну из сторон.",
+  "pairing-rejected": "Соединение отклонено на устройстве, попробуйте еще раз.",
+  "busy": "Ваш BitBox02 занят. Закройте все остальные кошельки и повторите попытку.",
+  "attestation-failed": "Ошибка аттестации устройства. Попробуйте переподключить BitBox02. Если проблема повторится, ваше устройство может не быть подлинным, обратитесь в службу поддержки Shift.",
+  "unsupported-device": "Неподдерживаемое устройство BitBox. MEW поддерживает только BitBox02 Multi edition или BitBox01."
+}

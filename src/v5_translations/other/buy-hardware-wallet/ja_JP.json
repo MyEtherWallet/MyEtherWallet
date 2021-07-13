@@ -1,0 +1,17 @@
+{
+  "page": {
+    "title": "Buy a Hardware wallet",
+    "desc": "Purchase a hardware wallet for the highest security when accessing your crypto."
+  },
+  "desc": {
+    "ledger": "A light, yet solid multicurrency hardware wallet for cryptocurrencies. It is easy to carry everywhere thanks to its USB format.",
+    "finney": "Uncompromised Security In a Blockchain Smartphone",
+    "bitbox": "Our aim is to equip you for independence, with ease, in the digital world.",
+    "trezor": "The most trusted hardware wallet in the world. Get yours today!",
+    "keepkey": "Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers.",
+    "bcvault": "Gain full control of your private keys. Backup, Encrypt, Export, Delete. Your choice.",
+    "coolwallet": "Security in the size of a credit card. Connect via Bluetooth to an iOS or Android app on your smartphone."
+  },
+  "caption-starting-from": "Starting From",
+  "button-more-info": "More information"
+}

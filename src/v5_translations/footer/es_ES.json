@@ -1,0 +1,42 @@
+{
+  "title": {
+    "discover": "Discover",
+    "affiliates": "Affiliates",
+    "mew": "MEW",
+    "love": "Love MEW?"
+  },
+  "units": "Units",
+  "txStat": "TX Status",
+  "debugs": "Debugs",
+  "extension": "MEW CX",
+  "others": "Others",
+  "affiliates": "Affiliates",
+  "ledger": "Ledger Wallet",
+  "ethCard": "Ether Card",
+  "bitbox": "BitBox",
+  "bity": "Bity",
+  "billfodl": "Billfodl",
+  "finney": "Finney",
+  "trezor": "Trezor",
+  "keepkey": "KeepKey",
+  "bcvault": "BC Vault",
+  "about": "About",
+  "team": "Team",
+  "feedback": "Feedback",
+  "privacy": "Privacy",
+  "copyright": "© 2020 MyEtherWallet. All Rights reserved.",
+  "pricing-p": "Pricing taken from",
+  "advanced": "Advanced",
+  "send-offline": "Send Offline Helper",
+  "sotd": "State of the DApps",
+  "mew-connect": "MEWconnect",
+  "mew-wallet": "MEW wallet",
+  "cool-wallet": "CoolWallet",
+  "donation": {
+    "desc": "Help us keep MEW free and open-source, your donations go a long way towards making that possible.",
+    "ether": "Ethereum Donation",
+    "bitcoin": "Bitcoin Donation"
+  },
+  "coingecko": "Coingecko",
+  "view-wallet-info": "View Wallet Info"
+}

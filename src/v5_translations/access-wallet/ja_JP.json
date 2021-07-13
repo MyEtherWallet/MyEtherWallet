@@ -1,0 +1,144 @@
+{
+  "mewconnect": {
+    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
+    "modal": {
+      "title": "Mobile Access",
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
+    },
+    "protocol": "MEWconnect Protocol",
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
+  },
+  "mobile-app": {
+    "option-title": "Mobile App",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Mobile Access"
+    },
+    "mew-connect": "MEWconnect"
+  },
+  "finney": {
+    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
+    "finney-wallet": "FinneyWallet",
+    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
+    "get-finney": "Get your {finney-title} now",
+    "finney-title": "FINNEY™",
+    "mobile": "mobile",
+    "finney-connect": "FINNEY Connect"
+  },
+  "hardware": {
+    "option-title": "Hardware",
+    "warning": {
+      "not-connected": "Please make sure your device is connected."
+    },
+    "modal": {
+      "title": "Access by Hardware",
+      "button-buy": "Buy Now",
+      "button-choose": "Continue"
+    },
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Select BitBox wallet"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Please confirm the encryption pairing code matches what is shown on your BitBox02.",
+    "unlock": "Enter BitBox02 password to unlock."
+  },
+  "software": {
+    "option-title": "Software",
+    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "modal": {
+      "title": "Access by Software",
+      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
+      "purchase-link": "Purchase a hardware wallet...."
+    }
+  },
+  "metamask": {
+    "option-title": "Metamask",
+    "option-text": "Use the MetaMask extension to access my wallet",
+    "warning": {
+      "safari": "MetaMask is only available in these browsers:",
+      "install-promt": "Please install the Metamask extension and refresh your page.",
+      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+    },
+    "modal": {
+      "title": "Access via MetaMask",
+      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
+      "button-install": "Install Metamask",
+      "button-refresh": "Refresh",
+      "terms": "To Access my Wallet, I accept {terms}."
+    }
+  },
+  "mnemonic": {
+    "string": "Mnemonic Phrase",
+    "value": "Value",
+    "modal": {
+      "title": "Access by Mnemonic Phrase",
+      "text": "Please type in your mnemonic phrase."
+    }
+  },
+  "ledger": {
+    "modal": {
+      "title": "Choose the App",
+      "text": "Please choose the App you have opened in Ledger"
+    }
+  },
+  "private-key": {
+    "string": "Private Key",
+    "modal": {
+      "title": "Access by Private Key",
+      "placeholder": "Enter Private Key"
+    },
+    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
+  },
+  "network-addr": {
+    "string": "Network and Address",
+    "addr-to-interact": "Address to Interact With",
+    "id": "ID",
+    "icon": "icon"
+  },
+  "path": {
+    "string": "Path",
+    "hd-derivation": "HD Derivation Path",
+    "custom": "Custom Paths",
+    "add-custom": "Add Custom Path",
+    "ivalid-custom": "Invalid Custom Path",
+    "invalid-desc": "The path: {path} is not valid for this device",
+    "alias": "Alias"
+  },
+  "pin": {
+    "string": "PIN",
+    "enter": "Enter PIN for your {device}",
+    "layout": "The PIN layout is displayed on your Hardware wallet",
+    "access": "To access my wallet,",
+    "accept": "I accept the",
+    "terms": "Terms and Conditions"
+  },
+  "json-file": "Keystore File",
+  "accept-terms": "To Access my Wallet, I accept {terms}",
+  "hd-derivation-path": "HD Derivation Path",
+  "custom-paths": "Custom Paths",
+  "add-custom-path": "Add Custom Path",
+  "interact-addr": "Address to Interact With",
+  "id": "ID",
+  "network-and-address": "Network and Address",
+  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
+  "password": "Password",
+  "access-wallet-or": "or",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
+  "refresh": "Refresh",
+  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
+  "try-again": "Try Again",
+  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "wallet-info": "Wallet Information",
+  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
+  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
+  "xwallet-title": "Access by XWallet",
+  "get-it-now": "Get It Now",
+  "or": "OR CONNECT WITH",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
+}
