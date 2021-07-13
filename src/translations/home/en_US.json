@@ -1,7 +1,7 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
+  "subheading": "MEW (MyEtherWallet) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "create-new-wallet": {
     "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
