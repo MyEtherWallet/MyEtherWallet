@@ -17,7 +17,7 @@ const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
   //A-Z
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
-  DASHBOARD: { NAME: 'Dashboard', PATH: '/dashboard' },
+  DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },

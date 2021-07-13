@@ -92,7 +92,6 @@ export default {
     },
     currentTool(val) {
       this.$router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
-      //this.setCurrentTool();
     }
   },
   mounted() {
