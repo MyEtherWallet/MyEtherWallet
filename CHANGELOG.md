@@ -8,6 +8,7 @@
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 * use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
+* fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
 
 ### Release v6.0.1
 
