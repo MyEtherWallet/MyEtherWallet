@@ -129,7 +129,7 @@
           :nft="selectedNft"
           :nft-category="selectedContract.name"
           :send="sendTx"
-          :disabled="isValid"
+          :disabled="!isValid"
           :set-address="setAddress"
         />
       </template>
@@ -214,7 +214,7 @@ export default {
      * Check if address is valid
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress) && this.toAddress !== '';
+      return this.nft.isValidAddress(this.toAddress);
     }
   },
   watch: {
