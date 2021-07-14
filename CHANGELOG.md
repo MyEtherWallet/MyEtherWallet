@@ -1,9 +1,13 @@
+### Release v6.0.2
+
 ### Devop
 
+* use v6 mewbuilds [#3257](https://github.com/MyEtherWallet/MyEtherWallet/pull/3257)
 * Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
+* fix verify causing duplicate routings [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 * fix nft send button when empty [#3261](https://github.com/MyEtherWallet/MyEtherWallet/pull/3261)
@@ -16,7 +20,7 @@
 ### Fix
 
 * fix show private key in paper wallet for non pubKeyOnly wallets [#3239](https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
-* Fix contract interaction[#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
+* Fix contract interaction [#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
 * Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
 * fix $store null [#3273](https://github.com/MyEtherWallet/MyEtherWallet/pull/3273)
 
@@ -27,7 +31,7 @@
 
 ### Devop
 
-* Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+* Fix sentry sourcemaps and add more devmojis [#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
 
 ### Release v6.0.0
 
