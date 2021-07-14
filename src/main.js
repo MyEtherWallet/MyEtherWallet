@@ -7,6 +7,18 @@ import './main/components';
 
 import Vue from 'vue';
 import Router from 'vue-router';
+
+const originalPush = Router.prototype.push;
+const originalReplace = Router.prototype.replace;
+Router.prototype.push = function push(path) {
+  return originalPush.call(this, path).catch(err => err);
+};
+Router.prototype.replace = function push(path) {
+  return originalReplace.call(this, path).catch(err => err);
+};
+Router.prototype.originalPush = originalPush;
+Router.prototype.originalReplace = originalReplace;
+
 import router from '@/core/router';
 import store from '@/core/store';
 import Vuex from 'vuex';
