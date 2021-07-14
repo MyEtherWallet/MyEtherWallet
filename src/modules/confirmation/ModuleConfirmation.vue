@@ -792,7 +792,7 @@ export default {
                 });
               })
               .catch(e => {
-                throw new Error(e);
+                this.instance.errorHandler(e);
               });
           }
           this.signedTxArray = signed;
