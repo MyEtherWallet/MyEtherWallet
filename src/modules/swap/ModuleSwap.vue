@@ -905,6 +905,15 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      /**
+       * Ensure that both pairs have been set
+       * before calling the providers
+       */
+      const hasPair =
+        this.toTokenType.symbol &&
+        this.fromTokenType.symbol &&
+        !_.isEmpty(this.toTokenType) &&
+        !_.isEmpty(this.fromToTokenType);
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
@@ -919,12 +928,7 @@ export default {
       this.step = 0;
 
       this.feeError = '';
-      if (
-        this.tokenInValue !== '' &&
-        this.tokenInValue > 0 &&
-        this.toTokenType.symbol &&
-        !_.isEmpty(this.toTokenType)
-      ) {
+      if (this.tokenInValue !== '' && this.tokenInValue > 0 && hasPair) {
         this.isLoadingProviders = true;
         this.swapper
           .getAllQuotes({

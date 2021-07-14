@@ -1,18 +1,19 @@
 ### Devop
 
-* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
+* fix tolowercase issues [#3276](https://github.com/MyEtherWallet/MyEtherWallet/pull/3276)
 
 ### Release v6.0.1
 
 ### Fix
 
-* fix show private key in paper wallet for non pubKeyOnly wallets \[#3239]https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+* fix show private key in paper wallet for non pubKeyOnly wallets [#3239](https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
 * Fix contract interaction[#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
 * Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
 
@@ -22,7 +23,7 @@
 
 ### Devop
 
-* Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+* Fix sentry sourcemaps and add more devmojis [#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
 
 ### Release v6.0.0
 
@@ -123,7 +124,7 @@
 * Mobile Navigation bar implementationn for wallet, repalce mdi-text icon to svg [#2895](https://github.com/MyEtherWallet/MyEtherWallet/pull/2895)
 * Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
 * Fix langing page header [#2886](https://github.com/MyEtherWallet/MyEtherWallet/pull/2886)
-* Refactor access wallet, update ui to make it consistent \[#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
+* Refactor access wallet, update ui to make it consistent [#2846](https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
 * Update swap provider list [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
 * Settings [#2835h](https://github.com/MyEtherWallet/MyEtherWallet/pull/2835)
 * notifications [#2860](https://github.com/MyEtherWallet/MyEtherWallet/pull/2860)
