@@ -109,7 +109,7 @@ export default {
      * if overview, button text is empty
      */
     backBtnText() {
-      return this.isMnemonic || this.isKeystore ? '' : 'Back to Software';
+      return this.isMnemonic || this.isKeystore ? '' : 'Back to Create Wallet';
     }
   },
   mounted() {
@@ -127,9 +127,7 @@ export default {
     goBack() {
       if (this.isOverview) {
         try {
-          this.$router.push({
-            query: { type: 'overview' }
-          });
+          this.$router.go(-1);
         } catch (e) {
           Toast(e, {}, ERROR);
         }

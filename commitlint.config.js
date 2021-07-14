@@ -19,7 +19,8 @@ module.exports = {
         'style',
         'lint',
         'test',
-        'translation'
+        'translation',
+        'sentry'
       ]
     ]
   }
