@@ -55,35 +55,9 @@
     "button-text-one": "Create a new wallet",
     "button-text-two": "Access my wallet"
   },
-  "faqs": {
-    "subtitle": "Have not found the question that you are looking for?",
-    "button-see-more": "See More...",
-    "button-here": "here.",
-    "button-learn-more": "Learn more...",
-    "mew-wallet": {
-      "title": "What is MEW wallet?",
-      "text": "MEW wallet is our official fully-fledged mobile app, bringing Ethereum to your iOS or Android phone"
-    },
-    "create-wallet": {
-      "title": "How do I create a new wallet?",
-      "text": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEW wallet, Keystore file, or Mnemonic phrase. For more information, click"
-    },
-    "mewconnect": {
-      "title": "What is MEWconnect?",
-      "text": "MEWconnect is our companion mobile app for MyEtherWallet. We call it a hardware wallet without all the hardware. Now available for all Android and iOS smartphones! Read more"
-    },
-    "other-wallets": {
-      "title": "Can MEW work with other wallets?",
-      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more"
-    },
-    "send-txs": {
-      "title": "How can I send a transaction?",
-      "text": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the Ethereum blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more"
-    },
-    "forgot-pwd": {
-      "title": "I forgot my password/private key! What can I do?",
-      "text": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more"
-    }
+  "footer": {
+    "heading": "Love MEW?",
+    "text": "Help us keep MEW free and open-source, your donations go a long way towards making that possible."
   },
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {

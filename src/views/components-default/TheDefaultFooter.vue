@@ -21,12 +21,9 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              Love MEW?
+              {{ $t('home.footer.heading') }}
             </div>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <p>{{ $t('home.footer.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
@@ -176,11 +173,10 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="mb-3 d-flex align-center">Love MEW?</h3>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <h3 class="mb-3 d-flex align-center">
+              {{ $t('home.footer.heading') }}
+            </h3>
+            <p>{{ $t('home.footer.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
               target="_blank"

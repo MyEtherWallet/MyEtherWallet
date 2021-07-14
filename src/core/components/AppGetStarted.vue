@@ -5,7 +5,9 @@
       <v-container>
         <div class="d-flex align-center px-6">
           <div>
-            <h1 class="white--text mb-3">{{ $t('home.get-started.heading') }}</h1>
+            <h1 class="white--text mb-3">
+              {{ $t('home.get-started.heading') }}
+            </h1>
             <div align="left" class="mt-5">
               <a
                 href="https://apps.apple.com/app/id1464614025"
