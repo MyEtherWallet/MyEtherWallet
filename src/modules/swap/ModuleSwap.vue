@@ -437,8 +437,7 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const isNotEmpty =
-        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      const isNotEmpty = this.toTokenType.symbol && this.fromTokenType.symbol;
       return isNotEmpty;
     },
     /**
@@ -909,11 +908,6 @@ export default {
        * Ensure that both pairs have been set
        * before calling the providers
        */
-      const hasPair =
-        this.toTokenType.symbol &&
-        this.fromTokenType.symbol &&
-        !_.isEmpty(this.toTokenType) &&
-        !_.isEmpty(this.fromToTokenType);
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
@@ -928,7 +922,11 @@ export default {
       this.step = 0;
 
       this.feeError = '';
-      if (this.tokenInValue !== '' && this.tokenInValue > 0 && hasPair) {
+      if (
+        this.tokenInValue !== '' &&
+        this.tokenInValue > 0 &&
+        this.enableTokenSwitch
+      ) {
         this.isLoadingProviders = true;
         this.swapper
           .getAllQuotes({
