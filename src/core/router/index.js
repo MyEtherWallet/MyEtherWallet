@@ -38,7 +38,7 @@ router.beforeResolve((to, from, next) => {
        * this is a little hacky but utilizes intended purpose.
        * vue router notes: move on to the next hook in the pipeline. If no hooks are left, the navigation is confirmed.
        */
-      if (from.name !== 'AccessWallet') router.push({ name: 'AccessWallet' });
+      router.push({ name: 'AccessWallet' });
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
