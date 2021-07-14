@@ -15,7 +15,7 @@
           <div>
             <h1 class="white--text">{{ $t('home.mewtopia-block.title') }}</h1>
             <p class="white--text mt-3">
-              {{ $t('home.mewtopia-block.text')}}
+              {{ $t('home.mewtopia-block.text') }}
             </p>
           </div>
           <mew-button
@@ -35,10 +35,14 @@
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-8">
-            <h1 class="white--text pb-2">{{ $t('home.mewtopia-block.mobile.title-one') }}</h1>
-            <h1 class="white--text">{{ $t('home.mewtopia-block.mobile.title-two') }}</h1>
+            <h1 class="white--text pb-2">
+              {{ $t('home.mewtopia-block.mobile.title-one') }}
+            </h1>
+            <h1 class="white--text">
+              {{ $t('home.mewtopia-block.mobile.title-two') }}
+            </h1>
             <p class="white--text mt-3">
-              {{ $t('home.mewtopia-block.text')}}
+              {{ $t('home.mewtopia-block.text') }}
             </p>
           </div>
           <mew-button
