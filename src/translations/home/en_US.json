@@ -41,6 +41,15 @@
       "link": "Get the App"
     }
   },
+  "mewtopia-block": {
+    "title": "New to crypto? Explore MEWtopia!",
+    "text": "Learn how to get the most out of Ethereum with our free library of resources!",
+    "button-text": "Get Started",
+    "mobile": {
+      "title-one": "New to crypto?",
+      "title-two": "Explore MEWtopia!"
+    }
+  },
   "faqs": {
     "subtitle": "Have not found the question that you are looking for?",
     "button-see-more": "See More...",

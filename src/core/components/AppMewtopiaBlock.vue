@@ -13,16 +13,15 @@
           "
         >
           <div>
-            <h1 class="white--text">New to crypto? Explore MEWtopia!</h1>
+            <h1 class="white--text">{{ $t('home.mewtopia-block.title') }}</h1>
             <p class="white--text mt-3">
-              Learn how to get the most out of Ethereum with our free library of
-              resources!
+              {{ $t('home.mewtopia-block.text')}}
             </p>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"
             :has-full-width="false"
-            title="Get Started"
+            :title="$t('home.mewtopia-block.button-text')"
             btn-style="outline"
             color-theme="white"
             btn-size="xlarge"
@@ -36,17 +35,16 @@
       <div class="card-content">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-8">
-            <h1 class="white--text pb-2">New to crypto?</h1>
-            <h1 class="white--text">Explore MEWtopia!</h1>
+            <h1 class="white--text pb-2">{{ $t('home.mewtopia-block.mobile.title-one') }}</h1>
+            <h1 class="white--text">{{ $t('home.mewtopia-block.mobile.title-two') }}</h1>
             <p class="white--text mt-3">
-              Learn how to get the most out of Ethereum with our free library of
-              resources!
+              {{ $t('home.mewtopia-block.text')}}
             </p>
           </div>
           <mew-button
             btn-link="https://www.mewtopia.com/"
             :has-full-width="false"
-            title="Get Started"
+            :title="$t('home.mewtopia-block.button-text')"
             btn-style="outline"
             color-theme="white"
             btn-size="xlarge"
