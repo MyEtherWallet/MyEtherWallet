@@ -42,14 +42,18 @@
               class="mr-4"
               :title="$t('home.get-started.button-text-one')"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'CreateWallet' })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
+              "
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               :title="$t('home.get-started.button-text-two')"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'AccessWallet' })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
+              "
             />
           </div>
         </div>
@@ -92,7 +96,9 @@
                 has-full-width
                 :title="$t('home.get-started.button-text-one')"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'CreateWallet' })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
+                "
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -101,7 +107,9 @@
                 btn-style="outline"
                 :title="$t('home.get-started.button-text-two')"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'AccessWallet' })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
+                "
               />
             </v-col>
           </v-row>
@@ -112,11 +120,14 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '../configs/configRoutes';
 export default {
   name: 'GetStarted',
   components: {},
   data() {
-    return {};
+    return {
+      ROUTES_HOME: ROUTES_HOME
+    };
   }
 };
 </script>
