@@ -4,6 +4,7 @@
 
 ### Fix
 
+* fix verify causing duplicate routings [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 * use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)

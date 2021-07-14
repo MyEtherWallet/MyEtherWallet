@@ -124,6 +124,11 @@ export default {
         label: 'More',
         sub: [
           {
+            label: 'Verify message',
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
+          }
+          /*
+          {
             label: 'Watch only address',
             to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
           },
@@ -132,13 +137,10 @@ export default {
             to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '2' } }
           },
           {
-            label: 'Verify message',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
-          },
-          {
             label: 'Convery units',
             to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '4' } }
           }
+          */
         ]
       },
       { label: 'Buy ETH', url: 'https://ccswap.myetherwallet.com' }
