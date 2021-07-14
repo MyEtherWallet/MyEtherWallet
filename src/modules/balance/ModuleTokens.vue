@@ -54,6 +54,8 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import isEqual from 'lodash/isEqual';
+
 export default {
   components: {
     BalanceEmptyBlock
@@ -142,7 +144,7 @@ export default {
                   toToken: '',
                   amount: item.balancef
                 };
-                if (obj !== this.$route.query) {
+                if (!isEqual(obj, this.$route.query)) {
                   this.$router.push({ name: 'Swap', query: obj });
                 }
               },
