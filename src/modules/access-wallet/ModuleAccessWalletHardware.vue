@@ -230,6 +230,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -698,7 +699,7 @@ export default {
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: fromWei(balance),
+            balance: formatFloatingPointValue(fromWei(balance)).value,
             tokens: 'Loading..'
           });
         }
