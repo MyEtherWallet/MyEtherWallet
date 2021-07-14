@@ -638,11 +638,12 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.accounts = [];
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.accountAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
-        this.setAddresses();
+        this.setMnemonicAddress();
       }
     }
   },
@@ -655,25 +656,33 @@ export default {
      * Async method that gets accounts according to the pagination
      * Used in STEP 2 and 3
      */
-    async setAddresses() {
-      const web3 = new Web3(this.network.url);
-      this.accounts = [];
-      for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
-        const account = await this.handlerAccessWallet
-          .getWalletInstance()
-          .getAccount(i);
-        const balance = await web3.eth.getBalance(account.getAddressString());
-        this.accounts.push({
-          address: account.getAddressString(),
-          account: account,
-          idx: i,
-          balance: fromWei(balance)
-        });
+    async setMnemonicAddress() {
+      try {
+        const web3 = new Web3(this.network.url);
+        this.accounts = [];
+        for (
+          let i = this.currentIdx;
+          i < this.currentIdx + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.handlerAccessWallet
+            .getWalletInstance()
+            .getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
+          this.accounts.push({
+            address: account.getAddressString(),
+            account: account,
+            idx: i,
+            balance: fromWei(balance)
+          });
+        }
+        this.currentIdx += MAX_ADDRESSES;
+        this.addressPage += 1;
+        this.selectedAddress = this.accounts[0].address;
+        this.accountAddress = this.accounts[0].address;
+      } catch (e) {
+        Toast(e, {}, ERROR);
       }
-      this.currentIdx += MAX_ADDRESSES;
-      this.addressPage += 1;
-      this.selectedAddress = this.accounts[0].address;
-      this.accountAddress = this.accounts[0].address;
     },
     /**
      * Method unlocks mnemonic phrase;
@@ -736,7 +745,7 @@ export default {
         .then(res => {
           if (res) {
             this.step = 3;
-            this.setAddresses();
+            this.setMnemonicAddress();
           }
         })
         .catch(e => {
@@ -768,7 +777,7 @@ export default {
      * Used in STEP 3
      */
     nextAddressSet() {
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
     /**
      * Methods generates privious derived addresses
@@ -781,7 +790,7 @@ export default {
         this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
       this.currentIdx -=
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
 
     /**
