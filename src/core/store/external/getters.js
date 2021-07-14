@@ -92,10 +92,13 @@ const getCoinGeckoTokenById = state => cgid => {
  * Get Token info including market data if exists
  */
 const contractToToken =
-  (state, getters, rootState, rootGetters) => contractAdress => {
-    contractAdress = contractAdress.toLowerCase();
-    let tokenId = platformList[contractAdress];
-    if (contractAdress === MAIN_TOKEN_ADDRESS) {
+  (state, getters, rootState, rootGetters) => contractAddress => {
+    if (!contractAddress) {
+      return null;
+    }
+    contractAddress = contractAddress.toLowerCase();
+    let tokenId = platformList[contractAddress];
+    if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
       const networkType = rootGetters['global/network'].type;
       cgToken = getters.getCoinGeckoTokenById(tokenId);
@@ -111,12 +114,12 @@ const contractToToken =
     }
     let cgToken;
     cgToken = getters.getCoinGeckoTokenById(tokenId);
-    let networkToken = tempTokenCache[contractAdress];
+    let networkToken = tempTokenCache[contractAddress];
     if (!networkToken) {
       networkToken = rootGetters['global/network'].type.tokens.find(
-        t => t.address.toLowerCase() === contractAdress
+        t => t.address.toLowerCase() === contractAddress
       );
-      tempTokenCache[contractAdress] = networkToken;
+      tempTokenCache[contractAddress] = networkToken;
     }
     if (!networkToken) return null;
     return Object.assign(cgToken, {
