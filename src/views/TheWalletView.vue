@@ -2,7 +2,7 @@
   <div class="wallet-main">
     <the-wallet-side-menu />
     <the-wallet-header />
-    <v-main>
+    <v-main class="pt-8">
       <v-container
         class="pa-2 pa-md-3 mb-14 align-center wallet-content-container"
         fluid
@@ -29,6 +29,7 @@ import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   components: {
     TheWalletSideMenu,
@@ -48,7 +49,7 @@ export default {
   watch: {
     address() {
       if (!this.address) {
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
       }
     },
     network() {

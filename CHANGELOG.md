@@ -1,12 +1,41 @@
+### Release v6.0.2
+
 ### Devop
 
+* use v6 mewbuilds [#3257](https://github.com/MyEtherWallet/MyEtherWallet/pull/3257)
+* Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 * Remove getTransactionByHash null error msg check and skip balance history apollo query if it is not ETH network[#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
 
-* Fix sentry sourcemaps and add more devmojis[#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
+### Fix
+
+* fix verify causing duplicate routings [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
+* fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
+* fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
+* use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)
+* fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
+* fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
+
+### Release v6.0.1
+
+### Fix
+
+* fix show private key in paper wallet for non pubKeyOnly wallets [#3239](https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
+* Fix contract interaction [#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
+* Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
+* fix $store null [#3273](https://github.com/MyEtherWallet/MyEtherWallet/pull/3273)
+
+### Feature
+
+* Change routes from hardcoded string to consts [#3244](https://github.com/MyEtherWallet/MyEtherWallet/pull/3244)
+* Remove divider in Staked UI and replace Russ team member photo [#3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
+
+### Devop
+
+* Fix sentry sourcemaps and add more devmojis [#3245](https://github.com/MyEtherWallet/MyEtherWallet/pull/3245)
 
 ### Release v6.0.0
 
-### Bug
+### Fix
 
 * fix routing issue [#3231](https://github.com/MyEtherWallet/MyEtherWallet/pull/3231)
 
@@ -23,7 +52,7 @@
 * remove wallet on back [#3206](https://github.com/MyEtherWallet/MyEtherWallet/pull/3206)
 * listen and match metamask changes [#3203](https://github.com/MyEtherWallet/MyEtherWallet/pull/3203)
 * fix landing and create wallet ui issues [#3190](https://github.com/MyEtherWallet/MyEtherWallet/pull/3190)
-* Disable next button on gas estimation process or error [#3180](3180)
+* Disable next button on gas estimation process or error [#3180](https://github.com/MyEtherWallet/MyEtherWallet/pull/3180)
 * fix wallet link, fix trade, remove shield icon [#3181](https://github.com/MyEtherWallet/MyEtherWallet/pull/3181)
 * fix create wallet flows [#3174](https://github.com/MyEtherWallet/MyEtherWallet/pull/3174)
 * Fix swap verification data field [#3176](https://github.com/MyEtherWallet/MyEtherWallet/pull/3176)
@@ -103,7 +132,7 @@
 * Mobile Navigation bar implementationn for wallet, repalce mdi-text icon to svg [#2895](https://github.com/MyEtherWallet/MyEtherWallet/pull/2895)
 * Refactor empty balance block, hide elemnents on network switches [#2890](https://github.com/MyEtherWallet/MyEtherWallet/pull/2890)
 * Fix langing page header [#2886](https://github.com/MyEtherWallet/MyEtherWallet/pull/2886)
-* Refactor access wallet, update ui to make it consistent \[#2846] (https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
+* Refactor access wallet, update ui to make it consistent [#2846](https://github.com/MyEtherWallet/MyEtherWallet/pull/2846)
 * Update swap provider list [#2871](https://github.com/MyEtherWallet/MyEtherWallet/pull/2871)
 * Settings [#2835h](https://github.com/MyEtherWallet/MyEtherWallet/pull/2835)
 * notifications [#2860](https://github.com/MyEtherWallet/MyEtherWallet/pull/2860)

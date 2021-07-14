@@ -106,7 +106,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {
-      if (this.address && !this.showPrivateKey) {
+      if (this.showPrivateKey) {
         return this.instance.getPrivateKeyString();
       }
       return null;
@@ -115,7 +115,7 @@ export default {
       return this.address ? toChecksumAddress(this.address) : '';
     },
     showPrivateKey() {
-      return !this.isHardware || !this.instance.isPubOnly;
+      return !this.instance.isPubOnly;
     }
   },
   mounted() {

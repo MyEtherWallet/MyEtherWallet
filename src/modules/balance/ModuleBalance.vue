@@ -110,10 +110,12 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
+  formatPercentageValue,
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceChart,
@@ -176,7 +178,9 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return this.networkTokenUSDMarket.price_change_percentage_24h;
+        return formatPercentageValue(
+          this.networkTokenUSDMarket.price_change_percentage_24h
+        ).value;
       }
       return '';
     },
@@ -281,7 +285,7 @@ export default {
       this.scale = 'hours';
     },
     navigateToSend() {
-      this.$router.push({ name: 'SendTX' });
+      this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     }
   }
 };
