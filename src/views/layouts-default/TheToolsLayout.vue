@@ -93,7 +93,7 @@ export default {
       if (tools.includes(this.$route.query.tool)) {
         this.currentTool = this.$route.query.tool;
       } else {
-        this.currentTool = 'watch';
+        this.currentTool = 'verify';
       }
     }
   }
