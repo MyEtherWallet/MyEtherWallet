@@ -125,7 +125,7 @@ export default {
         sub: [
           {
             label: 'Verify message',
-            to: { name: 'Tools', query: { tab: '3' } }
+            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
           }
           /*
           {

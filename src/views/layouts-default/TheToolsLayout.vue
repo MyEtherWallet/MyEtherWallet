@@ -33,6 +33,7 @@ import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
 import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
 import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper';
 import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'MoreActions',
@@ -72,7 +73,7 @@ export default {
       this.setCurrentTool();
     },
     currentTool(val) {
-      this.$router.push({ name: 'Tools', query: { tool: val } });
+      this.$router.push({ name: ROUTES_HOME.TOOLS.NAME, query: { tool: val } });
     }
   },
   mounted() {
