@@ -72,14 +72,7 @@ export default {
       this.setCurrentTool();
     },
     currentTool(val) {
-      // To ensure no duplicate routing on first entry
-      if (this.$route.query.tool != val) {
-        this.$router.push({
-          name: 'Tools',
-          query: { tool: val }
-        });
-        //this.setCurrentTool();
-      }
+        this.$router.push({ name: 'Tools', query: { tool: val }});
     }
   },
   mounted() {
