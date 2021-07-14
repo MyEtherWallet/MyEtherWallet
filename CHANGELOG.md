@@ -1,6 +1,7 @@
 ### Devop
 
 * Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Add value to invalid type notification error message [#3280](https://github.com/MyEtherWallet/MyEtherWallet/pull/3280)
 
 ### Fix
 
