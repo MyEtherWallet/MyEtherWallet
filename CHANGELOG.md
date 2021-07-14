@@ -18,6 +18,7 @@
 * fix nft send button when empty [#3261](https://github.com/MyEtherWallet/MyEtherWallet/pull/3261)
 * use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
+* fix tolowercase issues [#3276](https://github.com/MyEtherWallet/MyEtherWallet/pull/3276)
 * fix create error [#3271](https://github.com/MyEtherWallet/MyEtherWallet/pull/3271)
 * fix walletlink clear [#3277](https://github.com/MyEtherWallet/MyEtherWallet/pull/3277)
 * fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
@@ -30,7 +31,7 @@
 ### Fix
 
 * fix show private key in paper wallet for non pubKeyOnly wallets [#3239](https://github.com/MyEtherWallet/MyEtherWallet/pull/3239)
-* Fix contract interaction [#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
+* Fix contract interaction[#3251](https://github.com/MyEtherWallet/MyEtherWallet/pull/3251)
 * Format 24 hour change percentage on module balance [#3248](https://github.com/MyEtherWallet/MyEtherWallet/pull/3248)
 * fix $store null [#3273](https://github.com/MyEtherWallet/MyEtherWallet/pull/3273)
 

@@ -212,7 +212,7 @@ export default {
       }
     },
     setAddress(value) {
-      this.addressToAdd = value;
+      this.addressToAdd = value ? value : '';
     },
     setNickname(value) {
       this.nickname = value;
