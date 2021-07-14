@@ -54,7 +54,6 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import { _ } from 'web3-utils'
 export default {
   components: {
     BalanceEmptyBlock
@@ -143,9 +142,7 @@ export default {
                   toToken: '',
                   amount: item.balancef
                 };
-                if (!_.isEqual(obj, this.$route.query)) {
                   this.$router.push({ name: 'Swap', query: obj });
-                }
               },
               btnStyle: 'outline',
               colorTheme: 'primary'
