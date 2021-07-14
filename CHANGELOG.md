@@ -4,6 +4,7 @@
 
 ### Fix
 
+* fix reset is not a function error [#3269](https://github.com/MyEtherWallet/MyEtherWallet/pull/3269)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
