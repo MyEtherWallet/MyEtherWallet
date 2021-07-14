@@ -8,8 +8,8 @@ const SOFTWARE_WALLET_TYPES = {
 };
 
 const isPrivateKey = key => {
-  const _priv = key.replace('0x', '');
-  return isHexString('0x' + _priv, 32) && key !== '';
+  const _priv = key ? key.replace('0x', '') : '';
+  return key !== '' && isHexString('0x' + _priv, 32);
 };
 
 export { SOFTWARE_WALLET_TYPES, isPrivateKey };

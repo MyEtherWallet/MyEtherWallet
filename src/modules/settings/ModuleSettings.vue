@@ -32,9 +32,7 @@
             <settings-import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <settings-export-config
-              :export-config="settingsHandler.exportStore"
-            />
+            <settings-export-config :export-config="exportStore" />
           </template>
           <template #panelBody4>
             <div class="pa-6">
@@ -225,6 +223,9 @@ export default {
       this.idxToExpand = null;
       this.addMode = false;
       this.editMode = false;
+    },
+    exportStore() {
+      this.settingsHandler.exportStore();
     }
   }
 };
