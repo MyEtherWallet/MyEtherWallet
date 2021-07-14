@@ -21,7 +21,7 @@ const EXCEPTIONS = [
   '@unstoppabledomains/resolution',
   'sass',
   'scryptsy',
-  'is-ipfs'
+  'is-ipfs' // verifying this next week
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
