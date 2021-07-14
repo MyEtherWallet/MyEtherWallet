@@ -58,17 +58,5 @@
   "footer": {
     "heading": "Love MEW?",
     "text": "Help us keep MEW free and open-source, your donations go a long way towards making that possible."
-  },
-  "lost-title": "Oops! Looks like you're lost.",
-  "mew-wallet-modal": {
-    "title": "Official MEW wallet App is now available!",
-    "text": "Buy, hold, and send Ether and tokens. Explore Ethereum on your mobile device. {learn-more}",
-    "learn-more": "Learn more",
-    "footer-text": "Download our App today!",
-    "new": "new",
-    "more": "More",
-    "less": "Less",
-    "hide": "Hide",
-    "img-desc": "MEW wallet screenshot"
   }
 }
