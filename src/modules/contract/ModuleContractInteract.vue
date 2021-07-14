@@ -33,7 +33,7 @@
             title="Interact"
             :disabled="!canInteract"
             :has-full-width="false"
-            button-size="xlarge"
+            btn-size="xlarge"
             @click.native="showInteract()"
           />
         </div>
@@ -105,7 +105,7 @@
             <mew-button
               :title="isViewFunction ? 'Read' : 'Write'"
               :has-full-width="false"
-              button-size="xlarge"
+              btn-size="xlarge"
               :disabled="canProceed"
               @click.native="readWrite"
             />

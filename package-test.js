@@ -20,7 +20,8 @@ const EXCEPTIONS = [
   '@aave/protocol-js',
   '@unstoppabledomains/resolution',
   'sass',
-  'scryptsy'
+  'scryptsy',
+  'is-ipfs' // verifying this next week
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
