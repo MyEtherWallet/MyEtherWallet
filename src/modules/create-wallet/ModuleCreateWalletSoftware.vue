@@ -140,7 +140,9 @@ export default {
      */
     setType(newType) {
       try {
-        this.$router.push({ query: { type: newType } });
+        this.$router.push({
+          query: { type: newType }
+        });
       } catch (e) {
         Toast(e, {}, ERROR);
       }
