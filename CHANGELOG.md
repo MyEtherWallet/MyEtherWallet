@@ -8,6 +8,7 @@
 
 ### Fix
 
+* fix reset is not a function error [#3269](https://github.com/MyEtherWallet/MyEtherWallet/pull/3269)
 * fix text overflow on hd wallet balance [#3265](https://github.com/MyEtherWallet/MyEtherWallet/pull/3265)
 * fix re-add fix for routes [#3262](https://github.com/MyEtherWallet/MyEtherWallet/pull/3262)
 * fix 'change route from watch to verify' and 'fix tools layout' [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
