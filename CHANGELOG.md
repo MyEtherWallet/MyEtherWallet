@@ -2,11 +2,17 @@
 
 ### Devop
 
+* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+
+### Fix
+
 * use v6 mewbuilds [#3257](https://github.com/MyEtherWallet/MyEtherWallet/pull/3257)
 * Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
 
 ### Fix
 
+* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* fix contract button size [#3263](https://github.com/MyEtherWallet/MyEtherWallet/pull/3263)
 * fix verify causing duplicate routings [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
