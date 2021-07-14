@@ -5,7 +5,7 @@
       <v-container>
         <div class="d-flex align-center px-6">
           <div>
-            <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
+            <h1 class="white--text mb-3">{{ $t('home.get-started.heading') }}</h1>
             <div align="left" class="mt-5">
               <a
                 href="https://apps.apple.com/app/id1464614025"
@@ -38,14 +38,14 @@
               color-theme="primary"
               btn-style="background"
               class="mr-4"
-              title="Create a new wallet"
+              :title="$t('home.get-started.button-text-one')"
               btn-size="xlarge"
               @click.native="$router.push({ name: 'CreateWallet' })"
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
-              title="Access my wallet"
+              :title="$t('home.get-started.button-text-two')"
               btn-size="xlarge"
               @click.native="$router.push({ name: 'AccessWallet' })"
             />
@@ -59,7 +59,7 @@
       <v-container class="px-5">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-9">
-            <h1 class="white--text">Ready to explore Ethereum?</h1>
+            <h1 class="white--text">{{ $t('home.get-started.heading') }}</h1>
             <div align="left" class="mt-5">
               <a
                 href="https://apps.apple.com/app/id1464614025"
@@ -88,7 +88,7 @@
             <v-col cols="12" sm="6" class="mr-n2 mb-n2">
               <mew-button
                 has-full-width
-                title="Create a new wallet"
+                :title="$t('home.get-started.button-text-one')"
                 btn-size="xlarge"
                 @click.native="$router.push({ name: 'CreateWallet' })"
               />
@@ -97,7 +97,7 @@
               <mew-button
                 has-full-width
                 btn-style="outline"
-                title="Access my wallet"
+                :title="$t('home.get-started.button-text-two')"
                 btn-size="xlarge"
                 @click.native="$router.push({ name: 'AccessWallet' })"
               />

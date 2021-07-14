@@ -50,6 +50,11 @@
       "title-two": "Explore MEWtopia!"
     }
   },
+  "get-started": {
+    "heading": "Ready to explore Ethereum?",
+    "button-text-one": "Create a new wallet",
+    "button-text-two": "Access my wallet"
+  },
   "faqs": {
     "subtitle": "Have not found the question that you are looking for?",
     "button-see-more": "See More...",
@@ -79,19 +84,6 @@
       "title": "I forgot my password/private key! What can I do?",
       "text": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more"
     }
-  },
-  "social": {
-    "title": "Join MEW Community",
-    "facebook": "Facebook",
-    "twitter": "Twitter",
-    "medium": "Medium",
-    "reddit": "Reddit",
-    "github": "Github",
-    "vkontakte": "Vkontakte",
-    "youtube": "YouTube",
-    "mewtopia": "MEWtopia",
-    "instagram": "Instagram",
-    "telegram": "Telegram"
   },
   "lost-title": "Oops! Looks like you're lost.",
   "mew-wallet-modal": {
