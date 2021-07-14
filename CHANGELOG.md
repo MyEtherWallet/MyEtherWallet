@@ -13,7 +13,7 @@
 * use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
 * fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
-
+* fix to address when transferring token [#3282](https://github.com/MyEtherWallet/MyEtherWallet/pull/3282)
 ### Release v6.0.1
 
 ### Fix
