@@ -2,15 +2,25 @@
 
 ### Devop
 
+* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Update mew components and other packages [#3268](https://github.com/MyEtherWallet/MyEtherWallet/pull/3268)
+
+### Fix
+
 * use v6 mewbuilds [#3257](https://github.com/MyEtherWallet/MyEtherWallet/pull/3257)
 * Remove reference to master on checkBranch [#3254](https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* Add value to invalid type notification error message [#3280](https://github.com/MyEtherWallet/MyEtherWallet/pull/3280)
+* Remove getTransactionByHash null error msg check and skip balance history apollo query if it is not ETH network[#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
 
 ### Fix
 
 * fix re-add fix for routes [#3262](https://github.com/MyEtherWallet/MyEtherWallet/pull/3262)
 * fix 'change route from watch to verify' and 'fix tools layout' [#3258](https://github.com/MyEtherWallet/MyEtherWallet/pull/3258)
+* Remove reference to master on checkBranch \[#3254]https://github.com/MyEtherWallet/MyEtherWallet/pull/3254)
+* fix contract button size [#3263](https://github.com/MyEtherWallet/MyEtherWallet/pull/3263)
 * fix back button on create wallet [#3241](https://github.com/MyEtherWallet/MyEtherWallet/pull/3241)
 * fix prefilled swaps [#3240](https://github.com/MyEtherWallet/MyEtherWallet/pull/3240)
+* fix nft send button when empty [#3261](https://github.com/MyEtherWallet/MyEtherWallet/pull/3261)
 * use network getter instead of currentNetwork [#3260](https://github.com/MyEtherWallet/MyEtherWallet/pull/3260)
 * fix getransferv2 error [#3259](https://github.com/MyEtherWallet/MyEtherWallet/pull/3259)
 * fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
