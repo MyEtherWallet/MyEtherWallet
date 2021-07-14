@@ -265,7 +265,7 @@
                     </v-row>
                   </v-col>
                   <v-col cols="4" sm="3">
-                    <p>
+                    <p class="balance-overflow">
                       {{
                         acc.balance === 'Loading..'
                           ? acc.balance
@@ -902,5 +902,11 @@ table {
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+.balance-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
