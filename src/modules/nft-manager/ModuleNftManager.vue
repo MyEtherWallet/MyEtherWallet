@@ -214,7 +214,7 @@ export default {
      * Check if address is valid
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress) && this.address !== '';
+      return this.nft.isValidAddress(this.toAddress);
     }
   },
   watch: {
