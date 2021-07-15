@@ -5,7 +5,20 @@
   "create-wallet": {
     "title": "Create a new wallet",
     "subtitle-one": "Please select a method to create a new wallet",
-    "subtitle-two": "Already have a wallet?"
+    "subtitle-two": "Already have a wallet?",
+    "card-one": {
+      "title": "Get MEW wallet app",
+      "subtitle": "Download our official app and connect to MEW web using your mobile phone. Available on iOS and Android."
+    },
+    "card-two": {
+      "title": "Buy a Hardware Wallet",
+      "subtitle": "For the highest standard of security, buy a hardware wallet and use it with MEW."
+    },
+    "card-three": {
+      "title": "Software",
+      "subtitle": "Software methods like keystore file and mnemonic phrase should only be used in offline settings by experienced users.",
+      "note": "NOT RECOMMENDED"
+    }
   },
   "access-my-wallet": {
     "title": "Access My Wallet",
