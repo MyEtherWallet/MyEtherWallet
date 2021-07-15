@@ -24,12 +24,12 @@
             <mew-super-button
               font-class="mew-heading-2"
               :color-theme="btn.color"
-              :title="btn.title"
-              :subtitle="btn.subtitle"
+              :title="$t(btn.title)"
+              :subtitle="$t(btn.subtitle)"
               :title-icon="btn.titleIcon"
               :title-icon-type="btn.titleIconType"
               :title-icon-class="btn.titleIconClass"
-              :note="btn.note"
+              :note="$t(btn.note)"
               @click.native="btn.fn"
             >
               <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
