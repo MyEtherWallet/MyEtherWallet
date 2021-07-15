@@ -22,6 +22,7 @@ const ROUTES_WALLET = {
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }

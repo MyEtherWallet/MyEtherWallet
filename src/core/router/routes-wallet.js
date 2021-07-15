@@ -9,6 +9,7 @@ import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
 import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
+import Settings from '@/modules/settings/ModuleSettings';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
@@ -28,6 +29,14 @@ export default {
       path: ROUTES_WALLET.DASHBOARD.PATH,
       name: ROUTES_WALLET.DASHBOARD.NAME,
       component: Dashboard,
+      meta: {
+        noAuth: false
+      }
+    },
+    {
+      path: ROUTES_WALLET.SETTINGS.PATH,
+      name: ROUTES_WALLET.SETTINGS.NAME,
+      component: Settings,
       meta: {
         noAuth: false
       }

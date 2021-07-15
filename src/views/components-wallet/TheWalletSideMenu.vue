@@ -127,6 +127,7 @@
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
+          :to="item.route"
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">
@@ -157,7 +158,7 @@
     ></mew-popup>
     <module-settings
       :on-settings="onSettings"
-      @closeSettings="toggleSettings"
+      @closeSettings="closeSettingsRouteToDashboard"
     />
     <!--
     =====================================================================================
@@ -289,7 +290,8 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.toggleSettings
+          fn: this.toggleSettings,
+          route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
         {
           title: this.$t('common.logout'),
@@ -329,6 +331,10 @@ export default {
     },
     toggleSettings() {
       this.onSettings = !this.onSettings;
+    },
+    closeSettingsRouteToDashboard() {
+      this.onSettings = !this.onSettings;
+      this.$router.push('Dashboard');
     },
     onLogout(res) {
       this.showLogoutPopup = false;
