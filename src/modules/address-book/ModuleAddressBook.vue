@@ -40,6 +40,12 @@ import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { _ } from 'web3-utils';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
+
+const USER_INPUT_TYPES = {
+  typed: 'TYPED',
+  selected: 'SELECTED'
+};
 
 export default {
   components: {
@@ -87,7 +93,7 @@ export default {
           ]
         : [
             {
-              address: this.$store.state.wallet.address,
+              address: toChecksumAddress(this.$store.state.wallet.address),
               nickname: 'My Address',
               resolverAddr: ''
             }
@@ -132,30 +138,35 @@ export default {
     },
     setAddress(value, inputType) {
       if (typeof value === 'string') {
+        /**
+         * Checks if user typed or selected an address from dropdown
+         */
         const typeVal =
-          inputType === 'typed'
+          inputType === USER_INPUT_TYPES.typed
             ? value
             : this.addressBookWithMyAddress.find(item => {
                 return value.toLowerCase() === item.address.toLowerCase();
               });
-        this.inputAddr = value.address ? value.address : value;
+        this.inputAddr = value;
         this.resolvedAddr = '';
-        const isAddValid = this.isValidAddressFunc(this.inputAddr);
-        if (isAddValid instanceof Promise) {
-          isAddValid.then(res => {
+        /**
+         * Checks if the address is valid
+         */
+        const isAddrValid = this.isValidAddressFunc(this.inputAddr);
+        if (isAddrValid instanceof Promise) {
+          isAddrValid.then(res => {
             this.isValidAddress = res;
-            this.$emit('setAddress', value, this.isValidAddress, {
-              type: inputType,
-              value: _.isObject(typeVal) ? typeVal.nickname : typeVal
-            });
           });
         } else {
-          this.isValidAddress = isAddValid;
-          this.$emit('setAddress', value, this.isValidAddress, {
-            type: inputType,
-            value: _.isObject(typeVal) ? typeVal.nickname : typeVal
-          });
+          this.isValidAddress = isAddrValid;
         }
+        /**
+         * @emits setAddress
+         */
+        this.$emit('setAddress', this.inputAddr, this.isValidAddress, {
+          type: inputType,
+          value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+        });
         if (!this.isValidAddress) {
           this.resolveName();
         }

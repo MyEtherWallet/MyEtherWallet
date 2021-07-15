@@ -33,7 +33,7 @@
         </h5>
         <div class="d-flex align-center">
           <span id="item-addr" class="monospace mr-3 truncate">
-            {{ addressToAdd }}
+            {{ checksumAddressToAdd }}
           </span>
           <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
@@ -90,6 +90,7 @@
 import utils from 'web3-utils';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 const modes = ['add', 'edit'];
 
@@ -118,13 +119,13 @@ export default {
         return (
           !this.addressToAdd ||
           !this.validAddress ||
-          this.nickname.length > 20 ||
+          this.nickname?.length > 20 ||
           this.alreadyExists
         );
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname.length > 20
+          this.nickname === this.item.nickname || this.nickname?.length > 20
         );
       }
       return true;
@@ -143,7 +144,7 @@ export default {
     nicknameRules() {
       return [
         value =>
-          value.length < 20 ||
+          (value && value.length < 20) ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
@@ -158,19 +159,28 @@ export default {
     addMode() {
       return this.mode === modes[0];
     },
+    isMyAddress() {
+      return this.address?.toLowerCase() === this.addressToAdd?.toLowerCase();
+    },
     alreadyExists() {
       if (this.addMode) {
-        if (this.address === this.addressToAdd) {
+        if (this.isMyAddress) {
           return true;
         }
         return Object.keys(this.addressBook).some(key => {
           return (
             this.addressBook[key].address.toLowerCase() ===
-            this.addressToAdd.toLowerCase()
+            this.addressToAdd?.toLowerCase()
           );
         });
       }
       return false;
+    },
+    checksumAddressToAdd() {
+      if (this.addressToAdd !== '' && utils.isAddress(this.addressToAdd)) {
+        return toChecksumAddress(this.addressToAdd);
+      }
+      return this.addressToAdd;
     }
   },
   watch: {
@@ -200,7 +210,7 @@ export default {
       this.resolvedAddr = '';
     },
     async resolveName() {
-      if (this.nameResolver) {
+      if (this.nameResolver && this.addressToAdd) {
         await this.nameResolver
           .resolveName(this.addressToAdd)
           .then(addr => {
@@ -218,7 +228,7 @@ export default {
       this.nickname = value;
     },
     update() {
-      this.addressBook[this.currentIdx].address = this.addressToAdd;
+      this.addressBook[this.currentIdx].address = this.checksumAddressToAdd;
       this.addressBook[this.currentIdx].nickname = this.nickname;
       this.setAddressBook(this.addressBook);
       this.$emit('back', 3);
@@ -235,7 +245,7 @@ export default {
         return;
       }
       this.addressBook.push({
-        address: this.addressToAdd,
+        address: this.checksumAddressToAdd,
         resolvedAddr: this.resolvedAddr,
         nickname: this.nickname || (this.addressBook.length + 1).toString()
       });
