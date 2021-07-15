@@ -368,7 +368,7 @@ export default {
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
         amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
@@ -393,6 +393,7 @@ export default {
     disableNext() {
       return (
         this.step < 2 ||
+        this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
         this.providersErrorMsg.subtitle !== ''
