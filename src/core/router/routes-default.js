@@ -4,6 +4,7 @@ import TheHowItWorksLayout from '@/views/layouts-default/TheHowItWorksLayout';
 import TheCompanyLayout from '@/views/layouts-default/TheCompanyLayout';
 import TheTeamLayout from '@/views/layouts-default/TheTeamLayout';
 import ThePressKitLayout from '@/views/layouts-default/ThePressKitLayout';
+import TheDappSubmissionLayout from '@/views/layouts-default/TheDappSubmissionLayout';
 import TheBuyHardwareWalletLayout from '@/views/layouts-default/TheBuyHardwareWalletLayout';
 import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
 import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
@@ -99,6 +100,14 @@ export default {
       path: 'presskit',
       name: 'PressKit',
       component: ThePressKitLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: 'dapp-submission',
+      name: 'DappSubmission',
+      component: TheDappSubmissionLayout,
       meta: {
         noAuth: true
       }
