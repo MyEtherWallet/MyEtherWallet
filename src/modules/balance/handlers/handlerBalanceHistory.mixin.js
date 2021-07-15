@@ -52,8 +52,8 @@ export default {
           }
         } while (nextKey);
       },
-      error({ error }) {
-        Toast(error?.message, {}, ERROR);
+      error(error) {
+        Toast(error.message, {}, ERROR);
       }
     }
   },
