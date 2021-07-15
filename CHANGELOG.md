@@ -1,3 +1,11 @@
+### Release v6.0.3
+
+### Devop
+
+### Fix
+
+* fix sanitize hex utils check [#3285](https://github.com/MyEtherWallet/MyEtherWallet/pull/3285)
+
 ### Release v6.0.2
 
 ### Devop
