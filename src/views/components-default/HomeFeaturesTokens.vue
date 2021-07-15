@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'HomeFeaturesTokens',
   components: {},
@@ -93,7 +95,8 @@ export default {
         label: 'cDAI (CDAI)',
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
-    ]
+    ],
+    ROUTES_HOME: ROUTES_HOME
   })
 };
 </script>
