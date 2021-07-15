@@ -111,7 +111,7 @@
     "ethereum-ens": "0.8.0",
     "ethereumjs-common": "1.5.2",
     "ethereumjs-tx": "2.1.2",
-    "ethereumjs-util": "7.0.10",
+    "ethereumjs-util": "7.1.0",
     "ethereumjs-wallet": "1.0.1",
     "hdkey": "2.0.1",
     "html2canvas": "1.0.0-rc.7",
