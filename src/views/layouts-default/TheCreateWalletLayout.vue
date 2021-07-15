@@ -7,9 +7,9 @@
     =====================================================================================
     -->
       <the-layout-header
-        title="Create a new wallet"
-        subtitle-line-one="Please select a method to create a new wallet"
-        subtitle-line-two="Already have a wallet?"
+        :title="$t('home.create-wallet.title')"
+        :subtitle-line-one="$t('home.create-wallet.subtitle-one')"
+        :subtitle-line-two="$t('home.create-wallet.subtitle-two')"
         :route-obj="titleRoute"
         has-link
       />
