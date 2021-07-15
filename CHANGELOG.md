@@ -1,3 +1,6 @@
+### Fix
+* Fix disable next button on swap [#3290](https://github.com/MyEtherWallet/MyEtherWallet/pull/3290)
+
 ### Release v6.0.2
 
 ### Devop
