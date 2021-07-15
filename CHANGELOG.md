@@ -24,7 +24,8 @@
 * fix let toast handle error [#3275](https://github.com/MyEtherWallet/MyEtherWallet/pull/3275)
 * fix to address when transferring token [#3282](https://github.com/MyEtherWallet/MyEtherWallet/pull/3282)
 * Add value to invalid type notification error message [#3280](https://github.com/MyEtherWallet/MyEtherWallet/pull/3280)
-* Remove getTransactionByHash null error msg check and skip balance history apollo query if it is not ETH network[#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
+* Remove getTransactionByHash null error msg check and skip balance history apollo query if it is not ETH network [#3235](https://github.com/MyEtherWallet/MyEtherWallet/pull/3235)
+* fix quickhelp content [#3287](https://github.com/MyEtherWallet/MyEtherWallet/pull/3287)
 
 ### Release v6.0.1
 
