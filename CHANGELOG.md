@@ -1,3 +1,6 @@
+### Fix
+* Make sure everything in address book is checksummed [#3289](https://github.com/MyEtherWallet/MyEtherWallet/pull/3289)
+
 ### Release v6.0.2
 
 ### Devop
