@@ -437,8 +437,7 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const isNotEmpty =
-        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
+      const isNotEmpty = this.toTokenType.symbol && this.fromTokenType.symbol;
       return isNotEmpty;
     },
     /**
@@ -842,6 +841,18 @@ export default {
       }
       return findToken ? findToken : this.actualFromTokens[0];
     },
+    getDefaultToToken() {
+      const findToken = this.actualToTokens.find(item => {
+        if (item.contract === this.defaults.toToken) return item;
+      });
+      if (
+        this.defaults.toToken === MAIN_TOKEN_ADDRESS &&
+        new BigNumber(this.balanceInETH).gt(0)
+      ) {
+        return this.mainTokenDetails;
+      }
+      return findToken ? findToken : this.actualFromTokens[0];
+    },
     /**
      * gets the select label placeholder token imgs
      */
@@ -871,7 +882,9 @@ export default {
     setDefaults() {
       setTimeout(() => {
         this.fromTokenType = this.getDefaultFromToken();
-        this.toTokenType = this.actualToTokens[0];
+        if (this.defaults.toToken) {
+          this.toTokenType = this.getDefaultToToken();
+        }
         this.setTokenInValue(this.tokenInValue);
       }, 500);
     },
@@ -891,6 +904,10 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      /**
+       * Ensure that both pairs have been set
+       * before calling the providers
+       */
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
@@ -908,8 +925,7 @@ export default {
       if (
         this.tokenInValue !== '' &&
         this.tokenInValue > 0 &&
-        this.toTokenType.symbol &&
-        !_.isEmpty(this.toTokenType)
+        this.enableTokenSwitch
       ) {
         this.isLoadingProviders = true;
         this.swapper

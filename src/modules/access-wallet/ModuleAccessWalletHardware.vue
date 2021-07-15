@@ -229,6 +229,8 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -478,6 +480,7 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.accounts = [];
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
@@ -590,7 +593,11 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          if (this.wallet[this.walletType]) {
+            this.wallets[this.walletType].create.errorHandler(err);
+          } else {
+            Toast(err, {}, ERROR);
+          }
           this.reset();
         });
     },
@@ -605,7 +612,11 @@ export default {
           this.setAddresses();
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          if (this.wallet[this.walletType]) {
+            this.wallets[this.walletType].create.errorHandler(err);
+          } else {
+            Toast(err, {}, ERROR);
+          }
           this.reset();
         });
     },
@@ -622,7 +633,8 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            if (!this.switchAddress) this.$router.push({ name: 'Dashboard' });
+            if (!this.switchAddress)
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             else this.close();
           })
           .catch(e => {
@@ -696,7 +708,7 @@ export default {
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: fromWei(balance),
+            balance: formatFloatingPointValue(fromWei(balance)).value,
             tokens: 'Loading..'
           });
         }
@@ -704,7 +716,11 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        this.wallets[this.walletType].create.errorHandler(e);
+        if (this.wallet[this.walletType]) {
+          this.wallets[this.walletType].create.errorHandler(e);
+        } else {
+          Toast(e, {}, ERROR);
+        }
         this.reset();
       }
     },
