@@ -53,7 +53,7 @@ export default {
         } while (nextKey);
       },
       error({ error }) {
-        Toast(error.message, {}, ERROR);
+        Toast(error?.message, {}, ERROR);
       }
     }
   },
