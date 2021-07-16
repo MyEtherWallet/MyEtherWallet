@@ -13,5 +13,19 @@
       "title": "Work with other chains",
       "text": "MEW supports additional Ethereum-compatible networks including Ethereum Classic (ETC), Binance Smart Chain (BSC) and Polygon, so that users can manage assets beyond the Ethereum mainnet."
     }
+  },
+  "swap": {
+    "info-one": {
+      "title": "Cross-Chain Swaps",
+      "text": "MEW offers cross-chain swaps for a variety of popular coins. Swap between Ether and Bitcoin, Litecoin, or even DOGE!"
+    },
+    "info-two": {
+      "title": "Competitive Rates",
+      "text": "MEW works with decentralized exchange aggregators 1inch and DEX.AG to find the best price on your token swap. This way you don’t have to deal with multiple platforms to get the best rate."
+    },
+    "info-three": {
+      "title": "Cash Out to Fiat",
+      "text": "Our partner Bity allows anyone to cash out their Ether for Euros or Swiss Francs."
+    }
   }
 }
