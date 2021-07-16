@@ -1,3 +1,7 @@
+### Fix
+
+* fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
+
 ### Release v6.0.2
 
 ### Devop
