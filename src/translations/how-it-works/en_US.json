@@ -27,5 +27,26 @@
       "title": "Cash Out to Fiat",
       "text": "Our partner Bity allows anyone to cash out their Ether for Euros or Swiss Francs."
     }
+  },
+  "dapps": {
+    "info-one": {
+      "title": "DApps Center",
+      "text": "Explore our integrated DApps to fully experience Ethereum’s capabilities. Take advantage of DeFi services with our partners Aave and MakerDAO, and register a domain name for your wallet through ENS or Unstoppable Domains. We are constantly adding more DApps!"
+    },
+    "info-two": {
+      "title": "Submit Your Own DApp!",
+      "text": "MEW is dedicated to being decentralized and open-source, so we are excited about working with DApp developers and making DApp integrations easy. You can fill out your details through our ",
+      "link": "DApp Submit Form"
+    }
+  },
+  "tokens": {
+    "info-one": {
+      "title": "Buy Tokens",
+      "text": "Swap for ERC20 tokens and stablecoins through our decentralized providers."
+    },
+    "info-two": {
+      "title": "Custom Tokens",
+      "text": "MEW automatically supports most ERC20 tokens through our API, but if you don’t see the token you’re looking for, you can add it as a custom token right in the interface!"
+    }
   }
 }
