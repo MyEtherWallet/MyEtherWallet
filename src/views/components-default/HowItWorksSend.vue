@@ -15,11 +15,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                Send Transactions
+                {{ $t('howItWorks.send-funds.info-one.title') }}
               </div>
               <p>
-                MEW gives you full control-send your funds to anyone, anywhere,
-                at any time, without middlemen, minimums, or limits.
+                {{ $t('howItWorks.send-funds.info-two.text') }}
               </p>
             </div>
           </div>
@@ -29,10 +28,11 @@
               <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{ $t('howItWorks.send-funds.info-two.title') }}
+              </div>
               <p>
-                View and manage all of your collectibles and domains in MEW’s
-                NFT Manager
+                {{ $t('howItWorks.send-funds.info-two.text') }}
               </p>
             </div>
           </div>
@@ -43,12 +43,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                Work with other chains
+                {{ $t('howItWorks.send-funds.info-three.title') }}
               </div>
               <p>
-                MEW supports additional Ethereum-compatible networks including
-                Ethereum Classic (ETC), Binance Smart Chain (BSC) and Polygon,
-                so that users can manage assets beyond the Ethereum mainnet.
+                {{ $t('howItWorks.send-funds.info-three.text') }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a

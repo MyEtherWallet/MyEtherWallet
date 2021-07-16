@@ -1,0 +1,17 @@
+{
+  "title": "How it works",
+  "send-funds": {
+    "info-one": {
+      "title": "Send Transactions",
+      "text": "MEW gives you full control-send your funds to anyone, anywhere, at any time, without middlemen, minimums, or limits."
+    },
+    "info-two": {
+      "title": "NFT Manager",
+      "text": "View and manage all of your collectibles and domains in MEW’s NFT Manager."
+    },
+    "info-three": {
+      "title": "Work with other chains",
+      "text": "MEW supports additional Ethereum-compatible networks including Ethereum Classic (ETC), Binance Smart Chain (BSC) and Polygon, so that users can manage assets beyond the Ethereum mainnet."
+    }
+  }
+}
