@@ -36,9 +36,7 @@
           $t('home.mew-wallet-modal.title')
         }}</span>
       </div>
-      <div
-        :class="['btn-container', isExpanded ? 'bottom-space' : 'ml-7']"
-      >
+      <div :class="['btn-container', isExpanded ? 'bottom-space' : 'ml-7']">
         <a
           v-for="(btn, idx) in storeButtons"
           :key="idx"

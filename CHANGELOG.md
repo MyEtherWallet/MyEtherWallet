@@ -1,3 +1,6 @@
+### Feature
+* Add MEW wallet banner [#3295](https://github.com/MyEtherWallet/MyEtherWallet/pull/3295)
+
 ### Release v6.0.2
 
 ### Devop
