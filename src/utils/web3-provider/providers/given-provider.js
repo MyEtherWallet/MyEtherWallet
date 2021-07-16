@@ -10,9 +10,8 @@ import {
 } from '../methods';
 class GivenProvider {
   constructor(host) {
-    this.givenProvider = Object.assign({}, host);
+    this.givenProvider = host;
     const requestManager = new Web3RequestManager(host);
-    if (this.givenProvider.sendAsync) delete this.givenProvider.sendAsync;
     if (this.givenProvider.request) {
       this.givenProvider.request_ = this.givenProvider.request;
       delete this.givenProvider.request;
@@ -42,24 +41,6 @@ class GivenProvider {
           this.givenProvider.request_(payload).then(resolve).catch(reject);
         });
       });
-    };
-    this.givenProvider.send = (payload, callback) => {
-      this.givenProvider
-        .request(payload)
-        .then(res =>
-          callback(null, {
-            jsonrpc: '2.0',
-            id: payload.id,
-            result: res
-          })
-        )
-        .catch(err =>
-          callback({
-            jsonrpc: '2.0',
-            id: payload.id,
-            error: err
-          })
-        );
     };
     return this.givenProvider;
   }
