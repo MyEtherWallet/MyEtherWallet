@@ -585,7 +585,7 @@ export default {
       if (this.allFormsValid) {
         axios({
           method: 'post',
-          url: 'https://formspree.io/f/xdoyllqr',
+          url: 'https://formspree.io/f/mqjndkkx',
           data: formData,
           headers: { 'Content-Type': 'multipart/form-data' }
         })
