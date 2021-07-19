@@ -1,5 +1,7 @@
 ### Fix
+
 * fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
+* fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 
 ### Release v6.0.2
 
