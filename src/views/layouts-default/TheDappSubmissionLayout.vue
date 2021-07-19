@@ -112,6 +112,7 @@
               outlined
               counter
               :rules="[rules.noEmptyString]"
+              maxlength="800"
             ></v-textarea>
 
             <!--
@@ -457,6 +458,7 @@
               v-model="form.additionalNotes"
               outlined
               counter
+              maxlength="300"
             ></v-textarea>
 
             <!--
@@ -564,7 +566,7 @@
           <mew-button
             class="ml-auto d-block"
             :title="$t('dappsSubmission.okay')"
-            @click.native="gotoHome"
+            @click.native="$router.push({ name: 'Home' })"
           >
           </mew-button>
         </v-card-actions>
@@ -694,13 +696,21 @@ export default {
             this.error = true;
           });
       }
-    },
-    gotoHome() {
-      this.$router.push({ name: 'Home' });
     }
   }
 };
 </script>
+
+<style lang="scss">
+.mew-component--dapp-submission {
+  // Hide down arrow for v-combobox
+  .v-select--is-multi {
+    .v-input__append-inner {
+      display: none;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .border {
