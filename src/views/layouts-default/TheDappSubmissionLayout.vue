@@ -4,29 +4,36 @@
     <v-form ref="form">
       <v-container class="my-10">
         <v-row>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="8">
+            <div style="max-width: 500px">
+              <div class="mew-heading-1">Tell us about your Dapp!</div>
+              <div class="mt-1">
+                It will take some time to review your Dapp submission. We will
+                contact you as soon as the review is done.
+              </div>
+            </div>
+
             <!--
-          =================================================================
-          Dapp name
-          =================================================================
-          -->
+            =================================================================
+            Dapp name
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Dapp name <span class="mew-label">(Required)</span>
               </div>
             </div>
-            <v-text-field
-              ref="dappName"
+            <mew-input
               v-model="form.dappName"
               :rules="[rules.noEmptyString]"
               outlined
             />
 
             <!--
-          =================================================================
-          Category
-          =================================================================
-          -->
+            =================================================================
+            Category
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Category <span class="mew-label">(Required)</span>
@@ -34,16 +41,17 @@
             </div>
             <v-select
               v-model="form.category"
+              :rules="[rules.noNull]"
               :items="itemsCategory"
               placeholder="Select a category"
               outlined
             />
 
             <!--
-          =================================================================
-          Tags
-          =================================================================
-          -->
+            =================================================================
+            Tags
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Tags <span class="mew-label">(Required)</span>
@@ -63,15 +71,19 @@
                 <v-chip x-small class="ml-1">Wallet</v-chip>
               </div>
             </div>
-            <div class="border">
-              <v-combobox v-model="form.tags" label="Tags" multiple chips />
-            </div>
+            <v-combobox
+              v-model="form.tags"
+              :rules="[rules.noEmptyArray]"
+              multiple
+              chips
+              outlined
+            />
 
             <!--
-          =================================================================
-          Description
-          =================================================================
-          -->
+            =================================================================
+            Description
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Description <span class="mew-label">(Required)</span>
@@ -82,40 +94,40 @@
               v-model="form.description"
               outlined
               counter
+              :rules="[rules.noEmptyString]"
             ></v-textarea>
 
             <!--
-          =================================================================
-          Contract address
-          =================================================================
-          -->
+            =================================================================
+            Contract address
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Contract address <span class="mew-label">(Required)</span>
               </div>
             </div>
-            <v-text-field
-              ref="contractAddress"
+            <mew-input
               v-model="form.contractAddress"
               outlined
-              :rules="[rules.validEthAddress]"
+              :rules="[rules.noEmptyString, rules.requireValidEthAddress]"
             />
 
             <!--
-          =================================================================
-          Dapp website
-          =================================================================
-          -->
+            =================================================================
+            Dapp website
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">Dapp website</div>
             </div>
-            <mew-input v-model="form.dappWebsite" />
+            <mew-input v-model="form.dappWebsite" outlined />
 
             <!--
-          =================================================================
-          Is your Dapp available for use in the United States?
-          =================================================================
-          -->
+            =================================================================
+            Is your Dapp available for use in the United States?
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Is your Dapp available for use in the United States?
@@ -123,24 +135,34 @@
               </div>
             </div>
             <div class="border">
-              <v-radio-group v-model="form.usMarket" column class="mt-0">
+              <v-radio-group
+                v-model="form.usMarket"
+                column
+                class="mt-0"
+                :rules="[rules.noNull]"
+              >
                 <v-radio label="Yes" value="yes"></v-radio>
                 <v-radio label="No" value="no"></v-radio>
               </v-radio-group>
             </div>
 
             <!--
-          =================================================================
-          Dapp status
-          =================================================================
-          -->
+            =================================================================
+            Dapp status
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Dapp status <span class="mew-label">(Required)</span>
               </div>
             </div>
             <div class="border">
-              <v-radio-group v-model="form.dappStatus" column class="mt-0">
+              <v-radio-group
+                v-model="form.dappStatus"
+                :rules="[rules.noNull]"
+                column
+                class="mt-0"
+              >
                 <v-radio label="Live" value="Live"></v-radio>
                 <v-radio label="Beta" value="Beta"></v-radio>
                 <v-radio label="Prototype" value="Prototype"></v-radio>
@@ -154,10 +176,10 @@
             </div>
 
             <!--
-          =================================================================
-          Dapp contract audit
-          =================================================================
-          -->
+            =================================================================
+            Dapp contract audit
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">Dapp contract audit</div>
               <div>
@@ -166,7 +188,12 @@
               </div>
             </div>
             <div class="border">
-              <v-radio-group v-model="form.contractAudit" column class="mt-0">
+              <v-radio-group
+                v-model="form.contractAudit"
+                :rules="[rules.noNull]"
+                column
+                class="mt-0"
+              >
                 <v-radio
                   label="None in process"
                   value="None in process"
@@ -177,10 +204,10 @@
             </div>
 
             <!--
-          =================================================================
-          Mock user flow
-          =================================================================
-          -->
+            =================================================================
+            Mock user flow
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Mock user flow <span class="mew-label">(Required)</span>
@@ -190,16 +217,17 @@
             <div class="border">
               <v-file-input
                 v-model="form.mockFlowFile"
+                :rules="[rules.noNull]"
                 accept="image/jpeg, .pdf"
                 label="JPEG, PDF (> 5MB)"
               ></v-file-input>
             </div>
 
             <!--
-          =================================================================
-          Dapp icon
-          =================================================================
-          -->
+            =================================================================
+            Dapp icon
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Dapp icon <span class="mew-label">(Required)</span>
@@ -209,16 +237,17 @@
             <div class="border">
               <v-file-input
                 v-model="form.dappIconFile"
+                :rules="[rules.noNull]"
                 accept="image/jpeg, image/png"
                 label="JPEG, PNG"
               ></v-file-input>
             </div>
 
             <!--
-          =================================================================
-          Banner
-          =================================================================
-          -->
+            =================================================================
+            Banner
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Banner <span class="mew-label">(Required)</span>
@@ -228,16 +257,17 @@
             <div class="border">
               <v-file-input
                 v-model="form.bannerFile"
+                :rules="[rules.noNull]"
                 accept="image/jpeg, image/png"
                 label="JPEG, PNG"
               ></v-file-input>
             </div>
 
             <!--
-          =================================================================
-          Authors
-          =================================================================
-          -->
+            =================================================================
+            Authors
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Authors <span class="mew-label">(Required)</span>
@@ -246,73 +276,97 @@
             </div>
             <mew-input
               v-model="form.authors"
+              :rules="[rules.noEmptyString]"
               placeholder="e.g.) James Lee, Emilie Roy, Edward McCormick"
             />
 
             <!--
-          =================================================================
-          My full name
-          =================================================================
-          -->
+            =================================================================
+            My full name
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 My full name <span class="mew-label">(Required)</span>
               </div>
             </div>
-            <mew-input v-model="form.fullName" />
+            <mew-input v-model="form.fullName" :rules="[rules.noEmptyString]" />
 
             <!--
-          =================================================================
-          My email
-          =================================================================
-          -->
+            =================================================================
+            My email
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 My email <span class="mew-label">(Required)</span>
               </div>
             </div>
-            <mew-input v-model="form.email" />
+            <mew-input
+              v-model="form.email"
+              :rules="[rules.noEmptyString, rules.email]"
+            />
 
             <!--
-          =================================================================
-          Company social links
-          =================================================================
-          -->
+            =================================================================
+            Company social links
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">
                 Company social links <span class="mew-label">(Required)</span>
               </div>
               <div>Provide at least one social link</div>
-            </div>
-            <div class="border social-media">
-              <div
-                v-for="(s, socialIndex) in socialLinks"
-                :key="s.name"
-                class="d-flex align-center"
-              >
-                <img :src="s.icon" :alt="s.name" />
-                <v-text-field
-                  v-model="form.socialLinks[socialIndex]"
-                  :label="s.name"
+              <div class="social-media mt-1">
+                <img
+                  src="@/assets/images/icons/socials/svg/facebook.svg"
+                  alt="Facebook"
+                />
+                <img
+                  src="@/assets/images/icons/socials/svg/twitter.svg"
+                  alt="Twitter"
+                />
+                <img
+                  src="@/assets/images/icons/socials/svg/linkedin.svg"
+                  alt="LinkedIn"
+                />
+                <img
+                  src="@/assets/images/icons/socials/svg/reddit.svg"
+                  alt="Reddit"
+                />
+                <img
+                  src="@/assets/images/icons/socials/svg/medium.svg"
+                  alt="Medium"
+                />
+                <img
+                  src="@/assets/images/icons/socials/svg/github.svg"
+                  alt="Github"
                 />
               </div>
             </div>
+            <v-combobox
+              v-model="form.socialLinks"
+              :rules="[rules.noEmptyArray]"
+              multiple
+              chips
+              outlined
+            />
 
             <!--
-          =================================================================
-          Company website
-          =================================================================
-          -->
+            =================================================================
+            Company website
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">Company website</div>
             </div>
             <mew-input v-model="form.companyWebsite" />
 
             <!--
-          =================================================================
-          Software license
-          =================================================================
-          -->
+            =================================================================
+            Software license
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">Software license</div>
             </div>
@@ -322,10 +376,10 @@
             />
 
             <!--
-          =================================================================
-          Additional notes
-          =================================================================
-          -->
+            =================================================================
+            Additional notes
+            =================================================================
+            -->
             <div class="title-m">
               <div class="mew-heading-3">Additional notes</div>
               <div>300 characters max</div>
@@ -337,36 +391,111 @@
             ></v-textarea>
 
             <!--
-          =================================================================
-          Submit button
-          =================================================================
-          -->
+            =================================================================
+            Submit button
+            =================================================================
+            -->
             <mew-button
               title="Submit"
               btn-size="xlarge"
               class="d-block mx-auto mt-10"
               @click.native="submitForm"
             ></mew-button>
+
+            <div
+              v-show="!allFormsValid"
+              class="text-center mx-auto mt-4 mb-4 error--text"
+              style="max-width: 300px"
+            >
+              Please meke sure to fill out all required forms before click
+              submit button.
+            </div>
           </v-col>
 
-          <v-col cols="12" md="6">
-            <mew-button
-              title="Submit"
-              btn-size="xlarge"
-              class="d-block mx-auto mt-10"
-              @click.native="submitForm"
-            ></mew-button>
+          <v-col cols="12" md="4">
+            <div style="position: sticky; top: 0">
+              <div class="walletBg pa-6">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="mew-heading-2">
+                    A Joint Effort With State of The Dapps
+                  </div>
+                  <img
+                    src="@/assets/images/icons/icon-sotd.png"
+                    alt="stateofthedapps.com"
+                    height="50"
+                    class="ml-3"
+                  />
+                </div>
+                <div class="mt-5">
+                  By submitting your Dapp information, you acknowledge that your
+                  Dapp will be listed on
+                  <a href="https://www.stateofthedapps.com/" target="_blank">
+                    stateofthedapps.com
+                  </a>
+                </div>
+              </div>
 
-            <pre>
-            {{ form }}
-          </pre
-            >
-
-            <div>{{ form.mockFlowFile }}</div>
+              <div class="walletBg pa-6 mt-6">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="mew-heading-2">MEW Support</div>
+                  <img
+                    src="@/assets/images/icons/icon-message2-mew.svg"
+                    alt="MEW support"
+                    height="50"
+                    class="ml-3"
+                  />
+                </div>
+                <div class="mt-3">
+                  Any question? Get in touch and we’ll get back as soon as we
+                  can.
+                </div>
+                <a href="mailto:support@myetherwallet.com" target="_blank">
+                  <mew-button
+                    title="Contact Supper"
+                    has-full-width
+                    class="mt-3"
+                    btn-style="outline"
+                  />
+                </a>
+              </div>
+            </div>
           </v-col>
         </v-row>
       </v-container>
     </v-form>
+
+    <v-dialog v-model="formSubmitted" width="500">
+      <v-card>
+        <v-card-title class="text-h5">
+          Great! Your Dapp information have been successfully submitted.
+        </v-card-title>
+        <v-card-text class="mew-body">
+          We will review your Dapp information and this could take several days.
+          You will be contacted as soon as the review is done. Thank you.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="gotoHome"> Okay </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="error" width="500">
+      <v-card>
+        <v-card-title class="text-h5">
+          Something went wrong. Please try again.
+        </v-card-title>
+        <v-card-text class="mew-body">
+          There was some error and Dapp submission was failed.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="error = false">
+            Okay
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -379,6 +508,9 @@ export default {
   name: 'DappSubmition',
   components: { TheLayoutHeader },
   data: () => ({
+    allFormsValid: true,
+    formSubmitted: false,
+    error: false,
     form: {
       dappName: '',
       tags: [],
@@ -398,7 +530,8 @@ export default {
       companyWebsite: '',
       socialLinks: [],
       license: '',
-      additionalNotes: ''
+      additionalNotes: '',
+      _cc: 'support@stateofthedapps.com'
     },
     itemsCategory: [
       'Games',
@@ -420,78 +553,56 @@ export default {
       'Health',
       'Other'
     ],
-    socialLinks: [
-      {
-        name: 'Facebook',
-        icon: require('@/assets/images/icons/socials/svg/facebook.svg')
-      },
-      {
-        name: 'Twitter',
-        icon: require('@/assets/images/icons/socials/svg/twitter.svg')
-      },
-      {
-        name: 'LinkedIn',
-        icon: require('@/assets/images/icons/socials/svg/linkedin.svg')
-      },
-      {
-        name: 'Reddit',
-        icon: require('@/assets/images/icons/socials/svg/reddit.svg')
-      },
-      {
-        name: 'Medium',
-        icon: require('@/assets/images/icons/socials/svg/medium.svg')
-      },
-      {
-        name: 'Github',
-        icon: require('@/assets/images/icons/socials/svg/github.svg')
-      }
-    ],
     rules: {
       noEmptyString: value => {
-        return value != '' || 'Invalid address';
+        return value != '' || 'This field is required';
       },
-      validEthAddress: value => {
+      noEmptyArray: value => {
+        return value.length != 0 || 'This field is required';
+      },
+      noNull: value => {
+        return value != null || 'This field is required';
+      },
+      requireValidEthAddress: value => {
         return web3.utils.isAddress(value) || 'Invalid address';
+      },
+      email: value => {
+        return /.+@.+/.test(value) || 'E-mail must be valid';
       }
     }
   }),
   methods: {
     async submitForm() {
       const formData = new FormData();
-      this.form._cc = 'support@stateofthedapps.com';
 
       for (const key in this.form) {
         formData.append(key, this.form[key]);
       }
 
-      // Remove empty social links
-      this.form.socialLinks = await this.removeEmptyArray(
-        this.form.socialLinks
+      // Validate input field reqirements
+      this.allFormsValid = this.$refs.form.validate();
+
+      console.log(
+        'Here ======================================>' + this.allFormsValid
       );
 
-      // Validate input field reqirements
-      if (this.$refs.form.validate()) {
+      if (this.allFormsValid) {
         axios({
           method: 'post',
           url: 'https://formspree.io/f/xdoyllqr',
           data: formData,
           headers: { 'Content-Type': 'multipart/form-data' }
         })
-          .then(function (response) {
-            console.log(response);
+          .then(() => {
+            this.formSubmitted = true;
           })
-          .catch(function (response) {
-            console.log(response);
+          .catch(() => {
+            this.error = true;
           });
       }
     },
-    removeEmptyArray(arr) {
-      arr = arr.filter(entry => entry.trim() != '');
-      return arr.filter(function (val) {
-        if (val !== null && val !== '') {
-          return val;
-        }
-      });
+    gotoHome() {
+      this.$router.push({ name: 'Home' });
     }
   }
 };
@@ -511,9 +622,8 @@ export default {
 
 .social-media {
   img {
-    width: 18px;
-    margin-right: 15px;
-    filter: opacity(0.2);
+    width: 15px;
+    margin-right: 25px;
   }
 }
 </style>
