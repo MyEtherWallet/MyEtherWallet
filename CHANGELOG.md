@@ -19,6 +19,7 @@
 
 ### Feature
 
+* Add dapp submission page [#3279](https://github.com/MyEtherWallet/MyEtherWallet/pull/3279)
 * Remove divider in Staked UI and replace Russ team member photo [#3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
 
 ### Devop

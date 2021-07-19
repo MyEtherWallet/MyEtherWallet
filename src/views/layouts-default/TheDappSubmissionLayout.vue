@@ -18,7 +18,7 @@
             Dapp name
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Dapp name <span class="mew-label">(Required)</span>
               </div>
@@ -34,7 +34,7 @@
             Category
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Category <span class="mew-label">(Required)</span>
               </div>
@@ -52,7 +52,7 @@
             Tags
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Tags <span class="mew-label">(Required)</span>
               </div>
@@ -84,7 +84,7 @@
             Description
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Description <span class="mew-label">(Required)</span>
               </div>
@@ -102,7 +102,7 @@
             Contract address
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Contract address <span class="mew-label">(Required)</span>
               </div>
@@ -118,7 +118,7 @@
             Dapp website
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">Dapp website</div>
             </div>
             <mew-input v-model="form.dappWebsite" outlined />
@@ -128,7 +128,7 @@
             Is your Dapp available for use in the United States?
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Is your Dapp available for use in the United States?
                 <span class="mew-label">(Required)</span>
@@ -151,7 +151,7 @@
             Dapp status
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Dapp status <span class="mew-label">(Required)</span>
               </div>
@@ -180,7 +180,7 @@
             Dapp contract audit
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">Dapp contract audit</div>
               <div>
                 Audits are not required for application, but are required by
@@ -208,7 +208,7 @@
             Mock user flow
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Mock user flow <span class="mew-label">(Required)</span>
               </div>
@@ -228,7 +228,7 @@
             Dapp icon
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Dapp icon <span class="mew-label">(Required)</span>
               </div>
@@ -248,7 +248,7 @@
             Banner
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Banner <span class="mew-label">(Required)</span>
               </div>
@@ -268,7 +268,7 @@
             Authors
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Authors <span class="mew-label">(Required)</span>
               </div>
@@ -285,7 +285,7 @@
             My full name
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 My full name <span class="mew-label">(Required)</span>
               </div>
@@ -297,7 +297,7 @@
             My email
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 My email <span class="mew-label">(Required)</span>
               </div>
@@ -312,7 +312,7 @@
             Company social links
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">
                 Company social links <span class="mew-label">(Required)</span>
               </div>
@@ -357,7 +357,7 @@
             Company website
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">Company website</div>
             </div>
             <mew-input v-model="form.companyWebsite" />
@@ -367,7 +367,7 @@
             Software license
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">Software license</div>
             </div>
             <mew-input
@@ -380,7 +380,7 @@
             Additional notes
             =================================================================
             -->
-            <div class="title-m">
+            <div class="section-title">
               <div class="mew-heading-3">Additional notes</div>
               <div>300 characters max</div>
             </div>
@@ -582,10 +582,6 @@ export default {
       // Validate input field reqirements
       this.allFormsValid = this.$refs.form.validate();
 
-      console.log(
-        'Here ======================================>' + this.allFormsValid
-      );
-
       if (this.allFormsValid) {
         axios({
           method: 'post',
@@ -616,7 +612,7 @@ export default {
   margin-bottom: 30px;
 }
 
-.title-m {
+.section-title {
   padding: 40px 0 10px 0;
 }
 
