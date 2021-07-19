@@ -1,3 +1,5 @@
+### Fix
+* Check if object is there before calling disconnect [#3298](https://github.com/MyEtherWallet/MyEtherWallet/pull/3298)
 ### Release v6.0.2
 
 ### Devop
