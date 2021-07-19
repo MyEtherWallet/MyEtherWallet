@@ -1,5 +1,10 @@
 ### Feature
+
 * fix error message property of undefined [#3292](https://github.com/MyEtherWallet/MyEtherWallet/pull/3292)
+
+### Fix
+
+* fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
 
 ### Release v6.0.2
 
