@@ -339,7 +339,10 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
     txTo() {
-      if (!this.isBatch) return this.tx.to;
+      if (!this.isBatch)
+        return this.tx.hasOwnProperty('toTxData')
+          ? this.tx.toTxData.to
+          : this.tx.to;
       return this.unsignedTxArr[0].to;
     },
     usdValue() {
@@ -792,7 +795,7 @@ export default {
                 });
               })
               .catch(e => {
-                throw new Error(e);
+                this.instance.errorHandler(e);
               });
           }
           this.signedTxArray = signed;
