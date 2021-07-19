@@ -1,3 +1,6 @@
+### Fix
+* fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
+
 ### Release v6.0.2
 
 ### Devop
