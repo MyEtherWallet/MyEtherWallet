@@ -29,9 +29,11 @@ class MEWconnectWallet {
     this.mewConnect = await connection.createWalletOnly(
       store.getters['global/network']
     );
-    this.mewConnect.disconnect = () => {
-      this.mewConnect.mewConnect.disconnectRTC();
-    };
+    if (this.mewConnect) {
+      this.mewConnect.disconnect = () => {
+        this.mewConnect.mewConnect.disconnectRTC();
+      };
+    }
     this.mewConnect.mewConnect.on('RtcClosedEvent', () => {
       if (this.mewConnect.mewConnect.getConnectonState()) {
         store.dispatch('wallet/removeWallet');

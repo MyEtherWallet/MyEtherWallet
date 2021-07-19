@@ -34,11 +34,12 @@ class WalletConnectWallet {
         store.dispatch('wallet/removeWallet');
       }
     });
-
-    this.walletConnect.disconnect = () => {
-      this.isKilled = true;
-      this.walletConnect.killSession();
-    };
+    if (this.walletConnect) {
+      this.walletConnect.disconnect = () => {
+        this.isKilled = true;
+        this.walletConnect.killSession();
+      };
+    }
     this.meta = {
       name: 'Wallet Connect',
       img: {
