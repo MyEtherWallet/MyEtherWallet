@@ -1,15 +1,18 @@
 <template>
   <div class="mew-component--dapp-submission">
-    <the-layout-header title="Dapp Submission Form" />
+    <the-layout-header
+      :title="$t('dappsSubmission.banner-submit.dapp-submission-form')"
+    />
     <v-form ref="form">
       <v-container class="my-10">
         <v-row>
           <v-col cols="12" md="8">
             <div style="max-width: 500px">
-              <div class="mew-heading-1">Tell us about your Dapp!</div>
+              <div class="mew-heading-1">
+                {{ $t('dappsSubmission.tell-us-about-your-dapp') }}
+              </div>
               <div class="mt-1">
-                It will take some time to review your Dapp submission. We will
-                contact you as soon as the review is done.
+                {{ $t('dappsSubmission.provide-text') }}
               </div>
             </div>
 
@@ -20,7 +23,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Dapp name <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.name') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <mew-input
@@ -36,7 +42,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Category <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.category') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <v-select
@@ -54,15 +63,16 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Tags <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.tags-title') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
               <div>
-                A 5-7 word description of your DApp. Please don't include
-                self-promotion or obvious words such as 'blockchain',
-                'decentralized', or 'Ethereum', (e.g. Game, Social, Finance...)
+                {{ $t('dappsSubmission.about-your-dapp.tags') }}
               </div>
               <div>
-                Suggested tags
+                {{ $t('dappsSubmission.about-your-dapp.suggested-tags') }}
                 <v-chip x-small class="ml-1">Games</v-chip>
                 <v-chip x-small class="ml-1">Defi</v-chip>
                 <v-chip x-small class="ml-1">Lending</v-chip>
@@ -86,9 +96,16 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Description <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.description') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>800 characters max</div>
+              <div>
+                {{
+                  $t('dappsSubmission.about-your-dapp.description-placeholder')
+                }}
+              </div>
             </div>
             <v-textarea
               v-model="form.description"
@@ -104,7 +121,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Contract address <span class="mew-label">(Required)</span>
+                Contract address
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <mew-input
@@ -119,7 +139,9 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">Dapp website</div>
+              <div class="mew-heading-3">
+                {{ $t('dappsSubmission.about-your-dapp.dapp-website') }}
+              </div>
             </div>
             <mew-input v-model="form.dappWebsite" outlined />
 
@@ -130,8 +152,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Is your Dapp available for use in the United States?
-                <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.dapp-us') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <div class="border">
@@ -153,7 +177,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Dapp status <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.dapp-status') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <div class="border">
@@ -181,10 +208,11 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">Dapp contract audit</div>
+              <div class="mew-heading-3">
+                {{ $t('dappsSubmission.about-your-dapp.contract-audit-title') }}
+              </div>
               <div>
-                Audits are not required for application, but are required by
-                final step.
+                {{ $t('dappsSubmission.about-your-dapp.contract-audit') }}
               </div>
             </div>
             <div class="border">
@@ -210,9 +238,14 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Mock user flow <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.mock-flow-title') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>Dimensions must be 1200px width by 630px height</div>
+              <div>
+                {{ $t('dappsSubmission.about-your-dapp.mock-requirements') }}
+              </div>
             </div>
             <div class="border">
               <v-file-input
@@ -230,9 +263,14 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Dapp icon <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.dapp-icon-title') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>Dimensions must be 192px width by 192px height</div>
+              <div>
+                {{ $t('dappsSubmission.about-your-dapp.dapp-icon') }}
+              </div>
             </div>
             <div class="border">
               <v-file-input
@@ -250,9 +288,14 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Banner <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-dapp.banner-title') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>Dimensions must be 1200px width by 206px height</div>
+              <div>
+                {{ $t('dappsSubmission.about-your-dapp.banner') }}
+              </div>
             </div>
             <div class="border">
               <v-file-input
@@ -270,14 +313,19 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Authors <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-team.authors-title') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>Separate names or organizations with a comma</div>
+              <div>{{ $t('dappsSubmission.about-your-team.authors') }}</div>
             </div>
             <mew-input
               v-model="form.authors"
               :rules="[rules.noEmptyString]"
-              placeholder="e.g.) James Lee, Emilie Roy, Edward McCormick"
+              :placeholder="
+                $t('dappsSubmission.about-your-team.author-placeholder')
+              "
             />
 
             <!--
@@ -287,7 +335,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                My full name <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-team.full-name') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <mew-input v-model="form.fullName" :rules="[rules.noEmptyString]" />
@@ -299,7 +350,10 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                My email <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-team.email') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
             </div>
             <mew-input
@@ -314,9 +368,14 @@
             -->
             <div class="section-title">
               <div class="mew-heading-3">
-                Company social links <span class="mew-label">(Required)</span>
+                {{ $t('dappsSubmission.about-your-team.social-links') }}
+                <span class="mew-label">
+                  ({{ $t('dappsSubmission.required') }})
+                </span>
               </div>
-              <div>Provide at least one social link</div>
+              <div>
+                {{ $t('dappsSubmission.about-your-team.provide-social-link') }}
+              </div>
               <div class="social-media mt-1">
                 <img
                   src="@/assets/images/icons/socials/svg/facebook.svg"
@@ -358,7 +417,9 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">Company website</div>
+              <div class="mew-heading-3">
+                {{ $t('dappsSubmission.about-your-team.company-website') }}
+              </div>
             </div>
             <mew-input v-model="form.companyWebsite" />
 
@@ -368,11 +429,15 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">Software license</div>
+              <div class="mew-heading-3">
+                {{ $t('dappsSubmission.about-your-team.license') }}
+              </div>
             </div>
             <mew-input
               v-model="form.license"
-              placeholder="e.g.) MIT, GPL, Proprietary"
+              :placeholder="
+                $t('dappsSubmission.about-your-team.license-placeholder')
+              "
             />
 
             <!--
@@ -381,8 +446,12 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">Additional notes</div>
-              <div>300 characters max</div>
+              <div class="mew-heading-3">
+                {{ $t('dappsSubmission.about-your-team.additional-notes') }}
+              </div>
+              <div>
+                {{ $t('dappsSubmission.about-your-team.notes-placeholder') }}
+              </div>
             </div>
             <v-textarea
               v-model="form.additionalNotes"
@@ -396,7 +465,7 @@
             =================================================================
             -->
             <mew-button
-              title="Submit"
+              :title="$t('dappsSubmission.submit')"
               btn-size="xlarge"
               class="d-block mx-auto mt-10"
               @click.native="submitForm"
@@ -407,17 +476,21 @@
               class="text-center mx-auto mt-4 mb-4 error--text"
               style="max-width: 300px"
             >
-              Please meke sure to fill out all required forms before click
-              submit button.
+              {{ $t('dappsSubmission.fill-out-required-fields') }}
             </div>
           </v-col>
 
           <v-col cols="12" md="4">
             <div style="position: sticky; top: 0">
+              <!--
+              =================================================================
+              State of the Dapps (side)
+              =================================================================
+              -->
               <div class="walletBg pa-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
-                    A Joint Effort With State of The Dapps
+                    {{ $t('dappsSubmission.sotd.title') }}
                   </div>
                   <img
                     src="@/assets/images/icons/icon-sotd.png"
@@ -427,17 +500,28 @@
                   />
                 </div>
                 <div class="mt-5">
-                  By submitting your Dapp information, you acknowledge that your
-                  Dapp will be listed on
-                  <a href="https://www.stateofthedapps.com/" target="_blank">
-                    stateofthedapps.com
-                  </a>
+                  <i18n tag="div" path="dappsSubmission.sotd.info">
+                    <a
+                      slot="url"
+                      href="https://stateofthedapps.com"
+                      target="_blank"
+                    >
+                      stateofthedapps.com
+                    </a>
+                  </i18n>
                 </div>
               </div>
 
+              <!--
+              =================================================================
+              MEW Support (side)
+              =================================================================
+              -->
               <div class="walletBg pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
-                  <div class="mew-heading-2">MEW Support</div>
+                  <div class="mew-heading-2">
+                    {{ $t('dappsSubmission.mew-support.title') }}
+                  </div>
                   <img
                     src="@/assets/images/icons/icon-message2-mew.svg"
                     alt="MEW support"
@@ -446,12 +530,11 @@
                   />
                 </div>
                 <div class="mt-3">
-                  Any question? Get in touch and we’ll get back as soon as we
-                  can.
+                  {{ $t('dappsSubmission.mew-support.info') }}
                 </div>
                 <a href="mailto:support@myetherwallet.com" target="_blank">
                   <mew-button
-                    title="Contact Supper"
+                    :title="$t('dappsSubmission.contact-support')"
                     has-full-width
                     class="mt-3"
                     btn-style="outline"
@@ -464,35 +547,50 @@
       </v-container>
     </v-form>
 
+    <!--
+    =================================================================
+    Success (dialog)
+    =================================================================
+    -->
     <v-dialog v-model="formSubmitted" width="500">
       <v-card>
         <v-card-title class="text-h5">
-          Great! Your Dapp information have been successfully submitted.
+          {{ $t('dappsSubmission.successful') }}
         </v-card-title>
         <v-card-text class="mew-body">
-          We will review your Dapp information and this could take several days.
-          You will be contacted as soon as the review is done. Thank you.
+          {{ $t('dappsSubmission.congrats-msg') }}
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="gotoHome"> Okay </v-btn>
+        <v-card-actions class="pb-4">
+          <mew-button
+            class="ml-auto d-block"
+            :title="$t('dappsSubmission.okay')"
+            @click.native="gotoHome"
+          >
+          </mew-button>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
+    <!--
+    =================================================================
+    Failed (dialog)
+    =================================================================
+    -->
     <v-dialog v-model="error" width="500">
       <v-card>
         <v-card-title class="text-h5">
-          Something went wrong. Please try again.
+          {{ $t('dappsSubmission.failed') }}
         </v-card-title>
         <v-card-text class="mew-body">
-          There was some error and Dapp submission was failed.
+          {{ $t('dappsSubmission.try-again') }}
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="error = false">
-            Okay
-          </v-btn>
+        <v-card-actions class="pb-4">
+          <mew-button
+            class="ml-auto d-block"
+            :title="$t('dappsSubmission.okay')"
+            @click.native="error = false"
+          >
+          </mew-button>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -611,11 +709,9 @@ export default {
   padding: 20px;
   margin-bottom: 30px;
 }
-
 .section-title {
   padding: 40px 0 10px 0;
 }
-
 .social-media {
   img {
     width: 15px;
