@@ -14,7 +14,7 @@
           =================================================================
           -->
           <v-col cols="12" md="8">
-            <div style="max-width: 500px">
+            <div style="max-width: 500px" class="mb-8">
               <div class="mew-heading-1">
                 {{ $t('dappsSubmission.tell-us-about-your-dapp') }}
               </div>
