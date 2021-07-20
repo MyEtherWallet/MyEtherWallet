@@ -1,0 +1,144 @@
+{
+  "mewconnect": {
+    "option-text": "Отсканируйте QR-код для доступа с помощью MEW wallet или MEWconnect",
+    "modal": {
+      "title": "Мобильный доступ",
+      "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения MEW wallet? Загрузите сейчас."
+    },
+    "protocol": "Протокол MEWconnect",
+    "warning": "MEW wallet и MEWconnect несовместимы с iPads."
+  },
+  "mobile-app": {
+    "option-title": "Мобильное приложение",
+    "examples": "WalletConnect; WalletLink",
+    "modal": {
+      "title": "Мобильный доступ"
+    },
+    "mew-connect": "MEWconnect"
+  },
+  "finney": {
+    "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
+    "finney-wallet": "FinneyWallet",
+    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
+    "get-finney": "Купите {finney-title} сейчас",
+    "finney-title": "FINNEY™",
+    "mobile": "мобильный",
+    "finney-connect": "FINNEY Connect"
+  },
+  "hardware": {
+    "option-title": "Аппаратный доступ",
+    "warning": {
+      "not-connected": "Пожалуйста, убедитесь, что устройство подключено."
+    },
+    "modal": {
+      "title": "Аппаратный доступ",
+      "button-buy": "Купить",
+      "button-choose": "Продолжить"
+    },
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
+  },
+  "bitbox": {
+    "modal": {
+      "title": "Выберите кошелек BitBox"
+    },
+    "bitbox02": "BitBox02",
+    "pairing": "Подтвердите что код шифрования соответсвует тому, который показан на вашем BitBox02.",
+    "unlock": "Введите пароль BitBox02 для разблокировки."
+  },
+  "software": {
+    "option-title": "Программный доступ",
+    "option-text": "Файл хранения ключей, приватный ключ, мнемоническая фраза",
+    "modal": {
+      "title": "Программный доступ",
+      "purchase-text": "Приобретите аппаратный кошелек для максимальной безопасности при доступе к средствам.",
+      "purchase-link": "Купить аппаратный кошелек...."
+    }
+  },
+  "metamask": {
+    "option-title": "Metamask",
+    "option-text": "Использовать расширение MetaMask для получения доступа к моему кошельку",
+    "warning": {
+      "safari": "MetaMask доступен только в этих браузерах:",
+      "install-promt": "Установите расширение Metamask и обновите вашу страницу.",
+      "unlock": "Не удается получить доступ к кошельку! Разблокируйте ваш кошелек с помощью расширения Metamask"
+    },
+    "modal": {
+      "title": "Доступ с помощью MetaMask",
+      "text": "Пожалуйста, используйте MyEtherWallet на безопасном (SSL/HTTPS) соединении для подключения.",
+      "button-install": "Установить MetaMask",
+      "button-refresh": "Обновить",
+      "terms": "Для получения доступа, я принимаю {terms}."
+    }
+  },
+  "mnemonic": {
+    "string": "Мнемоническая фраза",
+    "value": "Слов",
+    "modal": {
+      "title": "Доступ с помощью мнемонической фразы",
+      "text": "Пожалуйста, введите вашу мнемоническую фразу."
+    }
+  },
+  "ledger": {
+    "modal": {
+      "title": "Выберите приложение",
+      "text": "Пожалуйста, выберите приложение которое вы открыли в Ledger"
+    }
+  },
+  "private-key": {
+    "string": "Закрытый Kлюч",
+    "modal": {
+      "title": "Доступ с помощью Закрытого Ключа",
+      "placeholder": "Введите Закрытый Kлюч"
+    },
+    "do-not-share": "Пожалуйста, {do-not} делитесь своим приватным ключом с кем-либо! Вы можете потерять свои деньги, если поделитесь им"
+  },
+  "network-addr": {
+    "string": "Сеть и Адрес",
+    "addr-to-interact": "Адрес для взаимодействия",
+    "id": "ID",
+    "icon": "иконка"
+  },
+  "path": {
+    "string": "Путь",
+    "hd-derivation": "Путь деривации HD",
+    "custom": "Кастомные пути",
+    "add-custom": "Добавить кастомный путь",
+    "ivalid-custom": "Неверный кастомный путь",
+    "invalid-desc": "Путь: {path} не подходит для этого устройства",
+    "alias": "Название"
+  },
+  "pin": {
+    "string": "PIN-код",
+    "enter": "Введите PIN-код для {device}",
+    "layout": "Раскладка PIN-кода отображается на вашем аппаратном кошельке",
+    "access": "Для доступа к моему кошельку,",
+    "accept": "Я принимаю",
+    "terms": "Условия и Положения"
+  },
+  "json-file": "Файл-хранилищe ключa",
+  "accept-terms": "Для получения доступа, я принимаю {terms}",
+  "hd-derivation-path": "Путь деривации HD",
+  "custom-paths": "Кастомные пути",
+  "add-custom-path": "Добавить кастомный путь",
+  "interact-addr": "Адрес для взаимодействия",
+  "id": "ID",
+  "network-and-address": "Сеть и адрес",
+  "please-type-in-mnemonic-phrase": "Введите вашу мнемоническую фразу.",
+  "password": "Пароль",
+  "access-wallet-or": "или",
+  "web3-wallet-desc": "MetaMask; Dapper",
+  "web3-wallet": "MEW CX",
+  "refresh": "Обновить",
+  "unlock-web3-wallet": "Не удается получить доступ к кошельку! Пожалуйста, разблокируйте ваш кошелек через расширение для браузера",
+  "try-again": "Повторить попытку",
+  "invalid-path-desc": "Путь: {path} не подходит для этого устройства",
+  "wallet-info": "Информация о кошельке",
+  "wallet-options": "Проверьте историю транзакций, скачайте новый файл-хранилищe ключa, распечатайте бумажный кошелек и многое другое!",
+  "xwallet-desc": "Используйте аккаунт Pundi X Savings от MEW для сканирования QR-кода сверху",
+  "xwallet-title": "Доступ через XWallet",
+  "get-it-now": "Загрузить сейчас",
+  "or": "ИЛИ ПОДКЛЮЧИТЬСЯ С",
+  "wallet-connect": "WalletConnect",
+  "wallet-link": "WalletLink"
+}
