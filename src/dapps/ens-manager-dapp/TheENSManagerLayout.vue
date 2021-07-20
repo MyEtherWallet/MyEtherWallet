@@ -504,7 +504,6 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$refs.registerDomain.reset();
     },
     setName(name) {
       if (this.name === null || this.name === '') {

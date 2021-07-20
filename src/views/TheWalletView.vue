@@ -43,7 +43,6 @@ export default {
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
     ...mapGetters('global', ['network']),
     ...mapState('external', ['coinGeckoTokens']),
-    ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {

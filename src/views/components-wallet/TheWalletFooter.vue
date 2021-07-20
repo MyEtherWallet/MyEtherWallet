@@ -7,7 +7,13 @@
     class="mew-component--wallet-footer pa-0"
   >
     <v-container
-      class="d-flex align-center justify-center wallet-content-container pa-6"
+      class="
+        d-flex
+        align-center
+        justify-center
+        wallet-content-container
+        pa-md-6
+      "
       fluid
     >
       <v-row class="align-center justify-space-between">
