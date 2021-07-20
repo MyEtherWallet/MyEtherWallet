@@ -9,6 +9,7 @@
     display: grid;
     grid-column-gap: 0;
     grid-template-columns: 270px 1fr;
+    padding-top: 35px;
 
     @media all and (max-width: $interface--mobile-side-menu--width) {
       grid-template-columns: 0 1fr;

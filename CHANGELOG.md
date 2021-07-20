@@ -1,7 +1,15 @@
+### v5.8.4
+
+### Fixes
+
+- fix: a bunch of fixes for v5 [#3266](https://github.com/MyEtherWallet/MyEtherWallet/pull/3266)
 
 ### v5.8.3
-### Feat 
+
+### Feat
+
 - Update welcome modal text [#3232](https://github.com/MyEtherWallet/MyEtherWallet/pull/3232)
+
 ### v5.8.2
 
 ### Devop

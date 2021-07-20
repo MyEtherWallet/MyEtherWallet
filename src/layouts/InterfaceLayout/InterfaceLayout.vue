@@ -304,6 +304,7 @@ export default {
     ]),
     fetchSetTokens() {
       this.setTokens().then(res => {
+        this.$eventHub.$emit('userTokens', res);
         this.tokens = res;
         this.receivedTokens = true;
       });
@@ -802,6 +803,7 @@ export default {
           this.getBalance();
           this.setTokens().then(res => {
             this.tokens = res;
+            this.$eventHub.$emit('userTokens', res);
             this.receivedTokens = true;
           });
           this.setNonce();

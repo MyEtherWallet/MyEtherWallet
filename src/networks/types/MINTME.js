@@ -8,7 +8,7 @@ export default {
   homePage: 'https://www.mintme.com/coin/',
   blockExplorerTX: 'https://www.mintme.com/explorer/tx/[[txHash]]',
   blockExplorerAddr: 'https://www.mintme.com/explorer/addr/[[address]]',
-  chainID: 24484,
+  chainID: 24734,
   tokens: tokens,
   contracts: contracts,
   icon: mintme,
