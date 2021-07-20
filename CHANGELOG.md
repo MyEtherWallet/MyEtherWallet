@@ -2,6 +2,23 @@
 
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
 
+### Release v6.0.3-hotfix.1
+
+### Fix
+
+* Add scoped to mew wallet banner scss[#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
+
+### Release v6.0.3
+
+### Feature
+
+* Add MEW wallet banner [#3295](https://github.com/MyEtherWallet/MyEtherWallet/pull/3295)
+
+### Fix
+
+* add mew notification prop to hide indicator \[#3302] (https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
+* fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
+
 ### Release v6.0.2
 
 ### Devop

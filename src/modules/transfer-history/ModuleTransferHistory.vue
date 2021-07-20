@@ -6,7 +6,11 @@
       </v-col>
       <v-col cols="12" class="px-0">
         <div v-for="(data, key) in actualNotifications" :key="key">
-          <mew-notification :notification="data.notification" class="px-0" />
+          <mew-notification
+            :show-indicator="false"
+            :notification="data.notification"
+            class="px-0"
+          />
         </div>
       </v-col>
     </v-row>

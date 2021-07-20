@@ -12,13 +12,8 @@ class GivenProvider {
   constructor(host) {
     this.givenProvider = host;
     const requestManager = new Web3RequestManager(host);
-    if (this.givenProvider.request) {
+    if (this.givenProvider.request && !this.givenProvider.request_) {
       this.givenProvider.request_ = this.givenProvider.request;
-      delete this.givenProvider.request;
-    }
-    if (this.givenProvider.send) {
-      this.givenProvider.send_ = this.givenProvider.send;
-      delete this.givenProvider.send;
     }
     this.givenProvider.request = payload => {
       return new Promise((resolve, reject) => {
