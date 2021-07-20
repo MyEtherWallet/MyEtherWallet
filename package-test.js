@@ -69,7 +69,8 @@ const EXCEPTIONS = [
   'prettier', // 5-26-21
   '@ledgerhq/hw-app-eth', // 7-2-21 major version change
   '@ledgerhq/hw-transport-webusb', // 7-2-21 major version change
-  'package-json' // 7-2-21 major version change
+  'package-json', // 7-2-21 major version change
+  'luxon' // 7-20-21 major version change
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
