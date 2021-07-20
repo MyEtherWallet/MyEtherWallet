@@ -122,7 +122,7 @@
             </p>
             <v-spacer />
             <v-sheet width="150" color="transparent">
-              <!-- <v-select
+              <v-select
                 v-model="select"
                 append-icon="mdi-chevron-down"
                 :items="languages"
@@ -131,7 +131,7 @@
                 return-object
                 single-line
                 dark
-              ></v-select> -->
+              ></v-select>
             </v-sheet>
           </div>
         </v-container>
@@ -265,7 +265,7 @@
             <div class="d-flex align-center justify-space-between">
               <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
               <v-sheet width="150" color="transparent">
-                <!-- <v-select
+                <v-select
                   v-model="select"
                   append-icon="mdi-chevron-down"
                   :items="languages"
@@ -274,7 +274,7 @@
                   return-object
                   single-line
                   dark
-                ></v-select> -->
+                ></v-select>
               </v-sheet>
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
@@ -383,39 +383,39 @@ export default {
         ]
       }
     ],
-    // select: 'en',
-    // languages: [
-    //   {
-    //     name: 'English',
-    //     value: 'en',
-    //     flag: require('@/assets/images/flags/uk.png')
-    //   },
-    //   {
-    //     name: 'Russian',
-    //     value: 'ru',
-    //     flag: require('@/assets/images/flags/russia.png')
-    //   },
-    //   {
-    //     name: 'Germany',
-    //     value: 'ge',
-    //     flag: require('@/assets/images/flags/germany.png')
-    //   },
-    //   {
-    //     name: 'Chinese',
-    //     value: 'ch',
-    //     flag: require('@/assets/images/flags/china.png')
-    //   },
-    //   {
-    //     name: 'Korean',
-    //     value: 'kr',
-    //     flag: require('@/assets/images/flags/korea.png')
-    //   },
-    //   {
-    //     name: 'Japanese',
-    //     value: 'jp',
-    //     flag: require('@/assets/images/flags/japan.png')
-    //   }
-    // ],
+    select: 'en_US',
+    languages: [
+      {
+        name: 'English',
+        value: 'en_US',
+        flag: require('@/assets/images/flags/uk.png')
+      },
+      {
+        name: 'Russian',
+        value: 'ru_RU',
+        flag: require('@/assets/images/flags/russia.png')
+      }
+      //   {
+      //     name: 'Germany',
+      //     value: 'ge',
+      //     flag: require('@/assets/images/flags/germany.png')
+      //   },
+      //   {
+      //     name: 'Chinese',
+      //     value: 'ch',
+      //     flag: require('@/assets/images/flags/china.png')
+      //   },
+      //   {
+      //     name: 'Korean',
+      //     value: 'kr',
+      //     flag: require('@/assets/images/flags/korea.png')
+      //   },
+      //   {
+      //     name: 'Japanese',
+      //     value: 'jp',
+      //     flag: require('@/assets/images/flags/japan.png')
+      //   }
+    ],
     socialIcons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
@@ -455,7 +455,14 @@ export default {
       }
     ],
     ROUTES_HOME: ROUTES_HOME
-  })
+  }),
+  watch: {
+    select({ value }) {
+      if (this.$i18n.locale !== value) {
+        this.$i18n.locale = value;
+      }
+    }
+  }
 };
 </script>
 
