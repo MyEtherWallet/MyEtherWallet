@@ -90,6 +90,7 @@
   "fill-out-required-fields":"Please meke sure to fill out all required forms before click submit button.",
   "okay":"Okay",
   "successful":"Great! Your Dapp information have been successfully submitted.",
-  "failed":"Great! Your Dapp information have been successfully submitted.",
-  "try-again":"There was some error and Dapp submission was failed. Please try again."
+  "failed":"Un oh... Dapp submission failed...",
+  "try-again":"We are sorry. There was some error and Dapp submission failed. Please try again. if this error persists, contact support.",
+  "progress":"Keep going, because you are almost finished..."
 }

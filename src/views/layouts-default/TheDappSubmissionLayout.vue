@@ -3,9 +3,16 @@
     <the-layout-header
       :title="$t('dappsSubmission.banner-submit.dapp-submission-form')"
     />
-    <v-form ref="form">
+    <v-form ref="form" @input="progress">
       <v-container class="my-10">
         <v-row>
+          <!--
+          =================================================================
+          *****************************************************************
+          Main content
+          *****************************************************************
+          =================================================================
+          -->
           <v-col cols="12" md="8">
             <div style="max-width: 500px">
               <div class="mew-heading-1">
@@ -474,7 +481,7 @@
             ></mew-button>
 
             <div
-              v-show="!allFormsValid"
+              v-show="!areAllRequiredFormsValid"
               class="text-center mx-auto mt-4 mb-4 error--text"
               style="max-width: 300px"
             >
@@ -482,14 +489,42 @@
             </div>
           </v-col>
 
+          <!--
+          =================================================================
+          *****************************************************************
+          Side column
+          *****************************************************************
+          =================================================================
+          -->
           <v-col cols="12" md="4">
             <div style="position: sticky; top: 0">
+              <!--
+              =================================================================
+              Progress (side)
+              =================================================================
+              -->
+              <div class="walletBg pa-6 d-none d-md-block">
+                <div class="mew-heading-2">
+                  {{ $t('dappsSubmission.progress') }}
+                </div>
+                <v-progress-linear
+                  v-model="validRequiredFormsRate"
+                  color="primary"
+                  height="25"
+                  class="mt-5"
+                >
+                  <template #default="{ value }">
+                    <strong>{{ Math.ceil(value) }}%</strong>
+                  </template>
+                </v-progress-linear>
+              </div>
+
               <!--
               =================================================================
               State of the Dapps (side)
               =================================================================
               -->
-              <div class="walletBg pa-6">
+              <div class="walletBg pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
                     {{ $t('dappsSubmission.sotd.title') }}
@@ -499,6 +534,7 @@
                     alt="stateofthedapps.com"
                     height="50"
                     class="ml-3"
+                    style="border-radius: 50%"
                   />
                 </div>
                 <div class="mt-5">
@@ -554,23 +590,21 @@
     Success (dialog)
     =================================================================
     -->
-    <v-dialog v-model="formSubmitted" width="500">
-      <v-card>
-        <v-card-title class="text-h5">
+    <v-dialog v-model="formSubmissionSuccessful" width="500">
+      <div class="pa-5 white">
+        <div class="mew-heading-2">
           {{ $t('dappsSubmission.successful') }}
-        </v-card-title>
-        <v-card-text class="mew-body">
+        </div>
+        <div class="mt-3">
           {{ $t('dappsSubmission.congrats-msg') }}
-        </v-card-text>
-        <v-card-actions class="pb-4">
-          <mew-button
-            class="ml-auto d-block"
-            :title="$t('dappsSubmission.okay')"
-            @click.native="$router.push({ name: 'Home' })"
-          >
-          </mew-button>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <mew-button
+          class="ml-auto d-block mt-5"
+          :title="$t('dappsSubmission.okay')"
+          @click.native="$router.push({ name: 'Home' })"
+        >
+        </mew-button>
+      </div>
     </v-dialog>
 
     <!--
@@ -578,23 +612,21 @@
     Failed (dialog)
     =================================================================
     -->
-    <v-dialog v-model="error" width="500">
-      <v-card>
-        <v-card-title class="text-h5">
+    <v-dialog v-model="formSubmissionFailed" width="500">
+      <div class="pa-5 white">
+        <div class="mew-heading-2 error--text">
           {{ $t('dappsSubmission.failed') }}
-        </v-card-title>
-        <v-card-text class="mew-body">
+        </div>
+        <div class="mt-3 error--text">
           {{ $t('dappsSubmission.try-again') }}
-        </v-card-text>
-        <v-card-actions class="pb-4">
-          <mew-button
-            class="ml-auto d-block"
-            :title="$t('dappsSubmission.okay')"
-            @click.native="error = false"
-          >
-          </mew-button>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <mew-button
+          class="ml-auto d-block mt-5"
+          :title="$t('dappsSubmission.okay')"
+          @click.native="formSubmissionFailed = false"
+        >
+        </mew-button>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -608,9 +640,10 @@ export default {
   name: 'DappSubmition',
   components: { TheLayoutHeader },
   data: () => ({
-    allFormsValid: true,
-    formSubmitted: false,
-    error: false,
+    validRequiredFormsRate: 0,
+    areAllRequiredFormsValid: true,
+    formSubmissionSuccessful: false,
+    formSubmissionFailed: false,
     form: {
       dappName: '',
       tags: [],
@@ -680,9 +713,9 @@ export default {
       }
 
       // Validate input field reqirements
-      this.allFormsValid = this.$refs.form.validate();
+      this.areAllRequiredFormsValid = this.$refs.form.validate();
 
-      if (this.allFormsValid) {
+      if (this.areAllRequiredFormsValid) {
         axios({
           method: 'post',
           url: 'https://formspree.io/f/mqjndkkx',
@@ -690,12 +723,32 @@ export default {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
           .then(() => {
-            this.formSubmitted = true;
+            this.formSubmissionSuccessful = true;
           })
           .catch(() => {
-            this.error = true;
+            this.formSubmissionFailed = true;
           });
       }
+    },
+    progress() {
+      // Total 14 required forms
+      const validFormCount =
+        (this.form.dappName === '' ? 0 : 1) +
+        (this.form.category === null ? 0 : 1) +
+        (this.form.tags.length === 0 ? 0 : 1) +
+        (this.form.description === '' ? 0 : 1) +
+        (this.form.contractAddress === '' ? 0 : 1) +
+        (this.form.usMarket === null ? 0 : 1) +
+        (this.form.dappStatus === null ? 0 : 1) +
+        (this.form.mockFlowFile === null ? 0 : 1) +
+        (this.form.dappIconFile === null ? 0 : 1) +
+        (this.form.bannerFile === null ? 0 : 1) +
+        (this.form.authors === '' ? 0 : 1) +
+        (this.form.fullName === '' ? 0 : 1) +
+        (this.form.email === '' ? 0 : 1) +
+        (this.form.socialLinks.length === 0 ? 0 : 1);
+
+      this.validRequiredFormsRate = (validFormCount / 14) * 100;
     }
   }
 };
