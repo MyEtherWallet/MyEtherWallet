@@ -1,3 +1,6 @@
+### Fix
+* Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
+
 ### Release v6.0.3
 
 ### Feature
