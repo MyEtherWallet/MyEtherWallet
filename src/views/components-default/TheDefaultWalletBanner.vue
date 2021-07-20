@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .close-container {
   position: absolute;
   right: 20px;
