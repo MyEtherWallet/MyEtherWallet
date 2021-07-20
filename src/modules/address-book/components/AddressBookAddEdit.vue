@@ -150,8 +150,10 @@ export default {
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? utils.isAddress(this.resolvedAddr)
-        : utils.isAddress(this.addressToAdd);
+        ? utils.isAddress(this.resolvedAddr) &&
+            utils.isHexStrict(this.resolvedAddr)
+        : utils.isAddress(this.addressToAdd) &&
+            utils.isHexStrict(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
