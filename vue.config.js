@@ -11,7 +11,7 @@ const sourceMapsConfig = {
 if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
   sourceMapsConfig.exclude = /vendors.*.*/;
 const webpackConfig = {
-  devtool: false,
+  devtool: 'source-map',
   node: {
     process: true
   },
@@ -24,7 +24,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "font-src 'self' data:; default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443; img-src 'self' nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+        "font-src 'self' data:; default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 https://js.stripe.com:443 connect.trezor.io:443; img-src 'self' nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
         allowedConnections.join(' ') +
         ';',
       'X-Content-Type-Options': 'nosniff',

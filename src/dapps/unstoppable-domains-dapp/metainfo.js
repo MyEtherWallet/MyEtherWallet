@@ -1,4 +1,5 @@
 import layout from './UnstoppableDomain';
+import { ETH } from '@/utils/networks/types';
 export default {
   title: 'Unstoppable Domains',
   subtitle: 'Buy a .crypto domain or manage your .crypto domains',
@@ -6,7 +7,7 @@ export default {
   rightIconType: 'mew',
   rightIcon: 'stake',
   path: 'unstoppable',
-  networks: [],
+  networks: [ETH],
   layout,
   meta: {
     noAuth: false

@@ -54,10 +54,6 @@ export default {
       bannerImage: bannerImage,
       bannerText: {
         title: 'Explore MEW DApps'
-      },
-      noDappsAvailable: {
-        title: `DApps are are not supported on this network`,
-        subtitle: 'Please select a different network'
       }
     };
   },
