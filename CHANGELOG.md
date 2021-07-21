@@ -1,6 +1,7 @@
 ### Fix
 
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
+* fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 
 ### Release v6.0.3-hotfix.1
 
