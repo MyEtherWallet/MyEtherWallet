@@ -1,3 +1,6 @@
+### Feature
+* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+
 ### Release v6.0.3-hotfix.1
 
 ### Fix
