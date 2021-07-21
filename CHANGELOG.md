@@ -1,3 +1,5 @@
+### Feature
+* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
 ### Fix
 
 * Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
