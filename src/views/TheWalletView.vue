@@ -17,7 +17,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber, toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -96,7 +96,11 @@ export default {
         if (this.gasPriceType === gasPriceTypes.STORED) {
           this.setGasPrice(this.baseGasPrice);
         } else {
-          this.setGasPrice(res);
+          const modifiedGasPrice = toBN(res).muln(
+            this.network.type.gasPriceMultiplier
+          );
+          console.log(modifiedGasPrice.toString(), res);
+          this.setGasPrice(modifiedGasPrice.toString());
         }
       });
     },
