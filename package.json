@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.0.2",
+  "version": "6.0.3-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -39,7 +39,7 @@
     "@ensdomains/address-encoder": "0.2.6",
     "@ensdomains/ens-contracts": "0.0.5",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.5.96-beta",
+    "@myetherwallet/mew-components": "0.5.98-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.9.0",
     "@sentry/tracing": "6.9.0",
@@ -65,7 +65,7 @@
     "highcharts": "9.1.2",
     "highcharts-vue": "1.4.0",
     "idna-uts46": "1.1.0",
-    "lottie-web": "5.7.11",
+    "lottie-web": "5.7.12",
     "moment": "2.29.1",
     "package-json": "7.0.0",
     "platform": "1.3.6",
