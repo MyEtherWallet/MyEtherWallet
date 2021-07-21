@@ -2,7 +2,8 @@
 
 ### Fix
 
-* Add scoped to mew wallet banner scss[#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
+* Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
+* Add scoped to mew wallet banner scss [#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
 
 ### Release v6.0.3
 
