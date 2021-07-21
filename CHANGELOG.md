@@ -5,7 +5,7 @@
 
 ### Feat
 
-* reset send and swap forms after pressing next [#3312](https://github.com/MyEtherWallet/MyEtherWallet/pull/3312)
+* reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
 
 ### Release v6.0.3-hotfix.1
 
