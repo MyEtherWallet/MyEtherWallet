@@ -241,7 +241,12 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
     isDisabledNextBtn() {
       return (
@@ -319,7 +324,7 @@ export default {
             disabled: true,
             text: 'Your wallet is empty.',
             linkText: this.isEthNetwork ? 'Buy ETH' : '',
-            link: this.isEthNetwork ? 'https://ccswap.myetherwallet.com/#/' : ''
+            link: this.isEthNetwork ? this.swapLink : ''
           })
         : null;
       return [

@@ -351,7 +351,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -869,7 +874,8 @@ export default {
       return [];
     },
     buyEth() {
-      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = _.clone(this.fromTokenType);
