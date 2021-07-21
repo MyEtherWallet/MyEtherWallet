@@ -115,7 +115,6 @@ export default {
       this.isValidAddress = false;
       this.$refs.addressSelect.clear();
 
-      console.log(this.$refs.addressSelect);
       // Calls setups from mounted
       if (this.network.type.ens)
         this.nameResolver = new NameResolver(this.network);
