@@ -71,7 +71,7 @@
         =====================================================================================
         -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book @setAddress="setAddress" />
+          <module-address-book ref="addressInput" @setAddress="setAddress" />
         </v-col>
         <!--
       =====================================================================================
@@ -498,7 +498,6 @@ export default {
     },
     network() {
       this.clear();
-      this.setSendTransaction();
     }
   },
   mounted() {
@@ -525,6 +524,35 @@ export default {
     }, 500);
   },
   methods: {
+    /**
+     * Resets values to default
+     */
+    clear() {
+      this.$refs.addressInput.clear();
+      this.toAddress = '';
+      this.selectedCurrency = this.tokensList[0];
+      this.sendTx = null;
+      this.isValidAddress = false;
+      this.amount = '0';
+      this.data = '0x';
+      this.userInputType = '';
+      this.localGasPrice = '0';
+      this.localGasType = 'economy';
+      this.defaultGasLimit = '21000';
+      this.gasLimitError = '';
+      this.amountError = '';
+      this.gasEstimationError = '';
+      this.gasEstimationIsReady = false;
+
+      // resets the defaults on mount
+      this.setSendTransaction();
+      this.gasLimit = this.prefilledGasLimit;
+      this.sendTx.setCurrency(this.selectedCurrency);
+      this.handleLocalGasPrice({
+        gasType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      });
+    },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
      */
@@ -616,6 +644,7 @@ export default {
       this.sendTx.submitTransaction().catch(error => {
         this.error = error;
       });
+      this.clear();
     },
     prefillForm() {
       if (this.isPrefilled) {
@@ -633,14 +662,6 @@ export default {
         Toast(this.$t('sendTx.prefilled-warning'), {}, WARNING, 1000);
         this.clearPrefilled();
       }
-    },
-    clear() {
-      this.data = '';
-      this.amount = '0';
-      this.isValidAddress = false;
-      this.toAddress = '';
-      this.$refs.mewSelect.clear();
-      this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
       const amt = toBN(amount).toString();
