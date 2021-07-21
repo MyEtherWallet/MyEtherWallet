@@ -756,7 +756,7 @@ export default {
     },
     network() {
       if (this.isAvailable) {
-        this.setupSwap();
+        this.clear();
       }
     },
     mainTokenDetails() {
