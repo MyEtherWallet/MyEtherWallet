@@ -51,8 +51,9 @@
               target="_blank"
               >Help Center</a
             >
-            <span class="mx-5">|</span>
-            <div style="max-width=200px">
+            <!-- hiding for now until we get translations implemented -->
+            <!-- <span class="mx-5">|</span> -->
+            <!-- <div style="max-width=200px">
               <v-select
                 v-model="onLanguage"
                 append-icon="mdi-chevron-down"
@@ -62,7 +63,7 @@
                 return-object
                 single-line
               ></v-select>
-            </div>
+            </div> -->
           </div>
         </v-col>
       </v-row>
