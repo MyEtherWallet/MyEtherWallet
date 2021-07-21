@@ -586,19 +586,23 @@ export default {
      */
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name].map(token => {
-        if (token.cgid) {
-          const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = foundToken.pricef;
-          return Object.assign(token, foundToken);
-        }
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          token = Object.assign(token, foundToken);
-          token.price = token.pricef;
-        }
-        return token;
-      });
+      return TRENDING_LIST[this.network.type.name]
+        .filter(token => {
+          return token.contract !== this.fromTokenType.contract;
+        })
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = foundToken.pricef;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            token = Object.assign(token, foundToken);
+            token.price = token.pricef;
+          }
+          return token;
+        });
     },
     totalFees() {
       const gasPrice =
