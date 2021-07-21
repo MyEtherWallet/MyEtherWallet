@@ -99,7 +99,6 @@ export default {
           const modifiedGasPrice = toBN(res).muln(
             this.network.type.gasPriceMultiplier
           );
-          console.log(modifiedGasPrice.toString(), res);
           this.setGasPrice(modifiedGasPrice.toString());
         }
       });
