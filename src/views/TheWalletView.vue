@@ -1,12 +1,9 @@
 <template>
   <div class="wallet-main">
     <the-wallet-side-menu />
-    <the-wallet-header />
-    <v-main class="pt-8">
-      <v-container
-        class="pa-2 pa-md-3 mb-14 align-center wallet-content-container"
-        fluid
-      >
+    <v-main>
+      <v-container class="pa-2 pa-md-3 mb-14 align-center" fluid>
+        <the-wallet-header />
         <module-confirmation />
         <router-view />
       </v-container>
