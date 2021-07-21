@@ -1,5 +1,9 @@
 ### Feature
 * Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+### Fix
+
+* fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
+* fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 
 ### Release v6.0.3-hotfix.1
 
@@ -15,6 +19,7 @@
 
 ### Fix
 
+* fix error message property of undefined [#3292](https://github.com/MyEtherWallet/MyEtherWallet/pull/3292)
 * add mew notification prop to hide indicator \[#3302] (https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
 * fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
 
