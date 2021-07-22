@@ -1,13 +1,19 @@
+### Feature
+
+* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+
 ### Fix
 
 * Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
 * fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
+* hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
 
 ### Release v6.0.3-hotfix.1
 
 ### Fix
 
+* fix route import [#3291](https://github.com/MyEtherWallet/MyEtherWallet/pull/3291)
 * Add scoped to mew wallet banner scss[#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
 
 ### Release v6.0.3
