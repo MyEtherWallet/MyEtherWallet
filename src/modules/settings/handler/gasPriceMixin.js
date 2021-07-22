@@ -7,6 +7,7 @@ import {
 } from '@/core/helpers/gasPriceHelper';
 import { fromWei, toWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { toBN } from 'web3-utils';
 
 const gasPriceMixin = {
   data() {
@@ -17,7 +18,7 @@ const gasPriceMixin = {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice']),
+    ...mapGetters('global', ['gasPrice', 'network']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType', 'baseGasPrice']),
     gasButtons() {
@@ -104,7 +105,10 @@ const gasPriceMixin = {
     },
     fetchGasPrice() {
       this.web3.eth.getGasPrice().then(gp => {
-        this.localGas = gp;
+        const modifiedGasPrice = toBN(gp).muln(
+          this.network.type.gasPriceMultiplier
+        );
+        this.localGas = modifiedGasPrice.toString();
       });
     }
   }

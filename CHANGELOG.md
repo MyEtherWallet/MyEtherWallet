@@ -5,10 +5,12 @@
 ### Fix
 
 * fix set ipfs hash button visible while uploading file [#3321](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
+* fix polygon gasprice issue [#3312](https://github.com/MyEtherWallet/MyEtherWallet/pull/3312)
 * Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
 * fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
+* Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
 
 ### Release v6.0.3-hotfix.1
 
