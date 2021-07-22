@@ -79,6 +79,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 const STATIC_PAIRS = [
   {
@@ -167,7 +168,8 @@ export default {
       swapHandler: null,
       swapData: null,
       loading: true,
-      error: false
+      error: false,
+      ROUTES_HOME: ROUTES_HOME
     };
   },
   computed: {

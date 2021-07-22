@@ -56,7 +56,6 @@ const setWeb3Instance = function (
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
   web3Instance.eth.transactionConfirmationBlocks = 1;
-  web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
     // eslint-disable-next-line no-async-promise-executor

@@ -30,6 +30,7 @@
                 />
               </div>
               <mew-input
+                ref="amountInput"
                 label="Amount"
                 placeholder="0"
                 type="number"
@@ -585,19 +586,23 @@ export default {
      */
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name].map(token => {
-        if (token.cgid) {
-          const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = foundToken.pricef;
-          return Object.assign(token, foundToken);
-        }
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          token = Object.assign(token, foundToken);
-          token.price = token.pricef;
-        }
-        return token;
-      });
+      return TRENDING_LIST[this.network.type.name]
+        .filter(token => {
+          return token.contract !== this.fromTokenType.contract;
+        })
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = foundToken.pricef;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            token = Object.assign(token, foundToken);
+            token.price = token.pricef;
+          }
+          return token;
+        });
     },
     totalFees() {
       const gasPrice =
@@ -755,15 +760,7 @@ export default {
     },
     network() {
       if (this.isAvailable) {
-        this.isLoading = true;
-        this.swapper = new Swapper(this.web3, this.network.type.name);
-        this.swapper
-          .getAllTokens()
-          .then(this.processTokens)
-          .then(() => {
-            this.setDefaults();
-            this.isLoading = false;
-          });
+        this.clear();
       }
     },
     mainTokenDetails() {
@@ -781,29 +778,71 @@ export default {
     }
   },
   mounted() {
-    this.isLoading = !this.prefetched;
-    this.swapper = new Swapper(this.web3, this.network.type.name);
-    if (!this.prefetched) {
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
-    } else {
-      this.processTokens(this.swapTokens, false);
-      this.setDefaults();
-      this.isLoading = false;
-    }
-    this.handleLocalGasPrice({
-      gasType: this.gasPriceType,
-      gasPrice: this.gasPrice
-    });
+    this.setupSwap();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    setupSwap() {
+      this.isLoading = !this.prefetched;
+      this.swapper = new Swapper(this.web3, this.network.type.name);
+      if (!this.prefetched) {
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      } else {
+        this.processTokens(this.swapTokens, false);
+        this.setDefaults();
+        this.isLoading = false;
+      }
+      this.handleLocalGasPrice({
+        gasType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      });
+    },
+    // reset values after executing transaction
+    clear() {
+      this.step = 0;
+      this.confirmInfo = {
+        to: '',
+        from: '',
+        fromImg: '',
+        toImg: '',
+        fromType: '',
+        toType: '',
+        validUntil: 0,
+        selectedProvider: '',
+        totalFees: ''
+      };
+
+      this.toTokenswapper = null;
+      this.toTokentoTokenType = {};
+      this.toTokenfromTokenType = {};
+      this.toTokentokenInValue = '0';
+      this.toTokentokenOutValue = '0';
+      this.availableTokens = { toTokens: [], fromTokens: [] };
+      this.availableQuotes = [];
+      this.currentTrade = null;
+      this.allTrades = [];
+      this.isLoading = false;
+      this.loadingFee = false;
+      this.feeError = '';
+      this.defaults = {
+        fromToken: this.fromToken
+      };
+      this.isLoadingProviders = false;
+      this.addressValue = {};
+      this.selectedProvider = {};
+      this.localGasPrice = '0';
+      this.localGasType = 'economy';
+      this.$refs.toToken.clear();
+      this.$refs.amountInput.clear();
+      this.setupSwap();
+    },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
@@ -1050,6 +1089,7 @@ export default {
         .catch(err => {
           Toast(err.message, {}, ERROR);
         });
+      this.clear();
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(

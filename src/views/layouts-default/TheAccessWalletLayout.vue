@@ -272,7 +272,7 @@ export default {
           await window.ethereum.enable();
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, web3.currentProvider]);
+          this.setWallet([wallet, window.ethereum]);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

@@ -1,12 +1,12 @@
 <template>
-  <v-sheet>
+  <div>
     <the-default-header />
     <v-main>
       <router-view />
     </v-main>
     <the-default-footer />
     <the-default-wallet-banner />
-  </v-sheet>
+  </div>
 </template>
 
 <script>
