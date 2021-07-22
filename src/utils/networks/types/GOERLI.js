@@ -1,7 +1,7 @@
 import tokens from '@/_generated/tokens/tokens-goerli.json';
 import contracts from '@/_generated/contracts/contract-abi-goerli.json';
 import { GOERLI } from '../tlds';
-import goerli from '@/assets/images/networks/eth.svg';
+import goerli from '@/assets/images/networks/network.svg';
 
 export default {
   name: 'GOERLI',
@@ -29,5 +29,6 @@ export default {
     blockExplorerAddr: '',
     websocket: null
   },
+  gasPriceMultiplier: 1,
   coingeckoID: null
 };

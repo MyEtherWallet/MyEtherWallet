@@ -1,4 +1,4 @@
-name: add to mewbuilds
+name: add to mewbuilds [v6]
 
 on:
   push:
@@ -15,19 +15,18 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: setup env
+        id: node-version
         run: |
           docker build -t mew-build-container .
           echo ::set-output name=NODE_VERSION::$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "node --version")
 
       - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+        uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{steps.node-version.outputs.NODE_VERSION}}-
+            ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
       - name: npm install
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
@@ -53,17 +52,17 @@ jobs:
           chmod 400 ipfs-host.pem
           hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh --`
           HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
-          aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$GITHUB_SHA
-          aws s3 cp s3://mewbuilds/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/build/$GITHUB_SHA/service-worker.js \
+          aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/v6/build/$GITHUB_SHA
+          aws s3 cp s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type application/javascript --acl public-read
-          aws s3 cp s3://mewbuilds/build/$GITHUB_SHA/index.html s3://mewbuilds/build/$GITHUB_SHA/index.html \
+          aws s3 cp s3://mewbuilds/v6/build/$GITHUB_SHA/index.html s3://mewbuilds/v6/build/$GITHUB_SHA/index.html \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type text/html --acl public-read
           cd dist && zip -r ../MyEtherWallet-$GITHUB_SHA.zip * && cd ..
           VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://v6.mewbuilds.com/${GITHUB_SHA}/index.html<br/> \
                             https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \

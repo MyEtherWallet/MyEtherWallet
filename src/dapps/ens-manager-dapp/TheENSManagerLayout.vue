@@ -168,6 +168,7 @@
                 <v-row class="pa-7">
                   <v-col
                     v-for="(option, key) in manageDomainOptions"
+                    v-show="!domain.expired || key === 1"
                     :key="key"
                     cols="6"
                     sm="6"
@@ -503,7 +504,6 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$refs.registerDomain.reset();
     },
     setName(name) {
       if (this.name === null || this.name === '') {

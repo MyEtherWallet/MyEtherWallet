@@ -9,7 +9,7 @@
       <v-row>
         <v-col cols="12" lg="7">
           <v-img
-            src="@/assets/images/snippets/my-tokens-table.png"
+            src="@/assets/images/snippets/my-tokens-table.svg"
             class="mb-n7"
           />
         </v-col>
@@ -45,7 +45,7 @@
               <p class="white--text">
                 MEW automatically supports most ERC20 tokens through our API,
                 but if you don’t see the token you’re looking for, you can add
-                it as a custom token right into the interface!
+                it as a custom token right in the interface!
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a
@@ -73,8 +73,7 @@ export default {
       textProps: 'white--text',
       toptitle: '',
       title: 'Tokens',
-      description:
-        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+      description: 'If it is on Ethereum you can manage it with MEW.',
       centered: false
     }
   })

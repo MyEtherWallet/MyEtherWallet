@@ -74,7 +74,7 @@ const getCoinGeckoTokenById = state => cgid => {
     symbol: cgToken ? cgToken.symbol.toUpperCase() : '',
     subtext: cgToken ? cgToken.name : '',
     value: cgToken ? cgToken.name : '',
-    img: cgToken ? cgToken.image : '',
+    img: cgToken ? `https://img.mewapi.io/?image=${cgToken.image}` : '',
     market_cap: cgToken ? cgToken.market_cap : '0',
     market_capf: cgToken ? formatIntegerValue(cgToken.market_cap).value : '0',
     price_change_percentage_24h: cgToken
@@ -92,16 +92,19 @@ const getCoinGeckoTokenById = state => cgid => {
  * Get Token info including market data if exists
  */
 const contractToToken =
-  (state, getters, rootState, rootGetters) => contractAdress => {
-    contractAdress = contractAdress.toLowerCase();
-    let tokenId = platformList[contractAdress];
-    if (contractAdress === MAIN_TOKEN_ADDRESS) {
+  (state, getters, rootState, rootGetters) => contractAddress => {
+    if (!contractAddress) {
+      return null;
+    }
+    contractAddress = contractAddress.toLowerCase();
+    let tokenId = platformList[contractAddress];
+    if (contractAddress === MAIN_TOKEN_ADDRESS) {
       tokenId = rootGetters['global/network'].type.coingeckoID;
       const networkType = rootGetters['global/network'].type;
       cgToken = getters.getCoinGeckoTokenById(tokenId);
       return Object.assign(cgToken, {
-        name: networkType.name,
-        symbol: networkType.name,
+        name: networkType.currencyName,
+        symbol: networkType.currencyName,
         subtext: networkType.name_long,
         value: networkType.name_long,
         contract: MAIN_TOKEN_ADDRESS,
@@ -111,12 +114,12 @@ const contractToToken =
     }
     let cgToken;
     cgToken = getters.getCoinGeckoTokenById(tokenId);
-    let networkToken = tempTokenCache[contractAdress];
+    let networkToken = tempTokenCache[contractAddress];
     if (!networkToken) {
       networkToken = rootGetters['global/network'].type.tokens.find(
-        t => t.address.toLowerCase() === contractAdress
+        t => t.address.toLowerCase() === contractAddress
       );
-      tempTokenCache[contractAdress] = networkToken;
+      tempTokenCache[contractAddress] = networkToken;
     }
     if (!networkToken) return null;
     return Object.assign(cgToken, {

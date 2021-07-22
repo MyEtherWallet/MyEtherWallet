@@ -5,7 +5,7 @@
         Values
       =====================================================================================
     -->
-    <confirmation-values-container :items="valueItems" is-swap />
+    <confirmation-values-container :items="valueItems" is-custom />
     <!--
       =====================================================================================
         Summary
@@ -59,10 +59,6 @@ export default {
         };
       }
     },
-    gasPriceType: {
-      type: String,
-      default: ''
-    },
     fromVal: {
       type: String,
       default: '0'
@@ -70,14 +66,6 @@ export default {
     toVal: {
       type: String,
       default: '0'
-    },
-    to: {
-      type: String,
-      default: ''
-    },
-    from: {
-      type: String,
-      default: ''
     },
     fromImg: {
       type: String,
@@ -95,21 +83,17 @@ export default {
       type: String,
       default: ''
     },
-    show: {
-      type: Boolean,
-      default: false
+    fromUsd: {
+      type: String,
+      default: ''
+    },
+    toUsd: {
+      type: String,
+      default: ''
     },
     txFee: {
       type: String,
       default: '0'
-    },
-    close: {
-      type: Function,
-      default: () => {}
-    },
-    send: {
-      type: Function,
-      default: () => {}
     }
   },
   computed: {
@@ -139,23 +123,21 @@ export default {
           title: 'You Swap',
           icon: this.fromImg,
           value: this.formattedFromVal,
-          type: this.fromType
+          type: this.fromType,
+          address: this.from,
+          amount: formatFloatingPointValue(this.fromVal).value,
+          usd: formatFloatingPointValue(this.fromUsd).value
         },
         {
           title: 'You will get',
           icon: this.toImg,
           value: this.formattedToVal,
-          type: this.toType
+          type: this.toType,
+          address: this.to,
+          amount: formatFloatingPointValue(this.toVal).value,
+          usd: formatFiatValue(this.toUsd).value
         }
       ];
-    }
-  },
-  methods: {
-    toFixed(val) {
-      return `~${BigNumber(val).toFixed(2)}`;
-    },
-    handleClose() {
-      this.$emit('close');
     }
   }
 };

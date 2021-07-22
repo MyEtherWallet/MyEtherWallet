@@ -39,13 +39,13 @@
             <template #contentBelowTitle>
               <div class="mt-6">
                 <img
-                  src="@/assets/images/icons/button-app-store.png"
+                  src="@/assets/images/icons/button-app-store.svg"
                   alt="Apple app store"
                   style="height: 30px"
                   class="mr-2"
                 />
                 <img
-                  src="@/assets/images/icons/button-play-store.png"
+                  src="@/assets/images/icons/button-play-store.svg"
                   alt="Google play store"
                   style="height: 30px"
                 />
@@ -71,7 +71,7 @@
           class="mb-5"
           color-theme="basic"
           title="Buy a Hardware Wallet"
-          subtitle="A hardware wallet offers the highest security for accessing your crypto"
+          subtitle="For the highest standard of security, buy a hardware wallet and use it with MEW."
           title-icon="mdi-shield-check"
           title-icon-type="mdi"
           title-icon-class="primary--text"
@@ -79,7 +79,9 @@
           :right-icon="
             require('@/assets/images/icons/icon-hardware-wallet.png')
           "
-          @click.native="$router.push({ name: 'BuyHardwareWallet' })"
+          @click.native="
+            $router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME })
+          "
         />
         <!--
         =====================================================================================
@@ -91,8 +93,7 @@
           class="mb-5"
           color-theme="outline"
           title="Software"
-          subtitle="Keystore files / Mnemonic phrase is highly sensitive information, and
-          they should only be used in offline settings by experienced users."
+          subtitle="Software methods like keystore file and mnemonic phrase should only be used in offline settings by experienced users."
           title-icon-class="warning--text text--darken-1"
           title-icon="mdi-alert"
           title-icon-type="mdi"
@@ -126,6 +127,7 @@
 import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'TheCreateWalletLayout',
   components: {
@@ -149,13 +151,14 @@ export default {
     titleRoute: {
       text: 'Access Wallet',
       routeName: 'AccessWallet'
-    }
+    },
+    ROUTES_HOME: ROUTES_HOME
   }),
   methods: {
     openSoftwareModule() {
       try {
         this.$router.push({
-          name: 'CreateWallet',
+          name: ROUTES_HOME.CREATE_WALLET.NAME,
           params: { overlay: 'software' },
           query: { type: 'overview' }
         });
@@ -166,7 +169,7 @@ export default {
     closeSoftwareModule() {
       try {
         this.$router.push({
-          name: 'CreateWallet'
+          name: ROUTES_HOME.CREATE_WALLET.NAME
         });
       } catch (e) {
         Toast(e, {}, ERROR);

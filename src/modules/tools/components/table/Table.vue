@@ -143,23 +143,6 @@ export default {
         myValue: '$227.54'
       }
     ],
-    headers: [
-      {
-        text: '',
-        value: 'icon',
-        sortable: false
-      },
-      {
-        text: 'Token Name',
-        value: 'token'
-      },
-      { text: 'Price', value: 'price' },
-      { text: 'Market Cap', value: 'marketCap' },
-      { text: 'Change(24h)', value: 'change' },
-      { text: 'Chart(24h)', value: 'chart', sortable: false },
-      { text: 'Amount', value: 'amount' },
-      { text: 'My value', value: 'myvalue' }
-    ],
     addresses: []
   }),
   created() {

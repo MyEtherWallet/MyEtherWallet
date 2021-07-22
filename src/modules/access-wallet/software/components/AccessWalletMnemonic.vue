@@ -117,14 +117,9 @@
             =====================================================================================
             -->
             <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-            <div class="headline font-weight-bold">
+            <div class="headline font-weight-bold mb-5">
               Select HD Derivation Path
             </div>
-            <p class="mb-5">
-              Please select HD Derivation Path that you you want to interact
-              with or enter a custom one.
-            </p>
-
             <mew-select
               v-model="selectedPath"
               label="Select Path"
@@ -197,12 +192,9 @@
             =====================================================================================
             -->
             <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-            <div class="headline font-weight-bold">
+            <div class="headline font-weight-bold mb-5">
               Select Address and Network
             </div>
-            <p class="mb-5">
-              Please select address that you want to interact with and network.
-            </p>
           </v-col>
         </v-row>
         <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
@@ -224,7 +216,7 @@
                     <p class="">Adddress</p>
                   </v-col>
                   <v-col cols="4" sm="3">
-                    <p>ETH Balance</p>
+                    <p>{{ network.type.name }} Balance</p>
                   </v-col>
                 </v-row>
                 <!--
@@ -273,7 +265,7 @@
                     </v-row>
                   </v-col>
                   <v-col cols="4" sm="3">
-                    <p>
+                    <p class="balance-overflow">
                       {{
                         acc.balance === 'Loading..'
                           ? acc.balance
@@ -320,31 +312,7 @@
           =====================================================================================
           -->
           <template #panelBody2>
-            <div class="network-container custom-scroll-bar ml-3 mr-n3 pr-3">
-              <v-radio-group v-model="selectedNetwork">
-                <div v-for="(type, i) in networkTypes" :key="type">
-                  <h5 class="text-capitalize font-weight-bold">
-                    {{ type }}
-                  </h5>
-                  <v-container>
-                    <v-row dense align="center" justify="space-between">
-                      <v-col
-                        v-for="(item, idx) in Networks[type]"
-                        :key="item.service + idx"
-                        cols="12"
-                        sm="6"
-                      >
-                        <v-radio :label="item.service" :value="item.url" />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <v-divider
-                    v-if="networkTypes.length != i + 1"
-                    class="mt-0 mb-5"
-                  />
-                </div>
-              </v-radio-group>
-            </div>
+            <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
           </template>
         </mew-expand-panel>
         <!--
@@ -390,8 +358,11 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 import { checkCustomPath } from '../handlers/pathHelper';
 import AppBtnRow from '@/core/components/AppBtnRow';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 const MAX_ADDRESSES = 5;
 
@@ -413,7 +384,8 @@ export default {
   },
   components: {
     phraseBlock,
-    AppBtnRow
+    AppBtnRow,
+    NetworkSwitch
   },
   props: {
     handlerAccessWallet: {
@@ -443,9 +415,10 @@ export default {
             /**
              * Sets the balance of the account of accountAddress
              */
-            this.accounts[this.onAccountIndex].balance = fromWei(
-              data.getEthBalance.balance
-            );
+            this.accounts[this.onAccountIndex].balance =
+              formatFloatingPointValue(
+                fromWei(data.getEthBalance.balance)
+              ).value;
             /**
              * Find the next index and set the address of it to accountAddress
              */
@@ -463,8 +436,6 @@ export default {
   },
   data() {
     return {
-      /* Apollo */
-      getEthBalance: '',
       /* Stepper Items */
       step: 1,
       stepperItems: [
@@ -506,7 +477,6 @@ export default {
         url: 'https://www.myetherwallet.com/terms-of-service'
       },
       /*Network Items: */
-      selectedNetwork: '',
       panelNetworkSubstring: '',
       /* Mnemonic Addresses */
       selectedAddress: '',
@@ -517,7 +487,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['Networks', 'network']),
+    ...mapGetters('global', ['network']),
     ...mapState('global', ['customPaths']),
     /**
      * Property returns the index of the account of the accountAddress
@@ -625,26 +595,6 @@ export default {
         }
       ];
     },
-
-    /**
-     * Property returns default network and nodes items
-     * Property Interface:
-     * {  name = string -> Name of the Path,
-     *    subtext = string --> Derivation Path,
-     *    value = tring --> Derivation Path
-     * }
-     */
-    networkTypes() {
-      const showFirst = ['ETH', 'ROP', 'RIN'];
-      const typeArr = Object.keys(this.Networks).filter(item => {
-        if (!showFirst.includes(item)) {
-          return item;
-        }
-      });
-      typeArr.unshift('ETH', 'ROP', 'RIN');
-      return typeArr;
-    },
-
     /**
      * Property returns default network and nodes items
      * Property Interface:
@@ -665,17 +615,6 @@ export default {
     }
   },
   watch: {
-    selectedNetwork(newVal) {
-      Object.values(this.Networks).forEach(itm => {
-        const found = itm.find(network => {
-          return network.url === newVal;
-        });
-        if (found) {
-          this.panelNetworkSubstring = `${found.type.name} - ${found.service}`;
-          this.setNetwork(found);
-        }
-      });
-    },
     phrase: {
       deep: true,
       handler: function (newval) {
@@ -695,47 +634,55 @@ export default {
       handler: function (newVal) {
         this.accounts = newVal;
       }
+    },
+    network: {
+      deep: true,
+      handler: function () {
+        this.accounts = [];
+        this.addressPage -= 1;
+        this.selectedAddress = '';
+        this.accountAddress = '';
+        this.currentIdx -= MAX_ADDRESSES;
+        this.setMnemonicAddress();
+      }
     }
   },
   mounted() {
-    this.selectedNetwork = this.network.url;
-    this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.service}`;
+    this.setNetworkPanel();
   },
   methods: {
-    ...mapActions('global', ['setNetwork', 'addCustomPath']),
-    /**
-     * Method that launches new tab to an explorer with address clicked
-     * Used in STEP 3, Address Row
-     */
-    launchExplorrer(addr) {
-      // eslint-disable-next-line
-      window.open(
-        this.network.type.blockExplorerAddr.replace('[[address]]', addr),
-        '_blank'
-      );
-    },
-
+    ...mapActions('global', ['addCustomPath']),
     /**
      * Async method that gets accounts according to the pagination
      * Used in STEP 2 and 3
      */
-    async setAddresses() {
-      this.accounts = [];
-      for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
-        const account = await this.handlerAccessWallet
-          .getWalletInstance()
-          .getAccount(i);
-        this.accounts.push({
-          address: account.getAddressString(),
-          account: account,
-          idx: i,
-          balance: 'Loading..'
-        });
+    async setMnemonicAddress() {
+      try {
+        const web3 = new Web3(this.network.url);
+        this.accounts = [];
+        for (
+          let i = this.currentIdx;
+          i < this.currentIdx + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.handlerAccessWallet
+            .getWalletInstance()
+            .getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
+          this.accounts.push({
+            address: account.getAddressString(),
+            account: account,
+            idx: i,
+            balance: fromWei(balance)
+          });
+        }
+        this.currentIdx += MAX_ADDRESSES;
+        this.addressPage += 1;
+        this.selectedAddress = this.accounts[0].address;
+        this.accountAddress = this.accounts[0].address;
+      } catch (e) {
+        Toast(e, {}, ERROR);
       }
-      this.currentIdx += MAX_ADDRESSES;
-      this.addressPage += 1;
-      this.selectedAddress = this.accounts[0].address;
-      this.accountAddress = this.accounts[0].address;
     },
     /**
      * Method unlocks mnemonic phrase;
@@ -798,7 +745,7 @@ export default {
         .then(res => {
           if (res) {
             this.step = 3;
-            this.setAddresses();
+            this.setMnemonicAddress();
           }
         })
         .catch(e => {
@@ -830,7 +777,7 @@ export default {
      * Used in STEP 3
      */
     nextAddressSet() {
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
     /**
      * Methods generates privious derived addresses
@@ -843,7 +790,7 @@ export default {
         this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
       this.currentIdx -=
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
 
     /**
@@ -859,6 +806,14 @@ export default {
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }
+    },
+    /**
+     * Methods sets panelNetworkSubstring  based on the
+     * Used in STEP 3
+     * @return {void}
+     */
+    setNetworkPanel() {
+      this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.type.name_long}`;
     }
   }
 };
@@ -947,5 +902,11 @@ table {
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+.balance-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

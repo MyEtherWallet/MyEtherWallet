@@ -22,7 +22,7 @@
         class="mr-1"
       >
         <img
-          src="@/assets/images/icons/button-app-store.png"
+          src="@/assets/images/icons/button-app-store.svg"
           alt="Apple app store"
           height="35"
         />
@@ -32,7 +32,7 @@
         target="_blank"
       >
         <img
-          src="@/assets/images/icons/button-play-store.png"
+          src="@/assets/images/icons/button-play-store.svg"
           alt="Google play store"
           height="35"
         />

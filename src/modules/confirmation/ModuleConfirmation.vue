@@ -33,7 +33,7 @@
             Links
           =====================================================================================
           -->
-          <v-row class="justify-sm-space-between align-center pt-3" dense>
+          <v-row class="justify-sm-space-around align-center pt-3" dense>
             <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
               <a
                 class="d-flex justify-center justify-sm-end"
@@ -106,6 +106,8 @@
             :from-val="swapInfo.fromVal"
             :to-val="swapInfo.toVal"
             :provider="swapInfo.selectedProvider"
+            :to-usd="swapInfo.toUsdVal"
+            :from-usd="swapInfo.fromUsdVal"
             :tx-fee="swapInfo.totalFees"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
@@ -174,7 +176,9 @@
                   <v-spacer />
                   <div v-if="signing">
                     <v-progress-circular
-                      v-show="isBatch && signedTxArray.length < i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length < i + 1
+                      "
                       indeterminate
                       color="primary"
                       size="20"
@@ -200,7 +204,9 @@
                       mdi-check
                     </v-icon>
                     <v-icon
-                      v-show="isBatch && signedTxArray.length >= i + 1"
+                      v-show="
+                        error === '' && isBatch && signedTxArray.length >= i + 1
+                      "
                       color="primary"
                     >
                       mdi-check
@@ -248,7 +254,6 @@
     >
       <template #mewOverlayBody>
         <confirmation-messsage
-          v-if="true"
           ref="messageConfirmationContainer"
           :msg="signature"
           :copy="copyToClipboard"
@@ -334,7 +339,10 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
     txTo() {
-      if (!this.isBatch) return this.tx.to;
+      if (!this.isBatch)
+        return this.tx.hasOwnProperty('toTxData')
+          ? this.tx.toTxData.to
+          : this.tx.to;
       return this.unsignedTxArr[0].to;
     },
     usdValue() {
@@ -343,10 +351,13 @@ export default {
     isWeb3Wallet() {
       return this.identifier === WALLET_TYPES.WEB3_WALLET;
     },
+    isMewConnect() {
+      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    },
     showConfirmWithWallet() {
       return (
         (this.isHardware || this.isWeb3Wallet) &&
-        (this.signing || this.signingPending)
+        (this.signing || this.error !== '')
       );
     },
     transactions() {
@@ -393,9 +404,6 @@ export default {
       }, BigNumber(0));
       return hexToNumberString(batchGasPrice);
     },
-    nonce() {
-      return hexToNumber(this.tx.nonce);
-    },
     txFee() {
       const parsedTxFee = BigNumber(toWei(this.gasPrice, 'gwei'))
         .times(this.gasLimit)
@@ -414,20 +422,14 @@ export default {
           : '0x';
         return parsedValue;
       }
-
       return '0';
-    },
-    isSoftwareWallet() {
-      return (
-        !this.instance.isHardware &&
-        (this.instance.identifier === WALLET_TYPES.KEYSTORE ||
-          this.instance.identifier === WALLET_TYPES.PRIV_KEY ||
-          this.instance.identifier === WALLET_TYPES.MNEMONIC)
-      );
     },
     disableBtn() {
       if (this.error !== '') return true;
       if (!this.signing) return true;
+      return this.txSigned;
+    },
+    txSigned() {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
@@ -467,9 +469,22 @@ export default {
     }
   },
   watch: {
+    error(newVal) {
+      /**
+       * Reset signed values if any of the tx in batch is declined
+       */
+      if (newVal !== '') {
+        this.signedTxArray = [];
+        this.signedTxObject = {};
+      }
+    },
     signedTxArray: {
       handler: function (newVal) {
-        if (this.isWeb3Wallet && newVal.length === this.unsignedTxArr.length) {
+        if (
+          this.isWeb3Wallet &&
+          newVal.length !== 0 &&
+          newVal.length === this.unsignedTxArr.length
+        ) {
           this.showTxOverlay = false;
           this.showSuccess(newVal);
         }
@@ -611,8 +626,8 @@ export default {
       this.error = '';
     },
     parseRawData(tx) {
-      let tokenData = '';
-      if (tx.to && tx.data && tx.data !== '0x') {
+      let tokenData = {};
+      if (tx.to && tx.data && tx.data.substr(0, 10) === '0xa9059cbb') {
         tokenData = parseTokenData(tx.data, tx.to);
         tx.fromTxData = {
           currency: this.network.type.currencyName,
@@ -638,16 +653,19 @@ export default {
         const promiEvent = web3.eth[_method](_rawTx);
         _tx.network = this.network.type.name;
         _tx.gasPrice = isHex(_tx.gasPrice)
-          ? fromWei(hexToNumberString(_tx.gasPrice), 'gwei')
+          ? hexToNumberString(_tx.gasPrice)
           : _tx.gasPrice;
         _tx.transactionFee = fromWei(
-          BigNumber(toWei(_tx.gasPrice, 'gwei')).times(_tx.gas).toString()
+          BigNumber(_tx.gasPrice).times(_tx.gas).toString()
         );
         _tx.gasLimit = _tx.gas;
         setEvents(promiEvent, _tx, this.$store.dispatch);
         promiEvent.once('transactionHash', hash => {
-          const localStoredObj = locStore.get(sha3(this.address));
-          locStore.set(sha3(this.address), {
+          const storeKey = sha3(
+            `${this.network.type.name}-${this.address.toLowerCase()}`
+          );
+          const localStoredObj = locStore.get(storeKey);
+          locStore.set(storeKey, {
             nonce: sanitizeHex(
               new BigNumber(localStoredObj.nonce).plus(1).toString(16)
             ),
@@ -722,6 +740,7 @@ export default {
           .catch(e => {
             this.signedTxObject = {};
             this.error = e.message;
+            this.signing = false;
           });
         this.resolver(event);
       } else {
@@ -729,10 +748,14 @@ export default {
           .signTransaction(this.tx)
           .then(res => {
             this.signedTxObject = res;
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           })
           .catch(e => {
             this.signedTxObject = {};
             this.error = e.message;
+            this.signing = false;
           });
       }
     },
@@ -757,6 +780,9 @@ export default {
               ? this.unsignedTxArr[i].type
               : 'OUT';
             signed.push(_signedTx);
+            if (this.isHardware && this.txSigned) {
+              this.btnAction();
+            }
           } else {
             const event = this.instance.signTransaction(this.unsignedTxArr[i]);
             batchTxEvents.push(event);
@@ -769,7 +795,7 @@ export default {
                 });
               })
               .catch(e => {
-                throw new Error(e);
+                this.instance.errorHandler(e);
               });
           }
           this.signedTxArray = signed;
@@ -780,7 +806,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
         this.signing = false;
       }
     },
@@ -794,7 +820,6 @@ export default {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;
         }
-
         this.isBatch ? this.sendBatchTransaction() : this.sendSignedTx();
         return;
       }

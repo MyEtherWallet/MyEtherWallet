@@ -80,7 +80,7 @@
         <mew-warning-sheet
           class="mt-4 mb-0"
           title="NOT RECOMMENDED"
-          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. You will need your keystore file + password to access your wallet. Please save them in a secure location. We CAN NOT retrieve or reset your keystore/password if you lose them."
         />
       </template>
       <!--
@@ -133,7 +133,7 @@
         <mew-warning-sheet
           class="mt-4 mb-0"
           title="NOT RECOMMENDED"
-          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. You will need your keystore file + password to access your wallet. Please save them in a secure location. We CAN NOT retrieve or reset your keystore/password if you lose them."
         />
       </template>
       <!--
@@ -148,8 +148,9 @@
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
               <div class="headline font-weight-bold mb-3">You are done!</div>
               <p class="mb-6">
-                Congratulation! Please use the MEWconnect App to scan this QR
-                code in order to access your new wallet. And you are done!
+                You are now ready to take advantage of all that Ethereum has to
+                offer! Access with keystore file should only be used in an
+                offline setting.
               </p>
               <v-img
                 class="d-block d-sm-none mx-auto mt-12 mb-12"
@@ -187,6 +188,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'CreateWalletKeystore',
@@ -238,7 +240,7 @@ export default {
       cofirmPassword: '',
       passwordRulles: [
         value => !!value || 'Required',
-        value => value.length > 7 || 'Password is less then 8 characters'
+        value => value.length >= 7 || 'Password is less than 7 characters'
       ],
 
       walletFile: '',
@@ -248,7 +250,11 @@ export default {
   },
   computed: {
     enableCreateButton() {
-      return this.password !== '' && this.cofirmPassword === this.password;
+      return (
+        this.password !== '' &&
+        this.cofirmPassword === this.password &&
+        this.password.length >= 7
+      );
     },
     passwordConfirmRulles() {
       return [
@@ -277,7 +283,7 @@ export default {
       this.updateStep(3);
     },
     goToAccess() {
-      this.$router.push({ name: 'AccessWallet' });
+      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
     /**
      * Update step

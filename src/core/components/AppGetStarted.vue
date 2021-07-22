@@ -6,20 +6,29 @@
         <div class="d-flex align-center px-6">
           <div>
             <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
-            <p class="white--text ma-0">
-              Still don't know what MEW is?
+            <div align="left" class="mt-5">
               <a
-                class="
-                  color--inherit
-                  font-weight-medium
-                  text-decoration--underline
-                "
-                href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                href="https://apps.apple.com/app/id1464614025"
+                target="_blank"
+                class="mr-1"
+              >
+                <img
+                  src="@/assets/images/icons/button-app-store.svg"
+                  alt="Apple app store"
+                  height="35"
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
                 target="_blank"
               >
-                Learn more
+                <img
+                  src="@/assets/images/icons/button-play-store.svg"
+                  alt="Google play store"
+                  height="35"
+                />
               </a>
-            </p>
+            </div>
           </div>
 
           <v-spacer />
@@ -31,14 +40,18 @@
               class="mr-4"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'CreateWallet' })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
+              "
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'AccessWallet' })"
+              @click.native="
+                $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
+              "
             />
           </div>
         </div>
@@ -51,20 +64,29 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div class="mb-9">
             <h1 class="white--text">Ready to explore Ethereum?</h1>
-            <p class="white--text mt-3">
-              Still don't know what MEW is?
+            <div align="left" class="mt-5">
               <a
-                class="
-                  color--inherit
-                  font-weight-medium
-                  text-decoration--underline
-                "
-                href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                href="https://apps.apple.com/app/id1464614025"
+                target="_blank"
+                class="mr-1"
+              >
+                <img
+                  src="@/assets/images/icons/button-app-store.svg"
+                  alt="Apple app store"
+                  height="35"
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
                 target="_blank"
               >
-                Learn more
+                <img
+                  src="@/assets/images/icons/button-play-store.svg"
+                  alt="Google play store"
+                  height="35"
+                />
               </a>
-            </p>
+            </div>
           </div>
           <v-row>
             <v-col cols="12" sm="6" class="mr-n2 mb-n2">
@@ -72,7 +94,9 @@
                 has-full-width
                 title="Create a new wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'CreateWallet' })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
+                "
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -81,7 +105,9 @@
                 btn-style="outline"
                 title="Access my wallet"
                 btn-size="xlarge"
-                @click.native="$router.push({ name: 'AccessWallet' })"
+                @click.native="
+                  $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
+                "
               />
             </v-col>
           </v-row>
@@ -92,11 +118,14 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '../configs/configRoutes';
 export default {
   name: 'GetStarted',
   components: {},
   data() {
-    return {};
+    return {
+      ROUTES_HOME: ROUTES_HOME
+    };
   }
 };
 </script>

@@ -121,12 +121,13 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { convertToFixed } from '../handlers/helpers';
-import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import {
+  convertToFixed,
   ACTION_TYPES,
   INTEREST_TYPES
-} from '@/dapps/aave-dapp/handlers/helpers';
+} from '../handlers/helpers';
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+
 export default {
   props: {
     actionType: {
@@ -159,14 +160,8 @@ export default {
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },
-    isBorrow() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.borrow;
-    },
     isInterest() {
       return this.actionType.toLowerCase() === ACTION_TYPES.interest;
-    },
-    isCollateral() {
-      return this.actionType.toLowerCase() === ACTION_TYPES.collateral;
     },
     details() {
       let details = [

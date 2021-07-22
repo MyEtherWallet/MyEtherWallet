@@ -6,7 +6,6 @@ import { getMainDefinition } from 'apollo-utilities';
 import { onError } from 'apollo-link-error';
 import * as Sentry from '@sentry/vue';
 import ApolloClient from 'apollo-client';
-import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 export function createApolloClient(httpsEndpoint, wsEndpoint) {
@@ -27,14 +26,6 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
       graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
-        // Ignore getTransactionByHash null error msg
-        if (
-          newError
-            .toLowerCase()
-            .includes(errorMsgs.cannotReturnNull.toLowerCase())
-        ) {
-          return;
-        }
         // eslint-disable-next-line
         console.error(newError);
       });

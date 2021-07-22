@@ -29,7 +29,7 @@ export default {
       update: data => data.getTimeseriesData,
       skip() {
         const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
-        return !acceptableScales.includes(this.scale);
+        return !acceptableScales.includes(this.scale) || !this.isEthNetwork;
       },
       result() {
         const parsedResult = this._parseResult(this.getTimeseriesData.items);
@@ -52,7 +52,7 @@ export default {
           }
         } while (nextKey);
       },
-      error({ error }) {
+      error(error) {
         Toast(error.message, {}, ERROR);
       }
     }

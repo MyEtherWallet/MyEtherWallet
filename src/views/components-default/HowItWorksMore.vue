@@ -29,10 +29,7 @@
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import Contract from '@/assets/images/icons/icon-contract-mew.svg';
 import Message from '@/assets/images/icons/icon-message-mew.svg';
-import ViewOnlyWallet from '@/assets/images/icons/icon-view-only-mew.svg';
-import ChromeEx from '@/assets/images/icons/icon-cx-mew.svg';
 import BuyEth from '@/assets/images/icons/icon-buy-eth-mew.svg';
-import AdvancedTools from '@/assets/images/icons/icon-advanced-tools-mew.svg';
 
 export default {
   components: { AppBlockTitle },
@@ -41,14 +38,13 @@ export default {
       textProps: '',
       toptitle: '',
       title: 'More tools',
-      description:
-        'We are always expanding to keep up with the constantly evolving technology of the Ethereum blockchain.',
+      description: '',
       centered: false
     },
     blockContent: [
       {
         img: Contract,
-        title: 'Smart Contract',
+        title: 'Smart Contracts',
         description:
           'Interact with any smart contract on Ethereum, whether we’ve integrated it or not!'
       },
@@ -56,31 +52,13 @@ export default {
         img: Message,
         title: 'Messages',
         description:
-          'Send or Verify Messages from the MEW interface to verify ownership of your wallet.'
-      },
-      {
-        img: ViewOnlyWallet,
-        title: 'View Only Wallet',
-        description:
-          'Search your Public Address without accessing your wallet, so you can keep track of your balances quickly and easily.'
-      },
-      {
-        img: ChromeEx,
-        title: 'MEW CX',
-        description:
-          'Connect with our Web-3 enabled Chrome Extension wallet, capable of third-party DApp interaction right from your browser.'
+          'Send or verify messages from the MEW interface to verify ownership of your wallet.'
       },
       {
         img: BuyEth,
-        title: 'Buy Eth',
+        title: 'Buy ETH',
         description:
-          'Purchase Ether with a credit card through our provider, Simplex.'
-      },
-      {
-        img: AdvancedTools,
-        title: 'Advanced Tools',
-        description:
-          'MEW’s functionality ranges from Beginner to Expert, with everything in-between.'
+          'Purchase Ether with a credit card through our provider Simplex.'
       }
     ]
   })

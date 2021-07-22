@@ -1,9 +1,16 @@
 <template>
   <div class="mew-component--side-info-network">
-    <network-switch
-      :open="openNetworkOverlay"
-      @close="openNetworkOverlay = false"
-    />
+    <mew-overlay
+      :show-overlay="openNetworkOverlay"
+      title="Select Network"
+      left-btn-text=""
+      right-btn-text="Close"
+      @closeOverlay="openNetworkOverlay = false"
+    >
+      <template #mewOverlayBody>
+        <network-switch :filter-types="filterNetworks" />
+      </template>
+    </mew-overlay>
 
     <mew6-white-sheet
       :sideinfo="!mobile"
@@ -13,6 +20,7 @@
         <div class="d-flex align-center">
           <span class="mew-heading-2 mr-2">{{ $t('common.network') }}</span>
           <v-btn
+            v-if="show"
             depressed
             color="secondary"
             class="title-button"
@@ -23,11 +31,11 @@
         </div>
 
         <div class="mt-4">
-          <div class="mb-1">{{ type }} - {{ service }}</div>
+          <div class="mb-1">{{ type }} - {{ fullName }}</div>
           <div>Last Block: {{ lastBlock }}</div>
         </div>
       </div>
-      <img height="65" :src="network.type.icon" />
+      <v-img :src="icon" :max-height="65" :max-width="65" contain />
     </mew6-white-sheet>
   </div>
 </template>
@@ -36,6 +44,7 @@
 import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import WALLET_TYPES from '../access-wallet/common/walletTypes';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
@@ -51,16 +60,32 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['blockNumber']),
+    ...mapState('wallet', ['blockNumber', 'identifier', 'isHardware']),
     ...mapGetters('global', ['network']),
     type() {
       return this.network.type.name;
     },
-    service() {
-      return this.network.service;
+    fullName() {
+      return this.network.type.name_long;
     },
     lastBlock() {
       return formatIntegerToString(this.blockNumber);
+    },
+    icon() {
+      return this.network.type.icon;
+    },
+    show() {
+      return this.identifier !== WALLET_TYPES.WEB3_WALLET;
+    },
+    /**
+     * IMPORTANT TO DO:
+     * @returns {boolean}
+     */
+    filterNetworks() {
+      if (this.isHardware) {
+        return [];
+      }
+      return [];
     }
   }
 };

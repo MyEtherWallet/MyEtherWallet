@@ -227,6 +227,10 @@ import wallets, {
 } from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
+import Web3 from 'web3';
+import { fromWei } from 'web3-utils';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -472,6 +476,18 @@ export default {
             this.wallets[this.walletType].titles[this.step];
     }
   },
+  watch: {
+    network: {
+      deep: true,
+      handler: function () {
+        this.accounts = [];
+        this.addressPage -= 1;
+        this.selectedAddress = '';
+        this.currentIdx -= MAX_ADDRESSES;
+        if (this.hwWalletInstance) this.setAddresses();
+      }
+    }
+  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -577,7 +593,11 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          if (this.wallets[this.walletType]) {
+            this.wallets[this.walletType].create.errorHandler(err);
+          } else {
+            Toast(err, {}, ERROR);
+          }
           this.reset();
         });
     },
@@ -592,7 +612,11 @@ export default {
           this.setAddresses();
         })
         .catch(err => {
-          this.wallets[this.walletType].create.errorHandler(err);
+          if (this.wallets[this.walletType]) {
+            this.wallets[this.walletType].create.errorHandler(err);
+          } else {
+            Toast(err, {}, ERROR);
+          }
           this.reset();
         });
     },
@@ -609,7 +633,8 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
-            if (!this.switchAddress) this.$router.push({ name: 'Dashboard' });
+            if (!this.switchAddress)
+              this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             else this.close();
           })
           .catch(e => {
@@ -670,6 +695,7 @@ export default {
      */
     async setAddresses() {
       try {
+        const web3 = new Web3(this.network.url);
         this.accounts = [];
         for (
           let i = this.currentIdx;
@@ -677,11 +703,12 @@ export default {
           i++
         ) {
           const account = await this.hwWalletInstance.getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
           this.accounts.push({
             address: account.getAddressString(),
             account: account,
             idx: i,
-            balance: 'Loading..',
+            balance: formatFloatingPointValue(fromWei(balance)).value,
             tokens: 'Loading..'
           });
         }
@@ -689,7 +716,11 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        this.wallets[this.walletType].create.errorHandler(e);
+        if (this.wallets[this.walletType]) {
+          this.wallets[this.walletType].create.errorHandler(e);
+        } else {
+          Toast(e, {}, ERROR);
+        }
         this.reset();
       }
     },

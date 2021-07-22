@@ -1,39 +1,43 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    :title="title"
-    :has-elevation="true"
-    :has-indicator="true"
-  >
-    <template #moduleBody>
-      <div>
-        <v-textarea
-          v-model="message"
-          outlined
-          label="Signature"
-          :value="message"
-        ></v-textarea>
+  <div>
+    <div class="mew-heading-2 mb-12">{{ title }}</div>
 
-        <div v-if="signResult">
-          <span v-if="didSign"> {{ signer }} Did Sign</span>
-          <span v-if="didntSign">{{ signer }} Didn't sign</span>
-        </div>
-        <mew-button
-          title="Verify"
-          btn-size="xlarge"
-          class="display--block mx-auto mt-5"
-          @click.native="verifyMessage"
-        />
-        <mew-button
-          btn-style="transparent"
-          title="Clean all"
-          btn-size="small"
-          class="display--block mx-auto mt-5"
-          @click.native="clearAll"
-        />
-      </div>
-    </template>
-  </mew-module>
+    <v-textarea
+      v-model="message"
+      outlined
+      label="Signature"
+      :value="message"
+    ></v-textarea>
+
+    <div v-if="signResult" class="walletBg pa-3">
+      {{ signer }}
+      <span v-if="didSign" class="font-weight-medium">
+        did sign the message
+      </span>
+      <span v-if="didntSign" class="font-weight-medium">
+        didn't sign the message
+      </span>
+    </div>
+
+    <div v-if="verificationError" class="walletBg pa-3">
+      {{ $t('signMessage.failed') }}
+    </div>
+
+    <mew-button
+      :disabled="!message"
+      title="Verify"
+      btn-size="xlarge"
+      class="display--block mx-auto mt-5"
+      @click.native="verifyMessage"
+    />
+    <mew-button
+      btn-style="transparent"
+      title="Clear All"
+      btn-size="small"
+      class="display--block mx-auto mt-5"
+      @click.native="clearAll"
+    />
+  </div>
 </template>
 
 <script>
@@ -41,12 +45,14 @@ import SignAndVerifyMessage from '@/modules/message/handlers';
 
 export default {
   name: 'ModuleMessageVerify',
+  components: {},
   data() {
     return {
       title: 'Verify Message',
       didSign: false,
       didntSign: false,
       signResult: false,
+      verificationError: false,
       message: '',
       signer: ''
     };
@@ -57,16 +63,26 @@ export default {
   },
   methods: {
     verifyMessage() {
-      this.signResult = true;
-      const signCheck = this.signAndVerify.verifyMessage(this.message);
-      if (signCheck.verified) {
-        this.didSign = true;
-      } else {
-        this.didntSign = true;
+      try {
+        this.verificationError = false;
+        this.signResult = false;
+
+        const signCheck = this.signAndVerify.verifyMessage(this.message);
+
+        if (signCheck.verified) {
+          this.signResult = true;
+          this.didSign = true;
+        } else {
+          this.signResult = true;
+          this.didntSign = true;
+        }
+        this.signer = '0x' + signCheck.signer;
+      } catch (e) {
+        this.verificationError = true;
       }
-      this.signer = '0x' + signCheck.signer;
     },
     clearAll() {
+      this.verificationError = false;
       this.didntSign = false;
       this.didSign = false;
       this.signResult = false;

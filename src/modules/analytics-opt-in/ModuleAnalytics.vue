@@ -199,10 +199,10 @@ export default {
   methods: {
     ...mapMutations('global', ['NEVER_SHOW_TRACKING']),
     ...mapActions('global', ['setTrackingConsent']),
-    setSelected(selected) {
-      this.selectedOption = selected;
-      this.expanded = true;
-    },
+    // setSelected(selected) {
+    //   this.selectedOption = selected;
+    //   this.expanded = true;
+    // },
     backToOverview() {
       this.selectedOption = '';
       this.expanded = false;

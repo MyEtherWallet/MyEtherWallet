@@ -11,52 +11,54 @@
                 <img
                   class="mr-1"
                   height="23"
-                  src="@/assets/images/icons/button-app-store.png"
+                  src="@/assets/images/icons/button-app-store.svg"
                 />
                 <img
                   class="mr-1"
                   height="23"
-                  src="@/assets/images/icons/button-play-store.png"
+                  src="@/assets/images/icons/button-play-store.svg"
                 />
               </div>
             </div>
           </a>
         </template>
         <template #slide2>
-          <div
-            class="ad2 px-5 d-flex flex-column justify-center"
-            @click="$router.push({ name: 'BuyHardwareWallet' })"
+          <router-link
+            :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+            target="_blank"
           >
-            <div class="title font-weight-bold mb-n1">Hardware wallets</div>
-            <div class="mb-2">Take a look at our hardware wallets!</div>
-            <div class="d-flex align-center">
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/bitmap.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/bitbox.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/billfodl.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/finney.png"
-              />
-              <img
-                class="mr-2"
-                height="38"
-                src="@/assets/images/hardware-wallets/keepkey.png"
-              />
+            <div class="ad2 px-5 d-flex flex-column justify-center">
+              <div class="title font-weight-bold mb-n1">Hardware wallets</div>
+              <div class="mb-2">Buy a hardware wallet!</div>
+              <div class="d-flex align-center">
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/bitmap.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/bitbox.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/billfodl.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/finney.png"
+                />
+                <img
+                  class="mr-2"
+                  height="38"
+                  src="@/assets/images/hardware-wallets/keepkey.png"
+                />
+              </div>
             </div>
-          </div>
+          </router-link>
         </template>
       </mew-carousel>
     </mew6-white-sheet>
@@ -64,7 +66,13 @@
 </template>
 
 <script>
-export default {};
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
+export default {
+  data: () => ({
+    ROUTES_HOME: ROUTES_HOME
+  })
+};
 </script>
 
 <style lang="scss" scoped>

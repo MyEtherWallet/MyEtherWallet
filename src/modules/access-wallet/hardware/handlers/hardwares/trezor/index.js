@@ -29,9 +29,12 @@ class TrezorWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.TREZOR];
-    this.icon = {
-      type: 'img',
-      value: trezor
+    this.meta = {
+      name: 'Trezor',
+      img: {
+        type: 'img',
+        value: trezor
+      }
     };
   }
   async init(basePath) {
@@ -91,7 +94,8 @@ class TrezorWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress
+      displayAddress,
+      this.meta
     );
   }
   getCurrentPath() {

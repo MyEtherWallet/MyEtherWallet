@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="network.type.name === 'ETH'"
-    class="mew6-component--module-balance"
-  >
+  <div class="mew6-component--module-balance">
     <!--
   =====================================================================================
     display if the user has an eth balance > 0
@@ -17,8 +14,7 @@
       type="card"
     ></v-skeleton-loader>
     <mew-module
-      v-if="!showBuyEth && !loading"
-      class="pa-7"
+      v-if="hasBalance && !loading"
       :subtitle="subtitle"
       :title="title"
       :has-body-padding="false"
@@ -28,8 +24,8 @@
       :has-full-height="true"
       icon-align="left"
     >
-      <template #rightHeaderContainer>
-        <div class="d-flex align-center">
+      <template v-if="network.type.name === 'ETH'" #rightHeaderContainer>
+        <div class="d-flex align-center ml-8 mt-3 mt-sm-0">
           <mew-toggle
             :button-group="chartButtons"
             :on-toggle-btn-idx="activeButton"
@@ -46,10 +42,23 @@
         </div>
       </template>
       <template #moduleBody>
-        <div class="pa-7">
-          <balance-chart :data="chartData" class="full-width mt-5" />
-          <v-row class="align-center">
-            <v-col class="d-flex align-center justify-center">
+        <balance-chart
+          v-if="network.type.name === 'ETH'"
+          :data="chartData"
+          class="full-width mt-5 pa-md-3"
+        />
+        <div
+          class="
+            pa-3 pa-sm-7
+            d-block d-md-flex
+            align-center
+            justify-space-between
+          "
+        >
+          <div
+            class="d-flex flex-column flex-sm-row align-center justify-center"
+          >
+            <div class="d-flex align-center">
               <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
               <div
                 :class="[
@@ -66,19 +75,19 @@
                 ]"
                 >{{ priceChangeArrow }}</v-icon
               >
-              <div class="ml-5">
-                {{ formatFiatPrice }} / 1 {{ network.type.name }}
-              </div>
-            </v-col>
-            <v-col class="text-right">
-              <mew-button
-                :has-full-width="false"
-                title="Send Transaction"
-                btn-size="xlarge"
-                @click.native="navigateToSend"
-              />
-            </v-col>
-          </v-row>
+            </div>
+            <div class="ml-sm-5">
+              {{ formatFiatPrice }} / 1 {{ network.type.name }}
+            </div>
+          </div>
+          <div class="text-center text-md-right mt-4 mt-md-0">
+            <mew-button
+              :has-full-width="false"
+              title="Send Transaction"
+              btn-size="xlarge"
+              @click.native="navigateToSend"
+            />
+          </div>
         </div>
       </template>
     </mew-module>
@@ -88,7 +97,7 @@
     =====================================================================================
     -->
     <balance-empty-block
-      v-if="showBuyEth && !loading"
+      v-if="!hasBalance && !loading"
       :network-type="network.type.name"
       :is-eth="isEthNetwork"
     />
@@ -101,9 +110,12 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
+  formatPercentageValue,
   formatFiatValue,
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceChart,
@@ -130,9 +142,6 @@ export default {
       'networkTokenUSDMarket'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network']),
-    showBuyEth() {
-      return this.balanceInETH <= 0 && this.chartData.length <= 0;
-    },
     priceChangeArrow() {
       return this.priceChange ? 'mdi-arrow-up-bold' : 'mdi-arrow-down-bold';
     },
@@ -169,7 +178,9 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        this.networkTokenUSDMarket.price_change_percentage_24hf;
+        return formatPercentageValue(
+          this.networkTokenUSDMarket.price_change_percentage_24h
+        ).value;
       }
       return '';
     },
@@ -190,11 +201,18 @@ export default {
      */
     fiatLoaded() {
       return (
-        this.networkTokenUSDMarket &&
-        this.networkTokenUSDMarket.price_change_percentage_24h &&
-        this.balanceFiatValue &&
-        this.fiatValue
+        !!this.networkTokenUSDMarket &&
+        !!this.networkTokenUSDMarket.price_change_percentage_24h &&
+        !!this.balanceFiatValue &&
+        !!this.fiatValue
       );
+    },
+    /**
+     * Determines whether or not to show empty block
+     * @return {boolean}
+     */
+    hasBalance() {
+      return BigNumber(this.balanceInWei).gt(0);
     }
   },
   watch: {
@@ -267,7 +285,7 @@ export default {
       this.scale = 'hours';
     },
     navigateToSend() {
-      this.$router.push({ name: 'SendTX' });
+      this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     }
   }
 };

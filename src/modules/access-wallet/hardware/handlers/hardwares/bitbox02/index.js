@@ -23,9 +23,12 @@ class BitBox02Wallet {
     this.supportedPaths = bip44Paths[WALLET_TYPES.BITBOX2];
     this.status = undefined;
     this.pairingConfirmed = false;
-    this.icon = {
-      type: 'mew-icon',
-      value: 'bitbox'
+    this.meta = {
+      name: 'BitBox 2',
+      img: {
+        type: 'mew-icon',
+        value: 'bitbox'
+      }
     };
   }
   async connect() {
@@ -79,13 +82,13 @@ class BitBox02Wallet {
       const networkId = tx.getChainId();
       const signingData = {
         keypath: this.basePath + '/' + idx,
-        chainId: tx.getChainId(),
+        chainId: networkId,
         tx: tx
       };
       const result = await this.BitBox02.ethSignTransaction(signingData);
-      tx.r = new Buffer(result.r);
-      tx.s = new Buffer(result.s);
-      tx.v = new Buffer(result.v);
+      tx.r = Buffer.from(result.r);
+      tx.s = Buffer.from(result.s);
+      tx.v = Buffer.from(result.v);
 
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
@@ -105,9 +108,9 @@ class BitBox02Wallet {
         message: toBuffer(msg)
       });
       return Buffer.concat([
-        new Buffer(result.r),
-        new Buffer(result.s),
-        new Buffer(result.v)
+        Buffer.from(result.r),
+        Buffer.from(result.s),
+        Buffer.from(result.v)
       ]);
     };
 
@@ -124,7 +127,7 @@ class BitBox02Wallet {
       txSigner,
       msgSigner,
       displayAddress,
-      this.icon
+      this.meta
     );
   }
 

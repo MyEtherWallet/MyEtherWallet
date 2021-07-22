@@ -76,11 +76,11 @@
           </div>
         </v-col>
         <v-col cols="auto">
-          <qr-code :data="key" :height="140" :width="140" />
+          <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
-      <v-row v-if="!isHardware">
+      <v-row v-if="showPrivateKey">
         <v-col cols="12" md="8" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
@@ -130,20 +130,22 @@ export default {
   name: 'BalanceAddressPaperWallet',
   data() {
     return {
-      blockieSize: '70px',
       blockieImg: undefined
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {
-      if (!this.isHardware) {
+      if (this.showPrivateKey) {
         return this.instance.getPrivateKeyString();
       }
       return null;
     },
     getChecksumAddressString() {
-      return toChecksumAddress(this.address);
+      return this.address ? toChecksumAddress(this.address) : '';
+    },
+    showPrivateKey() {
+      return !this.instance.isPubOnly;
     }
   },
   mounted() {

@@ -31,10 +31,14 @@
       @error="onImgErr"
     />
     <div class="mb-4 mt-2">{{ nft.name }}</div>
-    <module-address-book @setAddress="setAddress" />
+    <module-address-book
+      :is-valid-address-func="isValidToAddress"
+      @setAddress="setAddress"
+    />
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
+      :disabled="disabled"
       title="Send"
       btn-size="large"
       color-theme="primary"
@@ -46,6 +50,7 @@
 <script>
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import nftPlaceholder from '@/assets/images/icons/icon-nft-placeholder.png';
+import { isAddress } from '@/core/helpers/addressUtils';
 
 export default {
   components: {
@@ -82,22 +87,17 @@ export default {
       },
       type: Function
     },
-    disabled: {
-      default: false,
-      type: Boolean
-    },
     nftCategory: {
       default: '',
       type: String
+    },
+    disabled: {
+      default: false,
+      type: Boolean
     }
   },
   data() {
     return {
-      expandPanel: [
-        {
-          name: this.$t('common.details')
-        }
-      ],
       nftPlaceholder: nftPlaceholder
     };
   },
@@ -109,6 +109,9 @@ export default {
   methods: {
     onImgErr(e) {
       e.target.src = this.nftPlaceholder;
+    },
+    isValidToAddress(address) {
+      return address && isAddress(address);
     }
   }
 };

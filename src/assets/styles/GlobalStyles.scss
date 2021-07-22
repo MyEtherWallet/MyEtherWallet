@@ -24,7 +24,7 @@ html {
 /* Remove default v-sheet border-radius */
 .theme--light.v-sheet,
 .theme--dark.v-sheet {
-  border-radius: 0;
+  border-radius: 8px;
 }
 
 /* Set default text color */
@@ -62,6 +62,10 @@ html {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+}
+
+.v-dialog {
+  border-radius: 8px !important;
 }
 
 /* ========== Fix MEW components ========== */

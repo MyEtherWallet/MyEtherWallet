@@ -1,6 +1,6 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://staging.mewwallet.dev/v3';
+const HOST_URL = 'https://mainnet.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
@@ -122,9 +122,7 @@ class MEWPClass {
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = tradeObj.gasPrice
-      ? tradeObj.gasPrice
-      : await this.web3.eth.getGasPrice();
+    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
         this.web3.eth

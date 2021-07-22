@@ -25,16 +25,6 @@
       </div>
     </div>
     <div class="mt-12 d-flex align-center">
-      <mew-blockie
-        v-if="false"
-        :address="address"
-        :size="8"
-        :scale="16"
-        :width="blockieSize"
-        :height="blockieSize"
-        class="mr-4 white"
-      />
-
       <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
 
       <div style="max-width: 400px">
@@ -64,11 +54,11 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <qr-code :value="key" :options="{ size: 140 }"></qr-code>
+          <qr-code :value="address" :options="{ size: 140 }"></qr-code>
         </v-col>
       </v-row>
 
-      <v-row v-if="!isHardware">
+      <v-row v-if="showPrivateKey">
         <v-col cols="8">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
@@ -110,20 +100,22 @@ export default {
   name: 'BalanceAddressPaperWallet',
   data() {
     return {
-      blockieSize: '70px',
       blockieImg: undefined
     };
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
     key() {
-      if (!this.isHardware) {
+      if (this.showPrivateKey) {
         return this.instance.getPrivateKeyString();
       }
       return null;
     },
     getChecksumAddressString() {
-      return toChecksumAddress(this.address);
+      return this.address ? toChecksumAddress(this.address) : '';
+    },
+    showPrivateKey() {
+      return !this.instance.isPubOnly;
     }
   },
   mounted() {

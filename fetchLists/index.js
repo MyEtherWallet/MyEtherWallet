@@ -46,6 +46,10 @@ const fetchOneInchLists = async () => {
   };
 };
 const fetchCGtokenList = async () => {
+  const ethTokens = await getFormattedList(
+    'https://tokens.coingecko.com/ethereum/all.json',
+    'eth'
+  );
   const bscTokens = await getFormattedList(
     'https://tokens.coingecko.com/binance-smart-chain/all.json',
     'bsc'
@@ -55,6 +59,7 @@ const fetchCGtokenList = async () => {
     'matic'
   );
   return {
+    eth: ethTokens,
     bsc: bscTokens,
     matic: maticTokens
   };

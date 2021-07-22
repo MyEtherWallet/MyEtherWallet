@@ -23,7 +23,7 @@
               ref="mewSelect"
               label="Token"
               :items="tokens"
-              :is-swap="true"
+              :is-custom="true"
               :value="selectedCurrency"
               @input="setCurrency"
             />
@@ -71,7 +71,7 @@
         =====================================================================================
         -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book @setAddress="setAddress" />
+          <module-address-book ref="addressInput" @setAddress="setAddress" />
         </v-col>
         <!--
       =====================================================================================
@@ -207,10 +207,6 @@ export default {
       type: String,
       default: ''
     },
-    prefilledTokenSymbol: {
-      type: String,
-      default: ''
-    },
     prefilledGasLimit: {
       type: String,
       default: '21000'
@@ -218,7 +214,6 @@ export default {
   },
   data() {
     return {
-      addMode: false,
       gasLimit: '21000',
       toAddress: '',
       sendTx: null,
@@ -226,7 +221,6 @@ export default {
       amount: '0',
       selectedCurrency: {},
       data: '0x',
-      clearAll: false,
       userInputType: '',
       expandPanel: [
         {
@@ -247,8 +241,8 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapGetters('global', ['network', 'gasPrice']),
-    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     isDisabledNextBtn() {
       return (
         this.feeError !== '' ||
@@ -258,7 +252,8 @@ export default {
       );
     },
     buyMore() {
-      return MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
+      return this.isEthNetwork &&
+        MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
         this.amountError === 'Not enough balance to send!'
         ? 'Buy more.'
         : '';
@@ -323,8 +318,8 @@ export default {
             hasNoEth: true,
             disabled: true,
             text: 'Your wallet is empty.',
-            linkText: 'Buy ETH',
-            link: 'https://ccswap.myetherwallet.com/#/'
+            linkText: this.isEthNetwork ? 'Buy ETH' : '',
+            link: this.isEthNetwork ? 'https://ccswap.myetherwallet.com/#/' : ''
           })
         : null;
       return [
@@ -333,7 +328,7 @@ export default {
           imgs: imgs.splice(0, 5),
           total: `${this.tokensList.length}`,
           divider: true,
-          selectTokenLabel: true
+          selectLabel: true
         },
         {
           header: 'My Wallet'
@@ -387,10 +382,6 @@ export default {
         }
       ];
     },
-    displayedGasPrice() {
-      const gasPrice = this.actualGasPrice.toString();
-      return BigNumber(fromWei(gasPrice, 'gwei')).toFixed(2);
-    },
     isEthNetwork() {
       return this.network.type.name === ETH.name;
     },
@@ -407,15 +398,6 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
-    },
-    currencyBalance() {
-      if (this.selectedCurrency?.balance) {
-        return this.convertToDisplay(
-          this.selectedCurrency.balance,
-          this.selectedCurrency.decimals
-        );
-      }
-      return '0';
     },
     txFeeETH() {
       return fromWei(this.txFee);
@@ -439,12 +421,6 @@ export default {
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
       return toBN(amount);
-    },
-    hasSelectedToken() {
-      return (
-        !_.isEmpty(this.selectedCurrency) &&
-        this.selectedCurrency.hasOwnProperty('symbol')
-      );
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -491,6 +467,8 @@ export default {
       }
     },
     amount(newVal) {
+      // make sure amount never becomes null
+      if (!newVal) this.amount = '0';
       if (this.isValidAmount) {
         this.sendTx.setValue(this.getCalculatedAmount);
       }
@@ -520,7 +498,6 @@ export default {
     },
     network() {
       this.clear();
-      this.setSendTransaction();
     }
   },
   mounted() {
@@ -547,6 +524,35 @@ export default {
     }, 500);
   },
   methods: {
+    /**
+     * Resets values to default
+     */
+    clear() {
+      this.$refs.addressInput.clear();
+      this.toAddress = '';
+      this.selectedCurrency = this.tokensList[0];
+      this.sendTx = null;
+      this.isValidAddress = false;
+      this.amount = '0';
+      this.data = '0x';
+      this.userInputType = '';
+      this.localGasPrice = '0';
+      this.localGasType = 'economy';
+      this.defaultGasLimit = '21000';
+      this.gasLimitError = '';
+      this.amountError = '';
+      this.gasEstimationError = '';
+      this.gasEstimationIsReady = false;
+
+      // resets the defaults on mount
+      this.setSendTransaction();
+      this.gasLimit = this.prefilledGasLimit;
+      this.sendTx.setCurrency(this.selectedCurrency);
+      this.handleLocalGasPrice({
+        gasType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      });
+    },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
      */
@@ -614,9 +620,6 @@ export default {
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
     },
-    toggleOverlay() {
-      this.addMode = !this.addMode;
-    },
     setSendTransaction() {
       this.sendTx = new SendTransaction(this.$store);
     },
@@ -641,6 +644,7 @@ export default {
       this.sendTx.submitTransaction().catch(error => {
         this.error = error;
       });
+      this.clear();
     },
     prefillForm() {
       if (this.isPrefilled) {
@@ -658,14 +662,6 @@ export default {
         Toast(this.$t('sendTx.prefilled-warning'), {}, WARNING, 1000);
         this.clearPrefilled();
       }
-    },
-    clear() {
-      this.data = '';
-      this.amount = '0';
-      this.isValidAddress = false;
-      this.toAddress = '';
-      this.$refs.mewSelect.clear();
-      this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
       const amt = toBN(amount).toString();

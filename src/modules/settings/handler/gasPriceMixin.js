@@ -1,12 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { SENTRY, Toast } from '@/modules/toast/handler/handlerToast';
+import { SENTRY, Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import {
   getGasBasedOnType,
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
 import { fromWei, toWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { toBN } from 'web3-utils';
 
 const gasPriceMixin = {
   data() {
@@ -17,7 +18,7 @@ const gasPriceMixin = {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice']),
+    ...mapGetters('global', ['gasPrice', 'network']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType', 'baseGasPrice']),
     gasButtons() {
@@ -95,11 +96,19 @@ const gasPriceMixin = {
         this.setGasPrice(
           getGasBasedOnType(toWei(customGasPrice, 'gwei'), gasPriceTypes.STORED)
         );
+        Toast(
+          `You have set custom gas price at: ${customGasPrice}`,
+          {},
+          SUCCESS
+        );
       });
     },
     fetchGasPrice() {
       this.web3.eth.getGasPrice().then(gp => {
-        this.localGas = gp;
+        const modifiedGasPrice = toBN(gp).muln(
+          this.network.type.gasPriceMultiplier
+        );
+        this.localGas = modifiedGasPrice.toString();
       });
     }
   }

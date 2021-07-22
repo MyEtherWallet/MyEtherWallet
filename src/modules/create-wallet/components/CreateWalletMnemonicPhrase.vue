@@ -94,7 +94,7 @@
         <mew-warning-sheet
           class="mt-5 mb-0"
           title="NOT RECOMMENDED"
-          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. Your phrase is the key to your wallet. Please make sure to write it down and save it in a secure location. We CAN NOT retrieve or reset your phrase if you lose it."
         />
       </template>
       <!--
@@ -179,7 +179,7 @@
         <mew-warning-sheet
           class="mt-5 mb-0"
           title="NOT RECOMMENDED"
-          description='This information is sensitive, and these options should only be used in offline settings by experienced crypto users. And MEW "CAN NOT" change your password. Please "DO NOT FORGET" to save your password, and it is your private key. You will need this "Password + Keystore file" to access your wallet.'
+          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users. Your phrase is the key to your wallet. Please make sure to write it down and save it in a secure location. We CAN NOT retrieve or reset your phrase if you lose it."
         />
       </template>
       <!--
@@ -192,10 +192,11 @@
           <div class="d-flex align-center">
             <div>
               <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-              <div class="headline font-weight-bold mb-3">Well done</div>
+              <div class="headline font-weight-bold mb-3">Well done!</div>
               <p class="mb-6">
-                Congratulation! Please use the MEWconnect App to scan this QR
-                code in order to access your new wallet. And you are done!
+                You are now ready to take advantage of all that Ethereum has to
+                offer! Access with mnemonic phrase should only be used in an
+                offline setting
               </p>
               <v-img
                 class="d-block d-sm-none mx-auto mt-12 mb-12"
@@ -235,6 +236,7 @@
 import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
@@ -254,20 +256,6 @@ export default {
     validateMnemonicValues: {},
     extraWord: '',
     extraWordVerification: '',
-    link: {
-      title: 'Learn more',
-      url: 'https://www.myetherwallet.com/terms-of-service'
-    },
-    titleData: {
-      textProps: 'white--text',
-      toptitle: '',
-      title: 'Mnemonic phrase',
-      titleMaxWidth: '',
-      description:
-        'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
-      descriptionMaxWidth: '400px',
-      centered: true
-    },
     steppers: [
       {
         step: 1,
@@ -368,7 +356,7 @@ export default {
      * Used in Step 3
      */
     goToAccess() {
-      this.$router.push({ name: 'AccessWallet' });
+      this.$router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     },
 
     /**
@@ -380,9 +368,6 @@ export default {
         this.setPhrase();
       }
       this.step = newStep;
-    },
-    randomNumberGenerator() {
-      return Math.floor(Math.random() * 24) + 1;
     }
   }
 };

@@ -78,12 +78,12 @@
                 </a>
               </div>
               <div class="px-6 border-right">
-                <router-link :to="{ name: 'PrivacyPolicy' }">
+                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
                   Privacy
                 </router-link>
               </div>
               <div class="px-6">
-                <router-link :to="{ name: 'TermsOfService' }">
+                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
               </div>
@@ -98,7 +98,13 @@
               target="_blank"
               class="ml-4"
             >
-              <mew-icon :img-height="20" :icon-name="i.icon" />
+              <mew-icon v-if="i.icon" :img-height="20" :icon-name="i.icon" />
+              <img
+                v-if="i.iconImage"
+                :src="i.iconImage"
+                alt="Social"
+                height="15"
+              />
             </a>
           </div>
         </div>
@@ -119,7 +125,7 @@
             </p>
             <v-spacer />
             <v-sheet width="150" color="transparent">
-              <v-select
+              <!-- <v-select
                 v-model="select"
                 append-icon="mdi-chevron-down"
                 :items="languages"
@@ -128,7 +134,7 @@
                 return-object
                 single-line
                 dark
-              ></v-select>
+              ></v-select> -->
             </v-sheet>
           </div>
         </v-container>
@@ -263,7 +269,7 @@
             <div class="d-flex align-center justify-space-between">
               <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
               <v-sheet width="150" color="transparent">
-                <v-select
+                <!-- <v-select
                   v-model="select"
                   append-icon="mdi-chevron-down"
                   :items="languages"
@@ -272,7 +278,7 @@
                   return-object
                   single-line
                   dark
-                ></v-select>
+                ></v-select> -->
               </v-sheet>
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
@@ -294,6 +300,8 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'TheDefaultFooter',
   data: () => ({
@@ -379,39 +387,39 @@ export default {
         ]
       }
     ],
-    select: 'en',
-    languages: [
-      {
-        name: 'English',
-        value: 'en',
-        flag: require('@/assets/images/flags/uk.png')
-      },
-      {
-        name: 'Russian',
-        value: 'ru',
-        flag: require('@/assets/images/flags/russia.png')
-      },
-      {
-        name: 'Germany',
-        value: 'ge',
-        flag: require('@/assets/images/flags/germany.png')
-      },
-      {
-        name: 'Chinese',
-        value: 'ch',
-        flag: require('@/assets/images/flags/china.png')
-      },
-      {
-        name: 'Korean',
-        value: 'kr',
-        flag: require('@/assets/images/flags/korea.png')
-      },
-      {
-        name: 'Japanese',
-        value: 'jp',
-        flag: require('@/assets/images/flags/japan.png')
-      }
-    ],
+    // select: 'en',
+    // languages: [
+    //   {
+    //     name: 'English',
+    //     value: 'en',
+    //     flag: require('@/assets/images/flags/uk.png')
+    //   },
+    //   {
+    //     name: 'Russian',
+    //     value: 'ru',
+    //     flag: require('@/assets/images/flags/russia.png')
+    //   },
+    //   {
+    //     name: 'Germany',
+    //     value: 'ge',
+    //     flag: require('@/assets/images/flags/germany.png')
+    //   },
+    //   {
+    //     name: 'Chinese',
+    //     value: 'ch',
+    //     flag: require('@/assets/images/flags/china.png')
+    //   },
+    //   {
+    //     name: 'Korean',
+    //     value: 'kr',
+    //     flag: require('@/assets/images/flags/korea.png')
+    //   },
+    //   {
+    //     name: 'Japanese',
+    //     value: 'jp',
+    //     flag: require('@/assets/images/flags/japan.png')
+    //   }
+    // ],
     socialIcons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
@@ -444,8 +452,13 @@ export default {
       {
         link: 'https://medium.com/@myetherwallet',
         icon: 'medium'
+      },
+      {
+        link: 'https://t.me/myetherwallet',
+        iconImage: require('@/assets/images/icons/icon-telegram.svg')
       }
-    ]
+    ],
+    ROUTES_HOME: ROUTES_HOME
   })
 };
 </script>

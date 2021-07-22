@@ -47,7 +47,6 @@ export default {
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
-      this.setDarkList();
       this.setCurrency(currencyTypes.USD);
     }
     // Window events to watch out if the online status changes
@@ -56,13 +55,12 @@ export default {
     });
     window.addEventListener('online', () => {
       this.setOnlineStatus(true);
-      this.setDarkList();
       this.setCurrency(currencyTypes.USD);
     });
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setDarkList', 'setCurrency'])
+    ...mapActions('external', ['setCurrency'])
   }
 };
 </script>

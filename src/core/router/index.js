@@ -3,6 +3,7 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
+import { ROUTES_HOME } from '../configs/configRoutes';
 const routes = [routesDefault, routesWallet];
 
 const getLangBasePath = () => {
@@ -25,17 +26,24 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
-  if (to.meta.hasOwnProperty('requiresAuth')) {
+  // Check if user is coming from a path that needs auth
+  if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
+    store.dispatch('wallet/removeWallet');
+  }
+  if (to.meta.noAuth) {
     next();
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      next({ name: 'AccessWallet' });
+      next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     } else {
       if (store.state.external.path !== '') {
+        const localPath = store.state.external.path;
         store.dispatch('external/setLastPath', '');
+        router.push({ path: localPath });
+      } else {
+        next();
       }
-      next();
     }
   }
 });

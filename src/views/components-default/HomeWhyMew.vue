@@ -1,7 +1,6 @@
 <template>
   <div class="mew-component--why-mew">
     <div class="desktop-content d-none d-lg-block">
-      <div class="py-12" />
       <div class="py-6" />
       <v-container>
         <v-sheet color="transparent" max-width="400px">
@@ -18,10 +17,6 @@
             class="d-flex align-end block-box-shadow"
             title="Friendly to use"
             desc="Access the Ethereum blockchain's original and most-trusted wallet, now with a host of new features all contained in an elegant and friendly interface."
-            :link="{
-              title: 'Start exploring',
-              url: 'www.myetherwallet.com'
-            }"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
           <div class="pa-4"></div>
@@ -30,12 +25,8 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
+              title="Swaps, DeFi, DApps, NFTs, Stablecoins"
               desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
-              :link="{
-                title: 'Learn more',
-                url: 'www.myetherwallet.com'
-              }"
             />
             <div class="pa-4"></div>
             <mew-info-card
@@ -43,20 +34,16 @@
               max-width="600"
               title="Hardware wallet support"
               desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
-              :link="{
-                title: 'Learn more',
-                url: 'www.myetherwallet.com'
-              }"
             />
           </div>
 
           <div class="pa-4"></div>
           <mew-info-card
-            title="MEWwallet"
+            title="MEW wallet"
             desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
             :link="{
               title: 'Get the App',
-              url: 'www.myetherwallet.com'
+              url: 'https://www.mewwallet.com/'
             }"
           >
             <template #titleIconContainer>
@@ -107,7 +94,7 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Swaps, DeFi, Dapps, NFTs, Stablecoins"
+            title="Swaps, DeFi, DApps, NFTs, Stablecoins"
             desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
             :link="{
               title: 'Learn more',
@@ -127,7 +114,7 @@
 
           <mew-info-card
             class="mx-auto"
-            title="MEWwallet"
+            title="MEW wallet"
             desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
             :link="{
               title: 'Get the App',

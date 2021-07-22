@@ -5,6 +5,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
+const sourceMapsConfig = {
+  filename: 'sourcemaps/[file].map'
+};
+if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
+  sourceMapsConfig.exclude = /vendors.*.*/;
 const webpackConfig = {
   devtool: false,
   node: {
@@ -19,7 +24,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "font-src 'self' data:; default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443 viewm.moonicorn.network:443; img-src 'self' mewcard.mewapi.io:443 raw.githubusercontent.com:443 assets.coingecko.com:443 nft.mewapi.io:443 nft2.mewapi.io:443 cdn.stateofthedapps.com:443 img.mewapi.io:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
+        "font-src 'self' data:; default-src 'self' blob:; frame-src 'self' www.walletlink.org:443 connect.trezor.io:443; img-src 'self' nft.mewapi.io:443 mewcard.mewapi.io:443 img.mewapi.io:443 data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src " +
         allowedConnections.join(' ') +
         ';',
       'X-Content-Type-Options': 'nosniff',
@@ -29,10 +34,7 @@ const webpackConfig = {
     }
   },
   plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: 'sourcemaps/[file].map',
-      exclude: /vendors.*.*/
-    }),
+    new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',
@@ -64,13 +66,8 @@ const webpackConfig = {
   ],
   optimization: {
     splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors'
-        }
-      }
+      minSize: 1000000,
+      maxSize: 20000000
     }
   }
 };
@@ -89,6 +86,7 @@ const exportObj = {
     }
   },
   chainWebpack: config => {
+    2;
     // GraphQL Loader
     config.module
       .rule('graphql')

@@ -89,9 +89,10 @@ import {
 import { ACCESS_VALID_OVERLAYS } from '@/core/router/helpers';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import { mapActions, mapState, mapGetters } from 'vuex';
-import MewConnect from '@myetherwallet/mewconnect-web-client';
 import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
+import { MewConnectWallet } from '@/modules/access-wallet/common';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -122,8 +123,8 @@ export default {
         /* MEW wallet Button */
         {
           color: 'basic',
-          title: 'MEWwallet',
-          subtitle: 'Use MEWwallet to access my wallet',
+          title: 'MEW wallet',
+          subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
@@ -137,7 +138,7 @@ export default {
         {
           color: 'basic',
           title: 'Browser Extension',
-          subtitle: 'Use Browser Extension to access my wallet',
+          subtitle: 'Use your web3 wallet with MEW.',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
           titleIcon: 'mdi-shield-check',
@@ -150,8 +151,8 @@ export default {
         /* Hardware Wallet */
         {
           color: 'basic',
-          title: 'Hardware wallets',
-          subtitle: 'Ledger, Trezor, Keep key, FINNEY, BitBox',
+          title: 'Hardware Wallets',
+          subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',
@@ -165,7 +166,7 @@ export default {
         {
           color: 'basic',
           title: 'Mobile Apps',
-          subtitle: 'WalletConnect, Wallet Link',
+          subtitle: 'WalletConnect, WalletLink',
           note: '',
           rightIcons: [
             require('@/assets/images/icons/icon-wallet-connect.svg'),
@@ -238,7 +239,7 @@ export default {
     close() {
       try {
         this.$router.push({
-          name: 'AccessWallet'
+          name: ROUTES_HOME.ACCESS_WALLET.NAME
         });
       } catch (e) {
         Toast(e, {}, ERROR);
@@ -252,7 +253,7 @@ export default {
     openOverlay(type) {
       try {
         this.$router.push({
-          name: 'AccessWallet',
+          name: ROUTES_HOME.ACCESS_WALLET.NAME,
           params: { overlay: type },
           query: { type: 'overview' }
         });
@@ -271,15 +272,11 @@ export default {
           await window.ethereum.enable();
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, web3.currentProvider]);
-          window.ethereum.on('accountsChanged', acc => {
-            const wallet = new Web3Wallet(acc[0]);
-            this.setWallet([wallet, web3.currentProvider]);
-          });
+          this.setWallet([wallet, window.ethereum]);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
-            this.$router.push({ name: 'Wallets' });
+            this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
           }
         } catch (e) {
           Toast(e.message, {}, WARNING);
@@ -292,20 +289,15 @@ export default {
      * Subsequently, this method creates an instance of MEWconnect with signTransaction and signMessage methods.
      */
     openMEWconnect() {
-      try {
-        const mc = new MewConnect.Initiator({ newPopupCreator: true });
-        mc.createWalletOnly(this.network)
-          .then(_newWallet => {
-            this.setWallet([_newWallet]).then(() => {
-              this.$router.push({ name: 'Dashboard' });
-            });
-          })
-          .catch(e => {
-            Toast(e.message, {}, SENTRY);
+      MewConnectWallet()
+        .then(_newWallet => {
+          this.setWallet([_newWallet]).then(() => {
+            this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           });
-      } catch (e) {
-        Toast(e.message, {}, SENTRY);
-      }
+        })
+        .catch(e => {
+          Toast(e.message, {}, SENTRY);
+        });
     }
   }
 };

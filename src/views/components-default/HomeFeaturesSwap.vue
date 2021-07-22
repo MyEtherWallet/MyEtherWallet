@@ -67,7 +67,9 @@
         title="Swap"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
-        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
+        @click.native="
+          $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME, params: {} })
+        "
       />
     </div>
   </mew6-white-sheet>
@@ -78,6 +80,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 const STATIC_PAIRS = [
   {
@@ -161,18 +164,13 @@ const STATIC_PAIRS = [
 export default {
   name: 'HomeFeaturesSwap',
   components: {},
-  props: {
-    mobile: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       swapHandler: null,
       swapData: null,
       loading: true,
-      error: false
+      error: false,
+      ROUTES_HOME: ROUTES_HOME
     };
   },
   computed: {

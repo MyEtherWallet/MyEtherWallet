@@ -4,16 +4,14 @@ import MEWProvider from '@/utils/web3-provider';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { formatters } from 'web3-core-helpers';
 import EventNames from '@/utils/web3-provider/events';
-
 import { EventBus } from '@/core/plugins/eventBus';
 const removeWallet = function ({ commit, state }) {
   if (
     state.identifier === WALLET_TYPES.WALLET_CONNECT ||
-    state.identifier === WALLET_TYPES.WALLET_LINK
+    state.identifier === WALLET_TYPES.WALLET_LINK ||
+    state.identifier === WALLET_TYPES.MEW_CONNECT
   ) {
     state.instance.getConnection().disconnect();
-  } else if (state.identifier === WALLET_TYPES.MEW_CONNECT) {
-    state.instance.getConnection().disconnectRTC();
   }
   commit('REMOVE_WALLET');
 };
@@ -58,13 +56,13 @@ const setWeb3Instance = function (
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
   web3Instance.eth.transactionConfirmationBlocks = 1;
-  web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
         const gasPrice = rootGetters['global/gasPrice'];
+
         const localTx = {
           to: arr[i].to,
           data: arr[i].data,
@@ -81,7 +79,7 @@ const setWeb3Instance = function (
         arr[i].nonce = web3.utils.toBN(nonce).addn(i).toString();
         arr[i].gas = gas;
         arr[i].chainId = !arr[i].chainId
-          ? rootState.global.currentNetwork.type.chainID
+          ? rootGetters['global/network'].type.chainID
           : arr[i].chainId;
         arr[i].gasPrice =
           arr[i].gasPrice === undefined ? gasPrice : arr[i].gasPrice;
