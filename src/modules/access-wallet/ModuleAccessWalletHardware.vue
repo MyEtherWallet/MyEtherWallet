@@ -593,7 +593,7 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          if (this.wallet[this.walletType]) {
+          if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
@@ -612,7 +612,7 @@ export default {
           this.setAddresses();
         })
         .catch(err => {
-          if (this.wallet[this.walletType]) {
+          if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
@@ -716,7 +716,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        if (this.wallet[this.walletType]) {
+        if (this.wallets[this.walletType]) {
           this.wallets[this.walletType].create.errorHandler(e);
         } else {
           Toast(e, {}, ERROR);

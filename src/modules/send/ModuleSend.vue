@@ -242,7 +242,7 @@ export default {
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
-    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     isDisabledNextBtn() {
       return (
         this.feeError !== '' ||

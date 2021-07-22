@@ -1,9 +1,21 @@
+### Feature
+
+* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+
+### Fix
+
+* Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
+* fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
+* fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
+* hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
+* Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
+
 ### Release v6.0.3-hotfix.1
 
 ### Fix
 
-* Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
-* Add scoped to mew wallet banner scss [#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
+* fix route import [#3291](https://github.com/MyEtherWallet/MyEtherWallet/pull/3291)
+* Add scoped to mew wallet banner scss[#3304](https://github.com/MyEtherWallet/MyEtherWallet/pull/3304)
 
 ### Release v6.0.3
 
@@ -13,6 +25,7 @@
 
 ### Fix
 
+* fix error message property of undefined [#3292](https://github.com/MyEtherWallet/MyEtherWallet/pull/3292)
 * add mew notification prop to hide indicator \[#3302] (https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
 * fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
 
