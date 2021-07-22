@@ -11,7 +11,7 @@ const sourceMapsConfig = {
 if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false')
   sourceMapsConfig.exclude = /vendors.*.*/;
 const webpackConfig = {
-  devtool: 'source-map',
+  devtool: false,
   node: {
     process: true
   },
