@@ -9,6 +9,7 @@
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
 * fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
+* Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
 
 ### Release v6.0.3-hotfix.1
 
