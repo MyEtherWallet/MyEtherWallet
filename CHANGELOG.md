@@ -11,6 +11,10 @@
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
 * Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
 
+### Feat
+
+* reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
+
 ### Release v6.0.3-hotfix.1
 
 ### Fix
