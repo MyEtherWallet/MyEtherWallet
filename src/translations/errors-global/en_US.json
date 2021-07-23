@@ -1,21 +1,5 @@
 {
-  "not-valid-amount-total": "Not enough ",
-  "to-send": "to send.",
-  "invalid-value": "Invalid value",
-  "wrong-passphrase": "Passphrase given is incorrect!",
-  "browser-non-u2f": "Browser not u2f compliant. Try using Chrome or Opera!",
-  "browser-non-web-usb": "Browser does not support WebUSB. Try using Chrome or Opera!",
-  "no-mobile-support": "Hardware wallet not supported by mobile browser!",
   "something-went-wrong": "Something went wrong!",
-  "signer-address-different": "Signer address is different from the derived address!",
-  "high-gas-limit-warning": "Warning: High gas prices mean higher transaction fees.",
   "invalid-network-id-sig": "Invalid networkId signature returned. Expected: {expected}, Got: {got}",
-  "print-support-error": "Print isn't supported or browser does not support print",
-  "network-error": "No network connection please make sure you are connected",
-  "browser-not-supported": "Browser not compliant. Try using Chrome or Opera!",
-  "access-denied": "You dont have necessary permission to perform this task, make sure you are logged in as admin",
-  "unable-to-reset-device": "Unable to reset device, try unplugging and replugging",
-  "u2f-not-supported": "U2F Not supported by browser!",
-  "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address may not be recoverable.",
-  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction."
+  "print-support-error": "Print isn't supported or browser does not support print"
 }
