@@ -9,6 +9,7 @@ const ACCEPTABLE_ENTRIES = [
   'translation'
 ];
 function main() {
+  const currentChangeLog = fs.readFileSync('CHANGELOG.md', 'utf8');
   const files = fs.readdirSync('./changelog');
   const container = ACCEPTABLE_ENTRIES.reduce((acc, curr) => {
     acc[curr] = [];
@@ -40,7 +41,7 @@ function main() {
         const parsedFile = `${fileContent.replace(
           '\n',
           ''
-        )} [${prNumber}](https://github.com/MyEtherWallet/MyEtherWallet/pull/${prNumber})`;
+        )} [#${prNumber}](https://github.com/MyEtherWallet/MyEtherWallet/pull/${prNumber})`;
         body = `${body}
 ${parsedFile}`;
         if (idx === container[item].length - 1) {
@@ -53,12 +54,17 @@ ${parsedFile}`;
     }
   });
 
-  if (files.includes(`release-v${version}.md`)) {
+  if (currentChangeLog.includes(`v${version}`)) {
     console.log(
       `Release v${version} already exists! Please make sure that versions are updated properly!`
     );
     return;
   }
+
+  const remadeChangelog = `${newLog}
+
+  ${currentChangeLog}`;
+
   fs.writeFileSync(`./changelog/release-v${version}.md`, newLog);
   // deletes all non release entries for release
   files
