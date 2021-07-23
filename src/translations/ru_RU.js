@@ -9,7 +9,6 @@ import privacyPolicy from './privacy-policy/ru_RU';
 import termsOfService from './terms-of-conditions/ru_RU';
 import accessWallet from './access-wallet/ru_RU';
 import interfaceTranslations from './interface/ru_RU';
-import team from './team/ru_RU';
 import errorsGlobal from './errors-global/ru_RU';
 import trezorError from './errors-trezor/ru_RU';
 import ledgerError from './errors-ledger/ru_RU';
@@ -36,7 +35,6 @@ const ru_RU = {
   gettingStarted: gettingStarted,
   privacyPol: privacyPolicy,
   termsOfService: termsOfService,
-  team: team,
   accessWallet: accessWallet,
   interface: interfaceTranslations,
   errorsGlobal: errorsGlobal,
