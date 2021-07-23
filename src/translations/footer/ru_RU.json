@@ -3,7 +3,7 @@
     "discover": "Инструменты",
     "affiliates": "Партнеры",
     "mew": "MEW",
-    "love": "Нравится {heart} MEW?"
+    "love": "Нравится %1$s MEW?"
   },
   "units": "Единицы",
   "txStat": "Статус транзакции",

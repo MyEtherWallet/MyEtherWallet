@@ -29,7 +29,6 @@
   "advanced": "Advanced",
   "send-offline": "Send Offline Helper",
   "sotd": "State of the DApps",
-  "mew-connect-protocol": "MEWconnect Protocol",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
   "donation": {
@@ -39,9 +38,10 @@
   },
   "coingecko": "Coingecko",
   "view-wallet-info": "View Wallet Info",
+  "mew-connect-protocol": "MEWconnect Protocol",
   "press-kit": {
     "header": "Press Kit",
-    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
+    "subtext": "Announcements can be found on our %1$s. For press and media inquiries, please contact: %1$s",
     "medium": "Medium blog"
   },
   "ethvm": "EthVM"

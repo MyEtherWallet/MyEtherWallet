@@ -10,7 +10,7 @@
   },
   "sotd": {
     "title": "A Joint Effort With State of The DApps",
-    "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on {url}",
+    "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on %1$s",
     "url": "stateofthedapps.com",
     "name": "State of the DApps"
   },
