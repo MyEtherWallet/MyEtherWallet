@@ -1,0 +1,21 @@
+name: generate changelog when a release is happening
+
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    name: Generaate changelog before release
+    if: contains(github.head_ref, 'develop') == true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Compile changelog entries
+        run: node prepChangelog.js
+      - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: $GITHUB_TOKEN
+          commit-message: 'devop: generate changelog for release'

@@ -9,8 +9,12 @@ const ACCEPTABLE_ENTRIES = [
   'translation'
 ];
 function main() {
-  const currentChangeLog = fs.readFileSync('CHANGELOG.md', 'utf8');
   const files = fs.readdirSync('./changelog');
+  if (files.length === 0) {
+    console.log('No changelog entry found!');
+    return;
+  }
+  const currentChangeLog = fs.readFileSync('CHANGELOG.md', 'utf8');
   const container = ACCEPTABLE_ENTRIES.reduce((acc, curr) => {
     acc[curr] = [];
     return acc;
@@ -65,7 +69,7 @@ ${parsedFile}`;
 
   ${currentChangeLog}`;
 
-  fs.writeFileSync(`./changelog/release-v${version}.md`, newLog);
+  fs.writeFileSync(`./changelog/release-v${version}.md`, remadeChangelog);
   // deletes all non release entries for release
   files
     .filter(item => {
