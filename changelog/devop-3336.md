@@ -1,1 +1,1 @@
-- create a way to avoid changelog conflicts
+* create a way to avoid changelog conflicts
