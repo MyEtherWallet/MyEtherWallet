@@ -52,7 +52,15 @@ ${parsedFile}`;
       ${sectionHeader}`;
     }
   });
+
+  if (files.includes(`release-v${version}.md`)) {
+    console.log(
+      `Release v${version} already exists! Please make sure that versions are updated properly!`
+    );
+    return;
+  }
   fs.writeFileSync(`./changelog/release-v${version}.md`, newLog);
+  // deletes all non release entries for release
   files
     .filter(item => {
       if (!item.includes('release')) {
