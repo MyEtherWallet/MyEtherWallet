@@ -38,5 +38,6 @@
     "bitcoin": "Поддержка в Bitcoin"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "Смотреть информацию о кошельке"
+  "view-wallet-info": "Смотреть информацию о кошельке",
+  "ethvm": "EthVM"
 }
