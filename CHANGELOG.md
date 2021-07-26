@@ -1,5 +1,6 @@
 ### Fix
 
+* fix sanitize hex utils check [#3285](https://github.com/MyEtherWallet/MyEtherWallet/pull/3285)
 * fix polygon gasprice issue [#3312](https://github.com/MyEtherWallet/MyEtherWallet/pull/3312)
 * Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
