@@ -21,9 +21,9 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              {{ $t('home.footer.heading') }}
+              {{ $t('footer.donation.heading') }}
             </div>
-            <p>{{ $t('home.footer.text') }}</p>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
@@ -36,7 +36,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>
@@ -71,17 +71,17 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
-                  Privacy
+                  {{ $t('footer.privacy') }}
                 </router-link>
               </div>
               <div class="px-6">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
-                  Terms
+                  {{ $t('footer.tos') }}
                 </router-link>
               </div>
             </div>
@@ -112,12 +112,12 @@
             <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+              {{ $t('footer.copyright') }}
               <a
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
                 target="_blank"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >.
             </p>
             <v-spacer />
@@ -174,9 +174,9 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
             <h3 class="mb-3 d-flex align-center">
-              {{ $t('home.footer.heading') }}
+              {{ $t('footer.donation.heading') }}
             </h3>
-            <p>{{ $t('home.footer.text') }}</p>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
               target="_blank"
@@ -207,7 +207,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.btc') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -236,14 +236,14 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-2 px-lg-6 border-right">
                 <a
                   class="color--inherit"
                   href="https://www.myetherwallet.com/privacy-policy"
-                  >Privacy</a
+                  >{{ $t('footer.privacy') }}</a
                 >
               </div>
               <div class="px-2 px-lg-6">
@@ -251,7 +251,7 @@
                   class="color--inherit"
                   href="https://www.myetherwallet.com/terms-and-conditions"
                 >
-                  Terms
+                  {{ $t('footer.tos') }}
                 </a>
               </div>
             </div>
@@ -279,12 +279,12 @@
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+                {{ $t('footer.copyright') }}
                 <a
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
                   target="_blank"
-                  >Coingecko</a
+                  >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
             </v-sheet>
