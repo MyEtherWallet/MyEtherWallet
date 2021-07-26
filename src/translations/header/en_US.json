@@ -1,11 +1,4 @@
 {
-  "ethplorer": "Ethplorer",
-  "ethvm": "EthVM",
-  "new-wallet": "New Wallet",
-  "access": "Access",
-  "twitter-modal": {
-    "pt1": "Our Twitter account has been inaccessible since the Twitter Hack on July 15th with no response from Twitter Support.",
-    "pt2": "We're calling on the MEW community for help! Re-tweet MEW founder’s message to restore MEW Twitter!",
-    "retweet": "Retweet"
-  }
+  "what-is-mew": "What is MEW",
+  "buy-eth": "Buy ETH"
 }
