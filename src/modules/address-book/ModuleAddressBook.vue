@@ -105,6 +105,23 @@ export default {
     }
   },
   methods: {
+    // is used from the parent context
+    // eslint-disable-next-line
+    clear() {
+      this.addMode = false;
+      this.resolvedAddr = '';
+      this.inputAddr = '';
+      this.nameResolver = null;
+      this.isValidAddress = false;
+      this.$refs.addressSelect.clear();
+
+      // Calls setups from mounted
+      if (this.network.type.ens)
+        this.nameResolver = new NameResolver(this.network);
+      if (this.isHomePage) {
+        this.setDonationAddress();
+      }
+    },
     /**
      * Sets selected address to be MEW donation address
      * only happens on home page
