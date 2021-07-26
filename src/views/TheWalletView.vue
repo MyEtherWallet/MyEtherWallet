@@ -1,12 +1,9 @@
 <template>
   <div class="wallet-main">
     <the-wallet-side-menu />
-    <the-wallet-header />
-    <v-main class="pt-8">
-      <v-container
-        class="pa-2 pa-md-3 mb-14 align-center wallet-content-container"
-        fluid
-      >
+    <v-main>
+      <v-container class="pa-2 pa-md-3 mb-14 align-center" fluid>
+        <the-wallet-header />
         <module-confirmation />
         <router-view />
       </v-container>
@@ -17,7 +14,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber, toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -96,7 +93,10 @@ export default {
         if (this.gasPriceType === gasPriceTypes.STORED) {
           this.setGasPrice(this.baseGasPrice);
         } else {
-          this.setGasPrice(res);
+          const modifiedGasPrice = toBN(res).muln(
+            this.network.type.gasPriceMultiplier
+          );
+          this.setGasPrice(modifiedGasPrice.toString());
         }
       });
     },

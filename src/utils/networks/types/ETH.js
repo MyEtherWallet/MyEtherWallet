@@ -29,5 +29,6 @@ export default {
     blockExplorerAddr: 'https://ethvm.com/address/[[address]]',
     websocket: null
   },
+  gasPriceMultiplier: 1,
   coingeckoID: 'ethereum'
 };
