@@ -100,7 +100,7 @@
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.0.1",
     "bip39": "3.0.4",
-    "codecov": "3.8.2",
+    "codecov": "3.8.3",
     "commitlint": "12.1.4",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.31.0",
