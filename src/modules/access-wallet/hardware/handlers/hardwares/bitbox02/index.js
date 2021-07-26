@@ -69,7 +69,7 @@ class BitBox02Wallet {
     this.hdKey = HDKey.fromExtendedKey(rootPub);
 
     if (!this.attestation) {
-      errorHandler('Attestation failed');
+      errorHandler({ message: 'Attestation failed' });
     }
   }
 
