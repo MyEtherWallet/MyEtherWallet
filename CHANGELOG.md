@@ -15,6 +15,10 @@
 * reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
 * Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
 
+### Devop
+
+* use swap link in all ccswap instances that are active [#3315](https://github.com/MyEtherWallet/MyEtherWallet/pull/3315)
+
 ### Release v6.0.3-hotfix.1
 
 ### Fix
