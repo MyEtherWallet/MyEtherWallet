@@ -1,3 +1,7 @@
+### Feature
+
+* remove quick help from v6 [3310](https://github.com/MyEtherWallet/MyEtherWallet/pull/3310)
+
 ### Fix
 
 * fix set ipfs hash button visible while uploading file [#3321](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
@@ -38,7 +42,7 @@
 ### Fix
 
 * fix error message property of undefined [#3292](https://github.com/MyEtherWallet/MyEtherWallet/pull/3292)
-* add mew notification prop to hide indicator \[#3302] (https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
+* add mew notification prop to hide indicator [#3302](https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
 * fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
 
 ### Release v6.0.2
