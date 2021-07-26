@@ -5,7 +5,7 @@
         <div class="mew-heading-2 mb-3">{{ actualTitle }}</div>
       </v-col>
       <v-col cols="12" class="px-0">
-        <div v-for="(data, key) in actualNotifications" :key="key">
+        <div v-for="(data, key) in actualNotifications" :key="key" class="mb-2">
           <mew-notification
             :show-indicator="false"
             :notification="data.notification"
