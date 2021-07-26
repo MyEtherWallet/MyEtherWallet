@@ -10,6 +10,7 @@
 * fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
 * Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
+* Fix swap display not working correctly [#3326](https://github.com/MyEtherWallet/MyEtherWallet/pull/3326)
 
 ### Feat
 
