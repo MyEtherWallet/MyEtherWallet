@@ -1,0 +1,36 @@
+name: add to codecov [v6]
+
+on:
+  push:
+    branches-ignore:
+      - 'gh-pages'
+      - 'gh-pages-history'
+      - 'master'
+      - 'develop'
+    tags-ignore:
+      - '*'
+    paths:
+      - './src/translations/**.json'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - './src/translations/**.json'
+
+jobs:
+  upload-translaations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check and create lokalise branch
+        env:
+          TOKEN: ${{secrets.LOKALISE_TOKEN}}
+          PROJECT_ID: ${{secrets.PROJECT_ID}}
+        run: TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/createLokaliseBranch.js
+
+      - name: Upload changes to lokalise
+        uses: jitterbit/get-changed-files@v1
+        env:
+          TOKEN: ${{secrets.LOKALISE_TOKEN}}
+          PROJECT_ID: ${{secrets.PROJECT_ID}}
+        run: FILES=${{steps.files.outputs.added_modified}} TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/uploadToLokalise.js
