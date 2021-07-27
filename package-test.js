@@ -68,7 +68,7 @@ const looper = () => {
       if (ALL_PACKAGES[_name] !== latestVersion) {
         if (
           (_name === '@myetherwallet/mew-components' &&
-            new Date(latestVersionTime).getTime() < new Date().getTime()) ||
+            !latestVersion.includes('-')) ||
           new Date(latestVersionTime).getTime() <
             new Date().getTime() - SAFE_TIME
         ) {

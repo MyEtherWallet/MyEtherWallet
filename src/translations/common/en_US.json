@@ -119,11 +119,6 @@
     "strong": "Strong strength password",
     "strong-note": "Good! Your password is very strong."
   },
-  "decision-tree": {
-    "subcategories": "Subcategories",
-    "no-results": "Oops! No search results found.",
-    "quick-help": "Quick Help"
-  },
   "optional": "Optional",
   "value": "Value",
   "network": "Network",
