@@ -1,4 +1,5 @@
 ### Fix
+
 * Check if object is there before calling disconnect [#3298](https://github.com/MyEtherWallet/MyEtherWallet/pull/3298)
 * tx confirmation mew help center link [#3323](https://github.com/MyEtherWallet/MyEtherWallet/pull/3323)
 * fix verify message layout [#3320](https://github.com/MyEtherWallet/MyEtherWallet/pull/3320)
