@@ -43,7 +43,7 @@
       @closeOverlay="openNotifications = false"
     >
       <template #mewOverlayBody>
-        <v-sheet class="transparent" max-width="700px" width="100%">
+        <v-sheet class="transparent" max-width="735px" width="100%">
           <v-sheet
             color="transparent"
             max-width="350px"

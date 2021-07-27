@@ -5,7 +5,7 @@
         Values
       =====================================================================================
     -->
-    <confirmation-values-container :items="valueItems" is-custom />
+    <confirmation-values-container :items="valueItems" is-swap />
     <!--
       =====================================================================================
         Summary

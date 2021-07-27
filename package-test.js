@@ -20,8 +20,7 @@ const EXCEPTIONS = [
   '@aave/protocol-js',
   '@unstoppabledomains/resolution',
   'sass',
-  'scryptsy',
-  'is-ipfs' // verifying this next week
+  'scryptsy'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -69,7 +68,7 @@ const looper = () => {
       if (ALL_PACKAGES[_name] !== latestVersion) {
         if (
           (_name === '@myetherwallet/mew-components' &&
-            new Date(latestVersionTime).getTime() < new Date().getTime()) ||
+            !latestVersion.includes('-')) ||
           new Date(latestVersionTime).getTime() <
             new Date().getTime() - SAFE_TIME
         ) {
