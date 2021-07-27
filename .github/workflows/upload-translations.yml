@@ -6,14 +6,8 @@ on:
       - 'gh-pages'
       - 'gh-pages-history'
       - 'master'
-      - 'develop'
     tags-ignore:
       - '*'
-    paths:
-      - './src/translations/**.json'
-  pull_request:
-    branches:
-      - develop
     paths:
       - './src/translations/**.json'
 
@@ -29,8 +23,10 @@ jobs:
         run: TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/createLokaliseBranch.js
 
       - name: Upload changes to lokalise
-        uses: jitterbit/get-changed-files@v1
+        uses: tj-actions/changed-files@v9
+        with: |
+          ./src/translations
         env:
           TOKEN: ${{secrets.LOKALISE_TOKEN}}
           PROJECT_ID: ${{secrets.PROJECT_ID}}
-        run: FILES=${{steps.files.outputs.added_modified}} TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/uploadToLokalise.js
+        run: FILES=${{steps.changed-files.outputs.all_modified_files}} TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/uploadToLokalise.js
