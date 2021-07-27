@@ -13,9 +13,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-          cache: 'npm'
       - name: Compile changelog entries
-        run: node prepChangelog.js
+        run: npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node prepChangelog.js && npm run lint:md
       - name: Create PR
         uses: peter-evans/create-pull-request@v3
         with:
