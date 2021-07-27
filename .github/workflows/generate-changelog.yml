@@ -6,7 +6,8 @@ on:
       - devop/changelog-changes
 
 jobs:
-  build:
+  changelog:
+    runs-on: ubuntu-latest
     name: Generate changelog before release
     steps:
       - uses: actions/checkout@v2
