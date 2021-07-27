@@ -167,7 +167,7 @@
                   v-if="notEnoughEth"
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="https://ccswap.myetherwallet.com/#/"
+                  :href="swapLink"
                   class="mew-label font-weight-medium"
                   >Buy more ETH</a
                 >
@@ -255,7 +255,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'isEthNetwork']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
 
     icon() {
       return GAS_TYPE_ICONS[this.gasPriceType];

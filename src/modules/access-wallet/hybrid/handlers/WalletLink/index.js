@@ -30,12 +30,10 @@ class WalletLinkWallet {
       'realrpcurlnotrequired',
       0
     );
-    if (this.connection) {
-      this.connection._storage.clear();
-      this.connection.disconnect = () => {
-        this.connection._storage.clear();
-      };
-    }
+    this.connection?._storage.clear();
+    this.connection.disconnect = () => {
+      this.connection?._storage.clear();
+    };
     this.meta = {
       name: 'WalletLink',
       img: {

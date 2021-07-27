@@ -1,43 +1,48 @@
 <template>
-  <div>
-    <div class="mew-heading-2 mb-12">{{ title }}</div>
+  <mew-module
+    class="d-flex flex-grow-1 pt-6"
+    :title="title"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
+      <v-textarea
+        v-model="message"
+        outlined
+        label="Signature"
+        :value="message"
+      ></v-textarea>
 
-    <v-textarea
-      v-model="message"
-      outlined
-      label="Signature"
-      :value="message"
-    ></v-textarea>
+      <div v-if="signResult" class="walletBg pa-3">
+        {{ signer }}
+        <span v-if="didSign" class="font-weight-medium">
+          did sign the message
+        </span>
+        <span v-if="didntSign" class="font-weight-medium">
+          didn't sign the message
+        </span>
+      </div>
 
-    <div v-if="signResult" class="walletBg pa-3">
-      {{ signer }}
-      <span v-if="didSign" class="font-weight-medium">
-        did sign the message
-      </span>
-      <span v-if="didntSign" class="font-weight-medium">
-        didn't sign the message
-      </span>
-    </div>
+      <div v-if="verificationError" class="walletBg pa-3">
+        {{ $t('signMessage.failed') }}
+      </div>
 
-    <div v-if="verificationError" class="walletBg pa-3">
-      {{ $t('signMessage.failed') }}
-    </div>
-
-    <mew-button
-      :disabled="!message"
-      title="Verify"
-      btn-size="xlarge"
-      class="display--block mx-auto mt-5"
-      @click.native="verifyMessage"
-    />
-    <mew-button
-      btn-style="transparent"
-      title="Clear All"
-      btn-size="small"
-      class="display--block mx-auto mt-5"
-      @click.native="clearAll"
-    />
-  </div>
+      <mew-button
+        :disabled="!message"
+        title="Verify"
+        btn-size="xlarge"
+        class="display--block mx-auto mt-5"
+        @click.native="verifyMessage"
+      />
+      <mew-button
+        btn-style="transparent"
+        title="Clear All"
+        btn-size="small"
+        class="display--block mx-auto mt-5"
+        @click.native="clearAll"
+      />
+    </template>
+  </mew-module>
 </template>
 
 <script>
