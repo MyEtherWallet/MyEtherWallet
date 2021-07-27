@@ -1,4 +1,13 @@
 {
+  "header": {
+    "desc":"Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
+    "read": "Read..."
+  },
+  "qr": {
+    "title": "My public address to receive funds",
+    "desc": "To receive ETH from another account, send ETH from that account to this address.",
+    "my-main-account": "My Main Account"
+  },
   "menu": {
     "dashboard": "Dashboard",
     "nft": "NFT Manager",
@@ -27,5 +36,16 @@
       "already-exists": "This address already exists in the contact book",
       "addr-required": "Address is required"
     }
+  },
+  "gas": {
+    "desc": "Please select a default gas price for your transaction fee",
+    "change-gas": "To change the custom gas price, go to",
+    "global-setting": "global settings"
+  },
+  "import": {
+    "desc": "Please upload the file and click the button to open and import your configuration file from your local computer."
+  },
+  "export": {
+    "desc": "Export your configuration file and save it on your local computer for later use."
   }
 }

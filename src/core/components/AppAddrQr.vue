@@ -6,7 +6,7 @@
     =====================================================================================
     -->
     <v-col cols="10">
-      <div class="mew-heading-2">My public address to receive funds</div>
+      <div class="mew-heading-2">{{ $t('interface.qr.title') }}</div>
     </v-col>
     <!--
     =====================================================================================
@@ -15,8 +15,7 @@
     -->
     <v-col cols="12">
       <div class="textPrimary--text">
-        To receive ETH from another account, send ETH from that account to this
-        address.
+        {{ $t('interface.qr.desc') }}
       </div>
     </v-col>
     <!--
@@ -33,7 +32,7 @@
           class="inline-block"
         />
         <div class="pl-1 mew-body font-weight-bold inline-block">
-          My Main Account
+          {{ $t('interface.qr.my-main-account') }}
         </div>
       </div>
     </v-col>

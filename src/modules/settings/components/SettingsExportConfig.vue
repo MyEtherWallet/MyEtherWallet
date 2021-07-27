@@ -1,8 +1,7 @@
 <template>
   <div class="pa-6">
     <v-sheet color="transparent" max-width="550px" class="mb-7">
-      Export your configuration file and save it on your local computer for
-      later use.
+      {{ $t('interface.export.desc') }}
     </v-sheet>
     <div class="d-flex justify-center mt-5">
       <mew-button
