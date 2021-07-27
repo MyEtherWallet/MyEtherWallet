@@ -1,5 +1,6 @@
 ### Fix
 
+* fix tx confirmation layout [#3335](https://github.com/MyEtherWallet/MyEtherWallet/pull/3335)
 * tx confirmation mew help center link [#3323](https://github.com/MyEtherWallet/MyEtherWallet/pull/3323)
 * fix verify message layout [#3320](https://github.com/MyEtherWallet/MyEtherWallet/pull/3320)
 * fix set ipfs hash button visible while uploading file [#3321](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
