@@ -27,6 +27,7 @@ import LottieAnimation from '@/core/directives/lottie';
 
 // etc
 import '@/core/plugins/registerServiceWorker';
+import '@/core/plugins/translate';
 import vuetify from '@/core/plugins/vuetify';
 import apolloProvider from './main/apolloProvider';
 import i18n from './main/i18n';
