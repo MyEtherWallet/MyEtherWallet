@@ -15,7 +15,7 @@ jobs:
           node-version: '12'
           cache: 'npm'
       - name: Compile changelog entries
-        run: npm install remark-cli && node prepChangelog.js && npm run lint:md
+        run: node prepChangelog.js && npx remark . -o -f
       - name: Create PR
         env:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
