@@ -1,15 +1,11 @@
 const fs = require('fs');
 const version = require('./package.json').version;
-const ACCEPTABLE_ENTRIES = [
-  'feat',
-  'fix',
-  'chore',
-  'devop',
-  'ui',
-  'translation'
-];
+const devmoji = require('./devmoji.config');
+const ACCEPTABLE_ENTRIES = devmoji.devmoji.map(i => i.code);
+const CHANGELOG_DIR = './changelog';
 function main() {
-  const files = fs.readdirSync('./changelog');
+  let files = fs.readdirSync(CHANGELOG_DIR);
+  files = files.filter(f => f.charAt(0) !== '.');
   if (files.length === 0) {
     console.log('No changelog entry found!');
     return;
@@ -20,24 +16,21 @@ function main() {
     return acc;
   }, {});
   let newLog = `### Release v${version}`;
+  const isNewVersionAdded = !currentChangeLog.includes(newLog);
   files.forEach(item => {
     const type = item.split('-')[0];
-    const isValidType = ACCEPTABLE_ENTRIES.find(item => {
-      if (item === type) {
-        return item;
-      }
-    });
-
-    if (isValidType) {
+    if (ACCEPTABLE_ENTRIES.includes(type)) {
       container[type].push(item);
+    } else {
+      throw new Error(
+        'Invalid changelog type, valid types:' + ACCEPTABLE_ENTRIES.join(',')
+      );
     }
   });
-
+  let updatedStr = '';
   Object.keys(container).forEach(item => {
     if (container[item].length > 0) {
-      let sectionHeader = `
-### ${item}
-      `;
+      let sectionHeader = `### ${item}`;
       let body = ``;
       container[item].forEach((file, idx) => {
         const fileContent = fs.readFileSync(`./changelog/${file}`, 'utf8');
@@ -46,40 +39,28 @@ function main() {
           '\n',
           ''
         )} [#${prNumber}](https://github.com/MyEtherWallet/MyEtherWallet/pull/${prNumber})`;
-        body = `${body}
-${parsedFile}`;
+        body = `${body} \n ${parsedFile}`;
         if (idx === container[item].length - 1) {
-          sectionHeader = sectionHeader.concat(body);
-          body = ``;
+          updatedStr = `${updatedStr}\n ${sectionHeader} \n ${body}`;
         }
       });
-      newLog = `${newLog}
-      ${sectionHeader}`;
     }
   });
-
-  if (currentChangeLog.includes(`v${version}`)) {
-    console.log(
-      `Release v${version} already exists! Please make sure that versions are updated properly!`
-    );
-    return;
+  let remadeChangelog = `${updatedStr} \n ${currentChangeLog}`;
+  if (isNewVersionAdded) {
+    remadeChangelog = `${newLog} \n ${remadeChangelog}`;
   }
-
-  const remadeChangelog = `${newLog}
-
-  ${currentChangeLog}`;
-
-  fs.writeFileSync(`./changelog/release-v${version}.md`, remadeChangelog);
-  // deletes all non release entries for release
-  files
-    .filter(item => {
-      if (!item.includes('release')) {
-        return item;
-      }
-    })
-    .forEach(item => {
-      fs.unlinkSync(`./changelog/${item}`);
-    });
+  fs.writeFileSync(`./CHANGELOG.md`, remadeChangelog);
+  // // deletes all non release entries for release
+  // files
+  //   .filter(item => {
+  //     if (!item.includes('release')) {
+  //       return item;
+  //     }
+  //   })
+  //   .forEach(item => {
+  //     fs.unlinkSync(`./changelog/${item}`);
+  //   });
 }
 
 main();
