@@ -24,10 +24,23 @@
   },
   "swap": "Swap",
   "read": "Read",
-  "decision-tree": {
-    "subcategories": "Subcategories",
-    "quick-help": "Quick Help"
+  "article": {
+    "using-mew-offline": "Using MEW Offline",
+    "mnemonic-password": "Mnemonic Phrase: Should I Include an Extra Word?"
   },
+  "password": {
+    "string": "Password",
+    "enter": "Enter password",
+    "your": "Your Password",
+    "weak": "Weak strength password",
+    "weak-note": "Your password needs to be minimum 10 charactors long.",
+    "medium": "Medium strength password",
+    "medium-note": "Add numbers to make your password stronger.",
+    "strong": "Strong strength password",
+    "strong-note": "Good! Your password is very strong."
+  },
+  "optional": "Optional",
+  "value": "Value",
   "network": "Network",
   "addr": "Address",
   "balance": {

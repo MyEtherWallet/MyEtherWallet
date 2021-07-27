@@ -352,7 +352,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -369,7 +374,7 @@ export default {
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
         amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
@@ -394,6 +399,7 @@ export default {
     disableNext() {
       return (
         this.step < 2 ||
+        this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
         this.providersErrorMsg.subtitle !== ''
@@ -904,7 +910,8 @@ export default {
       return [];
     },
     buyEth() {
-      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = _.clone(this.fromTokenType);

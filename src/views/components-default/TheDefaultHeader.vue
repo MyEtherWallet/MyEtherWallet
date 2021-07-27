@@ -43,7 +43,7 @@
             @goToPage="routeTo"
           />
           <a
-            href="https://ccswap.myetherwallet.com/#/"
+            :href="swapLink"
             target="_blank"
             class="white--text text-decoration--none"
           >
@@ -62,6 +62,7 @@
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'TheDefaultHeader',
@@ -104,6 +105,9 @@ export default {
     },
     ROUTES_HOME: ROUTES_HOME
   }),
+  computed: {
+    ...mapGetters('global', ['swapLink'])
+  },
   methods: {
     routeTo(route) {
       this.$router.push(route);
