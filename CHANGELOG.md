@@ -20,6 +20,7 @@
 
 ### Feat
 
+* add routes to various features [3288](https://github.com/MyEtherWallet/MyEtherWallet/pull/3288)
 * remove quick help from v6 [3310](https://github.com/MyEtherWallet/MyEtherWallet/pull/3310)
 * reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
 * Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
