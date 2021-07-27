@@ -17,11 +17,9 @@ jobs:
       - name: Compile changelog entries
         run: node prepChangelog.js
       - name: Create PR
-        env:
-          GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         uses: peter-evans/create-pull-request@v3
         with:
-          token: $GITHUB_TOKEN
+          token: ${{secrets.MEW_BOT_TOKEN}}
           commit-message: 'chore: 👷 generate changelog for release'
           branch: chore/generate-changelog
           base: devop/changelog-changes
