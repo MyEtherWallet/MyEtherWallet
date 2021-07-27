@@ -3,7 +3,7 @@ const { LokaliseApi } = require('@lokalise/node-api');
 async function createBranch() {
   try {
     const lokaliseToken = process.env.TOKEN;
-    const branchName = process.env.BRANCH_NAME.replace('refs/heads/', '');
+    const branchName = process.env.GITHUB_REF.replace('refs/heads/', '');
     const projectId = process.env.PROJECT_ID;
     const lokalise = new LokaliseApi({ apiKey: lokaliseToken });
 

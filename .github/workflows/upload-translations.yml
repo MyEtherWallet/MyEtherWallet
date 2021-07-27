@@ -20,7 +20,7 @@ jobs:
         env:
           TOKEN: ${{secrets.LOKALISE_TOKEN}}
           PROJECT_ID: ${{secrets.PROJECT_ID}}
-        run: TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/createLokaliseBranch.js
+        run: node ./scripts/createLokaliseBranch.js
 
       - name: Upload changes to lokalise
         uses: tj-actions/changed-files@v9
@@ -29,4 +29,4 @@ jobs:
         env:
           TOKEN: ${{secrets.LOKALISE_TOKEN}}
           PROJECT_ID: ${{secrets.PROJECT_ID}}
-        run: FILES=${{steps.changed-files.outputs.all_modified_files}} TOKEN=TOKEN BRANCH_NAME=${{github.ref}} PROJECT_ID=PROJECT_ID node ./scripts/uploadToLokalise.js
+        run: FILES=${{steps.changed-files.outputs.all_modified_files}} node ./scripts/uploadToLokalise.js
