@@ -3,7 +3,7 @@ name: generate changelog
 on:
   push:
     branches:
-      - develop
+      - devop/changelog-changes
 
 jobs:
   build:
@@ -20,5 +20,5 @@ jobs:
           token: $GITHUB_TOKEN
           commit-message: 'chore: 👷 generate changelog for release'
           branch: chore/generate-changelog
-          base: develop
+          base: devop/changelog-changes
           title: 'chore: 👷 generate changelog for release'

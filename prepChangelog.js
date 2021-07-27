@@ -52,15 +52,9 @@ function main() {
   }
   fs.writeFileSync(`./CHANGELOG.md`, remadeChangelog);
   // // deletes all non release entries for release
-  // files
-  //   .filter(item => {
-  //     if (!item.includes('release')) {
-  //       return item;
-  //     }
-  //   })
-  //   .forEach(item => {
-  //     fs.unlinkSync(`./changelog/${item}`);
-  //   });
+  files.forEach(item => {
+    fs.unlinkSync(`${CHANGELOG_DIR}/${item}`);
+  });
 }
 
 main();
