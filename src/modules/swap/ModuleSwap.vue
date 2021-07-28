@@ -51,7 +51,8 @@
                   method: setMaxAmount
                 }"
                 @input="setTokenInValue"
-            /></v-col>
+              />
+            </v-col>
             <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
               <div class="d-flex align-center justify-center pb-sm-10">
                 <swap-btn
@@ -216,7 +217,7 @@
              Swap Fee
             =====================================================================================
           -->
-          <app-network-fee
+          <app-transaction-fee
             v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
@@ -225,6 +226,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
+            :balance="displayBalance"
             is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
@@ -261,7 +263,7 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
@@ -283,7 +285,7 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
-    AppNetworkFee
+    AppTransactionFee
   },
   props: {
     fromToken: {
