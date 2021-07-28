@@ -13,7 +13,7 @@
           <div class="white--text mew-title">
             {{ $t('home.tagline1') }} {{ $t('home.tagline2') }}
           </div>
-          <p class="white--text mt-3">
+          <p data-lokalise data-key="home.subheading" class="white--text mt-3">
             {{ $t('home.subheading') }}
           </p>
           <div class="mt-9 d-flex">

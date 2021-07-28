@@ -70,6 +70,21 @@
       <p>Thank you!</p>
     </div>
   </noscript>
+  <script>
+    window.LOKALISE_CONFIG = {
+      projectId: 'FILL ME IN',
+      locale: "en",
+      usePanelOffset: true,
+      onSave: function (updatedTranslations, skippedTranslations, dismissedTranslations, errorMessage) {
+        console.log('on save function')
+      }
+    };
+    (function () {
+      var a = document.createElement("script"); a.type = "text/javascript"; a.async = !0;
+      a.src = ["https://app.lokalise.com/live-js/script.min.js?", (new Date).getTime()].join("");
+      document.body.appendChild(a)
+    })();
+  </script>
 </body>
 
 </html>

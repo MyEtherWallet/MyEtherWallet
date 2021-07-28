@@ -1,7 +1,7 @@
 <template>
   <div class="pa-6">
     <div v-if="!isSwap" class="mb-6">
-      Please select a default gas price for your transaction fee
+      {{ $t('interface.gas.desc') }}
     </div>
     <!--
     =====================================================================================
@@ -62,11 +62,11 @@
           @click.native="setCPrice"
         />
         <p v-if="isSwap" class="pt-2">
-          To change the custom gas price, go to
+          {{ $t('interface.gas.change-gas') }}
           <span
             class="cursor--pointer go-to-global-text"
             @click="openGlobalSettings"
-            >global settings</span
+            >{{ $t('interface.gas.global-setting') }}</span
           >
         </p>
       </div>
@@ -79,11 +79,11 @@
           @click.native="setCPrice"
         />
         <p class="pt-2">
-          To change the custom gas price, go to
+          {{ $t('interface.gas.change-gas') }}
           <span
             class="cursor--pointer go-to-global-text"
             @click="openGlobalSettings"
-            >global settings</span
+            >{{ $t('interface.gas.global-setting') }}</span
           >
         </p>
       </v-row>

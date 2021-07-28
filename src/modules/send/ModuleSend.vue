@@ -111,12 +111,10 @@
                 <div class="d-flex font-weight-bold mb-2">
                   <v-icon class="textBlack2--text mew-body mr-1">
                     mdi-alert-outline</v-icon
-                  >For advanced users only
+                  >{{ $t('sendTx.advanced.title') }}
                 </div>
                 <div>
-                  Please don’t edit these fields unless you are an expert user &
-                  know what you’re doing. Entering the wrong information could
-                  result in your transaction failing or getting stuck.
+                  {{ $t('sendTx.advanced.desc') }}
                 </div>
               </div>
               <div class="d-flex align-center justify-end pb-3">

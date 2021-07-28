@@ -8,14 +8,13 @@
     <v-sheet class="py-6 px-4">
       <v-row>
         <v-col cols="12">
-          <p class="mew-heading-1">Network fee</p>
+          <p class="mew-heading-1">{{ $t('sendTx.network-fee.title') }}</p>
           <p class="mew-body">
-            This fee is calculated by multiplying the gas price and gas limit
-            for your transaction. Higher fees result in faster transactions.
+            {{ $t('sendTx.network-fee.desc') }}
             <a
               href="https://kb.myetherwallet.com/en/transactions/what-is-gas/"
               target="_blank"
-              >Learn more
+              >{{ $t('sendTx.network-fee.learn-more') }}
             </a>
           </p>
           <settings-gas-price

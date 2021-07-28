@@ -7,5 +7,14 @@
   "enter-addr": "Enter address",
   "success": {
     "title": "Success"
+  },
+  "network-fee": {
+    "title": "Network fee",
+    "desc": "This fee is calculated by multiplying the gas price and gas limit for your transaction. Higher fees result in faster transactions.",
+    "learn-more": "Learn more"
+  },
+  "advanced": {
+    "title": "For advanced users only",
+    "desc": "Please don’t edit these fields unless you are an expert user & know what you’re doing. Entering the wrong information could result in your transaction failing or getting stuck."
   }
 }
