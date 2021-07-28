@@ -12,7 +12,7 @@
       type="avatar"
     ></v-skeleton-loader>
     <div v-if="!loading" class="d-flex align-center">
-      <v-btn icon @click="openNotifications = true">
+      <v-btn icon @click="openNotifications">
         <img
           src="@/assets/images/icons/icon-notifications.svg"
           :class="[invertIcon ? 'make-white-svg' : '']"
@@ -31,16 +31,16 @@
           error
           lighten2
         "
-        @click="openNotifications = true"
+        @click="openNotifications"
       >
         {{ notificationCount }}
       </div>
     </div>
     <mew-overlay
       left-btn-text=""
-      :show-overlay="openNotifications"
+      :show-overlay="isOpenNotifications"
       right-btn-text="Close"
-      @closeOverlay="openNotifications = false"
+      @closeOverlay="closeNotifications"
     >
       <template #mewOverlayBody>
         <v-sheet class="transparent" max-width="735px" width="100%">
@@ -123,6 +123,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleNotifications',
@@ -142,7 +143,7 @@ export default {
         { label: 'Out', val: NOTIFICATION_TYPES.OUT },
         { label: 'Swap', val: NOTIFICATION_TYPES.SWAP }
       ],
-      openNotifications: false,
+      isOpenNotifications: false,
       statusCheckTimer: null
     };
   },
@@ -237,7 +238,7 @@ export default {
   },
   mounted() {
     EventBus.$on('openNotifications', () => {
-      this.openNotifications = true;
+      this.openNotifications();
     });
     this.statusCheckTimer = setInterval(() => {
       this.currentNotifications.forEach(notification => {
@@ -300,6 +301,18 @@ export default {
           }
         });
       }
+    },
+    openNotifications() {
+      history.pushState(
+        {},
+        null,
+        '/#/wallet/' + ROUTES_WALLET.NOTIFICATIONS.PATH
+      );
+      this.isOpenNotifications = true;
+    },
+    closeNotifications() {
+      history.pushState({}, null, '/#/wallet/');
+      this.isOpenNotifications = false;
     }
   }
 };
