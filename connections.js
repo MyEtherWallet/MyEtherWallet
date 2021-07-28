@@ -32,5 +32,6 @@ module.exports = [
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'https://api.wallet.coinbase.com:443',
-  'data:'
+  'data:',
+  'https://mainnet.infura.io:443'
 ];
