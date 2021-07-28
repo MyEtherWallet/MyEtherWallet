@@ -20,6 +20,7 @@
         >
           <template #panelBody1>
             <settings-gas-price
+              class="px-6"
               :buttons="gasButtons"
               :selected="gasPriceType"
               :set-selected="setSelected"

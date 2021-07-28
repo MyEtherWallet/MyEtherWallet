@@ -46,22 +46,27 @@
         "
       >
         <div class="d-flex align-center">
-          <div class="mr-2"><v-icon>mdi-arrow-up</v-icon></div>
-          <div>{{ b.title }}</div>
+          <div class="mr-2 ml-n1 text-center" style="width: 40px">
+            <v-icon v-if="b.title === 'economy'">mdi-check</v-icon>
+            <v-icon v-if="b.title === 'regular'">mdi-arrow-up</v-icon>
+            <v-icon v-if="b.title === 'fast'">mdi-arrow-up</v-icon>
+            <v-icon v-if="b.title === 'fast'" class="ml-n2"
+              >mdi-arrow-up</v-icon
+            >
+          </div>
+          <div v-if="b.title === 'economy'">Normal priority</div>
+          <div v-if="b.title === 'regular'">Higher priority</div>
+          <div v-if="b.title === 'fast'">Highest priority</div>
         </div>
-        <div class="text-right">
-          <div class="mew-label">{{ b.usd }} {{ b.time }}</div>
-          <div class="mew-label">~ {{ b.gas | twoDecimalPoint }} Gwei</div>
+        <div v-if="b.title === 'economy'" class="text-right">No tip</div>
+        <div v-else class="text-right">
+          <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
+          <div class="mew-label">+{{ b.gas | twoDecimalPoint }} Gwei</div>
         </div>
       </div>
     </div>
 
-    <!--
-    =====================================================================================
-      Divider
-    =====================================================================================
-    -->
-    <div class="text-center mew-label mt-6 secondary--text">
+    <div class="text-center mew-label mt-6 mb-5 secondary--text">
       To increase priority
       <a
         rel="noopener noreferrer"
