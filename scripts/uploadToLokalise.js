@@ -1,4 +1,5 @@
 const { LokaliseApi } = require('@lokalise/node-api');
+const fs = require('fs');
 
 async function uploadToLokalise() {
   try {
@@ -11,21 +12,27 @@ async function uploadToLokalise() {
     if (!files.length > 0) {
       const promises = [];
       files.forEach(path => {
-        promises.push(
-          lokalise.files.upload(`${projectId}:${branchName}`, {
-            filename: path,
-            lang_iso: 'en'
-          })
-        );
+        const splitPath = path.split('/');
+        const readFile = fs.readFileSync(path);
+        if (splitPath.includes('en_US')) {
+          promises.push(
+            lokalise.files.upload(`${projectId}:${branchName}`, {
+              data: readFile.toString('base64'),
+              filename: path,
+              lang_iso: 'en'
+            })
+          );
+        }
       });
 
       Promise.all(promises).then(() => {
         console.log('New translations have been uploaded');
         process.exit(0);
       });
+    } else {
+      console.log('No new translations');
+      process.exit(0);
     }
-    console.log('No new translations');
-    process.exit(0);
   } catch (e) {
     console.log(e);
     process.exit(1);
