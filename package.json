@@ -15,7 +15,7 @@
     "juststart": "vue-cli-service serve --watch",
     "dev": "npm run update && npm run juststart",
     "lint:code": "vue-cli-service lint",
-    "lint:md": "remark . -o -f",
+    "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh",
