@@ -90,11 +90,15 @@ export default {
   },
   methods: {
     openNetworkOverlay() {
-      this.$router.push({ name: ROUTES_WALLET.NETWORK_SWITCH.NAME });
+      history.pushState(
+        {},
+        null,
+        '/#/wallet/' + ROUTES_WALLET.NETWORK_SWITCH.PATH
+      );
       this.isOpenNetworkOverlay = true;
     },
     closeNetworkOverlay() {
-      this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      history.pushState({}, null, '/#/wallet/');
       this.isOpenNetworkOverlay = false;
     }
   }
