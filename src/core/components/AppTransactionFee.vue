@@ -99,7 +99,7 @@
             {{ actualFeeFormatted }} ETH
           </div>
         </div>
-        <div class="py-1">
+        <div class="py-1 ml-3">
           <div class="mew-label">Total ETH in your wallet:</div>
           <div>{{ balance }} ETH</div>
         </div>
@@ -123,7 +123,7 @@
         Too high transaction fee / Buy more ETH
       =====================================================
       -->
-      <div class="d-flex align-center mt-1 ml-2">
+      <div class="d-flex align-center ml-3 mt-1">
         <div
           class="mr-1 primary--text cursor--pointer user-select--none mew-label"
           @click="openHighFeeNote = true"
