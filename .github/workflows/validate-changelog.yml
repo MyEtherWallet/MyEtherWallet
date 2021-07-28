@@ -8,7 +8,7 @@ on:
 jobs:
   validate-changelog:
     runs-on: ubuntu-latest
-    if: ${{ github.ref != 'refs/heads/chore/generate-changelog' }}
+    if: "!contains(github.ref, 'chore/generate-changelog')"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
