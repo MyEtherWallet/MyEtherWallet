@@ -1,0 +1,25 @@
+name: generate changelog
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Compile changelog entries
+        run: npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node prepChangelog.js && npm run lint:md
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{secrets.MEW_BOT_TOKEN}}
+          commit-message: 'chore: 👷 generate changelog for release'
+          branch: chore/generate-changelog
+          base: develop
+          title: 'chore: 👷 generate changelog for release'
