@@ -11,6 +11,8 @@ import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
 import Settings from '@/modules/settings/ModuleSettings';
 import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
+import Network from '@/modules/network/ModuleNetwork';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
@@ -30,6 +32,20 @@ export default {
       path: ROUTES_WALLET.DASHBOARD.PATH,
       name: ROUTES_WALLET.DASHBOARD.NAME,
       component: Dashboard,
+      children: [
+        {
+          path: ROUTES_WALLET.NETWORK.PATH,
+          name: ROUTES_WALLET.NETWORK.NAME,
+          component: Network,
+          children: [
+            {
+              path: ROUTES_WALLET.NETWORK_SWITCH.PATH,
+              name: ROUTES_WALLET.NETWORK_SWITCH.NAME,
+              component: NetworkSwitch
+            }
+          ]
+        }
+      ],
       meta: {
         noAuth: false
       }

@@ -333,7 +333,7 @@ export default {
       this.onSettings = !this.onSettings;
     },
     closeSettingsRouteToDashboard() {
-      this.onSettings = !this.onSettings;
+      this.toggleSettings();
       this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
     },
     onLogout(res) {

@@ -20,6 +20,8 @@ const ROUTES_WALLET = {
   DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
+  NETWORK: { NAME: 'Network', PATH: 'network' },
+  NETWORK_SWITCH: { NAME: 'NetworkSwitch', PATH: 'switch-network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
