@@ -14,4 +14,9 @@ jobs:
         with:
           node-version: '12'
       - name: validate changelog entries
-        run: node validateChangelog.js
+        run: |
+          if [[ "$GITHUB_HEAD_REF" == *"chore/generate-changelog"* ]]; then
+              echo "not necessary"
+          else
+              node validateChangelog.js
+          fi
