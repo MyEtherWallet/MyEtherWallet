@@ -38,7 +38,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isEIP1559SupportedNetwork']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('wallet', ['balanceInWei'])
   },
@@ -55,6 +55,7 @@ export default {
       this.subscribeToBlockNumber();
       this.setGas();
       this.setTokensAndBalance();
+      console.log(this.web3);
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();
@@ -74,7 +75,12 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
-    ...mapActions('global', ['setGasPrice', 'setNetwork']),
+    ...mapActions('global', [
+      'setGasPrice',
+      'setNetwork',
+      'setBaseFeePerGas',
+      'setMaxPriorityFeePerGas'
+    ]),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
       this.setTokensAndBalance();
@@ -88,8 +94,27 @@ export default {
         this.setTokens([]);
       }
     },
+    setPriorityFee(curBlock) {
+      const blockstocheck = 50;
+      this.web3.eth.getFeeHistory(blockstocheck, curBlock, [90]).then(res => {
+        let total = toBN(0);
+        res.reward.forEach(r => {
+          total = total.add(toBN(r[0]));
+        });
+        this.setMaxPriorityFeePerGas(total.divn(blockstocheck));
+      });
+    },
+    checkAndSetBaseFee(baseFee, curBlock) {
+      if (baseFee) {
+        this.setPriorityFee(curBlock);
+        this.setBaseFeePerGas(toBN(baseFee));
+      } else {
+        this.setBaseFeePerGas(toBN('0'));
+      }
+    },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
+        //fix-it
         if (this.gasPriceType === gasPriceTypes.STORED) {
           this.setGasPrice(this.baseGasPrice);
         } else {
@@ -101,10 +126,16 @@ export default {
       });
     },
     subscribeToBlockNumber() {
-      this.web3.eth.getBlockNumber().then(res => {
-        this.setBlockNumber(res);
-        this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-          this.setBlockNumber(res.number);
+      this.web3.eth.getBlockNumber().then(bNumber => {
+        this.setBlockNumber(bNumber);
+        this.web3.eth.getBlock(bNumber).then(block => {
+          this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
+          this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+            if (this.isEIP1559SupportedNetwork) {
+              this.setBaseFeePerGas(toBN(res.baseFeePerGas));
+            }
+            this.setBlockNumber(res.number);
+          });
         });
       });
     },

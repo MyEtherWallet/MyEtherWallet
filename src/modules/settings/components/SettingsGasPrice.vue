@@ -204,6 +204,7 @@ export default {
     }
   },
   mounted() {
+    //fix-it
     this.customGasPrice =
       this.gasPriceType === gasPriceTypes.STORED
         ? fromWei(this.gasPrice, 'gwei')

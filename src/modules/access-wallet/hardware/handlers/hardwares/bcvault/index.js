@@ -1,4 +1,4 @@
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import { bufferToHex } from 'ethereumjs-util';
 import * as bc from 'bc-vault-js';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';

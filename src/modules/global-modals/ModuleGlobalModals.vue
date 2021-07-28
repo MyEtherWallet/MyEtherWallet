@@ -32,7 +32,7 @@ import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
 import { EventBus } from '@/core/plugins/eventBus';
-import { _ } from 'web3-utils';
+import _ from 'underscore';
 const OPEN_MATRIX = 'showHardwarePinMatrix';
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';

@@ -15,7 +15,7 @@ import {
   calculateChainIdFromV
 } from '@/modules/access-wallet/common/helpers';
 import HDKey from 'hdkey';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { toBN } from 'web3-utils';
 
 const MED_CONST = 21428571428.571;
 const MED_MULTIPLIER = 1.0714285714286;
@@ -50,8 +51,7 @@ const regularToEconomy = gasPrice => {
 const gasPriceTypes = {
   ECONOMY: 'economy',
   REGULAR: 'regular',
-  FAST: 'fast',
-  STORED: 'stored'
+  FAST: 'fast'
 };
 const getGasBasedOnType = (gasPrice, gasPriceType) => {
   switch (gasPriceType) {
@@ -61,13 +61,22 @@ const getGasBasedOnType = (gasPrice, gasPriceType) => {
       return getRegular(gasPrice);
     case gasPriceTypes.FAST:
       return getFast(gasPrice);
-    case gasPriceTypes.STORED:
-      return gasPrice;
     default:
       return getEconomy(gasPrice);
   }
 };
-
+const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
+  switch (gasPriceType) {
+    case gasPriceTypes.ECONOMY:
+      return toBN('0');
+    case gasPriceTypes.REGULAR:
+      return priorityFeeBN.muln(0.5);
+    case gasPriceTypes.FAST:
+      return priorityFeeBN;
+    default:
+      return toBN('0');
+  }
+};
 export {
   getEconomy,
   getRegular,
@@ -75,5 +84,6 @@ export {
   getGasBasedOnType,
   fastToEconomy,
   regularToEconomy,
-  gasPriceTypes
+  gasPriceTypes,
+  getPriorityFeeBasedOnType
 };

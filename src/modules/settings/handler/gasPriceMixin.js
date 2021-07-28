@@ -92,6 +92,7 @@ const gasPriceMixin = {
       }
     },
     setCustomGasPrice(customGasPrice) {
+      //fix-it
       this.setGasPriceType(gasPriceTypes.STORED).then(() => {
         this.setGasPrice(
           getGasBasedOnType(toWei(customGasPrice, 'gwei'), gasPriceTypes.STORED)

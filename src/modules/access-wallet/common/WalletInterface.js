@@ -15,7 +15,7 @@ import {
 } from 'ethereumjs-util';
 import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
 class WalletInterface {

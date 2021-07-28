@@ -1,7 +1,7 @@
 import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import SanitizeHex from '@/core/helpers/sanitizeHex';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
 import ErrorList from '../errors';

@@ -1,6 +1,6 @@
 import Ledger from '@ledgerhq/hw-app-eth';
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';

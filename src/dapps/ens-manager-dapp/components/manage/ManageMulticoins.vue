@@ -24,7 +24,7 @@
 
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import _ from 'underscore';
 export default {
   props: {
     setMulticoin: {

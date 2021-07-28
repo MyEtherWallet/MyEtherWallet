@@ -100,10 +100,6 @@ const setWeb3Instance = function (
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
-const setENS = function ({ commit }, ens) {
-  commit('SET_ENS', ens);
-};
-
 const setOwnedDomains = function ({ commit }, ownedDomains) {
   commit('SET_OWNED_DOMAINS', ownedDomains);
 };
@@ -116,7 +112,6 @@ export default {
   removeWallet,
   setWallet,
   setAccountBalance,
-  setENS,
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,

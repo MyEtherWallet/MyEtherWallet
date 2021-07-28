@@ -4,7 +4,7 @@ export default {
     notifications: 'notifications-store'
   },
   VERSION: {
-    global: '1.0.1',
+    global: '1.0.2',
     notifications: '1.0.1'
   }
 };

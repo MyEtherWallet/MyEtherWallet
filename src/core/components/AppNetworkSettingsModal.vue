@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     setCustom(value) {
+      //fix-it
       const newObj = {
         gasType: gasPriceTypes.STORED,
         gasPrice: toWei(value, 'gwei')

@@ -1,6 +1,10 @@
 import nodeList from '@/utils/networks';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import { getGasBasedOnType } from '@/core/helpers/gasPriceHelper';
+import {
+  getGasBasedOnType,
+  getPriorityFeeBasedOnType
+} from '@/core/helpers/gasPriceHelper';
+import { toBN } from 'web3-utils';
 
 const Networks = function () {
   return nodeList;
@@ -19,8 +23,18 @@ const network = function (state) {
   return network;
 };
 
-const gasPrice = function (state) {
-  return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
+const gasPrice = function (state, getters) {
+  if (!getters.isEIP1559SupportedNetwork) {
+    return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
+  }
+  return toBN(state.eip1559.baseFeePerGas)
+    .add(
+      getPriorityFeeBasedOnType(
+        toBN(state.eip1559.maxPriorityFeePerGas),
+        state.gasPriceType
+      )
+    )
+    .toString();
 };
 
 const isEthNetwork = function (state, getters) {
@@ -46,6 +60,18 @@ const swapLink = function (state, getters, rootState) {
   const link = 'https://ccswap.myetherwallet.com/#/';
   return hasAddress ? `${link}?to=${hasAddress}` : link;
 };
+const isEIP1559SupportedNetwork = function (state) {
+  return state.eip1559.baseFeePerGas !== '0';
+};
+const gasAuctionInfo = function (state) {
+  return {
+    baseFeePerGas: toBN(state.eip1559.baseFeePerGas),
+    priorityFeePerGas: getPriorityFeeBasedOnType(
+      toBN(state.eip1559.maxPriorityFeePerGas),
+      state.gasPriceType
+    )
+  };
+};
 export default {
   Networks,
   network,
@@ -54,5 +80,7 @@ export default {
   localContracts,
   isTestNetwork,
   hasSwap,
-  swapLink
+  swapLink,
+  isEIP1559SupportedNetwork,
+  gasAuctionInfo
 };

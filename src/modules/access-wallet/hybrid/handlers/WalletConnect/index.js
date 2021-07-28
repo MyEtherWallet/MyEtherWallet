@@ -1,7 +1,7 @@
 import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,

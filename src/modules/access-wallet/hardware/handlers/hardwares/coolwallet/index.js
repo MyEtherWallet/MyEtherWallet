@@ -1,4 +1,4 @@
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';

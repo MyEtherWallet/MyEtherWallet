@@ -35,7 +35,13 @@ const addCustomPath = function ({ commit }, val) {
 const deleteCustomPath = function ({ commit }, val) {
   commit('DELETE_CUSTOM_PATH', val);
 };
+const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
+  commit('SET_MAX_PRIORITY_FEE_PER_GAS', valBN);
+};
 
+const setBaseFeePerGas = function ({ commit }, valBN) {
+  commit('SET_BASE_FEE_PER_GAS', valBN.muln(2));
+};
 export default {
   setOnlineStatus,
   setLocale,
@@ -46,5 +52,7 @@ export default {
   setImportedState,
   addLocalContract,
   addCustomPath,
-  deleteCustomPath
+  deleteCustomPath,
+  setMaxPriorityFeePerGas,
+  setBaseFeePerGas
 };

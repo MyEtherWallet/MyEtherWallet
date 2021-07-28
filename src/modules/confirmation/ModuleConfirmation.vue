@@ -280,13 +280,13 @@ import ConfirmWithWallet from './components/ConfirmWithWallet';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
-  _,
   hexToNumberString,
   hexToNumber,
   toWei,
   sha3,
   isHex
 } from 'web3-utils';
+import _ from 'underscore';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';

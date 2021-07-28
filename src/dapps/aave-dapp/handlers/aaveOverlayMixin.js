@@ -1,4 +1,4 @@
-import { _ } from 'web3-utils';
+import _ from 'underscore';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 

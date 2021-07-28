@@ -26,10 +26,6 @@ const SET_BALANCE = function (state, balance) {
   state.balance = balance;
 };
 
-const SET_ENS = function (state, ens) {
-  state.ens = ens;
-};
-
 const SET_WEB3_INSTANCE = function (state, web3) {
   state.web3 = web3;
 };
@@ -50,7 +46,6 @@ export default {
   REMOVE_WALLET,
   SET_WALLET,
   SET_BALANCE,
-  SET_ENS,
   SET_WEB3_INSTANCE,
   SET_BLOCK_NUMBER,
   SET_OWNED_DOMAINS,

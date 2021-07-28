@@ -175,7 +175,8 @@
 </template>
 
 <script>
-import { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
+import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
+import _ from 'underscore';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
