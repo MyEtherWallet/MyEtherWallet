@@ -19,6 +19,7 @@ const ROUTES_WALLET = {
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
+  ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NETWORK: { NAME: 'Network', PATH: 'network' },
   NETWORK_SWITCH: { NAME: 'NetworkSwitch', PATH: 'switch-network' },
