@@ -15,4 +15,4 @@ jobs:
         with:
           node-version: '12'
       - name: validate changelog entries
-        run: node validateChangelog.js
+        run: echo $GITHUB_REF && node validateChangelog.js
