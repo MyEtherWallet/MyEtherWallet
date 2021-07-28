@@ -21,6 +21,7 @@ const ROUTES_WALLET = {
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
+  NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },

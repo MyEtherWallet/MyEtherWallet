@@ -10,6 +10,7 @@ import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
 import Settings from '@/modules/settings/ModuleSettings';
+import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
@@ -54,6 +55,16 @@ export default {
       path: ROUTES_WALLET.NFT_MANAGER.PATH,
       name: ROUTES_WALLET.NFT_MANAGER.NAME,
       component: NftManager,
+      children: [
+        {
+          path: ROUTES_WALLET.NFT_MANAGER_SEND.PATH,
+          name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME,
+          component: NftManagerSend,
+          meta: {
+            noAuth: false
+          }
+        }
+      ],
       meta: {
         noAuth: false
       }
