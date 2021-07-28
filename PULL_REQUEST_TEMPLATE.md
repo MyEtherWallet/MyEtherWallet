@@ -2,12 +2,12 @@
 
 ### Devop
 
-* \[ ] Updated CHANGELOG.md
+* \[ ] Added entry to ./changelog
 * \[ ] Add PR label
 
 ### Feature
 
-* \[ ] Updated CHANGELOG.md
+* \[ ] Added entry to ./changelog
 * \[ ] Is this a user submitted feature request?
   * \[ ] Link to issue:
 * \[ ] Add test cases or procedure
@@ -15,14 +15,14 @@
 
 ### Bug
 
-* \[ ] Updated CHANGELOG.md
+* \[ ] Added entry to ./changelog
 * \[ ] Is this a user submitted bug?
   * \[ ] Link to issue:
 * \[ ] Add PR label
 
 ### Release
 
-* \[ ] Updated CHANGELOG.md
+* \[ ] Added entry to ./changelog
 * \[ ] Created a release
   * \[ ] Link to release:
 * \[ ] Add PR label

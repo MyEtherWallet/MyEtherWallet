@@ -127,7 +127,12 @@
             <b>Make sure all the information is correct.</b> Canceling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
-            <a rel="noopener noreferrer">Learn more.</a>
+            <a
+              href="https://kb.myetherwallet.com/en/transactions/tx-failed-why-was-i-charged/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more.</a
+            >
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
