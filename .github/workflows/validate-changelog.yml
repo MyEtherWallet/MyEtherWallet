@@ -8,11 +8,11 @@ on:
 jobs:
   validate-changelog:
     runs-on: ubuntu-latest
-    if: "!contains(github.ref, 'chore/generate-changelog')"
+    if: "!contains(github.head_ref, 'chore/generate-changelog')"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
       - name: validate changelog entries
-        run: echo $GITHUB_REF && node validateChangelog.js
+        run: echo $GITHUB_HEAD_REF && node validateChangelog.js
