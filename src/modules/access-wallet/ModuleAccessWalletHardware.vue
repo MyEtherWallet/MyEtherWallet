@@ -228,7 +228,7 @@ import wallets, {
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
-import { fromWei } from 'web3-utils';
+import { fromWei, _ } from 'web3-utils';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;
@@ -484,7 +484,7 @@ export default {
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
-        if (this.hwWalletInstance) this.setAddresses();
+        if (!_.isEmpty(this.hwWalletInstance)) this.setAddresses();
       }
     }
   },
@@ -593,7 +593,7 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          if (this.wallet[this.walletType]) {
+          if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
@@ -612,7 +612,7 @@ export default {
           this.setAddresses();
         })
         .catch(err => {
-          if (this.wallet[this.walletType]) {
+          if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
@@ -716,7 +716,7 @@ export default {
         this.currentIdx += MAX_ADDRESSES;
         this.selectedAddress = this.accounts[0].address;
       } catch (e) {
-        if (this.wallet[this.walletType]) {
+        if (this.wallets[this.walletType]) {
           this.wallets[this.walletType].create.errorHandler(e);
         } else {
           Toast(e, {}, ERROR);

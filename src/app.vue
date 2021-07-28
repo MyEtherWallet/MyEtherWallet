@@ -1,21 +1,5 @@
 <template>
   <v-app class="walletBg">
-    <div
-      class="
-        d-flex
-        align-center
-        justify-center
-        pa-2
-        tableHeader
-        textBlack2--text
-      "
-    >
-      Missing the old version? &nbsp;
-      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
-        You can find version 5 here</a
-      >
-    </div>
-    <module-decision-tree />
     <router-view />
     <module-toast />
     <module-global-modals />
@@ -25,7 +9,6 @@
 <script>
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
-import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import currencyTypes from '@/core/configs/configCurrencyTypes';
 import { PWA_EVENTS } from '@/core/helpers/common';
@@ -37,7 +20,7 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleDecisionTree, ModuleGlobalModals },
+  components: { ModuleToast, ModuleGlobalModals },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');

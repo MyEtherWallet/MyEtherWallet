@@ -52,7 +52,7 @@ export default {
           }
         } while (nextKey);
       },
-      error({ error }) {
+      error(error) {
         Toast(error.message, {}, ERROR);
       }
     }

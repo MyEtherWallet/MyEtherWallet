@@ -91,43 +91,47 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
-
+import { mapGetters } from 'vuex';
 export default {
   name: 'MobileMenu',
   components: { AppBtnMenu },
   data: () => ({
-    isOpen: false,
-    menu: [
-      { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
-      {
-        label: 'Popular',
-        sub: [
-          {
-            label: 'Send transaction',
-            to: { name: ROUTES_WALLET.SEND_TX.NAME }
-          },
-          {
-            label: 'Explore DApps',
-            to: { name: ROUTES_WALLET.DAPPS.NAME }
-          },
-          {
-            label: 'Swap tokens',
-            to: { name: ROUTES_WALLET.SWAP.NAME }
-          },
-          {
-            label: 'Sign message',
-            to: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-          }
-        ]
-      },
-      {
-        label: 'More',
-        sub: [
-          {
-            label: 'Verify message',
-            to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
-          }
-          /*
+    isOpen: false
+  }),
+  computed: {
+    ...mapGetters('global', ['swapLink']),
+    menu() {
+      return [
+        { label: 'How it works', to: { name: ROUTES_HOME.HOW_IT_WORKS.NAME } },
+        {
+          label: 'Popular',
+          sub: [
+            {
+              label: 'Send transaction',
+              to: { name: ROUTES_WALLET.SEND_TX.NAME }
+            },
+            {
+              label: 'Explore DApps',
+              to: { name: ROUTES_WALLET.DAPPS.NAME }
+            },
+            {
+              label: 'Swap tokens',
+              to: { name: ROUTES_WALLET.SWAP.NAME }
+            },
+            {
+              label: 'Sign message',
+              to: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+            }
+          ]
+        },
+        {
+          label: 'More',
+          sub: [
+            {
+              label: 'Verify message',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '3' } }
+            }
+            /*
           {
             label: 'Watch only address',
             to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
@@ -141,11 +145,12 @@ export default {
             to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '4' } }
           }
           */
-        ]
-      },
-      { label: 'Buy ETH', url: 'https://ccswap.myetherwallet.com' }
-    ]
-  }),
+          ]
+        },
+        { label: 'Buy ETH', url: this.swapLink }
+      ];
+    }
+  },
   methods: {
     pushRoute(to) {
       this.$router.push(to).catch(() => true);
