@@ -705,7 +705,7 @@ export default {
     }
   }),
   methods: {
-    async submitForm() {
+    submitForm() {
       const formData = new FormData();
 
       for (const key in this.form) {
