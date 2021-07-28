@@ -26,7 +26,6 @@
 
 ### Devop
 
-* remove remaining decision tree parts from quickhelp [3345](https://github.com/MyEtherWallet/MyEtherWallet/pull/3345)
 * use swap link in all ccswap instances that are active [#3315](https://github.com/MyEtherWallet/MyEtherWallet/pull/3315)
 * only require mew component update when it isn't a beta version [#3344](https://github.com/MyEtherWallet/MyEtherWallet/pull/3344)
 
