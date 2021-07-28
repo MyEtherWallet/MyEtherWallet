@@ -35,7 +35,7 @@ function main() {
       container[item].forEach((file, idx) => {
         const fileContent = fs.readFileSync(`./changelog/${file}`, 'utf8');
         const prNumber = file.split('-')[1].replace('.md', '');
-        const parsedFile = `${fileContent.replace(
+        const parsedFile = `* ${fileContent.replace(
           '\n',
           ''
         )} [#${prNumber}](https://github.com/MyEtherWallet/MyEtherWallet/pull/${prNumber})`;

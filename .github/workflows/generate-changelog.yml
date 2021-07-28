@@ -1,4 +1,4 @@
-name: generate changelog
+name: generate changelog [v6]
 
 on:
   push:
