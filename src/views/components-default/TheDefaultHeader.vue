@@ -1,5 +1,20 @@
 <template>
   <div class="default-header expandHeader">
+    <div
+      class="
+        d-flex
+        align-center
+        justify-center
+        pa-2
+        tableHeader
+        textBlack2--text
+      "
+    >
+      Missing the old version?&nbsp;
+      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
+        You can find version 5 here
+      </a>
+    </div>
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
@@ -28,7 +43,7 @@
             @goToPage="routeTo"
           />
           <a
-            href="https://ccswap.myetherwallet.com/#/"
+            :href="swapLink"
             target="_blank"
             class="white--text text-decoration--none"
           >
@@ -47,6 +62,7 @@
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'TheDefaultHeader',
@@ -89,6 +105,9 @@ export default {
     },
     ROUTES_HOME: ROUTES_HOME
   }),
+  computed: {
+    ...mapGetters('global', ['swapLink'])
+  },
   methods: {
     routeTo(route) {
       this.$router.push(route);
