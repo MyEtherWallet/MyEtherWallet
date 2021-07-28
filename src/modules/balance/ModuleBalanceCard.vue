@@ -77,11 +77,7 @@
               Refresh Button
             =====================================================================================
             -->
-        <v-icon
-          class="cursor-pointer refresh-icon"
-          size="20"
-          color="white"
-          @click="refresh"
+        <v-icon class="cursor-pointer refresh-icon" size="20" @click="refresh"
           >mdi-refresh</v-icon
         >
       </div>
@@ -381,9 +377,14 @@ export default {
     drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.24));
 }
 
+.v-icon.refresh-icon {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .refresh-icon:hover {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 32px;
+  color: var(--v-white-base);
   height: 20px;
   width: 20px;
 }
