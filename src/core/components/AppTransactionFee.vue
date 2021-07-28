@@ -13,6 +13,7 @@
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
+
     <!--
     =====================================================
       High fees pop up
@@ -66,8 +67,8 @@
     -->
     <v-skeleton-loader
       v-show="gettingFee || !showFee"
-      type="text"
-      width="150px"
+      type="paragraph"
+      width="200px"
       class="mt-2 px-sm-2 align-center"
     />
 
@@ -98,7 +99,10 @@
             {{ actualFeeFormatted }} ETH
           </div>
         </div>
-        <div class="py-1">Total: {{ balance }} ETH</div>
+        <div class="py-1">
+          <div class="mew-label">Total ETH in your wallet:</div>
+          <div>{{ balance }} ETH</div>
+        </div>
       </div>
 
       <!--
@@ -121,7 +125,7 @@
       -->
       <div class="d-flex align-center mt-1 ml-2">
         <div
-          class="mr-2 primary--text cursor--pointer user-select--none mew-label"
+          class="mr-1 primary--text cursor--pointer user-select--none mew-label"
           @click="openHighFeeNote = true"
         >
           Why are the fees so high?
@@ -132,8 +136,9 @@
           target="_blank"
           :href="swapLink"
           class="mew-label font-weight-medium"
-          >Buy more ETH</a
         >
+          Buy more ETH
+        </a>
       </div>
     </div>
   </div>
@@ -253,13 +258,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.icon-holder {
-  padding: 3px 6px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.eth-fee {
-  white-space: nowrap;
-}
-</style>
+<style lang="scss" scoped></style>
