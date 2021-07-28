@@ -9,5 +9,5 @@
   ],
   "appPort": ["8080:8080"],
   "shutdownAction": "stopContainer",
-  "postCreateCommand": "npm install"
+  "postCreateCommand": "npm ci" // this ensures that new build will use package-lock.json
 }

@@ -1,6 +1,5 @@
 <template>
   <v-app class="walletBg">
-    <module-decision-tree />
     <router-view />
     <module-toast />
     <module-global-modals />
