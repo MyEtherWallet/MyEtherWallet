@@ -384,27 +384,12 @@
               <div>
                 {{ $t('dappsSubmission.about-your-team.provide-social-link') }}
               </div>
-              <div class="social-media mt-1">
-                <img
-                  src="@/assets/images/icons/socials/svg/facebook.svg"
-                  alt="Facebook"
-                />
-                <img
-                  src="@/assets/images/icons/socials/svg/twitter.svg"
-                  alt="Twitter"
-                />
-                <img
-                  src="@/assets/images/icons/socials/svg/linkedin.svg"
-                  alt="LinkedIn"
-                />
-                <img
-                  src="@/assets/images/icons/socials/svg/reddit.svg"
-                  alt="Reddit"
-                />
-                <img
-                  src="@/assets/images/icons/socials/svg/medium.svg"
-                  alt="Medium"
-                />
+              <div class="social-media mt-1 d-flex align-center">
+                <v-icon class="px-1" small color="basic">mdi-facebook</v-icon>
+                <v-icon class="px-1" small color="basic">mdi-twitter</v-icon>
+                <v-icon class="px-1" small color="basic">mdi-linkedin</v-icon>
+                <v-icon class="px-1" small color="basic">mdi-reddit</v-icon>
+                <v-icon class="px-1" small color="basic">mdi-medium</v-icon>
                 <img
                   src="@/assets/images/icons/socials/svg/github.svg"
                   alt="Github"
@@ -474,6 +459,7 @@
             =================================================================
             -->
             <mew-button
+              :disabled="validRequiredFormsRate !== 100 ? true : false"
               :title="$t('dappsSubmission.submit')"
               btn-size="xlarge"
               class="d-block mx-auto mt-10"
@@ -481,7 +467,7 @@
             ></mew-button>
 
             <div
-              v-show="!areAllRequiredFormsValid"
+              v-show="validRequiredFormsRate !== 100"
               class="text-center mx-auto mt-4 mb-4 error--text"
               style="max-width: 300px"
             >
@@ -700,7 +686,7 @@ export default {
         return web3.utils.isAddress(value) || 'Invalid address';
       },
       email: value => {
-        return /.+@.+/.test(value) || 'E-mail must be valid';
+        return /.+@.+/.test(value) || 'Invalid email';
       }
     }
   }),
@@ -777,8 +763,8 @@ export default {
 }
 .social-media {
   img {
-    width: 15px;
-    margin-right: 25px;
+    width: 13px;
+    margin-left: 5px;
   }
 }
 </style>

@@ -56,9 +56,9 @@
   "about-your-team": {
     "authors-title": "Authors",
     "authors": "Separate names or organizations with a comma",
-    "author-placeholder": "e.g.) James Lee, Emilie Roy, Edward McCormick",
+    "author-placeholder": "e.g. James Lee, Emilie Roy, Edward McCormick",
     "full-name": "My full name",
-    "software-license": "(e.g. MIT, GPL, Proprietary)",
+    "software-license": "e.g. MIT, GPL, Proprietary",
     "email": "My email",
     "email-address": "My email address",
     "social-links": "Company social links",
@@ -67,7 +67,7 @@
     "add": "Add",
     "company-website": "Company website",
     "license": "Software License",
-    "license-placeholder": "e.g.) MIT, GPL, Proprietary",
+    "license-placeholder": "e.g. MIT, GPL, Proprietary",
     "additional-notes": "Additional Notes",
     "notes-placeholder": "300 characters"
   },
@@ -85,12 +85,12 @@
   "congrats-msg": "It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.",
   "strength-of": "Strength of Information",
   "contact-support": "Contact Support",
-  "tell-us-about-your-dapp":"Tell us about your Dapp!",
+  "tell-us-about-your-dapp":"Tell us about your DApp!",
   "required":"Required",
-  "fill-out-required-fields":"Please meke sure to fill out all required forms before click submit button.",
+  "fill-out-required-fields":"Please fill out all the required fields.",
   "okay":"Okay",
-  "successful":"Great! Your Dapp information have been successfully submitted.",
-  "failed":"Un oh... Dapp submission failed...",
-  "try-again":"We are sorry. There was some error and Dapp submission failed. Please try again. if this error persists, contact support.",
+  "successful":"Great! Your DApp information have been successfully submitted.",
+  "failed":"Uh-oh... DApp submission failed...",
+  "try-again":"We are sorry. There was an error and DApp submission failed. Please try again, if this error persists, contact support.",
   "progress":"Keep going, because you are almost finished..."
 }
