@@ -10,7 +10,7 @@ import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 import { toChecksumAddress } from 'web3-utils';
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {

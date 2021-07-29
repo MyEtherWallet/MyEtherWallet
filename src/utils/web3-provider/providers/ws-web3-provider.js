@@ -1,6 +1,6 @@
 'use strict';
 const errors = require('web3-core-helpers').errors;
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 let Ws = null;
 let _btoa = null;

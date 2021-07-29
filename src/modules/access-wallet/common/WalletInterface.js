@@ -11,11 +11,12 @@ import {
   ecsign,
   isValidPrivate,
   isValidPublic,
-  privateToPublic
+  privateToPublic,
+  bnToHex
 } from 'ethereumjs-util';
 import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
-import { Transaction } from '@ethereumjs/tx';
+import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
 class WalletInterface {
@@ -92,25 +93,47 @@ class WalletInterface {
     return toChecksumAddress(this.getAddressString());
   }
   signTransaction(txParams, signer) {
+    console.log('heree 1');
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
-        const tx = new Transaction(txParams, {
-          common: commonGenerator(store.getters['global/network'])
-        });
-        const networkId = tx.getChainId();
-        tx.sign(this.privateKey);
-        const signedChainId = calculateChainIdFromV(tx.v);
-        if (signedChainId !== networkId)
-          throw new Error(
-            'Invalid networkId signature returned. Expected: ' +
-              networkId +
-              ', Got: ' +
-              signedChainId,
-            'InvalidNetworkId'
-          );
-        resolve(getSignTransactionObject(tx));
+        try {
+          let tx = Transaction.fromTxData(txParams, {
+            common: commonGenerator(store.getters['global/network'])
+          });
+          if (store.getters['global/isEIP1559SupportedNetwork']) {
+            const feeMarket = store.getters['global/gasFeeMarketInfo'];
+            const _txParams = Object.assign(
+              {
+                maxPriorityFeePerGas: bnToHex(feeMarket.priorityFeePerGas),
+                maxFeePerGas: bnToHex(feeMarket.maxFeePerGas)
+              },
+              txParams
+            );
+            delete _txParams.gasPrice;
+            tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
+              common: commonGenerator(store.getters['global/network'])
+            });
+          }
+          const networkId = store.getters['global/network'].type.chainID;
+          tx = tx.sign(this.privateKey);
+          const signedChainId = tx.chainId
+            ? parseInt(tx.chainId.toString())
+            : calculateChainIdFromV(tx.v);
+          if (signedChainId !== networkId)
+            throw new Error(
+              'Invalid networkId signature returned. Expected: ' +
+                networkId +
+                ', Got: ' +
+                signedChainId,
+              'InvalidNetworkId'
+            );
+          console.log(getSignTransactionObject(tx));
+          resolve(getSignTransactionObject(tx));
+        } catch (e) {
+          console.log(e);
+        }
       });
     }
     return signer(txParams);

@@ -44,6 +44,9 @@ export default async ({ payload, store, requestManager }, res, next) => {
           store.state.wallet.instance.getAddressString()
         )
       : tx.nonce;
+    if (tx.gasLimit) {
+      tx.gas = tx.gasLimit;
+    }
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
   } catch (e) {
     res(e);
@@ -53,9 +56,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
     ? store.getters['global/network'].type.chainID
     : tx.chainId;
   tx.from = tx.from ? tx.from : store.state.wallet.address;
-  if (store.getters['global/isEIP1559SupportedNetwork']) {
-    // const priorityFee =
-  }
   getSanitizedTx(tx)
     .then(_tx => {
       const event = confirmInfo

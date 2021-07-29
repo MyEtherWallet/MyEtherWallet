@@ -1,7 +1,7 @@
 import vuexStore from '@/core/store';
 import { mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 

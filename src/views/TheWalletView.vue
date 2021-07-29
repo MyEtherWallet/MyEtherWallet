@@ -20,7 +20,6 @@ import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
 import nodeList from '@/utils/networks';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -94,19 +93,15 @@ export default {
         this.setTokens([]);
       }
     },
-    setPriorityFee(curBlock) {
-      const blockstocheck = 50;
-      this.web3.eth.getFeeHistory(blockstocheck, curBlock, [90]).then(res => {
-        let total = toBN(0);
-        res.reward.forEach(r => {
-          total = total.add(toBN(r[0]));
-        });
-        this.setMaxPriorityFeePerGas(total.divn(blockstocheck));
+    setPriorityFee(curBlock, baseFee) {
+      this.web3.eth.getGasPrice().then(gasPrice => {
+        const priorityFee = toBN(gasPrice).sub(toBN(baseFee));
+        this.setMaxPriorityFeePerGas(priorityFee);
       });
     },
     checkAndSetBaseFee(baseFee, curBlock) {
       if (baseFee) {
-        this.setPriorityFee(curBlock);
+        this.setPriorityFee(curBlock, baseFee);
         this.setBaseFeePerGas(toBN(baseFee));
       } else {
         this.setBaseFeePerGas(toBN('0'));
@@ -114,15 +109,10 @@ export default {
     },
     setGas() {
       this.web3.eth.getGasPrice().then(res => {
-        //fix-it
-        if (this.gasPriceType === gasPriceTypes.STORED) {
-          this.setGasPrice(this.baseGasPrice);
-        } else {
-          const modifiedGasPrice = toBN(res).muln(
-            this.network.type.gasPriceMultiplier
-          );
-          this.setGasPrice(modifiedGasPrice.toString());
-        }
+        const modifiedGasPrice = toBN(res).muln(
+          this.network.type.gasPriceMultiplier
+        );
+        this.setGasPrice(modifiedGasPrice.toString());
       });
     },
     subscribeToBlockNumber() {
@@ -132,7 +122,11 @@ export default {
           this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork) {
-              this.setBaseFeePerGas(toBN(res.baseFeePerGas));
+              if (res.number % 50 === 0) {
+                this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
+              } else {
+                this.setBaseFeePerGas(toBN(res.baseFeePerGas));
+              }
             }
             this.setBlockNumber(res.number);
           });

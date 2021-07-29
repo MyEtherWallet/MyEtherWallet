@@ -24,7 +24,7 @@
 
 <script>
 import textValidator from '@/dapps/ens-manager-dapp/handlers/handlerTextRecords';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 export default {

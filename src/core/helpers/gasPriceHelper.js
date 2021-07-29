@@ -1,6 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { toBN } from 'web3-utils';
-
 const MED_CONST = 21428571428.571;
 const MED_MULTIPLIER = 1.0714285714286;
 const FAST_CONST = 42857142857.145;
@@ -68,13 +66,13 @@ const getGasBasedOnType = (gasPrice, gasPriceType) => {
 const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
   switch (gasPriceType) {
     case gasPriceTypes.ECONOMY:
-      return toBN('0');
+      return priorityFeeBN.muln(0.3);
     case gasPriceTypes.REGULAR:
       return priorityFeeBN.muln(0.5);
     case gasPriceTypes.FAST:
       return priorityFeeBN;
     default:
-      return toBN('0');
+      return priorityFeeBN.muln(0.3);
   }
 };
 export {

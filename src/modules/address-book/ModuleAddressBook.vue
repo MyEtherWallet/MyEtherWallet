@@ -39,7 +39,7 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 export default {
   components: {

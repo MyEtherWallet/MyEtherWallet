@@ -229,7 +229,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_ADDRESSES = 5;

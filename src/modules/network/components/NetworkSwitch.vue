@@ -120,7 +120,7 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 export default {
   name: 'NetworkSwitch',

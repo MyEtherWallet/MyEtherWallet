@@ -177,7 +177,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import _ from 'underscore';
+import * as _ from 'underscore';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -526,6 +526,7 @@ export default {
     }, 1000);
     this.debounceEstimateGas = _.debounce(allValidInputs => {
       if (allValidInputs) {
+        console.log(_, 'hereerer');
         this.estimateAndSetGas();
       }
     }, 500);

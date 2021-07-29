@@ -27,14 +27,7 @@ const gasPrice = function (state, getters) {
   if (!getters.isEIP1559SupportedNetwork) {
     return getGasBasedOnType(state.baseGasPrice, state.gasPriceType);
   }
-  return toBN(state.eip1559.baseFeePerGas)
-    .add(
-      getPriorityFeeBasedOnType(
-        toBN(state.eip1559.maxPriorityFeePerGas),
-        state.gasPriceType
-      )
-    )
-    .toString();
+  return getters.gasFeeMarketInfo.maxFeePerGas.toString();
 };
 
 const isEthNetwork = function (state, getters) {
@@ -63,13 +56,16 @@ const swapLink = function (state, getters, rootState) {
 const isEIP1559SupportedNetwork = function (state) {
   return state.eip1559.baseFeePerGas !== '0';
 };
-const gasAuctionInfo = function (state) {
+const gasFeeMarketInfo = function (state) {
+  const priorityFee = getPriorityFeeBasedOnType(
+    toBN(state.eip1559.maxPriorityFeePerGas),
+    state.gasPriceType
+  );
   return {
-    baseFeePerGas: toBN(state.eip1559.baseFeePerGas),
-    priorityFeePerGas: getPriorityFeeBasedOnType(
-      toBN(state.eip1559.maxPriorityFeePerGas),
-      state.gasPriceType
-    )
+    maxFeePerGas: toBN(state.eip1559.baseFeePerGas).add(priorityFee),
+    priorityFeePerGas: toBN(state.eip1559.baseFeePerGas)
+      .divn(2)
+      .add(priorityFee)
   };
 };
 export default {
@@ -82,5 +78,5 @@ export default {
   hasSwap,
   swapLink,
   isEIP1559SupportedNetwork,
-  gasAuctionInfo
+  gasFeeMarketInfo
 };

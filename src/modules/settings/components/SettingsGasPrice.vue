@@ -58,8 +58,7 @@
           <div v-if="b.title === 'regular'">Higher priority</div>
           <div v-if="b.title === 'fast'">Highest priority</div>
         </div>
-        <div v-if="b.title === 'economy'" class="text-right">No tip</div>
-        <div v-else class="text-right">
+        <div class="text-right">
           <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
           <div class="mew-label">+{{ b.gas | twoDecimalPoint }} Gwei</div>
         </div>
@@ -77,63 +76,6 @@
         Buy more ETH
       </a>
     </div>
-
-    <!--
-    =====================================================================================
-      Divider
-    =====================================================================================
-    -->
-    <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
-      <v-divider />
-      <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
-      <v-divider />
-    </v-row>
-    <!--
-      =====================================================================================
-       Custom Gas
-      =====================================================================================
-      -->
-    <div v-if="!isSwap" class="d-sm-flex text-center">
-      <mew-input
-        v-model="customGasPrice"
-        label="Customize"
-        placeholder=" "
-        right-label="Gwei"
-        class="mr-0 mr-sm-3"
-      />
-      <mew-button
-        :title="customBtn.text"
-        btn-size="xlarge"
-        :btn-style="customBtn.style"
-        :has-full-width="isSwap"
-        @click.native="setCPrice"
-      />
-      <p v-if="isSwap" class="pt-2">
-        To change the custom gas price, go to
-        <span
-          class="cursor--pointer go-to-global-text"
-          @click="openGlobalSettings"
-          >global settings</span
-        >
-      </p>
-    </div>
-    <v-row v-if="hasCustom" align="start" class="px-3">
-      <mew-button
-        :title="customBtn.text"
-        btn-size="xlarge"
-        :btn-style="customBtn.style"
-        :has-full-width="true"
-        @click.native="setCPrice"
-      />
-      <p class="pt-2">
-        To change the custom gas price, go to
-        <span
-          class="cursor--pointer go-to-global-text"
-          @click="openGlobalSettings"
-          >global settings</span
-        >
-      </p>
-    </v-row>
   </div>
 </template>
 
@@ -141,8 +83,6 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei } from 'web3-utils';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -164,61 +104,15 @@ export default {
       type: Array,
       default: () => []
     },
-    gasPrice: {
-      type: String,
-      default: '0'
-    },
-    setCustomGasPrice: {
-      type: Function,
-      default: () => {}
-    },
     isSwap: {
       type: Boolean,
       default: false
-    },
-    openGlobalSettings: {
-      type: Function,
-      default: () => {}
     }
-  },
-  data() {
-    return {
-      customGasPrice: '0'
-    };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink']),
-    ...mapState('global', ['gasPriceType']),
-    customBtn() {
-      if (!this.customGasPrice) return {};
-      const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(this.customGasPrice, 'ether')
-      );
-      return {
-        text: this.isSwap
-          ? `Custom: ${this.customGasPrice} Gwei $ ${
-              formatFiatValue(usdValue).value
-            }`
-          : 'Confirm',
-        style: this.isSwap ? 'outline' : 'background'
-      };
-    },
-    hasCustom() {
-      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
-    }
-  },
-  mounted() {
-    //fix-it
-    this.customGasPrice =
-      this.gasPriceType === gasPriceTypes.STORED
-        ? fromWei(this.gasPrice, 'gwei')
-        : '0';
-  },
-  methods: {
-    setCPrice() {
-      this.setCustomGasPrice(this.customGasPrice);
-    }
+    ...mapState('global', ['gasPriceType'])
   }
 };
 </script>
