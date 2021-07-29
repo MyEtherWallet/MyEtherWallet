@@ -54,7 +54,6 @@ export default {
       this.subscribeToBlockNumber();
       this.setGas();
       this.setTokensAndBalance();
-      console.log(this.web3);
     },
     coinGeckoTokens() {
       this.setTokenAndEthBalance();

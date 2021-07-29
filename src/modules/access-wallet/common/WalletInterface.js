@@ -93,7 +93,6 @@ class WalletInterface {
     return toChecksumAddress(this.getAddressString());
   }
   signTransaction(txParams, signer) {
-    console.log('heree 1');
     if (this.isPubOnly && typeof signer !== 'function')
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
@@ -129,7 +128,6 @@ class WalletInterface {
                 signedChainId,
               'InvalidNetworkId'
             );
-          console.log(getSignTransactionObject(tx));
           resolve(getSignTransactionObject(tx));
         } catch (e) {
           console.log(e);

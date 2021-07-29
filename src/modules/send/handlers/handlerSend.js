@@ -48,7 +48,6 @@ class SendTransaction {
         : toHex(toBN(this.localGasPrice));
   }
   setGasLimit(_gasLimit) {
-    console.log(_gasLimit);
     this.TX.gas = toHex(toBN(_gasLimit));
   }
   setLocalGasPrice(gasPrice) {
@@ -151,7 +150,6 @@ class SendTransaction {
       const json = _tx.toJSON(true);
       json.from = this.address();
       json.toDetails = this.TX.toDetails;
-      console.log(this.TX, _tx, json, 4);
       return this.web3().eth.sendTransaction(json);
     } catch (e) {
       return e;
