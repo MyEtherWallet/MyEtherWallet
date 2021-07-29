@@ -182,7 +182,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -526,7 +526,6 @@ export default {
     }, 1000);
     this.debounceEstimateGas = _.debounce(allValidInputs => {
       if (allValidInputs) {
-        console.log(_, 'hereerer');
         this.estimateAndSetGas();
       }
     }, 500);
@@ -650,7 +649,7 @@ export default {
     send() {
       window.scrollTo(0, 0);
       this.sendTx.submitTransaction().catch(error => {
-        this.error = error;
+        Toast(error, {}, ERROR, 1000);
       });
       this.clear();
     },

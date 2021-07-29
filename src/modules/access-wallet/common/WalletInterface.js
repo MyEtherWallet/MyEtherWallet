@@ -19,6 +19,7 @@ import commonGenerator from '@/core/helpers/commonGenerator';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
+import { toBN } from 'web3-utils';
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {
     this.nickname = nick !== null && nick !== '' ? nick : '';
@@ -97,41 +98,39 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
-        try {
-          let tx = Transaction.fromTxData(txParams, {
+        let tx = Transaction.fromTxData(txParams, {
+          common: commonGenerator(store.getters['global/network'])
+        });
+        if (store.getters['global/isEIP1559SupportedNetwork']) {
+          const feeMarket = store.getters['global/gasFeeMarketInfo'];
+          const _txParams = Object.assign(
+            {
+              maxPriorityFeePerGas: bnToHex(
+                toBN(txParams.gasPrice).sub(feeMarket.baseFeePerGas)
+              ),
+              maxFeePerGas: txParams.gasPrice
+            },
+            txParams
+          );
+          delete _txParams.gasPrice;
+          tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
             common: commonGenerator(store.getters['global/network'])
           });
-          if (store.getters['global/isEIP1559SupportedNetwork']) {
-            const feeMarket = store.getters['global/gasFeeMarketInfo'];
-            const _txParams = Object.assign(
-              {
-                maxPriorityFeePerGas: bnToHex(feeMarket.priorityFeePerGas),
-                maxFeePerGas: bnToHex(feeMarket.maxFeePerGas)
-              },
-              txParams
-            );
-            delete _txParams.gasPrice;
-            tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-              common: commonGenerator(store.getters['global/network'])
-            });
-          }
-          const networkId = store.getters['global/network'].type.chainID;
-          tx = tx.sign(this.privateKey);
-          const signedChainId = tx.chainId
-            ? parseInt(tx.chainId.toString())
-            : calculateChainIdFromV(tx.v);
-          if (signedChainId !== networkId)
-            throw new Error(
-              'Invalid networkId signature returned. Expected: ' +
-                networkId +
-                ', Got: ' +
-                signedChainId,
-              'InvalidNetworkId'
-            );
-          resolve(getSignTransactionObject(tx));
-        } catch (e) {
-          console.log(e);
         }
+        const networkId = store.getters['global/network'].type.chainID;
+        tx = tx.sign(this.privateKey);
+        const signedChainId = tx.chainId
+          ? parseInt(tx.chainId.toString())
+          : calculateChainIdFromV(tx.v);
+        if (signedChainId !== networkId)
+          throw new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
+          );
+        resolve(getSignTransactionObject(tx));
       });
     }
     return signer(txParams);

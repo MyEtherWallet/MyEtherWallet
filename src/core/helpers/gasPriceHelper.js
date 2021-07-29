@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { toBN, toWei } from 'web3-utils';
 const MED_CONST = 21428571428.571;
 const MED_MULTIPLIER = 1.0714285714286;
 const FAST_CONST = 42857142857.145;
@@ -51,6 +52,18 @@ const gasPriceTypes = {
   REGULAR: 'regular',
   FAST: 'fast'
 };
+const estimatedTime = type => {
+  switch (type) {
+    case gasPriceTypes.ECONOMY:
+      return '15 min';
+    case gasPriceTypes.REGULAR:
+      return '5 min';
+    case gasPriceTypes.FAST:
+      return '2 min';
+    default:
+      return '';
+  }
+};
 const getGasBasedOnType = (gasPrice, gasPriceType) => {
   switch (gasPriceType) {
     case gasPriceTypes.ECONOMY:
@@ -64,15 +77,18 @@ const getGasBasedOnType = (gasPrice, gasPriceType) => {
   }
 };
 const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
+  const minFee = toBN(toWei('2', 'gwei'));
   switch (gasPriceType) {
     case gasPriceTypes.ECONOMY:
-      return priorityFeeBN.muln(0.3);
+      return minFee;
     case gasPriceTypes.REGULAR:
-      return priorityFeeBN.muln(0.5);
+      return priorityFeeBN.muln(0.5).lt(minFee)
+        ? minFee
+        : priorityFeeBN.muln(0.5);
     case gasPriceTypes.FAST:
-      return priorityFeeBN;
+      return priorityFeeBN.lt(minFee) ? minFee : priorityFeeBN;
     default:
-      return priorityFeeBN.muln(0.3);
+      return minFee;
   }
 };
 export {
@@ -83,5 +99,6 @@ export {
   fastToEconomy,
   regularToEconomy,
   gasPriceTypes,
-  getPriorityFeeBasedOnType
+  getPriorityFeeBasedOnType,
+  estimatedTime
 };

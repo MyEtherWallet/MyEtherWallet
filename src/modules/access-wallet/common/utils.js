@@ -31,18 +31,7 @@ const getHexTxObject = tx => {
 const getSignTransactionObject = tx => {
   return {
     rawTransaction: bufferToHex(tx.serialize()),
-    tx: {
-      nonce: bufferToHex(tx.nonce),
-      gasPrice: tx.gasPrice ? bufferToHex(tx.gasPrice) : '0x0',
-      gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
-      to: bufferToHex(tx.to),
-      value: bufferToHex(tx.value),
-      input: bufferToHex(tx.data),
-      v: bufferToHex(tx.v),
-      r: bufferToHex(tx.r),
-      s: bufferToHex(tx.s),
-      hash: bufferToHex(tx.hash())
-    }
+    tx: Object.assign({ hash: bufferToHex(tx.hash()) }, tx.toJSON())
   };
 };
 const calculateChainIdFromV = v => {

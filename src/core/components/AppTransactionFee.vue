@@ -155,7 +155,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-
+import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 export default {
   name: 'AppTransactionFee',
   components: { AppModal, AppNetworkSettingsModal },
@@ -225,16 +225,7 @@ export default {
         : 'Maximum possible transaction fee is shown. Actual fee is likely to be less once your transaction is executed.';
     },
     timeWillTake() {
-      switch (this.gasPriceType) {
-        case 'economy':
-          return '15 min';
-        case 'regular':
-          return '5 min';
-        case 'fast':
-          return '2 min';
-        default:
-          return '';
-      }
+      return estimatedTime(this.gasPriceType);
     }
   },
   methods: {

@@ -25,7 +25,6 @@
               :selected="gasPriceType"
               :set-selected="setSelected"
               :gas-price="gasPrice"
-              :set-custom-gas-price="setCustomGasPrice"
               :global="true"
             />
           </template>

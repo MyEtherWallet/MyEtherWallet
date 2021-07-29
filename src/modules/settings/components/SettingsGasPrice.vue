@@ -6,12 +6,12 @@
 
     <div class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
-        <div class="mr-2">0.0011 ETH</div>
-        <div class="textSecondary--text">$3.45</div>
+        <div class="mr-2">{{ currentValue.gas | twoDecimalPoint }} Gwei</div>
+        <div class="textSecondary--text">{{ currentValue.usd }}</div>
       </div>
       <div class="d-flex align-center">
         <v-icon small color="basic" class="mr-1">mdi-clock-outline</v-icon>
-        <div>5 min</div>
+        <div>{{ currentValue.time }}</div>
       </div>
     </div>
 
@@ -47,16 +47,18 @@
       >
         <div class="d-flex align-center">
           <div class="mr-2 ml-n1 text-center" style="width: 40px">
-            <v-icon v-if="b.title === 'economy'">mdi-check</v-icon>
-            <v-icon v-if="b.title === 'regular'">mdi-arrow-up</v-icon>
-            <v-icon v-if="b.title === 'fast'">mdi-arrow-up</v-icon>
-            <v-icon v-if="b.title === 'fast'" class="ml-n2"
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY">mdi-check</v-icon>
+            <v-icon v-if="b.title === gasPriceTypes.REGULAR"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon v-if="b.title === gasPriceTypes.FAST">mdi-arrow-up</v-icon>
+            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2"
               >mdi-arrow-up</v-icon
             >
           </div>
-          <div v-if="b.title === 'economy'">Normal priority</div>
-          <div v-if="b.title === 'regular'">Higher priority</div>
-          <div v-if="b.title === 'fast'">Highest priority</div>
+          <div v-if="b.title === gasPriceTypes.ECONOMY">Normal priority</div>
+          <div v-if="b.title === gasPriceTypes.REGULAR">Higher priority</div>
+          <div v-if="b.title === gasPriceTypes.FAST">Highest priority</div>
         </div>
         <div class="text-right">
           <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
@@ -109,10 +111,23 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      gasPriceTypes: gasPriceTypes
+    };
+  },
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink']),
-    ...mapState('global', ['gasPriceType'])
+    ...mapState('global', ['gasPriceType', 'gasPrice']),
+    currentValue() {
+      for (const but of this.buttons) {
+        if (but.title === this.selected) {
+          return but;
+        }
+      }
+      return {};
+    }
   }
 };
 </script>

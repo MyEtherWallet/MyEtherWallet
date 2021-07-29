@@ -5,6 +5,7 @@ import Notification, {
 } from '@/modules/notifications/handlers/handlerNotification';
 
 import * as _ from 'underscore';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -64,6 +65,10 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
+      if (!newTxObj.hash) {
+        Toast(err, {}, ERROR);
+        return;
+      }
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       const notification = new Notification(newTxObj);

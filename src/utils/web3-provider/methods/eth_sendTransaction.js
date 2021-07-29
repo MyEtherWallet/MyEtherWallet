@@ -39,6 +39,9 @@ export default async ({ payload, store, requestManager }, res, next) => {
   tx.value = tx.value === '' || tx.value === '0x' ? '0' : tx.value;
   const ethCalls = new EthCalls(requestManager);
   try {
+    if (!tx.nonce) {
+      console.log('here');
+    }
     tx.nonce = !tx.nonce
       ? await store.state.wallet.web3.eth.getTransactionCount(
           store.state.wallet.instance.getAddressString()
@@ -48,6 +51,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
       tx.gas = tx.gasLimit;
     }
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
+    tx.gasLimit = tx.gas;
   } catch (e) {
     res(e);
     return;

@@ -120,12 +120,8 @@ export default {
         this.web3.eth.getBlock(bNumber).then(block => {
           this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-            if (this.isEIP1559SupportedNetwork) {
-              if (res.number % 50 === 0) {
-                this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
-              } else {
-                this.setBaseFeePerGas(toBN(res.baseFeePerGas));
-              }
+            if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
+              this.setBaseFeePerGas(toBN(res.baseFeePerGas));
             }
             this.setBlockNumber(res.number);
           });

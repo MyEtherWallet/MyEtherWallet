@@ -11,21 +11,17 @@
       :selected="selected"
       :set-selected="setGas"
       :gas-price="gasPrice"
-      :set-custom-gas-price="setCustom"
       :open-global-settings="openSettings"
     />
   </app-simple-dialog>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import AppSimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
-import {
-  getGasBasedOnType,
-  gasPriceTypes
-} from '@/core/helpers/gasPriceHelper';
-import { toWei } from 'web3-utils';
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 export default {
   components: {
     AppSimpleDialog,
@@ -53,20 +49,14 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapGetters('global', ['gasPriceByType'])
+  },
   methods: {
-    setCustom(value) {
-      //fix-it
-      const newObj = {
-        gasType: gasPriceTypes.STORED,
-        gasPrice: toWei(value, 'gwei')
-      };
-      this.$emit('onLocalGasPrice', newObj);
-      this.close();
-    },
     setGas(value) {
       const newObj = {
         gasType: value,
-        gasPrice: getGasBasedOnType(this.localGas, value)
+        gasPrice: this.gasPriceByType(value)
       };
       this.$emit('onLocalGasPrice', newObj);
       this.close();
