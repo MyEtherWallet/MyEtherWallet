@@ -270,18 +270,18 @@ export default {
     ...mapMutations('unstoppable', [
       'SET_CURRENT_DOMAIN',
       'CLEAR_DOMAIN',
-      'SET_MANAGE_DOMAIN',
+      'SET_MANAGE_RECORD',
       'SET_ACTIVE_OVERLAY'
     ]),
     ...mapActions('unstoppable', ['fetchMyDomains', 'fetchIpfsHash']),
     openManageRecordsOverlay(domain) {
       this.SET_ACTIVE_OVERLAY({ value: 'ManageRecordsOverlay' });
-      this.SET_MANAGE_DOMAIN({ value: domain });
+      this.SET_MANAGE_RECORD({ value: domain });
       this.manageRecordsOverlay = true;
     },
     async openUploadIpfsOverlay(domain) {
       this.SET_ACTIVE_OVERLAY({ value: 'UploadIpfsOverlay' });
-      this.SET_MANAGE_DOMAIN({ value: domain });
+      this.SET_MANAGE_RECORD({ value: domain });
       await this.fetchIpfsHash();
       this.uploadIpfsOverlay = true;
     },
@@ -290,11 +290,11 @@ export default {
     },
     closeManageRecordsOverlay() {
       this.manageRecordsOverlay = false;
-      this.SET_MANAGE_DOMAIN({ value: { name: '' } });
+      this.SET_MANAGE_RECORD({ value: { name: '' } });
     },
     closeUploadIpfsOverlay() {
       this.uploadIpfsOverlay = false;
-      this.SET_MANAGE_DOMAIN({ value: { name: '' } });
+      this.SET_MANAGE_RECORD({ value: { name: '' } });
     },
     async buyDomain(domain) {
       this.SET_CURRENT_DOMAIN({ value: domain });

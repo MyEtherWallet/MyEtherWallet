@@ -1,14 +1,36 @@
-const domain = state => state.currentDomain;
-const domainName = state => state.currentDomain.name;
-const domainPrice = state => state.currentDomain.price;
-const email = state => state.email;
-const order = state => state.order;
-const baseUrl = state => state.udBaseUrl;
-const resellerId = state => state.resellerId;
-const myDomains = state => state.myDomains;
-const managedDomain = state => state.manageRecordDomain;
-const resolution = state => state.resolution;
-const activeOverlay = state => state.activeOverlay;
+const domain = function (state) {
+  return state.currentDomain;
+};
+const domainName = function (state) {
+  return state.currentDomain.name;
+};
+const domainPrice = function (state) {
+  return state.currentDomain.price;
+};
+const email = function (state) {
+  return state.email;
+};
+const order = function (state) {
+  return state.order;
+};
+const baseUrl = function (state) {
+  return state.udBaseUrl;
+};
+const resellerId = function (state) {
+  return state.resellerId;
+};
+const myDomains = function (state) {
+  return state.myDomains;
+};
+const managedDomain = function (state) {
+  return state.manageRecordDomain;
+};
+const resolution = function (state) {
+  return state.resolution;
+};
+const activeOverlay = function (state) {
+  return state.activeOverlay;
+};
 
 export default {
   domain,

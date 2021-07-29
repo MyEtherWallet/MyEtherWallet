@@ -134,12 +134,9 @@ export default {
     ...mapState('wallet', ['balance', 'address', 'web3']),
     ...mapGetters('unstoppable', [
       'managedDomain',
-      'resoultion',
+      'resolution',
       'activeOverlay'
-    ]),
-    resolution() {
-      return this.resoultion();
-    }
+    ])
   },
   watch: {
     managedDomain: async function (newVal, oldVal) {

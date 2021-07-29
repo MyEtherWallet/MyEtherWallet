@@ -112,6 +112,11 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapGetters('unstoppable', [
+      'managedDomain',
+      'resolution',
+      'activeOverlay'
+    ]),
     ipfsHash: {
       get() {
         return this.managedDomain.ipfsHash;
@@ -135,11 +140,6 @@ export default {
   },
   methods: {
     ...mapMutations('unstoppable', ['SET_ACTIVE_OVERLAY']),
-    ...mapGetters('unstoppable', [
-      'managedDomain',
-      'resolution',
-      'activeOverlay'
-    ]),
     isValidIpfs(value) {
       this.disabled = !isIpfs.multihash(value);
       return !this.disabled;

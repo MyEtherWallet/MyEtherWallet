@@ -37,14 +37,14 @@ const fetchIpfsHash = async ({ commit, state }) => {
     const ipfs = await state.resolution.getIpfsHash(
       state.manageRecordDomain.name
     );
-    commit('SET_MANAGE_DOMAIN', {
+    commit('SET_MANAGE_RECORD', {
       value: {
         ...state.manageRecordDomain,
         ipfsHash: ipfs
       }
     });
   } catch (err) {
-    commit('SET_MANAGE_DOMAIN', {
+    commit('SET_MANAGE_RECORD', {
       value: {
         ...state.manageRecordDomain
       }
