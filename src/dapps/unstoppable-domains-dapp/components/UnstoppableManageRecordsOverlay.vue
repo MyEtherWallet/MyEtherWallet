@@ -144,7 +144,7 @@ export default {
   watch: {
     managedDomain: async function (newVal, oldVal) {
       if (
-        this.activeOverlay() === 'ManageRecordsOverlay' &&
+        this.activeOverlay === 'ManageRecordsOverlay' &&
         newVal &&
         newVal.name !== oldVal.name
       ) {
@@ -152,7 +152,7 @@ export default {
       }
     },
     errors: function (newVal) {
-      if (this.activeOverlay() === 'ManageRecordsOverlay') {
+      if (this.activeOverlay === 'ManageRecordsOverlay') {
         this.disabled = this.hasError(newVal);
       }
     }

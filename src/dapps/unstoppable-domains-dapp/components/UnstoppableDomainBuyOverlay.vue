@@ -235,7 +235,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'address', 'web3']),
-    ...mapState('external', ['ETHUSDValue']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapGetters('unstoppable', [
       'domain',
       'email',
@@ -245,9 +245,7 @@ export default {
     ]),
     convertedEthPrice() {
       return BigNumber(this.domainPrice).gt(0)
-        ? BigNumber(this.domainPrice)
-            .dividedBy(this.ETHUSDValue.value)
-            .toFixed(8)
+        ? BigNumber(this.domainPrice).dividedBy(this.fiatValue).toFixed(8)
         : '0';
     },
     notEnoughBalance() {

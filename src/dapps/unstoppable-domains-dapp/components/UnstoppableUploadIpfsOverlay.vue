@@ -20,7 +20,7 @@
         </div>
         <div v-if="!loading" class="pa-8" style="min-height: 266px">
           <div class="d-flex justify-space-between align-center">
-            <h3 class="font-weight-medium">{{ managedDomain.name || '' }}</h3>
+            <h3 class="font-weight-medium">{{ name }}</h3>
             <div class="label-container">
               <form
                 enctype="multipart/form-data"
@@ -119,11 +119,14 @@ export default {
       set(newHash) {
         return newHash;
       }
+    },
+    name() {
+      return this.managedDomain.name ? this.managedDomain.name : '';
     }
   },
   watch: {
     managedDomain: async function (newVal, oldVal) {
-      if (this.activeOverlay() === 'UploadIpfsOverlay' && newVal) {
+      if (this.activeOverlay === 'UploadIpfsOverlay' && newVal) {
         if (newVal.name !== oldVal.name) {
           await this.fetchRecords();
         }
@@ -148,7 +151,7 @@ export default {
     },
     async fetchRecords() {
       this.ipfsHash = await this.resolution
-        .getIpfsHash(this.managedDomain.name)
+        .getIpfsHash(this.name)
         .then(ipfs => {
           this.isValidIpfs(ipfs);
           return ipfs;
@@ -265,7 +268,7 @@ export default {
       this.loading = true;
 
       const currentResolverAddress = await this.resolution.getResolver(
-        this.managedDomain.name
+        this.name
       );
 
       if (!currentResolverAddress) {
@@ -282,7 +285,7 @@ export default {
           from: this.address,
           to: currentResolverAddress,
           data: resolverContract.methods
-            .set('ipfs.html.value', hash, this.managedDomain.namehash)
+            .set('ipfs.html.value', hash, this.namehash)
             .encodeABI(),
           value: 0
         };
