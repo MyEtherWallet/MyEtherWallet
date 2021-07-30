@@ -2,16 +2,17 @@ import Resolution from '@unstoppabledomains/resolution';
 import { toChecksumAddress } from 'web3-utils';
 
 export default class UNS {
-  constructor(network) {
-    const resolution = new Resolution({
-      blockchain: {
+  constructor(network, web3) {
+    const networkname = 'mainnet';
+    const resolution = Resolution.fromWeb3Version1Provider(
+      web3.currentProvider,
+      {
         ens: false,
         uns: {
-          url: network.url,
-          network: 'mainnet' //we have to get this from network object
+          network: networkname
         }
       }
-    });
+    );
     this.resolver = resolution;
   }
   resolveName(name) {
