@@ -19,7 +19,7 @@ async function uploadToLokalise() {
             lokalise.files.upload(`${projectId}:${branchName}`, {
               data: readFile.toString('base64'),
               filename: path,
-              lang_iso: 'en'
+              lang_iso: 'en_US'
             })
           );
         }
