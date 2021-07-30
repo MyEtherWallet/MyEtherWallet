@@ -13,15 +13,33 @@ class CustomRequestManager extends Web3RequestManager {
     super(host);
   }
   request(payload) {
-    return this.provider.request_(payload);
+    return new Promise((resolve, reject) => {
+      const callback = (error, result) => {
+        if (error) return reject(error.error);
+        if (result.error) return reject(result.error);
+        return resolve(result.result);
+      };
+      if (this.provider.request_) {
+        this.provider.request_(payload).then(resolve).catch(reject);
+      } else if (this.provider.sendAsync) {
+        this.provider.sendAsync(payload, callback);
+      } else if (this.provider.send) {
+        this.provider.send(payload, callback);
+      }
+    });
   }
-  send({ method, params }, callback) {
-    this.provider
-      .request_({ method, params })
-      .then(res => {
-        callback(null, res);
-      })
-      .catch(err => callback(err));
+  send(data, callback) {
+    const { method, params } = data;
+    if (this.provider.request_) {
+      this.provider
+        .request_({ method, params })
+        .then(res => {
+          callback(null, res);
+        })
+        .catch(err => callback(err));
+    } else {
+      super.send(data, callback);
+    }
   }
 }
 class GivenProvider {
@@ -49,7 +67,13 @@ class GivenProvider {
         middleware.use(ethGetTransactionCount);
         middleware.use(ethSign);
         middleware.run(req, callback).then(() => {
-          this.givenProvider.request_(payload).then(resolve).catch(reject);
+          if (this.givenProvider.request_) {
+            this.givenProvider.request_(payload).then(resolve).catch(reject);
+          } else if (this.givenProvider.sendAsync) {
+            this.givenProvider.sendAsync(payload, callback);
+          } else if (this.givenProvider.send) {
+            this.givenProvider.send(payload, callback);
+          }
         });
       });
     };
