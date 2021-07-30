@@ -36,8 +36,12 @@ class WSProvider {
         this.wsProvider.connectionId !==
         VuexStore.state.wallet.web3.currentProvider.connectionId
       ) {
-        this.wsProvider.disconnect();
-        this.oWSProvider.disconnect();
+        if (this.wsProvider) {
+          this.wsProvider.disconnect();
+        }
+        if (this.oWSProvider) {
+          this.oWSProvider.disconnect();
+        }
         workerTimer.clearInterval(this.keepAliveTimer);
       }
     };

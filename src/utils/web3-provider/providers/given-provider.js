@@ -8,10 +8,21 @@ import {
   ethSignTransaction,
   ethGetTransactionCount
 } from '../methods';
+class CustomRequestManager extends Web3RequestManager {
+  constructor(host) {
+    super(host);
+  }
+  send({ method, params, jsonrpc, id }, callback) {
+    this.provider
+      .request_({ method, params })
+      .then(res => callback(null, { id, jsonrpc, result: res }))
+      .catch(err => callback(err));
+  }
+}
 class GivenProvider {
   constructor(host) {
     this.givenProvider = host;
-    const requestManager = new Web3RequestManager(host);
+    const requestManager = new CustomRequestManager(host);
     if (this.givenProvider.request && !this.givenProvider.request_) {
       this.givenProvider.request_ = this.givenProvider.request;
     }
@@ -42,4 +53,5 @@ class GivenProvider {
     return this.givenProvider;
   }
 }
+export { CustomRequestManager };
 export default GivenProvider;
