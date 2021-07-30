@@ -177,8 +177,7 @@ class Changelly {
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = await this.web3.eth.getGasPrice();
-
+    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     return new Promise((resolve, reject) => {
       this.web3.eth
         .sendTransaction(

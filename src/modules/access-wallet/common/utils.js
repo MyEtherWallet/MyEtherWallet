@@ -10,7 +10,7 @@ const padLeftEven = hex => {
   return hex;
 };
 const sanitizeHex = hex => {
-  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
+  hex = hex ? (hex.substring(0, 2) == '0x' ? hex.substring(2) : hex) : '';
   if (hex == '') return '';
   return '0x' + padLeftEven(hex);
 };

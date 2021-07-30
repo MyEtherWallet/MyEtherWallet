@@ -15,7 +15,7 @@
     "juststart": "vue-cli-service serve --watch",
     "dev": "npm run update && npm run juststart",
     "lint:code": "vue-cli-service lint",
-    "lint:md": "remark . -o -f",
+    "lint:md": "remark . -o",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",
-    "@ledgerhq/hw-app-eth": "6.1.0",
+    "@ledgerhq/hw-app-eth": "6.2.0",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
     "@ledgerhq/hw-transport-webusb": "6.2.0",
     "@mdi/font": "5.9.55",
@@ -122,7 +122,6 @@
     "imagemin-webpack-plugin": "2.4.2",
     "is-ipfs": "6.0.1",
     "jest-skipped-reporter": "0.0.5",
-    "marked": "2.1.3",
     "multicoin-address-validator": "0.4.5",
     "node-fetch": "2.6.1",
     "node-sass": "6.0.1",
@@ -179,7 +178,8 @@
     "scrypt.js": "0.3.0",
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
-    "diff": "3.5.0"
+    "diff": "3.5.0",
+    "elleptic": "6.5.3"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
