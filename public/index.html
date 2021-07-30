@@ -73,17 +73,21 @@
   <script>
     window.LOKALISE_CONFIG = {
       projectId: '<%= VUE_APP_LOKLISE_ID %>',
-      locale: "en",
-      usePanelOffset: true,
-      // onSave: function (updatedTranslations, skippedTranslations, dismissedTranslations, errorMessage) {
-      //   console.log('on save function')
-      // }
+      locale: "en_US",
+      usePanelOffset: true
     };
     (function () {
       var a = document.createElement("script"); a.type = "text/javascript"; a.async = !0;
       a.src = ["https://app.lokalise.com/live-js/script.min.js?", (new Date).getTime()].join("");
       document.body.appendChild(a)
     })();
+    document.addEventListener('lokalise-on-save', function (event) {
+      console.log(event.detail);
+      console.log(event.detail.updatedTranslations);
+      console.log(event.detail.skippedTranslations);
+      console.log(event.detail.dismissedTranslations);
+      console.log(event.detail.errorMessage);
+    });
   </script>
 </body>
 
