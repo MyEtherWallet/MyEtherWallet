@@ -12,10 +12,15 @@ class CustomRequestManager extends Web3RequestManager {
   constructor(host) {
     super(host);
   }
-  send({ method, params, jsonrpc, id }, callback) {
+  request(payload) {
+    return this.provider.request_(payload);
+  }
+  send({ method, params }, callback) {
     this.provider
       .request_({ method, params })
-      .then(res => callback(null, { id, jsonrpc, result: res }))
+      .then(res => {
+        callback(null, res);
+      })
       .catch(err => callback(err));
   }
 }
