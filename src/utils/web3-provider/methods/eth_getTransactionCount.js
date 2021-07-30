@@ -25,7 +25,6 @@ export default async ({ payload, store, requestManager }, res, next) => {
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
   if (timeDiff > 1) {
     const liveNonce = await ethCalls.getTransactionCount(addr);
-    console.log(liveNonce);
     const liveNonceBN = toBN(liveNonce);
     const cachedNonceBN = toBN(cached.nonce);
     if (timeDiff > 15) {
