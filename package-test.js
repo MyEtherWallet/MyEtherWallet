@@ -18,7 +18,6 @@ const EXCEPTIONS = [
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  '@unstoppabledomains/resolution',
   'sass',
   'scryptsy'
 ];
