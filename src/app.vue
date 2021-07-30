@@ -21,16 +21,6 @@ import {
 export default {
   name: 'App',
   components: { ModuleToast, ModuleGlobalModals },
-  data() {
-    return {
-      translate: document
-    };
-  },
-  watch: {
-    translate() {
-      console.log('asdff', document);
-    }
-  },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
