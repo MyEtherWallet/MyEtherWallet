@@ -41,9 +41,9 @@
     "@myetherwallet/eth2-keystore": "0.2.3",
     "@myetherwallet/mew-components": "0.6.0",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
-    "@sentry/browser": "6.9.0",
-    "@sentry/tracing": "6.9.0",
-    "@sentry/vue": "6.9.0",
+    "@sentry/browser": "6.10.0",
+    "@sentry/tracing": "6.10.0",
+    "@sentry/vue": "6.10.0",
     "@shapeshiftoss/hdwallet-core": "1.15.4",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.15.4",
     "@unstoppabledomains/resolution": "3.0.0",
@@ -76,7 +76,7 @@
     "vue-apollo": "3.0.7",
     "vue-router": "3.5.2",
     "vuex": "3.6.2",
-    "walletlink": "2.1.6"
+    "walletlink": "2.1.7"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",
@@ -91,7 +91,7 @@
     "@vue/cli-plugin-unit-jest": "4.5.13",
     "@vue/cli-service": "4.5.13",
     "@vue/eslint-config-prettier": "6.0.0",
-    "@vue/test-utils": "1.2.1",
+    "@vue/test-utils": "1.2.2",
     "apollo": "2.33.4",
     "axios": "0.21.1",
     "babel-core": "7.0.0-bridge.0",
