@@ -32,7 +32,6 @@ class GivenProvider {
       this.givenProvider.request_ = this.givenProvider.request;
     }
     this.givenProvider.request = payload => {
-      console.log(payload);
       return new Promise((resolve, reject) => {
         const callback = (error, result) => {
           if (error) return reject(error.error);
@@ -50,7 +49,6 @@ class GivenProvider {
         middleware.use(ethGetTransactionCount);
         middleware.use(ethSign);
         middleware.run(req, callback).then(() => {
-          console.log(payload, 2);
           this.givenProvider.request_(payload).then(resolve).catch(reject);
         });
       });
