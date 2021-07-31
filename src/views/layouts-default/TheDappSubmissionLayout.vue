@@ -336,7 +336,6 @@
                 :src="imgBanner"
                 alt="Mock flow"
               />
-              {{ imgBanner }}
             </div>
 
             <!--
@@ -803,7 +802,7 @@ export default {
   }
 }
 .preview {
-  max-width: 500px;
+  max-width: 400px;
   width: 100%;
 }
 </style>
