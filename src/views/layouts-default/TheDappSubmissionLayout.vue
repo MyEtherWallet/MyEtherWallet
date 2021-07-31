@@ -255,13 +255,23 @@
                 {{ $t('dappsSubmission.about-your-dapp.mock-requirements') }}
               </div>
             </div>
+            <div>
+              {{ form.mockFlowFile }}
+            </div>
             <div class="border">
               <v-file-input
                 v-model="form.mockFlowFile"
                 :rules="[rules.noNull]"
                 accept="image/jpeg, .pdf"
                 label="JPEG, PDF (> 5MB)"
+                @change="imgPreview($event, 'imgMockFlow')"
               ></v-file-input>
+              <img
+                v-if="imgMockFlow"
+                class="preview"
+                :src="imgMockFlow"
+                alt="Mock flow"
+              />
             </div>
 
             <!--
@@ -286,7 +296,14 @@
                 :rules="[rules.noNull]"
                 accept="image/jpeg, image/png"
                 label="JPEG, PNG"
+                @change="imgPreview($event, 'imgDappIcon')"
               ></v-file-input>
+              <img
+                v-if="imgDappIcon"
+                class="preview"
+                :src="imgDappIcon"
+                alt="Mock flow"
+              />
             </div>
 
             <!--
@@ -311,7 +328,15 @@
                 :rules="[rules.noNull]"
                 accept="image/jpeg, image/png"
                 label="JPEG, PNG"
+                @change="imgPreview($event, 'imgBanner')"
               ></v-file-input>
+              <img
+                v-if="imgBanner"
+                class="preview"
+                :src="imgBanner"
+                alt="Mock flow"
+              />
+              {{ imgBanner }}
             </div>
 
             <!--
@@ -626,6 +651,9 @@ export default {
   name: 'DappSubmition',
   components: { TheLayoutHeader },
   data: () => ({
+    imgMockFlow: '',
+    imgDappIcon: '',
+    imgBanner: '',
     validRequiredFormsRate: 0,
     areAllRequiredFormsValid: true,
     formSubmissionSuccessful: false,
@@ -691,6 +719,13 @@ export default {
     }
   }),
   methods: {
+    imgPreview(e, targetVar) {
+      if (e) {
+        this[targetVar] = URL.createObjectURL(e);
+      } else {
+        this[targetVar] = '';
+      }
+    },
     submitForm() {
       const formData = new FormData();
 
@@ -766,5 +801,9 @@ export default {
     width: 13px;
     margin-left: 5px;
   }
+}
+.preview {
+  max-width: 500px;
+  width: 100%;
 }
 </style>
