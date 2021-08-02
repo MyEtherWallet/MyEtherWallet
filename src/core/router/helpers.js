@@ -130,12 +130,6 @@ const swapRouterGuard = (to, from, next) => {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
-const stakingRouterGuard = (to, from, next) => {};
-
-// eslint-disable-next-line no-unused-vars
-const ensRouterGuard = (to, from, next) => {};
-
 export {
   createWalletProps,
   createRouteGuard,
@@ -143,7 +137,5 @@ export {
   accessRouteGuard,
   ACCESS_VALID_OVERLAYS,
   swapProps,
-  swapRouterGuard,
-  stakingRouterGuard,
-  ensRouterGuard
+  swapRouterGuard
 };
