@@ -110,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
@@ -180,7 +180,7 @@ export default {
   },
   mounted() {
     if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network);
+      this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.addMode && this.toAddress) {
       this.addressToAdd = this.toAddress;
     }
