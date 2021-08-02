@@ -594,7 +594,6 @@ export default {
         ) {
           try {
             getAddressTokens(this.account.address).then(res => {
-              console.log(res);
               const tokens = [];
               const apiTokens = res.data.getOwnersERC20Tokens.owners;
               const parsedApiTokens = apiTokens.map(apiT => {
