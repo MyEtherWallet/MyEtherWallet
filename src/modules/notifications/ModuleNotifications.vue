@@ -303,15 +303,11 @@ export default {
       }
     },
     openNotifications() {
-      history.pushState(
-        {},
-        null,
-        '/#/wallet/' + ROUTES_WALLET.NOTIFICATIONS.PATH
-      );
+      this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
       this.isOpenNotifications = true;
     },
     closeNotifications() {
-      history.pushState({}, null, '/#/wallet/');
+      this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
       this.isOpenNotifications = false;
     }
   }

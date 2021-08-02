@@ -11,6 +11,7 @@ import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
 import Settings from '@/modules/settings/ModuleSettings';
 import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
+import Notifications from '@/modules/notifications/ModuleNotifications';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
@@ -65,6 +66,14 @@ export default {
           }
         }
       ],
+      meta: {
+        noAuth: false
+      }
+    },
+    {
+      path: ROUTES_WALLET.NOTIFICATIONS.PATH,
+      name: ROUTES_WALLET.NOTIFICATIONS.NAME,
+      component: Notifications,
       meta: {
         noAuth: false
       }
