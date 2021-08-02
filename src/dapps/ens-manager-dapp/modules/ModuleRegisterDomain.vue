@@ -38,7 +38,6 @@
 <script>
 import Request from '../components/register/RegisterRequest';
 import Register from '../components/register/Register';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: { Request, Register },
@@ -119,30 +118,11 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.pushHistoryState();
-  },
-  beforeDestroy() {
-    history.pushState({}, null, '/#/wallet/');
-  },
   methods: {
     onRequest(val) {
       this.generateKeyPhrase();
       this.duration = val;
       this.onStep += 1;
-      this.pushHistoryState();
-    },
-    pushHistoryState() {
-      history.pushState(
-        {},
-        null,
-        '/#/wallet/' +
-          ROUTES_WALLET.DAPPS.PATH +
-          '/' +
-          ROUTES_WALLET.ENS_MANAGER.PATH +
-          '/' +
-          this.onStep
-      );
     }
   }
 };
