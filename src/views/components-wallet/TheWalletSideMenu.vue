@@ -156,10 +156,7 @@
       popup-type="confirm"
       @onClick="onLogout"
     ></mew-popup>
-    <module-settings
-      :on-settings="onSettings"
-      @closeSettings="closeSettingsRouteToDashboard"
-    />
+    <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
     =====================================================================================
       Navigation Bar on top of the screen for xs-md screens
@@ -332,9 +329,9 @@ export default {
     toggleSettings() {
       this.onSettings = !this.onSettings;
     },
-    closeSettingsRouteToDashboard() {
+    closeSettings() {
       this.toggleSettings();
-      this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      this.$router.go(-1);
     },
     onLogout(res) {
       this.showLogoutPopup = false;

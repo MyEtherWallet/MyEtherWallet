@@ -307,7 +307,7 @@ export default {
       this.isOpenNotifications = true;
     },
     closeNotifications() {
-      this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
+      this.$router.go(-1);
       this.isOpenNotifications = false;
     }
   }

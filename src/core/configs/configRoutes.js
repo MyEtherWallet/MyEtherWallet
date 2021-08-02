@@ -22,7 +22,6 @@ const ROUTES_WALLET = {
   ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NETWORK: { NAME: 'Network', PATH: 'network' },
-  NETWORK_SWITCH: { NAME: 'NetworkSwitch', PATH: 'switch-network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   NOTIFICATIONS: { NAME: 'Notifications', PATH: 'notifications' },
