@@ -1,3 +1,9 @@
+### v5.8.5
+
+### Fixes
+
+- Bitbox 1 fix [#3340](https://github.com/MyEtherWallet/MyEtherWallet/pull/3340)
+
 ### v5.8.4
 
 ### Fixes
