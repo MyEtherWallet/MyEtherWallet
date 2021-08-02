@@ -88,6 +88,11 @@ export default {
       return [];
     }
   },
+  mounted() {
+    this.$route.name == ROUTES_WALLET.NETWORK.NAME
+      ? this.openNetworkOverlay()
+      : '';
+  },
   methods: {
     openNetworkOverlay() {
       this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
