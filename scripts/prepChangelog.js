@@ -1,6 +1,6 @@
 const fs = require('fs');
-const version = require('./package.json').version;
-const devmoji = require('./devmoji.config');
+const version = require('../package.json').version;
+const devmoji = require('../devmoji.config');
 const ACCEPTABLE_ENTRIES = devmoji.devmoji.map(i => i.code);
 const CHANGELOG_DIR = './changelog';
 function main() {
@@ -15,7 +15,7 @@ function main() {
     acc[curr] = [];
     return acc;
   }, {});
-  let newLog = `### Release v${version}`;
+  const newLog = `### Release v${version}`;
   const isNewVersionAdded = !currentChangeLog.includes(newLog);
   files.forEach(item => {
     const type = item.split('-')[0];
@@ -30,7 +30,7 @@ function main() {
   let updatedStr = '';
   Object.keys(container).forEach(item => {
     if (container[item].length > 0) {
-      let sectionHeader = `### ${item}`;
+      const sectionHeader = `### ${item}`;
       let body = ``;
       container[item].forEach((file, idx) => {
         const fileContent = fs.readFileSync(`./changelog/${file}`, 'utf8');
