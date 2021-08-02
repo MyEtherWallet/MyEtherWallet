@@ -89,7 +89,7 @@
     -->
                   <nft-manager-details
                     :loading="loadingTokens"
-                    :on-click="goToSend"
+                    :on-click="openNftSend"
                     :get-image-url="getImageUrl"
                     :token="token"
                   />
@@ -248,19 +248,16 @@ export default {
     /**
      * Send NFT
      */
-    openNftSend() {
-      this.onNftSend = true;
-    },
-    closeNftSend() {
-      this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
-    },
-    goToSend(selectedNft) {
+    openNftSend(selectedNft) {
       if (selectedNft) {
         this.selectedNft = selectedNft;
       }
-      this.openNftSend();
+      this.onNftSend = true;
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME });
+    },
+    closeNftSend() {
+      this.onNftSend = false;
+      this.$router.go(-1);
     },
     sendTx() {
       if (this.isValid) {
