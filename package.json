@@ -177,7 +177,8 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "elleptic": "6.5.3"
+    "elleptic": "6.5.3",
+    "tar": "6.1.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
