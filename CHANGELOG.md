@@ -1,3 +1,7 @@
+### feat
+
+* * update unstoppable domains package [#3279](https://github.com/MyEtherWallet/MyEtherWallet/pull/3279)
+
 ### Release v6.0.4
 
 ### devop
