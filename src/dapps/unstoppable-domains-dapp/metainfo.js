@@ -5,6 +5,7 @@ export default {
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stake',
+  name: 'unstoppable',
   path: 'unstoppable',
   networks: [],
   layout,

@@ -261,7 +261,9 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
+  name: 'ENSManagerLayout',
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
     return {
@@ -504,6 +506,7 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
+      this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
     },
     setName(name) {
       if (this.name === null || this.name === '') {

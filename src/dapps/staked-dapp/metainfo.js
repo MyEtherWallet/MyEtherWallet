@@ -6,6 +6,7 @@ export default {
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stake',
+  name: 'staked',
   path: 'staked',
   networks: [ETH, GOERLI],
   layout,
