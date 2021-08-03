@@ -80,12 +80,16 @@
               </div>
               <div>
                 {{ $t('dappsSubmission.about-your-dapp.suggested-tags') }}
-                <v-chip x-small class="ml-1">Games</v-chip>
-                <v-chip x-small class="ml-1">Defi</v-chip>
-                <v-chip x-small class="ml-1">Lending</v-chip>
-                <v-chip x-small class="ml-1">Social</v-chip>
-                <v-chip x-small class="ml-1">Finance</v-chip>
-                <v-chip x-small class="ml-1">Wallet</v-chip>
+                <v-chip
+                  v-for="(tag, tagKey) in tagsList"
+                  :key="tagKey"
+                  x-small
+                  class="ml-1 cursor--pointer"
+                  :val="tag"
+                  @click="fillTags"
+                >
+                  {{ tag }}
+                </v-chip>
               </div>
             </div>
             <v-combobox
@@ -699,6 +703,7 @@ export default {
       'Health',
       'Other'
     ],
+    tagsList: ['Games', 'Defi', 'Lending', 'Social', 'Finance', 'Wallet'],
     rules: {
       noEmptyString: value => {
         return value != '' || 'This field is required';
@@ -718,6 +723,12 @@ export default {
     }
   }),
   methods: {
+    fillTags(e) {
+      const item = e.currentTarget.getAttribute('val');
+      if (this.form.tags.indexOf(item) === -1) {
+        this.form.tags.push(item);
+      }
+    },
     imgPreview(e, targetVar) {
       if (e) {
         this[targetVar] = URL.createObjectURL(e);
