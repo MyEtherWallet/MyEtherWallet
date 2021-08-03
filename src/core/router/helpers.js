@@ -130,6 +130,16 @@ const swapRouterGuard = (to, from, next) => {
   }
 };
 
+const ensRouterGuard = (to, from, next) => {
+  if (from.name == 'ens-manager' && to.name == 'ENS1') {
+    next();
+  } else if (from.name == 'ENS1' && to.name == 'ENS2') {
+    next();
+  } else if (from.name == 'ENS2' && to.name == 'ENS3') {
+    next();
+  }
+};
+
 export {
   createWalletProps,
   createRouteGuard,
@@ -137,5 +147,6 @@ export {
   accessRouteGuard,
   ACCESS_VALID_OVERLAYS,
   swapProps,
-  swapRouterGuard
+  swapRouterGuard,
+  ensRouterGuard
 };
