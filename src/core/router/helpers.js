@@ -153,6 +153,34 @@ const ensRouterGuard = (to, from, next) => {
   }
 };
 
+const stakedRouterGuard = (to, from, next) => {
+  if (
+    // STAKED => STAKED 1
+    from.name == ROUTES_WALLET.STAKED.NAME &&
+    to.name == ROUTES_WALLET.STAKED_1.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 1 => STAKED 2
+    from.name == ROUTES_WALLET.STAKED_1.NAME &&
+    to.name == ROUTES_WALLET.STAKED_2.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 2 => STAKED 3
+    from.name == ROUTES_WALLET.STAKED_2.NAME &&
+    to.name == ROUTES_WALLET.STAKED_3.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 3 => STAKED 4
+    from.name == ROUTES_WALLET.STAKED_3.NAME &&
+    to.name == ROUTES_WALLET.STAKED_4.NAME
+  ) {
+    next();
+  }
+};
+
 export {
   createWalletProps,
   createRouteGuard,
@@ -161,5 +189,6 @@ export {
   ACCESS_VALID_OVERLAYS,
   swapProps,
   swapRouterGuard,
-  ensRouterGuard
+  ensRouterGuard,
+  stakedRouterGuard
 };
