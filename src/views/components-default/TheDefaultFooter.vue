@@ -345,7 +345,8 @@ export default {
           },
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' }
+          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
+          { label: 'Submit DApp', routerLink: 'DappSubmission' }
         ]
       },
       {
