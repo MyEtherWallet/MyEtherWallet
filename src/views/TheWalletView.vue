@@ -15,7 +15,6 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import { toBN } from 'web3-utils';
-import BigNumber from 'bignumber.js';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -66,6 +65,11 @@ export default {
       this.setup();
 
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        const web3Instance = new Web3(window.ethereum);
+
+        web3Instance.eth.net.getId().then(id => {
+          this.findAndSetNetwork(id);
+        });
         this.web3Listeners();
       }
     }
@@ -114,12 +118,6 @@ export default {
      * and setup listenerss for metamask changes
      */
     web3Listeners() {
-      const web3Instance = new Web3(window.ethereum);
-
-      web3Instance.eth.net.getId().then(id => {
-        this.findAndSetNetwork(id);
-      });
-
       window.ethereum.on('chainChanged', chainId => {
         this.findAndSetNetwork(chainId);
       });
@@ -136,7 +134,7 @@ export default {
     },
     findAndSetNetwork(web3ChainId) {
       const foundNetwork = Object.values(nodeList).find(item => {
-        if (BigNumber(web3ChainId).eq(item[0].type.chainID)) return item;
+        if (toBN(web3ChainId).toNumber() === item[0].type.chainID) return item;
       });
 
       if (foundNetwork) {
