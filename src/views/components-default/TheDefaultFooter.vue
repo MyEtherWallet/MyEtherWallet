@@ -297,6 +297,7 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { loadLanguageAsync } from '@/main/i18n';
 
 export default {
   name: 'TheDefaultFooter',
@@ -458,9 +459,7 @@ export default {
   }),
   watch: {
     select({ value }) {
-      if (this.$i18n.locale !== value) {
-        this.$i18n.locale = value;
-      }
+      loadLanguageAsync(value);
     }
   }
 };
