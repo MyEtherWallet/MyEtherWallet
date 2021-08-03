@@ -1,5 +1,6 @@
 import xss from 'xss';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers';
+import { ROUTES_WALLET } from '../configs/configRoutes';
 
 const ACCESS_VALID_OVERLAYS = {
   HARDWARE: 'hardware',
@@ -131,11 +132,23 @@ const swapRouterGuard = (to, from, next) => {
 };
 
 const ensRouterGuard = (to, from, next) => {
-  if (from.name == 'ens-manager' && to.name == 'ENS1') {
+  if (
+    // ENS MANAGER => ENS 1
+    from.name == ROUTES_WALLET.ENS_MANAGER.NAME &&
+    to.name == ROUTES_WALLET.ENS_1.NAME
+  ) {
     next();
-  } else if (from.name == 'ENS1' && to.name == 'ENS2') {
+  } else if (
+    // ENS 1 => ENS 2
+    from.name == ROUTES_WALLET.ENS_1.NAME &&
+    to.name == ROUTES_WALLET.ENS_2.NAME
+  ) {
     next();
-  } else if (from.name == 'ENS2' && to.name == 'ENS3') {
+  } else if (
+    // ENS 2 => ENS 3
+    from.name == ROUTES_WALLET.ENS_2.NAME &&
+    to.name == ROUTES_WALLET.ENS_3.NAME
+  ) {
     next();
   }
 };
