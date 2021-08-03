@@ -38,14 +38,18 @@ class CustomRequestManager extends Web3RequestManager {
         })
         .catch(err => callback(err));
     } else {
-      super.send(data, callback);
+      this.request({ method, params })
+        .then(res => {
+          callback(null, res);
+        })
+        .catch(err => callback(err));
     }
   }
 }
 class GivenProvider {
   constructor(host) {
     this.givenProvider = host;
-    const requestManager = new CustomRequestManager(host);
+    const requestManager = new CustomRequestManager(this.givenProvider);
     if (this.givenProvider.request && !this.givenProvider.request_) {
       this.givenProvider.request_ = this.givenProvider.request;
     }
