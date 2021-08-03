@@ -5,6 +5,7 @@ const ROUTES_HOME = {
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'company' },
   COMPANY_PAGE: { NAME: 'CompanyPage', PATH: 'company' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'wallet/create/:overlay?' },
+  DAPP_SUBMISSION: { NAME: 'DappSubmission', PATH: 'dapp-submission' },
   HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
   PRESS_KIT: { NAME: 'PressKit', PATH: 'presskit' },
   PRIVACY_POLICY: { NAME: 'PrivacyPolicy', PATH: 'privacy-policy' },
