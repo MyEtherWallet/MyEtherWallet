@@ -14,7 +14,8 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { hexToNumber, toBN } from 'web3-utils';
+import { toBN } from 'web3-utils';
+import BigNumber from 'bignumber.js';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
@@ -113,14 +114,18 @@ export default {
      * and setup listenerss for metamask changes
      */
     web3Listeners() {
-      const metamaskChainId = hexToNumber(window.ethereum.chainId);
-      const currentChainId = this.network.type.chainID;
-      if (metamaskChainId !== currentChainId) {
-        this.findAndSetNetwork(metamaskChainId);
-      }
+      const web3Instance = new Web3(window.ethereum);
+
+      web3Instance.eth.net.getId().then(id => {
+        this.findAndSetNetwork(id);
+      });
 
       window.ethereum.on('chainChanged', chainId => {
-        this.findAndSetNetwork(hexToNumber(chainId));
+        this.findAndSetNetwork(chainId);
+      });
+
+      window.ethereum.on('networkChanged', chainId => {
+        this.findAndSetNetwork(chainId);
       });
 
       window.ethereum.on('accountsChanged', acc => {
@@ -129,9 +134,9 @@ export default {
         this.setWallet([wallet, web3.currentProvider]);
       });
     },
-    findAndSetNetwork(metamaskChain) {
+    findAndSetNetwork(web3ChainId) {
       const foundNetwork = Object.values(nodeList).find(item => {
-        if (item[0].type.chainID === metamaskChain) return item;
+        if (BigNumber(web3ChainId).eq(item[0].type.chainID)) return item;
       });
 
       if (foundNetwork) {
