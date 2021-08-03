@@ -67,6 +67,7 @@ export default {
   computed: {
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['web3']),
     rules() {
       return [
         this.isValidAddress ||
@@ -99,7 +100,7 @@ export default {
   },
   mounted() {
     if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network);
+      this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
       this.setDonationAddress();
     }
@@ -117,7 +118,7 @@ export default {
 
       // Calls setups from mounted
       if (this.network.type.ens)
-        this.nameResolver = new NameResolver(this.network);
+        this.nameResolver = new NameResolver(this.network, this.web3);
       if (this.isHomePage) {
         this.setDonationAddress();
       }

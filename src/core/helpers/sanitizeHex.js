@@ -4,8 +4,8 @@ const padLeftEven = hex => {
 };
 
 const sanitizeHex = hex => {
-  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
-  if (hex == '') return '0x';
+  hex = hex ? (hex.substring(0, 2) == '0x' ? hex.substring(2) : hex) : '';
+  if (hex == '') return '';
   return '0x' + padLeftEven(hex);
 };
 
