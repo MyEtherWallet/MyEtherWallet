@@ -1,3 +1,4 @@
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ETH, GOERLI } from '@/utils/networks/types';
 import layout from './TheStakedLayout';
 export default {
@@ -6,8 +7,8 @@ export default {
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'stake',
-  name: 'staked',
-  path: 'staked',
+  name: ROUTES_WALLET.STAKED.NAME,
+  path: ROUTES_WALLET.STAKED.PATH,
   networks: [ETH, GOERLI],
   layout,
   meta: {

@@ -16,6 +16,7 @@ const ROUTES_HOME = {
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
   //A-Z
+  AAVE: { NAME: 'Aave', PATH: 'aave' },
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
@@ -27,7 +28,9 @@ const ROUTES_WALLET = {
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  STAKED: { NAME: 'Staked', PATH: 'staked' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
+  UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };
 
