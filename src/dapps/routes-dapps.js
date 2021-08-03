@@ -11,7 +11,8 @@ export default [
       path: dm.path,
       name: dm.path,
       component: dm.layout,
-      meta: dm.meta
+      meta: dm.meta,
+      children: dm.children
     };
   })
 ];

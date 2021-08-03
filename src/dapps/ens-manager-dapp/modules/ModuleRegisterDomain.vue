@@ -38,8 +38,10 @@
 <script>
 import Request from '../components/register/RegisterRequest';
 import Register from '../components/register/Register';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
+  name: 'RegisterDomain',
   components: { Request, Register },
   props: {
     getRentPrice: {
@@ -117,6 +119,19 @@ export default {
         }
       ]
     };
+  },
+  watch: {
+    onStep(newStep) {
+      if (newStep == 2) {
+        this.$router.push({ name: ROUTES_WALLET.ENS_2.NAME });
+      }
+      if (newStep == 3) {
+        this.$router.push({ name: ROUTES_WALLET.ENS_3.NAME });
+      }
+    }
+  },
+  mounted() {
+    this.$router.push({ name: ROUTES_WALLET.ENS_1.NAME });
   },
   methods: {
     onRequest(val) {
