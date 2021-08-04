@@ -87,10 +87,9 @@
 </template>
 
 <script>
-import utils from 'web3-utils';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 
 const modes = ['add', 'edit'];
 
@@ -111,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
@@ -150,10 +149,8 @@ export default {
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? utils.isAddress(this.resolvedAddr) &&
-            utils.isHexStrict(this.resolvedAddr)
-        : utils.isAddress(this.addressToAdd) &&
-            utils.isHexStrict(this.addressToAdd);
+        ? isAddress(this.resolvedAddr)
+        : isAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
@@ -179,7 +176,7 @@ export default {
       return false;
     },
     checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && utils.isAddress(this.addressToAdd)) {
+      if (this.addressToAdd !== '' && isAddress(this.addressToAdd)) {
         return toChecksumAddress(this.addressToAdd);
       }
       return this.addressToAdd;
@@ -188,11 +185,18 @@ export default {
   watch: {
     addressToAdd() {
       this.resolveName();
+    },
+    web3() {
+      if (this.network.type.ens) {
+        this.nameResolver = new NameResolver(this.network, this.web3);
+      } else {
+        this.nameResolver = null;
+      }
     }
   },
   mounted() {
     if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network);
+      this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.addMode && this.toAddress) {
       this.addressToAdd = this.toAddress;
     }
@@ -212,7 +216,11 @@ export default {
       this.resolvedAddr = '';
     },
     async resolveName() {
-      if (this.nameResolver && this.addressToAdd) {
+      if (
+        this.nameResolver &&
+        this.addressToAdd &&
+        this.addressToAdd.includes('.')
+      ) {
         await this.nameResolver
           .resolveName(this.addressToAdd)
           .then(addr => {

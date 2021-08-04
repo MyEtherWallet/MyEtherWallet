@@ -4,6 +4,7 @@ import MiddleWare from '../middleware';
 import workerTimer from '@/core/helpers/webWorkerTimer.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ethSendTransaction,
   ethSignTransaction,
@@ -36,8 +37,12 @@ class WSProvider {
         this.wsProvider.connectionId !==
         VuexStore.state.wallet.web3.currentProvider.connectionId
       ) {
-        this.wsProvider.disconnect();
-        this.oWSProvider.disconnect();
+        if (this.wsProvider) {
+          this.wsProvider.disconnect();
+        }
+        if (this.oWSProvider) {
+          this.oWSProvider.disconnect();
+        }
         workerTimer.clearInterval(this.keepAliveTimer);
       }
     };
@@ -111,6 +116,23 @@ class WSProvider {
       middleware.run(req, callback).then(() => {
         this.wsProvider.connection.send(JSON.stringify(payload));
         this.wsProvider._addResponseCallback(payload, callback);
+      });
+    };
+    this.wsProvider.request = payload => {
+      return new Promise((resolve, reject) => {
+        this.wsProvider.send(
+          {
+            jsonrpc: '2.0',
+            id: uuidv4(),
+            method: payload.method,
+            params: payload.params
+          },
+          (err, res) => {
+            if (err) return reject(err);
+            else if (res.error) return reject(res.error);
+            resolve(res.result);
+          }
+        );
       });
     };
     return this.wsProvider;

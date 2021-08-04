@@ -64,9 +64,11 @@ export default {
       isValidAddress: false
     };
   },
+
   computed: {
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['web3']),
     rules() {
       return [
         this.isValidAddress ||
@@ -97,9 +99,18 @@ export default {
       return this.isHomePage ? false : this.isValidAddress;
     }
   },
+  watch: {
+    web3() {
+      if (this.network.type.ens) {
+        this.nameResolver = new NameResolver(this.network, this.web3);
+      } else {
+        this.nameResolver = null;
+      }
+    }
+  },
   mounted() {
     if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network);
+      this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
       this.setDonationAddress();
     }
@@ -117,7 +128,7 @@ export default {
 
       // Calls setups from mounted
       if (this.network.type.ens)
-        this.nameResolver = new NameResolver(this.network);
+        this.nameResolver = new NameResolver(this.network, this.web3);
       if (this.isHomePage) {
         this.setDonationAddress();
       }
@@ -133,9 +144,10 @@ export default {
       this.addMode = !this.addMode;
     },
     async resolveName() {
-      if (this.nameResolver) {
+      if (this.nameResolver && this.inputAddr.includes('.')) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
+            console.log(addr);
             this.resolvedAddr = addr;
             this.isValidAddress = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {

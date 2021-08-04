@@ -4,6 +4,7 @@ import TheHowItWorksLayout from '@/views/layouts-default/TheHowItWorksLayout';
 import TheCompanyLayout from '@/views/layouts-default/TheCompanyLayout';
 import TheTeamLayout from '@/views/layouts-default/TheTeamLayout';
 import ThePressKitLayout from '@/views/layouts-default/ThePressKitLayout';
+import TheDappSubmissionLayout from '@/views/layouts-default/TheDappSubmissionLayout';
 import TheBuyHardwareWalletLayout from '@/views/layouts-default/TheBuyHardwareWalletLayout';
 import TheToolsLayout from '@/views/layouts-default/TheToolsLayout';
 import TheCreateWalletLayout from '@/views/layouts-default/TheCreateWalletLayout';
@@ -100,6 +101,14 @@ export default {
       path: ROUTES_HOME.PRESS_KIT.PATH,
       name: ROUTES_HOME.PRESS_KIT.NAME,
       component: ThePressKitLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.DAPP_SUBMISSION.PATH,
+      name: ROUTES_HOME.DAPP_SUBMISSION.NAME,
+      component: TheDappSubmissionLayout,
       meta: {
         noAuth: true
       }
