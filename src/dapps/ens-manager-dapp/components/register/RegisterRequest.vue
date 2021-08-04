@@ -1,11 +1,5 @@
 <template>
-  <v-sheet
-    elevation="10"
-    width="100%"
-    min-width="600px"
-    class="mx-auto pa-8"
-    rounded
-  >
+  <div>
     <div v-if="loading" class="d-flex align-center justify-center">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -41,7 +35,7 @@
         @click.native="onClick"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

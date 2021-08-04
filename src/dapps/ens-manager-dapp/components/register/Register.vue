@@ -1,11 +1,5 @@
 <template>
-  <v-sheet
-    elevation="10"
-    width="100%"
-    min-width="600px"
-    class="mx-auto pa-10"
-    rounded
-  >
+  <div>
     <div class="d-flex flex-column superPrimary pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
@@ -68,7 +62,7 @@
         @click.native="!canRegister ? commit() : register(duration)"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

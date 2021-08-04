@@ -20,16 +20,13 @@
       :title="$t('interface.address-book.add-addr')"
       :show-overlay="addMode"
       :close="toggleOverlay"
-      left-btn-text=""
-      :right-btn-text="$t('common.close')"
+      content-size="xlarge"
     >
-      <template #mewOverlayBody>
-        <address-book-add-edit
-          :to-address="inputAddr"
-          mode="add"
-          @back="toggleOverlay"
-        />
-      </template>
+      <address-book-add-edit
+        :to-address="inputAddr"
+        mode="add"
+        @back="toggleOverlay"
+      />
     </mew-overlay>
   </div>
 </template>

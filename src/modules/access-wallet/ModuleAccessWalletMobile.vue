@@ -7,7 +7,7 @@
   <mew-overlay
     :show-overlay="open"
     title="Access Wallet with Mobile Apps"
-    right-btn-text="Close"
+    content-size="large"
     :close="close"
   >
     <!--
@@ -15,31 +15,29 @@
       Mobile Connection Protocol Buttons
     =====================================================================================
     -->
-    <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <v-row>
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
-            <mew-super-button
-              font-class="mew-heading-2"
-              :title="btn.label"
-              :subtitle="btn.description"
-              color-theme="basic"
-              @click.native="btn.fn"
-            >
-              <template #contentSlot>
-                <v-img
-                  :src="btn.icon"
-                  max-width="90px"
-                  min-width="40px"
-                  class="px-4 px-sm-3"
-                  contain
-                />
-              </template>
-            </mew-super-button>
-          </v-col>
-        </v-row>
-      </v-sheet>
-    </template>
+    <v-sheet color="transparent" max-width="650px" class="mx-auto">
+      <v-row>
+        <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
+          <mew-super-button
+            font-class="mew-heading-2"
+            :title="btn.label"
+            :subtitle="btn.description"
+            color-theme="basic"
+            @click.native="btn.fn"
+          >
+            <template #contentSlot>
+              <v-img
+                :src="btn.icon"
+                max-width="90px"
+                min-width="40px"
+                class="px-4 px-sm-3"
+                contain
+              />
+            </template>
+          </mew-super-button>
+        </v-col>
+      </v-row>
+    </v-sheet>
   </mew-overlay>
 </template>
 

@@ -4,34 +4,28 @@
       color-type="mewBg"
       :show-overlay="open"
       title="My paper wallet"
-      right-btn-text="Close"
+      content-size="xlarge"
       :close="close"
     >
-      <template v-if="open" #mewOverlayBody>
-        <v-sheet max-width="900px" color="transparent">
-          <mew6-white-sheet class="pa-3 pa-md-12">
-            <!--
+      <!--
             ===============================================
             Printable paper wallet content
             ===============================================
             -->
-            <div ref="printContainer" class="printable-wallet">
-              <paper-wallet-to-print />
-            </div>
+      <div ref="printContainer" class="printable-wallet">
+        <paper-wallet-to-print />
+      </div>
 
-            <!--
+      <!--
             ===============================================
             Paper wallet to show
             ===============================================
             -->
-            <paper-wallet-to-display />
-          </mew6-white-sheet>
+      <paper-wallet-to-display />
 
-          <div class="d-flex justify-center mt-12 mb-10">
-            <mew-button title="Print" btn-size="xlarge" @click.native="print" />
-          </div>
-        </v-sheet>
-      </template>
+      <div class="d-flex justify-center mt-12 mb-10">
+        <mew-button title="Print" btn-size="xlarge" @click.native="print" />
+      </div>
     </mew-overlay>
   </div>
 </template>

@@ -5,78 +5,73 @@
   =====================================================================================
   -->
   <mew-overlay
+    content-size="large"
     :show-overlay="open"
     :title="title"
-    right-btn-text="Close"
-    :back="accessBack"
+    :back="showBackBtn ? accessBack : null"
     :close="close"
-    :left-btn-text="backBtnText"
   >
-    <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <!--
-        =====================================================================================
-         Overview: prompts user to select options
-        =====================================================================================
-        -->
-        <v-row v-if="walletType === types.OVERVIEW">
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-            <mew-super-button
-              font-class="mew-heading-2"
-              btn-mode="small-right-image"
-              :title="btn.label"
-              :subtitle="btn.description"
-              :right-icon="btn.icon"
-              right-icon-type="mew"
-              color-theme="basic"
-              @click.native="btn.fn"
-            />
-          </v-col>
-        </v-row>
-        <!--
-        =====================================================================================
-         Access With Keystore
-        =====================================================================================
-        -->
-        <access-wallet-keystore
-          v-if="walletType === types.KEYSTORE"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
+    <!--
+    =====================================================================================
+      Overview: prompts user to select options
+    =====================================================================================
+    -->
+    <v-row v-if="walletType === types.OVERVIEW">
+      <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+        <mew-super-button
+          font-class="mew-heading-2"
+          btn-mode="small-right-image"
+          :title="btn.label"
+          :subtitle="btn.description"
+          :right-icon="btn.icon"
+          right-icon-type="mew"
+          color-theme="basic"
+          @click.native="btn.fn"
         />
-        <!--
-        =====================================================================================
-         Access With Mnemonic
-        =====================================================================================
-        -->
-        <access-wallet-mnemonic
-          v-if="walletType === types.MNEMONIC"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
-        />
-        <!--
-        =====================================================================================
-         Access With PrivateKey
-        =====================================================================================
-        -->
-        <access-wallet-private-key
-          v-else-if="walletType === types.PRIVATE_KEY"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
-        />
-        <!--
-        =====================================================================================
-          Warning
-        =====================================================================================
-        -->
-        <mew-warning-sheet
-          title="Not Recommended"
-          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
-          :link-obj="warningSheetObj"
-          class="mt-6"
-        />
-      </v-sheet>
-      <div class="spacer-y-medium" />
-    </template>
+      </v-col>
+    </v-row>
+    <!--
+    =====================================================================================
+      Access With Keystore
+    =====================================================================================
+    -->
+    <access-wallet-keystore
+      v-if="walletType === types.KEYSTORE"
+      :handler-access-wallet="accessHandler"
+      @unlock="unclockWallet"
+    />
+    <!--
+    =====================================================================================
+      Access With Mnemonic
+    =====================================================================================
+    -->
+    <access-wallet-mnemonic
+      v-if="walletType === types.MNEMONIC"
+      :handler-access-wallet="accessHandler"
+      @unlock="unclockWallet"
+    />
+    <!--
+    =====================================================================================
+      Access With PrivateKey
+    =====================================================================================
+    -->
+    <access-wallet-private-key
+      v-else-if="walletType === types.PRIVATE_KEY"
+      :handler-access-wallet="accessHandler"
+      @unlock="unclockWallet"
+    />
+    <!--
+    =====================================================================================
+      Warning
+    =====================================================================================
+    -->
+    <mew-warning-sheet
+      title="Not Recommended"
+      description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
+      :link-obj="warningSheetObj"
+      class="mt-6"
+    />
+    <div class="spacer-y-medium" />
   </mew-overlay>
 </template>
 
@@ -157,13 +152,10 @@ export default {
 
   computed: {
     /**
-     * @returns back button text
-     * if overview, button text is empty
+     * @returns if the back button on overlay should be displayed
      */
-    backBtnText() {
-      return this.walletType === SOFTWARE_WALLET_TYPES.OVERVIEW
-        ? ''
-        : 'Select Software';
+    showBackBtn() {
+      return this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW;
     },
     /**
      * @returns correct title of the overlay according to the wallet type selected

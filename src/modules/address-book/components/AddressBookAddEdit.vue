@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-10 mt-5" width="700" :rounded="true">
+  <div>
     <!--
   =====================================================================================
     Address Book - add address mode
@@ -83,7 +83,7 @@
     >
       {{ $t('interface.address-book.remove-addr') }}
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

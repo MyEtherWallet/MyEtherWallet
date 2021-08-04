@@ -3,13 +3,10 @@
     <mew-overlay
       :show-overlay="openNetworkOverlay"
       title="Select Network"
-      left-btn-text=""
-      right-btn-text="Close"
-      @closeOverlay="openNetworkOverlay = false"
+      content-size="large"
+      :close="close"
     >
-      <template #mewOverlayBody>
-        <network-switch :filter-types="filterNetworks" />
-      </template>
+      <network-switch :filter-types="filterNetworks" />
     </mew-overlay>
 
     <mew6-white-sheet
@@ -86,6 +83,14 @@ export default {
         return [];
       }
       return [];
+    }
+  },
+  methods: {
+    /**
+     * Close network overlay
+     */
+    close() {
+      this.openNetworkOverlay = false;
     }
   }
 };

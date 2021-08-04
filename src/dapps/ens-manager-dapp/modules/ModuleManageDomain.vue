@@ -1,42 +1,35 @@
 <template>
-  <mew-overlay
-    :show-overlay="onManage"
-    :title="overlayTitle"
-    :right-btn-text="$t('common.cancel')"
-    :close="close"
-  >
-    <template #mewOverlayBody>
-      <v-sheet
-        class="pa-12 rounded -flex align-center justify-center"
-        color="white"
-        min-width="600"
-      >
-        <transfer v-if="isTransfer" ref="transfer" :transfer="transfer" />
-        <renew
-          v-if="isRenew"
-          :get-rent-price="getRentPrice"
-          :host-name="hostName"
-          :renew="renew"
-        />
-        <manage-multicoins
-          v-if="isManageMulticoin"
-          :set-multicoin="setMulticoin"
-          :multicoin="multicoin"
-        />
-        <manage-txt-records
-          v-if="isManageTxtRecord"
-          :set-text-records="setTextRecords"
-          :text-records="textRecords"
-        />
-        <manage-upload-website
-          v-if="isManageUpload"
-          :setting-ipfs="settingIpfs"
-          :set-ipfs="setIpfs"
-          :upload-file="uploadFile"
-          :uploaded-hash="uploadedHash"
-        />
-      </v-sheet>
-    </template>
+  <mew-overlay :show-overlay="onManage" :title="overlayTitle" :close="close">
+    <v-sheet
+      class="pa-12 rounded -flex align-center justify-center"
+      color="white"
+      min-width="600"
+    >
+      <transfer v-if="isTransfer" ref="transfer" :transfer="transfer" />
+      <renew
+        v-if="isRenew"
+        :get-rent-price="getRentPrice"
+        :host-name="hostName"
+        :renew="renew"
+      />
+      <manage-multicoins
+        v-if="isManageMulticoin"
+        :set-multicoin="setMulticoin"
+        :multicoin="multicoin"
+      />
+      <manage-txt-records
+        v-if="isManageTxtRecord"
+        :set-text-records="setTextRecords"
+        :text-records="textRecords"
+      />
+      <manage-upload-website
+        v-if="isManageUpload"
+        :setting-ipfs="settingIpfs"
+        :set-ipfs="setIpfs"
+        :upload-file="uploadFile"
+        :uploaded-hash="uploadedHash"
+      />
+    </v-sheet>
   </mew-overlay>
 </template>
 
