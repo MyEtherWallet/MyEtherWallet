@@ -594,7 +594,7 @@ export default {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
         .filter(token => {
-          return token.contract !== this.fromTokenType.contract;
+          return token.contract !== this.fromTokenType?.contract;
         })
         .map(token => {
           if (token.cgid) {
