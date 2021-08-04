@@ -137,12 +137,14 @@ export default {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            this.resolvedAddr = addr;
-            this.isValidAddress = true;
-            this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'RESOLVED',
-              value: this.inputAddr
-            });
+            if (addr !== '0x0000000000000000000000000000000000000000') {
+              this.resolvedAddr = addr;
+              this.isValidAddress = true;
+              this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+                type: 'RESOLVED',
+                value: this.inputAddr
+              });
+            }
           });
           // eslint-disable-next-line no-empty
         } catch (e) {}
