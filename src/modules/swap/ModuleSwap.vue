@@ -1088,10 +1088,11 @@ export default {
     },
 
     executeTrade() {
+      const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
-          this.swapNotificationFormatter(res);
+          this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
           Toast(err.message, {}, ERROR);
@@ -1103,7 +1104,7 @@ export default {
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj) {
+    swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
         const notif = Object.assign(
           {
@@ -1123,11 +1124,11 @@ export default {
               icon: this.confirmInfo.toImg,
               to: this.confirmInfo.to
                 ? this.confirmInfo.to
-                : this.currentTrade.transactions[idx].to
+                : currentTrade.transactions[idx].to
             },
             swapObj: obj
           },
-          this.currentTrade.transactions[idx]
+          currentTrade.transactions[idx]
         );
         this.addNotification(new Notification(notif));
       });
