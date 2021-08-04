@@ -114,17 +114,11 @@ export default {
   },
   watch: {
     onStep(newStep) {
-      if (newStep == 2 && this.$route.name == ROUTES_WALLET.STAKED_1.NAME) {
+      if (newStep == 2) {
         this.$router.push({ name: ROUTES_WALLET.STAKED_2.NAME });
-      } else if (
-        newStep == 3 &&
-        this.$route.name == ROUTES_WALLET.STAKED_2.NAME
-      ) {
+      } else if (newStep == 3) {
         this.$router.push({ name: ROUTES_WALLET.STAKED_3.NAME });
-      } else if (
-        newStep == 4 &&
-        this.$route.name == ROUTES_WALLET.STAKED_3.NAME
-      ) {
+      } else if (newStep == 4) {
         this.$router.push({ name: ROUTES_WALLET.STAKED_4.NAME });
       } else {
         this.$router.push({ name: ROUTES_WALLET.STAKED.NAME });

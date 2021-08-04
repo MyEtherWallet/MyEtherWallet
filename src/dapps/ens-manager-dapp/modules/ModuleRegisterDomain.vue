@@ -121,9 +121,9 @@ export default {
   },
   watch: {
     onStep(newStep) {
-      if (newStep == 2 && this.$route.name == ROUTES_WALLET.ENS_1.NAME) {
+      if (newStep == 2) {
         this.$router.push({ name: ROUTES_WALLET.ENS_2.NAME });
-      } else if (newStep == 3 && this.$route.name == ROUTES_WALLET.ENS_2.NAME) {
+      } else if (newStep == 3) {
         this.$router.push({ name: ROUTES_WALLET.ENS_3.NAME });
       } else {
         this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
@@ -131,8 +131,7 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.name == ROUTES_WALLET.ENS_MANAGER.NAME)
-      this.$router.push({ name: ROUTES_WALLET.ENS_1.NAME });
+    if (this.onStep == 1) this.$router.push({ name: ROUTES_WALLET.ENS_1.NAME });
   },
   methods: {
     onRequest(val) {
