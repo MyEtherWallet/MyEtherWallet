@@ -18,8 +18,7 @@ const EXCEPTIONS = [
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  'sass',
-  'scryptsy'
+  'sass'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
