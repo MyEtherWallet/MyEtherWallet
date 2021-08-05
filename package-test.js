@@ -18,7 +18,12 @@ const EXCEPTIONS = [
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  'sass'
+  'sass',
+  'web3',
+  'web3-core-helpers',
+  'web3-core-method',
+  'web3-core-requestmanager',
+  'web3-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
