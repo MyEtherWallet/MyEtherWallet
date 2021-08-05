@@ -16,13 +16,6 @@ import * as semver from 'semver';
 
 const BitBoxLowestSupportedVersion = '7.0.1';
 const BitBoxNonSupportedVersion = '8.0.0';
-const hijackState = {
-  // Order must match that in the firmware code
-  responseReady: 0,
-  processingCommand: 1,
-  incompleteCommand: 2,
-  idle: 3
-};
 class DigitalBitboxEth {
   static aes_cbc_b64_decrypt = (ciphertext, key) => {
     try {
@@ -136,22 +129,8 @@ class DigitalBitboxEth {
     let message = '';
     if (encrypt) message = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, this.key);
     else message = cmd || ' '; // Need at least 1 byte length for U2F
-    this.comm.exchange(message, (response, err) => {
+    this.comm.exchange(message, response => {
       try {
-        if (typeof err !== 'undefined' || typeof response === 'undefined') {
-          // Entered on U2F timeouts
-          // Poll for the response
-          this.send('', false, callback);
-          return;
-        }
-        if (response.length == 1) {
-          if (response[0] == hijackState.processingCommand) {
-            // BitBox is processing the previous command
-            // Poll for the response
-            this.send('', false, callback);
-          }
-          return;
-        }
         response = JSON.parse(response.toString('utf8'));
         if ('error' in response) {
           callback(undefined, DigitalBitboxEth.parseError(response.error));
