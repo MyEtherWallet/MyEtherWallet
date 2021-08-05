@@ -8,6 +8,7 @@ yarn-error.log*
 selenium-debug.log
 
 # Editor directories and files
+.cache
 .idea
 *.suo
 *.ntvs*

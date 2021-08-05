@@ -19,7 +19,6 @@ const EXCEPTIONS = [
   'husky',
   '@aave/protocol-js',
   'sass',
-  'scryptsy',
   'web3',
   'web3-core-helpers',
   'web3-core-method',
