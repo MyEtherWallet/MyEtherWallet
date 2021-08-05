@@ -40,6 +40,12 @@ const hasSwap = function (state, getters) {
   const name = getters.network.type.name;
   return name === ETH.name || name === BSC.name || name === MATIC.name;
 };
+
+const swapLink = function (state, getters, rootState) {
+  const hasAddress = rootState.wallet.address;
+  const link = 'https://ccswap.myetherwallet.com/#/';
+  return hasAddress ? `${link}?to=${hasAddress}` : link;
+};
 export default {
   Networks,
   network,
@@ -47,5 +53,6 @@ export default {
   isEthNetwork,
   localContracts,
   isTestNetwork,
-  hasSwap
+  hasSwap,
+  swapLink
 };
