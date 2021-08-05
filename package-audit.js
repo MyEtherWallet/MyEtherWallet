@@ -19,7 +19,8 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url', // added 6/23/21
   'css-what', // added 6/23/21
   'trim-newlines', // added 6/23/21
-  'socket.io-parser' // added 7/2/21
+  'socket.io-parser', // added 7/2/21
+  'tar' // added 8/5/21
 ];
 
 const execute = (command, callback) => {
