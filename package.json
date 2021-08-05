@@ -49,7 +49,7 @@
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.15.5-alpha.0",
     "@unstoppabledomains/resolution": "5.0.0",
     "@walletconnect/browser": "1.0.0",
-    "@walletconnect/qrcode-modal": "1.4.1",
+    "@walletconnect/qrcode-modal": "1.5.2",
     "animejs": "3.2.1",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-client": "2.6.10",
