@@ -154,7 +154,7 @@ h6 {
   user-select: none;
 }
 .cursor--pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 /* ========== Border ========== */
@@ -242,7 +242,7 @@ h6 {
   }
 }
 
-/* ========== Convert SVG to white ========== */
+/* ========= Convert SVG to white ========= */
 .make-white-svg {
   filter: brightness(10);
 }
