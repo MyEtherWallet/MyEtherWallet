@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <!--
   =====================================================================================
     Address Book - add address mode

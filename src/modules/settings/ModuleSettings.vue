@@ -188,7 +188,7 @@ export default {
           number: idx + 1,
           address: item.address,
           nickname: item.nickname,
-          resolvedAddr: item.resolvedAddr,
+          resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
           callToAction: [
             {
               title: 'Edit',
