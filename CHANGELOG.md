@@ -1,3 +1,12 @@
+### feat
+
+* * update unstoppable domains package [#3279](https://github.com/MyEtherWallet/MyEtherWallet/pull/3279)
+
+### fix
+
+* show tokens even if it is not in the network list [#3362](https://github.com/MyEtherWallet/MyEtherWallet/pull/3362)
+* * fix error when swapping due to currentTrade becoming null [#3366](https://github.com/MyEtherWallet/MyEtherWallet/pull/3366)
+
 ### Release v6.0.4
 
 ### devop
