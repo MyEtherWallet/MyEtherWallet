@@ -112,7 +112,7 @@ export default {
           if (
             res.baseFeePerGas &&
             this.gasPriceType !== gasPriceTypes.STORED &&
-            toBN(res.baseFeePerGas).gt(this.gasPrice)
+            toBN(res.baseFeePerGas).gt(toBN(this.gasPrice))
           ) {
             this.setGas();
           }
