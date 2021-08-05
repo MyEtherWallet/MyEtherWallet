@@ -114,12 +114,6 @@ export default {
             this.gasPriceType !== gasPriceTypes.STORED &&
             toBN(res.baseFeePerGas).gt(this.gasPrice)
           ) {
-            console.log(
-              'current',
-              this.gasPrice,
-              'base fee',
-              res.baseFeePerGas
-            );
             this.setGas();
           }
           this.setBlockNumber(res.number);
