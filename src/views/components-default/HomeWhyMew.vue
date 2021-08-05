@@ -4,10 +4,14 @@
       <div class="py-6" />
       <v-container>
         <v-sheet color="transparent" max-width="400px">
-          <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+          <div
+            class="mew-heading-3 text-uppercase textPrimary--text mb-1"
+            data-lokalise
+            data-key="home.about-mew.subheading"
+          >
             {{ $t('home.about-mew.subheading') }}
           </div>
-          <h1 class="mb-9">
+          <h1 class="mb-9" data-lokalise data-key="home.about-mew.heading">
             {{ $t('home.about-mew.heading') }}
           </h1>
         </v-sheet>

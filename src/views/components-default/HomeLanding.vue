@@ -11,7 +11,12 @@
       >
         <v-card color="transparent" flat tile max-width="430px">
           <div class="white--text mew-title">
-            {{ $t('home.tagline1') }} {{ $t('home.tagline2') }}
+            <span data-lokalise data-key="home.tagline1">
+              {{ $t('home.tagline1') }}
+            </span>
+            <span data-lokalise data-key="home.tagline2">
+              {{ $t('home.tagline2') }}
+            </span>
           </div>
           <p data-lokalise data-key="home.subheading" class="white--text mt-3">
             {{ $t('home.subheading') }}
@@ -57,9 +62,14 @@
             class="white--text font-weight-bold mb-4"
             style="font-size: 3rem; line-height: 3.3rem"
           >
-            {{ $t('home.tagline1') }} {{ $t('home.tagline2') }}
+            <span data-lokalise data-key="home.tagline1">
+              {{ $t('home.tagline1') }}
+            </span>
+            <span data-lokalise data-key="home.tagline2">
+              {{ $t('home.tagline2') }}
+            </span>
           </div>
-          <p class="white--text mt-3">
+          <p class="white--text mt-3" data-lokalise data-key="home.subheading">
             {{ $t('home.subheading') }}
           </p>
           <div class="mt-12">

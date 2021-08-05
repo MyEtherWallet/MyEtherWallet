@@ -82,10 +82,7 @@
       document.body.appendChild(a)
     })();
     document.addEventListener('lokalise-on-save', function (event) {
-      console.log(event.detail.updated);
-      console.log(event.detail.skipped);
-      console.log(event.detail.dismissed);
-      console.log(event.detail.error);
+      console.log(event.detail);
     });
   </script>
 </body>

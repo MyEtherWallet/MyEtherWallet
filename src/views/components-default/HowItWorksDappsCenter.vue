@@ -18,10 +18,14 @@
               <v-img src="@/assets/images/icons/icon-dapps-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">
+              <div
+                class="mb-1 font-weight-bold subtitle-1"
+                data-lokalise
+                data-key="howItWorks.dapps.info-one.title"
+              >
                 {{ $t('howItWorks.dapps.info-one.title') }}
               </div>
-              <p>
+              <p data-lokalise data-key="howItWorks.dapps.info-one.text">
                 {{ $t('howItWorks.dapps.info-one.text') }}
               </p>
             </div>
@@ -32,14 +36,20 @@
               <v-img src="@/assets/images/icons/icon-submit-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">
+              <div
+                class="mb-1 font-weight-bold subtitle-1"
+                data-lokalise
+                data-key="howItWorks.dapps.info-two.title"
+              >
                 {{ $t('howItWorks.dapps.info-two.title') }}
               </div>
-              <p>
+              <p data-lokalise data-key="howItWorks.dapps.info-two.text">
                 {{ $t('howItWorks.dapps.info-two.text') }}
                 <a
                   href="https://www.myetherwallet.com/dapp-submission"
                   target="_blank"
+                  data-lokalise
+                  data-key="howItWorks.dapps.info-two.link"
                   >{{ $t('howItWorks.dapps.info-two.link') }}</a
                 >.
               </p>
