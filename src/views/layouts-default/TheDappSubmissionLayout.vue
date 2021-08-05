@@ -15,10 +15,18 @@
           -->
           <v-col cols="12" md="8">
             <div style="max-width: 500px" class="mb-8">
-              <div class="mew-heading-1">
+              <div
+                class="mew-heading-1"
+                data-lokalise
+                data-key="dappsSubmission.tell-us-about-your-dapp"
+              >
                 {{ $t('dappsSubmission.tell-us-about-your-dapp') }}
               </div>
-              <div class="mt-1">
+              <div
+                class="mt-1"
+                data-lokalise
+                data-key="dappsSubmission.provide-text"
+              >
                 {{ $t('dappsSubmission.provide-text') }}
               </div>
             </div>
@@ -29,9 +37,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.name"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.name') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -48,9 +64,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.category"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.category') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -69,16 +93,30 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.tags-title"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.tags-title') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.tags"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.tags') }}
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.suggested-tags"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.suggested-tags') }}
                 <v-chip
                   v-for="(tag, tagKey) in tagsList"
@@ -106,13 +144,24 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.description"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.description') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.description-placeholder"
+              >
                 {{
                   $t('dappsSubmission.about-your-dapp.description-placeholder')
                 }}
@@ -132,9 +181,19 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
-                Contract address
-                <span class="mew-label">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.contract-address-title"
+              >
+                {{
+                  $t('dappsSubmission.about-your-dapp.contract-address-title')
+                }}
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -151,7 +210,11 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.dapp-website"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.dapp-website') }}
               </div>
             </div>
@@ -163,9 +226,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.dapp-us"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.dapp-us') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -188,9 +259,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.dapp-status"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.dapp-status') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -220,10 +299,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.contract-audit-title"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.contract-audit-title') }}
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.contract-audit"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.contract-audit') }}
               </div>
             </div>
@@ -249,13 +335,24 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.mock-flow-title"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.mock-flow-title') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.mock-requirements"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.mock-requirements') }}
               </div>
             </div>
@@ -284,13 +381,24 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.dapp-icon-title"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.dapp-icon-title') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.dapp-icon"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.dapp-icon') }}
               </div>
             </div>
@@ -316,13 +424,24 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.banner-title"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.banner-title') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-dapp.banner"
+              >
                 {{ $t('dappsSubmission.about-your-dapp.banner') }}
               </div>
             </div>
@@ -348,13 +467,26 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.authors-title"
+              >
                 {{ $t('dappsSubmission.about-your-team.authors-title') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>{{ $t('dappsSubmission.about-your-team.authors') }}</div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.authors"
+              >
+                {{ $t('dappsSubmission.about-your-team.authors') }}
+              </div>
             </div>
             <mew-input
               v-model="form.authors"
@@ -370,9 +502,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.full-name"
+              >
                 {{ $t('dappsSubmission.about-your-team.full-name') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -385,9 +525,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.email"
+              >
                 {{ $t('dappsSubmission.about-your-team.email') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
@@ -403,13 +551,24 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.social-links"
+              >
                 {{ $t('dappsSubmission.about-your-team.social-links') }}
-                <span class="mew-label">
+                <span
+                  class="mew-label"
+                  data-lokalise
+                  data-key="dappsSubmission.required"
+                >
                   ({{ $t('dappsSubmission.required') }})
                 </span>
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.provide-social-link"
+              >
                 {{ $t('dappsSubmission.about-your-team.provide-social-link') }}
               </div>
               <div class="social-media mt-1 d-flex align-center">
@@ -438,7 +597,11 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.company-website"
+              >
                 {{ $t('dappsSubmission.about-your-team.company-website') }}
               </div>
             </div>
@@ -450,7 +613,11 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.license"
+              >
                 {{ $t('dappsSubmission.about-your-team.license') }}
               </div>
             </div>
@@ -467,10 +634,17 @@
             =================================================================
             -->
             <div class="section-title">
-              <div class="mew-heading-3">
+              <div
+                class="mew-heading-3"
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.additional-notes"
+              >
                 {{ $t('dappsSubmission.about-your-team.additional-notes') }}
               </div>
-              <div>
+              <div
+                data-lokalise
+                data-key="dappsSubmission.about-your-team.notes-placeholder"
+              >
                 {{ $t('dappsSubmission.about-your-team.notes-placeholder') }}
               </div>
             </div>
@@ -518,7 +692,11 @@
               =================================================================
               -->
               <div class="walletBg pa-6 d-none d-md-block">
-                <div class="mew-heading-2">
+                <div
+                  class="mew-heading-2"
+                  data-lokalise
+                  data-key="dappsSubmission.progress"
+                >
                   {{ $t('dappsSubmission.progress') }}
                 </div>
                 <v-progress-linear
@@ -540,7 +718,11 @@
               -->
               <div class="walletBg pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
-                  <div class="mew-heading-2">
+                  <div
+                    class="mew-heading-2"
+                    data-lokalise
+                    data-key="dappsSubmission.sotd.title"
+                  >
                     {{ $t('dappsSubmission.sotd.title') }}
                   </div>
                   <img
@@ -557,8 +739,10 @@
                       slot="url"
                       href="https://stateofthedapps.com"
                       target="_blank"
+                      data-lokalise
+                      data-key="dappsSubmission.sotd.url"
                     >
-                      stateofthedapps.com
+                      {{ $t('dappsSubmission.sotd.url') }}
                     </a>
                   </i18n>
                 </div>
@@ -571,7 +755,11 @@
               -->
               <div class="walletBg pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
-                  <div class="mew-heading-2">
+                  <div
+                    class="mew-heading-2"
+                    data-lokalise
+                    data-key="dappsSubmission.mew-support.title"
+                  >
                     {{ $t('dappsSubmission.mew-support.title') }}
                   </div>
                   <img
@@ -581,7 +769,11 @@
                     class="ml-3"
                   />
                 </div>
-                <div class="mt-3">
+                <div
+                  class="mt-3"
+                  data-lokalise
+                  data-key="dappsSubmission.mew-support.info"
+                >
                   {{ $t('dappsSubmission.mew-support.info') }}
                 </div>
                 <a href="mailto:support@myetherwallet.com" target="_blank">
@@ -606,10 +798,14 @@
     -->
     <v-dialog v-model="formSubmissionSuccessful" width="500">
       <div class="pa-5 white">
-        <div class="mew-heading-2">
+        <div
+          class="mew-heading-2"
+          data-lokalise
+          data-key="dappsSubmission.successful"
+        >
           {{ $t('dappsSubmission.successful') }}
         </div>
-        <div class="mt-3">
+        <div class="mt-3" data-lokalise data-key="dappsSubmission.congrats-msg">
           {{ $t('dappsSubmission.congrats-msg') }}
         </div>
         <mew-button
@@ -628,10 +824,18 @@
     -->
     <v-dialog v-model="formSubmissionFailed" width="500">
       <div class="pa-5 white">
-        <div class="mew-heading-2 error--text">
+        <div
+          class="mew-heading-2 error--text"
+          data-lokalise
+          data-key="dappsSubmission.failed"
+        >
           {{ $t('dappsSubmission.failed') }}
         </div>
-        <div class="mt-3 error--text">
+        <div
+          class="mt-3 error--text"
+          data-lokalise
+          data-key="dappsSubmission.try-again"
+        >
           {{ $t('dappsSubmission.try-again') }}
         </div>
         <mew-button
