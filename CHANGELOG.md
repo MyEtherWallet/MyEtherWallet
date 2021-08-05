@@ -1,3 +1,11 @@
+### devop
+
+* * revert mew compoent, update package for build [#3368](https://github.com/MyEtherWallet/MyEtherWallet/pull/3368)
+
+### fix
+
+* fix gas price going below basefee in eip 1559 [#3370](https://github.com/MyEtherWallet/MyEtherWallet/pull/3370)
+
 ### Release v6.0.4
 
 ### devop
