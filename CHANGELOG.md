@@ -1,3 +1,7 @@
+### devop
+
+* * revert mew compoent, update package for build [#3368](https://github.com/MyEtherWallet/MyEtherWallet/pull/3368)
+
 ### Release v6.0.4
 
 ### devop
