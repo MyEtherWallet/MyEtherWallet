@@ -1,11 +1,8 @@
-### devop
-
-* * revert mew compoent, update package for build [#3368](https://github.com/MyEtherWallet/MyEtherWallet/pull/3368)
-
 ### Release v6.0.4
 
 ### devop
 
+* revert mew compoent, update package for build [#3368](https://github.com/MyEtherWallet/MyEtherWallet/pull/3368)
 * create a way to avoid changelog conflicts [#3336](https://github.com/MyEtherWallet/MyEtherWallet/pull/3336)
 * remove remaining decision tree parts from quickhelp [#3345](https://github.com/MyEtherWallet/MyEtherWallet/pull/3345)
 * validate changelog files [#3348](https://github.com/MyEtherWallet/MyEtherWallet/pull/3348)
