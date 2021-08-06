@@ -15,9 +15,9 @@ export default class NameResolver {
   async resolveName(name) {
     name = normalise(name);
     let address = '';
-    if (/^[a-zA-Z\-.0-9]*\.(crypto|zil)$/.test(name))
-      address = await this.uns.resolveName(name);
-    address = await this.ens.resolveName(name);
+    address = /^[a-zA-Z\-.0-9]*\.(crypto|zil)$/.test(name)
+      ? await this.uns.resolveName(name)
+      : await this.ens.resolveName(name);
     if (address === '0x0000000000000000000000000000000000000000')
       throw new Error('Invalid address');
     else return address;
