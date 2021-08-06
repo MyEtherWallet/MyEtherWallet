@@ -5,6 +5,11 @@
   =====================================================================================
   -->
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="open"
     title="Access Wallet with Mobile Apps"
     content-size="large"

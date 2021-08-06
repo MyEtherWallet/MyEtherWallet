@@ -1,5 +1,10 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :title="title"
     :show-overlay="onSettings"
     :back="editMode || addMode ? back : null"

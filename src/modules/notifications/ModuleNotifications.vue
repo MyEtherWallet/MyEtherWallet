@@ -37,6 +37,11 @@
       </div>
     </div>
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       title="Notifications"
       content-size="large"
       :show-overlay="openNotifications"

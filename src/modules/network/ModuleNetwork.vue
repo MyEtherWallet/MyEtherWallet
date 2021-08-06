@@ -1,6 +1,11 @@
 <template>
   <div class="mew-component--side-info-network">
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="openNetworkOverlay"
       title="Select Network"
       content-size="large"

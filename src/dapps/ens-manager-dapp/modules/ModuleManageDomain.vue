@@ -1,5 +1,14 @@
 <template>
-  <mew-overlay :show-overlay="onManage" :title="overlayTitle" :close="close">
+  <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
+    :show-overlay="onManage"
+    :title="overlayTitle"
+    :close="close"
+  >
     <v-sheet
       class="pa-12 rounded -flex align-center justify-center"
       color="white"
