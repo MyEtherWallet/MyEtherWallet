@@ -61,7 +61,8 @@ export default {
       resolvedAddr: '',
       inputAddr: '',
       nameResolver: null,
-      isValidAddress: false
+      isValidAddress: false,
+      loadingSetAddress: true
     };
   },
 
@@ -71,7 +72,7 @@ export default {
     ...mapState('wallet', ['web3']),
     rules() {
       return [
-        this.isValidAddress ||
+          (!this.loadingSetAddress && this.isValidAddress) ||
           this.$t('interface.address-book.validations.invalid-address'),
         value =>
           !!value || this.$t('interface.address-book.validations.addr-required')
@@ -144,12 +145,13 @@ export default {
       this.addMode = !this.addMode;
     },
     async resolveName() {
-      if (this.nameResolver && this.inputAddr.includes('.')) {
+      if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            console.log(addr);
             this.resolvedAddr = addr;
             this.isValidAddress = true;
+            this.loadingSetAddress = false;
+            console.error('in here');
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
               type: 'RESOLVED',
               value: this.inputAddr
@@ -173,6 +175,8 @@ export default {
         if (isAddValid instanceof Promise) {
           isAddValid.then(res => {
             this.isValidAddress = res;
+            this.loadingSetAddress = !this.isValidAddress ? true : false;
+            console.error('first if', this.loadingSetAddress);
             this.$emit('setAddress', value, this.isValidAddress, {
               type: inputType,
               value: _.isObject(typeVal) ? typeVal.nickname : typeVal
@@ -180,6 +184,8 @@ export default {
           });
         } else {
           this.isValidAddress = isAddValid;
+          this.loadingSetAddress = !this.isValidAddress ? true : false;
+          console.error('first if', this.loadingSetAddress);
           this.$emit('setAddress', value, this.isValidAddress, {
             type: inputType,
             value: _.isObject(typeVal) ? typeVal.nickname : typeVal
