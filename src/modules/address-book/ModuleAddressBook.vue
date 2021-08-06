@@ -12,8 +12,9 @@
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
       :rules="rules"
-      @input="setAddress"
+      :error-messages="errorMessages"
       @saveAddress="toggleOverlay"
+      @input="setAddress"
     />
     <!-- add and edit the address book -->
     <mew-overlay
@@ -21,7 +22,7 @@
       :show-overlay="addMode"
       :close="toggleOverlay"
       left-btn-text=""
-      right-btn-text=""
+      :right-btn-text="$t('common.close')"
     >
       <template #mewOverlayBody>
         <address-book-add-edit
@@ -40,6 +41,12 @@ import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { _ } from 'web3-utils';
+import { toChecksumAddress } from '@/core/helpers/addressUtils';
+
+const USER_INPUT_TYPES = {
+  typed: 'TYPED',
+  selected: 'SELECTED'
+};
 
 export default {
   components: {
@@ -62,7 +69,7 @@ export default {
       inputAddr: '',
       nameResolver: null,
       isValidAddress: false,
-      loadingSetAddress: true
+      loadedAddressValidation: false
     };
   },
 
@@ -70,9 +77,18 @@ export default {
     ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
+    errorMessages() {
+      if (!this.isValidAddress && this.loadedAddressValidation) {
+        return this.$t('interface.address-book.validations.invalid-address');
+      }
+      return '';
+    },
+    // TODO: remove the first rule once the components package is updated to the
+    // right version (0.6.7-beta and up)
+    // waiting on overlay changes
     rules() {
       return [
-          (!this.loadingSetAddress && this.isValidAddress) ||
+        (this.isValidAddress && this.loadedAddressValidation) ||
           this.$t('interface.address-book.validations.invalid-address'),
         value =>
           !!value || this.$t('interface.address-book.validations.addr-required')
@@ -90,7 +106,7 @@ export default {
           ]
         : [
             {
-              address: this.$store.state.wallet.address,
+              address: toChecksumAddress(this.$store.state.wallet.address),
               nickname: 'My Address',
               resolverAddr: ''
             }
@@ -117,6 +133,48 @@ export default {
     }
   },
   methods: {
+    /**
+     * Checks if address is valid
+     * and sets the address value
+     */
+    setAddress(value, inputType) {
+      if (typeof value === 'string') {
+        /**
+         * Checks if user typed or selected an address from dropdown
+         */
+        const typeVal =
+          inputType === USER_INPUT_TYPES.typed
+            ? value
+            : this.addressBookWithMyAddress.find(item => {
+                return value.toLowerCase() === item.address.toLowerCase();
+              });
+        this.inputAddr = value;
+        this.resolvedAddr = '';
+        /**
+         * Checks if the address is valid
+         */
+        const isAddValid = this.isValidAddressFunc(this.inputAddr);
+        if (isAddValid instanceof Promise) {
+          isAddValid.then(res => {
+            this.isValidAddress = res;
+          });
+        } else {
+          this.isValidAddress = isAddValid;
+        }
+        this.loadedAddressValidation = !this.isValidAddress ? false : true;
+
+        /**
+         * @emits setAddress
+         */
+        this.$emit('setAddress', value, this.isValidAddress, {
+          type: inputType,
+          value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+        });
+        if (!this.isValidAddress) {
+          this.resolveName();
+        }
+      }
+    },
     // is used from the parent context
     // eslint-disable-next-line
     clear() {
@@ -144,58 +202,27 @@ export default {
     toggleOverlay() {
       this.addMode = !this.addMode;
     },
-    async resolveName() {
+    /**
+     * Resolves name and @returns address
+     */
+    resolveName: _.debounce(async function () {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
             this.resolvedAddr = addr;
             this.isValidAddress = true;
-            this.loadingSetAddress = false;
-            console.error('in here');
+            this.loadedAddressValidation = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
               type: 'RESOLVED',
               value: this.inputAddr
             });
           });
           // eslint-disable-next-line no-empty
-        } catch (e) {}
-      }
-    },
-    setAddress(value, inputType) {
-      if (typeof value === 'string') {
-        const typeVal =
-          inputType === 'typed'
-            ? value
-            : this.addressBookWithMyAddress.find(item => {
-                return value.toLowerCase() === item.address.toLowerCase();
-              });
-        this.inputAddr = value.address ? value.address : value;
-        this.resolvedAddr = '';
-        const isAddValid = this.isValidAddressFunc(this.inputAddr);
-        if (isAddValid instanceof Promise) {
-          isAddValid.then(res => {
-            this.isValidAddress = res;
-            this.loadingSetAddress = !this.isValidAddress ? true : false;
-            console.error('first if', this.loadingSetAddress);
-            this.$emit('setAddress', value, this.isValidAddress, {
-              type: inputType,
-              value: _.isObject(typeVal) ? typeVal.nickname : typeVal
-            });
-          });
-        } else {
-          this.isValidAddress = isAddValid;
-          this.loadingSetAddress = !this.isValidAddress ? true : false;
-          console.error('first if', this.loadingSetAddress);
-          this.$emit('setAddress', value, this.isValidAddress, {
-            type: inputType,
-            value: _.isObject(typeVal) ? typeVal.nickname : typeVal
-          });
-        }
-        if (!this.isValidAddress) {
-          this.resolveName();
+        } catch (e) {
+          this.loadedAddressValidation = true;
         }
       }
-    }
+    }, 500)
   }
 };
 </script>
