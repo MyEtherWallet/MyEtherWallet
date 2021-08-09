@@ -12,7 +12,6 @@ module.exports = [
   'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
-  'wss://bridge.walletconnect.org:443',
   'https://unstoppabledomains.com:443',
   'https://o382951.ingest.sentry.io:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
@@ -36,5 +35,6 @@ module.exports = [
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'https://api.wallet.coinbase.com:443',
-  'data:'
+  'data:',
+  'https://mainnet.infura.io:443'
 ];

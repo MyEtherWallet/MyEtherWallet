@@ -1,19 +1,50 @@
-### Feature
+### Release v6.0.4
 
-* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+### devop
 
-### Fix
+* revert mew compoent, update package for build [#3368](https://github.com/MyEtherWallet/MyEtherWallet/pull/3368)
+* create a way to avoid changelog conflicts [#3336](https://github.com/MyEtherWallet/MyEtherWallet/pull/3336)
+* remove remaining decision tree parts from quickhelp [#3345](https://github.com/MyEtherWallet/MyEtherWallet/pull/3345)
+* validate changelog files [#3348](https://github.com/MyEtherWallet/MyEtherWallet/pull/3348)
+* update unstoppable domains package [#3352](https://github.com/MyEtherWallet/MyEtherWallet/pull/3352)
 
+### fix
+
+* fix gas price going below basefee in eip 1559 [#3370](https://github.com/MyEtherWallet/MyEtherWallet/pull/3370)
+* show tokens even if it is not in the network list [#3362](https://github.com/MyEtherWallet/MyEtherWallet/pull/3362)
+* fix error when swapping due to currentTrade becoming null [#3366](https://github.com/MyEtherWallet/MyEtherWallet/pull/3366)
+* Check if object is there before calling disconnect [#3298](https://github.com/MyEtherWallet/MyEtherWallet/pull/3298)
+* Change the refresh icon colors (regular state and hover state) [#3353](https://github.com/MyEtherWallet/MyEtherWallet/pull/3353)
+* fix metamask transaction send issue [#3354](https://github.com/MyEtherWallet/MyEtherWallet/pull/3354)
+* fix sanitize hex all the spots [#3357](https://github.com/MyEtherWallet/MyEtherWallet/pull/3357)
+* fix transaction confirmation total with fee [#3343](https://github.com/MyEtherWallet/MyEtherWallet/pull/3343)
+* fix tx confirmation layout [#3335](https://github.com/MyEtherWallet/MyEtherWallet/pull/3335)
+* tx confirmation mew help center link [#3323](https://github.com/MyEtherWallet/MyEtherWallet/pull/3323)
+* fix verify message layout [#3320](https://github.com/MyEtherWallet/MyEtherWallet/pull/3320)
+* fix set ipfs hash button visible while uploading file [#3321](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
+* Fix disable next button on swap [#3290](https://github.com/MyEtherWallet/MyEtherWallet/pull/3290)
+* remove provider from title and fix checkbox alignment [#3314](https://github.com/MyEtherWallet/MyEtherWallet/pull/3314)
+* fix sanitize hex utils check [#3285](https://github.com/MyEtherWallet/MyEtherWallet/pull/3285)
 * fix polygon gasprice issue [#3312](https://github.com/MyEtherWallet/MyEtherWallet/pull/3312)
 * Add ethereum token when from token is not ethereum for swap [#3305](https://github.com/MyEtherWallet/MyEtherWallet/pull/3305)
 * fix givenProvider.request\_ is not a function [#3293](https://github.com/MyEtherWallet/MyEtherWallet/pull/3293)
 * fix hardware wallet access erroring [#3299](https://github.com/MyEtherWallet/MyEtherWallet/pull/3299)
+* fix error by catching it [#3318](https://github.com/MyEtherWallet/MyEtherWallet/pull/3318)
+* fix e.wallet undefined error [#3319](https://github.com/MyEtherWallet/MyEtherWallet/pull/3319)
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
 * Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
+* Fix swap display not working correctly [#3326](https://github.com/MyEtherWallet/MyEtherWallet/pull/3326)
 
 ### Feat
 
+* remove quick help from v6 [3310](https://github.com/MyEtherWallet/MyEtherWallet/pull/3310)
 * reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
+* Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
+
+### Devop
+
+* use swap link in all ccswap instances that are active [#3315](https://github.com/MyEtherWallet/MyEtherWallet/pull/3315)
+* only require mew component update when it isn't a beta version [#3344](https://github.com/MyEtherWallet/MyEtherWallet/pull/3344)
 
 ### Release v6.0.3-hotfix.1
 
@@ -31,7 +62,7 @@
 ### Fix
 
 * fix error message property of undefined [#3292](https://github.com/MyEtherWallet/MyEtherWallet/pull/3292)
-* add mew notification prop to hide indicator \[#3302] (https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
+* add mew notification prop to hide indicator [#3302](https://github.com/MyEtherWallet/MyEtherWallet/pull/3302)
 * fix footer hiding content [#3296](https://github.com/MyEtherWallet/MyEtherWallet/pull/3296)
 
 ### Release v6.0.2
@@ -74,6 +105,7 @@
 
 ### Feature
 
+* Add dapp submission page [#3279](https://github.com/MyEtherWallet/MyEtherWallet/pull/3279)
 * Change routes from hardcoded string to consts [#3244](https://github.com/MyEtherWallet/MyEtherWallet/pull/3244)
 * Remove divider in Staked UI and replace Russ team member photo [#3246](https://github.com/MyEtherWallet/MyEtherWallet/pull/3246)
 

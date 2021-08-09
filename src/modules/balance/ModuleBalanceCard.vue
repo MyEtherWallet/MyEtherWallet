@@ -78,9 +78,9 @@
             =====================================================================================
             -->
         <v-icon
+          color="rgba(255, 255, 255, 0.72)"
           class="cursor-pointer refresh-icon"
           size="20"
-          color="white"
           @click="refresh"
           >mdi-refresh</v-icon
         >
@@ -384,6 +384,7 @@ export default {
 .refresh-icon:hover {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 32px;
+  color: var(--v-white-base) !important;
   height: 20px;
   width: 20px;
 }

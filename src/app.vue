@@ -1,6 +1,5 @@
 <template>
   <v-app class="walletBg">
-    <module-decision-tree />
     <router-view />
     <module-toast />
     <module-global-modals />
@@ -11,7 +10,6 @@
 <script>
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
-import ModuleDecisionTree from '@/modules/decision-tree/ModuleDecisionTree';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
 import currencyTypes from '@/core/configs/configCurrencyTypes';
@@ -24,12 +22,7 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'App',
-  components: {
-    ModuleToast,
-    ModuleDecisionTree,
-    ModuleGlobalModals,
-    ModuleAnalytics
-  },
+  components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');

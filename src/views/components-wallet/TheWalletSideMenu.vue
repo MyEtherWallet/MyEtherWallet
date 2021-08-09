@@ -316,7 +316,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'swapLink']),
     ...mapState('wallet', ['instance']),
     ...mapState('global', ['consentToTrack'])
   },
@@ -356,7 +356,8 @@ export default {
       this.showLogoutPopup = !this.showLogoutPopup;
     },
     openSimplex() {
-      window.open('https://ccswap.myetherwallet.com', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     }
   }
 };

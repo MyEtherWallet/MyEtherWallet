@@ -352,7 +352,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -369,7 +374,7 @@ export default {
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
         amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
@@ -394,6 +399,7 @@ export default {
     disableNext() {
       return (
         this.step < 2 ||
+        this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
         this.providersErrorMsg.subtitle !== ''
@@ -588,7 +594,7 @@ export default {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
         .filter(token => {
-          return token.contract !== this.fromTokenType.contract;
+          return token.contract !== this.fromTokenType?.contract;
         })
         .map(token => {
           if (token.cgid) {
@@ -904,7 +910,8 @@ export default {
       return [];
     },
     buyEth() {
-      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = _.clone(this.fromTokenType);
@@ -1081,10 +1088,11 @@ export default {
     },
 
     executeTrade() {
+      const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
-          this.swapNotificationFormatter(res);
+          this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
           Toast(err.message, {}, ERROR);
@@ -1096,7 +1104,7 @@ export default {
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj) {
+    swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
         const notif = Object.assign(
           {
@@ -1116,11 +1124,11 @@ export default {
               icon: this.confirmInfo.toImg,
               to: this.confirmInfo.to
                 ? this.confirmInfo.to
-                : this.currentTrade.transactions[idx].to
+                : currentTrade.transactions[idx].to
             },
             swapObj: obj
           },
-          this.currentTrade.transactions[idx]
+          currentTrade.transactions[idx]
         );
         this.addNotification(new Notification(notif));
       });
