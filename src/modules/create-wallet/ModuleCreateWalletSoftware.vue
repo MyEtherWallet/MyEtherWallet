@@ -15,7 +15,7 @@
       :title="typeTitle"
       :close="close"
       :back="goBack"
-      content-size="medium"
+      content-size="large"
     >
       <!--
         =====================================================================================
