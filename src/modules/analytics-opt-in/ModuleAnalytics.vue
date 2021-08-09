@@ -1,110 +1,139 @@
 <template>
+  <!--
+    ===================================================
+   Analytics Opt-in Dialog
+    ===================================================
+    -->
   <div>
     <v-dialog
       :value="!displayedTrackingPopup"
-      width="350"
-      max-width="350"
+      width="360"
+      max-width="360"
       overlay-opacity="0"
-      content-class="matomo-dialog"
+      :content-class="
+        $vuetify.breakpoint.smAndUp
+          ? 'position-right matomo-analytics-dialog ma-0'
+          : 'matomo-analytics-dialog ma-0'
+      "
+      scrollable
     >
-      <v-sheet>
-        <!-- change depending on when something is opened -->
-        <div v-if="!expanded" class="pa-4">
-          <h2 class="ma-0 mew-heading-2 font-weight-regular">
-            Help us make MEW better by allowing us to measure a few things?
-          </h2>
-        </div>
-        <div v-else class="pa-4 cursor--pointer" @click="backToOverview">
-          <h2 class="ma-0 mew-heading-2 font-weight-regular">
-            <v-icon size="xlarge"> mdi-chevron-left </v-icon> Back to overview
-          </h2>
-        </div>
-        <!-- Contains scrollable content -->
-        <v-virtual-scroll
-          v-show="!expanded"
-          height="325"
-          item-height="125"
-          :items="options"
-        >
-          <template #default="{ item }">
+      <v-card>
+        <!--
+    ===================================================
+   Titles
+    ===================================================
+    -->
+        <v-card-text class="pa-0">
+          <div
+            class="
+              titlePrimary--text
+              mew-heading-2
+              font-weight-regular
+              pa-8
+              pb-4
+            "
+          >
+            <span v-if="!expanded" class="break-word"
+              >Help us make MEW better by allowing us to measure a few
+              things?</span
+            >
+            <span v-else class="cursor-pointer" @click="backToOverview"
+              ><v-icon class="mb-1" color="titleSecondary" size="30px">
+                mdi-chevron-left
+              </v-icon>
+              Back to overview</span
+            >
+          </div>
+          <!--
+    ===================================================
+   Content (on mount)
+    ===================================================
+    -->
+          <div v-if="!expanded">
             <div
-              :class="item.clickable ? 'cursor--pointer' : ''"
-              @click="item.clickFn"
+              v-for="(option, idx) in options"
+              :key="idx"
+              :class="option.clickFn ? 'cursor--pointer clickable-content' : ''"
+              @click="option.clickFn"
             >
               <v-divider />
-              <v-row :key="item.title + item.text" class="py-2 px-3">
-                <v-col v-if="item.iconLeft !== ''" class="pt-10" cols="2">
-                  <v-icon :class="item.color">
-                    {{ item.iconLeft }}
+              <v-row class="ma-0">
+                <v-col v-if="option.iconLeft" class="py-13 pl-9" cols="2">
+                  <v-icon :color="option.color">
+                    {{ option.iconLeft }}
                   </v-icon>
                 </v-col>
-                <v-col cols="8" :class="[item.additionalClass, item.color]">
-                  <p class="mew-body font-weight-bold">
-                    {{ item.title }}
-                  </p>
-                  <p v-if="item.text" class="mew-label ma-0">
-                    {{ item.text }}
-                  </p>
-                  <a
-                    :href="item.link"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    :class="item.linkClass"
-                    @click.stop="() => {}"
-                    >{{ item.linkText }}
-                    <v-icon
-                      v-if="item.linkIcon !== ''"
-                      size="small"
-                      color="primary"
-                    >
-                      {{ item.linkIcon }}</v-icon
-                    ></a
+                <v-col cols="8" :class="['py-4 pl-6', option.color + '--text']">
+                  <p
+                    v-if="option.title"
+                    class="font-weight-bold mb-2 titlePrimary--text"
                   >
+                    {{ option.title }}
+                  </p>
+                  <p v-if="option.text" class="mb-0">
+                    {{ option.text }}
+                  </p>
+                  <div :class="option.linkClass">
+                    <a
+                      :href="option.link"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      >{{ option.linkText }}
+                      <v-icon
+                        v-if="option.linkIcon"
+                        size="small"
+                        color="primary"
+                      >
+                        {{ option.linkIcon }}</v-icon
+                      ></a
+                    >
+                  </div>
                 </v-col>
-                <v-col v-if="item.iconRight !== ''" class="pt-10" cols="2">
-                  <v-icon :class="item.color">
-                    {{ item.iconRight }}
+                <v-col v-if="option.iconRight" class="py-13 pr-7" cols="2">
+                  <v-icon :color="option.color">
+                    {{ option.iconRight }}
                   </v-icon>
                 </v-col>
               </v-row>
             </div>
-          </template>
-        </v-virtual-scroll>
-
-        <!-- Displayable contents -->
-        <div v-show="expanded" class="displayable-content-container">
-          <v-divider />
-          <div v-if="selectedOption === 'whatWeCollect'" class="py-4 px-5">
-            <p class="ma-0 font-weight-bold">What we collect</p>
-            <ul class="what-we-collect-ul pl-5">
-              <li class="pb-1">What features do people use the most?</li>
-              <li class="pb-1">
-                What parts of the product do users run into the most trouble
-                with?
-              </li>
-              <li class="pb-1">
-                Where do users drop off when completing certain actions?
-              </li>
-              <li class="pb-1">
-                General location (We will never know your exact location and
-                your IP address will be partially anonymized.)
-              </li>
-            </ul>
           </div>
-          <v-divider />
-          <div class="pa-3 pt-5 text-center">
-            <a rel="noopener noreferrer" target="_blank">
-              View our full tracking policy
-              <v-icon size="small" color="primary"> mdi-open-in-new</v-icon>
-            </a>
+          <!--
+    ===================================================
+   Content (expanded on: What we collect)
+    ===================================================
+    -->
+          <div v-show="expanded">
+            <v-divider />
+            <div v-if="selectedOption === 'whatWeCollect'" class="py-4 px-8">
+              <p class="font-weight-bold titlePrimary--text mb-2">
+                What we collect
+              </p>
+              <ul class="what-we-collect-ul titleSecondary--text pl-5">
+                <li
+                  v-for="(item, idx) in whatWeCollectItems"
+                  :key="item + idx"
+                  class="pb-1"
+                >
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+            <v-divider />
+            <div class="pa-8 text-center">
+              <a rel="noopener noreferrer" target="_blank">
+                View our full tracking policy
+                <v-icon size="small" color="primary"> mdi-open-in-new</v-icon>
+              </a>
+            </div>
           </div>
-        </div>
-
-        <!-- fixed buttons -->
+        </v-card-text>
         <v-divider />
-        <div
-          class="pa-3 d-flex flex-column additionalClass-center justify-center"
-        >
+        <!--
+    ===================================================
+   Buttons
+    ===================================================
+    -->
+        <v-card-actions class="px-8 py-6 d-flex flex-column justify-center">
           <mew-button
             has-full-width
             title="Allow MEW to measure analytics"
@@ -112,13 +141,13 @@
             @click.native="allow"
           />
           <p
-            class="text-center secondary--text mt-2 cursor--pointer"
+            class="text-center secondary--text mt-3 mb-0 cursor--pointer"
             @click="dontAllow"
           >
             Don't allow
           </p>
-        </div>
-      </v-sheet>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -129,19 +158,22 @@ export default {
   data() {
     return {
       expanded: false,
+      whatWeCollectItems: [
+        'What features do people use the most?',
+        'What parts of the product do users run into the most trouble with?',
+        'Where do users drop off when completing certain actions?',
+        'General location (We will never know your exact location and your IP address will be partially anonymized.)'
+      ],
       options: [
         {
           title: 'What we collect',
           iconLeft: 'mdi-chart-box-outline',
           iconRight: 'mdi-chevron-right',
-          text: 'We will only collect data on how users are using the product',
-          linkText: 'What we collect',
+          text: 'We will only collect data on how users are using the product.',
           link: '', // ask russ where this goes
-          linkIcon: '',
-          linkClass: '',
-          additionalClass: '',
-          color: '',
-          clickable: true,
+          linkText: 'What we collect',
+          linkClass: 'font-weight-medium',
+          color: 'titleSecondary', //TODO: add this color to mew components
           clickFn: () => {
             this.selectedOption = 'whatWeCollect';
             this.expanded = true;
@@ -152,28 +184,14 @@ export default {
           iconLeft: 'mdi-incognito-circle',
           iconRight: '',
           text: "We will never collect user's full IP address or exact location so you can remain anonymous.",
-          linkText: '',
-          link: '',
-          linkIcon: '',
-          linkClass: '',
-          additionalClass: '',
-          color: '',
-          clickable: false,
-          clickFn: () => {}
+          color: 'titleSecondary' //TODO: add this color to mew components
         },
         {
           title: 'Privacy',
           iconLeft: 'mdi-lock-outline',
           iconRight: '',
           text: 'We cannot access any personal data: No seed words, no private keys, no public address nor passwords.',
-          linkText: '',
-          link: '',
-          linkIcon: '',
-          linkClass: '',
-          additionalClass: '',
-          color: '',
-          clickable: false,
-          clickFn: () => {}
+          color: 'titleSecondary' //TODO: add this color to mew components
         },
         {
           title: '',
@@ -183,11 +201,8 @@ export default {
           linkText: 'View our full tracking policy',
           link: '', // ask russ where this goes
           linkIcon: 'mdi-open-in-new',
-          linkClass: 'pt-3',
-          additionalClass: 'text-center',
-          color: 'searchText--text',
-          clickable: false,
-          clickFn: () => {}
+          linkClass: 'mt-4',
+          color: 'searchText'
         }
       ],
       selectedOption: ''
@@ -217,19 +232,21 @@ export default {
 };
 </script>
 
-<style>
-.matomo-dialog {
-  position: absolute !important;
-  top: 16px !important;
-  right: 16px !important;
+<style lang="scss">
+.matomo-analytics-dialog {
+  height: 600px;
+  &.position-right {
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+  }
 }
 </style>
 
 <style lang="scss" scoped>
-.displayable-content-container {
-  height: 325px;
+.clickable-content:hover {
+  background-color: var(--v-tableHeader-base);
 }
-
 .what-we-collect-ul {
   list-style-type: disc;
 }
