@@ -105,7 +105,7 @@
     "codecov": "3.8.3",
     "commitlint": "13.1.0",
     "copy-webpack-plugin": "6.3.2",
-    "eslint": "7.31.0",
+    "eslint": "7.32.0",
     "eslint-plugin-prettier": "3.4.0",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "7.14.0",
