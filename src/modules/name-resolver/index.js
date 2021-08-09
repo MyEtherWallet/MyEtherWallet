@@ -1,6 +1,7 @@
 import ENS from './resolvers/ens';
 import UNS from './resolvers/uns';
 import { normalise } from './helpers';
+import { isAddress } from '@/core/helpers/addressUtils.js';
 export default class NameResolver {
   constructor(network, web3) {
     this.network = network;
@@ -16,11 +17,19 @@ export default class NameResolver {
     }
     return true;
   }
-  resolveName(name, ens = true) {
+  async resolveName(name) {
     name = normalise(name);
-    if (ens) {
-      return this.ens.resolveName(name);
+    let address = '';
+    const ensAddress = await this.ens.resolveName(name);
+    if (ensAddress === '0x0000000000000000000000000000000000000000') {
+      address = await this.uns.resolveName(name);
+    } else {
+      address = ensAddress;
     }
-    return this.uns.resolveName(name);
+
+    if (isAddress(address)) {
+      return address;
+    }
+    throw new Error('Invalid Address!');
   }
 }
