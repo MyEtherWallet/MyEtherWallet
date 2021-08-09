@@ -61,7 +61,8 @@ export default {
       resolvedAddr: '',
       inputAddr: '',
       nameResolver: null,
-      isValidAddress: false
+      isValidAddress: false,
+      resolveError: ''
     };
   },
   computed: {
@@ -70,6 +71,7 @@ export default {
     ...mapState('wallet', ['web3']),
     rules() {
       return [
+        this.resolveError === '' || this.resolveError,
         this.isValidAddress ||
           this.$t('interface.address-book.validations.invalid-address'),
         value =>
@@ -134,21 +136,45 @@ export default {
       this.addMode = !this.addMode;
     },
     async resolveName() {
-      if (this.nameResolver) {
+      this.resolveError = '';
+      if (this.nameResolver && this.nameResolver.isValidName(this.inputAddr)) {
         try {
-          await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            this.resolvedAddr = addr;
-            this.isValidAddress = true;
-            this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'RESOLVED',
-              value: this.inputAddr
-            });
+          const resolvedAddress = await this.nameResolver.resolveName(
+            this.inputAddr
+          );
+          if (
+            resolvedAddress !== '0x0000000000000000000000000000000000000000'
+          ) {
+            this.handleResolvedAddr(resolvedAddress);
+          } else {
+            this.resolveWithUns();
+          }
+        } catch (e) {
+          this.resolveError = e.message;
+        }
+      }
+    },
+    handleResolvedAddr(resolvedAddr) {
+      this.resolvedAddr = resolvedAddr;
+      this.isValidAddress = true;
+      this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+        type: 'RESOLVED',
+        value: this.inputAddr
+      });
+    },
+    async resolveWithUns() {
+      try {
+        await this.nameResolver
+          .resolveName(this.inputAddr, false)
+          .then(resolvedAddr => {
+            this.handleResolvedAddr(resolvedAddr);
           });
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
+      } catch (e) {
+        this.resolveError = e.message;
       }
     },
     setAddress(value, inputType) {
+      this.resolveError = '';
       if (typeof value === 'string') {
         const typeVal =
           inputType === 'typed'

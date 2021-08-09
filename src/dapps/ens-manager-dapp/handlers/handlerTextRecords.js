@@ -1,5 +1,5 @@
 /* eslint-disable security/detect-unsafe-regex */
-import * as uts46 from 'idna-uts46';
+import * as uts46 from 'idna-uts46-hx';
 
 const normalise = function (str) {
   return uts46.toUnicode(str, {

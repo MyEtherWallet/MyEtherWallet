@@ -9,13 +9,18 @@ export default class NameResolver {
     this.uns = new UNS(this.network, this.web3);
   }
   isValidName(name) {
-    name = normalise(name);
-    return name.indexOf('.') > 0;
+    const splitName = name.split('.');
+    if (splitName.length > 1) {
+      name = normalise(name);
+      return name.indexOf('.') > 0;
+    }
+    return true;
   }
-  resolveName(name) {
+  resolveName(name, ens = true) {
     name = normalise(name);
-    if (/^[a-zA-Z\-.0-9]*\.(crypto|zil)$/.test(name))
-      return this.uns.resolveName(name);
-    return this.ens.resolveName(name);
+    if (ens) {
+      return this.ens.resolveName(name);
+    }
+    return this.uns.resolveName(name);
   }
 }
