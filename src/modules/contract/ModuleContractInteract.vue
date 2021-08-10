@@ -98,6 +98,7 @@
                   return hasEnough ? '' : 'Not enough ETH';
                 }
               ]"
+              type="number"
               @input="payableInput($event)"
             />
           </div>
