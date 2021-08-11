@@ -54,9 +54,11 @@
           linkTitle: 'Contact support',
           link: 'mailto:support@myetherwallet.com'
         }"
+        title="Interact with contract"
         :show-overlay="interact"
         :close="closeInteract"
         :back="backInteract"
+        content-size="medium"
       >
         <mew-select :label="'Method'" :items="methods" @input="methodSelect">
         </mew-select>
@@ -117,9 +119,9 @@
             Outputs
           </div>
           <div
-            v-for="(output, idx) in selectedMethod.outputs"
+            v-for="(output, i) in selectedMethod.outputs"
             v-show="selectedMethod.outputs.length"
-            :key="output.name + idx"
+            :key="output.name + i"
             class="input-item-container"
           >
             <mew-input
