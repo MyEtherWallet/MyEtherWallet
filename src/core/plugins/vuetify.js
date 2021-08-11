@@ -76,7 +76,6 @@ import Vuetify, {
   VItem,
   VItemGroup,
   VScrollYTransition,
-  VVirtualScroll,
   VSkeletonLoader,
   VChip,
   VSystemBar
@@ -156,7 +155,6 @@ Vue.use(Vuetify, {
     VItem,
     VItemGroup,
     VScrollYTransition,
-    VVirtualScroll,
     VSkeletonLoader,
     VChip,
     VSystemBar

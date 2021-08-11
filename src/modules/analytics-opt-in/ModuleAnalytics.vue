@@ -33,7 +33,7 @@
               pb-4
             "
           >
-            <span v-if="!expanded" class="break-word"
+            <span v-if="!onWhatWeCollect" class="break-word"
               >Help us make MEW better by allowing us to measure a few
               things?</span
             >
@@ -49,12 +49,12 @@
    Content (on mount)
     ===================================================
     -->
-          <div v-if="!expanded">
+          <div v-if="!onWhatWeCollect">
             <div
               v-for="(option, idx) in options"
               :key="idx"
               :class="option.clickFn ? 'cursor--pointer clickable-content' : ''"
-              @click="option.clickFn"
+              @click="option.clickFn ? options.clickFn : () => {}"
             >
               <v-divider />
               <v-row class="ma-0">
@@ -102,9 +102,9 @@
    Content (expanded on: What we collect)
     ===================================================
     -->
-          <div v-show="expanded">
+          <div v-show="onWhatWeCollect">
             <v-divider />
-            <div v-if="selectedOption === 'whatWeCollect'" class="py-4 px-8">
+            <div class="py-4 px-8">
               <p class="font-weight-bold titlePrimary--text mb-2">
                 What we collect
               </p>
@@ -138,11 +138,11 @@
             has-full-width
             title="Allow MEW to measure analytics"
             btn-size="xlarge"
-            @click.native="allow"
+            @click.native="onClick(true)"
           />
           <p
             class="text-center secondary--text mt-3 mb-0 cursor--pointer"
-            @click="dontAllow"
+            @click="onClick(false)"
           >
             Don't allow
           </p>
@@ -154,10 +154,13 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import handlerAnalytics from './handlers/handlerAnalytics.mixin';
+
 export default {
+  mixins: [handlerAnalytics],
   data() {
     return {
-      expanded: false,
+      onWhatWeCollect: false,
       whatWeCollectItems: [
         'What features do people use the most?',
         'What parts of the product do users run into the most trouble with?',
@@ -170,42 +173,36 @@ export default {
           iconLeft: 'mdi-chart-box-outline',
           iconRight: 'mdi-chevron-right',
           text: 'We will only collect data on how users are using the product.',
-          link: '', // ask russ where this goes
+          link: '', // TODO: ask russ for link
           linkText: 'What we collect',
           linkClass: 'font-weight-medium',
           color: 'titleSecondary', //TODO: add this color to mew components
           clickFn: () => {
-            this.selectedOption = 'whatWeCollect';
-            this.expanded = true;
+            this.onWhatWeCollect = true;
           }
         },
         {
           title: 'Anonymity',
           iconLeft: 'mdi-incognito-circle',
-          iconRight: '',
           text: "We will never collect user's full IP address or exact location so you can remain anonymous.",
           color: 'titleSecondary' //TODO: add this color to mew components
         },
         {
           title: 'Privacy',
           iconLeft: 'mdi-lock-outline',
-          iconRight: '',
           text: 'We cannot access any personal data: No seed words, no private keys, no public address nor passwords.',
           color: 'titleSecondary' //TODO: add this color to mew components
         },
         {
-          title: '',
           iconLeft: 'mdi-toggle-switch',
-          iconRight: '',
           text: 'You can opt out anytime by clicking the toggle switch in the side bar menu.',
           linkText: 'View our full tracking policy',
-          link: '', // ask russ where this goes
+          link: '', // TODO: ask russ for link
           linkIcon: 'mdi-open-in-new',
           linkClass: 'mt-4',
           color: 'searchText'
         }
-      ],
-      selectedOption: ''
+      ]
     };
   },
   computed: {
@@ -214,19 +211,18 @@ export default {
   methods: {
     ...mapMutations('global', ['NEVER_SHOW_TRACKING']),
     ...mapActions('global', ['setTrackingConsent']),
-    // setSelected(selected) {
-    //   this.selectedOption = selected;
-    //   this.expanded = true;
-    // },
+    /**
+     * Returns back to home page
+     */
     backToOverview() {
-      this.selectedOption = '';
-      this.expanded = false;
+      this.onWhatWeCollect = false;
     },
-    allow() {
-      this.setTrackingConsent(true).then(this.NEVER_SHOW_TRACKING);
-    },
-    dontAllow() {
-      this.setTrackingConsent(false).then(this.NEVER_SHOW_TRACKING);
+    /**
+     * Sets the tracking consent and
+     * then never display this dialog again
+     */
+    onClick(val) {
+      this.setTrackingConsent(val).then(this.NEVER_SHOW_TRACKING);
     }
   }
 };

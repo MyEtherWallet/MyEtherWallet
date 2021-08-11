@@ -128,12 +128,15 @@ import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWall
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   name: 'TheCreateWalletLayout',
   components: {
     ModuleCreateWalletSoftware,
     TheLayoutHeader
   },
+  mixins: [handlerAnalytics],
   props: {
     showSoftwareModule: {
       type: Boolean
@@ -154,6 +157,9 @@ export default {
     },
     ROUTES_HOME: ROUTES_HOME
   }),
+  mounted() {
+    this.setTracking('createWallet', 'landed');
+  },
   methods: {
     openSoftwareModule() {
       try {
