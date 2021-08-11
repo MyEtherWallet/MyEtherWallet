@@ -1,3 +1,8 @@
+### fix
+
+* * fix wallet layout bug [#3373](https://github.com/MyEtherWallet/MyEtherWallet/pull/3373)
+* * fix checking enough eth in contract [#3378](https://github.com/MyEtherWallet/MyEtherWallet/pull/3378)
+
 ### Release v6.0.4
 
 ### devop
