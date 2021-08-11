@@ -60,7 +60,7 @@
         </v-row>
       </v-sheet>
     </div>
-    <div class="full-width" v-if="step > 0">
+    <div v-if="step > 0" class="full-width">
       <mew-stepper :items="extraStepDetails" :on-step="stepperStep">
         <!--
             =====================================================================================
