@@ -134,8 +134,8 @@ export default {
 }
 
 .blockie-image {
-  height: 110px;
-  width: 110px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
 }
 </style>

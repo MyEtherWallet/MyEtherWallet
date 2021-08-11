@@ -30,7 +30,7 @@
     </v-container>
 
     <v-row class="mt-3 mt-md-12 d-flex align-center">
-      <v-col cols="12" md="2">
+      <v-col class="text-right" cols="12" md="2">
         <img :src="blockieImg" alt="Blockie Image" class="blockie-image" />
       </v-col>
       <v-col col="auto">
@@ -160,8 +160,8 @@ export default {
 
 <style lang="scss" scoped>
 .blockie-image {
-  height: 110px;
-  width: 110px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
 }
 </style>

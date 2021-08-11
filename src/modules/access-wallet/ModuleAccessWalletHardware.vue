@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="back"
+    :back="step === 0 ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -60,7 +60,7 @@
         </v-row>
       </v-sheet>
     </div>
-    <div v-if="step > 0">
+    <div class="full-width" v-if="step > 0">
       <mew-stepper :items="extraStepDetails" :on-step="stepperStep">
         <!--
             =====================================================================================

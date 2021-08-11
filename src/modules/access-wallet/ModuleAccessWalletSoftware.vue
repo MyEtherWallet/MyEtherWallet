@@ -76,7 +76,6 @@
       :link-obj="warningSheetObj"
       class="mt-6"
     />
-    <div class="spacer-y-medium" />
   </mew-overlay>
 </template>
 
@@ -170,7 +169,7 @@ export default {
         case SOFTWARE_WALLET_TYPES.KEYSTORE:
           return 'Access Wallet with Keystore File';
         case SOFTWARE_WALLET_TYPES.MNEMONIC:
-          return 'Access Wallet with Mnemonic Pharse';
+          return 'Access Wallet with Mnemonic Phrase';
         case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
           return 'Access Wallet with Private Key';
         default:
