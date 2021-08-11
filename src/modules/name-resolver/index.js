@@ -2,6 +2,7 @@ import ENS from './resolvers/ens';
 import UNS from './resolvers/uns';
 import { normalise } from './helpers';
 import { isAddress } from '@/core/helpers/addressUtils.js';
+const ETH_DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class NameResolver {
   constructor(network, web3) {
     this.network = network;
@@ -21,8 +22,9 @@ export default class NameResolver {
     name = normalise(name);
     let address = '';
     const ensAddress = await this.ens.resolveName(name);
-    if (ensAddress === '0x0000000000000000000000000000000000000000') {
-      address = await this.uns.resolveName(name);
+    if (ensAddress === ETH_DEFAULT_ADDRESS) {
+      const unsAddress = await this.uns.resolveName(name);
+      address = unsAddress !== ETH_DEFAULT_ADDRESS ? unsAddress : '';
     } else {
       address = ensAddress;
     }
