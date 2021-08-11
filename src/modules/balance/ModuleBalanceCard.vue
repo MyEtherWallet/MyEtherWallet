@@ -170,7 +170,7 @@
       :show="openQR"
       :close="closeQR"
       :has-buttons="false"
-      width="400px"
+      width="408px"
     >
       <template #dialogBody>
         <app-addr-qr />
