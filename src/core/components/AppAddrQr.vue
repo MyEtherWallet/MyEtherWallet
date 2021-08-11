@@ -26,7 +26,7 @@
     -->
     <div class="d-flex align-center mb-4">
       <mew-blockie :address="address" width="22px" height="22px" />
-      <div class="pl-1 mew-body font-weight-bold">My Main Account</div>
+      <div class="pl-1 mew-body font-weight-bold">My main account</div>
     </div>
 
     <!--
