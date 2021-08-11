@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.setTracking('onLandingPage', 'true');
+      this.trackLandingPage();
     }, 1000);
   },
   methods: {}

@@ -189,9 +189,11 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'CreateWalletKeystore',
+  mixins: [handlerAnalytics],
   props: {
     handlerCreateWallet: {
       type: Object,
@@ -280,6 +282,7 @@ export default {
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
+      this.trackCreateWallet('created & downloaded keystore');
       this.updateStep(3);
     },
     goToAccess() {

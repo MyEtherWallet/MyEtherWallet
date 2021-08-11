@@ -237,12 +237,15 @@ import mnemonicPhraseTable from '@/components/MnemonicPhraseTable';
 import phraseBlock from '@/components/PhraseBlock';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 export default {
   name: 'CreateWalletMnemonicPhrase',
   components: {
     mnemonicPhraseTable,
     phraseBlock
   },
+  mixins: [handlerAnalytics],
   props: {
     handlerCreateWallet: {
       type: Object,
@@ -345,6 +348,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
+          this.trackCreateWallet('created mnemonic');
           this.updateStep(3);
         })
         .catch(e => {

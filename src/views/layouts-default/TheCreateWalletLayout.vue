@@ -158,7 +158,7 @@ export default {
     ROUTES_HOME: ROUTES_HOME
   }),
   mounted() {
-    this.setTracking('createWallet', 'landed');
+    this.trackCreateWallet('landed');
   },
   methods: {
     openSoftwareModule() {

@@ -217,7 +217,7 @@ export default {
             } else {
               this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
-            this.setTracking(this.type, 'accessed');
+            this.trackAccessWallet('accessed ' + this.type);
           })
           .catch(e => {
             Toast(e, {}, ERROR);
