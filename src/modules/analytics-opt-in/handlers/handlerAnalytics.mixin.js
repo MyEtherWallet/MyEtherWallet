@@ -27,7 +27,7 @@ export default {
      * (depends on the action being passed in)
      */
     trackAccessWallet(action) {
-      console.error('action', action)
+      console.error('action', action);
       if (this.$matomo) {
         this.$matomo.trackEvent(categories.accessWallet, action);
       }
