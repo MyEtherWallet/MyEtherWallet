@@ -90,52 +90,57 @@
               />
             </div>
           </div>
-        </div>
-        <div>
-          <mew-input
-            v-if="isPayableFunction"
-            label="ETH amount:"
-            :rules="[
-              value => {
-                return hasEnough(value);
-              }
-            ]"
-            @input="payableInput($event)"
-          />
-        </div>
-        <div class="text-center mt-3">
-          <mew-button
-            :title="isViewFunction ? 'Read' : 'Write'"
-            :has-full-width="false"
-            btn-size="xlarge"
-            :disabled="canProceed"
-            @click.native="readWrite"
-          />
-        </div>
-        <div class="pa-4"></div>
-        <div v-show="selectedMethod.outputs.length" class="mb-10">Outputs</div>
-        <div
-          v-for="(output, idx) in selectedMethod.outputs"
-          v-show="selectedMethod.outputs.length"
-          :key="output.name + idx"
-          class="input-item-container"
-        >
-          <mew-input
-            v-if="getType(output.type).type !== 'radio'"
-            :value="output.value"
-            :disabled="true"
-            :label="`${output.name} (${output.type})`"
-            class="non-bool-input"
-          />
-          <mew-input
-            v-if="getType(output.type).type === 'radio'"
-            :value="
-              typeof output.value !== 'undefined' ? output.value.toString() : ''
-            "
-            :disabled="true"
-            :label="`${output.name} (${output.type})`"
-            class="non-bool-input"
-          />
+          <div>
+            <mew-input
+              v-if="isPayableFunction"
+              label="ETH amount:"
+              :rules="[
+                value => {
+                  return hasEnough ? '' : 'Not enough ETH';
+                }
+              ]"
+              type="number"
+              @input="payableInput($event)"
+            />
+          </div>
+          <div class="text-center mt-3">
+            <mew-button
+              :title="isViewFunction ? 'Read' : 'Write'"
+              :has-full-width="false"
+              btn-size="xlarge"
+              :disabled="canProceed"
+              @click.native="readWrite"
+            />
+          </div>
+          <div class="pa-4"></div>
+          <div v-show="selectedMethod.outputs.length" class="mb-10">
+            Outputs
+          </div>
+          <div
+            v-for="(output, idx) in selectedMethod.outputs"
+            v-show="selectedMethod.outputs.length"
+            :key="output.name + idx"
+            class="input-item-container"
+          >
+            <mew-input
+              v-if="getType(output.type).type !== 'radio'"
+              :value="output.value"
+              :disabled="true"
+              :label="`${output.name} (${output.type})`"
+              class="non-bool-input"
+            />
+            <mew-input
+              v-if="getType(output.type).type === 'radio'"
+              :value="
+                typeof output.value !== 'undefined'
+                  ? output.value.toString()
+                  : ''
+              "
+              :disabled="true"
+              :label="`${output.name} (${output.type})`"
+              class="non-bool-input"
+            />
+          </div>
         </div>
       </mew-overlay>
     </template>
@@ -200,7 +205,7 @@ export default {
     },
     canPay() {
       if (this.isPayableFunction) {
-        return this.hasEnough();
+        return this.hasEnough;
       }
       return true;
     },
@@ -277,7 +282,7 @@ export default {
       }
     },
     payableInput(amount) {
-      if (!amount || amount === '') amount = 0;
+      if (!amount || amount === '') amount = '0';
       this.ethPayable = toWei(amount, 'ether');
       this.hasEnough = toBN(this.ethPayable).lte(this.balance);
     },

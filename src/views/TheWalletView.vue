@@ -2,7 +2,7 @@
   <div class="wallet-main">
     <the-wallet-side-menu />
     <v-main>
-      <v-container class="pa-2 pa-md-3 mb-14 align-center" fluid>
+      <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
         <router-view />
