@@ -1,6 +1,8 @@
 import ENS from './resolvers/ens';
 import UNS from './resolvers/uns';
-import { normalise } from './helpers';
+import normalise from '@/core/helpers/normalise';
+import { isAddress } from '@/core/helpers/addressUtils.js';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class NameResolver {
   constructor(network, web3) {
     this.network = network;
@@ -9,13 +11,23 @@ export default class NameResolver {
     this.uns = new UNS(this.network, this.web3);
   }
   isValidName(name) {
-    name = normalise(name);
-    return name.indexOf('.') > 0;
+    const splitName = name.split('.');
+    if (splitName.length > 1) {
+      name = normalise(name);
+      return name.indexOf('.') > 0;
+    }
+    return false;
   }
-  resolveName(name) {
+  async resolveName(name) {
+    if (!this.isValidName(name)) throw new Error('Invalid Address!');
     name = normalise(name);
-    if (/^[a-zA-Z\-.0-9]*\.(crypto|zil)$/.test(name))
-      return this.uns.resolveName(name);
-    return this.ens.resolveName(name);
+    let address = await this.ens.resolveName(name);
+    if (address === ZERO_ADDRESS) {
+      address = await this.uns.resolveName(name);
+    }
+    if (isAddress(address) && address !== ZERO_ADDRESS) {
+      return address;
+    }
+    throw new Error('Invalid Address!');
   }
 }
