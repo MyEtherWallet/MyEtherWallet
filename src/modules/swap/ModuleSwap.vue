@@ -946,14 +946,14 @@ export default {
     setFromToken(value) {
       this.fromTokenType = value;
       if (value && value.name) {
-        this.trackSwap('swap from: ' + value.name);
+        this.trackSwap('from: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },
     setToToken(value) {
       this.toTokenType = value;
       if (value && value.name) {
-        this.trackSwap('swap to: ' + value.name);
+        this.trackSwap('to: ' + value.name);
       }
       this.setTokenInValue(this.tokenInValue);
     },

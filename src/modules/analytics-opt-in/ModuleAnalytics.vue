@@ -219,7 +219,7 @@ export default {
     },
     /**
      * Sets the tracking consent and
-     * then never display this dialog again
+     * then never displays the dialog again
      */
     onClick(val) {
       this.setTrackingConsent(val).then(this.NEVER_SHOW_TRACKING);
