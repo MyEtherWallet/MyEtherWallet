@@ -282,7 +282,7 @@ export default {
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
-      this.trackCreateWallet('created & downloaded keystore');
+      this.trackCreateWallet('keystore');
       this.updateStep(3);
     },
     goToAccess() {

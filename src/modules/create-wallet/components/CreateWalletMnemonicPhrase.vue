@@ -348,7 +348,7 @@ export default {
       this.handlerCreateWallet
         .validateMnemonic(this.validateMnemonicValues)
         .then(() => {
-          this.trackCreateWallet('created mnemonic');
+          this.trackCreateWallet('mnemonic');
           this.updateStep(3);
         })
         .catch(e => {

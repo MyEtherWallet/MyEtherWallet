@@ -129,7 +129,7 @@
     "prettier": "2.3.2",
     "print-js": "1.6.0",
     "raw-loader": "4.0.2",
-    "remark-cli": "10.0.0",
+    "remark-cli": "9.0.0",
     "remark-preset-lint-recommended": "5.0.0",
     "sass": "1.34.1",
     "sass-loader": "10.1.1",

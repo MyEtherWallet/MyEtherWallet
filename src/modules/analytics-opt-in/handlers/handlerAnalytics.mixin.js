@@ -1,4 +1,4 @@
-import categories from '../configs/configCategories';
+import categories from './configs/configCategories';
 
 export default {
   name: 'HandlerAnalytics',
@@ -27,9 +27,25 @@ export default {
      * (depends on the action being passed in)
      */
     trackAccessWallet(action) {
-      console.error('action', action);
       if (this.$matomo) {
         this.$matomo.trackEvent(categories.accessWallet, action);
+      }
+    },
+    /**
+     * Tracks when user switches network
+     */
+    trackNetworkSwitch(action) {
+      if (this.$matomo) {
+        this.$matomo.trackEvent(categories.networkSwitch, action);
+      }
+    },
+    /**
+     * Tracks which swap rate user clicks
+     */
+    trackSwapRate(action) {
+      if (this.$matomo) {
+        console.error('action', action)
+        this.$matomo.trackEvent(categories.swapRates, action);
       }
     }
   }

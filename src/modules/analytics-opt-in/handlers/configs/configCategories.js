@@ -4,8 +4,8 @@ export default {
   createWallet: 'createWallet',
   accessWallet: 'accessWallet',
   exitDashboard: 'exitDashboard',
-  networkChange: 'networkChange',
+  networkSwitch: 'networkSwitch',
   swap: 'swap',
   dapp: 'dapp',
-  swapWidget: 'swapWidget'
+  swapRates: 'swapRates'
 };
