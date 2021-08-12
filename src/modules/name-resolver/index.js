@@ -1,6 +1,6 @@
 import ENS from './resolvers/ens';
 import UNS from './resolvers/uns';
-import { normalise } from './helpers';
+import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils.js';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export default class NameResolver {

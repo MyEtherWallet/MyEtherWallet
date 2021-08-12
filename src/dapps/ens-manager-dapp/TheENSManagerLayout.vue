@@ -509,7 +509,8 @@ export default {
       if (this.name === null || this.name === '') {
         this.nameHandler = {};
       }
-      this.name = name;
+
+      this.name = name.toLowerCase();
     },
     register(duration) {
       this.nameHandler

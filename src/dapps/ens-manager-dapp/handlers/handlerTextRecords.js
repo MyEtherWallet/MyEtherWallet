@@ -1,12 +1,5 @@
-/* eslint-disable security/detect-unsafe-regex */
-import * as uts46 from 'idna-uts46-hx';
-
-const normalise = function (str) {
-  return uts46.toUnicode(str, {
-    useStd3ASCII: true,
-    transitional: false
-  });
-};
+/* eslint-disable security/detect-unsafe-regex, no-useless-escape */
+import normalise from '@/core/helpers/normalise';
 
 const extractHostname = url => {
   let hostname;
@@ -54,7 +47,6 @@ const isEmail = function (input) {
   if (!input || input === '') return false;
   const atIndex = input.indexOf('@');
   const emailRegex =
-    // eslint-disable-next-line no-useless-escape
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   try {
     const parsedEmailName = normalise(input.substr(0, atIndex));
