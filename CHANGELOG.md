@@ -7,10 +7,11 @@
 * remove remaining decision tree parts from quickhelp [#3345](https://github.com/MyEtherWallet/MyEtherWallet/pull/3345)
 * validate changelog files [#3348](https://github.com/MyEtherWallet/MyEtherWallet/pull/3348)
 * update unstoppable domains package [#3352](https://github.com/MyEtherWallet/MyEtherWallet/pull/3352)
+* use swap link in all ccswap instances that are active [#3315](https://github.com/MyEtherWallet/MyEtherWallet/pull/3315)
+* only require mew component update when it isn't a beta version [#3344](https://github.com/MyEtherWallet/MyEtherWallet/pull/3344)
 
 ### fix
 
-* fix my public address overlay layout [#3372](https://github.com/MyEtherWallet/MyEtherWallet/pull/3372)
 * fix gas price going below basefee in eip 1559 [#3370](https://github.com/MyEtherWallet/MyEtherWallet/pull/3370)
 * show tokens even if it is not in the network list [#3362](https://github.com/MyEtherWallet/MyEtherWallet/pull/3362)
 * fix error when swapping due to currentTrade becoming null [#3366](https://github.com/MyEtherWallet/MyEtherWallet/pull/3366)
@@ -41,11 +42,6 @@
 * remove quick help from v6 [3310](https://github.com/MyEtherWallet/MyEtherWallet/pull/3310)
 * reset send and swap forms after pressing next [#3309](https://github.com/MyEtherWallet/MyEtherWallet/pull/3309)
 * Add refresh icon to balance card [#3311](https://github.com/MyEtherWallet/MyEtherWallet/pull/3311)
-
-### Devop
-
-* use swap link in all ccswap instances that are active [#3315](https://github.com/MyEtherWallet/MyEtherWallet/pull/3315)
-* only require mew component update when it isn't a beta version [#3344](https://github.com/MyEtherWallet/MyEtherWallet/pull/3344)
 
 ### Release v6.0.3-hotfix.1
 
