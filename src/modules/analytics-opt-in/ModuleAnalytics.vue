@@ -54,10 +54,9 @@
               v-for="(option, idx) in options"
               :key="idx"
               :class="option.clickFn ? 'cursor--pointer clickable-content' : ''"
-              @click="option.clickFn ? options.clickFn : () => {}"
             >
               <v-divider />
-              <v-row class="ma-0">
+              <v-row class="ma-0" @click="option.clickFn">
                 <v-col v-if="option.iconLeft" class="py-13 pl-9" cols="2">
                   <v-icon :color="option.color">
                     {{ option.iconLeft }}
@@ -185,13 +184,15 @@ export default {
           title: 'Anonymity',
           iconLeft: 'mdi-incognito-circle',
           text: "We will never collect user's full IP address or exact location so you can remain anonymous.",
-          color: 'titleSecondary' //TODO: add this color to mew components
+          color: 'titleSecondary', //TODO: add this color to mew components
+          clickFn: () => {}
         },
         {
           title: 'Privacy',
           iconLeft: 'mdi-lock-outline',
           text: 'We cannot access any personal data: No seed words, no private keys, no public address nor passwords.',
-          color: 'titleSecondary' //TODO: add this color to mew components
+          color: 'titleSecondary', //TODO: add this color to mew components
+          clickFn: () => {}
         },
         {
           iconLeft: 'mdi-toggle-switch',
@@ -200,7 +201,8 @@ export default {
           link: '', // TODO: ask russ for link
           linkIcon: 'mdi-open-in-new',
           linkClass: 'mt-4',
-          color: 'searchText'
+          color: 'searchText',
+          clickFn: () => {}
         }
       ]
     };
