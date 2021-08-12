@@ -216,6 +216,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   components: {
@@ -224,6 +225,7 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -340,15 +342,13 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    setConsent() {
-      this.setTrackingConsent(!this.consentToTrack);
-    },
     toggleSettings() {
       this.onSettings = !this.onSettings;
     },
     onLogout(res) {
       this.showLogoutPopup = false;
       if (res.title === this.logout.btnRight.title) {
+        this.trackLogout();
         this.removeWallet();
       }
     },
