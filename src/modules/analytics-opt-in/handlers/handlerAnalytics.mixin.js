@@ -44,7 +44,6 @@ export default {
      */
     trackSwapRate(action) {
       if (this.$matomo) {
-        console.error('action', action)
         this.$matomo.trackEvent(categories.swapRates, action);
       }
     }
