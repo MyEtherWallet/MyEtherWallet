@@ -17,7 +17,7 @@ export default {
      */
     trackLandingPage() {
       if (this.$matomo) {
-        this.$matomo.trackEvent(categories.landingPage, 'on');
+        this.$matomo.trackEvent(categories.landingPage, 'landed on');
       }
     },
     /**
