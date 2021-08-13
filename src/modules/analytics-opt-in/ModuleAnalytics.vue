@@ -57,7 +57,7 @@
             >
               <v-divider />
               <v-row class="ma-0" @click="option.clickFn">
-                <v-col v-if="option.iconLeft" class="py-13 pl-9" cols="2">
+                <v-col v-if="option.iconLeft" class="pt-13 pl-9" cols="2">
                   <v-icon :color="option.color">
                     {{ option.iconLeft }}
                   </v-icon>
@@ -88,7 +88,7 @@
                     >
                   </div>
                 </v-col>
-                <v-col v-if="option.iconRight" class="py-13 pr-7" cols="2">
+                <v-col v-if="option.iconRight" class="pt-13 pr-7" cols="2">
                   <v-icon :color="option.color">
                     {{ option.iconRight }}
                   </v-icon>
