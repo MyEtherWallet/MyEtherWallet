@@ -6,7 +6,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { toBN } from 'web3-utils';
+import { toBN, _ } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
 
 const setCurrency = async function ({ commit }, val) {
@@ -104,12 +104,14 @@ const setTokenAndEthBalance = function ({
         if (!token) {
           promises.push(
             getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
-              rootGetters['global/network'].type.tokens.push({
-                name: info.name,
-                symbol: info.symbol,
-                decimals: info.decimals,
-                address: t.contract
-              });
+              if (info && _.isEmpty(info)) {
+                rootGetters['global/network'].type.tokens.push({
+                  name: info.name,
+                  symbol: info.symbol,
+                  decimals: info.decimals,
+                  address: t.contract
+                });
+              }
             })
           );
         }
