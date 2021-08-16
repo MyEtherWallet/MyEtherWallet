@@ -2,7 +2,7 @@
   <div class="wallet-main">
     <the-wallet-side-menu />
     <v-main>
-      <v-container class="pa-2 pa-md-3 mb-14 align-center" fluid>
+      <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
         <router-view />
@@ -38,7 +38,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'gasPrice']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('wallet', ['balanceInWei'])
   },
@@ -109,6 +109,13 @@ export default {
       this.web3.eth.getBlockNumber().then(res => {
         this.setBlockNumber(res);
         this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+          if (
+            res.baseFeePerGas &&
+            this.gasPriceType !== gasPriceTypes.STORED &&
+            toBN(res.baseFeePerGas).gt(toBN(this.gasPrice))
+          ) {
+            this.setGas();
+          }
           this.setBlockNumber(res.number);
         });
       });
