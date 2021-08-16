@@ -127,6 +127,7 @@
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
+          :to="item.route"
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">
@@ -155,10 +156,7 @@
       popup-type="confirm"
       @onClick="onLogout"
     ></mew-popup>
-    <module-settings
-      :on-settings="onSettings"
-      @closeSettings="toggleSettings"
-    />
+    <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
     =====================================================================================
       Navigation Bar on top of the screen for xs-md screens
@@ -289,7 +287,8 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.toggleSettings
+          fn: this.toggleSettings,
+          route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
         {
           title: this.$t('common.logout'),
@@ -329,6 +328,10 @@ export default {
     },
     toggleSettings() {
       this.onSettings = !this.onSettings;
+    },
+    closeSettings() {
+      this.toggleSettings();
+      this.$router.go(-1);
     },
     onLogout(res) {
       this.showLogoutPopup = false;
