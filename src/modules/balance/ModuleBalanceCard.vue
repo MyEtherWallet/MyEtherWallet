@@ -170,7 +170,7 @@
       :show="openQR"
       :close="closeQR"
       :has-buttons="false"
-      width="400px"
+      width="408px"
     >
       <template #dialogBody>
         <app-addr-qr />
@@ -279,6 +279,7 @@ export default {
       this.openChangeAddress = false;
     },
     closePaperWallet() {
+      console.error("in here")
       this.openPaperWallet = false;
     },
     copyAddress() {

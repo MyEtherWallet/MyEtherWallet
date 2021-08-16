@@ -20,29 +20,27 @@
       Mobile Connection Protocol Buttons
     =====================================================================================
     -->
-    <v-sheet color="transparent" max-width="650px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
-          <mew-super-button
-            font-class="mew-heading-2"
-            :title="btn.label"
-            :subtitle="btn.description"
-            color-theme="basic"
-            @click.native="btn.fn"
-          >
-            <template #contentSlot>
-              <v-img
-                :src="btn.icon"
-                max-width="90px"
-                min-width="40px"
-                class="px-4 px-sm-3"
-                contain
-              />
-            </template>
-          </mew-super-button>
-        </v-col>
-      </v-row>
-    </v-sheet>
+    <v-row>
+      <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
+        <mew-super-button
+          font-class="mew-heading-2"
+          :title="btn.label"
+          :subtitle="btn.description"
+          color-theme="basic"
+          @click.native="btn.fn"
+        >
+          <template #contentSlot>
+            <v-img
+              :src="btn.icon"
+              max-width="90px"
+              min-width="40px"
+              class="px-4 px-sm-3"
+              contain
+            />
+          </template>
+        </mew-super-button>
+      </v-col>
+    </v-row>
   </mew-overlay>
 </template>
 
