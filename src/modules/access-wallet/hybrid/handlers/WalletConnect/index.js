@@ -24,7 +24,7 @@ class WalletConnectWallet {
       bridge: BRIDGE_URL,
       qrcodeModal: WalletConnectQRCodeModal
     });
-    console.log(walletConnect);
+
     if (
       walletConnect &&
       walletConnect.connected &&
