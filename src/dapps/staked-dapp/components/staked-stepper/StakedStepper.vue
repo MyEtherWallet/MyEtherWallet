@@ -144,6 +144,10 @@ export default {
      */
     readyToStake() {
       this.$emit('readyToStake', this.amount);
+    },
+    // eslint-disable-next-line
+    reset() {
+      this.nextStep({ onStep: 1, amount: this.amount });
     }
   }
 };
