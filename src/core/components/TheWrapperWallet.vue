@@ -8,13 +8,13 @@
       RightCol - takes rightColItem${n} slot that will be displayed one after another
     =====================================================================================
     -->
-  <v-row>
+  <v-row class="ma-n2 ma-md-n3">
     <!--
     =====================================================================================
      Network Col on SM-XS
     =====================================================================================
     -->
-    <v-col cols="12" class="d-md-none pb-0">
+    <v-col cols="12" class="pa-2 pa-md-3 d-md-none pb-0">
       <module-network />
     </v-col>
     <!--
@@ -22,13 +22,13 @@
       Left Col - primary modules
     =====================================================================================
     -->
-    <v-col cols="12" md="8" class="pb-md-3">
-      <v-row>
+    <v-col cols="12" md="8" class="pa-2 pa-md-3">
+      <v-row class="ma-n2 ma-md-n3">
         <v-col
           v-for="n in totalLeftColItems"
           :key="n"
           cols="12"
-          class="pb-0 pb-md-3"
+          class="pa-2 pa-md-3 pb-0"
         >
           <slot :name="`leftColItem${n}`" />
         </v-col>
@@ -39,16 +39,16 @@
       Right Col - secondary modules, Network is present on top on md-xl
     =====================================================================================
     -->
-    <v-col cols="12" md="4" class="pb-md-3">
-      <v-row>
-        <v-col cols="12" class="d-none d-md-block">
+    <v-col cols="12" md="4" class="pa-2 pa-md-3">
+      <v-row class="ma-n2 ma-md-n3">
+        <v-col cols="12" class="pa-2 pa-md-3 d-none d-md-block">
           <module-network />
         </v-col>
         <v-col
           v-for="n in totalRightColItems"
           :key="n"
           cols="12"
-          class="pb-0 pb-md-3"
+          class="pa-2 pa-md-3 pb-0"
         >
           <slot :name="`rightColItem${n}`" />
         </v-col>

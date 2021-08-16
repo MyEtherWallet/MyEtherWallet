@@ -32,15 +32,13 @@
               <v-row class="mx-0">
                 <v-col class="pr-0" cols="8">
                   <mew-input
-                    :error-messages="
-                      domainTaken ? $t('ens.domain-taken') : null
-                    "
                     :value="name"
                     :has-clear-btn="true"
                     :rules="rules"
                     :label="$t('ens.register.domain-name')"
                     :placeholder="$t('ens.ph.three-char')"
                     class="mr-3 flex-grow-1"
+                    :error-messages="errorMessages"
                     @input="setName"
                   />
                 </v-col>
@@ -48,6 +46,7 @@
                   <mew-button
                     :loading="loading"
                     :disabled="
+                      errorMessages ||
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
@@ -261,6 +260,7 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import normalise from '@/core/helpers/normalise';
 export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
@@ -277,6 +277,7 @@ export default {
       nameHandler: {},
       ensManager: {},
       onRegister: false,
+      searchError: '',
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -320,8 +321,13 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
+    errorMessages() {
+      if (this.domainTaken) return this.$t('ens.domain-taken');
+      return this.searchError;
+    },
     rules() {
       return [
+        this.searchError === '' || this.searchError,
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
@@ -506,10 +512,18 @@ export default {
       this.nameHandler = {};
     },
     setName(name) {
+      this.searchError = '';
       if (this.name === null || this.name === '') {
         this.nameHandler = {};
       }
-      this.name = name;
+      try {
+        this.name = normalise(name);
+      } catch (e) {
+        this.searchError = e.message.includes('Failed to validate')
+          ? 'Invalid name!'
+          : e.message;
+        this.name = name;
+      }
     },
     register(duration) {
       this.nameHandler
