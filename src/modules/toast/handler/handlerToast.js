@@ -6,15 +6,12 @@ const ERROR = 'error';
 const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
-const GLOBAL_ERRORS = [
-  "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
-];
+const GLOBAL_ERRORS = {
+  "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.":"Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
+};
 const foundGlobalError = text => {
-  const errorValues = GLOBAL_ERRORS;
-  return errorValues.find(item => {
-    if (text && text.includes(item)) return item;
-    return item.includes(text) || item.includes(text);
-  });
+  const errorValues = Object.values(GLOBAL_ERRORS);
+  return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
   const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
@@ -42,7 +39,7 @@ const Toast = (text, link, type, duration) => {
   }
   if (type === SENTRY) {
     if (foundGlobalError(text)) {
-      EventBus.$emit(ToastEvents[type], text, link, duration);
+      EventBus.$emit(ToastEvents[ERROR], text, link, duration);
     } else {
       Sentry.captureException(text);
     }
