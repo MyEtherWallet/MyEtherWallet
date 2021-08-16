@@ -1,3 +1,7 @@
+### fix
+
+* * fix undefined symbol in swap [#3387](https://github.com/MyEtherWallet/MyEtherWallet/pull/3387)
+
 ### Release v6.0.4-hotfix.1
 
 ### feat
