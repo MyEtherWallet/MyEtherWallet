@@ -33,5 +33,6 @@ module.exports = [
   'https://api.wallet.coinbase.com:443',
   'data:',
   'https://mainnet.infura.io:443',
-  'https://app.lokalise.com:443'
+  'https://app.lokalise.com:443',
+  'https://api.zilliqa.com:443'
 ];
