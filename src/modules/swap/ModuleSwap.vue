@@ -216,6 +216,7 @@
              Swap Fee
             =====================================================================================
           -->
+
           <app-network-fee
             v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
@@ -229,6 +230,22 @@
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />
+
+          <app-transaction-fee
+            v-if="step > 0 && providersErrorMsg.subtitle === ''"
+            :show-fee="showSwapFee"
+            :getting-fee="loadingFee"
+            :error="feeError"
+            :total-fees="totalFees"
+            :gas-price-type="localGasType"
+            :message="feeError"
+            :not-enough-eth="notEnoughEth"
+            :balance="displayBalance"
+            is-custom
+            class="mt-10 mt-sm-16"
+            @onLocalGasPrice="handleLocalGasPrice"
+          />
+
           <div class="text-center mt-10 mt-sm-15">
             <mew-button
               title="Next"
@@ -262,6 +279,7 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
@@ -283,7 +301,8 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
-    AppNetworkFee
+    AppNetworkFee,
+    AppTransactionFee
   },
   props: {
     fromToken: {
