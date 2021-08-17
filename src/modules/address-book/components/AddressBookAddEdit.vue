@@ -12,6 +12,7 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
+      autofocus
       :resolved-addr="resolvedAddr"
       @input="setAddress"
     />

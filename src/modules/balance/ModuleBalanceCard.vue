@@ -165,6 +165,7 @@
     <balance-address-paper-wallet
       :open="openPaperWallet"
       :close="closePaperWallet"
+      @close="closePaperWallet"
     />
     <app-modal
       :show="openQR"
@@ -279,7 +280,6 @@ export default {
       this.openChangeAddress = false;
     },
     closePaperWallet() {
-      console.error('in here');
       this.openPaperWallet = false;
     },
     copyAddress() {
