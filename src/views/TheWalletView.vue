@@ -2,7 +2,7 @@
   <div class="wallet-main">
     <the-wallet-side-menu />
     <v-main>
-      <v-container class="pa-2 pa-md-3 mb-14 align-center" fluid>
+      <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
         <router-view />
@@ -37,7 +37,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['network', 'isEIP1559SupportedNetwork']),
+    ...mapGetters('global', ['network', 'gasPrice', 'isEIP1559SupportedNetwork']),
     ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('wallet', ['balanceInWei'])
   },

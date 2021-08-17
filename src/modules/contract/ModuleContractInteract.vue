@@ -95,9 +95,10 @@
               label="ETH amount:"
               :rules="[
                 value => {
-                  return hasEnough(value);
+                  return hasEnough ? '' : 'Not enough ETH';
                 }
               ]"
+              type="number"
               @input="payableInput($event)"
             />
           </div>
@@ -203,7 +204,7 @@ export default {
     },
     canPay() {
       if (this.isPayableFunction) {
-        return this.hasEnough();
+        return this.hasEnough;
       }
       return true;
     },
@@ -280,7 +281,7 @@ export default {
       }
     },
     payableInput(amount) {
-      if (!amount || amount === '') amount = 0;
+      if (!amount || amount === '') amount = '0';
       this.ethPayable = toWei(amount, 'ether');
       this.hasEnough = toBN(this.ethPayable).lte(this.balance);
     },

@@ -10,7 +10,8 @@ import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 import { toChecksumAddress } from 'web3-utils';
-import * as _ from 'underscore';
+import { clone } from 'underscore';
+import normalise from '@/core/helpers/normalise';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -20,8 +21,8 @@ export default class ENSManagerInterface {
     this.ens = ens ? ens : null;
     // Returned value
     this.tld = getTld(name, network);
-    this.parsedHostName = getHostName(name);
-    this.name = this.parsedHostName + '.' + this.tld;
+    this.parsedHostName = normalise(getHostName(name));
+    this.name = normalise(this.parsedHostName + '.' + this.tld);
     this.nameHash = nameHashPckg.hash(this.name);
     this.subtext = '';
     this.mainResolvingAddress = '';
@@ -315,7 +316,7 @@ export default class ENSManagerInterface {
   async _setMulticoins() {
     const newObj = {};
     Object.keys(multicoins).forEach(item => {
-      newObj[item] = _.clone(multicoins[item]);
+      newObj[item] = clone(multicoins[item]);
     });
     this.multiCoin = newObj;
     try {

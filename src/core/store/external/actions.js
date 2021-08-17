@@ -7,6 +7,7 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
+import getTokenInfo from '@/core/helpers/tokenInfo';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -96,14 +97,35 @@ const setTokenAndEthBalance = function ({
   )
     .then(res => res.json())
     .then(res => res.result)
+    .then(preTokens => {
+      const promises = [];
+      preTokens.forEach(t => {
+        const token = getters.contractToToken(t.contract);
+        if (!token) {
+          promises.push(
+            getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
+              if (info) {
+                rootGetters['global/network'].type.tokens.push({
+                  name: info.name,
+                  symbol: info.symbol,
+                  decimals: info.decimals,
+                  address: t.contract
+                });
+              }
+            })
+          );
+        }
+      });
+      return Promise.all(promises).then(() => preTokens);
+    })
     .then(tokens => {
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
+        if (!token) return;
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        if (!token) return;
         const denominator = new BigNumber(10).pow(token.decimals);
         const usdBalance = new BigNumber(t.balance)
           .div(denominator)

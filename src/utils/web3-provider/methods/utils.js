@@ -71,6 +71,9 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
+      if (!newTxObj.hasOwnProperty('hash')) {
+        newTxObj['hash'] = '0x';
+      }
       const notification = new Notification(newTxObj);
       setTimeout(() => {
         dispatch(

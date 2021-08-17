@@ -32,5 +32,6 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'https://api.wallet.coinbase.com:443',
   'data:',
-  'https://mainnet.infura.io:443'
+  'https://mainnet.infura.io:443',
+  'https://api.zilliqa.com:443'
 ];
