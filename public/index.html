@@ -71,19 +71,25 @@
     </div>
   </noscript>
   <script>
-    window.LOKALISE_CONFIG = {
-      projectId: '<%= process.env.VUE_APP_LOKLISE_ID %>',
-      locale: "en_US",
-      usePanelOffset: true
-    };
-    (function () {
-      var a = document.createElement("script"); a.type = "text/javascript"; a.async = !0;
-      a.src = ["https://app.lokalise.com/live-js/script.min.js?", (new Date).getTime()].join("");
-      document.body.appendChild(a)
-    })();
-    document.addEventListener('lokalise-on-save', function (event) {
-      console.log(event.detail);
-    });
+    if ('<%= process.env.VUE_APP_MODE %>' === 'translate') {
+      window.LOKALISE_CONFIG = {
+        projectId: '<%= process.env.VUE_APP_LOKLISE_ID %>',
+        locale: "en_US",
+        usePanelOffset: true,
+        plainKey: true,
+        plainKeyLeftWrapper: '{.',
+        plainKeyRightWrapper: '.}',
+        disableAdvancedHtml: true
+      };
+      (function () {
+        var a = document.createElement("script"); a.type = "text/javascript"; a.async = !0;
+        a.src = ["https://app.lokalise.com/live-js/script.min.js?", (new Date).getTime()].join("");
+        document.body.appendChild(a)
+      })();
+      document.addEventListener('lokalise-on-save', function (event) {
+        console.log(event.detail);
+      });
+    }
   </script>
 </body>
 

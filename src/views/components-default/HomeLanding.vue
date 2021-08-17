@@ -18,8 +18,8 @@
               {{ $t('home.tagline2') }}
             </span>
           </div>
-          <p data-lokalise data-key="home.subheading" class="white--text mt-3">
-            {{ $t('home.subheading') }}
+          <p class="white--text mt-3">
+            {{ $t('home.subheading') | lokalise('home.subheading') }}
           </p>
           <div class="mt-9 d-flex">
             <mew-button
