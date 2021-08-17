@@ -6,7 +6,9 @@ const ERRORS = {
   'WebUSB is not available in this browser. We recommend trying Chrome.':
     'keepKey.browser-not-supported',
   'Unexpected Message': 'keepKey.generic-error',
-  'Unknown message type received': 'keepKey.generic-error'
+  'Unknown message type received': 'keepKey.generic-error',
+  'Conflicting Application: Another wallet is trying to connect with your KeepKey.':
+    'Conflicting Application: Another wallet is trying to connect with your KeepKey.'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);
