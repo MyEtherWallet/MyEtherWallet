@@ -41,7 +41,7 @@
     "@ensdomains/ensjs": "2.0.1",
     "@lokalise/node-api": "6.3.0",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.6.2-beta",
+    "@myetherwallet/mew-components": "0.6.7-beta",
     "@myetherwallet/mewconnect-web-client": "2.1.23-beta.9",
     "@sentry/browser": "6.11.0",
     "@sentry/tracing": "6.11.0",
