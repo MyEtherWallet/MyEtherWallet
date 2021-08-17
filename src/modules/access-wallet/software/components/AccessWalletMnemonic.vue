@@ -663,7 +663,10 @@ export default {
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
       const isStored = this.addressBook.find(item => {
-        if (toChecksumAddress(item.address) === checksummedAddress) {
+        const address = item.resolvedAddr
+          ? toChecksumAddress(item.resolvedAddr)
+          : toChecksumAddress(item.address);
+        if (address === checksummedAddress) {
           return item;
         }
       });
