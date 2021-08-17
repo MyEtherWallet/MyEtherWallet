@@ -133,7 +133,6 @@
               :has-filter="true"
               :items="parsedPaths"
               filter-placeholder="Search Path"
-              @input="nextStepTwo"
             />
           </v-col>
         </v-row>
@@ -605,6 +604,15 @@ export default {
         this.currentIdx = MAX_ADDRESSES;
         this.setMnemonicAddress();
       }
+    },
+    selectedPath: {
+      deep: true,
+      instant: true,
+      handler: function (val) {
+        this.addressPage = 0;
+        this.currentIdx = MAX_ADDRESSES;
+        this.nextStepTwo(val);
+      }
     }
   },
   mounted() {
@@ -659,7 +667,11 @@ export default {
           return item;
         }
       });
-      return isStored ? isStored.nickname : '';
+      return isStored
+        ? isStored.resolvedAddr
+          ? isStored.resolvedAddr
+          : isStored.nickname
+        : '';
     },
     /**
      * Method unlocks mnemonic phrase;
@@ -673,7 +685,7 @@ export default {
         .then(res => {
           if (res) {
             this.step = 2;
-            // this.nextStepTwo();
+            this.nextStepTwo();
           }
         })
         .catch(e => {
