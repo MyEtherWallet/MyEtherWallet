@@ -17,14 +17,29 @@ const ROUTES_HOME = {
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
   //A-Z
+  AAVE: { NAME: 'Aave', PATH: 'aave' },
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
+  ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
+  ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
+  ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
+  ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
+  NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
+  NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
+  NOTIFICATIONS: { NAME: 'Notifications', PATH: 'notifications' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  STAKED: { NAME: 'Staked', PATH: 'staked' },
+  STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },
+  STAKED_2: { NAME: 'Staked2', PATH: 'staked-2' },
+  STAKED_3: { NAME: 'Staked3', PATH: 'staked-3' },
+  STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
   SWAP: { NAME: 'Swap', PATH: 'swap' },
+  UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
 };
 
