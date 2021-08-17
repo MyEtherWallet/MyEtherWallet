@@ -412,8 +412,8 @@ export default {
           value: 24
         }
       ],
-      // /* Path Items: */
-      // selectedPath: null,
+      /* Path Items: */
+      selectedPath: null,
       // customPathName: '',
       // customPathValue: '',
       /* Terms Items : */
@@ -435,6 +435,20 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['customPaths', 'addressBook']),
+    localInstance() {
+      const web3 = new Web3(this.network.url);
+      const chainId = BigNumber(this.network.type.chainID);
+      const ens = this.network.type.hasOwnProperty('ens')
+        ? new ENS({
+            provider: web3.eth.currentProvider,
+            ensAddress: getEnsAddress(chainId.toString())
+          })
+        : null;
+      return {
+        web3: web3,
+        ens: ens
+      };
+    },
     /**
      * Property returns the index of the account of the accountAddress
      */
@@ -585,10 +599,10 @@ export default {
       deep: true,
       handler: function () {
         this.accounts = [];
-        this.addressPage -= 1;
+        this.addressPage = 0;
         this.selectedAddress = '';
         this.accountAddress = '';
-        this.currentIdx -= MAX_ADDRESSES;
+        this.currentIdx = MAX_ADDRESSES;
         this.setMnemonicAddress();
       }
     }
@@ -604,12 +618,6 @@ export default {
      */
     async setMnemonicAddress() {
       try {
-        const web3 = new Web3(this.network.url);
-        const chainId = BigNumber(this.network.type.chainID);
-        const ensInstance = new ENS({
-          provider: web3.eth.currentProvider,
-          ensAddress: getEnsAddress(chainId.toString())
-        });
         this.accounts = [];
         for (
           let i = this.currentIdx;
@@ -620,8 +628,12 @@ export default {
             .getWalletInstance()
             .getAccount(i);
           const address = account.getAddressString();
-          const balance = await web3.eth.getBalance(address);
-          const name = await ensInstance.getName(address);
+          const balance = await this.localInstance.web3.eth.getBalance(address);
+          const name = this.localInstance.ens
+            ? await this.localInstance.ens.getName(address)
+            : {
+                name: ''
+              };
           const nickname = this.getNickname(address);
           this.accounts.push({
             address: address,
