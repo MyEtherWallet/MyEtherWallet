@@ -1,7 +1,7 @@
 import vuexStore from '@/core/store';
 import { mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
-import * as _ from 'underscore';
+import { contains, isString, keys } from 'underscore';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -61,8 +61,8 @@ export default class Settings {
   // strips strings and only accepts certain keys
   _validateImportObject(obj) {
     const newObj = {};
-    _.keys(obj).forEach(item => {
-      if (!_.contains(this.validFields, item)) {
+    keys(obj).forEach(item => {
+      if (!contains(this.validFields, item)) {
         // might actually not need to do this, just strip off the ones that aren't valid
         throw new Error(`Found invalid key! ${item}`);
       } else {
@@ -72,7 +72,7 @@ export default class Settings {
           newObj[item] = toWei(item);
         } else {
           // strip tags for string, otherwise return item
-          newObj[item] = _.isString(obj[item]) ? xss(obj[item]) : obj[item];
+          newObj[item] = isString(obj[item]) ? xss(obj[item]) : obj[item];
         }
       }
     });

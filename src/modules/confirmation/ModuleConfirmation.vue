@@ -286,7 +286,7 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import * as _ from 'underscore';
+import { isEmpty, isArray } from 'underscore';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -369,7 +369,7 @@ export default {
       const newArr =
         this.unsignedTxArr.length > 0
           ? [].concat(this.unsignedTxArr)
-          : _.isEmpty(this.tx)
+          : isEmpty(this.tx)
           ? []
           : [this.tx];
       return this.arrayParser(newArr);
@@ -438,10 +438,10 @@ export default {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
-        : !_.isEmpty(this.signedTxObject);
+        : !isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !_.isEmpty(this.swapInfo);
+      return !isEmpty(this.swapInfo);
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -450,7 +450,7 @@ export default {
       if (this.isBatch) {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
-      return !_.isEmpty(this.signedTxObject);
+      return !isEmpty(this.signedTxObject);
     },
     /**
      * Property returns string, deodning whether or not this is a swap or send
@@ -702,7 +702,7 @@ export default {
       this.reset();
     },
     showSuccess(param) {
-      if (_.isArray(param)) {
+      if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
           ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
@@ -820,7 +820,7 @@ export default {
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&
-          _.isEmpty(this.signedTxObject)
+          isEmpty(this.signedTxObject)
         ) {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;

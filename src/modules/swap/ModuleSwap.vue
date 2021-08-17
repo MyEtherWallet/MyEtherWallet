@@ -265,7 +265,7 @@ import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei } from 'web3-utils';
-import * as _ from 'underscore';
+import { isEmpty, clone, isUndefined, debounce } from 'underscore';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -750,7 +750,7 @@ export default {
      * @returns{boolean}
      */
     hasSelectedProvider() {
-      return !_.isEmpty(this.selectedProvider);
+      return !isEmpty(this.selectedProvider);
     }
   },
   watch: {
@@ -917,14 +917,14 @@ export default {
       window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
-      const fromToken = _.clone(this.fromTokenType);
-      const toToken = _.clone(this.toTokenType);
+      const fromToken = clone(this.fromTokenType);
+      const toToken = clone(this.toTokenType);
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
-      if (_.isUndefined(storeTokens)) {
+      if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
     },
@@ -952,7 +952,7 @@ export default {
       this.toTokenType = value;
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: _.debounce(function (value) {
+    setTokenInValue: debounce(function (value) {
       /**
        * Ensure that both pairs have been set
        * before calling the providers
@@ -1016,7 +1016,7 @@ export default {
         }
       });
     },
-    getTrade: _.debounce(function (idx) {
+    getTrade: debounce(function (idx) {
       if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
       this.step = 1;
       this.feeError = '';
@@ -1091,7 +1091,7 @@ export default {
     },
 
     executeTrade() {
-      const currentTradeCopy = _.clone(this.currentTrade);
+      const currentTradeCopy = clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {

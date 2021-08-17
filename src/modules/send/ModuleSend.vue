@@ -177,7 +177,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import * as _ from 'underscore';
+import { debounce, isEmpty } from 'underscore';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -282,7 +282,7 @@ export default {
     },
     showSelectedBalance() {
       return (
-        !_.isEmpty(this.selectedCurrency) &&
+        !isEmpty(this.selectedCurrency) &&
         this.selectedCurrency.text !== 'Select Token'
       );
     },
@@ -518,13 +518,13 @@ export default {
     });
   },
   created() {
-    this.debouncedGasLimitError = _.debounce(value => {
+    this.debouncedGasLimitError = debounce(value => {
       this.setGasLimitError(value);
     }, 1000);
-    this.debounceAmountError = _.debounce(value => {
+    this.debounceAmountError = debounce(value => {
       this.setAmountError(value);
     }, 1000);
-    this.debounceEstimateGas = _.debounce(allValidInputs => {
+    this.debounceEstimateGas = debounce(allValidInputs => {
       if (allValidInputs) {
         this.estimateAndSetGas();
       }
@@ -678,7 +678,7 @@ export default {
     },
     setEntireBal() {
       if (
-        _.isEmpty(this.selectedCurrency) ||
+        isEmpty(this.selectedCurrency) ||
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
         this.setAmount(

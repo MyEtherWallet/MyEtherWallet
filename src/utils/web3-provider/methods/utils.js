@@ -3,8 +3,7 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
-
-import * as _ from 'underscore';
+import { clone } from 'underscore';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
@@ -31,7 +30,7 @@ const getSanitizedTx = tx => {
 
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
-  const newTxObj = _.clone(tx);
+  const newTxObj = clone(tx);
   newTxObj.type = NOTIFICATION_TYPES.OUT;
   const isExempt = newTxObj.hasOwnProperty('handleNotification');
 

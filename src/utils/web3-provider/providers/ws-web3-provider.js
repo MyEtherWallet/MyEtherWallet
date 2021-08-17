@@ -1,7 +1,6 @@
 'use strict';
 const errors = require('web3-core-helpers').errors;
-import * as _ from 'underscore';
-
+import { isArray, isFunction } from 'underscore';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
@@ -45,7 +44,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
     const data = typeof e.data === 'string' ? e.data : '';
     _this._parseResponse(data).forEach(function (result) {
       let id = null;
-      if (_.isArray(result)) {
+      if (isArray(result)) {
         result.forEach(function (load) {
           if (_this.responseCallbacks[load.id]) id = load.id;
         });
@@ -59,7 +58,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         result.method.indexOf('_subscription') !== -1
       ) {
         _this.notificationCallbacks.forEach(function (callback) {
-          if (_.isFunction(callback)) callback(result);
+          if (isFunction(callback)) callback(result);
         });
       } else if (_this.responseCallbacks[id]) {
         _this.responseCallbacks[id](null, result);

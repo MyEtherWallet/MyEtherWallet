@@ -24,7 +24,7 @@
 
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import * as _ from 'underscore';
+import { clone } from 'underscore';
 export default {
   props: {
     setMulticoin: {
@@ -98,7 +98,7 @@ export default {
       /** Creates a no reference clone to be submitted to the contract */
       const copyMulticoin = Object.keys(this.multicoin)
         .map(item => {
-          const newItem = Object.assign({}, _.clone(this.multicoin[item]));
+          const newItem = Object.assign({}, clone(this.multicoin[item]));
           newItem.value = this.setCoins[item];
           return newItem;
         })
