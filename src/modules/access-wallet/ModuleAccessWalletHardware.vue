@@ -17,10 +17,10 @@
       <div class="expand-width">
         <!--
         =====================================================================================
-        Step 0: Select hardware wallet
+        Step 1: Select hardware wallet
         =====================================================================================
         -->
-        <div v-if="step === 0">
+        <div v-if="step === 1">
           <v-row class="align-end justify-start">
             <v-col cols="12">
               <!--
@@ -28,9 +28,6 @@
                 Title
               =====================================================================================
               -->
-              <div class="subtitle-1 font-weight-bold grey--text">
-                STEP {{ step + 1 }}.
-              </div>
               <div class="headline font-weight-bold">
                 Select a hardware wallet to access.
               </div>
@@ -40,6 +37,11 @@
             </v-col>
           </v-row>
           <v-sheet color="transparent" :max-width="740">
+            <!--
+              =====================================================================================
+                Different hardware instances
+              =====================================================================================
+              -->
             <v-row justify="start">
               <v-col
                 v-for="button in buttons"
@@ -61,165 +63,158 @@
             </v-row>
           </v-sheet>
         </div>
-        <div v-if="step > 0">
-          <mew-stepper :items="extraStepDetails" :on-step="stepperStep">
-            <!--
+        <div v-if="step === 2">
+          <!--
             =====================================================================================
-              Step 1: Start Access Selected Wallet
-            =====================================================================================
-            -->
-            <template v-if="stepperStep === 2" #stepperContent2>
-              <!--
-            =====================================================================================
-            BcVault
+              Step 2: Start Access Selected Hardware Wallet
             =====================================================================================
             -->
-              <access-wallet-bc-vault
-                v-if="onBCVault"
-                :accounts="accounts"
-                :loading="bcVaultLoading"
-                :set-address="setBCvaultAddress"
-              />
-              <!--
-            =====================================================================================
-             Bitbox
-            =====================================================================================
-            -->
-              <access-wallet-bitbox
-                v-else-if="onBitbox"
-                :set-selected-bitbox="setSelectedBitbox"
-              />
-              <!--
-            =====================================================================================
-            Password Step (Coolwallet)
-            =====================================================================================
-            -->
-              <access-wallet-password
-                v-else-if="onPassword"
-                :on-cool-wallet="onCoolWallet"
-                :next-step="nextStep"
-                :wallet-type="walletType"
-                @setTerms="setTerms"
-                @setPassword="setPassword"
-              />
-              <!--
-            =====================================================================================
-            Paths Step (Ledger, Trezor)
-            =====================================================================================
-            -->
-              <access-wallet-paths
-                v-else-if="onPaths"
-                :ledger-apps="ledgerApps"
-                :paths="paths"
-                :on-ledger="onLedger"
-                :icon="icon"
-                :next-step="nextStep"
-                :step="step"
-                @setPath="setPath"
-                @setLedgerApp="setLedgerApp"
-              />
-            </template>
-            <!--
-            =====================================================================================
-              Step 3: Select Network Address or Enter Pin | (If Applicable)
-            =====================================================================================
-            -->
-            <template v-if="stepperStep === 3" #stepperContent3>
-              <bit-box-popup v-if="onBitboxPopup" :device="hwWalletInstance" />
-              <!--
-              =====================================================================================
-              Pin Step
-              =====================================================================================
-              -->
-              <access-wallet-pin
-                v-if="enterPin"
-                :keep-key-pin-enter="callback"
-                :wallet-type="walletType"
-              />
-              <!--
-              =====================================================================================
-              Network Address Step
-              =====================================================================================
-              -->
-              <access-wallet-network-addresses
-                v-else-if="onNetworkAddresses"
-                :accounts="accounts"
-                :next-address-set="nextAddressSet"
-                :previous-address-set="previousAddressSet"
-                :set-hardware-wallet="setHardwareWallet"
-                :address-page="addressPage"
-                :step="step"
-              />
+          <!--
+        =====================================================================================
+        BcVault
+        =====================================================================================
+        -->
+          <!-- <access-wallet-bc-vault
+            v-if="onBCVault"
+            :accounts="accounts"
+            :loading="bcVaultLoading"
+            :set-address="setBCvaultAddress"
+          /> -->
+          <!--
+        =====================================================================================
+          Bitbox
+        =====================================================================================
+        -->
+          <!-- <access-wallet-bitbox
+            v-else-if="onBitbox"
+            :set-selected-bitbox="setSelectedBitbox"
+          /> -->
+          <!--
+        =====================================================================================
+        Password Step (Coolwallet)
+        =====================================================================================
+        -->
+          <!-- <access-wallet-password
+            v-else-if="onPassword"
+            :on-cool-wallet="onCoolWallet"
+            :next-step="nextStep"
+            :wallet-type="walletType"
+            @setTerms="setTerms"
+            @setPassword="setPassword"
+          /> -->
+          <!--
+        =====================================================================================
+        Paths Step (Ledger, Trezor)
+        =====================================================================================
+        -->
+          <!-- <access-wallet-paths
+            v-else-if="onPaths"
+            :ledger-apps="ledgerApps"
+            :paths="paths"
+            :on-ledger="onLedger"
+            :icon="icon"
+            :next-step="nextStep"
+            :step="step"
+            @setPath="setPath"
+            @setLedgerApp="setLedgerApp"
+          /> -->
+          <!--
+        =====================================================================================
+          Step 3: Select Network Address or Enter Pin | (If Applicable)
+        =====================================================================================
+        -->
+          <!-- <bit-box-popup v-if="onBitboxPopup" :device="hwWalletInstance" /> -->
+          <!--
+          =====================================================================================
+          Pin Step
+          =====================================================================================
+          -->
+          <!-- <access-wallet-pin
+            v-if="enterPin"
+            :keep-key-pin-enter="callback"
+            :wallet-type="walletType"
+          /> -->
+          <!--
+          =====================================================================================
+          Network Address Step
+          =====================================================================================
+          -->
+          <!-- <access-wallet-network-addresses
+            v-else-if="onNetworkAddresses"
+            :accounts="accounts"
+            :next-address-set="nextAddressSet"
+            :previous-address-set="previousAddressSet"
+            :set-hardware-wallet="setHardwareWallet"
+            :address-page="addressPage"
+            :step="step"
+          /> -->
 
-              <!--
+          <!--
 =====================================================================================
 Paths Step (Ledger, Trezor)
 =====================================================================================
 -->
-              <access-wallet-paths
-                v-else-if="onPaths"
-                :ledger-apps="ledgerApps"
-                :paths="paths"
-                :on-ledger="onLedger"
-                :icon="icon"
-                :next-step="nextStep"
-                :step="step"
-                @setPath="setPath"
-                @setLedgerApp="setLedgerApp"
-              />
-            </template>
-            <!--
+          <!-- <access-wallet-paths
+            v-else-if="onPaths"
+            :ledger-apps="ledgerApps"
+            :paths="paths"
+            :on-ledger="onLedger"
+            :icon="icon"
+            :next-step="nextStep"
+            :step="step"
+            @setPath="setPath"
+            @setLedgerApp="setLedgerApp"
+          /> -->
+          <!--
+        =====================================================================================
+          Step 4: Select Address and Network | (If Applicable)
+        =====================================================================================
+        -->
+          <!-- <div> -->
+          <!--
             =====================================================================================
-              Step 4: Select Address and Network | (If Applicable)
+            Password Step (Coolwallet)
             =====================================================================================
             -->
-            <template v-if="stepperStep === 4" #stepperContent4>
-              <div>
-                <!--
-                =====================================================================================
-                Password Step (Coolwallet)
-                =====================================================================================
-                -->
-                <access-wallet-password
-                  v-if="onPassword"
-                  :on-cool-wallet="onCoolWallet"
-                  :next-step="nextStep"
-                  :wallet-type="walletType"
-                  @setTerms="setTerms"
-                  @setPassword="setPassword"
-                />
-                <!--
-                =====================================================================================
-                Network Address Step
-                =====================================================================================
-                -->
-                <access-wallet-network-addresses
-                  v-else-if="onNetworkAddresses"
-                  :accounts="accounts"
-                  :next-address-set="nextAddressSet"
-                  :previous-address-set="previousAddressSet"
-                  :set-hardware-wallet="setHardwareWallet"
-                  :address-page="addressPage"
-                  :step="step"
-                />
-              </div>
-            </template>
-          </mew-stepper>
+          <!-- <access-wallet-password
+              v-if="onPassword"
+              :on-cool-wallet="onCoolWallet"
+              :next-step="nextStep"
+              :wallet-type="walletType"
+              @setTerms="setTerms"
+              @setPassword="setPassword"
+            /> -->
+          <!--
+            =====================================================================================
+            Network Address Step
+            =====================================================================================
+            -->
+          <!-- <access-wallet-network-addresses
+              v-else-if="onNetworkAddresses"
+              :accounts="accounts"
+              :next-address-set="nextAddressSet"
+              :previous-address-set="previousAddressSet"
+              :set-hardware-wallet="setHardwareWallet"
+              :address-page="addressPage"
+              :step="step"
+            /> -->
         </div>
       </div>
+      <!-- </div> -->
     </template>
   </mew-overlay>
 </template>
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
-import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
-import BitBoxPopup from './hardware/components/BitBoxPopup';
-import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
-import AccessWalletPassword from './hardware/components/AccessWalletPassword';
-import AccessWalletPaths from './hardware/components/AccessWalletPaths';
-import AccessWalletPin from './hardware/components/AccessWalletPin';
+// import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
+// import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
+// import BitBoxPopup from './hardware/components/BitBoxPopup';
+// import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
+// import AccessWalletPassword from './hardware/components/AccessWalletPassword';
+// import AccessWalletPaths from './hardware/components/AccessWalletPaths';
+// import AccessWalletPin from './hardware/components/AccessWalletPin';
+// import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets, {
@@ -236,13 +231,14 @@ const MAX_ADDRESSES = 5;
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    AccessWalletBcVault,
-    AccessWalletBitbox,
-    AccessWalletNetworkAddresses,
-    AccessWalletPassword,
-    AccessWalletPaths,
-    AccessWalletPin,
-    BitBoxPopup
+    // AccessWalletKeepkey,
+    // AccessWalletBcVault,
+    // AccessWalletBitbox,
+    // AccessWalletNetworkAddresses,
+    // AccessWalletPassword,
+    // AccessWalletPaths,
+    // AccessWalletPin,
+    // BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -304,7 +300,7 @@ export default {
       }),
       wallets: wallets,
       // resettable
-      step: 0,
+      step: 1,
       currentStep: '',
       steps: {},
       hwWalletInstance: {},
@@ -408,6 +404,12 @@ export default {
       return this.walletType === WALLET_TYPES.COOL_WALLET;
     },
     /**
+     * On Keepkey
+     */
+    onKeepkey() {
+      return this.walletType === WALLET_TYPES.KEEPKEY;
+    },
+    /**
      * On Password step
      */
     onPassword() {
@@ -500,7 +502,7 @@ export default {
      * Resets the Data
      */
     reset() {
-      this.step = 0;
+      this.step = 1;
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
       this.walletType = '';
@@ -525,7 +527,7 @@ export default {
         ? (this.close('showHardware'), delete this.steps[this.step + 1])
         : (this.step -= 1);
       this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
-      this.step === 0 ? this.reset() : '';
+      this.step === 1 ? this.reset() : '';
     },
     overlayClose() {
       this.reset();
@@ -533,7 +535,6 @@ export default {
     },
     setWalletInstance(str) {
       this.walletType = str;
-      this.step = 0;
       this.incrementStep();
     },
     incrementStep() {
