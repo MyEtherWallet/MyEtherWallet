@@ -279,7 +279,7 @@ export default {
       this.openChangeAddress = false;
     },
     closePaperWallet() {
-      console.error("in here")
+      console.error('in here');
       this.openPaperWallet = false;
     },
     copyAddress() {

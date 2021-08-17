@@ -203,7 +203,7 @@ export default {
     },
     toggleOverlay(val) {
       this.addMode = !this.addMode;
-      console.error('addMode', val)
+      console.error('addMode', val);
     },
     /**
      * Resolves name and @returns address
