@@ -104,12 +104,14 @@ const setTokenAndEthBalance = function ({
         if (!token) {
           promises.push(
             getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
-              rootGetters['global/network'].type.tokens.push({
-                name: info.name,
-                symbol: info.symbol,
-                decimals: info.decimals,
-                address: t.contract
-              });
+              if (info) {
+                rootGetters['global/network'].type.tokens.push({
+                  name: info.name,
+                  symbol: info.symbol,
+                  decimals: info.decimals,
+                  address: t.contract
+                });
+              }
             })
           );
         }

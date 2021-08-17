@@ -13,7 +13,7 @@
     :left-btn-text="backBtnText"
   >
     <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
+      <v-sheet color="transparent" max-width="740px" class="mx-auto">
         <!--
         =====================================================================================
          Overview: prompts user to select options
