@@ -28,7 +28,7 @@
             -->
       <paper-wallet-to-display />
 
-      <div class="d-flex justify-center mt-12 mb-10">
+      <div class="d-flex justify-center mt-12">
         <mew-button title="Print" btn-size="xlarge" @click.native="print" />
       </div>
     </mew-overlay>

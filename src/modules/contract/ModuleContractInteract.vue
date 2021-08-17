@@ -60,13 +60,18 @@
         :back="backInteract"
         content-size="medium"
       >
-        <mew-select :label="'Method'" :items="methods" @input="methodSelect">
+        <mew-select
+          class="full-width"
+          :label="'Method'"
+          :items="methods"
+          @input="methodSelect"
+        >
         </mew-select>
         <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
         <div
           v-for="(input, idx) in selectedMethod.inputs"
           :key="input.name + idx"
-          class="input-item-container"
+          class="input-item-container full-width"
         >
           <mew-input
             v-if="getType(input.type).type !== 'radio'"

@@ -74,7 +74,7 @@
       title="Not Recommended"
       description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
       :link-obj="warningSheetObj"
-      class="mt-6"
+      class="mt-6 mb-0"
     />
   </mew-overlay>
 </template>

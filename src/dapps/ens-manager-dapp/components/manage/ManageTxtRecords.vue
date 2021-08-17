@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <div v-for="(key, idx) in keys" :key="`${key}${idx}`">
       <mew-input
         :id="idx"

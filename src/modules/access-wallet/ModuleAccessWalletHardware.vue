@@ -38,27 +38,25 @@
           <p class="mb-5">Make sure your device is connected and unlocked.</p>
         </v-col>
       </v-row>
-      <v-sheet color="transparent" :max-width="740">
-        <v-row justify="start">
-          <v-col
-            v-for="button in buttons"
-            :key="button.label"
-            class="button-container"
-            cols="12"
-            md="6"
-          >
-            <mew-super-button
-              :title="button.label"
-              :cols-num="6"
-              color-theme="basic"
-              right-icon-type="img"
-              :right-icon="button.icon"
-              :right-icon-height="45"
-              @click.native="setWalletInstance(button.type)"
-            />
-          </v-col>
-        </v-row>
-      </v-sheet>
+      <v-row justify="start">
+        <v-col
+          v-for="button in buttons"
+          :key="button.label"
+          class="button-container"
+          cols="12"
+          md="6"
+        >
+          <mew-super-button
+            :title="button.label"
+            :cols-num="6"
+            color-theme="basic"
+            right-icon-type="img"
+            :right-icon="button.icon"
+            :right-icon-height="45"
+            @click.native="setWalletInstance(button.type)"
+          />
+        </v-col>
+      </v-row>
     </div>
     <div v-if="step > 0" class="full-width">
       <mew-stepper :items="extraStepDetails" :on-step="stepperStep">

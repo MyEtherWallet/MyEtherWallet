@@ -201,8 +201,9 @@ export default {
     setDonationAddress() {
       this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
     },
-    toggleOverlay() {
+    toggleOverlay(val) {
       this.addMode = !this.addMode;
+      console.error('addMode', val)
     },
     /**
      * Resolves name and @returns address

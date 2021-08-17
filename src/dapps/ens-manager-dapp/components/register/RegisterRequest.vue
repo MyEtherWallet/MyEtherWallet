@@ -28,7 +28,7 @@
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
       {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
-    <div class="d-flex justify-center my-6">
+    <div class="d-flex justify-center mt-6">
       <mew-button
         :title="$t('common.next')"
         btn-size="xlarge"

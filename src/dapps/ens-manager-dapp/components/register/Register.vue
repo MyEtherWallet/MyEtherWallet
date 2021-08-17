@@ -50,7 +50,7 @@
         }}</span>
       </div>
     </div>
-    <div class="d-flex justify-center my-6">
+    <div class="d-flex justify-center mt-6">
       <mew-button
         :disabled="loadingCommit || ticker !== '00:00'"
         :title="

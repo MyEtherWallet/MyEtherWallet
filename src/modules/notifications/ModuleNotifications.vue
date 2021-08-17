@@ -82,25 +82,20 @@
             />
           </v-sheet>
         </div>
-        <div class="pa-4">
-          <div
-            v-for="(data, key) in notificationsByType"
-            v-show="!loading && notificationsByType.length > 0"
-            :key="key"
-            class="mt-2"
-          >
-            <mew-notification
-              :notification="data.notification"
-              @click.native="markNotificationAsRead(data)"
-            />
-          </div>
-          <div
-            v-show="notificationsByType.length === 0"
-            class="pa-5 text-center"
-          >
-            <h3 class="mb-5">No notifications to display for:</h3>
-            <h3 class="break-hash">{{ address }}</h3>
-          </div>
+        <div
+          v-for="(data, key) in notificationsByType"
+          v-show="!loading && notificationsByType.length > 0"
+          :key="key"
+          class="mt-2"
+        >
+          <mew-notification
+            :notification="data.notification"
+            @click.native="markNotificationAsRead(data)"
+          />
+        </div>
+        <div v-show="notificationsByType.length === 0" class="pa-5 text-center">
+          <h3 class="mb-5">No notifications to display for:</h3>
+          <h3 class="break-hash">{{ address }}</h3>
         </div>
       </v-sheet>
       <!-- <div class="text-center py-6">

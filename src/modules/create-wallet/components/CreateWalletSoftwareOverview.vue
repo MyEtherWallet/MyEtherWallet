@@ -41,6 +41,7 @@
     =====================================================================================
     -->
     <mew-warning-sheet
+      class="mb-0"
       title="NOT RECOMMENDED"
       :link-obj="linkToLearnMore"
       description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
