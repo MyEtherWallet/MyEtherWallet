@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.0.4-hotfix.1",
+  "version": "6.0.5",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -20,7 +20,7 @@
     "lint:tests": "eslint --fix tests/",
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
-    "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
+    "start:history": "npm run update:mainlists && ROUT1R_MODE=history npm run dev",
     "update": "npm run update:packages && npm run update:lists",
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",

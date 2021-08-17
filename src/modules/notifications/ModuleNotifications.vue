@@ -12,7 +12,7 @@
       type="avatar"
     ></v-skeleton-loader>
     <div v-if="!loading" class="d-flex align-center">
-      <v-btn icon @click="openNotifications = true">
+      <v-btn icon @click="openNotifications">
         <img
           src="@/assets/images/icons/icon-notifications.svg"
           :class="[invertIcon ? 'make-white-svg' : '']"
@@ -31,7 +31,7 @@
           error
           lighten2
         "
-        @click="openNotifications = true"
+        @click="openNotifications"
       >
         {{ notificationCount }}
       </div>
@@ -44,8 +44,8 @@
       }"
       title="Notifications"
       content-size="large"
-      :show-overlay="openNotifications"
-      :close="close"
+      :show-overlay="isOpenNotifications"
+      :close="closeNotifications"
     >
       <v-sheet class="transparent" max-width="735px" width="100%">
         <v-sheet
@@ -116,6 +116,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleNotifications',
@@ -135,7 +136,7 @@ export default {
         { name: 'Out', value: NOTIFICATION_TYPES.OUT },
         { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
       ],
-      openNotifications: false,
+      isOpenNotifications: false,
       statusCheckTimer: null
     };
   },
@@ -230,7 +231,7 @@ export default {
   },
   mounted() {
     EventBus.$on('openNotifications', () => {
-      this.openNotifications = true;
+      this.openNotifications();
     });
     this.statusCheckTimer = setInterval(() => {
       this.currentNotifications.forEach(notification => {
@@ -243,12 +244,6 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
-    /**
-     * Close notification overlay
-     */
-    close() {
-      this.openNotifications = false;
-    },
     /**
      * Set the filter value
      */
@@ -305,6 +300,14 @@ export default {
           }
         });
       }
+    },
+    openNotifications() {
+      this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
+      this.isOpenNotifications = true;
+    },
+    closeNotifications() {
+      this.$router.go(-1);
+      this.isOpenNotifications = false;
     }
   }
 };

@@ -6,14 +6,13 @@
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
       }"
-      :show-overlay="openNetworkOverlay"
+      :show-overlay="isOpenNetworkOverlay"
       title="Select Network"
       content-size="large"
-      :close="close"
+      :close="closeNetworkOverlay"
     >
       <network-switch :filter-types="filterNetworks" />
     </mew-overlay>
-
     <mew6-white-sheet
       :sideinfo="!mobile"
       class="px-5 px-lg-7 py-5 d-flex justify-space-between"
@@ -26,7 +25,7 @@
             depressed
             color="secondary"
             class="title-button"
-            @click.native="openNetworkOverlay = true"
+            @click.native="openNetworkOverlay"
           >
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
@@ -47,6 +46,7 @@ import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
@@ -58,7 +58,7 @@ export default {
   },
   data() {
     return {
-      openNetworkOverlay: false
+      isOpenNetworkOverlay: false
     };
   },
   computed: {
@@ -90,12 +90,19 @@ export default {
       return [];
     }
   },
+  mounted() {
+    this.$route.name == ROUTES_WALLET.NETWORK.NAME
+      ? this.openNetworkOverlay()
+      : '';
+  },
   methods: {
-    /**
-     * Close network overlay
-     */
-    close() {
-      this.openNetworkOverlay = false;
+    openNetworkOverlay() {
+      this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
+      this.isOpenNetworkOverlay = true;
+    },
+    closeNetworkOverlay() {
+      this.$router.go(-1);
+      this.isOpenNetworkOverlay = false;
     }
   }
 };
