@@ -49,148 +49,106 @@
           </div>
         </template>
       </app-modal>
+
       <!--
       =====================================================
-        Desktop Network Fee selector
+        Title
       =====================================================
       -->
-      <v-row justify="space-between" align="start">
-        <!--
-        =====================================================
-          Title: Network Fee
-        =====================================================
-        -->
-        <v-col cols="12" sm="4" class="pb-0">
-          <div class="d-flex align-center justify-start pl-4">
-            <div class="mew-heading-3 mb-0">Network fee</div>
-            <mew-tooltip
-              class="pl-1"
-              :text="feeTitleTooltip"
-              max-width="300px"
-            />
-          </div>
-        </v-col>
-        <v-spacer class="d-none d-sm-flex" />
-        <!--
-        =====================================================
-         Fee Content
-        =====================================================
-        -->
-        <v-col class="d-flex justify-end align-center">
-          <v-row dense>
-            <v-col cols="12 py-0">
-              <div class="d-block d-sm-flex justify-start">
-                <!--
-                =====================================================
-                  Type: ie Economy
-                =====================================================
-                -->
-                <div
-                  class="
-                    d-flex
-                    justify-start justify-sm-space-around
-                    align-center
-                  "
-                >
-                  <mew-icon :icon-name="icon" :img-height="30" />
-                  <span class="capitalize pl-2 mew-heading-4">{{
-                    gasPriceType
-                  }}</span>
-                </div>
-                <!--
-                =====================================================
-                  Fee: Eth & Fiat Value,  present when Fee is loaded
-                =====================================================
-                -->
-                <div
-                  v-if="!gettingFee && showFee"
-                  :class="[
-                    $vuetify.breakpoint.xs ? 'mew-body' : 'mew-heading-4',
-                    ' pl-0 pl-sm-2 textSecondary--text d-flex eth-fee align-center'
-                  ]"
-                >
-                  {{ actualFeeFormatted }} {{ network.type.currencyName }}
+      <div class="d-flex align-center mb-2">
+        <div class="mew-heading-3 ml-4">Transaction fee</div>
+        <mew-tooltip class="pl-1" :text="feeTitleTooltip" max-width="300px" />
+      </div>
 
-                  <span
-                    :class="[
-                      hasError ? 'error--text' : 'black--text',
-                      'px-2',
-                      $vuetify.breakpoint.xs ? 'mew-body' : 'mew-heading-4'
-                    ]"
-                    >{{ feesInUsd }}</span
-                  >
-                </div>
-                <!--
-                =====================================================
-                 Loader: present when loading Fee
-                =====================================================
-                -->
-                <v-skeleton-loader
-                  v-show="gettingFee || !showFee"
-                  type="text"
-                  width="150px"
-                  class="mt-2 px-sm-2 align-center"
-                />
-              </div>
-            </v-col>
-            <!--
-            =====================================================
-              Error message
-            =====================================================
-            -->
-            <v-col v-if="!gettingFee & hasError" cols="12">
-              <div :class="[hasError ? 'error--text' : '', 'mew-label']">
-                {{ message }}
-              </div>
-            </v-col>
-            <!--
-            =====================================================
-              High Fees pop up button
-            =====================================================
-            -->
-            <v-col v-if="isEthNetwork" cols="12" class="pt-0">
-              <div class="d-flex align-center justify-start pt-1">
-                <div
-                  class="
-                    mr-3
-                    primary--text
-                    cursor--pointer
-                    user-select--none
-                    mew-label
-                    font-weight-medium
-                  "
-                  @click="openHighFeeNote = true"
-                >
-                  Why are the fees so high?
-                </div>
-                <a
-                  v-if="notEnoughEth"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  :href="swapLink"
-                  class="mew-label font-weight-medium"
-                  >Buy more ETH</a
-                >
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
+      <!--
+      =====================================================
+        Loader: present when loading Fee
+      =====================================================
+      -->
+      <v-skeleton-loader
+        v-show="gettingFee || !showFee"
+        type="paragraph"
+        width="200px"
+        class="mt-2 px-sm-2 align-center"
+      />
+
+      <div v-if="!gettingFee && showFee">
         <!--
-        =====================================================
-         Button: Chage Fee Button
-        =====================================================
-        -->
-        <v-col cols="1">
-          <div class="d-flex justify-end align-center">
-            <img
-              class="btn-circle"
-              src="@/assets/images/icons/icon-edit-btn.svg"
-              alt="edit"
+      =====================================================
+        Transaction fee selector button
+      =====================================================
+      -->
+        <div
+          class="d-flex align-center justify-space-between flex-wrap-reverse"
+        >
+          <div class="d-flex align-center flex-wrap">
+            <v-btn
+              depressed
+              class="text-transform--initial"
               @click="openGasPriceModal"
-            />
+            >
+              <div class="d-flex align-center">
+                <div>{{ feesInUsd }}</div>
+                <v-icon small class="mx-2">mdi-arrow-right</v-icon>
+                <div class="d-flex align-center">
+                  <v-icon small>mdi-clock-outline</v-icon>
+                  <div>{{ timeWillTake }}</div>
+                </div>
+                <v-icon class="ml-3">mdi-chevron-down</v-icon>
+              </div>
+            </v-btn>
+            <div class="textSecondary--text ml-3 py-1">
+              {{ actualFeeFormatted }} ETH
+            </div>
           </div>
-        </v-col>
-      </v-row>
+          <div class="py-1 ml-3">
+            <div class="mew-label">Total ETH in your wallet:</div>
+            <div>{{ balance }} ETH</div>
+          </div>
+        </div>
+
+        <!--
+      =====================================================
+        Not enough balance warning / Error
+      =====================================================
+      -->
+        <div
+          v-if="!gettingFee & hasError"
+          :class="[hasError ? 'error--text' : '', 'mew-label']"
+          class="mt-2 ml-2"
+        >
+          {{ message }}
+        </div>
+
+        <!--
+      =====================================================
+        Too high transaction fee / Buy more ETH
+      =====================================================
+      -->
+        <div class="d-flex align-center ml-3 mt-1">
+          <div
+            class="
+              mr-1
+              primary--text
+              cursor--pointer
+              user-select--none
+              mew-label
+            "
+            @click="openHighFeeNote = true"
+          >
+            Why are the fees so high?
+          </div>
+          <a
+            v-if="notEnoughEth"
+            rel="noopener noreferrer"
+            target="_blank"
+            :href="swapLink"
+            class="mew-label font-weight-medium"
+          >
+            Buy more ETH
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -206,13 +164,8 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 
-const GAS_TYPE_ICONS = {
-  economy: 'bicycle',
-  regular: 'car',
-  fast: 'rocket',
-  stored: 'tags'
-};
 export default {
   name: 'AppNetworkFee',
   components: { AppModal, AppNetworkSettingsModal },
@@ -248,6 +201,10 @@ export default {
     isSwap: {
       type: Boolean,
       default: false
+    },
+    balance: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -256,10 +213,6 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
-
-    icon() {
-      return GAS_TYPE_ICONS[this.gasPriceType];
-    },
     actualFees() {
       return fromWei(this.totalFees).toString();
     },
@@ -279,6 +232,9 @@ export default {
       return this.isSwap
         ? 'Maximum possible transaction fee is shown. Actual fee is likely to be less once your swap is executed.'
         : 'Maximum possible transaction fee is shown. Actual fee is likely to be less once your transaction is executed.';
+    },
+    timeWillTake() {
+      return estimatedTime(this.gasPriceType);
     }
   },
   methods: {

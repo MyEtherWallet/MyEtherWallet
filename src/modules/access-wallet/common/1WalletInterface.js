@@ -11,15 +11,13 @@ import {
   ecsign,
   isValidPrivate,
   isValidPublic,
-  privateToPublic,
-  bnToHex
+  privateToPublic
 } from 'ethereumjs-util';
 import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
-import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
+import { Transaction } from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
-import { toBN } from 'web3-utils';
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {
     this.nickname = nick !== null && nick !== '' ? nick : '';
@@ -98,30 +96,12 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
-        let tx = Transaction.fromTxData(txParams, {
+        const tx = new Transaction(txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
-        if (store.getters['global/isEIP1559SupportedNetwork']) {
-          const feeMarket = store.getters['global/gasFeeMarketInfo'];
-          const _txParams = Object.assign(
-            {
-              maxPriorityFeePerGas: bnToHex(
-                toBN(txParams.gasPrice).sub(feeMarket.baseFeePerGas)
-              ),
-              maxFeePerGas: txParams.gasPrice
-            },
-            txParams
-          );
-          delete _txParams.gasPrice;
-          tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-            common: commonGenerator(store.getters['global/network'])
-          });
-        }
-        const networkId = store.getters['global/network'].type.chainID;
-        tx = tx.sign(this.privateKey);
-        const signedChainId = tx.chainId
-          ? parseInt(tx.chainId.toString())
-          : calculateChainIdFromV(tx.v);
+        const networkId = tx.getChainId();
+        tx.sign(this.privateKey);
+        const signedChainId = calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)
           throw new Error(
             'Invalid networkId signature returned. Expected: ' +

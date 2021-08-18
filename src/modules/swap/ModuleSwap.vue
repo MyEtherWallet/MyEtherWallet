@@ -216,21 +216,6 @@
              Swap Fee
             =====================================================================================
           -->
-
-          <app-network-fee
-            v-if="step > 0 && providersErrorMsg.subtitle === ''"
-            :show-fee="showSwapFee"
-            :getting-fee="loadingFee"
-            :error="feeError"
-            :total-fees="totalFees"
-            :gas-price-type="localGasType"
-            :message="feeError"
-            :not-enough-eth="notEnoughEth"
-            is-custom
-            class="mt-10 mt-sm-16"
-            @onLocalGasPrice="handleLocalGasPrice"
-          />
-
           <app-transaction-fee
             v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
@@ -278,7 +263,6 @@ import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -301,7 +285,6 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
-    AppNetworkFee,
     AppTransactionFee
   },
   props: {

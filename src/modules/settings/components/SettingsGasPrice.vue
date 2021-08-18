@@ -1,93 +1,83 @@
 <template>
-  <div class="pa-6">
+  <div>
     <div v-if="!isSwap" class="mb-6">
       Please select a default gas price for your transaction fee
     </div>
+
+    <div class="d-flex align-center justify-space-between mb-4">
+      <div class="d-flex align-center">
+        <div class="mr-2">{{ currentValue.gas | twoDecimalPoint }} Gwei</div>
+        <div class="textSecondary--text">{{ currentValue.usd }}</div>
+      </div>
+      <div class="d-flex align-center">
+        <v-icon small color="basic" class="mr-1">mdi-clock-outline</v-icon>
+        <div>{{ timeWillTake }}</div>
+      </div>
+    </div>
+
+    <div class="textBlack2--text mb-5">
+      This fee is changed by Ethereum network. You can prioritize transaction by
+      adding a tip to the miner.
+    </div>
+
     <!--
     =====================================================================================
       Economic / Regular / Fast
     =====================================================================================
     -->
-    <v-sheet color="transparent" max-width="500px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
-          <div
-            :class="[
-              selected === b.title ? 'active' : '',
-              'text-center group-button pb-5 pt-2'
-            ]"
-            @click.stop="
-              () => {
-                setSelected(b.title);
-              }
-            "
-          >
-            <mew-icon :icon-name="b.icon" :img-height="80" />
-            <h5 class="font-weight-bold mb-2 text-capitalize">{{ b.title }}</h5>
-            <div class="font-weight-bold mb-2">
-              ~ {{ b.gas | twoDecimalPoint }} Gwei
-            </div>
-            <div>{{ b.usd }} {{ b.time }}</div>
+    <div>
+      <div
+        v-for="(b, key) in buttons"
+        :key="key"
+        class="
+          px-5
+          py-4
+          mb-2
+          d-flex
+          align-center
+          justify-space-between
+          group-button
+        "
+        :class="[selected === b.title ? 'active' : '']"
+        @click.stop="
+          () => {
+            setSelected(b.title);
+          }
+        "
+      >
+        <div class="d-flex align-center">
+          <div class="mr-2 ml-n1 text-center" style="width: 40px">
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY">mdi-check</v-icon>
+            <v-icon v-if="b.title === gasPriceTypes.REGULAR"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon v-if="b.title === gasPriceTypes.FAST">mdi-arrow-up</v-icon>
+            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2"
+              >mdi-arrow-up</v-icon
+            >
           </div>
-        </v-col>
-      </v-row>
-      <!--
-      =====================================================================================
-        Divider
-      =====================================================================================
-      -->
-      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
-        <v-divider />
-        <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
-        <v-divider />
-      </v-row>
-      <!--
-      =====================================================================================
-       Custom Gas
-      =====================================================================================
-      -->
-      <div v-if="!isSwap" class="d-sm-flex text-center">
-        <mew-input
-          v-model="customGasPrice"
-          label="Customize"
-          placeholder=" "
-          right-label="Gwei"
-          class="mr-0 mr-sm-3"
-        />
-        <mew-button
-          :title="customBtn.text"
-          btn-size="xlarge"
-          :btn-style="customBtn.style"
-          :has-full-width="isSwap"
-          @click.native="setCPrice"
-        />
-        <p v-if="isSwap" class="pt-2">
-          To change the custom gas price, go to
-          <span
-            class="cursor--pointer go-to-global-text"
-            @click="openGlobalSettings"
-            >global settings</span
-          >
-        </p>
+          <div v-if="b.title === gasPriceTypes.ECONOMY">Normal priority</div>
+          <div v-if="b.title === gasPriceTypes.REGULAR">Higher priority</div>
+          <div v-if="b.title === gasPriceTypes.FAST">Highest priority</div>
+        </div>
+        <div class="text-right">
+          <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
+          <div class="mew-label">+{{ b.gas | twoDecimalPoint }} Gwei</div>
+        </div>
       </div>
-      <v-row v-if="hasCustom" align="start" class="px-3">
-        <mew-button
-          :title="customBtn.text"
-          btn-size="xlarge"
-          :btn-style="customBtn.style"
-          :has-full-width="true"
-          @click.native="setCPrice"
-        />
-        <p class="pt-2">
-          To change the custom gas price, go to
-          <span
-            class="cursor--pointer go-to-global-text"
-            @click="openGlobalSettings"
-            >global settings</span
-          >
-        </p>
-      </v-row>
-    </v-sheet>
+    </div>
+
+    <div class="text-center mew-label mt-6 mb-5 secondary--text">
+      To increase priority
+      <a
+        rel="noopener noreferrer"
+        target="_blank"
+        :href="swapLink"
+        class="font-weight-medium"
+      >
+        Buy more ETH
+      </a>
+    </div>
   </div>
 </template>
 
@@ -95,8 +85,8 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei, toWei } from 'web3-utils';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { estimatedTime } from '@/core/helpers/gasPriceHelper';
+
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -118,58 +108,30 @@ export default {
       type: Array,
       default: () => []
     },
-    gasPrice: {
-      type: String,
-      default: '0'
-    },
-    setCustomGasPrice: {
-      type: Function,
-      default: () => {}
-    },
     isSwap: {
       type: Boolean,
       default: false
-    },
-    openGlobalSettings: {
-      type: Function,
-      default: () => {}
     }
   },
   data() {
     return {
-      customGasPrice: '0'
+      gasPriceTypes: gasPriceTypes
     };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    customBtn() {
-      const defaultGasPrice = !this.customGasPrice ? '0' : this.customGasPrice;
-      const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(toWei(defaultGasPrice, 'gwei'), 'ether')
-      );
-      return {
-        text: this.isSwap
-          ? `Custom: ${defaultGasPrice} Gwei $ ${
-              formatFiatValue(usdValue).value
-            }`
-          : 'Confirm',
-        style: this.isSwap ? 'outline' : 'background'
-      };
+    ...mapGetters('global', ['swapLink']),
+    ...mapState('global', ['gasPriceType', 'gasPrice']),
+    currentValue() {
+      for (const but of this.buttons) {
+        if (but.title === this.selected) {
+          return but;
+        }
+      }
+      return {};
     },
-    hasCustom() {
-      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
-    }
-  },
-  mounted() {
-    this.customGasPrice =
-      this.gasPriceType === gasPriceTypes.STORED
-        ? fromWei(this.gasPrice, 'gwei')
-        : '0';
-  },
-  methods: {
-    setCPrice() {
-      this.setCustomGasPrice(this.customGasPrice);
+    timeWillTake() {
+      return estimatedTime(this.selected);
     }
   }
 };
@@ -186,8 +148,8 @@ export default {
   width: 100%;
   border: 1px solid transparent;
   &.active {
-    border: 1px solid var(--v-primary-base);
-    background-color: #f2fafa;
+    border: 2px solid var(--v-primary-base);
+    background-color: #e1f7f4;
     opacity: 1;
   }
 }
