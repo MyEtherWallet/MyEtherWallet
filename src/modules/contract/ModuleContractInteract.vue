@@ -49,44 +49,52 @@
       </div>
 
       <mew-overlay
+        :footer="{
+          text: 'Need help?',
+          linkTitle: 'Contact support',
+          link: 'mailto:support@myetherwallet.com'
+        }"
+        title="Interact with contract"
         :show-overlay="interact"
-        left-btn-text="back"
-        right-btn-text="close"
         :close="closeInteract"
         :back="backInteract"
+        content-size="medium"
       >
-        <template #mewOverlayBody>
-          <mew-select :label="'Method'" :items="methods" @input="methodSelect">
-          </mew-select>
-          <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
+        <mew-select
+          class="full-width"
+          :label="'Method'"
+          :items="methods"
+          @input="methodSelect"
+        >
+        </mew-select>
+        <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
+        <div
+          v-for="(input, idx) in selectedMethod.inputs"
+          :key="input.name + idx"
+          class="input-item-container full-width"
+        >
+          <mew-input
+            v-if="getType(input.type).type !== 'radio'"
+            :label="`${input.name} (${input.type})`"
+            :rules="[
+              value => {
+                return isValidInput(value, getType(input.type).solidityType);
+              }
+            ]"
+            @input="valueInput(idx, $event)"
+          />
           <div
-            v-for="(input, idx) in selectedMethod.inputs"
-            :key="input.name + idx"
-            class="input-item-container"
+            v-if="getType(input.type).type === 'radio'"
+            class="bool-input-container"
           >
-            <mew-input
-              v-if="getType(input.type).type !== 'radio'"
-              :label="`${input.name} (${input.type})`"
-              :rules="[
-                value => {
-                  return isValidInput(value, getType(input.type).solidityType);
-                }
-              ]"
-              @input="valueInput(idx, $event)"
-            />
-            <div
-              v-if="getType(input.type).type === 'radio'"
-              class="bool-input-container"
-            >
-              <div class="bool-items">
-                <mew-checkbox
-                  v-model="input.value"
-                  :label="input.name"
-                  type="radio"
-                  checked
-                  @input="valueInput(idx, $event)"
-                />
-              </div>
+            <div class="bool-items">
+              <mew-checkbox
+                v-model="input.value"
+                :label="input.name"
+                type="radio"
+                checked
+                @input="valueInput(idx, $event)"
+              />
             </div>
           </div>
           <div>
@@ -116,9 +124,9 @@
             Outputs
           </div>
           <div
-            v-for="(output, idx) in selectedMethod.outputs"
+            v-for="(output, i) in selectedMethod.outputs"
             v-show="selectedMethod.outputs.length"
-            :key="output.name + idx"
+            :key="output.name + i"
             class="input-item-container"
           >
             <mew-input
@@ -140,7 +148,7 @@
               class="non-bool-input"
             />
           </div>
-        </template>
+        </div>
       </mew-overlay>
     </template>
   </mew-module>

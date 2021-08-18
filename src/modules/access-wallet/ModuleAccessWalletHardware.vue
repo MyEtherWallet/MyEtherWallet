@@ -5,191 +5,105 @@
 =====================================================================================
 -->
   <mew-overlay
-    description=""
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="open"
     :title="title"
-    right-btn-text="Cancel"
-    :back="back"
+    :back="step === 0 ? null : back"
     :close="overlayClose"
-    :left-btn-text="step > 0 ? 'Back' : ''"
+    content-size="xlarge"
   >
-    <template #mewOverlayBody>
-      <div class="expand-width">
-        <!--
+    <v-row class="pa-5 full-width text-center rounded subtitle-container"
+      ><span class="full-width"
+        >The highest standard of security in the crypto space.
+        <!-- TODO: add link -->
+        <a href="" target="_blank"> Learn More </a>
+      </span></v-row
+    >
+    <!--
         =====================================================================================
         Step 1: Select hardware wallet
         =====================================================================================
         -->
-        <div v-if="step === 1">
-          <v-row class="align-end justify-start">
-            <v-col cols="12">
-              <!--
-              =====================================================================================
-                Title
-              =====================================================================================
-              -->
-              <div class="headline font-weight-bold">
-                Select a hardware wallet to access.
-              </div>
-              <p class="mb-5">
-                Make sure your device is connected and unlocked.
-              </p>
-            </v-col>
-          </v-row>
-          <v-sheet color="transparent" :max-width="740">
-            <!--
+    <div v-if="step === 1">
+      <!--
               =====================================================================================
                 Different hardware instances
               =====================================================================================
               -->
-            <v-row justify="start">
-              <v-col
-                v-for="button in buttons"
-                :key="button.label"
-                class="button-container"
-                cols="12"
-                md="6"
-              >
-                <mew-super-button
-                  :title="button.label"
-                  :cols-num="6"
-                  color-theme="basic"
-                  right-icon-type="img"
-                  :right-icon="button.icon"
-                  :right-icon-height="45"
-                  @click.native="setWalletInstance(button.type)"
-                />
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </div>
-        <div v-if="step === 2">
-          <!--
+      <v-row justify="start">
+        <v-col
+          v-for="button in buttons"
+          :key="button.label"
+          class="button-container"
+          cols="12"
+          md="6"
+        >
+          <mew-super-button
+            :title="button.label"
+            :cols-num="6"
+            color-theme="basic"
+            right-icon-type="img"
+            :right-icon="button.icon"
+            :right-icon-height="45"
+            @click.native="setWalletInstance(button.type)"
+          />
+        </v-col>
+      </v-row>
+    </div>
+    <!--
             =====================================================================================
-              Step 2: Start Access Selected Hardware Wallet
+              Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-          <!--
+    <div v-if="step === 2">
+      <!--
         =====================================================================================
-        BcVault
-        =====================================================================================
-        -->
-          <!-- <access-wallet-bc-vault
-            v-if="onBCVault"
-            :accounts="accounts"
-            :loading="bcVaultLoading"
-            :set-address="setBCvaultAddress"
-          /> -->
-          <!--
-        =====================================================================================
-          Bitbox
+          Bitbox2
         =====================================================================================
         -->
-          <!-- <access-wallet-bitbox
+      <!-- <access-wallet-bitbox
             v-else-if="onBitbox"
             :set-selected-bitbox="setSelectedBitbox"
           /> -->
-          <!--
+      <!--
         =====================================================================================
-        Password Step (Coolwallet)
-        =====================================================================================
-        -->
-          <!-- <access-wallet-password
-            v-else-if="onPassword"
-            :on-cool-wallet="onCoolWallet"
-            :next-step="nextStep"
-            :wallet-type="walletType"
-            @setTerms="setTerms"
-            @setPassword="setPassword"
-          /> -->
-          <!--
-        =====================================================================================
-        Paths Step (Ledger, Trezor)
+          Keepkey
         =====================================================================================
         -->
-          <!-- <access-wallet-paths
-            v-else-if="onPaths"
-            :ledger-apps="ledgerApps"
-            :paths="paths"
-            :on-ledger="onLedger"
-            :icon="icon"
-            :next-step="nextStep"
-            :step="step"
-            @setPath="setPath"
-            @setLedgerApp="setLedgerApp"
-          /> -->
-          <!--
+      <access-wallet-keepkey v-if="onKeepkey" />
+      <!--
         =====================================================================================
-          Step 3: Select Network Address or Enter Pin | (If Applicable)
+          Cool Wallet
         =====================================================================================
         -->
-          <!-- <bit-box-popup v-if="onBitboxPopup" :device="hwWalletInstance" /> -->
-          <!--
-          =====================================================================================
-          Pin Step
-          =====================================================================================
-          -->
-          <!-- <access-wallet-pin
-            v-if="enterPin"
-            :keep-key-pin-enter="callback"
-            :wallet-type="walletType"
-          /> -->
-          <!--
-          =====================================================================================
-          Network Address Step
-          =====================================================================================
-          -->
-          <!-- <access-wallet-network-addresses
-            v-else-if="onNetworkAddresses"
-            :accounts="accounts"
-            :next-address-set="nextAddressSet"
-            :previous-address-set="previousAddressSet"
-            :set-hardware-wallet="setHardwareWallet"
-            :address-page="addressPage"
-            :step="step"
-          /> -->
-
-          <!--
-=====================================================================================
-Paths Step (Ledger, Trezor)
-=====================================================================================
--->
-          <!-- <access-wallet-paths
-            v-else-if="onPaths"
-            :ledger-apps="ledgerApps"
-            :paths="paths"
-            :on-ledger="onLedger"
-            :icon="icon"
-            :next-step="nextStep"
-            :step="step"
-            @setPath="setPath"
-            @setLedgerApp="setLedgerApp"
-          /> -->
-          <!--
+      <span>Cool Wallet</span>
+      <!--
         =====================================================================================
-          Step 4: Select Address and Network | (If Applicable)
+          Ledger
         =====================================================================================
         -->
-          <!-- <div> -->
-          <!--
-            =====================================================================================
-            Password Step (Coolwallet)
-            =====================================================================================
-            -->
-          <!-- <access-wallet-password
-              v-if="onPassword"
-              :on-cool-wallet="onCoolWallet"
-              :next-step="nextStep"
-              :wallet-type="walletType"
-              @setTerms="setTerms"
-              @setPassword="setPassword"
-            /> -->
-          <!--
+      <span>Ledger</span>
+      <!--
+        =====================================================================================
+          Trezor
+        =====================================================================================
+        -->
+      <span>Trezor</span>
+      <!--
+        =====================================================================================
+          Step 3: Select Address and Network | (If Applicable) 
+        =====================================================================================
+        -->
+      <!--
             =====================================================================================
             Network Address Step
             =====================================================================================
             -->
-          <!-- <access-wallet-network-addresses
+      <!-- <access-wallet-network-addresses
               v-else-if="onNetworkAddresses"
               :accounts="accounts"
               :next-address-set="nextAddressSet"
@@ -198,23 +112,21 @@ Paths Step (Ledger, Trezor)
               :address-page="addressPage"
               :step="step"
             /> -->
-        </div>
-      </div>
-      <!-- </div> -->
-    </template>
+      <!-- </div>
+      </div> -->
+    </div>
   </mew-overlay>
 </template>
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-// import AccessWalletBcVault from './hardware/components/AccessWalletBcVault';
 // import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
 // import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
-// import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
+import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets, {
@@ -231,8 +143,7 @@ const MAX_ADDRESSES = 5;
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    // AccessWalletKeepkey,
-    // AccessWalletBcVault,
+    AccessWalletKeepkey
     // AccessWalletBitbox,
     // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
@@ -386,12 +297,6 @@ export default {
       return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
     },
     /**
-     * On Bc Vault
-     */
-    onBCVault() {
-      return this.walletType === WALLET_TYPES.BCVAULT;
-    },
-    /**
      * On Ledger
      */
     onLedger() {
@@ -471,11 +376,9 @@ export default {
      * Overlay title
      */
     title() {
-      return !this.step
-        ? 'Hardware Wallets'
-        : this.stepperStep +
-            '. ' +
-            this.wallets[this.walletType].titles[this.step];
+      return this.step === 1
+        ? 'Select a hardware wallet'
+        : this.wallets[this.walletType];
     }
   },
   watch: {
@@ -742,6 +645,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.subtitle-container {
+  background-color: rgba(109, 137, 166, 0.06);
+}
 .button-container {
   height: 100px;
 }

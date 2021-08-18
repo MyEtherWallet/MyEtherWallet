@@ -7,90 +7,79 @@
       =====================================================================================
       -->
       <template v-if="step === 1" #stepperContent1>
-        <mew6-white-sheet class="pa-4 pa-sm-12">
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-          <div class="headline font-weight-bold mb-5">
-            Write down these words
-          </div>
-          <!--
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+        <div class="headline font-weight-bold mb-5">Write down these words</div>
+        <!--
           =====================================================================================
             Update Button & Word Number Selector
           =====================================================================================
           -->
-          <div class="d-flex align-center justify-end pb-4">
-            <div
-              class="
-                primary--text
-                cursor--pointer
-                d-flex
-                align-center
-                mr-2
-                pa-2
-              "
-              @click="setPhrase"
-            >
-              <v-icon small color="primary" class="mr-1">mdi-sync</v-icon>
-              <div class="font-weight-medium">Update</div>
-            </div>
-            <v-select
-              v-model="phraseSize"
-              style="max-width: 150px"
-              hide-details
-              dense
-              item-text="name"
-              item-value="value"
-              :items="mnemonicOptions"
-              label=""
-              outlined
-            ></v-select>
+        <div class="d-flex align-center justify-end pb-4">
+          <div
+            class="primary--text cursor--pointer d-flex align-center mr-2 pa-2"
+            @click="setPhrase"
+          >
+            <v-icon small color="primary" class="mr-1">mdi-sync</v-icon>
+            <div class="font-weight-medium">Update</div>
           </div>
-          <!--
+          <v-select
+            v-model="phraseSize"
+            style="max-width: 150px"
+            hide-details
+            dense
+            item-text="name"
+            item-value="value"
+            :items="mnemonicOptions"
+            label=""
+            outlined
+          ></v-select>
+        </div>
+        <!--
           =====================================================================================
-            Pharse Table
+            Phrase Table
           =====================================================================================
           -->
-          <phrase-block class="mb-8">
-            <mnemonic-phrase-table :data="phrase" />
-          </phrase-block>
-          <!--
+        <phrase-block class="mb-8">
+          <mnemonic-phrase-table :data="phrase" />
+        </phrase-block>
+        <!--
           =====================================================================================
             Extra Word
           =====================================================================================
           -->
-          <div class="mt-10">
-            <mew-expand-panel
-              :has-dividers="true"
-              :is-toggle="true"
-              :interactive-content="true"
-              :panel-items="[
-                {
-                  name: 'Add Extra Word'
-                }
-              ]"
-            >
-              <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  label="Extra word"
-                  placeholder="Extra word"
-                />
-              </template>
-            </mew-expand-panel>
-          </div>
-          <!--
+        <div class="mt-10">
+          <mew-expand-panel
+            :has-dividers="true"
+            :is-toggle="true"
+            :interactive-content="true"
+            :panel-items="[
+              {
+                name: 'Add Extra Word'
+              }
+            ]"
+          >
+            <template #panelBody1>
+              <mew-input
+                v-model="extraWord"
+                label="Extra word"
+                placeholder="Extra word"
+              />
+            </template>
+          </mew-expand-panel>
+        </div>
+        <!--
           =====================================================================================
            Button
           =====================================================================================
           -->
-          <div class="d-flex justify-center mt-6">
-            <mew-button
-              title="I wrote them down"
-              btn-size="xlarge"
-              :has-full-width="false"
-              @click.native="updateStep(2)"
-            />
-          </div>
-        </mew6-white-sheet>
+        <div class="d-flex justify-center mt-6">
+          <mew-button
+            title="I wrote them down"
+            btn-size="xlarge"
+            :has-full-width="false"
+            @click.native="updateStep(2)"
+          />
+        </div>
         <mew-warning-sheet
           class="mt-5 mb-0"
           title="NOT RECOMMENDED"
@@ -103,79 +92,74 @@
       =====================================================================================
       -->
       <template v-if="step === 2" #stepperContent2>
-        <mew6-white-sheet class="pa-4 pa-sm-12">
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-          <div class="headline font-weight-bold">Verification</div>
-          <div class="mb-5">
-            {{ stepTwoText }}
-          </div>
-          <!--
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+        <div class="headline font-weight-bold">Verification</div>
+        <div class="mb-5">
+          {{ stepTwoText }}
+        </div>
+        <!--
           =====================================================================================
            Words Radio Group
           =====================================================================================
           -->
-          <v-sheet max-width="600px" class="mx-auto">
-            <v-radio-group
-              v-for="(item, idx) in generatedVerification"
-              :key="`${idx}verification`"
-              v-model="validateMnemonicValues[getOnlyKey(item)]"
-              hide-details
-              mandatory
-              row
-              class="radio-group pa-5"
-            >
-              <template #label>
-                <div
-                  class="mew-heading-3 mb-3 mb-sm-0"
-                  style="min-width: 30px; line-height: 25px"
-                >
-                  {{ getOnlyKey(item) + 1 }}.
-                </div>
-              </template>
-              <v-row>
-                <v-col
-                  v-for="(entries, id) in getEntries(item)"
-                  :key="entries + id"
-                  cols="12"
-                  sm="4"
-                >
-                  <v-radio
-                    :label="entries"
-                    :value="`${entries}_${id}`"
-                  ></v-radio>
-                </v-col>
-              </v-row>
-            </v-radio-group>
-            <mew-input
-              v-if="extraWord && extraWord !== ''"
-              v-model="extraWordVerification"
-              label="Confirm extra word"
-              placeholder="Please confirm your extra word"
-              class="mt-10 mb-3"
-            />
-          </v-sheet>
-          <!--
+        <v-sheet max-width="600px" class="mx-auto">
+          <v-radio-group
+            v-for="(item, idx) in generatedVerification"
+            :key="`${idx}verification`"
+            v-model="validateMnemonicValues[getOnlyKey(item)]"
+            hide-details
+            mandatory
+            row
+            class="radio-group pa-5"
+          >
+            <template #label>
+              <div
+                class="mew-heading-3 mb-3 mb-sm-0"
+                style="min-width: 30px; line-height: 25px"
+              >
+                {{ getOnlyKey(item) + 1 }}.
+              </div>
+            </template>
+            <v-row>
+              <v-col
+                v-for="(entries, id) in getEntries(item)"
+                :key="entries + id"
+                cols="12"
+                sm="4"
+              >
+                <v-radio :label="entries" :value="`${entries}_${id}`"></v-radio>
+              </v-col>
+            </v-row>
+          </v-radio-group>
+          <mew-input
+            v-if="extraWord && extraWord !== ''"
+            v-model="extraWordVerification"
+            label="Confirm extra word"
+            placeholder="Please confirm your extra word"
+            class="mt-10 mb-3"
+          />
+        </v-sheet>
+        <!--
           =====================================================================================
            Back Button & Verify Button
           =====================================================================================
           -->
-          <div class="d-flex flex-column flex-md-row justify-center mt-6">
-            <mew-button
-              title="Back"
-              btn-size="xlarge"
-              btn-style="outline"
-              class="mx-md-1 my-1"
-              @click.native="updateStep(1)"
-            />
-            <mew-button
-              title="Verify"
-              btn-size="xlarge"
-              :disabled="!canVerify"
-              class="mx-md-1 my-1"
-              @click.native="verify"
-            />
-          </div>
-        </mew6-white-sheet>
+        <div class="d-flex flex-column flex-md-row justify-center mt-6">
+          <mew-button
+            title="Back"
+            btn-size="xlarge"
+            btn-style="outline"
+            class="mx-md-1 my-1"
+            @click.native="updateStep(1)"
+          />
+          <mew-button
+            title="Verify"
+            btn-size="xlarge"
+            :disabled="!canVerify"
+            class="mx-md-1 my-1"
+            @click.native="verify"
+          />
+        </div>
         <mew-warning-sheet
           class="mt-5 mb-0"
           title="NOT RECOMMENDED"
@@ -188,45 +172,43 @@
       =====================================================================================
       -->
       <template v-if="step === 3" #stepperContent3>
-        <mew6-white-sheet v-if="step === 3" class="pa-4 pa-sm-12">
-          <div class="d-flex align-center">
-            <div>
-              <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-              <div class="headline font-weight-bold mb-3">Well done!</div>
-              <p class="mb-6">
-                You are now ready to take advantage of all that Ethereum has to
-                offer! Access with mnemonic phrase should only be used in an
-                offline setting
-              </p>
-              <v-img
-                class="d-block d-sm-none mx-auto mt-12 mb-12"
-                max-width="170px"
-                src="@/assets/images/icons/icon-keystore-mew.png"
-              />
-
-              <div class="d-flex flex-column">
-                <mew-button
-                  title="Access Wallet"
-                  btn-size="xlarge"
-                  :has-full-width="false"
-                  class="mb-5"
-                  @click.native="goToAccess"
-                />
-                <mew-button
-                  title="Create Another Wallet"
-                  :has-full-width="false"
-                  btn-style="transparent"
-                  @click.native="updateStep(1)"
-                />
-              </div>
-            </div>
+        <div class="d-flex align-center">
+          <div>
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
+            <div class="headline font-weight-bold mb-3">Well done!</div>
+            <p class="mb-6">
+              You are now ready to take advantage of all that Ethereum has to
+              offer! Access with mnemonic phrase should only be used in an
+              offline setting
+            </p>
             <v-img
-              class="d-none d-sm-block ml-8"
-              max-width="250px"
+              class="d-block d-sm-none mx-auto mt-12 mb-12"
+              max-width="170px"
               src="@/assets/images/icons/icon-keystore-mew.png"
             />
+
+            <div class="d-flex flex-column">
+              <mew-button
+                title="Access Wallet"
+                btn-size="xlarge"
+                :has-full-width="false"
+                class="mb-5"
+                @click.native="goToAccess"
+              />
+              <mew-button
+                title="Create Another Wallet"
+                :has-full-width="false"
+                btn-style="transparent"
+                @click.native="updateStep(1)"
+              />
+            </div>
           </div>
-        </mew6-white-sheet>
+          <v-img
+            class="d-none d-sm-block ml-8"
+            max-width="250px"
+            src="@/assets/images/icons/icon-keystore-mew.png"
+          />
+        </div>
       </template>
     </mew-stepper>
   </div>
