@@ -354,13 +354,15 @@ export default {
       return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
-      return this.identifier === WALLET_TYPES.WEB3_WALLET;
+      return (
+        this.identifier === WALLET_TYPES.WEB3_WALLET ||
+        this.identifier === WALLET_TYPES.WALLET_CONNECT
+      );
     },
     isOtherWallet() {
       return (
         this.identifier === WALLET_TYPES.MEW_CONNECT ||
-        this.identifier === WALLET_TYPES.WALLET_LINK ||
-        this.identifier === WALLET_TYPES.WALLET_CONNECT
+        this.identifier === WALLET_TYPES.WALLET_LINK
       );
     },
     isNotSoftware() {
