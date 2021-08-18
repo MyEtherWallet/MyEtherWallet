@@ -21,6 +21,7 @@ import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import bitbox02Error from './errors-bitbox02/en_US';
+import satochipError from './errors-satochip/en_US';
 import buyHardwareWallet from './other/buy-hardware-wallet/en_US';
 import convertUnits from './other/convert-units/en_US';
 import verifyMessage from './other/verify-message/en_US';
@@ -66,6 +67,7 @@ const en_US = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   bitbox02Error: bitbox02Error,
+  satochipError: satochipError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
   convertUnits: convertUnits,

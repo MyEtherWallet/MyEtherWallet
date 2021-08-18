@@ -27,7 +27,7 @@ class SatochipWallet {
     this.resolveMap= new Map();
     this.requestID=0;
     this.ws= 0; 
-    this.reconnectInterval = (1 * 1000 * 60) / 4;
+    this.reconnectInterval = (1 * 1000 * 60) / 4; //time in ms
           
   } // end constructor()
   
@@ -55,7 +55,7 @@ class SatochipWallet {
       };
       const request = JSON.stringify(msg);
       
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         // send request to device and keep a ref of the resolve function in a map
         new Promise((resolve2) => {
           console.log('Satochip: resolveMap.size - before:' + this.resolveMap.size);
@@ -66,10 +66,14 @@ class SatochipWallet {
           //console.log('Satochip: resolveMap.size - after:' + this.resolveMap.size);
         }).then((res) => {
           console.log('In satochip-connect-tab: getChainCode: res: ', res);
-          resolve({
-            publicKey: res.pubkey,
-            chainCode: res.chaincode
-          });
+          if (res.exitstatus == 0){//no issue
+            resolve({
+              publicKey: res.pubkey,
+              chainCode: res.chaincode
+            });
+          }else{// there was an issue
+            reject(res.reason)
+          }
         });
       }) 
     });  
@@ -124,6 +128,8 @@ class SatochipWallet {
         mywallet.ws.onerror = function error() {
           console.log('disconnected with error!');
           mywallet.isConnected = false;
+          //throw new Error('Satochip: error while connecting to Satochip-Bridge')
+          errorHandler('Satochip: error while connecting to Satochip-Bridge')
         };
       } else {
         resolve(mywallet.ws);
@@ -151,7 +157,7 @@ class SatochipWallet {
       const request = JSON.stringify(msg);
       const chainId= tx_info.chainId;
       
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
           // send request to device and keep a ref of the resolve function in a map
           new Promise((resolve2) => {
             this.resolveMap.set(msg.requestID, resolve2);
@@ -160,9 +166,12 @@ class SatochipWallet {
           }).then((res) => {
             // extracts usefull data from device response and resolve original promise
             console.log('In satochip-connect-tab: signRawTransaction: res: ', res);
-            const payload={ v: (res.v+chainId*2+35), r:res.r, s:res.s}
-            resolve(payload);
-            
+            if (res.exitstatus == 0){//no issue
+              const payload={ v: (res.v+chainId*2+35), r:res.r, s:res.s}
+              resolve(payload);
+            }else{// there was an issue
+             reject(res.reason)
+            }
           });
       });
     });      
@@ -172,7 +181,8 @@ class SatochipWallet {
     console.log('Satochip: signMessage() START');
     // message is a hex-string prefixed with 0x
     if (!msg) {
-      throw Error('No message to sign');
+      //throw new Error('No message to sign');
+      errorHandler('No message to sign');
     }
    
     return this.connect().then((ws) => {
@@ -194,11 +204,16 @@ class SatochipWallet {
         }).then((res) => {
           // extracts usefull data from device response and resolve original promise
           console.log('Satochip: signMessage: result: ' + res);
-          const r = res.r;
-          const s = res.s;
-          const v = ('0' + res.v.toString(16)).slice(-2); //padd with '0'
-          const combined = '0x'+r + s + v; 
-          resolve(combined);
+          if (res.exitstatus == 0){//no issue
+            const r = res.r;
+            const s = res.s;
+            const v = ('0' + res.v.toString(16)).slice(-2); //padd with '0'
+            const combined = '0x'+r + s + v; 
+            resolve(combined);
+          }else{// there was an issue
+            //throw new Error(res.reason); //reject(res.reason)
+            errorHandler(res.reason)
+          }
         });
       });
     });

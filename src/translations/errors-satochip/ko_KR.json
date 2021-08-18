@@ -1,0 +1,15 @@
+{
+  "popup-closed": "Popup Closed",
+  "device-disconnect": "Device disconnected",
+  "device-disconnect-action": "device disconnected during action",
+  "user-cancelled-action": "Action cancelled by user",
+  "no-permission": "Permissions not granted",
+  "call-in-progress": "Device call in progress",
+  "cancelled": "Event cancelled by user",
+  "iframe-timeout": "Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
+  "popup-failed-to-open": "Popup failed to open.  Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
+  "connect-error": "Satochip: error while connecting to Satochip-Bridge. Make sure that Satochip-Bridge is up and running",
+  "noresponse-2FA": "Satochip: no response received from 2FA device",
+  "rejected-2FA": "Satochip: signing request rejected by user",
+  "no-card-found": "Satochip error: no card found! Please insert a Satochip"
+}
