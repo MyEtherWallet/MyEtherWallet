@@ -48,13 +48,13 @@
         <div class="d-flex align-center">
           <div class="mr-2 ml-n1 text-center" style="width: 40px">
             <v-icon v-if="b.title === gasPriceTypes.ECONOMY">mdi-check</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.REGULAR"
-              >mdi-arrow-up</v-icon
-            >
+            <v-icon v-if="b.title === gasPriceTypes.REGULAR">
+              mdi-arrow-up
+            </v-icon>
             <v-icon v-if="b.title === gasPriceTypes.FAST">mdi-arrow-up</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2"
-              >mdi-arrow-up</v-icon
-            >
+            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2">
+              mdi-arrow-up
+            </v-icon>
           </div>
           <div v-if="b.title === gasPriceTypes.ECONOMY">Normal priority</div>
           <div v-if="b.title === gasPriceTypes.REGULAR">Higher priority</div>

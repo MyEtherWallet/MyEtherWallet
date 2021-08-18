@@ -226,7 +226,6 @@
             :message="feeError"
             :not-enough-eth="notEnoughEth"
             :balance="displayBalance"
-            is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />

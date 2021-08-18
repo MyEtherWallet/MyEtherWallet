@@ -1,6 +1,5 @@
 <template>
   <mew-overlay
-    :title="title"
     :show-overlay="onSettings"
     :close="close"
     :back="back"
@@ -8,13 +7,14 @@
     :right-btn-text="$t('common.close')"
   >
     <template #mewOverlayBody>
-      <v-sheet
+      <mew6-white-sheet
         v-if="!editMode && !addMode"
-        class="mt-5"
-        max-width="700"
-        color="transparent"
+        class="pa-15 pt-4 modules--settings"
+        style="max-width: 744px"
       >
+        <div class="mew-subtitle text-center mb-10">{{ title }}</div>
         <mew-expand-panel
+          has-dividers
           :panel-items="panelItems"
           :idx-to-expand="idxToExpand"
         >
@@ -62,7 +62,7 @@
             <notifications />
           </template> -->
         </mew-expand-panel>
-      </v-sheet>
+      </mew6-white-sheet>
       <!--
     =====================================================================================
      Add / Edit Address Book overlay
@@ -74,18 +74,24 @@
         :mode="onMode"
         @back="back"
       />
+      <div class="mt-12">
+        Need help?
+        <a href="mailto:support@myetherwallet.com" target="_blank">
+          Contact support
+        </a>
+      </div>
     </template>
   </mew-overlay>
 </template>
 
 <script>
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import SettingsImportConfig from './components/SettingsImportConfig';
 import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
 const modes = ['add', 'edit'];
 
@@ -148,9 +154,14 @@ export default {
       return [
         {
           name: 'Gas price',
-          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
-            this.gasPriceType
-          })`
+          subtext: `✔
+          ${
+            this.gasPriceType === gasPriceTypes.ECONOMY ? 'Normal priority' : ''
+          }
+          ${
+            this.gasPriceType === gasPriceTypes.REGULAR ? 'Higher priority' : ''
+          }
+          ${this.gasPriceType === gasPriceTypes.FAST ? 'Highest priority' : ''}`
         },
         {
           name: 'Import configurations'
@@ -231,3 +242,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.modules--settings {
+  .mew-expand-panel .v-expansion-panel {
+    margin-bottom: -1px !important;
+    margin-top: 0px !important;
+  }
+}
+</style>

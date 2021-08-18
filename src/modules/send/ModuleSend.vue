@@ -79,7 +79,7 @@
       =====================================================================================
       -->
         <v-col cols="12" class="py-0">
-          <app-network-fee
+          <app-transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
             :error="feeError"
@@ -87,6 +87,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
+            :balance="selectedBalance"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
@@ -184,7 +185,7 @@ import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
@@ -192,7 +193,7 @@ export default {
     ModuleAddressBook,
     SendLowBalanceNotice,
     AppButtonBalance,
-    AppNetworkFee
+    AppTransactionFee
   },
   props: {
     prefilledAmount: {

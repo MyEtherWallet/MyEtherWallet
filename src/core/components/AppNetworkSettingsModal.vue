@@ -1,5 +1,5 @@
 <template>
-  <app-simple-dialog
+  <simple-dialog
     :value="gasPriceModal"
     width="400"
     title="Transaction fee"
@@ -13,18 +13,18 @@
       :gas-price="gasPrice"
       :open-global-settings="openSettings"
     />
-  </app-simple-dialog>
+  </simple-dialog>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import AppSimpleDialog from './AppSimpleDialog';
+import SimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 export default {
   components: {
-    AppSimpleDialog,
+    SimpleDialog,
     SettingsGasPrice
   },
   mixins: [gasPriceMixin],
