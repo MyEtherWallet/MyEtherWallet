@@ -34,5 +34,7 @@ module.exports = [
   'data:',
   'https://mainnet.infura.io:443',
   'https://api.zilliqa.com:443',
+  'https://cdn.live.ledger.com:443',
+  'https://app.lokalise.com:443',
   'https://registry.walletconnect.org:443/data/wallets.json'
 ];
