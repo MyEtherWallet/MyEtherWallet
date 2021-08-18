@@ -40,7 +40,7 @@ const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
 };
 
 const setBaseFeePerGas = function ({ commit }, valBN) {
-  commit('SET_BASE_FEE_PER_GAS', valBN.muln(2));
+  commit('SET_BASE_FEE_PER_GAS', valBN.muln(1.5));
 };
 export default {
   setOnlineStatus,

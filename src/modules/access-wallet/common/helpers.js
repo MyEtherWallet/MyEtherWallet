@@ -83,7 +83,13 @@ const getSignTransactionObject = tx => {
     rawTransaction: bufferToHex(tx.serialize()),
     tx: {
       nonce: bufferToHex(tx.nonce),
-      gasPrice: bufferToHex(tx.gasPrice),
+      gasPrice: tx.gasPrice
+        ? bufferToHex(tx.gasPrice)
+        : bufferToHex(tx.maxFeePerGas),
+      maxFeePerGas: tx.maxFeePerGas ? bufferToHex(tx.maxFeePerGas) : null,
+      maxPriorityFeePerGas: tx.maxPriorityFeePerGas
+        ? bufferToHex(tx.maxPriorityFeePerGas)
+        : null,
       gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
       to: bufferToHex(tx.to),
       value: bufferToHex(tx.value),

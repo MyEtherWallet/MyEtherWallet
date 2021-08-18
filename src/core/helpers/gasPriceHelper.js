@@ -82,11 +82,11 @@ const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
     case gasPriceTypes.ECONOMY:
       return minFee;
     case gasPriceTypes.REGULAR:
-      return priorityFeeBN.muln(0.5).lt(minFee)
-        ? minFee
+      return priorityFeeBN.muln(0.5).lt(minFee.muln(2))
+        ? minFee.muln(2)
         : priorityFeeBN.muln(0.5);
     case gasPriceTypes.FAST:
-      return priorityFeeBN.lt(minFee) ? minFee : priorityFeeBN;
+      return priorityFeeBN.lt(minFee.muln(4)) ? minFee.muln(4) : priorityFeeBN;
     default:
       return minFee;
   }

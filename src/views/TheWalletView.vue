@@ -101,15 +101,15 @@ export default {
         this.setTokens([]);
       }
     },
-    setPriorityFee(curBlock, baseFee) {
+    setPriorityFee(baseFee) {
       this.web3.eth.getGasPrice().then(gasPrice => {
         const priorityFee = toBN(gasPrice).sub(toBN(baseFee));
         this.setMaxPriorityFeePerGas(priorityFee);
       });
     },
-    checkAndSetBaseFee(baseFee, curBlock) {
+    checkAndSetBaseFee(baseFee) {
       if (baseFee) {
-        this.setPriorityFee(curBlock, baseFee);
+        this.setPriorityFee(baseFee);
         this.setBaseFeePerGas(toBN(baseFee));
       } else {
         this.setBaseFeePerGas(toBN('0'));
@@ -127,7 +127,7 @@ export default {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
-          this.checkAndSetBaseFee(block.baseFeePerGas, bNumber);
+          this.checkAndSetBaseFee(block.baseFeePerGas);
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
               this.setBaseFeePerGas(toBN(res.baseFeePerGas));

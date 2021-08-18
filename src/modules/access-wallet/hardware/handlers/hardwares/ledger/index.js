@@ -1,5 +1,5 @@
 import Ledger from '@ledgerhq/hw-app-eth';
-import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
+import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -68,7 +68,7 @@ class ledgerWallet {
     }
     const txSigner = async txParams => {
       const networkId = store.getters['global/network'].type.chainID;
-      const tokenInfo = byContractAddress(txParams.to);
+      const tokenInfo = byContractAddressAndChainId(txParams.to, networkId);
       if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const legacySigner = async _txParams => {
         const tx = new Transaction(_txParams, {
@@ -115,16 +115,24 @@ class ledgerWallet {
         const tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
+        const message = tx.getMessageToSign(false);
         try {
           // eslint-disable-next-line no-unused-vars
           const result = await this.ledger.signTransaction(
             accountPath,
-            tx.serialize().toString('hex')
+            message.toString('hex')
+          );
+          _txParams.v = '0x' + result.v;
+          _txParams.r = '0x' + result.r;
+          _txParams.s = '0x' + result.s;
+          return getSignTransactionObject(
+            FeeMarketEIP1559Transaction.fromTxData(_txParams)
           );
         } catch (e) {
           //old ledger eth app version
           if (e.message === 'Ledger device: UNKNOWN_ERROR (0x6501)')
             return legacySigner(txParams);
+          throw e;
         }
       } else {
         return legacySigner(txParams);
