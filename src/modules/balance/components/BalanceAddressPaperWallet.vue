@@ -1,39 +1,36 @@
 <template>
-  <div>
-    <mew-overlay
-      color-type="mewBg"
-      :show-overlay="open"
-      title="My paper wallet"
-      right-btn-text="Close"
-      :close="close"
-    >
-      <template v-if="open" #mewOverlayBody>
-        <v-sheet max-width="900px" color="transparent">
-          <mew6-white-sheet class="pa-3 pa-md-12">
-            <!--
-            ===============================================
-            Printable paper wallet content
-            ===============================================
-            -->
-            <div ref="printContainer" class="printable-wallet">
-              <paper-wallet-to-print />
-            </div>
+  <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
+    color-type="mewBg"
+    :show-overlay="isOverlayOpen"
+    title="My paper wallet"
+    content-size="xlarge"
+    :close="close"
+  >
+    <!--
+          ===============================================
+          Printable paper wallet content
+          ===============================================
+          -->
+    <div ref="printContainer" class="printable-wallet">
+      <paper-wallet-to-print />
+    </div>
 
-            <!--
-            ===============================================
-            Paper wallet to show
-            ===============================================
-            -->
-            <paper-wallet-to-display />
-          </mew6-white-sheet>
+    <!--
+          ===============================================
+          Paper wallet to show
+          ===============================================
+          -->
+    <paper-wallet-to-display />
 
-          <div class="d-flex justify-center mt-12 mb-10">
-            <mew-button title="Print" btn-size="xlarge" @click.native="print" />
-          </div>
-        </v-sheet>
-      </template>
-    </mew-overlay>
-  </div>
+    <div class="d-flex justify-center mt-12">
+      <mew-button title="Print" btn-size="xlarge" @click.native="print" />
+    </div>
+  </mew-overlay>
 </template>
 
 <script>
@@ -58,8 +55,17 @@ export default {
       type: Function
     }
   },
-  data() {
-    return {};
+  computed: {
+    isOverlayOpen() {
+      return !this.$vuetify.breakpoint.smAndDown && this.open;
+    }
+  },
+  watch: {
+    isOverlayOpen(val) {
+      if (val === false) {
+        this.$emit('close');
+      }
+    }
   },
   methods: {
     async print() {

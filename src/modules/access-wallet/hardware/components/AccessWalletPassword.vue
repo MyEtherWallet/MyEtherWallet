@@ -1,12 +1,5 @@
 <template>
-  <v-sheet
-    :outlined="true"
-    color="white"
-    :rounded="true"
-    class="pa-5 d-flex flex-column"
-    width="100%"
-    max-width="500px"
-  >
+  <div class="text-center">
     <div class="mt-2 mb-10 mew-heading-3 text-center">
       Please enter the password of your
       <span class="text-capitalize">{{ walletType }}</span> device.
@@ -36,7 +29,7 @@
       :link="link"
       class="justify-center"
     />
-  </v-sheet>
+  </div>
 </template>
 
 <script>

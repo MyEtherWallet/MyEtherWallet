@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--paper-wallet-content">
-    <v-container>
+    <v-container class="pa-0">
       <v-row>
         <v-col cols="12" md="6" class="d-flex align-center mr-auto">
           <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
@@ -8,7 +8,7 @@
             <span class="mx-3">|</span>Paper Wallet
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col class="pr-0" cols="auto">
           <div class="d-flex align-center mr-3 mb-2">
             <img
               class="mr-2"
@@ -30,10 +30,10 @@
     </v-container>
 
     <v-row class="mt-3 mt-md-12 d-flex align-center">
-      <v-col cols="12" md="2">
+      <v-col class="text-right pl-0" cols="12" md="2">
         <img :src="blockieImg" alt="Blockie Image" class="blockie-image" />
       </v-col>
-      <v-col col="auto">
+      <v-col class="pl-0" col="auto">
         <div style="max-width: 400px">
           <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
             My address icon
@@ -53,7 +53,7 @@
 
     <v-container>
       <v-row class="align-center mb-6">
-        <v-col cols="12" md="8" class="mr-auto">
+        <v-col cols="12" md="8" class="mr-auto pl-0">
           <div
             class="
               mew-heading-1
@@ -75,13 +75,13 @@
             {{ getChecksumAddressString }}
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col class="pr-0" cols="auto">
           <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
       <v-row v-if="showPrivateKey">
-        <v-col cols="12" md="8" class="mr-auto">
+        <v-col cols="12" md="8" class="mr-auto pl-0">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
@@ -103,7 +103,7 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto">
+        <v-col class="pr-0" cols="auto">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>
@@ -160,8 +160,8 @@ export default {
 
 <style lang="scss" scoped>
 .blockie-image {
-  height: 110px;
-  width: 110px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
 }
 </style>

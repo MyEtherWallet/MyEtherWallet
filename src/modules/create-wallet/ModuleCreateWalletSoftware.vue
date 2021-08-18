@@ -6,42 +6,44 @@
     =====================================================================================
     -->
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="open"
       :title="typeTitle"
-      :right-btn-text="$t('common.cancel')"
-      :left-btn-text="backBtnText"
       :close="close"
       :back="goBack"
+      content-size="large"
     >
-      <template #mewOverlayBody>
-        <!--
+      <!--
         =====================================================================================
          Overview: prompts user to select options
         =====================================================================================
         -->
-        <create-wallet-software-overview
-          v-if="isOverview"
-          @typeSelect="setType"
-        />
-        <!--
+      <create-wallet-software-overview
+        v-if="isOverview"
+        @typeSelect="setType"
+      />
+      <!--
         =====================================================================================
          Create using Keystore
         =====================================================================================
         -->
-        <create-wallet-keystore
-          v-else-if="isKeystore"
-          :handler-create-wallet="walletHandler"
-        />
-        <!--
+      <create-wallet-keystore
+        v-else-if="isKeystore"
+        :handler-create-wallet="walletHandler"
+      />
+      <!--
         =====================================================================================
          Create using Mnemonic
         =====================================================================================
         -->
-        <create-wallet-mnemonic-phrase
-          v-else-if="isMnemonic"
-          :handler-create-wallet="walletHandler"
-        />
-      </template>
+      <create-wallet-mnemonic-phrase
+        v-else-if="isMnemonic"
+        :handler-create-wallet="walletHandler"
+      />
     </mew-overlay>
   </div>
 </template>
@@ -103,13 +105,6 @@ export default {
         : this.walletType === this.types.KEYSTORE
         ? 'Create Wallet with Keystore File'
         : 'Create wallet using software';
-    },
-    /**
-     * @returns back button text
-     * if overview, button text is empty
-     */
-    backBtnText() {
-      return this.isMnemonic || this.isKeystore ? '' : 'Back to Create Wallet';
     }
   },
   mounted() {

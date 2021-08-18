@@ -7,26 +7,23 @@
   <mew-overlay
     :show-overlay="open"
     title="Repay"
-    right-btn-text="Close"
     :close="close"
     class="mew-component--aave-repay-overlay"
   >
-    <template #mewOverlayBody>
-      <div>
-        <aave-amount-form
-          :selected-token="preSelectedToken"
-          :handler="handler"
-          :show-toggle="aaveRepayForm.showToggle"
-          :left-side-values="aaveRepayForm.leftSideValues"
-          :right-side-values="aaveRepayForm.rightSideValues"
-          :form-text="aaveRepayForm.formText"
-          :button-title="aaveRepayForm.buttonTitle"
-          :token-balance="totalBorrow"
-          @cancel="handleCancel"
-          @emitValues="handleRepayAmount"
-        />
-      </div>
-    </template>
+    <div>
+      <aave-amount-form
+        :selected-token="preSelectedToken"
+        :handler="handler"
+        :show-toggle="aaveRepayForm.showToggle"
+        :left-side-values="aaveRepayForm.leftSideValues"
+        :right-side-values="aaveRepayForm.rightSideValues"
+        :form-text="aaveRepayForm.formText"
+        :button-title="aaveRepayForm.buttonTitle"
+        :token-balance="totalBorrow"
+        @cancel="handleCancel"
+        @emitValues="handleRepayAmount"
+      />
+    </div>
   </mew-overlay>
 </template>
 

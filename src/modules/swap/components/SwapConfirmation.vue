@@ -1,41 +1,41 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="show"
     :title="'Confirmation'"
-    left-btn-text="back"
     :back="backFunc"
     :close="backFunc"
   >
-    <template #mewOverlayBody>
-      <v-sheet max-width="600px" class="pa-8">
-        <div class="text-center mb-5">
-          <h2 class="error--text">{{ timeLeftStr }}</h2>
-          <div class="searchText--text font-weight-bold text-uppercase">
-            Time Remaining
-          </div>
-        </div>
-        <from-to-block
-          :from="from"
-          :to="to"
-          :from-type="fromType"
-          :to-type="toType"
-          :from-img="fromImg"
-          :to-img="toImg"
-          :from-val="fromVal"
-          :to-val="toVal"
-          class="mb-8"
-        />
-        <div class="d-flex justify-center my-8">
-          <mew-button
-            btn-size="xlarge"
-            title="Confirm and Swap"
-            :disabled="!sendEnabled"
-            @click.native="send"
-          />
-        </div>
-        <mew-warning-sheet :description="warningDescription" />
-      </v-sheet>
-    </template>
+    <div class="text-center mb-5">
+      <h2 class="error--text">{{ timeLeftStr }}</h2>
+      <div class="searchText--text font-weight-bold text-uppercase">
+        Time Remaining
+      </div>
+    </div>
+    <from-to-block
+      :from="from"
+      :to="to"
+      :from-type="fromType"
+      :to-type="toType"
+      :from-img="fromImg"
+      :to-img="toImg"
+      :from-val="fromVal"
+      :to-val="toVal"
+      class="mb-8"
+    />
+    <div class="d-flex justify-center my-8">
+      <mew-button
+        btn-size="xlarge"
+        title="Confirm and Swap"
+        :disabled="!sendEnabled"
+        @click.native="send"
+      />
+    </div>
+    <mew-warning-sheet :description="warningDescription" />
   </mew-overlay>
 </template>
 

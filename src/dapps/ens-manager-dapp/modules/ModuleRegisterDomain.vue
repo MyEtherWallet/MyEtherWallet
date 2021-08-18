@@ -1,37 +1,40 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="onRegister"
     :title="$t('ens.register-domain')"
-    :right-btn-text="$t('common.cancel')"
+    content-size="xlarge"
     :close="close"
   >
-    <template #mewOverlayBody>
-      <mew-stepper :items="stepperItems" :on-step="onStep">
-        <template #stepperContent1
-          ><request
-            v-if="onStep === 1"
-            class="mt-3"
-            :name="name"
-            :host-name="parsedHostName"
-            :loading="checkingDomainAvail"
-            :get-rent-price="getRentPrice"
-            @onRequest="onRequest"
-        /></template>
-        <template #stepperContent2
-          ><register
-            v-if="onStep === 2"
-            class="mt-3"
-            :name="name"
-            :duration="duration"
-            :register="register"
-            :commit="commit"
-            :committed="committed"
-            :minimum-age="minimumAge"
-            :loading-commit="loadingCommit"
-        /></template>
-        <template #stepperContent3><complete v-if="onStep === 3" /></template>
-      </mew-stepper>
-    </template>
+    <mew-stepper :items="stepperItems" :on-step="onStep">
+      <template #stepperContent1
+        ><request
+          v-if="onStep === 1"
+          class="mt-3"
+          :name="name"
+          :host-name="parsedHostName"
+          :loading="checkingDomainAvail"
+          :get-rent-price="getRentPrice"
+          @onRequest="onRequest"
+      /></template>
+      <template #stepperContent2
+        ><register
+          v-if="onStep === 2"
+          class="mt-3"
+          :name="name"
+          :duration="duration"
+          :register="register"
+          :commit="commit"
+          :committed="committed"
+          :minimum-age="minimumAge"
+          :loading-commit="loadingCommit"
+      /></template>
+      <template #stepperContent3><complete v-if="onStep === 3" /></template>
+    </mew-stepper>
   </mew-overlay>
 </template>
 
