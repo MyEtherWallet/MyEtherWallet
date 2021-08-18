@@ -22,17 +22,17 @@ export function createApolloClient(httpsEndpoint, wsEndpoint) {
 
   const websocket = new WebSocketLink(subscriptionClient);
 
-  const onErrorLink = onError(({ graphQLErrors }) => {
-    if (graphQLErrors && process.env.NODE_ENV !== 'production') {
-      graphQLErrors.map(({ message, locations, path }) => {
+  const onErrorLink = onError(error => {
+    if (error.graphQLErrors && process.env.NODE_ENV !== 'production') {
+      error.graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
         // eslint-disable-next-line
         console.error(newError);
       });
     }
 
-    if (graphQLErrors && process.env.NODE_ENV === 'production') {
-      graphQLErrors.map(({ message, locations, path }) => {
+    if (error.graphQLErrors && process.env.NODE_ENV === 'production') {
+      error.graphQLErrors.map(({ message, locations, path }) => {
         const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`;
         Sentry.captureException(newError);
       });
