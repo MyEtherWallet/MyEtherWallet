@@ -16,7 +16,7 @@
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row class="pa-5 full-width text-center rounded subtitle-container"
+    <v-row class="pa-5 mb-4 full-width text-center rounded subtitle-container"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
         <!-- TODO: add link -->
@@ -34,11 +34,11 @@
                 Different hardware instances
               =====================================================================================
               -->
-      <v-row justify="start">
+      <v-row no-gutters justify="start">
         <v-col
-          v-for="button in buttons"
+          v-for="(button, idx) in buttons"
           :key="button.label"
-          class="button-container"
+          :class="['button-container pb-2', idx % 2 == 0 ? 'pr-2' : '']"
           cols="12"
           md="6"
         >
