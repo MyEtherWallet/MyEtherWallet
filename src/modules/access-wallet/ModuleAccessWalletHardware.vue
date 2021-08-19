@@ -6,9 +6,9 @@
 -->
   <mew-overlay
     :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
+      text: step === 1 ? 'Need help? Read about' : 'Need help? Read',
+      linkTitle: footerLink.title,
+      link: footerLink.url
     }"
     :show-overlay="open"
     :title="title"
@@ -82,13 +82,13 @@
           Cool Wallet
         =====================================================================================
         -->
-      <span>Cool Wallet</span>
+      <span v-if="onCoolWallet">Cool Wallet</span>
       <!--
         =====================================================================================
           Ledger
         =====================================================================================
         -->
-      <span>Ledger</span>
+      <span v-if="onLedger">Ledger</span>
       <!--
         =====================================================================================
           Trezor
@@ -290,6 +290,22 @@ export default {
       return appPaths[0].network.icon;
     },
     /**
+     * Footer links to display beneath container
+     * TODO: get link urls from Russ
+     */
+    footerLink() {
+      if (this.onKeepkey) {
+        return {
+          title: 'Using a KeepKey Hardware wallet with MEW',
+          url: 'https://www.mewtopia.com/'
+        };
+      }
+      return {
+        title: 'Hardware Wallets',
+        url: 'https://www.mewtopia.com/'
+      };
+    },
+    /**
      * On Bitbox
      */
     onBitbox() {
@@ -315,6 +331,12 @@ export default {
      */
     onKeepkey() {
       return this.walletType === WALLET_TYPES.KEEPKEY;
+    },
+    /**
+     * On Trezor
+     */
+    onTrezor() {
+      return this.walletType === WALLET_TYPES.TREZOR;
     },
     /**
      * On Password step
