@@ -547,15 +547,12 @@ export default {
     commit() {
       this.nameHandler
         .createCommitment()
-        .on('transactionHash', hash => {
-          console.log(hash, 'i got the hash, calling minimum age');
+        .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
-            console.log(resp, 'got minimum age');
           });
         })
-        .on('receipt', res => {
-          console.log(res, 'i got the res');
+        .on('receipt', () => {
           this.loadingCommit = true;
           this.committed = false;
           setTimeout(() => {

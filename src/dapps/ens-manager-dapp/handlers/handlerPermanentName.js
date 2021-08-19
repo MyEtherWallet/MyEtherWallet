@@ -143,15 +143,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
             promiEvent.emit('transactionHash', hash)
           )
           .once('receipt', receipt => {
-            console.log('gets here once', receipt);
             return promiEvent.emit('receipt', receipt);
           })
           .on('receipt', receipt => {
-            console.log('gets here on', receipt);
             return promiEvent.emit('receipt', receipt);
           })
           .on('confirmation', (confNumber, receipt) => {
-            console.log('gets here on', confNumber);
             return promiEvent.emit('receipt', receipt);
           })
           .on('error', err => promiEvent.emit('error', err))
