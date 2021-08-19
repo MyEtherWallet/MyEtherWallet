@@ -75,13 +75,24 @@
                 label="To"
                 @input="setToToken"
               />
-              <mew-input
+              <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+              <v-text-field
                 label="Amount"
                 placeholder="0"
                 type="number"
-                disabled
+                :hide-clear-btn="true"
                 :value="tokenOutValue"
+                readonly="true"
+                outlined
               />
+              <!-- <mew-input
+                label="Amount"
+                placeholder="0"
+                type="number"
+                :hide-clear-btn="true"
+                :value="tokenOutValue"
+                readonly="true"
+              /> -->
             </v-col>
           </v-row>
 
@@ -1210,5 +1221,10 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
+}
+
+.swap-to-input {
+  pointer-events: none !important;
+  user-select: none !important;
 }
 </style>

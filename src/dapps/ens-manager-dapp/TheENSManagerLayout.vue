@@ -535,7 +535,7 @@ export default {
           Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
           this.closeRegister();
         })
-        .on('receipt', () => {
+        .once('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
@@ -547,12 +547,15 @@ export default {
     commit() {
       this.nameHandler
         .createCommitment()
-        .on('transactionHash', () => {
+        .on('transactionHash', hash => {
+          console.log(hash, 'i got the hash, calling minimum age');
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
+            console.log(resp, 'got minimum age');
           });
         })
-        .on('receipt', () => {
+        .on('receipt', res => {
+          console.log(res, 'i got the res');
           this.loadingCommit = true;
           this.committed = false;
           setTimeout(() => {
