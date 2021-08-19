@@ -47,22 +47,40 @@
       >
         <div class="d-flex align-center">
           <div class="mr-2 ml-n1 text-center" style="width: 40px">
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY">mdi-check</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.REGULAR">
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+              mdi-check
+            </v-icon>
+            <v-icon v-if="b.title === gasPriceTypes.REGULAR" color="textBlack">
               mdi-arrow-up
             </v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.FAST">mdi-arrow-up</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2">
+            <v-icon v-if="b.title === gasPriceTypes.FAST" color="textBlack">
+              mdi-arrow-up
+            </v-icon>
+            <v-icon
+              v-if="b.title === gasPriceTypes.FAST"
+              color="textBlack"
+              class="ml-n2"
+            >
               mdi-arrow-up
             </v-icon>
           </div>
-          <div v-if="b.title === gasPriceTypes.ECONOMY">Normal priority</div>
-          <div v-if="b.title === gasPriceTypes.REGULAR">Higher priority</div>
-          <div v-if="b.title === gasPriceTypes.FAST">Highest priority</div>
+          <div v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+            Normal priority
+          </div>
+          <div v-if="b.title === gasPriceTypes.REGULAR" color="textBlack">
+            Higher priority
+          </div>
+          <div v-if="b.title === gasPriceTypes.FAST" color="textBlack">
+            Highest priority
+          </div>
         </div>
         <div class="text-right">
-          <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
-          <div class="mew-label">+{{ b.gas | twoDecimalPoint }} Gwei</div>
+          <div class="mew-label textSecondary--text">
+            +{{ b.usd }} {{ b.time }}
+          </div>
+          <div class="mew-label textSecondary--text">
+            +{{ b.gas | twoDecimalPoint }} Gwei
+          </div>
         </div>
       </div>
     </div>
@@ -141,15 +159,18 @@ export default {
 .group-button {
   padding: 10px;
   border-radius: 10px;
-  background-color: #d0f4f8;
-  opacity: 0.5;
+  background-color: #f4f6f8;
+  //opacity: 0.5;
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
+  &:hover {
+    background-color: #e9eff4;
+  }
   &.active {
-    border: 2px solid var(--v-primary-base);
-    background-color: #e1f7f4;
+    border: 2px solid #31c0a5;
+    background-color: #d5edef;
     opacity: 1;
   }
 }
