@@ -380,7 +380,7 @@ export default {
     title() {
       return this.step === 1
         ? 'Select a hardware wallet'
-        : this.wallets[this.walletType];
+        : this.wallets[this.walletType].title;
     }
   },
   watch: {
