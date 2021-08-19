@@ -16,7 +16,9 @@
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row class="pa-5 mb-4 full-width text-center rounded subtitle-container"
+    <v-row
+      v-if="step === 1"
+      class="pa-5 mb-4 full-width text-center rounded subtitle-container"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
         <!-- TODO: add link -->
