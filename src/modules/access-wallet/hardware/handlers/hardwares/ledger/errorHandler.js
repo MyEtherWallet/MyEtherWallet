@@ -42,7 +42,9 @@ const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
     'ledgerError.denied-by-user-0x6985',
   "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
-    'ledgerError.unsupported-browser-u2f'
+    'ledgerError.unsupported-browser-u2f',
+  'Ledger device: Incorrect length (0x6700)':
+    'Wrong or No app selected in Ledger Device'
 };
 
 export default WalletErrorHandler(ERRORS, WARNINGS);

@@ -1,5 +1,6 @@
 import xss from 'xss';
 import { SOFTWARE_WALLET_TYPES } from '@/modules/access-wallet/software/handlers/helpers';
+import { ROUTES_WALLET } from '../configs/configRoutes';
 
 const ACCESS_VALID_OVERLAYS = {
   HARDWARE: 'hardware',
@@ -130,6 +131,56 @@ const swapRouterGuard = (to, from, next) => {
   }
 };
 
+const ensRouterGuard = (to, from, next) => {
+  if (
+    // ENS MANAGER => ENS 1
+    from.name == ROUTES_WALLET.ENS_MANAGER.NAME &&
+    to.name == ROUTES_WALLET.ENS_1.NAME
+  ) {
+    next();
+  } else if (
+    // ENS 1 => ENS 2
+    from.name == ROUTES_WALLET.ENS_1.NAME &&
+    to.name == ROUTES_WALLET.ENS_2.NAME
+  ) {
+    next();
+  } else if (
+    // ENS 2 => ENS 3
+    from.name == ROUTES_WALLET.ENS_2.NAME &&
+    to.name == ROUTES_WALLET.ENS_3.NAME
+  ) {
+    next();
+  }
+};
+
+const stakedRouterGuard = (to, from, next) => {
+  if (
+    // STAKED => STAKED 1
+    from.name == ROUTES_WALLET.STAKED.NAME &&
+    to.name == ROUTES_WALLET.STAKED_1.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 1 => STAKED 2
+    from.name == ROUTES_WALLET.STAKED_1.NAME &&
+    to.name == ROUTES_WALLET.STAKED_2.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 2 => STAKED 3
+    from.name == ROUTES_WALLET.STAKED_2.NAME &&
+    to.name == ROUTES_WALLET.STAKED_3.NAME
+  ) {
+    next();
+  } else if (
+    // STAKED 3 => STAKED 4
+    from.name == ROUTES_WALLET.STAKED_3.NAME &&
+    to.name == ROUTES_WALLET.STAKED_4.NAME
+  ) {
+    next();
+  }
+};
+
 export {
   createWalletProps,
   createRouteGuard,
@@ -137,5 +188,7 @@ export {
   accessRouteGuard,
   ACCESS_VALID_OVERLAYS,
   swapProps,
-  swapRouterGuard
+  swapRouterGuard,
+  ensRouterGuard,
+  stakedRouterGuard
 };

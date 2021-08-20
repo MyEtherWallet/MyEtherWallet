@@ -354,16 +354,22 @@ export default {
       return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
-      return this.identifier === WALLET_TYPES.WEB3_WALLET;
+      return (
+        this.identifier === WALLET_TYPES.WEB3_WALLET ||
+        this.identifier === WALLET_TYPES.WALLET_CONNECT
+      );
     },
-    isMewConnect() {
-      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    isOtherWallet() {
+      return (
+        this.identifier === WALLET_TYPES.MEW_CONNECT ||
+        this.identifier === WALLET_TYPES.WALLET_LINK
+      );
+    },
+    isNotSoftware() {
+      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
     },
     showConfirmWithWallet() {
-      return (
-        (this.isHardware || this.isWeb3Wallet) &&
-        (this.signing || this.error !== '')
-      );
+      return this.isNotSoftware && (this.signing || this.error !== '');
     },
     transactions() {
       const newArr =
@@ -732,7 +738,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -768,7 +774,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -811,7 +817,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
     },
