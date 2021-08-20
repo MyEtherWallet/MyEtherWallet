@@ -968,6 +968,11 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+      // Check if (in amount) is larger than (available balance)
+      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+        this.step = 0;
+        return;
+      }
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
