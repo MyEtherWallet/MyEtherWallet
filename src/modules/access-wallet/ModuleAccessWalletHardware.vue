@@ -61,7 +61,7 @@
               Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-    <div class="full-width" v-if="step === 2">
+    <div v-if="step === 2" class="full-width">
       <!--
         =====================================================================================
           Bitbox2
@@ -88,13 +88,42 @@
           Ledger
         =====================================================================================
         -->
-      <span v-if="onLedger">Ledger</span>
+      <span v-if="onLedger">
+        <div class="subtitle-1 font-weight-bold">Connecting to:</div>
+        <div>
+          <mew-select v-if="onLedger" v-model="ledgerApp" :items="ledgerApps" />
+          <div class="d-flex flex-column align-center justify-center">
+            <div class="pl-4">
+              <v-img
+                :src="
+                  require('@/assets/images/hardware-wallets/ledger-graphic.svg')
+                "
+                alt="Ledger Wallet"
+                max-width="21em"
+                max-height="10em"
+                contain
+              />
+            </div>
+            <v-card-title>
+              Connect your Ledger device and open Ethereum app
+            </v-card-title>
+          </div>
+        </div>
+        <div class="text-center">
+          <mew-button
+            btn-size="xlarge"
+            title="Unlock wallet"
+            has-full-width="true"
+            @click.native="nextStep"
+          />
+        </div>
+      </span>
       <!--
         =====================================================================================
           Trezor
         =====================================================================================
         -->
-      <span>Trezor</span>
+      <span v-if="onTrezor">Trezor</span>
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
