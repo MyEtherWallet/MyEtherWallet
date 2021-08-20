@@ -123,7 +123,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 import formatNotification from './helpers/formatNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+// import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleNotifications',
@@ -303,11 +303,11 @@ export default {
       }
     },
     openNotifications() {
-      this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
+      // this.$router.push({ name: ROUTES_WALLET.NOTIFICATIONS.NAME });
       this.isOpenNotifications = true;
     },
     closeNotifications() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
       this.isOpenNotifications = false;
     }
   }
