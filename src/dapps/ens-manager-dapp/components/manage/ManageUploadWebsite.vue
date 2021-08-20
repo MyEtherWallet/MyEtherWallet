@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <div
       v-if="settingIpfs"
       class="d-flex flex-column align-center justify-center"

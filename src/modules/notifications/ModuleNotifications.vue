@@ -37,77 +37,70 @@
       </div>
     </div>
     <mew-overlay
-      left-btn-text=""
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
+      title="Notifications"
+      content-size="large"
       :show-overlay="isOpenNotifications"
-      right-btn-text="Close"
-      @closeOverlay="closeNotifications"
+      :close="closeNotifications"
     >
-      <template #mewOverlayBody>
-        <v-sheet class="transparent" max-width="735px" width="100%">
-          <v-sheet
-            color="transparent"
-            max-width="350px"
-            class="d-flex align-center justify-space-between mx-auto mb-6"
-          >
-            <div>
-              <v-icon color="primary" large> mdi-circle-medium </v-icon>
-              Success
-            </div>
-            <div>
-              <v-icon color="orange" large> mdi-circle-medium </v-icon>
-              Pending
-            </div>
-            <div>
-              <v-icon color="error" large> mdi-circle-medium </v-icon>
-              Failed
-            </div>
-          </v-sheet>
-          <h2 class="text-center mb-2">Notifications</h2>
-          <div class="d-flex align-center justify-end">
-            <!-- <div>
+      <v-sheet class="transparent" max-width="735px" width="100%">
+        <v-sheet
+          color="transparent"
+          max-width="350px"
+          class="d-flex align-center justify-space-between mx-auto mb-6"
+        >
+          <div>
+            <v-icon color="primary" large> mdi-circle-medium </v-icon>
+            Success
+          </div>
+          <div>
+            <v-icon color="orange" large> mdi-circle-medium </v-icon>
+            Pending
+          </div>
+          <div>
+            <v-icon color="error" large> mdi-circle-medium </v-icon>
+            Failed
+          </div>
+        </v-sheet>
+        <div class="d-flex align-center justify-end">
+          <!-- <div>
             <div>6 notifications</div>
             <v-btn depressed x-small color="textSecondary" dark>
               Delete all
             </v-btn>
           </div> -->
-            <v-sheet color="transparent" max-width="150px">
-              <v-select
-                v-model="selected"
-                flat
-                solo
-                :items="items"
-                item-text="label"
-                item-value="val"
-              ></v-select>
-            </v-sheet>
-          </div>
-          <mew6-white-sheet>
-            <div class="pa-4">
-              <div
-                v-for="(data, key) in notificationsByType"
-                v-show="!loading && notificationsByType.length > 0"
-                :key="key"
-                class="mt-2"
-              >
-                <mew-notification
-                  :notification="data.notification"
-                  @click.native="markNotificationAsRead(data)"
-                />
-              </div>
-              <div
-                v-show="notificationsByType.length === 0"
-                class="pa-5 text-center"
-              >
-                <h3 class="mb-5">No notifications to display for:</h3>
-                <h3 class="break-hash">{{ address }}</h3>
-              </div>
-            </div>
-          </mew6-white-sheet>
-        </v-sheet>
-        <!-- <div class="text-center py-6">
+          <v-sheet color="transparent" max-width="150px">
+            <mew-select
+              :has-filter="false"
+              :is-custom="false"
+              :items="items"
+              @input="setSelected"
+            />
+          </v-sheet>
+        </div>
+        <div
+          v-for="(data, key) in notificationsByType"
+          v-show="!loading && notificationsByType.length > 0"
+          :key="key"
+          class="mt-2"
+        >
+          <mew-notification
+            :notification="data.notification"
+            @click.native="markNotificationAsRead(data)"
+          />
+        </div>
+        <div v-show="notificationsByType.length === 0" class="pa-5 text-center">
+          <h3 class="mb-5">No notifications to display for:</h3>
+          <h3 class="break-hash">{{ address }}</h3>
+        </div>
+      </v-sheet>
+      <!-- <div class="text-center py-6">
         <v-pagination v-model="page" :length="6"></v-pagination>
       </div> -->
-      </template>
     </mew-overlay>
   </div>
 </template>
@@ -138,10 +131,10 @@ export default {
     return {
       selected: NOTIFICATION_TYPES.ALL,
       items: [
-        { label: 'All', val: NOTIFICATION_TYPES.ALL },
-        { label: 'In', val: NOTIFICATION_TYPES.IN },
-        { label: 'Out', val: NOTIFICATION_TYPES.OUT },
-        { label: 'Swap', val: NOTIFICATION_TYPES.SWAP }
+        { name: 'All', value: NOTIFICATION_TYPES.ALL },
+        { name: 'In', value: NOTIFICATION_TYPES.IN },
+        { name: 'Out', value: NOTIFICATION_TYPES.OUT },
+        { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
       ],
       isOpenNotifications: false,
       statusCheckTimer: null
@@ -251,6 +244,12 @@ export default {
   },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
+    /**
+     * Set the filter value
+     */
+    setSelected(input) {
+      this.selected = input.value;
+    },
     sortByDate(a, b) {
       return new Date(b.date) - new Date(a.date);
     },

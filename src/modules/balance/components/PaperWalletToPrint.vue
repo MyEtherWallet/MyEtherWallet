@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-12 d-flex align-center">
+    <div class="mt-12 pl-0 d-flex align-center">
       <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
 
       <div style="max-width: 400px">
@@ -43,7 +43,7 @@
 
     <v-divider class="my-6"></v-divider>
 
-    <v-container>
+    <v-container class="pa-0">
       <v-row class="align-center mb-6">
         <v-col cols="8">
           <div class="mew-heading-1 font-weight-black text-uppercase">
@@ -134,8 +134,8 @@ export default {
 }
 
 .blockie-image {
-  height: 110px;
-  width: 110px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
 }
 </style>

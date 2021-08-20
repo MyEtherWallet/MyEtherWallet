@@ -6,101 +6,99 @@
     =====================================================================================
     -->
     <template v-if="step === 1" #stepperContent1>
-      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
-        <v-row class="align-end justify-start mb-3 mb-md-5">
-          <v-col cols="12">
-            <!--
-            =====================================================================================
-              Title
-            =====================================================================================
-            -->
-            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-            <div class="headline font-weight-bold">
-              Enter your Mnemonic Phrase
-            </div>
-            <p class="mb-3">
-              Please type the mnemonic phrase you wrote down in the right order.
-            </p>
-            <!--
-            =====================================================================================
-             Select number of words
-            =====================================================================================
-            -->
-            <div class="d-flex flex-row-reverse pb-4">
-              <v-select
-                v-model="length"
-                style="max-width: 150px"
-                hide-details
-                dense
-                item-text="label"
-                item-value="value"
-                :items="mnemonicOptions"
-                label=""
-                outlined
-              ></v-select>
-            </div>
-            <!--
-            =====================================================================================
-             Enter Phrase Block
-            =====================================================================================
-            -->
-            <phrase-block class="mb-8">
-              <v-row>
-                <v-col
-                  v-for="n in length"
-                  :key="`mnemonicInput${n}`"
-                  cols="6"
-                  lg="3"
-                  md="3"
-                  sm="4"
-                >
-                  <v-text-field
-                    :ref="`mnemonicInput${n}`"
-                    v-model="phrase[n]"
-                    :name="`mnemonicInput${n}`"
-                    :label="`${n}.`"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </phrase-block>
-            <!--
-            =====================================================================================
-             Extra Word
-            =====================================================================================
-            -->
-            <mew-expand-panel
-              :has-dividers="true"
-              :panel-items="extraWordPanel"
-              :idx-to-expand="null"
-            >
-              <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
-              </template>
-            </mew-expand-panel>
-            <!--
-            =====================================================================================
-             Next Button
-            =====================================================================================
-            -->
-            <v-row dense class="align-center justify-center pt-4">
-              <v-col cols="12" sm="4">
-                <mew-button
-                  has-full-width
-                  title="Next"
-                  btn-size="xlarge"
-                  :disabled="!isValidMnemonic"
-                  @click.native="unlockBtn"
-                />
+      <v-row class="align-end justify-start mb-3 mb-md-5">
+        <v-col cols="12">
+          <!--
+          =====================================================================================
+            Title
+          =====================================================================================
+          -->
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+          <div class="headline font-weight-bold">
+            Enter your Mnemonic Phrase
+          </div>
+          <p class="mb-3">
+            Please type the mnemonic phrase you wrote down in the right order.
+          </p>
+          <!--
+          =====================================================================================
+            Select number of words
+          =====================================================================================
+          -->
+          <div class="d-flex flex-row-reverse pb-4">
+            <v-select
+              v-model="length"
+              style="max-width: 150px"
+              hide-details
+              dense
+              item-text="label"
+              item-value="value"
+              :items="mnemonicOptions"
+              label=""
+              outlined
+            ></v-select>
+          </div>
+          <!--
+          =====================================================================================
+            Enter Phrase Block
+          =====================================================================================
+          -->
+          <phrase-block class="mb-8">
+            <v-row>
+              <v-col
+                v-for="n in length"
+                :key="`mnemonicInput${n}`"
+                cols="6"
+                lg="3"
+                md="3"
+                sm="4"
+              >
+                <v-text-field
+                  :ref="`mnemonicInput${n}`"
+                  v-model="phrase[n]"
+                  :name="`mnemonicInput${n}`"
+                  :label="`${n}.`"
+                ></v-text-field>
               </v-col>
             </v-row>
-          </v-col>
-        </v-row>
-      </v-sheet>
+          </phrase-block>
+          <!--
+          =====================================================================================
+            Extra Word
+          =====================================================================================
+          -->
+          <mew-expand-panel
+            :has-dividers="true"
+            :panel-items="extraWordPanel"
+            :idx-to-expand="null"
+          >
+            <template #panelBody1>
+              <mew-input
+                v-model="extraWord"
+                type="password"
+                label="Enter Extra word"
+                placeholder="Enter your extra word"
+              />
+            </template>
+          </mew-expand-panel>
+          <!--
+          =====================================================================================
+            Next Button
+          =====================================================================================
+          -->
+          <v-row dense class="align-center justify-center pt-4">
+            <v-col cols="12" sm="4">
+              <mew-button
+                has-full-width
+                title="Next"
+                btn-size="xlarge"
+                :disabled="!isValidMnemonic"
+                @click.native="unlockBtn"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
     </template>
     <!--
     =====================================================================================
@@ -108,185 +106,178 @@
     =====================================================================================
     -->
     <template v-if="step === 2" #stepperContent2>
-      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
-        <v-row class="align-end justify-start">
-          <v-col cols="12">
-            <!--
+      <v-row class="align-end justify-start">
+        <v-col cols="12">
+          <!--
             =====================================================================================
               Title
             =====================================================================================
             -->
-            <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-            <div class="headline font-weight-bold mb-5">
-              Select Address and Network
-            </div>
-          </v-col>
-        </v-row>
-        <v-row class="align-center justify-start">
-          <v-col cols="4">
-            <div class="headline font-weight-bold mb-5">Derivation Path:</div>
-          </v-col>
-          <v-col cols="6" offset="2">
-            <mew-select
-              v-model="selectedPath"
-              label="Select Path"
-              :has-filter="true"
-              :items="parsedPaths"
-              filter-placeholder="Search Path"
-            />
-          </v-col>
-        </v-row>
-        <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
-          <!--
+          <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+          <div class="headline font-weight-bold mb-5">
+            Select Address and Network
+          </div>
+        </v-col>
+      </v-row>
+      <v-row class="align-center justify-start">
+        <v-col cols="4">
+          <div class="headline font-weight-bold mb-5">Derivation Path:</div>
+        </v-col>
+        <v-col cols="6" offset="2">
+          <mew-select
+            v-model="selectedPath"
+            label="Select Path"
+            :has-filter="true"
+            :items="parsedPaths"
+            filter-placeholder="Search Path"
+          />
+        </v-col>
+      </v-row>
+      <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
+        <!--
           =====================================================================================
             Panel: Select Address
           =====================================================================================
           -->
-          <template #panelBody1>
-            <div>
-              <v-radio-group v-model="selectedAddress" class="ma-0">
-                <!--
+        <template #panelBody1>
+          <div>
+            <v-radio-group v-model="selectedAddress">
+              <!--
                 =====================================================================================
                   Table - Header
                 =====================================================================================
                 -->
-                <v-row dense class="table-header mx-0 py-2">
-                  <v-col offset="3">
-                    <p>Adddress</p>
-                  </v-col>
-                  <v-col cols="4" sm="3" offset="1" class="text-center">
-                    <p>{{ network.type.name }} Balance</p>
-                  </v-col>
-                </v-row>
-                <!--
+              <v-row dense class="table-header mx-0">
+                <v-col offset="2">
+                  <p class="">Adddress</p>
+                </v-col>
+                <v-col cols="4" sm="3">
+                  <p>{{ network.type.name }} Balance</p>
+                </v-col>
+              </v-row>
+              <!--
                 =====================================================================================
                   Table - Address Row
                 =====================================================================================
                 -->
-                <v-row
-                  v-for="(acc, idx) in accounts"
-                  v-show="accounts.length > 0"
-                  :key="acc.address"
-                  dense
-                  class="table-row-class align-center justify-center py-2 mx-0"
-                >
-                  <v-col cols="1" sm="1">
-                    <v-radio label="" :value="acc.address" class="mx-2" />
-                  </v-col>
-                  <v-col cols="1" sm="1" class="text-center">
-                    {{ idx }}
-                  </v-col>
-                  <v-col cols="7">
-                    <v-row
-                      dense
-                      class="
-                        align-center
-                        justify-start
-                        pl-1 pl-sm-3
-                        pr-2 pr-sm-3
-                      "
-                    >
-                      <mew-blockie
-                        width="25px"
-                        height="25px"
-                        :address="acc.address"
-                        class="mr-2"
-                      />
-                      <v-col cols="9" class="d-none d-sm-flex flex-column">
-                        <span v-if="acc.nickname" class="font-weight-bold">{{
-                          acc.nickname
-                        }}</span>
-                        <mew-transform-hash :hash="acc.address" />
-                        <span v-if="acc.ensName">{{ acc.ensName }}</span>
-                      </v-col>
-                      <p class="d-block d-sm-none">
-                        {{ acc.address | concatAddressXS }}
-                      </p>
-                      <mew-copy
-                        is-small
-                        tooltip="Copy Address"
-                        :copy-value="acc.address"
-                        class="ml-2"
-                      />
-                    </v-row>
-                  </v-col>
-                  <v-col cols="2" offset="1">
-                    <p class="balance-overflow">
-                      {{
-                        acc.balance === 'Loading..'
-                          ? acc.balance
-                          : `${acc.balance} ${network.type.name}`
-                      }}
+              <v-row
+                v-for="acc in accounts"
+                v-show="accounts.length > 0"
+                :key="acc.address"
+                dense
+                class="table-row-class align-center justify-center py-2 mx-0"
+              >
+                <v-col cols="1" sm="1">
+                  <v-radio label="" :value="acc.address" class="mx-2" />
+                </v-col>
+                <v-col cols="1" sm="1" class="text-center">
+                  {{ acc.idx }}
+                </v-col>
+                <v-col cols="7">
+                  <v-row
+                    dense
+                    class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                  >
+                    <mew-blockie
+                      width="25px"
+                      height="25px"
+                      :address="acc.address"
+                      class="mr-2"
+                    />
+                    <v-col cols="9" class="d-none d-sm-flex flex-column">
+                      <span v-if="acc.nickname" class="font-weight-bold">{{
+                        acc.nickname
+                      }}</span>
+                      <mew-transform-hash :hash="acc.address" />
+                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    </v-col>
+                    <p class="d-block d-sm-none">
+                      {{ acc.address | concatAddressXS }}
                     </p>
-                  </v-col>
-                </v-row>
-              </v-radio-group>
-              <!--
+                    <mew-copy
+                      is-small
+                      tooltip="Copy Address"
+                      :copy-value="acc.address"
+                      class="ml-2"
+                    />
+                  </v-row>
+                </v-col>
+                <v-col cols="2" offset="1">
+                  <p class="balance-overflow">
+                    {{
+                      acc.balance === 'Loading..'
+                        ? acc.balance
+                        : `${acc.balance} ${network.type.name}`
+                    }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-radio-group>
+            <!--
               =====================================================================================
                Previous / Next Buttons
               =====================================================================================
               -->
-              <v-row class="pb-6" align="center" justify="center">
-                <div>
-                  <mew-button
-                    title="Previous"
-                    color-theme="basic"
-                    icon="mdi-chevron-left"
-                    icon-type="mdi"
-                    btn-size="small"
-                    icon-align="left"
-                    btn-style="transparent"
-                    @click.native="previousAddressSet"
-                  />
-                  <mew-button
-                    title="Next"
-                    color-theme="basic"
-                    icon="mdi-chevron-right"
-                    icon-type="mdi"
-                    btn-size="small"
-                    icon-align="right"
-                    btn-style="transparent"
-                    @click.native="nextAddressSet"
-                  />
-                </div>
-              </v-row>
-            </div>
-          </template>
-          <!--
+            <v-row class="pb-6" align="center" justify="center">
+              <div>
+                <mew-button
+                  title="Previous"
+                  color-theme="basic"
+                  icon="mdi-chevron-left"
+                  icon-type="mdi"
+                  btn-size="small"
+                  icon-align="left"
+                  btn-style="transparent"
+                  @click.native="previousAddressSet"
+                />
+                <mew-button
+                  title="Next"
+                  color-theme="basic"
+                  icon="mdi-chevron-right"
+                  icon-type="mdi"
+                  btn-size="small"
+                  icon-align="right"
+                  btn-style="transparent"
+                  @click.native="nextAddressSet"
+                />
+              </div>
+            </v-row>
+          </div>
+        </template>
+        <!--
           =====================================================================================
             Panel: Network
           =====================================================================================
           -->
-          <template #panelBody2>
-            <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
-          </template>
-        </mew-expand-panel>
-        <!--
+        <template #panelBody2>
+          <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+        </template>
+      </mew-expand-panel>
+      <!--
         =====================================================================================
          Terms
         =====================================================================================
         -->
-        <div class="d-flex align-center flex-column">
-          <mew-checkbox
-            v-model="acceptTerms"
-            label="To access my wallet, I accept "
-            :link="link"
-            class="justify-center"
-          />
-        </div>
-        <!--
+      <div class="d-flex align-center flex-column">
+        <mew-checkbox
+          v-model="acceptTerms"
+          label="To access my wallet, I accept "
+          :link="link"
+          class="justify-center"
+        />
+      </div>
+      <!--
         =====================================================================================
           Back / Access Wallet Buttons
         =====================================================================================
         -->
-        <app-btn-row
-          class="my-2"
-          next-btn-text="Access Wallet"
-          :next-btn-method="accessWallet"
-          :back-btn-method="backStepOne"
-          :next-disable="!acceptTerms"
-        />
-      </v-sheet>
+      <app-btn-row
+        class="my-2"
+        next-btn-text="Access Wallet"
+        :next-btn-method="accessWallet"
+        :back-btn-method="backStepOne"
+        :next-disable="!acceptTerms"
+      />
     </template>
   </mew-stepper>
 </template>
@@ -306,7 +297,7 @@ import {
 import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
-import { fromWei, toChecksumAddress } from 'web3-utils';
+import { fromWei, toChecksumAddress, _ } from 'web3-utils';
 
 import Web3 from 'web3';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -577,14 +568,16 @@ export default {
     phrase: {
       deep: true,
       handler: function (newval) {
-        const splitVal = newval[1].split(' ');
-        if (splitVal.length === 12 || splitVal.length === 24) {
-          this.length = splitVal.length;
-          const newObj = {};
-          splitVal.forEach((item, idx) => {
-            newObj[idx + 1] = item;
-          });
-          this.phrase = newObj;
+        if (newval && !_.isEmpty(newval)) {
+          const splitVal = newval[1].split(' ');
+          if (splitVal.length === 12 || splitVal.length === 24) {
+            this.length = splitVal.length;
+            const newObj = {};
+            splitVal.forEach((item, idx) => {
+              newObj[idx + 1] = item;
+            });
+            this.phrase = newObj;
+          }
         }
       }
     },
@@ -601,7 +594,7 @@ export default {
         this.addressPage = 0;
         this.selectedAddress = '';
         this.accountAddress = '';
-        this.currentIdx = MAX_ADDRESSES;
+        this.currentIdx = 0;
         this.setMnemonicAddress();
       }
     },
@@ -610,7 +603,7 @@ export default {
       instant: true,
       handler: function (val) {
         this.addressPage = 0;
-        this.currentIdx = MAX_ADDRESSES;
+        this.currentIdx = 0;
         this.nextStepTwo(val);
       }
     }
@@ -755,7 +748,7 @@ export default {
       this.accounts.splice(0);
       this.currentIdx = 0;
       this.addressPage = 0;
-      this.phrase = '';
+      this.phrase = {};
       this.length = 12;
     },
     /**

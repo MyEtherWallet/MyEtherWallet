@@ -165,6 +165,7 @@
     <balance-address-paper-wallet
       :open="openPaperWallet"
       :close="closePaperWallet"
+      @close="closePaperWallet"
     />
     <app-modal
       :show="openQR"
