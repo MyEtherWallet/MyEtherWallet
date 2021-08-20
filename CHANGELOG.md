@@ -1,5 +1,10 @@
 ### fix
 
+* * hide swap provider list when there is not enough balance [#3390](https://github.com/MyEtherWallet/MyEtherWallet/pull/3390)
+* fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
+
+### fix
+
 * * show walletLink when signing [#3383](https://github.com/MyEtherWallet/MyEtherWallet/pull/3383)
 
 ### Release v6.0.5
