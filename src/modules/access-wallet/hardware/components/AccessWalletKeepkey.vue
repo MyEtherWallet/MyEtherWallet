@@ -1,3 +1,8 @@
+<!--
+=====================================================================================
+ Access Wallet - Keepkey
+=====================================================================================
+-->
 <template>
   <!-- <div>
     <span>Deviation</span>
@@ -10,25 +15,22 @@
         The PIN layout is displayed on your Hardware wallet.
       </span>
     </div>
-    <mew-input class="mb-5" />
+    <mew-input v-model="pin" type="password" class="mb-5" />
     <v-container
       class="mb-8 pa-0 d-flex flex-column align-center justify-center"
     >
       <v-row class="keypad" no-gutters>
-        <v-col v-for="(button, idx) in 9" :key="idx" cols="4">
+        <v-col v-for="(number, idx) in numbers" :key="idx" cols="4">
           <div
-            class="
-              tableHeader
-              rounded
-              pin
-              mr-2
-              mb-2
-              d-flex
-              align-center
-              justify-center
-            "
+            :class="[
+              'rounded pin mr-2 mb-2 d-flex cursor-pointer align-center justify-center',
+              pinEnabled ? 'superPrimary' : 'tableHeader'
+            ]"
+            @click="pin += number"
           >
-            <div class="pin-inner-circle disabled"></div>
+            <div
+              :class="['pin-inner-circle', pinEnabled ? 'primary' : 'disabled']"
+            ></div>
           </div>
         </v-col>
       </v-row>
@@ -38,6 +40,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/core/plugins/eventBus';
+
 export default {
   name: 'AccessWalletKeepkey',
   props: {
@@ -46,8 +50,29 @@ export default {
       default: () => []
     }
   },
+  data() {
+    return {
+      pinEnabled: false,
+      pin: '',
+      numbers: ['7', '8', '9', '4', '5', '6', '1', '2', '3']
+    };
+  },
+  watch: {
+    pin(newValue) {
+      if (newValue === null) {
+        this.pin = '';
+      }
+    }
+  },
+  created() {
+    EventBus.$on('enablePin', (deviceInfo, callback) => {
+      this.callback = callback;
+      this.deviceInfo = deviceInfo;
+      this.pinEnabled = true;
+    });
+  },
   mounted() {
-    console.error('paths', this.paths);
+    this.$emit('setPath', this.paths[0]);
   }
 };
 </script>

@@ -48,13 +48,9 @@ class KeepkeyWallet {
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.keepkey = await this.keepkeyAdapter.pairDevice(undefined, true);
     this.keyring.on(['*', '*', Events.PIN_REQUEST], () => {
-      EventBus.$emit(
-        'showHardwarePinMatrix',
-        { name: this.identifier },
-        pin => {
-          this.keepkey.sendPin(pin).catch(errorHandler);
-        }
-      );
+      EventBus.$emit('enablePin', { name: this.identifier }, pin => {
+        this.keepkey.sendPin(pin).catch(errorHandler);
+      });
     });
     this.keyring.on(['*', '*', Events.PASSPHRASE_REQUEST], () => {
       EventBus.$emit(

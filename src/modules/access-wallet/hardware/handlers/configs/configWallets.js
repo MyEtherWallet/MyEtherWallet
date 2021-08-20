@@ -51,12 +51,7 @@ export default {
   },
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,
-    when: 2,
-    steps: [
-      LAYOUT_STEPS.PATH_SELECT,
-      LAYOUT_STEPS.KEEPKEY_POPUP,
-      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
-    ],
+    steps: [LAYOUT_STEPS.KEEPKEY_POPUP, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,

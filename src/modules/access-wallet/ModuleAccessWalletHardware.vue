@@ -6,9 +6,9 @@
 -->
   <mew-overlay
     :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
+      text: step === 1 ? 'Need help? Read about' : 'Need help? Read',
+      linkTitle: footerLink.title,
+      link: footerLink.url
     }"
     :show-overlay="open"
     :title="title"
@@ -76,25 +76,29 @@
           Keepkey
         =====================================================================================
         -->
-      <access-wallet-keepkey v-if="onKeepkey" />
+      <access-wallet-keepkey
+        v-if="onKeepkey"
+        :paths="paths"
+        @setPath="setPath"
+      />
       <!--
         =====================================================================================
           Cool Wallet
         =====================================================================================
         -->
-      <span>Cool Wallet</span>
+      <span v-if="onCoolWallet">Cool Wallet</span>
       <!--
         =====================================================================================
           Ledger
         =====================================================================================
         -->
-      <span>Ledger</span>
+      <span v-if="onLedger">Ledger</span>
       <!--
         =====================================================================================
           Trezor
         =====================================================================================
         -->
-      <span>Trezor</span>
+      <span v-if="onTrezor">Trezor</span>
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
@@ -290,6 +294,22 @@ export default {
       return appPaths[0].network.icon;
     },
     /**
+     * Footer links to display beneath container
+     * TODO: get link urls from Russ
+     */
+    footerLink() {
+      if (this.onKeepkey) {
+        return {
+          title: 'Using a KeepKey Hardware wallet with MEW',
+          url: 'https://www.mewtopia.com/'
+        };
+      }
+      return {
+        title: 'Hardware Wallets',
+        url: 'https://www.mewtopia.com/'
+      };
+    },
+    /**
      * On Bitbox
      */
     onBitbox() {
@@ -315,6 +335,12 @@ export default {
      */
     onKeepkey() {
       return this.walletType === WALLET_TYPES.KEEPKEY;
+    },
+    /**
+     * On Trezor
+     */
+    onTrezor() {
+      return this.walletType === WALLET_TYPES.TREZOR;
     },
     /**
      * On Password step
@@ -440,7 +466,7 @@ export default {
     },
     setWalletInstance(str) {
       this.walletType = str;
-      this.incrementStep();
+      this.step++;
     },
     incrementStep() {
       this.currentStep = this.wallets[this.walletType].steps[this.step];
@@ -496,6 +522,7 @@ export default {
           } else {
             this.setAddresses();
           }
+          console.error('hw', _hwWallet)
           return _hwWallet;
         })
         .catch(err => {
@@ -530,7 +557,9 @@ export default {
      * Sets Path
      */
     setPath(obj) {
+      console.error("obj", obj)
       this.selectedPath = obj;
+      this.unlockPathOnly();
     },
     /**
      * Set the selected wallet
@@ -569,12 +598,6 @@ export default {
      */
     setTerms(boolean) {
       this.acceptTerms = boolean;
-    },
-    /**
-     * Keepkey Actions
-     */
-    keepKeyClear() {
-      this.pin = '';
     },
     keepKeyPinEnter(pin) {
       this.callback(pin);
