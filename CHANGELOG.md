@@ -1,11 +1,3 @@
-### fix
-
-* fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
-
-### fix
-
-* * show walletLink when signing [#3383](https://github.com/MyEtherWallet/MyEtherWallet/pull/3383)
-
 ### Release v6.0.5
 
 ### feature
@@ -22,6 +14,8 @@
 * fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix access wallet side padding [#3374](https://github.com/MyEtherWallet/MyEtherWallet/pull/3374)
+* fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
+* show walletLink when signing [#3383](https://github.com/MyEtherWallet/MyEtherWallet/pull/3383)
 
 ### devop
 
