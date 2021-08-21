@@ -29,25 +29,21 @@
       </v-row>
     </v-container>
 
-    <v-row class="mt-3 mt-md-12 d-flex align-center">
-      <v-col cols="12" md="2">
-        <img :src="blockieImg" alt="Blockie Image" class="blockie-image" />
-      </v-col>
-      <v-col col="auto">
-        <div style="max-width: 400px">
-          <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
-            My address icon
-          </div>
-          <div>
-            Always look for the icon when sending to this wallet. And please
-            keep your paper wallet at a
-            <span class="text-uppercase error--text font-weight-medium">
-              Safe Place!
-            </span>
-          </div>
+    <div class="mt-3 mt-md-12 d-block d-md-flex align-center">
+      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-4" />
+      <div style="max-width: 400px" class="my-3">
+        <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
+          My address icon
         </div>
-      </v-col>
-    </v-row>
+        <div>
+          Always look for the icon when sending to this wallet. And please keep
+          your paper wallet at a
+          <span class="text-uppercase error--text font-weight-medium">
+            Safe Place!
+          </span>
+        </div>
+      </div>
+    </div>
 
     <v-divider class="my-6"></v-divider>
 
