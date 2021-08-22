@@ -61,7 +61,7 @@
               Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-    <div class="full-width" v-if="step === 2">
+    <div v-if="step === 2" class="full-width">
       <!--
         =====================================================================================
           Bitbox2
@@ -94,7 +94,7 @@
           Trezor
         =====================================================================================
         -->
-      <span>Trezor</span>
+      <access-wallet-trezor v-if="onTrezor" />
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
@@ -128,6 +128,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
+import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -145,7 +146,8 @@ const MAX_ADDRESSES = 5;
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    AccessWalletKeepkey
+    AccessWalletKeepkey,
+    AccessWalletTrezor
     // AccessWalletBitbox,
     // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
