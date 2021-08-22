@@ -1,75 +1,68 @@
 <template>
-  <mew-overlay
-    :show-overlay="open"
-    :title="header"
-    right-btn-text="Close"
-    :close="callClose"
-  >
-    <template #mewOverlayBody>
-      <!--
+  <mew-overlay :show-overlay="open" :title="header" :close="callClose">
+    <!--
       =====================================================================================
         Aave token borrow table
       =====================================================================================
       -->
-      <v-sheet
-        v-if="step === 0"
-        color="white"
-        max-width="650px"
-        class="border-radius--10px pa-4"
-      >
-        <aave-table
-          :handler="handler"
-          :table-header="aaveTableHandler"
-          @selectedBorrow="handleSelectedBorrow"
-        />
-      </v-sheet>
-      <!--
+    <v-sheet
+      v-if="step === 0"
+      color="white"
+      max-width="650px"
+      class="border-radius--10px pa-4"
+    >
+      <aave-table
+        :handler="handler"
+        :table-header="aaveTableHandler"
+        @selectedBorrow="handleSelectedBorrow"
+      />
+    </v-sheet>
+    <!--
       =====================================================================================
         Aave token borrow form
       =====================================================================================
       -->
-      <div v-if="step === 1">
-        <aave-amount-form
-          :selected-token="selectedToken"
-          :handler="handler"
-          :action-type="aaveTableHandler"
-          :show-toggle="aaveBorrowForm.showToggle"
-          :left-side-values="aaveBorrowForm.leftSideValues"
-          :right-side-values="aaveBorrowForm.rightSideValues"
-          :form-text="aaveBorrowForm.formText"
-          :button-title="aaveBorrowForm.buttonTitle"
-          @cancelDeposit="handleCancel"
-          @emitValues="handleValues"
-        />
-      </div>
-      <!--
+    <div v-if="step === 1">
+      <aave-amount-form
+        :selected-token="selectedToken"
+        :handler="handler"
+        :action-type="aaveTableHandler"
+        :show-toggle="aaveBorrowForm.showToggle"
+        :left-side-values="aaveBorrowForm.leftSideValues"
+        :right-side-values="aaveBorrowForm.rightSideValues"
+        :form-text="aaveBorrowForm.formText"
+        :button-title="aaveBorrowForm.buttonTitle"
+        @cancelDeposit="handleCancel"
+        @emitValues="handleValues"
+      />
+    </div>
+    <!--
       =====================================================================================
         Aave select interest
       =====================================================================================
       -->
-      <div v-if="step === 2">
-        <aave-select-interest
-          :selected-token="actualToken"
-          @continue="handleContinue"
-        />
-      </div>
-      <!--
+    <div v-if="step === 2">
+      <aave-select-interest
+        :selected-token="actualToken"
+        @continue="handleContinue"
+      />
+    </div>
+    <!--
       =====================================================================================
         Aave Summary
       =====================================================================================
       -->
-      <div v-if="step === 3">
-        <aave-summary
-          :selected-token="selectedToken"
-          :handler="handler"
-          :amount="amount"
-          :amount-usd="amountUsd"
-          :step="step"
-          :action-type="aaveTableHandler"
-          @onConfirm="handleConfirm"
-        />
-      </div>
-    </template>
+    <div v-if="step === 3">
+      <aave-summary
+        :selected-token="selectedToken"
+        :handler="handler"
+        :amount="amount"
+        :amount-usd="amountUsd"
+        :step="step"
+        :action-type="aaveTableHandler"
+        @onConfirm="handleConfirm"
+      />
+    </div>
   </mew-overlay>
 </template>
 
