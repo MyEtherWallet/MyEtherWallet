@@ -5,7 +5,11 @@
       automatically, click below.
     </div>
     <div>
-      <mew-button class="mt-7" title="Connect Trezor" />
+      <mew-button
+        class="mt-7"
+        title="Connect Trezor"
+        @click.native="trezorUnlock"
+      />
     </div>
     <div class="primary--text my-8 cursor--pointer">
       <v-icon small class="primary--text">mdi-arrow-left</v-icon> Connect a
@@ -13,3 +17,14 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    trezorUnlock: {
+      type: Function,
+      default: () => {}
+    }
+  }
+};
+</script>

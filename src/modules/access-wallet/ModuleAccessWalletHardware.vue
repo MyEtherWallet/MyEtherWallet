@@ -94,7 +94,7 @@
           Trezor
         =====================================================================================
         -->
-      <access-wallet-trezor v-if="onTrezor" />
+      <access-wallet-trezor v-if="onTrezor" :trezor-unlock="trezorUnlock" />
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
@@ -471,6 +471,7 @@ export default {
       this.step++;
     },
     nextStep() {
+      console.log(this.walletType);
       if (this.walletType) {
         this.incrementStep();
         if (this.step === this.wallets[this.walletType].when) {
@@ -626,6 +627,7 @@ export default {
     async setAddresses() {
       try {
         const web3 = new Web3(this.network.url);
+        console.log('web3', web3);
         this.accounts = [];
         for (
           let i = this.currentIdx;
