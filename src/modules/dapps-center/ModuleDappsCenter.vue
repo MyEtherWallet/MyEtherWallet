@@ -23,7 +23,7 @@
             :title-icon="dapp.titleIcon"
             :right-icon-type="dapp.rightIconType"
             :right-icon="dapp.rightIcon"
-            @click.native="routeTo(dapp.path)"
+            @click.native="routeTo(dapp.name)"
           />
         </v-col>
       </v-row>
@@ -73,8 +73,8 @@ export default {
     }
   },
   methods: {
-    routeTo(path) {
-      this.$router.push({ name: path });
+    routeTo(name) {
+      this.$router.push({ name: name });
     }
   }
 };

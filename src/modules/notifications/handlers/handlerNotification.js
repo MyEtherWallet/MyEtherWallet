@@ -52,6 +52,7 @@ const NOTIFICATION_TYPES = {
  * Transaction status
  */
 const NOTIFICATION_STATUS = {
+  SUBMITTED: 'submitted',
   PENDING: 'pending',
   SUCCESS: 'success',
   COMPLETED: 'completed',
