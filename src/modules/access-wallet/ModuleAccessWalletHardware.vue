@@ -91,7 +91,12 @@
       <span v-if="onLedger">
         <div class="subtitle-1 font-weight-bold">Connecting to:</div>
         <div>
-          <mew-select v-if="onLedger" v-model="ledgerApp" :items="ledgerApps" />
+          <mew-select
+            v-if="onLedger"
+            v-model="ledgerApp"
+            :items="ledgerApps"
+            :is-custom="true"
+          />
           <div class="d-flex flex-column align-center justify-center">
             <div class="pl-4">
               <v-img
@@ -104,7 +109,7 @@
                 contain
               />
             </div>
-            <v-card-title>
+            <v-card-title class="border justify-center">
               Connect your Ledger device and open Ethereum app
             </v-card-title>
           </div>
@@ -112,8 +117,9 @@
         <div class="text-center">
           <mew-button
             btn-size="xlarge"
+            :has-full-width="true"
             title="Unlock wallet"
-            has-full-width="true"
+            :disabled="!ledgerConnected"
             @click.native="nextStep"
           />
         </div>
@@ -261,6 +267,7 @@ export default {
       walletInstance: {},
       enterPin: false,
       pin: '',
+      ledgerConnected: false,
       callback: () => {},
       unwatch: () => {}
     };
@@ -692,12 +699,22 @@ export default {
       this.currentIdx -=
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
       this.setAddresses();
+    },
+    setLedgerConnected() {
+      this.isLedgerConnected = true;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.border {
+  border: 1px solid var(--v-inputBorder-base);
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+}
 .subtitle-container {
   background-color: rgba(109, 137, 166, 0.06);
 }
