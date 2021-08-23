@@ -8,5 +8,6 @@ module.exports = {
   ETH_DONATION_ADDRESS: JSON.stringify(
     '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
   ),
-  FULL_SOURCEMAPS: JSON.stringify(process.env.FULL_SOURCEMAPS || 'false')
+  FULL_SOURCEMAPS: JSON.stringify(process.env.FULL_SOURCEMAPS || 'false'),
+  INTERCOM: JSON.stringify(process.env.INTERCOM_ID)
 };
