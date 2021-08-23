@@ -35,7 +35,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <mew-button title="Unlock wallet" btn-size="xlarge" has-full-width />
+    <mew-button @click.native="unlock" title="Unlock wallet" btn-size="xlarge" has-full-width />
   </div>
 </template>
 
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      callback: () => [],
       pinEnabled: false,
       pin: '',
       numbers: ['7', '8', '9', '4', '5', '6', '1', '2', '3']
@@ -67,12 +68,17 @@ export default {
   created() {
     EventBus.$on('enablePin', (deviceInfo, callback) => {
       this.callback = callback;
-      this.deviceInfo = deviceInfo;
+      // this.deviceInfo = deviceInfo;
       this.pinEnabled = true;
     });
   },
   mounted() {
     this.$emit('setPath', this.paths[0]);
+  },
+  methods: {
+    unlock() {
+      this.callback(this.pin);
+    }
   }
 };
 </script>

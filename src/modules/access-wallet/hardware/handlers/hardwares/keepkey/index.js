@@ -23,7 +23,6 @@ import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import keepkeyImg from '@/assets/images/icons/wallets/keepkey.svg';
 import { numberToHex } from 'web3-utils';
-const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
   constructor() {
@@ -33,7 +32,6 @@ class KeepkeyWallet {
     );
     this.identifier = WALLET_TYPES.KEEPKEY;
     this.isHardware = true;
-    this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
     this.meta = {
       name: 'KeepKey',
