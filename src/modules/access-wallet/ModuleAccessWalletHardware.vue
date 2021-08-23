@@ -109,8 +109,11 @@
                 contain
               />
             </div>
-            <v-card-title class="border justify-center">
+            <v-card-title v-if="!ledgerConnected" class="border justify-center">
               Connect your Ledger device and open Ethereum app
+            </v-card-title>
+            <v-card-title v-if="ledgerConnected" class="border justify-center">
+              Ledger connected
             </v-card-title>
           </div>
         </div>
