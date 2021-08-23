@@ -59,6 +59,7 @@
                     v-model="phrase[n]"
                     :name="`mnemonicInput${n}`"
                     :label="`${n}.`"
+                    autocomplete="off"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -87,14 +88,21 @@
             Next Button
           =====================================================================================
           -->
-            <v-row dense class="align-center justify-center pt-4">
-              <v-col cols="12" sm="4">
+            <v-row dense class="pt-4" align="center" justify="center">
+              <v-col cols="12" align-self="center" class="text-center">
                 <mew-button
-                  has-full-width
                   title="Next"
                   btn-size="xlarge"
                   :disabled="!isValidMnemonic"
                   @click.native="unlockBtn"
+                />
+              </v-col>
+              <v-col cols="12" align-self="center" class="text-center">
+                <mew-button
+                  title="Clear"
+                  btn-size="xlarge"
+                  btn-style="transparent"
+                  @click.native="clearFields"
                 />
               </v-col>
             </v-row>
@@ -230,6 +238,7 @@
                   btn-size="small"
                   icon-align="left"
                   btn-style="transparent"
+                  :disabled="currentIdx === 0"
                   @click.native="previousAddressSet"
                 />
                 <mew-button
@@ -405,7 +414,11 @@ export default {
         }
       ],
       /* Path Items: */
-      selectedPath: null,
+      selectedPath: {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      },
       // customPathName: '',
       // customPathValue: '',
       /* Terms Items : */
@@ -592,7 +605,7 @@ export default {
     network: {
       deep: true,
       handler: function () {
-        this.accounts = [];
+        this.accounts.splice(0);
         this.addressPage = 0;
         this.selectedAddress = '';
         this.accountAddress = '';
@@ -602,11 +615,11 @@ export default {
     },
     selectedPath: {
       deep: true,
-      instant: true,
-      handler: function (val) {
+      handler: function () {
+        this.accounts.splice(0);
         this.addressPage = 0;
         this.currentIdx = 0;
-        this.nextStepTwo(val);
+        this.nextStepTwo();
       }
     }
   },
@@ -620,8 +633,9 @@ export default {
      * Used in STEP 2 and 3
      */
     async setMnemonicAddress() {
+      // resets the array to empty
+      this.accounts.splice(0);
       try {
-        this.accounts = [];
         for (
           let i = this.currentIdx;
           i < this.currentIdx + MAX_ADDRESSES;
@@ -683,6 +697,9 @@ export default {
         .then(res => {
           if (res) {
             this.step = 2;
+            this.accounts.splice(0);
+            this.currentIdx = 0;
+            this.addressPage = 0;
             this.nextStepTwo();
           }
         })
@@ -726,8 +743,8 @@ export default {
      * Methods sets addresses according to the path selected
      * Used in STEP 1
      */
-    nextStepTwo(path) {
-      const defaultPath = path ? path : this.parsedPaths[0];
+    nextStepTwo() {
+      const defaultPath = this.selectedPath;
       this.handlerAccessWallet
         .updateMnemonicPath(defaultPath.value)
         .then(res => {
@@ -750,6 +767,13 @@ export default {
       this.accounts.splice(0);
       this.currentIdx = 0;
       this.addressPage = 0;
+      this.phrase = {};
+      this.length = 12;
+    },
+    /**
+     * Clears mnemonic input field
+     */
+    clearFields() {
       this.phrase = {};
       this.length = 12;
     },
