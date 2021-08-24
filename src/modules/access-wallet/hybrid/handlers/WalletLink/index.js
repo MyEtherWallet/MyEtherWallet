@@ -30,9 +30,8 @@ class WalletLinkWallet {
       'realrpcurlnotrequired',
       0
     );
-    this.connection?._storage.clear();
     this.connection.disconnect = () => {
-      this.connection?._storage.clear();
+      this.connection?._storage.clear && this.connection?._storage.clear();
     };
     this.meta = {
       name: 'WalletLink',
@@ -105,6 +104,7 @@ class WalletLinkWallet {
 const createWallet = async () => {
   const walletLinkWallet = new WalletLinkWallet();
   const _tWallet = await walletLinkWallet.init();
+  console.log(_tWallet);
   return _tWallet;
 };
 createWallet.errorHandler = errorHandler;
