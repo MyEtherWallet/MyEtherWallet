@@ -63,14 +63,15 @@ const EXCEPTIONS = [
   'sass-loader',
   'stylelint',
   'stylelint-config-standard',
-  '@unstoppabledomains/resolution',
   'vue-stripe-elements-plus',
   'node-sass', // 5-25-21
   'prettier', // 5-26-21
   '@ledgerhq/hw-app-eth', // 7-2-21 major version change
   '@ledgerhq/hw-transport-webusb', // 7-2-21 major version change
   'package-json', // 7-2-21 major version change
-  'luxon' // 7-20-21 major version change
+  'luxon', // 7-20-21 major version change
+  'remark-cli',
+  'remark-preset-lint-recommended'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

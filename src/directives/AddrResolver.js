@@ -1,4 +1,4 @@
-import { toChecksumAddress } from '@/helpers/addressUtils';
+import { toChecksumAddress, isAddress } from '@/helpers/addressUtils';
 import { Misc } from '@/helpers';
 import Resolution, { ResolutionError } from '@unstoppabledomains/resolution';
 import normalise from '@/helpers/normalise';
@@ -23,7 +23,7 @@ const AddrResolver = {
     const resolution = new Resolution({
       blockchain: {
         ens: false,
-        cns: {
+        uns: {
           url: ethMew.url,
           network: 'mainnet'
         }
@@ -68,7 +68,13 @@ const AddrResolver = {
         _this.isValidAddress = false;
         _this.hexAddress = '';
         _this.avatar = '';
-      } else resolveDomain(e);
+      } else if (isAddress(e)) {
+        _this.isValidAddress = true;
+        _this.hexAddress = e;
+        _this.avatar = '';
+      } else {
+        resolveDomain(e);
+      }
     };
     const resolveViaENS = function (domain) {
       const _this = vnode.context;
@@ -287,70 +293,62 @@ const AddrResolver = {
       messageDiv.appendChild(messagePar);
       messageDiv.classList.add('resolution-container');
       const _this = vnode.context;
-      if (
-        domain.indexOf('.') > 0 &&
-        // eslint-disable-next-line
-        /^[a-zA-Z\-\.0-9]*\.(zil|crypto)$/.test(domain)
-      ) {
-        try {
-          const address = await resolution.addr(domain, parentCurrency);
-          if (!checkDarklist(address)) {
-            _this.isValidAddress = true;
-            _this.hexAddress =
-              parentCurrency === network.type.name
-                ? toChecksumAddress(address)
-                : address;
-            const contractAddress = await checkAddressIsContract(address);
-            if (contractAddress) {
-              messagePar.classList.add('contract-addr-resolved');
-              messagePar.innerText = _this.$t(
-                'errorsGlobal.address-is-contract'
-              );
-            } else {
-              messagePar.classList.add('resolver-addr');
-              messagePar.style.cssText = 'display:flex;align-items:center';
-              messagePar.innerHTML = `${
-                parentCurrency === 'ETH'
-                  ? `<img style="padding:1em" src="${ethereumLogo}"/>`
-                  : `<p style="padding:1em .5em 1em 1em">${parentCurrency} Address: </p>`
-              }<span style="font-weight: 600">${_this.hexAddress}</span>`;
-              const twitterUsername = await resolution
-                .twitter(domain)
-                .catch(() => null);
-              if (twitterUsername) {
-                const twitterVerifiedPar = document.createElement('p');
-                twitterVerifiedPar.classList.add('twitter-verify');
+      try {
+        const address = await resolution.addr(domain, parentCurrency);
+        if (!checkDarklist(address)) {
+          _this.isValidAddress = true;
+          _this.hexAddress =
+            parentCurrency === network.type.name
+              ? toChecksumAddress(address)
+              : address;
+          const contractAddress = await checkAddressIsContract(address);
+          if (contractAddress) {
+            messagePar.classList.add('contract-addr-resolved');
+            messagePar.innerText = _this.$t('errorsGlobal.address-is-contract');
+          } else {
+            messagePar.classList.add('resolver-addr');
+            messagePar.style.cssText = 'display:flex;align-items:center';
+            messagePar.innerHTML = `${
+              parentCurrency === 'ETH'
+                ? `<img style="padding:1em" src="${ethereumLogo}"/>`
+                : `<p style="padding:1em .5em 1em 1em">${parentCurrency} Address: </p>`
+            }<span style="font-weight: 600">${_this.hexAddress}</span>`;
+            const twitterUsername = await resolution
+              .twitter(domain)
+              .catch(() => null);
+            if (twitterUsername) {
+              const twitterVerifiedPar = document.createElement('p');
+              twitterVerifiedPar.classList.add('twitter-verify');
 
-                twitterVerifiedPar.innerHTML = `<div style="display:flex; align-items:center; padding: 0 0 1em 1em"><img style="padding: 0 6px 0 0"src="${twitterVerifiedLogo}" /> <a href="https://twitter.com/${twitterUsername}" target="_blank" style="margin-right:5px; font-weight:600">@${twitterUsername}</a> - ${_this.$t(
-                  'ens.unstoppableResolution.twitter-verified'
-                )} <a href="https://chain.link/" target="_blank" rel="noopener noreferrer" style="margin-left: 5px">Chainlink</a></div>`;
-                messageDiv.appendChild(twitterVerifiedPar);
-              }
+              twitterVerifiedPar.innerHTML = `<div style="display:flex; align-items:center; padding: 0 0 1em 1em"><img style="padding: 0 6px 0 0"src="${twitterVerifiedLogo}" /> <a href="https://twitter.com/${twitterUsername}" target="_blank" style="margin-right:5px; font-weight:600">@${twitterUsername}</a> - ${_this.$t(
+                'ens.unstoppableResolution.twitter-verified'
+              )} <a href="https://chain.link/" target="_blank" rel="noopener noreferrer" style="margin-left: 5px">Chainlink</a></div>`;
+              messageDiv.appendChild(twitterVerifiedPar);
             }
-            appendElement(messageDiv);
           }
-        } catch (err) {
-          _this.isValidAddress = false;
-          _this.hexAddress = '';
-          _this.avatar = '';
-          messagePar.classList.add('resolver-error');
-          if (err instanceof ResolutionError) {
-            messagePar.innerText = _this.$t(
-              `ens.unstoppableResolution.${err.code}`,
-              {
-                domain,
-                method:
-                  err.code != 'UnsupportedDomain'
-                    ? resolution.serviceName(domain)
-                    : '',
-                recordName: parentCurrency
-              }
-            );
-            appendElement(messageDiv);
-          } else throw err;
+          appendElement(messageDiv);
         }
-      } else {
-        resolveViaENS(domain);
+      } catch (err) {
+        _this.isValidAddress = false;
+        _this.hexAddress = '';
+        _this.avatar = '';
+        messagePar.classList.add('resolver-error');
+        if (err instanceof ResolutionError) {
+          messagePar.innerText = _this.$t(
+            `ens.unstoppableResolution.${err.code}`,
+            {
+              domain,
+              method:
+                err.code != 'UnsupportedDomain'
+                  ? resolution.serviceName(domain)
+                  : '',
+              recordName: parentCurrency
+            }
+          );
+          appendElement(messageDiv);
+        } else {
+          resolveViaENS(domain);
+        }
       }
     };
 
