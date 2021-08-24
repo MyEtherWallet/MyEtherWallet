@@ -1,7 +1,6 @@
 import Ledger from '@ledgerhq/hw-app-eth';
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction } from 'ethereumjs-tx';
-import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -20,10 +19,9 @@ import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 const NEED_PASSWORD = false;
-const OPEN_TIMEOUT = 10000;
-const LISTENER_TIMEOUT = 30000;
 
 class ledgerWallet {
   constructor() {
@@ -160,7 +158,7 @@ const getLedgerTransport = async () => {
   if (support) {
     transport = await webUsbTransport.create();
   } else {
-    transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
+    Toast('WebUsb not supported', {}, ERROR);
   }
   return transport;
 };
