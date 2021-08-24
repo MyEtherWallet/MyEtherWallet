@@ -70,7 +70,8 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb', // 7-2-21 major version change
   'package-json', // 7-2-21 major version change
   'luxon', // 7-20-21 major version change
-  'remark-cli'
+  'remark-cli',
+  'remark-preset-lint-recommended'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
