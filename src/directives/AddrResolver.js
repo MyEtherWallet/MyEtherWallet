@@ -1,4 +1,4 @@
-import { toChecksumAddress } from '@/helpers/addressUtils';
+import { toChecksumAddress, isAddress } from '@/helpers/addressUtils';
 import { Misc } from '@/helpers';
 import Resolution, { ResolutionError } from '@unstoppabledomains/resolution';
 import normalise from '@/helpers/normalise';
@@ -68,7 +68,13 @@ const AddrResolver = {
         _this.isValidAddress = false;
         _this.hexAddress = '';
         _this.avatar = '';
-      } else resolveDomain(e);
+      } else if (isAddress(e)) {
+        _this.isValidAddress = true;
+        _this.hexAddress = e;
+        _this.avatar = '';
+      } else {
+        resolveDomain(e);
+      }
     };
     const resolveViaENS = function (domain) {
       const _this = vnode.context;
