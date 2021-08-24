@@ -104,7 +104,6 @@ class WalletLinkWallet {
 const createWallet = async () => {
   const walletLinkWallet = new WalletLinkWallet();
   const _tWallet = await walletLinkWallet.init();
-  console.log(_tWallet);
   return _tWallet;
 };
 createWallet.errorHandler = errorHandler;
