@@ -78,9 +78,7 @@
         Transaction fee selector button
       =====================================================
       -->
-        <div
-          class="d-flex align-center justify-space-between flex-wrap-reverse"
-        >
+        <div class="d-flex align-center justify-space-between flex-wrap">
           <div class="d-flex align-center flex-wrap">
             <v-btn
               depressed
@@ -88,7 +86,7 @@
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
-                <div>{{ feesInUsd }}</div>
+                <div class="textBlack2--text">{{ feesInUsd }}</div>
                 <v-icon small class="mx-2">mdi-arrow-right</v-icon>
                 <div class="d-flex align-center">
                   <v-icon small>mdi-clock-outline</v-icon>
@@ -102,8 +100,8 @@
             </div>
           </div>
           <div class="py-1 ml-3">
-            <div class="mew-label">Total ETH in your wallet:</div>
-            <div>{{ balance }} ETH</div>
+            Total:
+            {{ grandTotal }} ETH
           </div>
         </div>
 
@@ -218,6 +216,9 @@ export default {
     },
     actualFeeFormatted() {
       return formatFloatingPointValue(this.actualFees).value;
+    },
+    grandTotal() {
+      return BigNumber(this.actualFees).plus(this.balance);
     },
     feesInUsd() {
       const value = formatFiatValue(

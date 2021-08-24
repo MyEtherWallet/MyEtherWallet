@@ -82,7 +82,7 @@
                 type="number"
                 :hide-clear-btn="true"
                 :value="tokenOutValue"
-                readonly="true"
+                :readonly="true"
                 outlined
               />
               <!-- <mew-input
@@ -1153,8 +1153,8 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
-        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
+        const buyMoreStr = this.isEthNetwork ? 'Buy more ETH.' : '';
+        this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee. ${buyMoreStr}`;
       }
     },
     handleLocalGasPrice(e) {
