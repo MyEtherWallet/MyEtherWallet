@@ -440,19 +440,8 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['customPaths', 'addressBook']),
-    localInstance() {
-      const web3 = new Web3(this.network.url);
-      const chainId = BigNumber(this.network.type.chainID);
-      const ens = this.network.type.hasOwnProperty('ens')
-        ? new ENS({
-            provider: web3.eth.currentProvider,
-            ensAddress: getEnsAddress(chainId.toString())
-          })
-        : null;
-      return {
-        web3: web3,
-        ens: ens
-      };
+    web3() {
+      return new Web3(this.network.url);
     },
     /**
      * Property returns the index of the account of the accountAddress
@@ -633,9 +622,16 @@ export default {
      * Used in STEP 2 and 3
      */
     async setMnemonicAddress() {
-      // resets the array to empty
-      this.accounts.splice(0);
       try {
+        // resets the array to empty
+        this.accounts.splice(0);
+        const chainId = BigNumber(this.network.type.chainID);
+        const ens = this.network.type.hasOwnProperty('ens')
+          ? new ENS({
+              provider: this.web3.eth.currentProvider,
+              ensAddress: getEnsAddress(chainId.toString())
+            })
+          : null;
         for (
           let i = this.currentIdx;
           i < this.currentIdx + MAX_ADDRESSES;
@@ -645,18 +641,20 @@ export default {
             .getWalletInstance()
             .getAccount(i);
           const address = account.getAddressString();
-          const balance = await this.localInstance.web3.eth.getBalance(address);
-          const name = this.localInstance.ens
-            ? await this.localInstance.ens.getName(address)
+          const name = ens
+            ? await ens.getName(address)
             : {
                 name: ''
               };
+          const balance = this.network.type.isEthVMSupported.supported
+            ? 'Loading..'
+            : await this.web3.eth.getBalance(address);
           const nickname = this.getNickname(address);
           this.accounts.push({
             address: address,
             account: account,
             idx: i,
-            balance: fromWei(balance),
+            balance: balance !== 'Loading..' ? fromWei(balance) : balance,
             ensName: name.name ? name.name : '',
             nickname: nickname
           });
