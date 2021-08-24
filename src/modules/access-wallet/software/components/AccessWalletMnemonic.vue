@@ -6,103 +6,113 @@
     =====================================================================================
     -->
     <template v-if="step === 1" #stepperContent1>
-      <v-row class="align-end justify-start mb-3 mb-md-5">
-        <v-col cols="12">
-          <!--
+      <form @submit.prevent="unlockBtn">
+        <v-row class="align-end justify-start mb-3 mb-md-5">
+          <v-col cols="12">
+            <!--
           =====================================================================================
             Title
           =====================================================================================
           -->
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-          <div class="headline font-weight-bold">
-            Enter your Mnemonic Phrase
-          </div>
-          <p class="mb-3">
-            Please type the mnemonic phrase you wrote down in the right order.
-          </p>
-          <!--
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+            <div class="headline font-weight-bold">
+              Enter your Mnemonic Phrase
+            </div>
+            <p class="mb-3">
+              Please type the mnemonic phrase you wrote down in the right order.
+            </p>
+            <!--
           =====================================================================================
             Select number of words
           =====================================================================================
           -->
-          <div class="d-flex flex-row-reverse pb-4">
-            <v-select
-              v-model="length"
-              style="max-width: 150px"
-              hide-details
-              dense
-              item-text="label"
-              item-value="value"
-              :items="mnemonicOptions"
-              label=""
-              outlined
-            ></v-select>
-          </div>
-          <!--
+            <div class="d-flex flex-row-reverse pb-4">
+              <v-select
+                v-model="length"
+                style="max-width: 150px"
+                hide-details
+                dense
+                item-text="label"
+                item-value="value"
+                :items="mnemonicOptions"
+                label=""
+                outlined
+              ></v-select>
+            </div>
+            <!--
           =====================================================================================
             Enter Phrase Block
           =====================================================================================
           -->
-          <phrase-block class="mb-8">
-            <v-row>
-              <v-col
-                v-for="n in length"
-                :key="`mnemonicInput${n}`"
-                cols="6"
-                lg="3"
-                md="3"
-                sm="4"
-              >
-                <v-text-field
-                  :ref="`mnemonicInput${n}`"
-                  v-model="phrase[n]"
-                  :name="`mnemonicInput${n}`"
-                  :label="`${n}.`"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </phrase-block>
-          <!--
+            <phrase-block class="mb-8">
+              <v-row>
+                <v-col
+                  v-for="n in length"
+                  :key="`mnemonicInput${n}`"
+                  cols="6"
+                  lg="3"
+                  md="3"
+                  sm="4"
+                >
+                  <v-text-field
+                    :ref="`mnemonicInput${n}`"
+                    v-model="phrase[n]"
+                    :name="`mnemonicInput${n}`"
+                    :label="`${n}.`"
+                    autocomplete="off"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </phrase-block>
+            <!--
           =====================================================================================
             Extra Word
           =====================================================================================
           -->
-          <mew-expand-panel
-            :has-dividers="true"
-            :panel-items="extraWordPanel"
-            :idx-to-expand="null"
-          >
-            <template #panelBody1>
-              <mew-input
-                v-model="extraWord"
-                type="password"
-                label="Enter Extra word"
-                placeholder="Enter your extra word"
-              />
-            </template>
-          </mew-expand-panel>
-          <!--
+            <mew-expand-panel
+              :has-dividers="true"
+              :panel-items="extraWordPanel"
+              :idx-to-expand="null"
+            >
+              <template #panelBody1>
+                <mew-input
+                  v-model="extraWord"
+                  type="password"
+                  label="Enter Extra word"
+                  placeholder="Enter your extra word"
+                />
+              </template>
+            </mew-expand-panel>
+            <!--
           =====================================================================================
             Next Button
           =====================================================================================
           -->
-          <v-row dense class="align-center justify-center pt-4">
-            <v-col cols="12" sm="4">
-              <mew-button
-                has-full-width
-                title="Next"
-                btn-size="xlarge"
-                :disabled="!isValidMnemonic"
-                @click.native="unlockBtn"
-              />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+            <v-row dense class="pt-4" align="center" justify="center">
+              <v-col cols="12" align-self="center" class="text-center">
+                <mew-button
+                  title="Next"
+                  btn-size="xlarge"
+                  :disabled="!isValidMnemonic"
+                  @click.native="unlockBtn"
+                />
+              </v-col>
+              <v-col cols="12" align-self="center" class="text-center">
+                <mew-button
+                  title="Clear"
+                  btn-size="xlarge"
+                  btn-style="transparent"
+                  @click.native="clearFields"
+                />
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </form>
     </template>
     <!--
     =====================================================================================
-      Step 2: Select Derivation Path
+      Step 2: Select Address and Network
     =====================================================================================
     -->
     <template v-if="step === 2" #stepperContent2>
@@ -115,8 +125,15 @@
             -->
           <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
           <div class="headline font-weight-bold mb-5">
-            Select HD Derivation Path
+            Select Address and Network
           </div>
+        </v-col>
+      </v-row>
+      <v-row class="align-center justify-start">
+        <v-col cols="4">
+          <div class="headline font-weight-bold mb-5">Derivation Path:</div>
+        </v-col>
+        <v-col cols="6" offset="2">
           <mew-select
             v-model="selectedPath"
             label="Select Path"
@@ -124,74 +141,6 @@
             :items="parsedPaths"
             filter-placeholder="Search Path"
           />
-        </v-col>
-      </v-row>
-      <!--
-        =====================================================================================
-          Add Custom Path
-        =====================================================================================
-        -->
-      <mew-expand-panel
-        is-toggle
-        :has-dividers="true"
-        :idx-to-expand="null"
-        :panel-items="[
-          {
-            name: 'Add custom path'
-          }
-        ]"
-      >
-        <template #panelBody1>
-          <mew-input
-            v-model="customPathName"
-            label="Enter Alias"
-            placeholder="Enter custom path alias"
-          />
-          <mew-input
-            v-model="customPathValue"
-            label="Enter Path"
-            placeholder="m/44'/1'/0'/0"
-          />
-          <v-row class="align-center justify-center mb-5">
-            <mew-button
-              btn-size="small"
-              title="Add Path to List"
-              btn-style="outline"
-              :disable="!selectedPath"
-              @click.native="saveCustomPath"
-          /></v-row>
-        </template>
-      </mew-expand-panel>
-      <!--
-        =====================================================================================
-          Back/Next Buttons
-        =====================================================================================
-        -->
-      <app-btn-row
-        class="my-2"
-        :next-btn-method="nextStepThree"
-        :back-btn-method="backStepOne"
-        :next-disable="!selectedPath"
-      />
-      ></template
-    >
-    <!--
-    =====================================================================================
-      Step 3: Select Address and Network
-    =====================================================================================
-    -->
-    <template v-if="step === 3" #stepperContent3>
-      <v-row class="align-end justify-start">
-        <v-col cols="12">
-          <!--
-            =====================================================================================
-              Title
-            =====================================================================================
-            -->
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-          <div class="headline font-weight-bold mb-5">
-            Select Address and Network
-          </div>
         </v-col>
       </v-row>
       <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
@@ -226,12 +175,15 @@
                 v-show="accounts.length > 0"
                 :key="acc.address"
                 dense
-                class="table-row-class align-center justify-start py-1 mx-0"
+                class="table-row-class align-center justify-center py-2 mx-0"
               >
-                <v-col cols="2" sm="1">
+                <v-col cols="1" sm="1">
                   <v-radio label="" :value="acc.address" class="mx-2" />
                 </v-col>
-                <v-col cols="6" sm="8">
+                <v-col cols="1" sm="1" class="text-center">
+                  {{ acc.idx }}
+                </v-col>
+                <v-col cols="7">
                   <v-row
                     dense
                     class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
@@ -242,8 +194,12 @@
                       :address="acc.address"
                       class="mr-2"
                     />
-                    <v-col cols="9" class="d-none d-sm-flex">
+                    <v-col cols="9" class="d-none d-sm-flex flex-column">
+                      <span v-if="acc.nickname" class="font-weight-bold">{{
+                        acc.nickname
+                      }}</span>
                       <mew-transform-hash :hash="acc.address" />
+                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
                     </v-col>
                     <p class="d-block d-sm-none">
                       {{ acc.address | concatAddressXS }}
@@ -256,7 +212,7 @@
                     />
                   </v-row>
                 </v-col>
-                <v-col cols="4" sm="3">
+                <v-col cols="2" offset="1">
                   <p class="balance-overflow">
                     {{
                       acc.balance === 'Loading..'
@@ -282,6 +238,7 @@
                   btn-size="small"
                   icon-align="left"
                   btn-style="transparent"
+                  :disabled="currentIdx === 0"
                   @click.native="previousAddressSet"
                 />
                 <mew-button
@@ -329,7 +286,7 @@
         class="my-2"
         next-btn-text="Access Wallet"
         :next-btn-method="accessWallet"
-        :back-btn-method="backStepTwo"
+        :back-btn-method="backStepOne"
         :next-disable="!acceptTerms"
       />
     </template>
@@ -344,16 +301,19 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import {
   Toast,
   ERROR,
-  SUCCESS,
+  // SUCCESS,
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
-import { checkCustomPath } from '../handlers/pathHelper';
+// import { checkCustomPath } from '../handlers/pathHelper';
 import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
-import { fromWei } from 'web3-utils';
+import { fromWei, toChecksumAddress, _ } from 'web3-utils';
+
 import Web3 from 'web3';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import ENS, { getEnsAddress } from '@ensdomains/ensjs';
+import BigNumber from 'bignumber.js';
 
 const MAX_ADDRESSES = 5;
 
@@ -435,10 +395,6 @@ export default {
           name: 'Enter Phrase'
         },
         {
-          step: 2,
-          name: 'Select HD Path'
-        },
-        {
           step: 3,
           name: 'Address & Network'
         }
@@ -458,9 +414,13 @@ export default {
         }
       ],
       /* Path Items: */
-      selectedPath: null,
-      customPathName: '',
-      customPathValue: '',
+      selectedPath: {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      },
+      // customPathName: '',
+      // customPathValue: '',
       /* Terms Items : */
       acceptTerms: false,
       link: {
@@ -479,7 +439,10 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['customPaths']),
+    ...mapState('global', ['customPaths', 'addressBook']),
+    web3() {
+      return new Web3(this.network.url);
+    },
     /**
      * Property returns the index of the account of the accountAddress
      */
@@ -609,14 +572,16 @@ export default {
     phrase: {
       deep: true,
       handler: function (newval) {
-        const splitVal = newval[1].split(' ');
-        if (splitVal.length === 12 || splitVal.length === 24) {
-          this.length = splitVal.length;
-          const newObj = {};
-          splitVal.forEach((item, idx) => {
-            newObj[idx + 1] = item;
-          });
-          this.phrase = newObj;
+        if (newval && !_.isEmpty(newval)) {
+          const splitVal = newval[1].split(' ');
+          if (splitVal.length === 12 || splitVal.length === 24) {
+            this.length = splitVal.length;
+            const newObj = {};
+            splitVal.forEach((item, idx) => {
+              newObj[idx + 1] = item;
+            });
+            this.phrase = newObj;
+          }
         }
       }
     },
@@ -629,12 +594,21 @@ export default {
     network: {
       deep: true,
       handler: function () {
-        this.accounts = [];
-        this.addressPage -= 1;
+        this.accounts.splice(0);
+        this.addressPage = 0;
         this.selectedAddress = '';
         this.accountAddress = '';
-        this.currentIdx -= MAX_ADDRESSES;
+        this.currentIdx = 0;
         this.setMnemonicAddress();
+      }
+    },
+    selectedPath: {
+      deep: true,
+      handler: function () {
+        this.accounts.splice(0);
+        this.addressPage = 0;
+        this.currentIdx = 0;
+        this.nextStepTwo();
       }
     }
   },
@@ -649,8 +623,15 @@ export default {
      */
     async setMnemonicAddress() {
       try {
-        const web3 = new Web3(this.network.url);
-        this.accounts = [];
+        // resets the array to empty
+        this.accounts.splice(0);
+        const chainId = BigNumber(this.network.type.chainID);
+        const ens = this.network.type.hasOwnProperty('ens')
+          ? new ENS({
+              provider: this.web3.eth.currentProvider,
+              ensAddress: getEnsAddress(chainId.toString())
+            })
+          : null;
         for (
           let i = this.currentIdx;
           i < this.currentIdx + MAX_ADDRESSES;
@@ -659,12 +640,23 @@ export default {
           const account = await this.handlerAccessWallet
             .getWalletInstance()
             .getAccount(i);
-          const balance = await web3.eth.getBalance(account.getAddressString());
+          const address = account.getAddressString();
+          const name = ens
+            ? await ens.getName(address)
+            : {
+                name: ''
+              };
+          const balance = this.network.type.isEthVMSupported.supported
+            ? 'Loading..'
+            : await this.web3.eth.getBalance(address);
+          const nickname = this.getNickname(address);
           this.accounts.push({
-            address: account.getAddressString(),
+            address: address,
             account: account,
             idx: i,
-            balance: fromWei(balance)
+            balance: balance !== 'Loading..' ? fromWei(balance) : balance,
+            ensName: name.name ? name.name : '',
+            nickname: nickname
           });
         }
         this.currentIdx += MAX_ADDRESSES;
@@ -674,6 +666,22 @@ export default {
       } catch (e) {
         Toast(e, {}, ERROR);
       }
+    },
+    getNickname(address) {
+      const checksummedAddress = toChecksumAddress(address);
+      const isStored = this.addressBook.find(item => {
+        const address = item.resolvedAddr
+          ? toChecksumAddress(item.resolvedAddr)
+          : toChecksumAddress(item.address);
+        if (address === checksummedAddress) {
+          return item;
+        }
+      });
+      return isStored
+        ? isStored.resolvedAddr
+          ? isStored.resolvedAddr
+          : isStored.nickname
+        : '';
     },
     /**
      * Method unlocks mnemonic phrase;
@@ -687,6 +695,10 @@ export default {
         .then(res => {
           if (res) {
             this.step = 2;
+            this.accounts.splice(0);
+            this.currentIdx = 0;
+            this.addressPage = 0;
+            this.nextStepTwo();
           }
         })
         .catch(e => {
@@ -699,43 +711,42 @@ export default {
      * Shows toast message to use on error or successfull addition.
      * Used in STEP 2
      */
-    saveCustomPath() {
-      try {
-        const customPath = checkCustomPath(this.customPathValue);
-        if (customPath) {
-          if (this.parsedPaths.some(e => e.value === this.customPathValue)) {
-            const error = `Custom path already exhists: ${
-              this.parsedPaths.find(e => e.value === this.customPathValue).name
-            }`;
-            Toast(error, {}, ERROR);
-          } else {
-            const newPath = {
-              name: this.customPathName,
-              subtext: this.customPathValue,
-              value: this.customPathValue
-            };
-            this.addCustomPath(newPath).then(() => {
-              Toast('You have added custom path successfully.', {}, SUCCESS);
-            });
-          }
-        } else {
-          Toast('Custom path is not valid', {}, ERROR);
-        }
-      } catch (error) {
-        Toast(error, {}, ERROR);
-      }
-    },
+    // saveCustomPath() {
+    //   try {
+    //     const customPath = checkCustomPath(this.customPathValue);
+    //     if (customPath) {
+    //       if (this.parsedPaths.some(e => e.value === this.customPathValue)) {
+    //         const error = `Custom path already exhists: ${
+    //           this.parsedPaths.find(e => e.value === this.customPathValue).name
+    //         }`;
+    //         Toast(error, {}, ERROR);
+    //       } else {
+    //         const newPath = {
+    //           name: this.customPathName,
+    //           subtext: this.customPathValue,
+    //           value: this.customPathValue
+    //         };
+    //         this.addCustomPath(newPath).then(() => {
+    //           Toast('You have added custom path successfully.', {}, SUCCESS);
+    //         });
+    //       }
+    //     } else {
+    //       Toast('Custom path is not valid', {}, ERROR);
+    //     }
+    //   } catch (error) {
+    //     Toast(error, {}, ERROR);
+    //   }
+    // },
     /**
      * Methods sets addresses according to the path selected
-     * and switched stepper to step 3
-     * Used in STEP 2
+     * Used in STEP 1
      */
-    nextStepThree() {
+    nextStepTwo() {
+      const defaultPath = this.selectedPath;
       this.handlerAccessWallet
-        .updateMnemonicPath(this.selectedPath.value)
+        .updateMnemonicPath(defaultPath.value)
         .then(res => {
           if (res) {
-            this.step = 3;
             this.setMnemonicAddress();
           }
         })
@@ -744,25 +755,26 @@ export default {
         });
     },
     /**
-     * Methods changes stepper to step 1
+     * Methods resets all addresses
+     * and switched stepper to step 1
      * Used in STEP 2
      */
     backStepOne() {
       this.step = 1;
-    },
-    /**
-     * Methods resets all addresses
-     * and switched stepper to step 2
-     * Used in STEP 3
-     */
-    backStepTwo() {
-      this.step = 2;
       this.selectedAddress = '';
       this.accounts.splice(0);
       this.currentIdx = 0;
       this.addressPage = 0;
+      this.phrase = {};
+      this.length = 12;
     },
-
+    /**
+     * Clears mnemonic input field
+     */
+    clearFields() {
+      this.phrase = {};
+      this.length = 12;
+    },
     /**
      * Methods generates privious derived addresses
      * Used in STEP 3
