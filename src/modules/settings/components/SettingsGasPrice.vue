@@ -75,23 +75,31 @@
           </div>
         </div>
         <div class="text-right">
-          <div class="mew-label textSecondary--text">
-            +{{ b.usd }} {{ b.time }}
+          <div
+            v-if="b.title === gasPriceTypes.ECONOMY"
+            class="mew-label textSecondary--text"
+          >
+            No tip
           </div>
-          <div class="mew-label textSecondary--text">
-            +{{ b.gas | twoDecimalPoint }} Gwei
+          <div v-else>
+            <div class="mew-label textSecondary--text">
+              +{{ b.usd }} {{ b.time }}
+            </div>
+            <div class="mew-label textSecondary--text">
+              +{{ b.gas | twoDecimalPoint }} Gwei
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="text-center mew-label mt-6 mb-5 secondary--text">
-      To increase priority
+    <div v-if="!hasMinEth && !globalSetting" class="mt-6 mb-5 secondary--text">
+      <div>Not enough funds to increase priority.</div>
       <a
         rel="noopener noreferrer"
         target="_blank"
         :href="swapLink"
-        class="font-weight-medium"
+        class="mt-1 d-block"
       >
         Buy more ETH
       </a>
@@ -127,6 +135,14 @@ export default {
       default: () => []
     },
     isSwap: {
+      type: Boolean,
+      default: false
+    },
+    hasMinEth: {
+      type: Boolean,
+      default: false
+    },
+    globalSetting: {
       type: Boolean,
       default: false
     }
@@ -170,8 +186,12 @@ export default {
   }
   &.active {
     border: 2px solid #31c0a5;
-    background-color: #d5edef;
+    background-color: #e1f7f4;
     opacity: 1;
+    &:hover {
+      opacity: 1;
+      background-color: #d5edef;
+    }
   }
 }
 .go-to-global-text {

@@ -12,6 +12,7 @@
       :set-selected="setGas"
       :gas-price="gasPrice"
       :open-global-settings="openSettings"
+      :has-min-eth="hasMinEth"
     />
   </simple-dialog>
 </template>
@@ -44,6 +45,10 @@ export default {
     selected: {
       type: String,
       default: gasPriceTypes.ECONOMY
+    },
+    hasMinEth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="core--components--app-transaction-fee">
     <!--
       =====================================================
         AppNetworkSettings
@@ -10,6 +10,7 @@
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
       :selected="gasPriceType"
+      :has-min-eth="hasMinEth"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -65,13 +66,10 @@
         Loader: present when loading Fee
       =====================================================
       -->
-      <v-skeleton-loader
-        v-show="gettingFee || !showFee"
-        type="paragraph"
-        width="200px"
-        class="mt-2 px-sm-2 align-center"
-      />
-
+      <div v-show="gettingFee || !showFee" style="max-width: 556px">
+        <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
+        <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
+      </div>
       <div v-if="!gettingFee && showFee">
         <!--
       =====================================================
@@ -123,7 +121,7 @@
         Too high transaction fee / Buy more ETH
       =====================================================
       -->
-        <div class="d-flex align-center ml-3 mt-1">
+        <div class="d-flex align-center ml-2 mt-1">
           <div
             class="
               mr-1
@@ -203,6 +201,10 @@ export default {
     balance: {
       type: String,
       default: ''
+    },
+    hasMinEth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -267,5 +269,13 @@ export default {
 }
 .eth-fee {
   white-space: nowrap;
+}
+</style>
+
+<style lang="scss">
+.core--components--app-transaction-fee {
+  .v-skeleton-loader__heading {
+    width: 100% !important;
+  }
 }
 </style>
