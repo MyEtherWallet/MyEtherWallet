@@ -94,7 +94,7 @@ class WalletLinkWallet {
               msgSigner,
               this.connection,
               errorHandler,
-              this.icon
+              this.meta
             )
           );
         })

@@ -177,6 +177,12 @@ WebsocketProvider.prototype.on = function (type, callback) {
     throw new Error('The second parameter callback must be a function.');
 
   switch (type) {
+    case 'message':
+      this.notificationCallbacks.push(resp =>
+        callback({ data: resp.params, type: resp.method })
+      );
+      break;
+
     case 'data':
       this.notificationCallbacks.push(callback);
       break;

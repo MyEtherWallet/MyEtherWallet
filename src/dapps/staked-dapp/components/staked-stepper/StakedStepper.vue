@@ -63,6 +63,7 @@ import StepOneAmount from './staked-steps/StepOneAmount';
 import StepTwoGenerate from './staked-steps/StepTwoGenerate';
 import StepFourReview from './staked-steps/StepFourReview';
 import StepThreeUpload from './staked-steps/StepThreeUpload';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
@@ -110,6 +111,23 @@ export default {
       skipped: false,
       address: ''
     };
+  },
+  watch: {
+    onStep(newStep) {
+      if (newStep == 2) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_2.NAME });
+      } else if (newStep == 3) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_3.NAME });
+      } else if (newStep == 4) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_4.NAME });
+      } else {
+        this.$router.push({ name: ROUTES_WALLET.STAKED.NAME });
+      }
+    }
+  },
+  mounted() {
+    if (this.$route.name == ROUTES_WALLET.STAKED.NAME)
+      this.$router.push({ name: ROUTES_WALLET.STAKED_1.NAME });
   },
   methods: {
     /**

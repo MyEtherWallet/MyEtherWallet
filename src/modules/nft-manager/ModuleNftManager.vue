@@ -89,7 +89,7 @@
     -->
                   <nft-manager-details
                     :loading="loadingTokens"
-                    :on-click="goToSend"
+                    :on-click="openNftSend"
                     :get-image-url="getImageUrl"
                     :token="token"
                   />
@@ -124,7 +124,7 @@
     -->
         <nft-manager-send
           v-if="onNftSend"
-          :close="toggleNftSend"
+          :close="closeNftSend"
           :get-image-url="getImageUrl"
           :nft="selectedNft"
           :nft-category="selectedContract.name"
@@ -150,6 +150,7 @@ import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import handlerNft from './handlers/handlerNft.mixin';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
@@ -247,14 +248,16 @@ export default {
     /**
      * Send NFT
      */
-    toggleNftSend() {
-      this.onNftSend = !this.onNftSend;
-    },
-    goToSend(selectedNft) {
+    openNftSend(selectedNft) {
       if (selectedNft) {
         this.selectedNft = selectedNft;
       }
-      this.toggleNftSend();
+      this.onNftSend = true;
+      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME });
+    },
+    closeNftSend() {
+      this.onNftSend = false;
+      this.$router.go(-1);
     },
     sendTx() {
       if (this.isValid) {
@@ -279,7 +282,7 @@ export default {
             .catch(e => {
               Toast(e.message, {}, ERROR);
             });
-          this.toggleNftSend();
+          this.closeNftSend();
           this.selectedNft = {};
         } catch (e) {
           Toast(e.message, {}, WARNING);
