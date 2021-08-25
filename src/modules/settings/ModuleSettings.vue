@@ -155,7 +155,7 @@ export default {
       return [
         {
           name: 'Gas price',
-          subtext: `✔
+          subtext: `
           ${
             this.gasPriceType === gasPriceTypes.ECONOMY ? 'Normal priority' : ''
           }

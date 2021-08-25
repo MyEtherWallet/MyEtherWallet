@@ -64,6 +64,7 @@
               mdi-arrow-up
             </v-icon>
           </div>
+
           <div v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
             Normal priority
           </div>
@@ -74,7 +75,15 @@
             Highest priority
           </div>
         </div>
-        <div class="text-right">
+
+        <!-- Show check mark if this is called from global settings -->
+        <div v-if="globalSetting">
+          <v-icon v-if="selected === b.title" color="primary">
+            mdi-check-circle
+          </v-icon>
+          <v-icon v-else color="#e1e6ec"> mdi-checkbox-blank-circle </v-icon>
+        </div>
+        <div v-else class="text-right">
           <div
             v-if="b.title === gasPriceTypes.ECONOMY"
             class="mew-label textSecondary--text"

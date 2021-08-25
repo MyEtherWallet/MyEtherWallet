@@ -70,81 +70,132 @@
         <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
         <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
       </div>
-      <div v-if="!gettingFee && showFee">
-        <!--
+
+      <!--
       =====================================================
         Transaction fee selector button
       =====================================================
       -->
-        <div class="d-flex align-center justify-space-between flex-wrap">
-          <div class="d-flex align-center flex-wrap">
-            <v-btn
-              depressed
-              class="text-transform--initial"
-              @click="openGasPriceModal"
-            >
-              <div class="d-flex align-center">
-                <div class="textBlack2--text">{{ feesInUsd }}</div>
-                <v-icon small class="mx-2">mdi-arrow-right</v-icon>
+      <!-- Start of tx fee button -->
+      <div
+        v-if="!gettingFee && showFee"
+        class="d-flex align-start flex-wrap justify-space-between"
+      >
+        <div>
+          <div class="mb-4">
+            <div class="d-flex align-center flex-wrap">
+              <v-btn
+                depressed
+                class="text-transform--initial"
+                @click="openGasPriceModal"
+              >
                 <div class="d-flex align-center">
-                  <v-icon small>mdi-clock-outline</v-icon>
-                  <div>{{ timeWillTake }}</div>
+                  <div
+                    :class="
+                      !gettingFee & hasError
+                        ? 'error--text'
+                        : 'textBlack2--text'
+                    "
+                  >
+                    {{ feesInUsd }}
+                  </div>
+                  <v-icon
+                    :color="!gettingFee & hasError ? 'error' : ''"
+                    small
+                    class="mx-2"
+                    >mdi-arrow-right</v-icon
+                  >
+                  <div class="d-flex align-center">
+                    <v-icon
+                      :color="!gettingFee & hasError ? 'error' : ''"
+                      small
+                    >
+                      mdi-clock-outline
+                    </v-icon>
+                    <div
+                      :class="
+                        !gettingFee & hasError
+                          ? 'error--text'
+                          : 'textBlack2--text'
+                      "
+                    >
+                      {{ timeWillTake }}
+                    </div>
+                  </div>
+                  <v-icon
+                    :color="!gettingFee & hasError ? 'error' : ''"
+                    class="ml-3"
+                  >
+                    mdi-chevron-down
+                  </v-icon>
                 </div>
-                <v-icon class="ml-3">mdi-chevron-down</v-icon>
+              </v-btn>
+              <div
+                :class="
+                  !gettingFee & hasError ? 'error--text' : 'textSecondary--text'
+                "
+                class="ml-3 py-1"
+              >
+                {{ actualFeeFormatted }} ETH
               </div>
-            </v-btn>
-            <div class="textSecondary--text ml-3 py-1">
-              {{ actualFeeFormatted }} ETH
             </div>
           </div>
-          <div class="py-1 ml-3">
-            Total:
-            {{ grandTotal }} ETH
-          </div>
-        </div>
 
-        <!--
-      =====================================================
-        Not enough balance warning / Error
-      =====================================================
-      -->
-        <div
-          v-if="!gettingFee & hasError"
-          :class="[hasError ? 'error--text' : '', 'mew-label']"
-          class="mt-2 ml-2"
-        >
-          {{ message }}
-        </div>
-
-        <!--
-      =====================================================
-        Too high transaction fee / Buy more ETH
-      =====================================================
-      -->
-        <div class="d-flex align-center ml-2 mt-1">
+          <!--
+          =====================================================
+            Not enough balance warning / Error
+          =====================================================
+          -->
           <div
-            class="
-              mr-1
-              primary--text
-              cursor--pointer
-              user-select--none
-              mew-label
-            "
-            @click="openHighFeeNote = true"
+            v-if="!gettingFee & hasError"
+            :class="[hasError ? 'error--text' : '', 'mew-label']"
+            class="mb-1 ml-2"
           >
-            Why are the fees so high?
+            {{ message }}
+            <a
+              v-if="notEnoughEth"
+              rel="noopener noreferrer"
+              target="_blank"
+              :href="swapLink"
+              class="mew-label"
+            >
+              Buy more ETH
+            </a>
           </div>
-          <a
-            v-if="notEnoughEth"
-            rel="noopener noreferrer"
-            target="_blank"
-            :href="swapLink"
-            class="mew-label font-weight-medium"
-          >
-            Buy more ETH
-          </a>
+
+          <!--
+          =====================================================
+            Too high transaction fee / Buy more ETH
+          =====================================================
+          -->
+          <div class="d-flex align-center ml-2">
+            <div
+              class="
+                mr-1
+                primary--text
+                cursor--pointer
+                user-select--none
+                mew-label
+              "
+              @click="openHighFeeNote = true"
+            >
+              Why are the fees so high?
+            </div>
+          </div>
+        </div>
+        <div class="mt-2 ml-2 d-none d-lg-block">
+          <span class="mr-2">Total:</span>
+          {{ grandTotal }} ETH
         </div>
       </div>
+      <div class="d-block d-lg-none text-right">
+        <v-divider class="my-5" />
+        <div class="pl-2">
+          <span class="mr-2">Total:</span>
+          {{ grandTotal }} ETH
+        </div>
+      </div>
+      <!-- End of tx fee button -->
     </div>
   </div>
 </template>

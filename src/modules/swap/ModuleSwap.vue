@@ -242,7 +242,8 @@
             @onLocalGasPrice="handleLocalGasPrice"
           />
 
-          <div class="text-center mt-10 mt-sm-15">
+          <div class="text-center mt-13">
+            <div class="error--text mb-4">{{ amountErrorMessage }}</div>
             <mew-button
               title="Next"
               :has-full-width="false"
