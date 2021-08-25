@@ -1,0 +1,504 @@
+<template>
+  <div>
+    <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
+      <!--
+          =====================================================================================
+            Panel: Select Address
+          =====================================================================================
+          -->
+      <template #panelBody1>
+        <div>
+          <v-radio-group v-model="selectedAddress">
+            <!--
+                =====================================================================================
+                  Table - Header
+                =====================================================================================
+                -->
+            <v-row dense class="table-header mx-0">
+              <v-col offset="2">
+                <p class="">Adddress</p>
+              </v-col>
+              <v-col cols="4" sm="3">
+                <p>{{ network.type.name }} Balance</p>
+              </v-col>
+            </v-row>
+            <!--
+                =====================================================================================
+                  Table - Address Row
+                =====================================================================================
+                -->
+            <v-row
+              v-for="acc in accounts"
+              v-show="accounts.length > 0"
+              :key="acc.address"
+              dense
+              class="table-row-class align-center justify-center py-2 mx-0"
+            >
+              <v-col cols="1" sm="1">
+                <v-radio label="" :value="acc.address" class="mx-2" />
+              </v-col>
+              <v-col cols="1" sm="1" class="text-center">
+                {{ acc.idx }}
+              </v-col>
+              <v-col cols="7">
+                <v-row
+                  dense
+                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                >
+                  <mew-blockie
+                    width="25px"
+                    height="25px"
+                    :address="acc.address"
+                    class="mr-2"
+                  />
+                  <v-col cols="9" class="d-none d-sm-flex flex-column">
+                    <span v-if="acc.nickname" class="font-weight-bold">{{
+                      acc.nickname
+                    }}</span>
+                    <mew-transform-hash :hash="acc.address" />
+                    <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                  </v-col>
+                  <p class="d-block d-sm-none">
+                    {{ acc.address | concatAddressXS }}
+                  </p>
+                  <mew-copy
+                    is-small
+                    tooltip="Copy Address"
+                    :copy-value="acc.address"
+                    class="ml-2"
+                  />
+                </v-row>
+              </v-col>
+              <v-col cols="2" offset="1">
+                <p class="balance-overflow">
+                  {{
+                    acc.balance === 'Loading..'
+                      ? acc.balance
+                      : `${acc.balance} ${network.type.name}`
+                  }}
+                </p>
+              </v-col>
+            </v-row>
+          </v-radio-group>
+          <!--
+              =====================================================================================
+               Previous / Next Buttons
+              =====================================================================================
+              -->
+          <v-row class="pb-6" align="center" justify="center">
+            <div>
+              <mew-button
+                title="Previous"
+                color-theme="basic"
+                icon="mdi-chevron-left"
+                icon-type="mdi"
+                btn-size="small"
+                icon-align="left"
+                btn-style="transparent"
+                :disabled="currentIdx === 0"
+                @click.native="previousAddressSet"
+              />
+              <mew-button
+                title="Next"
+                color-theme="basic"
+                icon="mdi-chevron-right"
+                icon-type="mdi"
+                btn-size="small"
+                icon-align="right"
+                btn-style="transparent"
+                @click.native="nextAddressSet"
+              />
+            </div>
+          </v-row>
+        </div>
+      </template>
+      <!--
+          =====================================================================================
+            Panel: Network
+          =====================================================================================
+          -->
+      <template #panelBody2>
+        <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+      </template>
+    </mew-expand-panel>
+    <!--
+        =====================================================================================
+         Terms
+        =====================================================================================
+        -->
+    <div class="d-flex align-center flex-column">
+      <mew-checkbox
+        v-model="acceptTerms"
+        label="To access my wallet, I accept "
+        :link="link"
+        class="justify-center"
+      />
+    </div>
+    <!--
+        =====================================================================================
+          Back / Access Wallet Buttons
+        =====================================================================================
+        -->
+    <app-btn-row
+      class="my-2"
+      next-btn-text="Access Wallet"
+      :next-btn-method="accessWallet"
+      :back-btn-method="back ? reset : null"
+      :next-disable="!acceptTerms"
+    />
+  </div>
+</template>
+<script>
+import AppBtnRow from '@/core/components/AppBtnRow';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { fromWei, toChecksumAddress } from 'web3-utils';
+import { mapGetters, mapState } from 'vuex';
+import ENS, { getEnsAddress } from '@ensdomains/ensjs';
+import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
+
+const MAX_ADDRESSES = 5;
+
+export default {
+  name: 'AccessWalletAddressNetwork',
+  filters: {
+    concatAddress(val) {
+      return `${val.substring(0, 11)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    },
+    concatAddressXS(val) {
+      return `${val.substring(0, 4)}...${val.substring(
+        val.length - 4,
+        val.length
+      )}`;
+    }
+  },
+  components: {
+    AppBtnRow,
+    NetworkSwitch
+  },
+  props: {
+    back: {
+      type: Function,
+      default: function () {
+        return {};
+      }
+    },
+    handlerWallet: {
+      type: Object,
+      default: function () {
+        return {};
+      }
+    }
+  },
+  apollo: {
+    /**
+     * Apollo query to return eth balance for each account
+     */
+    getEthBalance: {
+      query: getEthBalance,
+      variables() {
+        return {
+          hash: this.accountAddress
+        };
+      },
+      skip() {
+        return this.skipApollo || this.accountAddress === null;
+      },
+      result({ data }) {
+        if (data && data.getEthBalance) {
+          if (this.accounts[this.onAccountIndex]) {
+            /**
+             * Sets the balance of the account of accountAddress
+             */
+            this.accounts[this.onAccountIndex].balance =
+              formatFloatingPointValue(
+                fromWei(data.getEthBalance.balance)
+              ).value;
+            /**
+             * Find the next index and set the address of it to accountAddress
+             */
+            const nextIdx = this.onAccountIndex + 1;
+            if (
+              nextIdx < this.accounts.length &&
+              this.accounts[nextIdx].balance === 'Loading..'
+            ) {
+              this.accountAddress = this.accounts[nextIdx].address;
+            }
+          }
+        }
+      }
+    }
+  },
+  data() {
+    return {
+      currentIdx: 0,
+      acceptTerms: false,
+      link: {
+        title: 'Terms',
+        url: 'https://www.myetherwallet.com/terms-of-service'
+      },
+      selectedAddress: '',
+      accountAddress: '',
+      /*Network Items: */
+      panelNetworkSubstring: '',
+      /* Path Items: */
+      addressPage: 0,
+      accounts: []
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['network']),
+    ...mapState('global', ['addressBook']),
+    web3() {
+      return new Web3(this.network.url);
+    },
+    /**
+     * Property returns the index of the account of the accountAddress
+     */
+    onAccountIndex() {
+      return this.accounts.findIndex(
+        acc => acc.address === this.accountAddress
+      );
+    },
+    /**
+     * Property returns boolean and validates whether or not to skip Apollo GetEthBalance query.
+     */
+    skipApollo() {
+      return (
+        (!this.accountAddress && this.accountAddress === '') ||
+        (this.accounts[this.onAccountIndex] &&
+          this.accounts[this.onAccountIndex].balance !== 'Loading..')
+      );
+    },
+    /**
+     * Property returns edited version of the selected address. ie: 0x3453...3a3b
+     */
+    panelAddressSubstring() {
+      return this.selectedAddress && this.selectedAddress !== ''
+        ? `${this.selectedAddress.substring(
+            0,
+            6
+          )} ... ${this.selectedAddress.substring(
+            this.selectedAddress.length - 4,
+            this.selectedAddress.length
+          )}`
+        : '';
+    },
+    /**
+     * Property returns expand panel items for the Address and Network
+     */
+    panelItems() {
+      return [
+        {
+          name: 'Address',
+          subtext: this.panelAddressSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        },
+        {
+          name: 'Network',
+          subtext: this.panelNetworkSubstring,
+          colorTheme: 'superPrimary',
+          hasActiveBorder: true
+        }
+      ];
+    },
+    /**
+     * Property returns default network and nodes items
+     * Property Interface:
+     * {  name = string -> Name of the Path,
+     *    subtext = string --> Derivation Path,
+     *    value = tring --> Derivation Path
+     * }
+     */
+    walletAccount() {
+      const wallet = this.accounts.find(item => {
+        return item.address === this.selectedAddress;
+      });
+      if (wallet) {
+        wallet.account.isHardware = true;
+        return wallet.account;
+      }
+      return null;
+    }
+  },
+  watch: {
+    accounts: {
+      deep: true,
+      handler: function (newVal) {
+        this.accounts = newVal;
+      }
+    },
+    network: {
+      deep: true,
+      handler: function () {
+        this.changeHandler();
+      }
+    },
+    handlerWallet: {
+      deep: true,
+      handler: function () {
+        this.changeHandler();
+      }
+    }
+  },
+  mounted() {
+    this.setNetworkPanel();
+    this.setAccounts();
+  },
+  methods: {
+    changeHandler() {
+      this.accounts.splice(0);
+      this.addressPage = 0;
+      this.selectedAddress = '';
+      this.accountAddress = '';
+      this.currentIdx = 0;
+      this.setAccounts();
+    },
+    /**
+     * Resets the component and calls back method prop.
+     */
+    reset() {
+      this.selectedAddress = '';
+      this.accounts.splice(0);
+      this.currentIdx = 0;
+      this.addressPage = 0;
+      this.back();
+    },
+    /**
+     * Async method that gets accounts according to the pagination
+     */
+    async setAccounts() {
+      try {
+        // resets the array to empty
+        this.accounts.splice(0);
+        const chainId = BigNumber(this.network.type.chainID);
+        const ens = this.network.type.hasOwnProperty('ens')
+          ? new ENS({
+              provider: this.web3.eth.currentProvider,
+              ensAddress: getEnsAddress(chainId.toString())
+            })
+          : null;
+        for (
+          let i = this.currentIdx;
+          i < this.currentIdx + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.handlerWallet.getAccount(i);
+          const address = account.getAddressString();
+          const name = ens
+            ? await ens.getName(address)
+            : {
+                name: ''
+              };
+          const balance = this.network.type.isEthVMSupported.supported
+            ? 'Loading..'
+            : await this.web3.eth.getBalance(address);
+          const nickname = this.getNickname(address);
+          this.accounts.push({
+            address: address,
+            account: account,
+            idx: i,
+            balance: balance !== 'Loading..' ? fromWei(balance) : balance,
+            ensName: name.name ? name.name : '',
+            nickname: nickname
+          });
+        }
+        this.currentIdx += MAX_ADDRESSES;
+        this.addressPage += 1;
+        this.selectedAddress = this.accounts[0].address;
+        this.accountAddress = this.accounts[0].address;
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    },
+    getNickname(address) {
+      const checksummedAddress = toChecksumAddress(address);
+      const isStored = this.addressBook.find(item => {
+        const address = item.resolvedAddr
+          ? toChecksumAddress(item.resolvedAddr)
+          : toChecksumAddress(item.address);
+        if (address === checksummedAddress) {
+          return item;
+        }
+      });
+      return isStored
+        ? isStored.resolvedAddr
+          ? isStored.resolvedAddr
+          : isStored.nickname
+        : '';
+    },
+    /**
+     * Methods generates previous derived addresses
+     */
+    nextAddressSet() {
+      this.setAccounts();
+    },
+    /**
+     * Methods generates previous derived addresses
+     */
+    previousAddressSet() {
+      const pageDeductor = this.currentIdx / MAX_ADDRESSES;
+      const idxDeductor = this.addressPage * MAX_ADDRESSES;
+      this.addressPage -=
+        this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
+      this.currentIdx -=
+        this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
+      this.setAccounts();
+    },
+    /**
+     * Methods sets panelNetworkSubstring  based on the
+     * @return {void}
+     */
+    setNetworkPanel() {
+      this.panelNetworkSubstring = `${this.network.type.name} - ${this.network.type.name_long}`;
+    },
+    /**
+     * Methods emits parent to unlock wallet
+     * and passes selected wallet account
+     * this.walletAccount should always be defined,
+     * check in place if logic was compromised.
+     */
+    accessWallet() {
+      if (this.walletAccount) {
+        this.$emit('unlock', this.walletAccount);
+      }
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+table {
+  border-spacing: 0;
+}
+
+.table-header {
+  text-align: start;
+  background-color: #f0f0f0;
+  p {
+    color: #96a8b6;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0px;
+  }
+}
+.table-row-class {
+  p {
+    margin-bottom: 0px;
+  }
+}
+.table-row-class:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+.balance-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
