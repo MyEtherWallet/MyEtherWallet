@@ -87,7 +87,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
-            :balance="selectedBalance"
+            :amount="amount"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>

@@ -183,11 +183,15 @@
             </div>
           </div>
         </div>
+
+        <!-- Total for desktop -->
         <div class="mt-2 ml-2 d-none d-lg-block">
           <span class="mr-2">Total:</span>
           {{ grandTotal }} ETH
         </div>
       </div>
+
+      <!-- Total for mobile -->
       <div class="d-block d-lg-none text-right">
         <v-divider class="my-5" />
         <div class="pl-2">
@@ -249,7 +253,7 @@ export default {
       type: Boolean,
       default: false
     },
-    balance: {
+    amount: {
       type: String,
       default: ''
     },
@@ -271,7 +275,7 @@ export default {
       return formatFloatingPointValue(this.actualFees).value;
     },
     grandTotal() {
-      return BigNumber(this.actualFees).plus(this.balance);
+      return BigNumber(this.actualFees).plus(this.amount);
     },
     feesInUsd() {
       const value = formatFiatValue(
