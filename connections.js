@@ -36,5 +36,6 @@ module.exports = [
   'https://api.zilliqa.com:443',
   'https://registry.walletconnect.org:443',
   'https://cdn.live.ledger.com:443',
-  'https://app.lokalise.com:443'
+  'https://app.lokalise.com:443',
+  'wss://rpc.gochain.io/ws'
 ];
