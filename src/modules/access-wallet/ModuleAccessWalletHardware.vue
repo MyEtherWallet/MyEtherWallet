@@ -82,7 +82,11 @@
           Cool Wallet
         =====================================================================================
         -->
-      <span v-if="onCoolWallet">Cool Wallet</span>
+      <access-wallet-cool-wallet
+        v-if="onCoolWallet"
+        :cool-wallet-unlock="coolWalletUnlock"
+        @password="setPassword"
+      />
       <!--
         =====================================================================================
           Ledger
@@ -94,7 +98,7 @@
           Trezor
         =====================================================================================
         -->
-      <span>Trezor</span>
+      <span v-if="onTrezor">Trezor</span>
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
@@ -129,6 +133,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
+import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets, {
@@ -145,7 +150,8 @@ const MAX_ADDRESSES = 5;
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    AccessWalletKeepkey
+    AccessWalletKeepkey,
+    AccessWalletCoolWallet
     // AccessWalletBitbox,
     // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
@@ -298,6 +304,11 @@ export default {
         return {
           title: 'Using a KeepKey Hardware wallet with MEW',
           url: 'https://www.mewtopia.com/'
+        };
+      } else if (this.onCoolWallet) {
+        return {
+          title: 'Using a CoolWallet Hardware Wallet with MEW',
+          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
         };
       }
       return {
