@@ -209,7 +209,11 @@ export default {
       // currentStep: '',
       // steps: {},
       hwWalletInstance: {},
-      selectedPath: {},
+      selectedPath: {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      },
       walletType: '',
       selectedLedgerApp: {},
       password: '',
@@ -424,7 +428,7 @@ export default {
     },
     setWalletInstance(str) {
       this.walletType = str;
-      this.step++;
+      this.nextStep();
     },
     nextStep() {
       if (this.walletType) {
