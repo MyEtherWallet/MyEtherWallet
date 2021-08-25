@@ -99,22 +99,22 @@
         =====================================================================================
         -->
       <span v-if="onTrezor">Trezor</span>
-      <!--
-        =====================================================================================
-          Step 3: Select Address and Network | (If Applicable) 
-        =====================================================================================
-        -->
-      <!--
-            =====================================================================================
-            Network Address Step
-            =====================================================================================
-            -->
-      <access-wallet-address-network
-        v-if="onAddressNetwork"
-        :handler-wallet="hwWalletInstance"
-        @unlock="setHardwareWallet"
-      />
     </div>
+    <!--
+      =====================================================================================
+        Step 3: Select Address and Network | (If Applicable) 
+      =====================================================================================
+      -->
+    <!--
+          =====================================================================================
+          Network Address Step
+          =====================================================================================
+          -->
+    <access-wallet-address-network
+      v-if="step === 3"
+      :handler-wallet="hwWalletInstance"
+      @unlock="setHardwareWallet"
+    />
   </mew-overlay>
 </template>
 
@@ -131,9 +131,7 @@ import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
-import wallets, {
-  LAYOUT_STEPS
-} from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
+import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -211,24 +209,17 @@ export default {
       wallets: wallets,
       // resettable
       step: 1,
-      currentStep: '',
-      steps: {},
+      // currentStep: '',
+      // steps: {},
       hwWalletInstance: {},
       selectedPath: {},
       walletType: '',
       selectedLedgerApp: {},
-      selectedAddress: '',
       password: '',
-      selectedNetwork: '',
-      accounts: [],
-      currentIdx: 0,
-      acceptTerms: false,
-      addressPage: 0,
-      qrCode: '',
-      bcVaultLoading: false,
-      enterPin: false,
-      pin: '',
-      onAddressNetwork: false,
+      // qrCode: '',
+      // walletInstance: {},
+      // enterPin: false,
+      // pin: '',
       callback: () => {},
       unwatch: () => {}
     };
@@ -314,12 +305,12 @@ export default {
     /**
      * On Bitbox
      */
-    onBitbox() {
-      return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
-    },
-    onBitboxPopup() {
-      return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
-    },
+    // onBitbox() {
+    //   return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
+    // },
+    // onBitboxPopup() {
+    //   return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
+    // },
     /**
      * On Ledger
      */
@@ -361,9 +352,9 @@ export default {
     /**
      * On Paths step
      */
-    onPaths() {
-      return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
-    },
+    // onPaths() {
+    //   return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
+    // },
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
@@ -431,14 +422,9 @@ export default {
       this.selectedPath = this.paths[0];
       this.walletType = '';
       this.selectedLedgerApp = this.ledgerApps[0];
-      this.selectedAddress = '';
       this.password = '';
-      this.selectedNetwork = '';
-      this.accounts = [];
-      this.currentIdx = 0;
-      this.acceptTerms = false;
-      this.addressPage = 0;
-      this.qrCode = '';
+      // this.qrCode = '';
+      // this.walletInstance = {};
       this.enterPin = false;
       this.walletType = '';
     },
@@ -446,10 +432,8 @@ export default {
      * Overlay Actions
      */
     back() {
-      !this.step
-        ? (this.close('showHardware'), delete this.steps[this.step + 1])
-        : (this.step -= 1);
-      this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
+      !this.step ? this.close('showHardware') : (this.step -= 1);
+      // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
     },
     overlayClose() {
@@ -458,15 +442,11 @@ export default {
     },
     setWalletInstance(str) {
       this.walletType = str;
-      this.incrementStep();
-    },
-    incrementStep() {
-      this.currentStep = this.wallets[this.walletType].steps[this.step];
       this.step++;
     },
     nextStep() {
       if (this.walletType) {
-        this.incrementStep();
+        this.step++;
         if (this.step === this.wallets[this.walletType].when) {
           this[`${this.walletType}Unlock`]();
         }
@@ -501,13 +481,13 @@ export default {
         .create(this.hasPath)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          if (this.walletType === WALLET_TYPES.BITBOX2) {
-            this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
-            _hwWallet.init(this.hasPath).then(() => {
-              this.hwWalletInstance = _hwWallet;
-            });
-          }
-          this.onAddressNetwork = true;
+          // if (this.walletType === WALLET_TYPES.BITBOX2) {
+          //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
+          //   _hwWallet.init(this.hasPath).then(() => {
+          //     this.hwWalletInstance = _hwWallet;
+          //   });
+          // }
+          this.step++;
           return _hwWallet;
         })
         .catch(err => {
@@ -527,7 +507,7 @@ export default {
         .create(path, password)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          this.onAddressNetwork = true;
+          this.step++;
         })
         .catch(err => {
           if (this.wallets[this.walletType]) {
@@ -541,9 +521,9 @@ export default {
     /**
      * Sets Path
      */
-    setPath(obj) {
-      this.selectedPath = obj;
-    },
+    // setPath(obj) {
+    //   this.selectedPath = obj;
+    // },
     /**
      * Set the selected wallet
      */
@@ -563,51 +543,45 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
-    },
+    }
     /**
      * Sets Ledger App
      */
-    setLedgerApp(obj) {
-      this.selectedLedgerApp = obj;
-    },
+    // setLedgerApp(obj) {
+    //   this.selectedLedgerApp = obj;
+    // },
     /**
      * Sets Password
      */
-    setPassword(str) {
-      this.password = str;
-    },
-    /**
-     * Sets Terms
-     */
-    setTerms(boolean) {
-      this.acceptTerms = boolean;
-    },
+    // setPassword(str) {
+    //   this.password = str;
+    // },
     /**
      * Keepkey Actions
      */
-    keepKeyClear() {
-      this.pin = '';
-    },
-    keepKeyPinEnter(pin) {
-      this.callback(pin);
-      this.enterPin = false;
-      this.step += 1;
-      setTimeout(() => {
-        this.callback = () => {};
-      }, 500);
-    },
+    // keepKeyClear() {
+    //   this.pin = '';
+    // },
+    // keepKeyPinEnter(pin) {
+    //   this.callback(pin);
+    //   this.enterPin = false;
+    //   this.step += 1;
+    //   setTimeout(() => {
+    //     this.callback = () => {};
+    //   }, 500);
+    // },
     /**
      * Sets BitBox value
      */
-    setSelectedBitbox(val) {
-      if (!val) {
-        this.walletType = WALLET_TYPES.BITBOX;
-      } else {
-        this.walletType = WALLET_TYPES.BITBOX2;
-      }
+    // setSelectedBitbox(val) {
+    //   if (!val) {
+    //     this.walletType = WALLET_TYPES.BITBOX;
+    //   } else {
+    //     this.walletType = WALLET_TYPES.BITBOX2;
+    //   }
 
-      this.nextStep();
-    }
+    //   this.nextStep();
+    // }
   }
 };
 </script>

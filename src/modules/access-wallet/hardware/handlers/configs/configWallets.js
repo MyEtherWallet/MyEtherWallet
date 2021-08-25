@@ -12,20 +12,20 @@ import {
 /**
  * different types of available hardware wallets
  */
-const LAYOUT_STEPS = {
-  ENTER_PASSWORD: 'enter_password',
-  PATH_SELECT: 'path_select',
-  NETWORK_ACCOUNT_SELECT: 'network_account_select',
-  BITBOX_SELECT: 'bitbox_select',
-  BITBOX_POPUP: 'bitbox_popup',
-  KEEPKEY_POPUP: 'keepkey_popup'
-};
-export { LAYOUT_STEPS };
+// const LAYOUT_STEPS = {
+//   ENTER_PASSWORD: 'enter_password',
+//   PATH_SELECT: 'path_select',
+//   NETWORK_ACCOUNT_SELECT: 'network_account_select',
+//   BITBOX_SELECT: 'bitbox_select',
+//   BITBOX_POPUP: 'bitbox_popup',
+//   KEEPKEY_POPUP: 'keepkey_popup'
+// };
+// export { LAYOUT_STEPS };
 export default {
   [WALLET_TYPES.LEDGER]: {
     create: LedgerWallet,
     when: 2,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    // steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,
@@ -34,7 +34,7 @@ export default {
   [WALLET_TYPES.TREZOR]: {
     create: TrezorWallet,
     when: 2,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    // steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,
@@ -43,7 +43,7 @@ export default {
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
     when: 2,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    // steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,
@@ -52,11 +52,11 @@ export default {
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,
     when: 2,
-    steps: [
-      LAYOUT_STEPS.PATH_SELECT,
-      LAYOUT_STEPS.KEEPKEY_POPUP,
-      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
-    ],
+    // steps: [
+    //   LAYOUT_STEPS.PATH_SELECT,
+    //   LAYOUT_STEPS.KEEPKEY_POPUP,
+    //   LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
+    // ],
     hasPaths: true,
     requiresPassword: false,
     accountOnly: false,
@@ -65,7 +65,7 @@ export default {
   [WALLET_TYPES.BCVAULT]: {
     create: BCVaultWallet,
     when: 2,
-    steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    // steps: [LAYOUT_STEPS.PATH_SELECT, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: false,
     accountOnly: true,
@@ -74,7 +74,7 @@ export default {
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
     when: 2,
-    steps: [LAYOUT_STEPS.ENTER_PASSWORD, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
+    // steps: [LAYOUT_STEPS.ENTER_PASSWORD, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: true,
     accountOnly: false,
