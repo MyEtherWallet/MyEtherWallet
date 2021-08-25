@@ -650,7 +650,8 @@ export default {
         .submitTransaction()
         .then(this.clear)
         .catch(error => {
-          this.error = error;
+          this.clear();
+          this.gasEstimationError = error.message;
         });
     },
     prefillForm() {
