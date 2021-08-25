@@ -338,12 +338,13 @@ export default {
     network: {
       deep: true,
       handler: function () {
-        this.accounts.splice(0);
-        this.addressPage = 0;
-        this.selectedAddress = '';
-        this.accountAddress = '';
-        this.currentIdx = 0;
-        this.setAccounts();
+        this.changeHandler();
+      }
+    },
+    handlerWallet: {
+      deep: true,
+      handler: function () {
+        this.changeHandler();
       }
     }
   },
@@ -352,6 +353,14 @@ export default {
     this.setAccounts();
   },
   methods: {
+    changeHandler() {
+      this.accounts.splice(0);
+      this.addressPage = 0;
+      this.selectedAddress = '';
+      this.accountAddress = '';
+      this.currentIdx = 0;
+      this.setAccounts();
+    },
     /**
      * Resets the component and calls back method prop.
      */

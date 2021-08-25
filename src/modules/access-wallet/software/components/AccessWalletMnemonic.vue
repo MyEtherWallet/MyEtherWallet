@@ -146,6 +146,7 @@
       <access-wallet-address-network
         :back="backStepOne"
         :handler-wallet="walletInstance"
+        :selected-path="selectedPath"
         @unlock="accessWallet"
       />
     </template>
@@ -290,7 +291,6 @@ export default {
     selectedPath: {
       deep: true,
       handler: function () {
-        this.accounts.splice(0);
         this.addressPage = 0;
         this.currentIdx = 0;
         this.nextStepTwo();
