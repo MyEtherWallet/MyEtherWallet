@@ -8,7 +8,8 @@ const ERRORS = {
   MaxAppRegistered: 'coolWalletError.max-app-instance',
   'browser not supported': 'coolWalletError.no-bluetooth',
   'User cancelled the requestDevice() chooser.': 'User cancelled action!',
-  'NetworkError: GATT operation already in progress.': 'AAAAAAAAAAAAAAAAAA'
+  'NetworkError: GATT operation already in progress.':
+    'Unknown CoolWallet Error!'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);
