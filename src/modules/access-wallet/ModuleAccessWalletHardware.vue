@@ -94,7 +94,7 @@
           Trezor
         =====================================================================================
         -->
-      <span>Trezor</span>
+      <span v-if="onTrezor">Trezor</span>
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 
@@ -106,14 +106,9 @@
             =====================================================================================
             -->
       <access-wallet-address-network
-              v-if="onNetworkAddresses"
-              :accounts="accounts"
-              :next-address-set="nextAddressSet"
-              :previous-address-set="previousAddressSet"
-              :set-hardware-wallet="setHardwareWallet"
-              :address-page="addressPage"
-              :step="step"
-            />
+        v-if="onAddressNetwork"
+        :handler-wallet="hwWalletInstance"
+      />
     </div>
   </mew-overlay>
 </template>
@@ -134,11 +129,7 @@ import wallets, {
 } from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import Web3 from 'web3';
-import { fromWei, _ } from 'web3-utils';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-const MAX_ADDRESSES = 5;
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -272,9 +263,6 @@ export default {
         }
       ];
     },
-    onNetworkAddresses() {
-      return this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
-    },
     /**
      * Returns the correct network icon
      */
@@ -403,18 +391,6 @@ export default {
         : this.wallets[this.walletType].title;
     }
   },
-  watch: {
-    network: {
-      deep: true,
-      handler: function () {
-        this.accounts = [];
-        this.addressPage -= 1;
-        this.selectedAddress = '';
-        this.currentIdx -= MAX_ADDRESSES;
-        if (!_.isEmpty(this.hwWalletInstance)) this.setAddresses();
-      }
-    }
-  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -506,16 +482,10 @@ export default {
           if (this.walletType === WALLET_TYPES.BITBOX2) {
             this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
             _hwWallet.init(this.hasPath).then(() => {
-              this.currentStep = LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
               this.hwWalletInstance = _hwWallet;
-              this.setAddresses();
             });
-          } else if (this.walletType === WALLET_TYPES.KEEPKEY) {
-            this.incrementStep();
-            this.setAddresses();
-          } else {
-            this.setAddresses();
           }
+          this.onAddressNetwork = true;
           return _hwWallet;
         })
         .catch(err => {
@@ -535,7 +505,7 @@ export default {
         .create(path, password)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          this.setAddresses();
+          this.onAddressNetwork = true;
         })
         .catch(err => {
           if (this.wallets[this.walletType]) {
@@ -615,52 +585,6 @@ export default {
       }
 
       this.nextStep();
-    },
-    /**
-     * Network Address step
-     */
-    async setAddresses() {
-      try {
-        const web3 = new Web3(this.network.url);
-        this.accounts = [];
-        for (
-          let i = this.currentIdx;
-          i < this.currentIdx + MAX_ADDRESSES;
-          i++
-        ) {
-          const account = await this.hwWalletInstance.getAccount(i);
-          const balance = await web3.eth.getBalance(account.getAddressString());
-          this.accounts.push({
-            address: account.getAddressString(),
-            account: account,
-            idx: i,
-            balance: formatFloatingPointValue(fromWei(balance)).value,
-            tokens: 'Loading..'
-          });
-        }
-        this.addressPage += 1;
-        this.currentIdx += MAX_ADDRESSES;
-        this.selectedAddress = this.accounts[0].address;
-      } catch (e) {
-        if (this.wallets[this.walletType]) {
-          this.wallets[this.walletType].create.errorHandler(e);
-        } else {
-          Toast(e, {}, ERROR);
-        }
-        this.reset();
-      }
-    },
-    nextAddressSet() {
-      this.setAddresses();
-    },
-    previousAddressSet() {
-      const pageDeductor = this.currentIdx / MAX_ADDRESSES;
-      const idxDeductor = this.addressPage * MAX_ADDRESSES;
-      this.addressPage -=
-        this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
-      this.currentIdx -=
-        this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAddresses();
     }
   }
 };
