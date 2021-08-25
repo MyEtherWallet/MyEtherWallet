@@ -8,6 +8,8 @@
       <mew-button
         class="mt-7"
         title="Connect Trezor"
+        icon="mdi-open-in-new"
+        icon-type="mdi"
         @click.native="trezorUnlock"
       />
     </div>
