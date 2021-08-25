@@ -94,7 +94,11 @@
           Trezor
         =====================================================================================
         -->
-      <access-wallet-trezor v-if="onTrezor" :trezor-unlock="trezorUnlock" />
+      <access-wallet-trezor
+        v-if="onTrezor"
+        :trezor-unlock="trezorUnlock"
+        :back="back"
+      />
       <!--
         =====================================================================================
           Step 3: Select Address and Network | (If Applicable) 

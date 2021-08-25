@@ -11,9 +11,9 @@
         @click.native="trezorUnlock"
       />
     </div>
-    <div class="primary--text my-8 cursor--pointer">
-      <v-icon small class="primary--text">mdi-arrow-left</v-icon> Connect a
-      different wallet
+    <div class="primary--text my-8 cursor--pointer" @click="back">
+      <v-icon small class="primary--text">mdi-arrow-left</v-icon>
+      Connect a different wallet
     </div>
   </div>
 </template>
@@ -22,6 +22,10 @@
 export default {
   props: {
     trezorUnlock: {
+      type: Function,
+      default: () => {}
+    },
+    back: {
       type: Function,
       default: () => {}
     }
