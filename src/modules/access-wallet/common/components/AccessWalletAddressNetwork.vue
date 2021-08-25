@@ -412,8 +412,7 @@ export default {
         }
         this.currentIdx += MAX_ADDRESSES;
         this.addressPage += 1;
-        this.selectedAddress = this.accounts[0].address;
-        this.accountAddress = this.accounts[0].address;
+        this.accountAddress = this.selectedAddress = this.accounts[0].address;
       } catch (e) {
         Toast(e, {}, ERROR);
       }

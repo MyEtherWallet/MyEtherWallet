@@ -112,6 +112,7 @@
       <access-wallet-address-network
         v-if="onAddressNetwork"
         :handler-wallet="hwWalletInstance"
+        @unlock="setHardwareWallet"
       />
     </div>
   </mew-overlay>
