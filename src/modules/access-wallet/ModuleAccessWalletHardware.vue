@@ -435,6 +435,7 @@ export default {
       !this.step ? this.close('showHardware') : (this.step -= 1);
       // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
+      this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
     overlayClose() {
       this.reset();
