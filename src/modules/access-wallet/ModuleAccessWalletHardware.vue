@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 0 ? null : back"
+    :back="step === 1 ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -109,17 +109,16 @@
             Network Address Step
             =====================================================================================
             -->
-      <!-- <access-wallet-network-addresses
-              v-else-if="onNetworkAddresses"
-              :accounts="accounts"
-              :next-address-set="nextAddressSet"
-              :previous-address-set="previousAddressSet"
-              :set-hardware-wallet="setHardwareWallet"
-              :address-page="addressPage"
-              :step="step"
-            /> -->
-      <!-- </div>
-      </div> -->
+      <access-wallet-address-network
+        v-if="onNetworkAddresses"
+        :accounts="accounts"
+        :next-address-set="nextAddressSet"
+        :previous-address-set="previousAddressSet"
+        :set-hardware-wallet="setHardwareWallet"
+        :handler-wallet="hwWalletInstance"
+        :address-page="addressPage"
+        :step="step"
+      />
     </div>
   </mew-overlay>
 </template>
@@ -128,10 +127,10 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
+import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
@@ -151,9 +150,9 @@ export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    AccessWalletCoolWallet
+    AccessWalletCoolWallet,
+    AccessWalletAddressNetwork
     // AccessWalletBitbox,
-    // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
     // AccessWalletPaths,
     // AccessWalletPin,
@@ -235,7 +234,6 @@ export default {
       addressPage: 0,
       qrCode: '',
       bcVaultLoading: false,
-      walletInstance: {},
       enterPin: false,
       pin: '',
       callback: () => {},
@@ -272,6 +270,13 @@ export default {
             }
           ]
         );
+      } else if (this.onNetworkAddresses) {
+        return [
+          {
+            step: 2,
+            name: 'Select Network and Address'
+          }
+        ];
       }
       return [
         {
@@ -281,7 +286,10 @@ export default {
       ];
     },
     onNetworkAddresses() {
-      return this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
+      return (
+        this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT &&
+        !_.isEmpty(this.hwWalletInstance)
+      );
     },
     /**
      * Returns the correct network icon
@@ -335,7 +343,10 @@ export default {
      * On CoolWallet
      */
     onCoolWallet() {
-      return this.walletType === WALLET_TYPES.COOL_WALLET;
+      return (
+        this.walletType === WALLET_TYPES.COOL_WALLET &&
+        _.isEmpty(this.hwWalletInstance)
+      );
     },
     /**
      * On Keepkey
@@ -453,7 +464,6 @@ export default {
       this.acceptTerms = false;
       this.addressPage = 0;
       this.qrCode = '';
-      this.walletInstance = {};
       this.enterPin = false;
       this.walletType = '';
     },
@@ -548,7 +558,6 @@ export default {
         .create(path, password)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          this.setAddresses();
         })
         .catch(err => {
           if (this.wallets[this.walletType]) {

@@ -7,7 +7,8 @@ const ERRORS = {
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
   MaxAppRegistered: 'coolWalletError.max-app-instance',
   'browser not supported': 'coolWalletError.no-bluetooth',
-  'User cancelled the requestDevice() chooser.': 'User cancelld action!'
+  'User cancelled the requestDevice() chooser.': 'User cancelled action!',
+  'NetworkError: GATT operation already in progress.': 'AAAAAAAAAAAAAAAAAA'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);
