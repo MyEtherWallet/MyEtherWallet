@@ -35,7 +35,12 @@
         </v-col>
       </v-row>
     </v-container>
-    <mew-button @click.native="unlock" title="Unlock wallet" btn-size="xlarge" has-full-width />
+    <mew-button
+      title="Unlock wallet"
+      btn-size="xlarge"
+      has-full-width
+      @click.native="unlock"
+    />
   </div>
 </template>
 
