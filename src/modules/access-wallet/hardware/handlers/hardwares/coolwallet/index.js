@@ -21,6 +21,9 @@ import commonGenerator from '@/core/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
 const APP_NAME = 'MyEtherWalletV6';
+const APP_ID = 'coolWallet-appId';
+const APP_PRIVATE_KEY = 'coolWallet-appPrivateKey';
+const APP_PUBLIC_KEY = 'coolWallet-appPublicKey';
 
 class CoolWallet {
   constructor() {
@@ -37,14 +40,12 @@ class CoolWallet {
         value: coolwallet
       }
     };
-    this.appId = locstore.get('coolWallet-appId')
-      ? locstore.get('coolWallet-appId')
+    this.appId = locstore.get(APP_ID) ? locstore.get(APP_ID) : '';
+    this.appPrivateKey = locstore.get(APP_PRIVATE_KEY)
+      ? locstore.get(APP_PRIVATE_KEY)
       : '';
-    this.appPrivateKey = locstore.get('coolWallet-appPrivateKey')
-      ? locstore.get('coolWallet-appPrivateKey')
-      : '';
-    this.appPublicKey = locstore.get('coolWallet-appPublicKey')
-      ? locstore.get('coolWallet-appPublicKey')
+    this.appPublicKey = locstore.get(APP_PUBLIC_KEY)
+      ? locstore.get(APP_PUBLIC_KEY)
       : '';
     this.firstTimeConnecting =
       this.appPrivateKey === '' &&
@@ -82,6 +83,9 @@ class CoolWallet {
                 .register(_this.appPublicKey, password, APP_NAME)
                 .then(appId => {
                   _this.appId = appId;
+                  locstore.set(APP_ID, appId);
+                  locstore.set(APP_PUBLIC_KEY, appPublicKey);
+                  locstore.set(APP_PRIVATE_KEY, appPrivateKey);
                   coolWalletInstance.setAppId(appId);
                   _this.deviceInstance = new cwsETH(
                     _this.transport,
