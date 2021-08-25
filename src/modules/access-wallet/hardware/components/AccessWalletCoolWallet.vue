@@ -6,7 +6,26 @@
       type="password"
     />
     <v-row no-gutters class="border-container mb-8">
-      <v-col lg="6" md="6" sm="12" class="pa-5">
+      <v-col
+        lg="6"
+        md="6"
+        sm="12"
+        class="d-flex align-center justify-center pt-5"
+        order-lg="last"
+        order-sm="first"
+        order-md="last"
+      >
+        <img src="@/assets/images/hardware-wallets/coolwallet-sample.png" />
+      </v-col>
+      <v-col
+        order-lg="first"
+        order-sm="last"
+        order-md="first"
+        lg="6"
+        md="6"
+        sm="12"
+        class="pa-5"
+      >
         <h2 class="mew-heading-2 text-center ma-0">
           Where is my pairing password?
         </h2>
@@ -33,15 +52,6 @@
           </a>
         </p>
         <p></p>
-      </v-col>
-
-      <v-col
-        lg="6"
-        md="6"
-        sm="12"
-        class="d-flex align-center justify-center pt-5"
-      >
-        <img src="@/assets/images/hardware-wallets/coolwallet-sample.png" />
       </v-col>
     </v-row>
     <mew-button
