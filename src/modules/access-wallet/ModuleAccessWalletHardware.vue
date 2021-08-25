@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 0 ? null : back"
+    :back="step === 1 ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -109,17 +109,15 @@
             Network Address Step
             =====================================================================================
             -->
-      <!-- <access-wallet-network-addresses
-              v-else-if="onNetworkAddresses"
+      <access-wallet-address-network
+              v-if="onNetworkAddresses"
               :accounts="accounts"
               :next-address-set="nextAddressSet"
               :previous-address-set="previousAddressSet"
               :set-hardware-wallet="setHardwareWallet"
               :address-page="addressPage"
               :step="step"
-            /> -->
-      <!-- </div>
-      </div> -->
+            />
     </div>
   </mew-overlay>
 </template>
@@ -128,10 +126,10 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
+import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -149,9 +147,9 @@ const MAX_ADDRESSES = 5;
 export default {
   name: 'HardwareAccessOverlay',
   components: {
-    AccessWalletKeepkey
+    AccessWalletKeepkey,
+    AccessWalletAddressNetwork
     // AccessWalletBitbox,
-    // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
     // AccessWalletPaths,
     // AccessWalletPin,
