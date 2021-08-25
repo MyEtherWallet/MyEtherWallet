@@ -646,10 +646,12 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx.submitTransaction().catch(error => {
-        this.error = error;
-      });
-      this.clear();
+      this.sendTx
+        .submitTransaction()
+        .then(this.clear)
+        .catch(error => {
+          this.error = error;
+        });
     },
     prefillForm() {
       if (this.isPrefilled) {
