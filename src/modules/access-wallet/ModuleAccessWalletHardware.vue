@@ -225,6 +225,7 @@ export default {
       walletInstance: {},
       enterPin: false,
       pin: '',
+      onAddressNetwork: false,
       callback: () => {},
       unwatch: () => {}
     };
