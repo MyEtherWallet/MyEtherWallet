@@ -243,6 +243,7 @@ export default {
       // currentStep: '',
       // steps: {},
       hwWalletInstance: {},
+      ledgerApp: {},
       selectedPath: {
         name: 'Ethereum',
         subtext: "m/44'/60'/0'/0",
@@ -255,6 +256,7 @@ export default {
       // walletInstance: {},
       // enterPin: false,
       // pin: '',
+      ledgerConnected: false,
       callback: () => {},
       unwatch: () => {}
     };
@@ -501,13 +503,13 @@ export default {
         .create(this.hasPath)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
+          if (_hwWallet.identifier == 'ledger') this.ledgerConnected = true;
           // if (this.walletType === WALLET_TYPES.BITBOX2) {
           //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
           //   _hwWallet.init(this.hasPath).then(() => {
           //     this.hwWalletInstance = _hwWallet;
           //   });
           // }
-          this.step++;
           return _hwWallet;
         })
         .catch(err => {
