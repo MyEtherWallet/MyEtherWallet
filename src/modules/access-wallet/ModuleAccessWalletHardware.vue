@@ -94,7 +94,27 @@
           Trezor
         =====================================================================================
         -->
-      <span v-if="onTrezor">Trezor</span>
+      <span v-if="onTrezor">
+        <div class="d-flex flex-column align-center">
+          <div class="titlePrimary-text">
+            Follow the instructions in the Trezor connection tab. If it did not
+            open automatically, click below.
+          </div>
+          <div>
+            <mew-button
+              class="mt-7"
+              title="Connect Trezor"
+              icon="mdi-open-in-new"
+              icon-type="mdi"
+              @click.native="trezorUnlock"
+            />
+          </div>
+          <div class="primary--text my-8 cursor--pointer" @click="reset">
+            <v-icon small class="primary--text">mdi-arrow-left</v-icon>
+            Connect a different wallet
+          </div>
+        </div></span
+      >
     </div>
     <!--
       =====================================================================================
@@ -402,7 +422,6 @@ export default {
       this.step = 1;
       this.hwWalletInstance = {};
       this.selectedPath = this.paths[0];
-      this.walletType = '';
       this.selectedLedgerApp = this.ledgerApps[0];
       this.password = '';
       // this.qrCode = '';
@@ -421,6 +440,10 @@ export default {
     overlayClose() {
       this.reset();
       this.close('showHardware');
+    },
+    trezorClose() {
+      this.step = 2;
+      this.walletType = WALLET_TYPES.TREZOR;
     },
     setWalletInstance(str) {
       this.walletType = str;
@@ -479,7 +502,7 @@ export default {
           } else {
             Toast(err, {}, ERROR);
           }
-          this.reset();
+          this.onTrezor ? this.trezorClose : this.reset();
         });
     },
     /**
