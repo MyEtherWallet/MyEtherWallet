@@ -83,7 +83,7 @@
                 type="number"
                 :hide-clear-btn="true"
                 :value="tokenOutValue"
-                readonly="true"
+                :readonly="true"
                 outlined
               />
               <!-- <mew-input
@@ -243,6 +243,7 @@
             @onLocalGasPrice="handleLocalGasPrice"
           />
           <div class="text-center mt-10 mt-sm-15">
+            <div class="error--text mb-4">{{ amountErrorMessage }}</div>
             <mew-button
               title="Next"
               :has-full-width="false"
@@ -1155,8 +1156,7 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
-        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
+        this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee.`;
       }
     },
     handleLocalGasPrice(e) {

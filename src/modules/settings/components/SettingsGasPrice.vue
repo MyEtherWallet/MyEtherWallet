@@ -47,33 +47,75 @@
       >
         <div class="d-flex align-center">
           <div class="mr-2 ml-n1 text-center" style="width: 40px">
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY">mdi-check</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.REGULAR"
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack"
+              >mdi-check</v-icon
+            >
+            <v-icon v-if="b.title === gasPriceTypes.REGULAR" color="textBlack"
               >mdi-arrow-up</v-icon
             >
-            <v-icon v-if="b.title === gasPriceTypes.FAST">mdi-arrow-up</v-icon>
-            <v-icon v-if="b.title === gasPriceTypes.FAST" class="ml-n2"
+            <v-icon v-if="b.title === gasPriceTypes.FAST" color="textBlack"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon
+              v-if="b.title === gasPriceTypes.FAST"
+              color="textBlack"
+              class="ml-n2"
               >mdi-arrow-up</v-icon
             >
           </div>
-          <div v-if="b.title === gasPriceTypes.ECONOMY">Normal priority</div>
-          <div v-if="b.title === gasPriceTypes.REGULAR">Higher priority</div>
-          <div v-if="b.title === gasPriceTypes.FAST">Highest priority</div>
+          <div
+            v-if="b.title === gasPriceTypes.ECONOMY"
+            class="mew-heading-3 font-weight-regular"
+          >
+            Normal priority
+          </div>
+          <div
+            v-if="b.title === gasPriceTypes.REGULAR"
+            class="mew-heading-3 font-weight-regular"
+          >
+            Higher priority
+          </div>
+          <div
+            v-if="b.title === gasPriceTypes.FAST"
+            class="mew-heading-3 font-weight-regular"
+          >
+            Highest priority
+          </div>
         </div>
-        <div class="text-right">
-          <div class="mew-label">+{{ b.usd }} {{ b.time }}</div>
-          <div class="mew-label">+{{ b.gas | twoDecimalPoint }} Gwei</div>
+
+        <!-- Show check mark if this is called from global settings -->
+        <div v-if="global">
+          <v-icon v-if="selected === b.title" color="primary">
+            mdi-check-circle
+          </v-icon>
+          <v-icon v-else color="#e1e6ec"> mdi-checkbox-blank-circle </v-icon>
+        </div>
+
+        <div v-else class="text-right">
+          <div
+            v-if="b.title === gasPriceTypes.ECONOMY"
+            class="textSecondary--text py-5"
+          >
+            No tip
+          </div>
+          <div v-else>
+            <div class="textSecondary--text">{{ b.time }}</div>
+            <div class="textSecondary--text">+{{ b.usd }}</div>
+            <div class="textSecondary--text">
+              +{{ b.gas | twoDecimalPoint }} Gwei
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="text-center mew-label mt-6 mb-5 secondary--text">
-      To increase priority
+    <div v-if="notEnoughEth" class="mt-6 mb-5 secondary--text pl-4">
+      <div>Not enough funds to increase priority.</div>
       <a
         rel="noopener noreferrer"
         target="_blank"
         :href="swapLink"
-        class="font-weight-medium"
+        class="mt-1 d-block"
       >
         Buy more ETH
       </a>
@@ -109,6 +151,14 @@ export default {
     isSwap: {
       type: Boolean,
       default: false
+    },
+    global: {
+      type: Boolean,
+      default: false
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -136,19 +186,22 @@ export default {
 .group-button {
   padding: 10px;
   border-radius: 10px;
-  background-color: #d0f4f8;
-  opacity: 0.5;
+  background-color: #f4f6f8;
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid transparent;
-  &.active {
-    border: 1px solid var(--v-primary-base);
-    background-color: #f2fafa;
-    opacity: 1;
+  border: 2px solid transparent;
+  &:hover {
+    background-color: #e9eff4;
   }
-}
-.go-to-global-text {
-  color: var(--v-primary-base);
+  &.active {
+    border: 2px solid #31c0a5;
+    background-color: #e1f7f4;
+    opacity: 1;
+    &:hover {
+      opacity: 1;
+      background-color: #d5edef;
+    }
+  }
 }
 </style>

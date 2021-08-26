@@ -20,7 +20,7 @@
         >
           <template #panelBody1>
             <settings-gas-price
-              class="px-6"
+              class="px-6 mb-10"
               :buttons="gasButtons"
               :selected="gasPriceType"
               :set-selected="setSelected"
@@ -78,13 +78,13 @@
 </template>
 
 <script>
+import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import SettingsImportConfig from './components/SettingsImportConfig';
 import SettingsExportConfig from './components/SettingsExportConfig';
 import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
 const modes = ['add', 'edit'];
 
@@ -147,9 +147,14 @@ export default {
       return [
         {
           name: 'Gas price',
-          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
-            this.gasPriceType
-          })`
+          subtext: `
+          ${
+            this.gasPriceType === gasPriceTypes.ECONOMY ? 'Normal priority' : ''
+          }
+          ${
+            this.gasPriceType === gasPriceTypes.REGULAR ? 'Higher priority' : ''
+          }
+          ${this.gasPriceType === gasPriceTypes.FAST ? 'Highest priority' : ''}`
         },
         {
           name: 'Import configurations'

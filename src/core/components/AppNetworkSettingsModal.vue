@@ -12,6 +12,7 @@
       :set-selected="setGas"
       :gas-price="gasPrice"
       :open-global-settings="openSettings"
+      :not-enough-eth="notEnoughEth"
     />
   </app-simple-dialog>
 </template>
@@ -44,6 +45,10 @@ export default {
     selected: {
       type: String,
       default: gasPriceTypes.ECONOMY
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="core--components--app-transaction-fee">
     <!--
     =====================================================
       AppNetworkSettings
@@ -10,6 +10,7 @@
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
       :selected="gasPriceType"
+      :not-enough-eth="notEnoughEth"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -65,82 +66,96 @@
       Loader: present when loading Fee
     =====================================================
     -->
-    <v-skeleton-loader
-      v-show="gettingFee || !showFee"
-      type="paragraph"
-      width="200px"
-      class="mt-2 px-sm-2 align-center"
-    />
+    <div v-show="gettingFee || !showFee" style="max-width: 556px">
+      <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
+      <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
+    </div>
 
-    <div v-if="!gettingFee && showFee">
-      <!--
+    <v-row v-if="!gettingFee && showFee">
+      <v-col cols="auto">
+        <!--
       =====================================================
         Transaction fee selector button
       =====================================================
       -->
-      <div class="d-flex align-center justify-space-between flex-wrap-reverse">
-        <div class="d-flex align-center flex-wrap">
+        <div class="d-flex align-center flex-wrap mb-2">
           <v-btn
             depressed
             class="text-transform--initial"
             @click="openGasPriceModal"
           >
             <div class="d-flex align-center">
-              <div>{{ feesInUsd }}</div>
-              <v-icon small class="mx-2">mdi-arrow-right</v-icon>
-              <div class="d-flex align-center">
-                <v-icon small>mdi-clock-outline</v-icon>
-                <div>{{ timeWillTake }}</div>
+              <div :class="hasError ? 'error--text' : 'textBlack2--text'">
+                {{ feesInUsd }}
               </div>
-              <v-icon class="ml-3">mdi-chevron-down</v-icon>
+              <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
+                mdi-arrow-right
+              </v-icon>
+              <div class="d-flex align-center">
+                <v-icon :color="hasError ? 'error' : ''" small>
+                  mdi-clock-outline
+                </v-icon>
+                <div :class="hasError ? 'error--text' : ''">
+                  {{ timeWillTake }}
+                </div>
+              </div>
+              <v-icon :color="hasError ? 'error' : ''" class="ml-3">
+                mdi-chevron-down
+              </v-icon>
             </div>
           </v-btn>
-          <div class="textSecondary--text ml-3 py-1">
+          <div
+            :class="hasError ? 'error--text' : 'textSecondary--text'"
+            class="ml-3 py-1"
+          >
             {{ actualFeeFormatted }} ETH
           </div>
         </div>
-        <div class="py-1 ml-3">
-          <div class="mew-label">Total ETH in your wallet:</div>
-          <div>{{ balance }} ETH</div>
-        </div>
-      </div>
 
-      <!--
+        <!--
       =====================================================
         Not enough balance warning / Error
       =====================================================
       -->
-      <div
-        v-if="!gettingFee & hasError"
-        :class="[hasError ? 'error--text' : '', 'mew-label']"
-        class="mt-2 ml-2"
-      >
-        {{ message }}
-      </div>
+        <div
+          v-if="!gettingFee & hasError"
+          :class="[hasError ? 'error--text' : '']"
+          class="ml-2"
+        >
+          {{ message }}
+          <a
+            v-if="notEnoughEth"
+            rel="noopener noreferrer"
+            target="_blank"
+            :href="swapLink"
+          >
+            Buy more ETH
+          </a>
+        </div>
 
-      <!--
+        <!--
       =====================================================
         Too high transaction fee / Buy more ETH
       =====================================================
       -->
-      <div class="d-flex align-center ml-3 mt-1">
         <div
-          class="mr-1 primary--text cursor--pointer user-select--none mew-label"
+          class="ml-2 mr-1 primary--text cursor--pointer user-select--none"
           @click="openHighFeeNote = true"
         >
           Why are the fees so high?
         </div>
-        <a
-          v-if="notEnoughEth"
-          rel="noopener noreferrer"
-          target="_blank"
-          :href="swapLink"
-          class="mew-label font-weight-medium"
-        >
-          Buy more ETH
-        </a>
-      </div>
-    </div>
+      </v-col>
+      <v-spacer />
+      <v-col cols="12" lg="auto">
+        <v-divider class="py-2 d-block d-lg-none" />
+        <div class="py-2 ml-2 text-right">
+          <div>
+            <span class="mr-2">Total:</span>
+            {{ balance }} ETH
+          </div>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -249,4 +264,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.core--components--app-transaction-fee {
+  .v-skeleton-loader__heading {
+    width: 100% !important;
+  }
+}
+</style>
