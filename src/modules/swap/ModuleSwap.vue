@@ -221,6 +221,7 @@
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
             :providers-error="providersErrorMsg"
+            :from-eth="fromTokenType.value === 'Ethereum'"
             class="mt-7"
           />
           <!--

@@ -88,6 +88,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
+            :from-eth="selectedCurrency.value === 'Ethereum'"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>

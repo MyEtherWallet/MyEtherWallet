@@ -146,7 +146,7 @@
         </div>
       </v-col>
       <v-spacer />
-      <v-col cols="12" lg="auto">
+      <v-col v-if="fromEth" cols="12" lg="auto">
         <v-divider class="py-2 d-block d-lg-none" />
         <div class="py-2 ml-2 text-right">
           <div>
@@ -203,6 +203,10 @@ export default {
       default: ''
     },
     isSwap: {
+      type: Boolean,
+      default: false
+    },
+    fromEth: {
       type: Boolean,
       default: false
     }
