@@ -1,6 +1,6 @@
 import tokens from '@/_generated/tokens/tokens-etc.json';
 import contracts from '@/_generated/contracts/contract-abi-etc.json';
-import etc from '@/assets/images/networks/etc.svg';
+import go from '@/assets/images/networks/go.svg';
 
 export default {
   name: 'GO',
@@ -11,7 +11,7 @@ export default {
   chainID: 60,
   tokens: tokens,
   contracts: contracts,
-  icon: etc,
+  icon: go,
   currencyName: 'GO',
   isTestNetwork: false,
   isEthVMSupported: {
