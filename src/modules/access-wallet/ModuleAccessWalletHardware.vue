@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 0 ? null : back"
+    :back="step === 1 ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -94,33 +94,23 @@
           Trezor
         =====================================================================================
         -->
-      <access-wallet-trezor
-        v-if="onTrezor"
-        :trezor-unlock="trezorUnlock"
-        :back="back"
-      />
-      <!--
-        =====================================================================================
-          Step 3: Select Address and Network | (If Applicable) 
-        =====================================================================================
-        -->
-      <!--
-            =====================================================================================
-            Network Address Step
-            =====================================================================================
-            -->
-      <!-- <access-wallet-network-addresses
-              v-else-if="onNetworkAddresses"
-              :accounts="accounts"
-              :next-address-set="nextAddressSet"
-              :previous-address-set="previousAddressSet"
-              :set-hardware-wallet="setHardwareWallet"
-              :address-page="addressPage"
-              :step="step"
-            /> -->
-      <!-- </div>
-      </div> -->
+      <span v-if="onTrezor">Trezor</span>
     </div>
+    <!--
+      =====================================================================================
+        Step 3: Select Address and Network | (If Applicable) 
+      =====================================================================================
+      -->
+    <!--
+          =====================================================================================
+          Network Address Step
+          =====================================================================================
+          -->
+    <access-wallet-address-network
+      v-if="step === 3"
+      :handler-wallet="hwWalletInstance"
+      @unlock="setHardwareWallet"
+    />
   </mew-overlay>
 </template>
 
@@ -128,32 +118,24 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletNetworkAddresses from './hardware/components/AccessWalletNetworkAddresses';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
-import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
+import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
-import wallets, {
-  LAYOUT_STEPS
-} from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
+import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
-import Web3 from 'web3';
-import { fromWei, _ } from 'web3-utils';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-const MAX_ADDRESSES = 5;
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    AccessWalletTrezor
+    AccessWalletAddressNetwork
     // AccessWalletBitbox,
-    // AccessWalletNetworkAddresses,
     // AccessWalletPassword,
     // AccessWalletPaths,
     // AccessWalletPin,
@@ -220,24 +202,21 @@ export default {
       wallets: wallets,
       // resettable
       step: 1,
-      currentStep: '',
-      steps: {},
+      // currentStep: '',
+      // steps: {},
       hwWalletInstance: {},
-      selectedPath: {},
+      selectedPath: {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      },
       walletType: '',
       selectedLedgerApp: {},
-      selectedAddress: '',
       password: '',
-      selectedNetwork: '',
-      accounts: [],
-      currentIdx: 0,
-      acceptTerms: false,
-      addressPage: 0,
-      qrCode: '',
-      bcVaultLoading: false,
-      walletInstance: {},
-      enterPin: false,
-      pin: '',
+      // qrCode: '',
+      // walletInstance: {},
+      // enterPin: false,
+      // pin: '',
       callback: () => {},
       unwatch: () => {}
     };
@@ -280,9 +259,6 @@ export default {
         }
       ];
     },
-    onNetworkAddresses() {
-      return this.currentStep === LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
-    },
     /**
      * Returns the correct network icon
      */
@@ -314,12 +290,12 @@ export default {
     /**
      * On Bitbox
      */
-    onBitbox() {
-      return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
-    },
-    onBitboxPopup() {
-      return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
-    },
+    // onBitbox() {
+    //   return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
+    // },
+    // onBitboxPopup() {
+    //   return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
+    // },
     /**
      * On Ledger
      */
@@ -358,9 +334,9 @@ export default {
     /**
      * On Paths step
      */
-    onPaths() {
-      return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
-    },
+    // onPaths() {
+    //   return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
+    // },
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
@@ -411,18 +387,6 @@ export default {
         : this.wallets[this.walletType].title;
     }
   },
-  watch: {
-    network: {
-      deep: true,
-      handler: function () {
-        this.accounts = [];
-        this.addressPage -= 1;
-        this.selectedAddress = '';
-        this.currentIdx -= MAX_ADDRESSES;
-        if (!_.isEmpty(this.hwWalletInstance)) this.setAddresses();
-      }
-    }
-  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -440,15 +404,9 @@ export default {
       this.selectedPath = this.paths[0];
       this.walletType = '';
       this.selectedLedgerApp = this.ledgerApps[0];
-      this.selectedAddress = '';
       this.password = '';
-      this.selectedNetwork = '';
-      this.accounts = [];
-      this.currentIdx = 0;
-      this.acceptTerms = false;
-      this.addressPage = 0;
-      this.qrCode = '';
-      this.walletInstance = {};
+      // this.qrCode = '';
+      // this.walletInstance = {};
       this.enterPin = false;
       this.walletType = '';
     },
@@ -456,10 +414,8 @@ export default {
      * Overlay Actions
      */
     back() {
-      !this.step
-        ? (this.close('showHardware'), delete this.steps[this.step + 1])
-        : (this.step -= 1);
-      this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
+      !this.step ? this.close('showHardware') : (this.step -= 1);
+      // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
     },
     overlayClose() {
@@ -468,16 +424,12 @@ export default {
     },
     setWalletInstance(str) {
       this.walletType = str;
-      this.incrementStep();
-    },
-    incrementStep() {
-      this.currentStep = this.wallets[this.walletType].steps[this.step];
-      this.step++;
+      this.nextStep();
     },
     nextStep() {
       console.log(this.walletType);
       if (this.walletType) {
-        this.incrementStep();
+        this.step++;
         if (this.step === this.wallets[this.walletType].when) {
           this[`${this.walletType}Unlock`]();
         }
@@ -512,19 +464,13 @@ export default {
         .create(this.hasPath)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          if (this.walletType === WALLET_TYPES.BITBOX2) {
-            this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
-            _hwWallet.init(this.hasPath).then(() => {
-              this.currentStep = LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT;
-              this.hwWalletInstance = _hwWallet;
-              this.setAddresses();
-            });
-          } else if (this.walletType === WALLET_TYPES.KEEPKEY) {
-            this.incrementStep();
-            this.setAddresses();
-          } else {
-            this.setAddresses();
-          }
+          // if (this.walletType === WALLET_TYPES.BITBOX2) {
+          //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
+          //   _hwWallet.init(this.hasPath).then(() => {
+          //     this.hwWalletInstance = _hwWallet;
+          //   });
+          // }
+          this.step++;
           return _hwWallet;
         })
         .catch(err => {
@@ -544,7 +490,7 @@ export default {
         .create(path, password)
         .then(_hwWallet => {
           this.hwWalletInstance = _hwWallet;
-          this.setAddresses();
+          this.step++;
         })
         .catch(err => {
           if (this.wallets[this.walletType]) {
@@ -558,9 +504,9 @@ export default {
     /**
      * Sets Path
      */
-    setPath(obj) {
-      this.selectedPath = obj;
-    },
+    // setPath(obj) {
+    //   this.selectedPath = obj;
+    // },
     /**
      * Set the selected wallet
      */
@@ -580,98 +526,45 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
-    },
+    }
     /**
      * Sets Ledger App
      */
-    setLedgerApp(obj) {
-      this.selectedLedgerApp = obj;
-    },
+    // setLedgerApp(obj) {
+    //   this.selectedLedgerApp = obj;
+    // },
     /**
      * Sets Password
      */
-    setPassword(str) {
-      this.password = str;
-    },
-    /**
-     * Sets Terms
-     */
-    setTerms(boolean) {
-      this.acceptTerms = boolean;
-    },
+    // setPassword(str) {
+    //   this.password = str;
+    // },
     /**
      * Keepkey Actions
      */
-    keepKeyClear() {
-      this.pin = '';
-    },
-    keepKeyPinEnter(pin) {
-      this.callback(pin);
-      this.enterPin = false;
-      this.step += 1;
-      setTimeout(() => {
-        this.callback = () => {};
-      }, 500);
-    },
+    // keepKeyClear() {
+    //   this.pin = '';
+    // },
+    // keepKeyPinEnter(pin) {
+    //   this.callback(pin);
+    //   this.enterPin = false;
+    //   this.step += 1;
+    //   setTimeout(() => {
+    //     this.callback = () => {};
+    //   }, 500);
+    // },
     /**
      * Sets BitBox value
      */
-    setSelectedBitbox(val) {
-      if (!val) {
-        this.walletType = WALLET_TYPES.BITBOX;
-      } else {
-        this.walletType = WALLET_TYPES.BITBOX2;
-      }
+    // setSelectedBitbox(val) {
+    //   if (!val) {
+    //     this.walletType = WALLET_TYPES.BITBOX;
+    //   } else {
+    //     this.walletType = WALLET_TYPES.BITBOX2;
+    //   }
 
-      this.nextStep();
-    },
-    /**
-     * Network Address step
-     */
-    async setAddresses() {
-      try {
-        const web3 = new Web3(this.network.url);
-        console.log('web3', web3);
-        this.accounts = [];
-        for (
-          let i = this.currentIdx;
-          i < this.currentIdx + MAX_ADDRESSES;
-          i++
-        ) {
-          const account = await this.hwWalletInstance.getAccount(i);
-          const balance = await web3.eth.getBalance(account.getAddressString());
-          this.accounts.push({
-            address: account.getAddressString(),
-            account: account,
-            idx: i,
-            balance: formatFloatingPointValue(fromWei(balance)).value,
-            tokens: 'Loading..'
-          });
-        }
-        this.addressPage += 1;
-        this.currentIdx += MAX_ADDRESSES;
-        this.selectedAddress = this.accounts[0].address;
-      } catch (e) {
-        if (this.wallets[this.walletType]) {
-          this.wallets[this.walletType].create.errorHandler(e);
-        } else {
-          Toast(e, {}, ERROR);
-        }
-        this.reset();
-      }
-    },
-    nextAddressSet() {
-      this.setAddresses();
-    },
-    previousAddressSet() {
-      const pageDeductor = this.currentIdx / MAX_ADDRESSES;
-      const idxDeductor = this.addressPage * MAX_ADDRESSES;
-      this.addressPage -=
-        this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
-      this.currentIdx -=
-        this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAddresses();
-    }
+    //   this.nextStep();
+    // }
   }
 };
 </script>

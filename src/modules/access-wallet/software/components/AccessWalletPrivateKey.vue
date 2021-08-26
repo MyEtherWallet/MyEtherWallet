@@ -11,6 +11,7 @@
       label="Private Key"
       placeholder="Enter your Private Key"
       :rules="privKeyRulles"
+      type="password"
     />
     <!--
     =====================================================================================

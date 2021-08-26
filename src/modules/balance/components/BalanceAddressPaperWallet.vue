@@ -10,6 +10,7 @@
     title="My paper wallet"
     content-size="xlarge"
     :close="close"
+    @closeOverlay="close"
   >
     <!--
           ===============================================

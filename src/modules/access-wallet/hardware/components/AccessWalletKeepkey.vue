@@ -7,15 +7,6 @@
 
 <script>
 export default {
-  name: 'AccessWalletKeepkey',
-  props: {
-    paths: {
-      type: Array,
-      default: () => []
-    }
-  },
-  mounted() {
-    console.error('paths', this.paths);
-  }
+  name: 'AccessWalletKeepkey'
 };
 </script>
