@@ -84,7 +84,7 @@
             :getting-fee="!txFeeIsReady"
             :error="feeError"
             :balance="balanceInETH"
-            :total-fees="txFee"
+            :total-fees="txFeeETH"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"

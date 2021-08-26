@@ -151,7 +151,7 @@
         <div class="py-2 ml-2 text-right">
           <div>
             <span class="mr-2">Total:</span>
-            {{ balance }} ETH
+            {{ actualFeeFormatted }} ETH
           </div>
         </div>
       </v-col>
@@ -161,7 +161,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import AppModal from '@/core/components/AppModal';
@@ -206,10 +205,6 @@ export default {
     isSwap: {
       type: Boolean,
       default: false
-    },
-    balance: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -218,16 +213,12 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
-
-    actualFees() {
-      return fromWei(this.totalFees).toString();
-    },
     actualFeeFormatted() {
-      return formatFloatingPointValue(this.actualFees).value;
+      return formatFloatingPointValue(this.totalFees).value;
     },
     feesInUsd() {
       const value = formatFiatValue(
-        BigNumber(this.actualFees).times(this.fiatValue).toFixed(2)
+        BigNumber(this.totalFees).times(this.fiatValue).toFixed(2)
       ).value;
       return `~${'$' + value}`;
     },
