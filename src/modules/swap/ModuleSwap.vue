@@ -221,7 +221,6 @@
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
             :providers-error="providersErrorMsg"
-            :from-eth="fromTokenType.value === 'Ethereum'"
             class="mt-7"
           />
           <!--
@@ -239,6 +238,7 @@
             :message="feeError"
             :not-enough-eth="notEnoughEth"
             :balance="displayBalance"
+            :from-eth="fromTokenType.value === 'Ethereum'"
             is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
