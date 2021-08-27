@@ -450,7 +450,6 @@ export default {
       this.nextStep();
     },
     nextStep() {
-      console.log(this.walletType);
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
