@@ -82,7 +82,7 @@
                 type="number"
                 :hide-clear-btn="true"
                 :value="tokenOutValue"
-                readonly="true"
+                :readonly="true"
                 outlined
               />
               <!-- <mew-input
@@ -782,6 +782,9 @@ export default {
     },
     mainTokenDetails() {
       this.setDefaults();
+    },
+    amountErrorMessage(newVal) {
+      if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
   beforeMount() {
@@ -1017,7 +1020,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    }, 1000),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1111,9 +1114,9 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.clear();
           Toast(err.message, {}, ERROR);
         });
-      this.clear();
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
@@ -1146,7 +1149,7 @@ export default {
           },
           currentTrade.transactions[idx]
         );
-        this.addNotification(new Notification(notif));
+        this.addNotification(new Notification(notif)).then(this.clear);
       });
     },
     checkFeeBalance() {
