@@ -170,6 +170,7 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { estimatedTime } from '@/core/helpers/gasPriceHelper';
+import { fromWei } from 'web3-utils';
 export default {
   name: 'AppTransactionFee',
   components: { AppModal, AppNetworkSettingsModal },
@@ -217,12 +218,15 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
+    feeToEth() {
+      return fromWei(this.totalFees);
+    },
     actualFeeFormatted() {
-      return formatFloatingPointValue(this.totalFees).value;
+      return formatFloatingPointValue(this.feeToEth).value;
     },
     feesInUsd() {
       const value = formatFiatValue(
-        BigNumber(this.totalFees).times(this.fiatValue).toFixed(2)
+        BigNumber(this.feeToEth).times(this.fiatValue).toFixed(2)
       ).value;
       return `~${'$' + value}`;
     },
