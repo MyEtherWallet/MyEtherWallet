@@ -92,6 +92,9 @@ export default {
       if (!obj.hasOwnProperty('priceRaw')) obj['priceRaw'] = this.valueUsd;
       return obj;
     },
+    isNetworkCurrency() {
+      return this.currency.symbol === this.network.type.currencyName;
+    },
     feeFormatted() {
       return formatFloatingPointValue(this.txFee).value;
     },
@@ -117,7 +120,11 @@ export default {
       ).value;
     },
     summaryItems() {
-      return ['Transaction Fee', 'Total'];
+      const defaultArr = ['Transaction Fee'];
+      if (this.isNetworkCurrency) {
+        defaultArr.push('Total');
+      }
+      return defaultArr;
     },
     valueItems() {
       return [
