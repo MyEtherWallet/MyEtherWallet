@@ -43,7 +43,7 @@
     "@ensdomains/ensjs": "2.0.1",
     "@myetherwallet/eth2-keystore": "0.2.3",
     "@myetherwallet/mew-components": "0.6.2-beta",
-    "@myetherwallet/mewconnect-web-client": "2.2.0-beta.10",
+    "@myetherwallet/mewconnect-web-client": "2.2.0-beta.9",
     "@sentry/browser": "6.11.0",
     "@sentry/tracing": "6.11.0",
     "@sentry/vue": "6.11.0",
