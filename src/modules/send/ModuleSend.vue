@@ -84,11 +84,11 @@
             :getting-fee="!txFeeIsReady"
             :error="feeError"
             :balance="balanceInETH"
-            :total-fees="txFeeETH"
+            :total-fees="txFeeGwei"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
-            :from-eth="selectedCurrency.symbol === 'ETH'"
+            :from-eth="isFromEth"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
@@ -183,7 +183,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
-import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
@@ -251,6 +251,9 @@ export default {
       'swapLink'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    isFromEth() {
+      return this.selectedCurrency?.symbol === 'ETH';
+    },
     isDisabledNextBtn() {
       return (
         this.feeError !== '' ||
@@ -409,6 +412,9 @@ export default {
     },
     txFeeETH() {
       return fromWei(this.txFee);
+    },
+    txFeeGwei() {
+      return this.txFee;
     },
     txFee() {
       if (this.isValidGasLimit) {
@@ -649,10 +655,13 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx.submitTransaction().catch(error => {
-        Toast(error, {}, ERROR, 1000);
-      });
-      this.clear();
+      this.sendTx
+        .submitTransaction()
+        .then(this.clear)
+        .catch(error => {
+          this.clear();
+          this.gasEstimationError = error.message;
+        });
     },
     prefillForm() {
       if (this.isPrefilled) {

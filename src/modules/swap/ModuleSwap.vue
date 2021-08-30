@@ -629,7 +629,7 @@ export default {
     totalFees() {
       const gasPrice =
         this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
-      return toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
+      return toBN(this.totalGasLimit).mul(toBN(gasPrice));
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -787,6 +787,9 @@ export default {
     },
     mainTokenDetails() {
       this.setDefaults();
+    },
+    amountErrorMessage(newVal) {
+      if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
   beforeMount() {
@@ -1022,7 +1025,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    }, 1000),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1116,9 +1119,9 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.clear();
           Toast(err.message, {}, ERROR);
         });
-      this.clear();
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
@@ -1151,7 +1154,7 @@ export default {
           },
           currentTrade.transactions[idx]
         );
-        this.addNotification(new Notification(notif));
+        this.addNotification(new Notification(notif)).then(this.clear);
       });
     },
     checkFeeBalance() {
