@@ -79,6 +79,7 @@
       <access-wallet-keepkey
         v-if="onKeepkey"
         :paths="paths"
+        :selected-path="selectedPath"
         @setPath="setPath"
       />
       <!--
@@ -211,7 +212,6 @@ export default {
       hwWalletInstance: {},
       selectedPath: {
         name: 'Ethereum',
-        subtext: "m/44'/60'/0'/0",
         value: "m/44'/60'/0'/0"
       },
       walletType: '',

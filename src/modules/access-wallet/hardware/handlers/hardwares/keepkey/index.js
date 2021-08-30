@@ -43,6 +43,7 @@ class KeepkeyWallet {
   }
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+    console.error('basePath', basePath)
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.keepkey = await this.keepkeyAdapter.pairDevice(undefined, true);
     this.keyring.on(['*', '*', Events.PIN_REQUEST], () => {
