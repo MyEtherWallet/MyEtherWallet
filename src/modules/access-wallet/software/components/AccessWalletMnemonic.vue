@@ -60,6 +60,7 @@
                     :name="`mnemonicInput${n}`"
                     :label="`${n}.`"
                     autocomplete="off"
+                    :autofocus="n === 1"
                   ></v-text-field>
                 </v-col>
               </v-row>
