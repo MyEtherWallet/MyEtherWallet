@@ -24,8 +24,7 @@ const EXCEPTIONS = [
   'web3-core-method',
   'web3-core-requestmanager',
   'web3-utils',
-  'remark-cli',
-  '@myetherwallet/mewconnect-web-client'
+  'remark-cli'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
