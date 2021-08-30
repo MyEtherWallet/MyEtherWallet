@@ -118,7 +118,7 @@
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
-    "is-ipfs": "6.0.1",
+    "is-ipfs": "6.0.2",
     "jest-skipped-reporter": "0.0.5",
     "multicoin-address-validator": "0.4.5",
     "minizlib": "2.1.2",

@@ -113,7 +113,12 @@
               Connect your Ledger device and open Ethereum app
             </v-card-title>
             <v-card-title v-if="ledgerConnected" class="border justify-center">
-              Ledger connected
+              <img
+                src="@/assets/images/icons/icon-checked.svg"
+                alt="Green check mark"
+                height="20"
+              />
+              <div class="padding">Ledger connected</div>
             </v-card-title>
           </div>
         </div>
@@ -457,6 +462,7 @@ export default {
       !this.step ? this.close('showHardware') : (this.step -= 1);
       // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
+      this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
     overlayClose() {
       this.reset();
@@ -614,6 +620,9 @@ export default {
   padding: 20px;
   margin-bottom: 30px;
   width: 100%;
+}
+.padding {
+  padding-left: 0.5em;
 }
 .subtitle-container {
   background-color: rgba(109, 137, 166, 0.06);
