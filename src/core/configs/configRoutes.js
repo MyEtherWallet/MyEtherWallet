@@ -29,7 +29,7 @@ const ROUTES_WALLET = {
   NETWORK: { NAME: 'Network', PATH: 'network' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
   NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
-  NOTIFICATIONS: { NAME: 'Notifications', PATH: 'notifications' },
+  // NOTIFICATIONS: { NAME: 'Notifications', PATH: 'notifications' },
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },

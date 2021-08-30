@@ -535,7 +535,7 @@ export default {
           Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
           this.closeRegister();
         })
-        .on('receipt', () => {
+        .once('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);

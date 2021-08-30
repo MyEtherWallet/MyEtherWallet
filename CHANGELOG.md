@@ -1,3 +1,40 @@
+### Release v6.0.6
+
+### ui
+
+* fix paperwallet qr code image [#3405](https://github.com/MyEtherWallet/MyEtherWallet/pull/3405)
+
+### fix
+
+* define error for setItem property of null [#3397](https://github.com/MyEtherWallet/MyEtherWallet/pull/3397)
+* handle errors for wrong sessions, multiple devices, and walletlink [#3412](https://github.com/MyEtherWallet/MyEtherWallet/pull/3412)
+* fix swap icons, and providers still showing when amount value errors [#3414](https://github.com/MyEtherWallet/MyEtherWallet/pull/3414)
+* only reset send tx once tx is mined [#3415](https://github.com/MyEtherWallet/MyEtherWallet/pull/3415)
+
+### Release v6.0.5
+
+### feature
+
+* implement routes on overlays and steppers [#3360](https://github.com/MyEtherWallet/MyEtherWallet/pull/3360)
+
+### fix
+
+* fix undefined symbol in swap [#3387](https://github.com/MyEtherWallet/MyEtherWallet/pull/3387)
+* only push token if info is not empty [#3392](https://github.com/MyEtherWallet/MyEtherWallet/pull/3392)
+* add submitted to known notification status types, add null hash if hash doesn't exists [#3384](https://github.com/MyEtherWallet/MyEtherWallet/pull/3384)
+* allow decimals to be passed on custom gas price [#3382](https://github.com/MyEtherWallet/MyEtherWallet/pull/3382)
+* return empty arraay when data doesn't exist when fetching balance [#3380](https://github.com/MyEtherWallet/MyEtherWallet/pull/3380)
+* fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
+* fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
+* fix access wallet side padding [#3374](https://github.com/MyEtherWallet/MyEtherWallet/pull/3374)
+* fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
+* show walletLink when signing [#3383](https://github.com/MyEtherWallet/MyEtherWallet/pull/3383)
+  hide swap provider list when there is not enough balance [#3390](https://github.com/MyEtherWallet/MyEtherWallet/pull/3390)
+
+### devop
+
+* add toasts or error handling for known sentry errors [#3371](https://github.com/MyEtherWallet/MyEtherWallet/pull/3371)
+
 ### Release v6.0.4-hotfix.1
 
 ### feat
@@ -24,6 +61,7 @@
 * only require mew component update when it isn't a beta version [#3344](https://github.com/MyEtherWallet/MyEtherWallet/pull/3344)
 
 ### fix
+
 * fix gas price going below basefee in eip 1559 [#3370](https://github.com/MyEtherWallet/MyEtherWallet/pull/3370)
 * show tokens even if it is not in the network list [#3362](https://github.com/MyEtherWallet/MyEtherWallet/pull/3362)
 * fix error when swapping due to currentTrade becoming null [#3366](https://github.com/MyEtherWallet/MyEtherWallet/pull/3366)
