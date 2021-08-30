@@ -228,7 +228,6 @@
              Swap Fee
             =====================================================================================
           -->
-          <div>{{ fromTokenType }}</div>
           <app-transaction-fee
             v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"

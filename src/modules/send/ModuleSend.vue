@@ -79,7 +79,6 @@
       =====================================================================================
       -->
         <v-col cols="12" class="py-0 mb-8">
-          <div>{{ selectedCurrency }}</div>
           <app-transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
