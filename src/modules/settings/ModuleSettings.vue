@@ -146,7 +146,7 @@ export default {
     panelItems() {
       return [
         {
-          name: 'Gas price',
+          name: 'Default transaction priority',
           subtext: `
           ${
             this.gasPriceType === gasPriceTypes.ECONOMY ? 'Normal priority' : ''
