@@ -228,6 +228,7 @@
              Swap Fee
             =====================================================================================
           -->
+          <div>{{ fromTokenType }}</div>
           <app-transaction-fee
             v-if="step > 0 && providersErrorMsg.subtitle === ''"
             :show-fee="showSwapFee"
@@ -238,7 +239,7 @@
             :message="feeError"
             :not-enough-eth="notEnoughEth"
             :balance="displayBalance"
-            :from-eth="fromTokenType.value === 'Ethereum'"
+            :from-eth="fromTokenType.symbol === 'ETH'"
             is-custom
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
