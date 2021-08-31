@@ -31,7 +31,10 @@
     -->
     <div v-show="gettingFee || !showFee" style="max-width: 556px">
       <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
-      <v-skeleton-loader type="heading" class="mt-2 px-sm-2 align-center" />
+      <v-skeleton-loader
+        type="heading"
+        class="mt-2 px-sm-2 align-center d-block d-sm-none"
+      />
     </div>
 
     <v-row v-if="!gettingFee && showFee">
