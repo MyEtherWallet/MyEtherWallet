@@ -32,6 +32,8 @@ jobs:
         run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
+        env:
+          INTERCOM_ID: ${{secrets.INTERCOM_ID}}
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
 
       - name: post build
@@ -43,7 +45,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
-          INTERCOM_ID: ${{secrets.INTERCOM_ID}}
         run: |
           pip install --user awscli
           mkdir -p ~/.ssh
