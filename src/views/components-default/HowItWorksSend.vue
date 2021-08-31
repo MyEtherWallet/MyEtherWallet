@@ -14,15 +14,14 @@
               <v-img src="@/assets/images/icons/icon-send-mew.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1"
-                data-lokalise
-                data-key="howItWorks.send-funds.info-one.title"
-              >
-                {{ $t('howItWorks.send-funds.info-one.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.send-funds.info-one.title')
+                    | lokalise('howItWorks.send-funds.info-one.title')
+                }}
               </div>
-              <p data-lokalise data-key="howItWorks.send-funds.info-two.text">
-                {{ $t('howItWorks.send-funds.info-two.text') }}
+              <p>
+                {{ $t('howItWorks.send-funds.info-one.text') }}
               </p>
             </div>
           </div>
@@ -32,15 +31,17 @@
               <v-img src="@/assets/images/icons/icon-nft-mew.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1"
-                data-lokalise
-                data-key="howItWorks.send-funds.info-two.title"
-              >
-                {{ $t('howItWorks.send-funds.info-two.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.send-funds.info-two.title')
+                    | lokalise('howItWorks.send-funds.info-two.title')
+                }}
               </div>
-              <p data-lokalise data-key="howItWorks.send-funds.info-two.text">
-                {{ $t('howItWorks.send-funds.info-two.text') }}
+              <p>
+                {{
+                  $t('howItWorks.send-funds.info-two.text')
+                    | lokalise('howItWorks.send-funds.info-two.text')
+                }}
               </p>
             </div>
           </div>
@@ -50,15 +51,17 @@
               <v-img src="@/assets/images/icons/icon-offline-mew.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1"
-                data-lokalise
-                data-key="howItWorks.send-funds.info-three.title"
-              >
-                {{ $t('howItWorks.send-funds.info-three.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.send-funds.info-three.title')
+                    | lokalise('howItWorks.send-funds.info-three.title')
+                }}
               </div>
-              <p data-lokalise data-key="howItWorks.send-funds.info-three.text">
-                {{ $t('howItWorks.send-funds.info-three.text') }}
+              <p>
+                {{
+                  $t('howItWorks.send-funds.info-three.text')
+                    | lokalise('howItWorks.send-funds.info-three.text')
+                }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a

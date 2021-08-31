@@ -24,19 +24,17 @@
               <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1 white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-one.title"
-              >
-                {{ $t('howItWorks.swap.info-one.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
+                {{
+                  $t('howItWorks.swap.info-one.title')
+                    | lokalise('howItWorks.swap.info-one.title')
+                }}
               </div>
-              <p
-                class="white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-one.text"
-              >
-                {{ $t('howItWorks.swap.info-one.text') }}
+              <p class="white--text">
+                {{
+                  $t('howItWorks.swap.info-one.text')
+                    | lokalise('howItWorks.swap.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -46,19 +44,17 @@
               <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1 white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-two.title"
-              >
-                {{ $t('howItWorks.swap.info-two.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
+                {{
+                  $t('howItWorks.swap.info-two.title')
+                    | lokalise('howItWorks.swap.info-two.title')
+                }}
               </div>
-              <p
-                class="white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-two.text"
-              >
-                {{ $t('howItWorks.swap.info-two.text') }}
+              <p class="white--text">
+                {{
+                  $t('howItWorks.swap.info-two.text')
+                    | $t('howItWorks.swap.info-two.text')
+                }}
               </p>
             </div>
           </div>
@@ -68,19 +64,17 @@
               <v-img src="@/assets/images/icons/icon-fiat-white.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1 white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-three.title"
-              >
-                {{ $t('howItWorks.swap.info-three.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
+                {{
+                  $t('howItWorks.swap.info-three.title')
+                    | lokalise('howItWorks.swap.info-three.title')
+                }}
               </div>
-              <p
-                class="white--text"
-                data-lokalise
-                data-key="howItWorks.swap.info-three.text"
-              >
-                {{ $t('howItWorks.swap.info-three.text') }}
+              <p class="white--text">
+                {{
+                  $t('howItWorks.swap.info-three.text')
+                    | lokalise('howItWorks.swap.info-three.text')
+                }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a

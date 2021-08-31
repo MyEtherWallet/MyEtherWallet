@@ -18,15 +18,17 @@
               <v-img src="@/assets/images/icons/icon-dapps-mew.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1"
-                data-lokalise
-                data-key="howItWorks.dapps.info-one.title"
-              >
-                {{ $t('howItWorks.dapps.info-one.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.dapps.info-one.title')
+                    | lokalise('howItWorks.dapps.info-one.title')
+                }}
               </div>
-              <p data-lokalise data-key="howItWorks.dapps.info-one.text">
-                {{ $t('howItWorks.dapps.info-one.text') }}
+              <p>
+                {{
+                  $t('howItWorks.dapps.info-one.text')
+                    | lokalise('howItWorks.dapps.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -36,21 +38,24 @@
               <v-img src="@/assets/images/icons/icon-submit-mew.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1"
-                data-lokalise
-                data-key="howItWorks.dapps.info-two.title"
-              >
-                {{ $t('howItWorks.dapps.info-two.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.dapps.info-two.title')
+                    | lokalise('howItWorks.dapps.info-two.title')
+                }}
               </div>
-              <p data-lokalise data-key="howItWorks.dapps.info-two.text">
-                {{ $t('howItWorks.dapps.info-two.text') }}
+              <p>
+                {{
+                  $t('howItWorks.dapps.info-two.text')
+                    | lokalise('howItWorks.dapps.info-two.text')
+                }}
                 <a
                   href="https://www.myetherwallet.com/dapp-submission"
                   target="_blank"
-                  data-lokalise
-                  data-key="howItWorks.dapps.info-two.link"
-                  >{{ $t('howItWorks.dapps.info-two.link') }}</a
+                  >{{
+                    $t('howItWorks.dapps.info-two.link')
+                      | lokalise('howItWorks.dapps.info-two.link')
+                  }}</a
                 >.
               </p>
               <!-- <div class="d-flex align-center mt-10">

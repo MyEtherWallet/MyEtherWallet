@@ -24,19 +24,17 @@
               <v-img src="@/assets/images/icons/icon-buy-token-white.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1 white--text"
-                data-lokalise
-                data-key="howItWorks.tokens.info-one.title"
-              >
-                {{ $t('howItWorks.tokens.info-one.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
+                {{
+                  $t('howItWorks.tokens.info-one.title')
+                    | lokalise('howItWorks.tokens.info-one.title')
+                }}
               </div>
-              <p
-                class="white--text"
-                data-lokalise
-                data-key="howItWorks.tokens.info-one.text"
-              >
-                {{ $t('howItWorks.tokens.info-one.text') }}
+              <p class="white--text">
+                {{
+                  $t('howItWorks.tokens.info-one.text')
+                    | lokalise('howItWorks.tokens.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -46,19 +44,17 @@
               <v-img src="@/assets/images/currencies/icon-eth-white.svg" />
             </div>
             <div>
-              <div
-                class="mb-1 font-weight-bold subtitle-1 white--text"
-                data-lokalise
-                data-key="howItWorks.tokens.info-two.title"
-              >
-                {{ $t('howItWorks.tokens.info-two.title') }}
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
+                {{
+                  $t('howItWorks.tokens.info-two.title')
+                    | lokalise('howItWorks.tokens.info-two.title')
+                }}
               </div>
-              <p
-                class="white--text"
-                data-lokalise
-                data-key="howItWorks.tokens.info-two.text"
-              >
-                {{ $t('howItWorks.tokens.info-two.text') }}
+              <p class="white--text">
+                {{
+                  $t('howItWorks.tokens.info-two.text')
+                    | lokalise('howItWorks.tokens.info-two.text')
+                }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a
