@@ -43,6 +43,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
+          INTERCOM_ID: ${{secrets.INTERCOM_ID}}
         run: |
           pip install --user awscli
           mkdir -p ~/.ssh

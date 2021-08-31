@@ -64,7 +64,7 @@
     "clipboard-copy": "4.0.1",
     "graphql": "15.5.1",
     "graphql-tag": "2.12.5",
-    "highcharts": "9.1.2",
+    "highcharts": "9.2.2",
     "highcharts-vue": "1.4.0",
     "lottie-web": "5.7.13",
     "moment": "2.29.1",
@@ -118,7 +118,7 @@
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",
-    "is-ipfs": "6.0.1",
+    "is-ipfs": "6.0.2",
     "jest-skipped-reporter": "0.0.5",
     "multicoin-address-validator": "0.4.5",
     "minizlib": "2.1.2",
@@ -179,7 +179,7 @@
     "keccak": "3.0.1",
     "diff": "3.5.0",
     "elleptic": "6.5.3",
-    "tar": "4.4.15"
+    "tar": "4.4.18"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
