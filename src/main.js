@@ -37,7 +37,7 @@ import i18n from './main/i18n';
 Vue.directive('lottie', LottieAnimation);
 
 // eslint-disable-next-line
-Vue.use(VueIntercom, { appId: INTERCOM });
+Vue.use(VueIntercom, { appId: 'ja20qe25' });
 
 //Router
 Vue.use(Router);
