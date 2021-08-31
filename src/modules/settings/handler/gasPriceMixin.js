@@ -19,45 +19,42 @@ const gasPriceMixin = {
     ...mapState('global', ['gasPriceType', 'baseGasPrice']),
     gasButtons() {
       if (!this.gasPrice) return [];
-      const economy = fromWei(
-        this.gasPriceByType(gasPriceTypes.ECONOMY),
-        'gwei'
-      );
-      const regular = fromWei(
-        this.gasPriceByType(gasPriceTypes.REGULAR),
-        'gwei'
-      );
-      const fast = fromWei(this.gasPriceByType(gasPriceTypes.FAST), 'gwei');
+      const economy = fromWei(this.gasPriceByType(gasPriceTypes.ECONOMY));
+      const regular = fromWei(this.gasPriceByType(gasPriceTypes.REGULAR));
+      const fast = fromWei(this.gasPriceByType(gasPriceTypes.FAST));
       return [
         {
           title: gasPriceTypes.ECONOMY,
           gas: `${economy}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(economy, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(economy)))
             ).value
           }`,
-          time: estimatedTime(gasPriceTypes.ECONOMY)
+          time: estimatedTime(gasPriceTypes.ECONOMY),
+          priority: 'Normal priority'
         },
         {
           title: gasPriceTypes.REGULAR,
           gas: `${regular}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(regular, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(regular)))
             ).value
           }`,
-          time: estimatedTime(gasPriceTypes.REGULAR)
+          time: estimatedTime(gasPriceTypes.REGULAR),
+          priority: 'Higher priority'
         },
         {
           title: gasPriceTypes.FAST,
           gas: `${fast}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(fast, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(fast)))
             ).value
           }`,
-          time: estimatedTime(gasPriceTypes.FAST)
+          time: estimatedTime(gasPriceTypes.FAST),
+          priority: 'Highest priority'
         }
       ];
     }

@@ -6,7 +6,10 @@
 
     <div class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
-        <div class="mr-2">{{ currentValue.gas | twoDecimalPoint }} Gwei</div>
+        <div class="mr-2">
+          {{ currentValue.gas }}
+          {{ network.type.currencyName }}
+        </div>
         <div class="textSecondary--text">{{ currentValue.usd }}</div>
       </div>
       <div class="d-flex align-center">
@@ -64,23 +67,8 @@
               height="15"
             />
           </div>
-          <div
-            v-if="b.title === gasPriceTypes.ECONOMY"
-            class="mew-heading-3 font-weight-regular"
-          >
-            Normal priority
-          </div>
-          <div
-            v-if="b.title === gasPriceTypes.REGULAR"
-            class="mew-heading-3 font-weight-regular"
-          >
-            Higher priority
-          </div>
-          <div
-            v-if="b.title === gasPriceTypes.FAST"
-            class="mew-heading-3 font-weight-regular"
-          >
-            Highest priority
+          <div class="mew-heading-3 font-weight-regular">
+            {{ b.priority }}
           </div>
         </div>
 
@@ -103,7 +91,7 @@
             <div class="textSecondary--text">{{ b.time }}</div>
             <div class="textSecondary--text">+{{ b.usd }}</div>
             <div class="textSecondary--text">
-              +{{ b.gas | twoDecimalPoint }} Gwei
+              +{{ b.gas }} {{ network.type.currencyName }}
             </div>
           </div>
         </div>
@@ -125,18 +113,11 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'SettingsGasPrice',
-  filters: {
-    twoDecimalPoint: function (value) {
-      if (value.includes('.')) return BigNumber(value).toFixed(2);
-      return value;
-    }
-  },
   props: {
     selected: {
       type: String,
@@ -172,6 +153,7 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
+    ...mapGetters('global', ['network']),
     currentValue() {
       for (const but of this.buttons) {
         if (but.title === this.selected) {
