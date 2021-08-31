@@ -1,7 +1,3 @@
-### devop
-
-* sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
-
 ### Release v6.0.6
 
 ### ui
@@ -10,10 +6,15 @@
 
 ### fix
 
+* fix ledger send [#3424](https://github.com/MyEtherWallet/MyEtherWallet/pull/3424)
 * define error for setItem property of null [#3397](https://github.com/MyEtherWallet/MyEtherWallet/pull/3397)
 * handle errors for wrong sessions, multiple devices, and walletlink [#3412](https://github.com/MyEtherWallet/MyEtherWallet/pull/3412)
 * fix swap icons, and providers still showing when amount value errors [#3414](https://github.com/MyEtherWallet/MyEtherWallet/pull/3414)
 * only reset send tx once tx is mined [#3415](https://github.com/MyEtherWallet/MyEtherWallet/pull/3415)
+
+### devop
+
+* sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
 
 ### Release v6.0.5
 
