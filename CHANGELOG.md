@@ -1,3 +1,11 @@
+### devop
+
+* sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
+
+### fix
+
+* fix ledger send [#3424](https://github.com/MyEtherWallet/MyEtherWallet/pull/3424)
+
 ### Release v6.0.6
 
 ### ui
