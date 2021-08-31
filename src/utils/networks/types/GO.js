@@ -21,5 +21,6 @@ export default {
     blockExplorerAddr: '',
     websocket: null
   },
+  coingeckID: 'gochain',
   gasPriceMultiplier: 1
 };
