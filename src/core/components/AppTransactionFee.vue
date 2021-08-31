@@ -17,48 +17,11 @@
 
     <!--
     =====================================================
-      High fees pop up
-    =====================================================
-    -->
-    <app-modal
-      :show="openHighFeeNote"
-      :close="closeHighFeeNote"
-      :has-buttons="false"
-    >
-      <template #dialogBody>
-        <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
-        <div class="mew-heading-1">Are you guys out of your minds?</div>
-        <div class="mt-6 textPrimary--text">
-          Fees are indeed high these days. We feel your pain!
-          <br />
-          <br />
-          Transaction fees are charged by Ethereum miners, not MEW. We can't
-          influence them and we don't receive any part of the transaction fees
-          that you pay.
-          <br />
-          <br />
-          Ethereum is getting more and more popular, but its capacity is
-          limited, this is why when the network is congested, it can cost
-          $10-$20 to send a token, and a simple swap transaction can set you
-          back $100 or even more.
-          <br />
-          <br />
-          Many teams in the Ethereum community are working hard to solve this
-          problem: Ethereum 2.0 is gradually being built, numerous Layer 2
-          solutions are getting launched. It is still very early days of
-          Ethereum, and this is the current state of the technology.
-        </div>
-      </template>
-    </app-modal>
-
-    <!--
-    =====================================================
       Title
     =====================================================
     -->
     <div class="d-flex align-center mb-2">
       <div class="mew-heading-3 ml-4">Transaction fee</div>
-      <mew-tooltip class="pl-1" :text="feeTitleTooltip" max-width="300px" />
     </div>
 
     <!--
@@ -132,18 +95,6 @@
             Buy more ETH
           </a>
         </div>
-
-        <!--
-      =====================================================
-        Too high transaction fee / Buy more ETH
-      =====================================================
-      -->
-        <div
-          class="ml-2 mr-1 primary--text cursor--pointer user-select--none"
-          @click="openHighFeeNote = true"
-        >
-          Why are the fees so high?
-        </div>
       </v-col>
 
       <v-spacer />
@@ -165,7 +116,6 @@
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { EventBus } from '@/core/plugins/eventBus';
-import AppModal from '@/core/components/AppModal';
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
 import {
   formatFiatValue,
@@ -175,7 +125,7 @@ import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { fromWei } from 'web3-utils';
 export default {
   name: 'AppTransactionFee',
-  components: { AppModal, AppNetworkSettingsModal },
+  components: { AppNetworkSettingsModal },
   props: {
     showFee: {
       type: Boolean,
@@ -205,17 +155,13 @@ export default {
       type: String,
       default: ''
     },
-    isSwap: {
-      type: Boolean,
-      default: false
-    },
     fromEth: {
       type: Boolean,
       default: false
     }
   },
   data() {
-    return { gasPriceModal: false, openHighFeeNote: false };
+    return { gasPriceModal: false };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
@@ -235,19 +181,11 @@ export default {
     hasError() {
       return this.error !== '';
     },
-    feeTitleTooltip() {
-      return this.isSwap
-        ? 'Maximum possible transaction fee is shown. Actual fee is likely to be less once your swap is executed.'
-        : 'Maximum possible transaction fee is shown. Actual fee is likely to be less once your transaction is executed.';
-    },
     timeWillTake() {
       return estimatedTime(this.gasPriceType);
     }
   },
   methods: {
-    closeHighFeeNote() {
-      this.openHighFeeNote = false;
-    },
     openSettings() {
       EventBus.$emit('toggleSettings');
       this.gasPriceModal = false;

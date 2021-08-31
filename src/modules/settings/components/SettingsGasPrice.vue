@@ -29,15 +29,7 @@
       <div
         v-for="(b, key) in buttons"
         :key="key"
-        class="
-          px-5
-          py-4
-          mb-2
-          d-flex
-          align-center
-          justify-space-between
-          group-button
-        "
+        class="mb-2 d-flex align-center justify-space-between group-button"
         :class="[selected === b.title ? 'active' : '']"
         @click.stop="
           () => {
@@ -46,22 +38,31 @@
         "
       >
         <div class="d-flex align-center">
-          <div class="mr-2 ml-n1 text-center" style="width: 40px">
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack"
-              >mdi-check</v-icon
-            >
-            <v-icon v-if="b.title === gasPriceTypes.REGULAR" color="textBlack"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon v-if="b.title === gasPriceTypes.FAST" color="textBlack"
-              >mdi-arrow-up</v-icon
-            >
-            <v-icon
+          <div
+            class="mr-1 ml-n1 text-center"
+            style="width: 40px; line-height: 0"
+          >
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+              mdi-check
+            </v-icon>
+            <img
+              v-if="b.title === gasPriceTypes.REGULAR"
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
+            <img
               v-if="b.title === gasPriceTypes.FAST"
-              color="textBlack"
-              class="ml-n2"
-              >mdi-arrow-up</v-icon
-            >
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
+            <img
+              v-if="b.title === gasPriceTypes.FAST"
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
           </div>
           <div
             v-if="b.title === gasPriceTypes.ECONOMY"
@@ -127,6 +128,7 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
+
 export default {
   name: 'SettingsGasPrice',
   filters: {
@@ -184,8 +186,9 @@ export default {
 
 <style lang="scss" scoped>
 .group-button {
-  padding: 10px;
-  border-radius: 10px;
+  min-height: 72px;
+  padding: 5px 16px;
+  border-radius: 8px;
   background-color: #f4f6f8;
   cursor: pointer;
   user-select: none;
@@ -195,7 +198,7 @@ export default {
     background-color: #e9eff4;
   }
   &.active {
-    border: 2px solid #31c0a5;
+    border: 2px solid #05c0a5;
     background-color: #e1f7f4;
     opacity: 1;
     &:hover {

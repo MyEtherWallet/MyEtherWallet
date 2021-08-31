@@ -1,7 +1,7 @@
 <template>
   <app-simple-dialog
     :value="gasPriceModal"
-    width="400"
+    width="380"
     title="Transaction fee"
     @close="handleClose"
   >

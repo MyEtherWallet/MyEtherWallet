@@ -1,6 +1,5 @@
 <template>
   <mew-overlay
-    :title="title"
     :show-overlay="onSettings"
     :close="close"
     :back="back"
@@ -8,71 +7,85 @@
     :right-btn-text="$t('common.close')"
   >
     <template #mewOverlayBody>
-      <v-sheet
-        v-if="!editMode && !addMode"
-        class="mt-5"
-        max-width="700"
-        color="transparent"
+      <mew6-white-sheet
+        style="max-width: 744px"
+        class="pt-1 pb-12 px-12 module--settings-module-settings"
       >
-        <mew-expand-panel
-          :panel-items="panelItems"
-          :idx-to-expand="idxToExpand"
-        >
-          <template #panelBody1>
-            <settings-gas-price
-              class="px-6 mb-10"
-              :buttons="gasButtons"
-              :selected="gasPriceType"
-              :set-selected="setSelected"
-              :gas-price="gasPrice"
-              :global="true"
-            />
-          </template>
-          <template #panelBody2>
-            <settings-import-config :import-config="settingsHandler" />
-          </template>
-          <template #panelBody3>
-            <settings-export-config :export-config="exportStore" />
-          </template>
-          <template #panelBody4>
-            <div class="pa-6">
-              <div class="mb-4">
-                {{ $t('interface.address-book.add-up-to') }}
-              </div>
-              <mew-table
-                :table-headers="tableHeaders"
-                :table-data="tableData"
-                has-color
-                :success-toast="$t('common.copied')"
-                @onClick="onEdit"
-              />
+        <div class="mew-subtitle text-center mb-7">{{ title }}</div>
 
-              <div class="d-flex justify-center mt-5">
-                <mew-button
-                  :disabled="addressBook.length > 10"
-                  title="+ Add"
-                  btn-size="xlarge"
-                  @click.native="addMode = !addMode"
+        <div v-if="!editMode && !addMode">
+          <mew-expand-panel
+            :panel-items="panelItems"
+            :idx-to-expand="idxToExpand"
+            has-dividers
+          >
+            <template #panelBody1>
+              <settings-gas-price
+                class="px-6 mb-10"
+                :buttons="gasButtons"
+                :selected="gasPriceType"
+                :set-selected="setSelected"
+                :gas-price="gasPrice"
+                :global="true"
+              />
+            </template>
+            <template #panelBody2>
+              <settings-import-config :import-config="settingsHandler" />
+            </template>
+            <template #panelBody3>
+              <settings-export-config :export-config="exportStore" />
+            </template>
+            <template #panelBody4>
+              <div class="pa-6">
+                <div class="mb-4">
+                  {{ $t('interface.address-book.add-up-to') }}
+                </div>
+                <mew-table
+                  :table-headers="tableHeaders"
+                  :table-data="tableData"
+                  has-color
+                  :success-toast="$t('common.copied')"
+                  @onClick="onEdit"
                 />
+
+                <div class="d-flex justify-center mt-5">
+                  <mew-button
+                    :disabled="addressBook.length > 10"
+                    title="+ Add"
+                    btn-size="xlarge"
+                    @click.native="addMode = !addMode"
+                  />
+                </div>
               </div>
-            </div>
-          </template>
-          <!-- <template #panelBody5>
+            </template>
+            <!-- <template #panelBody5>
             <notifications />
           </template> -->
-        </mew-expand-panel>
-      </v-sheet>
-      <!--
-    =====================================================================================
-     Add / Edit Address Book overlay
-    =====================================================================================
-    -->
-      <address-book-add-edit
-        v-if="addMode || editMode"
-        :item="itemToEdit"
-        :mode="onMode"
-        @back="back"
-      />
+          </mew-expand-panel>
+        </div>
+        <!--
+        =====================================================================================
+        Add / Edit Address Book overlay
+        =====================================================================================
+        -->
+        <address-book-add-edit
+          v-if="addMode || editMode"
+          :item="itemToEdit"
+          :mode="onMode"
+          @back="back"
+        />
+      </mew6-white-sheet>
+
+      <div class="mt-10">
+        Need help?
+        <a
+          href="mailto:support@myetherwallet.com"
+          target="_blank"
+          class="font-weight-medium"
+        >
+          Contact support
+        </a>
+      </div>
     </template>
   </mew-overlay>
 </template>
@@ -235,3 +248,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.module--settings-module-settings {
+  .v-expansion-panel {
+    margin-top: 0px !important;
+    margin-bottom: -1px !important;
+  }
+}
+</style>
