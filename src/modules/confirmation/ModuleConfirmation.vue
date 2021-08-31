@@ -764,6 +764,7 @@ export default {
             }
           })
           .catch(e => {
+            console.log(e);
             this.signedTxObject = {};
             this.error = e.message;
             this.signing = false;
