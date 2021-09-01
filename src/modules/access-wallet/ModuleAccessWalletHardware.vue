@@ -399,7 +399,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet', 'removeWallet']),
+    ...mapActions('wallet', ['setWallet']),
     /**
      * Resets the Data
      */

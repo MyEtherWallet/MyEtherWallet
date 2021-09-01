@@ -334,7 +334,6 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
-      console.error('in here', this.showLogoutPopup);
     },
     openSimplex() {
       // eslint-disable-next-line
