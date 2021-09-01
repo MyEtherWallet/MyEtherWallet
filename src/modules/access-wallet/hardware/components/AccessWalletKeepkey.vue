@@ -13,6 +13,11 @@
       />
     </div>
     <div>
+      <!--
+=====================================================================================
+Pin Pad
+=====================================================================================
+-->
       <div class="d-flex flex-column">
         <span class="mew-heading-2 mb-2"> Enter your PIN. </span>
         <span class="mew-heading-4 mb-5">
@@ -42,10 +47,17 @@
           </v-col>
         </v-row>
       </v-container>
+      <!--
+=====================================================================================
+Unlock wallet button
+=====================================================================================
+-->
       <mew-button
         title="Unlock wallet"
         btn-size="xlarge"
         has-full-width
+        :loading="loading && !handlerLoaded"
+        :disabled="loading && !handlerLoaded"
         @click.native="unlock"
       />
     </div>
@@ -66,6 +78,10 @@ export default {
       type: Array,
       default: () => []
     },
+    handlerLoaded: {
+      type: Boolean,
+      default: false
+    },
     selectedPath: {
       type: Object,
       default: () => {}
@@ -76,6 +92,7 @@ export default {
       callback: () => [],
       pinEnabled: false,
       pin: '',
+      loading: false,
       numbers: ['7', '8', '9', '4', '5', '6', '1', '2', '3']
     };
   },
@@ -87,6 +104,10 @@ export default {
     }
   },
   created() {
+    /**
+     * Listens to event: enablePin to allow user to input pin
+     * also saves callback method to use later on
+     */
     EventBus.$on('enablePin', (deviceInfo, callback) => {
       this.callback = callback;
       // this.deviceInfo = deviceInfo;
@@ -94,10 +115,17 @@ export default {
     });
   },
   methods: {
+    /**
+     * emits setPath back to parent in order to unlock wallet correctly
+     */
     setPath(path) {
       this.$emit('setPath', path);
     },
+    /**
+     * uses callback method from handler to unlock wallet
+     */
     unlock() {
+      this.loading = true;
       this.callback(this.pin);
     }
   }

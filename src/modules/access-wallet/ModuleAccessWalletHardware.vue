@@ -80,6 +80,7 @@
         v-if="onKeepkey"
         :paths="paths"
         :selected-path="selectedPath"
+        :handler-loaded="loaded"
         @setPath="setPath"
       />
       <!--
@@ -216,6 +217,7 @@ export default {
       walletType: '',
       selectedLedgerApp: {},
       password: '',
+      loaded: false,
       // qrCode: '',
       // walletInstance: {},
       // enterPin: false,
@@ -469,6 +471,7 @@ export default {
       return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
+          this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           // if (this.walletType === WALLET_TYPES.BITBOX2) {
           //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
@@ -544,20 +547,6 @@ export default {
      */
     // setPassword(str) {
     //   this.password = str;
-    // },
-    /**
-     * Keepkey Actions
-     */
-    // keepKeyClear() {
-    //   this.pin = '';
-    // },
-    // keepKeyPinEnter(pin) {
-    //   this.callback(pin);
-    //   this.enterPin = false;
-    //   this.step += 1;
-    //   setTimeout(() => {
-    //     this.callback = () => {};
-    //   }, 500);
     // },
     /**
      * Sets BitBox value
