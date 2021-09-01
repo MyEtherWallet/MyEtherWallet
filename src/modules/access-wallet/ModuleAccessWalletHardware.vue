@@ -113,6 +113,7 @@
           -->
     <access-wallet-address-network
       v-if="step === 3"
+      :back="null"
       :handler-wallet="hwWalletInstance"
       @unlock="setHardwareWallet"
     />
@@ -125,7 +126,6 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
-// import AccessWalletPin from './hardware/components/AccessWalletPin';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
@@ -143,7 +143,6 @@ export default {
     // AccessWalletBitbox,
     // AccessWalletPassword,
     // AccessWalletPaths,
-    // AccessWalletPin,
     // BitBoxPopup
   },
   filters: {
@@ -398,7 +397,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('wallet', ['setWallet', 'removeWallet']),
     /**
      * Resets the Data
      */
@@ -411,8 +410,9 @@ export default {
       this.password = '';
       // this.qrCode = '';
       // this.walletInstance = {};
-      this.enterPin = false;
+      // this.enterPin = false;
       this.walletType = '';
+      this.removeWallet();
     },
     /**
      * Overlay Actions

@@ -141,7 +141,7 @@
         -->
     <app-btn-row
       class="my-2"
-      next-btn-text="Access Wallet"
+      next-btn-text="Access my wallet"
       :next-btn-method="accessWallet"
       :back-btn-method="back ? reset : null"
       :next-disable="!acceptTerms"

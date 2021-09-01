@@ -6,7 +6,11 @@
 <template>
   <div>
     <div class="text-right">
-      <access-wallet-derivation-path :selected-path="selectedPath" :paths="paths" />
+      <access-wallet-derivation-path
+        :selected-path="selectedPath"
+        :paths="paths"
+        @setPath="setPath"
+      />
     </div>
     <div>
       <div class="d-flex flex-column">
@@ -89,10 +93,10 @@ export default {
       this.pinEnabled = true;
     });
   },
-  mounted() {
-    this.$emit('setPath', this.paths[0]);
-  },
   methods: {
+    setPath(path) {
+      this.$emit('setPath', path);
+    },
     unlock() {
       this.callback(this.pin);
     }
