@@ -412,13 +412,16 @@ export default {
       // this.walletInstance = {};
       // this.enterPin = false;
       this.walletType = '';
-      this.removeWallet();
     },
     /**
-     * Overlay Actions
+     * Overlay Action: Back
+     * if on keepkey step 3, it will return to step 1 so it will reset everything
      */
     back() {
       !this.step ? this.close('showHardware') : (this.step -= 1);
+      if (this.onKeepkey && this.step === 2) {
+        this.step = 1;
+      }
       // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
     },
