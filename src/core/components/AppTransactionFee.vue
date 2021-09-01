@@ -52,7 +52,7 @@
           >
             <div class="d-flex align-center">
               <div :class="hasError ? 'error--text' : 'textBlack2--text'">
-                {{ feesInUsd }}
+                {{ feeInUsd }}
               </div>
               <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
                 mdi-arrow-right
@@ -107,7 +107,7 @@
         <div class="py-2 ml-2 text-right">
           <div>
             <span class="mr-2">Total:</span>
-            {{ actualFeeFormatted }} ETH
+            {{ actualCostFormatted }} ETH
           </div>
         </div>
       </v-col>
@@ -142,11 +142,11 @@ export default {
       type: String,
       default: ''
     },
-    notEnoughEth: {
-      type: Boolean,
-      default: false
+    totalCost: {
+      type: String,
+      default: '0'
     },
-    totalFees: {
+    txFee: {
       type: String,
       default: '0'
     },
@@ -157,6 +157,10 @@ export default {
     message: {
       type: String,
       default: ''
+    },
+    notEnoughEth: {
+      type: Boolean,
+      default: false
     },
     fromEth: {
       type: Boolean,
@@ -169,13 +173,19 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
+    costToEth() {
+      return fromWei(this.totalCost);
+    },
+    actualCostFormatted() {
+      return formatFloatingPointValue(this.costToEth).value;
+    },
     feeToEth() {
-      return fromWei(this.totalFees);
+      return fromWei(this.txFee);
     },
     actualFeeFormatted() {
       return formatFloatingPointValue(this.feeToEth).value;
     },
-    feesInUsd() {
+    feeInUsd() {
       const value = formatFiatValue(
         BigNumber(this.feeToEth).times(this.fiatValue).toFixed(2)
       ).value;

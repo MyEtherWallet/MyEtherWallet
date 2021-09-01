@@ -233,13 +233,12 @@
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
-            :total-fees="totalFees"
+            :total-cost="totalCost"
+            :tx-fee="txFee"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="notEnoughEth"
-            :balance="displayBalance"
-            :from-eth="fromTokenType.symbol === 'ETH'"
-            is-custom
+            :from-eth="isFromTokenMain"
             class="mt-10 mt-sm-16"
             @onLocalGasPrice="handleLocalGasPrice"
           />
@@ -332,7 +331,7 @@ export default {
         toType: '',
         validUntil: 0,
         selectedProvider: '',
-        totalFees: ''
+        txFee: ''
       },
       swapper: null,
       toTokenType: {},
@@ -626,10 +625,15 @@ export default {
           return token;
         });
     },
-    totalFees() {
+    txFee() {
       const gasPrice =
         this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
       return toBN(this.totalGasLimit).mul(toBN(gasPrice));
+    },
+    totalCost() {
+      const amount = this.isFromTokenMain ? this.tokenInValue : '0';
+      const amountWei = toWei(amount);
+      return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -664,7 +668,7 @@ export default {
      * balance for the transaction
      */
     notEnoughEth() {
-      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+      const balanceAfterFees = toBN(this.balance).sub(toBN(this.txFee));
       const isNotEnoughEth = this.isFromTokenMain
         ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
         : balanceAfterFees.isNeg();
@@ -767,7 +771,7 @@ export default {
     }
   },
   watch: {
-    totalFees: {
+    txFee: {
       handler: function () {
         this.checkFeeBalance();
       },
@@ -841,7 +845,7 @@ export default {
         toType: '',
         validUntil: 0,
         selectedProvider: '',
-        totalFees: ''
+        txFee: ''
       };
 
       this.toTokenswapper = null;
@@ -1072,7 +1076,7 @@ export default {
       }
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
-      this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+      this.exPannel[0].subtext = `${fromWei(this.txFee)} ${
         this.network.type.name
       }`;
       this.step = 2;
@@ -1095,7 +1099,7 @@ export default {
         fromUsdVal: this.fromTokenType.usdBalance,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
-        totalFees: this.totalFees,
+        txFee: this.txFee,
         gasPriceType: this.localGasType
       };
       this.executeTrade();

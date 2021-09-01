@@ -83,8 +83,8 @@
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
             :error="feeError"
-            :balance="balanceInETH"
-            :total-fees="txFeeGwei"
+            :total-cost="totalCost"
+            :tx-fee="txFee"
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
@@ -413,8 +413,9 @@ export default {
     txFeeETH() {
       return fromWei(this.txFee);
     },
-    txFeeGwei() {
-      return this.txFee;
+    totalCost() {
+      const amountToWei = toWei(this.amount);
+      return BigNumber(this.txFee).plus(amountToWei).toString();
     },
     txFee() {
       if (this.isValidGasLimit) {
@@ -450,7 +451,7 @@ export default {
       if (BigNumber(this.localGasPrice).eq(0)) {
         return BigNumber(this.gasPrice);
       }
-      return BigNumber(fromWei(this.localGasPrice));
+      return BigNumber(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -625,7 +626,7 @@ export default {
       }
     },
     handleLocalGasPrice(e) {
-      this.localGasPrice = toWei(e.gasPrice);
+      this.localGasPrice = e.gasPrice;
       this.localGasType = e.gasType;
       this.sendTx.setLocalGasPrice(this.actualGasPrice);
     },
