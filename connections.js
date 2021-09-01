@@ -43,5 +43,6 @@ module.exports = [
   'https://cdn.live.ledger.com:443',
   'https://app.lokalise.com:443',
   'https://registry.walletconnect.org:443/data/wallets.json',
-  'https://js.intercomcdn.com:443'
+  'https://js.intercomcdn.com:443',
+  'https://uploads.intercomcdn.com:443'
 ];
