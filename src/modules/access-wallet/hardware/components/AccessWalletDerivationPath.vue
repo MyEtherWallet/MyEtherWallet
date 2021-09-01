@@ -180,11 +180,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'customPaths']),
+    ...mapGetters('global', ['network']),
     ...mapState('global', ['customPaths']),
     /**
-     * Filtered paths based on search
-     * also adds custom paths to the beginning of the array
+     * Custom filtered paths based on search
      */
     filteredCustomPaths() {
       return this.customPaths.filter(path => {
@@ -199,7 +198,6 @@ export default {
     },
     /**
      * Filtered paths based on search
-     * also adds custom paths to the beginning of the array
      */
     filteredPaths() {
       return this.paths.filter(path => {
