@@ -22,7 +22,7 @@
 
 ### Release
 
-* \[ ] Added entry to ./changelog
+* \[ ] Merged changelog generation branch
 * \[ ] Created a release
   * \[ ] Link to release:
 * \[ ] Add PR label
