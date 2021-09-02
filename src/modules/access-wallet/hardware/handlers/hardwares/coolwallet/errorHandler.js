@@ -1,6 +1,6 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 const ERRORS = {
-  WrongPassword: 'coolWalletError.wrong-password',
+  'Wrong Password': 'coolWalletError.wrong-password',
   CardLocked: 'coolWalletError.card-locked',
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
@@ -9,7 +9,9 @@ const ERRORS = {
   'browser not supported': 'coolWalletError.no-bluetooth',
   'User cancelled the requestDevice() chooser.': 'User cancelled action!',
   'NetworkError: GATT operation already in progress.':
-    'Unknown CoolWallet Error!'
+    'Unknown CoolWallet Error!',
+  'Card Locked. Unlock with a registered App or reset your wallet.':
+    'Card Locked. Unlock with a registered App or reset your wallet.'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);

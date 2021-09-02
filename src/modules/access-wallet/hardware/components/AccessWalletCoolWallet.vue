@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="coolWalletUnlock">
+  <div>
     <mew-input
       v-model="pairingPassword"
       placeholder="Pairing Password"
@@ -61,7 +61,7 @@
       :disabled="disableBtn"
       @click.native="coolWalletUnlock"
     />
-  </form>
+  </div>
 </template>
 <script>
 export default {

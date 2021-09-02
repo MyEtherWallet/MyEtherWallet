@@ -113,6 +113,7 @@
     <access-wallet-address-network
       v-if="step === 3"
       :handler-wallet="hwWalletInstance"
+      :back="back"
       @unlock="setHardwareWallet"
     />
   </mew-overlay>
@@ -453,6 +454,7 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
+          if (this.walletType === WALLET_TYPES.COOL_WALLET) return;
           this[`${this.walletType}Unlock`]();
         }
       }
@@ -514,11 +516,11 @@ export default {
           this.hwWalletInstance = _hwWallet;
           this.step++;
         })
-        .catch(err => {
+        .catch(e => {
           if (this.wallets[this.walletType]) {
-            this.wallets[this.walletType].create.errorHandler(err);
+            this.wallets[this.walletType].create.errorHandler(e);
           } else {
-            Toast(err, {}, ERROR);
+            Toast(e, {}, ERROR);
           }
           this.reset();
         });
@@ -548,18 +550,18 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
+    },
+    /**
+     * Sets Password
+     */
+    setPassword(str) {
+      this.password = str;
     }
     /**
      * Sets Ledger App
      */
     // setLedgerApp(obj) {
     //   this.selectedLedgerApp = obj;
-    // },
-    /**
-     * Sets Password
-     */
-    // setPassword(str) {
-    //   this.password = str;
     // },
     /**
      * Keepkey Actions

@@ -73,7 +73,7 @@ export default {
   },
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
-    when: 2,
+    when: 3,
     // steps: [LAYOUT_STEPS.ENTER_PASSWORD, LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT],
     hasPaths: false,
     requiresPassword: true,
