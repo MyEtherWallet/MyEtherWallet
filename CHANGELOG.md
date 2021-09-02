@@ -15,6 +15,7 @@
 ### devop
 
 * sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
+* update packages for release [#3431](https://github.com/MyEtherWallet/MyEtherWallet/pull/3431)
 
 ### Release v6.0.5
 
