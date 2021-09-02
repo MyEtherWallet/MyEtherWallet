@@ -68,7 +68,6 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
-      console.log('asdf', dispatch);
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       if (!newTxObj.hasOwnProperty('hash')) {
