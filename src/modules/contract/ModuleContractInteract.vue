@@ -48,98 +48,135 @@
         </div>
       </div>
 
+      <!--
+      ============================================================================
+      Overlay
+      ============================================================================
+      -->
       <mew-overlay
+        title="Interact with contract"
         :show-overlay="interact"
-        left-btn-text="back"
         right-btn-text="close"
         :close="closeInteract"
-        :back="backInteract"
       >
         <template #mewOverlayBody>
-          <mew-select :label="'Method'" :items="methods" @input="methodSelect">
-          </mew-select>
-          <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
-          <div
-            v-for="(input, idx) in selectedMethod.inputs"
-            :key="input.name + idx"
-            class="input-item-container"
+          <mew6-white-sheet
+            style="max-width: 480px; width: 100%"
+            class="px-9 py-12"
           >
-            <mew-input
-              v-if="getType(input.type).type !== 'radio'"
-              :label="`${input.name} (${input.type})`"
-              :rules="[
-                value => {
-                  return isValidInput(value, getType(input.type).solidityType);
-                }
-              ]"
-              @input="valueInput(idx, $event)"
+            <mew-select
+              label="Function"
+              :items="methods"
+              class="mb-1"
+              @input="methodSelect"
             />
+
+            <mew-select label="_bidValue (unit256)" />
+
+            <div v-show="selectedMethod.inputs.length" class="mb-10">
+              Inputs
+            </div>
             <div
-              v-if="getType(input.type).type === 'radio'"
-              class="bool-input-container"
+              v-for="(input, idx) in selectedMethod.inputs"
+              :key="input.name + idx"
+              class="input-item-container"
             >
-              <div class="bool-items">
-                <mew-checkbox
-                  v-model="input.value"
-                  :label="input.name"
-                  type="radio"
-                  checked
-                  @input="valueInput(idx, $event)"
+              <mew-input
+                v-if="getType(input.type).type !== 'radio'"
+                :label="`${input.name} (${input.type})`"
+                :rules="[
+                  value => {
+                    return isValidInput(
+                      value,
+                      getType(input.type).solidityType
+                    );
+                  }
+                ]"
+                @input="valueInput(idx, $event)"
+              />
+              <div
+                v-if="getType(input.type).type === 'radio'"
+                class="bool-input-container"
+              >
+                <div class="bool-items">
+                  <mew-checkbox
+                    v-model="input.value"
+                    :label="input.name"
+                    type="radio"
+                    checked
+                    @input="valueInput(idx, $event)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <mew-input
+                v-if="isPayableFunction"
+                label="ETH amount:"
+                :rules="[
+                  value => {
+                    return hasEnough ? '' : 'Not enough ETH';
+                  }
+                ]"
+                type="number"
+                @input="payableInput($event)"
+              />
+            </div>
+            <div class="text-center mt-2">
+              <mew-button
+                :title="isViewFunction ? 'View result' : 'Write'"
+                :has-full-width="false"
+                btn-size="xlarge"
+                :disabled="canProceed"
+                @click.native="readWrite"
+              />
+            </div>
+
+            <v-divider class="mt-9 mb-8" />
+
+            <div>
+              <div class="mew-heading-2">Results</div>
+              <div class="d-flex align-center justify-space-between my-4">
+                <div>Token count:</div>
+                <div class="font-weight-medium">10000</div>
+              </div>
+              <div class="d-flex align-center justify-space-between">
+                <div>Purchase value:</div>
+                <div class="font-weight-medium">2103</div>
+              </div>
+            </div>
+
+            <div v-if="false">
+              <div v-show="selectedMethod.outputs.length" class="mb-10">
+                Outputs
+              </div>
+              <div
+                v-for="(output, idx) in selectedMethod.outputs"
+                v-show="selectedMethod.outputs.length"
+                :key="output.name + idx"
+                class="input-item-container"
+              >
+                <mew-input
+                  v-if="getType(output.type).type !== 'radio'"
+                  :value="output.value"
+                  :disabled="true"
+                  :label="`${output.name} (${output.type})`"
+                  class="non-bool-input"
+                />
+                <mew-input
+                  v-if="getType(output.type).type === 'radio'"
+                  :value="
+                    typeof output.value !== 'undefined'
+                      ? output.value.toString()
+                      : ''
+                  "
+                  :disabled="true"
+                  :label="`${output.name} (${output.type})`"
+                  class="non-bool-input"
                 />
               </div>
             </div>
-          </div>
-          <div>
-            <mew-input
-              v-if="isPayableFunction"
-              label="ETH amount:"
-              :rules="[
-                value => {
-                  return hasEnough ? '' : 'Not enough ETH';
-                }
-              ]"
-              type="number"
-              @input="payableInput($event)"
-            />
-          </div>
-          <div class="text-center mt-3">
-            <mew-button
-              :title="isViewFunction ? 'Read' : 'Write'"
-              :has-full-width="false"
-              btn-size="xlarge"
-              :disabled="canProceed"
-              @click.native="readWrite"
-            />
-          </div>
-          <div class="pa-4"></div>
-          <div v-show="selectedMethod.outputs.length" class="mb-10">
-            Outputs
-          </div>
-          <div
-            v-for="(output, idx) in selectedMethod.outputs"
-            v-show="selectedMethod.outputs.length"
-            :key="output.name + idx"
-            class="input-item-container"
-          >
-            <mew-input
-              v-if="getType(output.type).type !== 'radio'"
-              :value="output.value"
-              :disabled="true"
-              :label="`${output.name} (${output.type})`"
-              class="non-bool-input"
-            />
-            <mew-input
-              v-if="getType(output.type).type === 'radio'"
-              :value="
-                typeof output.value !== 'undefined'
-                  ? output.value.toString()
-                  : ''
-              "
-              :disabled="true"
-              :label="`${output.name} (${output.type})`"
-              class="non-bool-input"
-            />
-          </div>
+          </mew6-white-sheet>
         </template>
       </mew-overlay>
     </template>
@@ -312,10 +349,12 @@ export default {
       this.interact = false;
       this.resetDefaults();
     },
+    /*
     backInteract() {
       this.interact = false;
       this.resetDefaults();
     },
+    */
     showInteract() {
       this.interact = true;
       this.currentContract = new this.web3.eth.Contract(
