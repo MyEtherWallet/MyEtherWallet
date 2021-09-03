@@ -97,6 +97,13 @@
             :items="ledgerApps"
             :is-custom="true"
           />
+          <div class="text-right">
+            <access-wallet-derivation-path
+              :selected-path="selectedPath"
+              :paths="paths"
+              @setPath="setPath"
+            />
+          </div>
           <div class="d-flex flex-column align-center justify-center">
             <div class="pl-4">
               <v-img
@@ -166,6 +173,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 // import AccessWalletPin from './hardware/components/AccessWalletPin';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
+import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
@@ -177,7 +185,8 @@ export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    AccessWalletAddressNetwork
+    AccessWalletAddressNetwork,
+    AccessWalletDerivationPath
     // AccessWalletBitbox,
     // AccessWalletPassword,
     // AccessWalletPaths,
@@ -549,9 +558,9 @@ export default {
     /**
      * Sets Path
      */
-    // setPath(obj) {
-    //   this.selectedPath = obj;
-    // },
+    setPath(obj) {
+      this.selectedPath = obj;
+    },
     /**
      * Set the selected wallet
      */
