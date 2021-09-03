@@ -72,7 +72,7 @@ const getHexTxObject = tx => {
     to: sanitizeHex(tx.to.toString('hex')),
     value: sanitizeHex(tx.value.toString('hex')),
     data: sanitizeHex(tx.data.toString('hex')),
-    chainId: tx.getChainId(),
+    chainId: tx.common.chainId(),
     nonce: sanitizeHex(tx.nonce.toString('hex')),
     gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
     gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
