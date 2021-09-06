@@ -21,19 +21,13 @@
     -->
     <div v-if="isLoading">
       <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
-        <div class="d-flex align-center">
-          <v-skeleton-loader type="avatar" class="mr-3" />
-          <v-skeleton-loader type="heading" />
-        </div>
-        <v-spacer />
-        <div class="textSecondary--text font-weight-medium">
-          Finding best rates...
-        </div>
-        <v-spacer />
-        <div class="d-flex align-center">
-          <v-skeleton-loader type="heading" class="mr-3" />
-          <v-skeleton-loader type="avatar" />
-        </div>
+        <v-container fluid class="d-flex flex-column align-center">
+          <img :src="currentPicture" height="50" />
+          <div class="titlePrimary--text font-weight-medium py-5">
+            Finding best rates...
+          </div>
+          <v-progress-linear indeterminate color="primary" />
+        </v-container>
       </div>
 
       <div
@@ -42,12 +36,11 @@
           align-center
           px-5
           py-5
-          tableHeader
           border-radius--10px
           d-flex d-sm-none
         "
       >
-        <div class="textSecondary--text font-weight-medium mew-body">
+        <div class="titlePrimary--text font-weight-medium mew-body">
           Finding best rates...
         </div>
         <v-spacer />
@@ -233,7 +226,15 @@ export default {
         title: 'Select token and enter amount to see rates.',
         subtitle:
           'MEW finds the best price for you across multiple DEXs and exchange services.'
-      }
+      },
+      currentPicture: null,
+      partners: [
+        {
+          image: require('@/assets/images/partners/colored/changelly.png'),
+          id: 1
+        },
+        { image: require('@/assets/images/partners/colored/1inch.png'), id: 2 }
+      ]
     };
   },
   computed: {
@@ -324,6 +325,25 @@ export default {
         });
       }
     }
+  },
+  created() {
+    this.showImages();
+  },
+  methods: {
+    showImages() {
+      let index = 0;
+      const DELAY = 3000;
+
+      setInterval(() => {
+        if (this.isLoading) {
+          this.currentPicture = this.partners[index].image;
+        }
+        index++;
+        if (index >= this.partners.length) {
+          index = 0;
+        }
+      }, DELAY);
+    }
   }
 };
 </script>
@@ -350,8 +370,8 @@ export default {
   background-color: var(--v-superPrimary-base) !important;
 }
 .rate {
-  background-color: var(--v-tableHeader-base);
   min-height: 60px;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--v-selectBorder-base);
 }
 </style>
