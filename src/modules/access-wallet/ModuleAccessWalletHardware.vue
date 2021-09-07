@@ -129,7 +129,10 @@
     <access-wallet-address-network
       v-if="step === 3"
       :handler-wallet="hwWalletInstance"
+      :selected-path="selectedPath"
+      :paths="paths"
       @unlock="setHardwareWallet"
+      @setPath="setPath"
     />
   </mew-overlay>
 </template>
@@ -526,9 +529,9 @@ export default {
     /**
      * Sets Path
      */
-    // setPath(obj) {
-    //   this.selectedPath = obj;
-    // },
+    setPath(obj) {
+      this.selectedPath = obj;
+    },
     /**
      * Set the selected wallet
      */

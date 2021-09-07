@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="text-right mb-3">
+      <access-wallet-derivation-path
+        :selected-path="selectedPath"
+        :paths="paths"
+        @setPath="setPath"
+      />
+    </div>
     <mew-expand-panel :interactive-content="true" :panel-items="panelItems">
       <!--
           =====================================================================================
@@ -183,6 +190,7 @@
 <script>
 import AppBtnRow from '@/core/components/AppBtnRow';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
+import AccessWalletDerivationPath from '@/modules/access-wallet/hardware/components/AccessWalletDerivationPath.vue';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
@@ -212,7 +220,8 @@ export default {
   },
   components: {
     AppBtnRow,
-    NetworkSwitch
+    NetworkSwitch,
+    AccessWalletDerivationPath
   },
   props: {
     back: {
@@ -226,6 +235,14 @@ export default {
       default: function () {
         return {};
       }
+    },
+    paths: {
+      type: Array,
+      default: () => []
+    },
+    selectedPath: {
+      type: Object,
+      default: () => {}
     }
   },
   apollo: {
@@ -388,6 +405,9 @@ export default {
     this.setAccounts();
   },
   methods: {
+    setPath(path) {
+      this.$emit('setPath', path);
+    },
     changeHandler() {
       this.accounts.splice(0);
       this.addressPage = 0;
