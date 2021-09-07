@@ -167,13 +167,30 @@ export default {
     ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
+    /**
+     * @returns boolean
+     * disables button if there are error messages and no values
+     */
     isDisabled() {
       return (
         this.step === 2 &&
         (this.symbolLengthTooLong.length > 0 ||
-          this.nameLengthTooLong.length > 0) &&
-        (!this.tokenData[2].value || !this.tokenData[3].value)
+          this.nameLengthTooLong.length > 0 ||
+          !this.hasName ||
+          !this.hasSymbol)
       );
+    },
+    /**
+     * checks if there is token name
+     */
+    hasName() {
+      return this.tokenData[2].value || this.customName;
+    },
+    /**
+     * checks if there is symbol name
+     */
+    hasSymbol() {
+      return this.tokenData[3].value || this.customSymbol;
     }
   },
   methods: {
@@ -233,7 +250,7 @@ export default {
       return 'Enter up to 4 characters';
     },
     /**
-     * resets and closes overlay on close button click
+     * resets data and closes overlay on close button click
      */
     reset() {
       this.step = 1;
@@ -243,6 +260,11 @@ export default {
         { name: 'Name', value: '' },
         { name: 'Symbol', value: '' }
       ];
+      this.customName = '';
+      this.customSymbol = '';
+      this.symbolLengthTooLong = '';
+      this.nameLengthTooLong = '';
+      this.loaded = false;
       this.close();
     },
     /**
