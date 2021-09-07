@@ -120,11 +120,9 @@ export default {
       ).value;
     },
     summaryItems() {
-      const defaultArr = ['Transaction Fee'];
-      if (this.isNetworkCurrency) {
-        defaultArr.push('Total');
-      }
-      return defaultArr;
+      return this.isNetworkCurrency
+        ? ['Transaction Fee', 'Total']
+        : ['Transaction Fee'];
     },
     valueItems() {
       return [
