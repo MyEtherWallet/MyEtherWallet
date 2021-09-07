@@ -24,7 +24,9 @@ const EXCEPTIONS = [
   'web3-core-method',
   'web3-core-requestmanager',
   'web3-utils',
-  'remark-cli'
+  'remark-cli',
+  'eslint-plugin-prettier',
+  'node-fetch'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

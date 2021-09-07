@@ -18,10 +18,13 @@
       :icon="require('@/assets/images/icons/icon-token-grey.png')"
       icon-align="left"
     >
-      <!-- hiding for now until we have the ui  -->
-      <!-- <template #rightHeaderContainer>
-        <mew-button btn-style="transparent" title="All Tokens" />
-      </template> -->
+      <template #rightHeaderContainer>
+        <mew-button
+          btn-style="transparent"
+          title="+Custom Token"
+          @click.native="toggleCustomTokenOverlay"
+        />
+      </template>
       <template #moduleBody>
         <div class="my-8">
           <mew-table
@@ -48,16 +51,27 @@
       is-tokens
       :is-eth="isEthNetwork"
     />
+    <!--
+    =====================================================================================
+      add Custom Token form
+    =====================================================================================
+    -->
+    <token-add-custom
+      :close="toggleCustomTokenOverlay"
+      :open="openAddCustomToken"
+    />
   </div>
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
+import TokenAddCustom from './components/TokenAddCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
-    BalanceEmptyBlock
+    BalanceEmptyBlock,
+    TokenAddCustom
   },
   props: {
     dense: {
@@ -67,6 +81,7 @@ export default {
   },
   data() {
     return {
+      openAddCustomToken: false,
       tableHeaders: [
         {
           text: 'Token',
@@ -160,6 +175,11 @@ export default {
     },
     totalTokensValue() {
       return formatFiatValue(this.totalTokenFiatValue).value;
+    }
+  },
+  methods: {
+    toggleCustomTokenOverlay() {
+      this.openAddCustomToken = !this.openAddCustomToken;
     }
   }
 };
