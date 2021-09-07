@@ -19,10 +19,10 @@
       Sceleton Loader (desktop/mobile)
     =====================================================================================
     -->
-    <div v-if="isLoading">
+    <div v-if="isLoading" class="my-5">
       <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
         <v-container fluid class="d-flex flex-column align-center">
-          <img :src="currentPicture" height="50" />
+          <img :src="currentPicture" height="30" />
           <div class="titlePrimary--text font-weight-medium py-5">
             Finding best rates...
           </div>
@@ -229,11 +229,22 @@ export default {
       },
       currentPicture: null,
       partners: [
-        {
-          image: require('@/assets/images/partners/colored/changelly.png'),
-          id: 1
-        },
-        { image: require('@/assets/images/partners/colored/1inch.png'), id: 2 }
+        { image: require('../assets/0x.png') },
+        { image: require('../assets/1inch.png') },
+        { image: require('../assets/Bancor.png') },
+        { image: require('../assets/Bity.png') },
+        { image: require('../assets/Changelly.png') },
+        { image: require('../assets/Curve.png') },
+        { image: require('../assets/ddex.png') },
+        { image: require('../assets/deversiFI.png') },
+        { image: require('../assets/Idex.png') },
+        { image: require('../assets/kyber.png') },
+        { image: require('../assets/Oasis.png') },
+        { image: require('../assets/Paradex.png') },
+        { image: require('../assets/Sushiswap.png') },
+        { image: require('../assets/Synthetix.png') },
+        { image: require('../assets/uniswap.png') },
+        { image: require('../assets/xblaster.png') }
       ]
     };
   },
@@ -332,7 +343,7 @@ export default {
   methods: {
     showImages() {
       let index = 0;
-      const DELAY = 3000;
+      const DELAY = 2000;
 
       setInterval(() => {
         if (this.isLoading) {
