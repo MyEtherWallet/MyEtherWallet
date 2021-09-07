@@ -657,7 +657,6 @@ export default {
           to: tokenData.tokenTransferTo
         };
       }
-      tx.type = 'OUT';
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
@@ -794,9 +793,6 @@ export default {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
             }
-            _signedTx.tx['type'] = this.unsignedTxArr[i].type
-              ? this.unsignedTxArr[i].type
-              : 'OUT';
             signed.push(_signedTx);
             if (this.isHardware && this.txSigned) {
               this.btnAction();
