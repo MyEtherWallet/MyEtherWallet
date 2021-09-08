@@ -83,7 +83,7 @@
     <template #HeaderRight>
       <div class="text-right">
         <a
-          href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/#:~:text=MEW%20has%20integrated%20Staked.us,least%2032%20ETH%20to%20stake."
+          href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/"
           target="_blank"
           class="primary--text font-weight-medium text-right"
         >
