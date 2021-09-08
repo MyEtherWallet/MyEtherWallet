@@ -89,7 +89,7 @@
         =====================================================================================
         -->
       <span v-if="onLedger">
-        <div class="subtitle-1 font-weight-bold">Connecting to:</div>
+        <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
         <div>
           <mew-select
             v-if="onLedger"
@@ -105,7 +105,7 @@
             />
           </div>
           <div class="d-flex flex-column align-center justify-center">
-            <div class="pl-4">
+            <div class="pl-4 ledger-graphic">
               <v-img
                 :src="
                   require('@/assets/images/hardware-wallets/ledger-graphic.svg')
@@ -116,10 +116,16 @@
                 contain
               />
             </div>
-            <v-card-title v-if="!ledgerConnected" class="border justify-center">
+            <v-card-title
+              v-if="!ledgerConnected"
+              class="border justify-center font"
+            >
               Connect your Ledger device and open Ethereum app
             </v-card-title>
-            <v-card-title v-if="ledgerConnected" class="border justify-center">
+            <v-card-title
+              v-if="ledgerConnected"
+              class="border justify-center font"
+            >
               <img
                 src="@/assets/images/icons/icon-checked.svg"
                 alt="Green check mark"
@@ -180,6 +186,7 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import iconETHMatisse from '@/assets/images/currencies/eth-matisse-blue.svg';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -248,7 +255,8 @@ export default {
       ledgerApps: appPaths.map(item => {
         return {
           name: item.network.name_long,
-          value: item.network.name_long
+          value: item.network.name_long,
+          img: item.network.name == 'ETH' ? iconETHMatisse : item.network.icon
         };
       }),
       wallets: wallets,
@@ -334,6 +342,12 @@ export default {
         return {
           title: 'Using a KeepKey Hardware wallet with MEW',
           url: 'https://www.mewtopia.com/'
+        };
+      }
+      if (this.onLedger) {
+        return {
+          title: 'Using a Ledger Hardware wallet with MEW',
+          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
         };
       }
       return {
@@ -580,6 +594,14 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
+    },
+    getPlaceholderImgs() {
+      if (this.ledgerApps.length > 0) {
+        return this.ledgerApps.map(() => {
+          return this.icon;
+        });
+      }
+      return [];
     }
     /**
      * Sets Ledger App
@@ -630,6 +652,16 @@ export default {
   margin-bottom: 30px;
   width: 100%;
 }
+.font {
+  font-size: 16px;
+  text-align: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ledger-graphic {
+  padding-top: 72px;
+  padding-bottom: 32px;
+}
 .padding {
   padding-left: 0.5em;
 }
@@ -643,6 +675,13 @@ export default {
 @media screen and (min-width: 800px) {
   .expand-width {
     min-width: 740px;
+  }
+}
+
+@media screen and (max-width: 456px) {
+  .ledger-graphic {
+    padding-top: 50px;
+    padding-bottom: 32px;
   }
 }
 </style>
