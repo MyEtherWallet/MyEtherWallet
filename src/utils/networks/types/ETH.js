@@ -1,7 +1,7 @@
 import tokens from '@/_generated/tokens/tokens-eth.json';
 import contracts from '@/_generated/contracts/contract-abi-eth.json';
 import eth from '@/assets/images/networks/eth.svg';
-import { ETH } from '../tlds';
+import { GOERLI } from '../tlds';
 
 export default {
   name: 'ETH',
@@ -17,7 +17,7 @@ export default {
     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     registrarTLD: 'eth',
     registrarType: 'permanent',
-    supportedTld: ETH,
+    supportedTld: GOERLI,
     subgraphPath: 'https://api.thegraph.com/subgraphs/name/ensdomains/ens'
   },
   icon: eth,

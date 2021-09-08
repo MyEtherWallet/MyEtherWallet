@@ -15,6 +15,7 @@
 ### devop
 
 * sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
+* update packages for release [#3431](https://github.com/MyEtherWallet/MyEtherWallet/pull/3431)
 
 ### Release v6.0.5
 
@@ -29,7 +30,6 @@
 * add submitted to known notification status types, add null hash if hash doesn't exists [#3384](https://github.com/MyEtherWallet/MyEtherWallet/pull/3384)
 * allow decimals to be passed on custom gas price [#3382](https://github.com/MyEtherWallet/MyEtherWallet/pull/3382)
 * return empty arraay when data doesn't exist when fetching balance [#3380](https://github.com/MyEtherWallet/MyEtherWallet/pull/3380)
-* fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix access wallet side padding [#3374](https://github.com/MyEtherWallet/MyEtherWallet/pull/3374)
 * fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
