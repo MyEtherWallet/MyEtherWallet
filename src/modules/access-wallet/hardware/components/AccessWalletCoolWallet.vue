@@ -1,6 +1,7 @@
 <template>
   <div>
     <mew-input
+      v-if="isFirstTime"
       v-model="pairingPassword"
       placeholder="Pairing Password"
       type="password"
@@ -57,13 +58,17 @@
     <mew-button
       :has-full-width="true"
       btn-size="xlarge"
-      title="Unlock wallet"
+      :title="btnTitle"
       :disabled="disableBtn"
       @click.native="coolWalletUnlock"
     />
   </div>
 </template>
 <script>
+import locStore from 'store';
+const APP_ID = 'coolWallet-appId';
+const APP_PRIVATE_KEY = 'coolWallet-appPrivateKey';
+const APP_PUBLIC_KEY = 'coolWallet-appPublicKey';
 export default {
   props: {
     coolWalletUnlock: {
@@ -78,7 +83,20 @@ export default {
   },
   computed: {
     disableBtn() {
-      return this.pairingPassword === '' && this.pairingPassword.length < 8;
+      return this.isFirstTime
+        ? this.pairingPassword === '' && this.pairingPassword.length < 8
+        : this.isFirstTime;
+    },
+    isFirstTime() {
+      const appId = locStore.get(APP_ID);
+      const appPrivKey = locStore.get(APP_PRIVATE_KEY);
+      const appPubKey = locStore.get(APP_PUBLIC_KEY);
+      return !appId && !appPrivKey && !appPubKey;
+    },
+    btnTitle() {
+      return this.isFirstTime
+        ? 'Unlock Wallet'
+        : 'Unlock Wallet without password';
     }
   },
   watch: {
