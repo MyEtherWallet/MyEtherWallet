@@ -46,7 +46,6 @@
                   <mew-button
                     :loading="loading"
                     :disabled="
-                      errorMessages ||
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
