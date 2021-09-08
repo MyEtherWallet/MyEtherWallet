@@ -105,7 +105,12 @@
             />
           </div>
           <div class="d-flex flex-column align-center justify-center">
-            <div class="pl-4 ledger-graphic">
+            <div
+              :class="{
+                'pb-8 pt-15': $vuetify.breakpoint.smAndDown,
+                'pb-8 pt-18': $vuetify.breakpoint.mdAndUp
+              }"
+            >
               <v-img
                 :src="
                   require('@/assets/images/hardware-wallets/ledger-graphic.svg')
@@ -118,20 +123,20 @@
             </div>
             <v-card-title
               v-if="!ledgerConnected"
-              class="border justify-center font"
+              class="border justify-center font-weight-medium font-wrapping"
             >
               Connect your Ledger device and open Ethereum app
             </v-card-title>
             <v-card-title
               v-if="ledgerConnected"
-              class="border justify-center font"
+              class="border justify-center font-weight-medium font-wrapping"
             >
               <img
                 src="@/assets/images/icons/icon-checked.svg"
                 alt="Green check mark"
                 height="20"
               />
-              <div class="padding">Ledger connected</div>
+              Ledger connected
             </v-card-title>
           </div>
         </div>
@@ -594,14 +599,6 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
-    },
-    getPlaceholderImgs() {
-      if (this.ledgerApps.length > 0) {
-        return this.ledgerApps.map(() => {
-          return this.icon;
-        });
-      }
-      return [];
     }
     /**
      * Sets Ledger App
@@ -652,15 +649,10 @@ export default {
   margin-bottom: 30px;
   width: 100%;
 }
-.font {
-  font-size: 16px;
+.font-wrapping {
   text-align: center;
   white-space: pre-wrap;
   word-break: break-word;
-}
-.ledger-graphic {
-  padding-top: 72px;
-  padding-bottom: 32px;
 }
 .padding {
   padding-left: 0.5em;
@@ -675,13 +667,6 @@ export default {
 @media screen and (min-width: 800px) {
   .expand-width {
     min-width: 740px;
-  }
-}
-
-@media screen and (max-width: 456px) {
-  .ledger-graphic {
-    padding-top: 50px;
-    padding-bottom: 32px;
   }
 }
 </style>
