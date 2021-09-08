@@ -455,8 +455,12 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const hasSymbols = this.toTokenType?.symbol && this.fromTokenType?.symbol;
-      return !!hasSymbols;
+      return (
+        !_.isEmpty(this.fromTokenType) &&
+        !_.isEmpty(this.toTokenType) &&
+        !_.isEmpty(this.fromTokenType?.symbol) &&
+        !_.isEmpty(this.toTokenType?.symbol)
+      );
     },
     /**
      * Fetched tokens from all providers(?) + specific tokens
