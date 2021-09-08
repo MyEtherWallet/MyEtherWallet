@@ -25,7 +25,6 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   'remark-cli',
-  'eslint-plugin-prettier',
   'node-fetch'
 ];
 const CUSTOM_DIST = {
