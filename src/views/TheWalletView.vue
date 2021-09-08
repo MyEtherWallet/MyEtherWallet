@@ -75,6 +75,9 @@ export default {
         });
         this.web3Listeners();
       }
+      window.setInterval(() => {
+        this.setGas();
+      }, 180000);
     }
   },
   destroyed() {
