@@ -33,18 +33,20 @@
       <!--
     ===================================================
     Step two: display token info
+    adds mb-9 for basic info but will add mb-1 if there
+    are inputs
     ===================================================
     -->
       <div v-if="step === 2" class="full-width">
         <v-row
-          v-for="(token, idx) in tokenData"
+          v-for="(tkn, idx) in tokenDataToDisplay"
           :key="idx"
           no-gutters
           :class="[
             'd-flex align-center mt-0',
-            tokenData[idx + 1] &&
-            !isIcon(tokenData[idx + 1].name) &&
-            !tokenData[idx + 1].value &&
+            tokenDataToDisplay[idx + 1] &&
+            !isIcon(tokenDataToDisplay[idx + 1].name) &&
+            !tokenDataToDisplay[idx + 1].value &&
             loaded
               ? 'mb-1'
               : 'mb-9'
@@ -59,7 +61,7 @@
             cols="2"
             class="ml-5 captionPrimary--text mew-body font-weight-bold"
           >
-            {{ token.name }}
+            {{ tkn.name }}
           </v-col>
           <v-col cols="8" class="titlePrimary--text ml-2"
             ><!--
@@ -68,9 +70,9 @@
     ===================================================
     -->
             <span
-              v-if="!isIcon(token.name) && token.value"
-              :class="isContractAddress(token.name) ? 'mew-address' : ''"
-              >{{ token.value }}</span
+              v-if="!isIcon(tkn.name) && tkn.value"
+              :class="isContractAddress(tkn.name) ? 'mew-address' : ''"
+              >{{ tkn.value }}</span
             >
             <!--
     ===================================================
@@ -78,14 +80,14 @@
     ===================================================
     -->
             <img
-              v-if="isIcon(token.name) && token.value"
+              v-if="isIcon(tkn.name) && tkn.value"
               height="24px"
               width="23.5px"
-              :src="token.value"
+              :src="tkn.value"
               alt="token icon"
             />
             <div
-              v-if="isIcon(token.name) && !token.value"
+              v-if="isIcon(tkn.name) && !tkn.value"
               class="
                 token-placeholder
                 mew-caption
@@ -102,13 +104,13 @@
     ===================================================
     -->
             <mew-input
-              v-if="!isIcon(token.name) && !token.value && loaded"
+              v-if="!isIcon(tkn.name) && !tkn.value && loaded"
               :id="idx"
               :error-messages="
                 idx === 3 ? symbolLengthTooLong : nameLengthTooLong
               "
               class="mt-8"
-              :placeholder="getPlaceholder(token.name)"
+              :placeholder="getPlaceholder(tkn.name)"
               @input="setInputValue"
             />
           </v-col>
@@ -132,9 +134,15 @@
 
 <script>
 import abiERC20 from '../handlers/abiERC20';
-import { mapState, mapGetters } from 'vuex';
-import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { mapState, mapGetters, mapActions } from 'vuex';
+import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
+import { _ } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 
 export default {
   props: {
@@ -149,24 +157,31 @@ export default {
   },
   data() {
     return {
+      contractAddress: '',
       customName: '',
       customSymbol: '',
       symbolLengthTooLong: '',
       nameLengthTooLong: '',
       loaded: false,
       step: 1,
-      tokenData: [
-        { name: 'Contract', value: '' },
-        { name: 'Icon', value: '' },
-        { name: 'Name', value: '' },
-        { name: 'Symbol', value: '' }
-      ]
+      token: {}
     };
   },
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
+    /**
+     * @returns token data to display on form
+     */
+    tokenDataToDisplay() {
+      return [
+        { name: 'Contract', value: this.contractAddress },
+        { name: 'Icon', value: this.token.img },
+        { name: 'Name', value: this.token.name },
+        { name: 'Symbol', value: this.token.symbol }
+      ];
+    },
     /**
      * @returns boolean
      * disables button if there are error messages and no values
@@ -184,23 +199,24 @@ export default {
      * checks if there is token name
      */
     hasName() {
-      return this.tokenData[2].value || this.customName;
+      return this.tokenDataToDisplay[2].value || this.customName;
     },
     /**
      * checks if there is symbol name
      */
     hasSymbol() {
-      return this.tokenData[3].value || this.customSymbol;
+      return this.tokenDataToDisplay[3].value || this.customSymbol;
     }
   },
   methods: {
+    ...mapActions('custom', ['setCustomToken']),
     /**
      * set input value for custom name (idx = 2) or symbol (idx = 3)
      * if symbol then will double check if it is already in the list
      * will throw toast error if so
      * also will set error messages if value lengths are too long
      */
-    setInputValue(value, idx) {
+    setInputValue: _.debounce(function (value, idx) {
       if (idx == 3) {
         if (value && value.length > 6) {
           this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';
@@ -215,9 +231,16 @@ export default {
             return;
           }
         });
-        foundSymbol
-          ? Toast('A token with the symbol “ETH” already exists.', {}, ERROR)
-          : (this.customSymbol = value);
+        if (foundSymbol) {
+          this.customSymbol = '';
+          Toast(
+            'A token with the symbol ' + value + ' already exists.',
+            {},
+            ERROR
+          );
+          return;
+        }
+        this.customSymbol = value;
       } else {
         if (value && value.length > 24) {
           this.nameLengthTooLong = 'Name cannot exceed 24 characters';
@@ -226,25 +249,25 @@ export default {
         this.nameLengthTooLong = '';
         this.customName = value;
       }
-    },
+    }, 500),
     /**
      * @returns if token info displays contract address
      */
     isContractAddress(name) {
-      return name === this.tokenData[0].name;
+      return name === this.tokenDataToDisplay[0].name;
     },
     /**
      * @returns if token info displays icon
      */
     isIcon(name) {
-      return name === this.tokenData[1].name;
+      return name === this.tokenDataToDisplay[1].name;
     },
     /**
      * @returns mew input placeholders
      * if there is no value for name or symbol
      */
     getPlaceholder(name) {
-      if (name === this.tokenData[2].name) {
+      if (name === this.tokenDataToDisplay[2].name) {
         return 'Enter the token’s name';
       }
       return 'Enter up to 4 characters';
@@ -254,12 +277,8 @@ export default {
      */
     reset() {
       this.step = 1;
-      this.tokenData = [
-        { name: 'Contract', value: '' },
-        { name: 'Icon', value: '' },
-        { name: 'Name', value: '' },
-        { name: 'Symbol', value: '' }
-      ];
+      this.token = {};
+      this.contractAddress = '';
       this.customName = '';
       this.customSymbol = '';
       this.symbolLengthTooLong = '';
@@ -275,14 +294,27 @@ export default {
     next() {
       if (this.step === 1) {
         this.checkIfValidAddress();
+        return;
       }
+      this.token.name = !this.token.name ? this.customName : this.token.name;
+      this.token.symbol = !this.token.symbol
+        ? this.customSymbol
+        : this.token.symbol;
+
+      this.setCustomToken(this.token);
+      Toast(
+        'The token ' + this.token.name + ' was added to your token list!',
+        {},
+        SUCCESS
+      );
+      this.reset();
     },
     /**
      * sets the contract address that user inputs
      * (index 0 of token data)
      */
     setContractAddress(address) {
-      this.tokenData[0].value = address;
+      this.contractAddress = address;
     },
     /**
      * checks if the contract address is valid
@@ -290,7 +322,7 @@ export default {
      * otherwise it will throw toast error
      */
     checkIfValidAddress() {
-      if (this.tokenData[0].value && isAddress(this.tokenData[0].value)) {
+      if (this.contractAddress && isAddress(this.contractAddress)) {
         this.checkIfTokenExistsAlready();
       } else {
         Toast('This is not a valid contract address', {}, ERROR);
@@ -298,51 +330,65 @@ export default {
       }
     },
     /**
-     * checks if the token already exists in tokenList
+     * checks if the token contract already exists in tokenList
      * will return toast error if it does
      * otherwise it will get more info
      */
     checkIfTokenExistsAlready() {
       let foundToken = false;
       this.tokensList.find(token => {
-        if (this.tokenData[0].value.toLowerCase() === token.contract) {
+        if (this.contractAddress.toLowerCase() === token.contract) {
           foundToken = true;
           return;
         }
       });
+      // remove this
+      this.findTokenInfo();
       foundToken
         ? Toast('A token with this address already exists!', {}, ERROR)
         : this.findTokenInfo();
     },
     /**
      * finds more token info
-     * will use getter contractToToken to first check for info if not will check web3
-     * and then will assign the correct value to each tokenData object.
-     * index 0 is contract address, 1 is icon, 2 is name, 3 is symbol
-     * will throw toast error if they both cannot find any info
+     * will use web3 first to get token balance and decimals
+     * will then use getter contractToToken to first check for more info and calculate correct usd balance
+     * if not will check web3 to get name and symbol
+     * then will assign the correct values to the token object.
      */
     async findTokenInfo() {
       this.step = 2;
-      try {
-        const token = this.contractToToken(this.tokenData[0].value);
-        if (token) {
-          console.error('token', token);
-          this.tokenData[1].value = token.img;
-          this.tokenData[2].value = token.subtext;
-          this.tokenData[3].value = token.symbol;
-        } else {
-          const contract = new this.web3.eth.Contract(
-            abiERC20,
-            this.tokenData[0].value
-          );
-          this.tokenData[2].value = await contract.methods.name().call();
-          this.tokenData[3].value = await contract.methods.symbol().call();
-        }
-        this.loaded = true;
-      } catch {
-        this.loaded = true;
-        Toast('This is not a valid contract address', {}, ERROR);
+      const contract = new this.web3.eth.Contract(
+          abiERC20,
+          this.contractAddress
+        ),
+        balance = await contract.methods.balanceOf(this.address).call(),
+        decimals = await contract.methods.decimals().call(),
+        token = this.contractToToken(this.contractAddress);
+      if (token) {
+        this.token = token;
+        const denominator = new BigNumber(10).pow(decimals);
+        this.token.usdBalance = new BigNumber(balance)
+          .div(denominator)
+          .times(token.price)
+          .toString();
+        this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
+      } else {
+        this.token.name = await contract.methods.name().call();
+        this.token.symbol = await contract.methods.symbol().call();
       }
+      this.token.balancef = this.getTokenBalance(balance, decimals).value;
+      this.loaded = true;
+    },
+    /**
+     * gets token balance by dividing by token decimals
+     */
+    getTokenBalance(balance, decimals) {
+      let n = new BigNumber(balance);
+      if (decimals) {
+        n = n.div(new BigNumber(10).pow(decimals));
+        n = formatFloatingPointValue(n);
+      }
+      return n;
     }
   }
 };

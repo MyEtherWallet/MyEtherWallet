@@ -46,6 +46,7 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
+    this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
   },
