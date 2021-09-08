@@ -603,9 +603,9 @@ export default {
     setGasLimitError(value) {
       if (value) {
         if (BigNumber(value).lte(0))
-          this.gasLimitError = 'Gas limit must be greater then 0';
+          this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
-          this.gasLimitError = 'Gas limit can not have decimals points';
+          this.gasLimitError = 'Gas limit can not have decimal points';
         else if (toBN(value).lt(toBN(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {

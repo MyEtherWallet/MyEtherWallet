@@ -11,6 +11,7 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 import { toChecksumAddress, _ } from 'web3-utils';
 import normalise from '@/core/helpers/normalise';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 export default class ENSManagerInterface {
   constructor(name, address, network, web3, ens) {
@@ -310,7 +311,8 @@ export default class ENSManagerInterface {
       .then(addr => {
         this.mainResolvingAddress = toChecksumAddress(addr);
         this.subtext = this.mainResolvingAddress;
-      });
+      })
+      .catch(err => Toast(err, {}, ERROR));
   }
   async _setMulticoins() {
     const newObj = {};
