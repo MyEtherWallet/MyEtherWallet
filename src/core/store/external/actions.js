@@ -4,7 +4,8 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
@@ -56,6 +57,8 @@ const setTokenAndEthBalance = function ({
     if (decimals) {
       n = n.div(new BigNumber(10).pow(decimals));
       n = formatFloatingPointValue(n);
+    } else {
+      n = formatIntegerValue(n);
     }
     return n;
   };
