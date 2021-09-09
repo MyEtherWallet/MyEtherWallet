@@ -91,6 +91,7 @@
 * hide language select [#3317](https://github.com/MyEtherWallet/MyEtherWallet/pull/3317)
 * Fix wallet header overlapping issue on mobile [#3308](https://github.com/MyEtherWallet/MyEtherWallet/pull/3308)
 * Fix swap display not working correctly [#3326](https://github.com/MyEtherWallet/MyEtherWallet/pull/3326)
+* refer to the BitBox02 as BitBox02 instead of 'Bitbox 2', and fix the attestation failure warning [#3342](https://github.com/MyEtherWallet/MyEtherWallet/pull/3342)
 
 ### Feat
 
