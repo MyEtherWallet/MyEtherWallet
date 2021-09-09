@@ -34,7 +34,7 @@
             :disabled="!canInteract"
             :has-full-width="false"
             btn-size="xlarge"
-            @click.native="showInteract()"
+            @click.native="showInteract"
           />
         </div>
         <div class="text-center mt-4">
@@ -43,7 +43,7 @@
             :has-full-width="false"
             btn-size="small"
             btn-style="transparent"
-            @click.native="resetDefaults()"
+            @click.native="resetDefaults"
           />
         </div>
       </div>
@@ -71,9 +71,7 @@
               @input="methodSelect"
             />
 
-            <mew-select label="_bidValue (unit256)" />
-
-            <div v-show="selectedMethod.inputs.length" class="mb-10">
+            <div v-show="selectedMethod.inputs.length" class="mew-heading-2">
               Inputs
             </div>
             <div
@@ -124,7 +122,7 @@
             </div>
             <div class="text-center mt-2">
               <mew-button
-                :title="isViewFunction ? 'View result' : 'Write'"
+                :title="isViewFunction ? 'Call' : 'Write'"
                 :has-full-width="false"
                 btn-size="xlarge"
                 :disabled="canProceed"
@@ -132,48 +130,19 @@
               />
             </div>
 
-            <v-divider class="mt-9 mb-8" />
+            <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
 
-            <div>
+            <div v-if="hasOutputs">
               <div class="mew-heading-2">Results</div>
-              <div class="d-flex align-center justify-space-between my-4">
-                <div>Token count:</div>
-                <div class="font-weight-medium">10000</div>
-              </div>
-              <div class="d-flex align-center justify-space-between">
-                <div>Purchase value:</div>
-                <div class="font-weight-medium">2103</div>
-              </div>
-            </div>
-
-            <div v-if="false">
-              <div v-show="selectedMethod.outputs.length" class="mb-10">
-                Outputs
-              </div>
               <div
                 v-for="(output, idx) in selectedMethod.outputs"
-                v-show="selectedMethod.outputs.length"
                 :key="output.name + idx"
-                class="input-item-container"
+                class="d-flex align-center justify-space-between my-4"
               >
-                <mew-input
-                  v-if="getType(output.type).type !== 'radio'"
-                  :value="output.value"
-                  :disabled="true"
-                  :label="`${output.name} (${output.type})`"
-                  class="non-bool-input"
-                />
-                <mew-input
-                  v-if="getType(output.type).type === 'radio'"
-                  :value="
-                    typeof output.value !== 'undefined'
-                      ? output.value.toString()
-                      : ''
-                  "
-                  :disabled="true"
-                  :label="`${output.name} (${output.type})`"
-                  class="non-bool-input"
-                />
+                <div class="text-capitalize">
+                  {{ output.name !== '' ? output.name : selectedMethod.name }}
+                </div>
+                <div class="font-weight-medium">{{ output.value }}</div>
               </div>
             </div>
           </mew6-white-sheet>
@@ -253,7 +222,11 @@ export default {
     methods() {
       if (this.canInteract) {
         return JSON.parse(this.abi).filter(item => {
-          if (item.type !== 'constructor' && item.type !== 'event') {
+          if (
+            item.type !== 'constructor' &&
+            item.type !== 'event' &&
+            item.type !== 'Fallback'
+          ) {
             return item;
           }
         });
@@ -262,6 +235,15 @@ export default {
     },
     canInteract() {
       return isAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
+    },
+    hasOutputs() {
+      const outputsWithValues = this.selectedMethod.outputs.filter(item => {
+        if (item.value !== '') {
+          return item;
+        }
+      });
+
+      return outputsWithValues.length > 0;
     }
   },
   methods: {
@@ -349,12 +331,6 @@ export default {
       this.interact = false;
       this.resetDefaults();
     },
-    /*
-    backInteract() {
-      this.interact = false;
-      this.resetDefaults();
-    },
-    */
     showInteract() {
       this.interact = true;
       this.currentContract = new this.web3.eth.Contract(
