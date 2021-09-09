@@ -28,8 +28,40 @@
                 =====================================================================================
                 -->
             <v-row
+              v-for="index in 5"
+              v-show="isLoading"
+              :key="`${index}addressLoader`"
+              dense
+              class="table-row-class align-center justify-center py-2 mx-0"
+            >
+              <v-col md="1" sm="1">
+                <v-radio label="" :value="index" class="mx-2" disabled />
+              </v-col>
+              <v-col md="9" sm="7">
+                <v-row
+                  dense
+                  class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
+                >
+                  <v-col cols="12" class="d-flex flex-column">
+                    <v-skeleton-loader
+                      max-height="25"
+                      type="list-item-avatar"
+                      class="custom-skeleton-loader"
+                    />
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col md="2" sm="4">
+                <v-skeleton-loader
+                  type="list-item"
+                  max-height="25"
+                  class="custom-skeleton-loader"
+                />
+              </v-col>
+            </v-row>
+            <v-row
               v-for="acc in accounts"
-              v-show="accounts.length > 0"
+              v-show="!isLoading"
               :key="acc.address"
               dense
               class="table-row-class align-center justify-center py-2 mx-0"
@@ -258,6 +290,9 @@ export default {
     web3() {
       return new Web3(this.network.url);
     },
+    isLoading() {
+      return this.accounts.length !== MAX_ADDRESSES;
+    },
     /**
      * Property returns the index of the account of the accountAddress
      */
@@ -377,6 +412,7 @@ export default {
      * Async method that gets accounts according to the pagination
      */
     async setAccounts() {
+      const accountsArray = [];
       try {
         // resets the array to empty
         this.accounts.splice(0);
@@ -403,7 +439,7 @@ export default {
             ? 'Loading..'
             : await this.web3.eth.getBalance(address);
           const nickname = this.getNickname(address);
-          this.accounts.push({
+          accountsArray.push({
             address: address,
             account: account,
             idx: i,
@@ -414,8 +450,9 @@ export default {
         }
         this.currentIdx += MAX_ADDRESSES;
         this.addressPage += 1;
-        this.selectedAddress = this.accounts[0].address;
-        this.accountAddress = this.accounts[0].address;
+        this.selectedAddress = accountsArray[0].address;
+        this.accountAddress = accountsArray[0].address;
+        this.accounts = accountsArray;
       } catch (e) {
         Toast(e, {}, ERROR);
       }
@@ -502,5 +539,20 @@ table {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+</style>
+
+<style lang="scss">
+.custom-skeleton-loader {
+  .v-skeleton-loader__avatar {
+    height: 25px !important;
+    width: 25px !important;
+  }
+
+  .v-skeleton-loader__list-item-avatar,
+  .v-skeleton-loader__list-item {
+    background-color: transparent !important;
+    height: 25px !important;
+  }
 }
 </style>
