@@ -2,8 +2,6 @@ module.exports = [
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
-  'wss://nodes.mewapi.io:443',
-  'https://nodes.mewapi.io:443',
   'wss://api.thegraph.com/subgraphs/name/aave/',
   'https://api.thegraph.com:443/subgraphs/name/aave/',
   'wss://connect.mewapi.io:443',
@@ -19,7 +17,6 @@ module.exports = [
   'https://estimategas.mewapi.io:443',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
-  'wss://www.ethercluster.com:443',
   'https://nft.mewapi.io:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
@@ -32,7 +29,6 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'https://api.wallet.coinbase.com:443',
   'data:',
-  'https://mainnet.infura.io:443',
   'https://registry.walletconnect.org:443',
   'https://cdn.live.ledger.com:443',
   'https://app.lokalise.com:443',
@@ -46,5 +42,11 @@ module.exports = [
   'https://js.intercomcdn.com:443',
   'wss://nexus-websocket-a.intercom.io:443',
   'https://js.intercomcdn.com:443',
-  'https://uploads.intercomcdn.com:443'
+  'https://uploads.intercomcdn.com:443',
+  // Nodes
+  'https://nodes.mewapi.io:443',
+  'wss://nodes.mewapi.io:443',
+  'wss://www.ethercluster.com:443',
+  'wss://rpc.gochain.io:443/ws',
+  'https://mainnet.infura.io:443'
 ];
