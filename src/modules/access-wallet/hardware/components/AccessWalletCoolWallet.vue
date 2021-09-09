@@ -1,32 +1,22 @@
 <template>
   <div>
     <mew-input
-      v-if="isFirstTime"
       v-model="pairingPassword"
       placeholder="Pairing Password"
       type="password"
     />
     <v-row no-gutters class="border-container mb-8">
       <v-col
-        lg="6"
-        md="6"
-        sm="12"
         class="d-flex align-center justify-center pt-5"
-        order-lg="last"
-        order-sm="first"
-        order-md="last"
+        order="1"
+        cols="12"
+        lg="6"
+        order-lg="2"
+        order-md="1"
       >
         <img src="@/assets/images/hardware-wallets/coolwallet-sample.png" />
       </v-col>
-      <v-col
-        order-lg="first"
-        order-sm="last"
-        order-md="first"
-        lg="6"
-        md="6"
-        sm="12"
-        class="pa-5"
-      >
+      <v-col order-lg="1" order-md="2" order="2" lg="6" cols="12" class="pa-5">
         <h2 class="mew-heading-2 text-center ma-0">
           Where is my pairing password?
         </h2>
@@ -42,6 +32,12 @@
             >
           </li>
         </ol>
+        <!-- <p class="pt-1">
+          <b
+            >Please note that you only need your password if this is the first
+            time you're accessing the device on MEW</b
+          >
+        </p> -->
         <p class="pt-3 text-center">
           Need more help?
           <a
@@ -58,17 +54,12 @@
     <mew-button
       :has-full-width="true"
       btn-size="xlarge"
-      :title="btnTitle"
-      :disabled="disableBtn"
+      title="Unlock Wallet"
       @click.native="coolWalletUnlock"
     />
   </div>
 </template>
 <script>
-import locStore from 'store';
-const APP_ID = 'coolWallet-appId';
-const APP_PRIVATE_KEY = 'coolWallet-appPrivateKey';
-const APP_PUBLIC_KEY = 'coolWallet-appPublicKey';
 export default {
   props: {
     coolWalletUnlock: {
@@ -80,24 +71,6 @@ export default {
     return {
       pairingPassword: ''
     };
-  },
-  computed: {
-    disableBtn() {
-      return this.isFirstTime
-        ? this.pairingPassword === '' && this.pairingPassword.length < 8
-        : this.isFirstTime;
-    },
-    isFirstTime() {
-      const appId = locStore.get(APP_ID);
-      const appPrivKey = locStore.get(APP_PRIVATE_KEY);
-      const appPubKey = locStore.get(APP_PUBLIC_KEY);
-      return !appId && !appPrivKey && !appPubKey;
-    },
-    btnTitle() {
-      return this.isFirstTime
-        ? 'Unlock Wallet'
-        : 'Unlock Wallet without password';
-    }
   },
   watch: {
     pairingPassword(newVal) {

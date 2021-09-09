@@ -24,6 +24,7 @@ const APP_NAME = 'MyEtherWalletV6';
 const APP_ID = 'coolWallet-appId';
 const APP_PRIVATE_KEY = 'coolWallet-appPrivateKey';
 const APP_PUBLIC_KEY = 'coolWallet-appPublicKey';
+const CW_DEVICE_NAME = 'coolWallet-deviceName';
 
 class CoolWallet {
   constructor() {
@@ -40,6 +41,10 @@ class CoolWallet {
         value: coolwallet
       }
     };
+
+    this.lastCWDeviceUsed = locstore.get(CW_DEVICE_NAME)
+      ? locstore.get(CW_DEVICE_NAME)
+      : '';
     this.appId = locstore.get(APP_ID) ? locstore.get(APP_ID) : '';
     this.appPrivateKey = locstore.get(APP_PRIVATE_KEY)
       ? locstore.get(APP_PRIVATE_KEY)
@@ -47,10 +52,6 @@ class CoolWallet {
     this.appPublicKey = locstore.get(APP_PUBLIC_KEY)
       ? locstore.get(APP_PUBLIC_KEY)
       : '';
-    this.firstTimeConnecting =
-      this.appPrivateKey === '' &&
-      this.appPublicKey === '' &&
-      this.appId === '';
   }
   init(password) {
     const _this = this;
@@ -63,38 +64,18 @@ class CoolWallet {
           cwsTransportLib.connect(device).then(async _transport => {
             _this.transport = _transport;
             try {
-              _this.deviceInstance = new cwsETH(
-                _this.transport,
-                _this.appPrivateKey,
-                _this.appId
-              );
+              /**
+               * if lastCWDeviceUsed !== device.name
+               * assume that its a different cw device
+               * throw moves it to catch so it registers
+               */
+              if (_this.lastCWDeviceUsed !== device.name) throw '';
+              locstore.set(CW_DEVICE_NAME, device.name);
+              _this.connectToCW();
               await _this.deviceInstance.getAddress(0);
               resolve();
             } catch (e) {
-              const { publicKey: appPublicKey, privateKey: appPrivateKey } =
-                generateKeyPair();
-              _this.appPrivateKey = appPrivateKey;
-              _this.appPublicKey = appPublicKey;
-              const coolWalletInstance = new cwsWallet(
-                _this.transport,
-                _this.appPrivateKey
-              );
-              coolWalletInstance
-                .register(_this.appPublicKey, password, APP_NAME)
-                .then(appId => {
-                  _this.appId = appId;
-                  locstore.set(APP_ID, appId);
-                  locstore.set(APP_PUBLIC_KEY, appPublicKey);
-                  locstore.set(APP_PRIVATE_KEY, appPrivateKey);
-                  coolWalletInstance.setAppId(appId);
-                  _this.deviceInstance = new cwsETH(
-                    _this.transport,
-                    _this.appPrivateKey,
-                    _this.appId
-                  );
-                  resolve();
-                })
-                .catch(errorHandler);
+              this.generateAndRegister(password, resolve, device);
             }
           });
         } else {
@@ -102,6 +83,38 @@ class CoolWallet {
         }
       });
     });
+  }
+
+  generateAndRegister(password, cb, device) {
+    const { publicKey: appPublicKey, privateKey: appPrivateKey } =
+      generateKeyPair();
+    this.appPrivateKey = appPrivateKey;
+    this.appPublicKey = appPublicKey;
+    const coolWalletInstance = new cwsWallet(
+      this.transport,
+      this.appPrivateKey
+    );
+    coolWalletInstance
+      .register(this.appPublicKey, password, APP_NAME)
+      .then(appId => {
+        this.appId = appId;
+        locstore.set(APP_ID, appId);
+        locstore.set(APP_PUBLIC_KEY, appPublicKey);
+        locstore.set(APP_PRIVATE_KEY, appPrivateKey);
+        locstore.set(CW_DEVICE_NAME, device.name);
+        coolWalletInstance.setAppId(appId);
+        this.connectToCW();
+        cb();
+      })
+      .catch(errorHandler);
+  }
+
+  connectToCW() {
+    this.deviceInstance = new cwsETH(
+      this.transport,
+      this.appPrivateKey,
+      this.appId
+    );
   }
 
   async getAccount(idx) {
