@@ -26,6 +26,7 @@
           What is the token contract address?
         </div>
         <mew-input
+          :value="contractAddress"
           placeholder="Enter contract address"
           @input="setContractAddress"
         />
@@ -48,8 +49,7 @@
             'd-flex align-center mt-0',
             tokenDataToDisplay[idx + 1] &&
             !isIcon(tokenDataToDisplay[idx + 1].name) &&
-            !tokenDataToDisplay[idx + 1].value &&
-            loaded
+            !tokenDataToDisplay[idx + 1].value
               ? 'mb-1'
               : 'mb-9'
           ]"
@@ -85,6 +85,7 @@
     -->
             <mew-transform-hash
               v-if="isContractAddress(tkn.name)"
+              justify-start
               class="justify-start"
               :hash="tkn.value"
             />
@@ -118,7 +119,7 @@
     ===================================================
     -->
             <mew-input
-              v-if="!isIcon(tkn.name) && !tkn.value && loaded"
+              v-if="!isIcon(tkn.name) && !tkn.value"
               :id="idx"
               :error-messages="
                 idx === 3 ? symbolLengthTooLong : nameLengthTooLong
@@ -138,6 +139,7 @@
       <mew-button
         btn-size="xlarge"
         has-full-width
+        :loading="loading"
         :disabled="isDisabled"
         :title="step === 1 ? 'Next' : 'Add Token'"
         @click.native="next"
@@ -176,7 +178,7 @@ export default {
       customSymbol: '',
       symbolLengthTooLong: '',
       nameLengthTooLong: '',
-      loaded: false,
+      loading: false,
       step: 1,
       token: {}
     };
@@ -185,6 +187,7 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
+    ...mapState('custom', ['customTokens']),
     /**
      * @returns token data to display on form
      */
@@ -202,11 +205,13 @@ export default {
      */
     isDisabled() {
       return (
-        this.step === 2 &&
-        (this.symbolLengthTooLong.length > 0 ||
-          this.nameLengthTooLong.length > 0 ||
-          !this.hasName ||
-          !this.hasSymbol)
+        this.loading ||
+        (this.step === 1 && !this.contractAddress) ||
+        (this.step === 2 &&
+          (this.symbolLengthTooLong.length > 0 ||
+            this.nameLengthTooLong.length > 0 ||
+            !this.hasName ||
+            !this.hasSymbol))
       );
     },
     /**
@@ -239,7 +244,7 @@ export default {
         this.symbolLengthTooLong = '';
         let foundSymbol = false;
 
-        this.tokensList.find(token => {
+        this.customTokens.concat(this.tokensList).find(token => {
           if (value === token.symbol) {
             foundSymbol = true;
             return;
@@ -290,6 +295,7 @@ export default {
      * resets data and closes overlay on close button click
      */
     reset() {
+      this.close();
       this.step = 1;
       this.token = {};
       this.contractAddress = '';
@@ -297,8 +303,7 @@ export default {
       this.customSymbol = '';
       this.symbolLengthTooLong = '';
       this.nameLengthTooLong = '';
-      this.loaded = false;
-      this.close();
+      this.loading = false;
     },
     /**
      * next (step one) and add token methods (step two) for button
@@ -307,6 +312,7 @@ export default {
      */
     next() {
       if (this.step === 1) {
+        this.loading = true;
         this.checkIfValidAddress();
         return;
       }
@@ -314,7 +320,6 @@ export default {
       this.token.symbol = !this.token.symbol
         ? this.customSymbol
         : this.token.symbol;
-
       this.setCustomToken(this.token);
       Toast(
         'The token ' + this.token.name + ' was added to your token list!',
@@ -339,6 +344,8 @@ export default {
       if (this.contractAddress && isAddress(this.contractAddress)) {
         this.checkIfTokenExistsAlready();
       } else {
+        this.loading = false;
+        this.contractAddress = '';
         Toast('This is not a valid contract address', {}, ERROR);
         return;
       }
@@ -350,15 +357,21 @@ export default {
      */
     checkIfTokenExistsAlready() {
       let foundToken = false;
-      this.tokensList.find(token => {
-        if (this.contractAddress.toLowerCase() === token.contract) {
+      this.customTokens.concat(this.tokensList).find(token => {
+        if (
+          this.contractAddress.toLowerCase() === token.contract?.toLowerCase()
+        ) {
           foundToken = true;
           return;
         }
       });
-      foundToken
-        ? Toast('A token with this address already exists!', {}, ERROR)
-        : this.findTokenInfo();
+      if (foundToken) {
+        this.contractAddress = '';
+        this.loading = false;
+        Toast('A token with this address already exists!', {}, ERROR);
+        return;
+      }
+      this.findTokenInfo();
     },
     /**
      * finds more token info
@@ -368,7 +381,6 @@ export default {
      * then will assign the correct values to the token object.
      */
     async findTokenInfo() {
-      this.step = 2;
       const contract = new this.web3.eth.Contract(
           abiERC20,
           this.contractAddress
@@ -388,9 +400,11 @@ export default {
         this.token.name = await contract.methods.name().call();
         this.token.symbol = await contract.methods.symbol().call();
         this.token.usdBalancef = '0.00';
+        this.token.contract = this.contractAddress;
       }
       this.token.balancef = this.getTokenBalance(balance, decimals).value;
-      this.loaded = true;
+      this.loading = false;
+      this.step = 2;
     },
     /**
      * gets token balance by dividing by token decimals
