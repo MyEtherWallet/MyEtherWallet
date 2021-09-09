@@ -628,7 +628,7 @@ export default {
     txFee() {
       const gasPrice =
         this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
-      return toBN(this.totalGasLimit).mul(toBN(gasPrice));
+      return toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
     },
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';

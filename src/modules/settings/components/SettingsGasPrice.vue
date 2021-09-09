@@ -72,14 +72,15 @@
           </div>
         </div>
 
-        <!-- Show check mark if this is called from global settings -->
-        <div v-if="global">
+        <!-- Show check mark -->
+        <div>
           <v-icon v-if="selected === b.title" color="primary">
             mdi-check-circle
           </v-icon>
           <v-icon v-else color="#e1e6ec"> mdi-checkbox-blank-circle </v-icon>
         </div>
 
+        <!--
         <div v-else class="text-right">
           <div
             v-if="b.title === gasPriceTypes.ECONOMY"
@@ -95,6 +96,7 @@
             </div>
           </div>
         </div>
+        -->
       </div>
     </div>
 
@@ -135,10 +137,12 @@ export default {
       type: Boolean,
       default: false
     },
+    /*
     global: {
       type: Boolean,
       default: false
     },
+    */
     notEnoughEth: {
       type: Boolean,
       default: false
