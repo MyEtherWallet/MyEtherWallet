@@ -12,7 +12,7 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'coolWalletError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'bitbox02Error.operation-that-changes-interface-state-in-progress'
+    'coolWalletError.operation-that-changes-interface-state-in-progress'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);
