@@ -1,3 +1,22 @@
+### devop
+
+* hide total when sending tokens [#3421](https://github.com/MyEtherWallet/MyEtherWallet/pull/3421)
+
+### feat
+
+* add Intercom [#3410](https://github.com/MyEtherWallet/MyEtherWallet/pull/3410)
+
+### fix
+
+* * handle window.ethereum.on is not a function [#3407](https://github.com/MyEtherWallet/MyEtherWallet/pull/3407)
+* * remove out type for transactions to fix metamask send transaction [#3426](https://github.com/MyEtherWallet/MyEtherWallet/pull/3426)
+* * ens manager error handling [#3428](https://github.com/MyEtherWallet/MyEtherWallet/pull/3428)
+* * fix undefined issue when deploying contract [#3430](https://github.com/MyEtherWallet/MyEtherWallet/pull/3430)
+* only allow numbers in gas price input [#3436](https://github.com/MyEtherWallet/MyEtherWallet/pull/3436)
+* add catch and check whether ref exists before clearing [#3437](https://github.com/MyEtherWallet/MyEtherWallet/pull/3437)
+* * fix undefined token type or symbol [#3440](https://github.com/MyEtherWallet/MyEtherWallet/pull/3440)
+* return array if preToken is undefined [#3443](https://github.com/MyEtherWallet/MyEtherWallet/pull/3443)
+
 ### Release v6.0.6
 
 ### ui
