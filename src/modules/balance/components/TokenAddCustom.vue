@@ -34,7 +34,9 @@
     ===================================================
     Step two: display token info
     adds mb-9 for basic info but will add mb-1 if there
-    are inputs
+    are mew inputs (since there is extra spacing on bottom for mew inputs - 
+    I had to do it this way to center everything 
+    but TODO: find a better way to do this)
     ===================================================
     -->
       <div v-if="step === 2" class="full-width">
@@ -66,14 +68,26 @@
           <v-col cols="8" class="titlePrimary--text ml-2"
             ><!--
     ===================================================
-    displays all token values if it is there except for icon 
+    displays all token values if it is there except for icon and contract address
     ===================================================
     -->
             <span
-              v-if="!isIcon(tkn.name) && tkn.value"
-              :class="isContractAddress(tkn.name) ? 'mew-address' : ''"
+              v-if="
+                !isIcon(tkn.name) && !isContractAddress(tkn.name) && tkn.value
+              "
               >{{ tkn.value }}</span
             >
+            <!--
+    ===================================================
+    transform hash for contract address incase theres not 
+    enough space
+    ===================================================
+    -->
+            <mew-transform-hash
+              v-if="isContractAddress(tkn.name)"
+              class="justify-start"
+              :hash="tkn.value"
+            />
             <!--
     ===================================================
     displays token icon img or placeholder if there is no src
@@ -342,8 +356,6 @@ export default {
           return;
         }
       });
-      // remove this
-      this.findTokenInfo();
       foundToken
         ? Toast('A token with this address already exists!', {}, ERROR)
         : this.findTokenInfo();
@@ -375,6 +387,7 @@ export default {
       } else {
         this.token.name = await contract.methods.name().call();
         this.token.symbol = await contract.methods.symbol().call();
+        this.token.usdBalancef = '0.00';
       }
       this.token.balancef = this.getTokenBalance(balance, decimals).value;
       this.loaded = true;

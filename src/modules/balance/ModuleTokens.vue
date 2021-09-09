@@ -19,11 +19,11 @@
       icon-align="left"
     >
       <template #rightHeaderContainer>
-        <mew-button
-          btn-style="transparent"
-          title="+Custom Token"
-          @click.native="toggleCustomTokenOverlay"
-        />
+        <span
+          class="primary--text cursor-pointer pl-3"
+          @click="toggleCustomTokenOverlay"
+          >+ Custom Token</span
+        >
       </template>
       <template #moduleBody>
         <div class="my-8">
