@@ -105,12 +105,7 @@
             />
           </div>
           <div class="d-flex flex-column align-center justify-center">
-            <div
-              :class="{
-                'pb-8 pt-15': $vuetify.breakpoint.smAndDown,
-                'pb-8 pt-18': $vuetify.breakpoint.mdAndUp
-              }"
-            >
+            <div class="pb-8 pt-15 pt-md-18">
               <v-img
                 :src="
                   require('@/assets/images/hardware-wallets/ledger-graphic.svg')
@@ -125,7 +120,9 @@
               v-if="!ledgerConnected"
               class="border justify-center font-weight-medium font-wrapping"
             >
-              Connect your Ledger device and open Ethereum app
+              <div class="mew-heading-4 pl-1">
+                Connect your Ledger device and open Ethereum app
+              </div>
             </v-card-title>
             <v-card-title
               v-if="ledgerConnected"
@@ -136,7 +133,7 @@
                 alt="Green check mark"
                 height="20"
               />
-              Ledger connected
+              <div class="mew-heading-4 pl-1">Ledger connected</div>
             </v-card-title>
           </div>
         </div>
@@ -191,7 +188,6 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import iconETHMatisse from '@/assets/images/currencies/eth-matisse-blue.svg';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -261,7 +257,7 @@ export default {
         return {
           name: item.network.name_long,
           value: item.network.name_long,
-          img: item.network.name == 'ETH' ? iconETHMatisse : item.network.icon
+          img: item.network.icon
         };
       }),
       wallets: wallets,
@@ -653,9 +649,6 @@ export default {
   text-align: center;
   white-space: pre-wrap;
   word-break: break-word;
-}
-.padding {
-  padding-left: 0.5em;
 }
 .subtitle-container {
   background-color: rgba(109, 137, 166, 0.06);
