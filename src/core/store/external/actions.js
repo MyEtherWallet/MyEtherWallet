@@ -98,8 +98,10 @@ const setTokenAndEthBalance = function ({
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
+      const hasPreTokens = preTokens ? preTokens : [];
       const promises = [];
-      preTokens.forEach(t => {
+
+      hasPreTokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
         if (!token) {
           promises.push(
@@ -116,7 +118,7 @@ const setTokenAndEthBalance = function ({
           );
         }
       });
-      return Promise.all(promises).then(() => preTokens);
+      return Promise.all(promises).then(() => hasPreTokens);
     })
     .then(tokens => {
       const formattedList = [];
