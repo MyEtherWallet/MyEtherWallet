@@ -6,7 +6,8 @@ const ERRORS = {
   'Call Request Rejected': 'Request rejected',
   'Session currently connected': 'Session currently connected',
   "Cannot read property 'setItem' of null":
-    'Issue accessing WalletConnect! Please try clearing your cache'
+    'Issue accessing WalletConnect! Please try clearing your cache',
+  'No error message': 'No error message'
 };
 const WARNINGS = {};
 
