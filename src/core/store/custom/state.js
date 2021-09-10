@@ -2,7 +2,7 @@ import Configs from '../configs';
 
 const state = {
   localStore: true,
-  customTokens: [],
+  customTokens: {},
   stateVersion: Configs.VERSION.custom
 };
 

@@ -125,7 +125,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
-    ...mapState('custom', ['customTokens']),
+    ...mapGetters('custom', ['customTokens']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {

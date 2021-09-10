@@ -86,7 +86,6 @@
             <mew-transform-hash
               v-if="isContractAddress(tkn.name)"
               justify-start
-              class="justify-start"
               :hash="tkn.value"
             />
             <!--
@@ -187,7 +186,7 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
-    ...mapState('custom', ['customTokens']),
+    ...mapGetters('custom', ['customTokens']),
     /**
      * @returns token data to display on form
      */
