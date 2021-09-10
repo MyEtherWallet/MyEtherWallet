@@ -36,21 +36,17 @@
                 Different hardware instances
               =====================================================================================
               -->
-      <v-row no-gutters justify="start">
+      <v-row dense no-gutters justify="start">
         <v-col
-          v-for="(button, idx) in buttons"
+          v-for="button in buttons"
           :key="button.label"
-          :class="['button-container pb-2', idx % 2 == 0 ? 'pr-2' : '']"
+          class="button-container full-width pa-1"
           cols="12"
-          md="6"
+          sm="6"
         >
-          <mew-super-button
+          <mew-super-button-revised
             :title="button.label"
-            :cols-num="6"
-            color-theme="basic"
-            right-icon-type="img"
-            :right-icon="button.icon"
-            :right-icon-height="45"
+            :left-icon="button.icon"
             @click.native="setWalletInstance(button.type)"
           />
         </v-col>
@@ -135,12 +131,15 @@ import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWal
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+// TODO: add these changes to mew components
+import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    AccessWalletAddressNetwork
+    AccessWalletAddressNetwork,
+    MewSuperButtonRevised
     // AccessWalletBitbox,
     // AccessWalletPassword,
     // AccessWalletPaths,
