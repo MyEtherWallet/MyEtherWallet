@@ -1,12 +1,14 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
-  'User canceled': 'user cancelled the action',
-  'QR Code Modal closed': 'QR code popup closed',
-  'Call Request Rejected': 'Request rejected',
-  'Session currently connected': 'Session currently connected',
+  'User canceled': 'walletconnectError-user-cancelled-the-action',
+  'QR Code Modal closed': 'walletconnectError-qr-code-popup-closed',
+  'Call Request Rejected': 'walletconnectError-request-rejected',
+  'Session currently connected':
+    'walletconnectError-session-currently-connected',
   "Cannot read property 'setItem' of null":
-    'Issue accessing WalletConnect! Please try clearing your cache'
+    'walletconnectError-issue-accessing-walletconnect-please-clear-cache',
+  'No error message': 'walletconnectError-no-error-message'
 };
 const WARNINGS = {};
 
