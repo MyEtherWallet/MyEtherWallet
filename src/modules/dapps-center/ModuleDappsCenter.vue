@@ -75,9 +75,9 @@ export default {
     }
   },
   methods: {
-    routeTo(path) {
-      this.trackDapp(path);
-      this.$router.push({ name: path });
+    routeTo(name) {
+      this.trackDapp(name);
+      this.$router.push({ name: name });
     }
   }
 };
