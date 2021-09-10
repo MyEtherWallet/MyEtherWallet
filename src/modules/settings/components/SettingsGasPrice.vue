@@ -6,19 +6,19 @@
 
     <div class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
-        <div class="mr-2">
-          {{ currentValue.gas }}
+        <div class="primary--text mr-2">~{{ currentValue.usd }}</div>
+        <div class="searchText--text">
+          {{ actualFeeFormatted }}
           {{ network.type.currencyName }}
         </div>
-        <div class="textSecondary--text">{{ currentValue.usd }}</div>
       </div>
       <div class="d-flex align-center">
-        <v-icon small color="basic" class="mr-1">mdi-clock-outline</v-icon>
-        <div>{{ currentValue.time }}</div>
+        <v-icon small color="primary" class="mr-1">mdi-clock-outline</v-icon>
+        <div class="primary--text">{{ currentValue.time }}</div>
       </div>
     </div>
 
-    <div class="textBlack2--text mb-5">
+    <div class="textPrimary--text mb-5">
       This fee is changed by Ethereum network. You can prioritize transaction by
       adding a tip to the miner.
     </div>
@@ -117,6 +117,7 @@
 <script>
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'SettingsGasPrice',
@@ -165,6 +166,9 @@ export default {
         }
       }
       return {};
+    },
+    actualFeeFormatted() {
+      return formatFloatingPointValue(this.currentValue.gas).value;
     }
   }
 };

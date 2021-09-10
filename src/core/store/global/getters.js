@@ -30,7 +30,10 @@ const gasPriceByType = (state, getters) => type => {
     toBN(state.eip1559.maxPriorityFeePerGas),
     type
   );
-  return toBN(state.eip1559.baseFeePerGas).add(priorityFee).toString();
+  return toBN(state.eip1559.baseFeePerGas)
+    .add(priorityFee)
+    .muln(21000)
+    .toString();
 };
 const gasPrice = function (state, getters) {
   if (!getters.isEIP1559SupportedNetwork) {
