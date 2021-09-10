@@ -8,14 +8,17 @@
 
 ### fix
 
-* * handle window.ethereum.on is not a function [#3407](https://github.com/MyEtherWallet/MyEtherWallet/pull/3407)
-* * remove out type for transactions to fix metamask send transaction [#3426](https://github.com/MyEtherWallet/MyEtherWallet/pull/3426)
-* * ens manager error handling [#3428](https://github.com/MyEtherWallet/MyEtherWallet/pull/3428)
-* * fix undefined issue when deploying contract [#3430](https://github.com/MyEtherWallet/MyEtherWallet/pull/3430)
+* handle window.ethereum.on is not a function [#3407](https://github.com/MyEtherWallet/MyEtherWallet/pull/3407)
+* adding in ethjs util private key check and errors to handlers [#3409](https://github.com/MyEtherWallet/MyEtherWallet/pull/3409)
+* remove out type for transactions to fix metamask send transaction [#3426](https://github.com/MyEtherWallet/MyEtherWallet/pull/3426)
+* ens manager error handling [#3428](https://github.com/MyEtherWallet/MyEtherWallet/pull/3428)
+* fix undefined issue when deploying contract [#3430](https://github.com/MyEtherWallet/MyEtherWallet/pull/3430)
 * only allow numbers in gas price input [#3436](https://github.com/MyEtherWallet/MyEtherWallet/pull/3436)
 * add catch and check whether ref exists before clearing [#3437](https://github.com/MyEtherWallet/MyEtherWallet/pull/3437)
-* * fix undefined token type or symbol [#3440](https://github.com/MyEtherWallet/MyEtherWallet/pull/3440)
+* rerouting on refresh for settings nft manager and network [#3439](https://github.com/MyEtherWallet/MyEtherWallet/pull/3439)
+* fix undefined token type or symbol [#3440](https://github.com/MyEtherWallet/MyEtherWallet/pull/3440)
 * return array if preToken is undefined [#3443](https://github.com/MyEtherWallet/MyEtherWallet/pull/3443)
+* fix token balance for non decimal from showing undefined [#3445](https://github.com/MyEtherWallet/MyEtherWallet/pull/3445)
 
 ### Release v6.0.6
 
