@@ -8,7 +8,6 @@
     class="titlePrimary--text full-width mew-super-button-revised"
     color="white basic-border"
     :ripple="false"
-    :disabled="disabled"
     depressed
   >
     <v-row no-gutters class="pl-5 full-width align-center">

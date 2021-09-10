@@ -18,7 +18,10 @@
   >
     <v-row
       v-if="step === 1"
-      class="pa-5 mb-4 full-width text-center rounded subtitle-container"
+      :class="[
+        'pa-5 mb-4 full-width text-center rounded subtitle-container',
+        $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
+      ]"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
         <!-- TODO: add link -->
