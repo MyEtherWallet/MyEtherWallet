@@ -7,99 +7,102 @@
     -->
     <template v-if="step === 1" #stepperContent1>
       <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
-        <v-row class="align-end justify-start mb-3 mb-md-5">
-          <v-col cols="12">
-            <!--
+        <form @submit.prevent="unlockBtn">
+          <v-row class="align-end justify-start mb-3 mb-md-5">
+            <v-col cols="12">
+              <!--
             =====================================================================================
               Title
             =====================================================================================
             -->
-            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-            <div class="headline font-weight-bold">
-              Enter your Mnemonic Phrase
-            </div>
-            <p class="mb-3">
-              Please type the mnemonic phrase you wrote down in the right order.
-            </p>
-            <!--
+              <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+              <div class="headline font-weight-bold">
+                Enter your Mnemonic Phrase
+              </div>
+              <p class="mb-3">
+                Please type the mnemonic phrase you wrote down in the right
+                order.
+              </p>
+              <!--
             =====================================================================================
              Select number of words
             =====================================================================================
             -->
-            <div class="d-flex flex-row-reverse pb-4">
-              <v-select
-                v-model="length"
-                style="max-width: 150px"
-                hide-details
-                dense
-                item-text="label"
-                item-value="value"
-                :items="mnemonicOptions"
-                label=""
-                outlined
-              ></v-select>
-            </div>
-            <!--
+              <div class="d-flex flex-row-reverse pb-4">
+                <v-select
+                  v-model="length"
+                  style="max-width: 150px"
+                  hide-details
+                  dense
+                  item-text="label"
+                  item-value="value"
+                  :items="mnemonicOptions"
+                  label=""
+                  outlined
+                ></v-select>
+              </div>
+              <!--
             =====================================================================================
              Enter Phrase Block
             =====================================================================================
             -->
-            <phrase-block class="mb-8">
-              <v-row>
-                <v-col
-                  v-for="n in length"
-                  :key="`mnemonicInput${n}`"
-                  cols="6"
-                  lg="3"
-                  md="3"
-                  sm="4"
-                >
-                  <v-text-field
-                    :ref="`mnemonicInput${n}`"
-                    v-model="phrase[n]"
-                    :name="`mnemonicInput${n}`"
-                    :label="`${n}.`"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </phrase-block>
-            <!--
+              <phrase-block class="mb-8">
+                <v-row>
+                  <v-col
+                    v-for="n in length"
+                    :key="`mnemonicInput${n}`"
+                    cols="6"
+                    lg="3"
+                    md="3"
+                    sm="4"
+                  >
+                    <v-text-field
+                      :ref="`mnemonicInput${n}`"
+                      v-model="phrase[n]"
+                      :label="`${n}.`"
+                      autocomplete="off"
+                    />
+                  </v-col>
+                </v-row>
+              </phrase-block>
+              <!--
             =====================================================================================
              Extra Word
             =====================================================================================
             -->
-            <mew-expand-panel
-              :has-dividers="true"
-              :panel-items="extraWordPanel"
-              :idx-to-expand="null"
-            >
-              <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
-              </template>
-            </mew-expand-panel>
-            <!--
+              <mew-expand-panel
+                :has-dividers="true"
+                :panel-items="extraWordPanel"
+                :idx-to-expand="null"
+              >
+                <template #panelBody1>
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Enter Extra word"
+                    placeholder="Enter your extra word"
+                  />
+                </template>
+              </mew-expand-panel>
+              <!--
             =====================================================================================
              Next Button
             =====================================================================================
             -->
-            <v-row dense class="align-center justify-center pt-4">
-              <v-col cols="12" sm="4">
-                <mew-button
-                  has-full-width
-                  title="Next"
-                  btn-size="xlarge"
-                  :disabled="!isValidMnemonic"
-                  @click.native="unlockBtn"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+              <v-row dense class="align-center justify-center pt-4">
+                <v-col cols="12" sm="4">
+                  <mew-button
+                    has-full-width
+                    title="Next"
+                    btn-size="xlarge"
+                    :disabled="!isValidMnemonic"
+                    @click.native="unlockBtn"
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </form>
       </v-sheet>
     </template>
     <!--

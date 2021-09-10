@@ -75,13 +75,24 @@
                 label="To"
                 @input="setToToken"
               />
-              <mew-input
+              <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+              <v-text-field
                 label="Amount"
                 placeholder="0"
                 type="number"
-                disabled
+                :hide-clear-btn="true"
                 :value="tokenOutValue"
+                :readonly="true"
+                outlined
               />
+              <!-- <mew-input
+                label="Amount"
+                placeholder="0"
+                type="number"
+                :hide-clear-btn="true"
+                :value="tokenOutValue"
+                readonly="true"
+              /> -->
             </v-col>
           </v-row>
 
@@ -446,8 +457,12 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const isNotEmpty = this.toTokenType.symbol && this.fromTokenType.symbol;
-      return isNotEmpty;
+      return (
+        !_.isEmpty(this.fromTokenType) &&
+        !_.isEmpty(this.toTokenType) &&
+        !_.isEmpty(this.fromTokenType?.symbol) &&
+        !_.isEmpty(this.toTokenType?.symbol)
+      );
     },
     /**
      * Fetched tokens from all providers(?) + specific tokens
@@ -773,6 +788,9 @@ export default {
     },
     mainTokenDetails() {
       this.setDefaults();
+    },
+    amountErrorMessage(newVal) {
+      if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
   beforeMount() {
@@ -965,6 +983,11 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+      // Check if (in amount) is larger than (available balance)
+      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+        this.step = 0;
+        return;
+      }
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1009,7 +1032,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    }, 1000),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1103,9 +1126,9 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.clear();
           Toast(err.message, {}, ERROR);
         });
-      this.clear();
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
@@ -1138,7 +1161,7 @@ export default {
           },
           currentTrade.transactions[idx]
         );
-        this.addNotification(new Notification(notif));
+        this.addNotification(new Notification(notif)).then(this.clear);
       });
     },
     checkFeeBalance() {
@@ -1218,5 +1241,10 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
+}
+
+.swap-to-input {
+  pointer-events: none !important;
+  user-select: none !important;
 }
 </style>

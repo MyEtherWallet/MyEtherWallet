@@ -9,6 +9,10 @@ import SignMessage from '@/views/layouts-wallet/TheSignMessageLayout';
 import VerifyMessage from '@/views/layouts-wallet/TheVerifyMessageLayout';
 import Dapps from '@/views/layouts-wallet/TheDappCenterLayout.vue';
 import DappRoutes from '@/dapps/routes-dapps.js';
+import Settings from '@/modules/settings/ModuleSettings';
+import NftManagerSend from '@/modules/nft-manager/components/NftManagerSend';
+// import Notifications from '@/modules/notifications/ModuleNotifications';
+import Network from '@/modules/network/ModuleNetwork';
 import { swapProps, swapRouterGuard } from './helpers';
 import { ROUTES_WALLET } from '../configs/configRoutes';
 export default {
@@ -33,6 +37,14 @@ export default {
       }
     },
     {
+      path: ROUTES_WALLET.SETTINGS.PATH,
+      name: ROUTES_WALLET.SETTINGS.NAME,
+      component: Settings,
+      meta: {
+        noAuth: false
+      }
+    },
+    {
       path: ROUTES_WALLET.SEND_TX.PATH,
       name: ROUTES_WALLET.SEND_TX.NAME,
       component: Send,
@@ -45,6 +57,32 @@ export default {
       path: ROUTES_WALLET.NFT_MANAGER.PATH,
       name: ROUTES_WALLET.NFT_MANAGER.NAME,
       component: NftManager,
+      children: [
+        {
+          path: ROUTES_WALLET.NFT_MANAGER_SEND.PATH,
+          name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME,
+          component: NftManagerSend,
+          meta: {
+            noAuth: false
+          }
+        }
+      ],
+      meta: {
+        noAuth: false
+      }
+    },
+    // {
+    //   path: ROUTES_WALLET.NOTIFICATIONS.PATH,
+    //   name: ROUTES_WALLET.NOTIFICATIONS.NAME,
+    //   component: Notifications,
+    //   meta: {
+    //     noAuth: false
+    //   }
+    // },
+    {
+      path: ROUTES_WALLET.NETWORK.PATH,
+      name: ROUTES_WALLET.NETWORK.NAME,
+      component: Network,
       meta: {
         noAuth: false
       }

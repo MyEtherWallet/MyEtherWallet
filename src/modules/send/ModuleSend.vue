@@ -533,7 +533,8 @@ export default {
      * Resets values to default
      */
     clear() {
-      this.$refs.addressInput.clear();
+      if (this.$refs && this.$refs.addressInput)
+        this.$refs.addressInput.clear();
       this.toAddress = '';
       this.selectedCurrency = this.tokensList[0];
       this.sendTx = null;
@@ -603,9 +604,9 @@ export default {
     setGasLimitError(value) {
       if (value) {
         if (BigNumber(value).lte(0))
-          this.gasLimitError = 'Gas limit must be greater then 0';
+          this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
-          this.gasLimitError = 'Gas limit can not have decimals points';
+          this.gasLimitError = 'Gas limit can not have decimal points';
         else if (toBN(value).lt(toBN(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {
@@ -646,10 +647,15 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx.submitTransaction().catch(error => {
-        this.error = error;
-      });
-      this.clear();
+      this.sendTx
+        .submitTransaction()
+        .then(() => {
+          this.clear();
+        })
+        .catch(error => {
+          this.clear();
+          this.gasEstimationError = error.message;
+        });
     },
     prefillForm() {
       if (this.isPrefilled) {

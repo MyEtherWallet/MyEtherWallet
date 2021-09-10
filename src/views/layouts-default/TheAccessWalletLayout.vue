@@ -18,45 +18,43 @@
         Options
       =====================================================================================
       -->
-      <v-container>
-        <v-sheet color="transparent" max-width="650px" class="mx-auto">
-          <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-            <mew-super-button
-              font-class="mew-heading-2"
-              :color-theme="btn.color"
-              :title="btn.title"
-              :subtitle="btn.subtitle"
-              :title-icon="btn.titleIcon"
-              :title-icon-type="btn.titleIconType"
-              :title-icon-class="btn.titleIconClass"
-              :note="btn.note"
-              @click.native="btn.fn"
-            >
-              <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
-                <v-row v-if="btn.rightIcon" class="align-center justify-end">
-                  <v-img
-                    :src="btn.rightIcon"
-                    max-width="100px"
-                    min-width="40px"
-                    class="px-4 px-sm-3"
-                    contain
-                  />
-                </v-row>
-                <v-row v-else class="align-center justify-end">
-                  <v-img
-                    v-for="(icon, index) in btn.rightIcons"
-                    :key="index"
-                    :src="icon"
-                    max-width="70px"
-                    contain
-                    class="px-4 px-sm-3"
-                  />
-                </v-row>
-              </template>
-            </mew-super-button>
-          </div>
-        </v-sheet>
-      </v-container>
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
+        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
+          <mew-super-button
+            font-class="mew-heading-2"
+            :color-theme="btn.color"
+            :title="btn.title"
+            :subtitle="btn.subtitle"
+            :title-icon="btn.titleIcon"
+            :title-icon-type="btn.titleIconType"
+            :title-icon-class="btn.titleIconClass"
+            :note="btn.note"
+            @click.native="btn.fn"
+          >
+            <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
+              <v-row v-if="btn.rightIcon" class="align-center justify-end">
+                <v-img
+                  :src="btn.rightIcon"
+                  max-width="100px"
+                  min-width="40px"
+                  class="px-4 px-sm-3"
+                  contain
+                />
+              </v-row>
+              <v-row v-else class="align-center justify-end">
+                <v-img
+                  v-for="(icon, index) in btn.rightIcons"
+                  :key="index"
+                  :src="icon"
+                  max-width="70px"
+                  contain
+                  class="px-4 px-sm-3"
+                />
+              </v-row>
+            </template>
+          </mew-super-button>
+        </div>
+      </v-sheet>
       <!--
       =====================================================================================
         Acccess Wallet Module Overlays - activate on Options Button click

@@ -127,6 +127,7 @@
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
+          :to="item.route"
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">
@@ -166,10 +167,7 @@
       popup-type="confirm"
       @onClick="onLogout"
     ></mew-popup>
-    <module-settings
-      :on-settings="onSettings"
-      @closeSettings="toggleSettings"
-    />
+    <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
     =====================================================================================
       Navigation Bar on top of the screen for xs-md screens
@@ -302,7 +300,8 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.toggleSettings
+          fn: this.openSettings,
+          route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
         {
           title: this.$t('common.logout'),
@@ -323,8 +322,11 @@ export default {
     ...mapState('global', ['consentToTrack'])
   },
   mounted() {
-    EventBus.$on('toggleSettings', () => {
-      this.toggleSettings();
+    if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
+      this.openSettings();
+    }
+    EventBus.$on('openSettings', () => {
+      this.openSettings();
     });
   },
   methods: {
@@ -342,8 +344,12 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    toggleSettings() {
-      this.onSettings = !this.onSettings;
+    openSettings() {
+      this.onSettings = true;
+    },
+    closeSettings() {
+      this.onSettings = false;
+      this.$router.go(-1);
     },
     onLogout(res) {
       this.showLogoutPopup = false;

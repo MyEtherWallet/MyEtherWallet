@@ -12,6 +12,7 @@
         label="Private Key"
         placeholder="Enter your Private Key"
         :rules="privKeyRulles"
+        type="password"
       />
       <!--
       =====================================================================================
@@ -43,6 +44,11 @@
 
 <script>
 import { isPrivateKey } from '../handlers/helpers';
+import { isValidPrivate } from 'ethereumjs-util';
+import {
+  getBufferFromHex,
+  sanitizeHex
+} from '../../../access-wallet/common/utils';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {
@@ -78,7 +84,10 @@ export default {
      * @return booelan
      */
     isPrivKey() {
-      return isPrivateKey(this.privateKey);
+      const _privKey = Buffer.isBuffer(this.actualPrivateKey)
+        ? this.actualPrivateKey
+        : getBufferFromHex(sanitizeHex(this.actualPrivateKey));
+      return isPrivateKey(this.privateKey) && isValidPrivate(_privKey);
     },
     /**
      * @returns actual private without '0x' prefix

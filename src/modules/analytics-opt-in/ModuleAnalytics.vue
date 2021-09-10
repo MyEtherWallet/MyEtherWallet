@@ -73,18 +73,15 @@
                     {{ option.text }}
                   </p>
                   <div :class="option.linkClass">
-                    <a
-                      :href="option.link"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      >{{ option.linkText }}
+                    <router-link :to="{ name: ROUTES_PRIVACY_POLICY }">
+                      {{ option.linkText }}
                       <v-icon
                         v-if="option.linkIcon"
                         size="small"
                         color="primary"
                       >
                         {{ option.linkIcon }}</v-icon
-                      ></a
+                      ></router-link
                     >
                   </div>
                 </v-col>
@@ -119,10 +116,10 @@
             </div>
             <v-divider />
             <div class="pa-8 text-center">
-              <a rel="noopener noreferrer" target="_blank">
+              <router-link :to="{ name: ROUTES_PRIVACY_POLICY }">
                 View our full tracking policy
                 <v-icon size="small" color="primary"> mdi-open-in-new</v-icon>
-              </a>
+              </router-link>
             </div>
           </div>
         </v-card-text>
@@ -154,11 +151,13 @@
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   mixins: [handlerAnalytics],
   data() {
     return {
+      ROUTES_PRIVACY_POLICY: ROUTES_HOME.PRIVACY_POLICY.NAME,
       onWhatWeCollect: false,
       whatWeCollectItems: [
         'What features do people use the most?',
@@ -172,10 +171,9 @@ export default {
           iconLeft: 'mdi-chart-box-outline',
           iconRight: 'mdi-chevron-right',
           text: 'We will only collect data on how users are using the product.',
-          link: '', // TODO: ask russ for link
           linkText: 'What we collect',
           linkClass: 'font-weight-medium',
-          color: 'titleSecondary', //TODO: add this color to mew components
+          color: 'titleSecondary',
           clickFn: () => {
             this.onWhatWeCollect = true;
           }
@@ -184,21 +182,20 @@ export default {
           title: 'Anonymity',
           iconLeft: 'mdi-incognito-circle',
           text: "We will never collect user's full IP address or exact location so you can remain anonymous.",
-          color: 'titleSecondary', //TODO: add this color to mew components
+          color: 'titleSecondary',
           clickFn: () => {}
         },
         {
           title: 'Privacy',
           iconLeft: 'mdi-lock-outline',
           text: 'We cannot access any personal data: No seed words, no private keys, no public address nor passwords.',
-          color: 'titleSecondary', //TODO: add this color to mew components
+          color: 'titleSecondary',
           clickFn: () => {}
         },
         {
           iconLeft: 'mdi-toggle-switch',
           text: 'You can opt out anytime by clicking the toggle switch in the side bar menu.',
           linkText: 'View our full tracking policy',
-          link: '', // TODO: ask russ for link
           linkIcon: 'mdi-open-in-new',
           linkClass: 'mt-4',
           color: 'searchText',
