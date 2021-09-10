@@ -460,10 +460,10 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        isEmpty(this.fromTokenType) &&
-        isEmpty(this.toTokenType) &&
-        isEmpty(this.fromTokenType?.symbol) &&
-        isEmpty(this.toTokenType?.symbol)
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
       );
     },
     /**
