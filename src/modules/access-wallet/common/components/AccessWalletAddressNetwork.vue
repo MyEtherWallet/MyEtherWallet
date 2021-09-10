@@ -175,7 +175,7 @@
       class="my-2"
       next-btn-text="Access Wallet"
       :next-btn-method="accessWallet"
-      :back-btn-method="back ? reset : null"
+      :back-btn-method="null"
       :next-disable="!acceptTerms"
     />
   </div>
@@ -215,12 +215,6 @@ export default {
     NetworkSwitch
   },
   props: {
-    back: {
-      type: Function,
-      default: function () {
-        return {};
-      }
-    },
     handlerWallet: {
       type: Object,
       default: function () {
@@ -395,16 +389,6 @@ export default {
       this.accountAddress = '';
       this.currentIdx = 0;
       this.setAccounts();
-    },
-    /**
-     * Resets the component and calls back method prop.
-     */
-    reset() {
-      this.selectedAddress = '';
-      this.accounts.splice(0);
-      this.currentIdx = 0;
-      this.addressPage = 0;
-      this.back();
     },
     /**
      * Async method that gets accounts according to the pagination

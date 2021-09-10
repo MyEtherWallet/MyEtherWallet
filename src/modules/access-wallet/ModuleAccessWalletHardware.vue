@@ -113,7 +113,6 @@
     <access-wallet-address-network
       v-if="step === 3"
       :handler-wallet="hwWalletInstance"
-      :back="back"
       @unlock="setHardwareWallet"
     />
   </mew-overlay>
