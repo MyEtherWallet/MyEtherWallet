@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex align-center justify-space-between mb-4">
+    <div v-if="hasCost" class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
         <div class="primary--text mr-2">{{ actualUsdFormatted }}</div>
         <div class="searchText--text">
@@ -161,8 +161,11 @@ export default {
       }
       return {};
     },
+    hasCost() {
+      return BigNumber(this.costInEth).gt(0);
+    },
     actualFeeFormatted() {
-      return BigNumber(this.costInEth).gt(0)
+      return this.hasCost
         ? formatFloatingPointValue(this.costInEth).value
         : this.currentValue.gas;
     },
@@ -173,9 +176,7 @@ export default {
       return `~${'$' + value}`;
     },
     actualUsdFormatted() {
-      return BigNumber(this.costInEth).gt(0)
-        ? this.costInUsd
-        : this.currentValue.usd;
+      return this.hasCost ? this.costInUsd : this.currentValue.usd;
     }
   }
 };
