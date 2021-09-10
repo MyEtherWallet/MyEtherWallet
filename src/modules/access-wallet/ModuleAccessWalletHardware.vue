@@ -231,48 +231,6 @@ export default {
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
     ...mapState('wallet', ['identifier']),
-    stepperStep() {
-      return this.step + 1;
-    },
-    extraSteps() {
-      return Object.keys(this.wallets[this.walletType].titles);
-    },
-    extraStepDetails() {
-      if (this.walletType !== '') {
-        return Object.keys(this.wallets[this.walletType].titles).reduce(
-          (acc, item) => {
-            acc.push({
-              step: +item + 1,
-              name: this.wallets[this.walletType].titles[item].includes(
-                'Enter your password'
-              )
-                ? 'Verify password'
-                : this.wallets[this.walletType].titles[item]
-            });
-            return acc;
-          },
-          [
-            {
-              step: 1,
-              name: 'Select Hardware Wallet'
-            }
-          ]
-        );
-      } else if (this.onAddressNetwork) {
-        return [
-          {
-            step: 2,
-            name: 'Select Network and Address'
-          }
-        ];
-      }
-      return [
-        {
-          step: 1,
-          name: 'Select Hardware Wallet'
-        }
-      ];
-    },
     /**
      * Returns the correct network icon
      */
@@ -404,9 +362,12 @@ export default {
      * Overlay title
      */
     title() {
-      return this.step === 1
-        ? 'Select a hardware wallet'
-        : this.wallets[this.walletType].title;
+      if (this.step > this.wallets[this.walletType]?.when) {
+        return 'Select Network and Address';
+      } else if (this.step === 1) {
+        return 'Select a hardware wallet';
+      }
+      return this.wallets[this.walletType].title;
     }
   },
   mounted() {
