@@ -190,6 +190,7 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'CreateWalletKeystore',
@@ -282,7 +283,7 @@ export default {
     },
     downloadWallet() {
       this.$refs.downloadLink.click();
-      this.trackCreateWallet('keystore');
+      this.trackCreateWallet(WALLET_TYPES.KEYSTORE);
       this.updateStep(3);
     },
     goToAccess() {
