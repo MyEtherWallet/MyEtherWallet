@@ -21,7 +21,7 @@ import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
@@ -145,19 +145,27 @@ export default {
      * and setup listenerss for metamask changes
      */
     web3Listeners() {
-      window.ethereum.on('chainChanged', chainId => {
-        this.findAndSetNetwork(chainId);
-      });
+      if (window.ethereum.on) {
+        window.ethereum.on('chainChanged', chainId => {
+          this.findAndSetNetwork(chainId);
+        });
 
-      window.ethereum.on('networkChanged', chainId => {
-        this.findAndSetNetwork(chainId);
-      });
+        window.ethereum.on('networkChanged', chainId => {
+          this.findAndSetNetwork(chainId);
+        });
 
-      window.ethereum.on('accountsChanged', acc => {
-        const web3 = new Web3(window.ethereum);
-        const wallet = new Web3Wallet(acc[0]);
-        this.setWallet([wallet, web3.currentProvider]);
-      });
+        window.ethereum.on('accountsChanged', acc => {
+          const web3 = new Web3(window.ethereum);
+          const wallet = new Web3Wallet(acc[0]);
+          this.setWallet([wallet, web3.currentProvider]);
+        });
+      } else {
+        Toast(
+          'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
+          {},
+          ERROR
+        );
+      }
     },
     findAndSetNetwork(web3ChainId) {
       const foundNetwork = Object.values(nodeList).find(item => {

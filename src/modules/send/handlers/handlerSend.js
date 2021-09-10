@@ -7,6 +7,7 @@ import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
