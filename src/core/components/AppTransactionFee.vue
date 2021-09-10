@@ -11,6 +11,7 @@
       :gas-price-modal="gasPriceModal"
       :selected="gasPriceType"
       :not-enough-eth="notEnoughEth"
+      :cost-in-eth="costInEth"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -52,7 +53,7 @@
           >
             <div class="d-flex align-center">
               <div :class="hasError ? 'error--text' : 'textBlack2--text'">
-                {{ feeInUsd }}
+                {{ costInUsd }}
               </div>
               <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
                 mdi-arrow-right
@@ -74,7 +75,7 @@
             :class="hasError ? 'error--text' : 'textSecondary--text'"
             class="ml-3 py-1"
           >
-            {{ actualFeeFormatted }} ETH
+            {{ actualCostFormatted }} {{ network.type.currencyName }}
           </div>
         </div>
 
@@ -107,7 +108,7 @@
         <div class="py-2 ml-2 text-right">
           <div>
             <span class="mr-2">Total:</span>
-            {{ actualCostFormatted }} ETH
+            {{ actualCostFormatted }} {{ network.type.currencyName }}
           </div>
         </div>
       </v-col>
@@ -146,10 +147,6 @@ export default {
       type: String,
       default: '0'
     },
-    txFee: {
-      type: String,
-      default: '0'
-    },
     gasPriceType: {
       type: String,
       default: 'economy'
@@ -173,21 +170,15 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
-    costToEth() {
+    costInEth() {
       return fromWei(this.totalCost);
     },
     actualCostFormatted() {
-      return formatFloatingPointValue(this.costToEth).value;
+      return formatFloatingPointValue(this.costInEth).value;
     },
-    feeToEth() {
-      return fromWei(this.txFee);
-    },
-    actualFeeFormatted() {
-      return formatFloatingPointValue(this.feeToEth).value;
-    },
-    feeInUsd() {
+    costInUsd() {
       const value = formatFiatValue(
-        BigNumber(this.feeToEth).times(this.fiatValue).toFixed(2)
+        BigNumber(this.costInEth).times(this.fiatValue).toFixed(2)
       ).value;
       return `~${'$' + value}`;
     },

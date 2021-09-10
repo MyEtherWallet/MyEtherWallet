@@ -88,7 +88,7 @@
             :gas-price-type="localGasType"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
-            :from-eth="isFromEth"
+            :from-eth="isFromNetworkCurrency"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
@@ -251,8 +251,8 @@ export default {
       'swapLink'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    isFromEth() {
-      return this.selectedCurrency?.symbol === 'ETH';
+    isFromNetworkCurrency() {
+      return this.selectedCurrency?.symbol === this.currencyName;
     },
     isDisabledNextBtn() {
       return (
@@ -415,7 +415,9 @@ export default {
     },
     totalCost() {
       const amountToWei = toWei(this.amount);
-      return BigNumber(this.txFee).plus(amountToWei).toString();
+      return this.isFromNetworkCurrency
+        ? BigNumber(this.txFee).plus(amountToWei).toString()
+        : this.txFee;
     },
     txFee() {
       if (this.isValidGasLimit) {

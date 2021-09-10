@@ -1,12 +1,8 @@
 <template>
   <div>
-    <div v-if="!isSwap" class="mb-6">
-      Please select a default gas price for your transaction fee
-    </div>
-
     <div class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
-        <div class="primary--text mr-2">~{{ currentValue.usd }}</div>
+        <div class="primary--text mr-2">{{ actualUsdFormatted }}</div>
         <div class="searchText--text">
           {{ actualFeeFormatted }}
           {{ network.type.currencyName }}
@@ -117,7 +113,11 @@
 <script>
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
 
 export default {
   name: 'SettingsGasPrice',
@@ -134,16 +134,10 @@ export default {
       type: Array,
       default: () => []
     },
-    isSwap: {
-      type: Boolean,
-      default: false
+    costInEth: {
+      type: String,
+      default: '0'
     },
-    /*
-    global: {
-      type: Boolean,
-      default: false
-    },
-    */
     notEnoughEth: {
       type: Boolean,
       default: false
@@ -168,7 +162,20 @@ export default {
       return {};
     },
     actualFeeFormatted() {
-      return formatFloatingPointValue(this.currentValue.gas).value;
+      return BigNumber(this.costInEth).gt(0)
+        ? formatFloatingPointValue(this.costInEth).value
+        : this.currentValue.gas;
+    },
+    costInUsd() {
+      const value = formatFiatValue(
+        BigNumber(this.costInEth).times(this.fiatValue).toFixed(2)
+      ).value;
+      return `~${'$' + value}`;
+    },
+    actualUsdFormatted() {
+      return BigNumber(this.costInEth).gt(0)
+        ? this.costInUsd
+        : this.currentValue.usd;
     }
   }
 };

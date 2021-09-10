@@ -11,6 +11,7 @@
       :selected="selected"
       :set-selected="setGas"
       :gas-price="gasPrice"
+      :cost-in-eth="costInEth"
       :open-global-settings="openSettings"
       :not-enough-eth="notEnoughEth"
     />
@@ -49,6 +50,10 @@ export default {
     notEnoughEth: {
       type: Boolean,
       default: false
+    },
+    costInEth: {
+      type: String,
+      default: '0'
     }
   },
   data() {
