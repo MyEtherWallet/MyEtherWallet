@@ -18,7 +18,6 @@
           placeholder=" "
           class="mr-3 flex-grow-1"
         />
-        <!--  mew text area doesn't handle array as prop -->
 
         <v-textarea
           v-model="abi"
@@ -71,7 +70,10 @@
               @input="methodSelect"
             />
 
-            <div v-show="selectedMethod.inputs.length" class="mew-heading-2">
+            <div
+              v-show="selectedMethod.inputs.length"
+              class="mew-heading-2 mb-3"
+            >
               Inputs
             </div>
             <div
