@@ -118,22 +118,24 @@
             </div>
             <v-card-title
               v-if="!ledgerConnected"
-              class="border justify-center font-weight-medium font-wrapping"
+              class="border justify-center font-wrapping"
             >
-              <div class="mew-heading-4 pl-1">
+              <div class="mew-heading-4 font-weight-medium pl-1">
                 Connect your Ledger device and open Ethereum app
               </div>
             </v-card-title>
             <v-card-title
               v-if="ledgerConnected"
-              class="border justify-center font-weight-medium font-wrapping"
+              class="border justify-center font-wrapping"
             >
               <img
                 src="@/assets/images/icons/icon-checked.svg"
                 alt="Green check mark"
                 height="20"
               />
-              <div class="mew-heading-4 pl-1">Ledger connected</div>
+              <div class="mew-heading-4 font-weight-medium pl-1">
+                Ledger connected
+              </div>
             </v-card-title>
           </div>
         </div>
