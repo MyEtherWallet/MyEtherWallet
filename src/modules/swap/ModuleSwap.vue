@@ -13,79 +13,80 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <v-row class="align-center justify-space-between mt-4">
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
-              <div class="position--relative">
-                <app-button-balance
-                  :loading="isLoading"
-                  :balance="displayBalance"
-                />
+          <mew6-white-sheet class="pt-7 pb-3 px-5">
+            <v-row class="align-center justify-space-between mt-4">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
+                <div class="position--relative">
+                  <app-button-balance
+                    :loading="isLoading"
+                    :balance="displayBalance"
+                  />
+                  <mew-select
+                    :value="fromTokenType"
+                    label="From"
+                    :items="actualFromTokens"
+                    :is-custom="true"
+                    :loading="isLoading"
+                    @input="setFromToken"
+                  />
+                </div>
+                <mew-input
+                  ref="amountInput"
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :value="tokenInValue"
+                  :persistent-hint="true"
+                  :error-messages="amountErrorMessage"
+                  :disabled="initialLoad"
+                  :buy-more-str="
+                    isEthNetwork &&
+                    (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                      amountErrorMessage === errorMsgs.amountEthIsTooLow)
+                      ? 'Buy more.'
+                      : null
+                  "
+                  :max-btn-obj="{
+                    title: 'Max',
+                    disabled: false,
+                    method: setMaxAmount
+                  }"
+                  @input="setTokenInValue"
+              /></v-col>
+              <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+                <div class="d-flex align-center justify-center pb-sm-10">
+                  <swap-btn
+                    :class="[
+                      enableTokenSwitch
+                        ? 'cursor--pointer'
+                        : 'pointer-event--none',
+                      'd-flex align-center justify-center'
+                    ]"
+                    @click.native="switchTokens"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
                 <mew-select
-                  :value="fromTokenType"
-                  label="From"
-                  :items="actualFromTokens"
+                  ref="toToken"
+                  :value="toTokenType"
+                  :items="actualToTokens"
                   :is-custom="true"
                   :loading="isLoading"
-                  @input="setFromToken"
+                  label="To"
+                  @input="setToToken"
                 />
-              </div>
-              <mew-input
-                ref="amountInput"
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :value="tokenInValue"
-                :persistent-hint="true"
-                :error-messages="amountErrorMessage"
-                :disabled="initialLoad"
-                :buy-more-str="
-                  isEthNetwork &&
-                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
-                    ? 'Buy more.'
-                    : null
-                "
-                :max-btn-obj="{
-                  title: 'Max',
-                  disabled: false,
-                  method: setMaxAmount
-                }"
-                @input="setTokenInValue"
-            /></v-col>
-            <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
-              <div class="d-flex align-center justify-center pb-sm-10">
-                <swap-btn
-                  :class="[
-                    enableTokenSwitch
-                      ? 'cursor--pointer'
-                      : 'pointer-event--none',
-                    'd-flex align-center justify-center'
-                  ]"
-                  @click.native="switchTokens"
+                <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+                <v-text-field
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :hide-clear-btn="true"
+                  :value="tokenOutValue"
+                  :readonly="true"
+                  outlined
                 />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
-              <mew-select
-                ref="toToken"
-                :value="toTokenType"
-                :items="actualToTokens"
-                :is-custom="true"
-                :loading="isLoading"
-                label="To"
-                @input="setToToken"
-              />
-              <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
-              <v-text-field
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :hide-clear-btn="true"
-                :value="tokenOutValue"
-                :readonly="true"
-                outlined
-              />
-              <!-- <mew-input
+                <!-- <mew-input
                 label="Amount"
                 placeholder="0"
                 type="number"
@@ -93,8 +94,9 @@
                 :value="tokenOutValue"
                 readonly="true"
               /> -->
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </mew6-white-sheet>
 
           <!--
           =====================================================================================
@@ -243,10 +245,11 @@
           <div class="text-center mt-10 mt-sm-15">
             <mew-button
               title="Next"
-              :has-full-width="false"
+              :has-full-width="true"
               :disabled="disableNext"
               btn-size="xlarge"
               @click.native="showConfirm"
+              style="max-width: 240px"
             />
           </div>
         </template>

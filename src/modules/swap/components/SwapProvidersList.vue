@@ -3,24 +3,13 @@
     <div v-if="step > 0" class="mew-heading-3 mb-5 pl-4">Select rate</div>
     <!--
     =====================================================================================
-      Providers Message
-    =====================================================================================
-    -->
-    <app-user-msg-block
-      v-if="(step == 0 && !isLoading) || !toTokenSymbol"
-      :message="providersMessage"
-      :is-alert="false"
-    />
-
-    <!--
-    =====================================================================================
       Sceleton Loader (desktop/mobile)
     =====================================================================================
     -->
     <div v-if="isLoading" class="my-5">
       <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
-        <v-container fluid class="d-flex flex-column align-center">
-          <img :src="currentPicture" height="30" />
+        <v-container fluid class="d-flex flex-column align-center my-3">
+          <img :src="currentPicture" height="30" class="my-4" />
           <div class="titlePrimary--text font-weight-medium py-5">
             Finding best rates...
           </div>
@@ -220,11 +209,6 @@ export default {
   data() {
     return {
       showMore: false,
-      providersMessage: {
-        title: 'Select token and enter amount to see rates.',
-        subtitle:
-          'MEW finds the best price for you across multiple DEXs and exchange services.'
-      },
       currentPicture: null,
       partners: [
         { image: require('../assets/0x.png') },
