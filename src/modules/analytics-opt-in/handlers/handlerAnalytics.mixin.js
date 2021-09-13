@@ -2,10 +2,15 @@
  * Matomo Analytics Mixin
  */
 import categories from './configs/configCategories';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'HandlerAnalytics',
+  computed: {
+    ...mapState('global', ['consentToTrack'])
+  },
   methods: {
+    ...mapActions('global', ['setTrackingConsent']),
     /**
      * Sets the consent to track on wallet page
      */

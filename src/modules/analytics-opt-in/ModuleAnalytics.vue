@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
@@ -209,7 +209,6 @@ export default {
   },
   methods: {
     ...mapMutations('global', ['NEVER_SHOW_TRACKING']),
-    ...mapActions('global', ['setTrackingConsent']),
     /**
      * Returns back to home page
      */

@@ -144,10 +144,10 @@
         <div class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
-              :value="consentToTrack"
+              :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="gray"
+              color="white"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -318,8 +318,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'swapLink']),
-    ...mapState('wallet', ['instance']),
-    ...mapState('global', ['consentToTrack'])
+    ...mapState('wallet', ['instance'])
   },
   mounted() {
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
@@ -331,7 +330,6 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
-    ...mapActions('global', ['setTrackingConsent']),
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -462,6 +460,11 @@ export default {
 
     &::-webkit-scrollbar-corner {
       background: transparent;
+    }
+  }
+  .matomo-tracking-switch {
+    .v-label {
+      color: var(--v-white-base);
     }
   }
 }
