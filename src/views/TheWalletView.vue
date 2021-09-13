@@ -78,7 +78,12 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
+    ...mapActions('wallet', [
+      'setBlockNumber',
+      'setTokens',
+      'setWallet',
+      'removeWallet'
+    ]),
     ...mapActions('global', ['setGasPrice', 'setNetwork']),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
@@ -136,8 +141,10 @@ export default {
 
         window.ethereum.on('accountsChanged', acc => {
           const web3 = new Web3(window.ethereum);
-          const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, web3.currentProvider]);
+          if (acc[0]) {
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          }
         });
       } else {
         Toast(
