@@ -6,26 +6,26 @@
   "deposit-addr": "Адрес депозита",
   "recieve-amount": "Сумма к Получению",
   "review": "Обзор обмена",
-  "sent-my-coins": "Я отправил {currency}",
-  "send-value-curr": "Отправить {value} {currency} ",
+  "sent-my-coins": "Я отправил {{currency}}",
+  "send-value-curr": "Отправить {{value}} {{currency}} ",
   "value-below-min": "Значение ниже минимального для выбранного провайдера",
   "below-min-swap": "Ниже минимального значения обмена для выбранного провайдера",
   "value-above-max": "Значение выше максимального для выбранного провайдера",
   "above-max-swap": "Выше максимального значения обмена для выбранного провайдера",
   "time-remain": "Оставшееся время",
-  "refund": "{currency} адрес для возмещения (при необходимости) от Changelly",
+  "refund": "{{currency}} адрес для возмещения (при необходимости) от Changelly",
   "button-loading": "Завершение деталей обмена",
   "providers": {
     "string": "Провайдер | Провайдеры",
     "no-provider-found": "Провайдер не найден :(",
     "loading-rates": "Пожалуйста, подождите, пока мы загружаем тарифы провайдера...",
-    "load-rate-error": "При получении курса {from-currency} к {to-currency} произошла ошибка. Пожалуйста, подождите минуту и повторите попытку",
-    "kyber-slippage": "Возможно проскальзывание {value}%"
+    "load-rate-error": "При получении курса {{from-currency}} к {{to-currency}} произошла ошибка. Пожалуйста, подождите минуту и повторите попытку",
+    "kyber-slippage": "Возможно проскальзывание {{value}}%"
   },
   "warning": {
-    "unable-validate-addr": "В настоящее время не удалось проверить адреса для {currency}. Вероятно, что все правильно, но пожалуйста, убедитесь, что адрес верный перед отправкой.",
-    "not-valid-addr-src": "Не подходящий {currency} адрес",
-    "supply-valid-addr": "Пожалуйста, укажите подходящий {currency} адрес",
+    "unable-validate-addr": "В настоящее время не удалось проверить адреса для {{currency}}. Вероятно, что все правильно, но пожалуйста, убедитесь, что адрес верный перед отправкой.",
+    "not-valid-addr-src": "Не подходящий {{currency}} адрес",
+    "supply-valid-addr": "Пожалуйста, укажите подходящий {{currency}} адрес",
     "not-enough-funds": "У вас недостаточно средств",
     "no-swap-offline": "обмен не доступен оффлайн",
     "swap-only-mainnet": "Обмен доступен только на mainnet",
@@ -36,10 +36,10 @@
     "gas-too-high": "Цена газа слишком высока. Пожалуйста, понизьте цену газа и повторите попытку."
   },
   "notice": {
-    "retrieve-changelly-rate-failed": "Не удалось получить курс Changelly от {fromCurrency} к {toCurrency}",
-    "retrieve-bity-rate-failed": "Не удалось получить курс Bity от {fromCurrency} к {toCurrency}",
-    "retrieve-kyber-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}",
-    "retrieve-simplex-rate-failed": "Не удалось получить курс Simplex от {fromCurrency} к {toCurrency}"
+    "retrieve-changelly-rate-failed": "Не удалось получить курс Changelly от {{fromCurrency}} к {{toCurrency}}",
+    "retrieve-bity-rate-failed": "Не удалось получить курс Bity от {{fromCurrency}} к {{toCurrency}}",
+    "retrieve-kyber-rate-failed": "Не удалось получить курс Simplex от {{fromCurrency}} к {{toCurrency}}",
+    "retrieve-simplex-rate-failed": "Не удалось получить курс Simplex от {{fromCurrency}} к {{toCurrency}}"
   },
   "tag-line": {
     "bity": "Обменяйте ETH, BTC, REP, или продавайте за фиат, используя ваш телефон!",
@@ -54,7 +54,7 @@
     "prev-verified": "Ваш номер телефона уже подтвержден. Пожалуйста, перейдите дальше.",
     "acc-owner-name": "Имя на банковском счете",
     "city": "Город",
-    "state": "Штат/Область",
+    "state": "Штат\/Область",
     "zip-code": "Индекс",
     "country": "Страна",
     "country-code": "Код Страны",
@@ -62,7 +62,7 @@
     "billing-addr": "Адрес для выставления счёта",
     "addr-optional": "Адрес 2 (необязательно)",
     "addr-placeholder": "Адрес 1",
-    "bic-swift": "BIC/Swift код",
+    "bic-swift": "BIC\/Swift код",
     "popover-bic-swift": "Это международный роутинг номер банка.",
     "aba-num": "ABA номер",
     "popover-aba-num": "Это номер ABA.",
@@ -74,7 +74,7 @@
     "button-submit": "Отправить",
     "email-placeholder": "user@example.com"
   },
-  "order-id": "ID заказа {provider}",
+  "order-id": "ID заказа {{provider}}",
   "swap-widget": "Виджет Обмена",
   "from-min": "От Mин.",
   "max": "Макс.",

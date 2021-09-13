@@ -4,17 +4,17 @@
     "modal": {
       "title": "Mobile Access",
       "text1": "Please use MEW wallet App to scan the QR code above",
-      "text2": "Don't have the app? {action}",
+      "text2": "Don't have the app? {{action}}",
       "download-now": "Download now."
     },
     "scan": "Scan QR code with MEW wallet App",
     "warning": "MEW wallet is not compatible with iPads.",
     "instructions": {
-      "step1": "Step 1: {first}",
-      "step2": "Step 2: {second}",
-      "step3": "Step 3: {third}",
+      "step1": "Step 1: {{first}}",
+      "step2": "Step 2: {{second}}",
+      "step3": "Step 3: {{third}}",
       "first": "Open MEW wallet App",
-      "second": "Tap {icon-pos}",
+      "second": "Tap {{icon-pos}}",
       "icon-pos": "icon on the top right",
       "third": "Scan the QR code"
     }
@@ -28,10 +28,10 @@
     "mew-wallet": "MEW wallet"
   },
   "finney": {
-    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
+    "scan-info": "To connect, scan the QR code from {{wallet}} app on your {{finney-bc}}",
     "finney-wallet": "FinneyWallet",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-finney": "Get your {finney-title} now",
+    "get-finney": "Get your {{finney-title}} now",
     "finney-title": "FINNEY™",
     "mobile": "mobile",
     "finney-connect": "FINNEY Connect"
@@ -75,7 +75,7 @@
     },
     "modal": {
       "title": "Access via MetaMask",
-      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
+      "text": "Please use MyEtherWallet on a secure (SSL\/HTTPS) connection to connect.",
       "button-install": "Install Metamask",
       "button-refresh": "Refresh",
       "terms": "To Access my Wallet, I accept "
@@ -101,7 +101,7 @@
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
-    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "Please {{do-not}} share your private key to anyone! You may lose your money if you share it"
   },
   "network-addr": {
     "string": "Network and Address",
@@ -116,12 +116,12 @@
     "custom": "Custom Paths",
     "add-custom": "Add Custom Path",
     "ivalid-custom": "Invalid Custom Path",
-    "invalid-desc": "The path: {path} is not valid for this device",
+    "invalid-desc": "The path: {{path}} is not valid for this device",
     "alias": "Alias"
   },
   "pin": {
     "string": "PIN",
-    "enter": "Enter PIN for your {device}",
+    "enter": "Enter PIN for your {{device}}",
     "layout": "The PIN layout is displayed on your Hardware wallet",
     "access": "To access my wallet,",
     "accept": "I accept the",
@@ -143,7 +143,7 @@
   "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Browser Extension",
   "try-again": "Try Again",
-  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "invalid-path-desc": "The path: {{path}} is not valid for this device",
   "wallet-info": "Wallet Information",
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",

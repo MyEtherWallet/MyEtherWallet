@@ -44,7 +44,7 @@
     "android": "и Android",
     "twitter": "Подписаться на Twitter",
     "new": "новый",
-    "mew-wallet": "MEW wallet {new} {officially-released}",
+    "mew-wallet": "MEW wallet {{new}} {{officially-released}}",
     "officially-released": "Официальный Выпуск"
   },
   "menu": {
@@ -72,7 +72,7 @@
   "tx-history": "История транзакций",
   "investigate": "Используйте хэш транзакции, чтобы выяснить, почему эта транзакция не удалась.",
   "contract-creation": "Создание контракта",
-  "mewconnect-disconnected": "Похоже, что вы отключены от MEWconnect / MEW wallet, пожалуйста, переподключитесь через приложение.",
+  "mewconnect-disconnected": "Похоже, что вы отключены от MEWconnect \/ MEW wallet, пожалуйста, переподключитесь через приложение.",
   "config": {
     "tx-speed": "Скорость Транзакции",
     "import": "Импорт конфигурации",
@@ -87,8 +87,8 @@
   },
   "no-avail": "Эта функция недоступна.",
   "dashboard-swap": "MEW является партнером Bity, Kyber Network, Changelly и Simplex, чтобы позволить пользователям обменивать фиатные деньги на криптовалюту, эфириум и биткоины, эфириум и ERC20.",
-  "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
-  "etherscan-address-url": "https://etherscan.io/address/[[address]]",
+  "etherscan-tx-url": "https:\/\/etherscan.io\/tx\/[[txHash]]",
+  "etherscan-address-url": "https:\/\/etherscan.io\/address\/[[address]]",
   "address-book": {
     "edit": "Изменить",
     "add": "Добавить",
@@ -112,13 +112,12 @@
     "header": "ИКОНКА МОЕГО АДРЕСА",
     "subheader": "Всегда ищите эту иконку при отправке на этот кошелек",
     "paper": "Бумажный кошелек",
-    "link2": "https://www.myetherwallet.com",
+    "link2": "https:\/\/www.myetherwallet.com",
     "my-priv": "МОЙ ЗАКРЫТЫЙ КЛЮЧ",
-    "warning": "Пожалуйста, храните бумажный кошелек в {safe} месте! Пожалуйста, {do-not} своим закрытым ключом с кем-либо!",
+    "warning": "Пожалуйста, храните бумажный кошелек в {{safe}} месте! Пожалуйста, {{do-not}} своим закрытым ключом с кем-либо!",
     "safe": "БЕЗОПАСНОМ",
     "do-not": "НЕ делитесь"
   },
-  "select-item": "Выберите элемент",
   "economy": "Эконом",
   "regular": "Стандартный",
   "fast": "Быстрый"

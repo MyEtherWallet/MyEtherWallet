@@ -3,7 +3,7 @@
     "discover": "Инструменты",
     "affiliates": "Партнеры",
     "mew": "MEW",
-    "love": "Нравится {heart} MEW?"
+    "love": "Нравится {{heart}} MEW?"
   },
   "units": "Единицы",
   "txStat": "Статус транзакции",
@@ -29,7 +29,6 @@
   "advanced": "Дополнительные параметры",
   "send-offline": "Помощник для оффлайн транзакций",
   "sotd": "State of the DApps",
-  "mew-connect": "MEWconnect",
   "mew-wallet": "MEW wallet",
   "cool-wallet": "CoolWallet",
   "donation": {
@@ -38,5 +37,6 @@
     "bitcoin": "Поддержка в Bitcoin"
   },
   "coingecko": "Coingecko",
-  "view-wallet-info": "Смотреть информацию о кошельке"
+  "view-wallet-info": "Смотреть информацию о кошельке",
+  "mew-connect": "MEWconnect"
 }

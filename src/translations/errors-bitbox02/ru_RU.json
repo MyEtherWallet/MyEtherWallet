@@ -5,7 +5,7 @@
   "upgrade-firmware": "Пожалуйста, обновитесь до последней прошивки, используя приложение Shift Cryptosecurity's BitBox.",
   "unsupported-firmware": "MyEtherWallet пока не поддерживает эту версию прошивки.",
   "unsupported-origin": "Попытка подключения от непроверенного источника.",
-  "no-bridge": "BitBoxBridge не найден. Перейдите на shiftcrypto.ch/start и установите BitBoxBridge для подключения вашего BitBox02.",
+  "no-bridge": "BitBoxBridge не найден. Перейдите на shiftcrypto.ch\/start и установите BitBoxBridge для подключения вашего BitBox02.",
   "expected-one": "Подключите ваш BitBox02 и выберите ориентацию экрана, нажав на одну из сторон.",
   "pairing-rejected": "Соединение отклонено на устройстве, попробуйте еще раз.",
   "busy": "Ваш BitBox02 занят. Закройте все остальные кошельки и повторите попытку.",
