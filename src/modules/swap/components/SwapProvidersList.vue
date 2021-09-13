@@ -1,8 +1,6 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
-    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
-      Select rate
-    </div>
+    <div v-if="step > 0" class="mew-heading-3 mb-5 pl-4">Select rate</div>
     <!--
     =====================================================================================
       Providers Message
@@ -342,18 +340,10 @@ export default {
   },
   methods: {
     showImages() {
-      let index = 0;
-      const DELAY = 2000;
-
       setInterval(() => {
-        if (this.isLoading) {
-          this.currentPicture = this.partners[index].image;
-        }
-        index++;
-        if (index >= this.partners.length) {
-          index = 0;
-        }
-      }, DELAY);
+        const index = Math.floor(Math.random() * this.partners.length);
+        this.currentPicture = this.partners[index].image;
+      }, 1500);
     }
   }
 };
