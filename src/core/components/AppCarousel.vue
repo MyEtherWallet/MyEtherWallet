@@ -23,7 +23,10 @@
           </a>
         </template>
         <template #slide2>
-          <router-link :to="{ name: 'BuyHardwareWallet' }" target="_blank">
+          <router-link
+            :to="{ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME }"
+            target="_blank"
+          >
             <div class="ad2 px-5 d-flex flex-column justify-center">
               <div class="title font-weight-bold mb-n1">Hardware wallets</div>
               <div class="mb-2">Buy a hardware wallet!</div>
@@ -63,7 +66,13 @@
 </template>
 
 <script>
-export default {};
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
+export default {
+  data: () => ({
+    ROUTES_HOME: ROUTES_HOME
+  })
+};
 </script>
 
 <style lang="scss" scoped>

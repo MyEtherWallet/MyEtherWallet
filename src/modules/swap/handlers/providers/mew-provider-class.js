@@ -65,13 +65,17 @@ class MEWPClass {
             toContractAddress: toAddress,
             amount: queryAmount.toFixed(fromT.decimals),
             chain: this.chain,
-            excludeDexes:
-              this.provider === MEWPClass.supportedDexes.ZERO_X
-                ? MEWPClass.supportedDexes.ONE_INCH
-                : MEWPClass.supportedDexes.ZERO_X
+            excludeDexes: Object.values(MEWPClass.supportedDexes)
+              .filter(dex => dex !== this.provider)
+              .join(',')
           }
         })
         .then(response => {
+          console.log(
+            Object.values(MEWPClass.supportedDexes)
+              .filter(dex => dex !== this.provider)
+              .join(',')
+          );
           const quotes = response.data.quotes.filter(
             q => q.dex === this.provider
           );
@@ -122,9 +126,7 @@ class MEWPClass {
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = tradeObj.gasPrice
-      ? tradeObj.gasPrice
-      : await this.web3.eth.getGasPrice();
+    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
         this.web3.eth
@@ -217,6 +219,7 @@ class MEWPClass {
 }
 MEWPClass.supportedDexes = {
   ZERO_X: 'ZERO_X',
-  ONE_INCH: 'ONE_INCH'
+  ONE_INCH: 'ONE_INCH',
+  PARASWAP: 'PARASWAP'
 };
 export default MEWPClass;

@@ -127,7 +127,12 @@
             <b>Make sure all the information is correct.</b> Canceling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
-            <a rel="noopener noreferrer">Learn more.</a>
+            <a
+              href="https://kb.myetherwallet.com/en/transactions/tx-failed-why-was-i-charged/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more.</a
+            >
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
@@ -339,23 +344,32 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('global', ['addressBook']),
     txTo() {
-      if (!this.isBatch) return this.tx.to;
+      if (!this.isBatch)
+        return this.tx.hasOwnProperty('toTxData')
+          ? this.tx.toTxData.to
+          : this.tx.to;
       return this.unsignedTxArr[0].to;
     },
     usdValue() {
       return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
-      return this.identifier === WALLET_TYPES.WEB3_WALLET;
+      return (
+        this.identifier === WALLET_TYPES.WEB3_WALLET ||
+        this.identifier === WALLET_TYPES.WALLET_CONNECT
+      );
     },
-    isMewConnect() {
-      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    isOtherWallet() {
+      return (
+        this.identifier === WALLET_TYPES.MEW_CONNECT ||
+        this.identifier === WALLET_TYPES.WALLET_LINK
+      );
+    },
+    isNotSoftware() {
+      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
     },
     showConfirmWithWallet() {
-      return (
-        (this.isHardware || this.isWeb3Wallet) &&
-        (this.signing || this.error !== '')
-      );
+      return this.isNotSoftware && (this.signing || this.error !== '');
     },
     transactions() {
       const newArr =
@@ -636,7 +650,6 @@ export default {
           to: tokenData.tokenTransferTo
         };
       }
-      tx.type = 'OUT';
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
@@ -724,7 +737,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -760,7 +773,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -773,9 +786,6 @@ export default {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
             }
-            _signedTx.tx['type'] = this.unsignedTxArr[i].type
-              ? this.unsignedTxArr[i].type
-              : 'OUT';
             signed.push(_signedTx);
             if (this.isHardware && this.txSigned) {
               this.btnAction();
@@ -792,7 +802,7 @@ export default {
                 });
               })
               .catch(e => {
-                throw new Error(e);
+                this.instance.errorHandler(e);
               });
           }
           this.signedTxArray = signed;
@@ -803,7 +813,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
     },

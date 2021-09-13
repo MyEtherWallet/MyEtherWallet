@@ -78,12 +78,12 @@
                 </a>
               </div>
               <div class="px-6 border-right">
-                <router-link :to="{ name: 'PrivacyPolicy' }">
+                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
                   Privacy
                 </router-link>
               </div>
               <div class="px-6">
-                <router-link :to="{ name: 'TermsOfService' }">
+                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
                 </router-link>
               </div>
@@ -300,6 +300,8 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'TheDefaultFooter',
   data: () => ({
@@ -343,7 +345,8 @@ export default {
           },
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
-          { label: 'Security Policy', routerLink: 'SecurityPolicy' }
+          { label: 'Security Policy', routerLink: 'SecurityPolicy' },
+          { label: 'Submit DApp', routerLink: 'DappSubmission' }
         ]
       },
       {
@@ -455,7 +458,8 @@ export default {
         link: 'https://t.me/myetherwallet',
         iconImage: require('@/assets/images/icons/icon-telegram.svg')
       }
-    ]
+    ],
+    ROUTES_HOME: ROUTES_HOME
   })
 };
 </script>

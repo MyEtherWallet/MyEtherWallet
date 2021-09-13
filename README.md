@@ -54,7 +54,7 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 
 1. Open terminal
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `npm i` to install node packages.
+3. run `npm ci` to install node packages.
 4. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
 5. start `npm start`
 6. If `npm start` fails and above the error message it states 'new update found' then the package.json version of the indicated packages needs to be updated to match the versions shown in the notice.
@@ -65,7 +65,7 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 1. Open terminal
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
 3. run `git checkout develop`
-4. run `npm i` to install node packages.
+4. run `npm ci` to install node packages.
 5. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
 6. start `npm run dev`
 7. App should be running in `https://localhost:8080`

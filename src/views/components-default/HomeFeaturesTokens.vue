@@ -19,13 +19,17 @@
         title="Get tokens"
         btn-size="xlarge"
         class="mx-auto mt-12 d-block"
-        @click.native="$router.push({ name: 'AccessWallet', params: {} })"
+        @click.native="
+          $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME, params: {} })
+        "
       />
     </div>
   </mew6-white-sheet>
 </template>
 
 <script>
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'HomeFeaturesTokens',
   components: {},
@@ -91,7 +95,8 @@ export default {
         label: 'cDAI (CDAI)',
         icon: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/9281/thumb/cDAI.png'
       }
-    ]
+    ],
+    ROUTES_HOME: ROUTES_HOME
   })
 };
 </script>

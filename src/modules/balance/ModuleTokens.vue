@@ -54,6 +54,7 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceEmptyBlock
@@ -142,7 +143,10 @@ export default {
                   toToken: '',
                   amount: item.balancef
                 };
-                this.$router.push({ name: 'Swap', query: obj });
+                this.$router.push({
+                  name: ROUTES_WALLET.SWAP.NAME,
+                  query: obj
+                });
               },
               btnStyle: 'outline',
               colorTheme: 'primary'

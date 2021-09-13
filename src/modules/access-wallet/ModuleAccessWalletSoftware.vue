@@ -88,6 +88,7 @@ import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
+import { ROUTES_WALLET } from '../../core/configs/configRoutes';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -211,7 +212,7 @@ export default {
             if (this.path !== '') {
               this.$router.push({ path: this.path });
             } else {
-              this.$router.push({ name: 'Wallets' });
+              this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
           })
           .catch(e => {

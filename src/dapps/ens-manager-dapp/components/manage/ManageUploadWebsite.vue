@@ -33,7 +33,7 @@
         @input="setHash"
       />
     </div>
-    <div class="d-flex align-center justify-center mt-3">
+    <div v-if="!settingIpfs" class="d-flex align-center justify-center mt-3">
       <mew-button
         :disabled="!isValidIPFS"
         :title="$t('ens.set-hash')"

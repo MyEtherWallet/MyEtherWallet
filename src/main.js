@@ -7,6 +7,20 @@ import './main/components';
 
 import Vue from 'vue';
 import Router from 'vue-router';
+
+import VueIntercom from '@mathieustan/vue-intercom';
+
+const originalPush = Router.prototype.push;
+const originalReplace = Router.prototype.replace;
+Router.prototype.push = function push(path) {
+  return originalPush.call(this, path).catch(err => err);
+};
+Router.prototype.replace = function push(path) {
+  return originalReplace.call(this, path).catch(err => err);
+};
+Router.prototype.originalPush = originalPush;
+Router.prototype.originalReplace = originalReplace;
+
 import router from '@/core/router';
 import store from '@/core/store';
 import Vuex from 'vuex';
@@ -21,6 +35,9 @@ import i18n from './main/i18n';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
+
+// eslint-disable-next-line
+Vue.use(VueIntercom, { appId: 'ja20qe25' });
 
 //Router
 Vue.use(Router);

@@ -32,9 +32,7 @@
             <settings-import-config :import-config="settingsHandler" />
           </template>
           <template #panelBody3>
-            <settings-export-config
-              :export-config="settingsHandler.exportStore"
-            />
+            <settings-export-config :export-config="exportStore" />
           </template>
           <template #panelBody4>
             <div class="pa-6">
@@ -88,6 +86,7 @@ import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
 
 export default {
@@ -99,6 +98,13 @@ export default {
     AddressBookAddEdit
   },
   mixins: [gasPriceMixin],
+  beforeRouteLeave(to, from, next) {
+    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+    } else {
+      next();
+    }
+  },
   props: {
     onSettings: { default: false, type: Boolean }
   },
@@ -225,6 +231,9 @@ export default {
       this.idxToExpand = null;
       this.addMode = false;
       this.editMode = false;
+    },
+    exportStore() {
+      this.settingsHandler.exportStore();
     }
   }
 };

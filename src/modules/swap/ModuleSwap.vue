@@ -30,6 +30,7 @@
                 />
               </div>
               <mew-input
+                ref="amountInput"
                 label="Amount"
                 placeholder="0"
                 type="number"
@@ -74,13 +75,24 @@
                 label="To"
                 @input="setToToken"
               />
-              <mew-input
+              <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+              <v-text-field
                 label="Amount"
                 placeholder="0"
                 type="number"
-                disabled
+                :hide-clear-btn="true"
                 :value="tokenOutValue"
+                :readonly="true"
+                outlined
               />
+              <!-- <mew-input
+                label="Amount"
+                placeholder="0"
+                type="number"
+                :hide-clear-btn="true"
+                :value="tokenOutValue"
+                readonly="true"
+              /> -->
             </v-col>
           </v-row>
 
@@ -351,7 +363,12 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -368,7 +385,7 @@ export default {
      */
     errorMsgs() {
       return {
-        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap`,
+        amountEthIsTooLow: `You do not have enough ${this.network.type.name} to swap.`,
         amountExceedsEthBalance: `Amount exceeds your ${this.network.type.name} balance.`,
         amountExceedsTxFee: `Amount entered doesn't allow for transaction fee`,
         amountLessThan0: 'Swap amount must be greater than 0',
@@ -393,6 +410,7 @@ export default {
     disableNext() {
       return (
         this.step < 2 ||
+        this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
         this.providersErrorMsg.subtitle !== ''
@@ -437,9 +455,12 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const isNotEmpty =
-        !_.isEmpty(this.fromTokenType) && !_.isEmpty(this.toTokenType);
-      return isNotEmpty;
+      return (
+        !_.isEmpty(this.fromTokenType) &&
+        !_.isEmpty(this.toTokenType) &&
+        !_.isEmpty(this.fromTokenType?.symbol) &&
+        !_.isEmpty(this.toTokenType?.symbol)
+      );
     },
     /**
      * Fetched tokens from all providers(?) + specific tokens
@@ -586,19 +607,23 @@ export default {
      */
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name].map(token => {
-        if (token.cgid) {
-          const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = foundToken.pricef;
-          return Object.assign(token, foundToken);
-        }
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          token = Object.assign(token, foundToken);
-          token.price = token.pricef;
-        }
-        return token;
-      });
+      return TRENDING_LIST[this.network.type.name]
+        .filter(token => {
+          return token.contract !== this.fromTokenType?.contract;
+        })
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = foundToken.pricef;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            token = Object.assign(token, foundToken);
+            token.price = token.pricef;
+          }
+          return token;
+        });
     },
     totalFees() {
       const gasPrice =
@@ -756,19 +781,14 @@ export default {
     },
     network() {
       if (this.isAvailable) {
-        this.isLoading = true;
-        this.swapper = new Swapper(this.web3, this.network.type.name);
-        this.swapper
-          .getAllTokens()
-          .then(this.processTokens)
-          .then(() => {
-            this.setDefaults();
-            this.isLoading = false;
-          });
+        this.clear();
       }
     },
     mainTokenDetails() {
       this.setDefaults();
+    },
+    amountErrorMessage(newVal) {
+      if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
   beforeMount() {
@@ -782,29 +802,71 @@ export default {
     }
   },
   mounted() {
-    this.isLoading = !this.prefetched;
-    this.swapper = new Swapper(this.web3, this.network.type.name);
-    if (!this.prefetched) {
-      this.swapper
-        .getAllTokens()
-        .then(this.processTokens)
-        .then(() => {
-          this.setDefaults();
-          this.isLoading = false;
-        });
-    } else {
-      this.processTokens(this.swapTokens, false);
-      this.setDefaults();
-      this.isLoading = false;
-    }
-    this.handleLocalGasPrice({
-      gasType: this.gasPriceType,
-      gasPrice: this.gasPrice
-    });
+    this.setupSwap();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    setupSwap() {
+      this.isLoading = !this.prefetched;
+      this.swapper = new Swapper(this.web3, this.network.type.name);
+      if (!this.prefetched) {
+        this.swapper
+          .getAllTokens()
+          .then(this.processTokens)
+          .then(() => {
+            this.setDefaults();
+            this.isLoading = false;
+          });
+      } else {
+        this.processTokens(this.swapTokens, false);
+        this.setDefaults();
+        this.isLoading = false;
+      }
+      this.handleLocalGasPrice({
+        gasType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      });
+    },
+    // reset values after executing transaction
+    clear() {
+      this.step = 0;
+      this.confirmInfo = {
+        to: '',
+        from: '',
+        fromImg: '',
+        toImg: '',
+        fromType: '',
+        toType: '',
+        validUntil: 0,
+        selectedProvider: '',
+        totalFees: ''
+      };
+
+      this.toTokenswapper = null;
+      this.toTokentoTokenType = {};
+      this.toTokenfromTokenType = {};
+      this.toTokentokenInValue = '0';
+      this.toTokentokenOutValue = '0';
+      this.availableTokens = { toTokens: [], fromTokens: [] };
+      this.availableQuotes = [];
+      this.currentTrade = null;
+      this.allTrades = [];
+      this.isLoading = false;
+      this.loadingFee = false;
+      this.feeError = '';
+      this.defaults = {
+        fromToken: this.fromToken
+      };
+      this.isLoadingProviders = false;
+      this.addressValue = {};
+      this.selectedProvider = {};
+      this.localGasPrice = '0';
+      this.localGasType = 'economy';
+      this.$refs.toToken.clear();
+      this.$refs.amountInput.clear();
+      this.setupSwap();
+    },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
@@ -866,7 +928,8 @@ export default {
       return [];
     },
     buyEth() {
-      window.open('https://ccswap.myetherwallet.com/#/', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = _.clone(this.fromTokenType);
@@ -905,9 +968,18 @@ export default {
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
+      /**
+       * Ensure that both pairs have been set
+       * before calling the providers
+       */
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+      // Check if (in amount) is larger than (available balance)
+      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+        this.step = 0;
+        return;
+      }
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -922,8 +994,7 @@ export default {
       if (
         this.tokenInValue !== '' &&
         this.tokenInValue > 0 &&
-        this.toTokenType.symbol &&
-        !_.isEmpty(this.toTokenType)
+        this.enableTokenSwitch
       ) {
         this.isLoadingProviders = true;
         this.swapper
@@ -953,7 +1024,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    }, 1000),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1040,12 +1111,14 @@ export default {
     },
 
     executeTrade() {
+      const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
-          this.swapNotificationFormatter(res);
+          this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.clear();
           Toast(err.message, {}, ERROR);
         });
     },
@@ -1054,7 +1127,7 @@ export default {
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj) {
+    swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
         const notif = Object.assign(
           {
@@ -1074,13 +1147,13 @@ export default {
               icon: this.confirmInfo.toImg,
               to: this.confirmInfo.to
                 ? this.confirmInfo.to
-                : this.currentTrade.transactions[idx].to
+                : currentTrade.transactions[idx].to
             },
             swapObj: obj
           },
-          this.currentTrade.transactions[idx]
+          currentTrade.transactions[idx]
         );
-        this.addNotification(new Notification(notif));
+        this.addNotification(new Notification(notif)).then(this.clear);
       });
     },
     checkFeeBalance() {
@@ -1160,5 +1233,10 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
+}
+
+.swap-to-input {
+  pointer-events: none !important;
+  user-select: none !important;
 }
 </style>

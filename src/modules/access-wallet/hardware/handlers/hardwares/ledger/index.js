@@ -1,5 +1,5 @@
 import Ledger from '@ledgerhq/hw-app-eth';
-import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
+import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction } from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
@@ -68,6 +68,7 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
+      const chainId = store.getters['global/network'].type.chainID;
       tx = new Transaction(tx, {
         common: commonGenerator(store.getters['global/network'])
       });
@@ -75,13 +76,15 @@ class ledgerWallet {
       tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
-      const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
+      const tokenInfo = byContractAddressAndChainId(
+        '0x' + tx.to.toString('hex'),
+        chainId
+      );
       if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const result = await this.ledger.signTransaction(
         accountPath,
         tx.serialize().toString('hex')
       );
-
       // EIP155 support. check/recalc signature v value.
       let v = result.v;
       const rv = parseInt(v, 16);
@@ -90,7 +93,6 @@ class ledgerWallet {
         cv += 1; // add signature v bit.
       }
       v = cv.toString(16);
-
       tx.v = getBufferFromHex(v);
       tx.r = getBufferFromHex(result.r);
       tx.s = getBufferFromHex(result.s);

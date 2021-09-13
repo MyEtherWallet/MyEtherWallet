@@ -8,54 +8,82 @@
       />
     </div>
     <div class="info-container pl-8 pr-5 py-4 text-shadow">
-      <div
-        class="info-container--text font-weight-bold text-uppercase white--text"
-      >
-        MY Personal Account
-      </div>
-      <div class="d-flex align-center">
-        <v-tooltip top content-class="tooltip-inner">
-          <template #activator="{ on }">
-            <div
-              class="
-                justify-start
-                d-flex
-                align-center
-                info-container--addr
-                monospace
-              "
-              v-on="on"
-            >
-              {{ addrFirstSix }}
-              <v-icon class="info-container--addr pt-1"
-                >mdi-dots-horizontal</v-icon
-              >
+      <div class="d-flex flex-row justify-space-between align-start">
+        <div>
+          <!--
+          =====================================================================================
+            Address
+          =====================================================================================
+          -->
+          <div
+            class="
+              info-container--text
+              font-weight-bold
+              text-uppercase
+              white--text
+            "
+          >
+            MY Personal Account
+          </div>
+          <div class="d-flex align-center">
+            <v-tooltip top content-class="tooltip-inner">
+              <template #activator="{ on }">
+                <div
+                  class="
+                    justify-start
+                    d-flex
+                    align-center
+                    info-container--addr
+                    monospace
+                  "
+                  v-on="on"
+                >
+                  {{ addrFirstSix }}
+                  <v-icon class="info-container--addr pt-1"
+                    >mdi-dots-horizontal</v-icon
+                  >
 
-              {{ addrlastFour }}
-            </div>
-          </template>
-          <span class="titlePrimary--text">{{ getChecksumAddressString }}</span>
-        </v-tooltip>
+                  {{ addrlastFour }}
+                </div>
+              </template>
+              <span class="titlePrimary--text">{{
+                getChecksumAddressString
+              }}</span>
+            </v-tooltip>
+            <!--
+            =====================================================================================
+              Print Button
+            =====================================================================================
+            -->
+            <v-tooltip top content-class="tooltip-inner">
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  class="info-container--action-print px-0 ml-1 drop-shadow"
+                  fab
+                  depressed
+                  color="white"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="openPaperWallet = true"
+                  ><v-icon size="10px">mdi-printer</v-icon></v-btn
+                >
+              </template>
+              <span class="titlePrimary--text">Print account info</span>
+            </v-tooltip>
+          </div>
+        </div>
         <!--
-        =====================================================================================
-          Print Button
-        =====================================================================================
-        -->
-        <v-tooltip top content-class="tooltip-inner">
-          <template #activator="{ on, attrs }">
-            <v-btn
-              class="info-container--action-print px-0 ml-1 drop-shadow"
-              fab
-              depressed
-              color="white"
-              v-bind="attrs"
-              v-on="on"
-              @click="openPaperWallet = true"
-              ><v-icon size="10px">mdi-printer</v-icon></v-btn
-            >
-          </template>
-          <span class="titlePrimary--text">Print account info</span>
-        </v-tooltip>
+            =====================================================================================
+              Refresh Button
+            =====================================================================================
+            -->
+        <v-icon
+          color="rgba(255, 255, 255, 0.72)"
+          class="cursor-pointer refresh-icon"
+          size="20"
+          @click="refresh"
+          >mdi-refresh</v-icon
+        >
       </div>
       <!--
       =====================================================================================
@@ -99,45 +127,31 @@
             QR CODE
           =====================================================================================
           -->
-          <v-tooltip top content-class="tooltip-inner">
-            <template #activator="{ on, attrs }">
-              <v-btn
-                class="info-container--action-btn mr-2 px-0"
-                fab
-                depressed
-                color="white"
-                v-bind="attrs"
-                v-on="on"
-                @click="openQR = true"
-                ><v-icon class="info-container--icon" size="18px"
-                  >mdi-qrcode</v-icon
-                ></v-btn
-              >
-            </template>
-            <span class="titlePrimary--text">View QR code</span>
-          </v-tooltip>
+          <v-btn
+            class="info-container--action-btn mr-2 px-0"
+            fab
+            depressed
+            color="white"
+            @click="openQR = true"
+            ><v-icon class="info-container--icon" size="18px"
+              >mdi-qrcode</v-icon
+            ></v-btn
+          >
           <!--
           =====================================================================================
             Copy Button
           =====================================================================================
           -->
-          <v-tooltip top content-class="tooltip-inner">
-            <template #activator="{ on, attrs }">
-              <v-btn
-                class="info-container--action-btn px-0"
-                depressed
-                fab
-                color="white"
-                v-bind="attrs"
-                v-on="on"
-                @click="copyAddress"
-                ><v-icon class="info-container--icon" small
-                  >mdi-content-copy</v-icon
-                ></v-btn
-              >
-            </template>
-            <span class="titlePrimary--text">Copy address</span>
-          </v-tooltip>
+          <v-btn
+            class="info-container--action-btn px-0"
+            depressed
+            fab
+            color="white"
+            @click="copyAddress"
+            ><v-icon class="info-container--icon" small
+              >mdi-content-copy</v-icon
+            ></v-btn
+          >
         </div>
       </div>
     </div>
@@ -156,7 +170,7 @@
       :show="openQR"
       :close="closeQR"
       :has-buttons="false"
-      width="400px"
+      width="408px"
     >
       <template #dialogBody>
         <app-addr-qr />
@@ -171,7 +185,7 @@ import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
@@ -241,6 +255,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions('external', ['setTokenAndEthBalance']),
+    /**
+     * refreshes the token and eth balance
+     */
+    refresh() {
+      this.setTokenAndEthBalance();
+    },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
       if (el) {
@@ -358,5 +379,17 @@ export default {
 .drop-shadow {
   filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.24)),
     drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.24));
+}
+
+.refresh-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
+  color: var(--v-white-base) !important;
+  height: 20px;
+  width: 20px;
+}
+
+.refresh-icon.v-icon.v-icon::after {
+  background-color: transparent;
 }
 </style>

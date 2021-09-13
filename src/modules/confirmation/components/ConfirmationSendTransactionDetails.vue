@@ -92,6 +92,9 @@ export default {
       if (!obj.hasOwnProperty('priceRaw')) obj['priceRaw'] = this.valueUsd;
       return obj;
     },
+    isNetworkCurrency() {
+      return this.currency.symbol === this.network.type.currencyName;
+    },
     feeFormatted() {
       return formatFloatingPointValue(this.txFee).value;
     },
@@ -103,7 +106,7 @@ export default {
       return this.feeFormatted;
     },
     totalFeeUSD() {
-      const ethFeeToUsd = BigNumber(this.totalFee).times(this.valueUsd);
+      const ethFeeToUsd = BigNumber(this.txFee).times(this.valueUsd);
       if (this.currency.symbol === this.network.type.currencyName) {
         const amountToUsd = BigNumber(this.value).times(this.valueUsd);
         return formatFiatValue(BigNumber(amountToUsd).plus(ethFeeToUsd)).value;
@@ -117,7 +120,9 @@ export default {
       ).value;
     },
     summaryItems() {
-      return ['Transaction Fee', 'Total'];
+      return this.isNetworkCurrency
+        ? ['Transaction Fee', 'Total']
+        : ['Transaction Fee'];
     },
     valueItems() {
       return [

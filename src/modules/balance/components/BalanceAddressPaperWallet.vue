@@ -6,6 +6,7 @@
       title="My paper wallet"
       right-btn-text="Close"
       :close="close"
+      @closeOverlay="close"
     >
       <template v-if="open" #mewOverlayBody>
         <v-sheet max-width="900px" color="transparent">
