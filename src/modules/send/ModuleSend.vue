@@ -71,7 +71,7 @@
         =====================================================================================
         -->
         <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book @setAddress="setAddress" />
+          <module-address-book ref="addressInput" @setAddress="setAddress" />
         </v-col>
         <!--
       =====================================================================================
@@ -241,8 +241,13 @@ export default {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
-    ...mapGetters('global', ['network', 'gasPrice', 'isEthNetwork']),
-    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei', 'tokensList']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEthNetwork',
+      'swapLink'
+    ]),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     isDisabledNextBtn() {
       return (
         this.feeError !== '' ||
@@ -319,7 +324,7 @@ export default {
             disabled: true,
             text: 'Your wallet is empty.',
             linkText: this.isEthNetwork ? 'Buy ETH' : '',
-            link: this.isEthNetwork ? 'https://ccswap.myetherwallet.com/#/' : ''
+            link: this.isEthNetwork ? this.swapLink : ''
           })
         : null;
       return [
@@ -498,7 +503,6 @@ export default {
     },
     network() {
       this.clear();
-      this.setSendTransaction();
     }
   },
   mounted() {
@@ -525,6 +529,36 @@ export default {
     }, 500);
   },
   methods: {
+    /**
+     * Resets values to default
+     */
+    clear() {
+      if (this.$refs && this.$refs.addressInput)
+        this.$refs.addressInput.clear();
+      this.toAddress = '';
+      this.selectedCurrency = this.tokensList[0];
+      this.sendTx = null;
+      this.isValidAddress = false;
+      this.amount = '0';
+      this.data = '0x';
+      this.userInputType = '';
+      this.localGasPrice = '0';
+      this.localGasType = 'economy';
+      this.defaultGasLimit = '21000';
+      this.gasLimitError = '';
+      this.amountError = '';
+      this.gasEstimationError = '';
+      this.gasEstimationIsReady = false;
+
+      // resets the defaults on mount
+      this.setSendTransaction();
+      this.gasLimit = this.prefilledGasLimit;
+      this.sendTx.setCurrency(this.selectedCurrency);
+      this.handleLocalGasPrice({
+        gasType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      });
+    },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
      */
@@ -570,9 +604,9 @@ export default {
     setGasLimitError(value) {
       if (value) {
         if (BigNumber(value).lte(0))
-          this.gasLimitError = 'Gas limit must be greater then 0';
+          this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
-          this.gasLimitError = 'Gas limit can not have decimals points';
+          this.gasLimitError = 'Gas limit can not have decimal points';
         else if (toBN(value).lt(toBN(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {
@@ -613,9 +647,15 @@ export default {
     },
     send() {
       window.scrollTo(0, 0);
-      this.sendTx.submitTransaction().catch(error => {
-        this.error = error;
-      });
+      this.sendTx
+        .submitTransaction()
+        .then(() => {
+          this.clear();
+        })
+        .catch(error => {
+          this.clear();
+          this.gasEstimationError = error.message;
+        });
     },
     prefillForm() {
       if (this.isPrefilled) {
@@ -633,14 +673,6 @@ export default {
         Toast(this.$t('sendTx.prefilled-warning'), {}, WARNING, 1000);
         this.clearPrefilled();
       }
-    },
-    clear() {
-      this.data = '';
-      this.amount = '0';
-      this.isValidAddress = false;
-      this.toAddress = '';
-      this.$refs.mewSelect.clear();
-      this.selectedCurrency = this.tokensList[0];
     },
     convertToDisplay(amount, decimals) {
       const amt = toBN(amount).toString();

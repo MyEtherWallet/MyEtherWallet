@@ -53,6 +53,7 @@
           placeholder=" "
           right-label="Gwei"
           class="mr-0 mr-sm-3"
+          type="number"
         />
         <mew-button
           :title="customBtn.text"
@@ -95,7 +96,7 @@
 import BigNumber from 'bignumber.js';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei } from 'web3-utils';
+import { fromWei, toWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'SettingsGasPrice',
@@ -144,13 +145,13 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType']),
     customBtn() {
-      if (!this.customGasPrice) return {};
+      const defaultGasPrice = !this.customGasPrice ? '0' : this.customGasPrice;
       const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(this.customGasPrice, 'ether')
+        fromWei(toWei(defaultGasPrice, 'gwei'), 'ether')
       );
       return {
         text: this.isSwap
-          ? `Custom: ${this.customGasPrice} Gwei $ ${
+          ? `Custom: ${defaultGasPrice} Gwei $ ${
               formatFiatValue(usdValue).value
             }`
           : 'Confirm',

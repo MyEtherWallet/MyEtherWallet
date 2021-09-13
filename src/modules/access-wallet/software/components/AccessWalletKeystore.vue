@@ -150,7 +150,6 @@ export default {
           this.step = 2;
         } catch (e) {
           Toast(e.message, {}, ERROR);
-          throw new Error(e);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);

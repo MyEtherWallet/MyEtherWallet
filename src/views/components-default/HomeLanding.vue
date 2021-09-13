@@ -23,14 +23,24 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'CreateWallet', params: {} })"
+              @click.native="
+                $router.push({
+                  name: ROUTES_HOME.CREATE_WALLET.NAME,
+                  params: {}
+                })
+              "
             />
             <mew-button
               :has-full-width="false"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'AccessWallet', params: {} })"
+              @click.native="
+                $router.push({
+                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
+                  params: {}
+                })
+              "
             />
           </div>
         </v-card>
@@ -62,7 +72,12 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'CreateWallet', params: {} })"
+              @click.native="
+                $router.push({
+                  name: ROUTES_HOME.CREATE_WALLET.NAME,
+                  params: {}
+                })
+              "
             />
             <mew-button
               class="width--full"
@@ -70,7 +85,12 @@
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="$router.push({ name: 'AccessWallet', params: {} })"
+              @click.native="
+                $router.push({
+                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
+                  params: {}
+                })
+              "
             />
           </div>
         </v-card>
@@ -80,9 +100,14 @@
 </template>
 
 <script>
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'HomeLanding',
   components: {},
+  data() {
+    return { ROUTES_HOME: ROUTES_HOME };
+  },
   methods: {}
 };
 </script>

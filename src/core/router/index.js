@@ -3,6 +3,7 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
+import { ROUTES_HOME } from '../configs/configRoutes';
 const routes = [routesDefault, routesWallet];
 
 const getLangBasePath = () => {
@@ -34,11 +35,7 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      /** only resolve a new path when current path isn't accesswallet
-       * this is a little hacky but utilizes intended purpose.
-       * vue router notes: move on to the next hook in the pipeline. If no hooks are left, the navigation is confirmed.
-       */
-      if (from.name !== 'AccessWallet') router.push({ name: 'AccessWallet' });
+      next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;

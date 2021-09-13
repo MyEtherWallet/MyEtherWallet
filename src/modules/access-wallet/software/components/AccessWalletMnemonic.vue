@@ -7,99 +7,102 @@
     -->
     <template v-if="step === 1" #stepperContent1>
       <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
-        <v-row class="align-end justify-start mb-3 mb-md-5">
-          <v-col cols="12">
-            <!--
+        <form @submit.prevent="unlockBtn">
+          <v-row class="align-end justify-start mb-3 mb-md-5">
+            <v-col cols="12">
+              <!--
             =====================================================================================
               Title
             =====================================================================================
             -->
-            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-            <div class="headline font-weight-bold">
-              Enter your Mnemonic Phrase
-            </div>
-            <p class="mb-3">
-              Please type the mnemonic phrase you wrote down in the right order.
-            </p>
-            <!--
+              <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+              <div class="headline font-weight-bold">
+                Enter your Mnemonic Phrase
+              </div>
+              <p class="mb-3">
+                Please type the mnemonic phrase you wrote down in the right
+                order.
+              </p>
+              <!--
             =====================================================================================
              Select number of words
             =====================================================================================
             -->
-            <div class="d-flex flex-row-reverse pb-4">
-              <v-select
-                v-model="length"
-                style="max-width: 150px"
-                hide-details
-                dense
-                item-text="label"
-                item-value="value"
-                :items="mnemonicOptions"
-                label=""
-                outlined
-              ></v-select>
-            </div>
-            <!--
+              <div class="d-flex flex-row-reverse pb-4">
+                <v-select
+                  v-model="length"
+                  style="max-width: 150px"
+                  hide-details
+                  dense
+                  item-text="label"
+                  item-value="value"
+                  :items="mnemonicOptions"
+                  label=""
+                  outlined
+                ></v-select>
+              </div>
+              <!--
             =====================================================================================
              Enter Phrase Block
             =====================================================================================
             -->
-            <phrase-block class="mb-8">
-              <v-row>
-                <v-col
-                  v-for="n in length"
-                  :key="`mnemonicInput${n}`"
-                  cols="6"
-                  lg="3"
-                  md="3"
-                  sm="4"
-                >
-                  <v-text-field
-                    :ref="`mnemonicInput${n}`"
-                    v-model="phrase[n]"
-                    :name="`mnemonicInput${n}`"
-                    :label="`${n}.`"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </phrase-block>
-            <!--
+              <phrase-block class="mb-8">
+                <v-row>
+                  <v-col
+                    v-for="n in length"
+                    :key="`mnemonicInput${n}`"
+                    cols="6"
+                    lg="3"
+                    md="3"
+                    sm="4"
+                  >
+                    <v-text-field
+                      :ref="`mnemonicInput${n}`"
+                      v-model="phrase[n]"
+                      :label="`${n}.`"
+                      autocomplete="off"
+                    />
+                  </v-col>
+                </v-row>
+              </phrase-block>
+              <!--
             =====================================================================================
              Extra Word
             =====================================================================================
             -->
-            <mew-expand-panel
-              :has-dividers="true"
-              :panel-items="extraWordPanel"
-              :idx-to-expand="null"
-            >
-              <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
-              </template>
-            </mew-expand-panel>
-            <!--
+              <mew-expand-panel
+                :has-dividers="true"
+                :panel-items="extraWordPanel"
+                :idx-to-expand="null"
+              >
+                <template #panelBody1>
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Enter Extra word"
+                    placeholder="Enter your extra word"
+                  />
+                </template>
+              </mew-expand-panel>
+              <!--
             =====================================================================================
              Next Button
             =====================================================================================
             -->
-            <v-row dense class="align-center justify-center pt-4">
-              <v-col cols="12" sm="4">
-                <mew-button
-                  has-full-width
-                  title="Next"
-                  btn-size="xlarge"
-                  :disabled="!isValidMnemonic"
-                  @click.native="unlockBtn"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+              <v-row dense class="align-center justify-center pt-4">
+                <v-col cols="12" sm="4">
+                  <mew-button
+                    has-full-width
+                    title="Next"
+                    btn-size="xlarge"
+                    :disabled="!isValidMnemonic"
+                    @click.native="unlockBtn"
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </form>
       </v-sheet>
     </template>
     <!--
@@ -265,7 +268,7 @@
                     </v-row>
                   </v-col>
                   <v-col cols="4" sm="3">
-                    <p>
+                    <p class="balance-overflow">
                       {{
                         acc.balance === 'Loading..'
                           ? acc.balance
@@ -638,11 +641,12 @@ export default {
     network: {
       deep: true,
       handler: function () {
+        this.accounts = [];
         this.addressPage -= 1;
         this.selectedAddress = '';
         this.accountAddress = '';
         this.currentIdx -= MAX_ADDRESSES;
-        this.setAddresses();
+        this.setMnemonicAddress();
       }
     }
   },
@@ -655,25 +659,33 @@ export default {
      * Async method that gets accounts according to the pagination
      * Used in STEP 2 and 3
      */
-    async setAddresses() {
-      const web3 = new Web3(this.network.url);
-      this.accounts = [];
-      for (let i = this.currentIdx; i < this.currentIdx + MAX_ADDRESSES; i++) {
-        const account = await this.handlerAccessWallet
-          .getWalletInstance()
-          .getAccount(i);
-        const balance = await web3.eth.getBalance(account.getAddressString());
-        this.accounts.push({
-          address: account.getAddressString(),
-          account: account,
-          idx: i,
-          balance: fromWei(balance)
-        });
+    async setMnemonicAddress() {
+      try {
+        const web3 = new Web3(this.network.url);
+        this.accounts = [];
+        for (
+          let i = this.currentIdx;
+          i < this.currentIdx + MAX_ADDRESSES;
+          i++
+        ) {
+          const account = await this.handlerAccessWallet
+            .getWalletInstance()
+            .getAccount(i);
+          const balance = await web3.eth.getBalance(account.getAddressString());
+          this.accounts.push({
+            address: account.getAddressString(),
+            account: account,
+            idx: i,
+            balance: fromWei(balance)
+          });
+        }
+        this.currentIdx += MAX_ADDRESSES;
+        this.addressPage += 1;
+        this.selectedAddress = this.accounts[0].address;
+        this.accountAddress = this.accounts[0].address;
+      } catch (e) {
+        Toast(e, {}, ERROR);
       }
-      this.currentIdx += MAX_ADDRESSES;
-      this.addressPage += 1;
-      this.selectedAddress = this.accounts[0].address;
-      this.accountAddress = this.accounts[0].address;
     },
     /**
      * Method unlocks mnemonic phrase;
@@ -736,7 +748,7 @@ export default {
         .then(res => {
           if (res) {
             this.step = 3;
-            this.setAddresses();
+            this.setMnemonicAddress();
           }
         })
         .catch(e => {
@@ -768,7 +780,7 @@ export default {
      * Used in STEP 3
      */
     nextAddressSet() {
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
     /**
      * Methods generates privious derived addresses
@@ -781,7 +793,7 @@ export default {
         this.currentIdx <= 10 ? pageDeductor : pageDeductor - 1;
       this.currentIdx -=
         this.currentIdx <= 10 ? idxDeductor : idxDeductor - MAX_ADDRESSES;
-      this.setAddresses();
+      this.setMnemonicAddress();
     },
 
     /**
@@ -893,5 +905,11 @@ table {
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+.balance-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
     <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
-      Select rate and provider
+      Select rate
     </div>
     <!--
     =====================================================================================

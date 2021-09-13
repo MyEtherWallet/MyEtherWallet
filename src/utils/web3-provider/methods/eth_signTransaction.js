@@ -27,7 +27,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET) {
+      if (
+        store.state.wallet.identifier === WALLET_TYPES.WEB3_WALLET ||
+        store.state.wallet.identifier === WALLET_TYPES.WALLET_CONNECT
+      ) {
         res(new Error('web3 wallets doesnt support eth_signTransaction'));
       } else {
         if (_tx.hasOwnProperty('generateOnly')) {

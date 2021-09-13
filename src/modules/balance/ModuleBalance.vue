@@ -115,6 +115,7 @@ import {
   formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceChart,
@@ -284,7 +285,7 @@ export default {
       this.scale = 'hours';
     },
     navigateToSend() {
-      this.$router.push({ name: 'SendTX' });
+      this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     }
   }
 };

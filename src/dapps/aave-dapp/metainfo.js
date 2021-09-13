@@ -1,3 +1,4 @@
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import layout from './Aave';
 export default {
   title: 'Aave V1',
@@ -5,7 +6,8 @@ export default {
   tag: '#DeFi',
   rightIconType: 'mew',
   rightIcon: 'aave',
-  path: 'aave',
+  name: ROUTES_WALLET.AAVE.NAME,
+  path: ROUTES_WALLET.AAVE.PATH,
   networks: [],
   layout,
   meta: {
