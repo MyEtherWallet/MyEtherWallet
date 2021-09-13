@@ -1,0 +1,23 @@
+{
+  "howItWorks.dapps.info-one.title": "DApps Center",
+  "howItWorks.dapps.info-one.text": "Explore our integrated DApps to fully experience Ethereum’s capabilities. Take advantage of DeFi services with our partners Aave and MakerDAO, and register a domain name for your wallet through ENS or Unstoppable Domains. We are constantly adding more DApps!",
+  "howItWorks.dapps.info-two.title": "Submit Your Own DApp!",
+  "howItWorks.dapps.info-two.text": "MEW is dedicated to being decentralized and open-source, so we are excited about working with DApp developers and making DApp integrations easy. You can fill out your details through our ",
+  "howItWorks.dapps.info-two.link": "DApp Submit Form",
+  "howItWorks.send-funds.info-one.title": "Send Transactions",
+  "howItWorks.send-funds.info-one.text": "MEW gives you full control-send your funds to anyone, anywhere, at any time, without middlemen, minimums, or limits.",
+  "howItWorks.send-funds.info-two.title": "NFT Manager",
+  "howItWorks.send-funds.info-two.text": "View and manage all of your collectibles and domains in MEW’s NFT Manager.",
+  "howItWorks.send-funds.info-three.title": "Work with other chains",
+  "howItWorks.send-funds.info-three.text": "Cross-Chain Swaps",
+  "howItWorks.swap.info-one.title": "Cross-Chain Swaps",
+  "howItWorks.swap.info-one.text": "MEW offers cross-chain swaps for a variety of popular coins. Swap between Ether and Bitcoin, Litecoin, or even DOGE!",
+  "howItWorks.swap.info-two.title": "Competitive Rates",
+  "howItWorks.swap.info-two.text": "MEW works with decentralized exchange aggregators 1inch and DEX.AG to find the best price on your token swap. This way you don’t have to deal with multiple platforms to get the best rate.",
+  "howItWorks.swap.info-three.title": "Cash Out to Fiat",
+  "howItWorks.swap.info-three.text": "Our partner Bity allows anyone to cash out their Ether for Euros or Swiss Francs.",
+  "howItWorks.tokens.info-one.title": "Buy Tokens",
+  "howItWorks.tokens.info-one.text": "Swap for ERC20 tokens and stablecoins through our decentralized providers.",
+  "howItWorks.tokens.info-two.title": "Custom Tokens",
+  "howItWorks.tokens.info-two.text": "MEW automatically supports most ERC20 tokens through our API, but if you don’t see the token you’re looking for, you can add it as a custom token right in the interface!"
+}

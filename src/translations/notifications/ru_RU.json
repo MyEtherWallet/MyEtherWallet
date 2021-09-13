@@ -8,5 +8,6 @@
   "failed": "Сбой",
   "cancelled": "Отменено",
   "error": "Ошибка",
-  "status-error": "Статус Ошибки"
+  "status-error": "Статус Ошибки",
+  "error-parsing-tx-details": "test"
 }

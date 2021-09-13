@@ -19,7 +19,7 @@
   "title-security": "About Security",
   "lost-password": {
     "title": "What if I lose my keys or password?",
-    "desc": "We can not recover your information for you. If you lose your information, it's {goneForever}. MEW doesn't store any data. After you've received your keys and set up a password, we strongly suggest you:",
+    "desc": "We can not recover your information for you. If you lose your information, it's {{goneForever}}. MEW doesn't store any data. After you've received your keys and set up a password, we strongly suggest you:",
     "desc-caps-gone-forever": "GONE FOREVER",
     "option1": "Write Your Keys And Password Down. Keep Them Safe.",
     "option2": "Don't Store Your Keys And Password on Your Computer or Phone.",
@@ -37,17 +37,17 @@
     },
     "tip3": {
       "title": "Bookmark our website",
-      "desc": "Always check the URL for our 'MyEtherWallet Inc [US]' certification. And install our {link} for an extra layer of security!",
+      "desc": "Always check the URL for our 'MyEtherWallet Inc [US]' certification. And install our {{link}} for an extra layer of security!",
       "link": "Chrome extension"
     },
     "tip4": {
       "title": "Buy a hardware wallet",
-      "desc": "We have many great hardware wallets listed on our interface. They tend to cost between $90 and $200. Your security is worth it. Buy one {link}.",
+      "desc": "We have many great hardware wallets listed on our interface. They tend to cost between $90 and $200. Your security is worth it. Buy one {{link}}.",
       "link": "here"
     },
     "tip5": {
       "title": "Feel free to contact us",
-      "desc": "Please feel free to contact us. Our email is {link}. We're here to help.",
+      "desc": "Please feel free to contact us. Our email is {{link}}. We're here to help.",
       "link": "support@myetherwallet.com"
     }
   },
@@ -60,6 +60,6 @@
   },
   "title-congrats": "Congratulations!",
   "congratulations": {
-    "desc": "Thanks for reading through our introduction! Now you're ready to dive in. If you want to know more, please head to our {helpCenter}. We are here to help you have the most secure and most convenient experience possible!"
+    "desc": "Thanks for reading through our introduction! Now you're ready to dive in. If you want to know more, please head to our {{helpCenter}}. We are here to help you have the most secure and most convenient experience possible!"
   }
 }

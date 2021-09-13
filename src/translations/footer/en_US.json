@@ -41,7 +41,7 @@
   "view-wallet-info": "View Wallet Info",
   "press-kit": {
     "header": "Press Kit",
-    "subtext": "Announcements can be found on our {mediumlink}. For press and media inquiries, please contact: {hyperlink}",
+    "subtext": "Announcements can be found on our {{mediumlink}}. For press and media inquiries, please contact: {{hyperlink}}",
     "medium": "Medium blog"
   },
   "ethvm": "EthVM"

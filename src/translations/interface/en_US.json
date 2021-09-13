@@ -1,7 +1,7 @@
 {
   "network-modal": {
     "custom": "Custom Networks",
-    "add-custom": "Add Custom Network/Node",
+    "add-custom": "Add Custom Network\/Node",
     "http-access": "HTTP Basic Access Authentication",
     "warning": "Warning: This information will be saved to your local storage, make sure your computer is secure.",
     "dont-know": "Don't know what it is?",
@@ -44,19 +44,19 @@
     "android": "and Android",
     "twitter": "Follow us on Twitter",
     "new": "new",
-    "mew-wallet": "MEW wallet {new} {officially-released}",
+    "mew-wallet": "MEW wallet {{new}} {{officially-released}}",
     "officially-released": "Officially Released"
   },
   "menu": {
     "string": "Menu",
     "dashboard": "Dashboard",
     "send": "Send",
-    "nft": "NFT Manager",
     "contract": "Contract",
     "interact-contract": "Interact with Contract",
     "message": "Message",
     "deploy": "Deploy Contract",
     "sign-message": "Sign Message",
+    "nft": "NFT Manager",
     "verify-message": "Verify Message",
     "dapps": "DApps",
     "dapps-center": "DApps Center",
@@ -77,7 +77,7 @@
   "tx-history": "Transaction History",
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
   "contract-creation": "Contract Creation",
-  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect / MEW wallet, please reconnect using the App.",
+  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect \/ MEW wallet, please reconnect using the App.",
   "config": {
     "tx-speed": "Transaction Speed",
     "import": "Import Configuration",
@@ -92,16 +92,14 @@
   },
   "no-avail": "This function is not available.",
   "dashboard-swap": "MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for all ETH and token swaps, as well as ETH <-> Fiat and ETH <-> BTC",
-  "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
-  "etherscan-address-url": "https://etherscan.io/address/[[address]]",
+  "etherscan-tx-url": "https:\/\/etherscan.io\/tx\/[[txHash]]",
+  "etherscan-address-url": "https:\/\/etherscan.io\/address\/[[address]]",
   "address-book": {
     "edit": "Edit",
     "add": "Add",
     "title": "Manage Contact Addresses",
     "add-up-to": "You can add up to 10 contact addresses.",
     "nickname": "Nickname",
-    "enter-addr": "Enter an address",
-    "enter-nickname": "Enter a nickname",
     "remove-addr": "Remove Address",
     "add-addr": "Add a contact address",
     "successfully-added": "Successfully added to the address book",
@@ -111,6 +109,8 @@
     "update": "Update",
     "success-update": "Successfully updated",
     "save-addr": "Save Address",
+    "enter-addr": "Enter an address",
+    "enter-nickname": "Enter a nickname",
     "validations": {
       "invalid-name": "This is an invalid name",
       "invalid-address": "Invalid Address",
@@ -119,21 +119,20 @@
       "addr-required": "Address is required"
     }
   },
-  "web3-not-found": "Web3 Instance not found!",
   "import-error": "Something went wrong while importing file, please make sure it is a valid file",
   "account-content": {
     "header": "MY ADDRESS ICON",
     "subheader": "Always look for this icon when sending to this wallet",
     "paper": "Paper Wallet",
-    "link2": "https://www.myetherwallet.com",
+    "link2": "https:\/\/www.myetherwallet.com",
     "my-priv": "MY PRIVATE KEY",
-    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
-    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
+    "warning": "Please Keep Your Paper Wallet at a {{safe}} Place! {{extend}}",
     "safe": "SAFE",
-    "do-not": "DO NOT"
+    "do-not": "DO NOT",
+    "dont-share-priv-key": "Please {{doNot}} Share Your Private Key With Anyone!"
   },
-  "select-item": "Select an item",
   "economy": "Economy",
   "regular": "Regular",
-  "fast": "Fast"
+  "fast": "Fast",
+  "web3-not-found": "Web3 Instance not found!"
 }

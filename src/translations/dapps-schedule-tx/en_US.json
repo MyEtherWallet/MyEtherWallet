@@ -5,21 +5,21 @@
   "warning": {
     "not-enough-eth": " Not enough ETH on account to schedule",
     "amount-higher-balance": "Amount higher than balance",
-    "min-bounty": "Please set a bounty of {min} or higher"
+    "min-bounty": "Please set a bounty of {{min}} or higher"
   },
-  "at-least-blocks": "Should be at least {number} blocks in the future",
-  "at-least-minutes": " Make sure that the time is at least {min} minutes in the future",
+  "at-least-blocks": "Should be at least {{number}} blocks in the future",
+  "at-least-minutes": " Make sure that the time is at least {{min}} minutes in the future",
   "date-time": "Date & Time",
   "timezone": "Timezone",
   "time-bounty": {
     "title": "Time Bounty",
     "desc": "The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed.",
-    "caption": "Covers up to {gas} Gwei gas price on future execution"
+    "caption": "Covers up to {{gas}} Gwei gas price on future execution"
   },
   "mode": "Scheduling mode",
   "set": {
-    "exec-window": " Please set an execution window of {min} or higher",
-    "gas-price": "Please set a gas price of {min} or higher",
+    "exec-window": " Please set an execution window of {{min}} or higher",
+    "gas-price": "Please set a gas price of {{min}} or higher",
     "gas-limit": "Please set a gas limit of 0 or higher",
     "future-gas-limit": "Please set a future gas limit of 0 or higher"
   },
@@ -28,7 +28,7 @@
   "note": {
     "string": "Note:",
     "token-transfer": "You are scheduling a token transfer. Token transfers require 2 separate transactions. One for token scheduling and another one for token transfer approval.",
-    "approve-tx": "If this is taking too long, follow {this} link to approve the transaction.",
+    "approve-tx": "If this is taking too long, follow {{this}} link to approve the transaction.",
     "this": "this"
   },
   "block-num": "Block Number",
@@ -43,13 +43,13 @@
     "usdt-not-available": "USDT conversion no longer available. Please provide an alternative USD conversion method"
   },
   "tx-scheduled-hash": [
-    "Your TX has been scheduled with the transaction hash {hash}.",
-    "Your TX has been scheduled with the transaction hash {hash} and is waiting to be mined."
+    "Your TX has been scheduled with the transaction hash {{hash}}.",
+    "Your TX has been scheduled with the transaction hash {{hash}} and is waiting to be mined."
   ],
   "wait-for-mined": "Please wait for the transaction to be mined before approving...",
   "approve": {
     "string": "approve",
-    "desc": "The transaction has been mined. Please {approve} the token transfer now.",
+    "desc": "The transaction has been mined. Please {{approve}} the token transfer now.",
     "token-transfer": "Approve Token Transfer"
   },
   "approved": "Approved",

@@ -40,7 +40,7 @@
   "confirm-logout": "Are you sure you want to logout of your wallet?",
   "feedback": {
     "send-us-feedback": "If you want to send us your feedback, please use",
-    "feedback-title": "Feedback / Customer Support"
+    "feedback-title": "Feedback \/ Customer Support"
   },
   "icon": "Icon",
   "no-icon": "No Icon",
@@ -58,7 +58,7 @@
     "string": "Support",
     "browser": "Browser",
     "os": "Operating System",
-    "device": "Device/Wallet type (If any)",
+    "device": "Device\/Wallet type (If any)",
     "address": "Wallet PUBLIC address (If any)",
     "url": "Url",
     "description": "Describe the issue"
@@ -85,7 +85,7 @@
     "unlock": "Unlock Wallet",
     "do-not-have": "Do not have a wallet?",
     "passphrase": "Passphrase",
-    "own": "{nickname}'s wallet",
+    "own": "{{nickname}}'s wallet",
     "login": "Login to access your wallet!"
   },
   "mewconnect": {
@@ -94,7 +94,7 @@
   },
   "mew-wallet": {
     "string": "MEW wallet",
-    "desc": "MEW's official fully-fledged app brings Ethereum to your iOS or Android smartphone. MEW wallet puts you in full control. {learn-more}"
+    "desc": "MEW's official fully-fledged app brings Ethereum to your iOS or Android smartphone. MEW wallet puts you in full control. {{learn-more}}"
   },
   "swap": "Swap",
   "token": "Token | Tokens",
