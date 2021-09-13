@@ -1,4 +1,4 @@
-import { OneInch, ZEROX, Changelly } from './providers';
+import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Configs from './configs';
@@ -17,6 +17,7 @@ class Swap {
     this.providers = [
       new OneInch(web3, chain),
       new ZEROX(web3, chain),
+      new ParaSwap(web3, chain),
       new Changelly(web3, chain)
     ];
     this.chain = chain;

@@ -65,13 +65,17 @@ class MEWPClass {
             toContractAddress: toAddress,
             amount: queryAmount.toFixed(fromT.decimals),
             chain: this.chain,
-            excludeDexes:
-              this.provider === MEWPClass.supportedDexes.ZERO_X
-                ? MEWPClass.supportedDexes.ONE_INCH
-                : MEWPClass.supportedDexes.ZERO_X
+            excludeDexes: Object.values(MEWPClass.supportedDexes)
+              .filter(dex => dex !== this.provider)
+              .join(',')
           }
         })
         .then(response => {
+          console.log(
+            Object.values(MEWPClass.supportedDexes)
+              .filter(dex => dex !== this.provider)
+              .join(',')
+          );
           const quotes = response.data.quotes.filter(
             q => q.dex === this.provider
           );
@@ -215,6 +219,7 @@ class MEWPClass {
 }
 MEWPClass.supportedDexes = {
   ZERO_X: 'ZERO_X',
-  ONE_INCH: 'ONE_INCH'
+  ONE_INCH: 'ONE_INCH',
+  PARASWAP: 'PARASWAP'
 };
 export default MEWPClass;
