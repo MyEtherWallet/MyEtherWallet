@@ -248,8 +248,8 @@
               :has-full-width="true"
               :disabled="disableNext"
               btn-size="xlarge"
-              @click.native="showConfirm"
               style="max-width: 240px"
+              @click.native="showConfirm"
             />
           </div>
         </template>
