@@ -71,11 +71,6 @@ class MEWPClass {
           }
         })
         .then(response => {
-          console.log(
-            Object.values(MEWPClass.supportedDexes)
-              .filter(dex => dex !== this.provider)
-              .join(',')
-          );
           const quotes = response.data.quotes.filter(
             q => q.dex === this.provider
           );
