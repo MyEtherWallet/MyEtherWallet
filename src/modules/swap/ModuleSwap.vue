@@ -169,7 +169,7 @@
                       collateral in DeFi apps, etc. There are multiple kinds of
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
-                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                        href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
                         target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
