@@ -7,7 +7,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'HandlerAnalytics',
   computed: {
-    ...mapState('global', ['consentToTrack'])
+    ...mapState('global', ['consentToTrack', 'displayedTrackingPopup'])
   },
   methods: {
     ...mapActions('global', ['setTrackingConsent']),

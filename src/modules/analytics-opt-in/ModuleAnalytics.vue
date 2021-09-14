@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations } from 'vuex';
 import handlerAnalytics from './handlers/handlerAnalytics.mixin';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
@@ -203,9 +203,6 @@ export default {
         }
       ]
     };
-  },
-  computed: {
-    ...mapState('global', ['displayedTrackingPopup'])
   },
   methods: {
     ...mapMutations('global', ['NEVER_SHOW_TRACKING']),

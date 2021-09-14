@@ -44,7 +44,7 @@ const setTracking = function ({ state }) {
   const matomoExists = () => {
     return new Promise(resolve => {
       const checkInterval = 50;
-      const timeout = 3000;
+      const timeout = 5000;
       const waitStart = Date.now();
       const interval = setInterval(() => {
         if (this._vm.$matomo) {

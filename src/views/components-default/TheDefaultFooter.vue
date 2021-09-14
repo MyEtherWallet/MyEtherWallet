@@ -89,7 +89,10 @@
               </div>
             </div>
           </div>
-          <div class="matomo-tracking-switch">
+          <div
+            v-if="displayedTrackingPopup && consentToTrack"
+            class="matomo-tracking-switch"
+          >
             <v-switch
               :input-value="consentToTrack"
               inset
