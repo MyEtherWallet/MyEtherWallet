@@ -17,7 +17,12 @@ const ERRORS = {
   'Browser not supported': 'trezor.unsupported-browser',
   'popup failed to open': 'trezor.popup-failed-to-open',
   'Safety check failed': 'trezor.safety-check-failed',
-  'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized'
+  'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized',
+  'User cancelled the requestDevice() chooser.':
+    'trezor.user-cancelled-request-device-bluetooth',
+  'Bluetooth adapter not available.': 'trezor.bluetooth-adapter-not-available',
+  'An operation that changes interface state is in progress.':
+    'trezor.operation-that-changes-interface-state-in-progress'
 };
 
 const WARNINGS = {};

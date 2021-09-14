@@ -6,7 +6,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import platform from 'platform';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import {
@@ -149,9 +148,7 @@ createWallet.errorHandler = errorHandler;
 
 const isWebUsbSupported = async () => {
   const isSupported = await webUsbTransport.isSupported();
-  return (
-    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
-  );
+  return isSupported;
 };
 
 const getLedgerTransport = async () => {
