@@ -13,7 +13,8 @@
     :show-overlay="open"
     title="Add custom token"
     :close="reset"
-    content-size="large"
+    :back="step === 2 ? back : null"
+    content-size="medium"
   >
     <div class="full-width">
       <!--
@@ -27,7 +28,7 @@
         </div>
         <mew-input
           :value="contractAddress"
-          placeholder="Enter contract address"
+          placeholder="Contract address"
           @input="setContractAddress"
         />
       </div>
@@ -327,6 +328,9 @@ export default {
       );
       this.reset();
     },
+    back() {
+      this.step = 1;
+    },
     /**
      * sets the contract address that user inputs
      * (index 0 of token data)
@@ -374,36 +378,44 @@ export default {
     },
     /**
      * finds more token info
-     * will use web3 first to get token balance and decimals
-     * will then use getter contractToToken to first check for more info and calculate correct usd balance
+     * will first use web3 to get the contract and
+     * then use getter contractToToken to check for more info and calculate correct usd balance
      * if not will check web3 to get name and symbol
      * then will assign the correct values to the token object.
+     * if it enters the catch then will just assign contract address.
      */
     async findTokenInfo() {
       const contract = new this.web3.eth.Contract(
-          abiERC20,
-          this.contractAddress
-        ),
-        balance = await contract.methods.balanceOf(this.address).call(),
-        decimals = await contract.methods.decimals().call(),
-        token = this.contractToToken(this.contractAddress);
-      if (token) {
-        this.token = token;
-        const denominator = new BigNumber(10).pow(decimals);
-        this.token.usdBalance = new BigNumber(balance)
-          .div(denominator)
-          .times(token.price)
-          .toString();
-        this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
-      } else {
-        this.token.name = await contract.methods.name().call();
-        this.token.symbol = await contract.methods.symbol().call();
-        this.token.usdBalancef = '0.00';
+        abiERC20,
+        this.contractAddress
+      );
+      this.token = this.contractToToken(this.contractAddress) || {};
+      try {
+        const balance = await contract.methods.balanceOf(this.address).call(),
+          decimals = await contract.methods.decimals().call();
+        if (this.token) {
+          const denominator = new BigNumber(10).pow(decimals);
+          this.token.usdBalance = new BigNumber(balance)
+            .div(denominator)
+            .times(this.token.price)
+            .toString();
+          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
+        } else {
+          this.token.name = await contract.methods.name().call();
+          this.token.symbol = await contract.methods.symbol().call();
+          this.token.usdBalancef = '0.00';
+          this.token.contract = this.contractAddress;
+        }
+        this.token.balancef = this.getTokenBalance(balance, decimals).value;
+        this.loading = false;
+        this.step = 2;
+      } catch {
         this.token.contract = this.contractAddress;
+        this.token.balancef = '0';
+        this.token.usdBalancef = '0.00';
+        this.loading = false;
+        this.step = 2;
       }
-      this.token.balancef = this.getTokenBalance(balance, decimals).value;
-      this.loading = false;
-      this.step = 2;
     },
     /**
      * gets token balance by dividing by token decimals
