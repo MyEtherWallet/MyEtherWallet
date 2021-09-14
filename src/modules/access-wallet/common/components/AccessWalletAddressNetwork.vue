@@ -170,7 +170,7 @@
         -->
     <app-btn-row
       class="my-2"
-      next-btn-text="Access Wallet"
+      next-btn-text="Access my wallet"
       :next-btn-method="accessWallet"
       :back-btn-method="null"
       :next-disable="!acceptTerms"
@@ -369,8 +369,10 @@ export default {
     },
     handlerWallet: {
       deep: true,
-      handler: function () {
-        this.changeHandler();
+      handler: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.changeHandler();
+        }
       }
     }
   },

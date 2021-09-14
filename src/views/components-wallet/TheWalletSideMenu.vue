@@ -149,12 +149,17 @@
       </v-list>
     </v-navigation-drawer>
     <mew-popup
-      :is-open="showLogoutPopup"
+      max-width="400px"
+      hide-close-btn
+      :show="showLogoutPopup"
       :title="$t('interface.menu.logout')"
-      :button-left="logout.btnLeft"
-      :button-right="logout.btnRight"
-      popup-type="confirm"
-      @onClick="onLogout"
+      :left-btn="{ text: 'Cancel', method: toggleLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
     ></mew-popup>
     <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
@@ -218,16 +223,6 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      logout: {
-        btnLeft: {
-          title: 'Cancel',
-          colorTheme: 'basic'
-        },
-        btnRight: {
-          title: 'Log out',
-          colorTheme: 'error'
-        }
-      },
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
@@ -336,11 +331,9 @@ export default {
       this.onSettings = false;
       this.$router.go(-1);
     },
-    onLogout(res) {
+    onLogout() {
       this.showLogoutPopup = false;
-      if (res.title === this.logout.btnRight.title) {
-        this.removeWallet();
-      }
+      this.removeWallet();
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
