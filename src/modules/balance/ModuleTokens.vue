@@ -144,7 +144,6 @@ export default {
       const tokenList = this.tokensList.map(item => {
         return this.formatValues(item);
       });
-      customTokens.sort((a, b) => b.usdBalance - a.usdBalance);
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
       const tokens = customTokens.concat(tokenList);
       return tokens;

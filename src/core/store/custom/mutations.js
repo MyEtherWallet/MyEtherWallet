@@ -16,7 +16,7 @@ const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   if (!state.customTokens[network.type.name]) {
     customTokensByNetwork = [];
   }
-  customTokensByNetwork.push(token);
+  customTokensByNetwork.unshift(token);
   Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
 };
 export default {

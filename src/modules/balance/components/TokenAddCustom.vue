@@ -268,7 +268,7 @@ export default {
         this.nameLengthTooLong = '';
         this.customName = value;
       }
-    }, 500),
+    }, 100),
     /**
      * @returns if token info displays contract address
      */
@@ -343,8 +343,13 @@ export default {
      * if it is then it will check if it already exists in the tokenList
      * otherwise it will throw toast error
      */
-    checkIfValidAddress() {
-      if (this.contractAddress && isAddress(this.contractAddress)) {
+    async checkIfValidAddress() {
+      const codeHash = await this.web3.eth.getCode(this.contractAddress);
+      if (
+        this.contractAddress &&
+        isAddress(this.contractAddress) &&
+        codeHash !== '0x'
+      ) {
         this.checkIfTokenExistsAlready();
       } else {
         this.loading = false;
