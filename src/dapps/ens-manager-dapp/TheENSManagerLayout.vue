@@ -332,7 +332,7 @@ export default {
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        this.name.split('.').length <= 2 ||
+        (this.name && this.name.split('.').length <= 2) ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
