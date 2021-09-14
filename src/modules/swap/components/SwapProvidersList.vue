@@ -212,21 +212,9 @@ export default {
       currentPicture: null,
       partners: [
         { image: require('../assets/0x.png') },
+        { image: require('../assets/paraswap.png') },
         { image: require('../assets/1inch.png') },
-        { image: require('../assets/Bancor.png') },
-        { image: require('../assets/Bity.png') },
-        { image: require('../assets/Changelly.png') },
-        { image: require('../assets/Curve.png') },
-        { image: require('../assets/ddex.png') },
-        { image: require('../assets/deversiFI.png') },
-        { image: require('../assets/Idex.png') },
-        { image: require('../assets/kyber.png') },
-        { image: require('../assets/Oasis.png') },
-        { image: require('../assets/Paradex.png') },
-        { image: require('../assets/Sushiswap.png') },
-        { image: require('../assets/Synthetix.png') },
-        { image: require('../assets/uniswap.png') },
-        { image: require('../assets/xblaster.png') }
+        { image: require('../assets/Changelly.png') }
       ]
     };
   },
@@ -324,10 +312,12 @@ export default {
   },
   methods: {
     showImages() {
+      let index = 0;
       setInterval(() => {
-        const index = Math.floor(Math.random() * this.partners.length);
         this.currentPicture = this.partners[index].image;
-      }, 1500);
+        index++;
+        if (index >= this.partners.length) index = 0;
+      }, 800);
     }
   }
 };
