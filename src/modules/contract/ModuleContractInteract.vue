@@ -18,7 +18,6 @@
           placeholder=" "
           class="mr-3 flex-grow-1"
         />
-        <!--  mew text area doesn't handle array as prop -->
 
         <v-textarea
           v-model="abi"
@@ -34,7 +33,7 @@
             :disabled="!canInteract"
             :has-full-width="false"
             btn-size="xlarge"
-            @click.native="showInteract()"
+            @click.native="showInteract"
           />
         </div>
         <div class="text-center mt-4">
@@ -43,103 +42,112 @@
             :has-full-width="false"
             btn-size="small"
             btn-style="transparent"
-            @click.native="resetDefaults()"
+            @click.native="resetDefaults"
           />
         </div>
       </div>
 
+      <!--
+      ============================================================================
+      Overlay
+      ============================================================================
+      -->
       <mew-overlay
+        title="Interact with contract"
         :show-overlay="interact"
-        left-btn-text="back"
         right-btn-text="close"
         :close="closeInteract"
-        :back="backInteract"
       >
         <template #mewOverlayBody>
-          <mew-select :label="'Method'" :items="methods" @input="methodSelect">
-          </mew-select>
-          <div v-show="selectedMethod.inputs.length" class="mb-10">Inputs</div>
-          <div
-            v-for="(input, idx) in selectedMethod.inputs"
-            :key="input.name + idx"
-            class="input-item-container"
+          <mew6-white-sheet
+            style="max-width: 480px; width: 100%"
+            class="px-9 py-12"
           >
-            <mew-input
-              v-if="getType(input.type).type !== 'radio'"
-              :label="`${input.name} (${input.type})`"
-              :rules="[
-                value => {
-                  return isValidInput(value, getType(input.type).solidityType);
-                }
-              ]"
-              @input="valueInput(idx, $event)"
+            <mew-select
+              label="Function"
+              :items="methods"
+              class="mb-1"
+              @input="methodSelect"
             />
+
             <div
-              v-if="getType(input.type).type === 'radio'"
-              class="bool-input-container"
+              v-show="selectedMethod.inputs.length"
+              class="mew-heading-2 mb-3"
             >
-              <div class="bool-items">
-                <mew-checkbox
-                  v-model="input.value"
-                  :label="input.name"
-                  type="radio"
-                  checked
-                  @input="valueInput(idx, $event)"
-                />
+              Inputs
+            </div>
+            <div
+              v-for="(input, idx) in selectedMethod.inputs"
+              :key="input.name + idx"
+              class="input-item-container"
+            >
+              <mew-input
+                v-if="getType(input.type).type !== 'radio'"
+                :label="`${input.name} (${input.type})`"
+                :rules="[
+                  value => {
+                    return isValidInput(
+                      value,
+                      getType(input.type).solidityType
+                    );
+                  }
+                ]"
+                @input="valueInput(idx, $event)"
+              />
+              <div
+                v-if="getType(input.type).type === 'radio'"
+                class="bool-input-container"
+              >
+                <div class="bool-items">
+                  <mew-checkbox
+                    v-model="input.value"
+                    :label="input.name"
+                    type="radio"
+                    checked
+                    @input="valueInput(idx, $event)"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <mew-input
-              v-if="isPayableFunction"
-              label="ETH amount:"
-              :rules="[
-                value => {
-                  return hasEnough ? '' : 'Not enough ETH';
-                }
-              ]"
-              type="number"
-              @input="payableInput($event)"
-            />
-          </div>
-          <div class="text-center mt-3">
-            <mew-button
-              :title="isViewFunction ? 'Read' : 'Write'"
-              :has-full-width="false"
-              btn-size="xlarge"
-              :disabled="canProceed"
-              @click.native="readWrite"
-            />
-          </div>
-          <div class="pa-4"></div>
-          <div v-show="selectedMethod.outputs.length" class="mb-10">
-            Outputs
-          </div>
-          <div
-            v-for="(output, idx) in selectedMethod.outputs"
-            v-show="selectedMethod.outputs.length"
-            :key="output.name + idx"
-            class="input-item-container"
-          >
-            <mew-input
-              v-if="getType(output.type).type !== 'radio'"
-              :value="output.value"
-              :disabled="true"
-              :label="`${output.name} (${output.type})`"
-              class="non-bool-input"
-            />
-            <mew-input
-              v-if="getType(output.type).type === 'radio'"
-              :value="
-                typeof output.value !== 'undefined'
-                  ? output.value.toString()
-                  : ''
-              "
-              :disabled="true"
-              :label="`${output.name} (${output.type})`"
-              class="non-bool-input"
-            />
-          </div>
+            <div>
+              <mew-input
+                v-if="isPayableFunction"
+                label="ETH amount:"
+                :rules="[
+                  value => {
+                    return hasEnough ? '' : 'Not enough ETH';
+                  }
+                ]"
+                type="number"
+                @input="payableInput($event)"
+              />
+            </div>
+            <div class="text-center mt-2">
+              <mew-button
+                :title="isViewFunction ? 'Call' : 'Write'"
+                :has-full-width="false"
+                btn-size="xlarge"
+                :disabled="canProceed"
+                @click.native="readWrite"
+              />
+            </div>
+
+            <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
+
+            <div v-if="hasOutputs">
+              <div class="mew-heading-2">Results</div>
+              <div
+                v-for="(output, idx) in selectedMethod.outputs"
+                :key="output.name + idx"
+                class="d-flex align-center justify-space-between my-4"
+              >
+                <div class="text-capitalize">
+                  {{ output.name !== '' ? output.name : selectedMethod.name }}
+                </div>
+                <div class="font-weight-medium">{{ output.value }}</div>
+              </div>
+            </div>
+          </mew6-white-sheet>
         </template>
       </mew-overlay>
     </template>
@@ -216,7 +224,11 @@ export default {
     methods() {
       if (this.canInteract) {
         return JSON.parse(this.abi).filter(item => {
-          if (item.type !== 'constructor' && item.type !== 'event') {
+          if (
+            item.type !== 'constructor' &&
+            item.type !== 'event' &&
+            item.type !== 'Fallback'
+          ) {
             return item;
           }
         });
@@ -225,6 +237,15 @@ export default {
     },
     canInteract() {
       return isAddress(this.contractAddress) && parseABI(parseJSON(this.abi));
+    },
+    hasOutputs() {
+      const outputsWithValues = this.selectedMethod.outputs.filter(item => {
+        if (item.value !== '') {
+          return item;
+        }
+      });
+
+      return outputsWithValues.length > 0;
     }
   },
   methods: {
@@ -309,10 +330,6 @@ export default {
       }
     },
     closeInteract() {
-      this.interact = false;
-      this.resetDefaults();
-    },
-    backInteract() {
       this.interact = false;
       this.resetDefaults();
     },
