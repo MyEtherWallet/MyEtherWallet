@@ -20,7 +20,7 @@
         <h2 class="mew-heading-2 text-center ma-0">
           Where is my pairing password?
         </h2>
-        <ol type="1" class="list-style-on pt-4 pl-5">
+        <ol type="1" class="list-style-on pt-4 pl-3">
           <li>Connect your Cool Wallet device.</li>
           <li class="pt-3">Open CoolBitX mobile app</li>
           <li class="pt-3">
@@ -32,13 +32,7 @@
             >
           </li>
         </ol>
-        <!-- <p class="pt-1">
-          <b
-            >Please note that you only need your password if this is the first
-            time you're accessing the device on MEW</b
-          >
-        </p> -->
-        <p class="pt-3 text-center">
+        <p class="pt-3 ml-3">
           Need more help?
           <a
             href="https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/"
