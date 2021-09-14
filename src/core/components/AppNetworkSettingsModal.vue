@@ -13,7 +13,7 @@
             This fee is calculated by multiplying the gas price and gas limit
             for your transaction. Higher fees result in faster transactions.
             <a
-              href="https://kb.myetherwallet.com/en/transactions/what-is-gas/"
+              href="https://help.myetherwallet.com/en/articles/5380678-what-is-gas"
               target="_blank"
               >Learn more
             </a>

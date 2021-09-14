@@ -128,7 +128,7 @@
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://kb.myetherwallet.com/en/transactions/tx-failed-why-was-i-charged/"
+              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a

@@ -32,7 +32,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 * [MEW CX: https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
 * [MEW Team](https://team.myetherwallet.com/)
 * [MEWtopia](https://www.mewtopia.com/)
-* [MEW Knowledgebase](https://kb.myetherwallet.com/)
+* [MEW Knowledgebase](https://help.myetherwallet.com/en/)
 * [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)
 * [Twitter: https://twitter.com/myetherwallet](https://twitter.com/myetherwallet)
 * [YouTube: https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA](https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA)
