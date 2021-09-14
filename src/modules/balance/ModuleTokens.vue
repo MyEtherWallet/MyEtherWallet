@@ -147,6 +147,7 @@ export default {
                   name: ROUTES_WALLET.SWAP.NAME,
                   query: obj
                 });
+                this.$emit('trade');
               },
               btnStyle: 'outline',
               colorTheme: 'primary'

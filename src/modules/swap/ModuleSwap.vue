@@ -766,6 +766,12 @@ export default {
     }
   },
   watch: {
+    $route: {
+      handler: function () {
+        this.setTokenFromURL();
+      },
+      immediate: true
+    },
     totalFees: {
       handler: function () {
         this.checkFeeBalance();
@@ -792,14 +798,7 @@ export default {
     }
   },
   beforeMount() {
-    if (Object.keys(this.$route.query).length > 0) {
-      const { fromToken, toToken, amount } = this.$route.query;
-      this.defaults = {
-        fromToken,
-        toToken
-      };
-      this.tokenInValue = `${amount}`;
-    }
+    this.setTokenFromURL();
   },
   mounted() {
     this.setupSwap();
@@ -1167,6 +1166,16 @@ export default {
       this.localGasPrice = e.gasPrice;
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
+    },
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { fromToken, toToken, amount } = this.$route.query;
+        this.defaults = {
+          fromToken,
+          toToken
+        };
+        this.tokenInValue = `${amount}`;
+      }
     }
   }
 };
