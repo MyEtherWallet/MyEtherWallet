@@ -8,13 +8,18 @@ const ERRORS = {
   'Max number of App paired. Delete one of the paired app.':
     'coolWalletError.max-app-instance',
   'browser not supported': 'coolWalletError.no-bluetooth',
-  'User cancelled the requestDevice() chooser.': 'User cancelled action!',
+  'User cancelled the requestDevice() chooser':
+    'coolWalletError.user-cancelled-request-device-bluetooth',
   'NetworkError: GATT operation already in progress.':
     'Unknown CoolWallet Error!',
   'Card Locked. Unlock with a registered App or reset your wallet.':
     'Card Locked. Unlock with a registered App or reset your wallet.',
   'Invalid hex string':
-    'Something went wrong! Please make sure your password is correct!'
+    'Something went wrong! Please make sure your password is correct!',
+  'Bluetooth adapter not available.':
+    'coolWalletError.bluetooth-adapter-not-available',
+  'An operation that changes interface state is in progress.':
+    'coolWalletError.operation-that-changes-interface-state-in-progress'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);

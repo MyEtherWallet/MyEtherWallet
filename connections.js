@@ -34,7 +34,15 @@ module.exports = [
   'data:',
   'https://mainnet.infura.io:443',
   'https://api.zilliqa.com:443',
+  'https://widget.intercom.io:443',
+  'https://api-iam.intercom.io:443',
+  'https://js.intercomcdn.com:443',
+  'wss://nexus-websocket-a.intercom.io:443',
+  'api-iam.intercom.io:443',
   'https://registry.walletconnect.org:443',
   'https://cdn.live.ledger.com:443',
-  'https://app.lokalise.com:443'
+  'https://app.lokalise.com:443',
+  'https://registry.walletconnect.org:443/data/wallets.json',
+  'https://js.intercomcdn.com:443',
+  'https://uploads.intercomcdn.com:443'
 ];

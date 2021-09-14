@@ -61,10 +61,7 @@ export default class Settings {
   _validateImportObject(obj) {
     const newObj = {};
     _.keys(obj).forEach(item => {
-      if (!_.contains(this.validFields, item)) {
-        // might actually not need to do this, just strip off the ones that aren't valid
-        throw new Error(`Found invalid key! ${item}`);
-      } else {
+      if (_.contains(this.validFields, item)) {
         if (item === 'gasPrice') {
           // converts gasPrice back to BN instance
           // this is assuming that when exporting, it gets converted to string
