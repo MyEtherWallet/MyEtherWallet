@@ -7,7 +7,11 @@ const ERRORS = {
   daemonError3: 'bcvaultError.https-issue',
   25601: 'bcvaultError.user-no-action',
   40449: 'bcvaultError.user-cancelled-action',
-  daemonError0x6901: 'bcvaultError.daemon0x6901'
+  daemonError0x6901: 'bcvaultError.daemon0x6901',
+  'Bluetooth adapter not available.':
+    'bcvaultError.bluetooth-adapter-not-available',
+  'An operation that changes interface state is in progress.':
+    'bcvaultError.operation-that-changes-interface-state-in-progress'
 };
 const WARNINGS = {
   jsError1: 'bcvaultError.browser-popup',

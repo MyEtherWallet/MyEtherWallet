@@ -82,6 +82,7 @@ import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
 
 export default {
@@ -93,6 +94,13 @@ export default {
     AddressBookAddEdit
   },
   mixins: [gasPriceMixin],
+  beforeRouteLeave(to, from, next) {
+    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+    } else {
+      next();
+    }
+  },
   props: {
     onSettings: { default: false, type: Boolean }
   },
