@@ -18,7 +18,10 @@
   >
     <v-row
       v-if="step === 1"
-      class="pa-5 mb-4 full-width text-center rounded subtitle-container"
+      :class="[
+        'pa-5 mb-4 full-width text-center rounded subtitle-container',
+        $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
+      ]"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
         <!-- TODO: add link -->
@@ -36,21 +39,17 @@
                 Different hardware instances
               =====================================================================================
               -->
-      <v-row no-gutters justify="start">
+      <v-row dense no-gutters justify="start">
         <v-col
-          v-for="(button, idx) in buttons"
+          v-for="button in buttons"
           :key="button.label"
-          :class="['button-container pb-2', idx % 2 == 0 ? 'pr-2' : '']"
+          class="button-container full-width pa-1"
           cols="12"
-          md="6"
+          sm="6"
         >
-          <mew-super-button
+          <mew-super-button-revised
             :title="button.label"
-            :cols-num="6"
-            color-theme="basic"
-            right-icon-type="img"
-            :right-icon="button.icon"
-            :right-icon-height="45"
+            :left-icon="button.icon"
             @click.native="setWalletInstance(button.type)"
           />
         </v-col>
@@ -76,13 +75,23 @@
           Keepkey
         =====================================================================================
         -->
-      <access-wallet-keepkey v-if="onKeepkey" />
+      <access-wallet-keepkey
+        v-if="onKeepkey"
+        :paths="paths"
+        :selected-path="selectedPath"
+        :handler-loaded="loaded"
+        @setPath="setPath"
+      />
       <!--
         =====================================================================================
           Cool Wallet
         =====================================================================================
         -->
-      <span v-if="onCoolWallet">Cool Wallet</span>
+      <access-wallet-cool-wallet
+        v-if="onCoolWallet"
+        :cool-wallet-unlock="coolWalletUnlock"
+        @password="setPassword"
+      />
       <!--
         =====================================================================================
           Ledger
@@ -168,6 +177,7 @@
           -->
     <access-wallet-address-network
       v-if="step === 3"
+      :back="null"
       :handler-wallet="hwWalletInstance"
       @unlock="setHardwareWallet"
     />
@@ -176,31 +186,35 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { _ } from 'web3-utils';
 // import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
-// import AccessWalletPin from './hardware/components/AccessWalletPin';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
+import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+// TODO: add these changes to mew components
+import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    AccessWalletAddressNetwork,
-    AccessWalletDerivationPath
+    MewSuperButtonRevised,
+    AccessWalletCoolWallet,
+    AccessWalletDerivationPath,
+    AccessWalletAddressNetwork
     // AccessWalletBitbox,
     // AccessWalletPassword,
     // AccessWalletPaths,
-    // AccessWalletPin,
     // BitBoxPopup
   },
   filters: {
@@ -271,12 +285,12 @@ export default {
       ledgerApp: {},
       selectedPath: {
         name: 'Ethereum',
-        subtext: "m/44'/60'/0'/0",
         value: "m/44'/60'/0'/0"
       },
       walletType: '',
       selectedLedgerApp: {},
       password: '',
+      loaded: false,
       // qrCode: '',
       // walletInstance: {},
       // enterPin: false,
@@ -289,41 +303,6 @@ export default {
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
     ...mapState('wallet', ['identifier']),
-    stepperStep() {
-      return this.step + 1;
-    },
-    extraSteps() {
-      return Object.keys(this.wallets[this.walletType].titles);
-    },
-    extraStepDetails() {
-      if (this.walletType !== '') {
-        return Object.keys(this.wallets[this.walletType].titles).reduce(
-          (acc, item) => {
-            acc.push({
-              step: +item + 1,
-              name: this.wallets[this.walletType].titles[item].includes(
-                'Enter your password'
-              )
-                ? 'Verify password'
-                : this.wallets[this.walletType].titles[item]
-            });
-            return acc;
-          },
-          [
-            {
-              step: 1,
-              name: 'Select Hardware Wallet'
-            }
-          ]
-        );
-      }
-      return [
-        {
-          step: 1,
-          name: 'Select Hardware Wallet'
-        }
-      ];
-    },
     /**
      * Returns the correct network icon
      */
@@ -345,6 +324,11 @@ export default {
         return {
           title: 'Using a KeepKey Hardware wallet with MEW',
           url: 'https://www.mewtopia.com/'
+        };
+      } else if (this.onCoolWallet) {
+        return {
+          title: 'Using a CoolWallet Hardware Wallet with MEW',
+          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
         };
       }
       if (this.onLedger) {
@@ -377,7 +361,10 @@ export default {
      * On CoolWallet
      */
     onCoolWallet() {
-      return this.walletType === WALLET_TYPES.COOL_WALLET;
+      return (
+        this.walletType === WALLET_TYPES.COOL_WALLET &&
+        _.isEmpty(this.hwWalletInstance)
+      );
     },
     /**
      * On Keepkey
@@ -453,9 +440,12 @@ export default {
      * Overlay title
      */
     title() {
-      return this.step === 1
-        ? 'Select a hardware wallet'
-        : this.wallets[this.walletType].title;
+      if (this.step > this.wallets[this.walletType]?.when) {
+        return 'Select Network and Address';
+      } else if (this.step === 1) {
+        return 'Select a hardware wallet';
+      }
+      return this.wallets[this.walletType].title;
     }
   },
   mounted() {
@@ -478,14 +468,18 @@ export default {
       this.password = '';
       // this.qrCode = '';
       // this.walletInstance = {};
-      this.enterPin = false;
+      // this.enterPin = false;
       this.walletType = '';
     },
     /**
-     * Overlay Actions
+     * Overlay Action: Back
+     * if on keepkey step 3, it will return to step 1 so it will reset everything
      */
     back() {
       !this.step ? this.close('showHardware') : (this.step -= 1);
+      if (this.onKeepkey && this.step === 2) {
+        this.step = 1;
+      }
       // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
       this.step === 2 ? (this.hwWalletInstance = {}) : null;
@@ -502,6 +496,7 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
+          if (this.walletType === WALLET_TYPES.COOL_WALLET) return;
           this[`${this.walletType}Unlock`]();
         }
       }
@@ -534,6 +529,7 @@ export default {
       return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
+          this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           if (_hwWallet.identifier == 'ledger') this.ledgerConnected = true;
           // if (this.walletType === WALLET_TYPES.BITBOX2) {
@@ -563,11 +559,11 @@ export default {
           this.hwWalletInstance = _hwWallet;
           this.step++;
         })
-        .catch(err => {
+        .catch(e => {
           if (this.wallets[this.walletType]) {
-            this.wallets[this.walletType].create.errorHandler(err);
+            this.wallets[this.walletType].create.errorHandler(e);
           } else {
-            Toast(err, {}, ERROR);
+            Toast(e, {}, ERROR);
           }
           this.reset();
         });
@@ -597,44 +593,13 @@ export default {
         this.reset();
         Toast(e.message, {}, ERROR);
       }
-    }
-    /**
-     * Sets Ledger App
-     */
-    // setLedgerApp(obj) {
-    //   this.selectedLedgerApp = obj;
-    // },
+    },
     /**
      * Sets Password
      */
-    // setPassword(str) {
-    //   this.password = str;
-    // },
-    /**
-     * Keepkey Actions
-     */
-    // keepKeyClear() {
-    //   this.pin = '';
-    // },
-    // keepKeyPinEnter(pin) {
-    //   this.callback(pin);
-    //   this.enterPin = false;
-    //   this.step += 1;
-    //   setTimeout(() => {
-    //     this.callback = () => {};
-    //   }, 500);
-    // },
-    /**
-     * Sets BitBox value
-     */
-    // setSelectedBitbox(val) {
-    //   if (!val) {
-    //     this.walletType = WALLET_TYPES.BITBOX;
-    //   } else {
-    //     this.walletType = WALLET_TYPES.BITBOX2;
-    //   }
-    //   this.nextStep();
-    // }
+    setPassword(str) {
+      this.password = str;
+    }
   }
 };
 </script>
