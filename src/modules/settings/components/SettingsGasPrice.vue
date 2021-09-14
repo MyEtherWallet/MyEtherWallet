@@ -53,6 +53,7 @@
           placeholder=" "
           right-label="Gwei"
           class="mr-0 mr-sm-3"
+          type="number"
         />
         <mew-button
           :title="customBtn.text"

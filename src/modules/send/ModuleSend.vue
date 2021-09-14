@@ -533,7 +533,8 @@ export default {
      * Resets values to default
      */
     clear() {
-      this.$refs.addressInput.clear();
+      if (this.$refs && this.$refs.addressInput)
+        this.$refs.addressInput.clear();
       this.toAddress = '';
       this.selectedCurrency = this.tokensList[0];
       this.sendTx = null;
@@ -648,7 +649,9 @@ export default {
       window.scrollTo(0, 0);
       this.sendTx
         .submitTransaction()
-        .then(this.clear)
+        .then(() => {
+          this.clear();
+        })
         .catch(error => {
           this.clear();
           this.gasEstimationError = error.message;
