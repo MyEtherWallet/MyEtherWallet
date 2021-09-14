@@ -49,7 +49,7 @@
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
-                      name.split('.').length > 2
+                      (name && name.split('.').length > 2)
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
