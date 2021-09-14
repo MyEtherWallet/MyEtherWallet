@@ -115,7 +115,7 @@ export default {
       types: SOFTWARE_WALLET_TYPES,
       warningSheetObj: {
         title: 'Learn More',
-        url: 'https://kb.myetherwallet.com/en/offline/using-mew-offline'
+        url: 'https://help.myetherwallet.com/en/articles/5380611-using-mew-offline-cold-storage'
       },
       buttons: [
         /* Keystore Button */
