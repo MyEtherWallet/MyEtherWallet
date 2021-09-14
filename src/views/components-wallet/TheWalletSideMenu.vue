@@ -282,7 +282,7 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.toggleSettings,
+          fn: this.openSettings,
           route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
         {
@@ -303,8 +303,11 @@ export default {
     ...mapState('wallet', ['instance'])
   },
   mounted() {
-    EventBus.$on('toggleSettings', () => {
-      this.toggleSettings();
+    if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
+      this.openSettings();
+    }
+    EventBus.$on('openSettings', () => {
+      this.openSettings();
     });
   },
   methods: {
@@ -321,11 +324,11 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    toggleSettings() {
-      this.onSettings = !this.onSettings;
+    openSettings() {
+      this.onSettings = true;
     },
     closeSettings() {
-      this.toggleSettings();
+      this.onSettings = false;
       this.$router.go(-1);
     },
     onLogout() {
