@@ -21,7 +21,7 @@ export default {
      * Tracks when user lands on landing page
      */
     trackLandingPage() {
-      if (this.$matomo) {
+      if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.landingPage, 'landed on');
       }
     },
@@ -31,7 +31,7 @@ export default {
      * (depends on the action being passed in)
      */
     trackCreateWallet(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.createWallet, action);
       }
     },
@@ -41,7 +41,7 @@ export default {
      * (depends on the action being passed in)
      */
     trackAccessWallet(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.accessWallet, action);
       }
     },
@@ -49,7 +49,7 @@ export default {
      * Tracks when user switches network
      */
     trackNetworkSwitch(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.networkSwitch, action);
       }
     },
@@ -57,7 +57,7 @@ export default {
      * Tracks which swap rate user clicks
      */
     trackSwapRate(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.swapRates, action);
       }
     },
@@ -65,7 +65,7 @@ export default {
      * Tracks which dapp user navigates to
      */
     trackDapp(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.dapp, action);
       }
     },
@@ -74,7 +74,7 @@ export default {
      * and swap to
      */
     trackSwap(action) {
-      if (this.$matomo && action) {
+      if (this.$matomo && action && this.consentToTrack) {
         this.$matomo.trackEvent(categories.swap, action);
       }
     },
@@ -82,7 +82,7 @@ export default {
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
-      if (this.$matomo) {
+      if (this.$matomo && this.consentToTrack) {
         this.$matomo.trackEvent(categories.exitDashboard, 'true');
       }
     }
