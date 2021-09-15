@@ -221,6 +221,7 @@
             :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
             :to-token-icon="toTokenType ? toTokenType.img : ''"
             :is-loading="isLoadingProviders"
+            :check-loading="checkLoading"
             :providers-error="providersErrorMsg"
             class="mt-7"
             @stopLoadingProviders="stopLoadingProviders"
@@ -357,6 +358,7 @@ export default {
         }
       ],
       isLoadingProviders: false,
+      checkLoading: true,
       addressValue: {},
       selectedProvider: {},
       localGasPrice: '0',
@@ -1026,6 +1028,7 @@ export default {
               this.step = 1;
             }
             // this.isLoadingProviders = false;
+            this.checkLoading = false;
           });
       }
     }, 1000),

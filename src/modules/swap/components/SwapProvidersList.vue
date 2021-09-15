@@ -201,6 +201,10 @@ export default {
       type: Boolean,
       default: false
     },
+    checkLoading: {
+      type: Boolean,
+      default: true
+    },
     providersError: {
       type: Object,
       default: () => {
@@ -309,19 +313,39 @@ export default {
       }
     },
     isLoading(value) {
+      let index = 0;
+      const length = this.partners.length;
+
       if (value) {
-        this.partners.forEach((partner, index) => {
+        const myLoop = () => {
           setTimeout(() => {
-            this.currentPicture = partner.image;
-            if (index * 600 === 1800) {
-              setTimeout(() => {
-                this.$emit('stopLoadingProviders', false);
-              }, 600);
+            if (this.checkLoading === false && index >= 4) {
+              this.$emit('stopLoadingProviders', false);
             }
-          }, index * 600);
-        });
+            this.currentPicture = this.partners[index]?.image;
+            index++;
+            if (index <= length) myLoop();
+          }, 600);
+        };
+        myLoop();
       }
+
+      // if (value) {
+      //   this.partners.forEach((partner, index) => {
+      //     setTimeout(() => {
+      //       this.currentPicture = partner.image;
+      //       if (index * 600 === 1800) {
+      //         setTimeout(() => {
+      //           this.$emit('stopLoadingProviders', false);
+      //         }, 600);
+      //       }
+      //     }, index * 600);
+      //   });
+      // }
     }
+  },
+  mounted() {
+    this.currentPicture = this.partners[0].image;
   }
 };
 </script>
