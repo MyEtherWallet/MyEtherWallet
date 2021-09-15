@@ -1,13 +1,13 @@
 import MEWPClass from './mew-provider-class';
 import { ETH } from '@/utils/networks/types';
-class DexAg {
+class ZeroX {
   constructor(web3, chain) {
     return new MEWPClass(
-      MEWPClass.supportedDexes.DEX_AG,
+      MEWPClass.supportedDexes.ZERO_X,
       web3,
       [ETH.name],
       chain
     );
   }
 }
-export default DexAg;
+export default ZeroX;
