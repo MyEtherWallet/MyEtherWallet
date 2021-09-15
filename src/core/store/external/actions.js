@@ -4,7 +4,8 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
@@ -56,6 +57,8 @@ const setTokenAndEthBalance = function ({
     if (decimals) {
       n = n.div(new BigNumber(10).pow(decimals));
       n = formatFloatingPointValue(n);
+    } else {
+      n = formatIntegerValue(n);
     }
     return n;
   };
@@ -98,8 +101,10 @@ const setTokenAndEthBalance = function ({
     .then(res => res.json())
     .then(res => res.result)
     .then(preTokens => {
+      const hasPreTokens = preTokens ? preTokens : [];
       const promises = [];
-      preTokens.forEach(t => {
+
+      hasPreTokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
         if (!token) {
           promises.push(
@@ -116,7 +121,7 @@ const setTokenAndEthBalance = function ({
           );
         }
       });
-      return Promise.all(promises).then(() => preTokens);
+      return Promise.all(promises).then(() => hasPreTokens);
     })
     .then(tokens => {
       const formattedList = [];

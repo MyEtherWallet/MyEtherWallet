@@ -286,7 +286,7 @@ export default {
       this.openHighFeeNote = false;
     },
     openSettings() {
-      EventBus.$emit('toggleSettings');
+      EventBus.$emit('openSettings');
       this.gasPriceModal = false;
     },
     closeGasPrice() {

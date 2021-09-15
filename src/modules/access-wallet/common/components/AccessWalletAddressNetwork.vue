@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="text-right mb-3">
+  <div style="width: 100%">
+    <div v-if="paths.length > 0" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :paths="paths"
@@ -22,11 +22,11 @@
                 =====================================================================================
                 -->
             <v-row dense class="table-header mx-0">
-              <v-col offset="2">
-                <p class="">Adddress</p>
+              <v-col offset="3">
+                <p>Adddress</p>
               </v-col>
               <v-col cols="4" sm="3">
-                <p>{{ network.type.name }} Balance</p>
+                <p class="text-center">{{ network.type.name }} Balance</p>
               </v-col>
             </v-row>
             <!--
@@ -41,10 +41,7 @@
               dense
               class="table-row-class align-center justify-center py-2 mx-0"
             >
-              <v-col md="1" sm="1">
-                <v-radio label="" :value="index" class="mx-2" disabled />
-              </v-col>
-              <v-col md="9" sm="7">
+              <v-col md="9" sm="9">
                 <v-row
                   dense
                   class="align-center justify-start pl-1 pl-sm-3 pr-2 pr-sm-3"
@@ -58,7 +55,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col md="2" sm="4">
+              <v-col md="3" sm="3">
                 <v-skeleton-loader
                   type="list-item"
                   max-height="25"
@@ -108,8 +105,8 @@
                   />
                 </v-row>
               </v-col>
-              <v-col cols="2" offset="1">
-                <p class="balance-overflow">
+              <v-col cols="3">
+                <p class="balance-overflow text-center">
                   {{
                     acc.balance === 'Loading..'
                       ? acc.balance
@@ -180,9 +177,9 @@
         -->
     <app-btn-row
       class="my-2"
-      next-btn-text="Access Wallet"
+      next-btn-text="Access my wallet"
       :next-btn-method="accessWallet"
-      :back-btn-method="back ? reset : null"
+      :back-btn-method="null"
       :next-disable="!acceptTerms"
     />
   </div>
@@ -224,12 +221,6 @@ export default {
     AccessWalletDerivationPath
   },
   props: {
-    back: {
-      type: Function,
-      default: function () {
-        return {};
-      }
-    },
     handlerWallet: {
       type: Object,
       default: function () {
@@ -395,8 +386,10 @@ export default {
     },
     handlerWallet: {
       deep: true,
-      handler: function () {
-        this.changeHandler();
+      handler: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.changeHandler();
+        }
       }
     }
   },
@@ -415,16 +408,6 @@ export default {
       this.accountAddress = '';
       this.currentIdx = 0;
       this.setAccounts();
-    },
-    /**
-     * Resets the component and calls back method prop.
-     */
-    reset() {
-      this.selectedAddress = '';
-      this.accounts.splice(0);
-      this.currentIdx = 0;
-      this.addressPage = 0;
-      this.back();
     },
     /**
      * Async method that gets accounts according to the pagination
