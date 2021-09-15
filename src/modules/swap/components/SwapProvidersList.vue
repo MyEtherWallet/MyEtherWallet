@@ -1,6 +1,8 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
-    <div v-if="step > 0" class="mew-heading-3 mb-5 pl-4">Select rate</div>
+    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
+      Select rate
+    </div>
     <!--
     =====================================================================================
       Sceleton Loader (desktop/mobile)
@@ -305,19 +307,20 @@ export default {
           }
         });
       }
-    }
-  },
-  created() {
-    this.showImages();
-  },
-  methods: {
-    showImages() {
-      let index = 0;
-      setInterval(() => {
-        this.currentPicture = this.partners[index].image;
-        index++;
-        if (index >= this.partners.length) index = 0;
-      }, 800);
+    },
+    isLoading(value) {
+      if (value) {
+        this.partners.forEach((partner, index) => {
+          setTimeout(() => {
+            this.currentPicture = partner.image;
+            if (index * 600 === 1800) {
+              setTimeout(() => {
+                this.$emit('stopLoadingProviders', false);
+              }, 600);
+            }
+          }, index * 600);
+        });
+      }
     }
   }
 };

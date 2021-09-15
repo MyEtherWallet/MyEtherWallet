@@ -223,6 +223,7 @@
             :is-loading="isLoadingProviders"
             :providers-error="providersErrorMsg"
             class="mt-7"
+            @stopLoadingProviders="stopLoadingProviders"
           />
           <!--
             =====================================================================================
@@ -1024,7 +1025,7 @@ export default {
               this.tokenOutValue = quotes[0].amount;
               this.step = 1;
             }
-            this.isLoadingProviders = false;
+            // this.isLoadingProviders = false;
           });
       }
     }, 1000),
@@ -1170,6 +1171,9 @@ export default {
       this.localGasPrice = e.gasPrice;
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
+    },
+    stopLoadingProviders(val) {
+      this.isLoadingProviders = val;
     }
   }
 };
