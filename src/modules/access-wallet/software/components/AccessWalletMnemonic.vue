@@ -145,7 +145,6 @@
         </v-col>
       </v-row>
       <access-wallet-address-network
-        :back="backStepOne"
         :handler-wallet="walletInstance"
         :selected-path="selectedPath"
         @unlock="accessWallet"
@@ -362,16 +361,6 @@ export default {
         .catch(e => {
           Toast(e, {}, ERROR);
         });
-    },
-    /**
-     * Methods resets all addresses
-     * and switched stepper to step 1
-     * Used in STEP 2
-     */
-    backStepOne() {
-      this.step = 1;
-      this.phrase = {};
-      this.length = 12;
     },
     /**
      * Clears mnemonic input field

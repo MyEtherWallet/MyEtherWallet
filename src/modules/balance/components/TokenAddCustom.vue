@@ -320,6 +320,7 @@ export default {
       this.token.symbol = !this.token.symbol
         ? this.customSymbol
         : this.token.symbol;
+      this.token.contract = this.contractAddress;
       this.setCustomToken(this.token);
       Toast(
         'The token ' + this.token.name + ' was added to your token list!',

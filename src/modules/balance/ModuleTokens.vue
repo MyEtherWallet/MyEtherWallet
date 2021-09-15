@@ -19,11 +19,20 @@
       icon-align="left"
     >
       <template #rightHeaderContainer>
-        <span
-          class="primary--text cursor-pointer pl-3"
-          @click="toggleCustomTokenOverlay"
-          >+ Custom Token</span
-        >
+        <div>
+          <span
+            v-if="!hasCustom"
+            class="primary--text cursor-pointer pl-3"
+            @click="toggleAddCustomToken"
+            >+ Custom Token</span
+          >
+          <mew-menu
+            v-else
+            text-color="black--text"
+            :list-obj="menuObj"
+            @goToPage="customTokenAction"
+          />
+        </div>
       </template>
       <template #moduleBody>
         <div class="my-8">
@@ -57,8 +66,17 @@
     =====================================================================================
     -->
     <token-add-custom
-      :close="toggleCustomTokenOverlay"
+      :close="toggleAddCustomToken"
       :open="openAddCustomToken"
+    />
+    <!--
+    =====================================================================================
+      delete Custom Token form
+    =====================================================================================
+    -->
+    <token-delete-custom
+      :close="toggleDeleteCustomToken"
+      :open="openDeleteCustomToken"
     />
   </div>
 </template>
@@ -66,11 +84,13 @@
 import { mapGetters, mapState } from 'vuex';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
+import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceEmptyBlock,
+    TokenDeleteCustom,
     TokenAddCustom
   },
   props: {
@@ -82,6 +102,7 @@ export default {
   data() {
     return {
       openAddCustomToken: false,
+      openDeleteCustomToken: false,
       tableHeaders: [
         {
           text: 'Token',
@@ -119,13 +140,30 @@ export default {
           sortable: false,
           width: '15%'
         }
-      ]
+      ],
+      menuObj: {
+        name: 'Custom Tokens',
+        items: [
+          {
+            items: [
+              {
+                title: 'Add',
+                to: 'add'
+              },
+              {
+                title: 'Remove',
+                to: 'remove'
+              }
+            ]
+          }
+        ]
+      }
     };
   },
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
-    ...mapGetters('custom', ['customTokens']),
+    ...mapGetters('custom', ['customTokens', 'hasCustom']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
@@ -196,8 +234,18 @@ export default {
       }
       return newObj;
     },
-    toggleCustomTokenOverlay() {
+    toggleAddCustomToken() {
       this.openAddCustomToken = !this.openAddCustomToken;
+    },
+    toggleDeleteCustomToken() {
+      this.openDeleteCustomToken = !this.openDeleteCustomToken;
+    },
+    customTokenAction(param) {
+      if (param === 'add') {
+        this.toggleAddCustomToken();
+      } else if (param === 'remove') {
+        this.toggleDeleteCustomToken();
+      }
     }
   }
 };

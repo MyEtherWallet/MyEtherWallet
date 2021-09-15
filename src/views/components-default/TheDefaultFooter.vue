@@ -327,6 +327,10 @@ export default {
             link: 'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
           },
           {
+            label: 'CoolWallet',
+            link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
+          },
+          {
             label: 'Billfodl',
             link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
           }
