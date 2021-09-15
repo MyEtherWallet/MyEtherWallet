@@ -19,7 +19,33 @@ const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   customTokensByNetwork.unshift(token);
   Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
 };
+
+const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
+  const network = rootGetters['global/network'];
+  const currentCustomTokens = state.customTokens[network.type.name].filter(
+    currentTokens => {
+      const found = token.find(item => {
+        if (item.address === currentTokens.contract) {
+          return item;
+        }
+      });
+      if (!found) {
+        return currentTokens;
+      }
+    }
+  );
+  Vue.set(state.customTokens, network.type.name, currentCustomTokens);
+};
+
+const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
+  const network = rootGetters['global/network'];
+  let customTokensByNetwork = state.customTokens[network.type.name];
+  customTokensByNetwork = [];
+  Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
+};
 export default {
   SET_CUSTOM_TOKEN,
+  DELETE_ALL_TOKENS,
+  DELETE_CUSTOM_TOKEN,
   INIT_STORE
 };
