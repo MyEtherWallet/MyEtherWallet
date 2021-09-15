@@ -1,9 +1,9 @@
-import Dexag from '../handlers/providers/dex-ag';
+import ZeroX from '../handlers/providers/zerox';
 jest.setTimeout(10000);
-const dexag = new Dexag();
-describe('DexAG Swap', () => {
+const zeroX = new ZeroX();
+describe('Zerox Swap', () => {
   xtest('it should return supported tokens including ETH', () => {
-    return dexag.getSupportedTokens().then(tokens => {
+    return zeroX.getSupportedTokens().then(tokens => {
       expect(tokens).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -18,7 +18,7 @@ describe('DexAG Swap', () => {
     });
   });
   test('it should return valid ETH address', () => {
-    return dexag
+    return zeroX
       .isValidToAddress({
         toT: { symbol: 'ETH' },
         address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
@@ -28,7 +28,7 @@ describe('DexAG Swap', () => {
       });
   });
   test('it should return inValid ETH address', () => {
-    return dexag
+    return zeroX
       .isValidToAddress({
         toT: { symbol: 'ETH' },
         address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068'
@@ -38,7 +38,7 @@ describe('DexAG Swap', () => {
       });
   });
   test('it should return a quote', () => {
-    return dexag
+    return zeroX
       .getQuote({
         toT: {
           symbol: 'DAI',
@@ -53,7 +53,7 @@ describe('DexAG Swap', () => {
       })
       .then(quotes => {
         expect(quotes.length).toBeGreaterThanOrEqual(1);
-        expect(quotes[0].provider).toBe('DEX_AG');
+        expect(quotes[0].provider).toBe('ZERO_X');
       });
   });
 });

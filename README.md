@@ -7,20 +7,20 @@
 [![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json) [![Greenkeeper badge](https://badges.greenkeeper.io/MyEtherWallet/MyEtherWallet.svg)](https://greenkeeper.io/)
 ![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square) [![Codecov badge](https://img.shields.io/codecov/c/github/MyEtherWallet/MyEtherWallet/develop.svg?style=flat-square)](https://codecov.io/github/MyEtherWallet/MyEtherWallet?branch=develop)
 
-MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. -*Stephen, #MEWForce*
+MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. - <i>Stephen, #MEWForce</i>
 
 !["MyEtherWallet Logo](./src/assets/images/backgrounds/v6-landing-screen-shot.png "MyEtherWallet")
 
 ## Philosophy
 
-* **Empower the people**: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
-* **Make it easy & free**: Everyone should be able to create a wallet and send Ether & Tokens without additional cost.
-* **People are the Priority**: People are the most important & their experience trumps all else. If monetization worsens the experience, we don't do it. (e.g. ads)
-* **A learning experience, too**: We want to educate about Ethereum, security, privacy, the importance of controlling your own keys, how the blockchain works, and how Ethereum and blockchain technologies enable a better world.
-* **If it can be hacked, it will be hacked**: Never save, store, or transmit secret info, like passwords or keys.
-* **Offline / Client-Side**: User should be able to run locally and offline without issue.
-* **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
-* **Open source & auditable**
+* <b>Empower the people</b>: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
+* <b>Make it easy & free</b>: Everyone should be able to create a wallet and send Ether & Tokens without additional cost.
+* <b>People are the Priority</b>: People are the most important & their experience trumps all else. If monetization worsens the experience, we don't do it. (e.g. ads)
+* <b>A learning experience, too</b>: We want to educate about Ethereum, security, privacy, the importance of controlling your own keys, how the blockchain works, and how Ethereum and blockchain technologies enable a better world.
+* <b>If it can be hacked, it will be hacked</b>: Never save, store, or transmit secret info, like passwords or keys.
+* <b>Offline / Client-Side</b>: User should be able to run locally and offline without issue.
+* <b>Private</b>: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
+* <b>Open source & auditable</b>
 
 ## MEW Around the Web
 

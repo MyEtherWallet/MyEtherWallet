@@ -11,14 +11,17 @@
       link: 'mailto:support@myetherwallet.com'
     }"
     :show-overlay="open"
-    title="Delete Custom Token"
+    title="Remove Custom Token"
     :close="close"
     :back="close"
     content-size="large"
   >
     <div class="full-width">
       <mew-popup
-        max-width="400px"
+        max-width="500px"
+        :has-body-content="true"
+        :has-padding="true"
+        scrollable
         hide-close-btn
         :show="showDeleteConfirmation"
         :title="confirmTitle"
@@ -28,12 +31,31 @@
           color: 'basic'
         }"
         :right-btn="{
-          text: 'Delete',
-          color: 'error',
+          text: 'Remove',
+          color: 'primary',
           method: confirmDelete,
           enabled: true
         }"
-      ></mew-popup>
+      >
+        <div>
+          <p class="mew-body text-left py-1">
+            {{ title }}
+          </p>
+          <div
+            v-for="token in selectedTokens"
+            :key="token.address"
+            class="d-flex"
+          >
+            <div class="d-flex">
+              <v-img :src="token.tokenImg" width="20" height="20" contain />
+              {{ token.token }}
+            </div>
+          </div>
+        </div>
+      </mew-popup>
+      <div class="mew-body text-center mb-3">
+        Please select tokens that you want to remove
+      </div>
       <mew-table
         has-select
         :table-headers="tableHeaders"
@@ -42,12 +64,12 @@
         @selectedRow="selectedValues"
         @selectedAll="onSelectAll"
       />
-      <div v-if="customTokens.length > 0" class="d-flex justify-center mt-2">
+      <div v-if="customTokens.length > 0" class="d-flex justify-center mt-6">
         <mew-button
-          :title="title"
-          color-theme="error"
-          :has-full-width="false"
-          btn-size="medium"
+          title="Next"
+          color-theme="primary"
+          :has-full-width="true"
+          btn-size="xlarge"
           :disabled="!enableDeleteButton"
           @click.native="toggleDeleteModal"
         />
@@ -98,6 +120,7 @@ export default {
   },
   computed: {
     ...mapGetters('custom', ['customTokens']),
+    ...mapGetters('global', ['network']),
     formattedCustomTokens() {
       return this.customTokens
         ? this.customTokens.map(item => {
@@ -109,10 +132,12 @@ export default {
       return this.selectedTokens.length > 0;
     },
     title() {
-      return `Delete Token${this.selectedTokens.length > 1 ? 's' : ''}`;
+      return `Are you sure you want to delete ${
+        this.selectedTokens.length > 1 ? 'these tokens' : 'this token'
+      }?`;
     },
     confirmTitle() {
-      return `Confirm Delete Token${this.selectedTokens.length > 1 ? 's' : ''}`;
+      return `Confirm Remove Token${this.selectedTokens.length > 1 ? 's' : ''}`;
     }
   },
   methods: {
@@ -125,6 +150,7 @@ export default {
       newObj.balance = [item.balancef + ' ' + item.symbol];
       newObj.token = item.symbol;
       newObj.address = item.contract;
+      newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       return newObj;
     },
     /**
@@ -165,12 +191,12 @@ export default {
       if (this.selectedTokens.length === this.customTokens.length) {
         this.deleteAll().then(() => {
           this.toggleDeleteModal();
-          Toast('Token deleted succesfully', {}, SUCCESS);
+          Toast('Token Remove succesfully', {}, SUCCESS);
         });
       } else {
         this.deleteToken(this.selectedTokens).then(() => {
           this.toggleDeleteModal();
-          Toast('Token deleted succesfully', {}, SUCCESS);
+          Toast('Token Remove succesfully', {}, SUCCESS);
         });
       }
     }

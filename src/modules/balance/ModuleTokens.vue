@@ -147,11 +147,11 @@ export default {
           {
             items: [
               {
-                title: 'Add',
+                title: '+ Add',
                 to: 'add'
               },
               {
-                title: 'Remove',
+                title: '- Remove',
                 to: 'remove'
               }
             ]
