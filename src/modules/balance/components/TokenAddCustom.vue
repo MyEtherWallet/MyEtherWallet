@@ -14,7 +14,7 @@
     title="Add custom token"
     :close="reset"
     :back="step === 2 ? back : null"
-    content-size="medium"
+    :content-size="step === 2 ? 'large' : 'medium'"
   >
     <div class="full-width">
       <!--
