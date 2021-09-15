@@ -23,13 +23,16 @@ export default class Settings {
         };
         reader.onloadend = evt => {
           const file = evt.target.result;
-          const obj = JSON.parse(file);
-          const parsedObj = _this._validateImportObject(obj);
-
-          // sets the imported state to the store
-          _this.setImportedState(parsedObj).then(() => {
-            resolve();
-          });
+          try {
+            const obj = JSON.parse(file);
+            const parsedObj = _this._validateImportObject(obj);
+            // sets the imported state to the store
+            _this.setImportedState(parsedObj).then(() => {
+              resolve();
+            });
+          } catch ({ message }) {
+            Toast('Invalid JSON: ' + message, {}, ERROR);
+          }
         };
         reader.readAsBinaryString(file);
       } catch (e) {

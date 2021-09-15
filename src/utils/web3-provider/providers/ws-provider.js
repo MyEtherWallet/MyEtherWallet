@@ -4,7 +4,7 @@ import MiddleWare from '../middleware';
 import workerTimer from '@/core/helpers/webWorkerTimer.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ethSendTransaction,
@@ -94,10 +94,7 @@ class WSProvider {
         this.wsProvider.connection.readyState !==
         this.wsProvider.connection.OPEN
       ) {
-        if (typeof this.wsProvider.connection.onerror === 'function') {
-          this.wsProvider.connection.onerror(new Error('connection not open'));
-        }
-        Toast('connection not open', {}, ERROR);
+        Toast('connection not open', {}, SENTRY);
         return;
       }
       const req = {
