@@ -83,7 +83,6 @@
   "devDependencies": {
     "@commitlint/config-conventional": "13.1.0",
     "@ledgerhq/hw-app-eth": "6.6.0",
-    "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
     "@ledgerhq/hw-transport-webusb": "6.6.0",
     "@mdi/font": "6.1.95",
     "@vue/babel-preset-app": "4.5.13",
@@ -162,7 +161,7 @@
   },
   "resolutions": {
     "handlebars": "4.7.7",
-    "axios": "0.21.1",
+    "axios": "0.21.4",
     "node-fetch": "2.6.1",
     "cryptiles": "4.1.2",
     "xmlhttprequest-ssl": "1.6.2",
