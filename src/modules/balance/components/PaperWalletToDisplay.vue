@@ -126,14 +126,11 @@
 <script>
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   data() {
-    return {
-      blockieImg: undefined
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
@@ -149,21 +146,6 @@ export default {
     showPrivateKey() {
       return !this.instance.isPubOnly;
     }
-  },
-  mounted() {
-    this.blockieImg = Blockies({
-      seed: this.address ? this.address.toLowerCase() : '',
-      size: 8,
-      scale: 16
-    }).toDataURL();
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.blockie-image {
-  height: 110px;
-  width: 110px;
-  border-radius: 50%;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--paper-wallet-content printable">
+  <div class="mew-component--paper-wallet-content" style="width: 800px">
     <div class="d-flex justify-space-between align-start">
       <div class="d-flex align-center">
         <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
@@ -30,6 +30,7 @@
         width="110px"
         height="110px"
         class="mr-6"
+        flat
       />
 
       <div style="max-width: 400px">
@@ -99,14 +100,11 @@
 <script>
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   data() {
-    return {
-      blockieImg: undefined
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
@@ -122,25 +120,6 @@ export default {
     showPrivateKey() {
       return !this.instance.isPubOnly;
     }
-  },
-  mounted() {
-    this.blockieImg = Blockies({
-      seed: this.address ? this.address.toLowerCase() : '',
-      size: 8,
-      scale: 16
-    }).toDataURL();
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.printable {
-  width: 800px !important;
-}
-
-.blockie-image {
-  height: 110px;
-  width: 110px;
-  border-radius: 50%;
-}
-</style>
