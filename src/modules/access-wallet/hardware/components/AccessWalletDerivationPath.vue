@@ -154,7 +154,6 @@ Custom Path Fields
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathHelper';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
-
 export default {
   props: {
     paths: {
