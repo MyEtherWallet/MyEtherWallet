@@ -30,7 +30,13 @@
     </v-container>
 
     <div class="mt-3 mt-md-12 d-block d-md-flex align-center">
-      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-4" />
+      <mew-blockie
+        :address="address"
+        width="110px"
+        height="110px"
+        class="mr-6"
+      />
+
       <div style="max-width: 400px" class="my-3">
         <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
           My address icon

@@ -25,7 +25,12 @@
       </div>
     </div>
     <div class="mt-12 d-flex align-center">
-      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
+      <mew-blockie
+        :address="address"
+        width="110px"
+        height="110px"
+        class="mr-6"
+      />
 
       <div style="max-width: 400px">
         <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
