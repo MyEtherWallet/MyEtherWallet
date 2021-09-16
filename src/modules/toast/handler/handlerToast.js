@@ -8,12 +8,30 @@ const INFO = 'info';
 const SENTRY = 'sentry';
 const GLOBAL_ERRORS = {
   "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.":
-    "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.",
-  'Device is used in another window': 'Device is used in another window',
-  'wrong previous session': 'Wrong previous session'
+    'globalError-invalid-returned-values',
+  'Invalid message type!': 'globalError-invalid-message-type',
+  'Device is used in another window':
+    'globalError-device-used-in-another-window',
+  'Wrong previous session': 'globalError-wrong-previous-session',
+  'Something went wrong in mnemonic wallet access':
+    'globalError-mnemonic-wallet-access-error',
+  'Expected public key to be an Uint8Array with length [33, 65]':
+    'globalError-invalid-public-key-needs-to-be-int8Array-with-length-33-65',
+  'Returned error: insufficient funds for transfer':
+    'globalError-insufficient-funds-for-transfer',
+  'Promise was rejected with a falsy value':
+    'globalError-promise-rejected-with-falsy-value',
+  'The operation is insecure.': 'globalError-the-operation-is-insecure.',
+  "CONNECTION ERROR: Couldn't connect to node on WS.":
+    'globalError-connection-error-couldnt-connect-to-WS.',
+  'Failed to fetch': 'globalError-failed-to-fetch',
+  'Non-Error promise rejection captured with keys: code, message':
+    'globalError-non-error-promise-rejection-captured-with-keys-code-message',
+  'Network Error': 'globalError-network-error',
+  'connection not open': 'globalError-connection-not-open'
 };
 const foundGlobalError = text => {
-  const errorValues = Object.values(GLOBAL_ERRORS);
+  const errorValues = Object.keys(GLOBAL_ERRORS);
   return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
