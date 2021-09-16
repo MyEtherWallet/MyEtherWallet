@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--paper-wallet-content">
-    <v-container class="pa-0">
+    <v-container>
       <v-row>
         <v-col cols="12" md="6" class="d-flex align-center mr-auto">
           <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
@@ -8,7 +8,7 @@
             <span class="mx-3">|</span>Paper Wallet
           </div>
         </v-col>
-        <v-col class="pr-0" cols="auto">
+        <v-col cols="auto">
           <div class="d-flex align-center mr-3 mb-2">
             <img
               class="mr-2"
@@ -30,7 +30,13 @@
     </v-container>
 
     <div class="mt-3 mt-md-12 d-block d-md-flex align-center">
-      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-4" />
+      <mew-blockie
+        :address="address"
+        width="110px"
+        height="110px"
+        class="mr-6"
+      />
+
       <div style="max-width: 400px" class="my-3">
         <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
           My address icon
@@ -49,7 +55,7 @@
 
     <v-container>
       <v-row class="align-center mb-6">
-        <v-col cols="12" md="8" class="mr-auto pl-0">
+        <v-col cols="12" md="8" class="mr-auto">
           <div
             class="
               mew-heading-1
@@ -71,13 +77,13 @@
             {{ getChecksumAddressString }}
           </div>
         </v-col>
-        <v-col class="pr-0" cols="auto">
+        <v-col cols="auto">
           <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
       <v-row v-if="showPrivateKey">
-        <v-col cols="12" md="8" class="mr-auto pl-0">
+        <v-col cols="12" md="8" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
@@ -99,7 +105,7 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col class="pr-0" cols="auto">
+        <v-col cols="auto">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>
@@ -120,14 +126,11 @@
 <script>
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   data() {
-    return {
-      blockieImg: undefined
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
@@ -143,21 +146,6 @@ export default {
     showPrivateKey() {
       return !this.instance.isPubOnly;
     }
-  },
-  mounted() {
-    this.blockieImg = Blockies({
-      seed: this.address ? this.address.toLowerCase() : '',
-      size: 8,
-      scale: 16
-    }).toDataURL();
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.blockie-image {
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-}
-</style>
