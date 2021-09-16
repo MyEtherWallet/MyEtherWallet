@@ -50,7 +50,7 @@
     <v-divider class="my-6"></v-divider>
 
     <v-container>
-      <v-row class="align-center mb-6">
+      <v-row class="align-center">
         <v-col cols="8">
           <div class="mew-heading-1 font-weight-black text-uppercase">
             My wallet address
@@ -60,12 +60,12 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <qr-code :value="address" :options="{ size: 140 }"></qr-code>
+          <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
       <v-row v-if="showPrivateKey">
-        <v-col cols="8">
+        <v-col cols="12" md="8" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
@@ -87,7 +87,7 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="auto">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>

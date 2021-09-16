@@ -54,7 +54,7 @@
     <v-divider class="my-6"></v-divider>
 
     <v-container>
-      <v-row class="align-center mb-6">
+      <v-row class="align-center">
         <v-col cols="12" md="8" class="mr-auto">
           <div
             class="
