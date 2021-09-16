@@ -1,4 +1,4 @@
-import WalletConnect from '@walletconnect/browser';
+import WalletConnect from '@walletconnect/client';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
 import { Transaction } from '@ethereumjs/tx';
@@ -34,15 +34,11 @@ class WalletConnectWallet {
       walletConnect.killSession(); // remove any leftover connections
     }
     this.walletConnect = walletConnect;
-    this.isKilled = true;
     this.walletConnect.on('disconnect', () => {
-      if (!this.isKilled) {
-        store.dispatch('wallet/removeWallet');
-      }
+      store.dispatch('wallet/removeWallet');
     });
 
     this.walletConnect.disconnect = () => {
-      this.isKilled = true;
       this.walletConnect.killSession();
     };
     this.meta = {
@@ -106,7 +102,6 @@ class WalletConnectWallet {
         if (error) {
           return reject(error);
         }
-        this.isKilled = false;
         this.walletConnect._qrcodeModal.close();
         const { accounts } = payload.params[0];
         resolve(

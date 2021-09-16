@@ -287,7 +287,7 @@ export default {
           type: WALLET_TYPES.KEEPKEY
         },
         {
-          label: 'Bitbox 02',
+          label: 'BitBox02',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
           type: WALLET_TYPES.BITBOX2
         },

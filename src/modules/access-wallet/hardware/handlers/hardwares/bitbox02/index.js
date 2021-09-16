@@ -24,7 +24,7 @@ class BitBox02Wallet {
     this.status = undefined;
     this.pairingConfirmed = false;
     this.meta = {
-      name: 'BitBox 2',
+      name: 'BitBox02',
       img: {
         type: 'mew-icon',
         value: 'bitbox'
@@ -69,7 +69,7 @@ class BitBox02Wallet {
     this.hdKey = HDKey.fromExtendedKey(rootPub);
 
     if (!this.attestation) {
-      errorHandler('Attestation failed');
+      errorHandler({ message: 'Attestation failed' });
     }
   }
 
