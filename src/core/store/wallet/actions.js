@@ -67,8 +67,7 @@ const setWeb3Instance = function (
           to: arr[i].to,
           data: arr[i].data,
           from: arr[i].from,
-          value: arr[i].value,
-          gasPrice: arr[i].gasPrice
+          value: arr[i].value
         };
         const gas = await (arr[i].gas === undefined
           ? web3Instance.eth.estimateGas(localTx)

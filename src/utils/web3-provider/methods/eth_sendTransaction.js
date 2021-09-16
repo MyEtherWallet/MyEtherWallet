@@ -36,6 +36,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
+  delete localTx['gasPrice'];
   tx.value = tx.value === '' || tx.value === '0x' ? '0' : tx.value;
   const ethCalls = new EthCalls(requestManager);
   try {

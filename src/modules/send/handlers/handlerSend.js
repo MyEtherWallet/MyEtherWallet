@@ -102,8 +102,7 @@ class SendTransaction {
       data: this.TX.data,
       from: this.TX.from,
       to: this.TX.to,
-      value: this.TX.value,
-      gasPrice: this.TX.gasPrice
+      value: this.TX.value
     });
   }
   isToken() {
