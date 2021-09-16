@@ -91,9 +91,9 @@ class TrezorWallet {
           };
           const result = await Trezor.ethereumSignTransaction(options);
           if (!result.success) throw new Error(result.payload.error);
-          tx.v = '0x' + result.v;
-          tx.r = '0x' + result.r;
-          tx.s = '0x' + result.s;
+          txParams.v = getBufferFromHex(result.payload.v);
+          txParams.r = getBufferFromHex(result.payload.r);
+          txParams.s = getBufferFromHex(result.payload.s);
           return getSignTransactionObject(
             FeeMarketEIP1559Transaction.fromTxData(txParams)
           );

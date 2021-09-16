@@ -65,7 +65,7 @@ export default {
       { img: Olga, name: 'Olga', title: 'VP' },
       { img: Alex, name: 'Alex', title: 'Director of Mobile' },
       { img: Misha, name: 'Misha', title: 'Lead Mobile Developer' },
-      { img: Yel, name: 'Yel', title: 'Full-Stack Developer' },
+      { img: Yel, name: 'Yel', title: 'Lead Web Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Ryan', title: 'Full-Stack Developer' },
@@ -74,7 +74,7 @@ export default {
       { img: doggiePlaceholder, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: placeholder, name: 'Vince', title: 'Marketing Manager' },
-      { img: Katya, name: 'Katya', title: 'Community and Content Manager' },
+      { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
       { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
       {
         img: placeholder,
