@@ -315,7 +315,6 @@ export default {
     isLoading(value) {
       let index = 0;
       const length = this.partners.length;
-      this.currentPicture = this.partners[index]?.image;
 
       if (value) {
         const showProviders = () => {
