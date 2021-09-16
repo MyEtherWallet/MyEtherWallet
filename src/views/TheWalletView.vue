@@ -135,9 +135,11 @@ export default {
         });
 
         window.ethereum.on('accountsChanged', acc => {
-          const web3 = new Web3(window.ethereum);
-          const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, web3.currentProvider]);
+          if (acc[0]) {
+            const web3 = new Web3(window.ethereum);
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          }
         });
       } else {
         Toast(
