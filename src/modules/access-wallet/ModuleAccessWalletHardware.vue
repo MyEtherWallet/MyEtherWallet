@@ -24,8 +24,9 @@
       ]"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
-        <!-- TODO: add link -->
-        <a href="" target="_blank"> Learn More </a>
+        <a href="https://help.myetherwallet.com/en/" target="_blank">
+          Learn More
+        </a>
       </span></v-row
     >
     <!--
@@ -345,26 +346,33 @@ export default {
      * TODO: get link urls from Russ
      */
     footerLink() {
-      if (this.onKeepkey) {
-        return {
-          title: 'Using a KeepKey Hardware wallet with MEW',
-          url: 'https://www.mewtopia.com/'
-        };
-      } else if (this.onCoolWallet) {
-        return {
-          title: 'Using a CoolWallet Hardware Wallet with MEW',
-          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
-        };
-      }
-      if (this.onLedger) {
-        return {
-          title: 'Using a Ledger Hardware wallet with MEW',
-          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
-        };
-      }
+      // Commented for now as the new articles aren't available yet
+      // if (this.onKeepkey) {
+      //   return {
+      //     title: 'Using a KeepKey Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
+      //   };
+      // } else if (this.onCoolWallet) {
+      //   return {
+      //     title: 'Using a CoolWallet Hardware Wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
+      //   };
+      // }
+      // if (this.onLedger) {
+      //   return {
+      //     title: 'Using a Ledger Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
+      //   };
+      // }
+      // if (this.onTrezor) {
+      //   return {
+      //     title: 'Using a Trezor Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-trezor-with-mew/'
+      //   };
+      // }
       return {
         title: 'Hardware Wallets',
-        url: 'https://www.mewtopia.com/'
+        url: 'https://help.myetherwallet.com/en/'
       };
     },
     /**
