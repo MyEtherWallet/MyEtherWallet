@@ -1,5 +1,6 @@
 'use strict';
 
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 const utils = require('web3-utils');
 const errors = require('web3-core-helpers').errors;
 
@@ -164,10 +165,7 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     return;
   }
   if (this.connection.readyState !== this.connection.OPEN) {
-    if (typeof this.connection.onerror === 'function') {
-      this.connection.onerror(new Error('connection not open'));
-    }
-    callback(new Error('connection not open'));
+    Toast('connection not open', {}, SENTRY);
     return;
   }
 
