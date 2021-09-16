@@ -8,8 +8,7 @@ const ERRORS = {
   'Max number of App paired. Delete one of the paired app.':
     'coolWalletError.max-app-instance',
   'browser not supported': 'coolWalletError.no-bluetooth',
-  'User cancelled the requestDevice() chooser':
-    'coolWalletError.user-cancelled-request-device-bluetooth',
+  'User cancelled the requestDevice() chooser': 'User cancelled action!',
   'NetworkError: GATT operation already in progress.':
     'Unknown CoolWallet Error!',
   'Card Locked. Unlock with a registered App or reset your wallet.':
