@@ -315,33 +315,24 @@ export default {
     isLoading(value) {
       let index = 0;
       const length = this.partners.length;
+      this.currentPicture = this.partners[index]?.image;
 
       if (value) {
-        const myLoop = () => {
-          setTimeout(() => {
-            if (this.checkLoading === false && index >= 4) {
-              this.$emit('stopLoadingProviders', false);
-            }
-            this.currentPicture = this.partners[index]?.image;
-            index++;
-            if (index <= length) myLoop();
-          }, 600);
+        const showProviders = () => {
+          setTimeout(
+            () => {
+              if (this.checkLoading === false && index >= 4) {
+                this.$emit('stopLoadingProviders', false);
+              }
+              this.currentPicture = this.partners[index]?.image;
+              index++;
+              if (index <= length) showProviders();
+            },
+            index === 0 ? 0 : 600
+          );
         };
-        myLoop();
+        showProviders();
       }
-
-      // if (value) {
-      //   this.partners.forEach((partner, index) => {
-      //     setTimeout(() => {
-      //       this.currentPicture = partner.image;
-      //       if (index * 600 === 1800) {
-      //         setTimeout(() => {
-      //           this.$emit('stopLoadingProviders', false);
-      //         }, 600);
-      //       }
-      //     }, index * 600);
-      //   });
-      // }
     }
   },
   mounted() {
