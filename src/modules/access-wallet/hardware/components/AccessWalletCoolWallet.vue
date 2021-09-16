@@ -4,6 +4,7 @@
       v-model="pairingPassword"
       placeholder="Pairing Password"
       type="password"
+      :error-messages="passwordErrorMsg"
     />
     <v-row no-gutters class="border-container mb-8">
       <v-col
@@ -59,12 +60,21 @@ export default {
     coolWalletUnlock: {
       type: Function,
       default: () => {}
+    },
+    passwordError: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       pairingPassword: ''
     };
+  },
+  computed: {
+    passwordErrorMsg() {
+      return this.passwordError ? 'Invalid PIN. Please enter correct PIN.' : '';
+    }
   },
   watch: {
     pairingPassword(newVal) {

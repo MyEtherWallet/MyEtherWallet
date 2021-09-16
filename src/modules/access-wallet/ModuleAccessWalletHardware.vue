@@ -90,6 +90,7 @@
       <access-wallet-cool-wallet
         v-if="onCoolWallet"
         :cool-wallet-unlock="coolWalletUnlock"
+        :password-error="passwordError"
         @password="setPassword"
       />
       <!--
@@ -320,7 +321,8 @@ export default {
       // pin: '',
       ledgerConnected: false,
       callback: () => {},
-      unwatch: () => {}
+      unwatch: () => {},
+      passwordError: false
     };
   },
   computed: {
@@ -587,11 +589,20 @@ export default {
         })
         .catch(e => {
           if (this.wallets[this.walletType]) {
-            this.wallets[this.walletType].create.errorHandler(e);
+            if (
+              e.message === 'Wrong Password' &&
+              this.walletType === WALLET_TYPES.COOL_WALLET
+            ) {
+              this.passwordError = true;
+            } else {
+              this.wallets[this.walletType].create.errorHandler(e);
+            }
           } else {
             Toast(e, {}, ERROR);
           }
-          this.reset();
+          if (e.message !== 'Wrong Password') {
+            this.reset();
+          }
         });
     },
     /**
@@ -625,6 +636,7 @@ export default {
      */
     setPassword(str) {
       this.password = str;
+      this.passwordError = false;
     }
   }
 };
