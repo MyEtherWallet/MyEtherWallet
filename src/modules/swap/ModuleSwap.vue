@@ -13,7 +13,7 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <mew6-white-sheet class="pt-7 pb-3 px-5">
+          <div class="input-swap-container pt-7 pb-3 px-5">
             <v-row class="align-center justify-space-between mt-4">
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
@@ -96,7 +96,7 @@
               /> -->
               </v-col>
             </v-row>
-          </mew6-white-sheet>
+          </div>
 
           <!--
           =====================================================================================
@@ -1183,6 +1183,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.input-swap-container {
+  box-shadow: 0px 4px 4px rgb(11 40 64 / 4%), 0px 2px 10px rgb(11 40 64 / 6%),
+    0px 3px 16px rgb(11 40 64 / 4%);
+  border-radius: 10px;
+}
+
 .v-input--selection-controls {
   padding: 0;
   margin: 0;
