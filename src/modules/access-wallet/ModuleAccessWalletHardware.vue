@@ -24,9 +24,9 @@
       ]"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
-        <a href="https://help.myetherwallet.com/en/" target="_blank">
-          Learn More
-        </a>
+        <router-link to="/buy-hardware">
+          Get a Hardware Wallet today
+        </router-link>
       </span></v-row
     >
     <!--

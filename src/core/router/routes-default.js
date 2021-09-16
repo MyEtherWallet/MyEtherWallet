@@ -82,8 +82,8 @@ export default {
       }
     },
     {
-      path: ROUTES_HOME.COMPANY_PAGE.PATH,
-      name: ROUTES_HOME.COMPANY_PAGE.NAME,
+      path: ROUTES_HOME.ABOUT_PAGE.PATH,
+      name: ROUTES_HOME.ABOUT_PAGE.NAME,
       component: TheCompanyLayout,
       meta: {
         noAuth: true

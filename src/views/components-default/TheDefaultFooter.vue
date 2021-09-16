@@ -339,7 +339,7 @@ export default {
       {
         title: 'MEW',
         data: [
-          { label: 'About us', routerLink: 'CompanyPage' },
+          { label: 'About us', routerLink: 'AboutPage' },
           { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
           { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
