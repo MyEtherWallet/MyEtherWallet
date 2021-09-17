@@ -1,4 +1,3 @@
-import BitBoxWallet from './hardwares/bitbox';
 import BitBox02Wallet from './hardwares/bitbox02';
 import LedgerWallet from './hardwares/ledger';
 import TrezorWallet from './hardwares/trezor';
@@ -7,7 +6,6 @@ import BCVaultWallet from './hardwares/bcvault';
 import CoolWallet from './hardwares/coolwallet';
 
 export {
-  BitBoxWallet,
   BitBox02Wallet,
   LedgerWallet,
   TrezorWallet,

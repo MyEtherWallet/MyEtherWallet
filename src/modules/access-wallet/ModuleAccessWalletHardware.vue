@@ -682,13 +682,8 @@ export default {
     /**
      * Sets BitBox value
      */
-    setSelectedBitbox(val) {
-      if (!val) {
-        this.walletType = WALLET_TYPES.BITBOX;
-      } else {
-        this.walletType = WALLET_TYPES.BITBOX2;
-      }
-
+    setSelectedBitbox() {
+      this.walletType = WALLET_TYPES.BITBOX2;
       this.nextStep();
     },
     /**

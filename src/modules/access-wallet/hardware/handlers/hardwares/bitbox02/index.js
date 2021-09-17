@@ -75,22 +75,22 @@ class BitBox02Wallet {
 
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParams => {
+      const tx = new Transaction(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       const signingData = {
         keypath: this.basePath + '/' + idx,
         chainId: networkId,
         tx: tx
       };
       const result = await this.BitBox02.ethSignTransaction(signingData);
-      tx.r = Buffer.from(result.r);
-      tx.s = Buffer.from(result.s);
-      tx.v = Buffer.from(result.v);
+      txParams.r = Buffer.from(result.r);
+      txParams.s = Buffer.from(result.s);
+      txParams.v = Buffer.from(result.v);
 
-      const signedChainId = calculateChainIdFromV(tx.v);
+      const signedChainId = calculateChainIdFromV(txParams.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
@@ -99,7 +99,7 @@ class BitBox02Wallet {
             signedChainId,
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(tx);
+      return getSignTransactionObject(Transaction.fromTxData(txParams));
     };
 
     const msgSigner = async msg => {

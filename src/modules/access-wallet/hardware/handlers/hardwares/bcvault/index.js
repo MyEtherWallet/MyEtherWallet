@@ -79,7 +79,7 @@ class BCVault {
 
   getAccount(address) {
     const path = null;
-    const txSigner = async tx => {
+    const txSigner = async txParams => {
       const web3Utils = store.state.wallet.web3.utils;
       if (store.state.wallet.network.type.chainID !== 1) {
         errorHandler({
@@ -87,9 +87,7 @@ class BCVault {
         });
         return;
       }
-      delete tx['from'];
-      tx['from'] = address;
-      tx = new Transaction(tx, {
+      const tx = new Transaction(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const newTx = {};
@@ -109,7 +107,7 @@ class BCVault {
               : web3Utils.hexToNumber(bufferToHex(tx['nonce']))
         }
       };
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       const result = await this.bcWallet
         .GenerateTransaction(
           this.deviceNumber[0],
@@ -121,11 +119,8 @@ class BCVault {
           errorHandler(err);
         });
       if (result) {
-        const resultTx = new Transaction(result);
-        tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
-        tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
-        tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
-        const signedChainId = calculateChainIdFromV(tx.v);
+        const resultTx = Transaction.fromTxData(result);
+        const signedChainId = calculateChainIdFromV(resultTx.v);
         if (signedChainId !== networkId)
           throw new Error(
             Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -134,7 +129,7 @@ class BCVault {
             }),
             'InvalidNetworkId'
           );
-        return getSignTransactionObject(tx);
+        return getSignTransactionObject(resultTx);
       }
     };
     const msgSigner = async msg => {

@@ -91,18 +91,18 @@ class KeepkeyWallet {
       derivedKey = this.hdKey.derive('m/' + idx);
       accountPath = this.basePath + '/' + idx;
     }
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParams => {
+      const tx = new Transaction(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const hexTx = getHexTx(tx);
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       hexTx.addressNList = bip32ToAddressNList(accountPath);
       const result = await this.keepkey.ethSignTx(hexTx);
-      tx.v = getBufferFromHex(sanitizeHex(numberToHex(result.v)));
-      tx.r = getBufferFromHex(sanitizeHex(result.r));
-      tx.s = getBufferFromHex(sanitizeHex(result.s));
-      const signedChainId = calculateChainIdFromV(tx.v);
+      txParams.v = getBufferFromHex(sanitizeHex(numberToHex(result.v)));
+      txParams.r = getBufferFromHex(sanitizeHex(result.r));
+      txParams.s = getBufferFromHex(sanitizeHex(result.s));
+      const signedChainId = calculateChainIdFromV(txParams.v);
       if (signedChainId !== networkId)
         throw new Error(
           Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -111,7 +111,7 @@ class KeepkeyWallet {
           }),
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(tx);
+      return getSignTransactionObject(Transaction.fromTxData(txParams));
     };
     const msgSigner = async msg => {
       const response = await this.keepkey.ethSignMessage({

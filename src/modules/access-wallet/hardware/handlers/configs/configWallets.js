@@ -3,7 +3,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   LedgerWallet,
   TrezorWallet,
-  BitBoxWallet,
   BitBox02Wallet,
   KeepkeyWallet,
   BCVaultWallet,
@@ -45,25 +44,6 @@ export default {
     titles: {
       1: 'Connect with Trezor',
       2: 'Confirm Network & Address'
-    }
-  },
-  [WALLET_TYPES.BITBOX]: {
-    create: BitBoxWallet,
-    when: 4,
-    steps: [
-      LAYOUT_STEPS.BITBOX_SELECT,
-      LAYOUT_STEPS.ENTER_PASSWORD,
-      LAYOUT_STEPS.PATH_SELECT,
-      LAYOUT_STEPS.NETWORK_ACCOUNT_SELECT
-    ],
-    hasPaths: true,
-    requiresPassword: true,
-    accountOnly: false,
-    titles: {
-      1: 'Select BitBox Wallet',
-      2: 'Connect with BitBox',
-      3: 'Enter your password',
-      4: 'Confirm Network & Address'
     }
   },
   [WALLET_TYPES.BITBOX2]: {
