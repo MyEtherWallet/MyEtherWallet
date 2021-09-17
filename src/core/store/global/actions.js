@@ -60,6 +60,7 @@ const setTracking = function ({ state }) {
   };
   matomoExists().then(() => {
     if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
+    else this._vm.$matomo.forgetConsentGiven();
   });
 };
 export default {
