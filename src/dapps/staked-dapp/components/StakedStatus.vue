@@ -357,11 +357,10 @@ export default {
           const createdDate = new Date(raw.created).getTime() + nextDay;
           const withinTheDay = new Date().getTime() <= createdDate;
           return (
-            (raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
-              raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
-              raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-              raw.status.toLowerCase() === STATUS_TYPES.CREATED) &&
-            !withinTheDay
+            raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
+            raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
+            raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
+            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && !withinTheDay)
           );
         })
         .map(raw => {
