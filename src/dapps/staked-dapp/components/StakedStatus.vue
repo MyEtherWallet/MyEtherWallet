@@ -360,7 +360,7 @@ export default {
             raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
             raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
             raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && !withinTheDay)
+            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
           );
         })
         .map(raw => {
