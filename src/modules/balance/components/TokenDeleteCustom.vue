@@ -12,8 +12,8 @@
     }"
     :show-overlay="open"
     title="Remove Custom Token"
-    :close="close"
-    :back="close"
+    :close="closeDelete"
+    :back="null"
     content-size="large"
   >
     <div class="full-width">
@@ -37,14 +37,14 @@
           enabled: true
         }"
       >
-        <div>
-          <p class="mew-body text-left py-1">
+        <div class="text-center">
+          <p class="mew-body textPrimary--text mb-5">
             {{ title }}
           </p>
           <div
             v-for="token in selectedTokens"
             :key="token.address"
-            class="d-flex"
+            class="d-flex align-center justify-center py-1"
           >
             <div class="d-flex">
               <v-img :src="token.tokenImg" width="20" height="20" contain />
@@ -53,7 +53,7 @@
           </div>
         </div>
       </mew-popup>
-      <div class="mew-body text-center mb-3">
+      <div class="mew-body textPrimary--text text-center mb-5">
         Please select tokens that you want to remove
       </div>
       <mew-table
@@ -102,7 +102,7 @@ export default {
           width: '20%'
         },
         {
-          text: 'Address',
+          text: 'Contract Address',
           value: 'address',
           sortable: false,
           width: '50%'
@@ -142,6 +142,10 @@ export default {
   },
   methods: {
     ...mapActions('custom', ['deleteAll', 'deleteToken']),
+    closeDelete() {
+      this.selectedTokens = [];
+      this.close();
+    },
     /**
      * @returns formatted values to display correctly on token table
      */

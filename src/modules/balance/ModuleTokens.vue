@@ -28,7 +28,7 @@
           >
           <mew-menu
             v-else
-            text-color="black--text"
+            text-color="primary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -147,11 +147,11 @@ export default {
           {
             items: [
               {
-                title: '+ Add',
+                title: 'Add Token',
                 to: 'add'
               },
               {
-                title: '- Remove',
+                title: 'Remove Token',
                 to: 'remove'
               }
             ]
