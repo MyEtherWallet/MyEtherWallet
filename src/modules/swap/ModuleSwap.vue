@@ -232,7 +232,11 @@
             =====================================================================================
           -->
           <app-network-fee
-            v-if="step > 0 && providersErrorMsg.subtitle === ''"
+            v-if="
+              step > 0 &&
+              providersErrorMsg.subtitle === '' &&
+              !isLoadingProviders
+            "
             :show-fee="showSwapFee"
             :getting-fee="loadingFee"
             :error="feeError"
@@ -865,6 +869,7 @@ export default {
         fromToken: this.fromToken
       };
       this.isLoadingProviders = false;
+      this.checkLoading = true;
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';

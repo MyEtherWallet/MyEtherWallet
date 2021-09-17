@@ -1,8 +1,5 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
-    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
-      Select rate
-    </div>
     <!--
     =====================================================================================
       Sceleton Loader (desktop/mobile)
@@ -44,6 +41,9 @@
     -->
     <v-item-group v-if="step >= 1 && toTokenSymbol && !hasProviderError">
       <v-row no-gutters>
+        <div v-if="providersList.length > 0" class="mew-heading-3 mb-5 pl-4">
+          Select rate
+        </div>
         <v-col
           v-for="(quote, idx) in providersList"
           :key="`quote-${idx}`"
@@ -170,6 +170,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { _ } from 'web3-utils';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -313,19 +314,26 @@ export default {
       }
     },
     isLoading(value) {
-      let index = 0;
-      const length = this.partners.length;
-
       if (value) {
+        let index = 0;
         const showProviders = () => {
-          setTimeout(
+          _.delay(
             () => {
-              if (this.checkLoading === false && index >= 4) {
+              if (!this.checkLoading && index >= 4) {
                 this.$emit('stopLoadingProviders', false);
               }
+
               this.currentPicture = this.partners[index]?.image;
-              index++;
-              if (index <= length) showProviders();
+
+              if (this.checkLoading && index >= 4) {
+                index = 0;
+              } else {
+                index++;
+              }
+
+              if (index <= this.partners.length) {
+                showProviders();
+              }
             },
             index === 0 ? 0 : 600
           );
@@ -333,9 +341,6 @@ export default {
         showProviders();
       }
     }
-  },
-  mounted() {
-    this.currentPicture = this.partners[0].image;
   }
 };
 </script>
