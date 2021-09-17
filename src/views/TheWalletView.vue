@@ -56,7 +56,6 @@ export default {
     },
     web3() {
       this.subscribeToBlockNumber();
-      this.setGas();
       this.setTokensAndBalance();
     },
     coinGeckoTokens() {
@@ -66,18 +65,13 @@ export default {
   mounted() {
     if (this.online) {
       this.setup();
-
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
         const web3Instance = new Web3(window.ethereum);
-
         web3Instance.eth.net.getId().then(id => {
           this.findAndSetNetwork(id);
         });
         this.web3Listeners();
       }
-      window.setInterval(() => {
-        this.setGas();
-      }, 180000);
     }
   },
   destroyed() {
@@ -86,15 +80,13 @@ export default {
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
     ...mapActions('global', [
-      'setGasPrice',
       'setNetwork',
       'setBaseFeePerGas',
-      'setMaxPriorityFeePerGas'
+      'updateGasPrice'
     ]),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
       this.setTokensAndBalance();
-      this.setGas();
       this.subscribeToBlockNumber();
     },
     setTokensAndBalance() {
@@ -104,27 +96,13 @@ export default {
         this.setTokens([]);
       }
     },
-    setPriorityFee(baseFee) {
-      this.web3.eth.getGasPrice().then(gasPrice => {
-        const priorityFee = toBN(gasPrice).sub(toBN(baseFee));
-        this.setMaxPriorityFeePerGas(priorityFee);
-      });
-    },
     checkAndSetBaseFee(baseFee) {
       if (baseFee) {
-        this.setPriorityFee(baseFee);
         this.setBaseFeePerGas(toBN(baseFee));
       } else {
         this.setBaseFeePerGas(toBN('0'));
       }
-    },
-    setGas() {
-      this.web3.eth.getGasPrice().then(res => {
-        const modifiedGasPrice = toBN(res).muln(
-          this.network.type.gasPriceMultiplier
-        );
-        this.setGasPrice(modifiedGasPrice.toString());
-      });
+      this.updateGasPrice();
     },
     subscribeToBlockNumber() {
       this.web3.eth.getBlockNumber().then(bNumber => {

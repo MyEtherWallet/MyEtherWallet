@@ -13,14 +13,14 @@ import {
   getSignTransactionObject,
   getBufferFromHex,
   sanitizeHex,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  eip1559Params
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
-import { bnToHex, rlp } from 'ethereumjs-util';
-import { toBN } from 'web3-utils';
+import { rlp } from 'ethereumjs-util';
 
 const NEED_PASSWORD = false;
 
@@ -103,12 +103,7 @@ class ledgerWallet {
       if (store.getters['global/isEIP1559SupportedNetwork']) {
         const feeMarket = store.getters['global/gasFeeMarketInfo'];
         const _txParams = Object.assign(
-          {
-            maxPriorityFeePerGas: bnToHex(
-              toBN(txParams.gasPrice).sub(feeMarket.baseFeePerGas)
-            ),
-            maxFeePerGas: txParams.gasPrice
-          },
+          eip1559Params(txParams.gasPrice, feeMarket),
           txParams
         );
         delete _txParams.gasPrice;

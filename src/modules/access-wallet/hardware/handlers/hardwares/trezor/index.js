@@ -8,10 +8,9 @@ import {
   getSignTransactionObject,
   getHexTxObject,
   getBufferFromHex,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  eip1559Params
 } from '@/modules/access-wallet/common/helpers';
-import { bnToHex } from 'ethereumjs-util';
-import { toBN } from 'web3-utils';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
@@ -77,12 +76,7 @@ class TrezorWallet {
       if (store.getters['global/isEIP1559SupportedNetwork']) {
         const feeMarket = store.getters['global/gasFeeMarketInfo'];
         const txParams = getHexTxObject(_tx);
-        Object.assign(txParams, {
-          maxPriorityFeePerGas: bnToHex(
-            toBN(txParams.gasPrice).sub(feeMarket.baseFeePerGas)
-          ),
-          maxFeePerGas: txParams.gasPrice
-        });
+        Object.assign(txParams, eip1559Params(txParams.gasPrice, feeMarket));
         delete txParams.gasPrice;
         try {
           const options = {

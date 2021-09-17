@@ -12,7 +12,6 @@
       :set-selected="setGas"
       :gas-price="gasPrice"
       :cost-in-eth="costInEth"
-      :open-global-settings="openSettings"
       :not-enough-eth="notEnoughEth"
     />
   </app-simple-dialog>
@@ -34,10 +33,6 @@ export default {
     gasPriceModal: {
       type: Boolean,
       default: false
-    },
-    openSettings: {
-      type: Function,
-      default: () => {}
     },
     close: {
       type: Function,

@@ -3,7 +3,6 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { gasPriceTypes, estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { fromWei, toWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import { toBN } from 'web3-utils';
 
 const gasPriceMixin = {
   data() {
@@ -60,9 +59,6 @@ const gasPriceMixin = {
     }
   },
   watch: {
-    gasPrice() {
-      this.fetchGasPrice();
-    },
     web3() {
       this.fetchGasPrice();
     }
@@ -71,17 +67,12 @@ const gasPriceMixin = {
     this.fetchGasPrice();
   },
   methods: {
-    ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
+    ...mapActions('global', ['setGasPriceType', 'updateGasPrice']),
     setSelected(selected) {
       this.setGasPriceType(selected);
     },
     fetchGasPrice() {
-      this.web3.eth.getGasPrice().then(res => {
-        const modifiedGasPrice = toBN(res).muln(
-          this.network.type.gasPriceMultiplier
-        );
-        this.setGasPrice(modifiedGasPrice.toString());
-      });
+      this.updateGasPrice();
     }
   }
 };

@@ -15,7 +15,7 @@ import {
   sanitizeHex,
   getSignTransactionObject,
   calculateChainIdFromV
-} from '@/modules/access-wallet/common/utils';
+} from '@/modules/access-wallet/common/helpers';
 
 const NEED_PASSWORD = false;
 

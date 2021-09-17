@@ -292,9 +292,9 @@ import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
-import { setEvents } from '@/utils/web3-provider/methods/utils.js';
+import { setEvents } from '@/utils/web3-provider/methods/utils';
 import * as locStore from 'store';
-import { sanitizeHex } from '@/modules/access-wallet/common/utils';
+import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 
 export default {

@@ -6,7 +6,6 @@
     =====================================================
     -->
     <app-network-settings-modal
-      :open-settings="openSettings"
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
       :selected="gasPriceType"
@@ -117,9 +116,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { EventBus } from '@/core/plugins/eventBus';
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
 import {
   formatFiatValue,
@@ -169,7 +167,12 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
+    ...mapGetters('global', [
+      'network',
+      'isEthNetwork',
+      'swapLink',
+      'gasPrice'
+    ]),
     costInEth() {
       return fromWei(this.totalCost);
     },
@@ -190,15 +193,14 @@ export default {
     }
   },
   methods: {
-    openSettings() {
-      EventBus.$emit('toggleSettings');
-      this.gasPriceModal = false;
-    },
+    ...mapActions('global', ['updateGasPrice']),
     closeGasPrice() {
       this.gasPriceModal = false;
     },
     openGasPriceModal() {
-      this.gasPriceModal = true;
+      this.updateGasPrice().then(() => {
+        this.gasPriceModal = true;
+      });
     },
     handleLocalGasPrice(val) {
       this.$emit('onLocalGasPrice', val);

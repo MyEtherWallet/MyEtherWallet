@@ -2,8 +2,9 @@ import {
   getBufferFromHex,
   getSignTransactionObject,
   sanitizeHex,
-  calculateChainIdFromV
-} from './utils';
+  calculateChainIdFromV,
+  eip1559Params
+} from './helpers';
 import {
   hashPersonalMessage,
   publicToAddress,
@@ -11,15 +12,13 @@ import {
   ecsign,
   isValidPrivate,
   isValidPublic,
-  privateToPublic,
-  bnToHex
+  privateToPublic
 } from 'ethereumjs-util';
 import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
-import { toBN } from 'web3-utils';
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick, keystore) {
     this.nickname = nick !== null && nick !== '' ? nick : '';
@@ -104,12 +103,7 @@ class WalletInterface {
         if (store.getters['global/isEIP1559SupportedNetwork']) {
           const feeMarket = store.getters['global/gasFeeMarketInfo'];
           const _txParams = Object.assign(
-            {
-              maxPriorityFeePerGas: bnToHex(
-                toBN(txParams.gasPrice).sub(feeMarket.baseFeePerGas)
-              ),
-              maxFeePerGas: txParams.gasPrice
-            },
+            eip1559Params(txParams.gasPrice, feeMarket),
             txParams
           );
           delete _txParams.gasPrice;

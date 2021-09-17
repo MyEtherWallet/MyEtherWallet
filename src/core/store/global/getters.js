@@ -2,7 +2,9 @@ import nodeList from '@/utils/networks';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import {
   getGasBasedOnType,
-  getPriorityFeeBasedOnType
+  getPriorityFeeBasedOnType,
+  getBaseFeeBasedOnType,
+  gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
 import { toBN } from 'web3-utils';
 
@@ -30,7 +32,11 @@ const gasPriceByType = (state, getters) => type => {
     toBN(state.eip1559.maxPriorityFeePerGas),
     type
   );
-  return toBN(state.eip1559.baseFeePerGas).add(priorityFee).toString();
+  const baseFee = getBaseFeeBasedOnType(
+    toBN(state.eip1559.baseFeePerGas),
+    type
+  );
+  return baseFee.add(priorityFee).toString();
 };
 const gasPrice = function (state, getters) {
   if (!getters.isEIP1559SupportedNetwork) {
@@ -70,10 +76,19 @@ const gasFeeMarketInfo = function (state) {
     toBN(state.eip1559.maxPriorityFeePerGas),
     state.gasPriceType
   );
+  const maxPriorityFeePerGas = getPriorityFeeBasedOnType(
+    toBN(state.eip1559.maxPriorityFeePerGas),
+    gasPriceTypes.FAST
+  );
+  const baseFee = getBaseFeeBasedOnType(
+    toBN(state.eip1559.baseFeePerGas),
+    state.gasPriceType
+  );
   return {
-    baseFeePerGas: toBN(state.eip1559.baseFeePerGas),
-    maxFeePerGas: toBN(state.eip1559.baseFeePerGas).add(priorityFee),
-    priorityFeePerGas: priorityFee
+    baseFeePerGas: baseFee,
+    maxFeePerGas: baseFee.add(priorityFee),
+    priorityFeePerGas: priorityFee,
+    maxPriorityFeePerGas
   };
 };
 export default {

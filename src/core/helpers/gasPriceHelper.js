@@ -76,22 +76,37 @@ const getGasBasedOnType = (gasPrice, gasPriceType) => {
       return getEconomy(gasPrice);
   }
 };
+const getMinPriorityFee = () => {
+  return toBN(toWei('1.25', 'gwei'));
+};
 const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
-  const minFee = toBN(toWei('2', 'gwei'));
+  const minFee = getMinPriorityFee();
+  const mediumTip = priorityFeeBN.lt(minFee) ? minFee : priorityFeeBN;
   switch (gasPriceType) {
     case gasPriceTypes.ECONOMY:
-      return minFee;
+      return mediumTip.muln(0.8);
     case gasPriceTypes.REGULAR:
-      return priorityFeeBN.muln(0.5).lt(minFee.muln(2))
-        ? minFee.muln(2)
-        : priorityFeeBN.muln(0.5);
+      return mediumTip;
     case gasPriceTypes.FAST:
-      return priorityFeeBN.lt(minFee.muln(4)) ? minFee.muln(4) : priorityFeeBN;
+      return mediumTip.muln(1.25);
     default:
       return minFee;
   }
 };
+const getBaseFeeBasedOnType = (baseFeeBN, gasPriceType) => {
+  switch (gasPriceType) {
+    case gasPriceTypes.ECONOMY:
+      return baseFeeBN.muln(1.25);
+    case gasPriceTypes.REGULAR:
+      return baseFeeBN.muln(1.5);
+    case gasPriceTypes.FAST:
+      return baseFeeBN.muln(1.75);
+    default:
+      return baseFeeBN;
+  }
+};
 export {
+  getBaseFeeBasedOnType,
   getEconomy,
   getRegular,
   getFast,
@@ -100,5 +115,6 @@ export {
   regularToEconomy,
   gasPriceTypes,
   getPriorityFeeBasedOnType,
-  estimatedTime
+  estimatedTime,
+  getMinPriorityFee
 };
