@@ -349,7 +349,7 @@ export default {
           { label: 'About us', routerLink: 'CompanyPage' },
           { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
-          { label: 'Help center', link: 'https://kb.myetherwallet.com/' },
+          { label: 'Help center', link: 'https://help.myetherwallet.com/' },
           {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'

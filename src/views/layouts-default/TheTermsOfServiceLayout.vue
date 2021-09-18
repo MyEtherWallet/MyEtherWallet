@@ -92,7 +92,7 @@
               >
                 <template #article1>
                   <a
-                    href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
+                    href="https://help.myetherwallet.com/en/articles/5377591-myetherwallet-an-introduction"
                     target="_blank"
                     rel="noopener noreferrer"
                     >"{{ parent.$t('termsOfService.article1') }}"</a
@@ -100,7 +100,7 @@
                 </template>
                 <template #article2>
                   <a
-                    href="https://kb.myetherwallet.com/en/security-and-privacy/pro-tips-how-to-avoid-phishing-scams/"
+                    href="https://help.myetherwallet.com/en/articles/5377928-pro-tips-how-to-avoid-phishing-scams"
                     target="_blank"
                     rel="noopener noreferrer"
                     >“{{ parent.$t('termsOfService.article2') }}”</a
