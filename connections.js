@@ -20,6 +20,9 @@ module.exports = [
   'https://nft.mewapi.io:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
+  'https://tx.info.aquacha.in:443/api', // aqua
+  'https://rpc.xdaichain.com:443',
+  'https://myetherwallet.matomo.cloud:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
   'https://staging.mewwallet.dev:443',

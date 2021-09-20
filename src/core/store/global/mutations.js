@@ -58,6 +58,18 @@ const ADD_LOCAL_CONTRACT = function (state, contract) {
     state.localContracts[state.currentNetwork.type.name] = [];
   state.localContracts[state.currentNetwork.type.name].push(contract);
 };
+const SET_TRACKING_CONSENT = function (state, val) {
+  if (this._vm.$matomo) {
+    this._vm.$matomo.setConsentGiven();
+    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
+    if (!val) this._vm.$matomo.forgetConsentGiven();
+  }
+  state.consentToTrack = val;
+};
+
+const NEVER_SHOW_TRACKING = function (state) {
+  state.displayedTrackingPopup = true;
+};
 
 export default {
   SET_ONLINE_STATUS,
@@ -70,5 +82,7 @@ export default {
   ADD_CUSTOM_PATH,
   DELETE_CUSTOM_PATH,
   SET_IMPORTED_STATE,
-  ADD_LOCAL_CONTRACT
+  ADD_LOCAL_CONTRACT,
+  SET_TRACKING_CONSENT,
+  NEVER_SHOW_TRACKING
 };

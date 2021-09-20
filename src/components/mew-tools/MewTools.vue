@@ -109,7 +109,7 @@ export default {
         {
           label: 'Help center',
           img: require('@/assets/images/icons/icon-customer-support.svg'),
-          link: 'https://kb.myetherwallet.com/'
+          link: 'https://help.myetherwallet.com/'
         },
         {
           label: 'MEWconnect protocol',
