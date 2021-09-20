@@ -4,6 +4,7 @@ import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './main/sentry';
 import './main/components';
+import './main/matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -53,6 +54,7 @@ new Vue({
   beforeCreate() {
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
+    this.$store.dispatch('global/setTracking');
   },
   render: h => h(app)
 });

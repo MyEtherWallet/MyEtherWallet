@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import vuetifyTheme from '@myetherwallet/mew-components/src/assets/styles/vuetifyTheme.js';
 import 'vuetify/dist/vuetify.min.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 import Vuetify, {
   VApp,

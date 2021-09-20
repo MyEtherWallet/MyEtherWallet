@@ -51,8 +51,12 @@ import {
 } from '@/modules/access-wallet/hybrid/handlers';
 import { mapActions } from 'vuex';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from './common/walletTypes';
+
 export default {
   name: 'ModuleAccessWalletMobile',
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -90,6 +94,7 @@ export default {
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
@@ -105,6 +110,7 @@ export default {
         WalletLinkWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_LINK);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
