@@ -12,5 +12,5 @@ Vue.use(VueMatomo, {
   disableCookies: true,
   enableHeartBeatTimer: true,
   heartBeatTimerInterval: 15,
-  debug: true
+  debug: process.env.NODE_ENV !== 'production'
 });
