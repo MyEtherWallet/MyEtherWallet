@@ -128,7 +128,7 @@
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://kb.myetherwallet.com/en/transactions/tx-failed-why-was-i-charged/"
+              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -650,7 +650,6 @@ export default {
           to: tokenData.tokenTransferTo
         };
       }
-      tx.type = 'OUT';
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
@@ -787,9 +786,6 @@ export default {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
             }
-            _signedTx.tx['type'] = this.unsignedTxArr[i].type
-              ? this.unsignedTxArr[i].type
-              : 'OUT';
             signed.push(_signedTx);
             if (this.isHardware && this.txSigned) {
               this.btnAction();

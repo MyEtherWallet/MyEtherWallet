@@ -231,6 +231,8 @@ import Web3 from 'web3';
 import { fromWei, _ } from 'web3-utils';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+
 const MAX_ADDRESSES = 5;
 
 export default {
@@ -253,6 +255,7 @@ export default {
       )}`;
     }
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -286,7 +289,7 @@ export default {
           type: WALLET_TYPES.KEEPKEY
         },
         {
-          label: 'Bitbox 02',
+          label: 'BitBox02',
           icon: require('@/assets/images/icons/hardware-wallets/icon-bitbox.svg'),
           type: WALLET_TYPES.BITBOX2
         },
@@ -633,6 +636,7 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
+            this.trackAccessWallet(wallet.identifier);
             if (!this.switchAddress)
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             else this.close();

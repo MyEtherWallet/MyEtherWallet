@@ -4,9 +4,12 @@ import '@/assets/fonts/Roboto/css/Roboto.css';
 
 import './main/sentry';
 import './main/components';
+import './main/matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
+
+import VueIntercom from '@mathieustan/vue-intercom';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -34,6 +37,9 @@ import i18n from './main/i18n';
 // Directives
 Vue.directive('lottie', LottieAnimation);
 
+// eslint-disable-next-line
+Vue.use(VueIntercom, { appId: 'ja20qe25' });
+
 //Router
 Vue.use(Router);
 Vue.use(Vuex);
@@ -48,6 +54,7 @@ new Vue({
   beforeCreate() {
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
+    this.$store.dispatch('global/setTracking');
   },
   render: h => h(app)
 });

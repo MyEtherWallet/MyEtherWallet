@@ -101,12 +101,19 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HomeLanding',
   components: {},
+  mixins: [handlerAnalytics],
   data() {
     return { ROUTES_HOME: ROUTES_HOME };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.trackLandingPage();
+    }, 1000);
   },
   methods: {}
 };

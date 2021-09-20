@@ -1,3 +1,40 @@
+### Release v6.1.0
+
+### devop
+
+* BitBox02 naming and fix attestation failure warning [#3342](https://github.com/MyEtherWallet/MyEtherWallet/pull/3342)
+* hide total when sending tokens [#3421](https://github.com/MyEtherWallet/MyEtherWallet/pull/3421)
+* update walletconnect library [#3442](https://github.com/MyEtherWallet/MyEtherWallet/pull/3442)
+* github action to remove old lokalise branches [#3460](https://github.com/MyEtherWallet/MyEtherWallet/pull/3460)
+
+### feat
+
+* add 0x and paraswap providers to swap [#3272](https://github.com/MyEtherWallet/MyEtherWallet/pull/3272)
+* add in Matomo analytics and tracking [#3327](https://github.com/MyEtherWallet/MyEtherWallet/pull/3327)
+* add Intercom [#3410](https://github.com/MyEtherWallet/MyEtherWallet/pull/3410)
+* added go chain network [#3416](https://github.com/MyEtherWallet/MyEtherWallet/pull/3416)
+* update interact with contract overlay content [#3429](https://github.com/MyEtherWallet/MyEtherWallet/pull/3429)
+
+### fix
+
+* fix wallet layout bug [#3373](https://github.com/MyEtherWallet/MyEtherWallet/pull/3373)
+* handle window.ethereum.on is not a function [#3407](https://github.com/MyEtherWallet/MyEtherWallet/pull/3407)
+* adding in ethjs util private key check and errors to handlers [#3409](https://github.com/MyEtherWallet/MyEtherWallet/pull/3409)
+* remove out type for transactions to fix metamask send transaction [#3426](https://github.com/MyEtherWallet/MyEtherWallet/pull/3426)
+* ens manager error handling [#3428](https://github.com/MyEtherWallet/MyEtherWallet/pull/3428)
+* fix undefined issue when deploying contract [#3430](https://github.com/MyEtherWallet/MyEtherWallet/pull/3430)
+* remove error throw and only assign known keys that reflect current state [#3435](https://github.com/MyEtherWallet/MyEtherWallet/pull/3435)
+* only allow numbers in gas price input [#3436](https://github.com/MyEtherWallet/MyEtherWallet/pull/3436)
+* add catch and check whether ref exists before clearing [#3437](https://github.com/MyEtherWallet/MyEtherWallet/pull/3437)
+* rerouting on refresh for settings nft manager and network [#3439](https://github.com/MyEtherWallet/MyEtherWallet/pull/3439)
+* fix undefined token type or symbol [#3440](https://github.com/MyEtherWallet/MyEtherWallet/pull/3440)
+* return array if preToken is undefined [#3443](https://github.com/MyEtherWallet/MyEtherWallet/pull/3443)
+* fix token balance for non decimal from showing undefined [#3445](https://github.com/MyEtherWallet/MyEtherWallet/pull/3445)
+* fix do not setWallet on accountsChanged event fired on first metamask lock [#3450](https://github.com/MyEtherWallet/MyEtherWallet/pull/3450)
+* add in catch for json parse errors in settings [#3451](https://github.com/MyEtherWallet/MyEtherWallet/pull/3451)
+* fix use toast instead for handling connection not open [#3454](https://github.com/MyEtherWallet/MyEtherWallet/pull/3454)
+* filter out unpaid validators [#3461](https://github.com/MyEtherWallet/MyEtherWallet/pull/3461)
+
 ### Release v6.0.6
 
 ### ui
@@ -30,7 +67,6 @@
 * add submitted to known notification status types, add null hash if hash doesn't exists [#3384](https://github.com/MyEtherWallet/MyEtherWallet/pull/3384)
 * allow decimals to be passed on custom gas price [#3382](https://github.com/MyEtherWallet/MyEtherWallet/pull/3382)
 * return empty arraay when data doesn't exist when fetching balance [#3380](https://github.com/MyEtherWallet/MyEtherWallet/pull/3380)
-* fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix reset error [#3379](https://github.com/MyEtherWallet/MyEtherWallet/pull/3379)
 * fix access wallet side padding [#3374](https://github.com/MyEtherWallet/MyEtherWallet/pull/3374)
 * fix mnemonic auto fill, private key, ens registry [#3400](https://github.com/MyEtherWallet/MyEtherWallet/pull/3400)
