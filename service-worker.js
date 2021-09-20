@@ -15,7 +15,7 @@ importScripts("workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "workbox-v4.3.1"});
 
 importScripts(
-  "precache-manifest.05a0f31a35f8c026d183773cdda6c4e0.js"
+  "precache-manifest.f6b94477c8077ad85acc85b09643c4be.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "myetherwallet"});
