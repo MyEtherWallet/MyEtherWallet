@@ -38,7 +38,6 @@ export default {
     });
     if (this.$intercom.ready) {
       this.$intercom.shutdown();
-      console.log('AAAAAAAAAAAAA');
     }
   },
   mounted() {
