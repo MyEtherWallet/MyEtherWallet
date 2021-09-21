@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import mewIcon from '@/assets/images/icons/icon-mew-logo.png';
+import mewIcon from '@/assets/images/icons/icon-mew-logo.svg';
 import QRCodeStyling from 'qr-code-styling';
 export default {
   props: {
