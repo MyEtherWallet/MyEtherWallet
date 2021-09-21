@@ -17,5 +17,19 @@
   "unable-to-reset-device": "Unable to reset device, try unplugging and replugging",
   "u2f-not-supported": "U2F Not supported by browser!",
   "address-is-contract": "The address provided belongs to a smart contract. Funds sent directly to a contract address may not be recoverable.",
-  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction."
+  "low-gas-price": "Warning: Your gas price is low, which may cause a delayed or dropped transaction.",
+  "invalid-returned-values": "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.",
+  "invalid-message-type": "Invalid message type!",
+  "device-used-in-another-window": "Device is used in another window",
+  "wrong-previous-session": "Wrong previous session",
+  "mnemonic-wallet-access-error": "Something went wrong in mnemonic wallet access",
+  "invalid-public-key-needs-to-be-int8Array-with-length-33-65": "Expected public key to be an Uint8Array with length [33, 65]",
+  "insufficient-funds-for-transfer": "Returned error: \"insufficient funds for transfer",
+  "promise-rejected-with-falsy-value": "Promise was rejected with a falsy value",
+  "the-operation-is-insecure": "The operation is insecure.",
+  "connection-error-couldnt-connect-to-WS.": "CONNECTION ERROR: Couldn't connect to node on WS.",
+  "failed-to-fetch": "Failed to fetch",
+  "non-error-promise-rejection-captured-with-keys-code-message": "Non-Error promise rejection captured with keys: code, message",
+  "connection-not-open":"Connection not open."
+
 }

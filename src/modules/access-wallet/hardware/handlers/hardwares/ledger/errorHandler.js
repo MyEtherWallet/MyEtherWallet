@@ -45,7 +45,8 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'ledgerError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'ledgerError.operation-that-changes-interface-state-in-progress'
+    'ledgerError.operation-that-changes-interface-state-in-progress',
+  'connection not open on send()': 'ledgerError.connection-not-open-on-send'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

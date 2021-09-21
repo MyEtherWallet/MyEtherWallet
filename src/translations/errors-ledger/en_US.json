@@ -20,5 +20,9 @@
   "device-disconnected": "Ledger device disconnected during operation.",
   "denied-by-user": "User denied action.",
   "no-interface-found": "Please upgrade firmware or contact support.",
-  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site"
+  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site",
+  "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
+  "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
+  "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
 }

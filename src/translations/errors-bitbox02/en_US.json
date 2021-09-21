@@ -10,5 +10,9 @@
   "pairing-rejected": "Pairing rejected on device, please try again.",
   "busy": "Your BitBox02 is busy. Please close all other wallets and try again.",
   "attestation-failed": "Device attestation failed. Try reconnecting the BitBox02. If the issue persists, your device may not be genuine, please contact Shift support.",
-  "unsupported-device": "Unsupported BitBox device. MEW only supports the BitBox02 Multi edition or BitBox01."
+  "unsupported-device": "Unsupported BitBox device. MEW only supports the BitBox02 Multi edition or BitBox01.",
+  "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
+  "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
+  "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
 }
