@@ -22,9 +22,6 @@
       Step One: Select tokens to delete
     =====================================================================================
     -->
-      <div class="mew-body textPrimary--text text-center mb-5">
-        Please select tokens that you want to remove
-      </div>
       <mew-table
         has-select
         :table-headers="tableHeaders"
