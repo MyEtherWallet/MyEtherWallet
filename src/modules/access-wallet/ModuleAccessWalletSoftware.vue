@@ -43,7 +43,7 @@
     <access-wallet-keystore
       v-if="walletType === types.KEYSTORE"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
@@ -53,7 +53,7 @@
     <access-wallet-mnemonic
       v-if="walletType === types.MNEMONIC"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
@@ -63,7 +63,7 @@
     <access-wallet-private-key
       v-else-if="walletType === types.PRIVATE_KEY"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
