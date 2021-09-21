@@ -1,1 +1,0 @@
-* github action to remove old lokalise branches
