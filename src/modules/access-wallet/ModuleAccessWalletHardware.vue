@@ -24,8 +24,9 @@
       ]"
       ><span class="full-width"
         >The highest standard of security in the crypto space.
-        <!-- TODO: add link -->
-        <a href="" target="_blank"> Learn More </a>
+        <router-link to="/buy-hardware">
+          Get a Hardware Wallet today
+        </router-link>
       </span></v-row
     >
     <!--
@@ -90,6 +91,7 @@
       <access-wallet-cool-wallet
         v-if="onCoolWallet"
         :cool-wallet-unlock="coolWalletUnlock"
+        :password-error="passwordError"
         @password="setPassword"
       />
       <!--
@@ -320,7 +322,8 @@ export default {
       // pin: '',
       ledgerConnected: false,
       callback: () => {},
-      unwatch: () => {}
+      unwatch: () => {},
+      passwordError: false
     };
   },
   computed: {
@@ -343,26 +346,33 @@ export default {
      * TODO: get link urls from Russ
      */
     footerLink() {
-      if (this.onKeepkey) {
-        return {
-          title: 'Using a KeepKey Hardware wallet with MEW',
-          url: 'https://www.mewtopia.com/'
-        };
-      } else if (this.onCoolWallet) {
-        return {
-          title: 'Using a CoolWallet Hardware Wallet with MEW',
-          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
-        };
-      }
-      if (this.onLedger) {
-        return {
-          title: 'Using a Ledger Hardware wallet with MEW',
-          url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
-        };
-      }
+      // Commented for now as the new articles aren't available yet
+      // if (this.onKeepkey) {
+      //   return {
+      //     title: 'Using a KeepKey Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
+      //   };
+      // } else if (this.onCoolWallet) {
+      //   return {
+      //     title: 'Using a CoolWallet Hardware Wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
+      //   };
+      // }
+      // if (this.onLedger) {
+      //   return {
+      //     title: 'Using a Ledger Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-ledger-with-mew/'
+      //   };
+      // }
+      // if (this.onTrezor) {
+      //   return {
+      //     title: 'Using a Trezor Hardware wallet with MEW',
+      //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-trezor-with-mew/'
+      //   };
+      // }
       return {
         title: 'Hardware Wallets',
-        url: 'https://www.mewtopia.com/'
+        url: 'https://help.myetherwallet.com/en/'
       };
     },
     /**
@@ -558,6 +568,7 @@ export default {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           if (_hwWallet.identifier == 'ledger') this.ledgerConnected = true;
+          if (_hwWallet.identifier == 'trezor' || this.onKeepkey) this.step++;
           // if (this.walletType === WALLET_TYPES.BITBOX2) {
           //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
           //   _hwWallet.init(this.hasPath).then(() => {
@@ -587,11 +598,20 @@ export default {
         })
         .catch(e => {
           if (this.wallets[this.walletType]) {
-            this.wallets[this.walletType].create.errorHandler(e);
+            if (
+              e.message === 'Wrong Password' &&
+              this.walletType === WALLET_TYPES.COOL_WALLET
+            ) {
+              this.passwordError = true;
+            } else {
+              this.wallets[this.walletType].create.errorHandler(e);
+            }
           } else {
             Toast(e, {}, ERROR);
           }
-          this.reset();
+          if (e.message !== 'Wrong Password') {
+            this.reset();
+          }
         });
     },
     /**
@@ -625,6 +645,7 @@ export default {
      */
     setPassword(str) {
       this.password = str;
+      this.passwordError = false;
     }
   }
 };

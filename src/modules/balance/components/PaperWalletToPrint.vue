@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--paper-wallet-content printable">
+  <div class="mew-component--paper-wallet-content" style="width: 800px">
     <div class="d-flex justify-space-between align-start">
       <div class="d-flex align-center">
         <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
@@ -24,8 +24,14 @@
         </div>
       </div>
     </div>
-    <div class="mt-12 pl-0 d-flex align-center">
-      <img :src="blockieImg" alt="Blockie Image" class="blockie-image mr-6" />
+    <div class="mt-12 d-flex align-center">
+      <mew-blockie
+        :address="address"
+        width="110px"
+        height="110px"
+        class="mr-6"
+        flat
+      />
 
       <div style="max-width: 400px">
         <div class="mew-heading-1 font-weight-black text-uppercase mb-2">
@@ -43,8 +49,8 @@
 
     <v-divider class="my-6"></v-divider>
 
-    <v-container class="pa-0">
-      <v-row class="align-center mb-6">
+    <v-container>
+      <v-row class="align-center">
         <v-col cols="8">
           <div class="mew-heading-1 font-weight-black text-uppercase">
             My wallet address
@@ -54,12 +60,12 @@
           </div>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <qr-code :value="address" :options="{ size: 140 }"></qr-code>
+          <qr-code :data="address" :height="140" :width="140" />
         </v-col>
       </v-row>
 
       <v-row v-if="showPrivateKey">
-        <v-col cols="8">
+        <v-col cols="12" md="8" class="mr-auto">
           <div
             class="mew-heading-1 font-weight-black text-uppercase error--text"
           >
@@ -81,7 +87,7 @@
             {{ key }}
           </div>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
+        <v-col cols="auto">
           <qr-code :data="key" :height="140" :width="140" :type-number="10" />
         </v-col>
       </v-row>
@@ -94,14 +100,11 @@
 <script>
 import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-import Blockies from '@/core/helpers/blockies.js';
 
 export default {
   name: 'BalanceAddressPaperWallet',
   data() {
-    return {
-      blockieImg: undefined
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['address', 'instance', 'isHardware']),
@@ -117,25 +120,6 @@ export default {
     showPrivateKey() {
       return !this.instance.isPubOnly;
     }
-  },
-  mounted() {
-    this.blockieImg = Blockies({
-      seed: this.address ? this.address.toLowerCase() : '',
-      size: 8,
-      scale: 16
-    }).toDataURL();
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.printable {
-  width: 800px !important;
-}
-
-.blockie-image {
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-}
-</style>

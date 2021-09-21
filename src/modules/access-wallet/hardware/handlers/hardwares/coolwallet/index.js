@@ -75,7 +75,7 @@ class CoolWallet {
               await _this.deviceInstance.getAddress(0);
               resolve();
             } catch (e) {
-              this.generateAndRegister(password, resolve, device);
+              this.generateAndRegister(password, resolve, device, reject);
             }
           });
         } else {
@@ -85,7 +85,7 @@ class CoolWallet {
     });
   }
 
-  generateAndRegister(password, cb, device) {
+  generateAndRegister(password, cb, device, reject) {
     const { publicKey: appPublicKey, privateKey: appPrivateKey } =
       generateKeyPair();
     this.appPrivateKey = appPrivateKey;
@@ -106,7 +106,9 @@ class CoolWallet {
         this.connectToCW();
         cb();
       })
-      .catch(errorHandler);
+      .catch(e => {
+        reject(e);
+      });
   }
 
   connectToCW() {
