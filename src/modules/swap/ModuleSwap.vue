@@ -375,7 +375,6 @@ export default {
       ],
       isLoadingProviders: false,
       showAnimation: false,
-      allProvidersShown: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
@@ -1054,9 +1053,6 @@ export default {
               this.step = 1;
             }
             this.isLoadingProviders = false;
-            if (this.allProvidersShown) {
-              this.showAnimation = false;
-            }
           });
       }
     }, 1000),
@@ -1204,7 +1200,9 @@ export default {
       this.localGasType = e.gasType;
     },
     showProviders(val) {
-      this.allProvidersShown = val;
+      if (!this.isLoadingProviders && val) {
+        this.showAnimation = false;
+      }
     }
   }
 };

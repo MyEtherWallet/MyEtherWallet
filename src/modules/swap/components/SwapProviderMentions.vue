@@ -38,7 +38,7 @@ export default {
   name: 'SwapProviderMentions',
   data() {
     return {
-      currentIndex: 0,
+      currentIndex: null,
       providers: [
         { image: require('../assets/0x.png') },
         { image: require('../assets/paraswap.png') },
@@ -50,7 +50,9 @@ export default {
   watch: {
     currentIndex(index) {
       if (index === this.providers.length - 1) {
-        this.$emit('showProviders', true);
+        setTimeout(() => {
+          this.$emit('showProviders', true);
+        }, 800);
       }
     }
   }
