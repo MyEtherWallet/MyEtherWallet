@@ -36,11 +36,7 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
-    if (this.$intercom.ready) {
-      // eslint-disable-next-line
-      console.log('AAAAAAAAAAAAA');
-      this.$intercom.shutdown();
-    }
+    this.$intercom.shutdown();
   },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
