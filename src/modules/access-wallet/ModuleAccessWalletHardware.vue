@@ -228,6 +228,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
 import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -251,6 +252,7 @@ export default {
       )}`;
     }
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -627,6 +629,7 @@ export default {
       try {
         this.setWallet([wallet])
           .then(() => {
+            this.trackAccessWallet(wallet.identifier);
             if (!this.switchAddress)
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             else this.close();

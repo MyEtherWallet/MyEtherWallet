@@ -91,6 +91,8 @@ import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { MewConnectWallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -101,6 +103,7 @@ export default {
     ModuleAccessWalletMobile,
     TheLayoutHeader
   },
+  mixins: [handlerAnalytics],
   props: {
     overlay: {
       type: String,
@@ -290,6 +293,7 @@ export default {
       MewConnectWallet()
         .then(_newWallet => {
           this.setWallet([_newWallet]).then(() => {
+            this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
             this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           });
         })

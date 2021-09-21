@@ -112,10 +112,12 @@ import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { _ } from 'web3-utils';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'NetworkSwitch',
   components: { AppUserMsgBlock },
+  mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },
     /** Set this prop to pass specific networks to be displayed */
@@ -300,6 +302,7 @@ export default {
               SUCCESS
             );
           }
+          this.trackNetworkSwitch(found[0].type.name);
           this.$emit('newNetwork');
         });
       } catch (e) {

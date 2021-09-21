@@ -128,6 +128,7 @@ import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWall
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+
 export default {
   name: 'TheCreateWalletLayout',
   components: {
