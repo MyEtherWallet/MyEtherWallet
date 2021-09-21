@@ -570,7 +570,7 @@ export default {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           if (_hwWallet.identifier == 'ledger') this.ledgerConnected = true;
-          if (_hwWallet.identifier == 'trezor') this.step++;
+          if (_hwWallet.identifier == 'trezor' || this.onKeepkey) this.step++;
           // if (this.walletType === WALLET_TYPES.BITBOX2) {
           //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
           //   _hwWallet.init(this.hasPath).then(() => {
