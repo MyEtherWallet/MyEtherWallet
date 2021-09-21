@@ -37,6 +37,8 @@ export default {
       Toast(updateMsg, {}, INFO);
     });
     if (this.$intercom.ready) {
+      // eslint-disable-next-line
+      console.log('AAAAAAAAAAAAA');
       this.$intercom.shutdown();
     }
   },
