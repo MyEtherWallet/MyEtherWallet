@@ -1,6 +1,7 @@
 import ToastEvents from './toastEvents';
 import { EventBus } from '@/core/plugins/eventBus';
 import * as Sentry from '@sentry/browser';
+import Vue from 'vue';
 const SUCCESS = 'success';
 const ERROR = 'error';
 const WARNING = 'warning';
@@ -60,7 +61,12 @@ const Toast = (text, link, type, duration) => {
   }
   if (type === SENTRY) {
     if (foundGlobalError(text)) {
-      EventBus.$emit(ToastEvents[ERROR], text, link, duration);
+      EventBus.$emit(
+        ToastEvents[ERROR],
+        Vue.$i18n.t(GLOBAL_ERRORS[text]),
+        link,
+        duration
+      );
     } else {
       Sentry.captureException(text);
     }
