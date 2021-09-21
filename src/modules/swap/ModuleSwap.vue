@@ -283,6 +283,7 @@ import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -296,6 +297,7 @@ export default {
     SwapProvidersList,
     AppNetworkFee
   },
+  mixins: [handlerAnalytics],
   props: {
     fromToken: {
       type: String,
@@ -961,10 +963,16 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('from: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setToToken(value) {
       this.toTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('to: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {

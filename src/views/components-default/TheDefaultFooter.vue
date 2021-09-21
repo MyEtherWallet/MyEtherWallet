@@ -65,7 +65,7 @@
             </a>
           </v-col>
         </v-row>
-        <div class="d-flex align-center mt-12">
+        <div class="d-flex align-center justify-space-between mt-12">
           <div class="d-flex align-center mx-n6">
             <div class="d-flex align-center line-height-small">
               <div class="px-6 border-right">
@@ -89,7 +89,16 @@
               </div>
             </div>
           </div>
-          <v-spacer />
+          <div v-if="displayedTrackingPopup" class="matomo-tracking-switch">
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="primary"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
           <div class="social-icons d-flex align-center">
             <a
               v-for="(i, key) in socialIcons"
@@ -301,9 +310,11 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheDefaultFooter',
+  mixins: [handlerAnalytics],
   data: () => ({
     // eslint-disable-next-line
     ethDonationAddress: ETH_DONATION_ADDRESS,
