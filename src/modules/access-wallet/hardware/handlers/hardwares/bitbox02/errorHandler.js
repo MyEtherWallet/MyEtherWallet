@@ -16,7 +16,8 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'bitbox02Error.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'bitbox02Error.operation-that-changes-interface-state-in-progress'
+    'bitbox02Error.operation-that-changes-interface-state-in-progress',
+  'connection not open on send()': 'bitbox02Error.connection-not-open-on-send'
 };
 const WARNINGS = {
   'Attestation failed': 'bitbox02Error.attestation-failed'

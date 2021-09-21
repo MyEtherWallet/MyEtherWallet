@@ -11,18 +11,21 @@ const ERRORS = {
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'trezorError.turn-on-contract-data',
   'Initialize failed: Response of unexpected type: Address. Should be Features':
-    'trezor.initializing-failed',
+    'trezorError.initializing-failed',
   Cancelled: 'trezorError.cancelled',
-  'Iframe timeout': 'trezor.iframe-timeout',
-  'Browser not supported': 'trezor.unsupported-browser',
-  'popup failed to open': 'trezor.popup-failed-to-open',
-  'Safety check failed': 'trezor.safety-check-failed',
-  'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized',
+  'Iframe timeout': 'trezorError.iframe-timeout',
+  'Browser not supported': 'trezorError.unsupported-browser',
+  'popup failed to open': 'trezorError.popup-failed-to-open',
+  'Safety check failed': 'trezorError.safety-check-failed',
+  'TrezorConnect not yet initialized':
+    'trezorError.trezor-connect-not-initialized',
   'User cancelled the requestDevice() chooser.':
-    'trezor.user-cancelled-request-device-bluetooth',
-  'Bluetooth adapter not available.': 'trezor.bluetooth-adapter-not-available',
+    'trezorError.user-cancelled-request-device-bluetooth',
+  'Bluetooth adapter not available.':
+    'trezorError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'trezor.operation-that-changes-interface-state-in-progress'
+    'trezorError.operation-that-changes-interface-state-in-progress'.anchor,
+  'connection not open on send()': 'trezorError.connection-not-open-on-send'
 };
 
 const WARNINGS = {};
