@@ -43,7 +43,7 @@
         <div class="mew-heading-3 mb-3 black--text">
           Total Value: ${{ totalTokenValues }}
         </div>
-        <module-tokens class="pa-0" dense @trade="showPopup = false" />
+        <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
       </template>
     </app-modal>
   </div>
