@@ -214,55 +214,57 @@
              Providers List
             =====================================================================================
             -->
-          <swap-provider-mentions
-            :is-loading="isLoadingProviders"
-            :check-loading="checkLoading"
-            @stopLoadingProviders="stopLoadingProviders"
-          />
-
           <div>
-            <swap-providers-list
-              :step="step"
-              :available-quotes="availableQuotes"
-              :set-provider="setProvider"
-              :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-              :to-token-icon="toTokenType ? toTokenType.img : ''"
+            <swap-provider-mentions
+              v-if="showAnimation"
               :is-loading="isLoadingProviders"
-              :providers-error="providersErrorMsg"
-              class="mt-7"
+              :check-loading="checkLoading"
+              @showProviders="showProviders"
             />
-            <!--
+            <div v-else>
+              <swap-providers-list
+                :step="step"
+                :available-quotes="availableQuotes"
+                :set-provider="setProvider"
+                :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+                :to-token-icon="toTokenType ? toTokenType.img : ''"
+                :is-loading="isLoadingProviders"
+                :providers-error="providersErrorMsg"
+                class="mt-7"
+              />
+              <!--
             =====================================================================================
              Swap Fee
             =====================================================================================
           -->
-            <app-network-fee
-              v-if="
-                step > 0 &&
-                providersErrorMsg.subtitle === '' &&
-                !isLoadingProviders
-              "
-              :show-fee="showSwapFee"
-              :getting-fee="loadingFee"
-              :error="feeError"
-              :total-fees="totalFees"
-              :gas-price-type="localGasType"
-              :message="feeError"
-              :not-enough-eth="notEnoughEth"
-              is-custom
-              class="mt-10 mt-sm-16"
-              @onLocalGasPrice="handleLocalGasPrice"
-            />
-          </div>
-          <div class="text-center mt-10 mt-sm-15">
-            <mew-button
-              title="Next"
-              :has-full-width="true"
-              :disabled="disableNext"
-              btn-size="xlarge"
-              style="max-width: 240px"
-              @click.native="showConfirm"
-            />
+              <app-network-fee
+                v-if="
+                  step > 0 &&
+                  providersErrorMsg.subtitle === '' &&
+                  !isLoadingProviders
+                "
+                :show-fee="showSwapFee"
+                :getting-fee="loadingFee"
+                :error="feeError"
+                :total-fees="totalFees"
+                :gas-price-type="localGasType"
+                :message="feeError"
+                :not-enough-eth="notEnoughEth"
+                is-custom
+                class="mt-10 mt-sm-16"
+                @onLocalGasPrice="handleLocalGasPrice"
+              />
+            </div>
+            <div class="text-center mt-10 mt-sm-15">
+              <mew-button
+                title="Next"
+                :has-full-width="true"
+                :disabled="disableNext"
+                btn-size="xlarge"
+                style="max-width: 240px"
+                @click.native="showConfirm"
+              />
+            </div>
           </div>
         </template>
         <!--
@@ -372,6 +374,8 @@ export default {
         }
       ],
       isLoadingProviders: false,
+      showAnimation: false,
+      allProvidersShown: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
@@ -1024,6 +1028,7 @@ export default {
         this.enableTokenSwitch
       ) {
         this.isLoadingProviders = true;
+        this.showAnimation = true;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1048,8 +1053,10 @@ export default {
               this.tokenOutValue = quotes[0].amount;
               this.step = 1;
             }
-            // this.isLoadingProviders = false;
-            this.checkLoading = false;
+            this.isLoadingProviders = false;
+            if (this.allProvidersShown) {
+              this.showAnimation = false;
+            }
           });
       }
     }, 1000),
@@ -1196,8 +1203,8 @@ export default {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
     },
-    stopLoadingProviders(val) {
-      this.isLoadingProviders = val;
+    showProviders(val) {
+      this.allProvidersShown = val;
     }
   }
 };

@@ -1,53 +1,45 @@
 <template>
-  <div v-if="isLoading" class="my-5">
+  <div class="my-5">
     <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
-      <v-container fluid class="d-flex flex-column align-center my-3">
-        <img :src="currentPicture" height="30" class="my-4" />
+      <v-container
+        fluid
+        class="d-flex flex-column align-center justify-center my-3"
+      >
+        <v-carousel
+          v-model="currentIndex"
+          cycle
+          height="60"
+          interval="800"
+          hide-delimiter-background
+          hide-delimiters
+          :show-arrows="false"
+        >
+          <v-carousel-item
+            v-for="(provider, i) in providers"
+            :key="i"
+            transition="slide-x-reverse-transition"
+          >
+            <v-row align-center justify-center class="fill-height">
+              <v-img :src="provider.image" height="30" class="my-4" contain />
+            </v-row>
+          </v-carousel-item>
+        </v-carousel>
         <div class="titlePrimary--text font-weight-medium py-5">
           Finding best rates...
         </div>
         <v-progress-linear indeterminate color="primary" />
       </v-container>
     </div>
-
-    <div
-      class="
-        loading
-        align-center
-        px-5
-        py-5
-        border-radius--10px
-        d-flex d-sm-none
-      "
-    >
-      <div class="titlePrimary--text font-weight-medium mew-body">
-        Finding best rates...
-      </div>
-      <v-spacer />
-      <v-skeleton-loader type="avatar" />
-    </div>
   </div>
 </template>
 
 <script>
-import { _ } from 'web3-utils';
-
 export default {
   name: 'SwapProviderMentions',
-  props: {
-    isLoading: {
-      type: Boolean,
-      default: false
-    },
-    checkLoading: {
-      type: Boolean,
-      default: true
-    }
-  },
   data() {
     return {
-      currentPicture: null,
-      partners: [
+      currentIndex: 0,
+      providers: [
         { image: require('../assets/0x.png') },
         { image: require('../assets/paraswap.png') },
         { image: require('../assets/1inch.png') },
@@ -56,32 +48,9 @@ export default {
     };
   },
   watch: {
-    isLoading(value) {
-      if (value) {
-        let index = 0;
-        const showProviders = () => {
-          _.delay(
-            () => {
-              if (!this.checkLoading && index >= 4) {
-                this.$emit('stopLoadingProviders', false);
-              }
-
-              this.currentPicture = this.partners[index]?.image;
-
-              if (this.checkLoading && index >= 4) {
-                index = 0;
-              } else {
-                index++;
-              }
-
-              if (index <= this.partners.length) {
-                showProviders();
-              }
-            },
-            index === 0 ? 0 : 600
-          );
-        };
-        showProviders();
+    currentIndex(index) {
+      if (index === this.providers.length - 1) {
+        this.$emit('showProviders', true);
       }
     }
   }
