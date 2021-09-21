@@ -214,40 +214,46 @@
              Providers List
             =====================================================================================
             -->
-          <swap-providers-list
-            :step="step"
-            :available-quotes="availableQuotes"
-            :set-provider="setProvider"
-            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-            :to-token-icon="toTokenType ? toTokenType.img : ''"
+          <swap-provider-mentions
             :is-loading="isLoadingProviders"
             :check-loading="checkLoading"
-            :providers-error="providersErrorMsg"
-            class="mt-7"
             @stopLoadingProviders="stopLoadingProviders"
           />
-          <!--
+
+          <div>
+            <swap-providers-list
+              :step="step"
+              :available-quotes="availableQuotes"
+              :set-provider="setProvider"
+              :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+              :to-token-icon="toTokenType ? toTokenType.img : ''"
+              :is-loading="isLoadingProviders"
+              :providers-error="providersErrorMsg"
+              class="mt-7"
+            />
+            <!--
             =====================================================================================
              Swap Fee
             =====================================================================================
           -->
-          <app-network-fee
-            v-if="
-              step > 0 &&
-              providersErrorMsg.subtitle === '' &&
-              !isLoadingProviders
-            "
-            :show-fee="showSwapFee"
-            :getting-fee="loadingFee"
-            :error="feeError"
-            :total-fees="totalFees"
-            :gas-price-type="localGasType"
-            :message="feeError"
-            :not-enough-eth="notEnoughEth"
-            is-custom
-            class="mt-10 mt-sm-16"
-            @onLocalGasPrice="handleLocalGasPrice"
-          />
+            <app-network-fee
+              v-if="
+                step > 0 &&
+                providersErrorMsg.subtitle === '' &&
+                !isLoadingProviders
+              "
+              :show-fee="showSwapFee"
+              :getting-fee="loadingFee"
+              :error="feeError"
+              :total-fees="totalFees"
+              :gas-price-type="localGasType"
+              :message="feeError"
+              :not-enough-eth="notEnoughEth"
+              is-custom
+              class="mt-10 mt-sm-16"
+              @onLocalGasPrice="handleLocalGasPrice"
+            />
+          </div>
           <div class="text-center mt-10 mt-sm-15">
             <mew-button
               title="Next"
@@ -280,6 +286,7 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
+import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
@@ -304,6 +311,7 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
+    SwapProviderMentions,
     AppNetworkFee
   },
   mixins: [handlerAnalytics],
