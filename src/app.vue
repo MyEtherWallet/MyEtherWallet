@@ -42,11 +42,8 @@ export default {
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
       this.$intercom.boot();
-      if (this.$intercom.isBooted) {
-        // eslint-disable-next-line
-        Intercom('shutdown');
-        this.$intercom.boot();
-      }
+      this.$intercom.shutdown();
+      this.$intercom.boot();
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
