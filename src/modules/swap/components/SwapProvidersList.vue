@@ -136,6 +136,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { _ } from 'web3-utils';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -214,13 +215,14 @@ export default {
                 .slice(0, MAX_PROVIDERS)
                 .filter(item => !!item)
             : this.availableQuotes.filter(item => !!item);
-        return list.map(quote => {
+        const returnedList = list.map(quote => {
           const formatted = formatFloatingPointValue(quote.rate * 100);
           return {
             rate: formatted.value,
             tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
           };
         });
+        if (returnedList) return returnedList;
       }
       return [];
     },
@@ -250,22 +252,23 @@ export default {
     }
   },
   watch: {
-    providersList(newValue, oldVal) {
-      if (
-        newValue.length > 0 &&
-        oldVal.length === 0 &&
-        !this.hasProviderError
-      ) {
-        const bestRate = newValue.findIndex(item => {
-          return item.rate === this.bestRate;
-        });
-        this.$nextTick(() => {
-          if (bestRate !== -1) {
-            this.$refs[`card${bestRate}`][0].toggle();
-            this.setProvider(bestRate);
-          }
-        });
-      }
+    providersList: {
+      handler: function (newVal, oldVal) {
+        const hasOldVal = !oldVal || (_.isArray(oldVal) && oldVal.length === 0);
+        if (newVal.length > 0 && hasOldVal && !this.hasProviderError) {
+          const bestRate = newVal.findIndex(item => {
+            return item.rate === this.bestRate;
+          });
+
+          this.$nextTick(() => {
+            if (bestRate !== -1) {
+              this.$refs[`card${bestRate}`][0].toggle();
+              this.setProvider(bestRate);
+            }
+          });
+        }
+      },
+      immediate: true
     }
   }
 };
