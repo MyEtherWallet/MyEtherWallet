@@ -10,7 +10,12 @@ const deleteAll = function ({ rootGetters, commit }) {
   commit('DELETE_ALL_TOKENS', { rootGetters });
 };
 
+const setAddressBook = function ({ commit }, addressBook) {
+  commit('SET_ADDRESS_BOOK', addressBook);
+};
+
 export default {
+  setAddressBook,
   setCustomToken,
   deleteAll,
   deleteToken
