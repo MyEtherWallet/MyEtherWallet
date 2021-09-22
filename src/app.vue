@@ -43,7 +43,8 @@ export default {
       this.setCurrency(currencyTypes.USD);
       this.$intercom.boot();
       if (this.$intercom.isBooted) {
-        this.$intercom.shutdown();
+        // eslint-disable-next-line
+        Intercom('shutdown');
         this.$intercom.boot();
       }
     }
