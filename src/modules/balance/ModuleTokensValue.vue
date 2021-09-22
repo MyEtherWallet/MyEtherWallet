@@ -73,7 +73,9 @@ export default {
       return formatFiatValue(this.totalTokenFiatValue).value;
     },
     tokenImages() {
-      const firstFive = this.tokensList.slice(0, 5);
+      const filterNoImageTokens = this.tokensList.filter(token => token.img);
+      const firstFive = filterNoImageTokens.slice(0, 5);
+
       return firstFive.map(item => {
         return item.img;
       });
