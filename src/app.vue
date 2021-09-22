@@ -38,7 +38,6 @@ export default {
     });
   },
   mounted() {
-    console.log(this.$intercom, 'HELLO THERE GENERAL');
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
