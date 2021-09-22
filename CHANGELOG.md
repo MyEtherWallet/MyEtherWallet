@@ -1,3 +1,9 @@
+### Release v6.1.0-hotfix.1
+
+### devop
+
+* update swap api [#3465](https://github.com/MyEtherWallet/MyEtherWallet/pull/3465)
+
 ### Release v6.1.0
 
 ### devop
