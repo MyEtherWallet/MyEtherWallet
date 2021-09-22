@@ -28,7 +28,7 @@
           >
           <mew-menu
             v-else
-            text-color="primary--text"
+            activator-text-color="primary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
