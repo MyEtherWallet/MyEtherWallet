@@ -68,7 +68,7 @@ const Toast = (text, link, type, duration) => {
         duration
       );
     } else {
-      Sentry.captureException(text);
+      Sentry.captureException(text.originalError || text.error || text);
     }
     return;
   }

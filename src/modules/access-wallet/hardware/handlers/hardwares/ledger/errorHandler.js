@@ -1,16 +1,13 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
+  UNKNOWN_ERROR: 'ledgerError.unknown',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
     'ledgerError.failed-sign-ineligible',
-  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
-  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
-  'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
-  'Ledger device: UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
-  'Ledger device: UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
-  'Ledger device: UNKNOWN_ERROR (0x650f)': 'ledgerError.wrong-wallet',
+  'Failed to sign with Ledger device: U2F OTHER_ERROR':
+    'ledgerError.u2f-other-error',
   'Ledger device: Invalid data received (0x6a80)':
     'ledgerError.invalid-data-0x6a80',
   'Ledger device: CLA_NOT_SUPPORTED (0x6e00)':
