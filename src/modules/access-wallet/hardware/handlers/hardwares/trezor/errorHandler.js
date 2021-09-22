@@ -25,7 +25,7 @@ const ERRORS = {
     'trezorError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
     'trezorError.operation-that-changes-interface-state-in-progress',
-  'connection not open on send()': 'trezorError.connection-not-open-on-send'
+  'connection not open': 'trezorError.connection-not-open-on-send'
 };
 
 const WARNINGS = {};

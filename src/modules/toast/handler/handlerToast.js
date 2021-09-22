@@ -8,9 +8,8 @@ const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
 const GLOBAL_ERRORS = {
-  "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.":
-    'globalError.invalid-returned-values',
-  'Invalid message type!': 'errorsGlobal.invalid-message-type',
+  "Returned values aren't valid": 'globalError.invalid-returned-values',
+  'Invalid message type': 'errorsGlobal.invalid-message-type',
   'Device is used in another window':
     'errorsGlobal.device-used-in-another-window',
   'Wrong previous session': 'errorsGlobal.wrong-previous-session',
@@ -33,7 +32,9 @@ const GLOBAL_ERRORS = {
 };
 const foundGlobalError = text => {
   const errorValues = Object.keys(GLOBAL_ERRORS);
-  return errorValues.includes(text);
+  return errorValues.find(item => {
+    return text.includes(item);
+  });
 };
 const Toast = (text, link, type, duration) => {
   const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
