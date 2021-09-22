@@ -9,6 +9,7 @@ const ERRORS = {
   'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
   'Ledger device: UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
+  'Ledger device: UNKNOWN_ERROR (0x6a15)': 'ledgerError.unknown-0x6a15',
   'Ledger device: UNKNOWN_ERROR (0x650f)': 'ledgerError.wrong-wallet',
   'Ledger device: Invalid data received (0x6a80)':
     'ledgerError.invalid-data-0x6a80',
