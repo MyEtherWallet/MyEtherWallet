@@ -37,9 +37,7 @@ export default {
       Toast(updateMsg, {}, INFO);
     });
     this.$intercom.shutdown();
-    setTimeout(() => {
-      this.bootIntercom();
-    }, 2000);
+    this.$intercom.once('ready', this.$intercom.boot);
   },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
@@ -57,11 +55,7 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency']),
-    bootIntercom() {
-      this.$intercom.boot();
-      this.$intercom.show();
-    }
+    ...mapActions('external', ['setCurrency'])
   }
 };
 </script>
