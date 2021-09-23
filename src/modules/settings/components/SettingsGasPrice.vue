@@ -29,7 +29,10 @@
         v-for="(b, key) in buttons"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[selected === b.title ? 'active' : '']"
+        :class="[
+          selected === b.title ? 'active' : '',
+          notEnoughEth ? 'disabled' : ''
+        ]"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -96,13 +99,13 @@
       </div>
     </div>
 
-    <div v-if="notEnoughEth" class="mt-6 mb-5 secondary--text pl-4">
+    <div v-if="notEnoughEth" class="mt-6 mb-5 error--text pl-4">
       <div>Not enough funds to increase priority.</div>
       <a
         rel="noopener noreferrer"
         target="_blank"
         :href="swapLink"
-        class="mt-1 d-block"
+        class="mt-1 d-inline-block"
       >
         Buy more ETH
       </a>
@@ -192,6 +195,11 @@ export default {
   user-select: none;
   width: 100%;
   border: 2px solid transparent;
+  &.disabled {
+    filter: grayscale(1);
+    opacity: 0.15 !important;
+    pointer-events: none;
+  }
   &:hover {
     background-color: #e9eff4;
   }

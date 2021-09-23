@@ -74,7 +74,7 @@
             :class="hasError ? 'error--text' : 'textSecondary--text'"
             class="ml-3 py-1"
           >
-            {{ actualCostFormatted }} {{ network.type.currencyName }}
+            {{ txFeeFormatted }} {{ network.type.currencyName }}
           </div>
         </div>
 
@@ -141,6 +141,10 @@ export default {
       type: String,
       default: ''
     },
+    txFee: {
+      type: String,
+      default: '0'
+    },
     totalCost: {
       type: String,
       default: '0'
@@ -173,8 +177,14 @@ export default {
       'swapLink',
       'gasPrice'
     ]),
+    txFeeInEth() {
+      return fromWei(this.txFee);
+    },
     costInEth() {
       return fromWei(this.totalCost);
+    },
+    txFeeFormatted() {
+      return formatFloatingPointValue(this.txFeeInEth).value;
     },
     actualCostFormatted() {
       return formatFloatingPointValue(this.costInEth).value;
