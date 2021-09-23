@@ -64,6 +64,19 @@ const SET_BASE_FEE_PER_GAS = function (state, baseFeePerGasBN) {
 const SET_MAX_PRIORITY_FEE_PER_GAS = function (state, maxPriorityFeePerGasBN) {
   state.eip1559.maxPriorityFeePerGas = maxPriorityFeePerGasBN.toString();
 };
+const SET_TRACKING_CONSENT = function (state, val) {
+  if (this._vm.$matomo) {
+    this._vm.$matomo.setConsentGiven();
+    this._vm.$matomo.trackEvent('consent', val ? 'true' : 'false');
+    if (!val) this._vm.$matomo.forgetConsentGiven();
+  }
+  state.consentToTrack = val;
+};
+
+const NEVER_SHOW_TRACKING = function (state) {
+  state.displayedTrackingPopup = true;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -77,5 +90,7 @@ export default {
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
   SET_BASE_FEE_PER_GAS,
-  SET_MAX_PRIORITY_FEE_PER_GAS
+  SET_MAX_PRIORITY_FEE_PER_GAS,
+  SET_TRACKING_CONSENT,
+  NEVER_SHOW_TRACKING
 };

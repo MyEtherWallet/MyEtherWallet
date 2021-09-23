@@ -59,6 +59,35 @@ const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
 const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
+
+const setTrackingConsent = function ({ commit, dispatch }, val) {
+  commit('SET_TRACKING_CONSENT', val);
+  dispatch('setTracking');
+};
+
+const setTracking = function ({ state }) {
+  const matomoExists = () => {
+    return new Promise(resolve => {
+      const checkInterval = 50;
+      const timeout = 5000;
+      const waitStart = Date.now();
+      const interval = setInterval(() => {
+        if (this._vm.$matomo) {
+          clearInterval(interval);
+          return resolve();
+        }
+        if (Date.now() >= waitStart + timeout) {
+          clearInterval(interval);
+          throw new Error(`$matomo undefined after waiting for ${timeout}ms`);
+        }
+      }, checkInterval);
+    });
+  };
+  matomoExists().then(() => {
+    if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
+    else this._vm.$matomo.forgetConsentGiven();
+  });
+};
 export default {
   updateGasPrice,
   setOnlineStatus,
@@ -72,5 +101,7 @@ export default {
   addCustomPath,
   deleteCustomPath,
   setMaxPriorityFeePerGas,
-  setBaseFeePerGas
+  setBaseFeePerGas,
+  setTrackingConsent,
+  setTracking
 };

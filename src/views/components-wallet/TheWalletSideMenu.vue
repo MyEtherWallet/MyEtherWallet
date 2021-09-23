@@ -12,7 +12,7 @@
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
             <!--
             =====================================================================================
@@ -141,10 +141,21 @@
             />
           </v-list-item-content>
         </v-list-item>
-
-        <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <!-- <theme-switch /> -->
-          <div class="searchText--text">v{{ version }}</div>
+        <div class="mt-3 px-8">
+          <div class="matomo-tracking-switch">
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="white"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <!-- <theme-switch /> -->
+            <div class="searchText--text">v{{ version }}</div>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -173,8 +184,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        <router-link
+          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+          style="line-height: 0"
+        >
+          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />
@@ -203,6 +217,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   components: {
@@ -211,6 +226,7 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -339,6 +355,7 @@ export default {
     onLogout(res) {
       this.showLogoutPopup = false;
       if (res.title === this.logout.btnRight.title) {
+        this.trackLogout();
         this.removeWallet();
       }
     },
@@ -446,6 +463,11 @@ export default {
 
     &::-webkit-scrollbar-corner {
       background: transparent;
+    }
+  }
+  .matomo-tracking-switch {
+    .v-label {
+      color: var(--v-white-base);
     }
   }
 }

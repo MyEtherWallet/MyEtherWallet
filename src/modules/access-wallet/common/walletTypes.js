@@ -14,6 +14,7 @@ const WALLET_TYPES = {
   XWALLET: 'xwallet',
   BCVAULT: 'bcVault',
   COOL_WALLET: 'coolWallet',
-  WALLET_LINK: 'walletLink'
+  WALLET_LINK: 'walletLink',
+  MEW_WALLET: 'mewWallet'
 };
 export default WALLET_TYPES;

@@ -170,7 +170,7 @@
                       collateral in DeFi apps, etc. There are multiple kinds of
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
-                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                        href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
                         target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
@@ -287,6 +287,7 @@ import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -300,6 +301,7 @@ export default {
     SwapProvidersList,
     AppTransactionFee
   },
+  mixins: [handlerAnalytics],
   props: {
     fromToken: {
       type: String,
@@ -970,10 +972,16 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('from: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setToToken(value) {
       this.toTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('to: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: debounce(function (value) {
