@@ -41,7 +41,8 @@ export default {
     const _this = this;
     // eslint-disable-next-line
     console.log('shutdown first');
-    this.$intercom.shutdown();
+    // eslint-disable-next-line
+    Intercom('shutdown');
     this.$intercom.once('ready', () => {
       // eslint-disable-next-line
       console.log('HELLO THERE');
