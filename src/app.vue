@@ -36,19 +36,10 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
+    this.$intercom.shutdown();
+    this.$intercom.once('ready', this.bootIntercom);
   },
   mounted() {
-    const _this = this;
-    // eslint-disable-next-line
-    console.log('shutdown first');
-    // eslint-disable-next-line
-    Intercom('shutdown');
-    this.$intercom.once('ready', () => {
-      // eslint-disable-next-line
-      console.log('HELLO THERE');
-      _this.$intercom.boot();
-      _this.$intercom.show();
-    });
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
@@ -64,7 +55,11 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency'])
+    ...mapActions('external', ['setCurrency']),
+    bootIntercom() {
+      this.$intercom.boot();
+      this.$intercom.show();
+    }
   }
 };
 </script>
