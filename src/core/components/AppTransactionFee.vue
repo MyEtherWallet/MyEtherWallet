@@ -11,6 +11,8 @@
       :selected="gasPriceType"
       :not-enough-eth="notEnoughEth"
       :cost-in-eth="costInEth"
+      :tx-fee-formatted="txFeeFormatted"
+      :tx-fee-usd="feeInUsd"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -52,7 +54,7 @@
           >
             <div class="d-flex align-center">
               <div :class="hasError ? 'error--text' : 'textBlack2--text'">
-                {{ costInUsd }}
+                {{ feeInUsd }}
               </div>
               <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
                 mdi-arrow-right
@@ -189,9 +191,17 @@ export default {
     actualCostFormatted() {
       return formatFloatingPointValue(this.costInEth).value;
     },
+    /*
     costInUsd() {
       const value = formatFiatValue(
         BigNumber(this.costInEth).times(this.fiatValue).toFixed(2)
+      ).value;
+      return `~${'$' + value}`;
+    },
+    */
+    feeInUsd() {
+      const value = formatFiatValue(
+        BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2)
       ).value;
       return `~${'$' + value}`;
     },

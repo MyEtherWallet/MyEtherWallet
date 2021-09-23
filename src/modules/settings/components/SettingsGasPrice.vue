@@ -2,9 +2,9 @@
   <div>
     <div v-if="hasCost" class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
-        <div class="primary--text mr-2">{{ actualUsdFormatted }}</div>
+        <div class="primary--text mr-2">{{ txFeeUsd }}</div>
         <div class="searchText--text">
-          {{ actualFeeFormatted }}
+          {{ txFeeFormatted }}
           {{ network.type.currencyName }}
         </div>
       </div>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="textPrimary--text mb-5">
-      This fee is changed by Ethereum network. You can prioritize transaction by
+      This fee is charged by Ethereum network. You can proritize transaction by
       adding a tip to the miner.
     </div>
 
@@ -116,10 +116,12 @@
 <script>
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
+/*
 import {
   formatFloatingPointValue,
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
+*/
 import BigNumber from 'bignumber.js';
 
 export default {
@@ -144,6 +146,14 @@ export default {
     notEnoughEth: {
       type: Boolean,
       default: false
+    },
+    txFeeFormatted: {
+      type: String,
+      default: '0'
+    },
+    txFeeUsd: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -166,7 +176,8 @@ export default {
     },
     hasCost() {
       return BigNumber(this.costInEth).gt(0);
-    },
+    }
+    /*
     actualFeeFormatted() {
       return this.hasCost
         ? formatFloatingPointValue(this.costInEth).value
@@ -181,6 +192,7 @@ export default {
     actualUsdFormatted() {
       return this.hasCost ? this.costInUsd : this.currentValue.usd;
     }
+    */
   }
 };
 </script>

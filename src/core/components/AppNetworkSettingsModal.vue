@@ -12,6 +12,8 @@
       :set-selected="setGas"
       :gas-price="gasPrice"
       :cost-in-eth="costInEth"
+      :tx-fee-formatted="txFeeFormatted"
+      :tx-fee-usd="txFeeUsd"
       :not-enough-eth="notEnoughEth"
     />
   </app-simple-dialog>
@@ -47,6 +49,14 @@ export default {
       default: false
     },
     costInEth: {
+      type: String,
+      default: '0'
+    },
+    txFeeFormatted: {
+      type: String,
+      default: '0'
+    },
+    txFeeUsd: {
       type: String,
       default: '0'
     }
