@@ -38,10 +38,15 @@ export default {
     });
   },
   mounted() {
+    const _this = this;
+    // eslint-disable-next-line
+    console.log('shutdown first');
     this.$intercom.shutdown();
     this.$intercom.once('ready', () => {
-      this.$intercom.boot();
-      this.$intercom.show();
+      // eslint-disable-next-line
+      console.log('HELLO THERE');
+      _this.$intercom.boot();
+      _this.$intercom.show();
     });
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
