@@ -4,7 +4,7 @@ import Notification, {
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
 
-import { _ } from 'web3-utils';
+import _ from 'lodash';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)

@@ -273,7 +273,8 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
-import { toBN, fromWei, toWei, _ } from 'web3-utils';
+import { toBN, fromWei, toWei } from 'web3-utils';
+import _ from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
