@@ -22,7 +22,9 @@ const isContractArgValid = (value, solidityType) => {
       return true;
     }
     if (solidityType.includes(uint) || solidityType.includes(int)) {
-      return value !== '' && !isNaN(value) && isInt(value);
+      return (
+        value !== '' && !isNaN(value) && isInt(value) && !hasWhiteSpace(value)
+      );
     } else if (solidityType === address) return isAddress(value);
     else if (solidityType === string) return true;
     else if (solidityType.includes(bytes))
@@ -81,4 +83,9 @@ const parseJSON = json => {
     return false;
   }
 };
-export { isContractArgValid, parseJSON, parseABI, getType };
+
+const hasWhiteSpace = string => {
+  return /\s/g.test(string);
+};
+
+export { isContractArgValid, parseJSON, parseABI, getType, hasWhiteSpace };

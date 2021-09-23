@@ -307,7 +307,6 @@ export default {
       this.hasEnough = toBN(this.ethPayable).lte(this.balance);
     },
     valueInput(idx, value) {
-      value = value.replace(/\s+/g, '');
       this.selectedMethod.inputs[idx].value = value;
       this.inputsValid = true;
       for (const _input of this.selectedMethod.inputs) {
