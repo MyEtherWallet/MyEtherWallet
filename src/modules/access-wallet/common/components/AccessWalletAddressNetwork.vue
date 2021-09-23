@@ -162,7 +162,7 @@
          Terms
         =====================================================================================
         -->
-    <div class="d-flex align-center flex-column">
+    <div class="d-flex align-center flex-column pt-3">
       <mew-checkbox
         v-model="acceptTerms"
         label="To access my wallet, I accept "
