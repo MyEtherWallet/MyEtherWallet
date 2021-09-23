@@ -40,7 +40,6 @@ export default {
   mounted() {
     this.$intercom.shutdown();
     this.$intercom.once('ready', () => {
-      console.log('gets here right?');
       this.$intercom.boot();
       this.$intercom.show();
     });
