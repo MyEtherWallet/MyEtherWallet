@@ -36,14 +36,14 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
-
+  },
+  mounted() {
     this.$intercom.shutdown();
     this.$intercom.once('ready', () => {
+      console.log('gets here right?');
       this.$intercom.boot();
       this.$intercom.show();
     });
-  },
-  mounted() {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
