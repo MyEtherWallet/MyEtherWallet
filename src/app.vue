@@ -36,12 +36,13 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
+    this.$intercom.shutdown();
   },
   mounted() {
-    this.$intercom.boot();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
+      this.$intercom.boot();
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
