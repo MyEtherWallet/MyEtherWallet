@@ -37,7 +37,9 @@ export default {
       Toast(updateMsg, {}, INFO);
     });
     this.$intercom.shutdown();
-    this.$intercom.once('ready', this.bootIntercom);
+    setTimeout(() => {
+      this.bootIntercom();
+    }, 2000);
   },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
