@@ -2,14 +2,7 @@
   <div>
     <v-row v-if="deviceNotPaired" no-gutters class="pt-4">
       <v-col cols="12" justify="center" align="center" class="py-5">
-        <img :src="imgPath" width="60%" />
-      </v-col>
-      <v-col cols="12" justify="center" align="center">
-        <v-card-title class="border justify-center font-wrapping py-5 mb-8">
-          <div class="mew-heading-4 font-weight-medium pl-1">
-            Connect your Bitbox2 device
-          </div>
-        </v-card-title>
+        <img :src="lockedImg" width="100%" class="bitbox-img" />
       </v-col>
       <v-col cols="12" justify="center" align="center">
         <mew-button
@@ -28,10 +21,18 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="deviceInitialized" no-gutters class="pt-4">
+      <v-col cols="12" justify="center" align="center" class="py-5">
+        <img :src="openImg" width="100%" class="bitbox-img" />
+      </v-col>
+      <v-col cols="12" justify="center" align="center">
+        <v-card-title class="border justify-center font-wrapping py-5 mb-8">
+          <div class="mew-heading-4 font-weight-medium pl-1">Loading....</div>
+        </v-card-title>
+      </v-col>
+    </v-row>
+
     <div v-if="deviceUnpaired">
-      <div class="mew-heading-2 pa-3 text-center">
-        Please verify pairing code
-      </div>
       <div class="mew-body">
         <pre class="text-center mew-heading-1">{{ devicePairingCode }}</pre>
       </div>
@@ -50,8 +51,8 @@
 </template>
 
 <script>
-import { _ } from 'web3-utils';
 import gifPath from '@/assets/images/hardware-wallets/bb02-pw-entry.gif';
+import bitbox2Locked from '@/assets/images/hardware-wallets/bitbox02-locked.png';
 import bitbox2Welcome from '@/assets/images/hardware-wallets/bitbox02-welcome.png';
 export default {
   props: {
@@ -62,39 +63,38 @@ export default {
     unlock: {
       type: Function,
       default: () => {}
+    },
+    deviceNotPaired: {
+      type: Boolean,
+      default: false
+    },
+    deviceConnected: {
+      type: Boolean,
+      default: false
+    },
+    deviceUnpaired: {
+      type: Boolean,
+      default: false
+    },
+    devicePairingCode: {
+      type: String,
+      default: ''
+    },
+    deviceConfirmed: {
+      type: Boolean,
+      default: false
+    },
+    deviceInitialized: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       gifPath: gifPath,
-      imgPath: bitbox2Welcome
+      lockedImg: bitbox2Locked,
+      openImg: bitbox2Welcome
     };
-  },
-  computed: {
-    deviceNotPaired() {
-      return (
-        _.isEmpty(this.hwWalletInstance) ||
-        (!_.isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
-      );
-    },
-    deviceConnected() {
-      return (
-        !this.deviceNotPaired && this.hwWalletInstance?.status === 'connected'
-      );
-    },
-    deviceUnpaired() {
-      return (
-        !this.deviceNotPaired && this.hwWalletInstance?.status === 'unpaired'
-      );
-    },
-    devicePairingCode() {
-      return !this.deviceNotPaired ? this.hwWalletInstance?.pairingCode : '';
-    },
-    deviceConfirmed() {
-      return !this.deviceNotPaired
-        ? this.hwWalletInstance?.pairingConfirmed
-        : false;
-    }
   },
   methods: {
     resolvePairing() {
@@ -118,5 +118,9 @@ export default {
   text-align: center;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.bitbox-img {
+  max-width: 340px;
 }
 </style>

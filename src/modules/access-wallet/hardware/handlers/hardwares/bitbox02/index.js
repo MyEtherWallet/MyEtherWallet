@@ -32,17 +32,13 @@ class BitBox02Wallet {
     };
   }
   async connect() {
-    try {
-      const devicePath = await getDevicePath();
-      this.BitBox02 = new BitBox02API(devicePath);
-    } catch (e) {
-      errorHandler(e);
-    }
+    const devicePath = await getDevicePath();
+    this.BitBox02 = new BitBox02API(devicePath);
   }
 
   async init(basePath) {
+    this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     try {
-      this.basePath = basePath ? basePath : this.supportedPaths[0].path;
       await this.BitBox02.connect(
         pairingCode => {
           this.pairingCode = pairingCode;
@@ -77,7 +73,7 @@ class BitBox02Wallet {
         errorHandler({ message: 'Attestation failed' });
       }
     } catch (e) {
-      errorHandler(e);
+      throw new Error(e);
     }
   }
 

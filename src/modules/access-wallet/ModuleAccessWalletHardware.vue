@@ -74,6 +74,12 @@
         :set-path="setPath"
         :hw-wallet-instance="hwWalletInstance"
         :unlock="bitbox02Unlock"
+        :device-not-paired="bitBox2NotPaired"
+        :device-connected="bitBox2Connected"
+        :device-unpaired="bitBox2Unpaired"
+        :device-pairing-code="bitBox2PairingCode"
+        :device-confirmed="bitBox2Confirmed"
+        :device-initialized="bitBox2Initialized"
       />
       <!--
         =====================================================================================
@@ -471,6 +477,44 @@ export default {
       } else if (this.step === 1) {
         return 'Select a hardware wallet';
       }
+      if (this.onBitbox2) return this.bitbox2Titles;
+      return this.wallets[this.walletType].title;
+    },
+    bitBox2NotPaired() {
+      return (
+        _.isEmpty(this.hwWalletInstance) ||
+        (!_.isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
+      );
+    },
+    bitBox2Connected() {
+      return (
+        !this.bitBox2NotPaired && this.hwWalletInstance?.status === 'connected'
+      );
+    },
+    bitBox2Unpaired() {
+      return (
+        !this.bitBox2NotPaired && this.hwWalletInstance?.status === 'unpaired'
+      );
+    },
+    bitBox2Initialized() {
+      return (
+        !this.bitBox2NotPaired &&
+        this.hwWalletInstance?.status === 'initialized'
+      );
+    },
+    bitBox2PairingCode() {
+      return !this.bitBox2NotPaired ? this.hwWalletInstance?.pairingCode : '';
+    },
+    bitBox2Confirmed() {
+      return !this.bitBox2NotPaired
+        ? this.hwWalletInstance?.pairingConfirmed
+        : false;
+    },
+    bitbox2Titles() {
+      if (this.bitBox2Connected) return 'Enter Bitbox 02 password';
+      if (this.bitBox2Unpaired) return 'Confirm pairing code';
+      if (this.bitBox2Initialized)
+        return 'Bitbox 02 succesfully initialized. Loading wallet';
       return this.wallets[this.walletType].title;
     }
   },
@@ -561,12 +605,20 @@ export default {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           if (this.onLedger) this.ledgerConnected = true;
-          if (this.onKeepkey || this.onKeepkey) this.step++;
+          if (this.onKeepkey || this.onTrezor) this.step++;
           if (this.onBitbox2) {
-            _hwWallet.init(this.hasPath).then(() => {
-              this.hwWalletInstance = _hwWallet;
-              this.nextStep();
-            });
+            _hwWallet
+              .init(this.hasPath)
+              .then(() => {
+                this.nextStep();
+                this.hwWalletInstance = _hwWallet;
+              })
+              .catch(e => {
+                this.wallets[this.walletType].create.errorHandler(e);
+                if (e.message === 'Error: Pairing rejected') {
+                  this.reset();
+                }
+              });
           }
           return _hwWallet;
         })
