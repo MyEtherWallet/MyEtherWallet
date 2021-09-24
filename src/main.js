@@ -8,6 +8,7 @@ import './main/matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 
@@ -52,14 +53,12 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
-    this.$intercom.boot();
-    this.$intercom.shutdown();
+    this.$intercom.boot({
+      user_id: uuidv4()
+    });
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.dispatch('global/setTracking');
-  },
-  created() {
-    this.$intercom.boot();
   },
   render: h => h(app)
 });
