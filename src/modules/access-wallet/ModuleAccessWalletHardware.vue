@@ -67,10 +67,10 @@
           Bitbox2
         =====================================================================================
         -->
-      <!-- <access-wallet-bitbox
-            v-else-if="onBitbox"
-            :set-selected-bitbox="setSelectedBitbox"
-          /> -->
+      <access-wallet-bitbox
+        v-if="onBitbox"
+        :set-selected-bitbox="setSelectedBitbox"
+      />
       <!--
         =====================================================================================
           Keepkey
@@ -380,9 +380,9 @@ export default {
     /**
      * On Bitbox
      */
-    // onBitbox() {
-    //   return this.currentStep === LAYOUT_STEPS.BITBOX_SELECT;
-    // },
+    onBitbox() {
+      return this.walletType === WALLET_TYPES.LEDGER;
+    },
     // onBitboxPopup() {
     //   return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
     // },
