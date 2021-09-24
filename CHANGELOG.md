@@ -1,3 +1,42 @@
+### Release v6.2.0
+
+### ui
+
+* * replace all mew-overlays with the new design. [#3367](https://github.com/MyEtherWallet/MyEtherWallet/pull/3367)
+* * update mnemonic phrase flow, add ens fetch and nickname, add derivation path [#3393](https://github.com/MyEtherWallet/MyEtherWallet/pull/3393)
+* * add in new ledger ui flow [#3403](https://github.com/MyEtherWallet/MyEtherWallet/pull/3403)
+* * keepkey ui refresh [#3404](https://github.com/MyEtherWallet/MyEtherWallet/pull/3404)
+* fix paperwallet qr code image [#3405](https://github.com/MyEtherWallet/MyEtherWallet/pull/3405)
+* * add connect wallet page for trezor wallet [#3406](https://github.com/MyEtherWallet/MyEtherWallet/pull/3406)
+* coolwallet ui refresh [#3413](https://github.com/MyEtherWallet/MyEtherWallet/pull/3413)
+* focus first mnemonic input on mount [#3422](https://github.com/MyEtherWallet/MyEtherWallet/pull/3422)
+* load accounts at the same time, add loaders in the meanwhile [#3423](https://github.com/MyEtherWallet/MyEtherWallet/pull/3423)
+* * show icons while getting rates [#3438](https://github.com/MyEtherWallet/MyEtherWallet/pull/3438)
+
+### devop
+
+* sync develop with main [#3419](https://github.com/MyEtherWallet/MyEtherWallet/pull/3419)
+* switch swap api [#3465](https://github.com/MyEtherWallet/MyEtherWallet/pull/3465)
+* sync develop to main [#3468](https://github.com/MyEtherWallet/MyEtherWallet/pull/3468)
+* remove matomo error [#3469](https://github.com/MyEtherWallet/MyEtherWallet/pull/3469)
+
+### feat
+
+* new hardware wallet access flow [#3398](https://github.com/MyEtherWallet/MyEtherWallet/pull/3398)
+* * add custom token feature [#3441](https://github.com/MyEtherWallet/MyEtherWallet/pull/3441)
+
+### fix
+
+* * fix access wallet side padding [#3374](https://github.com/MyEtherWallet/MyEtherWallet/pull/3374)
+* * define error for setItem property of null [#3397](https://github.com/MyEtherWallet/MyEtherWallet/pull/3397)
+* * adding in ethjs util private key check and errors to handlers [#3409](https://github.com/MyEtherWallet/MyEtherWallet/pull/3409)
+* * handle errors for wrong sessions, multiple devices, and walletlink [#3412](https://github.com/MyEtherWallet/MyEtherWallet/pull/3412)
+* * add in catch for json parse errors in settings [#3451](https://github.com/MyEtherWallet/MyEtherWallet/pull/3451)
+* * fix ens name obj is null on split [#3453](https://github.com/MyEtherWallet/MyEtherWallet/pull/3453)
+* * fix use toast instead for handling connection not open [#3454](https://github.com/MyEtherWallet/MyEtherWallet/pull/3454)
+* * add svg logo [#3455](https://github.com/MyEtherWallet/MyEtherWallet/pull/3455)
+* call shutdown when intercom instance is booted [#3472](https://github.com/MyEtherWallet/MyEtherWallet/pull/3472)
+
 ### Release v6.1.0-hotfix.1
 
 ### devop
