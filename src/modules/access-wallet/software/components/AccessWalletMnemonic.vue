@@ -246,7 +246,7 @@ export default {
      * Is used in unlock wallet method
      */
     parsedPhrase() {
-      return Object.values(this.phrase).join(' ');
+      return Object.values(this.phrase).join(' ').toLowerCase();
     },
     walletInstance() {
       return this.handlerAccessWallet.getWalletInstance();
@@ -281,7 +281,7 @@ export default {
             this.length = splitVal.length;
             const newObj = {};
             splitVal.forEach((item, idx) => {
-              newObj[idx + 1] = item;
+              newObj[idx + 1] = item.toLowerCase();
             });
             this.phrase = newObj;
           }

@@ -43,7 +43,7 @@
     <access-wallet-keystore
       v-if="walletType === types.KEYSTORE"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
@@ -53,7 +53,7 @@
     <access-wallet-mnemonic
       v-if="walletType === types.MNEMONIC"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
@@ -63,7 +63,7 @@
     <access-wallet-private-key
       v-else-if="walletType === types.PRIVATE_KEY"
       :handler-access-wallet="accessHandler"
-      @unlock="unclockWallet"
+      @unlock="unlockWallet"
     />
     <!--
     =====================================================================================
@@ -88,6 +88,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 import { ROUTES_WALLET } from '../../core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -96,6 +97,7 @@ export default {
     AccessWalletMnemonic,
     AccessWalletPrivateKey
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -112,6 +114,7 @@ export default {
   },
   data() {
     return {
+      type: '',
       types: SOFTWARE_WALLET_TYPES,
       warningSheetObj: {
         title: 'Learn More',
@@ -143,7 +146,7 @@ export default {
               this.accessHandler.unlockPrivateKeyWallet(
                 process.env.VUE_APP_PRIV_KEY
               );
-              this.unclockWallet();
+              this.unlockWallet();
             } else {
               this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
             }
@@ -198,7 +201,7 @@ export default {
      * Used in overlay back button
      * account is defined in Mnemonic phrase access
      */
-    unclockWallet(account = undefined) {
+    unlockWallet(account = undefined) {
       try {
         const wallet = !account
           ? this.accessHandler.getWalletInstance()
@@ -210,6 +213,7 @@ export default {
             } else {
               this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
+            this.trackAccessWallet(this.type);
           })
           .catch(e => {
             Toast(e, {}, ERROR);
@@ -244,6 +248,7 @@ export default {
     setType(newType) {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
+          this.type = newType;
           this.$router.push({
             query: { type: newType }
           });

@@ -3,6 +3,7 @@
     <router-view />
     <module-toast />
     <module-global-modals />
+    <module-analytics />
   </v-app>
 </template>
 
@@ -10,6 +11,7 @@
 import { mapActions } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
+import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
 import currencyTypes from '@/core/configs/configCurrencyTypes';
 import { PWA_EVENTS } from '@/core/helpers/common';
 import {
@@ -20,7 +22,7 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleGlobalModals },
+  components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
@@ -34,12 +36,13 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
+    this.$intercom.shutdown();
   },
   mounted() {
-    this.$intercom.boot();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
+      this.$intercom.boot();
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
