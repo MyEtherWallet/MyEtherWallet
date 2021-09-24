@@ -56,6 +56,7 @@ new Vue({
     this.$intercom.boot({
       user_id: uuidv4()
     });
+    this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.dispatch('global/setTracking');

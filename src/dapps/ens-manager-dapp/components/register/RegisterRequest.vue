@@ -1,11 +1,5 @@
 <template>
-  <v-sheet
-    elevation="10"
-    width="100%"
-    min-width="600px"
-    class="mx-auto pa-8"
-    rounded
-  >
+  <div>
     <div v-if="loading" class="d-flex align-center justify-center">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -34,14 +28,14 @@
       {{ $t('ens.request.estimated-price') }}: {{ rentPriceETH }}
       {{ $t('common.currency.eth') }} (${{ rentPriceUSD }})
     </div>
-    <div class="d-flex justify-center my-6">
+    <div class="d-flex justify-center mt-6">
       <mew-button
         :title="$t('common.next')"
         btn-size="xlarge"
         @click.native="onClick"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

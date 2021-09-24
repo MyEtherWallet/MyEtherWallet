@@ -38,7 +38,7 @@
             What is MEW
           </router-link>
           <mew-menu
-            text-color="white--text"
+            activator-text-color="white--text"
             :list-obj="menuObj"
             @goToPage="routeTo"
           />

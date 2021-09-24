@@ -7,7 +7,14 @@
       mobile position after the next button
     =====================================================================================
     -->
-    <v-col cols="12" sm="4" order="last" order-sm="first" class="px-sm-2">
+    <v-col
+      v-if="backBtnMethod"
+      cols="12"
+      sm="4"
+      order="last"
+      order-sm="first"
+      class="px-sm-2"
+    >
       <mew-button
         has-full-width
         :title="backBtnText"
@@ -24,7 +31,7 @@
       mobile position before the back button
     =====================================================================================
     -->
-    <v-col cols="12" sm="4" class="px-sm-2">
+    <v-col cols="12" :sm="backBtnMethod ? '4' : '12'" class="px-sm-2">
       <mew-button
         has-full-width
         btn-size="xlarge"
