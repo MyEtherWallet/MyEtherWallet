@@ -52,9 +52,14 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
+    this.$intercom.boot();
+    this.$intercom.shutdown();
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.dispatch('global/setTracking');
+  },
+  created() {
+    this.$intercom.boot();
   },
   render: h => h(app)
 });

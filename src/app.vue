@@ -36,8 +36,6 @@ export default {
     window.addEventListener(PWA_EVENTS.PWA_UPDATE_FOUND, () => {
       Toast(updateMsg, {}, INFO);
     });
-    this.$intercom.shutdown();
-    this.$intercom.once('ready', this.clearIntercom);
   },
   mounted() {
     this.setOnlineStatus(window.navigator.onLine);
@@ -55,10 +53,7 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency']),
-    clearIntercom() {
-      this.$intercom.boot();
-    }
+    ...mapActions('external', ['setCurrency'])
   }
 };
 </script>
