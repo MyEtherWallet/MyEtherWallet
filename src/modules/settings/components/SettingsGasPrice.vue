@@ -29,10 +29,7 @@
         v-for="(b, key) in buttons"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[
-          selected === b.title ? 'active' : '',
-          notEnoughEth ? 'disabled' : ''
-        ]"
+        :class="[selected === b.title ? 'active' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -99,8 +96,9 @@
       </div>
     </div>
 
-    <div v-if="notEnoughEth" class="mt-6 mb-5 error--text pl-4">
+    <div v-if="showNotEnoughEthWarning" class="mt-6 mb-5 error--text pl-4">
       <div>Not enough funds to increase priority.</div>
+      <div>{{ unavailableSpeed }} Priority is not selectable</div>
       <a
         rel="noopener noreferrer"
         target="_blank"
@@ -158,7 +156,10 @@ export default {
   },
   data() {
     return {
-      gasPriceTypes: gasPriceTypes
+      gasPriceTypes: gasPriceTypes,
+      previousSelected: null,
+      showNotEnoughEthWarning: false,
+      unavailableSpeed: ''
     };
   },
   computed: {
@@ -193,6 +194,34 @@ export default {
       return this.hasCost ? this.costInUsd : this.currentValue.usd;
     }
     */
+  },
+  watch: {
+    /**
+     * If not enough balance to cover new priority, go back to previous priority
+     */
+    selected() {
+      if (this.notEnoughEth) {
+        this.unavailableSpeed =
+          this.selected == 'fast'
+            ? 'Highest'
+            : this.selected == 'regular'
+            ? 'Higher'
+            : '';
+        this.setSelected(this.previousSelected);
+        this.showNotEnoughEthWarning = true;
+      }
+
+      if (!this.notEnoughEth) {
+        this.previousSelected = this.selected;
+      }
+    }
+  },
+  mounted() {
+    this.previousSelected = this.selected;
+
+    if (this.notEnoughEth) {
+      this.showNotEnoughEthWarning = true;
+    }
   }
 };
 </script>
