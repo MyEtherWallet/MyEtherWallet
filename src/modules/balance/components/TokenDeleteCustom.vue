@@ -1,7 +1,7 @@
 <template>
   <!--
     =====================================================================================
-      Add Custom Token Overlay
+      Delete Custom Token Overlay
     =====================================================================================
     -->
   <mew-overlay
@@ -11,51 +11,17 @@
       link: 'mailto:support@myetherwallet.com'
     }"
     :show-overlay="open"
-    title="Remove Custom Token"
+    :title="title"
     :close="closeDelete"
     :back="null"
-    content-size="large"
+    :content-size="step === 1 ? 'large' : 'medium'"
   >
-    <div class="full-width">
-      <mew-popup
-        max-width="500px"
-        :has-body-content="true"
-        :has-padding="true"
-        scrollable
-        hide-close-btn
-        :show="showDeleteConfirmation"
-        :title="confirmTitle"
-        :left-btn="{
-          text: 'Cancel',
-          method: toggleDeleteModal,
-          color: 'basic'
-        }"
-        :right-btn="{
-          text: 'Remove',
-          color: 'primary',
-          method: confirmDelete,
-          enabled: true
-        }"
-      >
-        <div class="text-center">
-          <p class="mew-body textPrimary--text mb-5">
-            {{ title }}
-          </p>
-          <div
-            v-for="token in selectedTokens"
-            :key="token.address"
-            class="d-flex align-center justify-center py-1"
-          >
-            <div class="d-flex">
-              <v-img :src="token.tokenImg" width="20" height="20" contain />
-              {{ token.token }}
-            </div>
-          </div>
-        </div>
-      </mew-popup>
-      <div class="mew-body textPrimary--text text-center mb-5">
-        Please select tokens that you want to remove
-      </div>
+    <div v-if="step === 1" class="full-width">
+      <!--
+    =====================================================================================
+      Step One: Select tokens to delete
+    =====================================================================================
+    -->
       <mew-table
         has-select
         :table-headers="tableHeaders"
@@ -71,7 +37,48 @@
           :has-full-width="true"
           btn-size="xlarge"
           :disabled="!enableDeleteButton"
-          @click.native="toggleDeleteModal"
+          @click.native="next"
+        />
+      </div>
+    </div>
+    <!--
+    =====================================================================================
+      Step Two: Confirm
+    =====================================================================================
+    -->
+    <div v-if="step === 2" class="full-width">
+      <div
+        v-for="token in selectedTokens"
+        :key="token.address"
+        class="d-flex align-center justify-center py-1"
+      >
+        <div class="d-flex align-center justify-center">
+          <v-img
+            class="mr-2"
+            :src="token.tokenImg"
+            width="20"
+            height="20"
+            contain
+          />
+          {{ token.token }}
+        </div>
+      </div>
+      <div class="mt-9">
+        <mew-button
+          title="Remove Tokens"
+          color-theme="error"
+          :has-full-width="true"
+          btn-size="xlarge"
+          class="mb-4"
+          @click.native="confirmDelete"
+        />
+        <mew-button
+          title="Keep Tokens"
+          color-theme="basic"
+          :has-full-width="true"
+          btn-size="xlarge"
+          btn-style="outline"
+          @click.native="closeDelete"
         />
       </div>
     </div>
@@ -94,6 +101,7 @@ export default {
   },
   data() {
     return {
+      step: 1,
       tableHeaders: [
         {
           text: 'Token',
@@ -114,8 +122,7 @@ export default {
           width: '20%'
         }
       ],
-      selectedTokens: [],
-      showDeleteConfirmation: false
+      selectedTokens: []
     };
   },
   computed: {
@@ -132,18 +139,23 @@ export default {
       return this.selectedTokens.length > 0;
     },
     title() {
-      return `Are you sure you want to delete ${
-        this.selectedTokens.length > 1 ? 'these tokens' : 'this token'
-      }?`;
-    },
-    confirmTitle() {
-      return `Confirm Remove Token${this.selectedTokens.length > 1 ? 's' : ''}`;
+      return this.step === 1
+        ? `Select the ${
+            this.selectedTokens.length > 1 ? 'tokens' : 'token'
+          } you want to remove`
+        : `Are you sure you want to remove ${
+            this.selectedTokens.length > 1 ? 'these tokens' : 'this token'
+          }?`;
     }
   },
   methods: {
     ...mapActions('custom', ['deleteAll', 'deleteToken']),
+    /**
+     * close overlay
+     */
     closeDelete() {
       this.selectedTokens = [];
+      this.step = 1;
       this.close();
     },
     /**
@@ -182,10 +194,10 @@ export default {
       }
     },
     /**
-     * Toggles delete confirmation modal
+     * Takes user to the confirm step
      */
-    toggleDeleteModal() {
-      this.showDeleteConfirmation = !this.showDeleteConfirmation;
+    next() {
+      this.step = 2;
     },
     /**
      * Depending on the selected count
@@ -194,12 +206,12 @@ export default {
     confirmDelete() {
       if (this.selectedTokens.length === this.customTokens.length) {
         this.deleteAll().then(() => {
-          this.toggleDeleteModal();
+          this.closeDelete();
           Toast('Token Remove succesfully', {}, SUCCESS);
         });
       } else {
         this.deleteToken(this.selectedTokens).then(() => {
-          this.toggleDeleteModal();
+          this.closeDelete();
           Toast('Token Remove succesfully', {}, SUCCESS);
         });
       }

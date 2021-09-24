@@ -28,7 +28,7 @@
           >
           <mew-menu
             v-else
-            text-color="primary--text"
+            activator-text-color="primary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -148,11 +148,13 @@ export default {
             items: [
               {
                 title: 'Add Token',
-                to: 'add'
+                to: 'add',
+                iconName: 'mdi-plus'
               },
               {
                 title: 'Remove Token',
-                to: 'remove'
+                to: 'remove',
+                iconName: 'mdi-minus'
               }
             ]
           }
