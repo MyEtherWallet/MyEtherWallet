@@ -10,22 +10,20 @@
     right-btn-text="Close"
     :close="close"
   >
-    <template #mewOverlayBody>
-      <div>
-        <aave-amount-form
-          :selected-token="preSelectedToken"
-          :handler="handler"
-          :show-toggle="aaveWithdrawForm.showToggle"
-          :left-side-values="aaveWithdrawForm.leftSideValues"
-          :right-side-values="aaveWithdrawForm.rightSideValues"
-          :form-text="aaveWithdrawForm.formText"
-          :button-title="aaveWithdrawForm.buttonTitle"
-          :token-balance="tokenBalance"
-          @cancel="handleCancel"
-          @emitValues="handleWithdrawAmount"
-        />
-      </div>
-    </template>
+    <div>
+      <aave-amount-form
+        :selected-token="preSelectedToken"
+        :handler="handler"
+        :show-toggle="aaveWithdrawForm.showToggle"
+        :left-side-values="aaveWithdrawForm.leftSideValues"
+        :right-side-values="aaveWithdrawForm.rightSideValues"
+        :form-text="aaveWithdrawForm.formText"
+        :button-title="aaveWithdrawForm.buttonTitle"
+        :token-balance="tokenBalance"
+        @cancel="handleCancel"
+        @emitValues="handleWithdrawAmount"
+      />
+    </div>
   </mew-overlay>
 </template>
 
