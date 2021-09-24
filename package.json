@@ -110,7 +110,7 @@
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-security": "1.4.0",
-    "eslint-plugin-vue": "7.17.0",
+    "eslint-plugin-vue": "7.18.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-common": "1.5.2",
     "ethereumjs-util": "7.1.0",
