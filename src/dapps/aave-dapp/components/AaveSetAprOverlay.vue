@@ -7,17 +7,14 @@
   <mew-overlay
     :show-overlay="open"
     title="Select your interest rate"
-    right-btn-text="Close"
     :close="close"
   >
-    <template #mewOverlayBody>
-      <div>
-        <aave-select-interest
-          :selected-token="actualToken"
-          @continue="handleSetInterestRate"
-        />
-      </div>
-    </template>
+    <div>
+      <aave-select-interest
+        :selected-token="actualToken"
+        @continue="handleSetInterestRate"
+      />
+    </div>
   </mew-overlay>
 </template>
 
