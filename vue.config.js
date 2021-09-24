@@ -18,7 +18,6 @@ const webpackConfig = {
   devServer: {
     https: true,
     host: 'localhost',
-    publicPath: '/testme/',
     hotOnly: true,
     port: 8080,
     headers: {
