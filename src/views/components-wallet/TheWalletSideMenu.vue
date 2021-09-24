@@ -12,7 +12,7 @@
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
             <!--
             =====================================================================================
@@ -184,8 +184,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        <router-link
+          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+          style="line-height: 0"
+        >
+          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />

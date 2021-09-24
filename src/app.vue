@@ -38,7 +38,6 @@ export default {
     });
   },
   mounted() {
-    this.$intercom.boot();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
