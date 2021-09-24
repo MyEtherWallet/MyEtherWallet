@@ -36,10 +36,10 @@
         -->
     <div v-if="step === 1">
       <!--
-              =====================================================================================
-                Different hardware instances
-              =====================================================================================
-              -->
+      =====================================================================================
+        Different hardware instances
+      =====================================================================================
+      -->
       <v-row dense no-gutters justify="start">
         <v-col
           v-for="button in buttons"
@@ -68,8 +68,12 @@
         =====================================================================================
         -->
       <access-wallet-bitbox
-        v-if="onBitbox"
-        :set-selected-bitbox="setSelectedBitbox"
+        v-if="onBitbox2"
+        :selected-path="selectedPath"
+        :paths="paths"
+        :set-path="setPath"
+        :hw-wallet-instance="hwWalletInstance"
+        :unlock="bitbox02Unlock"
       />
       <!--
         =====================================================================================
@@ -193,10 +197,10 @@
       =====================================================================================
       -->
     <!--
-          =====================================================================================
-          Network Address Step
-          =====================================================================================
-          -->
+    =====================================================================================
+    Network Address Step
+    =====================================================================================
+    -->
     <access-wallet-address-network
       v-if="step === 3"
       :back="null"
@@ -212,7 +216,7 @@
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { _ } from 'web3-utils';
-// import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
+import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 // import BitBoxPopup from './hardware/components/BitBoxPopup';
 // import AccessWalletPassword from './hardware/components/AccessWalletPassword';
 // import AccessWalletPaths from './hardware/components/AccessWalletPaths';
@@ -237,8 +241,8 @@ export default {
     MewSuperButtonRevised,
     AccessWalletCoolWallet,
     AccessWalletDerivationPath,
-    AccessWalletAddressNetwork
-    // AccessWalletBitbox,
+    AccessWalletAddressNetwork,
+    AccessWalletBitbox
     // AccessWalletPassword,
     // AccessWalletPaths,
     // BitBoxPopup
@@ -304,10 +308,7 @@ export default {
         };
       }),
       wallets: wallets,
-      // resettable
       step: 1,
-      // currentStep: '',
-      // steps: {},
       hwWalletInstance: {},
       ledgerApp: {},
       selectedPath: {
@@ -318,10 +319,6 @@ export default {
       selectedLedgerApp: {},
       password: '',
       loaded: false,
-      // qrCode: '',
-      // walletInstance: {},
-      // enterPin: false,
-      // pin: '',
       ledgerConnected: false,
       callback: () => {},
       unwatch: () => {},
@@ -378,14 +375,11 @@ export default {
       };
     },
     /**
-     * On Bitbox
+     * On Bitbox2
      */
-    onBitbox() {
-      return this.walletType === WALLET_TYPES.LEDGER;
+    onBitbox2() {
+      return this.walletType === WALLET_TYPES.BITBOX2;
     },
-    // onBitboxPopup() {
-    //   return this.currentStep === LAYOUT_STEPS.BITBOX_POPUP;
-    // },
     /**
      * On Ledger
      */
@@ -427,9 +421,6 @@ export default {
     /**
      * On Paths step
      */
-    // onPaths() {
-    //   return this.currentStep === LAYOUT_STEPS.PATH_SELECT;
-    // },
     paths() {
       const newArr = [];
       if (this.walletType === WALLET_TYPES.LEDGER) {
@@ -500,9 +491,6 @@ export default {
       this.selectedPath = this.paths[0];
       this.selectedLedgerApp = this.ledgerApps[0];
       this.password = '';
-      // this.qrCode = '';
-      // this.walletInstance = {};
-      // this.enterPin = false;
       this.walletType = '';
     },
     /**
@@ -514,7 +502,6 @@ export default {
       if (this.onKeepkey && this.step === 2) {
         this.step = 1;
       }
-      // this.currentStep = this.wallets[this.walletType].steps[this.step - 1];
       this.step === 1 ? this.reset() : '';
       this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
@@ -534,7 +521,11 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
-          if (this.walletType === WALLET_TYPES.COOL_WALLET) return;
+          if (
+            this.walletType === WALLET_TYPES.COOL_WALLET ||
+            this.walletType === WALLET_TYPES.BITBOX2
+          )
+            return;
           this[`${this.walletType}Unlock`]();
         }
       }
@@ -569,14 +560,14 @@ export default {
         .then(_hwWallet => {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
-          if (_hwWallet.identifier == 'ledger') this.ledgerConnected = true;
-          if (_hwWallet.identifier == 'trezor' || this.onKeepkey) this.step++;
-          // if (this.walletType === WALLET_TYPES.BITBOX2) {
-          //   this.currentStep = LAYOUT_STEPS.BITBOX_POPUP;
-          //   _hwWallet.init(this.hasPath).then(() => {
-          //     this.hwWalletInstance = _hwWallet;
-          //   });
-          // }
+          if (this.onLedger) this.ledgerConnected = true;
+          if (this.onKeepkey || this.onKeepkey) this.step++;
+          if (this.onBitbox2) {
+            _hwWallet.init(this.hasPath).then(() => {
+              this.hwWalletInstance = _hwWallet;
+              this.nextStep();
+            });
+          }
           return _hwWallet;
         })
         .catch(err => {

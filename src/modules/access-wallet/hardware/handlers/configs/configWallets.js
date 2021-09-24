@@ -32,10 +32,10 @@ export default {
   [WALLET_TYPES.BITBOX2]: {
     create: BitBox02Wallet,
     when: 2,
-    hasPaths: true,
+    hasPaths: false,
     requiresPassword: false,
     accountOnly: false,
-    titles: 'Connect your BitBox'
+    title: 'Connect your BitBox 02'
   },
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,

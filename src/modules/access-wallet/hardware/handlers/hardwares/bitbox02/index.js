@@ -32,44 +32,52 @@ class BitBox02Wallet {
     };
   }
   async connect() {
-    const devicePath = await getDevicePath();
-    this.BitBox02 = new BitBox02API(devicePath);
+    try {
+      const devicePath = await getDevicePath();
+      this.BitBox02 = new BitBox02API(devicePath);
+    } catch (e) {
+      errorHandler(e);
+    }
   }
 
   async init(basePath) {
-    this.basePath = basePath ? basePath : this.supportedPaths[0].path;
-    await this.BitBox02.connect(
-      pairingCode => {
-        this.pairingCode = pairingCode;
-      },
-      async () => {
-        return new Promise(resolve => {
-          this.pairingConfirmed = true;
-          this.pairingConfirmationResolve = resolve;
-        });
-      },
-      attestationResult => {
-        this.attestation = attestationResult;
-      },
-      () => {
-        store.dispatch('wallet/removeWallet');
-      },
-      status => {
-        this.status = status;
+    try {
+      this.basePath = basePath ? basePath : this.supportedPaths[0].path;
+      await this.BitBox02.connect(
+        pairingCode => {
+          this.pairingCode = pairingCode;
+        },
+        async () => {
+          return new Promise(resolve => {
+            this.pairingConfirmed = true;
+            this.pairingConfirmationResolve = resolve;
+          });
+        },
+        attestationResult => {
+          this.attestation = attestationResult;
+        },
+        () => {
+          store.dispatch('wallet/removeWallet');
+        },
+        status => {
+          this.status = status;
+        }
+      );
+
+      if (
+        this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
+      ) {
+        throw new Error('Unsupported device');
       }
-    );
 
-    if (
-      this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
-    ) {
-      throw new Error('Unsupported device');
-    }
+      const rootPub = await this.BitBox02.ethGetRootPubKey(this.basePath);
+      this.hdKey = HDKey.fromExtendedKey(rootPub);
 
-    const rootPub = await this.BitBox02.ethGetRootPubKey(this.basePath);
-    this.hdKey = HDKey.fromExtendedKey(rootPub);
-
-    if (!this.attestation) {
-      errorHandler({ message: 'Attestation failed' });
+      if (!this.attestation) {
+        errorHandler({ message: 'Attestation failed' });
+      }
+    } catch (e) {
+      errorHandler(e);
     }
   }
 
@@ -141,9 +149,13 @@ class BitBox02Wallet {
 }
 
 const createWallet = async () => {
-  const _bb02Wallet = new BitBox02Wallet();
-  await _bb02Wallet.connect();
-  return _bb02Wallet;
+  try {
+    const _bb02Wallet = new BitBox02Wallet();
+    await _bb02Wallet.connect();
+    return _bb02Wallet;
+  } catch (e) {
+    errorHandler(e);
+  }
 };
 createWallet.errorHandler = errorHandler;
 
