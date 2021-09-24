@@ -385,7 +385,6 @@ export default {
       }
     },
     handlerWallet: {
-      deep: true,
       handler: function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.changeHandler();
