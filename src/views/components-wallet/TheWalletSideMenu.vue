@@ -12,7 +12,7 @@
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
             <!--
             =====================================================================================
@@ -160,12 +160,17 @@
       </v-list>
     </v-navigation-drawer>
     <mew-popup
-      :is-open="showLogoutPopup"
+      max-width="400px"
+      hide-close-btn
+      :show="showLogoutPopup"
       :title="$t('interface.menu.logout')"
-      :button-left="logout.btnLeft"
-      :button-right="logout.btnRight"
-      popup-type="confirm"
-      @onClick="onLogout"
+      :left-btn="{ text: 'Cancel', method: toggleLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
     ></mew-popup>
     <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
@@ -184,8 +189,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        <router-link
+          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+          style="line-height: 0"
+        >
+          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />
@@ -231,16 +239,6 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      logout: {
-        btnLeft: {
-          title: 'Cancel',
-          colorTheme: 'basic'
-        },
-        btnRight: {
-          title: 'Log out',
-          colorTheme: 'error'
-        }
-      },
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
@@ -349,12 +347,9 @@ export default {
       this.onSettings = false;
       this.$router.go(-1);
     },
-    onLogout(res) {
+    onLogout() {
       this.showLogoutPopup = false;
-      if (res.title === this.logout.btnRight.title) {
-        this.trackLogout();
-        this.removeWallet();
-      }
+      this.removeWallet();
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;

@@ -49,7 +49,7 @@
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
-                      name.split('.').length > 2
+                      (name && name.split('.').length > 2)
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
@@ -332,7 +332,7 @@ export default {
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        this.name.split('.').length <= 2 ||
+        (this.name && this.name.split('.').length <= 2) ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
