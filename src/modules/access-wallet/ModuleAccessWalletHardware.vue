@@ -175,27 +175,9 @@
           Trezor
         =====================================================================================
         -->
-      <span v-if="onTrezor">
-        <div class="d-flex flex-column align-center">
-          <div class="titlePrimary-text">
-            Follow the instructions in the Trezor connection tab. If it did not
-            open automatically, click below.
-          </div>
-          <div>
-            <mew-button
-              class="mt-7"
-              title="Connect Trezor"
-              icon="mdi-open-in-new"
-              icon-type="mdi"
-              @click.native="trezorUnlock"
-            />
-          </div>
-          <div class="primary--text my-8 cursor--pointer" @click="reset">
-            <v-icon small class="primary--text">mdi-arrow-left</v-icon>
-            Connect a different wallet
-          </div>
-        </div></span
-      >
+      <div v-if="onTrezor">
+        <access-wallet-trezor :trezor-unlock="trezorUnlock" :reset="reset" />
+      </div>
     </div>
     <!--
       =====================================================================================
@@ -230,6 +212,7 @@ import AccessWalletAddressNetwork from '@/modules/access-wallet/common/component
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
+import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
@@ -246,6 +229,7 @@ export default {
     AccessWalletKeepkey,
     MewSuperButtonRevised,
     AccessWalletCoolWallet,
+    AccessWalletTrezor,
     AccessWalletDerivationPath,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
