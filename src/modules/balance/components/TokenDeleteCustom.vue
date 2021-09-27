@@ -149,7 +149,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('custom', ['deleteAll', 'deleteToken']),
+    ...mapActions('custom', ['deleteAllTokens', 'deleteToken']),
     /**
      * close overlay
      */
@@ -201,11 +201,11 @@ export default {
     },
     /**
      * Depending on the selected count
-     * it will call deleteAll or deleteToken
+     * it will call deleteAllTokens or deleteToken
      */
     confirmDelete() {
       if (this.selectedTokens.length === this.customTokens.length) {
-        this.deleteAll().then(() => {
+        this.deleteAllTokens().then(() => {
           this.closeDelete();
           Toast('Token Remove succesfully', {}, SUCCESS);
         });
