@@ -166,6 +166,7 @@ import {
   getType as getInputType,
   isContractArgValid
 } from './handlers/common';
+import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 export default {
   name: 'ModuleContractInteract',
@@ -270,21 +271,24 @@ export default {
         this.selectedMethod.name
       ].apply(this, params);
       if (this.isViewFunction) {
-        caller.call().then(result => {
-          if (this.selectedMethod.outputs.length === 1) {
-            this.selectedMethod.outputs[0].value = result;
-            Vue.set(
-              this.selectedMethod.outputs,
-              0,
-              this.selectedMethod.outputs[0]
-            );
-          } else if (this.selectedMethod.outputs.length > 1) {
-            this.selectedMethod.outputs.forEach((out, idx) => {
-              out.value = result[idx];
-              Vue.set(this.selectedMethod.outputs, idx, out);
-            });
-          }
-        });
+        caller
+          .call()
+          .then(result => {
+            if (this.selectedMethod.outputs.length === 1) {
+              this.selectedMethod.outputs[0].value = result;
+              Vue.set(
+                this.selectedMethod.outputs,
+                0,
+                this.selectedMethod.outputs[0]
+              );
+            } else if (this.selectedMethod.outputs.length > 1) {
+              this.selectedMethod.outputs.forEach((out, idx) => {
+                out.value = result[idx];
+                Vue.set(this.selectedMethod.outputs, idx, out);
+              });
+            }
+          })
+          .catch(({ message }) => Toast(message, {}, ERROR));
       } else if (this.isPayableFunction) {
         const rawTx = {
           to: this.contractAddress,
@@ -293,12 +297,17 @@ export default {
           data: caller.encodeABI()
         };
 
-        this.web3.eth.estimateGas(rawTx).then(gasLimit => {
-          rawTx.gas = gasLimit;
-          caller.send(rawTx);
-        });
+        this.web3.eth
+          .estimateGas(rawTx)
+          .then(gasLimit => {
+            rawTx.gas = gasLimit;
+            caller.send(rawTx);
+          })
+          .catch(({ message }) => Toast(message, {}, ERROR));
       } else {
-        caller.send({ from: this.address });
+        caller
+          .send({ from: this.address })
+          .catch(({ message }) => Toast(message, {}, ERROR));
       }
     },
     payableInput(amount) {
@@ -342,6 +351,7 @@ export default {
     },
     methodSelect(evt) {
       if (evt && evt.inputs && evt.outputs) {
+        this.inputsValid = false;
         this.selectedMethod = evt;
         this.selectedMethod.inputs.forEach(v => (v.value = ''));
         this.selectedMethod.outputs.forEach(v => (v.value = ''));
