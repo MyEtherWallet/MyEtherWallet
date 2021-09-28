@@ -73,12 +73,12 @@ export default {
       return formatFiatValue(this.totalTokenFiatValue).value;
     },
     tokenImages() {
-      const filterNoImageTokens = this.tokensList.filter(token => token.img);
-      const firstFive = filterNoImageTokens.slice(0, 5);
-
-      return firstFive.map(item => {
-        return item.img;
-      });
+      return this.tokensList
+        .filter(token => token.img)
+        .slice(0, 5)
+        .map(item => {
+          return item.img;
+        });
     },
     moreTokensCount() {
       return this.tokensList.length - this.tokenImages.length;
