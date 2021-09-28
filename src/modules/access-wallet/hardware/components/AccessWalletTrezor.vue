@@ -29,7 +29,7 @@ export default {
       default: () => {}
     },
     reset: {
-      type: Object,
+      type: Function,
       default: () => {}
     }
   }
