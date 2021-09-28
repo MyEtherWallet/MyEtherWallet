@@ -26,7 +26,7 @@
           <balance-card />
 
           <v-btn
-            v-if="network.type.name === 'ETH'"
+            v-if="network.type.name === 'ETH' && !isOfflineApp"
             class="mt-3"
             color="white"
             outlined
@@ -57,7 +57,11 @@
 
       <v-list>
         <v-list-item-group model="menuSelected">
-          <template v-for="(item, idx) in sectionOne">
+          <template
+            v-for="(item, idx) in isOfflineApp
+              ? sectionOneOfflineApp
+              : sectionOne"
+          >
             <v-list-item
               v-if="!item.children && shouldShow(item.route)"
               :key="item + idx + 1"
@@ -124,7 +128,9 @@
 
       <v-list>
         <v-list-item
-          v-for="(item, idx) in sectionTwo"
+          v-for="(item, idx) in isOfflineApp
+            ? sectionTwoOfflineApp
+            : sectionTwo"
           :key="item + idx"
           dense
           :to="item.route"
@@ -307,6 +313,30 @@ export default {
           fn: this.toggleLogout
         }
       ],
+      /**
+       * ====================================================
+       * Menu for offline app
+       * ====================================================
+       */
+      sectionOneOfflineApp: [
+        {
+          title: this.$t('sendTx.send-offline'),
+          route: { name: ROUTES_WALLET.SEND_TX.NAME },
+          icon: send
+        },
+        {
+          title: this.$t('signMessage.title'),
+          route: { name: ROUTES_WALLET.SEND_TX.NAME },
+          icon: send
+        }
+      ],
+      sectionTwoOfflineApp: [
+        {
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
+        }
+      ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -316,7 +346,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network', 'swapLink']),
-    ...mapState('wallet', ['instance'])
+    ...mapState('wallet', ['instance', 'isOfflineApp'])
   },
   mounted() {
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {

@@ -6,7 +6,7 @@
   "receiver": "Receiver",
   "send-tx": "Send Transaction",
   "send-tx-break": "Send {transaction}",
-  "send-offline": "Send Offline",
+  "send-offline": "Send Transaction Offline",
   "to-addr": "To Address",
   "from-addr": "From Address",
   "raw-tx": "Raw Transaction",
