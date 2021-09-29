@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-10 mt-5" width="700" :rounded="true">
+  <div class="full-width">
     <!--
   =====================================================================================
     Address Book - add address mode
@@ -12,6 +12,7 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
+      autofocus
       :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
@@ -83,7 +84,7 @@
     >
       {{ $t('interface.address-book.remove-addr') }}
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -111,7 +112,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
@@ -183,6 +184,9 @@ export default {
     }
   },
   watch: {
+    toAddress(newVal) {
+      this.addressToAdd = newVal;
+    },
     addressToAdd() {
       this.resolveName();
     },
@@ -209,7 +213,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['setAddressBook']),
+    ...mapActions('custom', ['setAddressBook']),
     reset() {
       this.addressToAdd = '';
       this.nickname = '';

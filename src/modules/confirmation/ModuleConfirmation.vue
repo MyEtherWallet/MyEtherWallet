@@ -250,20 +250,27 @@
         </v-card-text>
       </template>
     </app-modal>
+    <!--
+    ====================================================================================
+      Sign Message Confirmation
+    =====================================================================================
+    -->
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
-      left-btn-text=""
-      right-btn-text="close"
       :close="reset"
+      content-size="large"
     >
-      <template #mewOverlayBody>
-        <confirmation-messsage
-          ref="messageConfirmationContainer"
-          :msg="signature"
-          :copy="copyToClipboard"
-        />
-      </template>
+      <confirmation-messsage
+        ref="messageConfirmationContainer"
+        :msg="signature"
+        :copy="copyToClipboard"
+      />
     </mew-overlay>
   </div>
 </template>
@@ -342,7 +349,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')

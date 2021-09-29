@@ -11,26 +11,27 @@
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
-      :rules="rules"
       :error-messages="errorMessages"
       @saveAddress="toggleOverlay"
       @input="setAddress"
     />
     <!-- add and edit the address book -->
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :title="$t('interface.address-book.add-addr')"
       :show-overlay="addMode"
       :close="toggleOverlay"
-      left-btn-text=""
-      :right-btn-text="$t('common.close')"
+      content-size="xlarge"
     >
-      <template #mewOverlayBody>
-        <address-book-add-edit
-          :to-address="inputAddr"
-          mode="add"
-          @back="toggleOverlay"
-        />
-      </template>
+      <address-book-add-edit
+        :to-address="inputAddr"
+        mode="add"
+        @back="toggleOverlay"
+      />
     </mew-overlay>
   </div>
 </template>
@@ -74,25 +75,17 @@ export default {
   },
 
   computed: {
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
       }
+      if (!this.inputAddr && this.loadedAddressValidation) {
+        return this.$t('interface.address-book.validations.addr-required');
+      }
       return '';
-    },
-    // TODO: remove the first rule once the components package is updated to the
-    // right version (0.6.7-beta and up)
-    // waiting on overlay changes
-    rules() {
-      return [
-        (this.isValidAddress && this.loadedAddressValidation) ||
-          this.$t('interface.address-book.validations.invalid-address'),
-        value =>
-          !!value || this.$t('interface.address-book.validations.addr-required')
-      ];
     },
     addressBookWithMyAddress() {
       return this.isHomePage
@@ -183,6 +176,7 @@ export default {
       this.inputAddr = '';
       this.nameResolver = null;
       this.isValidAddress = false;
+      this.loadedAddressValidation = false;
       this.$refs.addressSelect.clear();
 
       // Calls setups from mounted
