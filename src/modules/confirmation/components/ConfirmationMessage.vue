@@ -1,22 +1,20 @@
 <template>
-  <v-sheet max-width="600px" class="pa-8">
-    <div class="px-3">
-      <div class="d-flex justify-space-between mb-2">
-        <v-textarea
-          ref="signatureContent"
-          outlined
-          label="Signature"
-          :value="msg"
-          :auto-grow="true"
-          :readonly="true"
-        ></v-textarea>
-      </div>
+  <div>
+    <div class="d-flex justify-space-between mb-2">
+      <v-textarea
+        ref="signatureContent"
+        outlined
+        label="Signature"
+        :value="msg"
+        :auto-grow="true"
+        :readonly="true"
+      ></v-textarea>
     </div>
     <div class="d-flex justify-center my-8">
       <mew-button btn-size="xlarge" title="Copy" @click.native="copy" />
     </div>
     <mew-warning-sheet :description="warningDescription" />
-  </v-sheet>
+  </div>
 </template>
 
 <script>
