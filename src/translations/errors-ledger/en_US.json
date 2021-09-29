@@ -5,7 +5,6 @@
   "device-busy-2": "Device is locked. Please unlock device and try again.",
   "unknown": "UNKNOWN_ERROR",
   "u2f-other-error": "Failed to sign with Ledger device (U2F OTHER_ERROR)",
-  "failed-to-sign-other": "Ledger failed to sign! U2F OTHER_ERROR",
   "failed-sign-ineligible": "Ledger failed to sign! U2F DEVICE_INELIGIBLE",
   "invalid-data-0x6a80": "Ledger received invalid data. (0x6a80)",
   "denied-by-user-0x6985": "User denied action. (0x6985)",

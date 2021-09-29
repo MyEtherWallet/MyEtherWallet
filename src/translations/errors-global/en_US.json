@@ -30,6 +30,7 @@
   "connection-error-couldnt-connect-to-WS.": "CONNECTION ERROR: Couldn't connect to node on WS.",
   "failed-to-fetch": "Failed to fetch",
   "non-error-promise-rejection-captured-with-keys-code-message": "Non-Error promise rejection captured with keys: code, message",
-  "connection-not-open":"Connection not open."
+  "connection-not-open": "Connection not open.",
+  "ens-not-supported-on-network-private": "Selected network does not support ENS!"
 
 }

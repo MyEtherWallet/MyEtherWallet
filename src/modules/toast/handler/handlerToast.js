@@ -8,7 +8,7 @@ const WARNING = 'warning';
 const INFO = 'info';
 const SENTRY = 'sentry';
 const GLOBAL_ERRORS = {
-  "Returned values aren't valid": 'globalError.invalid-returned-values',
+  "Returned values aren't valid": 'errorsGlobal.invalid-returned-values',
   'Invalid message type': 'errorsGlobal.invalid-message-type',
   'Device is used in another window':
     'errorsGlobal.device-used-in-another-window',
@@ -30,11 +30,21 @@ const GLOBAL_ERRORS = {
   'Network Error': 'errorsGlobal.network-error',
   'connection not open': 'errorsGlobal.connection-not-open'
 };
+
+const GLOBAL_WARNING = {
+  'ENS is not supported on network private':
+    'errorsGlobal.ens-not-supported-on-network-private'
+};
 const foundGlobalError = text => {
   const errorValues = Object.keys(GLOBAL_ERRORS);
   return errorValues.find(item => {
     return text.includes(item);
   });
+};
+
+const foundGlobalWarning = text => {
+  const errorValues = Object.values(GLOBAL_WARNING);
+  return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
   const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
@@ -61,7 +71,7 @@ const Toast = (text, link, type, duration) => {
     return;
   }
   if (type === SENTRY) {
-    if (foundGlobalError(text)) {
+    if (foundGlobalError(text) || foundGlobalWarning(text)) {
       EventBus.$emit(
         ToastEvents[ERROR],
         Vue.$i18n.t(GLOBAL_ERRORS[text]),
