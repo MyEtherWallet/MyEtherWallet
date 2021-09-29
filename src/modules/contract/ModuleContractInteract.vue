@@ -53,102 +53,95 @@
       ============================================================================
       -->
       <mew-overlay
+        :footer="{
+          text: 'Need help?',
+          linkTitle: 'Contact support',
+          link: 'mailto:support@myetherwallet.com'
+        }"
         title="Interact with contract"
         :show-overlay="interact"
-        right-btn-text="close"
         :close="closeInteract"
+        :back="backInteract"
+        content-size="medium"
       >
-        <template #mewOverlayBody>
-          <mew6-white-sheet
-            style="max-width: 480px; width: 100%"
-            class="px-9 py-12"
-          >
-            <mew-select
-              label="Function"
-              :items="methods"
-              class="mb-1"
-              @input="methodSelect"
-            />
+        <mew-select
+          label="Function"
+          :items="methods"
+          class="mb-1"
+          @input="methodSelect"
+        />
 
-            <div
-              v-show="selectedMethod.inputs.length"
-              class="mew-heading-2 mb-3"
-            >
-              Inputs
-            </div>
-            <div
-              v-for="(input, idx) in selectedMethod.inputs"
-              :key="input.name + idx"
-              class="input-item-container"
-            >
-              <mew-input
-                v-if="getType(input.type).type !== 'radio'"
-                :label="`${input.name} (${input.type})`"
-                :rules="[
-                  value => {
-                    return isValidInput(
-                      value,
-                      getType(input.type).solidityType
-                    );
-                  }
-                ]"
+        <div v-show="selectedMethod.inputs.length" class="mew-heading-2 mb-3">
+          Inputs
+        </div>
+        <div
+          v-for="(input, idx) in selectedMethod.inputs"
+          :key="input.name + idx"
+          class="input-item-container"
+        >
+          <mew-input
+            v-if="getType(input.type).type !== 'radio'"
+            :label="`${input.name} (${input.type})`"
+            :rules="[
+              value => {
+                return isValidInput(value, getType(input.type).solidityType);
+              }
+            ]"
+            @input="valueInput(idx, $event)"
+          />
+          <div
+            v-if="getType(input.type).type === 'radio'"
+            class="bool-input-container"
+          >
+            <div class="bool-items">
+              <mew-checkbox
+                v-model="input.value"
+                :label="input.name"
+                type="radio"
+                checked
                 @input="valueInput(idx, $event)"
               />
-              <div
-                v-if="getType(input.type).type === 'radio'"
-                class="bool-input-container"
-              >
-                <div class="bool-items">
-                  <mew-checkbox
-                    v-model="input.value"
-                    :label="input.name"
-                    type="radio"
-                    checked
-                    @input="valueInput(idx, $event)"
-                  />
-                </div>
-              </div>
             </div>
-            <div>
-              <mew-input
-                v-if="isPayableFunction"
-                label="ETH amount:"
-                :rules="[
-                  value => {
-                    return hasEnough ? '' : 'Not enough ETH';
-                  }
-                ]"
-                type="number"
-                @input="payableInput($event)"
-              />
-            </div>
-            <div class="text-center mt-2">
-              <mew-button
-                :title="isViewFunction ? 'Call' : 'Write'"
-                :has-full-width="false"
-                btn-size="xlarge"
-                :disabled="canProceed"
-                @click.native="readWrite"
-              />
-            </div>
+          </div>
+        </div>
+        <div>
+          <mew-input
+            v-if="isPayableFunction"
+            label="ETH amount:"
+            :rules="[
+              value => {
+                return hasEnough ? '' : 'Not enough ETH';
+              }
+            ]"
+            type="number"
+            @input="payableInput($event)"
+          />
+        </div>
+        <div class="text-center mt-2">
+          <mew-button
+            :title="isViewFunction ? 'Call' : 'Write'"
+            :has-full-width="false"
+            btn-size="xlarge"
+            :disabled="canProceed"
+            @click.native="readWrite"
+          />
+        </div>
 
-            <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
+        <v-divider v-if="hasOutputs" class="mt-9 mb-8" />
 
-            <div v-if="hasOutputs">
-              <div class="mew-heading-2">Results</div>
-              <div
-                v-for="(output, idx) in selectedMethod.outputs"
-                :key="output.name + idx"
-                class="d-flex align-center justify-space-between my-4"
-              >
-                <div class="text-capitalize">
-                  {{ output.name !== '' ? output.name : selectedMethod.name }}
-                </div>
-                <div class="font-weight-medium">{{ output.value }}</div>
-              </div>
+        <div v-if="hasOutputs">
+          <div class="mew-heading-2">Results</div>
+          <div
+            v-for="(output, idx) in selectedMethod.outputs"
+            :key="output.name + idx"
+            class="d-flex align-center justify-space-between my-4"
+          >
+            <div class="text-capitalize">
+              {{ output.name !== '' ? output.name : selectedMethod.name }}
             </div>
-          </mew6-white-sheet>
-        </template>
+            <div class="font-weight-medium">{{ output.value }}</div>
+          </div>
+        </div>
       </mew-overlay>
     </template>
   </mew-module>
@@ -166,6 +159,7 @@ import {
   getType as getInputType,
   isContractArgValid
 } from './handlers/common';
+import { ERROR, Toast } from '../toast/handler/handlerToast';
 
 export default {
   name: 'ModuleContractInteract',
@@ -270,21 +264,26 @@ export default {
         this.selectedMethod.name
       ].apply(this, params);
       if (this.isViewFunction) {
-        caller.call().then(result => {
-          if (this.selectedMethod.outputs.length === 1) {
-            this.selectedMethod.outputs[0].value = result;
-            Vue.set(
-              this.selectedMethod.outputs,
-              0,
-              this.selectedMethod.outputs[0]
-            );
-          } else if (this.selectedMethod.outputs.length > 1) {
-            this.selectedMethod.outputs.forEach((out, idx) => {
-              out.value = result[idx];
-              Vue.set(this.selectedMethod.outputs, idx, out);
-            });
-          }
-        });
+        caller
+          .call()
+          .then(result => {
+            if (this.selectedMethod.outputs.length === 1) {
+              this.selectedMethod.outputs[0].value = result;
+              Vue.set(
+                this.selectedMethod.outputs,
+                0,
+                this.selectedMethod.outputs[0]
+              );
+            } else if (this.selectedMethod.outputs.length > 1) {
+              this.selectedMethod.outputs.forEach((out, idx) => {
+                out.value = result[idx];
+                Vue.set(this.selectedMethod.outputs, idx, out);
+              });
+            }
+          })
+          .catch(({ message }) => {
+            Toast(message, {}, ERROR);
+          });
       } else if (this.isPayableFunction) {
         const rawTx = {
           to: this.contractAddress,
@@ -293,10 +292,15 @@ export default {
           data: caller.encodeABI()
         };
 
-        this.web3.eth.estimateGas(rawTx).then(gasLimit => {
-          rawTx.gas = gasLimit;
-          caller.send(rawTx);
-        });
+        this.web3.eth
+          .estimateGas(rawTx)
+          .then(gasLimit => {
+            rawTx.gas = gasLimit;
+            caller.send(rawTx);
+          })
+          .catch(({ message }) => {
+            Toast(message, {}, ERROR);
+          });
       } else {
         caller.send({ from: this.address });
       }

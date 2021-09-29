@@ -23,7 +23,6 @@ import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import keepkeyImg from '@/assets/images/icons/wallets/keepkey.svg';
 import { numberToHex } from 'web3-utils';
-const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
   constructor() {
@@ -33,7 +32,6 @@ class KeepkeyWallet {
     );
     this.identifier = WALLET_TYPES.KEEPKEY;
     this.isHardware = true;
-    this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
     this.meta = {
       name: 'KeepKey',
@@ -48,13 +46,9 @@ class KeepkeyWallet {
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.keepkey = await this.keepkeyAdapter.pairDevice(undefined, true);
     this.keyring.on(['*', '*', Events.PIN_REQUEST], () => {
-      EventBus.$emit(
-        'showHardwarePinMatrix',
-        { name: this.identifier },
-        pin => {
-          this.keepkey.sendPin(pin).catch(errorHandler);
-        }
-      );
+      EventBus.$emit('enablePin', { name: this.identifier }, pin => {
+        this.keepkey.sendPin(pin).catch(errorHandler);
+      });
     });
     this.keyring.on(['*', '*', Events.PASSPHRASE_REQUEST], () => {
       EventBus.$emit(

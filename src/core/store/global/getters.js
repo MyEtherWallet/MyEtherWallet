@@ -13,6 +13,9 @@ const Networks = function () {
 };
 const network = function (state) {
   let network = nodeList['ETH'][0];
+  if (!nodeList[state.currentNetwork.type.name]) {
+    throw new Error('Current network is not in nodeList.');
+  }
   const iteratableArr = nodeList[state.currentNetwork.type.name];
   network = Object.assign({}, state.currentNetwork);
   network.type = nodeList[state.currentNetwork.type.name][0].type;

@@ -21,6 +21,7 @@ import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
 import { rlp } from 'ethereumjs-util';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
 const NEED_PASSWORD = false;
 
@@ -177,9 +178,7 @@ createWallet.errorHandler = errorHandler;
 
 const isWebUsbSupported = async () => {
   const isSupported = await webUsbTransport.isSupported();
-  return (
-    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
-  );
+  return isSupported && platform.name !== 'Opera';
 };
 
 const getLedgerTransport = async () => {
@@ -188,7 +187,7 @@ const getLedgerTransport = async () => {
   if (support) {
     transport = await webUsbTransport.create();
   } else {
-    throw new Error('Browse doesnt support webusb');
+    Toast('WebUsb not supported', {}, ERROR);
   }
   return transport;
 };

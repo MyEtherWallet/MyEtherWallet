@@ -1,10 +1,15 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
+    :title="title"
     :show-overlay="onSettings"
+    :back="editMode || addMode ? back : null"
+    content-size="xlarge"
     :close="close"
-    :back="back"
-    :left-btn-text="addMode || editMode ? $t('common.back') : ''"
-    :right-btn-text="$t('common.close')"
   >
     <template #mewOverlayBody>
       <mew6-white-sheet
@@ -223,7 +228,7 @@ export default {
           number: idx + 1,
           address: item.address,
           nickname: item.nickname,
-          resolvedAddr: item.resolvedAddr,
+          resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
           callToAction: [
             {
               title: 'Edit',
@@ -236,7 +241,9 @@ export default {
       });
     },
     back(idx) {
-      this.idxToExpand = idx ? idx : null;
+      if (!isNaN(idx)) {
+        this.idxToExpand = idx ? idx : null;
+      }
       this.addMode = false;
       this.editMode = false;
     },
