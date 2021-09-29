@@ -47,7 +47,7 @@
           >
             <a
               class="black--text"
-              href="https://help.myetherwallet.com/"
+              href="https://help.myetherwallet.com/en/"
               target="_blank"
               >Help Center</a
             >
