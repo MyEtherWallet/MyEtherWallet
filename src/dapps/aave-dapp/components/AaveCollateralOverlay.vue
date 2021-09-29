@@ -4,20 +4,13 @@
     Collateral Overlay
   =====================================================================================
   -->
-  <mew-overlay
-    :show-overlay="open"
-    :title="title"
-    right-btn-text="Close"
-    :close="close"
-  >
-    <template #mewOverlayBody>
-      <aave-summary
-        :handler="handler"
-        :selected-token="preSelectedToken"
-        :action-type="collateral"
-        @onConfirm="callSwitchCollateral"
-      />
-    </template>
+  <mew-overlay :show-overlay="open" :title="title" :close="close">
+    <aave-summary
+      :handler="handler"
+      :selected-token="preSelectedToken"
+      :action-type="collateral"
+      @onConfirm="callSwitchCollateral"
+    />
   </mew-overlay>
 </template>
 
