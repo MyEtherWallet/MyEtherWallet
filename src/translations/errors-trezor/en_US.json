@@ -13,5 +13,9 @@
   "popup-failed-to-open": "Popup failed to open.  Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
   "safety-check-failed": "Safety check failed, make sure you are using latest trezor firmware",
   "initializing-failed": "Failed to initialize, try unplugging and replugging trezor",
-  "trezor-connect-not-initialized": "TrezorConnect is not yet initialized! try unplugging and replugging Trezor wallet"
+  "trezor-connect-not-initialized": "TrezorConnect is not yet initialized! try unplugging and replugging Trezor wallet",
+  "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
+  "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
+  "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
 }
