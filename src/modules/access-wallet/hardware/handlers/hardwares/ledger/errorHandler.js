@@ -27,6 +27,8 @@ const ERRORS = {
   'Ledger Device is busy': 'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failed-to-sign-other',
+  'Failed to sign with Ledger device: U2F OTHER_ERROR':
+    'ledgerError.failed-to-sign-other',
   'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
   'Please enable Contract data on the Ethereum app Settings':
     'ledgerError.enable-contract-data',

@@ -1,11 +1,5 @@
 <template>
-  <v-sheet
-    elevation="10"
-    width="100%"
-    min-width="600px"
-    class="mx-auto pa-10"
-    rounded
-  >
+  <div>
     <div class="d-flex flex-column superPrimary pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
@@ -56,7 +50,7 @@
         }}</span>
       </div>
     </div>
-    <div class="d-flex justify-center my-6">
+    <div class="d-flex justify-center mt-6">
       <mew-button
         :disabled="loadingCommit || ticker !== '00:00'"
         :title="
@@ -68,7 +62,7 @@
         @click.native="!canRegister ? commit() : register(duration)"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

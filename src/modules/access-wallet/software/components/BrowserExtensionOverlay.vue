@@ -1,5 +1,10 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="open"
     title="1. Connect with BCVault"
     right-btn-text="Cancel"

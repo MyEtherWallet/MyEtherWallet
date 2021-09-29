@@ -13,79 +13,80 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <v-row class="align-center justify-space-between mt-4">
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
-              <div class="position--relative">
-                <app-button-balance
-                  :loading="isLoading"
-                  :balance="displayBalance"
-                />
+          <div class="input-swap-container pt-7 pb-3 px-5">
+            <v-row class="align-center justify-space-between mt-4">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
+                <div class="position--relative">
+                  <app-button-balance
+                    :loading="isLoading"
+                    :balance="displayBalance"
+                  />
+                  <mew-select
+                    :value="fromTokenType"
+                    label="From"
+                    :items="actualFromTokens"
+                    :is-custom="true"
+                    :loading="isLoading"
+                    @input="setFromToken"
+                  />
+                </div>
+                <mew-input
+                  ref="amountInput"
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :value="tokenInValue"
+                  :persistent-hint="true"
+                  :error-messages="amountErrorMessage"
+                  :disabled="initialLoad"
+                  :buy-more-str="
+                    isEthNetwork &&
+                    (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                      amountErrorMessage === errorMsgs.amountEthIsTooLow)
+                      ? 'Buy more.'
+                      : null
+                  "
+                  :max-btn-obj="{
+                    title: 'Max',
+                    disabled: false,
+                    method: setMaxAmount
+                  }"
+                  @input="setTokenInValue"
+              /></v-col>
+              <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+                <div class="d-flex align-center justify-center pb-sm-10">
+                  <swap-btn
+                    :class="[
+                      enableTokenSwitch
+                        ? 'cursor--pointer'
+                        : 'pointer-event--none',
+                      'd-flex align-center justify-center'
+                    ]"
+                    @click.native="switchTokens"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
                 <mew-select
-                  :value="fromTokenType"
-                  label="From"
-                  :items="actualFromTokens"
+                  ref="toToken"
+                  :value="toTokenType"
+                  :items="actualToTokens"
                   :is-custom="true"
                   :loading="isLoading"
-                  @input="setFromToken"
+                  label="To"
+                  @input="setToToken"
                 />
-              </div>
-              <mew-input
-                ref="amountInput"
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :value="tokenInValue"
-                :persistent-hint="true"
-                :error-messages="amountErrorMessage"
-                :disabled="initialLoad"
-                :buy-more-str="
-                  isEthNetwork &&
-                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
-                    ? 'Buy more.'
-                    : null
-                "
-                :max-btn-obj="{
-                  title: 'Max',
-                  disabled: false,
-                  method: setMaxAmount
-                }"
-                @input="setTokenInValue"
-            /></v-col>
-            <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
-              <div class="d-flex align-center justify-center pb-sm-10">
-                <swap-btn
-                  :class="[
-                    enableTokenSwitch
-                      ? 'cursor--pointer'
-                      : 'pointer-event--none',
-                    'd-flex align-center justify-center'
-                  ]"
-                  @click.native="switchTokens"
+                <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+                <v-text-field
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :hide-clear-btn="true"
+                  :value="tokenOutValue"
+                  :readonly="true"
+                  outlined
                 />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
-              <mew-select
-                ref="toToken"
-                :value="toTokenType"
-                :items="actualToTokens"
-                :is-custom="true"
-                :loading="isLoading"
-                label="To"
-                @input="setToToken"
-              />
-              <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
-              <v-text-field
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :hide-clear-btn="true"
-                :value="tokenOutValue"
-                :readonly="true"
-                outlined
-              />
-              <!-- <mew-input
+                <!-- <mew-input
                 label="Amount"
                 placeholder="0"
                 type="number"
@@ -93,8 +94,9 @@
                 :value="tokenOutValue"
                 readonly="true"
               /> -->
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </div>
 
           <!--
           =====================================================================================
@@ -212,42 +214,60 @@
              Providers List
             =====================================================================================
             -->
-          <swap-providers-list
-            :step="step"
-            :available-quotes="availableQuotes"
-            :set-provider="setProvider"
-            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-            :to-token-icon="toTokenType ? toTokenType.img : ''"
-            :is-loading="isLoadingProviders"
-            :providers-error="providersErrorMsg"
-            class="mt-7"
-          />
-          <!--
-            =====================================================================================
-             Swap Fee
-            =====================================================================================
-          -->
-          <app-network-fee
-            v-if="step > 0 && providersErrorMsg.subtitle === ''"
-            :show-fee="showSwapFee"
-            :getting-fee="loadingFee"
-            :error="feeError"
-            :total-fees="totalFees"
-            :gas-price-type="localGasType"
-            :message="feeError"
-            :not-enough-eth="notEnoughEth"
-            is-custom
-            class="mt-10 mt-sm-16"
-            @onLocalGasPrice="handleLocalGasPrice"
-          />
-          <div class="text-center mt-10 mt-sm-15">
-            <mew-button
-              title="Next"
-              :has-full-width="false"
-              :disabled="disableNext"
-              btn-size="xlarge"
-              @click.native="showConfirm"
-            />
+          <div>
+            <v-slide-y-transition hide-on-leave>
+              <swap-provider-mentions
+                v-if="showAnimation"
+                key="showAnimation"
+                :is-loading="isLoadingProviders"
+                :check-loading="checkLoading"
+                @showProviders="showProviders"
+              />
+              <div v-else>
+                <swap-providers-list
+                  :step="step"
+                  :available-quotes="availableQuotes"
+                  :set-provider="setProvider"
+                  :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+                  :to-token-icon="toTokenType ? toTokenType.img : ''"
+                  :is-loading="isLoadingProviders"
+                  :providers-error="providersErrorMsg"
+                  class="mt-7"
+                />
+                <!--
+                =====================================================================================
+                Swap Fee
+                =====================================================================================
+                -->
+                <app-network-fee
+                  v-if="
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  :show-fee="showSwapFee"
+                  :getting-fee="loadingFee"
+                  :error="feeError"
+                  :total-fees="totalFees"
+                  :gas-price-type="localGasType"
+                  :message="feeError"
+                  :not-enough-eth="notEnoughEth"
+                  is-custom
+                  class="mt-10 mt-sm-16"
+                  @onLocalGasPrice="handleLocalGasPrice"
+                />
+              </div>
+              <div class="text-center mt-10 mt-sm-15">
+                <mew-button
+                  title="Next"
+                  :has-full-width="true"
+                  :disabled="disableNext"
+                  btn-size="xlarge"
+                  style="max-width: 240px"
+                  @click.native="showConfirm"
+                />
+              </div>
+            </v-slide-y-transition>
           </div>
         </template>
         <!--
@@ -271,6 +291,7 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
+import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
@@ -295,6 +316,7 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
+    SwapProviderMentions,
     AppNetworkFee
   },
   mixins: [handlerAnalytics],
@@ -355,6 +377,8 @@ export default {
         }
       ],
       isLoadingProviders: false,
+      showAnimation: false,
+      checkLoading: true,
       addressValue: {},
       selectedProvider: {},
       localGasPrice: '0',
@@ -861,6 +885,7 @@ export default {
         fromToken: this.fromToken
       };
       this.isLoadingProviders = false;
+      this.checkLoading = true;
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
@@ -1005,6 +1030,7 @@ export default {
         this.enableTokenSwitch
       ) {
         this.isLoadingProviders = true;
+        this.showAnimation = true;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1175,12 +1201,23 @@ export default {
       this.localGasPrice = e.gasPrice;
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
+    },
+    showProviders(val) {
+      if (!this.isLoadingProviders && val) {
+        this.showAnimation = false;
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.input-swap-container {
+  box-shadow: 0px 4px 4px rgb(11 40 64 / 4%), 0px 2px 10px rgb(11 40 64 / 6%),
+    0px 3px 16px rgb(11 40 64 / 4%);
+  border-radius: 10px;
+}
+
 .v-input--selection-controls {
   padding: 0;
   margin: 0;

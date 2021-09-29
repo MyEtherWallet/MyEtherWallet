@@ -30,8 +30,18 @@ const GLOBAL_ERRORS = {
   'Network Error': 'globalError-network-error',
   'connection not open': 'globalError-connection-not-open'
 };
+
+const GLOBAL_WARNING = {
+  'ENS is not supported on network private':
+    'Selected network does not support ENS!'
+};
 const foundGlobalError = text => {
   const errorValues = Object.keys(GLOBAL_ERRORS);
+  return errorValues.includes(text);
+};
+
+const foundGlobalWarning = text => {
+  const errorValues = Object.values(GLOBAL_WARNING);
   return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
@@ -60,6 +70,8 @@ const Toast = (text, link, type, duration) => {
   }
   if (type === SENTRY) {
     if (foundGlobalError(text)) {
+      EventBus.$emit(ToastEvents[ERROR], text, link, duration);
+    } else if (foundGlobalWarning(text)) {
       EventBus.$emit(ToastEvents[ERROR], text, link, duration);
     } else {
       Sentry.captureException(text);
