@@ -162,7 +162,7 @@
          Terms
         =====================================================================================
         -->
-    <div class="d-flex align-center flex-column">
+    <div class="d-flex align-center flex-column py-6">
       <mew-checkbox
         v-model="acceptTerms"
         label="To access my wallet, I accept "
@@ -385,7 +385,6 @@ export default {
       }
     },
     handlerWallet: {
-      deep: true,
       handler: function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.changeHandler();
