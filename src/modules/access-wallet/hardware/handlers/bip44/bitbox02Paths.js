@@ -1,2 +1,2 @@
-import { ethereum, ropsten } from '../configs/configPaths';
-export default [ethereum, ropsten];
+import { ethereum } from '../configs/configPaths';
+export default [ethereum];
