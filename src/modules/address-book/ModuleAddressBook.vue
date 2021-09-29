@@ -75,7 +75,7 @@ export default {
   },
 
   computed: {
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
     errorMessages() {

@@ -43,9 +43,15 @@ const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
   customTokensByNetwork = [];
   Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
 };
+
+const SET_ADDRESS_BOOK = function (state, val) {
+  state.addressBook = val;
+};
+
 export default {
   SET_CUSTOM_TOKEN,
   DELETE_ALL_TOKENS,
   DELETE_CUSTOM_TOKEN,
-  INIT_STORE
+  INIT_STORE,
+  SET_ADDRESS_BOOK
 };
