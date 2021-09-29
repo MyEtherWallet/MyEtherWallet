@@ -515,7 +515,7 @@ export default {
   watch: {
     selectedPath: {
       handler: function () {
-        this[`${this.walletType}Unlock`]();
+        if (this.walletType) this[`${this.walletType}Unlock`]();
       },
       deep: true
     }
@@ -613,7 +613,6 @@ export default {
                 this.hwWalletInstance = _hwWallet;
               })
               .catch(e => {
-                console.log(e);
                 this.wallets[this.walletType].create.errorHandler(e);
                 if (e.message === 'Error: Pairing rejected') {
                   this.reset();
@@ -623,7 +622,6 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
-          console.log(err);
           if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
