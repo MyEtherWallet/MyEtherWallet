@@ -281,7 +281,9 @@ export default {
               });
             }
           })
-          .catch(({ message }) => Toast(message, {}, ERROR));
+          .catch(({ message }) => {
+            Toast(message, {}, ERROR);
+          });
       } else if (this.isPayableFunction) {
         const rawTx = {
           to: this.contractAddress,
@@ -296,7 +298,9 @@ export default {
             rawTx.gas = gasLimit;
             caller.send(rawTx);
           })
-          .catch(({ message }) => Toast(message, {}, ERROR));
+          .catch(({ message }) => {
+            Toast(message, {}, ERROR);
+          });
       } else {
         caller
           .send({ from: this.address })

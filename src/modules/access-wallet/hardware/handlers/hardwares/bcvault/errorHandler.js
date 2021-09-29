@@ -11,7 +11,8 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'bcvaultError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'bcvaultError.operation-that-changes-interface-state-in-progress'
+    'bcvaultError.operation-that-changes-interface-state-in-progress',
+  'connection not open': 'bcvaultError.connection-not-open-on-send'
 };
 const WARNINGS = {
   jsError1: 'bcvaultError.browser-popup',
