@@ -384,12 +384,13 @@ export default {
         this.changeHandler();
       }
     },
-    handlerWallet: {
+    selectedPath: {
       handler: function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.changeHandler();
         }
-      }
+      },
+      deep: true
     }
   },
   mounted() {

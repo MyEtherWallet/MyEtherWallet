@@ -212,7 +212,7 @@
       :back="null"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
-      :paths="paths"
+      :paths="onLedger ? [] : paths"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />
@@ -223,9 +223,6 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { _ } from 'web3-utils';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
-// import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletPassword from './hardware/components/AccessWalletPassword';
-// import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
@@ -249,9 +246,6 @@ export default {
     AccessWalletDerivationPath,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
-    // AccessWalletPassword,
-    // AccessWalletPaths,
-    // BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -518,6 +512,14 @@ export default {
       return this.wallets[this.walletType].title;
     }
   },
+  watch: {
+    selectedPath: {
+      handler: function () {
+        this[`${this.walletType}Unlock`]();
+      },
+      deep: true
+    }
+  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -583,9 +585,6 @@ export default {
     trezorUnlock() {
       this.unlockPathOnly();
     },
-    bitboxUnlock() {
-      this.unlockPathAndPassword(this.hasPath, this.password);
-    },
     bitbox02Unlock() {
       this.unlockPathOnly();
     },
@@ -614,6 +613,7 @@ export default {
                 this.hwWalletInstance = _hwWallet;
               })
               .catch(e => {
+                console.log(e);
                 this.wallets[this.walletType].create.errorHandler(e);
                 if (e.message === 'Error: Pairing rejected') {
                   this.reset();
@@ -623,6 +623,7 @@ export default {
           return _hwWallet;
         })
         .catch(err => {
+          console.log(err);
           if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
