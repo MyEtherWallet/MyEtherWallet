@@ -25,7 +25,16 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   'remark-cli',
-  'node-fetch'
+  'node-fetch',
+  // remove after release
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue',
+  '@shapeshiftoss/hdwallet-core',
+  '@shapeshiftoss/hdwallet-keepkey-webusb',
+  'graphql',
+  'vue-apollo',
+  'remark-preset-lint-recommended'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
