@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
@@ -184,6 +184,9 @@ export default {
     }
   },
   watch: {
+    toAddress(newVal) {
+      this.addressToAdd = newVal;
+    },
     addressToAdd() {
       this.resolveName();
     },
@@ -210,7 +213,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['setAddressBook']),
+    ...mapActions('custom', ['setAddressBook']),
     reset() {
       this.addressToAdd = '';
       this.nickname = '';
