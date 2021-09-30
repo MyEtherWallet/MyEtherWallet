@@ -69,8 +69,9 @@
         </div>
 
         <!-- Show Priority Time-->
-        <div>
-          {{ b.time }}
+        <div class="d-flex align-center">
+          <v-icon class="mr-1" color="primary" small>mdi-clock-outline</v-icon>
+          <div class="primary--text">{{ b.time }}</div>
         </div>
 
         <!--
