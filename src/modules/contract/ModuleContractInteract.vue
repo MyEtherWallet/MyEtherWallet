@@ -302,7 +302,9 @@ export default {
             Toast(message, {}, ERROR);
           });
       } else {
-        caller.send({ from: this.address });
+        caller
+          .send({ from: this.address })
+          .catch(({ message }) => Toast(message, {}, ERROR));
       }
     },
     payableInput(amount) {
@@ -346,6 +348,7 @@ export default {
     },
     methodSelect(evt) {
       if (evt && evt.inputs && evt.outputs) {
+        this.inputsValid = false;
         this.selectedMethod = evt;
         this.selectedMethod.inputs.forEach(v => (v.value = ''));
         this.selectedMethod.outputs.forEach(v => (v.value = ''));
