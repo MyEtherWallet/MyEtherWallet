@@ -5,5 +5,9 @@
   "no-wallet-instance": "No wallet instance!",
   "pairing-issue": "Having issues with pairing CoolWallet",
   "no-bluetooth": "No bluetooth support, try using chrome browser",
-  "max-app-instance": "Maximum paired device reached! Please remove a paired device through the CoolWallet app settings!"
+  "max-app-instance": "Maximum paired device reached! Please remove a paired device through the CoolWallet app settings!",
+  "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
+  "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
+  "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
 }
