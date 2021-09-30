@@ -68,12 +68,9 @@
           </div>
         </div>
 
-        <!-- Show check mark -->
+        <!-- Show Priority Time-->
         <div>
-          <v-icon v-if="selected === b.title" color="primary">
-            mdi-check-circle
-          </v-icon>
-          <v-icon v-else color="#e1e6ec"> mdi-checkbox-blank-circle </v-icon>
+          {{ b.time }}
         </div>
 
         <!--
@@ -107,6 +104,15 @@
       >
         Buy more ETH
       </a>
+    </div>
+    <div v-else class="mt-4 d-flex flex-column align-center">
+      <mew-button title="Save" has-full-width></mew-button>
+      <div class="mt-3">
+        <span class="secondary--text">Can't increase priority? </span>
+        <span class="buy-eth primary--text" @click="openSimplex"
+          >Buy more ETH</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -222,6 +228,12 @@ export default {
     if (this.notEnoughEth) {
       this.showNotEnoughEthWarning = true;
     }
+  },
+  methods: {
+    openSimplex() {
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
+    }
   }
 };
 </script>
@@ -231,11 +243,11 @@ export default {
   min-height: 72px;
   padding: 5px 16px;
   border-radius: 8px;
-  background-color: #f4f6f8;
+  // background-color: #f4f6f8;
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 2px solid transparent;
+  border: 1px solid #eaedf7;
   &.disabled {
     filter: grayscale(1);
     opacity: 0.15 !important;
@@ -246,12 +258,15 @@ export default {
   }
   &.active {
     border: 2px solid #05c0a5;
-    background-color: #e1f7f4;
+    // background-color: #e1f7f4;
     opacity: 1;
     &:hover {
       opacity: 1;
       background-color: #d5edef;
     }
   }
+}
+.buy-eth:hover {
+  cursor: pointer;
 }
 </style>
