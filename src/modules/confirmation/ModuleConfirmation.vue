@@ -349,7 +349,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')

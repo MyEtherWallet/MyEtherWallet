@@ -20,9 +20,6 @@ const SET_GAS_PRICE = function (state, val) {
   state.baseGasPrice = val;
 };
 
-const SET_ADDRESS_BOOK = function (state, val) {
-  state.addressBook = val;
-};
 const SET_NETWORK = function (state, networkObj) {
   const _netObj = Object.assign({}, networkObj);
   _netObj.type = {
@@ -82,7 +79,6 @@ export default {
   SET_LOCALE,
   SET_GAS_PRICE,
   SET_NETWORK,
-  SET_ADDRESS_BOOK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
   ADD_CUSTOM_PATH,

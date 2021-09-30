@@ -168,7 +168,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     panelItems() {
       return [
         {
