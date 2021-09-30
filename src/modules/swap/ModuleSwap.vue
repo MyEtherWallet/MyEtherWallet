@@ -305,6 +305,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import xss from 'xss';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -792,6 +793,12 @@ export default {
     }
   },
   watch: {
+    $route: {
+      handler: function () {
+        this.setTokenFromURL();
+      },
+      immediate: true
+    },
     totalFees: {
       handler: function () {
         this.checkFeeBalance();
@@ -818,14 +825,7 @@ export default {
     }
   },
   beforeMount() {
-    if (Object.keys(this.$route.query).length > 0) {
-      const { fromToken, toToken, amount } = this.$route.query;
-      this.defaults = {
-        fromToken,
-        toToken
-      };
-      this.tokenInValue = `${amount}`;
-    }
+    this.setTokenFromURL();
   },
   mounted() {
     this.setupSwap();
@@ -1143,7 +1143,6 @@ export default {
       }
       return true;
     },
-
     executeTrade() {
       const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
@@ -1201,6 +1200,25 @@ export default {
       this.localGasPrice = e.gasPrice;
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
+    },
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { fromToken, toToken, amount } = this.stripQuery(
+          this.$route.query
+        );
+        this.defaults = {
+          fromToken,
+          toToken
+        };
+        this.tokenInValue = amount ? `${amount}` : '0';
+      }
+    },
+    stripQuery(queryObj) {
+      const newObj = {};
+      Object.keys(queryObj).forEach(key => {
+        newObj[key] = xss(queryObj[key]);
+      });
+      return newObj;
     },
     showProviders(val) {
       if (!this.isLoadingProviders && val) {
