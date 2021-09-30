@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="hasCost" class="d-flex align-center justify-space-between mb-4">
+    <!-- <div v-if="hasCost" class="d-flex align-center justify-space-between mb-4">
       <div class="d-flex align-center">
         <div class="primary--text mr-2">{{ txFeeUsd }}</div>
         <div class="searchText--text">
@@ -12,11 +12,11 @@
         <v-icon small color="primary" class="mr-1">mdi-clock-outline</v-icon>
         <div class="primary--text">{{ currentValue.time }}</div>
       </div>
-    </div>
+    </div> -->
 
     <div class="textPrimary--text mb-5">
-      This fee is charged by Ethereum network. You can proritize transaction by
-      adding a tip to the miner.
+      This fee is charged by the Ethereum network and fluctuates depending on
+      newtwork traffic. MEW does not profit form this fee.
     </div>
 
     <!--
@@ -120,7 +120,7 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 */
-import BigNumber from 'bignumber.js';
+// import BigNumber from 'bignumber.js';
 
 export default {
   name: 'SettingsGasPrice',
@@ -137,22 +137,22 @@ export default {
       type: Array,
       default: () => []
     },
-    costInEth: {
-      type: String,
-      default: '0'
-    },
+    // costInEth: {
+    //   type: String,
+    //   default: '0'
+    // },
     notEnoughEth: {
       type: Boolean,
       default: false
-    },
-    txFeeFormatted: {
-      type: String,
-      default: '0'
-    },
-    txFeeUsd: {
-      type: String,
-      default: '0'
     }
+    // txFeeFormatted: {
+    //   type: String,
+    //   default: '0'
+    // },
+    // txFeeUsd: {
+    //   type: String,
+    //   default: '0'
+    // }
   },
   data() {
     return {
@@ -166,18 +166,18 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
-    ...mapGetters('global', ['network']),
-    currentValue() {
-      for (const but of this.buttons) {
-        if (but.title === this.selected) {
-          return but;
-        }
-      }
-      return {};
-    },
-    hasCost() {
-      return BigNumber(this.costInEth).gt(0);
-    }
+    ...mapGetters('global', ['network'])
+    // currentValue() {
+    //   for (const but of this.buttons) {
+    //     if (but.title === this.selected) {
+    //       return but;
+    //     }
+    //   }
+    //   return {};
+    // },
+    // hasCost() {
+    //   return BigNumber(this.costInEth).gt(0);
+    // }
     /*
     actualFeeFormatted() {
       return this.hasCost

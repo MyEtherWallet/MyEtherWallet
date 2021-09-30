@@ -2,7 +2,7 @@
   <app-simple-dialog
     :value="gasPriceModal"
     width="380"
-    title="Transaction fee"
+    title="Select transaction fee"
     @close="handleClose"
   >
     <settings-gas-price
