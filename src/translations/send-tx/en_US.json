@@ -21,6 +21,7 @@
   "nonce": "Nonce",
   "data": "Data",
   "data-gas": "Data & Gas Limit",
+  "gas-price": "Gas Price (in Gwei)",
   "dep-amount": "Deposit Amount",
   "button-entire": "Entire Balance",
   "enter-addr": "Enter address",

@@ -321,13 +321,13 @@ export default {
       sectionOneOfflineApp: [
         {
           title: this.$t('sendTx.send-offline'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
+          route: { name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME },
           icon: send
         },
         {
-          title: this.$t('signMessage.title'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
-          icon: send
+          title: this.$t('interface.menu.sign-message'),
+          route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME },
+          icon: message
         }
       ],
       sectionTwoOfflineApp: [
