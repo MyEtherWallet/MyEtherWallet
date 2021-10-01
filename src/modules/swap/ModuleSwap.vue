@@ -1,6 +1,5 @@
 <template>
   <div class="mew-component--swap">
-    <div>{{ disabledTxPriorityButtons }}</div>
     <mew6-white-sheet>
       <mew-module
         :has-elevation="true"
@@ -207,7 +206,7 @@
             =====================================================================================
             -->
           <div>
-            <v-slide-y-transition hide-on-leave>
+            <v-slide-y-transition hide-on-leave group>
               <swap-provider-mentions
                 v-if="showAnimation"
                 key="showAnimation"
@@ -242,6 +241,7 @@
                   :message="feeError"
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
+                  :total-gas-limit="totalGasLimit"
                   class="mt-10 mt-sm-16"
                   @onLocalGasPrice="handleLocalGasPrice"
                 />
@@ -295,7 +295,6 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import xss from 'xss';
 
 const MIN_GAS_LIMIT = 800000;
@@ -693,19 +692,6 @@ export default {
         : balanceAfterFees.isNeg();
       return isNotEnoughEth;
     },
-    disabledTxPriorityButtons() {
-      return {
-        [gasPriceTypes.ECONOMY]: this.isInvalidTxSpeed(
-          this.gasPriceByType(gasPriceTypes.ECONOMY)
-        ),
-        [gasPriceTypes.REGULAR]: this.isInvalidTxSpeed(
-          this.gasPriceByType(gasPriceTypes.REGULAR)
-        ),
-        [gasPriceTypes.FAST]: this.isInvalidTxSpeed(
-          this.gasPriceByType(gasPriceTypes.FAST)
-        )
-      };
-    },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
@@ -837,14 +823,14 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
-    isInvalidTxSpeed(gasPrice) {
-      const txFee = toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
-      const balanceAfterFees = toBN(this.balance).sub(toBN(txFee));
-      const isNotEnoughEth = this.isFromTokenMain
-        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-        : balanceAfterFees.isNeg();
-      return isNotEnoughEth;
-    },
+    // isInvalidTxSpeed(gasPrice) {
+    //   const txFee = toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
+    //   const balanceAfterFees = toBN(this.balance).sub(toBN(txFee));
+    //   const isNotEnoughEth = this.isFromTokenMain
+    //     ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+    //     : balanceAfterFees.isNeg();
+    //   return isNotEnoughEth;
+    // },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);

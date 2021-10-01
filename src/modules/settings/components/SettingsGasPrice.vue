@@ -1,19 +1,5 @@
 <template>
   <div>
-    <!-- <div v-if="hasCost" class="d-flex align-center justify-space-between mb-4">
-      <div class="d-flex align-center">
-        <div class="primary--text mr-2">{{ txFeeUsd }}</div>
-        <div class="searchText--text">
-          {{ txFeeFormatted }}
-          {{ network.type.currencyName }}
-        </div>
-      </div>
-      <div class="d-flex align-center">
-        <v-icon small color="primary" class="mr-1">mdi-clock-outline</v-icon>
-        <div class="primary--text">{{ currentValue.time }}</div>
-      </div>
-    </div> -->
-
     <div class="textPrimary--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
       newtwork traffic. MEW does not profit form this fee.
@@ -63,8 +49,16 @@
               height="15"
             />
           </div>
-          <div class="mew-heading-3 font-weight-regular">
-            {{ b.priority }}
+          <div>
+            <div class="mew-heading-3 font-weight-regular">
+              {{ b.priority }}
+            </div>
+            <div class="prices d-flex">
+              <div class="secondary--text mr-2">
+                {{ costInEth(b.title) }} ETH
+              </div>
+              <div class="textSecondary--text">${{ costInUSD(b.title) }}</div>
+            </div>
           </div>
         </div>
 
@@ -119,15 +113,14 @@
 </template>
 
 <script>
+import { toBN, fromWei } from 'web3-utils';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-/*
 import {
-  formatFloatingPointValue,
-  formatFiatValue
+  formatFiatValue,
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-*/
-// import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 export default {
   name: 'SettingsGasPrice',
@@ -144,22 +137,14 @@ export default {
       type: Array,
       default: () => []
     },
-    // costInEth: {
-    //   type: String,
-    //   default: '0'
-    // },
     notEnoughEth: {
       type: Boolean,
       default: false
+    },
+    totalGasLimit: {
+      type: String,
+      default: '0'
     }
-    // txFeeFormatted: {
-    //   type: String,
-    //   default: '0'
-    // },
-    // txFeeUsd: {
-    //   type: String,
-    //   default: '0'
-    // }
   },
   data() {
     return {
@@ -171,7 +156,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['swapLink']),
+    ...mapGetters('global', ['swapLink', 'gasPriceByType']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
     ...mapGetters('global', ['network'])
     // currentValue() {
@@ -234,6 +219,49 @@ export default {
     openSimplex() {
       // eslint-disable-next-line
       window.open(`${this.swapLink}`, '_blank');
+    },
+    costInEth(priority) {
+      switch (priority) {
+        case gasPriceTypes.ECONOMY: {
+          return this.calcFeeInEth(gasPriceTypes.ECONOMY);
+        }
+        case gasPriceTypes.REGULAR: {
+          return this.calcFeeInEth(gasPriceTypes.REGULAR);
+        }
+        case gasPriceTypes.FAST: {
+          return this.calcFeeInEth(gasPriceTypes.FAST);
+        }
+        default:
+          return '';
+      }
+    },
+    costInUSD(priority) {
+      switch (priority) {
+        case gasPriceTypes.ECONOMY: {
+          return this.calcFeeinUSD(gasPriceTypes.ECONOMY);
+        }
+        case gasPriceTypes.REGULAR: {
+          return this.calcFeeinUSD(gasPriceTypes.REGULAR);
+        }
+        case gasPriceTypes.FAST: {
+          return this.calcFeeinUSD(gasPriceTypes.FAST);
+        }
+        default:
+          return '';
+      }
+    },
+    calcFeeInEth(priority) {
+      return formatFloatingPointValue(this.calcTxFee(priority)).value;
+    },
+    calcFeeinUSD(priority) {
+      return formatFiatValue(
+        BigNumber(this.calcTxFee(priority)).times(this.fiatValue).toFixed(2)
+      ).value;
+    },
+    calcTxFee(priority) {
+      return fromWei(
+        toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
+      ).toString();
     }
   }
 };
@@ -269,5 +297,9 @@ export default {
 }
 .buy-eth:hover {
   cursor: pointer;
+}
+.prices {
+  white-space: nowrap;
+  font-size: 14px;
 }
 </style>

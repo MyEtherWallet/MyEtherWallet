@@ -13,6 +13,7 @@
       :cost-in-eth="costInEth"
       :tx-fee-formatted="txFeeFormatted"
       :tx-fee-usd="feeInUsd"
+      :total-gas-limit="totalGasLimit"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -166,6 +167,10 @@ export default {
     fromEth: {
       type: Boolean,
       default: false
+    },
+    totalGasLimit: {
+      type: String,
+      default: '0'
     }
   },
   data() {
