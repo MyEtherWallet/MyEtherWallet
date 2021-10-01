@@ -207,14 +207,15 @@
             -->
           <div>
             <v-slide-y-transition hide-on-leave group>
-              <swap-provider-mentions
-                v-if="showAnimation"
-                key="showAnimation"
-                :is-loading="isLoadingProviders"
-                :check-loading="checkLoading"
-                @showProviders="showProviders"
-              />
-              <div v-else>
+              <div v-if="showAnimation" key="showAnimation">
+                <swap-provider-mentions
+                  :is-loading="isLoadingProviders"
+                  :check-loading="checkLoading"
+                  @showProviders="showProviders"
+                />
+              </div>
+              <!-- Transition group required unique key. Added showAnimation2 to hide warning -->
+              <div v-else key="showAnimation2">
                 <swap-providers-list
                   :step="step"
                   :available-quotes="availableQuotes"
@@ -246,17 +247,17 @@
                   @onLocalGasPrice="handleLocalGasPrice"
                 />
               </div>
-              <div class="text-center mt-10 mt-sm-15">
-                <mew-button
-                  title="Next"
-                  :has-full-width="true"
-                  :disabled="disableNext"
-                  btn-size="xlarge"
-                  style="max-width: 240px"
-                  @click.native="showConfirm"
-                />
-              </div>
             </v-slide-y-transition>
+            <div class="text-center mt-10 mt-sm-15">
+              <mew-button
+                title="Next"
+                :has-full-width="true"
+                :disabled="disableNext"
+                btn-size="xlarge"
+                style="max-width: 240px"
+                @click.native="showConfirm"
+              />
+            </div>
           </div>
         </template>
         <!--

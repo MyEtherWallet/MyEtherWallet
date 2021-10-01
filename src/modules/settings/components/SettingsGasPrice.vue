@@ -101,7 +101,11 @@
       </a>
     </div>
     <div v-else class="mt-4 d-flex flex-column align-center">
-      <mew-button title="Save" has-full-width></mew-button>
+      <mew-button
+        title="Save"
+        has-full-width
+        @click.native="closeDialog"
+      ></mew-button>
       <div class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
@@ -144,6 +148,10 @@ export default {
     totalGasLimit: {
       type: String,
       default: '0'
+    },
+    closeDialog: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {

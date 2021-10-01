@@ -16,6 +16,7 @@
       :tx-fee-usd="txFeeUsd"
       :not-enough-eth="notEnoughEth"
       :total-gas-limit="totalGasLimit"
+      :close-dialog="closeDialog"
     />
   </app-simple-dialog>
 </template>
@@ -37,10 +38,10 @@ export default {
       type: Boolean,
       default: false
     },
-    // close: {
-    //   type: Function,
-    //   default: () => {}
-    // },
+    close: {
+      type: Function,
+      default: () => {}
+    },
     selected: {
       type: String,
       default: gasPriceTypes.ECONOMY
@@ -80,6 +81,9 @@ export default {
       };
       this.$emit('onLocalGasPrice', newObj);
       // this.close();
+    },
+    closeDialog() {
+      this.close();
     },
     handleClose() {
       this.$emit('close');
