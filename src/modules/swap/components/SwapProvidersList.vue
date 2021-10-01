@@ -75,7 +75,7 @@
                           class="d-flex order-sm-1 justify-start align-center"
                         >
                           <div class="mb-0 mew-heading-3 font-weight-medium">
-                            {{ quote.rate }} {{ toTokenSymbol }}
+                            {{ quote.amount }} {{ toTokenSymbol }}
                           </div>
                           <mew-tooltip
                             v-if="quote.tooltip && quote.tooltip !== ''"
@@ -219,6 +219,7 @@ export default {
           const formatted = formatFloatingPointValue(quote.rate * 100);
           return {
             rate: formatted.value,
+            amount: formatFloatingPointValue(quote.amount).value,
             tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
           };
         });
