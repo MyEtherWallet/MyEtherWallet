@@ -33,6 +33,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isOpen: {
+      type: Boolean,
+      default: false
+    },
     width: {
       type: String,
       default: '600'
@@ -46,9 +50,26 @@ export default {
     return { isDialogOpen: false };
   },
   watch: {
-    value(val) {
-      if (val === true && this.isDialogOpen === false) {
+    // "value" for model
+    value(newVal) {
+      // Open when dialog is already closed to prevent Infinite Loop
+      if (newVal === true && this.isDialogOpen === false) {
         this.isDialogOpen = true;
+      }
+      // Close when dialog is already open to prevent Infinite Loop
+      if (newVal === false && this.isDialogOpen === true) {
+        this.isDialogOpen = false;
+      }
+    },
+    // Same as "value", but more user friendly option name
+    isOpen(newVal) {
+      // Open when dialog is already closed to prevent Infinite Loop
+      if (newVal === true && this.isDialogOpen === false) {
+        this.isDialogOpen = true;
+      }
+      // Close when dialog is already open to prevent Infinite Loop
+      if (newVal === false && this.isDialogOpen === true) {
+        this.isDialogOpen = false;
       }
     },
     isDialogOpen(val) {
