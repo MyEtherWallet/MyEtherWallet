@@ -16,6 +16,7 @@
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
         :class="[selected === b.title ? 'active' : '']"
+        :id="[costInEth(b.title) > balance ? 'disabled' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -152,6 +153,10 @@ export default {
     closeDialog: {
       type: Function,
       default: () => {}
+    },
+    balance: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -285,7 +290,7 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid #eaedf7;
-  &.disabled {
+  &#disabled {
     filter: grayscale(1);
     opacity: 0.15 !important;
     pointer-events: none;

@@ -243,6 +243,7 @@
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
                   :total-gas-limit="totalGasLimit"
+                  :balance="displayBalance"
                   class="mt-10 mt-sm-16"
                   @onLocalGasPrice="handleLocalGasPrice"
                 />

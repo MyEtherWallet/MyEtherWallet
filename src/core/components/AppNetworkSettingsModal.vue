@@ -17,6 +17,7 @@
       :not-enough-eth="notEnoughEth"
       :total-gas-limit="totalGasLimit"
       :close-dialog="closeDialog"
+      :balance="balance"
     />
   </app-simple-dialog>
 </template>
@@ -63,6 +64,10 @@ export default {
       default: '0'
     },
     totalGasLimit: {
+      type: String,
+      default: '0'
+    },
+    balance: {
       type: String,
       default: '0'
     }
