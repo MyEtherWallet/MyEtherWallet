@@ -13,10 +13,10 @@
     <div>
       <div
         v-for="(b, key) in buttons"
+        :id="[costInEth(b.title) > balance ? 'disabled' : '']"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
         :class="[selected === b.title ? 'active' : '']"
-        :id="[costInEth(b.title) > balance ? 'disabled' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
