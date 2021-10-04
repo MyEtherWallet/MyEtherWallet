@@ -2,7 +2,7 @@
 
 ### fix
 
-* fix swap issues [#3490](https://github.com/MyEtherWallet/MyEtherWallet/pull/3490)
+* fix swap issues [#3491](https://github.com/MyEtherWallet/MyEtherWallet/pull/3491)
 
 ### Release v6.2.0
 
