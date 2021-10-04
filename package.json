@@ -39,7 +39,7 @@
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.8",
     "@ensdomains/ens-contracts": "0.0.7",
-    "@ethereumjs/common": "2.4.0",
+    "@ethereumjs/common": "2.5.0",
     "@ethereumjs/tx": "3.3.0",
     "@ensdomains/ensjs": "2.0.1",
     "@mathieustan/vue-intercom": "0.0.7",
