@@ -215,7 +215,7 @@
             =====================================================================================
             -->
           <div>
-            <v-slide-y-transition hide-on-leave>
+            <v-slide-y-transition hide-on-leave group>
               <swap-provider-mentions
                 v-if="showAnimation"
                 key="showAnimation"
@@ -223,7 +223,7 @@
                 :check-loading="checkLoading"
                 @showProviders="showProviders"
               />
-              <div v-else>
+              <div v-else key="showAnimation1">
                 <swap-providers-list
                   :step="step"
                   :available-quotes="availableQuotes"
@@ -256,16 +256,23 @@
                   class="mt-10 mt-sm-16"
                   @onLocalGasPrice="handleLocalGasPrice"
                 />
-              </div>
-              <div class="text-center mt-10 mt-sm-15">
-                <mew-button
-                  title="Next"
-                  :has-full-width="true"
-                  :disabled="disableNext"
-                  btn-size="xlarge"
-                  style="max-width: 240px"
-                  @click.native="showConfirm"
-                />
+                <div
+                  v-if="
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  class="text-center mt-10 mt-sm-15"
+                >
+                  <mew-button
+                    title="Next"
+                    :has-full-width="true"
+                    :disabled="disableNext"
+                    btn-size="xlarge"
+                    style="max-width: 240px"
+                    @click.native="showConfirm"
+                  />
+                </div>
               </div>
             </v-slide-y-transition>
           </div>
@@ -689,11 +696,15 @@ export default {
      * balance for the transaction
      */
     notEnoughEth() {
-      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth = this.isFromTokenMain
-        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-        : balanceAfterFees.isNeg();
-      return isNotEnoughEth;
+      try {
+        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+        const isNotEnoughEth = this.isFromTokenMain
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+        return isNotEnoughEth;
+      } catch (e) {
+        return true;
+      }
     },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
@@ -815,16 +826,6 @@ export default {
     },
     amountErrorMessage(newVal) {
       if (newVal !== '') this.availableQuotes.splice(0);
-    }
-  },
-  beforeMount() {
-    if (Object.keys(this.$route.query).length > 0) {
-      const { fromToken, toToken, amount } = this.$route.query;
-      this.defaults = {
-        fromToken,
-        toToken
-      };
-      this.tokenInValue = `${amount}`;
     }
   },
   mounted() {
@@ -1013,6 +1014,16 @@ export default {
         this.step = 0;
         return;
       }
+
+      if (
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
+        )
+      ) {
+        return;
+      }
+
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1143,7 +1154,6 @@ export default {
       }
       return true;
     },
-
     executeTrade() {
       const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
