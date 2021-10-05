@@ -1,15 +1,17 @@
 <template>
   <div class="mew-component--side-info-network">
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="isOpenNetworkOverlay"
       title="Select Network"
-      left-btn-text=""
-      right-btn-text="Close"
-      @closeOverlay="closeNetworkOverlay"
+      content-size="large"
+      :close="closeNetworkOverlay"
     >
-      <template #mewOverlayBody>
-        <network-switch :filter-types="filterNetworks" />
-      </template>
+      <network-switch :filter-types="filterNetworks" />
     </mew-overlay>
     <mew6-white-sheet
       :sideinfo="!mobile"

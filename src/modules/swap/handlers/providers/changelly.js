@@ -6,6 +6,8 @@ import Configs from '../configs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
 import { ETH } from '@/utils/networks/types';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const HOST_URL = 'https://swap.mewapi.io/changelly';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 class Changelly {
@@ -41,6 +43,9 @@ class Changelly {
             isEth: d.contractAddress ? true : false
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   isValidToAddress({ toT, address }) {
@@ -57,6 +62,9 @@ class Changelly {
       })
       .then(response => {
         return response.data.result.result;
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   getMinMaxAmount({ fromT, toT }) {
@@ -78,6 +86,9 @@ class Changelly {
           minFrom: result?.minFrom,
           maxFrom: result?.maxFrom
         };
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   getQuote({ fromT, toT, fromAmount }) {
@@ -117,6 +128,9 @@ class Changelly {
               maxFrom: minmax.maxFrom
             }
           ];
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
     });
   }
@@ -173,6 +187,9 @@ class Changelly {
             transactions: [txObj]
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   async executeTrade(tradeObj, confirmInfo) {
@@ -220,6 +237,9 @@ class Changelly {
         if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
         if (failedStatuses.includes(status)) return Configs.status.COMPLETED;
         return Configs.status.UNKNOWN;
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
 }

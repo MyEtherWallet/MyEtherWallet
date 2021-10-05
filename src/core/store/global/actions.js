@@ -14,10 +14,6 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-
-const setAddressBook = function ({ commit }, addressBook) {
-  commit('SET_ADDRESS_BOOK', addressBook);
-};
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
@@ -53,7 +49,6 @@ const setTracking = function ({ state }) {
         }
         if (Date.now() >= waitStart + timeout) {
           clearInterval(interval);
-          throw new Error(`$matomo undefined after waiting for ${timeout}ms`);
         }
       }, checkInterval);
     });
@@ -69,7 +64,6 @@ export default {
   setNetwork,
   setGasPrice,
   setGasPriceType,
-  setAddressBook,
   setImportedState,
   addLocalContract,
   addCustomPath,
