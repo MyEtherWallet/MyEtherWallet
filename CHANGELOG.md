@@ -1,3 +1,9 @@
+### Release v6.2.0-hotfix.1
+
+### fix
+
+* fix swap issues [#3491](https://github.com/MyEtherWallet/MyEtherWallet/pull/3491)
+
 ### Release v6.2.0
 
 ### ui
