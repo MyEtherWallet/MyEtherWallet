@@ -828,6 +828,16 @@ export default {
       if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
+  beforeMount() {
+    if (Object.keys(this.$route.query).length > 0) {
+      const { fromToken, toToken, amount } = this.$route.query;
+      this.defaults = {
+        fromToken,
+        toToken
+      };
+      this.tokenInValue = `${amount}`;
+    }
+  },
   mounted() {
     this.setupSwap();
   },
