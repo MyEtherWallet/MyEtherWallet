@@ -193,6 +193,16 @@ export default {
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
+        },
+        /* Offline */
+        {
+          color: 'outline',
+          title: 'Offline Wallet',
+          subtitle: 'Keystore files, Mnemonic phrase, Private key',
+          titleIconClass: 'warning--text text--darken-1',
+          fn: () => {
+            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE, true);
+          }
         }
       ],
       showBrowser: false
@@ -200,6 +210,8 @@ export default {
   },
   computed: {
     ...mapState('external', ['path']),
+    ...mapState('wallet', ['isOfflineApp', 'isOfflineApp']),
+
     /**
      * Used in the creation of a MEWconnect instance
      **/
@@ -224,10 +236,17 @@ export default {
      */
     showMobile() {
       return this.overlay === ACCESS_VALID_OVERLAYS.MOBILE;
+    },
+    /**
+     * Opens up software module overlay. Returns true if overlay prop from route is ACCESS_VALID_OVERLAYS.SOFTWARE
+     * @return - boolean
+     */
+    showOffline() {
+      return this.overlay === ACCESS_VALID_OVERLAYS.SOFTWARE;
     }
   },
   methods: {
-    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('wallet', ['setWallet', 'setOfflineApp']),
     /**
      * Used to set the MEWconnect instance as the wallet
      **/
@@ -251,7 +270,9 @@ export default {
      * Consiquently this will open the correct module overlay.
      * @type - must be one of the VALID_OVERLAYS
      */
-    openOverlay(type) {
+    openOverlay(type, offline) {
+      this.setOfflineApp(offline);
+
       try {
         this.$router.push({
           name: ROUTES_HOME.ACCESS_WALLET.NAME,

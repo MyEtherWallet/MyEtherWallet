@@ -1,184 +1,229 @@
 <template>
-  <mew-module
-    class="d-flex flex-grow-1 pt-6"
-    title="Send Offline"
-    :has-elevation="true"
-    :has-indicator="true"
-  >
-    <template #moduleBody>
-      <!--
+  <div>
+    <mew-module
+      class="d-flex flex-grow-1 pt-6"
+      title="Send Offline"
+      :has-elevation="true"
+      :has-indicator="true"
+    >
+      <template #moduleBody>
+        <!--
       =====================================================================================
         Tokens / Amount to Swap / Token Balance
       =====================================================================================
       -->
-      <v-row class="mt-5">
-        <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
-          <div class="position--relative">
-            <app-button-balance
-              :balance="selectedBalance"
-              :loading="!showSelectedBalance"
-              class="d-sm-none"
-            />
-            <mew-select
-              ref="mewSelect"
-              label="Token"
-              :items="tokens"
-              :is-custom="true"
-              :value="selectedCurrency"
-              @input="setCurrency"
-            />
-          </div>
-        </v-col>
-        <v-col cols="12" sm="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
-          <div class="position--relative">
-            <app-button-balance
-              :balance="selectedBalance"
-              :loading="!showSelectedBalance"
-              class="d-none d-sm-block"
-            />
-            <mew-input
-              label="Amount"
-              placeholder="0"
-              :value="amount"
-              type="number"
-              :persistent-hint="true"
-              :error-messages="amountErrorMessage"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: false,
-                method: setEntireBal
-              }"
-              :buy-more-str="buyMore"
-              @input="setAmount"
-            />
-          </div>
-        </v-col>
-        <!--
+        <v-row class="mt-5">
+          <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
+            <div class="position--relative">
+              <app-button-balance
+                :balance="selectedBalance"
+                :loading="!showSelectedBalance"
+                class="d-sm-none"
+              />
+              <mew-select
+                ref="mewSelect"
+                label="Token"
+                :items="tokens"
+                :is-custom="true"
+                :value="selectedCurrency"
+                @input="setCurrency"
+              />
+            </div>
+          </v-col>
+          <v-col cols="12" sm="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
+            <div class="position--relative">
+              <app-button-balance
+                :balance="selectedBalance"
+                :loading="!showSelectedBalance"
+                class="d-none d-sm-block"
+              />
+              <mew-input
+                label="Amount"
+                placeholder="0"
+                :value="amount"
+                type="number"
+                :persistent-hint="true"
+                :error-messages="amountErrorMessage"
+                :max-btn-obj="{
+                  title: 'Max',
+                  disabled: false,
+                  method: setEntireBal
+                }"
+                :buy-more-str="buyMore"
+                @input="setAmount"
+              />
+            </div>
+          </v-col>
+          <!--
         =====================================================================================
           Low Balance Notice
         =====================================================================================
         -->
-        <v-col v-if="showBalanceNotice" cols="12" class="pt-0 pb-4">
-          <send-low-balance-notice
-            :address="address"
-            :currency-name="currencyName"
-            class="pa-3"
-          />
-        </v-col>
-        <!--
+          <v-col v-if="showBalanceNotice" cols="12" class="pt-0 pb-4">
+            <send-low-balance-notice
+              :address="address"
+              :currency-name="currencyName"
+              class="pa-3"
+            />
+          </v-col>
+          <!--
         =====================================================================================
           Input Address
         =====================================================================================
         -->
-        <v-col cols="12" class="pt-4 pb-2">
-          <module-address-book ref="addressInput" @setAddress="setAddress" />
-        </v-col>
+          <v-col cols="12" class="pt-4 pb-2">
+            <module-address-book ref="addressInput" @setAddress="setAddress" />
+          </v-col>
 
-        <v-col cols="12">
-          <mew-input
-            v-show="!isToken"
-            v-model="localNonce"
-            :label="$t('sendTx.nonce')"
-            placeholder="0"
-            type="number"
-            :rules="isInteger"
-          />
-        </v-col>
-        <v-col cols="12">
-          <mew-input
-            v-show="!isToken"
-            v-model="localGasPrice"
-            :label="$t('sendTx.gas-price')"
-            placeholder="1"
-            type="number"
-          />
-        </v-col>
+          <v-col cols="12">
+            <mew-input
+              v-show="!isToken"
+              v-model="localNonce"
+              :label="$t('sendTx.nonce')"
+              placeholder="0"
+              type="number"
+              :rules="isInteger"
+            />
+          </v-col>
+          <v-col cols="12">
+            <mew-input
+              v-show="!isToken"
+              v-model="localGasPrice"
+              :label="$t('sendTx.gas-price')"
+              placeholder="1"
+              type="number"
+            />
+          </v-col>
 
-        <!--
+          <!--
       =====================================================================================
         Advanced:
       =====================================================================================
       -->
-        <v-col cols="12" class="py-4">
-          <mew-expand-panel
-            ref="expandPanel"
-            is-toggle
-            has-dividers
-            :panel-items="expandPanel"
-            @toggled="closeToggle"
-          >
-            <template #panelBody1>
-              <!-- Warning Sheet -->
-              <div
-                class="pa-5 warning textBlack2--text border-radius--5px mb-8"
-              >
-                <div class="d-flex font-weight-bold mb-2">
-                  <v-icon class="textBlack2--text mew-body mr-1">
-                    mdi-alert-outline</v-icon
-                  >For advanced users only
-                </div>
-                <div>
-                  Please don’t edit these fields unless you are an expert user &
-                  know what you’re doing. Entering the wrong information could
-                  result in your transaction failing or getting stuck.
-                </div>
-              </div>
-              <div class="d-flex align-center justify-end pb-3">
+          <v-col cols="12" class="py-4">
+            <mew-expand-panel
+              ref="expandPanel"
+              is-toggle
+              has-dividers
+              :panel-items="expandPanel"
+              @toggled="closeToggle"
+            >
+              <template #panelBody1>
+                <!-- Warning Sheet -->
                 <div
-                  class="mew-body primary--text cursor--pointer"
-                  @click="setGasLimit(defaultGasLimit)"
+                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
                 >
-                  Reset to default: {{ formattedDefaultGasLimit }}
+                  <div class="d-flex font-weight-bold mb-2">
+                    <v-icon class="textBlack2--text mew-body mr-1">
+                      mdi-alert-outline</v-icon
+                    >For advanced users only
+                  </div>
+                  <div>
+                    Please don’t edit these fields unless you are an expert user
+                    & know what you’re doing. Entering the wrong information
+                    could result in your transaction failing or getting stuck.
+                  </div>
                 </div>
-              </div>
+                <div class="d-flex align-center justify-end pb-3">
+                  <div
+                    class="mew-body primary--text cursor--pointer"
+                    @click="setGasLimit(defaultGasLimit)"
+                  >
+                    Reset to default: {{ formattedDefaultGasLimit }}
+                  </div>
+                </div>
 
-              <mew-input
-                :value="gasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                :error-messages="gasLimitError"
-                type="number"
-                @input="setGasLimit"
-              />
+                <mew-input
+                  :value="gasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  :error-messages="gasLimitError"
+                  type="number"
+                  @input="setGasLimit"
+                />
 
-              <mew-input
-                v-show="!isToken"
-                v-model="data"
-                :label="$t('sendTx.add-data')"
-                placeholder="0x..."
-                :rules="dataRules"
-                class="mb-8"
-              />
-            </template>
-          </mew-expand-panel>
-        </v-col>
-      </v-row>
+                <mew-input
+                  v-show="!isToken"
+                  v-model="data"
+                  :label="$t('sendTx.add-data')"
+                  placeholder="0x..."
+                  :rules="dataRules"
+                  class="mb-8"
+                />
+              </template>
+            </mew-expand-panel>
+          </v-col>
+        </v-row>
 
-      <div class="d-flex flex-column mt-12">
-        <div class="text-center">
-          <mew-button
-            :title="$t('sendTx.generate-tx')"
-            :has-full-width="false"
-            btn-size="xlarge"
-            :disabled="isDisabledNextBtn"
-            @click.native="generateTx"
-          />
+        <div class="d-flex flex-column mt-12">
+          <div class="text-center">
+            <mew-button
+              :title="$t('sendTx.generate-tx')"
+              :has-full-width="false"
+              btn-size="xlarge"
+              :disabled="isDisabledNextBtn"
+              @click.native="generateTx"
+            />
+          </div>
+          <div class="text-center mt-4">
+            <mew-button
+              :title="$t('common.clear-all')"
+              :has-full-width="false"
+              btn-size="small"
+              btn-style="transparent"
+              @click.native="clear()"
+            />
+          </div>
         </div>
-        <div class="text-center mt-4">
-          <mew-button
-            :title="$t('common.clear-all')"
-            :has-full-width="false"
-            btn-size="small"
-            btn-style="transparent"
-            @click.native="clear()"
-          />
-        </div>
+      </template>
+    </mew-module>
+    <mew-overlay
+      :show-overlay="isSignedTxOpen"
+      :title="$t('sendTx.signed.tx')"
+      :close="() => (isSignedTxOpen = false)"
+      content-size="xlarge"
+    >
+      <div v-if="signedTransaction" style="width: 100%" class="text-center">
+        <mew-text-area
+          ref="signedTxInput"
+          style="width: 100%"
+          :label="$t('sendTx.signed.tx')"
+          :value="signedTransaction.rawTransaction"
+        />
+
+        <div class="mb-3">{{ $t('sendTx.signed.scan') }}</div>
+        <qrcode-vue
+          class="mb-3"
+          :value="signedTransaction.rawTransaction"
+          :size="200"
+          level="H"
+        />
+        <div>or</div>
+        <a
+          :href="jsonFile"
+          :download="jsonFileName"
+          rel="noopener noreferrer"
+          >{{ $t('sendTx.signed.download') }}</a
+        >
+        <mew-text-area
+          class="mt-12"
+          style="width: 100%"
+          :label="$t('sendTx.signed.raw')"
+          :value="signed"
+        />
+        <mew-button
+          class="mt-5"
+          :title="$t('sendTx.signed.button-copy-cont')"
+          @click.native="copyAndContinue"
+        ></mew-button>
       </div>
-    </template>
-  </mew-module>
+    </mew-overlay>
+  </div>
 </template>
 
 <script>
+import clipboardCopy from 'clipboard-copy';
+import QrcodeVue from 'qrcode.vue';
 import { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -195,7 +240,8 @@ export default {
   components: {
     ModuleAddressBook,
     SendLowBalanceNotice,
-    AppButtonBalance
+    AppButtonBalance,
+    QrcodeVue
   },
   props: {
     prefilledAmount: {
@@ -217,6 +263,7 @@ export default {
   },
   data() {
     return {
+      isSignedTxOpen: false,
       localNonce: '0',
       gasLimit: '21000',
       toAddress: '',
@@ -240,11 +287,14 @@ export default {
       gasEstimationError: '',
       gasEstimationIsReady: false,
       signed: null,
-      raw: null
+      raw: null,
+      signedTransaction: null,
+      jsonFileName: '',
+      jsonFile: null
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['balance', 'web3', 'address', 'instance']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
@@ -449,6 +499,15 @@ export default {
     }
   },
   watch: {
+    signed(newVal) {
+      const parsedVal = JSON.parse(newVal);
+      const string = JSON.stringify(parsedVal);
+      const blob = new Blob([string], {
+        type: 'mime'
+      });
+      this.jsonFileName = `signedTransactionObject-${+new Date()}.json`;
+      this.jsonFile = window.URL.createObjectURL(blob);
+    },
     multiwatch() {
       this.gasEstimationIsReady = false;
       this.debounceEstimateGas(this.allValidInputs);
@@ -530,6 +589,10 @@ export default {
     }, 500);
   },
   methods: {
+    copyAndContinue() {
+      clipboardCopy(this.$refs.signedTxInput.value);
+      this.isSignedTxOpen = false;
+    },
     /**
      * Resets values to default
      */
@@ -712,9 +775,8 @@ export default {
     async generateTx() {
       const symbol = this.network.type.currencyName;
       const isToken = this.selectedCurrency.symbol !== symbol;
-      //console.log(isToken);
-
       const amtWei = toWei(this.amount, 'ether');
+
       const raw = {
         nonce: sanitizeHex(new BigNumber(this.localNonce).toString(16)),
         gasLimit: sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
@@ -724,21 +786,20 @@ export default {
         to: isToken
           ? this.selectedCurrency.address
           : this.address.toLowerCase().trim(),
-        value: isToken ? 0 : amtWei,
+        value: isToken
+          ? sanitizeHex(new BigNumber(0).toString(16))
+          : sanitizeHex(new BigNumber(amtWei).toString(16)),
         data: this.data,
         chainId: this.network.type.chainID
       };
+
       this.raw = raw;
-
-      console.log(raw);
-
-      //return;
-      const signed = await this.wallet.signTransaction(this.raw);
+      const signed = await this.instance.signTransaction(this.raw);
+      this.signedTransaction = signed;
       this.signed = JSON.stringify(signed);
-      //this.$refs.signedTxModal.$refs.signedTx.show();
-      console.log(this.signed);
       window.scrollTo(0, 0);
       this.clear();
+      this.isSignedTxOpen = true;
     }
   }
 };

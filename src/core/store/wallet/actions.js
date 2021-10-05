@@ -112,6 +112,10 @@ const setBlockNumber = function ({ commit }, val) {
   commit('SET_BLOCK_NUMBER', val);
 };
 
+const setOfflineApp = function ({ commit }, val) {
+  commit('SET_OFFLINE_APP', val);
+};
+
 export default {
   removeWallet,
   setWallet,
@@ -120,5 +124,6 @@ export default {
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,
-  setTokens
+  setTokens,
+  setOfflineApp
 };

@@ -46,6 +46,10 @@ const SET_LOADING_WALLET_INFO = function (state, isLoading) {
   state.loadingWalletInfo = isLoading;
 };
 
+const SET_OFFLINE_APP = function (state, isOfflineApp) {
+  state.isOfflineApp = isOfflineApp;
+};
+
 export default {
   REMOVE_WALLET,
   SET_WALLET,
@@ -55,5 +59,6 @@ export default {
   SET_BLOCK_NUMBER,
   SET_OWNED_DOMAINS,
   SET_TOKENS,
-  SET_LOADING_WALLET_INFO
+  SET_LOADING_WALLET_INFO,
+  SET_OFFLINE_APP
 };

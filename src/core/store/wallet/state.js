@@ -7,7 +7,7 @@ const state = {
   identifier: '',
   isHardware: false,
   instance: null,
-  isOfflineApp: true,
+  isOfflineApp: false,
   web3: {},
   ensDomains: null,
   tokens: [],

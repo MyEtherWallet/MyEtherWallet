@@ -103,7 +103,10 @@
           network.type.currencyName
         }}</span>
       </div>
-      <div class="d-flex justify-space-between align-center">
+      <div
+        class="d-flex justify-space-between align-center"
+        :style="isOfflineApp ? 'margin-top:74px' : ''"
+      >
         <div v-if="!isOfflineApp" class="justify-start">
           <!--
           =====================================================================================
