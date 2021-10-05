@@ -71,7 +71,10 @@ const EXCEPTIONS = [
   'package-json', // 7-2-21 major version change
   'luxon', // 7-20-21 major version change
   'remark-cli',
-  'remark-preset-lint-recommended'
+  'remark-preset-lint-recommended',
+  'node-fetch', // 10-4-21 major version change
+  'eslint-plugin-prettier', // 10-4-21 major version change
+  'marked' // 10-4-21 major version change
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

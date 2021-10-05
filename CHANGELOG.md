@@ -1,4 +1,12 @@
+### v5.8.7
+
+### Fixes
+
+* Update packages, fix resolution issue
+
 ### v5.8.6
+
+### Fixes
 
 * Update unstoppable resolutions package and name resolution flows [#3402](https://github.com/MyEtherWallet/MyEtherWallet/pull/3402)
 
