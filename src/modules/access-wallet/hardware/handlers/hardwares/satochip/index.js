@@ -101,7 +101,7 @@ class SatochipWallet {
           }
         };
 
-        mywallet.ws.onclose = function close(event) {
+        mywallet.ws.onclose = function close() {
           mywallet.isConnected = false;
           setTimeout(mywallet.connect, mywallet.reconnectInterval);
         };

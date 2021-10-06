@@ -98,7 +98,7 @@
           Satochip
         =====================================================================================
         -->
-	  <span v-if="onSatochip">
+      <span v-if="onSatochip">
         <div class="d-flex flex-column align-center">
           <div class="titlePrimary-text">
             Follow the instructions in the Satochip connection tab. If it did not
@@ -117,9 +117,8 @@
             <v-icon small class="primary--text">mdi-arrow-left</v-icon>
             Connect a different wallet
           </div>
-        </div></span
-      >
-    </div>	
+        </div>
+      </span>
       <!--
         =====================================================================================
           Cool Wallet
@@ -221,9 +220,8 @@
             <v-icon small class="primary--text">mdi-arrow-left</v-icon>
             Connect a different wallet
           </div>
-        </div></span
-      >
-    </div>
+        </div>
+      </span>
     <!--
       =====================================================================================
         Step 3: Select Address and Network | (If Applicable) 
@@ -646,8 +644,7 @@ export default {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
           if (this.onLedger) this.ledgerConnected = true;
-          if (this.onKeepkey || this.onTrezor) this.step++;
-		  if (this.onSatochip) this.step++;
+          if (this.onKeepkey || this.onTrezor || this.onSatochip) this.step++;
           if (this.onBitbox2) {
             _hwWallet
               .init(this.hasPath)
