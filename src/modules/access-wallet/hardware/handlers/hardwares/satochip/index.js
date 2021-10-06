@@ -52,9 +52,7 @@ class SatochipWallet {
   
   getChainCode= (dpath) => {
     console.log('Satochip: getChainCode() START'); //debugSatochip
-    console.log('CHECK this: '+ this);
     return this.connect().then((ws) => {
-      console.log('In satochip-connect-tab: getChainCode: connect().then()'); //debugSatochip
       const msg = {
         requestID: this.requestID++,
         action: 'get_chaincode',
@@ -65,12 +63,9 @@ class SatochipWallet {
       return new Promise((resolve, reject) => {
         // send request to device and keep a ref of the resolve function in a map
         new Promise((resolve2) => {
-          console.log('Satochip: resolveMap.size - before:' + this.resolveMap.size);
           this.resolveMap.set(msg.requestID, resolve2);
           ws.send(request);
           console.log('Satochip: request sent:' + request);
-          //console.log('Satochip: typeof(resolve2):' + typeof resolve2);
-          //console.log('Satochip: resolveMap.size - after:' + this.resolveMap.size);
         }).then((res) => {
           console.log('In satochip-connect-tab: getChainCode: res: ', res);
           if (res.exitstatus == 0){//no issue
@@ -79,8 +74,6 @@ class SatochipWallet {
               chainCode: res.chaincode
             });
           }else{// there was an issue
-            //reject(res.reason)
-            //errorHandler(res.reason)
             errorHandler({ message: res.reason})
           }
         });
@@ -90,7 +83,6 @@ class SatochipWallet {
   
   connect = () => {
     console.log('Satochip: connect() START');
-    console.log('CHECK this: '+ this);
     const mywallet= this
     return new Promise((resolve) => {
       if (!mywallet.isConnected) {
@@ -102,8 +94,6 @@ class SatochipWallet {
           //TODO: remove get_status as it is not used?
           const msg = { requestID: mywallet.requestID++, action: 'get_status' };
           const data = JSON.stringify(msg);
-          // console.log('CHECK mywallet.isConnected: '+ mywallet.isConnected);
-          // console.log('CHECK this: '+ this);
           console.log('Sending request: '+ data);
           mywallet.ws.send(data);
           resolve(mywallet.ws);
@@ -119,7 +109,6 @@ class SatochipWallet {
           try {
             console.log('Assert: resolveMap has key: ' + response.requestID + '?' + mywallet.resolveMap.has(response.requestID) );
             if (mywallet.resolveMap.has(response.requestID)) {
-              console.log('typeof(resolveMap.get()):' + typeof mywallet.resolveMap.get(response.requestID) );
               mywallet.resolveMap.get(response.requestID)(response);
               mywallet.resolveMap.delete(response.requestID);
             }
@@ -137,8 +126,6 @@ class SatochipWallet {
         mywallet.ws.onerror = function error() {
           console.log('disconnected with error!');
           mywallet.isConnected = false;
-          //throw new Error('Satochip: error while connecting to Satochip-Bridge')
-          //errorHandler('Satochip: error while connecting to Satochip-Bridge')
           errorHandler({message: 'Satochip: error while connecting to Satochip-Bridge'})
         };
       } else {
@@ -180,8 +167,6 @@ class SatochipWallet {
               const payload={ v: (res.v+chainId*2+35), r:res.r, s:res.s}
               resolve(payload);
             }else{// there was an issue
-             //reject(res.reason)
-             //errorHandler(res.reason)
              errorHandler({message: res.reason})
             }
           });
@@ -193,8 +178,6 @@ class SatochipWallet {
     console.log('Satochip: signMessage() START');
     // message is a hex-string prefixed with 0x
     if (!msg) {
-      //throw new Error('No message to sign');
-      // errorHandler('No message to sign');
       errorHandler({message: 'No message to sign'});
     }
    
@@ -224,8 +207,6 @@ class SatochipWallet {
             const combined = '0x'+r + s + v; 
             resolve(combined);
           }else{// there was an issue
-            //throw new Error(res.reason); //reject(res.reason)
-            //errorHandler(res.reason)
             errorHandler({message: res.reason})
           }
         });
@@ -239,7 +220,6 @@ class SatochipWallet {
     // sign tx
     const txSigner = async tx => {
       console.log('Satochip: txSigner: START');
-      //console.log('Satochip: txSigner: tx: ' + tx);
       tx = new Transaction(tx, {
         common: commonGenerator(store.getters['global/network'])
       });
@@ -251,18 +231,12 @@ class SatochipWallet {
       const pubkey= this.hdKey.derive('m/' + idx).publicKey;
       const address= publicToAddress(pubkey, true).toString('hex');
       const tx_info= {tx_serialized:tx_serialized, tx_hash_true:tx_hash_true, tx_hash_false:tx_hash_false, chainId:networkId, address: address}; // debugsatochip
-      //console.log('Satochip: txSigner: tx_info:' + tx_info);
       const result= await this.signRawTransaction(path, tx, tx_info)
       console.log('Satochip: txSigner: result:' + result);
       
       tx.r = getBufferFromHex(result.r);
-      //console.log('Satochip: txSigner: tx.r:' + tx.r);
       tx.s = getBufferFromHex(result.s);
-      //console.log('Satochip: txSigner: tx.s:' + tx.s);
       tx.v = getBufferFromHex(result.v.toString(16)); 
-      //console.log('Satochip: txSigner: tx.v:' + tx.v);
-      
-      // if (!result.success) throw new Error(result.payload.error); // TODO
 
       const signedChainId = calculateChainIdFromV( getBufferFromHex(result.v.toString(16)) );
       console.log('Satochip: txSigner: signedChainId:' + signedChainId);
@@ -288,8 +262,6 @@ class SatochipWallet {
       const result= await this.signMessage(msg, path)
       console.log('Satochip: signMessage: result:' + result);
       return getBufferFromHex(result);
-
-      // if (!result.success) throw new Error(result.payload.error);// TODO
     };
     
     const displayAddress = () => {
