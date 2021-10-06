@@ -45,6 +45,10 @@ export default {
         link: 'https://www.secalot.com/'
       },
       {
+        img: require('@/assets/images/partners/satochip.png'),
+        link: 'https://satochip.io/shop/'
+      },
+      {
         img: require('@/assets/images/partners/bity.png'),
         link: 'https://bity.com/af/jshkb37v'
       },

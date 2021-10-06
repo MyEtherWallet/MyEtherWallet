@@ -151,6 +151,15 @@ export default {
         link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
       },
       {
+        logoImg: require('@/assets/images/hardware-wallets/logo-satochip.png'),
+        walletImg: require('@/assets/images/hardware-wallets/satochip.png'),
+        priceNote: 'Starting from',
+        currency: '$',
+        price: '25.00',
+        note: 'The open-source and affordable hardware wallet. Get yours today!',
+        link: 'https://satochip.io/shop/'
+      },
+      {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
         walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
         priceNote: 'Starting from',

@@ -341,6 +341,10 @@ export default {
             label: 'CoolWallet',
             link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
           },
+          { 
+            label: 'Satochip', 
+            link: 'https://satochip.io/shop/' 
+          },
           {
             label: 'Billfodl',
             link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
