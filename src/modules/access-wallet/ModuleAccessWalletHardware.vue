@@ -101,8 +101,8 @@
       <span v-if="onSatochip">
         <div class="d-flex flex-column align-center">
           <div class="titlePrimary-text">
-            Follow the instructions in the Satochip connection tab. If it did not
-            open automatically, click below.
+            Follow the instructions in the Satochip connection tab. If it did
+            not open automatically, click below.
           </div>
           <div>
             <mew-button
@@ -222,6 +222,7 @@
           </div>
         </div>
       </span>
+    </div>
     <!--
       =====================================================================================
         Step 3: Select Address and Network | (If Applicable) 
