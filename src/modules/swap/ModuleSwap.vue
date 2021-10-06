@@ -47,11 +47,7 @@
                       ? 'Buy more.'
                       : null
                   "
-                  :max-btn-obj="{
-                    title: 'Max',
-                    disabled: false,
-                    method: setMaxAmount
-                  }"
+                  :max-btn-obj="maxBtn"
                   @input="setTokenInValue"
               /></v-col>
               <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
@@ -216,12 +212,7 @@
               />
               <div v-else key="showAnimation1">
                 <module-address-book
-                  v-if="
-                    isFromNative &&
-                    step > 0 &&
-                    providersErrorMsg.subtitle === '' &&
-                    !isLoadingProviders
-                  "
+                  v-if="showRefundAddress"
                   ref="addressInput"
                   class="pt-4 pb-2 mt-10"
                   :label="nativeLabel"
@@ -430,6 +421,18 @@ export default {
      * @returns a boolean
      * based on how the swap state is
      */
+    showRefundAddress() {
+      return (
+        this.isFromNative &&
+        this.step > 0 &&
+        this.providersErrorMsg.subtitle === '' &&
+        !this.isLoadingProviders
+      );
+    },
+    /**
+     * @returns a boolean
+     * based on how the swap state is
+     */
     showNetworkFee() {
       return (
         !this.isFromNative &&
@@ -448,6 +451,19 @@ export default {
         this.providersErrorMsg.subtitle === '' &&
         !this.isLoadingProviders
       );
+    },
+    /**
+     * @returns an object
+     * if native token, return empty
+     */
+    maxBtn() {
+      return this.isFromNative
+        ? {}
+        : {
+            title: 'Max',
+            disabled: false,
+            method: this.setMaxAmount
+          };
     },
     /**
      *Returns errors messages based on netowrk
@@ -545,7 +561,9 @@ export default {
      */
     isFromNative() {
       if (this.isLoading) return false;
-      return !isAddress(this.fromTokenType?.contract);
+      return this.fromTokenType.hasOwnProperty('isEth')
+        ? !this.fromTokenType.isEth
+        : !isAddress(this.fromTokenType.contract);
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
@@ -1049,10 +1067,12 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
-      if (value && value.name) {
-        this.trackSwap('from: ' + value.name);
-      }
-      this.setTokenInValue(this.tokenInValue);
+      this.$nextTick(() => {
+        if (value && value.name) {
+          this.trackSwap('from: ' + value.name);
+        }
+        this.setTokenInValue(this.tokenInValue);
+      });
     },
     setToToken(value) {
       this.toTokenType = value;
