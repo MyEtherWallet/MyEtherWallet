@@ -95,6 +95,33 @@
       />
       <!--
         =====================================================================================
+          Satochip
+        =====================================================================================
+        -->
+	  <span v-if="onSatochip">
+        <div class="d-flex flex-column align-center">
+          <div class="titlePrimary-text">
+            Follow the instructions in the Satochip connection tab. If it did not
+            open automatically, click below.
+          </div>
+          <div>
+            <mew-button
+              class="mt-7"
+              title="Connect Satochip"
+              icon="mdi-open-in-new"
+              icon-type="mdi"
+              @click.native="satochipUnlock"
+            />
+          </div>
+          <div class="primary--text my-8 cursor--pointer" @click="reset">
+            <v-icon small class="primary--text">mdi-arrow-left</v-icon>
+            Connect a different wallet
+          </div>
+        </div></span
+      >
+    </div>	
+      <!--
+        =====================================================================================
           Cool Wallet
         =====================================================================================
         -->
@@ -304,6 +331,11 @@ export default {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
           type: WALLET_TYPES.COOL_WALLET
+        },
+        {
+          label: 'Satochip',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-satochip.svg'),
+          type: WALLET_TYPES.SATOCHIP
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -406,6 +438,12 @@ export default {
      */
     onKeepkey() {
       return this.walletType === WALLET_TYPES.KEEPKEY;
+    },
+    /**
+     * On Satochip
+     */
+    onSatochip() {
+      return this.walletType === WALLET_TYPES.SATOCHIP;
     },
     /**
      * On Trezor
@@ -592,6 +630,9 @@ export default {
     keepkeyUnlock() {
       this.unlockPathOnly();
     },
+    satochipUnlock() {
+      this.unlockPathOnly();
+    },
     coolWalletUnlock() {
       this.unlockPathAndPassword(null, this.password);
     },
@@ -606,6 +647,7 @@ export default {
           this.hwWalletInstance = _hwWallet;
           if (this.onLedger) this.ledgerConnected = true;
           if (this.onKeepkey || this.onTrezor) this.step++;
+		  if (this.onSatochip) this.step++;
           if (this.onBitbox2) {
             _hwWallet
               .init(this.hasPath)

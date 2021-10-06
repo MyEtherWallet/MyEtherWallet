@@ -15,6 +15,7 @@ const WALLET_TYPES = {
   XWALLET: 'xwallet',
   BCVAULT: 'bcVault',
   COOL_WALLET: 'coolWallet',
+  SATOCHIP: 'satochip',
   WALLET_LINK: 'walletLink',
   MEW_WALLET: 'mewWallet'
 };

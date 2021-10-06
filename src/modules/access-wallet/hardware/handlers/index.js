@@ -4,6 +4,7 @@ import LedgerWallet from './hardwares/ledger';
 import TrezorWallet from './hardwares/trezor';
 import KeepkeyWallet from './hardwares/keepkey';
 import BCVaultWallet from './hardwares/bcvault';
+import SatochipWallet from './hardwares/satochip';
 import CoolWallet from './hardwares/coolwallet';
 
 export {
@@ -12,5 +13,6 @@ export {
   TrezorWallet,
   KeepkeyWallet,
   BCVaultWallet,
+  SatochipWallet,
   CoolWallet
 };

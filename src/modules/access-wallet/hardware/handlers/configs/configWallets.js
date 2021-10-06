@@ -6,6 +6,7 @@ import {
   BitBox02Wallet,
   KeepkeyWallet,
   BCVaultWallet,
+  SatochipWallet,
   CoolWallet
 } from '@/modules/access-wallet/common';
 
@@ -52,6 +53,14 @@ export default {
     requiresPassword: false,
     accountOnly: true,
     title: 'Connect your BC Vault'
+  },
+  [WALLET_TYPES.SATOCHIP]: {
+    create: SatochipWallet,
+    when: 2,
+    hasPaths: false,
+    requiresPassword: false,
+    accountOnly: false,
+    title: 'Connect your Satochip'
   },
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,

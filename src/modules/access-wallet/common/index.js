@@ -4,6 +4,7 @@ import {
   BitBox02Wallet,
   KeepkeyWallet,
   BCVaultWallet,
+  SatochipWallet,
   CoolWallet
 } from '@/modules/access-wallet/hardware/handlers';
 import WalletInterface from './WalletInterface';
@@ -19,6 +20,7 @@ export {
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
+  SatochipWallet,
   CoolWallet,
   MewConnectWallet,
   WalletConnectWallet,

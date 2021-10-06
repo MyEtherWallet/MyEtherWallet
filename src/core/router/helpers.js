@@ -74,6 +74,7 @@ const accessRouteGuard = (to, from, next) => {
         'keepkey',
         'coolwallet',
         'xwallet',
+        'satochip',
         'bitbox',
         'trezor',
         'bcvault'

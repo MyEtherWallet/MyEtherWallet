@@ -12,6 +12,7 @@ module.exports = [
   'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
+  'ws://localhost:8397', // satochip hw
   'https://unstoppabledomains.com:443',
   'https://o382951.ingest.sentry.io:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
