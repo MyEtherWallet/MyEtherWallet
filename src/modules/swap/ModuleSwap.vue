@@ -207,15 +207,14 @@
             -->
           <div>
             <v-slide-y-transition hide-on-leave group>
-              <div v-if="showAnimation" key="showAnimation">
-                <swap-provider-mentions
-                  :is-loading="isLoadingProviders"
-                  :check-loading="checkLoading"
-                  @showProviders="showProviders"
-                />
-              </div>
-              <!-- Transition group required unique key. Added showAnimation2 to hide warning -->
-              <div v-else key="showAnimation2">
+              <swap-provider-mentions
+                v-if="showAnimation"
+                key="showAnimation"
+                :is-loading="isLoadingProviders"
+                :check-loading="checkLoading"
+                @showProviders="showProviders"
+              />
+              <div v-else key="showAnimation1">
                 <swap-providers-list
                   :step="step"
                   :available-quotes="availableQuotes"
@@ -247,6 +246,23 @@
                   class="mt-10 mt-sm-16"
                   @onLocalGasPrice="handleLocalGasPrice"
                 />
+                <div
+                  v-if="
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  class="text-center mt-10 mt-sm-15"
+                >
+                  <mew-button
+                    title="Next"
+                    :has-full-width="true"
+                    :disabled="disableNext"
+                    btn-size="xlarge"
+                    style="max-width: 240px"
+                    @click.native="showConfirm"
+                  />
+                </div>
               </div>
             </v-slide-y-transition>
             <div class="text-center mt-10 mt-sm-15">
@@ -688,11 +704,15 @@ export default {
      * balance for the transaction
      */
     notEnoughEth() {
-      const balanceAfterFees = toBN(this.balance).sub(toBN(this.txFee));
-      const isNotEnoughEth = this.isFromTokenMain
-        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-        : balanceAfterFees.isNeg();
-      return isNotEnoughEth;
+      try {
+        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+        const isNotEnoughEth = this.isFromTokenMain
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+        return isNotEnoughEth;
+      } catch (e) {
+        return true;
+      }
     },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
@@ -1013,6 +1033,16 @@ export default {
         this.step = 0;
         return;
       }
+
+      if (
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
+        )
+      ) {
+        return;
+      }
+
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
