@@ -86,6 +86,7 @@
             :total-cost="totalCost"
             :tx-fee="txFee"
             :gas-price-type="localGasType"
+            :total-gas-limit="gasLimit"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
             :from-eth="isFromNetworkCurrency"
