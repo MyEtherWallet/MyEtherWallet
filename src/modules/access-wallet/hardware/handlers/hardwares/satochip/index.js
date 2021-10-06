@@ -60,7 +60,7 @@ class SatochipWallet {
       };
       const request = JSON.stringify(msg);
       
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         // send request to device and keep a ref of the resolve function in a map
         new Promise((resolve2) => {
           this.resolveMap.set(msg.requestID, resolve2);
@@ -154,7 +154,7 @@ class SatochipWallet {
       const request = JSON.stringify(msg);
       const chainId= tx_info.chainId;
       
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
           // send request to device and keep a ref of the resolve function in a map
           new Promise((resolve2) => {
             this.resolveMap.set(msg.requestID, resolve2);
