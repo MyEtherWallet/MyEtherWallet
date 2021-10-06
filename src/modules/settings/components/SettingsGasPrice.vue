@@ -56,7 +56,7 @@
             </div>
             <div class="prices d-flex">
               <div class="secondary--text mr-2">
-                {{ costInEth(b.title) }} ETH
+                {{ costInEth(b.title) }} {{ currencyName }}
               </div>
               <div class="textSecondary--text">${{ costInUSD(b.title) }}</div>
             </div>
@@ -171,7 +171,7 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink', 'gasPriceByType']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['network']),
     // currentValue() {
     //   for (const but of this.buttons) {
     //     if (but.title === this.selected) {
@@ -199,6 +199,9 @@ export default {
       return this.hasCost ? this.costInUsd : this.currentValue.usd;
     }
     */
+    currencyName() {
+      return this.network.type.currencyName;
+    }
   },
   watch: {
     /**

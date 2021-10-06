@@ -21,7 +21,7 @@
           :buttons="gasButtons"
           :selected="gasPriceType"
           :set-selected="setSelected"
-          :gas-price="gasPrice"
+          :total-gas-limit="gasPrice"
           :set-custom-gas-price="setCustomGasPrice"
           :global="true"
         />
