@@ -39,19 +39,15 @@ class SatochipWallet {
   } // end constructor()
   
   async init(basePath) {
-    console.log('Satochip: init() START'); //debugSatochip
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
-    console.log('Satochip: init() basePath: ' + this.basePath); //debugSatochip
     
     const rootPub = await this.getChainCode(this.basePath); 
-    console.log('Satochip: init() rootPub: ' + rootPub); //debugSatochip
     this.hdKey = new HDKey();
     this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
     this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
   }
   
   getChainCode= (dpath) => {
-    console.log('Satochip: getChainCode() START'); //debugSatochip
     return this.connect().then((ws) => {
       const msg = {
         requestID: this.requestID++,
@@ -65,9 +61,7 @@ class SatochipWallet {
         new Promise((resolve2) => {
           this.resolveMap.set(msg.requestID, resolve2);
           ws.send(request);
-          console.log('Satochip: request sent:' + request);
         }).then((res) => {
-          console.log('In satochip-connect-tab: getChainCode: res: ', res);
           if (res.exitstatus == 0){//no issue
             resolve({
               publicKey: res.pubkey,
@@ -82,49 +76,37 @@ class SatochipWallet {
   } //  end getChainCode()
   
   connect = () => {
-    console.log('Satochip: connect() START');
     const mywallet= this
     return new Promise((resolve) => {
       if (!mywallet.isConnected) {
         mywallet.ws = new WebSocket('ws://localhost:8397/');
         
         mywallet.ws.onopen = function open() {
-          console.log('connected');
           mywallet.isConnected = true;
-          //TODO: remove get_status as it is not used?
           const msg = { requestID: mywallet.requestID++, action: 'get_status' };
           const data = JSON.stringify(msg);
-          console.log('Sending request: '+ data);
           mywallet.ws.send(data);
           resolve(mywallet.ws);
         };
 
         mywallet.ws.onmessage = function incoming(data) {
-          console.log('ONMESSAGE: message received!');
-          console.log('Reply:' + data.data); // should be string
-
           const response = JSON.parse(data.data);
-          console.log('Reply JSON:', response);
-
           try {
-            console.log('Assert: resolveMap has key: ' + response.requestID + '?' + mywallet.resolveMap.has(response.requestID) );
             if (mywallet.resolveMap.has(response.requestID)) {
               mywallet.resolveMap.get(response.requestID)(response);
               mywallet.resolveMap.delete(response.requestID);
             }
           } catch (error) {
-            console.error(error);
+            errorHandler({message: 'Satochip: error while connecting to Satochip-Bridge'})
           }
         };
 
         mywallet.ws.onclose = function close(event) {
-          console.log('disconnected with code:' + event.code);
           mywallet.isConnected = false;
           setTimeout(mywallet.connect, mywallet.reconnectInterval);
         };
 
         mywallet.ws.onerror = function error() {
-          console.log('disconnected with error!');
           mywallet.isConnected = false;
           errorHandler({message: 'Satochip: error while connecting to Satochip-Bridge'})
         };
@@ -135,10 +117,6 @@ class SatochipWallet {
   }; //end connect()
   
   signRawTransaction= function(path, tx, tx_info) {
-    console.log('In satochip-connect-tab: signRawTransaction(): START');
-    console.log('In satochip-connect-tab: signRawTransaction(): path', path);
-    console.log('In satochip-connect-tab: signRawTransaction(): tx', tx);
-    console.log('In satochip-connect-tab: signRawTransaction(): tx_info', tx_info);
 
     return this.connect().then((ws) => {
       const msg = {
@@ -159,10 +137,8 @@ class SatochipWallet {
           new Promise((resolve2) => {
             this.resolveMap.set(msg.requestID, resolve2);
             ws.send(request);
-            console.log('Satochip: request sent:' + request);
           }).then((res) => {
             // extracts usefull data from device response and resolve original promise
-            console.log('In satochip-connect-tab: signRawTransaction: res: ', res);
             if (res.exitstatus == 0){//no issue
               const payload={ v: (res.v+chainId*2+35), r:res.r, s:res.s}
               resolve(payload);
@@ -175,7 +151,6 @@ class SatochipWallet {
   } // end signRawTransaction
   
   signMessage= function(msg, path) {
-    console.log('Satochip: signMessage() START');
     // message is a hex-string prefixed with 0x
     if (!msg) {
       errorHandler({message: 'No message to sign'});
@@ -196,10 +171,8 @@ class SatochipWallet {
         new Promise((resolve2) => {
           this.resolveMap.set(data.requestID, resolve2);
           ws.send(request);
-          console.log('Satochip: signMessage: request sent:' + request);
         }).then((res) => {
           // extracts usefull data from device response and resolve original promise
-          console.log('Satochip: signMessage: result: ' + res);
           if (res.exitstatus == 0){//no issue
             const r = res.r;
             const s = res.s;
@@ -215,11 +188,9 @@ class SatochipWallet {
   } // end signMessage()
   
   getAccount(idx) {
-    console.log('Satochip: getAccount(): START');
     const derivedKey = this.hdKey.derive('m/' + idx);
     // sign tx
     const txSigner = async tx => {
-      console.log('Satochip: txSigner: START');
       tx = new Transaction(tx, {
         common: commonGenerator(store.getters['global/network'])
       });
@@ -232,15 +203,12 @@ class SatochipWallet {
       const address= publicToAddress(pubkey, true).toString('hex');
       const tx_info= {tx_serialized:tx_serialized, tx_hash_true:tx_hash_true, tx_hash_false:tx_hash_false, chainId:networkId, address: address}; // debugsatochip
       const result= await this.signRawTransaction(path, tx, tx_info)
-      console.log('Satochip: txSigner: result:' + result);
       
       tx.r = getBufferFromHex(result.r);
       tx.s = getBufferFromHex(result.s);
       tx.v = getBufferFromHex(result.v.toString(16)); 
 
       const signedChainId = calculateChainIdFromV( getBufferFromHex(result.v.toString(16)) );
-      console.log('Satochip: txSigner: signedChainId:' + signedChainId);
-      console.log('Satochip: txSigner: networkId:' + networkId);
       if (signedChainId !== networkId)
         throw new Error(
           Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -250,17 +218,12 @@ class SatochipWallet {
           'InvalidNetworkId'
         );
       
-      console.log('Satochip: txSigner: END');
       return getSignTransactionObject(tx);
     };
     // sign msg
     const msgSigner = async msg => {
-      console.log('Satochip: msgSigner: START');
       const path= this.basePath + '/' + idx;
-      console.log('Satochip: msgSigner: path: ' + path);
-
       const result= await this.signMessage(msg, path)
-      console.log('Satochip: signMessage: result:' + result);
       return getBufferFromHex(result);
     };
     
