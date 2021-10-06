@@ -19,6 +19,7 @@ import trezorError from './errors-trezor/ru_RU';
 import ledgerError from './errors-ledger/ru_RU';
 import keepkeyError from './errors-keepkey/ru_RU';
 import bitboxError from './errors-bitbox/ru_RU';
+import satochipError from './errors-satochip/ru_RU';
 import buyHardwareWallet from './other/buy-hardware-wallet/ru_RU';
 import convertUnits from './other/convert-units/ru_RU';
 import verifyMessage from './other/verify-message/ru_RU';
@@ -58,6 +59,7 @@ const ru_RU = {
   ledgerError: ledgerError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
+  satochipError: satochipError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
   convertUnits: convertUnits,
