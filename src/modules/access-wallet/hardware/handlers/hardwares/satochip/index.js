@@ -264,9 +264,6 @@ class SatochipWallet {
       return getBufferFromHex(result);
     };
     
-    const displayAddress = () => {
-      console.log('In satochip-connect-tab: displayAddress: START');
-    };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
       derivedKey.publicKey,
@@ -275,7 +272,6 @@ class SatochipWallet {
       errorHandler,
       txSigner,
       msgSigner,
-      displayAddress,
       this.meta
     );
   }
