@@ -1,7 +1,6 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
-import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import Configs from './configs';
+import Configs from './configs/providersConfigs';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -40,7 +39,7 @@ class Swap {
           return -1;
         });
         return {
-          fromTokens: sorted.filter(t => isAddress(t.contract)),
+          fromTokens: sorted,
           toTokens: sorted
         };
       });

@@ -18,6 +18,7 @@
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
                   <app-button-balance
+                    v-show="!isFromNative"
                     :loading="isLoading"
                     :balance="displayBalance"
                   />
@@ -76,24 +77,14 @@
                   label="To"
                   @input="setToToken"
                 />
-                <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
-                <v-text-field
+                <mew-input
                   label="Amount"
                   placeholder="0"
                   type="number"
                   :hide-clear-btn="true"
                   :value="tokenOutValue"
-                  :readonly="true"
-                  outlined
+                  is-read-only
                 />
-                <!-- <mew-input
-                label="Amount"
-                placeholder="0"
-                type="number"
-                :hide-clear-btn="true"
-                :value="tokenOutValue"
-                readonly="true"
-              /> -->
               </v-col>
             </v-row>
           </div>
@@ -224,6 +215,19 @@
                 @showProviders="showProviders"
               />
               <div v-else key="showAnimation1">
+                <module-address-book
+                  v-if="
+                    isFromNative &&
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  ref="addressInput"
+                  class="pt-4 pb-2 mt-10"
+                  :label="nativeLabel"
+                  :currency="selectedCurrency"
+                  @setAddress="setRefundAddr"
+                />
                 <swap-providers-list
                   :step="step"
                   :available-quotes="availableQuotes"
@@ -232,46 +236,37 @@
                   :to-token-icon="toTokenType ? toTokenType.img : ''"
                   :is-loading="isLoadingProviders"
                   :providers-error="providersErrorMsg"
-                  class="mt-7"
+                  :class="isFromNative ? '' : 'mt-7'"
                 />
                 <!--
                 =====================================================================================
                 Swap Fee
                 =====================================================================================
                 -->
-                <app-network-fee
-                  v-if="
-                    step > 0 &&
-                    providersErrorMsg.subtitle === '' &&
-                    !isLoadingProviders
-                  "
-                  :show-fee="showSwapFee"
-                  :getting-fee="loadingFee"
-                  :error="feeError"
-                  :total-fees="totalFees"
-                  :gas-price-type="localGasType"
-                  :message="feeError"
-                  :not-enough-eth="notEnoughEth"
-                  is-custom
-                  class="mt-10 mt-sm-16"
-                  @onLocalGasPrice="handleLocalGasPrice"
-                />
-                <div
-                  v-if="
-                    step > 0 &&
-                    providersErrorMsg.subtitle === '' &&
-                    !isLoadingProviders
-                  "
-                  class="text-center mt-10 mt-sm-15"
-                >
-                  <mew-button
-                    title="Next"
-                    :has-full-width="true"
-                    :disabled="disableNext"
-                    btn-size="xlarge"
-                    style="max-width: 240px"
-                    @click.native="showConfirm"
+                <div>
+                  <app-network-fee
+                    v-if="showNetworkFee"
+                    :show-fee="showSwapFee"
+                    :getting-fee="loadingFee"
+                    :error="feeError"
+                    :total-fees="totalFees"
+                    :gas-price-type="localGasType"
+                    :message="feeError"
+                    :not-enough-eth="notEnoughEth"
+                    is-custom
+                    class="mt-10 mt-sm-16"
+                    @onLocalGasPrice="handleLocalGasPrice"
                   />
+                  <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+                    <mew-button
+                      title="Next"
+                      :has-full-width="true"
+                      :disabled="disableNext"
+                      btn-size="xlarge"
+                      style="max-width: 240px"
+                      @click.native="showConfirm"
+                    />
+                  </div>
                 </div>
               </div>
             </v-slide-y-transition>
@@ -301,7 +296,7 @@ import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
-import { toBN, fromWei, toWei, _ } from 'web3-utils';
+import { toBN, fromWei, toWei, _, isAddress } from 'web3-utils';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -390,7 +385,8 @@ export default {
       addressValue: {},
       selectedProvider: {},
       localGasPrice: '0',
-      localGasType: 'economy'
+      localGasType: 'economy',
+      refundAddress: ''
     };
   },
   computed: {
@@ -414,6 +410,45 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    /**
+     * @returns string
+     * is used as a label for module-address-book
+     */
+    nativeLabel() {
+      return `Your ${this.fromTokenType?.name} refund address`;
+    },
+    /**
+     * @returns string
+     * is used as a label for module-address-book
+     */
+    selectedCurrency() {
+      return !this.isFromNative
+        ? this.network.type.name
+        : this.fromTokenType?.symbol;
+    },
+    /**
+     * @returns a boolean
+     * based on how the swap state is
+     */
+    showNetworkFee() {
+      return (
+        !this.isFromNative &&
+        this.step > 0 &&
+        this.providersErrorMsg.subtitle === '' &&
+        !this.isLoadingProviders
+      );
+    },
+    /**
+     * @returns a boolean
+     * based on how the swap state is
+     */
+    showNextButton() {
+      return (
+        this.step > 0 &&
+        this.providersErrorMsg.subtitle === '' &&
+        !this.isLoadingProviders
+      );
+    },
     /**
      *Returns errors messages based on netowrk
      */
@@ -497,13 +532,20 @@ export default {
       );
     },
     /**
-     * Fetched tokens from all providers(?) + specific tokens
-     * Returns an @Array
-     * Check if fromTokenType is ETH
+     * Checks whether selected from token is
+     * the network's currency
      */
     isFromTokenMain() {
       if (this.isLoading) return false;
       return this.fromTokenType?.contract === MAIN_TOKEN_ADDRESS;
+    },
+    /**
+     * Check if fromTokenType is a native token
+     * from other chains
+     */
+    isFromNative() {
+      if (this.isLoading) return false;
+      return !isAddress(this.fromTokenType?.contract);
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
@@ -683,13 +725,15 @@ export default {
       return this.addressValue.isValid;
     },
     /**
-     * Checks whether or not teh user has a minimum eth balance to swap:
+     * Checks whether or not the user has a minimum eth balance to swap:
      * @returns{boolean}
      */
     hasMinEth() {
-      return toBN(this.balanceInWei).gt(
-        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
-      );
+      return !this.isFromNative
+        ? toBN(this.balanceInWei).gt(
+            toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+          )
+        : true;
     },
 
     /**
@@ -741,10 +785,13 @@ export default {
     amountErrorMessage() {
       if (!this.initialLoad && !this.isLoading) {
         /* Balance is <= 0*/
+
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenMain
             ? this.errorMsgs.amountEthIsTooLow
-            : this.tokensList.length > 0 && !this.isFromTokenMain
+            : this.tokensList.length > 0 &&
+              !this.isFromTokenMain &&
+              !this.isFromNative
             ? this.errorMsgs.doNotOwnToken
             : '';
         }
@@ -844,6 +891,9 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    setRefundAddr(val) {
+      this.refundAddress = val;
+    },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);
@@ -1020,20 +1070,18 @@ export default {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
       // Check if (in amount) is larger than (available balance)
-      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+      if (
+        !this.isFromNative &&
+        this.availableBalance.lt(new BigNumber(this.tokenInValue))
+      ) {
         this.step = 0;
         return;
       }
-
       if (
-        !Swapper.helpers.hasValidDecimals(
-          this.tokenInValue,
-          this.fromTokenType.decimals
-        )
+        !Swapper.helpers.hasValidDecimals(value, this.fromTokenType.decimals)
       ) {
         return;
       }
-
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {

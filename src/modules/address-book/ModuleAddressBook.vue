@@ -6,7 +6,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
-      :label="$t('sendTx.to-addr')"
+      :label="parsedLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
@@ -43,6 +43,7 @@ import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
 import { _ } from 'web3-utils';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
@@ -61,6 +62,14 @@ export default {
     isHomePage: {
       type: Boolean,
       default: false
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    currency: {
+      type: String,
+      default: 'ETH'
     }
   },
   data() {
@@ -78,6 +87,9 @@ export default {
     ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
+    parsedLabel() {
+      return this.label ? this.label : this.$t('sendTx.to-addr');
+    },
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -132,39 +144,70 @@ export default {
      */
     setAddress(value, inputType) {
       if (typeof value === 'string') {
-        /**
-         * Checks if user typed or selected an address from dropdown
-         */
-        const typeVal =
-          inputType === USER_INPUT_TYPES.typed
-            ? value
-            : this.addressBookWithMyAddress.find(item => {
-                return value.toLowerCase() === item.address.toLowerCase();
-              });
-        this.inputAddr = value;
-        this.resolvedAddr = '';
-        /**
-         * Checks if the address is valid
-         */
-        const isAddValid = this.isValidAddressFunc(this.inputAddr);
-        if (isAddValid instanceof Promise) {
-          isAddValid.then(res => {
-            this.isValidAddress = res;
-          });
-        } else {
-          this.isValidAddress = isAddValid;
-        }
-        this.loadedAddressValidation = !this.isValidAddress ? false : true;
+        if (
+          this.currency.toLowerCase() === this.network.type.name.toLowerCase()
+        ) {
+          /**
+           * Checks if user typed or selected an address from dropdown
+           */
+          const typeVal =
+            inputType === USER_INPUT_TYPES.typed
+              ? value
+              : this.addressBookWithMyAddress.find(item => {
+                  return value.toLowerCase() === item.address.toLowerCase();
+                });
+          this.inputAddr = value;
+          this.resolvedAddr = '';
+          /**
+           * Checks if the address is valid
+           */
+          const isAddValid = this.isValidAddressFunc(this.inputAddr);
+          if (isAddValid instanceof Promise) {
+            isAddValid.then(res => {
+              this.isValidAddress = res;
+            });
+          } else {
+            this.isValidAddress = isAddValid;
+          }
+          this.loadedAddressValidation = !this.isValidAddress ? false : true;
 
-        /**
-         * @emits setAddress
-         */
-        this.$emit('setAddress', value, this.isValidAddress, {
-          type: inputType,
-          value: _.isObject(typeVal) ? typeVal.nickname : typeVal
-        });
-        if (!this.isValidAddress) {
-          this.resolveName();
+          /**
+           * @emits setAddress
+           */
+          this.$emit('setAddress', value, this.isValidAddress, {
+            type: inputType,
+            value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+          });
+          if (!this.isValidAddress) {
+            this.resolveName();
+          }
+        } else {
+          const currencyExists = WAValidator.findCurrency(
+            this.currency.toLowerCase()
+          );
+          if (currencyExists) {
+            const validate = WAValidator.validate(
+              value,
+              this.currency.toLowerCase()
+            );
+            if (validate) {
+              this.inputAddr = value;
+              this.isValidAddress = true;
+            } else {
+              this.isValidAddress = false;
+            }
+            this.loadedAddressValidation = true;
+            /**
+             * @emits setAddress
+             */
+            this.$emit('setAddress', value, this.isValidAddress, {
+              type: inputType,
+              value: value
+            });
+          } else {
+            this.isValidAddress = false;
+            this.loadedAddressValidation = true;
+          }
         }
       }
     },
