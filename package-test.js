@@ -4,67 +4,28 @@
 
 const package = require('./package.json');
 const packageJson = require('package-json');
-const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7 * 10; //70days (https://github.com/MyEtherWallet/MyEtherWallet/issues/3117)
-// babel-jest 24.0.0 is breaking all the tests [2-1-19]
-//@xkeshi/vue-qrcode no longer maintained, forked out to mew
-//multicoin-address-validator not enough downloads
-// waiting for vee-validate 3.0 to be more stable (https://github.com/baianat/vee-validate/issues/2248)
-// Matching exceptions with package.json
-// Lock @vue packages due to complications on updating
-// @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
-// @aave/protocol-js - freezes the whole page
+const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
+// webpack has a major update
+// copy-webpack-plugin major update
+// holding off on husky changes as the cli still has some weird necessary changes to run commitlint
 const EXCEPTIONS = [
+  'multicoin-address-validator',
   'postcss-import',
   'postcss-url',
   'webpack',
-  'canvas',
-  'ethereum-ens',
-  'babel-jest',
-  'multicoin-address-validator',
-  'vee-validate',
-  '@xkeshi/vue-qrcode',
-  '@vue/test-utils',
-  'graphql',
-  '@myetherwallet/eth-token-balance',
-  '@makerdao/dai',
-  'bootstrap-vue',
+  'copy-webpack-plugin',
+  'vuetify',
+  'sass-loader',
+  'husky',
+  '@aave/protocol-js',
+  'sass',
   'web3',
   'web3-core-helpers',
   'web3-core-method',
   'web3-core-requestmanager',
   'web3-utils',
-  'i18n-iso-countries',
-  '@myetherwallet/mewconnect-web-client',
-  '@walletconnect/browser',
-  '@walletconnect/qrcode-modal',
-  'ethereumjs-wallet',
-  '@makerdao/dai-plugin-mcd',
-  '@makerdao/dai-plugin-migrations',
-  'ethereumjs-util',
-  '@makerdao/dai-plugin-migrations',
-  'worker-loader',
-  'eslint-plugin-vue',
-  '@vue/cli-plugin-babel',
-  '@vue/cli-plugin-eslint',
-  '@vue/cli-plugin-pwa',
-  '@vue/cli-plugin-unit-jest',
-  '@vue/cli-service',
-  'postcss-import',
-  'postcss-url',
-  'webpack',
-  'copy-webpack-plugin',
-  '@aave/protocol-js',
-  // look into updating this after release
-  'is-ipfs',
-  '@stripe/stripe-js',
-  // probably hold off on these ones until next iteration
-  '@sentry/browser',
-  '@sentry/integrations',
-  'sass-loader',
-  'stylelint',
-  'stylelint-config-standard',
-  '@unstoppabledomains/resolution',
-  'vue-stripe-elements-plus'
+  'remark-cli',
+  'node-fetch'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -109,21 +70,28 @@ const looper = () => {
     .then(info => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
-      if (
-        ALL_PACKAGES[_name] !== latestVersion &&
-        new Date(latestVersionTime).getTime() < new Date().getTime() - SAFE_TIME
-      ) {
-        console.error(
-          'ERROR: Update ' +
-            _name +
-            ' from ' +
-            ALL_PACKAGES[_name] +
-            ' to ' +
-            latestVersion +
-            '. Released:',
-          latestVersionTime
-        );
-        updatesFound = true;
+      if (ALL_PACKAGES[_name] !== latestVersion) {
+        const isBehind =
+          new Date(latestVersionTime).getTime() <
+          new Date().getTime() - SAFE_TIME;
+        const isMewComponentBeta =
+          _name === '@myetherwallet/mew-components' &&
+          latestVersion.includes('-beta');
+        if (isBehind) {
+          if (!isMewComponentBeta) {
+            console.error(
+              'ERROR: Update ' +
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
+              latestVersionTime
+            );
+            updatesFound = true;
+          }
+        }
       }
     })
     .then(looper);

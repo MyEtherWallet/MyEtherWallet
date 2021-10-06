@@ -3,10 +3,9 @@
   "no-device": "No Ledger device found!",
   "device-busy-1": "Ledger Device is busy",
   "device-busy-2": "Device is locked. Please unlock device and try again.",
-  "unknown-0x6804": "Ledger device: UNKNOWN_ERROR (0x6804)",
-  "failed-to-sign-other": "Ledger failed to sign! U2F OTHER_ERROR",
+  "unknown": "UNKNOWN_ERROR",
+  "u2f-other-error": "Failed to sign with Ledger device (U2F OTHER_ERROR)",
   "failed-sign-ineligible": "Ledger failed to sign! U2F DEVICE_INELIGIBLE",
-  "unknown-0x6801": "Ledger device: UNKNOWN_ERROR (0x6801)",
   "invalid-data-0x6a80": "Ledger received invalid data. (0x6a80)",
   "denied-by-user-0x6985": "User denied action. (0x6985)",
   "cla-not-support-0x6e00": "Please make sure you're using the correct application",
@@ -16,9 +15,12 @@
   "no-device-selected": "No device selected or user closed the selection modal.",
   "app-and-network-mismatch": "The app does not support selected network",
   "transport-interface": "The interface number provided is not supported by the device in its current configuration.",
-  "wrong-wallet": "You selected the wrong wallet on your device",
   "device-disconnected": "Ledger device disconnected during operation.",
   "denied-by-user": "User denied action.",
   "no-interface-found": "Please upgrade firmware or contact support.",
-  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site"
+  "unable-to-claim": "Unable to connect to Ledger, make sure it is not used in another site",
+  "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
+  "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
+  "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
 }

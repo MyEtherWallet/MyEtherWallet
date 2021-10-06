@@ -2,13 +2,12 @@ module.exports = {
   globals: {
     VERSION: 'readonly',
     ROUTER_MODE: 'readonly',
-    BUILD_TYPE: 'readonly',
-    NODE_ENV: 'readonly',
-    FULL_SOURCEMAPS: 'readonly'
+    NODE_ENV: 'readonly'
   },
   root: true,
   env: {
-    node: true
+    node: true,
+    jest: true
   },
   extends: [
     'plugin:vue/recommended',
@@ -29,8 +28,24 @@ module.exports = {
     'security/detect-object-injection': 'off',
     'require-atomic-updates': 'off',
     'no-prototype-builtins': 'off',
-    "no-irregular-whitespace": ["error", { "skipComments": true, "skipTemplates": true, "skipStrings": true, "skipRegExps": true }],
-    // "no-invalid-position-at-import-rule": 'off'
+    'no-irregular-whitespace': [
+      'error',
+      {
+        skipComments: true,
+        skipTemplates: true,
+        skipStrings: true,
+        skipRegExps: true
+      }
+    ],
+    'vue/custom-event-name-casing': 'off',
+    'vue/no-unused-properties': [
+      'error',
+      {
+        groups: ['props', 'data', 'computed', 'methods', 'setup'],
+        deepData: false,
+        ignorePublicMembers: false
+      }
+    ]
   },
   parserOptions: {
     parser: 'babel-eslint'

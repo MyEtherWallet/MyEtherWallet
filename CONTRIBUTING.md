@@ -9,13 +9,13 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. For branches, you have to branch off of Develop and name your branch as <type or purpose>/<name-of-branch> ie: `feature/sending-eth`. We have a couple of branch types based on the task: bug (for bug fixes), devop, and feature.
+2. For branches, you have to branch off of Develop and name your branch as <type or purpose>/<name-of-branch> ie: `feature/sending-eth`. We have a couple of branch types based on the task: bug (for bug fixes), devop, and feature.\
    This should match the label on the PR
 3. Update the README.md with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
-4. Increase the version number in the package.json file to the new version that this Pull Request would represent.
+4. Increase the version number in the package.json file to the new version that this Pull Request would represent.\
    The versioning scheme we use is [SemVer](http://semver.org/).
-5. Add the commit message and PR number in the CHANGELOG.md under the release number
+5. Add entry to `./changelog` with the format `<type>-<pr#>.md` ie: `fix-1234.md` and add message as content. See `./changelog` entries for better examples
 6. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
 

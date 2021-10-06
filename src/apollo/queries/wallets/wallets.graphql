@@ -1,0 +1,51 @@
+query getEthBalance($hash: String!) {
+  getEthBalance(owner: $hash) {
+    balance
+  }
+}
+
+query getLatestPrices {
+  getLatestPrices {
+      id
+      symbol
+      name
+      image
+      contract
+      current_price
+      market_cap
+      total_volume
+      price_change_percentage_24h
+      total_supply
+  }
+}
+
+query getBalanceHistory(
+  $timeString: Int!
+  $todaysDate: Int!
+  $key: String!
+  $scale: TimeseriesScale!
+  $_nextKey: String
+) {
+  getTimeseriesData(
+    fromT: $timeString
+    toT: $todaysDate
+    key: $key
+    scale: $scale
+    nextKey: $_nextKey
+  ) {
+    items {
+      value
+      timestamp
+    }
+    nextKey
+  }
+}
+
+subscription subscribeToAccountBalance(
+  $owner: String!
+  $event: AddressEventType!
+) {
+  addressEvent(owner: $owner, event: $event) {
+    blockNumber
+  }
+}

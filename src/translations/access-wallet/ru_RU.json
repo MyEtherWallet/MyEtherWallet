@@ -1,31 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "Чтобы увидеть ваш мобильный кошелек в интерфейсе MEW web.",
+    "option-text": "Отсканируйте QR-код для доступа с помощью MEW wallet или MEWconnect",
     "modal": {
       "title": "Мобильный доступ",
-      "text1": "Используйте приложение MEW wallet для сканирования указанного выше QR-кода",
-      "text2": "Нет приложения? {action}",
-      "download-now": "Скачайте сейчас."
+      "text1": "Используйте приложение MEW wallet или MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения MEW wallet? Загрузите сейчас."
     },
-    "scan": "Сканируйте QR-код с помощью приложения MEW wallet",
-    "warning": "MEW wallet несовместим с iPads.",
-    "instructions": {
-      "step1": "Шаг 1: {first}",
-      "step2": "Шаг 2: {second}",
-      "step3": "Шаг 3: {third}",
-      "first": "Открыть приложение MEW wallet",
-      "second": "Нажмите {icon-pos}",
-      "icon-pos": "иконка в правом верхнем углу",
-      "third": "Отсканируйте QR-код"
-    }
+    "protocol": "Протокол MEWconnect",
+    "warning": "MEW wallet и MEWconnect несовместимы с iPads."
   },
   "mobile-app": {
     "option-title": "Мобильное приложение",
     "examples": "WalletConnect; WalletLink",
     "modal": {
-      "title": "Доступ через мобильное приложение"
+      "title": "Мобильный доступ"
     },
-    "mew-wallet": "MEW wallet"
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
@@ -46,7 +36,7 @@
       "button-buy": "Купить",
       "button-choose": "Продолжить"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
   },
   "bitbox": {
     "modal": {
@@ -62,7 +52,7 @@
     "modal": {
       "title": "Программный доступ",
       "purchase-text": "Приобретите аппаратный кошелек для максимальной безопасности при доступе к средствам.",
-      "purchase-link": "Купить аппаратный кошелек"
+      "purchase-link": "Купить аппаратный кошелек...."
     }
   },
   "metamask": {

@@ -8,6 +8,5 @@
   "failed": "Failed",
   "cancelled": "Cancelled",
   "error": "Error",
-  "status-error": "Status Error",
-  "error-parsing-tx-details": "Error parsing transaction details"
+  "status-error": "Status Error"
 }

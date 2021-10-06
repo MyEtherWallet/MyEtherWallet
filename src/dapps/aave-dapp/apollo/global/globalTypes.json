@@ -1,0 +1,829 @@
+{
+	"operations": [
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"operationName": "LiquidityRateHistoryUpdate",
+			"operationType": "subscription",
+			"rootType": "Subscription",
+			"variables": [
+				{
+					"name": "reserveAddress",
+					"type": "String!"
+				}
+			],
+			"source": "subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {\n  reserveParamsHistoryItems(where: {reserve: $reserveAddress}, first: 10) {\n    __typename\n    variableBorrowRate\n    stableBorrowRate\n    liquidityRate\n    timestamp\n  }\n}",
+			"fields": [
+				{
+					"responseName": "reserveParamsHistoryItems",
+					"fieldName": "reserveParamsHistoryItems",
+					"type": "[ReserveParamsHistoryItem!]!",
+					"args": [
+						{
+							"name": "where",
+							"value": {
+								"reserve": {
+									"kind": "Variable",
+									"variableName": "reserveAddress"
+								}
+							},
+							"type": "ReserveParamsHistoryItem_filter"
+						},
+						{
+							"name": "first",
+							"value": 10,
+							"type": "Int"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "variableBorrowRate",
+							"fieldName": "variableBorrowRate",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "stableBorrowRate",
+							"fieldName": "stableBorrowRate",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "liquidityRate",
+							"fieldName": "liquidityRate",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "timestamp",
+							"fieldName": "timestamp",
+							"type": "Int!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "subscription LiquidityRateHistoryUpdate($reserveAddress: String!) {\n  reserveParamsHistoryItems(where: {reserve: $reserveAddress}, first: 10) {\n    __typename\n    variableBorrowRate\n    stableBorrowRate\n    liquidityRate\n    timestamp\n  }\n}",
+			"operationId": "e97ca5e651d492da8cc8ae0fcb21f64eeaef6ce7556bce6116155a06dafbd003"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"operationName": "ReserveUpdateSubscription",
+			"operationType": "subscription",
+			"rootType": "Subscription",
+			"variables": [
+				{
+					"name": "poolId",
+					"type": "String!"
+				}
+			],
+			"source": "subscription ReserveUpdateSubscription($poolId: String!) {\n  reserves(where: {pool: $poolId}) {\n    __typename\n    ...ReserveData\n  }\n}",
+			"fields": [
+				{
+					"responseName": "reserves",
+					"fieldName": "reserves",
+					"type": "[Reserve!]!",
+					"args": [
+						{
+							"name": "where",
+							"value": {
+								"pool": {
+									"kind": "Variable",
+									"variableName": "poolId"
+								}
+							},
+							"type": "Reserve_filter"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [
+						"ReserveData"
+					],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [
+				"ReserveData"
+			],
+			"sourceWithFragments": "subscription ReserveUpdateSubscription($poolId: String!) {\n  reserves(where: {pool: $poolId}) {\n    __typename\n    ...ReserveData\n  }\n}\nfragment ReserveData on Reserve {\n  __typename\n  id\n  underlyingAsset\n  name\n  symbol\n  decimals\n  isActive\n  usageAsCollateralEnabled\n  borrowingEnabled\n  stableBorrowRateEnabled\n  baseLTVasCollateral\n  optimalUtilisationRate\n  averageStableBorrowRate\n  stableRateSlope1\n  stableRateSlope2\n  baseVariableBorrowRate\n  variableRateSlope1\n  variableRateSlope2\n  liquidityIndex\n  reserveLiquidationThreshold\n  variableBorrowIndex\n  aToken {\n    __typename\n    id\n  }\n  availableLiquidity\n  stableBorrowRate\n  liquidityRate\n  totalBorrows\n  totalBorrowsStable\n  totalBorrowsVariable\n  totalLiquidity\n  utilizationRate\n  reserveLiquidationBonus\n  variableBorrowRate\n  price {\n    __typename\n    priceInEth\n  }\n  lastUpdateTimestamp\n}",
+			"operationId": "a05f3d1b866687e884921d7fd0ce5540935e32dcab7ce0e8a69f56224e604bf2"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"operationName": "UserPositionUpdateSubscription",
+			"operationType": "subscription",
+			"rootType": "Subscription",
+			"variables": [
+				{
+					"name": "userAddress",
+					"type": "String!"
+				},
+				{
+					"name": "poolId",
+					"type": "String!"
+				}
+			],
+			"source": "subscription UserPositionUpdateSubscription($userAddress: String!, $poolId: String!) {\n  userReserves(where: {user: $userAddress, pool: $poolId}) {\n    __typename\n    ...UserReserveData\n  }\n}",
+			"fields": [
+				{
+					"responseName": "userReserves",
+					"fieldName": "userReserves",
+					"type": "[UserReserve!]!",
+					"args": [
+						{
+							"name": "where",
+							"value": {
+								"user": {
+									"kind": "Variable",
+									"variableName": "userAddress"
+								},
+								"pool": {
+									"kind": "Variable",
+									"variableName": "poolId"
+								}
+							},
+							"type": "UserReserve_filter"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [
+						"UserReserveData"
+					],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [
+				"UserReserveData"
+			],
+			"sourceWithFragments": "subscription UserPositionUpdateSubscription($userAddress: String!, $poolId: String!) {\n  userReserves(where: {user: $userAddress, pool: $poolId}) {\n    __typename\n    ...UserReserveData\n  }\n}\nfragment UserReserveData on UserReserve {\n  __typename\n  principalATokenBalance\n  userBalanceIndex\n  redirectedBalance\n  interestRedirectionAddress\n  reserve {\n    __typename\n    id\n    underlyingAsset\n    name\n    symbol\n    decimals\n    liquidityRate\n    reserveLiquidationBonus\n    lastUpdateTimestamp\n    aToken {\n      __typename\n      id\n    }\n  }\n  usageAsCollateralEnabledOnUser\n  borrowRate\n  borrowRateMode\n  originationFee\n  principalBorrows\n  variableBorrowIndex\n  lastUpdateTimestamp\n}",
+			"operationId": "fbeed0557011991200677194589797d458400d624f4aa15c7181348b7d9f736f"
+		},
+		{
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"operationName": "UsdPriceEth",
+			"operationType": "subscription",
+			"rootType": "Subscription",
+			"variables": [],
+			"source": "subscription UsdPriceEth {\n  priceOracle(id: \"1\") {\n    __typename\n    usdPriceEth\n  }\n}",
+			"fields": [
+				{
+					"responseName": "priceOracle",
+					"fieldName": "priceOracle",
+					"type": "PriceOracle",
+					"args": [
+						{
+							"name": "id",
+							"value": "1",
+							"type": "ID!"
+						}
+					],
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "usdPriceEth",
+							"fieldName": "usdPriceEth",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": [],
+			"fragmentsReferenced": [],
+			"sourceWithFragments": "subscription UsdPriceEth {\n  priceOracle(id: \"1\") {\n    __typename\n    usdPriceEth\n  }\n}",
+			"operationId": "f9a585b5c9372d09ee6ca057145600f8edffd93591367101cba10184449c6e70"
+		}
+	],
+	"fragments": [
+		{
+			"typeCondition": "ReserveParamsHistoryItem",
+			"possibleTypes": [
+				"ReserveParamsHistoryItem"
+			],
+			"fragmentName": "ReserveRatesHistoryData",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"source": "fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {\n  __typename\n  variableBorrowRate\n  stableBorrowRate\n  liquidityRate\n  utilizationRate\n  timestamp\n}",
+			"fields": [
+				{
+					"responseName": "__typename",
+					"fieldName": "__typename",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableBorrowRate",
+					"fieldName": "variableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableBorrowRate",
+					"fieldName": "stableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "liquidityRate",
+					"fieldName": "liquidityRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "utilizationRate",
+					"fieldName": "utilizationRate",
+					"type": "BigDecimal!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "timestamp",
+					"fieldName": "timestamp",
+					"type": "Int!",
+					"isConditional": false,
+					"isDeprecated": false
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": []
+		},
+		{
+			"typeCondition": "UserReserve",
+			"possibleTypes": [
+				"UserReserve"
+			],
+			"fragmentName": "UserReserveData",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"source": "fragment UserReserveData on UserReserve {\n  __typename\n  principalATokenBalance\n  userBalanceIndex\n  redirectedBalance\n  interestRedirectionAddress\n  reserve {\n    __typename\n    id\n    underlyingAsset\n    name\n    symbol\n    decimals\n    liquidityRate\n    reserveLiquidationBonus\n    lastUpdateTimestamp\n    aToken {\n      __typename\n      id\n    }\n  }\n  usageAsCollateralEnabledOnUser\n  borrowRate\n  borrowRateMode\n  originationFee\n  principalBorrows\n  variableBorrowIndex\n  lastUpdateTimestamp\n}",
+			"fields": [
+				{
+					"responseName": "__typename",
+					"fieldName": "__typename",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "principalATokenBalance",
+					"fieldName": "principalATokenBalance",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "userBalanceIndex",
+					"fieldName": "userBalanceIndex",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "redirectedBalance",
+					"fieldName": "redirectedBalance",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "interestRedirectionAddress",
+					"fieldName": "interestRedirectionAddress",
+					"type": "Bytes!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "reserve",
+					"fieldName": "reserve",
+					"type": "Reserve!",
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "id",
+							"fieldName": "id",
+							"type": "ID!",
+							"isConditional": false,
+							"description": "Reserve address",
+							"isDeprecated": false
+						},
+						{
+							"responseName": "underlyingAsset",
+							"fieldName": "underlyingAsset",
+							"type": "Bytes!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "name",
+							"fieldName": "name",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "symbol",
+							"fieldName": "symbol",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "decimals",
+							"fieldName": "decimals",
+							"type": "Int!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "liquidityRate",
+							"fieldName": "liquidityRate",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "reserveLiquidationBonus",
+							"fieldName": "reserveLiquidationBonus",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "lastUpdateTimestamp",
+							"fieldName": "lastUpdateTimestamp",
+							"type": "Int!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "aToken",
+							"fieldName": "aToken",
+							"type": "AToken!",
+							"isConditional": false,
+							"isDeprecated": false,
+							"fields": [
+								{
+									"responseName": "__typename",
+									"fieldName": "__typename",
+									"type": "String!",
+									"isConditional": false,
+									"isDeprecated": false
+								},
+								{
+									"responseName": "id",
+									"fieldName": "id",
+									"type": "ID!",
+									"isConditional": false,
+									"description": "AToken address",
+									"isDeprecated": false
+								}
+							],
+							"fragmentSpreads": [],
+							"inlineFragments": []
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				},
+				{
+					"responseName": "usageAsCollateralEnabledOnUser",
+					"fieldName": "usageAsCollateralEnabledOnUser",
+					"type": "Boolean!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "borrowRate",
+					"fieldName": "borrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "borrowRateMode",
+					"fieldName": "borrowRateMode",
+					"type": "BorrowRateMode!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "originationFee",
+					"fieldName": "originationFee",
+					"type": "BigInt!",
+					"isConditional": false,
+					"description": "Amount in currency units included as fee",
+					"isDeprecated": false
+				},
+				{
+					"responseName": "principalBorrows",
+					"fieldName": "principalBorrows",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableBorrowIndex",
+					"fieldName": "variableBorrowIndex",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "lastUpdateTimestamp",
+					"fieldName": "lastUpdateTimestamp",
+					"type": "Int!",
+					"isConditional": false,
+					"isDeprecated": false
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": []
+		},
+		{
+			"typeCondition": "Reserve",
+			"possibleTypes": [
+				"Reserve"
+			],
+			"fragmentName": "ReserveData",
+			"filePath": "file:///Users/yelpadillo/workspace/work/myetherwalletv6/src/dapps/aave-dapp/apollo/queries/aave.graphql",
+			"source": "fragment ReserveData on Reserve {\n  __typename\n  id\n  underlyingAsset\n  name\n  symbol\n  decimals\n  isActive\n  usageAsCollateralEnabled\n  borrowingEnabled\n  stableBorrowRateEnabled\n  baseLTVasCollateral\n  optimalUtilisationRate\n  averageStableBorrowRate\n  stableRateSlope1\n  stableRateSlope2\n  baseVariableBorrowRate\n  variableRateSlope1\n  variableRateSlope2\n  liquidityIndex\n  reserveLiquidationThreshold\n  variableBorrowIndex\n  aToken {\n    __typename\n    id\n  }\n  availableLiquidity\n  stableBorrowRate\n  liquidityRate\n  totalBorrows\n  totalBorrowsStable\n  totalBorrowsVariable\n  totalLiquidity\n  utilizationRate\n  reserveLiquidationBonus\n  variableBorrowRate\n  price {\n    __typename\n    priceInEth\n  }\n  lastUpdateTimestamp\n}",
+			"fields": [
+				{
+					"responseName": "__typename",
+					"fieldName": "__typename",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "id",
+					"fieldName": "id",
+					"type": "ID!",
+					"isConditional": false,
+					"description": "Reserve address",
+					"isDeprecated": false
+				},
+				{
+					"responseName": "underlyingAsset",
+					"fieldName": "underlyingAsset",
+					"type": "Bytes!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "name",
+					"fieldName": "name",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "symbol",
+					"fieldName": "symbol",
+					"type": "String!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "decimals",
+					"fieldName": "decimals",
+					"type": "Int!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "isActive",
+					"fieldName": "isActive",
+					"type": "Boolean!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "usageAsCollateralEnabled",
+					"fieldName": "usageAsCollateralEnabled",
+					"type": "Boolean!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "borrowingEnabled",
+					"fieldName": "borrowingEnabled",
+					"type": "Boolean!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableBorrowRateEnabled",
+					"fieldName": "stableBorrowRateEnabled",
+					"type": "Boolean!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "baseLTVasCollateral",
+					"fieldName": "baseLTVasCollateral",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "optimalUtilisationRate",
+					"fieldName": "optimalUtilisationRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "averageStableBorrowRate",
+					"fieldName": "averageStableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableRateSlope1",
+					"fieldName": "stableRateSlope1",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableRateSlope2",
+					"fieldName": "stableRateSlope2",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "baseVariableBorrowRate",
+					"fieldName": "baseVariableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableRateSlope1",
+					"fieldName": "variableRateSlope1",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableRateSlope2",
+					"fieldName": "variableRateSlope2",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "liquidityIndex",
+					"fieldName": "liquidityIndex",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "reserveLiquidationThreshold",
+					"fieldName": "reserveLiquidationThreshold",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableBorrowIndex",
+					"fieldName": "variableBorrowIndex",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "aToken",
+					"fieldName": "aToken",
+					"type": "AToken!",
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "id",
+							"fieldName": "id",
+							"type": "ID!",
+							"isConditional": false,
+							"description": "AToken address",
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				},
+				{
+					"responseName": "availableLiquidity",
+					"fieldName": "availableLiquidity",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "stableBorrowRate",
+					"fieldName": "stableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "liquidityRate",
+					"fieldName": "liquidityRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "totalBorrows",
+					"fieldName": "totalBorrows",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "totalBorrowsStable",
+					"fieldName": "totalBorrowsStable",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "totalBorrowsVariable",
+					"fieldName": "totalBorrowsVariable",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "totalLiquidity",
+					"fieldName": "totalLiquidity",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "utilizationRate",
+					"fieldName": "utilizationRate",
+					"type": "BigDecimal!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "reserveLiquidationBonus",
+					"fieldName": "reserveLiquidationBonus",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "variableBorrowRate",
+					"fieldName": "variableBorrowRate",
+					"type": "BigInt!",
+					"isConditional": false,
+					"isDeprecated": false
+				},
+				{
+					"responseName": "price",
+					"fieldName": "price",
+					"type": "PriceOracleAsset!",
+					"isConditional": false,
+					"isDeprecated": false,
+					"fields": [
+						{
+							"responseName": "__typename",
+							"fieldName": "__typename",
+							"type": "String!",
+							"isConditional": false,
+							"isDeprecated": false
+						},
+						{
+							"responseName": "priceInEth",
+							"fieldName": "priceInEth",
+							"type": "BigInt!",
+							"isConditional": false,
+							"isDeprecated": false
+						}
+					],
+					"fragmentSpreads": [],
+					"inlineFragments": []
+				},
+				{
+					"responseName": "lastUpdateTimestamp",
+					"fieldName": "lastUpdateTimestamp",
+					"type": "Int!",
+					"isConditional": false,
+					"isDeprecated": false
+				}
+			],
+			"fragmentSpreads": [],
+			"inlineFragments": []
+		}
+	],
+	"typesUsed": [
+		{
+			"kind": "ScalarType",
+			"name": "BigInt"
+		},
+		{
+			"kind": "ScalarType",
+			"name": "BigDecimal"
+		},
+		{
+			"kind": "ScalarType",
+			"name": "Bytes"
+		},
+		{
+			"kind": "EnumType",
+			"name": "BorrowRateMode",
+			"values": [
+				{
+					"name": "None",
+					"isDeprecated": false
+				},
+				{
+					"name": "Stable",
+					"isDeprecated": false
+				},
+				{
+					"name": "Variable",
+					"isDeprecated": false
+				}
+			]
+		}
+	],
+	"unionTypes": [],
+	"interfaceTypes": []
+}

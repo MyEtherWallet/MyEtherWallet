@@ -6,6 +6,8 @@ import dappsSubmission from './dapps-submission/en_US';
 import home from './home/en_US';
 import footer from './footer/en_US';
 import gettingStarted from './getting-started/en_US';
+import privacyPolicy from './privacy-policy/en_US';
+import termsOfService from './terms-of-conditions/en_US';
 import createWallet from './create-wallet/en_US';
 import accessWallet from './access-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
@@ -17,7 +19,6 @@ import trezorError from './errors-trezor/en_US';
 import bcvaultError from './errors-bcvault/en_US';
 import coolWalletError from './errors-coolwallet/en_US';
 import ledgerError from './errors-ledger/en_US';
-import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import bitbox02Error from './errors-bitbox02/en_US';
@@ -38,13 +39,12 @@ import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import notifications from './notifications/en_US';
 import mewcx from './mew-cx/en_US';
-import dappsAmbrpay from './dapps-ambrpay/en_US';
+import ambrpay from './dapps-ambrpay/en_US';
 import phishing from './other/phishing/en_US';
-import dappsAave from './dapps-aave/en_US';
+import aave from './dapps-aave/en_US';
 import header from './header/en_US';
-import dappsMCDMaker from './dapps-mcd-maker/en_US';
+import mcdMaker from './dapps-mcd-maker/en_US';
 import dappsStaked from './dapps-staked/en_US';
-import dappsMisc from './dapps-misc/en_US';
 
 const en_US = {
   common: common,
@@ -52,6 +52,8 @@ const en_US = {
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,
+  privacyPol: privacyPolicy,
+  termsOfService: termsOfService,
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,
@@ -63,7 +65,6 @@ const en_US = {
   coolWalletError: coolWalletError,
   ledgerError: ledgerError,
   bcvaultError: bcvaultError,
-  secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   bitbox02Error: bitbox02Error,
@@ -86,12 +87,11 @@ const en_US = {
   helpCenter: helpCenter,
   notifications: notifications,
   mewcx: mewcx,
-  dappsAmbrpay: dappsAmbrpay,
+  ambrpay: ambrpay,
   phishing: phishing,
-  dappsAave: dappsAave,
+  aave: aave,
   header: header,
-  dappsMCDMaker: dappsMCDMaker,
-  dappsStaked: dappsStaked,
-  dappsMisc: dappsMisc
+  mcdMaker: mcdMaker,
+  dappsStaked: dappsStaked
 };
 export default en_US;

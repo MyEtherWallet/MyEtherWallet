@@ -46,7 +46,7 @@
       "button-buy": "Buy Now",
       "button-choose": "Continue"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
   },
   "bitbox": {
     "modal": {
@@ -62,7 +62,7 @@
     "modal": {
       "title": "Access by Software",
       "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet"
+      "purchase-link": "Purchase a hardware wallet...."
     }
   },
   "metamask": {
@@ -78,7 +78,7 @@
       "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
       "button-install": "Install Metamask",
       "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
+      "terms": "To Access my Wallet, I accept "
     }
   },
   "mnemonic": {
@@ -107,7 +107,8 @@
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
     "id": "ID",
-    "icon": "icon"
+    "icon": "icon",
+    "select-title": "Select Address and Network"
   },
   "path": {
     "string": "Path",
@@ -127,7 +128,7 @@
     "terms": "Terms and Conditions"
   },
   "json-file": "Keystore File",
-  "accept-terms": "To Access my Wallet, I accept {terms}",
+  "accept-terms": "To Access my Wallet, I accept ",
   "hd-derivation-path": "HD Derivation Path",
   "custom-paths": "Custom Paths",
   "add-custom-path": "Add Custom Path",
@@ -150,5 +151,8 @@
   "get-it-now": "Get It Now",
   "or": "OR CONNECT WITH",
   "wallet-connect": "WalletConnect",
-  "wallet-link": "WalletLink"
+  "wallet-link": "WalletLink",
+  "previous": "Previous",
+  "next": "Next",
+  "access-my-wallet": "Access My Wallet"
 }

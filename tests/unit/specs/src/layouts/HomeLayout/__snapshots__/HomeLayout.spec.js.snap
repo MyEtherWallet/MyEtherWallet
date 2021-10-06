@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeLayout.vue resnders correctly 1`] = `
+<div
+  class="home"
+>
+  
+  HELLO
+
+</div>
+`;

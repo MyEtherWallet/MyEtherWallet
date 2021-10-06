@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="38px" height="38px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Oval Copy 12</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="14.5070348%" y1="38.8503086%" x2="100%" y2="56.4903777%" id="linearGradient-1">
+            <stop stop-color="#F09819" offset="0%"></stop>
+            <stop stop-color="#FF5858" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="1440" height="680"></rect>
+    </defs>
+    <g id="Landing-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-70" transform="translate(-1283.000000, -368.000000)">
+            <g id="Group-20">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <g id="Mask"></g>
+            </g>
+            <g id="Group-36" transform="translate(1283.000000, 369.000000)">
+                <g id="Group-7">
+                    <g id="ETH">
+                        <circle id="Oval" stroke="#FFFFFF" cx="18.855618" cy="18" r="18"></circle>
+                        <path d="M19.2173354,7.71428571 L25.3710922,19.3504025 L19.2173354,22.4919784 L12.8571429,19.3504025 L19.2173354,7.71428571 Z M12.8571429,20.480976 L19.2109343,23.6407538 L25.3710922,20.480976 L19.2109343,28.2857143 L12.8571429,20.480976 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="Group-34" transform="translate(1283.000000, 265.000000)">
+                <g id="BTC"></g>
+            </g>
+        </g>
+    </g>
+</svg>

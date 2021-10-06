@@ -13,12 +13,12 @@ noscript > .text-container {
   flex-direction: column;
 }
 
-p,
-h1,
-h3 {
+noscript p,
+noscript h1,
+noscript h3 {
   margin: 5px 10px;
 }
 
-noscript > .img-container > img {
+noscript>.img-container>img {
   height: 200px;
 }

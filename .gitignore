@@ -8,6 +8,7 @@ yarn-error.log*
 selenium-debug.log
 
 # Editor directories and files
+.cache
 .idea
 *.suo
 *.ntvs*
@@ -15,11 +16,14 @@ selenium-debug.log
 *.sln
 .npm
 .config
-.env
-.husky
 /tests/unit/coverage/
 release
 chrome-extension
+.env
 
 # Generated files
 src/_generated
+
+
+# Apollo files
+src/apollo/global/globalTypes.json

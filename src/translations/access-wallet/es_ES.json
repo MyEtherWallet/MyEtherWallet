@@ -1,31 +1,21 @@
 {
   "mewconnect": {
-    "option-text": "To see your mobile wallet on MEW web.",
+    "option-text": "Scan the QR code to access with MEW wallet or MEWconnect",
     "modal": {
       "title": "Mobile Access",
-      "text1": "Please use MEW wallet App to scan the QR code above",
-      "text2": "Don't have the app? {action}",
-      "download-now": "Download now."
+      "text1": "Please use MEW wallet or MEWconnect App to scan the QR code above",
+      "text2": "Don't have the MEW wallet app? Download now."
     },
-    "scan": "Scan QR code with MEW wallet App",
-    "warning": "MEW wallet is not compatible with iPads.",
-    "instructions": {
-      "step1": "Step 1: {first}",
-      "step2": "Step 2: {second}",
-      "step3": "Step 3: {third}",
-      "first": "Open MEW wallet App",
-      "second": "Tap {icon-pos}",
-      "icon-pos": "icon on the top right",
-      "third": "Scan the QR code"
-    }
+    "protocol": "MEWconnect Protocol",
+    "warning": "MEW wallet and MEWconnect apps are not compatible with iPads."
   },
   "mobile-app": {
     "option-title": "Mobile App",
     "examples": "WalletConnect; WalletLink",
     "modal": {
-      "title": "Access by Mobile App"
+      "title": "Mobile Access"
     },
-    "mew-wallet": "MEW wallet"
+    "mew-connect": "MEWconnect"
   },
   "finney": {
     "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
@@ -46,7 +36,7 @@
       "button-buy": "Buy Now",
       "button-choose": "Continue"
     },
-    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, KeepKey, XWallet"
   },
   "bitbox": {
     "modal": {
@@ -62,7 +52,7 @@
     "modal": {
       "title": "Access by Software",
       "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-      "purchase-link": "Purchase a hardware wallet"
+      "purchase-link": "Purchase a hardware wallet...."
     }
   },
   "metamask": {

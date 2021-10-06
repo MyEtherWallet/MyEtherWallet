@@ -1,0 +1,53 @@
+query getEthTransfersV2($owner: String!, $limit: Int, $nextKey: String) {
+    getEthTransfersV2(owner: $owner, filter: TO, limit: $limit, nextKey: $nextKey) {
+      transfers {
+        transfer {
+          transactionHash
+        }
+      }
+      nextKey
+    }
+}
+
+query getTransactionsByHashes($hashes: [String]!) {
+  getTransactionsByHashes(hashes: $hashes) {
+    from
+    gas
+    gasPrice
+    gasUsed
+    hash
+    timestamp
+    nonce
+    to
+    value
+    input
+    status
+  }
+}
+
+query getTransactionByHash($hash: String!) {
+  getTransactionByHash(hash: $hash) {
+    from
+    gas
+    gasPrice
+    gasUsed
+    hash
+    timestamp
+    nonce
+    to
+    value
+    input
+    status
+  }
+}
+
+subscription pendingTransaction($owner: String) {
+    pendingTransaction(owner: $owner) {
+        transactionHash
+        to
+    }
+}
+
+subscription transactionEvent($hash: String!) {
+    transactionEvent(hash: $hash)
+}

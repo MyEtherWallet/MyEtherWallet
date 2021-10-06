@@ -35,7 +35,6 @@
   "get-started": "立刻开始",
   "tutorial": "教程",
   "what-is-that": "那是什么？",
-  "invalid-private-key": "Invalid private key verify the length of the key",
   "confirm-logout": "您确定要登出钱包吗？",
   "feedback": {
     "send-us-feedback": "如果您想向我们发送反馈意见，请使用",
@@ -117,11 +116,6 @@
     "strong": "Strong strength password",
     "strong-note": "Good! Your password is very strong."
   },
-  "decision-tree": {
-    "subcategories": "Subcategories",
-    "no-results": "Oops! No search results found.",
-    "quick-help": "Quick Help"
-  },
   "optional": "Optional",
   "value": "Value",
   "network": "Network",
@@ -148,16 +142,15 @@
   "having-issues": "Having issues?",
   "issue-info": "Issue information",
   "learn-more": "Learn more",
-  "dapps": "Dapps",
+  "dapps": "DApps",
   "gas": {
     "current-gas": "Current Gas Price",
-    "limit": "Gas Limit (usually ranges from 21,000 to 500,000)",
-    "price": "Gas Price (in Gwei)",
+    "limit": "Gas Limit",
+    "price": "Gas Price",
     "gwei": "Gwei",
     "wei": "Wei",
     "fee": "Fee",
-    "string": "Gas",
-    "price-range": "Gas Price ranges from 5 gwei to infinity."
+    "string": "Gas"
   },
   "search": "Search",
   "loading": "Loading",
@@ -186,5 +179,5 @@
   "language": "Language",
   "logout": "Logout",
   "settings": "Settings",
-  "exit-dapp": "Exit DApp"
+  "exit-dapp": "Exit Dapp"
 }

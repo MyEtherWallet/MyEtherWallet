@@ -4,9 +4,7 @@ module.exports = {
     WITH_NETWORK: false,
     VERSION: 'test',
     NODE_ENV: 'test',
-    ROUTER_MODE: 'hash',
-    BUILD_TYPE: 'web',
-    FULL_SOURCEMAPS: 'false'
+    ROUTER_MODE: 'hash'
   },
   collectCoverageFrom: ['src/**/*.{js,vue}'],
   coveragePathIgnorePatterns: [
@@ -20,12 +18,12 @@ module.exports = {
   reporters: ['default', 'jest-skipped-reporter'],
   transform: {
     '^.+\\.vue$': 'vue-jest',
-    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|gif|ttf|woff|woff2)$':
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$':
       'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest'
   },
   moduleNameMapper: {
-    '^@/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
+    '^@/utils/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@@/(.*)$': '<rootDir>/tests/unit/$1',
     '^@/tests$': '<rootDir>/tests/index.js',
@@ -34,15 +32,16 @@ module.exports = {
     '\\.md': '<rootDir>/tests/unit/__mocks__/mdMockup.js'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f|@coolwallets|bitbox02-api/src/(?!(bitbox02-api-go*))))'
+    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input))'
   ],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [
-    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
+    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)',
+    '**/__tests__/*.(js | jsx | ts | tsx)',
+    '**/tests/*.spec.js'
   ],
   testEnvironmentOptions: {},
-  testURL: 'http://localhost/',
-  setupFiles: ['jest-canvas-mock'],
+  testURL: 'https://localhost:8080',
   setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };

@@ -9,10 +9,10 @@
     "info": "Any question? Get in touch and we’ll get back as soon as we can."
   },
   "sotd": {
-    "title": "A Joint Effort With State of The Dapps",
+    "title": "A Joint Effort With State of The DApps",
     "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on {url}",
     "url": "stateofthedapps.com",
-    "name": "State of the Dapps"
+    "name": "State of the DApps"
   },
   "about-your-dapp": {
     "name": "Dapp name",
@@ -33,10 +33,10 @@
     "dapp-status": "Dapp status",
     "launch-us": "Launch in the U.S. market",
     "mock-flow-title": "Mock user flow",
-    "mock-user-flow": "For live Dapps, representative documentation of the current user flow. For dapps in development, a rough mockup of what prospective user flow as it might look on the MEW interface.",
+    "mock-user-flow": "For live DApps, representative documentation of the current user flow. For dapps in development, a rough mockup of what prospective user flow as it might look on the MEW interface.",
     "mock-requirements": "Dimensions must be 1200px width by 630px height; JPEG or PDF file only; Image size no large than 5MB",
     "contract-address-title": "Contract address",
-    "contract-address": "Dapps without contract addresses will not be considered.",
+    "contract-address": "DApps without contract addresses will not be considered.",
     "dapp-icon-title": "Dapp icon",
     "dapp-icon-placeholder": "Drop your icon here",
     "dapp-icon": "Dimensions must be 192px width by 192px height (JPEG or PNG format)",

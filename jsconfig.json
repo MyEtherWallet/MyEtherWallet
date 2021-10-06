@@ -5,5 +5,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules", "tests", "./dist", "./chrome-extension"]
+  "exclude": ["node_modules", "tests"]
 }
