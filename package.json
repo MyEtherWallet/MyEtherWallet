@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.3.0",
+  "version": "6.2.0-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -81,7 +81,7 @@
     "walletlink": "2.1.11"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "13.1.0",
+    "@commitlint/config-conventional": "13.2.0",
     "@ledgerhq/hw-app-eth": "6.6.0",
     "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
     "@ledgerhq/hw-transport-webusb": "6.7.0",
@@ -98,12 +98,12 @@
     "axios": "0.21.4",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "27.1.0",
+    "babel-jest": "27.2.4",
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.0.1",
     "bip39": "3.0.4",
     "codecov": "3.8.3",
-    "commitlint": "13.1.0",
+    "commitlint": "13.2.0",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
