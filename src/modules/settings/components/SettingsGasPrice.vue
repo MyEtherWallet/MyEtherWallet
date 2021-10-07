@@ -10,10 +10,11 @@
       Economic / Regular / Fast
     =====================================================================================
     -->
+    <!-- :id="[setDisabled(b.title)]" -->
     <div>
       <div
         v-for="(b, key) in buttons"
-        :id="[costInEth(b.title) > balance ? 'disabled' : '']"
+        :id="[isDiabled(b.title)]"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
         :class="[selected === b.title ? 'active' : '']"
@@ -54,11 +55,43 @@
             <div class="mew-heading-3 font-weight-regular">
               {{ b.priority }}
             </div>
-            <div class="prices d-flex">
-              <div class="secondary--text mr-2">
-                {{ costInEth(b.title) }} {{ currencyName }}
+            <div v-if="!fromSettings" class="prices d-flex">
+              <div
+                v-if="b.title === gasPriceTypes.ECONOMY"
+                class="secondary--text mr-2"
+              >
+                {{ economyInEth }} {{ currencyName }}
               </div>
-              <div class="textSecondary--text">${{ costInUSD(b.title) }}</div>
+              <div
+                v-if="b.title === gasPriceTypes.REGULAR"
+                class="secondary--text mr-2"
+              >
+                {{ regularInEth }} {{ currencyName }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.FAST"
+                class="secondary--text mr-2"
+              >
+                {{ fastInEth }} {{ currencyName }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.ECONOMY"
+                class="textSecondary--text"
+              >
+                ${{ economyInUsd }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.REGULAR"
+                class="textSecondary--text"
+              >
+                ${{ regularInUsd }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.FAST"
+                class="textSecondary--text"
+              >
+                ${{ fastInUsd }}
+              </div>
             </div>
           </div>
         </div>
@@ -103,11 +136,12 @@
     </div>
     <div v-else class="mt-4 d-flex flex-column align-center">
       <mew-button
+        v-if="!fromSettings"
         title="Save"
         has-full-width
         @click.native="closeDialog"
       ></mew-button>
-      <div class="mt-3">
+      <div v-if="!fromSettings" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
           >Buy more ETH</span
@@ -154,9 +188,9 @@ export default {
       type: Function,
       default: () => {}
     },
-    balance: {
-      type: String,
-      default: '0'
+    fromSettings: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -169,9 +203,9 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['swapLink', 'gasPriceByType']),
+    ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('wallet', ['balanceInETH']),
     // currentValue() {
     //   for (const but of this.buttons) {
     //     if (but.title === this.selected) {
@@ -201,6 +235,33 @@ export default {
     */
     currencyName() {
       return this.network.type.currencyName;
+    },
+    economyInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
+      return formatFloatingPointValue(txFee).value;
+    },
+    regularInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
+      return formatFloatingPointValue(txFee).value;
+    },
+    fastInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.FAST);
+      return formatFloatingPointValue(txFee).value;
+    },
+    economyInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
+      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
+        .value;
+    },
+    regularInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
+      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
+        .value;
+    },
+    fastInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.FAST);
+      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
+        .value;
     }
   },
   watch: {
@@ -236,48 +297,18 @@ export default {
       // eslint-disable-next-line
       window.open(`${this.swapLink}`, '_blank');
     },
-    costInEth(priority) {
-      switch (priority) {
-        case gasPriceTypes.ECONOMY: {
-          return this.calcFeeInEth(gasPriceTypes.ECONOMY);
-        }
-        case gasPriceTypes.REGULAR: {
-          return this.calcFeeInEth(gasPriceTypes.REGULAR);
-        }
-        case gasPriceTypes.FAST: {
-          return this.calcFeeInEth(gasPriceTypes.FAST);
-        }
-        default:
-          return '';
-      }
-    },
-    costInUSD(priority) {
-      switch (priority) {
-        case gasPriceTypes.ECONOMY: {
-          return this.calcFeeinUSD(gasPriceTypes.ECONOMY);
-        }
-        case gasPriceTypes.REGULAR: {
-          return this.calcFeeinUSD(gasPriceTypes.REGULAR);
-        }
-        case gasPriceTypes.FAST: {
-          return this.calcFeeinUSD(gasPriceTypes.FAST);
-        }
-        default:
-          return '';
-      }
-    },
-    calcFeeInEth(priority) {
-      return formatFloatingPointValue(this.calcTxFee(priority)).value;
-    },
-    calcFeeinUSD(priority) {
-      return formatFiatValue(
-        BigNumber(this.calcTxFee(priority)).times(this.fiatValue).toFixed(2)
-      ).value;
-    },
     calcTxFee(priority) {
       return fromWei(
         toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
       ).toString();
+    },
+    isDiabled(priority) {
+      const txFee = this.calcTxFee(priority);
+      const cost = formatFloatingPointValue(txFee).value;
+      if (!this.fromSettings && Number(cost) > Number(this.balanceInETH)) {
+        return 'disabled';
+      }
+      return '';
     }
   }
 };

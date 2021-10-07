@@ -14,7 +14,6 @@
       :tx-fee-formatted="txFeeFormatted"
       :tx-fee-usd="feeInUsd"
       :total-gas-limit="totalGasLimit"
-      :balance="balance"
       @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
@@ -170,10 +169,6 @@ export default {
       default: false
     },
     totalGasLimit: {
-      type: String,
-      default: '0'
-    },
-    balance: {
       type: String,
       default: '0'
     }

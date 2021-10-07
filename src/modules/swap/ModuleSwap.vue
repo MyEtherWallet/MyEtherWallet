@@ -242,7 +242,6 @@
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
                   :total-gas-limit="totalGasLimit"
-                  :balance="displayBalance"
                   class="mt-10 mt-sm-16"
                   @onLocalGasPrice="handleLocalGasPrice"
                 />
@@ -265,16 +264,6 @@
                 </div>
               </div>
             </v-slide-y-transition>
-            <div class="text-center mt-10 mt-sm-15">
-              <mew-button
-                title="Next"
-                :has-full-width="true"
-                :disabled="disableNext"
-                btn-size="xlarge"
-                style="max-width: 240px"
-                @click.native="showConfirm"
-              />
-            </div>
           </div>
         </template>
         <!--

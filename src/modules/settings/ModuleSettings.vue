@@ -22,8 +22,8 @@
           :selected="gasPriceType"
           :set-selected="setSelected"
           :total-gas-limit="gasPrice"
-          :set-custom-gas-price="setCustomGasPrice"
           :global="true"
+          :from-settings="true"
         />
       </template>
       <template #panelBody2>
@@ -80,7 +80,6 @@ import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
@@ -150,10 +149,8 @@ export default {
     panelItems() {
       return [
         {
-          name: 'Gas price',
-          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
-            this.gasPriceType
-          })`
+          name: 'Default transaction priority',
+          subtext: this.setPriority(this.gasPriceType)
         },
         {
           name: 'Import configurations'
@@ -232,6 +229,14 @@ export default {
     },
     exportStore() {
       this.settingsHandler.exportStore();
+    },
+    setPriority(priority) {
+      const priorities = {
+        economy: 'Normal',
+        regular: 'Higher',
+        fast: 'Highest'
+      };
+      return priorities[priority];
     }
   }
 };
