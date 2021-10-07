@@ -213,7 +213,7 @@
       :hide-custom-paths="onKeepkey || onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
-      :paths="onLedger ? [] : paths"
+      :paths="paths"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />

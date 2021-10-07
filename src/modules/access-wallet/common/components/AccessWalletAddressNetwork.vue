@@ -1,8 +1,7 @@
 <template>
   <div style="width: 100%">
-    <div v-if="paths.length > 0" class="text-right mb-3">
+    <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
       <access-wallet-derivation-path
-        v-if="!hideCustomPaths"
         :selected-path="selectedPath"
         :paths="paths"
         @setPath="setPath"
