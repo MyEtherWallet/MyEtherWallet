@@ -694,7 +694,7 @@ export default {
      */
     notEnoughEth() {
       try {
-        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
         const isNotEnoughEth = this.isFromTokenMain
           ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
           : balanceAfterFees.isNeg();
@@ -717,10 +717,13 @@ export default {
             token.contract.toLowerCase() ===
             this.fromTokenType.contract.toLowerCase()
         );
-        return hasBalance && hasBalance.balance && hasBalance.decimals
+        return this.isFromTokenMain
+          ? this.getTokenBalance(toBN(this.balanceInWei), 18)
+          : hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
           : new BigNumber(0);
       }
+
       return new BigNumber(0);
     },
     /**
@@ -735,7 +738,7 @@ export default {
      * Used to show error messages for the amount input component
      */
     amountErrorMessage() {
-      if (!this.initialLoad && !this.isLoading) {
+      if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
         /* Balance is <= 0*/
         if (this.availableBalance.lte(0)) {
           return this.isFromTokenMain
