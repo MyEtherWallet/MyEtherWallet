@@ -17,6 +17,7 @@
       :not-enough-eth="notEnoughEth"
       :total-gas-limit="totalGasLimit"
       :close-dialog="closeDialog"
+      :from-settings="false"
     />
   </app-simple-dialog>
 </template>

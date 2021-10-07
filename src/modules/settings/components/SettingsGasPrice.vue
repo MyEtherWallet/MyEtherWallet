@@ -135,18 +135,18 @@
       </a>
     </div> -->
     <div class="mt-4 d-flex flex-column align-center">
-      <mew-button
-        v-if="!fromSettings"
-        title="Save"
-        has-full-width
-        @click.native="closeDialog"
-      ></mew-button>
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
           >Buy more ETH</span
         >
       </div>
+      <mew-button
+        v-else-if="!fromSettings"
+        title="Save"
+        has-full-width
+        @click.native="closeDialog"
+      ></mew-button>
     </div>
   </div>
 </template>
@@ -306,7 +306,10 @@ export default {
     isDiabled(priority) {
       const txFee = this.calcTxFee(priority);
       const cost = formatFloatingPointValue(txFee).value;
-      if (!this.fromSettings && Number(cost) > Number(this.balanceInETH)) {
+
+      if (!this.fromSettings && this.notEnoughEth) {
+        return 'disabled';
+      } else if (Number(cost) > Number(this.balanceInETH)) {
         return 'disabled';
       }
       return '';
