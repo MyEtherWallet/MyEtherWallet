@@ -122,7 +122,7 @@
       </div>
     </div>
 
-    <div v-if="showNotEnoughEthWarning" class="mt-6 mb-5 error--text pl-4">
+    <!-- <div v-if="showNotEnoughEthWarning" class="mt-6 mb-5 error--text pl-4">
       <div>Not enough funds to increase priority.</div>
       <div>{{ unavailableSpeed }} Priority is not selectable</div>
       <a
@@ -133,15 +133,15 @@
       >
         Buy more ETH
       </a>
-    </div>
-    <div v-else class="mt-4 d-flex flex-column align-center">
+    </div> -->
+    <div class="mt-4 d-flex flex-column align-center">
       <mew-button
         v-if="!fromSettings"
         title="Save"
         has-full-width
         @click.native="closeDialog"
       ></mew-button>
-      <div v-if="!fromSettings" class="mt-3">
+      <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
           >Buy more ETH</span
@@ -197,8 +197,8 @@ export default {
     return {
       gasPriceTypes: gasPriceTypes,
       previousSelected: null,
-      showNotEnoughEthWarning: false,
-      unavailableSpeed: ''
+      showNotEnoughEthWarning: false
+      // unavailableSpeed: ''
     };
   },
   computed: {
@@ -269,16 +269,17 @@ export default {
      * If not enough balance to cover new priority, go back to previous priority
      */
     selected() {
-      if (this.notEnoughEth) {
-        this.unavailableSpeed =
-          this.selected == 'fast'
-            ? 'Highest'
-            : this.selected == 'regular'
-            ? 'Higher'
-            : '';
-        this.setSelected(this.previousSelected);
-        this.showNotEnoughEthWarning = true;
-      }
+      // console.log('selected', this.selected);
+      // if (this.notEnoughEth) {
+      //   this.unavailableSpeed =
+      //     this.selected == 'fast'
+      //       ? 'Highest'
+      //       : this.selected == 'regular'
+      //       ? 'Higher'
+      //       : '';
+      //   this.setSelected(this.previousSelected);
+      //   this.showNotEnoughEthWarning = true;
+      // }
 
       if (!this.notEnoughEth) {
         this.previousSelected = this.selected;
