@@ -210,9 +210,10 @@
     <access-wallet-address-network
       v-if="step === 3"
       :back="null"
+      :hide-custom-paths="onKeepkey || onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
-      :paths="onLedger ? [] : paths"
+      :paths="paths"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />
