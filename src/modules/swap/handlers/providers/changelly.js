@@ -134,11 +134,20 @@ class Changelly {
         });
     });
   }
-  getTrade({ fromAddress, toAddress, quote, fromT, toT, fromAmount }) {
+  getTrade({
+    fromAddress,
+    toAddress,
+    quote,
+    fromT,
+    toT,
+    fromAmount,
+    refundAddress
+  }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
+    const providedRefundAddress = refundAddress ? refundAddress : fromAddress;
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
@@ -147,7 +156,7 @@ class Changelly {
         params: {
           from: fromT.symbol.toLowerCase(),
           to: toT.symbol.toLowerCase(),
-          refundAddress: fromAddress,
+          refundAddress: providedRefundAddress,
           address: toAddress,
           amountFrom: queryAmount.toString(),
           rateId: quote.rateId

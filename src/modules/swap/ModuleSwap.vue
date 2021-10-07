@@ -377,7 +377,8 @@ export default {
       selectedProvider: {},
       localGasPrice: '0',
       localGasType: 'economy',
-      refundAddress: ''
+      refundAddress: '',
+      isValidRefundAddr: false
     };
   },
   computed: {
@@ -561,9 +562,9 @@ export default {
      */
     isFromNative() {
       if (this.isLoading) return false;
-      return this.fromTokenType.hasOwnProperty('isEth')
-        ? !this.fromTokenType.isEth
-        : !isAddress(this.fromTokenType.contract);
+      return this.fromTokenType?.hasOwnProperty('isEth')
+        ? !this.fromTokenType?.isEth
+        : !isAddress(this.fromTokenType?.contract);
     },
     /**
      * Returns correct balance to be dispalyed above From Selection field
@@ -890,6 +891,7 @@ export default {
     },
     network() {
       if (this.isAvailable) {
+        console.log('i got called randomly tf');
         this.clear();
       }
     },
@@ -909,8 +911,14 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
-    setRefundAddr(val) {
-      this.refundAddress = val;
+    /**
+     * Handles emitted values from
+     * module-address-book
+     */
+    setRefundAddr(address, valid) {
+      this.refundAddress = address;
+      this.isValidRefundAddr = valid;
+      if (valid) this.setProvider(0);
     },
     setupSwap() {
       this.isLoading = !this.prefetched;
@@ -1161,22 +1169,28 @@ export default {
     },
     getTrade: _.debounce(function (idx) {
       if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
+      if (this.isFromNative && !this.isValidRefundAddr) return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
       if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
+      const swapObj = {
+        fromAddress: this.address,
+        toAddress: this.toAddress,
+        provider: this.availableQuotes[idx].provider,
+        fromT: this.fromTokenType,
+        toT: this.toTokenType,
+        quote: this.availableQuotes[idx],
+        fromAmount: new BigNumber(this.tokenInValue).times(
+          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        )
+      };
+
+      if (this.isFromNative) {
+        swapObj['refundAddress'] = this.refundAddress;
+      }
       this.swapper
-        .getTrade({
-          fromAddress: this.address,
-          toAddress: this.toAddress,
-          provider: this.availableQuotes[idx].provider,
-          fromT: this.fromTokenType,
-          toT: this.toTokenType,
-          quote: this.availableQuotes[idx],
-          fromAmount: new BigNumber(this.tokenInValue).times(
-            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-          )
-        })
+        .getTrade(swapObj)
         .then(trade => {
           this.allTrades[idx] = trade;
           this.setupTrade(trade);

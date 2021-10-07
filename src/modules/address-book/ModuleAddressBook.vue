@@ -207,6 +207,10 @@ export default {
           } else {
             this.isValidAddress = false;
             this.loadedAddressValidation = true;
+            this.$emit('setAddress', value, this.isValidAddress, {
+              type: inputType,
+              value: value
+            });
           }
         }
       }
