@@ -216,7 +216,7 @@ export default {
       const params = [];
       let details = {};
       for (const _input of this.constructorInputs) {
-        if (_input.type.includes('[]'))
+        if (_input.type.includes('[]') && _input.value)
           params.push(stringToArray(_input.value));
         else params.push(_input.value);
       }
@@ -247,7 +247,9 @@ export default {
         });
     },
     valueInput(idx, value) {
-      this.constructorInputs[idx].value = value;
+      if (idx && value) {
+        this.constructorInputs[idx].value = value;
+      }
       this.inputsValid = true;
       for (const _input of this.constructorInputs) {
         if (

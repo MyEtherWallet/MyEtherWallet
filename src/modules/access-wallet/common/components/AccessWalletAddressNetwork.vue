@@ -294,7 +294,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     web3() {
       return new Web3(this.network.url);
     },

@@ -10,7 +10,6 @@ const state = {
   localStore: true,
   consentToTrack: false,
   displayedTrackingPopup: false,
-  addressBook: [],
   Errors: {},
   online: true,
   linkQuery: {},
