@@ -1,75 +1,15 @@
 <template>
   <div>
-    <app-modal
-      :show="showSuccessModal"
-      :title="successTitle"
-      :close="resetSuccess"
-      :close-only="true"
-      width="480"
-      @close="resetSuccess"
-    >
-      <template #dialogBody>
-        <div>
-          <!--
-          ====================================================================================
-            Lottie or icon
-          =====================================================================================
-          -->
-          <div
-            v-if="showSuccessModal"
-            v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
-          />
-          <!--
-          ====================================================================================
-            Body
-          =====================================================================================
-          -->
-          <div class="mew-body">
-            {{ successBodyText }}
-          </div>
-          <!--
-          ====================================================================================
-            Links
-          =====================================================================================
-          -->
-          <v-row class="justify-sm-space-around align-center pt-3" dense>
-            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
-              <a
-                class="d-flex justify-center justify-sm-end"
-                @click.stop="viewProgress"
-                >View Progress</a
-              >
-            </v-col>
-            <v-col cols="12" sm="auto" class="pb-2">
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.etherscan"
-                class="d-flex justify-center justify-sm-start"
-                >View on Etherscan
-                <v-icon color="primary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-            <v-col
-              v-if="network.type.isEthVMSupported.supported"
-              cols="12"
-              sm="auto"
-              class="pb-2"
-            >
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.ethvm"
-                class="d-flex justify-center"
-                >View on EthVM
-                <v-icon color="primary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-          </v-row>
-        </div>
-      </template>
-    </app-modal>
+    <success-modal
+      :show-success-modal="showSuccessModal"
+      :show-success-swap="showSuccessSwap"
+      :success-title="successTitle"
+      :reset-success="resetSuccess"
+      :reset="reset"
+      :network="network"
+      :links="links"
+      :success-body-text="successBodyText"
+    />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
@@ -284,6 +224,9 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+
+import SuccessModal from './components/SuccessModal';
+
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
@@ -312,7 +255,8 @@ export default {
     AppModal,
     ConfirmationSwapTransactionDetails,
     ConfirmationSendTransactionDetails,
-    ConfirmWithWallet
+    ConfirmWithWallet,
+    SuccessModal
   },
   data() {
     return {
@@ -320,6 +264,7 @@ export default {
       showSignOverlay: false,
       showSuccessModal: false,
       showSuccessSwap: false,
+      showCrossChain: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -478,12 +423,6 @@ export default {
       return this.showSuccessSwap
         ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
         : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
-    },
-    /**
-     * Property returns string, depending whether or not this is a swap or send
-     */
-    successLottie() {
-      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -545,8 +484,8 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
       _self.title = 'Verify Swap';
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-        await this.signTx();
+      if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        await _self.signTx();
       }
     });
 
@@ -569,7 +508,7 @@ export default {
         _self.showTxOverlay = true;
 
         if (!isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.signBatchTx();
+          _self.signBatchTx();
         }
       }
     );
@@ -595,9 +534,21 @@ export default {
           _self.showSignOverlay = true;
         })
         .catch(e => {
-          this.reset();
+          _self.reset();
           _self.instance.errorHandler(e);
         });
+    });
+    /**
+     * receives an @Object
+     */
+    EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
+      _self.title = `Send ${txObj.fromType}`;
+      _self.tx = txObj;
+      _self.showCrossChain = true;
+      _self.resolver = () => {
+        resolver();
+        _self.reset();
+      };
     });
   },
   methods: {
@@ -708,10 +659,6 @@ export default {
       }
       this.reset();
       this.showSuccess(hash);
-    },
-    viewProgress() {
-      EventBus.$emit('openNotifications');
-      this.reset();
     },
     showSuccess(param) {
       if (_.isArray(param)) {
@@ -937,8 +884,5 @@ $borderPanels: 1px solid var(--v-selectBorder-base) !important;
 }
 .expansion-panel-border-bottom {
   border-bottom: $borderPanels;
-}
-.lottie {
-  height: 120px;
 }
 </style>

@@ -255,7 +255,9 @@
                       :disabled="disableNext"
                       btn-size="xlarge"
                       style="max-width: 240px"
-                      @click.native="showConfirm"
+                      @click.native="
+                        !isFromNative ? showConfirm() : showTradeConfirm()
+                      "
                     />
                   </div>
                 </div>
@@ -298,6 +300,9 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { EventBus } from '@/core/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
+
 import xss from 'xss';
 
 const MIN_GAS_LIMIT = 800000;
@@ -1207,13 +1212,15 @@ export default {
         return;
       }
       this.currentTrade = trade;
-      this.currentTrade.gasPrice = this.localGasPrice;
-      this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-        this.network.type.name
-      }`;
       this.step = 2;
       this.loadingFee = false;
-      this.checkFeeBalance();
+      if (!this.isFromNative) {
+        this.currentTrade.gasPrice = this.localGasPrice;
+        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
+          this.network.type.name
+        }`;
+        this.checkFeeBalance();
+      }
     },
     showConfirm() {
       this.confirmInfo = {
@@ -1235,6 +1242,34 @@ export default {
         gasPriceType: this.localGasType
       };
       this.executeTrade();
+    },
+    showTradeConfirm() {
+      this.confirmInfo = {
+        refundAddress: this.refundAddress,
+        to: this.toAddress,
+        fromType: this.fromTokenType.symbol,
+        toType: this.toTokenType.symbol,
+        fromImg: this.fromTokenType.img,
+        toImg: this.toTokenType.img,
+        fromVal: this.tokenInValue,
+        toVal: this.tokenOutValue,
+        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+          .times(this.tokenOutValue)
+          .toFixed(),
+        fromUsdVal: this.fromTokenType.usdBalance,
+        validUntil: new Date().getTime() + 10 * 60 * 1000,
+        selectedProvider: this.selectedProvider,
+        actualTrade: this.currentTrade
+      };
+      console.log(this.confirmInfo);
+      EventBus.$emit(
+        EventNames.SHOW_CROSS_CHAIN_MODAL,
+        this.confirmInfo,
+        this.sentCrossChain
+      );
+    },
+    sentCrossChain() {
+      console.log('add crosschain notification');
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {

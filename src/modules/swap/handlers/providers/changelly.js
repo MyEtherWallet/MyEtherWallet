@@ -165,37 +165,51 @@ class Changelly {
       .then(async response => {
         if (Array.isArray(response.data.result))
           return new Error('Invalid input');
-        const txObj = {
-          from: fromAddress,
-          data: '0x',
-          value: '0x0',
-          gas: '0x0'
-        };
-        if (fromT.contract === Configs.ETH) {
-          txObj.to = response.data.result.payinAddress;
-          txObj.value = toHex(
-            toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
-          );
-        } else {
-          let amountBN = new BigNumber(response.data.result.amountExpectedFrom);
-          amountBN = amountBN
-            .times(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
-            .toFixed(0);
-          amountBN = toBN(amountBN);
-          const erc20contract = new Web3Contract(erc20Abi);
-          txObj.data = erc20contract.methods
-            .transfer(response.data.result.payinAddress, amountBN)
-            .encodeABI();
-          txObj.to = toT.contract;
-        }
-        return this.web3.eth.estimateGas(txObj).then(gas => {
-          txObj.gas = gas;
-          return {
-            provider: this.provider,
-            response: response.data.result,
-            transactions: [txObj]
+        /**
+         * Differentiate between
+         * in network swap vs cross chain
+         * if refundAddress is truthy,
+         * swap is crosschain
+         */
+        if (!refundAddress) {
+          const txObj = {
+            from: fromAddress,
+            data: '0x',
+            value: '0x0',
+            gas: '0x0'
           };
-        });
+          if (fromT.contract === Configs.ETH) {
+            txObj.to = response.data.result.payinAddress;
+            txObj.value = toHex(
+              toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
+            );
+          } else {
+            let amountBN = new BigNumber(
+              response.data.result.amountExpectedFrom
+            );
+            amountBN = amountBN
+              .times(new BigNumber(10).pow(new BigNumber(fromT.decimals)))
+              .toFixed(0);
+            amountBN = toBN(amountBN);
+            const erc20contract = new Web3Contract(erc20Abi);
+            txObj.data = erc20contract.methods
+              .transfer(response.data.result.payinAddress, amountBN)
+              .encodeABI();
+            txObj.to = toT.contract;
+          }
+          return this.web3.eth.estimateGas(txObj).then(gas => {
+            txObj.gas = gas;
+            return {
+              provider: this.provider,
+              response: response.data.result,
+              transactions: [txObj]
+            };
+          });
+        }
+        return {
+          provider: this.provider,
+          response: response.data.result
+        };
       })
       .catch(err => {
         Toast(err, {}, ERROR);
