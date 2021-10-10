@@ -14,10 +14,12 @@
     <div>
       <div
         v-for="(b, key) in buttons"
-        :id="[isDiabled(b.title)]"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[selected === b.title ? 'active' : '']"
+        :class="[
+          selected === b.title ? 'active' : '',
+          unavailableSpeeds[b.title] ? 'disabled' : ''
+        ]"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -101,52 +103,28 @@
           <v-icon class="mr-1" color="primary" small>mdi-clock-outline</v-icon>
           <div class="primary--text">{{ b.time }}</div>
         </div>
-
-        <!--
-        <div v-else class="text-right">
-          <div
-            v-if="b.title === gasPriceTypes.ECONOMY"
-            class="textSecondary--text py-5"
-          >
-            No tip
-          </div>
-          <div v-else>
-            <div class="textSecondary--text">{{ b.time }}</div>
-            <div class="textSecondary--text">+{{ b.usd }}</div>
-            <div class="textSecondary--text">
-              +{{ b.gas }} {{ network.type.currencyName }}
-            </div>
-          </div>
-        </div>
-        -->
       </div>
     </div>
 
     <!-- <div v-if="showNotEnoughEthWarning" class="mt-6 mb-5 error--text pl-4">
-      <div>Not enough funds to increase priority.</div>
       <div>{{ unavailableSpeed }} Priority is not selectable</div>
-      <a
-        rel="noopener noreferrer"
-        target="_blank"
-        :href="swapLink"
-        class="mt-1 d-inline-block"
-      >
-        Buy more ETH
-      </a>
     </div> -->
     <div class="mt-4 d-flex flex-column align-center">
+      <mew-button
+        v-if="
+          !fromSettings &&
+          (!showNotEnoughEthWarning || !unavailableSpeeds.economy)
+        "
+        title="Save"
+        has-full-width
+        @click.native="closeDialog"
+      ></mew-button>
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
           >Buy more ETH</span
         >
       </div>
-      <mew-button
-        v-else-if="!fromSettings"
-        title="Save"
-        has-full-width
-        @click.native="closeDialog"
-      ></mew-button>
     </div>
   </div>
 </template>
@@ -197,8 +175,12 @@ export default {
     return {
       gasPriceTypes: gasPriceTypes,
       previousSelected: null,
-      showNotEnoughEthWarning: false
-      // unavailableSpeed: ''
+      showNotEnoughEthWarning: false,
+      unavailableSpeeds: {
+        economy: false,
+        regular: false,
+        fast: false
+      }
     };
   },
   computed: {
@@ -238,30 +220,27 @@ export default {
     },
     economyInEth() {
       const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
-      return formatFloatingPointValue(txFee).value;
+      return this.formatInEth(txFee);
     },
     regularInEth() {
       const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
-      return formatFloatingPointValue(txFee).value;
+      return this.formatInEth(txFee);
     },
     fastInEth() {
       const txFee = this.calcTxFee(gasPriceTypes.FAST);
-      return formatFloatingPointValue(txFee).value;
+      return this.formatInEth(txFee);
     },
     economyInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
-      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
-        .value;
+      return this.formatInUsd(txFee);
     },
     regularInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
-      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
-        .value;
+      return this.formatInUsd(txFee);
     },
     fastInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.FAST);
-      return formatFiatValue(BigNumber(txFee).times(this.fiatValue).toFixed(2))
-        .value;
+      return this.formatInUsd(txFee);
     }
   },
   watch: {
@@ -269,17 +248,24 @@ export default {
      * If not enough balance to cover new priority, go back to previous priority
      */
     selected() {
-      // console.log('selected', this.selected);
-      // if (this.notEnoughEth) {
-      //   this.unavailableSpeed =
-      //     this.selected == 'fast'
-      //       ? 'Highest'
-      //       : this.selected == 'regular'
-      //       ? 'Higher'
-      //       : '';
-      //   this.setSelected(this.previousSelected);
-      //   this.showNotEnoughEthWarning = true;
-      // }
+      if (this.notEnoughEth) {
+        // this.unavailableSpeed =
+        //   this.selected == 'regular'
+        //     ? 'Higher'
+        //     : this.selected == 'fast'
+        //     ? 'Highest'
+        //     : '';
+
+        if (this.selected == 'regular') {
+          this.unavailableSpeeds['regular'] = true;
+        } else if (this.selected == 'fast') {
+          this.unavailableSpeeds['fast'] = true;
+        } else {
+          this.unavailableSpeed = '';
+        }
+        this.setSelected(this.previousSelected);
+        this.showNotEnoughEthWarning = true;
+      }
 
       if (!this.notEnoughEth) {
         this.previousSelected = this.selected;
@@ -291,6 +277,9 @@ export default {
 
     if (this.notEnoughEth) {
       this.showNotEnoughEthWarning = true;
+      this.unavailableSpeeds.economy = true;
+      this.unavailableSpeeds.regular = true;
+      this.unavailableSpeeds.fast = true;
     }
   },
   methods: {
@@ -303,16 +292,12 @@ export default {
         toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
       ).toString();
     },
-    isDiabled(priority) {
-      const txFee = this.calcTxFee(priority);
-      const cost = formatFloatingPointValue(txFee).value;
-
-      if (!this.fromSettings && this.notEnoughEth) {
-        return 'disabled';
-      } else if (Number(cost) > Number(this.balanceInETH)) {
-        return 'disabled';
-      }
-      return '';
+    formatInEth(fee) {
+      return formatFloatingPointValue(fee).value;
+    },
+    formatInUsd(fee) {
+      return formatFiatValue(BigNumber(fee).times(this.fiatValue).toFixed(2))
+        .value;
     }
   }
 };
@@ -328,7 +313,7 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid #eaedf7;
-  &#disabled {
+  &.disabled {
     filter: grayscale(1);
     opacity: 0.15 !important;
     pointer-events: none;
