@@ -87,7 +87,7 @@
     "@commitlint/config-conventional": "13.2.0",
     "@ledgerhq/hw-app-eth": "6.6.0",
     "@ledgerhq/hw-transport-webusb": "6.7.0",
-    "@mdi/font": "6.1.95",
+    "@mdi/font": "6.2.95",
     "@vue/babel-preset-app": "4.5.13",
     "@vue/cli-plugin-babel": "4.5.13",
     "@vue/cli-plugin-eslint": "4.5.13",
