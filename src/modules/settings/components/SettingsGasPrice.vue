@@ -258,6 +258,7 @@ export default {
 
         if (this.selected == 'regular') {
           this.unavailableSpeeds['regular'] = true;
+          this.unavailableSpeeds['fast'] = true;
         } else if (this.selected == 'fast') {
           this.unavailableSpeeds['fast'] = true;
         } else {
