@@ -14,12 +14,10 @@
     <div>
       <div
         v-for="(b, key) in buttons"
+        :id="[unavailableSpeeds[b.title] ? 'disabled' : '']"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[
-          selected === b.title ? 'active' : '',
-          unavailableSpeeds[b.title] ? 'disabled' : ''
-        ]"
+        :class="[selected === b.title ? 'active' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
@@ -110,7 +108,7 @@
       <div>{{ unavailableSpeed }} Priority is not selectable</div>
     </div> -->
     <div class="mt-4 d-flex flex-column align-center">
-      <mew-button
+      <!-- <mew-button
         v-if="
           !fromSettings &&
           (!showNotEnoughEthWarning || !unavailableSpeeds.economy)
@@ -118,7 +116,7 @@
         title="Save"
         has-full-width
         @click.native="closeDialog"
-      ></mew-button>
+      ></mew-button> -->
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
@@ -162,10 +160,10 @@ export default {
       type: String,
       default: '0'
     },
-    closeDialog: {
-      type: Function,
-      default: () => {}
-    },
+    // closeDialog: {
+    //   type: Function,
+    //   default: () => {}
+    // },
     fromSettings: {
       type: Boolean,
       default: false
@@ -314,10 +312,11 @@ export default {
   user-select: none;
   width: 100%;
   border: 1px solid #eaedf7;
-  &.disabled {
+  &#disabled {
     filter: grayscale(1);
-    opacity: 0.15 !important;
+    opacity: 0.25 !important;
     pointer-events: none;
+    border: 1px solid #eaedf7;
   }
   &:hover {
     background-color: #e9eff4;
