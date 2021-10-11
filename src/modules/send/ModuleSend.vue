@@ -85,12 +85,11 @@
             :error="feeError"
             :total-cost="totalCost"
             :tx-fee="txFee"
-            :gas-price-type="localGasType"
+            :gas-price-type="gasPriceType"
             :total-gas-limit="gasLimit"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
             :from-eth="isFromNetworkCurrency"
-            @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
         <!--
@@ -232,8 +231,6 @@ export default {
           subtext: 'Gas Limit & Data'
         }
       ],
-      localGasPrice: '0',
-      localGasType: 'economy',
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
@@ -249,7 +246,8 @@ export default {
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink'
+      'swapLink',
+      'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     isFromNetworkCurrency() {
@@ -451,10 +449,8 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (BigNumber(this.localGasPrice).eq(0)) {
-        return BigNumber(this.gasPrice);
-      }
-      return BigNumber(this.localGasPrice);
+      const gasPrice = this.gasPriceByType(this.gasPriceType);
+      return BigNumber(gasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -523,10 +519,7 @@ export default {
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
     this.sendTx.setCurrency(this.selectedCurrency);
-    this.handleLocalGasPrice({
-      gasType: this.gasPriceType,
-      gasPrice: this.gasPrice
-    });
+    this.sendTx.setLocalGasPrice(this.actualGasPrice);
   },
   created() {
     this.debouncedGasLimitError = debounce(value => {
@@ -555,8 +548,6 @@ export default {
       this.amount = '0';
       this.data = '0x';
       this.userInputType = '';
-      this.localGasPrice = '0';
-      this.localGasType = 'economy';
       this.defaultGasLimit = '21000';
       this.gasLimitError = '';
       this.amountError = '';
@@ -567,10 +558,6 @@ export default {
       this.setSendTransaction();
       this.gasLimit = this.prefilledGasLimit;
       this.sendTx.setCurrency(this.selectedCurrency);
-      this.handleLocalGasPrice({
-        gasType: this.gasPriceType,
-        gasPrice: this.gasPrice
-      });
     },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
@@ -628,11 +615,6 @@ export default {
       } else {
         this.gasLimitError = 'Required';
       }
-    },
-    handleLocalGasPrice(e) {
-      this.localGasPrice = e.gasPrice;
-      this.localGasType = e.gasType;
-      this.sendTx.setLocalGasPrice(this.actualGasPrice);
     },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;

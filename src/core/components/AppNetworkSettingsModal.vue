@@ -76,11 +76,7 @@ export default {
   },
   methods: {
     setGas(value) {
-      const newObj = {
-        gasType: value,
-        gasPrice: this.gasPriceByType(value)
-      };
-      this.$emit('onLocalGasPrice', newObj);
+      this.setSelected(value);
       // this.close();
     },
     closeDialog() {

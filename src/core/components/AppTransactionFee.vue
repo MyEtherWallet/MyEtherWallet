@@ -14,7 +14,6 @@
       :tx-fee-formatted="txFeeFormatted"
       :tx-fee-usd="feeInUsd"
       :total-gas-limit="totalGasLimit"
-      @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
 
@@ -119,7 +118,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
 import {
@@ -152,10 +151,6 @@ export default {
       type: String,
       default: '0'
     },
-    gasPriceType: {
-      type: String,
-      default: 'economy'
-    },
     message: {
       type: String,
       default: ''
@@ -184,6 +179,7 @@ export default {
       'swapLink',
       'gasPrice'
     ]),
+    ...mapState('global', ['online', 'gasPriceType']),
     txFeeInEth() {
       return fromWei(this.txFee);
     },
@@ -226,9 +222,6 @@ export default {
       this.updateGasPrice().then(() => {
         this.gasPriceModal = true;
       });
-    },
-    handleLocalGasPrice(val) {
-      this.$emit('onLocalGasPrice', val);
     }
   }
 };

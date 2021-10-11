@@ -237,13 +237,11 @@
                   :error="feeError"
                   :total-cost="totalCost"
                   :tx-fee="txFee"
-                  :gas-price-type="localGasType"
                   :message="feeError"
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
                   :total-gas-limit="totalGasLimit"
                   class="mt-10 mt-sm-16"
-                  @onLocalGasPrice="handleLocalGasPrice"
                 />
                 <div
                   v-if="
@@ -651,9 +649,9 @@ export default {
         });
     },
     txFee() {
-      const gasPrice =
-        this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
-      return toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
+      return toBN(this.totalGasLimit)
+        .mul(toBN(this.currentGasPrice))
+        .toString();
     },
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
@@ -683,9 +681,8 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return toBN(this.balanceInWei).gt(
-        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
-      );
+      const gasPrice = this.gasPriceByType(this.gasPriceType);
+      return toBN(this.balanceInWei).gt(toBN(gasPrice).muln(MIN_GAS_LIMIT));
     },
 
     /**
@@ -695,7 +692,7 @@ export default {
     notEnoughEth() {
       try {
         const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
-        const isNotEnoughEth = this.isFromTokenMain
+        const isNotEnoughEth = !this.isFromTokenMain
           ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
           : balanceAfterFees.isNeg();
         return isNotEnoughEth;
@@ -725,6 +722,13 @@ export default {
       }
 
       return new BigNumber(0);
+    },
+    /**
+     * actual live gas price
+     * reflects block and selected gas price
+     */
+    currentGasPrice() {
+      return this.gasPriceByType(this.gasPriceType);
     },
     /**
      * Determines whether or not to show swap fee panel
@@ -803,6 +807,9 @@ export default {
     }
   },
   watch: {
+    gasPriceType() {
+      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
+    },
     txFee: {
       handler: function () {
         this.checkFeeBalance();
@@ -861,10 +868,6 @@ export default {
         this.setDefaults();
         this.isLoading = false;
       }
-      this.handleLocalGasPrice({
-        gasType: this.gasPriceType,
-        gasPrice: this.gasPrice
-      });
     },
     // reset values after executing transaction
     clear() {
@@ -900,7 +903,6 @@ export default {
       this.checkLoading = true;
       this.addressValue = {};
       this.selectedProvider = {};
-      this.localGasPrice = '0';
       this.localGasType = 'economy';
       this.$refs.toToken.clear();
       this.$refs.amountInput.clear();
@@ -921,7 +923,7 @@ export default {
     setMaxAmount() {
       const availableBalanceMinusGas = new BigNumber(
         this.availableBalance
-      ).minus(fromWei(toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)));
+      ).minus(fromWei(toBN(this.currentGasPrice).muln(MIN_GAS_LIMIT)));
       this.tokenInValue = this.isFromTokenMain
         ? availableBalanceMinusGas.gt(0)
           ? availableBalanceMinusGas.toFixed()
@@ -1126,7 +1128,7 @@ export default {
         return;
       }
       this.currentTrade = trade;
-      this.currentTrade.gasPrice = this.localGasPrice;
+      this.currentTrade.gasPrice = this.currentGasPrice;
       this.exPannel[0].subtext = `${fromWei(this.txFee)} ${
         this.network.type.name
       }`;
@@ -1151,7 +1153,7 @@ export default {
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         txFee: this.txFee,
-        gasPriceType: this.localGasType
+        gasPriceType: this.gasPriceType
       };
       this.executeTrade();
     },
@@ -1216,11 +1218,6 @@ export default {
       if (this.notEnoughEth) {
         this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee.`;
       }
-    },
-    handleLocalGasPrice(e) {
-      this.localGasPrice = e.gasPrice;
-      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
-      this.localGasType = e.gasType;
     },
     setTokenFromURL() {
       if (Object.keys(this.$route.query).length > 0) {
