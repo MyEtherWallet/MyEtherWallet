@@ -539,9 +539,11 @@ export default {
         });
     });
     /**
-     * receives an @Object
+     * receives an @Object which contains info about the currency and rates
+     * and a resolver which resets the module confirmation
      */
     EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
+      console.log('i got here', txObj);
       _self.title = `Send ${txObj.fromType}`;
       _self.tx = txObj;
       _self.showCrossChain = true;

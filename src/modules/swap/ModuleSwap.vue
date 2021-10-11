@@ -896,7 +896,6 @@ export default {
     },
     network() {
       if (this.isAvailable) {
-        console.log('i got called randomly tf');
         this.clear();
       }
     },
@@ -912,6 +911,7 @@ export default {
   },
   mounted() {
     this.setupSwap();
+    this.showTradeConfirm();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1244,27 +1244,83 @@ export default {
       this.executeTrade();
     },
     showTradeConfirm() {
-      this.confirmInfo = {
-        refundAddress: this.refundAddress,
-        to: this.toAddress,
-        fromType: this.fromTokenType.symbol,
-        toType: this.toTokenType.symbol,
-        fromImg: this.fromTokenType.img,
-        toImg: this.toTokenType.img,
-        fromVal: this.tokenInValue,
-        toVal: this.tokenOutValue,
-        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-          .times(this.tokenOutValue)
-          .toFixed(),
-        fromUsdVal: this.fromTokenType.usdBalance,
-        validUntil: new Date().getTime() + 10 * 60 * 1000,
-        selectedProvider: this.selectedProvider,
-        actualTrade: this.currentTrade
+      console.log('calling this guy')
+      const confirmInfo = {
+        validUntil: 1633726964016,
+        toVal: '29.22085440',
+        toUsdVal: 'NaN',
+        toType: 'ETH',
+        toImg:
+          'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+        to: '0x00450992bc72ab99ae55bccdce68e160412fdac0',
+        selectedProvider: {
+          amount: '29.22085440',
+          exchange: 'changelly',
+          exchangeInfo: {
+            description: '',
+            img: 'img/Changelly.730ed530.png',
+            name: 'Changelly'
+          },
+          isSelected: true,
+          maxFrom: '4.46945103',
+          minFrom: '0.00450000',
+          provider: 'changelly',
+          rate: '14.6104272',
+          rateId:
+            'fe8993badf88c62f6c1e4d505d8a44b392f59d842e8023a9b3c601d627c1a3495d254d3cedd72571f3408c6b6832e6e01315b58b05130bee6cc11a158560dcf899bfc53fec005a811a39586bfd163965f9'
+        },
+        refundAddress: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
+        fromImg:
+          'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
+        fromType: 'BTC',
+        fromUsdVal: undefined,
+        fromVal: '2',
+        actualTrade: {
+          provider: 'changelly',
+          response: {
+            amountExpectedFrom: '2.00000000',
+            amountExpectedTo: '29.22085440',
+            amountTo: '29.22085440',
+            apiExtraFee: '1',
+            binaryPayload: null,
+            changellyFee: '0.5',
+            createdAt: '2021-10-08T20:52:39.000Z',
+            currencyFrom: 'btc',
+            currencyTo: 'eth',
+            id: 'rlla3gfetbgbaks2',
+            kycRequired: false,
+            payTill: '2021-10-08T21:12:39.986Z',
+            payinAddress: '32usYraTqDxQ31sPdqEvKVwGyyZaFpMkFV',
+            payinExtraId: null,
+            payoutAddress: '0x00450992bc72ab99ae55bccdce68e160412fdac0',
+            refundAddress: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
+            signature: null,
+            status: 'new',
+            trackUrl: null
+          }
+        }
       };
-      console.log(this.confirmInfo);
+      // this.confirmInfo = {
+      //   refundAddress: this.refundAddress,
+      //   to: this.toAddress,
+      //   fromType: this.fromTokenType.symbol,
+      //   toType: this.toTokenType.symbol,
+      //   fromImg: this.fromTokenType.img,
+      //   toImg: this.toTokenType.img,
+      //   fromVal: this.tokenInValue,
+      //   toVal: this.tokenOutValue,
+      //   toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+      //     .times(this.tokenOutValue)
+      //     .toFixed(),
+      //   fromUsdVal: this.fromTokenType.usdBalance,
+      //   validUntil: new Date().getTime() + 10 * 60 * 1000,
+      //   selectedProvider: this.selectedProvider,
+      //   actualTrade: this.currentTrade
+      // };
+      // console.log(this.confirmInfo);
       EventBus.$emit(
         EventNames.SHOW_CROSS_CHAIN_MODAL,
-        this.confirmInfo,
+        confirmInfo,
         this.sentCrossChain
       );
     },
