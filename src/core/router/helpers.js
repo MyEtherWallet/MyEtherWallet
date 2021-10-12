@@ -70,13 +70,10 @@ const accessRouteGuard = (to, from, next) => {
       const validTypes = [
         'overview',
         'ledger',
-        'finney',
         'keepkey',
         'coolwallet',
-        'xwallet',
-        'bitbox',
-        'trezor',
-        'bcvault'
+        'bitbox02',
+        'trezor'
       ];
       if (validTypes.includes(to.query.type)) {
         next();
