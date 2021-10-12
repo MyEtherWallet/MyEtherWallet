@@ -14,7 +14,7 @@
     <div>
       <div
         v-for="(b, key) in buttons"
-        :id="[unavailableSpeeds[b.title] ? 'disabled' : '']"
+        :id="[b.disabled ? 'disabled' : '']"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
         :class="[selected === b.title ? 'active' : '']"
@@ -24,6 +24,7 @@
           }
         "
       >
+        {{ b.disabled }}
         <div class="d-flex align-center">
           <div
             class="mr-1 ml-n1 text-center"
@@ -150,6 +151,10 @@ export default {
     fromSettings: {
       type: Boolean,
       default: false
+    },
+    costInEth: {
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -195,6 +200,24 @@ export default {
     fastInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.FAST);
       return this.formatInUsd(txFee);
+    },
+    /**
+     *
+     */
+    newButtons() {
+      const newArray = [];
+      const amount = BigNumber(this.costInEth).minus(
+        this[`${this.selected}InEth`]
+      );
+      this.buttons.forEach(item => {
+        if (this.notEnoughEth) item.disabled = true;
+        const withFee = BigNumber(amount).plus(this[`${item.title}InEth`]);
+        item.disabled = withFee.gt(this.balanceInEth);
+        console.log(withFee.toString(), withFee.gt(this.balanceInETH));
+        newArray.push(item);
+      });
+      this.$forceUpdate();
+      return newArray;
     }
   },
   watch: {
@@ -218,6 +241,18 @@ export default {
       if (!this.notEnoughEth) {
         this.previousSelected = this.selected;
       }
+    },
+    costInEth: {
+      handler: function (newVal) {
+        const amount = BigNumber(newVal).minus(this[`${this.selected}InEth`]);
+        this.buttons.map(item => {
+          const withFee = BigNumber(amount).plus(this[`${item.title}InEth`]);
+          item.disabled = withFee.gt(this.balanceInEth);
+          console.log(withFee.toString(), withFee.gt(this.balanceInETH));
+          return item;
+        });
+      },
+      immediate: true
     }
   },
   mounted() {
