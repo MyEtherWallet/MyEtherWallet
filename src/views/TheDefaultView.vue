@@ -6,6 +6,7 @@
     </v-main>
     <the-default-footer />
     <the-default-wallet-banner />
+    <the-get-mew-wallet />
   </div>
 </template>
 
@@ -13,13 +14,15 @@
 import TheDefaultHeader from './components-default/TheDefaultHeader';
 import TheDefaultFooter from './components-default/TheDefaultFooter';
 import TheDefaultWalletBanner from './components-default/TheDefaultWalletBanner';
+import TheGetMewWallet from '@/views/components-default/TheGetMewWallet';
 
 export default {
   name: 'TheDefaultView',
   components: {
     TheDefaultHeader,
     TheDefaultFooter,
-    TheDefaultWalletBanner
+    TheDefaultWalletBanner,
+    TheGetMewWallet
   }
 };
 </script>
