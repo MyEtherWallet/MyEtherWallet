@@ -9,10 +9,6 @@ const WALLET_TYPES = {
   MNEMONIC: 'mnemonic',
   WEB3_WALLET: 'web3Wallet',
   PRIV_KEY: 'privKey',
-  FINNEY: 'finney',
-  WATCH_ONLY: 'watchOnly',
-  XWALLET: 'xwallet',
-  BCVAULT: 'bcVault',
   COOL_WALLET: 'coolWallet',
   WALLET_LINK: 'walletLink',
   MEW_WALLET: 'mewWallet'

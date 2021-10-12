@@ -113,6 +113,7 @@
     "eslint-plugin-vue": "7.18.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-common": "1.5.2",
+    "ethereumjs-tx": "2.1.2",
     "ethereumjs-util": "7.1.2",
     "ethereumjs-wallet": "1.0.1",
     "hdkey": "2.0.1",
@@ -163,7 +164,7 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "set-value": "4.0.1",
+    "set-value": "4.1.0",
     "glob-parent": "5.1.2",
     "handlebars": "4.7.7",
     "axios": "0.22.0",

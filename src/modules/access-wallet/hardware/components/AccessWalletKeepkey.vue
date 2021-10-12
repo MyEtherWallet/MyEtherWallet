@@ -5,6 +5,11 @@
 -->
 <template>
   <div>
+    <!--
+=====================================================================================
+Custom Paths
+=====================================================================================
+-->
     <div class="text-right">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
@@ -24,7 +29,12 @@ Pin Pad
           The PIN layout is displayed on your Hardware wallet.
         </span>
       </div>
-      <mew-input v-model="pin" type="password" class="mb-5" />
+      <mew-input
+        v-model="pin"
+        hide-password-icon
+        type="password"
+        class="mb-5"
+      />
       <v-container
         class="mb-8 pa-0 d-flex flex-column align-center justify-center"
       >
@@ -119,6 +129,7 @@ export default {
      * emits setPath back to parent in order to unlock wallet correctly
      */
     setPath(path) {
+      this.pin = '';
       this.$emit('setPath', path);
     },
     /**
