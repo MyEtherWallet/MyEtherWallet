@@ -37,7 +37,7 @@
             alt="Skale"
             height="40"
           />
-          <div class="mew-heading-3 mt-1">SKL Skating new on iOS!</div>
+          <div class="mew-heading-3 mt-1">SKL Staking new on iOS!</div>
         </div>
       </v-col>
       <v-col
