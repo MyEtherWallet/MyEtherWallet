@@ -192,14 +192,6 @@ export default {
     actualCostFormatted() {
       return formatFloatingPointValue(this.costInEth).value;
     },
-    /*
-    costInUsd() {
-      const value = formatFiatValue(
-        BigNumber(this.costInEth).times(this.fiatValue).toFixed(2)
-      ).value;
-      return `~${'$' + value}`;
-    },
-    */
     feeInUsd() {
       const value = formatFiatValue(
         BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2)

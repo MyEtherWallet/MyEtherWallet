@@ -103,20 +103,7 @@
         </div>
       </div>
     </div>
-
-    <!-- <div v-if="showNotEnoughEthWarning" class="mt-6 mb-5 error--text pl-4">
-      <div>{{ unavailableSpeed }} Priority is not selectable</div>
-    </div> -->
     <div class="mt-4 d-flex flex-column align-center">
-      <!-- <mew-button
-        v-if="
-          !fromSettings &&
-          (!showNotEnoughEthWarning || !unavailableSpeeds.economy)
-        "
-        title="Save"
-        has-full-width
-        @click.native="closeDialog"
-      ></mew-button> -->
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <span class="buy-eth primary--text" @click="openSimplex"
@@ -160,10 +147,6 @@ export default {
       type: String,
       default: '0'
     },
-    // closeDialog: {
-    //   type: Function,
-    //   default: () => {}
-    // },
     fromSettings: {
       type: Boolean,
       default: false
@@ -186,33 +169,6 @@ export default {
     ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH']),
-    // currentValue() {
-    //   for (const but of this.buttons) {
-    //     if (but.title === this.selected) {
-    //       return but;
-    //     }
-    //   }
-    //   return {};
-    // },
-    // hasCost() {
-    //   return BigNumber(this.costInEth).gt(0);
-    // }
-    /*
-    actualFeeFormatted() {
-      return this.hasCost
-        ? formatFloatingPointValue(this.costInEth).value
-        : this.currentValue.gas;
-    },
-    costInUsd() {
-      const value = formatFiatValue(
-        BigNumber(this.costInEth).times(this.fiatValue).toFixed(2)
-      ).value;
-      return `~${'$' + value}`;
-    },
-    actualUsdFormatted() {
-      return this.hasCost ? this.costInUsd : this.currentValue.usd;
-    }
-    */
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -247,13 +203,6 @@ export default {
      */
     selected() {
       if (this.notEnoughEth) {
-        // this.unavailableSpeed =
-        //   this.selected == 'regular'
-        //     ? 'Higher'
-        //     : this.selected == 'fast'
-        //     ? 'Highest'
-        //     : '';
-
         if (this.selected == 'regular') {
           this.unavailableSpeeds['regular'] = true;
           this.unavailableSpeeds['fast'] = true;
@@ -307,7 +256,6 @@ export default {
   min-height: 72px;
   padding: 5px 16px;
   border-radius: 8px;
-  // background-color: #f4f6f8;
   cursor: pointer;
   user-select: none;
   width: 100%;
@@ -323,7 +271,6 @@ export default {
   }
   &.active {
     border: 2px solid #05c0a5;
-    // background-color: #e1f7f4;
     opacity: 1;
     &:hover {
       opacity: 1;
