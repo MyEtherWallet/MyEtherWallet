@@ -2,7 +2,7 @@
   <div>
     <div class="textPrimary--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
-      newtwork traffic. MEW does not profit form this fee.
+      network traffic. MEW does not profit from this fee.
     </div>
 
     <!--
@@ -217,6 +217,11 @@ export default {
       if (!this.notEnoughEth) {
         this.previousSelected = this.selected;
       }
+    },
+    notEnoughEth(val) {
+      this.unavailableSpeeds.economy = val;
+      this.unavailableSpeeds.regular = val;
+      this.unavailableSpeeds.fast = val;
     }
   },
   mounted() {
