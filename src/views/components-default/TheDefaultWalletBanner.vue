@@ -24,41 +24,68 @@
         isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       }}</v-icon>
     </div>
-    <div
-      :class="[
-        isExpanded
-          ? 'd-flex flex-column center-content-expanded'
-          : 'center-content d-flex align-center'
-      ]"
-    >
-      <div :class="['title-row d-flex', isExpanded ? 'bottom-space' : '']">
-        <span class="full-height mew-heading-1">{{
-          $t('home.mew-wallet-modal.title')
-        }}</span>
-      </div>
-      <div :class="['btn-container', isExpanded ? 'bottom-space' : 'ml-7']">
-        <a
-          v-for="(btn, idx) in storeButtons"
-          :key="idx"
-          target="_blank"
-          :href="btn.url"
+    <v-row no-gutters dense align="center">
+      <v-col
+        cols="12"
+        lg="5"
+        align-self="center"
+        class="d-flex justify-center justify-lg-end pt-14 pb-8 py-lg-4"
+      >
+        <div>
+          <img
+            src="@/assets/images/partners/services/skale.svg"
+            alt="Skale"
+            height="40"
+          />
+          <div class="mew-heading-3 mt-1">SKL Skating new on iOS!</div>
+        </div>
+      </v-col>
+      <v-col
+        cols="12"
+        offset-lg="1"
+        lg="6"
+        class="d-flex align-center mx-auto justify-lg-start justify-center"
+      >
+        <div
+          :class="[
+            isExpanded
+              ? 'd-flex flex-column center-content-expanded'
+              : 'center-content d-flex align-center'
+          ]"
         >
-          <img height="46" class="mr-1" :src="btn.src" alt="App button" />
-        </a>
-      </div>
-      <div v-if="isExpanded" class="mew-body font-weight-medium footer-text">
-        <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
-        <a href="https://www.mewwallet.com/" target="_blank"
-          >{{ $t('home.mew-wallet-modal.learn-more') }}...
-        </a>
-      </div>
-    </div>
-    <img
-      v-if="isExpanded"
-      class="mew-connect-image"
-      src="@/assets/images/snippets/snippet-mew-wallet-confetti.png"
-      :alt="$t('home.mew-wallet-modal.img-desc')"
-    />
+          <div :class="['title-row d-flex', isExpanded ? 'bottom-space' : '']">
+            <span class="full-height mew-heading-1">{{
+              $t('home.mew-wallet-modal.title')
+            }}</span>
+          </div>
+          <div :class="['btn-container', isExpanded ? 'bottom-space' : 'ml-7']">
+            <a
+              v-for="(btn, idx) in storeButtons"
+              :key="idx"
+              target="_blank"
+              :href="btn.url"
+            >
+              <img height="46" class="mr-1" :src="btn.src" alt="App button" />
+            </a>
+          </div>
+          <div
+            v-if="isExpanded"
+            class="mew-body font-weight-medium footer-text"
+          >
+            <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
+            <a href="https://www.mewwallet.com/" target="_blank"
+              >{{ $t('home.mew-wallet-modal.learn-more') }}...
+            </a>
+          </div>
+        </div>
+        <img
+          v-if="isExpanded"
+          class="mew-connect-image"
+          src="@/assets/images/snippets/snippet-mew-wallet-confetti.png"
+          :alt="$t('home.mew-wallet-modal.img-desc')"
+        />
+      </v-col>
+    </v-row>
     <div
       v-if="!isExpanded"
       class="cursor-pointer font-weight-medium close-container"
