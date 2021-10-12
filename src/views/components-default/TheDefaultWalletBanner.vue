@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!hideBanner"
+    v-if="!showedBanner"
     :class="[
       'white d-flex justify-center align-center text-center full-width footer-banner-container',
       isExpanded ? 'footer-banner-expanded' : 'footer-banner'
@@ -99,11 +99,10 @@
 <script>
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-play-store.png';
-import store from 'store';
+import { mapMutations, mapState } from 'vuex';
 export default {
   data() {
     return {
-      hideBanner: false,
       isExpanded: false,
       storeButtons: [
         {
@@ -117,16 +116,16 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.hideBanner = store.get('hideBanner');
+  computed: {
+    ...mapState('global', ['showedBanner'])
   },
   methods: {
+    ...mapMutations('global', ['NEVER_SHOW_BANNER']),
     toggleBanner() {
       this.isExpanded = !this.isExpanded;
     },
     setHideBanner() {
-      this.hideBanner = true;
-      store.set('hideBanner', true);
+      this.NEVER_SHOW_BANNER();
     }
   }
 };
