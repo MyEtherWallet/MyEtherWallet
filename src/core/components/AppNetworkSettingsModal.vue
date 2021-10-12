@@ -77,7 +77,6 @@ export default {
   methods: {
     setGas(value) {
       this.setSelected(value);
-      this.close();
     },
     closeDialog() {
       this.close();
