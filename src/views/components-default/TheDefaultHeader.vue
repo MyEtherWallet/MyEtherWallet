@@ -24,7 +24,7 @@
           <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
             <v-img
               :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.png"
+              src="@/assets/images/icons/logo-mew.svg"
               max-height="36"
               max-width="130"
             />
@@ -38,7 +38,7 @@
             What is MEW
           </router-link>
           <mew-menu
-            text-color="white--text"
+            activator-text-color="white--text"
             :list-obj="menuObj"
             @goToPage="routeTo"
           />

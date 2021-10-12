@@ -14,10 +14,6 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-
-const setAddressBook = function ({ commit }, addressBook) {
-  commit('SET_ADDRESS_BOOK', addressBook);
-};
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
@@ -36,15 +32,42 @@ const deleteCustomPath = function ({ commit }, val) {
   commit('DELETE_CUSTOM_PATH', val);
 };
 
+const setTrackingConsent = function ({ commit, dispatch }, val) {
+  commit('SET_TRACKING_CONSENT', val);
+  dispatch('setTracking');
+};
+const setTracking = function ({ state }) {
+  const matomoExists = () => {
+    return new Promise(resolve => {
+      const checkInterval = 50;
+      const timeout = 5000;
+      const waitStart = Date.now();
+      const interval = setInterval(() => {
+        if (this._vm.$matomo) {
+          clearInterval(interval);
+          return resolve();
+        }
+        if (Date.now() >= waitStart + timeout) {
+          clearInterval(interval);
+        }
+      }, checkInterval);
+    });
+  };
+  matomoExists().then(() => {
+    if (state.consentToTrack) this._vm.$matomo.setConsentGiven();
+    else this._vm.$matomo.forgetConsentGiven();
+  });
+};
 export default {
   setOnlineStatus,
   setLocale,
   setNetwork,
   setGasPrice,
   setGasPriceType,
-  setAddressBook,
   setImportedState,
   addLocalContract,
   addCustomPath,
-  deleteCustomPath
+  deleteCustomPath,
+  setTrackingConsent,
+  setTracking
 };

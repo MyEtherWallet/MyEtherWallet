@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-node-${{steps.node-version.outputs.NODE_VERSION}}-
 
       - name: npm install
-        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm ci"
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "npm install"
 
       - name: build
         run: docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"

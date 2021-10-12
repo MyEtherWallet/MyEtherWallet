@@ -13,77 +13,90 @@
               From / Amount to Swap / To / Amount to Recieve
             =====================================================================================
             -->
-          <v-row class="align-center justify-space-between mt-4">
-            <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
-              <div class="position--relative">
-                <app-button-balance
-                  :loading="isLoading"
-                  :balance="displayBalance"
-                />
+          <div class="input-swap-container pt-7 pb-3 px-5">
+            <v-row class="align-center justify-space-between mt-4">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
+                <div class="position--relative">
+                  <app-button-balance
+                    :loading="isLoading"
+                    :balance="displayBalance"
+                  />
+                  <mew-select
+                    :value="fromTokenType"
+                    label="From"
+                    :items="actualFromTokens"
+                    :is-custom="true"
+                    :loading="isLoading"
+                    @input="setFromToken"
+                  />
+                </div>
+                <mew-input
+                  ref="amountInput"
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :value="tokenInValue"
+                  :persistent-hint="true"
+                  :error-messages="amountErrorMessage"
+                  :disabled="initialLoad"
+                  :buy-more-str="
+                    isEthNetwork &&
+                    (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
+                      amountErrorMessage === errorMsgs.amountEthIsTooLow)
+                      ? 'Buy more.'
+                      : null
+                  "
+                  :max-btn-obj="{
+                    title: 'Max',
+                    disabled: false,
+                    method: setMaxAmount
+                  }"
+                  @input="setTokenInValue"
+              /></v-col>
+              <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+                <div class="d-flex align-center justify-center pb-sm-10">
+                  <swap-btn
+                    :class="[
+                      enableTokenSwitch
+                        ? 'cursor--pointer'
+                        : 'pointer-event--none',
+                      'd-flex align-center justify-center'
+                    ]"
+                    @click.native="switchTokens"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
                 <mew-select
-                  :value="fromTokenType"
-                  label="From"
-                  :items="actualFromTokens"
+                  ref="toToken"
+                  :value="toTokenType"
+                  :items="actualToTokens"
                   :is-custom="true"
                   :loading="isLoading"
-                  @input="setFromToken"
+                  label="To"
+                  @input="setToToken"
                 />
-              </div>
-              <mew-input
-                ref="amountInput"
+                <!-- waiting for https://github.com/MyEtherWallet/mew-components/pull/166 to get merged -->
+                <v-text-field
+                  label="Amount"
+                  placeholder="0"
+                  type="number"
+                  :hide-clear-btn="true"
+                  :value="tokenOutValue"
+                  :readonly="true"
+                  outlined
+                />
+                <!-- <mew-input
                 label="Amount"
                 placeholder="0"
                 type="number"
-                :value="tokenInValue"
-                :persistent-hint="true"
-                :error-messages="amountErrorMessage"
-                :disabled="initialLoad"
-                :buy-more-str="
-                  isEthNetwork &&
-                  (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
-                    amountErrorMessage === errorMsgs.amountEthIsTooLow)
-                    ? 'Buy more.'
-                    : null
-                "
-                :max-btn-obj="{
-                  title: 'Max',
-                  disabled: false,
-                  method: setMaxAmount
-                }"
-                @input="setTokenInValue"
-            /></v-col>
-            <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
-              <div class="d-flex align-center justify-center pb-sm-10">
-                <swap-btn
-                  :class="[
-                    enableTokenSwitch
-                      ? 'cursor--pointer'
-                      : 'pointer-event--none',
-                    'd-flex align-center justify-center'
-                  ]"
-                  @click.native="switchTokens"
-                />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
-              <mew-select
-                ref="toToken"
-                :value="toTokenType"
-                :items="actualToTokens"
-                :is-custom="true"
-                :loading="isLoading"
-                label="To"
-                @input="setToToken"
-              />
-              <mew-input
-                label="Amount"
-                placeholder="0"
-                type="number"
-                disabled
+                :hide-clear-btn="true"
                 :value="tokenOutValue"
-              />
-            </v-col>
-          </v-row>
+                readonly="true"
+              /> -->
+              </v-col>
+            </v-row>
+          </div>
 
           <!--
           =====================================================================================
@@ -158,7 +171,7 @@
                       collateral in DeFi apps, etc. There are multiple kinds of
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
-                        href="https://kb.myetherwallet.com/en/swap/btc-to-ethereum/"
+                        href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
                         target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
@@ -201,42 +214,67 @@
              Providers List
             =====================================================================================
             -->
-          <swap-providers-list
-            :step="step"
-            :available-quotes="availableQuotes"
-            :set-provider="setProvider"
-            :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-            :to-token-icon="toTokenType ? toTokenType.img : ''"
-            :is-loading="isLoadingProviders"
-            :providers-error="providersErrorMsg"
-            class="mt-7"
-          />
-          <!--
-            =====================================================================================
-             Swap Fee
-            =====================================================================================
-          -->
-          <app-network-fee
-            v-if="step > 0 && providersErrorMsg.subtitle === ''"
-            :show-fee="showSwapFee"
-            :getting-fee="loadingFee"
-            :error="feeError"
-            :total-fees="totalFees"
-            :gas-price-type="localGasType"
-            :message="feeError"
-            :not-enough-eth="notEnoughEth"
-            is-custom
-            class="mt-10 mt-sm-16"
-            @onLocalGasPrice="handleLocalGasPrice"
-          />
-          <div class="text-center mt-10 mt-sm-15">
-            <mew-button
-              title="Next"
-              :has-full-width="false"
-              :disabled="disableNext"
-              btn-size="xlarge"
-              @click.native="showConfirm"
-            />
+          <div>
+            <v-slide-y-transition hide-on-leave group>
+              <swap-provider-mentions
+                v-if="showAnimation"
+                key="showAnimation"
+                :is-loading="isLoadingProviders"
+                :check-loading="checkLoading"
+                @showProviders="showProviders"
+              />
+              <div v-else key="showAnimation1">
+                <swap-providers-list
+                  :step="step"
+                  :available-quotes="availableQuotes"
+                  :set-provider="setProvider"
+                  :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+                  :to-token-icon="toTokenType ? toTokenType.img : ''"
+                  :is-loading="isLoadingProviders"
+                  :providers-error="providersErrorMsg"
+                  class="mt-7"
+                />
+                <!--
+                =====================================================================================
+                Swap Fee
+                =====================================================================================
+                -->
+                <app-network-fee
+                  v-if="
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  :show-fee="showSwapFee"
+                  :getting-fee="loadingFee"
+                  :error="feeError"
+                  :total-fees="totalFees"
+                  :gas-price-type="localGasType"
+                  :message="feeError"
+                  :not-enough-eth="notEnoughEth"
+                  is-custom
+                  class="mt-10 mt-sm-16"
+                  @onLocalGasPrice="handleLocalGasPrice"
+                />
+                <div
+                  v-if="
+                    step > 0 &&
+                    providersErrorMsg.subtitle === '' &&
+                    !isLoadingProviders
+                  "
+                  class="text-center mt-10 mt-sm-15"
+                >
+                  <mew-button
+                    title="Next"
+                    :has-full-width="true"
+                    :disabled="disableNext"
+                    btn-size="xlarge"
+                    style="max-width: 240px"
+                    @click.native="showConfirm"
+                  />
+                </div>
+              </div>
+            </v-slide-y-transition>
           </div>
         </template>
         <!--
@@ -260,6 +298,7 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
+import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
 import { toBN, fromWei, toWei, _ } from 'web3-utils';
@@ -272,6 +311,8 @@ import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import xss from 'xss';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -283,8 +324,10 @@ export default {
     AppUserMsgBlock,
     ModuleAddressBook,
     SwapProvidersList,
+    SwapProviderMentions,
     AppNetworkFee
   },
+  mixins: [handlerAnalytics],
   props: {
     fromToken: {
       type: String,
@@ -342,6 +385,8 @@ export default {
         }
       ],
       isLoadingProviders: false,
+      showAnimation: false,
+      checkLoading: true,
       addressValue: {},
       selectedProvider: {},
       localGasPrice: '0',
@@ -444,8 +489,12 @@ export default {
      * checks whether both token fields are empty
      */
     enableTokenSwitch() {
-      const isNotEmpty = this.toTokenType.symbol && this.fromTokenType.symbol;
-      return isNotEmpty;
+      return (
+        !_.isEmpty(this.fromTokenType) &&
+        !_.isEmpty(this.toTokenType) &&
+        !_.isEmpty(this.fromTokenType?.symbol) &&
+        !_.isEmpty(this.toTokenType?.symbol)
+      );
     },
     /**
      * Fetched tokens from all providers(?) + specific tokens
@@ -594,7 +643,7 @@ export default {
       if (!TRENDING_LIST[this.network.type.name]) return [];
       return TRENDING_LIST[this.network.type.name]
         .filter(token => {
-          return token.contract !== this.fromTokenType.contract;
+          return token.contract !== this.fromTokenType?.contract;
         })
         .map(token => {
           if (token.cgid) {
@@ -648,11 +697,15 @@ export default {
      * balance for the transaction
      */
     notEnoughEth() {
-      const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-      const isNotEnoughEth = this.isFromTokenMain
-        ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-        : balanceAfterFees.isNeg();
-      return isNotEnoughEth;
+      try {
+        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
+        const isNotEnoughEth = this.isFromTokenMain
+          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
+          : balanceAfterFees.isNeg();
+        return isNotEnoughEth;
+      } catch (e) {
+        return true;
+      }
     },
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
@@ -751,6 +804,12 @@ export default {
     }
   },
   watch: {
+    $route: {
+      handler: function () {
+        this.setTokenFromURL();
+      },
+      immediate: true
+    },
     totalFees: {
       handler: function () {
         this.checkFeeBalance();
@@ -771,17 +830,13 @@ export default {
     },
     mainTokenDetails() {
       this.setDefaults();
+    },
+    amountErrorMessage(newVal) {
+      if (newVal !== '') this.availableQuotes.splice(0);
     }
   },
   beforeMount() {
-    if (Object.keys(this.$route.query).length > 0) {
-      const { fromToken, toToken, amount } = this.$route.query;
-      this.defaults = {
-        fromToken,
-        toToken
-      };
-      this.tokenInValue = `${amount}`;
-    }
+    this.setTokenFromURL();
   },
   mounted() {
     this.setupSwap();
@@ -841,6 +896,7 @@ export default {
         fromToken: this.fromToken
       };
       this.isLoadingProviders = false;
+      this.checkLoading = true;
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
@@ -943,10 +999,16 @@ export default {
     },
     setFromToken(value) {
       this.fromTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('from: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setToToken(value) {
       this.toTokenType = value;
+      if (value && value.name) {
+        this.trackSwap('to: ' + value.name);
+      }
       this.setTokenInValue(this.tokenInValue);
     },
     setTokenInValue: _.debounce(function (value) {
@@ -957,6 +1019,21 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+      // Check if (in amount) is larger than (available balance)
+      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+        this.step = 0;
+        return;
+      }
+
+      if (
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
+        )
+      ) {
+        return;
+      }
+
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -974,6 +1051,7 @@ export default {
         this.enableTokenSwitch
       ) {
         this.isLoadingProviders = true;
+        this.showAnimation = true;
         this.swapper
           .getAllQuotes({
             fromT: this.fromTokenType,
@@ -1001,7 +1079,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 500),
+    }, 1000),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1086,24 +1164,24 @@ export default {
       }
       return true;
     },
-
     executeTrade() {
+      const currentTradeCopy = _.clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
-          this.swapNotificationFormatter(res);
+          this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.clear();
           Toast(err.message, {}, ERROR);
         });
-      this.clear();
     },
     getTokenBalance(balance, decimals) {
       return new BigNumber(balance.toString()).div(
         new BigNumber(10).pow(decimals)
       );
     },
-    swapNotificationFormatter(obj) {
+    swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
         const notif = Object.assign(
           {
@@ -1123,13 +1201,13 @@ export default {
               icon: this.confirmInfo.toImg,
               to: this.confirmInfo.to
                 ? this.confirmInfo.to
-                : this.currentTrade.transactions[idx].to
+                : currentTrade.transactions[idx].to
             },
             swapObj: obj
           },
-          this.currentTrade.transactions[idx]
+          currentTrade.transactions[idx]
         );
-        this.addNotification(new Notification(notif));
+        this.addNotification(new Notification(notif)).then(this.clear);
       });
     },
     checkFeeBalance() {
@@ -1143,12 +1221,42 @@ export default {
       this.localGasPrice = e.gasPrice;
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
       this.localGasType = e.gasType;
+    },
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { fromToken, toToken, amount } = this.stripQuery(
+          this.$route.query
+        );
+        this.defaults = {
+          fromToken,
+          toToken
+        };
+        this.tokenInValue = amount ? `${amount}` : '0';
+      }
+    },
+    stripQuery(queryObj) {
+      const newObj = {};
+      Object.keys(queryObj).forEach(key => {
+        newObj[key] = xss(queryObj[key]);
+      });
+      return newObj;
+    },
+    showProviders(val) {
+      if (!this.isLoadingProviders && val) {
+        this.showAnimation = false;
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.input-swap-container {
+  box-shadow: 0px 4px 4px rgb(11 40 64 / 4%), 0px 2px 10px rgb(11 40 64 / 6%),
+    0px 3px 16px rgb(11 40 64 / 4%);
+  border-radius: 10px;
+}
+
 .v-input--selection-controls {
   padding: 0;
   margin: 0;
@@ -1209,5 +1317,10 @@ export default {
   @media (min-width: 960px) {
     min-height: 45vh;
   }
+}
+
+.swap-to-input {
+  pointer-events: none !important;
+  user-select: none !important;
 }
 </style>

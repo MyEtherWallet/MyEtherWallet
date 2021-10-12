@@ -18,45 +18,43 @@
         Options
       =====================================================================================
       -->
-      <v-container>
-        <v-sheet color="transparent" max-width="650px" class="mx-auto">
-          <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-            <mew-super-button
-              font-class="mew-heading-2"
-              :color-theme="btn.color"
-              :title="btn.title"
-              :subtitle="btn.subtitle"
-              :title-icon="btn.titleIcon"
-              :title-icon-type="btn.titleIconType"
-              :title-icon-class="btn.titleIconClass"
-              :note="btn.note"
-              @click.native="btn.fn"
-            >
-              <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
-                <v-row v-if="btn.rightIcon" class="align-center justify-end">
-                  <v-img
-                    :src="btn.rightIcon"
-                    max-width="100px"
-                    min-width="40px"
-                    class="px-4 px-sm-3"
-                    contain
-                  />
-                </v-row>
-                <v-row v-else class="align-center justify-end">
-                  <v-img
-                    v-for="(icon, index) in btn.rightIcons"
-                    :key="index"
-                    :src="icon"
-                    max-width="70px"
-                    contain
-                    class="px-4 px-sm-3"
-                  />
-                </v-row>
-              </template>
-            </mew-super-button>
-          </div>
-        </v-sheet>
-      </v-container>
+      <v-sheet color="transparent" max-width="650px" class="mx-auto">
+        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
+          <mew-super-button
+            font-class="mew-heading-2"
+            :color-theme="btn.color"
+            :title="btn.title"
+            :subtitle="btn.subtitle"
+            :title-icon="btn.titleIcon"
+            :title-icon-type="btn.titleIconType"
+            :title-icon-class="btn.titleIconClass"
+            :note="btn.note"
+            @click.native="btn.fn"
+          >
+            <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
+              <v-row v-if="btn.rightIcon" class="align-center justify-end">
+                <v-img
+                  :src="btn.rightIcon"
+                  max-width="100px"
+                  min-width="40px"
+                  class="px-4 px-sm-3"
+                  contain
+                />
+              </v-row>
+              <v-row v-else class="align-center justify-end">
+                <v-img
+                  v-for="(icon, index) in btn.rightIcons"
+                  :key="index"
+                  :src="icon"
+                  max-width="70px"
+                  contain
+                  class="px-4 px-sm-3"
+                />
+              </v-row>
+            </template>
+          </mew-super-button>
+        </div>
+      </v-sheet>
       <!--
       =====================================================================================
         Acccess Wallet Module Overlays - activate on Options Button click
@@ -93,6 +91,8 @@ import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { MewConnectWallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'TheAccessWalletLayout',
@@ -103,6 +103,7 @@ export default {
     ModuleAccessWalletMobile,
     TheLayoutHeader
   },
+  mixins: [handlerAnalytics],
   props: {
     overlay: {
       type: String,
@@ -292,6 +293,7 @@ export default {
       MewConnectWallet()
         .then(_newWallet => {
           this.setWallet([_newWallet]).then(() => {
+            this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
             this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           });
         })

@@ -165,12 +165,13 @@
     <balance-address-paper-wallet
       :open="openPaperWallet"
       :close="closePaperWallet"
+      @close="closePaperWallet"
     />
     <app-modal
       :show="openQR"
       :close="closeQR"
       :has-buttons="false"
-      width="400px"
+      width="408px"
     >
       <template #dialogBody>
         <app-addr-qr />

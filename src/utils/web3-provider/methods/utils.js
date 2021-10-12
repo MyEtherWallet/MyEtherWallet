@@ -34,6 +34,10 @@ const setEvents = (promiObj, tx, dispatch) => {
   newTxObj.type = NOTIFICATION_TYPES.OUT;
   const isExempt = newTxObj.hasOwnProperty('handleNotification');
 
+  if (!newTxObj.to) {
+    newTxObj['to'] = '0x0000000000000000000000000000000000000000';
+  }
+
   promiObj
     .once('transactionHash', hash => {
       newTxObj.status = NOTIFICATION_STATUS.PENDING;
@@ -66,6 +70,9 @@ const setEvents = (promiObj, tx, dispatch) => {
     .on('error', err => {
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
+      if (!newTxObj.hasOwnProperty('hash')) {
+        newTxObj['hash'] = '0x';
+      }
       const notification = new Notification(newTxObj);
       setTimeout(() => {
         dispatch(

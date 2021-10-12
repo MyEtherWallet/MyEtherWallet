@@ -5,78 +5,77 @@
   =====================================================================================
   -->
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
+    content-size="large"
     :show-overlay="open"
     :title="title"
-    right-btn-text="Close"
-    :back="accessBack"
+    :back="showBackBtn ? accessBack : null"
     :close="close"
-    :left-btn-text="backBtnText"
   >
-    <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <!--
-        =====================================================================================
-         Overview: prompts user to select options
-        =====================================================================================
-        -->
-        <v-row v-if="walletType === types.OVERVIEW">
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-            <mew-super-button
-              font-class="mew-heading-2"
-              btn-mode="small-right-image"
-              :title="btn.label"
-              :subtitle="btn.description"
-              :right-icon="btn.icon"
-              right-icon-type="mew"
-              color-theme="basic"
-              @click.native="btn.fn"
-            />
-          </v-col>
-        </v-row>
-        <!--
-        =====================================================================================
-         Access With Keystore
-        =====================================================================================
-        -->
-        <access-wallet-keystore
-          v-if="walletType === types.KEYSTORE"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
+    <!--
+    =====================================================================================
+      Overview: prompts user to select options
+    =====================================================================================
+    -->
+    <v-row v-if="walletType === types.OVERVIEW">
+      <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
+        <mew-super-button
+          font-class="mew-heading-2"
+          btn-mode="small-right-image"
+          :title="btn.label"
+          :subtitle="btn.description"
+          :right-icon="btn.icon"
+          right-icon-type="mew"
+          color-theme="basic"
+          @click.native="btn.fn"
         />
-        <!--
-        =====================================================================================
-         Access With Mnemonic
-        =====================================================================================
-        -->
-        <access-wallet-mnemonic
-          v-if="walletType === types.MNEMONIC"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
-        />
-        <!--
-        =====================================================================================
-         Access With PrivateKey
-        =====================================================================================
-        -->
-        <access-wallet-private-key
-          v-else-if="walletType === types.PRIVATE_KEY"
-          :handler-access-wallet="accessHandler"
-          @unlock="unclockWallet"
-        />
-        <!--
-        =====================================================================================
-          Warning
-        =====================================================================================
-        -->
-        <mew-warning-sheet
-          title="Not Recommended"
-          description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
-          :link-obj="warningSheetObj"
-          class="mt-6"
-        />
-      </v-sheet>
-      <div class="spacer-y-medium" />
-    </template>
+      </v-col>
+    </v-row>
+    <!--
+    =====================================================================================
+      Access With Keystore
+    =====================================================================================
+    -->
+    <access-wallet-keystore
+      v-if="walletType === types.KEYSTORE"
+      :handler-access-wallet="accessHandler"
+      @unlock="unlockWallet"
+    />
+    <!--
+    =====================================================================================
+      Access With Mnemonic
+    =====================================================================================
+    -->
+    <access-wallet-mnemonic
+      v-if="walletType === types.MNEMONIC"
+      :handler-access-wallet="accessHandler"
+      @unlock="unlockWallet"
+    />
+    <!--
+    =====================================================================================
+      Access With PrivateKey
+    =====================================================================================
+    -->
+    <access-wallet-private-key
+      v-else-if="walletType === types.PRIVATE_KEY"
+      :handler-access-wallet="accessHandler"
+      @unlock="unlockWallet"
+    />
+    <!--
+    =====================================================================================
+      Warning
+    =====================================================================================
+    -->
+    <mew-warning-sheet
+      title="Not Recommended"
+      description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
+      :link-obj="warningSheetObj"
+      class="mt-6 mb-0"
+    />
   </mew-overlay>
 </template>
 
@@ -89,6 +88,7 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { SOFTWARE_WALLET_TYPES } from './software/handlers/helpers';
 import handlerAccessWalletSoftware from './software/handlers/handlerAccessWalletSoftware';
 import { ROUTES_WALLET } from '../../core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleAccessWalletSoftware',
@@ -97,6 +97,7 @@ export default {
     AccessWalletMnemonic,
     AccessWalletPrivateKey
   },
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -113,10 +114,11 @@ export default {
   },
   data() {
     return {
+      type: '',
       types: SOFTWARE_WALLET_TYPES,
       warningSheetObj: {
         title: 'Learn More',
-        url: 'https://kb.myetherwallet.com/en/offline/using-mew-offline'
+        url: 'https://help.myetherwallet.com/en/articles/5380611-using-mew-offline-cold-storage'
       },
       buttons: [
         /* Keystore Button */
@@ -144,7 +146,7 @@ export default {
               this.accessHandler.unlockPrivateKeyWallet(
                 process.env.VUE_APP_PRIV_KEY
               );
-              this.unclockWallet();
+              this.unlockWallet();
             } else {
               this.setType(SOFTWARE_WALLET_TYPES.PRIVATE_KEY);
             }
@@ -157,13 +159,10 @@ export default {
 
   computed: {
     /**
-     * @returns back button text
-     * if overview, button text is empty
+     * @returns if the back button on overlay should be displayed
      */
-    backBtnText() {
-      return this.walletType === SOFTWARE_WALLET_TYPES.OVERVIEW
-        ? ''
-        : 'Select Software';
+    showBackBtn() {
+      return this.walletType !== SOFTWARE_WALLET_TYPES.OVERVIEW;
     },
     /**
      * @returns correct title of the overlay according to the wallet type selected
@@ -173,7 +172,7 @@ export default {
         case SOFTWARE_WALLET_TYPES.KEYSTORE:
           return 'Access Wallet with Keystore File';
         case SOFTWARE_WALLET_TYPES.MNEMONIC:
-          return 'Access Wallet with Mnemonic Pharse';
+          return 'Access Wallet with Mnemonic Phrase';
         case SOFTWARE_WALLET_TYPES.PRIVATE_KEY:
           return 'Access Wallet with Private Key';
         default:
@@ -202,7 +201,7 @@ export default {
      * Used in overlay back button
      * account is defined in Mnemonic phrase access
      */
-    unclockWallet(account = undefined) {
+    unlockWallet(account = undefined) {
       try {
         const wallet = !account
           ? this.accessHandler.getWalletInstance()
@@ -214,6 +213,7 @@ export default {
             } else {
               this.$router.push({ name: ROUTES_WALLET.WALLETS.NAME });
             }
+            this.trackAccessWallet(this.type);
           })
           .catch(e => {
             Toast(e, {}, ERROR);
@@ -248,6 +248,7 @@ export default {
     setType(newType) {
       if (Object.values(SOFTWARE_WALLET_TYPES).includes(newType)) {
         try {
+          this.type = newType;
           this.$router.push({
             query: { type: newType }
           });

@@ -23,7 +23,7 @@
             :title-icon="dapp.titleIcon"
             :right-icon-type="dapp.rightIconType"
             :right-icon="dapp.rightIcon"
-            @click.native="routeTo(dapp.path)"
+            @click.native="routeTo(dapp.name)"
           />
         </v-col>
       </v-row>
@@ -46,9 +46,11 @@ import { mapGetters } from 'vuex';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import dappsMeta from '@/dapps/metainfo-dapps';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 export default {
   components: { TheWrapperDapp, AppUserMsgBlock },
+  mixins: [handlerAnalytics],
   data() {
     return {
       bannerImage: bannerImage,
@@ -69,8 +71,9 @@ export default {
     }
   },
   methods: {
-    routeTo(path) {
-      this.$router.push({ name: path });
+    routeTo(name) {
+      this.trackDapp(name);
+      this.$router.push({ name: name });
     }
   }
 };

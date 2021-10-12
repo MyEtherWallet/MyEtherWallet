@@ -8,7 +8,8 @@ const defaultNetwork = nodeList['ETH'].find(item => {
 
 const state = {
   localStore: true,
-  addressBook: [],
+  consentToTrack: false,
+  displayedTrackingPopup: false,
   Errors: {},
   online: true,
   linkQuery: {},

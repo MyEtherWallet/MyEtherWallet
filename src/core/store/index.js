@@ -5,6 +5,7 @@ import wallet from './wallet';
 import notifications from './notifications';
 import externalData from './external';
 import swap from './swap';
+import custom from './custom';
 import Configs from './configs';
 import LocalStore from 'store';
 import unstoppableStore from '@/dapps/unstoppable-domains-dapp/store/index.js';
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
     external: externalData,
     notifications: notifications,
     swap: swap,
-    unstoppable: unstoppableStore
+    unstoppable: unstoppableStore,
+    custom: custom
   }
 });
 

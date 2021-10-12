@@ -128,7 +128,7 @@
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://kb.myetherwallet.com/en/transactions/tx-failed-why-was-i-charged/"
+              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -250,20 +250,27 @@
         </v-card-text>
       </template>
     </app-modal>
+    <!--
+    ====================================================================================
+      Sign Message Confirmation
+    =====================================================================================
+    -->
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
-      left-btn-text=""
-      right-btn-text="close"
       :close="reset"
+      content-size="large"
     >
-      <template #mewOverlayBody>
-        <confirmation-messsage
-          ref="messageConfirmationContainer"
-          :msg="signature"
-          :copy="copyToClipboard"
-        />
-      </template>
+      <confirmation-messsage
+        ref="messageConfirmationContainer"
+        :msg="signature"
+        :copy="copyToClipboard"
+      />
     </mew-overlay>
   </div>
 </template>
@@ -342,7 +349,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -354,16 +361,22 @@ export default {
       return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
-      return this.identifier === WALLET_TYPES.WEB3_WALLET;
+      return (
+        this.identifier === WALLET_TYPES.WEB3_WALLET ||
+        this.identifier === WALLET_TYPES.WALLET_CONNECT
+      );
     },
-    isMewConnect() {
-      return this.identifier === WALLET_TYPES.MEW_CONNECT;
+    isOtherWallet() {
+      return (
+        this.identifier === WALLET_TYPES.MEW_CONNECT ||
+        this.identifier === WALLET_TYPES.WALLET_LINK
+      );
+    },
+    isNotSoftware() {
+      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
     },
     showConfirmWithWallet() {
-      return (
-        (this.isHardware || this.isWeb3Wallet) &&
-        (this.signing || this.error !== '')
-      );
+      return this.isNotSoftware && (this.signing || this.error !== '');
     },
     transactions() {
       const newArr =
@@ -644,7 +657,6 @@ export default {
           to: tokenData.tokenTransferTo
         };
       }
-      tx.type = 'OUT';
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
@@ -732,7 +744,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -768,7 +780,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isHardware || this.isWeb3Wallet) {
+      if (this.isNotSoftware) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -781,9 +793,6 @@ export default {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
             }
-            _signedTx.tx['type'] = this.unsignedTxArr[i].type
-              ? this.unsignedTxArr[i].type
-              : 'OUT';
             signed.push(_signedTx);
             if (this.isHardware && this.txSigned) {
               this.btnAction();
@@ -811,7 +820,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
         this.signing = false;
       }
     },
