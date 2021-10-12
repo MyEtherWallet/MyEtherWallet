@@ -10,7 +10,6 @@
       Economic / Regular / Fast
     =====================================================================================
     -->
-    <!-- :id="[setDisabled(b.title)]" -->
     <div>
       <div
         v-for="(b, key) in buttons"
@@ -106,9 +105,7 @@
     <div class="mt-4 d-flex flex-column align-center">
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
-        <span class="buy-eth primary--text" @click="openSimplex"
-          >Buy more ETH</span
-        >
+        <a target="_blank" :href="swapLink"> Buy more ETH </a>
       </div>
     </div>
   </div>
@@ -204,12 +201,14 @@ export default {
     selected() {
       if (this.notEnoughEth) {
         if (this.selected == 'regular') {
-          this.unavailableSpeeds['regular'] = true;
-          this.unavailableSpeeds['fast'] = true;
+          this.unavailableSpeeds.regular = true;
+          this.unavailableSpeeds.fast = true;
         } else if (this.selected == 'fast') {
-          this.unavailableSpeeds['fast'] = true;
+          this.unavailableSpeeds.fast = true;
         } else {
-          this.unavailableSpeed = '';
+          this.unavailableSpeeds.economy = true;
+          this.unavailableSpeeds.regular = true;
+          this.unavailableSpeeds.fast = true;
         }
         this.setSelected(this.previousSelected);
         this.showNotEnoughEthWarning = true;
@@ -231,10 +230,6 @@ export default {
     }
   },
   methods: {
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
-    },
     calcTxFee(priority) {
       return fromWei(
         toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
