@@ -7,6 +7,7 @@ import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 
 class SendTransaction {
   constructor() {
@@ -157,10 +158,6 @@ class SendTransaction {
   }
 }
 SendTransaction.helpers = {
-  hasValidDecimals(amountStr, numDecimals) {
-    const decimals = amountStr.split('.')[1];
-    if (!decimals) return true;
-    return decimals.length <= numDecimals;
-  }
+  hasValidDecimals
 };
 export default SendTransaction;

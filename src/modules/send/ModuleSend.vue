@@ -413,6 +413,13 @@ export default {
       return fromWei(this.txFee);
     },
     totalCost() {
+      if (
+        !SendTransaction.helpers.hasValidDecimals(
+          this.amount,
+          this.selectedCurrency?.decimals
+        )
+      )
+        return '0';
       const amountToWei = toWei(this.amount);
       return this.isFromNetworkCurrency
         ? BigNumber(this.txFee).plus(amountToWei).toString()
