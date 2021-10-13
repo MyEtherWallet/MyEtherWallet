@@ -12,6 +12,7 @@
     =====================================================================================
     -->
     <block-header
+      v-if="!isNewHeader"
       :text-obj="bannerTextObj"
       :banner-img="bannerImg"
       :title-icon="titleIcon"
@@ -26,10 +27,11 @@
         <slot name="HeaderRight" />
       </template>
     </block-header>
+    <the-dapp-header v-else />
 
     <!--
     =====================================================================================
-      Mew Tabs - props: tabItems, activeTab; takes in a slot for each 
+      Mew Tabs - props: tabItems, activeTab; takes in a slot for each
       tab content (tabContent + tab number )
       TODO: remove hideDefaultTabHeader prop and refactor
     =====================================================================================
@@ -65,9 +67,9 @@
 <script>
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import BlockHeader from '@/core/components/AppBlockHeader';
-
+import TheDappHeader from '@/core/components/TheDappHeader';
 export default {
-  components: { BlockHeader },
+  components: { BlockHeader, TheDappHeader },
   props: {
     hasExitBtn: {
       default: false,
@@ -106,6 +108,10 @@ export default {
       type: Function
     },
     hideDefaultTabHeader: {
+      default: false,
+      type: Boolean
+    },
+    isNewHeader: {
       default: false,
       type: Boolean
     }
