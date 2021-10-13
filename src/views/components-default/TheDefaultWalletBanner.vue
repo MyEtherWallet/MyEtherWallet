@@ -27,7 +27,7 @@
     <v-row no-gutters dense align="center">
       <v-col
         cols="12"
-        lg="5"
+        lg="4"
         align-self="center"
         class="d-flex justify-center justify-lg-end pt-14 pb-8 py-lg-4"
       >
@@ -43,7 +43,7 @@
       <v-col
         cols="12"
         offset-lg="1"
-        lg="6"
+        lg="7"
         class="
           d-flex
           align-center
@@ -72,7 +72,7 @@
               target="_blank"
               :href="btn.url"
             >
-              <img height="46" class="mr-1" :src="btn.src" alt="App button" />
+              <img height="46" class="mr-5" :src="btn.src" alt="App button" />
             </a>
           </div>
           <div
