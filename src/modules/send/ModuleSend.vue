@@ -714,7 +714,6 @@ export default {
       this.selectedCurrency = value;
     },
     handleLocalGasPrice(e) {
-      console.log(e);
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(this.actualGasPrice);
     }
