@@ -108,7 +108,7 @@
             :provider="swapInfo.selectedProvider"
             :to-usd="swapInfo.toUsdVal"
             :from-usd="swapInfo.fromUsdVal"
-            :tx-fee="swapInfo.totalFees"
+            :tx-fee="swapInfo.txFee"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
           />

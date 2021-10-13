@@ -8,12 +8,12 @@
     <app-network-settings-modal
       :close="closeGasPrice"
       :gas-price-modal="gasPriceModal"
-      :selected="gasPriceType"
       :not-enough-eth="notEnoughEth"
       :cost-in-eth="costInEth"
       :tx-fee-formatted="txFeeFormatted"
       :tx-fee-usd="feeInUsd"
       :total-gas-limit="totalGasLimit"
+      @onLocalGasPrice="handleLocalGasPrice"
       @close="closeGasPrice"
     />
 
@@ -214,6 +214,9 @@ export default {
       this.updateGasPrice().then(() => {
         this.gasPriceModal = true;
       });
+    },
+    handleLocalGasPrice(val) {
+      this.$emit('onLocalGasPrice', val);
     }
   }
 };

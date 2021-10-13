@@ -8,7 +8,6 @@
     <settings-gas-price
       :is-swap="true"
       :buttons="gasButtons"
-      :selected="selected"
       :set-selected="setGas"
       :gas-price="gasPrice"
       :cost-in-eth="costInEth"
@@ -23,11 +22,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import AppSimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 export default {
   components: {
     AppSimpleDialog,
@@ -42,10 +40,6 @@ export default {
     close: {
       type: Function,
       default: () => {}
-    },
-    selected: {
-      type: String,
-      default: gasPriceTypes.ECONOMY
     },
     notEnoughEth: {
       type: Boolean,
@@ -72,12 +66,34 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters('global', ['gasPriceByType'])
+    ...mapState('global', ['online'])
+  },
+  watch: {
+    /**
+     * emit gas when modal
+     * opens in case of difference
+     */
+    gasPriceModal(newVal) {
+      if (newVal)
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+    },
+    /**
+     * only emit new gas price
+     * when modal is open
+     */
+    gasPrice() {
+      if (this.gasPriceModal) {
+        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+      }
+    }
   },
   methods: {
+    /**
+     * emit selected gas
+     */
     setGas(value) {
+      this.$emit('onLocalGasPrice', this.gasPriceByType(value));
       this.setSelected(value);
-      this.close();
     },
     closeDialog() {
       this.close();

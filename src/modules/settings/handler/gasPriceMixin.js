@@ -31,8 +31,7 @@ const gasPriceMixin = {
             ).value
           }`,
           time: estimatedTime(gasPriceTypes.ECONOMY),
-          priority: 'Normal priority',
-          disabled: false
+          priority: 'Normal priority'
         },
         {
           title: gasPriceTypes.REGULAR,
@@ -43,8 +42,7 @@ const gasPriceMixin = {
             ).value
           }`,
           time: estimatedTime(gasPriceTypes.REGULAR),
-          priority: 'Higher priority',
-          disabled: false
+          priority: 'Higher priority'
         },
         {
           title: gasPriceTypes.FAST,
@@ -55,8 +53,7 @@ const gasPriceMixin = {
             ).value
           }`,
           time: estimatedTime(gasPriceTypes.FAST),
-          priority: 'Highest priority',
-          disabled: false
+          priority: 'Highest priority'
         }
       ];
     }

@@ -85,11 +85,11 @@
             :error="feeError"
             :total-cost="totalCost"
             :tx-fee="txFee"
-            :gas-price-type="gasPriceType"
             :total-gas-limit="gasLimit"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
             :from-eth="isFromNetworkCurrency"
+            @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
         <!--
@@ -235,7 +235,8 @@ export default {
       gasLimitError: '',
       amountError: '',
       gasEstimationError: '',
-      gasEstimationIsReady: false
+      gasEstimationIsReady: false,
+      localGasPrice: '0'
     };
   },
   computed: {
@@ -456,8 +457,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      const gasPrice = this.gasPriceByType(this.gasPriceType);
-      return BigNumber(gasPrice);
+      if (BigNumber(this.localGasPrice).eq(0)) {
+        return BigNumber(this.gasPrice);
+      }
+      return BigNumber(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -560,11 +563,13 @@ export default {
       this.amountError = '';
       this.gasEstimationError = '';
       this.gasEstimationIsReady = false;
+      this.localGasPrice = '0';
 
       // resets the defaults on mount
       this.setSendTransaction();
       this.gasLimit = this.prefilledGasLimit;
       this.sendTx.setCurrency(this.selectedCurrency);
+      this.handleLocalGasPrice(this.gasPrice);
     },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
@@ -707,6 +712,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+    },
+    handleLocalGasPrice(e) {
+      console.log(e);
+      this.localGasPrice = e;
+      this.sendTx.setLocalGasPrice(this.actualGasPrice);
     }
   }
 };

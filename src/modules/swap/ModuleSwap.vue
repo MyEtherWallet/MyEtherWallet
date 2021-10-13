@@ -237,11 +237,12 @@
                   :error="feeError"
                   :total-cost="totalCost"
                   :tx-fee="txFee"
+                  :total-gas-limit="totalGasLimit"
                   :message="feeError"
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
-                  :total-gas-limit="totalGasLimit"
                   class="mt-10 mt-sm-16"
+                  @onLocalGasPrice="handleLocalGasPrice"
                 />
                 <div
                   v-if="
@@ -364,21 +365,12 @@ export default {
       defaults: {
         fromToken: this.fromToken
       },
-      exPannel: [
-        {
-          name: 'Transaction Fee',
-          subtext: '$0.00',
-          tooltip:
-            'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
-        }
-      ],
       isLoadingProviders: false,
       showAnimation: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
-      localGasPrice: '0',
-      localGasType: 'economy'
+      localGasPrice: '0'
     };
   },
   computed: {
@@ -728,7 +720,9 @@ export default {
      * reflects block and selected gas price
      */
     currentGasPrice() {
-      return this.gasPriceByType(this.gasPriceType);
+      return BigNumber(this.localGasPrice).eq(0)
+        ? this.gasPriceByType(this.gasPriceType)
+        : this.localGasPrice;
     },
     /**
      * Determines whether or not to show swap fee panel
@@ -844,14 +838,6 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
-    // isInvalidTxSpeed(gasPrice) {
-    //   const txFee = toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
-    //   const balanceAfterFees = toBN(this.balance).sub(toBN(txFee));
-    //   const isNotEnoughEth = this.isFromTokenMain
-    //     ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-    //     : balanceAfterFees.isNeg();
-    //   return isNotEnoughEth;
-    // },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);
@@ -903,7 +889,7 @@ export default {
       this.checkLoading = true;
       this.addressValue = {};
       this.selectedProvider = {};
-      this.localGasType = 'economy';
+      this.localGasPrice = '0';
       this.$refs.toToken.clear();
       this.$refs.amountInput.clear();
       this.setupSwap();
@@ -1129,9 +1115,6 @@ export default {
       }
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.currentGasPrice;
-      this.exPannel[0].subtext = `${fromWei(this.txFee)} ${
-        this.network.type.name
-      }`;
       this.step = 2;
       this.loadingFee = false;
       this.checkFeeBalance();
@@ -1149,7 +1132,7 @@ export default {
         toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
           .times(this.tokenOutValue)
           .toFixed(),
-        fromUsdVal: this.fromTokenType.usdBalance,
+        fromUsdVal: this.fromTokenType.price,
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         txFee: this.txFee,
@@ -1242,6 +1225,9 @@ export default {
       if (!this.isLoadingProviders && val) {
         this.showAnimation = false;
       }
+    },
+    handleLocalGasPrice(e) {
+      this.localGasPrice = e;
     }
   }
 };

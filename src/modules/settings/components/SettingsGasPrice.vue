@@ -2,7 +2,7 @@
   <div>
     <div class="textPrimary--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
-      newtwork traffic. MEW does not profit form this fee.
+      network traffic. MEW does not profit from this fee.
     </div>
 
     <!--
@@ -10,21 +10,19 @@
       Economic / Regular / Fast
     =====================================================================================
     -->
-    <!-- :id="[setDisabled(b.title)]" -->
     <div>
       <div
         v-for="(b, key) in buttons"
-        :id="[b.disabled ? 'disabled' : '']"
+        :id="$data[`${b.title}Disabled`] ? 'disabled' : ''"
         :key="key"
         class="mb-2 d-flex align-center justify-space-between group-button"
-        :class="[selected === b.title ? 'active' : '']"
+        :class="[gasPriceType === b.title ? 'active' : '']"
         @click.stop="
           () => {
             setSelected(b.title);
           }
         "
       >
-        {{ b.disabled }}
         <div class="d-flex align-center">
           <div
             class="mr-1 ml-n1 text-center"
@@ -107,9 +105,7 @@
     <div class="mt-4 d-flex flex-column align-center">
       <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
-        <span class="buy-eth primary--text" @click="openSimplex"
-          >Buy more ETH</span
-        >
+        <a target="_blank" :href="swapLink"> Buy more ETH </a>
       </div>
     </div>
   </div>
@@ -128,10 +124,6 @@ import BigNumber from 'bignumber.js';
 export default {
   name: 'SettingsGasPrice',
   props: {
-    selected: {
-      type: String,
-      default: gasPriceTypes.ECONOMY
-    },
     setSelected: {
       type: Function,
       default: () => {}
@@ -162,11 +154,9 @@ export default {
       gasPriceTypes: gasPriceTypes,
       previousSelected: null,
       showNotEnoughEthWarning: false,
-      unavailableSpeeds: {
-        economy: false,
-        regular: false,
-        fast: false
-      }
+      economyDisabled: false,
+      regularDisabled: false,
+      fastDisabled: false
     };
   },
   computed: {
@@ -200,76 +190,49 @@ export default {
     fastInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.FAST);
       return this.formatInUsd(txFee);
-    },
-    /**
-     *
-     */
-    newButtons() {
-      const newArray = [];
-      const amount = BigNumber(this.costInEth).minus(
-        this[`${this.selected}InEth`]
-      );
-      this.buttons.forEach(item => {
-        if (this.notEnoughEth) item.disabled = true;
-        const withFee = BigNumber(amount).plus(this[`${item.title}InEth`]);
-        item.disabled = withFee.gt(this.balanceInEth);
-        console.log(withFee.toString(), withFee.gt(this.balanceInETH));
-        newArray.push(item);
-      });
-      this.$forceUpdate();
-      return newArray;
     }
   },
   watch: {
     /**
      * If not enough balance to cover new priority, go back to previous priority
      */
-    selected() {
+    gasPriceType() {
       if (this.notEnoughEth) {
-        if (this.selected == 'regular') {
-          this.unavailableSpeeds['regular'] = true;
-          this.unavailableSpeeds['fast'] = true;
-        } else if (this.selected == 'fast') {
-          this.unavailableSpeeds['fast'] = true;
+        if (this.gasPriceType == 'regular') {
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        } else if (this.gasPriceType == 'fast') {
+          this.fastDisabled = true;
         } else {
-          this.unavailableSpeed = '';
+          this.economyDisabled = true;
+          this.regularDisabled = true;
+          this.fastDisabled = true;
         }
         this.setSelected(this.previousSelected);
         this.showNotEnoughEthWarning = true;
       }
 
       if (!this.notEnoughEth) {
-        this.previousSelected = this.selected;
+        this.previousSelected = this.gasPriceType;
       }
     },
-    costInEth: {
-      handler: function (newVal) {
-        const amount = BigNumber(newVal).minus(this[`${this.selected}InEth`]);
-        this.buttons.map(item => {
-          const withFee = BigNumber(amount).plus(this[`${item.title}InEth`]);
-          item.disabled = withFee.gt(this.balanceInEth);
-          console.log(withFee.toString(), withFee.gt(this.balanceInETH));
-          return item;
-        });
-      },
-      immediate: true
+    costInEth(newVal) {
+      const amount = BigNumber(newVal).minus(this[`${this.gasPriceType}InEth`]);
+      Object.values(this.gasPriceTypes).forEach(item => {
+        const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
+        this[`${item}Disabled`] = withFee.gt(this.balanceInETH);
+      });
+    },
+    notEnoughEth(val) {
+      Object.values(this.gasPriceTypes).forEach(item => {
+        this[`${item}Disabled`] = val;
+      });
     }
   },
   mounted() {
-    this.previousSelected = this.selected;
-
-    if (this.notEnoughEth) {
-      this.showNotEnoughEthWarning = true;
-      this.unavailableSpeeds.economy = true;
-      this.unavailableSpeeds.regular = true;
-      this.unavailableSpeeds.fast = true;
-    }
+    this.previousSelected = this.gasPriceType;
   },
   methods: {
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
-    },
     calcTxFee(priority) {
       return fromWei(
         toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
