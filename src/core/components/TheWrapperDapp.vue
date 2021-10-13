@@ -27,7 +27,12 @@
         <slot name="HeaderRight" />
       </template>
     </block-header>
-    <the-dapp-header v-else />
+    <the-dapp-header
+      v-else
+      :dapp-name="bannerText.title"
+      :dapp-text="bannerText.subtext"
+      :dapp-img="dappImg"
+    />
 
     <!--
     =====================================================================================
@@ -114,6 +119,10 @@ export default {
     isNewHeader: {
       default: false,
       type: Boolean
+    },
+    dappImg: {
+      default: '',
+      type: String
     }
   },
   data() {
