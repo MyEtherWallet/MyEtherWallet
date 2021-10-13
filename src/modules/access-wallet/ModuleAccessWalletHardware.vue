@@ -210,6 +210,7 @@
     <access-wallet-address-network
       v-if="step === 3"
       :back="null"
+      :hide-custom-paths="onKeepkey || onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
@@ -223,9 +224,6 @@
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { _ } from 'web3-utils';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
-// import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletPassword from './hardware/components/AccessWalletPassword';
-// import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
@@ -249,9 +247,6 @@ export default {
     AccessWalletDerivationPath,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
-    // AccessWalletPassword,
-    // AccessWalletPaths,
-    // BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -518,6 +513,14 @@ export default {
       return this.wallets[this.walletType].title;
     }
   },
+  watch: {
+    selectedPath: {
+      handler: function () {
+        if (this.walletType) this[`${this.walletType}Unlock`]();
+      },
+      deep: true
+    }
+  },
   mounted() {
     if (this.switchAddress) {
       this.nextStep(this.identifier);
@@ -582,9 +585,6 @@ export default {
     },
     trezorUnlock() {
       this.unlockPathOnly();
-    },
-    bitboxUnlock() {
-      this.unlockPathAndPassword(this.hasPath, this.password);
     },
     bitbox02Unlock() {
       this.unlockPathOnly();
