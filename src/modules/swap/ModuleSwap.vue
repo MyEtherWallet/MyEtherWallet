@@ -679,7 +679,19 @@ export default {
         {
           header: 'Other Tokens'
         },
-        ...validFromTokens
+        ...validFromTokens,
+        //Adding in BTC to match 'TO' trending token
+        {
+          contract: '0xbtc',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
+          symbol: 'BTC',
+          isEth: false,
+          name: 'BTC',
+          subtext: 'Bitcoin',
+          value: 'Bitcoin',
+          cgid: 'bitcoin'
+        }
       ];
       return returnableTokens;
     },

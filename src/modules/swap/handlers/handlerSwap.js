@@ -38,9 +38,11 @@ class Swap {
           if (a.name > b.name) return 1;
           return -1;
         });
+        //filtering duplicate BTCs since we add later with trending
+        const filtered = sorted.filter(a => a.symbol != 'BTC');
         return {
-          fromTokens: sorted,
-          toTokens: sorted
+          fromTokens: filtered,
+          toTokens: filtered
         };
       });
     });
