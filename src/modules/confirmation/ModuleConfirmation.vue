@@ -10,6 +10,13 @@
       :links="links"
       :success-body-text="successBodyText"
     />
+    <cross-chain-confirmation
+      :show-cross-chain-modal="showCrossChainModal"
+      :tx-obj="tx"
+      :title="title"
+      :reset="reset"
+      :sent-btc="resolver"
+    />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
@@ -224,6 +231,7 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+import CrossChainConfirmation from './components/CrossChainConfirmation';
 
 import SuccessModal from './components/SuccessModal';
 
@@ -256,7 +264,8 @@ export default {
     ConfirmationSwapTransactionDetails,
     ConfirmationSendTransactionDetails,
     ConfirmWithWallet,
-    SuccessModal
+    SuccessModal,
+    CrossChainConfirmation
   },
   data() {
     return {
@@ -264,7 +273,7 @@ export default {
       showSignOverlay: false,
       showSuccessModal: false,
       showSuccessSwap: false,
-      showCrossChain: false,
+      showCrossChainModal: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -543,10 +552,9 @@ export default {
      * and a resolver which resets the module confirmation
      */
     EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
-      console.log('i got here', txObj);
       _self.title = `Send ${txObj.fromType}`;
       _self.tx = txObj;
-      _self.showCrossChain = true;
+      _self.showCrossChainModal = true;
       _self.resolver = () => {
         resolver();
         _self.reset();
@@ -579,6 +587,7 @@ export default {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
       this.showSuccessModal = false;
+      this.showCrossChainModal = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';

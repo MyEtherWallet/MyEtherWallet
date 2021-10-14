@@ -1235,7 +1235,11 @@ export default {
         toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
           .times(this.tokenOutValue)
           .toFixed(),
-        fromUsdVal: this.fromTokenType.usdBalance,
+        fromUsdVal: BigNumber(
+          this.fromTokenType.price ? this.fromTokenType.price : 0
+        )
+          .times(this.tokenInValue)
+          .toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         totalFees: this.totalFees,
@@ -1244,7 +1248,7 @@ export default {
       this.executeTrade();
     },
     showTradeConfirm() {
-      console.log('calling this guy')
+      console.log('calling this guy');
       const confirmInfo = {
         validUntil: 1633726964016,
         toVal: '29.22085440',
@@ -1309,10 +1313,12 @@ export default {
       //   toImg: this.toTokenType.img,
       //   fromVal: this.tokenInValue,
       //   toVal: this.tokenOutValue,
-      //   toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-      //     .times(this.tokenOutValue)
-      //     .toFixed(),
-      //   fromUsdVal: this.fromTokenType.usdBalance,
+      // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+      //   .times(this.tokenOutValue)
+      //   .toFixed(),
+      // fromUsdVal: BigNumber(this.fromTokenType.price ? this.fromTokenType.price : 0)
+      //   .times(this.tokenInValue)
+      //   .toFixed(),
       //   validUntil: new Date().getTime() + 10 * 60 * 1000,
       //   selectedProvider: this.selectedProvider,
       //   actualTrade: this.currentTrade
