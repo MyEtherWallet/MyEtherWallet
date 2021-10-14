@@ -705,6 +705,7 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+      this.amount = 0;
     }
   }
 };
