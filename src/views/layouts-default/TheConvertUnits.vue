@@ -1,44 +1,52 @@
 <template>
   <div class="mew-component--convert-units">
     <the-layout-header title="Convert Units" />
-    <div class="py-7" />
+    <v-container class="my-10">
+      <div><unit-input :options="options" /></div>
 
-    <v-container>
-      <div class="page-container">
-        <div class="page-title">
-          <page-title
-            :options="{
-              title: $t('convertUnits.page.title'),
-              boldSubTitle: '',
-              textContent: [$t('convertUnits.page.desc')]
-            }"
-          />
-        </div>
+      <div class="mew-heading-1">
+        {{ $t('convertUnits.title-refference') }}
+      </div>
 
-        <div><unit-input :options="options" /></div>
-
-        <div class="ether-unit-reference-guide">
-          <div class="block-title">
-            <h3>{{ $t('convertUnits.title-refference') }}</h3>
-          </div>
-
-          <div class="unit-table">
-            <table>
-              <tbody>
-                <tr v-for="eu in etherUnitRef" :key="eu.key">
-                  <td>{{ eu.name }}</td>
-                  <td class="unit-long">{{ eu.unit1 }}</td>
-                  <td class="unit-short">
-                    <div>
-                      {{ eu.unit2 }}<span>{{ eu.unit2e }}</span>
-                    </div>
-                  </td>
-                  <td>{{ eu.desc }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="unit-table">
+        <table>
+          <thead>
+            <tr class="font-weight-medium">
+              <td>Unit</td>
+              <td>Wei</td>
+              <td>Ether</td>
+              <td>Alternate name</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="eu in etherUnitRef" :key="eu.key">
+              <td>{{ eu.name }}</td>
+              <td>
+                <div class="d-flex align-center">
+                  <div v-show="$vuetify.breakpoint.mdAndUp" class="mr-1">
+                    {{ eu.unit1 }} =
+                  </div>
+                  <div class="unit-short">
+                    {{ eu.unit2 }}
+                    <span> {{ eu.unit2e }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-center">
+                  <div v-show="$vuetify.breakpoint.lgAndUp" class="mr-1">
+                    {{ eu.etherUnit1 }} =
+                  </div>
+                  <div class="unit-short">
+                    {{ eu.etherUnit2 }}
+                    <span> {{ eu.etherUnit2e }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ eu.desc }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </v-container>
 
@@ -64,6 +72,9 @@ export default {
           unit1: '1',
           unit2: '1',
           unit2e: '',
+          etherUnit1: '0.000,000,000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-18',
           desc: ''
         },
         {
@@ -71,6 +82,9 @@ export default {
           unit1: '1,000',
           unit2: '10',
           unit2e: '3',
+          etherUnit1: '0.000,000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-15',
           desc: 'ada, femtoether'
         },
         {
@@ -78,6 +92,9 @@ export default {
           unit1: '1,000,000',
           unit2: '10',
           unit2e: '6',
+          etherUnit1: '0.000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-12',
           desc: 'babbage, picoether'
         },
         {
@@ -85,6 +102,9 @@ export default {
           unit1: '1,000,000,000',
           unit2: '10',
           unit2e: '9',
+          etherUnit1: '0.000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-9',
           desc: 'shannon, nanoether, nano'
         },
         {
@@ -92,6 +112,9 @@ export default {
           unit1: '1,000,000,000,000',
           unit2: '10',
           unit2e: '12',
+          etherUnit1: '0.000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-6',
           desc: 'microether, micro'
         },
         {
@@ -99,6 +122,9 @@ export default {
           unit1: '1,000,000,000,000,000',
           unit2: '10',
           unit2e: '15',
+          etherUnit1: '0.001',
+          etherUnit2: '10',
+          etherUnit2e: '-3',
           desc: 'milliether, milli'
         },
         {
@@ -106,6 +132,9 @@ export default {
           unit1: '1,000,000,000,000,000,000',
           unit2: '10',
           unit2e: '18',
+          etherUnit1: '1',
+          etherUnit2: '1',
+          etherUnit2e: '',
           desc: ''
         },
         {
@@ -113,6 +142,9 @@ export default {
           unit1: '1,000,000,000,000,000,000,000',
           unit2: '10',
           unit2e: '21',
+          etherUnit1: '1,000',
+          etherUnit2: '10',
+          etherUnit2e: '3',
           desc: 'grand, einstein'
         },
         {
@@ -120,6 +152,9 @@ export default {
           unit1: '1,000,000,000,000,000,000,000,000',
           unit2: '10',
           unit2e: '24',
+          etherUnit1: '1,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '6',
           desc: ''
         },
         {
@@ -127,6 +162,9 @@ export default {
           unit1: '1,000,000,000,000,000,000,000,000,000',
           unit2: '10',
           unit2e: '27',
+          etherUnit1: '1,000,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '9',
           desc: ''
         },
         {
@@ -134,6 +172,9 @@ export default {
           unit1: '1,000,000,000,000,000,000,000,000,000,000',
           unit2: '10',
           unit2e: '30',
+          etherUnit1: '1,000,000,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '12',
           desc: ''
         }
       ],
@@ -156,41 +197,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ether-unit-reference-guide {
-  margin-top: 60px;
-
-  .block-title {
-    text-align: center;
-  }
-
-  .unit-table {
-    margin-top: 20px;
-    table {
-      width: 100%;
-      border-top: 1px solid grey;
+.unit-table {
+  margin-top: 20px;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
       tr {
+        border-top: 1px solid var(--v-titlePrimary-base);
+        border-bottom: 1px solid var(--v-titlePrimary-base);
+      }
+    }
+    tbody {
+      tr:nth-child(even) {
+        background-color: var(--v-tableHeader-base);
+      }
+    }
+    tr {
+      td {
+        padding: 12px 10px;
         position: relative;
-        border-bottom: 1px solid grey;
-        td {
-          padding: 18px 10px;
-          position: relative;
-
-          span {
-            position: absolute;
-            top: 3px;
-            left: 17px;
-            font-size: 9px;
-            margin-top: -10px;
-          }
-        }
       }
     }
   }
+}
 
-  .unit-short {
-    & > div {
-      position: relative;
-    }
+.unit-short {
+  position: relative;
+  span {
+    position: absolute;
+    top: 3px;
+    left: 17px;
+    font-size: 9px;
+    margin-top: -10px;
   }
 }
 </style>
