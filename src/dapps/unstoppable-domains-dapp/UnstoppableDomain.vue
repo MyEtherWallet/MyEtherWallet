@@ -20,24 +20,24 @@
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">
                   {{ $t('unstoppable.search-domain-prompt') }}
                 </div>
-              </div>
+              </div> -->
               <div class="d-flex align-start">
                 <mew-input
                   v-model="input"
                   :has-clear-btn="true"
                   right-label=".crypto"
-                  label="Domain name"
+                  :label="$t('unstoppable.search-domain-prompt')"
                   placeholder=" "
                   class="mr-3 flex-grow-1"
                 />
                 <mew-button
                   :has-full-width="false"
                   btn-size="xlarge"
-                  title="Check availability"
+                  title="Search"
                   @click.native="searchDomain"
                 />
               </div>
