@@ -1,8 +1,51 @@
 <template>
   <div class="mew-component--convert-units">
-    <the-layout-header title="Convert Units" />
-    <v-container class="my-10">
-      <div><unit-input :options="options" /></div>
+    <the-layout-header
+      title="Convert Units"
+      subtitle-line-one="Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions."
+    />
+    <v-container class="my-15">
+      <v-row class="conver-units mx-auto mb-15" style="max-width: 1000px">
+        <v-col cols="12" md="5">
+          <mew-select
+            :has-filter="false"
+            :items="items"
+            :value="selectedLeft"
+            class="mb-2"
+            @input="updateCurrencyLeft"
+          />
+          <mew-input
+            :value="valueLeft"
+            type="number"
+            label="Amount"
+            @input="updateAmountLeft"
+          />
+        </v-col>
+        <v-col cols="12" md="2" class="d-flex align-center justify-center">
+          <v-icon
+            :style="
+              $vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
+            "
+            large
+            >mdi-swap-horizontal</v-icon
+          >
+        </v-col>
+        <v-col cols="12" md="5">
+          <mew-select
+            :has-filter="false"
+            :items="items"
+            :value="selectedRight"
+            class="mb-2"
+            @input="updateCurrencyRight"
+          />
+          <mew-input
+            :value="valueRight"
+            type="number"
+            label="Amount"
+            @input="updateAmountRight"
+          />
+        </v-col>
+      </v-row>
 
       <div class="mew-heading-1">
         {{ $t('convertUnits.title-refference') }}
@@ -57,6 +100,9 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppGetStarted from '@/core/components/AppGetStarted';
+import { mapState } from 'vuex';
+import { BigNumber } from 'bignumber.js';
+import utils from 'web3-utils';
 
 export default {
   name: 'TheConvertUnits',
@@ -66,6 +112,62 @@ export default {
   },
   data() {
     return {
+      items: [
+        {
+          name: 'Wei',
+          value: 'wei'
+        },
+        {
+          name: 'Kwei',
+          value: 'kwei'
+        },
+        {
+          name: 'Mwei',
+          value: 'mwei'
+        },
+        {
+          name: 'Gwei',
+          value: 'gwei'
+        },
+        {
+          name: 'Szabo',
+          value: 'szabo'
+        },
+        {
+          name: 'Finney',
+          value: 'finney'
+        },
+        {
+          name: 'Ether',
+          value: 'ether'
+        },
+        {
+          name: 'Kether',
+          value: 'kether'
+        },
+        {
+          name: 'Mether',
+          value: 'mether'
+        },
+        {
+          name: 'Gether',
+          value: 'gether'
+        },
+        {
+          name: 'Tether',
+          value: 'tether'
+        }
+      ],
+      selectedLeft: {
+        name: 'Wei',
+        value: 'wei'
+      },
+      selectedRight: {
+        name: 'Ether',
+        value: 'ether'
+      },
+      valueLeft: '1000000000000000000',
+      valueRight: '1',
       etherUnitRef: [
         {
           name: 'Wei',
@@ -177,21 +279,66 @@ export default {
           etherUnit2e: '12',
           desc: ''
         }
-      ],
-      options: [
-        'wei',
-        'kwei',
-        'mwei',
-        'gwei',
-        'szabo',
-        'finney',
-        'ether',
-        'kether',
-        'mether',
-        'gether',
-        'tether'
       ]
     };
+  },
+  computed: {
+    ...mapState('wallet', ['web3'])
+  },
+  watch: {
+    valueLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        newVal,
+        this.selectedLeft,
+        this.selectedRight
+      );
+    },
+    valueRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        newVal,
+        this.selectedRight,
+        this.selectedLeft
+      );
+    },
+    selectedLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        this.valueLeft,
+        newVal,
+        this.selectedRight
+      );
+    },
+    selectedRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        this.valueRight,
+        newVal,
+        this.selectedLeft
+      );
+    }
+  },
+  methods: {
+    getValueOfUnit(unit) {
+      unit = unit ? unit.value.toLowerCase() : 'ether';
+      const unitValue = utils.unitMap[unit];
+      return new BigNumber(unitValue, 10);
+    },
+    convertFromTo(amt, from, to) {
+      return new BigNumber(String(amt))
+        .times(this.getValueOfUnit(from))
+        .div(this.getValueOfUnit(to))
+        .toString(10);
+    },
+    updateCurrencyLeft(e) {
+      this.selectedLeft = e;
+    },
+    updateCurrencyRight(e) {
+      this.selectedRight = e;
+    },
+    updateAmountLeft(e) {
+      this.valueLeft = e;
+    },
+    updateAmountRight(e) {
+      this.valueRight = e;
+    }
   }
 };
 </script>
@@ -230,6 +377,14 @@ export default {
     left: 17px;
     font-size: 9px;
     margin-top: -10px;
+  }
+}
+</style>
+
+<style lang="scss">
+.mew-component--convert-units {
+  .v-text-field__details {
+    display: none;
   }
 }
 </style>
