@@ -18,7 +18,7 @@
     ===================================================
     -->
     <template #tabContent1>
-      <p>Tab1</p>
+      <module-eth-blocks-mint />
     </template>
     <!--
     ===================================================
@@ -27,26 +27,33 @@
     -->
     <template #tabContent2>
       <p>Tab2</p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+      </p>
     </template>
   </the-wrapper-dapp>
 </template>
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-
+import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint.vue';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp
+    TheWrapperDapp,
+    ModuleEthBlocksMint
   },
   data() {
     return {
       header: {
-        title: 'Eth Blocks',
+        title: 'ETH Blocks',
         subtext: 'Mint stunning QR art-pieces based on your favorite blocks.'
       },
       activeTab: 0,
-      tabs: [{ name: 'Tab1' }, { name: 'Tab2' }],
+      tabs: [{ name: 'Mint a new block' }, { name: 'My blocks' }],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg')
     };
   }

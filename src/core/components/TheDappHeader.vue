@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-5 pt-sm-9 pb-sm-5 px-sm-13">
+  <v-container fluid class="pa-5 pt-sm-9 px-sm-13">
     <!--
     =====================================================================================
       DAPP HEADER:
@@ -36,7 +36,9 @@
           class="bluePrimary--text"
         >
           <v-row class="align-center" no-gutters>
-            <v-icon class="green--text" size="20"> mdi-chevron-left</v-icon>
+            <v-icon class="bluePrimary--text" size="20">
+              mdi-chevron-left</v-icon
+            >
             <div>{{ $t('common.dapps') }}</div>
           </v-row>
         </router-link>

@@ -43,7 +43,12 @@
     -->
     <mew-tabs
       v-if="tabItems.length > 0"
-      :class="['pt-5', hideDefaultTabHeader ? 'hide-default-tab-header' : '']"
+      :class="[
+        {
+          'pt-5': !isNewHeader,
+          'hide-default-tab-header': hideDefaultTabHeader
+        }
+      ]"
       :items="tabItems"
       :is-centered="true"
       :active-tab="activeTab"
@@ -116,6 +121,9 @@ export default {
       default: false,
       type: Boolean
     },
+    /** NEW ITEMS FOR UPDATED WRAPPER
+     * NOTE: REFACTOR NEEDED FOR OTHER DAPPS
+     */
     isNewHeader: {
       default: false,
       type: Boolean
