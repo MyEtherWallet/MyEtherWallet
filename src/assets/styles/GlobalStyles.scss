@@ -66,8 +66,12 @@ html {
 
 .v-dialog {
   border-radius: 8px !important;
+  .v-dialog:active {
+    .v-bottom-sheet {
+      z-index: 35000 !important;
+    }
+  }
 }
-
 /* ========== Fix MEW components ========== */
 .theme--dark.v-expansion-panels .v-expansion-panel {
   background-color: transparent !important;
