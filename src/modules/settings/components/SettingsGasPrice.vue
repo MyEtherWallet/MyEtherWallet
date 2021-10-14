@@ -230,6 +230,12 @@ export default {
     }
   },
   mounted() {
+    if (this.notEnoughEth) {
+      this.showNotEnoughEthWarning = true;
+      Object.values(this.gasPriceTypes).forEach(item => {
+        this[`${item}Disabled`] = true;
+      });
+    }
     this.previousSelected = this.gasPriceType;
   },
   methods: {
