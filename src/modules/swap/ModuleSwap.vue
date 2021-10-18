@@ -1028,7 +1028,7 @@ export default {
       if (
         !Swapper.helpers.hasValidDecimals(
           this.tokenInValue,
-          this.fromTokenType.decimals
+          !this.fromTokenType.decimals ? 18 : this.fromTokenType.decimals
         )
       ) {
         return;
