@@ -130,23 +130,11 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="align-center justify-start">
-        <v-col cols="4">
-          <div class="headline font-weight-bold mb-5">Derivation Path:</div>
-        </v-col>
-        <v-col cols="6" offset="2">
-          <mew-select
-            v-model="selectedPath"
-            label="Select Path"
-            :has-filter="true"
-            :items="parsedPaths"
-            filter-placeholder="Search Path"
-          />
-        </v-col>
-      </v-row>
       <access-wallet-address-network
         :handler-wallet="walletInstance"
         :selected-path="selectedPath"
+        :paths="parsedPaths"
+        @setPath="setPath"
         @unlock="accessWallet"
       />
     </template>
@@ -157,7 +145,6 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
-// import { checkCustomPath } from '../handlers/pathHelper';
 import { _ } from 'web3-utils';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
@@ -204,14 +191,13 @@ export default {
           value: 24
         }
       ],
-      // customPathName: '',
-      // customPathValue: '',
       /* Derivation Path */
       selectedPath: {
         name: 'Ethereum',
         subtext: "m/44'/60'/0'/0",
         value: "m/44'/60'/0'/0"
-      }
+      },
+      walletInstance: {}
     };
   },
   computed: {
@@ -247,9 +233,6 @@ export default {
      */
     parsedPhrase() {
       return Object.values(this.phrase).join(' ').toLowerCase();
-    },
-    walletInstance() {
-      return this.handlerAccessWallet.getWalletInstance();
     },
     /**
      * Property returns default Paths + Custom paths, used in Select Path component
@@ -291,8 +274,6 @@ export default {
     selectedPath: {
       deep: true,
       handler: function () {
-        this.addressPage = 0;
-        this.currentIdx = 0;
         this.nextStepTwo();
       }
     }
@@ -318,42 +299,9 @@ export default {
           Toast(e, {}, ERROR);
         });
     },
-    /**
-     * Method adds custom path.
-     * Checks, whether or not the path is valid and already exhists in the parsed paths.
-     * Shows toast message to use on error or successfull addition.
-     * Used in STEP 2
-     */
-    // saveCustomPath() {
-    //   try {
-    //     const customPath = checkCustomPath(this.customPathValue);
-    //     if (customPath) {
-    //       if (this.parsedPaths.some(e => e.value === this.customPathValue)) {
-    //         const error = `Custom path already exhists: ${
-    //           this.parsedPaths.find(e => e.value === this.customPathValue).name
-    //         }`;
-    //         Toast(error, {}, ERROR);
-    //       } else {
-    //         const newPath = {
-    //           name: this.customPathName,
-    //           subtext: this.customPathValue,
-    //           value: this.customPathValue
-    //         };
-    //         this.addCustomPath(newPath).then(() => {
-    //           Toast('You have added custom path successfully.', {}, SUCCESS);
-    //         });
-    //       }
-    //     } else {
-    //       Toast('Custom path is not valid', {}, ERROR);
-    //     }
-    //   } catch (error) {
-    //     Toast(error, {}, ERROR);
-    //   }
-    // },
-    /**
-     * Methods sets addresses according to the path selected
-     * Used in STEP 1
-     */
+    setPath(e) {
+      this.selectedPath = e;
+    },
     nextStepTwo() {
       const defaultPath = this.selectedPath;
       this.handlerAccessWallet
@@ -361,6 +309,7 @@ export default {
         .catch(e => {
           Toast(e, {}, ERROR);
         });
+      this.walletInstance = this.handlerAccessWallet.getWalletInstance();
     },
     /**
      * Clears mnemonic input field

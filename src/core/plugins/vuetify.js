@@ -79,7 +79,8 @@ import Vuetify, {
   VScrollYTransition,
   VSkeletonLoader,
   VChip,
-  VSystemBar
+  VSystemBar,
+  VAlert
 } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
@@ -159,7 +160,8 @@ Vue.use(Vuetify, {
     VScrollYTransition,
     VSkeletonLoader,
     VChip,
-    VSystemBar
+    VSystemBar,
+    VAlert
   }
 });
 

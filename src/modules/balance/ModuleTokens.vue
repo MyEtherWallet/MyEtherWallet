@@ -221,7 +221,6 @@ export default {
             method: () => {
               const obj = {
                 fromToken: item.contract,
-                toToken: '',
                 amount: item.balancef
               };
               this.$router.push({
