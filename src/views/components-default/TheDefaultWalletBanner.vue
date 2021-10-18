@@ -61,9 +61,9 @@
           ]"
         >
           <div :class="['title-row d-flex', isExpanded ? 'bottom-space' : '']">
-            <span class="full-height mew-heading-1">{{
-              $t('home.mew-wallet-modal.title')
-            }}</span>
+            <div class="full-height mew-heading-1">
+              {{ $t('home.mew-wallet-modal.title') }}
+            </div>
           </div>
           <div :class="['btn-container', isExpanded ? 'bottom-space' : 'ml-7']">
             <a
