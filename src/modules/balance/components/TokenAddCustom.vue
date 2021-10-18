@@ -296,6 +296,9 @@ export default {
      */
     reset() {
       this.close();
+      this.clear();
+    },
+    clear() {
       this.step = 1;
       this.token = {};
       this.contractAddress = '';
@@ -313,21 +316,29 @@ export default {
     next() {
       if (this.step === 1) {
         this.loading = true;
-        this.checkIfValidAddress();
+        this.checkIfValidAddress()
+          .then(() => {
+            this.token.name = !this.token.name
+              ? this.customName
+              : this.token.name;
+            this.token.symbol = !this.token.symbol
+              ? this.customSymbol
+              : this.token.symbol;
+            this.token.contract = this.contractAddress;
+            this.setCustomToken(this.token);
+            Toast(
+              'The token ' + this.token.name + ' was added to your token list!',
+              {},
+              SUCCESS
+            );
+            this.reset();
+          })
+          .catch(e => {
+            Toast(e, {}, ERROR);
+            this.clear();
+          });
         return;
       }
-      this.token.name = !this.token.name ? this.customName : this.token.name;
-      this.token.symbol = !this.token.symbol
-        ? this.customSymbol
-        : this.token.symbol;
-      this.token.contract = this.contractAddress;
-      this.setCustomToken(this.token);
-      Toast(
-        'The token ' + this.token.name + ' was added to your token list!',
-        {},
-        SUCCESS
-      );
-      this.reset();
     },
     back() {
       this.step = 1;
@@ -345,18 +356,21 @@ export default {
      * otherwise it will throw toast error
      */
     async checkIfValidAddress() {
-      const codeHash = await this.web3.eth.getCode(this.contractAddress);
-      if (
-        this.contractAddress &&
-        isAddress(this.contractAddress) &&
-        codeHash !== '0x'
-      ) {
-        this.checkIfTokenExistsAlready();
-      } else {
-        this.loading = false;
-        this.contractAddress = '';
-        Toast('This is not a valid contract address', {}, ERROR);
-        return;
+      try {
+        const codeHash = await this.web3.eth.getCode(this.contractAddress);
+        if (
+          this.contractAddress &&
+          isAddress(this.contractAddress) &&
+          codeHash !== '0x'
+        ) {
+          this.checkIfTokenExistsAlready();
+        } else {
+          this.loading = false;
+          this.contractAddress = '';
+          throw new Error('This is not a valid contract address');
+        }
+      } catch (e) {
+        throw new Error(e);
       }
     },
     /**
@@ -377,8 +391,7 @@ export default {
       if (foundToken) {
         this.contractAddress = '';
         this.loading = false;
-        Toast('A token with this address already exists!', {}, ERROR);
-        return;
+        throw new Error('A token with this address already exists!');
       }
       this.findTokenInfo();
     },
@@ -405,7 +418,9 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
+          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value
+            ? formatFiatValue(this.token.usdBalance).value
+            : formatFiatValue(0);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();

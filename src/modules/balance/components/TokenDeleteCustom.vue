@@ -163,7 +163,11 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
-      newObj.balance = [item.balancef + ' ' + item.symbol];
+      newObj.balance = [
+        item.balancef
+          ? item.balancef + ' ' + item.symbol
+          : '0' + ' ' + item.symbol
+      ];
       newObj.token = item.symbol;
       newObj.address = item.contract;
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
