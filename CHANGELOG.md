@@ -8,6 +8,7 @@
 ### devop
 
 * Pull main back to develop [#3492](https://github.com/MyEtherWallet/MyEtherWallet/pull/3492)
+* update README.md with integrations info [#3498](https://github.com/MyEtherWallet/MyEtherWallet/pull/3498)
 
 ### fix
 
