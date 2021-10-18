@@ -207,6 +207,7 @@ export default {
       return (
         this.loading ||
         (this.step === 1 && !this.contractAddress) ||
+        (this.step === 1 && !isAddress(this.contractAddress)) ||
         (this.step === 2 &&
           (this.symbolLengthTooLong.length > 0 ||
             this.nameLengthTooLong.length > 0 ||
@@ -296,9 +297,6 @@ export default {
      */
     reset() {
       this.close();
-      this.clear();
-    },
-    clear() {
       this.step = 1;
       this.token = {};
       this.contractAddress = '';
@@ -316,29 +314,21 @@ export default {
     next() {
       if (this.step === 1) {
         this.loading = true;
-        this.checkIfValidAddress()
-          .then(() => {
-            this.token.name = !this.token.name
-              ? this.customName
-              : this.token.name;
-            this.token.symbol = !this.token.symbol
-              ? this.customSymbol
-              : this.token.symbol;
-            this.token.contract = this.contractAddress;
-            this.setCustomToken(this.token);
-            Toast(
-              'The token ' + this.token.name + ' was added to your token list!',
-              {},
-              SUCCESS
-            );
-            this.reset();
-          })
-          .catch(e => {
-            Toast(e, {}, ERROR);
-            this.clear();
-          });
+        this.checkIfValidAddress();
         return;
       }
+      this.token.name = !this.token.name ? this.customName : this.token.name;
+      this.token.symbol = !this.token.symbol
+        ? this.customSymbol
+        : this.token.symbol;
+      this.token.contract = this.contractAddress;
+      this.setCustomToken(this.token);
+      Toast(
+        'The token ' + this.token.name + ' was added to your token list!',
+        {},
+        SUCCESS
+      );
+      this.reset();
     },
     back() {
       this.step = 1;
@@ -356,21 +346,18 @@ export default {
      * otherwise it will throw toast error
      */
     async checkIfValidAddress() {
-      try {
-        const codeHash = await this.web3.eth.getCode(this.contractAddress);
-        if (
-          this.contractAddress &&
-          isAddress(this.contractAddress) &&
-          codeHash !== '0x'
-        ) {
-          this.checkIfTokenExistsAlready();
-        } else {
-          this.loading = false;
-          this.contractAddress = '';
-          throw new Error('This is not a valid contract address');
-        }
-      } catch (e) {
-        throw new Error(e);
+      const codeHash = await this.web3.eth.getCode(this.contractAddress);
+      if (
+        this.contractAddress &&
+        isAddress(this.contractAddress) &&
+        codeHash !== '0x'
+      ) {
+        this.checkIfTokenExistsAlready();
+      } else {
+        this.loading = false;
+        this.contractAddress = '';
+        Toast('This is not a valid contract address', {}, ERROR);
+        return;
       }
     },
     /**
@@ -391,9 +378,10 @@ export default {
       if (foundToken) {
         this.contractAddress = '';
         this.loading = false;
-        throw new Error('A token with this address already exists!');
+        Toast('A token with this address already exists!', {}, ERROR);
+      } else {
+        this.findTokenInfo();
       }
-      this.findTokenInfo();
     },
     /**
      * finds more token info
