@@ -689,6 +689,7 @@ export default {
           : balanceAfterFees.isNeg();
         return isNotEnoughEth;
       } catch (e) {
+        console.log(e);
         return true;
       }
     },
