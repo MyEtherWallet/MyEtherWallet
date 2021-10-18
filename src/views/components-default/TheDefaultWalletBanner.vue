@@ -61,7 +61,7 @@
           ]"
         >
           <div :class="['title-row d-flex', isExpanded ? 'bottom-space' : '']">
-            <div class="full-height mew-heading-1">
+            <div class="full-height mew-heading-1 px-4">
               {{ $t('home.mew-wallet-modal.title') }}
             </div>
           </div>
