@@ -14,10 +14,6 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-
-const setAddressBook = function ({ commit }, addressBook) {
-  commit('SET_ADDRESS_BOOK', addressBook);
-};
 const setNetwork = function ({ commit }, networkObj) {
   commit('SET_NETWORK', networkObj);
 };
@@ -68,7 +64,6 @@ export default {
   setNetwork,
   setGasPrice,
   setGasPriceType,
-  setAddressBook,
   setImportedState,
   addLocalContract,
   addCustomPath,

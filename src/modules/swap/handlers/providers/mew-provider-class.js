@@ -7,6 +7,7 @@ const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
 import Configs from '../configs';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class MEWPClass {
   constructor(providerName, web3, supportednetworks, chain) {
     this.web3 = web3;
@@ -33,6 +34,9 @@ class MEWPClass {
             type: 'ERC20'
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   isValidToAddress({ address }) {
@@ -117,6 +121,9 @@ class MEWPClass {
           provider: this.provider,
           transactions: response.data.transactions
         };
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   async executeTrade(tradeObj, confirmInfo) {

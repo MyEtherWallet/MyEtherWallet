@@ -288,7 +288,7 @@ export default {
       return this.network.type.currencyName;
     },
     showBalanceNotice() {
-      const isZero = BigNumber(this.blanaceInEth).lte(0);
+      const isZero = BigNumber(this.balanceInETH).lte(0);
       const isLessThanTxFee =
         BigNumber(this.balanceInETH).gt(0) &&
         BigNumber(this.txFeeETH).gt(this.balanceInETH);

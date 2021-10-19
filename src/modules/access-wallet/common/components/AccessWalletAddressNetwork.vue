@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <div v-if="paths.length > 0" class="text-right mb-3">
+    <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
         :paths="paths"
@@ -23,7 +23,7 @@
                 -->
             <v-row dense class="table-header mx-0">
               <v-col offset="3">
-                <p>Adddress</p>
+                <p>Address</p>
               </v-col>
               <v-col cols="4" sm="3">
                 <p class="text-center">{{ network.type.name }} Balance</p>
@@ -234,6 +234,13 @@ export default {
     selectedPath: {
       type: Object,
       default: () => {}
+    },
+    /**
+     * hides access wallet derivation path component
+     */
+    hideCustomPaths: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {
@@ -294,7 +301,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('custom', ['addressBook']),
     web3() {
       return new Web3(this.network.url);
     },
@@ -384,12 +391,13 @@ export default {
         this.changeHandler();
       }
     },
-    handlerWallet: {
+    selectedPath: {
       handler: function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.changeHandler();
         }
-      }
+      },
+      deep: true
     }
   },
   mounted() {
