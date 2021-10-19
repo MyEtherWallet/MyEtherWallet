@@ -74,6 +74,10 @@ const NEVER_SHOW_TRACKING = function (state) {
   state.displayedTrackingPopup = true;
 };
 
+const NEVER_SHOW_BANNER = function (state) {
+  state.showedBanner = true;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -88,5 +92,6 @@ export default {
   SET_BASE_FEE_PER_GAS,
   SET_MAX_PRIORITY_FEE_PER_GAS,
   SET_TRACKING_CONSENT,
-  NEVER_SHOW_TRACKING
+  NEVER_SHOW_TRACKING,
+  NEVER_SHOW_BANNER
 };

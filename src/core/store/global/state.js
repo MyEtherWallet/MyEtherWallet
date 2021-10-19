@@ -27,7 +27,8 @@ const state = {
   eip1559: {
     baseFeePerGas: '0',
     maxPriorityFeePerGas: '0'
-  }
+  },
+  showedBanner: false
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name
