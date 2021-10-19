@@ -153,7 +153,6 @@ export default {
       this.bannerTextObj.exit = this.$t('common.exit-dapp');
     }
   },
-
   methods: {
     onClose() {
       this.$router.push({

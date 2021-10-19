@@ -72,7 +72,7 @@
           Block is owned: SEND NFT BUTTON
         ===================================================
         -->
-      <v-col v-if="isOwned" cols="12" md="6" class="mt-4 pr-md-2 mb-md-2">
+      <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
         <mew-button has-full-width title="Send ETH Block" btn-style="outline" />
       </v-col>
       <!--
@@ -80,7 +80,7 @@
           Block is owned: LIST FOR SALE BUTTON
         ===================================================
         -->
-      <v-col v-if="isOwned" cols="12" md="6" class="mt-5 mb-2 mt-md-4 pl-md-2">
+      <v-col v-if="isOwned" cols="12" sm="6" class="mt-5 mb-2 mt-sm-4 pl-sm-2">
         <mew-button has-full-width>
           <v-row class="align-center justify-center">
             <div>List for sale</div>

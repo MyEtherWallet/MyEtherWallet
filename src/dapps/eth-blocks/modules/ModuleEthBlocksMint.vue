@@ -13,7 +13,7 @@
         ===================================================
         -->
         <v-col cols="12" order="first" order-sm="last">
-          <p class="primary--text pt-1 mb-2 ml-2">
+          <p class="primary--text mb-1 ml-2">
             Max block number: {{ maxBlock }}
           </p>
           <mew-search
