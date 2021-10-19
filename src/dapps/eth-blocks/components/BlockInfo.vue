@@ -136,21 +136,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.staked-status-container {
-  max-width: 500px;
-}
 .border-container {
   border: 1px solid var(--v-greyMedium-base);
   border-radius: 12px;
 }
-.search-success {
-  border: 1px solid var(--v-greenMedium-base);
-  border-radius: 10px;
-  .search-success--header {
-    background-color: var(--v-backgroundOverlay-base);
-    border-radius: 10px 10px 0% 0%;
-  }
-}
+
 .table-properties {
   border: 1px solid var(--v-greyMedium-base);
   border-radius: 10px;
