@@ -26,13 +26,7 @@
     ===================================================
     -->
     <template #tabContent2>
-      <p>Tab2</p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </p>
+      <module-eth-blocks-my-blocks />
     </template>
   </the-wrapper-dapp>
 </template>
@@ -40,11 +34,13 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint.vue';
+import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks.vue';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
     TheWrapperDapp,
-    ModuleEthBlocksMint
+    ModuleEthBlocksMint,
+    ModuleEthBlocksMyBlocks
   },
   data() {
     return {
