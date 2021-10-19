@@ -4,6 +4,7 @@ import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 
 import Vuetify, {
+  VAlert,
   VApp,
   VBtn,
   VBtnToggle,
@@ -84,6 +85,7 @@ import Vuetify, {
 
 Vue.use(Vuetify, {
   components: {
+    VAlert,
     VApp,
     VBtn,
     VBtnToggle,

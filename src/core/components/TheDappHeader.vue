@@ -53,7 +53,7 @@
          Dapp Subtext
         ====================================
         -->
-        <p class="textLight--text mb-0">
+        <p class="textMedium--text mb-0">
           {{ dappText }}
         </p>
       </v-col>

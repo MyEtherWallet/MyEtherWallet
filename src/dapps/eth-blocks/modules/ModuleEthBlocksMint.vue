@@ -13,15 +13,15 @@
         ===================================================
         -->
         <v-col cols="12" order="first" order-sm="last">
+          <p class="primary--text pt-1 mb-2 ml-2">
+            Max block number: {{ maxBlock }}
+          </p>
           <mew-search
             is-search-block
             placeholder="Enter a block number"
             :value="searchInput"
+            :on-search="search"
           />
-          <p class="primary--text pt-1 mb-8 mb-sm-0">
-            Max block number: {{ maxBlock }}
-          </p>
-          <mew-button @click.native="search">Temp Search Button </mew-button>
         </v-col>
         <!--
         ===================================================
@@ -40,7 +40,7 @@
         -->
         <v-col cols="12">
           <!-- <mint-loading /> -->
-          <mint-search-result />
+          <block-info />
         </v-col>
       </v-row>
     </v-sheet>
@@ -52,14 +52,14 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { mapState } from 'vuex';
 import MintEthBlocksInfo from '../components/mint/MintEthBlocksInfo.vue';
 // import MintLoading from '../components/mint/MintLoading.vue';
-import MintSearchResult from '../components/mint/MintSearchResult.vue';
+import BlockInfo from '../components/BlockInfo.vue';
 
 export default {
   name: 'ModuleEthBlocksMint',
   components: {
     MintEthBlocksInfo,
     // MintLoading,
-    MintSearchResult
+    BlockInfo
   },
   data() {
     return {
@@ -92,6 +92,6 @@ export default {
   max-width: 500px;
 }
 .border-container {
-  border: 1px solid var(--v-selectBorder-base);
+  border: 2px solid var(--v-selectBorder-base);
 }
 </style>

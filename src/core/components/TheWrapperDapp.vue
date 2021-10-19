@@ -50,9 +50,10 @@
         }
       ]"
       :items="tabItems"
-      :is-centered="true"
       :active-tab="activeTab"
-      has-underline
+      :background="tabBackground"
+      :has-underline="!isNewHeader"
+      :active-color="tabActiveColor"
       @onTab="onTab"
     >
       <template
@@ -138,12 +139,21 @@ export default {
       bannerTextObj: {}
     };
   },
+  computed: {
+    tabBackground() {
+      return this.isNewHeader ? 'backgroundGrey' : 'transparent';
+    },
+    tabActiveColor() {
+      return this.isNewHeader ? 'blue500' : 'textDark';
+    }
+  },
   mounted() {
     this.bannerTextObj = this.bannerText;
     if (this.hasExitBtn) {
       this.bannerTextObj.exit = this.$t('common.exit-dapp');
     }
   },
+
   methods: {
     onClose() {
       this.$router.push({
