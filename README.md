@@ -27,7 +27,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 * [Website: https://www.myetherwallet.com/](https://www.myetherwallet.com/)
 * MEW Wallet:
   * [IOS App](https://apps.apple.com/us/app/mew-wallet-ethereum-and-defi/id1464614025)
-  * [Android App](https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet\&hl=en\_US\&gl=US)
+  * [Android App](https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet\&hl=en_US\&gl=US)
 * [EthVM Blockchain explorer](https://www.ethvm.com/)
 * [MEW CX: https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
 * [MEW Team](https://team.myetherwallet.com/)
