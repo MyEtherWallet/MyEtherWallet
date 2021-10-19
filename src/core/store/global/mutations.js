@@ -68,6 +68,10 @@ const NEVER_SHOW_TRACKING = function (state) {
   state.displayedTrackingPopup = true;
 };
 
+const NEVER_SHOW_BANNER = function (state) {
+  state.showedBanner = true;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -80,5 +84,6 @@ export default {
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
   SET_TRACKING_CONSENT,
-  NEVER_SHOW_TRACKING
+  NEVER_SHOW_TRACKING,
+  NEVER_SHOW_BANNER
 };

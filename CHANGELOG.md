@@ -1,3 +1,31 @@
+### Release v6.2.1
+
+### ui
+
+* hide tokens with no image [#3471](https://github.com/MyEtherWallet/MyEtherWallet/pull/3471)
+* add get mew wallet overlay [#3497](https://github.com/MyEtherWallet/MyEtherWallet/pull/3497)
+
+### devop
+
+* Pull main back to develop [#3492](https://github.com/MyEtherWallet/MyEtherWallet/pull/3492)
+* update README.md with integrations info [#3498](https://github.com/MyEtherWallet/MyEtherWallet/pull/3498)
+
+### fix
+
+* fix trade button on my token value overlay [#3452](https://github.com/MyEtherWallet/MyEtherWallet/pull/3452)
+* add in additional error handling [#3466](https://github.com/MyEtherWallet/MyEtherWallet/pull/3466)
+* update components package and remove rules for module-address-book [#3467](https://github.com/MyEtherWallet/MyEtherWallet/pull/3467)
+* change address book store to custom and fix mew address select dropdown component [#3470](https://github.com/MyEtherWallet/MyEtherWallet/pull/3470)
+* fix sentry issue #2507644001 [#3473](https://github.com/MyEtherWallet/MyEtherWallet/pull/3473)
+* fix matomo toggle color on wallet page [#3474](https://github.com/MyEtherWallet/MyEtherWallet/pull/3474)
+* fix contract interaction input [#3475](https://github.com/MyEtherWallet/MyEtherWallet/pull/3475)
+* fix low balance not showing up in send tx [#3476](https://github.com/MyEtherWallet/MyEtherWallet/pull/3476)
+* fix sentry issue #2505736127 [#3477](https://github.com/MyEtherWallet/MyEtherWallet/pull/3477)
+* fix add in throw for current network [#3482](https://github.com/MyEtherWallet/MyEtherWallet/pull/3482)
+* fix add check for substr [#3483](https://github.com/MyEtherWallet/MyEtherWallet/pull/3483)
+* fix swap provider list amount [#3485](https://github.com/MyEtherWallet/MyEtherWallet/pull/3485)
+* enable custom path for mnemonic, hardware access cleanup [#3486](https://github.com/MyEtherWallet/MyEtherWallet/pull/3486)
+
 ### Release v6.2.0-hotfix.1
 
 ### fix
