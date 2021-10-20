@@ -15,7 +15,7 @@
       />
     </div>
     <mew6-white-sheet>
-      <mew-banner :text-obj="topBanner" :banner-img="BG" />
+      <unstoppable-banner />
       <mew-tabs :items="tabs" has-underline>
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
@@ -116,14 +116,14 @@
                   </v-card>
                 </v-list-item-content>
               </v-list-item>
-              <v-progress-linear
+              <v-progress-circular
                 v-if="loading"
                 style="margin: 32px auto 40px auto; max-width: 200px"
                 indeterminate
                 color="primary"
-              ></v-progress-linear>
+              ></v-progress-circular>
             </div>
-            <unstoppable-info-card />
+            <unstoppable-info-card v-if="searchResults.length === 0" />
             <div class="py-10"></div>
           </v-sheet>
         </template>
@@ -205,11 +205,11 @@
 </template>
 
 <script>
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import UnstoppableDomainBuyOverlay from './components/UnstoppableDomainBuyOverlay';
 import UnstoppableManageRecordsOverlay from './components/UnstoppableManageRecordsOverlay';
 import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOverlay';
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
+import UnstoppableBanner from './components/UnstoppableBanner.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
 import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
@@ -218,7 +218,8 @@ export default {
     UnstoppableDomainBuyOverlay,
     UnstoppableManageRecordsOverlay,
     UnstoppableUploadIpfsOverlay,
-    UnstoppableInfoCard
+    UnstoppableInfoCard,
+    UnstoppableBanner
   },
   data() {
     return {
@@ -241,12 +242,7 @@ export default {
           label: this.$t('unstoppable.manage-ipfs-website'),
           open: this.openUploadIpfsOverlay
         }
-      ],
-      BG: BG,
-      topBanner: {
-        title: this.$t('unstoppable.title'),
-        subtext: this.$t('unstoppable.subtitle')
-      }
+      ]
     };
   },
   computed: {
