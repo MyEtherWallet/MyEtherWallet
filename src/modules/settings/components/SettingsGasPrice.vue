@@ -216,26 +216,22 @@ export default {
         this.previousSelected = this.gasPriceType;
       }
     },
-    costInEth(newVal) {
-      const amount = BigNumber(newVal).minus(this[`${this.gasPriceType}InEth`]);
-      Object.values(this.gasPriceTypes).forEach(item => {
-        const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
-        this[`${item}Disabled`] = withFee.gt(this.balanceInETH);
-      });
+    gasPrice() {
+      this.recalculate();
     },
-    notEnoughEth(val) {
-      Object.values(this.gasPriceTypes).forEach(item => {
-        this[`${item}Disabled`] = val;
-      });
+    costInEth() {
+      this.recalculate();
+    },
+    notEnoughEth(newVal) {
+      this.showNotEnoughEthWarning = newVal;
+      this.recalculate();
     }
   },
   mounted() {
     if (this.notEnoughEth) {
       this.showNotEnoughEthWarning = true;
-      Object.values(this.gasPriceTypes).forEach(item => {
-        this[`${item}Disabled`] = true;
-      });
     }
+    this.recalculate();
     this.previousSelected = this.gasPriceType;
   },
   methods: {
@@ -250,6 +246,15 @@ export default {
     formatInUsd(fee) {
       return formatFiatValue(BigNumber(fee).times(this.fiatValue).toFixed(2))
         .value;
+    },
+    recalculate() {
+      const amount = BigNumber(this.costInEth).minus(
+        this[`${this.gasPriceType}InEth`]
+      );
+      Object.values(this.gasPriceTypes).forEach(item => {
+        const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
+        this[`${item}Disabled`] = withFee.gt(this.balanceInETH);
+      });
     }
   }
 };

@@ -74,8 +74,9 @@ export default {
      * opens in case of difference
      */
     gasPriceModal(newVal) {
-      if (newVal)
+      if (newVal) {
         this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+      }
     },
     /**
      * only emit new gas price

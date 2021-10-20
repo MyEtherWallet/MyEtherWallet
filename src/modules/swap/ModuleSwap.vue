@@ -379,7 +379,6 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('global', [
       'network',
-      'gasPrice',
       'isEthNetwork',
       'swapLink',
       'gasPriceByType'
@@ -673,8 +672,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      const gasPrice = this.gasPriceByType(this.gasPriceType);
-      return toBN(this.balanceInWei).gt(toBN(gasPrice).muln(MIN_GAS_LIMIT));
+      return toBN(this.balanceInWei).gt(
+        toBN(this.currentGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -689,7 +689,6 @@ export default {
           : balanceAfterFees.isNeg();
         return isNotEnoughEth;
       } catch (e) {
-        console.log(e);
         return true;
       }
     },
@@ -855,6 +854,8 @@ export default {
         this.setDefaults();
         this.isLoading = false;
       }
+
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     // reset values after executing transaction
     clear() {

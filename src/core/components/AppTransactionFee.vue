@@ -173,12 +173,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'swapLink',
-      'gasPrice'
-    ]),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
     ...mapState('global', ['online', 'gasPriceType']),
     txFeeInEth() {
       return fromWei(this.txFee);
