@@ -3,7 +3,7 @@
     <mew6-white-sheet>
       <mew-carousel class="box-shadow" carousel-height="155" :total-slides="2">
         <template #slide1>
-          <a href="https://www.mewwallet.com/" target="_blank">
+          <a :href="mobileOrWebLink" target="_blank">
             <div class="ad1 px-5 d-flex flex-column justify-center">
               <div class="title font-weight-bold mb-n1">MEW wallet App</div>
               <div class="mb-2">Download it today!</div>
@@ -67,11 +67,24 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+const platform = require('platform');
 
 export default {
   data: () => ({
     ROUTES_HOME: ROUTES_HOME
-  })
+  }),
+  methods: {
+    mobileOrWebLink() {
+      //Mobile
+      if (platform.os.family.includes('iOS')) {
+        return 'https://apps.apple.com/app/id1464614025';
+      } else if (platform.os.family.includes('Android')) {
+        return 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
+      }
+      //Web
+      return 'https://www.mewwallet.com/';
+    }
+  }
 };
 </script>
 
