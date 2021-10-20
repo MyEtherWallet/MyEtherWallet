@@ -205,7 +205,7 @@
              Providers List
             =====================================================================================
             -->
-          <div>
+          <div v-if="hasMinEth">
             <v-slide-y-transition hide-on-leave group>
               <swap-provider-mentions
                 v-if="showAnimation"
@@ -706,9 +706,7 @@ export default {
             token.contract.toLowerCase() ===
             this.fromTokenType.contract.toLowerCase()
         );
-        return this.isFromTokenMain
-          ? this.getTokenBalance(toBN(this.balanceInWei), 18)
-          : hasBalance && hasBalance.balance && hasBalance.decimals
+        return hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
           : new BigNumber(0);
       }
@@ -1011,7 +1009,10 @@ export default {
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
       // Check if (in amount) is larger than (available balance)
-      if (this.availableBalance.lt(new BigNumber(this.tokenInValue))) {
+      if (
+        this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
+        !this.hasMinEth
+      ) {
         this.step = 0;
         return;
       }
@@ -1024,7 +1025,6 @@ export default {
       ) {
         return;
       }
-
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
