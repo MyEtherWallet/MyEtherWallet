@@ -7,6 +7,7 @@
       :btn-action="sentBtc"
       :btn-enabled="time !== '00:00'"
       :btn-text="buttonTitle"
+      :is-persistent="true"
       width="560"
       @close="reset"
     >
@@ -152,7 +153,7 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        this.startingTime = moment(60 * 0.25 * 1000);
+        this.startingTime = moment(60 * 20 * 1000);
         this.counter = setInterval(() => {
           if (this.time === '00:00') {
             clearInterval(this.counter);

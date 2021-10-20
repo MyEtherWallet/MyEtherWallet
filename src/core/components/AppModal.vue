@@ -5,6 +5,7 @@
     :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
+    :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
     <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
@@ -206,6 +207,10 @@ export default {
       default: '600'
     },
     hasButtons: {
+      type: Boolean,
+      default: true
+    },
+    isPersistent: {
       type: Boolean,
       default: true
     },

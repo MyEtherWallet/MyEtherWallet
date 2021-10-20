@@ -23,7 +23,8 @@ const state = {
     : Object.assign({}, nodeList['ETH'][0]),
   preferredCurrency: 'USD',
   customPaths: [],
-  localContracts: {}
+  localContracts: {},
+  showedBanner: false
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name
