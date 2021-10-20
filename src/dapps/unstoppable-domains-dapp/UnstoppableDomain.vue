@@ -102,13 +102,10 @@
                     <div class="d-flex justify-space-between align-center">
                       <div>
                         <div class="mew-heading-1 mb-2">{{ d.name }}</div>
-                        <div>
-                          <span class="font-weight-medium">${{ d.price }}</span>
-                        </div>
                       </div>
                       <div class="d-flex align-center">
-                        <div class="mew-heading-3 primary--text mr-6">
-                          {{ $t('unstoppable.is-available') }}
+                        <div class="mew-heading-3 textLight--text mr-6">
+                          ${{ d.price }}
                         </div>
                         <mew-button
                           :title="$t('unstoppable.buy')"
@@ -126,7 +123,7 @@
                 color="primary"
               ></v-progress-linear>
             </div>
-
+            <unstoppable-info-card />
             <div class="py-10"></div>
           </v-sheet>
         </template>
@@ -212,6 +209,7 @@ import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import UnstoppableDomainBuyOverlay from './components/UnstoppableDomainBuyOverlay';
 import UnstoppableManageRecordsOverlay from './components/UnstoppableManageRecordsOverlay';
 import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOverlay';
+import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
 import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
@@ -219,7 +217,8 @@ export default {
   components: {
     UnstoppableDomainBuyOverlay,
     UnstoppableManageRecordsOverlay,
-    UnstoppableUploadIpfsOverlay
+    UnstoppableUploadIpfsOverlay,
+    UnstoppableInfoCard
   },
   data() {
     return {
