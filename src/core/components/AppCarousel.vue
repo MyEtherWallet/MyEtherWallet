@@ -75,13 +75,11 @@ export default {
   }),
   methods: {
     mobileOrWebLink() {
-      //Mobile
       if (platform.os.family.includes('iOS')) {
         return 'https://apps.apple.com/app/id1464614025';
       } else if (platform.os.family.includes('Android')) {
         return 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet';
       }
-      //Web
       return 'https://www.mewwallet.com/';
     }
   }
