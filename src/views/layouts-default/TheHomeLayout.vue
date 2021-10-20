@@ -1,8 +1,5 @@
 <template>
   <div>
-    <v-container>
-      <domain-table />
-    </v-container>
     <home-landing />
     <home-features />
     <home-socials />
@@ -14,7 +11,6 @@
 </template>
 
 <script>
-import DomainTable from './DomainTable';
 import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
 import HomeSocials from '../components-default/HomeSocials.vue';
@@ -26,7 +22,6 @@ import AppPartnersBlock from '@/core/components/AppPartnersBlock';
 export default {
   name: 'TheHomeLayout',
   components: {
-    DomainTable,
     HomeLanding,
     HomeFeatures,
     HomeSocials,
