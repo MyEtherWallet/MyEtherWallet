@@ -3,7 +3,7 @@
     <mew6-white-sheet>
       <mew-carousel class="box-shadow" carousel-height="155" :total-slides="2">
         <template #slide1>
-          <a :href="mobileOrWebLink" target="_blank">
+          <a :href="mobileOrWebLink()" target="_blank">
             <div class="ad1 px-5 d-flex flex-column justify-center">
               <div class="title font-weight-bold mb-n1">MEW wallet App</div>
               <div class="mb-2">Download it today!</div>
