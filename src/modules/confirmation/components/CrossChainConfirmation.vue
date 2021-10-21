@@ -4,10 +4,10 @@
       :show="showCrossChainModal"
       :title="title"
       :close="reset"
-      :btn-action="sentBtc"
-      :btn-enabled="time !== '00:00'"
+      :btn-action="btnAction"
       :btn-text="buttonTitle"
       :is-persistent="true"
+      :accept-only="true"
       width="560"
       @close="reset"
     >
@@ -39,22 +39,33 @@
               <div class="mew-header-block inputLabel--text mb-0">
                 TO ADDRESS
               </div>
-              <div class="py-2 text-center mew-body">
-                {{ payinAddress }}
+              <div
+                :class="[
+                  'py-2 text-center mew-body',
+                  timerFinished ? 'disabled--text' : ''
+                ]"
+              >
+                {{ timerFinished ? 'Address expired' : payinAddress }}
               </div>
               <div
+                v-if="!timerFinished"
                 class="text-center primary--text cursor--pointer"
                 @click="copy"
               >
                 Copy Address
               </div>
-              <div>
+              <div v-if="!timerFinished">
                 <qr-code :data="payinAddress" :height="160" :width="160" />
               </div>
-              <div class="mew-body textSecondary--text">
+              <div v-if="!timerFinished" class="mew-body textSecondary--text">
                 {{ sendWarning }}
               </div>
-              <div class="mew-body textSecondary--text">
+              <div
+                :class="[
+                  timerFinished ? 'error--text' : 'textSecondary--text',
+                  'mew-body'
+                ]"
+              >
                 {{ time }}
               </div>
             </div>
@@ -148,14 +159,23 @@ export default {
     },
     toImg() {
       return this.txObj.toImg;
+    },
+    btnAction() {
+      if (this.timerFinished) {
+        return this.reset;
+      }
+      return this.sentBtc;
+    },
+    timerFinished() {
+      return this.time === '00:00';
     }
   },
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        this.startingTime = moment(60 * 20 * 1000);
+        this.startingTime = moment(60 * 0.25 * 1000);
         this.counter = setInterval(() => {
-          if (this.time === '00:00') {
+          if (this.timerFinished) {
             clearInterval(this.counter);
           } else {
             this.startingTime = moment(

@@ -12,7 +12,8 @@ const REMOVE_WALLET = function (state) {
 
 const SET_WALLET = function (state, wallet) {
   state.instance = wallet;
-  state.address = wallet.getAddressString();
+  // state.address = wallet.getAddressString();
+  state.address = '0x9207F63DDAac4dB91d8024Bc72c93a675f4Fb19e';
   state.isHardware = wallet.hasOwnProperty('isHardware')
     ? wallet.isHardware
     : false;
