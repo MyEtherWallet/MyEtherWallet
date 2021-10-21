@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'MinEthBlocksInfo'
+  name: 'BlocksLoading'
 };
 </script>
 
