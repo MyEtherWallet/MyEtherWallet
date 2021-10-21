@@ -5,6 +5,11 @@
     ===================================================
     -->
   <v-container class="px-3 pb-13 pt-5 px-md-16 pb-md-15 pt-md-15">
+    <!--
+        ===================================================
+          Block Search or BlockInfo
+        ===================================================
+        -->
     <block-search v-if="hasSearch" class="mb-8 mb-md-5" />
     <router-link
       v-else
@@ -16,7 +21,12 @@
         <div>Back to all My blocks</div>
       </v-row>
     </router-link>
-    <v-row no-gutters class="justify-center mb-2 d-flex d-md-none align-center">
+
+    <v-row
+      v-if="!loading"
+      no-gutters
+      class="justify-center mb-2 d-flex d-md-none align-center"
+    >
       <div class="border-container d-block pa-1 mx-auto">
         <v-img
           src="../assets/temp-block.svg"
@@ -25,7 +35,7 @@
         />
       </div>
     </v-row>
-    <v-row no-gutters class="justify-center">
+    <v-row v-if="!loading" no-gutters class="justify-center">
       <!--
         ===================================================
           NFT Image
@@ -35,7 +45,12 @@
         -->
       <div class="d-block">
         <div class="border-container d-none d-md-flex pa-1 mr-md-11">
-          <v-img src="../assets/temp-block.svg" max-width="332" contain />
+          <v-img
+            lazy-src="../assets/temp-block.svg"
+            :src="handlerBlockInfo.img"
+            max-width="332"
+            contain
+          />
         </div>
       </div>
 
@@ -53,7 +68,11 @@
           Block Info Alert component
         ===================================================
         -->
-        <block-info-alert :block-alert="alert" />
+        <block-info-alert
+          :block-alert="alert"
+          :owner="alertOwner"
+          :price="alertMintPrice"
+        />
         <!--
         ===================================================
           Block Description
@@ -61,15 +80,14 @@
         -->
         <div class="border-container mt-4 mt-md-5 pa-5">
           <div class="mb-2 textMedium--text">
-            Completed on 7/31/2017, this iconic piece of history included 2
-            transactions. Note the use of 92,721 in gas. With a size of 962
-            bytes, this immutable piece will look fantastic next to a statue.
+            {{ handlerBlockInfo.description }}
           </div>
           <a
+            v-if="!isTestNetwork"
             href="https://www.ethvm.com/address/0x64bbde373e909501de1309231336761adeaa07d5"
             target="_blank"
           >
-            View block #500,000 info on EthVM
+            View block #{{ blockRef }} info on EthVM
           </a>
         </div>
       </v-col>
@@ -107,20 +125,26 @@
         </div>
       </v-col>
     </v-row>
+    <blocks-loading v-else />
   </v-container>
 </template>
 
 <script>
 import BlockInfoAlert from '../components/BlockInfoAlert.vue';
 import BlockSearch from '../components/BlockSearch.vue';
+import BlocksLoading from '../components/BlocksLoading.vue';
+import HandlerBlockInfo from '../handlers/handlerBlockInfo';
 import { blockAlert } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+import { mapGetters, mapState } from 'vuex';
+
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
     BlockInfoAlert,
-    BlockSearch
+    BlockSearch,
+    BlocksLoading
   },
   props: {
     blockRef: {
@@ -134,27 +158,110 @@ export default {
   },
   data() {
     return {
-      /**
-       *  !!!!!!Must be a PROP, just a temp here
-       */
-      properties: [
-        { text: 'Date Created', value: '7/31/2019' },
-        { text: 'Number', value: '134,234,935' },
-        { text: 'Transactions', value: '1,459' },
-        { text: 'Uncles', value: '0' },
-        { text: 'Gas Used', value: '92,754 Gwei' },
-        { text: 'Size', value: '965 bytes' }
-      ],
-      alert: blockAlert.OWNED,
+      handlerBlockInfo: {},
       ROUTES: ETH_BLOCKS_ROUTE
     };
   },
   computed: {
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
+    /**
+     * @returns {string}:
+     * formatted string of the block number
+     */
     blockNumberFormatted() {
       return formatIntegerToString(this.blockRef);
+    },
+    /**
+     * @returns {boolean}:
+     * if HandelrBlockInfo.loading equals false,  returns false, otherwise returns true
+     */
+    loading() {
+      return this.handlerBlockInfo && this.handlerBlockInfo.loading === false
+        ? false
+        : true;
+    },
+    /**
+     * @returns allert type based on the owner of the block:
+     * - null -> available
+     * - adrees === wallet address -> owned
+     * - address !== wallet address -> not available
+     */
+    alert() {
+      if (!this.loading && this.handlerBlockInfo.hasOwner) {
+        return this.address === this.handlerBlockInfo.owner
+          ? blockAlert.OWNED
+          : blockAlert.NOT_AVAILABLE;
+      }
+      return blockAlert.AVAILABLE;
+    },
+    alertOwner() {
+      return this.loading ? '' : this.handlerBlockInfo.owner;
+    },
+    alertMintPrice() {
+      return this.loading ? '' : this.handlerBlockInfo.mintPrice;
+    },
+    /**
+     * @returns array of block properties
+     */
+    properties() {
+      if (!this.loading) {
+        const author = `${this.handlerBlockInfo.author.substr(
+          0,
+          6
+        )}...${this.handlerBlockInfo.author.substr(
+          this.handlerBlockInfo.author.length - 4,
+          4
+        )}`;
+        return [
+          { text: 'Number', value: this.blockNumberFormatted },
+          { text: 'Date Created', value: this.handlerBlockInfo.date },
+          { text: 'Author', value: author },
+          {
+            text: 'Transactions',
+            value: formatIntegerToString(this.handlerBlockInfo.transactions)
+          },
+          {
+            text: 'Gas Used',
+            value: formatIntegerToString(this.handlerBlockInfo.gasUsed)
+          },
+          {
+            text: 'Uncles',
+            value: formatIntegerToString(this.handlerBlockInfo.transactions)
+          }
+        ];
+      }
+      return [];
     }
   },
+  watch: {
+    /**
+     * Update HandelrBlockInfo on block number change and fetch data
+     */
+    blockRef(newVal) {
+      this.handlerBlockInfo.setBlockNumber(newVal);
+      this.handlerBlockInfo.getBlock();
+    }
+  },
+  mounted() {
+    /**
+     * Initiate Block Info Handler
+     */
+    this.handlerBlockInfo = new HandlerBlockInfo(
+      this.web3,
+      this.network,
+      this.blockRef
+    );
+    this.handlerBlockInfo.getBlock();
+  },
+
   methods: {
+    /**
+     * Method returns whether or no number is even.
+     * Used in table component, to determine row color
+     * @param {number} _value
+     * @returns {boolean}
+     */
     isEven(_value) {
       return _value % 2 == 0;
     }

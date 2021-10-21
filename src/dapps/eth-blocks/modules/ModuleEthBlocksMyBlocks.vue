@@ -1,13 +1,13 @@
 <template>
   <!--
     ===================================================
-    Staked Status Tab
+    My Blocks Tab
     ===================================================
     -->
   <div class="pt-5 pb-13 px-3 pa-sm-15">
     <!--
     ===================================================
-    OverView Header
+    Overview Header
     ===================================================
     -->
     <v-row class="align-center">
@@ -116,7 +116,7 @@ export default {
       try {
         this.$router.push({
           name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
-          params: { blockRef: block }
+          params: { blockRef: block, hasSearch: false }
         });
       } catch (e) {
         Toast(e, {}, ERROR);

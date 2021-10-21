@@ -30,7 +30,7 @@
           href="https://www.ethvm.com/address/0x64bbde373e909501de1309231336761adeaa07d5"
           target="_blank"
         >
-          0x7554...9605
+          {{ ownerFormatted }}
         </a>
       </v-col>
       <!--
@@ -56,8 +56,12 @@
         ===================================================
         -->
       <v-col v-if="isAvailable" cols="6" class="mt-1">
-        <h2 class="mb-1 textDark--text">0.005 ETH</h2>
-        <p class="textLight--text mb-0">$180.42</p>
+        <h2 class="mb-1 textDark--text">
+          {{ formattedPrice }} {{ network.type.currencyName }}
+        </h2>
+        <p v-if="!isTestNetwork" class="textLight--text mb-0">
+          {{ formatFiatPrice }}
+        </p>
       </v-col>
       <!--
         ===================================================
@@ -99,18 +103,38 @@ import {
   blockAlert,
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
+import { fromWei } from 'web3-utils';
+import { mapGetters } from 'vuex';
+import {
+  formatIntegerToString,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
 export default {
   name: 'BlockInfoAlert',
   props: {
     blockAlert: {
       default: blockAlert.NOT_AVAILABLE,
       validator: blockAlertValidator
+    },
+    owner: {
+      type: String,
+      default: ''
+    },
+    price: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {};
   },
   computed: {
+    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('external', ['fiatValue']),
+    /**
+     * @returns{string}
+     */
     alertTheme() {
       switch (this.blockAlert) {
         case blockAlert.NOT_AVAILABLE:
@@ -121,6 +145,9 @@ export default {
           return 'info';
       }
     },
+    /**
+     * @returns{string}
+     */
     alertTitle() {
       switch (this.blockAlert) {
         case blockAlert.NOT_AVAILABLE:
@@ -131,6 +158,9 @@ export default {
           return 'You own this ETH Block';
       }
     },
+    /**
+     * @returns{string}
+     */
     alertTitleColor() {
       switch (this.blockAlert) {
         case blockAlert.NOT_AVAILABLE:
@@ -141,6 +171,9 @@ export default {
           return 'bluePrimary--text';
       }
     },
+    /**
+     * @returns{string}
+     */
     alertIcon() {
       switch (this.blockAlert) {
         case blockAlert.NOT_AVAILABLE:
@@ -159,6 +192,36 @@ export default {
     },
     isOwned() {
       return this.blockAlert === blockAlert.OWNED;
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted owner string such as '0x4356...5a24'
+     */
+    ownerFormatted() {
+      console.log('owner: ', this.owner);
+      return this.owner && this.owner !== ''
+        ? `${this.owner.substr(0, 6)}...${this.owner.substr(
+            this.owner.length - 4,
+            4
+          )}`
+        : '';
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted formatted ETH price
+     */
+    formattedPrice() {
+      return formatIntegerToString(fromWei(this.price));
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted formatted FIAT price
+     */
+    formatFiatPrice() {
+      const value = formatFiatValue(
+        BigNumber(fromWei(this.price)).times(this.fiatValue)
+      ).value;
+      return `~ ${'$' + value}`;
     }
   }
 };
