@@ -4,7 +4,18 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <div>
+  <v-container class="px-3 pb-13 pt-5 px-md-16 pb-md-15 pt-md-15">
+    <block-search v-if="hasSearch" class="mb-8 mb-md-5" />
+    <router-link
+      v-else
+      :to="{ name: ROUTES.MY_BLOCKS.NAME }"
+      class="blue500--text"
+    >
+      <v-row class="align-center mt-3 mt-md-3 mb-7 mb-md-8" no-gutters>
+        <v-icon class="bluePrimary--text" size="20"> mdi-chevron-left</v-icon>
+        <div>Back to all My blocks</div>
+      </v-row>
+    </router-link>
     <v-row no-gutters class="justify-center mb-2 d-flex d-md-none align-center">
       <div class="border-container d-block pa-1 mx-auto">
         <v-img
@@ -34,7 +45,9 @@
           NFT Title
         ===================================================
         -->
-        <h2 class="mb-4 mb-md-8 text-center text-md-left">Block #500,000</h2>
+        <h2 class="mb-4 mb-md-8 text-center text-md-left">
+          Block #{{ blockNumberFormatted }}
+        </h2>
         <!--
         ===================================================
           Block Info Alert component
@@ -94,22 +107,30 @@
         </div>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import BlockInfoAlert from './BlockInfoAlert.vue';
+import BlockInfoAlert from '../components/BlockInfoAlert.vue';
+import BlockSearch from '../components/BlockSearch.vue';
 import { blockAlert } from '../handlers/helpers/blockAlertType';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 export default {
-  name: 'BlockInfo',
+  name: 'ModuleEthBlockInfo',
   components: {
-    BlockInfoAlert
+    BlockInfoAlert,
+    BlockSearch
   },
   props: {
-    // properties: {
-    //   default: () => [],
-    //   type: Array
-    // }
+    blockRef: {
+      type: String,
+      required: true
+    },
+    hasSearch: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -124,8 +145,14 @@ export default {
         { text: 'Gas Used', value: '92,754 Gwei' },
         { text: 'Size', value: '965 bytes' }
       ],
-      alert: blockAlert.OWNED
+      alert: blockAlert.OWNED,
+      ROUTES: ETH_BLOCKS_ROUTE
     };
+  },
+  computed: {
+    blockNumberFormatted() {
+      return formatIntegerToString(this.blockRef);
+    }
   },
   methods: {
     isEven(_value) {

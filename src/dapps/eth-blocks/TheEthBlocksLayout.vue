@@ -12,35 +12,16 @@
     :active-tab="activeTab"
     top-strip
   >
-    <!--
-    ===================================================
-    New Stake Tab
-    ===================================================
-    -->
-    <template #tabContent1>
-      <module-eth-blocks-mint />
-    </template>
-    <!--
-    ===================================================
-    My Stake tab
-    ===================================================
-    -->
-    <template #tabContent2>
-      <module-eth-blocks-my-blocks />
-    </template>
   </the-wrapper-dapp>
 </template>
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint.vue';
-import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks.vue';
+import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp,
-    ModuleEthBlocksMint,
-    ModuleEthBlocksMyBlocks
+    TheWrapperDapp
   },
   data() {
     return {
@@ -49,7 +30,18 @@ export default {
         subtext: 'Mint stunning QR art-pieces based on your favorite blocks.'
       },
       activeTab: 0,
-      tabs: [{ name: 'Mint a new block' }, { name: 'My blocks' }],
+      tabs: [
+        {
+          name: 'Mint a new block',
+          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME }
+        },
+        {
+          name: 'My blocks',
+          route: {
+            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
+          }
+        }
+      ],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg')
     };
   }

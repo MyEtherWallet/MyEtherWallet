@@ -100,7 +100,7 @@ import {
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
 export default {
-  name: 'BlockInfo',
+  name: 'BlockInfoAlert',
   props: {
     blockAlert: {
       default: blockAlert.NOT_AVAILABLE,

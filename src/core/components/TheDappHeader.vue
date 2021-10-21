@@ -33,12 +33,10 @@
         -->
         <router-link
           :to="{ name: ROUTE_DAPP_CENTER.NAME }"
-          class="bluePrimary--text"
+          class="blue500--text"
         >
           <v-row class="align-center" no-gutters>
-            <v-icon class="bluePrimary--text" size="20">
-              mdi-chevron-left</v-icon
-            >
+            <v-icon class="blue500--text" size="20"> mdi-chevron-left</v-icon>
             <div>{{ $t('common.dapps') }}</div>
           </v-row>
         </router-link>

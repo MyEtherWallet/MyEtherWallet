@@ -23,7 +23,7 @@
             :title-icon="dapp.titleIcon"
             :right-icon-type="dapp.rightIconType"
             :right-icon="dapp.rightIcon"
-            @click.native="routeTo(dapp.name)"
+            @click.native="routeTo(dappName(dapp))"
           />
         </v-col>
       </v-row>
@@ -78,6 +78,12 @@ export default {
     routeTo(name) {
       this.trackDapp(name);
       this.$router.push({ name: name });
+    },
+    /**
+     * defualtName is used to route to dapps that has defalt child route
+     */
+    dappName(dapp) {
+      return dapp.name || dapp.defaultName;
     }
   }
 };

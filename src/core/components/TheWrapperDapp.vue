@@ -27,6 +27,11 @@
         <slot name="HeaderRight" />
       </template>
     </block-header>
+    <!--
+    =====================================================================================
+     NER DAPP HEADER:
+    =====================================================================================
+    -->
     <the-dapp-header
       v-else
       :dapp-name="bannerText.title"
@@ -42,7 +47,7 @@
     =====================================================================================
     -->
     <mew-tabs
-      v-if="tabItems.length > 0"
+      v-if="tabItems.length > 0 && !isNewHeader"
       :class="[
         {
           'pt-5': !isNewHeader,
@@ -51,9 +56,9 @@
       ]"
       :items="tabItems"
       :active-tab="activeTab"
-      :background="tabBackground"
-      :has-underline="!isNewHeader"
-      :active-color="tabActiveColor"
+      :background="transparent"
+      has-underline
+      active-color="textDark"
       @onTab="onTab"
     >
       <template
@@ -63,7 +68,40 @@
         <slot :name="'tabContent' + (idx + 1)" />
       </template>
     </mew-tabs>
-
+    <!--
+    =====================================================================================
+      NEW menu Tabs - props: tabItems, activeTab; takes in a slot for each
+      tab content (tabContent + tab number )
+      TODO: remove hideDefaultTabHeader prop and refactor
+    =====================================================================================
+    -->
+    <v-tabs
+      v-if="tabItems.length > 0 && isNewHeader"
+      v-model="tab"
+      background-color="backgroundGrey"
+      color="blue500"
+      height="46"
+    >
+      <v-tab
+        v-for="(item, index) in tabItems"
+        :key="item.name"
+        :to="item.route"
+        :class="[
+          'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
+          { 'ml-3 ml-md-13': index === 0 },
+          { 'mr-3 mr-md-13': index + 1 === tabItems.length }
+        ]"
+        active-class="blue500--text"
+      >
+        {{ item.name }}
+      </v-tab>
+    </v-tabs>
+    <!--
+    =====================================================================================
+     NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
+    =====================================================================================
+    -->
+    <router-view v-if="tabItems.length > 0 && isNewHeader" />
     <!--
     =====================================================================================
      Slot: content, used to place body content if not using tabs.
@@ -82,48 +120,71 @@ import TheDappHeader from '@/core/components/TheDappHeader';
 export default {
   components: { BlockHeader, TheDappHeader },
   props: {
+    // OLD
     hasExitBtn: {
       default: false,
       type: Boolean
     },
+    // OLD
     bannerImg: {
       default: bannerImage,
       type: String
     },
+    /**
+     * NEW Banner Text:
+     * bannerText: {
+     *     title: 'ETH Blocks', //
+     *     subtext: 'Mint stunning QR art-pieces based on your favorite blocks.'
+     * }
+     */
     bannerText: {
       default: () => {},
       type: Object
     },
+    /**
+     * NEW TAB ITEMS OBJECT SHOULD LOOK LIKE THIS:
+     * tabItems:
+     *   [{
+     *      name: 'Mint a new block',                      // String that will be displayd as a tab menu
+     *      route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },   // Route name of the child
+     *    }]
+     */
     tabItems: {
       default: () => [],
       type: Array
     },
+    // OLD
     activeTab: {
       default: 0,
       type: Number
     },
+    // OLD
     titleIcon: {
       default: '',
       type: String
     },
+    // OLD
     noBackBtn: {
       default: false,
       type: Boolean
     },
+    // OLD
     topStrip: {
       default: false,
       type: Boolean
     },
+    // OLD
     onTab: {
       default: () => {},
       type: Function
     },
+    // OLD
     hideDefaultTabHeader: {
       default: false,
       type: Boolean
     },
     /** NEW ITEMS FOR UPDATED WRAPPER
-     * NOTE: REFACTOR NEEDED FOR OTHER DAPPS
+     * NOTE: REFACTOR NEEDED FOR OTHER DAPPS: you can remove all older menu and items
      */
     isNewHeader: {
       default: false,
@@ -136,16 +197,9 @@ export default {
   },
   data() {
     return {
-      bannerTextObj: {}
+      bannerTextObj: {},
+      tab: null
     };
-  },
-  computed: {
-    tabBackground() {
-      return this.isNewHeader ? 'backgroundGrey' : 'transparent';
-    },
-    tabActiveColor() {
-      return this.isNewHeader ? 'blue500' : 'textDark';
-    }
   },
   mounted() {
     this.bannerTextObj = this.bannerText;
@@ -168,5 +222,20 @@ export default {
   .v-tabs {
     display: none;
   }
+}
+.menu-tab-text {
+  text-transform: none !important;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

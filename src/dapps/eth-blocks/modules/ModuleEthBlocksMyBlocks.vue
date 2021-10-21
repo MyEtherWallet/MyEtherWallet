@@ -10,7 +10,7 @@
     OverView Header
     ===================================================
     -->
-    <v-row no-gutters class="align-center">
+    <v-row class="align-center">
       <!--
       ===================================================
         Block Count
@@ -34,8 +34,8 @@
           <div class="d-none d-sm-block textLight--text mew-caption mr-5">
             sort by
           </div>
-          <mew-button btn-style="light">Newest</mew-button>
-          <mew-button btn-style="transparent">123</mew-button>
+          <mew-button btn-style="light" btn-size="medium">Newest</mew-button>
+          <mew-button btn-style="transparent" btn-size="medium">123</mew-button>
         </div>
       </v-col>
       <!--
@@ -66,16 +66,16 @@
       Owned Blocks
     ===================================================
     -->
-    <v-row v-if="hasBlocks">
-      <v-col v-for="i in 23" :key="i" cols="12" sm="6" md="3">
-        <div class="border-container px-5 pt-5 pb-8">
+    <v-row v-if="hasBlocks" class="align-top justify-center">
+      <v-col v-for="i in 23" :key="i" cols="9" sm="6" md="3">
+        <div
+          class="border-container px-5 pt-5 pb-8"
+          @click="routeTo('130567789')"
+        >
           <v-img src="../assets/temp-block.svg" contain />
           <div class="my-2 mew-heading-2 textDark--text">
             Block #13,0567,789
           </div>
-          <p class="textMedium--text mb-0">
-            Completed on 7/31/2017, this iconic piece of history included...
-          </p>
         </div>
       </v-col>
     </v-row>
@@ -98,6 +98,9 @@
 </template>
 
 <script>
+import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 export default {
   name: 'ModuleEthBlocksMyBlocks',
   props: {},
@@ -107,7 +110,19 @@ export default {
       totalBlocks: 12
     };
   },
-  computed: {}
+  computed: {},
+  methods: {
+    routeTo(block) {
+      try {
+        this.$router.push({
+          name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
+          params: { blockRef: block }
+        });
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
+    }
+  }
 };
 </script>
 
