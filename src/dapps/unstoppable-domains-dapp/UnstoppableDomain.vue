@@ -20,11 +20,6 @@
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
-              <!-- <div class="mb-3">
-                <div class="mew-heading-3 font-weight-bold">
-                  {{ $t('unstoppable.search-domain-prompt') }}
-                </div>
-              </div> -->
               <div class="d-flex align-start">
                 <mew-input
                   v-model="input"
@@ -43,6 +38,13 @@
               </div>
             </div>
             <div>
+              <domain-table
+                v-if="searchResults.length !== 0"
+                :search-results="searchResults"
+                :buy-domain="buyDomain"
+              />
+            </div>
+            <!-- <div>
               <div v-if="searchResults.length !== 0" class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">
                   {{ $t('unstoppable.result') }}
@@ -122,7 +124,7 @@
                 indeterminate
                 color="primary"
               ></v-progress-circular>
-            </div>
+            </div> -->
             <unstoppable-info-card v-if="searchResults.length === 0" />
             <div class="py-10"></div>
           </v-sheet>
@@ -210,6 +212,7 @@ import UnstoppableManageRecordsOverlay from './components/UnstoppableManageRecor
 import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOverlay';
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
 import UnstoppableBanner from './components/UnstoppableBanner.vue';
+import DomainTable from '@/views/layouts-default/DomainTable.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
 import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
@@ -218,6 +221,7 @@ export default {
     UnstoppableDomainBuyOverlay,
     UnstoppableManageRecordsOverlay,
     UnstoppableUploadIpfsOverlay,
+    DomainTable,
     UnstoppableInfoCard,
     UnstoppableBanner
   },
