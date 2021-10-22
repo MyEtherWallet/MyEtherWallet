@@ -1,8 +1,68 @@
-import Notification from './handlerNotification';
+import { isAddress } from 'web3-utils';
+import Notification, {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from './handlerNotification';
+import BigNumber from 'bignumber.js';
+
+const VALID_ARGUMENTS = [
+  'validUntil', // number
+  'toVal', // string
+  'toUsdVal', // string
+  'toType', // string
+  'toImg', // string
+  'to', // string
+  'selectedProvider', // obj
+  'refundAddress', // string
+  'fromImg', // string
+  'fromType', // string
+  'fromUsdVal', // string
+  'fromVal', // string
+  'actualTrade', // object
+  'type' // string
+];
 
 export default class NonChainNotification extends Notification {
   constructor(obj) {
     super(obj);
+  }
+
+  /**
+   * Formats notification obj
+   */
+  formatNotificiationObj(obj) {
+    /**
+     * Assigning values: date, value, gasPrice, gas, status
+     */
+    const date = obj.validUntil
+      ? new BigNumber(obj.validUntil).times(1000).toNumber()
+      : new Date().getTime();
+    /**
+     * The Notification Obj
+     */
+    const notification = {
+      from: obj.from,
+      to: obj.to,
+      fromType: obj.fromType,
+      toType: obj.toType,
+      fromImg: obj.fromImg,
+      toImg: obj.toImg,
+      fromVal: obj.fromVal,
+      toVal: obj.toVal,
+      toUsdVal: obj.toUsdVal,
+      fromUsdVal: obj.fromUsdVal,
+      validUntil: date,
+      selectedProvider: obj.selectedProvider,
+      totalFees: obj.totalFees,
+      gasPriceType: obj.gasPriceType,
+      actualTrade: obj.actualTrade
+    };
+    if (notification.status === '0x1' || notification.status === '0x0')
+      notification.status =
+        notification.status === '0x1'
+          ? NOTIFICATION_STATUS.SUCCESS
+          : NOTIFICATION_STATUS.FAILED;
+    this.validateNotificationObj(notification);
   }
 
   /**
@@ -30,46 +90,9 @@ export default class NonChainNotification extends Notification {
         !isAddress(obj[keysArray[i]])
       ) {
         this._invalidType(keysArray[i], obj[keysArray[i]]);
-      } else if (keysArray[i] === 'hash' && !isHexStrict(obj[keysArray[i]])) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
       } else if (obj[keysArray[i]]) {
         this[keysArray[i]] = obj[keysArray[i]];
       }
-    }
-  }
-  /**
-   * Updates status and resolves back to ui with the new object
-   */
-  updateStatus(status) {
-    return new Promise(resolve => {
-      this.status = status;
-      vuexStore.dispatch('notifications/updateNotification', this);
-      resolve(this);
-    });
-  }
-  /**
-   * Check swap status
-   */
-  checkSwapStatus(swapper) {
-    if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
-      const _this = this;
-      _this.swapResolver = setInterval(() => {
-        swapper.getStatus(_this.swapObj).then(res => {
-          const formattedStatus = res.toLowerCase();
-          _this.status =
-            formattedStatus === NOTIFICATION_STATUS.COMPLETED
-              ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
-              : formattedStatus === NOTIFICATION_STATUS.FAILED ||
-                formattedStatus === NOTIFICATION_STATUS.UNKNOWN
-              ? NOTIFICATION_STATUS.FAILED.toUpperCase()
-              : res;
-        });
-        if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
-          _this.read = false;
-          vuexStore.dispatch('notifications/updateNotification', _this);
-          clearInterval(_this.swapResolver);
-        }
-      }, 10000);
     }
   }
 }

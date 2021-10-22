@@ -295,6 +295,7 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
+import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
 import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
@@ -349,8 +350,9 @@ export default {
         fromType: '',
         toType: '',
         validUntil: 0,
-        selectedProvider: '',
-        totalFees: ''
+        selectedProvider: {},
+        totalFees: '',
+        actualTrade: {}
       },
       swapper: null,
       toTokenType: {},
@@ -499,13 +501,16 @@ export default {
       };
     },
     disableNext() {
-      return (
+      const disableSet =
         this.step < 2 ||
         this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
-        this.providersErrorMsg.subtitle !== ''
-      );
+        this.providersErrorMsg.subtitle !== '';
+      if (this.fromTokenType?.isEth) {
+        return disableSet;
+      }
+      return disableSet && this.refundAddress === '';
     },
     providersErrorMsg() {
       let msg = '';
@@ -590,6 +595,11 @@ export default {
         )
           return item;
       });
+      const filteredTrendingTokens = this.trendingTokens.length
+        ? this.trendingTokens.filter(token => {
+            return token.contract !== this.fromTokenType?.contract;
+          })
+        : [];
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -599,12 +609,12 @@ export default {
           selectLabel: true
         }
       ];
-      if (this.trendingTokens.length) {
+      if (filteredTrendingTokens.length) {
         returnableTokens = returnableTokens.concat([
           {
             header: 'Trending'
           },
-          ...this.trendingTokens,
+          ...filteredTrendingTokens,
           {
             header: 'All'
           },
@@ -647,6 +657,11 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
+      const filteredTrendingTokens = this.trendingTokens.length
+        ? this.trendingTokens.filter(token => {
+            return token.contract !== this.toTokenType?.contract;
+          })
+        : [];
       const validFromTokens = this.fromTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
@@ -676,22 +691,12 @@ export default {
           header: 'My Wallet'
         },
         ...tradebleWalletTokens,
+        ...filteredTrendingTokens,
         {
           header: 'Other Tokens'
         },
         ...validFromTokens,
-        //Adding in BTC to match 'TO' trending token
-        {
-          contract: '0xbtc',
-          decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
-          symbol: 'BTC',
-          isEth: false,
-          name: 'BTC',
-          subtext: 'Bitcoin',
-          value: 'Bitcoin',
-          cgid: 'bitcoin'
-        }
+        ...filteredTrendingTokens
       ];
       return returnableTokens;
     },
@@ -719,23 +724,19 @@ export default {
      */
     trendingTokens() {
       if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name]
-        .filter(token => {
-          return token.contract !== this.fromTokenType?.contract;
-        })
-        .map(token => {
-          if (token.cgid) {
-            const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = foundToken.pricef;
-            return Object.assign(token, foundToken);
-          }
-          const foundToken = this.contractToToken(token.contract);
-          if (foundToken) {
-            token = Object.assign(token, foundToken);
-            token.price = token.pricef;
-          }
-          return token;
-        });
+      return TRENDING_LIST[this.network.type.name].map(token => {
+        if (token.cgid) {
+          const foundToken = this.getCoinGeckoTokenById(token.cgid);
+          foundToken.price = foundToken.pricef;
+          return Object.assign(token, foundToken);
+        }
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          token = Object.assign(token, foundToken);
+          token.price = token.pricef;
+        }
+        return token;
+      });
     },
     totalFees() {
       const gasPrice =
@@ -748,6 +749,7 @@ export default {
         this.currentTrade.transactions?.forEach(tx => {
           totalGas = totalGas.add(toBN(tx.gas));
         });
+        2;
         return totalGas.toString();
       }
       return '0';
@@ -923,7 +925,6 @@ export default {
   },
   mounted() {
     this.setupSwap();
-    this.showTradeConfirm();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -969,8 +970,9 @@ export default {
         fromType: '',
         toType: '',
         validUntil: 0,
-        selectedProvider: '',
-        totalFees: ''
+        selectedProvider: {},
+        totalFees: '',
+        actualTrade: {}
       };
 
       this.toTokenswapper = null;
@@ -1123,7 +1125,10 @@ export default {
         return;
       }
       if (
-        !Swapper.helpers.hasValidDecimals(value, this.fromTokenType.decimals)
+        !Swapper.helpers.hasValidDecimals(
+          this.tokenInValue,
+          this.fromTokenType.decimals
+        )
       ) {
         return;
       }
@@ -1223,6 +1228,7 @@ export default {
         this.feeError = 'Provider issue';
         return;
       }
+      this.feeError = '';
       this.currentTrade = trade;
       this.step = 2;
       this.loadingFee = false;
@@ -1235,6 +1241,12 @@ export default {
       }
     },
     showConfirm() {
+      this.setConfirmInfo();
+      this.executeTrade();
+    },
+    setConfirmInfo() {
+      const toPrice = this.toTokenType.price ? this.toTokenType.price : 0;
+      const fromPrice = this.fromTokenType.price ? this.fromTokenType.price : 0;
       this.confirmInfo = {
         from: this.address,
         to: this.toAddress,
@@ -1244,106 +1256,33 @@ export default {
         toImg: this.toTokenType.img,
         fromVal: this.tokenInValue,
         toVal: this.tokenOutValue,
-        toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-          .times(this.tokenOutValue)
-          .toFixed(),
-        fromUsdVal: BigNumber(
-          this.fromTokenType.price ? this.fromTokenType.price : 0
-        )
-          .times(this.tokenInValue)
-          .toFixed(),
+        toUsdVal: BigNumber(toPrice).times(this.tokenOutValue).toFixed(),
+        fromUsdVal: BigNumber(fromPrice).times(this.tokenInValue).toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         totalFees: this.totalFees,
-        gasPriceType: this.localGasType
+        gasPriceType: this.localGasType,
+        actualTrade: this.currentTrade
       };
-      this.executeTrade();
     },
     showTradeConfirm() {
-      console.log('calling this guy');
-      const confirmInfo = {
-        validUntil: 1633726964016,
-        toVal: '29.22085440',
-        toUsdVal: 'NaN',
-        toType: 'ETH',
-        toImg:
-          'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
-        to: '0x00450992bc72ab99ae55bccdce68e160412fdac0',
-        selectedProvider: {
-          amount: '29.22085440',
-          exchange: 'changelly',
-          exchangeInfo: {
-            description: '',
-            img: 'img/Changelly.730ed530.png',
-            name: 'Changelly'
-          },
-          isSelected: true,
-          maxFrom: '4.46945103',
-          minFrom: '0.00450000',
-          provider: 'changelly',
-          rate: '14.6104272',
-          rateId:
-            'fe8993badf88c62f6c1e4d505d8a44b392f59d842e8023a9b3c601d627c1a3495d254d3cedd72571f3408c6b6832e6e01315b58b05130bee6cc11a158560dcf899bfc53fec005a811a39586bfd163965f9'
-        },
-        refundAddress: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
-        fromImg:
-          'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',
-        fromType: 'BTC',
-        fromUsdVal: undefined,
-        fromVal: '2',
-        actualTrade: {
-          provider: 'changelly',
-          response: {
-            amountExpectedFrom: '2.00000000',
-            amountExpectedTo: '29.22085440',
-            amountTo: '29.22085440',
-            apiExtraFee: '1',
-            binaryPayload: null,
-            changellyFee: '0.5',
-            createdAt: '2021-10-08T20:52:39.000Z',
-            currencyFrom: 'btc',
-            currencyTo: 'eth',
-            id: 'rlla3gfetbgbaks2',
-            kycRequired: false,
-            payTill: '2021-10-08T21:12:39.986Z',
-            payinAddress: '32usYraTqDxQ31sPdqEvKVwGyyZaFpMkFV',
-            payinExtraId: null,
-            payoutAddress: '0x00450992bc72ab99ae55bccdce68e160412fdac0',
-            refundAddress: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
-            signature: null,
-            status: 'new',
-            trackUrl: null
-          }
-        }
-      };
-      // this.confirmInfo = {
-      //   refundAddress: this.refundAddress,
-      //   to: this.toAddress,
-      //   fromType: this.fromTokenType.symbol,
-      //   toType: this.toTokenType.symbol,
-      //   fromImg: this.fromTokenType.img,
-      //   toImg: this.toTokenType.img,
-      //   fromVal: this.tokenInValue,
-      //   toVal: this.tokenOutValue,
-      // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-      //   .times(this.tokenOutValue)
-      //   .toFixed(),
-      // fromUsdVal: BigNumber(this.fromTokenType.price ? this.fromTokenType.price : 0)
-      //   .times(this.tokenInValue)
-      //   .toFixed(),
-      //   validUntil: new Date().getTime() + 10 * 60 * 1000,
-      //   selectedProvider: this.selectedProvider,
-      //   actualTrade: this.currentTrade
-      // };
-      // console.log(this.confirmInfo);
+      this.setConfirmInfo();
       EventBus.$emit(
         EventNames.SHOW_CROSS_CHAIN_MODAL,
-        confirmInfo,
+        this.confirmInfo,
         this.sentCrossChain
       );
     },
-    sentCrossChain() {
-      console.log('add crosschain notification');
+    sentCrossChain(val) {
+      if (!val) {
+        const obj = Object.assign({}, this.confirmInfo, {
+          type: NOTIFICATION_TYPES.SWAP,
+          status: NOTIFICATION_STATUS.SUBMITTED
+        });
+        this.addNotification(new NonChainNotification(obj)).then(this.clear);
+      } else {
+        this.clear();
+      }
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {

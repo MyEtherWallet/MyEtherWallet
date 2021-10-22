@@ -127,7 +127,7 @@ export default {
     }
   },
   data() {
-    return { startingTime: moment(60 * 0.25 * 1000), counter: () => {} };
+    return { startingTime: moment(60 * 20 * 1000), counter: () => {} };
   },
   computed: {
     time() {
@@ -166,6 +166,10 @@ export default {
       }
       return this.sentBtc;
     },
+    locReset() {
+      this.sentBtc(true);
+      this.reset();
+    },
     timerFinished() {
       return this.time === '00:00';
     }
@@ -173,7 +177,7 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        this.startingTime = moment(60 * 0.25 * 1000);
+        this.startingTime = moment(60 * 20 * 1000);
         this.counter = setInterval(() => {
           if (this.timerFinished) {
             clearInterval(this.counter);
