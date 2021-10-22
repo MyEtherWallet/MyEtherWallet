@@ -199,7 +199,9 @@ export default {
     formatValues(item) {
       const newObj = {};
       newObj.balance = [
-        item.balancef + ' ' + item.symbol,
+        item.balancef
+          ? item.balancef + ' ' + item.symbol
+          : '0' + ' ' + item.symbol,
         '$' + item.usdBalancef ? item.usdBalancef : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
