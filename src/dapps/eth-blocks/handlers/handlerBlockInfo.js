@@ -40,10 +40,11 @@ export default class HandlerBlockInfo {
    * Get Block Info
    */
   getBlock() {
+    console.log(this.network);
     this.loading = true;
     const payload = {
       blockNumber: this.blockNumber,
-      chainId: 4
+      chainId: this.network.type.chainID
     };
     return axios
       .post(URL_POST, payload, {
@@ -53,7 +54,6 @@ export default class HandlerBlockInfo {
       })
       .then(resp => {
         //Set Block Data
-        console.log(resp.data);
         const meta = resp.data.metadata;
         this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
         this.owner = resp.data.tokenOwner;

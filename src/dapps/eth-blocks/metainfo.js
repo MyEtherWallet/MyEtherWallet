@@ -1,5 +1,5 @@
 import { ETH_BLOCKS_ROUTE, blockGuard } from './configsRoutes';
-import { ETH } from '@/utils/networks/types';
+import { ETH, RIN } from '@/utils/networks/types';
 import layout from './TheEthBlocksLayout';
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
@@ -12,7 +12,7 @@ export default {
   rightIconType: 'mew',
   rightIcon: 'stake',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
-  networks: [ETH],
+  networks: [ETH, RIN],
   layout,
   defaultName: ETH_BLOCKS_ROUTE.CORE.NAME,
   meta: {
