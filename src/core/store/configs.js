@@ -5,7 +5,7 @@ export default {
     custom: 'custom-store'
   },
   VERSION: {
-    global: '1.0.3',
+    global: '1.0.4',
     notifications: '1.0.1',
     custom: '1.0.2'
   }
