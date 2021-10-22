@@ -25,7 +25,8 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   'remark-cli',
-  'node-fetch'
+  'node-fetch',
+  'eslint' // not supported by vue yet
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

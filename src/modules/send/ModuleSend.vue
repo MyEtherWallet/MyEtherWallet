@@ -634,6 +634,7 @@ export default {
       this.userInputType = userInputType;
     },
     setSendTransaction() {
+      this.localGasPrice = this.gasPrice;
       this.sendTx = new SendTransaction(this.$store);
     },
     estimateAndSetGas() {

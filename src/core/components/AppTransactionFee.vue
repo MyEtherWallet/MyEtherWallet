@@ -173,7 +173,12 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'swapLink']),
+    ...mapGetters('global', [
+      'network',
+      'isEthNetwork',
+      'swapLink',
+      'gasPriceByType'
+    ]),
     ...mapState('global', ['online', 'gasPriceType']),
     txFeeInEth() {
       return fromWei(this.txFee);
@@ -199,6 +204,12 @@ export default {
     timeWillTake() {
       return estimatedTime(this.gasPriceType);
     }
+  },
+  mounted() {
+    // update gasprice every 2 minutes
+    setInterval(() => {
+      this.handleLocalGasPrice(this.gasPriceByType(this.gasPrice));
+    }, 60 * 2000);
   },
   methods: {
     ...mapActions('global', ['updateGasPrice']),
