@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
+import { URL_POST_META, IMAGE_PROXY } from './configs';
 
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
-const URL_POST =
-  'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/meta';
 export default class HandlerBlockInfo {
   constructor(web3, network, blockNumber) {
     /**
@@ -40,14 +39,13 @@ export default class HandlerBlockInfo {
    * Get Block Info
    */
   getBlock() {
-    console.log(this.network);
     this.loading = true;
     const payload = {
       blockNumber: this.blockNumber,
       chainId: this.network.type.chainID
     };
     return axios
-      .post(URL_POST, payload, {
+      .post(URL_POST_META, payload, {
         header: {
           'Content-Type': 'application/json'
         }
@@ -57,7 +55,7 @@ export default class HandlerBlockInfo {
         const meta = resp.data.metadata;
         this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
         this.owner = resp.data.tokenOwner;
-        this.img = `https://img.mewapi.io/?image=${meta.image}`;
+        this.img = `${IMAGE_PROXY}${meta.image}`;
         this.mintPrice = meta.mintPrice;
         this.description = meta.description;
         this.date = meta.attributes[2].value;
@@ -68,7 +66,7 @@ export default class HandlerBlockInfo {
         this.loading = false;
       })
       .catch(err => {
-        this.loadingValidators = false;
+        this.loading = false;
         Toast(err, {}, ERROR);
       });
   }
