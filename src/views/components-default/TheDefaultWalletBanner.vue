@@ -70,7 +70,7 @@
               v-for="(btn, idx) in storeButtons"
               :key="idx"
               target="_blank"
-              :href="btn.url"
+              :href="isMobile() ? btn.url : 'https://mewwallet.com'"
             >
               <img height="46" class="mr-5" :src="btn.src" alt="App button" />
             </a>
@@ -80,7 +80,9 @@
             class="mew-body font-weight-medium footer-text"
           >
             <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
-            <a href="https://www.mewwallet.com/" target="_blank"
+            <a
+              :href="isMobile() ? btn.url : 'https://mewwallet.com'"
+              target="_blank"
               >{{ $t('home.mew-wallet-modal.learn-more') }}...
             </a>
           </div>
@@ -107,6 +109,7 @@
 import appStore from '@/assets/images/icons/button-app-store.png';
 import googlePlay from '@/assets/images/icons/button-play-store.png';
 import { mapMutations, mapState } from 'vuex';
+const platform = require('platform');
 export default {
   data() {
     return {
@@ -133,6 +136,12 @@ export default {
     },
     setHideBanner() {
       this.NEVER_SHOW_BANNER();
+    },
+    isMobile() {
+      return (
+        platform.os.family.includes('iOS') ||
+        platform.os.family.includes('Android')
+      );
     }
   }
 };
