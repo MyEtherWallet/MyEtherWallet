@@ -1,1 +1,1 @@
-*  migrate addressBook store
+* migrate addressBook store
