@@ -113,6 +113,8 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3']),
     ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('addressBook', ['isMigrated']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
@@ -167,9 +169,9 @@ export default {
         if (this.isMyAddress) {
           return true;
         }
-        return Object.keys(this.addressBook).some(key => {
+        return Object.keys(this.addressBookStore).some(key => {
           return (
-            this.addressBook[key].address.toLowerCase() ===
+            this.addressBookStore[key].address.toLowerCase() ===
             this.addressToAdd?.toLowerCase()
           );
         });
@@ -199,6 +201,12 @@ export default {
     }
   },
   mounted() {
+    if (!this.isMigrated) {
+      this.addressBook.forEach(address => {
+        this.addressBookStore.push(address);
+      });
+      this.setMigrated(true);
+    }
     if (this.network.type.ens)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.addMode && this.toAddress) {
@@ -207,13 +215,14 @@ export default {
     if (this.editMode) {
       this.addressToAdd = this.item.address;
       this.nickname = this.item.nickname;
-      this.currentIdx = this.addressBook.findIndex(
+      this.currentIdx = this.addressBookStore.findIndex(
         item => item.address === this.item.address
       );
     }
   },
   methods: {
-    ...mapActions('custom', ['setAddressBook']),
+    ...mapActions('addressBook', ['setAddressBook']),
+    ...mapActions('addressBook', ['setMigrated']),
     reset() {
       this.addressToAdd = '';
       this.nickname = '';
@@ -242,14 +251,15 @@ export default {
       this.nickname = value;
     },
     update() {
-      this.addressBook[this.currentIdx].address = this.checksumAddressToAdd;
-      this.addressBook[this.currentIdx].nickname = this.nickname;
-      this.setAddressBook(this.addressBook);
+      this.addressBookStore[this.currentIdx].address =
+        this.checksumAddressToAdd;
+      this.addressBookStore[this.currentIdx].nickname = this.nickname;
+      this.setAddressBook(this.addressBookStore);
       this.$emit('back', 3);
     },
     remove() {
-      this.addressBook.splice(this.currentIdx, 1);
-      this.setAddressBook(this.addressBook);
+      this.addressBookStore.splice(this.currentIdx, 1);
+      this.setAddressBook(this.addressBookStore);
       this.reset();
       this.$emit('back', 3);
     },
@@ -258,12 +268,12 @@ export default {
         this.reset();
         return;
       }
-      this.addressBook.push({
+      this.addressBookStore.push({
         address: this.checksumAddressToAdd,
         resolvedAddr: this.resolvedAddr,
-        nickname: this.nickname || (this.addressBook.length + 1).toString()
+        nickname: this.nickname || (this.addressBookStore.length + 1).toString()
       });
-      this.setAddressBook(this.addressBook);
+      this.setAddressBook(this.addressBookStore);
       this.reset();
       this.$emit('back', 3);
     }
