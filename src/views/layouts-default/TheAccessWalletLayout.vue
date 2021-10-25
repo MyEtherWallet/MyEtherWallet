@@ -61,7 +61,6 @@
       =====================================================================================
       -->
       <div class="spacer-y-medium" />
-      <browser-extension-overlay :open="showBrowser" :close="close" />
       <module-access-wallet-mobile :open="showMobile" :close="close" />
       <module-access-wallet-hardware :open="showHardware" :close="close" />
       <module-access-wallet-software
@@ -74,7 +73,6 @@
 </template>
 
 <script>
-import browserExtensionOverlay from '@/modules/access-wallet/software/components/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
@@ -97,7 +95,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
-    browserExtensionOverlay,
     ModuleAccessWalletHardware,
     ModuleAccessWalletSoftware,
     ModuleAccessWalletMobile,
