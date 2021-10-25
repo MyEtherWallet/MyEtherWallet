@@ -18,6 +18,40 @@
         Options
       =====================================================================================
       -->
+      <div style="max-width: 650px" class="mx-auto">
+        <mew-button
+          v-for="btn in buttons"
+          :key="btn.title"
+          class="mb-5"
+          color-theme="basic"
+          btn-style="light"
+          style="height: 160px"
+        >
+          <div class="px-2 textDark--text text-left d-flex align-center">
+            <div>
+              <div class="mb-2 d-flex align-center">
+                <div class="mew-heading-2">Get MEW wallet app</div>
+                <v-icon dense color="primary" class="ml-1">
+                  mdi-shield-check
+                </v-icon>
+              </div>
+              <div class="break-word">
+                Download our official app and connect to MEW web using your
+                mobile phone. Available on iOS and Android.
+              </div>
+            </div>
+            <div class="d-none d-sm-block pl-5">
+              <img
+                class="mew-wallet-img"
+                src="@/assets/images/snippets/bg-mew-wallet.png"
+                alt="MEWwallet"
+                style="height: 140px; margin-top: 20px; margin-bottom: -3px"
+              />
+            </div>
+          </div>
+        </mew-button>
+      </div>
+
       <v-sheet color="transparent" max-width="650px" class="mx-auto">
         <div v-for="btn in buttons" :key="btn.title" class="mb-5">
           <mew-super-button

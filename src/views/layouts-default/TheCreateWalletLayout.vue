@@ -18,18 +18,53 @@
         Options
     =====================================================================================
     -->
-      <div style="max-width: 650px" class="mx-auto mb-15">
+      <div style="max-width: 650px" class="mx-auto">
+        <a href="https://www.mewwallet.com/" target="_blank">
+          <mew-button
+            class="mb-5"
+            color-theme="basic"
+            btn-style="light"
+            style="height: 160px"
+          >
+            <div class="px-2 textDark--text text-left d-flex align-center">
+              <div>
+                <div class="mb-2 d-flex align-center">
+                  <div class="mew-heading-2">Get MEW wallet app</div>
+                  <v-icon dense color="primary" class="ml-1">
+                    mdi-shield-check
+                  </v-icon>
+                </div>
+                <div class="break-word">
+                  Download our official app and connect to MEW web using your
+                  mobile phone. Available on iOS and Android.
+                </div>
+              </div>
+              <div class="d-none d-sm-block pl-5">
+                <img
+                  class="mew-wallet-img"
+                  src="@/assets/images/snippets/bg-mew-wallet.png"
+                  alt="MEWwallet"
+                  style="height: 140px; margin-top: 20px; margin-bottom: -3px"
+                />
+              </div>
+            </div>
+          </mew-button>
+        </a>
+
         <mew-button
           class="mb-5"
           color-theme="basic"
           btn-style="light"
           style="height: 160px"
+          @click.native="
+            $router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME })
+          "
         >
           <div class="px-2 textDark--text text-left d-flex align-center">
             <div>
               <div class="mb-2 d-flex align-center">
                 <div class="mew-heading-2">Get MEW wallet app</div>
-                <v-icon small color="primary" class="ml-1">
+                <v-icon dense color="primary" class="ml-1">
                   mdi-shield-check
                 </v-icon>
               </div>
@@ -38,31 +73,7 @@
                 mobile phone. Available on iOS and Android.
               </div>
             </div>
-            <div>
-              <img
-                class="mew-wallet-img"
-                src="@/assets/images/snippets/bg-mew-wallet.png"
-                alt="MEWwallet"
-                style="height: 140px; margin-top: 20px; margin-bottom: -3px"
-              />
-            </div>
-          </div>
-        </mew-button>
-        <mew-button color-theme="basic" btn-style="light" style="height: 160px">
-          <div class="px-2 textDark--text text-left d-flex align-center">
-            <div>
-              <div class="mb-2 d-flex align-center">
-                <div class="mew-heading-2">Get MEW wallet app</div>
-                <v-icon small color="primary" class="ml-1">
-                  mdi-shield-check
-                </v-icon>
-              </div>
-              <div class="break-word">
-                Download our official app and connect to MEW web using your
-                mobile phone. Available on iOS and Android.
-              </div>
-            </div>
-            <div class="px-5">
+            <div class="d-none d-sm-block px-5">
               <img
                 class="mew-wallet-img"
                 src="@/assets/images/icons/icon-hardware-wallet.png"
@@ -72,91 +83,34 @@
             </div>
           </div>
         </mew-button>
-      </div>
 
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <!--
-        =====================================================================================
-          MEW wallet Button
-        =====================================================================================
-        -->
-        <a href="https://www.mewwallet.com/" target="_blank">
-          <mew-super-button
-            font-class="mew-heading-2"
-            class="mb-5"
-            color-theme="basic"
-            title="Get MEW wallet app"
-            subtitle="Download our official app and connect to MEW web using your mobile phone. Available on iOS and Android."
-            title-icon="mdi-shield-check"
-            title-icon-type="mdi"
-            title-icon-class="primary--text"
-          >
-            <!-- need to add this slot -->
-            <template #contentBelowTitle>
-              <div class="mt-6">
-                <img
-                  src="@/assets/images/icons/button-app-store.svg"
-                  alt="Apple app store"
-                  style="height: 30px"
-                  class="mr-2"
-                />
-                <img
-                  src="@/assets/images/icons/button-play-store.svg"
-                  alt="Google play store"
-                  style="height: 30px"
-                />
-              </div>
-            </template>
-            <template #contentSlot>
-              <img
-                class="mew-wallet-img"
-                src="@/assets/images/snippets/bg-mew-wallet.png"
-                alt="MEWwallet"
-                style="height: 140px; margin-top: 20px"
-              />
-            </template>
-          </mew-super-button>
-        </a>
-        <!--
-        =====================================================================================
-          Buy Hardware Button
-        =====================================================================================
-        -->
-        <mew-super-button
-          font-class="mew-heading-2"
+        <mew-button
           class="mb-5"
           color-theme="basic"
-          title="Buy a Hardware Wallet"
-          subtitle="For the highest standard of security, buy a hardware wallet and use it with MEW."
-          title-icon="mdi-shield-check"
-          title-icon-type="mdi"
-          title-icon-class="primary--text"
-          right-icon-type="img"
-          :right-icon="
-            require('@/assets/images/icons/icon-hardware-wallet.png')
-          "
-          @click.native="
-            $router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME })
-          "
-        />
-        <!--
-        =====================================================================================
-          Create Software Button
-        =====================================================================================
-        -->
-        <mew-super-button
-          font-class="mew-heading-2"
-          class="mb-5"
-          color-theme="outline"
-          title="Software"
-          subtitle="Software methods like keystore file and mnemonic phrase should only be used in offline settings by experienced users."
-          title-icon-class="warning--text text--darken-1"
-          title-icon="mdi-alert"
-          title-icon-type="mdi"
-          note="NOT RECOMMENDED"
+          btn-style="outline"
+          style="height: 160px; position: relative"
           @click.native="openSoftwareModule"
-        />
-      </v-sheet>
+        >
+          <div
+            class="warning--text text--darken-1 mew-label"
+            style="position: absolute; top: -30px; right: 0px"
+          >
+            NOT RECOMMENDED
+          </div>
+          <div class="px-2 textDark--text text-left">
+            <div class="mb-2 d-flex align-center">
+              <div class="mew-heading-2 white--text">Software</div>
+              <v-icon dense color="warning darken-1" class="ml-1">
+                mdi-alert
+              </v-icon>
+            </div>
+            <div class="break-word white--text">
+              Download our official app and connect to MEW web using your mobile
+              phone. Available on iOS and Android.
+            </div>
+          </div>
+        </mew-button>
+      </div>
     </v-container>
     <div class="spacer-y-medium" />
     <mew-toast
