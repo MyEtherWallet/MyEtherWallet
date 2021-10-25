@@ -1025,6 +1025,14 @@ export default {
         return;
       }
 
+      if (_.isEmpty(this.fromTokenType)) {
+        Toast(
+          "The 'from token' is not valid. Please check the 'from token.'",
+          {},
+          ERROR
+        );
+      }
+
       if (
         !Swapper.helpers.hasValidDecimals(
           this.tokenInValue,
