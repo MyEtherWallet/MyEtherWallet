@@ -601,6 +601,11 @@ export default {
     unlockPathOnly() {
       return this.wallets[this.walletType]
         .create(this.hasPath)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+          if (this.onLedger) this.step--;
+          return;
+        })
         .then(_hwWallet => {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
