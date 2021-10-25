@@ -72,3 +72,22 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
+
+## Integrations
+
+### Hardware Wallets
+
+Prior to submitting a request to integrate a hardware wallet, please review hardware wallet requirements that followed recent updates on MyEtherWallet and Ethereum protocol.
+
+*A Hardware wallet must meet the following minimum requirements:*
+
+1. Message signing
+2. Data signing
+3. Must be able to sign other ethereum-based chains, specifically, Matic and BSC.
+4. EIP1559 signing
+
+Reach out to us at <integrations@myetherwallet.com>, so we can determine if we will be able to integrate your hardware wallet.
+
+### DApps
+
+Please fill out the form [here](https://www.myetherwallet.com/dapp-submission). We will reach out to you as soon as we can.
