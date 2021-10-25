@@ -1079,9 +1079,7 @@ export default {
     setDefaults() {
       setTimeout(() => {
         this.fromTokenType = this.getDefaultFromToken();
-        if (this.defaults.toToken) {
-          this.toTokenType = this.getDefaultToToken();
-        }
+        this.toTokenType = this.getDefaultToToken();
         this.setTokenInValue(this.tokenInValue);
       }, 500);
     },
