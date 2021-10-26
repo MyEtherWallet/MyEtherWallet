@@ -18,42 +18,46 @@
     Overview Header
     ===================================================
     -->
-    <v-row v-else class="align-center">
+    <v-row v-else class="align-center justify-start">
       <!--
       ===================================================
         Block Count
         Order: 1st
       ===================================================
       -->
-      <v-col cols="6" md="3" order="first">
+      <v-col cols="12" md="3">
         <div class="mew-heading-3 textDark--text">
-          My Blocks <span>({{ blocks.length }})</span>
+          My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
         </div>
       </v-col>
       <v-spacer class="d-none d-md-flex" order="2" />
+      <!--
+      ===================================================
+        Search Blocks
+      ===================================================
+      -->
+      <v-col cols="12" md="3">
+        <mew-search placeholder="Find my block" is-compact />
+      </v-col>
       <!--
       ===================================================
         Sort
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col cols="6" md="3" order="2" order-md="4">
-        <div class="d-flex align-center justify-end">
-          <div class="d-none d-sm-block textLight--text mew-caption mr-5">
+      <v-col cols="12" md="3">
+        <v-row class="d-flex align-center">
+          <!-- <div
+            class="d-block white-space--nowrap textLight--text mew-caption pl-3"
+          >
             sort by
-          </div>
-          <mew-button btn-style="light" btn-size="medium">Newest</mew-button>
-          <mew-button btn-style="transparent" btn-size="medium">123</mew-button>
-        </div>
+          </div> -->
+          <v-col class="pl-2">
+            <blocks-sort @setSort="setActiveSort" />
+          </v-col>
+        </v-row>
       </v-col>
-      <!--
-      ===================================================
-        Search Blocks
-      ===================================================
-      -->
-      <v-col cols="12" md="3" order="3">
-        <mew-search placeholder="Find my block" is-compact />
-      </v-col>
+
       <!--
       ===================================================
         Alert: No Blocks Owned
@@ -86,7 +90,7 @@
           @click="routeTo('block.block')"
         >
           <v-img :src="block.image" lazy-src="../assets/temp-block.svg" contain>
-            <template v-slot:placeholder>
+            <template #placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
                   indeterminate
@@ -106,6 +110,7 @@
 
 <script>
 import BlocksLoading from '../components/BlocksLoading.vue';
+import BlocksSort from '../components/BlocksSort.vue';
 import HandlerMyBlocks from '../handlers/handlerMyBlocks';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -114,10 +119,11 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'ModuleEthBlocksMyBlocks',
-  components: { BlocksLoading },
+  components: { BlocksLoading, BlocksSort },
   data() {
     return {
-      handlerMyBlocks: {}
+      handlerMyBlocks: {},
+      activeSort: 0
     };
   },
   computed: {
@@ -133,11 +139,33 @@ export default {
         : true;
     },
     blocks() {
-      console.log();
-      return this.loading ? [] : this.handlerMyBlocks.ownedBlocks;
+      if (!this.loading) {
+        switch (this.activeSort) {
+          case 0:
+            return this.handlerMyBlocks.blocks.newest;
+          case 1:
+            return this.handlerMyBlocks.blocks.oldest;
+          case 2:
+            return this.handlerMyBlocks.blocks.ascend;
+          case 3:
+            return this.handlerMyBlocks.blocks.dscend;
+          default:
+            return this.handlerMyBlocks.blocks.newest;
+        }
+
+        // if (this.activeSort === ) {
+        //   return this.isReverseSort
+        //     ? this.handlerMyBlocks.blocks.newest
+        //     : this.handlerMyBlocks.blocks.oldest;
+        // }
+        // return this.isReverseSort
+        //   ? this.handlerMyBlocks.blocks.ascend
+        //   : this.handlerMyBlocks.blocks.dscend;
+      }
+      return [];
     },
     hasBlocks() {
-      return this.blocks.length > 0;
+      return this.handlerMyBlocks.totalBlocks > 0;
     }
   },
   mounted() {
@@ -164,6 +192,9 @@ export default {
     },
     formatBlockNumber(block) {
       return formatIntegerToString(block);
+    },
+    setActiveSort(value) {
+      this.activeSort = value;
     }
   }
 };

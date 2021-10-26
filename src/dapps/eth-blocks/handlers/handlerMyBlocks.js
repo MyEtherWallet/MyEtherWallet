@@ -2,6 +2,23 @@ import axios from 'axios';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { URL_POST_OWNER, IMAGE_PROXY } from './configs';
 
+class SortedBlocks {
+  constructor(blocks) {
+    this.oldest = [...blocks];
+    this.newest = [...blocks].reverse();
+    this.ascend = [...this.sort(blocks)];
+    this.dscend = [...this.ascend].reverse();
+  }
+
+  sort(_blocks) {
+    const newBlocks = [..._blocks];
+    return [
+      ...newBlocks.sort(function (a, b) {
+        return a.block - b.block;
+      })
+    ];
+  }
+}
 export default class MyBlocks {
   constructor(web3, network, address) {
     /**
@@ -11,7 +28,8 @@ export default class MyBlocks {
     this.web3 = web3;
     this.network = network;
     this.address = address;
-    this.ownedBlocks = [];
+    this.blocks = {};
+    this.totalBlocks = 0;
   }
 
   /**
@@ -30,13 +48,14 @@ export default class MyBlocks {
         }
       })
       .then(resp => {
-        this.ownedBlocks = resp.data.tokens.map(item => {
-          const block = item;
-          block.image = `${IMAGE_PROXY}${item.image}`;
-          return block;
-        });
-
-        console.log(this.ownedBlocks);
+        this.blocks = new SortedBlocks(
+          resp.data.tokens.map(item => {
+            const block = item;
+            block.image = `${IMAGE_PROXY}${item.image}`;
+            return block;
+          })
+        );
+        this.totalBlocks = resp.data.tokens.length;
         this.loading = false;
       })
       .catch(err => {
