@@ -192,7 +192,7 @@ import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   formatFiatValue,
-  formatBalanceEthValue
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 
 export default {
@@ -210,7 +210,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapState('wallet', ['address', 'instance', 'identifier']),
     ...mapGetters('external', [
       'fiatValue',
@@ -232,7 +232,7 @@ export default {
       return this.walletChainBalance;
     },
     walletChainBalance() {
-      return `${formatBalanceEthValue(this.balanceInWei).value}`;
+      return `${formatFloatingPointValue(this.balanceInETH).value}`;
     },
     /**
      * @returns {string} first 6 letters in the address

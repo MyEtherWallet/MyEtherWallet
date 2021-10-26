@@ -1,7 +1,10 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
-  UNKNOWN_ERROR: 'ledgerError.unknown',
+  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
+  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
+  'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
+  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x6boc',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
@@ -44,7 +47,10 @@ const ERRORS = {
     'ledgerError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
     'ledgerError.operation-that-changes-interface-state-in-progress',
-  'connection not open': 'ledgerError.connection-not-open-on-send'
+  'connection not open': 'ledgerError.connection-not-open-on-send',
+  "undefined is not an object (evaluating 'e.decorateAppAPIMethods')":
+    'ledgerError.firmware-or-mobile',
+  'Access denied.': 'ledgerError.access-denied'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

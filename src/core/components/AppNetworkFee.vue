@@ -25,27 +25,25 @@
         :has-buttons="false"
       >
         <template #dialogBody>
-          <div class="mew-heading-1 mb-2">Why are the fees so high?</div>
-          <div class="mew-heading-1">Are you guys out of your minds?</div>
+          <div class="mew-heading-1 mb-2">How are fees determined?</div>
           <div class="mt-6 textPrimary--text">
-            Fees are indeed high these days. We feel your pain!
-            <br />
-            <br />
             Transaction fees are charged by Ethereum miners, not MEW. We can't
             influence them and we don't receive any part of the transaction fees
             that you pay.
-            <br />
-            <br />
-            Ethereum is getting more and more popular, but its capacity is
-            limited, this is why when the network is congested, it can cost
-            $10-$20 to send a token, and a simple swap transaction can set you
-            back $100 or even more.
-            <br />
-            <br />
-            Many teams in the Ethereum community are working hard to solve this
-            problem: Ethereum 2.0 is gradually being built, numerous Layer 2
-            solutions are getting launched. It is still very early days of
-            Ethereum, and this is the current state of the technology.
+          </div>
+          <div class="mew-heading-1 my-2 mt-6">What should I do?</div>
+          <div class="mt-6 textPrimary--text">
+            Good news! You have options! If you’re not in a hurry, you can use
+            the “Economy” setting and your transaction will be mined at a later
+            time. MEW supports Ethereum scaling solutions Polygon and Binance
+            Smart Chain (accessible on MEW web and Android). Consider using
+            these chains to avoid congestion and save on fees. Learn how
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://help.myetherwallet.com/en/?q=network"
+              >here</a
+            >.
           </div>
         </template>
       </app-modal>
@@ -161,7 +159,7 @@
                   "
                   @click="openHighFeeNote = true"
                 >
-                  Why are the fees so high?
+                  How are fees determined?
                 </div>
                 <a
                   v-if="notEnoughEth"
