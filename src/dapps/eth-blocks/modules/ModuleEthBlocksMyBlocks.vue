@@ -84,10 +84,16 @@
     ===================================================
     -->
     <v-row v-if="hasBlocks" class="align-top justify-start">
-      <v-col v-for="block in blocks" :key="block.block" cols="9" sm="6" md="3">
+      <v-col
+        v-for="block in blocks"
+        :key="block.blockNumber"
+        cols="9"
+        sm="6"
+        md="3"
+      >
         <div
           class="border-container px-5 pt-5 pb-8"
-          @click="routeTo('block.block')"
+          @click="routeTo(block.blockNumber)"
         >
           <v-img :src="block.image" lazy-src="../assets/temp-block.svg" contain>
             <template #placeholder>
