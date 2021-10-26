@@ -20,7 +20,7 @@
       Mobile Connection Protocol Buttons
     =====================================================================================
     -->
-    <div style="max-width: 650px; width: 100%" class="mx-auto">
+    <div style="max-width: 650px; width: 100%" class="mx-auto mb-n5">
       <div v-for="(btn, key) in buttons" :key="key">
         <mew-button
           has-full-width
@@ -31,7 +31,7 @@
           @click.native="btn.fn"
         >
           <div
-            class="d-flex align-center justify-space-between"
+            class="d-flex align-center justify-space-between px-2"
             style="width: 100%"
           >
             <div class="mew-heading-2 textDark--text">{{ btn.label }}</div>
