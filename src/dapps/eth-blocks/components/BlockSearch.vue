@@ -26,8 +26,10 @@
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { mapState } from 'vuex';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
-import BigNumber from 'bignumber.js';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { validBlockNumber } from '../handlers/helpers/common';
+import { toBN } from 'web3-utils';
+
 export default {
   name: 'ModuleEthBlocksMint',
 
@@ -43,18 +45,15 @@ export default {
     },
     searchErrorMessage() {
       if (this.searchBlock && this.searchBlock !== '') {
-        const block = BigNumber(this.searchBlock);
-        if (!block.isInteger()) {
-          return 'value must be an integer';
+        if (!validBlockNumber(this.searchBlock)) {
+          return 'value must be a positive integer';
         }
-        if (!block.gte(0)) {
-          return 'block number should be a positive number';
-        }
-        if (block.gt(this.blockNumber)) {
+        const search = toBN(this.searchBlock);
+        const max = toBN(this.blockNumber);
+        if (search.gt(max)) {
           return `block number must be smaller or equal to ${this.maxBlock}`;
         }
       }
-
       return '';
     }
   },

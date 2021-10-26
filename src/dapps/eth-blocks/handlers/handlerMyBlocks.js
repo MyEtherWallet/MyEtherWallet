@@ -31,6 +31,13 @@ export default class MyBlocks {
     this.blocks = {};
     this.totalBlocks = 0;
   }
+  /**
+   * Sets network in the class
+   * @param {Obeject}_network - network object
+   */
+  setNetwork(_network) {
+    this.network = _network;
+  }
 
   /**
    * Get Block Info
@@ -42,12 +49,13 @@ export default class MyBlocks {
       chainId: this.network.type.chainID
     };
     return axios
-      .post(URL_POST_OWNER, payload, {
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
+      .post(URL_POST_OWNER, payload)
       .then(resp => {
+        if (resp.data.error) {
+          this.loading = false;
+          throw new Error(resp.data.error);
+        }
+        //acoutn for empty block array
         this.blocks = new SortedBlocks(
           resp.data.tokens.map(item => {
             const block = item;

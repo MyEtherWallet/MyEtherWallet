@@ -1,10 +1,9 @@
 import { ETH_BLOCKS_ROUTE, blockGuard } from './configsRoutes';
-import { ETH, RIN } from '@/utils/networks/types';
 import layout from './TheEthBlocksLayout';
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
-
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'ETH Blocks',
   subtitle: 'Mint stunning QR art-pieces based on your favorite blocks.',
@@ -12,7 +11,7 @@ export default {
   rightIconType: 'mew',
   rightIcon: 'stake',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
-  networks: [ETH, RIN],
+  networks: SUPPORTED_NETWORKS,
   layout,
   defaultName: ETH_BLOCKS_ROUTE.CORE.NAME,
   meta: {

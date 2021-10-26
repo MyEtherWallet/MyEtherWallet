@@ -101,7 +101,10 @@
      NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
     =====================================================================================
     -->
-    <router-view v-if="tabItems.length > 0 && isNewHeader" />
+    <router-view v-if="tabItems.length > 0 && isNewHeader && isValidNetwork" />
+    <div v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork">
+      <p>Not valid Network</p>
+    </div>
     <!--
     =====================================================================================
      Slot: content, used to place body content if not using tabs.
@@ -117,6 +120,7 @@
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import BlockHeader from '@/core/components/AppBlockHeader';
 import TheDappHeader from '@/core/components/TheDappHeader';
+import { mapGetters } from 'vuex';
 export default {
   components: { BlockHeader, TheDappHeader },
   props: {
@@ -193,6 +197,10 @@ export default {
     dappImg: {
       default: '',
       type: String
+    },
+    validNetworks: {
+      default: () => [],
+      type: Array
     }
   },
   data() {
@@ -201,6 +209,17 @@ export default {
       tab: null
     };
   },
+  computed: {
+    ...mapGetters('global', ['network']),
+    isValidNetwork() {
+      const chainID = this.network.type.chainID;
+      const validChain = this.validNetworks.filter(
+        item => item.chainID === chainID
+      );
+      return validChain.length > 0;
+    }
+  },
+
   mounted() {
     this.bannerTextObj = this.bannerText;
     if (this.hasExitBtn) {

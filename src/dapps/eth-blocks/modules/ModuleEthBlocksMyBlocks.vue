@@ -25,7 +25,7 @@
         Order: 1st
       ===================================================
       -->
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="3" class="py-0">
         <div class="mew-heading-3 textDark--text">
           My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
         </div>
@@ -36,7 +36,7 @@
         Search Blocks
       ===================================================
       -->
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="3" class="py-0">
         <mew-search
           placeholder="Find my block"
           is-compact
@@ -51,12 +51,13 @@
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col cols="12" md="3">
-        <v-row class="d-flex align-center">
-          <v-col class="pl-2">
+      <v-col cols="12" md="3" class="py-0">
+        <div class="d-flex flex-row flex-nowrap align-center">
+          <div class="textLight--text mew-label pr-2 text-uppercase">Sort</div>
+          <v-col class="pa-0">
             <blocks-sort @setSort="setActiveSort" />
           </v-col>
-        </v-row>
+        </div>
       </v-col>
 
       <!--
@@ -84,7 +85,10 @@
       Owned Blocks
     ===================================================
     -->
-    <v-row v-if="hasBlocks" class="align-top justify-start">
+    <v-row
+      v-if="hasBlocks"
+      class="align-top justify-center justify-sm-start mt-5 mt-md-0"
+    >
       <v-col
         v-for="block in blocks"
         :key="block.blockNumber"
@@ -127,7 +131,8 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { mapState, mapGetters } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
+import { validBlockNumber } from '../handlers/helpers/common';
+
 export default {
   name: 'ModuleEthBlocksMyBlocks',
   components: { BlocksLoading, BlocksSort },
@@ -176,19 +181,22 @@ export default {
      */
     filterErrorMessage() {
       if (this.filterBlock && this.filterBlock !== '') {
-        console.log('checking');
-        const block = BigNumber(this.filterBlock);
-        if (!block.isInteger()) {
-          return 'value must be an integer';
-        }
-        if (!block.gte(0)) {
-          return 'block number should be a positive number';
+        if (!validBlockNumber(this.filterBlock)) {
+          return 'value must be a positive  integer';
         }
         if (!this.handlerMyBlocks.checkHasBlock(this.filterBlock)) {
           return `You do not own block #${this.filterBlock}`;
         }
       }
       return '';
+    }
+  },
+  watch: {
+    network(newVal) {
+      if (newVal) {
+        this.handlerMyBlocks.setNetwork(newVal);
+        this.handlerMyBlocks.getBlocks();
+      }
     }
   },
   mounted() {
@@ -202,6 +210,7 @@ export default {
     );
     this.handlerMyBlocks.getBlocks();
   },
+
   methods: {
     routeTo(block) {
       try {

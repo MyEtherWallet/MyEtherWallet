@@ -10,6 +10,7 @@
     :banner-text="header"
     :tab-items="tabs"
     :active-tab="activeTab"
+    :valid-networks="validNetworks"
     top-strip
   >
   </the-wrapper-dapp>
@@ -18,6 +19,7 @@
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import { ETH_BLOCKS_ROUTE } from './configsRoutes';
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
@@ -42,7 +44,8 @@ export default {
           }
         }
       ],
-      headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg')
+      headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
+      validNetworks: SUPPORTED_NETWORKS
     };
   }
 };

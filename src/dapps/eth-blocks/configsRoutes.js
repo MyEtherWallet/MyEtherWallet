@@ -1,5 +1,4 @@
-import BigNumber from 'bignumber.js';
-
+import { validBlockNumber } from './handlers/helpers/common';
 const ETH_BLOCKS_ROUTE = {
   CORE: {
     NAME: 'EthBlocks',
@@ -23,8 +22,7 @@ const MY_BLOCKS_PATH = '/wallet/dapps/eth-blocks/my-blocks';
  *  - Checks if router FROM was my-blocks and sets  prop hasSearch to false
  */
 const blockGuard = (to, from, next) => {
-  const blockNumber = BigNumber(to.params.blockRef);
-  if (isInteger(blockNumber)) {
+  if (validBlockNumber(to.params.blockRef)) {
     if (from.path === MY_BLOCKS_PATH) {
       to.params.hasSearch = false;
     }
@@ -35,21 +33,4 @@ const blockGuard = (to, from, next) => {
   }
 };
 
-const goToBlock = blockNumber => {
-  if (isInteger(blockNumber)) {
-    return {
-      query: {
-        name: ETH_BLOCKS_ROUTE.BLOCK.Name,
-        params: { blockRef: blockNumber }
-      }
-    };
-  }
-  throw new Error('passing non integer to block route in eth-blocks');
-};
-
-const isInteger = value => {
-  const blockNumber = BigNumber(value);
-  return blockNumber.isInteger() && blockNumber.gt(0);
-};
-
-export { ETH_BLOCKS_ROUTE, blockGuard, goToBlock };
+export { ETH_BLOCKS_ROUTE, blockGuard };
