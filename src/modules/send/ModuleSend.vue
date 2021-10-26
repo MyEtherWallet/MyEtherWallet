@@ -713,11 +713,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+      this.amount = 0;
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(this.actualGasPrice);
-      this.amount = 0;
     }
   }
 };
