@@ -22,73 +22,50 @@
         <mew-button
           v-for="btn in buttons"
           :key="btn.title"
+          has-full-width
           class="mb-5"
           color-theme="basic"
-          btn-style="light"
+          :btn-style="btn.color === 'outline' ? 'outline' : 'light'"
           style="height: 160px"
+          @click.native="btn.fn"
         >
-          <div class="px-2 textDark--text text-left d-flex align-center">
+          <div
+            class="px-2 text-left d-flex align-center justify-space-between"
+            :class="btn.color === 'outline' ? 'white--text' : 'textDark--text'"
+            style="width: 100%"
+          >
             <div>
               <div class="mb-2 d-flex align-center">
-                <div class="mew-heading-2">Get MEW wallet app</div>
-                <v-icon dense color="primary" class="ml-1">
-                  mdi-shield-check
+                <div class="mew-heading-2">{{ btn.title }}</div>
+                <v-icon dense :color="btn.titleIconClass" class="ml-1">
+                  {{ btn.titleIcon }}
                 </v-icon>
               </div>
               <div class="break-word">
-                Download our official app and connect to MEW web using your
-                mobile phone. Available on iOS and Android.
+                {{ btn.subtitle }}
               </div>
             </div>
-            <div class="d-none d-sm-block pl-5">
+            <div class="d-none d-sm-flex align-center pl-5">
               <img
+                v-if="btn.rightIcon"
                 class="mew-wallet-img"
-                src="@/assets/images/snippets/bg-mew-wallet.png"
-                alt="MEWwallet"
-                style="height: 140px; margin-top: 20px; margin-bottom: -3px"
+                :src="btn.rightIcon"
+                :alt="btn.rightIcon"
+                style="height: 90px"
+              />
+              <img
+                v-for="(icon, index) in btn.rightIcons"
+                v-else
+                :key="index"
+                :src="icon"
+                width="70"
+                class="px-2"
               />
             </div>
           </div>
         </mew-button>
       </div>
 
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-          <mew-super-button
-            font-class="mew-heading-2"
-            :color-theme="btn.color"
-            :title="btn.title"
-            :subtitle="btn.subtitle"
-            :title-icon="btn.titleIcon"
-            :title-icon-type="btn.titleIconType"
-            :title-icon-class="btn.titleIconClass"
-            :note="btn.note"
-            @click.native="btn.fn"
-          >
-            <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
-              <v-row v-if="btn.rightIcon" class="align-center justify-end">
-                <v-img
-                  :src="btn.rightIcon"
-                  max-width="100px"
-                  min-width="40px"
-                  class="px-4 px-sm-3"
-                  contain
-                />
-              </v-row>
-              <v-row v-else class="align-center justify-end">
-                <v-img
-                  v-for="(icon, index) in btn.rightIcons"
-                  :key="index"
-                  :src="icon"
-                  max-width="70px"
-                  contain
-                  class="px-4 px-sm-3"
-                />
-              </v-row>
-            </template>
-          </mew-super-button>
-        </div>
-      </v-sheet>
       <!--
       =====================================================================================
         Acccess Wallet Module Overlays - activate on Options Button click
@@ -161,7 +138,7 @@ export default {
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openMEWconnect();
           }
@@ -175,7 +152,7 @@ export default {
           rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openWeb3Wallet();
           }
@@ -189,7 +166,7 @@ export default {
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
           }
@@ -206,7 +183,7 @@ export default {
           ],
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
           }
@@ -220,7 +197,7 @@ export default {
           rightIcon: '',
           titleIcon: 'mdi-alert',
           titleIconType: 'mdi',
-          titleIconClass: 'warning--text text--darken-1',
+          titleIconClass: 'warning darken-1',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
