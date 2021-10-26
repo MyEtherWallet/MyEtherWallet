@@ -6,7 +6,7 @@
     content-size="large"
   >
     <div>
-      <v-sheet width="450px" height="100%" color="transparent">
+      <v-sheet width="500px" height="100%" color="transparent">
         <!--
         =====================================================================================
           Panel: Payment Buttons
@@ -50,6 +50,11 @@
 
           <div style="width: 100%">
             <h2 class="mb-3">Select Payment</h2>
+            <!--
+            =====================================================================================
+              Panel: Crypto
+            =====================================================================================
+            -->
             <v-card
               v-if="crypto"
               outlined
@@ -76,32 +81,40 @@
               <v-icon class="primary--text">mdi-check-circle</v-icon>
             </v-card>
 
-            <v-card
-              v-if="credit"
-              outlined
-              class="
-                pa-4
-                d-flex
-                align-center
-                justify-space-between
-                bordered-red
-                greenBorder
-                informationBG
-              "
-            >
-              <div class="d-flex align-center">
-                <img
-                  src="@/assets/images/currencies/usd.png"
-                  :style="{ width: '28px' }"
-                  alt="USD"
-                />
-                <div class="font-weight-medium ml-3">
-                  {{ domainPrice }}
-                  <span class="primary--text">USD</span>
-                </div>
-              </div>
-              <v-icon class="primary--text">mdi-check-circle</v-icon>
-            </v-card>
+            <!--
+            =====================================================================================
+              Panel: Credit
+            =====================================================================================
+            -->
+            <div v-if="credit">
+              <v-row no-gutters>
+                <v-col cols="12">
+                  <mew-input placeholder="Cardholder's Name" />
+                </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-col cols="12">
+                  <mew-input placeholder="Card Number" />
+                </v-col>
+              </v-row>
+              <v-row no-gutters justify="center">
+                <v-col class="pr-1" cols="6">
+                  <mew-input placeholder="Valid Through" />
+                </v-col>
+                <v-col class="pl-1" cols="6">
+                  <mew-input placeholder="CVV" />
+                </v-col>
+              </v-row>
+              <v-row no-gutters justify="space-between">
+                <v-col class="pr-1" cols="5">
+                  <mew-button btn-style="outline" title="Cancel Payment" />
+                </v-col>
+                <v-col class="pl-1" cols="5">
+                  <mew-button title="Pay $40" />
+                </v-col>
+              </v-row>
+            </div>
+
             <div v-if="credit" class="stripe-card-input mt-8">
               <card
                 :class="{ complete }"
@@ -139,12 +152,12 @@
               </a>
             </div>
 
-            <div class="d-flex justify-space-between my-3">
+            <div v-if="crypto" class="d-flex justify-space-between my-3">
               <div>Network Fee</div>
               <div class="lightPrimary--text">5 ETH</div>
             </div>
 
-            <div class="d-flex justify-center mt-5">
+            <div v-if="crypto" class="d-flex justify-center mt-5">
               <mew-button
                 title="Next step"
                 btn-size="xlarge"
