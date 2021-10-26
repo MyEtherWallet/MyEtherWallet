@@ -41,7 +41,7 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import { _ } from 'web3-utils';
+import { isObject, debounce } from 'underscore';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 const USER_INPUT_TYPES = {
@@ -161,7 +161,7 @@ export default {
          */
         this.$emit('setAddress', value, this.isValidAddress, {
           type: inputType,
-          value: _.isObject(typeVal) ? typeVal.nickname : typeVal
+          value: isObject(typeVal) ? typeVal.nickname : typeVal
         });
         if (!this.isValidAddress) {
           this.resolveName();
@@ -199,7 +199,7 @@ export default {
     /**
      * Resolves name and @returns address
      */
-    resolveName: _.debounce(async function () {
+    resolveName: debounce(async function () {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {

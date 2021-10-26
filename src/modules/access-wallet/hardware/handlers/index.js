@@ -1,4 +1,3 @@
-// TODO: remove the hardware folders
 import BitBox02Wallet from './hardwares/bitbox02';
 import LedgerWallet from './hardwares/ledger';
 import TrezorWallet from './hardwares/trezor';

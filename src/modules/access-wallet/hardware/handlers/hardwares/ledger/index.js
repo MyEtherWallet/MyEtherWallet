@@ -1,6 +1,6 @@
 import Ledger from '@ledgerhq/hw-app-eth';
 import { byContractAddressAndChainId } from '@ledgerhq/hw-app-eth/erc20';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -13,12 +13,14 @@ import {
   getSignTransactionObject,
   getBufferFromHex,
   sanitizeHex,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  eip1559Params
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
+import { rlp } from 'ethereumjs-util';
 
 const NEED_PASSWORD = false;
 
@@ -64,45 +66,72 @@ class ledgerWallet {
       derivedKey = this.hdKey.derive('m/' + idx);
       accountPath = this.basePath + '/' + idx;
     }
-    const txSigner = async tx => {
-      const chainId = store.getters['global/network'].type.chainID;
-      tx = new Transaction(tx, {
-        common: commonGenerator(store.getters['global/network'])
-      });
-      const networkId = tx.getChainId();
-      tx.raw[6] = networkId;
-      tx.raw[7] = Buffer.from([]);
-      tx.raw[8] = Buffer.from([]);
-      const tokenInfo = byContractAddressAndChainId(
-        '0x' + tx.to.toString('hex'),
-        chainId
-      );
+    const txSigner = async txParams => {
+      const networkId = store.getters['global/network'].type.chainID;
+      const tokenInfo = byContractAddressAndChainId(txParams.to, networkId);
       if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
-      const result = await this.ledger.signTransaction(
-        accountPath,
-        tx.serialize().toString('hex')
-      );
-      // EIP155 support. check/recalc signature v value.
-      let v = result.v;
-      const rv = parseInt(v, 16);
-      let cv = networkId * 2 + 35;
-      if (rv !== cv && (rv & cv) !== rv) {
-        cv += 1; // add signature v bit.
-      }
-      v = cv.toString(16);
-      tx.v = getBufferFromHex(v);
-      tx.r = getBufferFromHex(result.r);
-      tx.s = getBufferFromHex(result.s);
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        throw new Error(
-          Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
-            got: signedChainId,
-            expected: networkId
-          }),
-          'InvalidNetworkId'
+      const legacySigner = async _txParams => {
+        const tx = new Transaction(_txParams, {
+          common: commonGenerator(store.getters['global/network'])
+        });
+        const message = tx.getMessageToSign(false);
+        const serializedMessage = rlp.encode(message);
+        const result = await this.ledger.signTransaction(
+          accountPath,
+          serializedMessage.toString('hex')
         );
-      return getSignTransactionObject(tx);
+        // EIP155 support. check/recalc signature v value.
+        const rv = parseInt(result.v, 16);
+        let cv = networkId * 2 + 35;
+        if (rv !== cv && (rv & cv) !== rv) {
+          cv += 1; // add signature v bit.
+        }
+        _txParams.v = '0x' + cv.toString(16);
+        _txParams.r = '0x' + result.r;
+        _txParams.s = '0x' + result.s;
+        const signedChainId = calculateChainIdFromV(_txParams.v);
+        if (signedChainId !== networkId)
+          throw new Error(
+            Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+              got: signedChainId,
+              expected: networkId
+            }),
+            'InvalidNetworkId'
+          );
+        return getSignTransactionObject(Transaction.fromTxData(_txParams));
+      };
+      if (store.getters['global/isEIP1559SupportedNetwork']) {
+        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+        const _txParams = Object.assign(
+          eip1559Params(txParams.gasPrice, feeMarket),
+          txParams
+        );
+        delete _txParams.gasPrice;
+        const tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
+          common: commonGenerator(store.getters['global/network'])
+        });
+        const message = tx.getMessageToSign(false);
+        try {
+          // eslint-disable-next-line no-unused-vars
+          const result = await this.ledger.signTransaction(
+            accountPath,
+            message.toString('hex')
+          );
+          _txParams.v = '0x' + result.v;
+          _txParams.r = '0x' + result.r;
+          _txParams.s = '0x' + result.s;
+          return getSignTransactionObject(
+            FeeMarketEIP1559Transaction.fromTxData(_txParams)
+          );
+        } catch (e) {
+          //old ledger eth app version
+          if (e.message === 'Ledger device: UNKNOWN_ERROR (0x6501)')
+            return legacySigner(txParams);
+          throw e;
+        }
+      } else {
+        return legacySigner(txParams);
+      }
     };
     const msgSigner = async msg => {
       const result = await this.ledger.signPersonalMessage(
