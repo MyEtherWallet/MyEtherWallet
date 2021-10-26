@@ -69,7 +69,12 @@
         ===================================================
         -->
       <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex justify-end">
-        <mew-button :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'" />
+        <mew-button
+          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
+          :disabled="disableMint"
+          :loading="disableMint"
+          @click.native="emitMint()"
+        />
       </v-col>
       <!--
         ===================================================
@@ -100,7 +105,7 @@
 
 <script>
 import {
-  blockAlert,
+  BLOCK_ALERT,
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
 import { fromWei } from 'web3-utils';
@@ -114,7 +119,7 @@ export default {
   name: 'BlockInfoAlert',
   props: {
     blockAlert: {
-      default: blockAlert.NOT_AVAILABLE,
+      default: BLOCK_ALERT.NOT_AVAILABLE,
       validator: blockAlertValidator
     },
     owner: {
@@ -124,10 +129,11 @@ export default {
     price: {
       type: String,
       default: ''
+    },
+    disableMint: {
+      type: Boolean,
+      default: false
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapGetters('global', ['network', 'isTestNetwork']),
@@ -137,9 +143,9 @@ export default {
      */
     alertTheme() {
       switch (this.blockAlert) {
-        case blockAlert.NOT_AVAILABLE:
+        case BLOCK_ALERT.NOT_AVAILABLE:
           return 'warning';
-        case blockAlert.AVAILABLE:
+        case BLOCK_ALERT.AVAILABLE:
           return 'success';
         default:
           return 'info';
@@ -150,9 +156,9 @@ export default {
      */
     alertTitle() {
       switch (this.blockAlert) {
-        case blockAlert.NOT_AVAILABLE:
+        case BLOCK_ALERT.NOT_AVAILABLE:
           return 'This block in not available';
-        case blockAlert.AVAILABLE:
+        case BLOCK_ALERT.AVAILABLE:
           return 'This block is available';
         default:
           return 'You own this ETH Block';
@@ -163,9 +169,9 @@ export default {
      */
     alertTitleColor() {
       switch (this.blockAlert) {
-        case blockAlert.NOT_AVAILABLE:
+        case BLOCK_ALERT.NOT_AVAILABLE:
           return 'orangePrimary--text';
-        case blockAlert.AVAILABLE:
+        case BLOCK_ALERT.AVAILABLE:
           return 'greenPrimary--text';
         default:
           return 'bluePrimary--text';
@@ -176,22 +182,22 @@ export default {
      */
     alertIcon() {
       switch (this.blockAlert) {
-        case blockAlert.NOT_AVAILABLE:
+        case BLOCK_ALERT.NOT_AVAILABLE:
           return 'mdi-alert';
-        case blockAlert.AVAILABLE:
+        case BLOCK_ALERT.AVAILABLE:
           return 'mdi-checkbox-marked-circle';
         default:
           return 'mdi-information';
       }
     },
     isAvailable() {
-      return this.blockAlert === blockAlert.AVAILABLE;
+      return this.blockAlert === BLOCK_ALERT.AVAILABLE;
     },
     isNotAvailable() {
-      return this.blockAlert === blockAlert.NOT_AVAILABLE;
+      return this.blockAlert === BLOCK_ALERT.NOT_AVAILABLE;
     },
     isOwned() {
-      return this.blockAlert === blockAlert.OWNED;
+      return this.blockAlert === BLOCK_ALERT.OWNED;
     },
     /**
      * @returns{string}
@@ -222,6 +228,18 @@ export default {
         BigNumber(fromWei(this.price)).times(this.fiatValue)
       ).value;
       return `~ ${'$' + value}`;
+    }
+  },
+  methods: {
+    /**
+     * Emits 'mint' to the parent
+     * ONLY USED IN AVALAILABLE block alert Mint button
+     * @emits mint
+     */
+    emitMint() {
+      if (this.isAvailable) {
+        this.$emit('mint');
+      }
     }
   }
 };

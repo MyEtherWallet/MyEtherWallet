@@ -72,6 +72,8 @@
           :block-alert="alert"
           :owner="alertOwner"
           :price="alertMintPrice"
+          :disable-mint="isMinting"
+          @mint="mintBlock"
         />
         <!--
         ===================================================
@@ -134,7 +136,7 @@ import BlockInfoAlert from '../components/BlockInfoAlert.vue';
 import BlockSearch from '../components/BlockSearch.vue';
 import BlocksLoading from '../components/BlocksLoading.vue';
 import HandlerBlockInfo from '../handlers/handlerBlockInfo';
-import { blockAlert } from '../handlers/helpers/blockAlertType';
+import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { mapGetters, mapState } from 'vuex';
@@ -190,10 +192,10 @@ export default {
     alert() {
       if (!this.loading && this.handlerBlockInfo.hasOwner) {
         return this.address === this.handlerBlockInfo.owner
-          ? blockAlert.OWNED
-          : blockAlert.NOT_AVAILABLE;
+          ? BLOCK_ALERT.OWNED
+          : BLOCK_ALERT.NOT_AVAILABLE;
       }
-      return blockAlert.AVAILABLE;
+      return BLOCK_ALERT.AVAILABLE;
     },
     alertOwner() {
       return this.loading ? '' : this.handlerBlockInfo.owner;
@@ -201,6 +203,7 @@ export default {
     alertMintPrice() {
       return this.loading ? '' : this.handlerBlockInfo.mintPrice;
     },
+
     /**
      * @returns array of block properties
      */
@@ -232,6 +235,12 @@ export default {
         ];
       }
       return [];
+    },
+    /**
+     * @returns {boolean}:
+     */
+    isMinting() {
+      return this.loading ? false : this.handlerBlockInfo.isMinting;
     }
   },
   watch: {
@@ -250,7 +259,8 @@ export default {
     this.handlerBlockInfo = new HandlerBlockInfo(
       this.web3,
       this.network,
-      this.blockRef
+      this.blockRef,
+      this.address
     );
     this.handlerBlockInfo.getBlock();
   },
@@ -264,6 +274,13 @@ export default {
      */
     isEven(_value) {
       return _value % 2 == 0;
+    },
+    /**
+     * Method mints blocks.
+     * Responds, to child Alert component on emit 'mint' event
+     */
+    mintBlock() {
+      this.handlerBlockInfo.mintBlock();
     }
   }
 };

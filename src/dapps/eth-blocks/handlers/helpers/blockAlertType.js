@@ -1,4 +1,4 @@
-const blockAlert = {
+const BLOCK_ALERT = {
   AVAILABLE: 'available',
   NOT_AVAILABLE: 'notavailable',
   OWNED: 'owned'
@@ -6,10 +6,10 @@ const blockAlert = {
 
 const blockAlertValidator = type => {
   return (
-    type === blockAlert.AVAILABLE ||
-    type === blockAlert.NOT_AVAILABLE ||
-    type === blockAlert.OWNED
+    type === BLOCK_ALERT.AVAILABLE ||
+    type === BLOCK_ALERT.NOT_AVAILABLE ||
+    type === BLOCK_ALERT.OWNED
   );
 };
 
-export { blockAlert, blockAlertValidator };
+export { BLOCK_ALERT, blockAlertValidator };

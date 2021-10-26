@@ -5,11 +5,11 @@
   =====================================================================================
   -->
   <v-menu
+    v-model="isDropdownOpen"
     max-height="520"
     content-class="mew-dropdown-content-class"
     offset-y
     left
-    v-model="isDropdownOpen"
     open-on-click
   >
     <template #activator="{ on, attrs }">
@@ -85,27 +85,12 @@ export default {
 
   props: {
     /**
-     * Popup width
-     */
-    popupWidth: {
-      type: String,
-      default: '380'
-    },
-    /**
      * Popup title
      */
     popupTitle: {
       type: String,
       default: ''
     },
-    /**
-     * Controls if the popup dropdown is opened or closed.
-     */
-    isOpened: {
-      type: Boolean,
-      default: false
-    },
-
     hasClose: {
       type: Boolean,
       defualt: true
