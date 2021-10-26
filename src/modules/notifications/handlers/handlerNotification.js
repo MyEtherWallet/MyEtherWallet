@@ -52,7 +52,6 @@ const NOTIFICATION_TYPES = {
  * Transaction status
  */
 const NOTIFICATION_STATUS = {
-  SUBMITTED: 'submitted',
   PENDING: 'pending',
   SUCCESS: 'success',
   COMPLETED: 'completed',
@@ -121,26 +120,26 @@ export default class Notification {
     const keysArray = Object.keys(obj);
     for (let i = 0; i < keysArray.length; i++) {
       if (!VALID_ARGUMENTS.includes(keysArray[i])) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
+        this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'type' &&
         !Object.values(NOTIFICATION_TYPES).includes(obj['type'].toLowerCase())
       ) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
+        this._invalidType(keysArray[i]);
       } else if (
         keysArray[i] === 'status' &&
         !Object.values(NOTIFICATION_STATUS).includes(
           obj['status'].toLowerCase()
         )
       ) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
+        this._invalidType(keysArray[i]);
       } else if (
         (keysArray[i] === 'to' || keysArray[i] === 'from') &&
         !isAddress(obj[keysArray[i]])
       ) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
+        this._invalidType(keysArray[i]);
       } else if (keysArray[i] === 'hash' && !isHexStrict(obj[keysArray[i]])) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
+        this._invalidType(keysArray[i]);
       } else if (obj[keysArray[i]]) {
         this[keysArray[i]] = obj[keysArray[i]];
       }
@@ -202,9 +201,9 @@ export default class Notification {
     });
   }
 
-  _invalidType(type, value) {
+  _invalidType(type) {
     throw new Error(
-      `Invalid Notification ${type} : ${value} passed! Please check the parameters passed into the Notification constructor!`
+      `Invalid Notification ${type} passed! Please check the parameters passed into the Notification constructor!`
     );
   }
   /**

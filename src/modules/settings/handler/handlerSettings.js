@@ -1,7 +1,6 @@
 import vuexStore from '@/core/store';
 import { mapActions } from 'vuex';
-import { toWei } from 'web3-utils';
-import { contains, isString, keys } from 'underscore';
+import { toWei, _ } from 'web3-utils';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -24,16 +23,13 @@ export default class Settings {
         };
         reader.onloadend = evt => {
           const file = evt.target.result;
-          try {
-            const obj = JSON.parse(file);
-            const parsedObj = _this._validateImportObject(obj);
-            // sets the imported state to the store
-            _this.setImportedState(parsedObj).then(() => {
-              resolve();
-            });
-          } catch ({ message }) {
-            Toast('Invalid JSON: ' + message, {}, ERROR);
-          }
+          const obj = JSON.parse(file);
+          const parsedObj = _this._validateImportObject(obj);
+
+          // sets the imported state to the store
+          _this.setImportedState(parsedObj).then(() => {
+            resolve();
+          });
         };
         reader.readAsBinaryString(file);
       } catch (e) {
@@ -64,15 +60,18 @@ export default class Settings {
   // strips strings and only accepts certain keys
   _validateImportObject(obj) {
     const newObj = {};
-    keys(obj).forEach(item => {
-      if (contains(this.validFields, item)) {
+    _.keys(obj).forEach(item => {
+      if (!_.contains(this.validFields, item)) {
+        // might actually not need to do this, just strip off the ones that aren't valid
+        throw new Error(`Found invalid key! ${item}`);
+      } else {
         if (item === 'gasPrice') {
           // converts gasPrice back to BN instance
           // this is assuming that when exporting, it gets converted to string
           newObj[item] = toWei(item);
         } else {
           // strip tags for string, otherwise return item
-          newObj[item] = isString(obj[item]) ? xss(obj[item]) : obj[item];
+          newObj[item] = _.isString(obj[item]) ? xss(obj[item]) : obj[item];
         }
       }
     });

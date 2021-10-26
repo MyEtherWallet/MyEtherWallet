@@ -56,6 +56,7 @@ const setWeb3Instance = function (
     new MEWProvider(provider ? provider : parsedUrl, options)
   );
   web3Instance.eth.transactionConfirmationBlocks = 1;
+  web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
     // eslint-disable-next-line no-async-promise-executor
@@ -67,7 +68,8 @@ const setWeb3Instance = function (
           to: arr[i].to,
           data: arr[i].data,
           from: arr[i].from,
-          value: arr[i].value
+          value: arr[i].value,
+          gasPrice: arr[i].gasPrice
         };
         const gas = await (arr[i].gas === undefined
           ? web3Instance.eth.estimateGas(localTx)
@@ -99,6 +101,10 @@ const setWeb3Instance = function (
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
+const setENS = function ({ commit }, ens) {
+  commit('SET_ENS', ens);
+};
+
 const setOwnedDomains = function ({ commit }, ownedDomains) {
   commit('SET_OWNED_DOMAINS', ownedDomains);
 };
@@ -111,6 +117,7 @@ export default {
   removeWallet,
   setWallet,
   setAccountBalance,
+  setENS,
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,

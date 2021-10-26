@@ -1,9 +1,6 @@
 import Wallet from 'ethereumjs-wallet';
 import walletConfigs from './walletConfigs';
-import { bufferToInt, bnToHex } from 'ethereumjs-util';
-import sanitizeHex from '@/core/helpers/sanitizeHex';
-import { getMinPriorityFee } from '@/core/helpers/gasPriceHelper';
-import { toBN } from 'web3-utils';
+import { bufferToInt } from 'ethereumjs-util';
 /* These needs to be changed further due to the new async library */
 const fromMyEtherWalletV2 = json => {
   if (json.privKey.length !== 64) {
@@ -66,6 +63,11 @@ const padLeftEven = hex => {
   hex = hex.length % 2 != 0 ? '0' + hex : hex;
   return hex;
 };
+const sanitizeHex = hex => {
+  hex = hex.substring(0, 2) == '0x' ? hex.substring(2) : hex;
+  if (hex == '') return '';
+  return '0x' + padLeftEven(hex);
+};
 const bufferToHex = buffer => {
   return '0x' + buffer.toString('hex');
 };
@@ -74,7 +76,7 @@ const getHexTxObject = tx => {
     to: sanitizeHex(tx.to.toString('hex')),
     value: sanitizeHex(tx.value.toString('hex')),
     data: sanitizeHex(tx.data.toString('hex')),
-    chainId: tx.common.chainId(),
+    chainId: tx.getChainId(),
     nonce: sanitizeHex(tx.nonce.toString('hex')),
     gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
     gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
@@ -85,13 +87,7 @@ const getSignTransactionObject = tx => {
     rawTransaction: bufferToHex(tx.serialize()),
     tx: {
       nonce: bufferToHex(tx.nonce),
-      gasPrice: tx.gasPrice
-        ? bufferToHex(tx.gasPrice)
-        : bufferToHex(tx.maxFeePerGas),
-      maxFeePerGas: tx.maxFeePerGas ? bufferToHex(tx.maxFeePerGas) : null,
-      maxPriorityFeePerGas: tx.maxPriorityFeePerGas
-        ? bufferToHex(tx.maxPriorityFeePerGas)
-        : null,
+      gasPrice: bufferToHex(tx.gasPrice),
       gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
       to: bufferToHex(tx.to),
       value: bufferToHex(tx.value),
@@ -102,18 +98,6 @@ const getSignTransactionObject = tx => {
       hash: bufferToHex(tx.hash())
     }
   };
-};
-const eip1559Params = (gasPrice, feeMarket) => {
-  const tip = toBN(gasPrice).sub(feeMarket.baseFeePerGas);
-  const fees = {
-    maxPriorityFeePerGas: tip.lt(getMinPriorityFee())
-      ? bnToHex(getMinPriorityFee())
-      : tip.gt(feeMarket.maxPriorityFeePerGas)
-      ? bnToHex(feeMarket.maxPriorityFeePerGas)
-      : bnToHex(tip),
-    maxFeePerGas: gasPrice
-  };
-  return fees;
 };
 const calculateChainIdFromV = v => {
   const sigV = bufferToInt(v);
@@ -132,6 +116,5 @@ export {
   calculateChainIdFromV,
   walletRequirePass,
   createKeystore,
-  unlockKeystore,
-  eip1559Params
+  unlockKeystore
 };

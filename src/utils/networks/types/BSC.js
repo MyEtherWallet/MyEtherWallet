@@ -17,6 +17,5 @@ export default {
     url: null,
     websocket: null
   },
-  gasPriceMultiplier: 1,
   coingeckoID: 'binancecoin'
 };

@@ -108,7 +108,7 @@
             :provider="swapInfo.selectedProvider"
             :to-usd="swapInfo.toUsdVal"
             :from-usd="swapInfo.fromUsdVal"
-            :tx-fee="swapInfo.txFee"
+            :tx-fee="swapInfo.totalFees"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
           />
@@ -127,12 +127,7 @@
             <b>Make sure all the information is correct.</b> Canceling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
-            <a
-              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more.</a
-            >
+            <a rel="noopener noreferrer">Learn more.</a>
           </div>
           <!-- transaction details -->
           <confirm-with-wallet
@@ -250,27 +245,20 @@
         </v-card-text>
       </template>
     </app-modal>
-    <!--
-    ====================================================================================
-      Sign Message Confirmation
-    =====================================================================================
-    -->
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
       :show-overlay="showSignOverlay"
       :title="title ? title : 'Message'"
+      left-btn-text=""
+      right-btn-text="close"
       :close="reset"
-      content-size="large"
     >
-      <confirmation-messsage
-        ref="messageConfirmationContainer"
-        :msg="signature"
-        :copy="copyToClipboard"
-      />
+      <template #mewOverlayBody>
+        <confirmation-messsage
+          ref="messageConfirmationContainer"
+          :msg="signature"
+          :copy="copyToClipboard"
+        />
+      </template>
     </mew-overlay>
   </div>
 </template>
@@ -287,21 +275,21 @@ import ConfirmWithWallet from './components/ConfirmWithWallet';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
+  _,
   hexToNumberString,
   hexToNumber,
   toWei,
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'underscore';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
-import { setEvents } from '@/utils/web3-provider/methods/utils';
+import { setEvents } from '@/utils/web3-provider/methods/utils.js';
 import * as locStore from 'store';
-import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
+import { sanitizeHex } from '@/modules/access-wallet/common/utils';
 import dataToAction from './handlers/dataToAction';
 
 export default {
@@ -349,40 +337,31 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('custom', ['addressBook']),
+    ...mapState('global', ['addressBook']),
     txTo() {
-      if (!this.isBatch)
-        return this.tx.hasOwnProperty('toTxData')
-          ? this.tx.toTxData.to
-          : this.tx.to;
+      if (!this.isBatch) return this.tx.to;
       return this.unsignedTxArr[0].to;
     },
     usdValue() {
       return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
-      return (
-        this.identifier === WALLET_TYPES.WEB3_WALLET ||
-        this.identifier === WALLET_TYPES.WALLET_CONNECT
-      );
+      return this.identifier === WALLET_TYPES.WEB3_WALLET;
     },
-    isOtherWallet() {
-      return (
-        this.identifier === WALLET_TYPES.MEW_CONNECT ||
-        this.identifier === WALLET_TYPES.WALLET_LINK
-      );
-    },
-    isNotSoftware() {
-      return this.isHardware || this.isWeb3Wallet || this.isOtherWallet;
+    isMewConnect() {
+      return this.identifier === WALLET_TYPES.MEW_CONNECT;
     },
     showConfirmWithWallet() {
-      return this.isNotSoftware && (this.signing || this.error !== '');
+      return (
+        (this.isHardware || this.isWeb3Wallet) &&
+        (this.signing || this.error !== '')
+      );
     },
     transactions() {
       const newArr =
         this.unsignedTxArr.length > 0
           ? [].concat(this.unsignedTxArr)
-          : isEmpty(this.tx)
+          : _.isEmpty(this.tx)
           ? []
           : [this.tx];
       return this.arrayParser(newArr);
@@ -451,10 +430,10 @@ export default {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
-        : !isEmpty(this.signedTxObject);
+        : !_.isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !isEmpty(this.swapInfo);
+      return !_.isEmpty(this.swapInfo);
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -463,7 +442,7 @@ export default {
       if (this.isBatch) {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
-      return !isEmpty(this.signedTxObject);
+      return !_.isEmpty(this.signedTxObject);
     },
     /**
      * Property returns string, deodning whether or not this is a swap or send
@@ -657,6 +636,7 @@ export default {
           to: tokenData.tokenTransferTo
         };
       }
+      tx.type = 'OUT';
       tx.network = this.network.type.name;
     },
     async sendBatchTransaction() {
@@ -714,7 +694,7 @@ export default {
       this.reset();
     },
     showSuccess(param) {
-      if (isArray(param)) {
+      if (_.isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
           ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
@@ -744,7 +724,7 @@ export default {
     },
     async signTx() {
       this.error = '';
-      if (this.isNotSoftware) {
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
       }
       if (this.isWeb3Wallet) {
@@ -780,7 +760,7 @@ export default {
       this.error = '';
       const signed = [];
       const batchTxEvents = [];
-      if (this.isNotSoftware) {
+      if (this.isHardware || this.isWeb3Wallet) {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
@@ -793,6 +773,9 @@ export default {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
             }
+            _signedTx.tx['type'] = this.unsignedTxArr[i].type
+              ? this.unsignedTxArr[i].type
+              : 'OUT';
             signed.push(_signedTx);
             if (this.isHardware && this.txSigned) {
               this.btnAction();
@@ -809,7 +792,7 @@ export default {
                 });
               })
               .catch(e => {
-                this.instance.errorHandler(e);
+                throw new Error(e);
               });
           }
           this.signedTxArray = signed;
@@ -820,7 +803,7 @@ export default {
           return;
         }
       }
-      if (!this.isWeb3Wallet && !this.isHardware && !this.isOtherWallet) {
+      if (!this.isWeb3Wallet && !this.isHardware && !this.isMewConnect) {
         this.signing = false;
       }
     },
@@ -829,7 +812,7 @@ export default {
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&
-          isEmpty(this.signedTxObject)
+          _.isEmpty(this.signedTxObject)
         ) {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;

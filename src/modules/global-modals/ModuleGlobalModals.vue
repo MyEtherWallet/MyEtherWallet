@@ -9,6 +9,7 @@
       @close="reset"
     >
       <template #dialogBody>
+        <enter-pin-matrix v-if="openMatrix" @password="setPassword" />
         <hardware-password-modal
           v-if="openHardwarePassword"
           @password="setPassword"
@@ -26,16 +27,19 @@
 </template>
 
 <script>
+import EnterPinMatrix from './components/EnterPinMatrix.vue';
 import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
 import { EventBus } from '@/core/plugins/eventBus';
-import { isEmpty } from 'underscore';
+import { _ } from 'web3-utils';
+const OPEN_MATRIX = 'showHardwarePinMatrix';
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
 export default {
   components: {
     AppModal,
+    EnterPinMatrix,
     HardwarePasswordModal,
     AppErrorMsg
   },
@@ -44,6 +48,7 @@ export default {
       deviceInfo: {},
       callback: () => {},
       openHardwarePassword: false,
+      openMatrix: false,
       openError: false,
       password: '',
       acceptTerms: false,
@@ -52,10 +57,10 @@ export default {
   },
   computed: {
     showModal() {
-      return this.openHardwarePassword;
+      return this.openMatrix || this.openHardwarePassword;
     },
     title() {
-      const walletName = isEmpty(this.deviceInfo)
+      const walletName = _.isEmpty(this.deviceInfo)
         ? 'wallet'
         : this.deviceInfo.name;
       return `Access your ${walletName}`;
@@ -73,6 +78,11 @@ export default {
       this.callback = callback;
       this.openError = true;
     });
+    EventBus.$on(OPEN_MATRIX, (deviceInfo, callback) => {
+      this.callback = callback;
+      this.deviceInfo = deviceInfo;
+      this.openMatrix = true;
+    });
     EventBus.$on(OPEN_HARDWARE_PASSWORD, (deviceInfo, callback) => {
       this.callback = callback;
       this.deviceInfo = deviceInfo;
@@ -86,6 +96,7 @@ export default {
       this.identifier = '';
       this.openHardwarePassword = false;
       this.openError = false;
+      this.openMatrix = false;
       this.password = '';
       this.acceptTerms = false;
     },

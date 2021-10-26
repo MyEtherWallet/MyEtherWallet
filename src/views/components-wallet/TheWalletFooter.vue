@@ -7,13 +7,7 @@
     class="mew-component--wallet-footer pa-0"
   >
     <v-container
-      class="
-        d-flex
-        align-center
-        justify-center
-        wallet-content-container
-        pa-md-6
-      "
+      class="d-flex align-center justify-center wallet-content-container pa-6"
       fluid
     >
       <v-row class="align-center justify-space-between">
@@ -47,12 +41,11 @@
           >
             <a
               class="black--text"
-              href="https://help.myetherwallet.com/en/"
+              href="https://kb.myetherwallet.com/"
               target="_blank"
               >Help Center</a
             >
-            <!-- hide language select till translations are done-->
-            <!-- <span class="mx-5">|</span>
+            <span class="mx-5">|</span>
             <div style="max-width=200px">
               <v-select
                 v-model="onLanguage"
@@ -63,7 +56,7 @@
                 return-object
                 single-line
               ></v-select>
-            </div> -->
+            </div>
           </div>
         </v-col>
       </v-row>

@@ -6,47 +6,51 @@
     =====================================================================================
     -->
     <template v-if="step === 1" #stepperContent1>
-      <v-row class="align-start justify-space-between">
-        <v-col cols="12" sm="6">
-          <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-          <div class="headline font-weight-bold">Select your Keystore File</div>
-          <p class="mb-3 mb-sm-10 mb-md-5">
-            Please select keystore file that unlocks your wallet.
-          </p>
-          <div class="d-flex align-center justify-center d-sm-none">
-            <img
-              src="@/assets/images/icons/keystore-file.jpg"
-              alt="Keystore File"
-              style="width: 75%"
+      <v-sheet color="white" class="border-radius--10px pa-4 pa-md-10">
+        <v-row class="align-start justify-space-between">
+          <v-col cols="12" sm="6">
+            <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+            <div class="headline font-weight-bold">
+              Select your Keystore File
+            </div>
+            <p class="mb-3 mb-sm-10 mb-md-5">
+              Please select keystore file that unlocks your wallet.
+            </p>
+            <div class="d-flex align-center justify-center d-sm-none">
+              <img
+                src="@/assets/images/icons/keystore-file.jpg"
+                alt="Keystore File"
+                style="width: 75%"
+              />
+            </div>
+            <mew-button
+              title="Select File"
+              btn-style="outline"
+              color-theme="primary"
+              btn-size="xlarge"
+              :has-full-width="true"
+              :shows-active-state="true"
+              @click.native="uploadBtn"
             />
-          </div>
-          <mew-button
-            title="Select File"
-            btn-style="outline"
-            color-theme="primary"
-            btn-size="xlarge"
-            :has-full-width="true"
-            :shows-active-state="true"
-            @click.native="uploadBtn"
-          />
-          <input
-            ref="jsonInput"
-            type="file"
-            name="file"
-            style="display: none"
-            @change="uploadFile"
-          />
-        </v-col>
-        <v-col cols="12" sm="6" class="d-none d-sm-flex">
-          <div class="d-flex align-start justify-sm-end">
-            <img
-              src="@/assets/images/icons/keystore-file.jpg"
-              alt="Keystore File"
-              style="width: 75%"
+            <input
+              ref="jsonInput"
+              type="file"
+              name="file"
+              style="display: none"
+              @change="uploadFile"
             />
-          </div>
-        </v-col>
-      </v-row>
+          </v-col>
+          <v-col cols="12" sm="6" class="d-none d-sm-flex">
+            <div class="d-flex align-start justify-sm-end">
+              <img
+                src="@/assets/images/icons/keystore-file.jpg"
+                alt="Keystore File"
+                style="width: 75%"
+              />
+            </div>
+          </v-col>
+        </v-row>
+      </v-sheet>
     </template>
     <!--
     =====================================================================================
@@ -146,6 +150,7 @@ export default {
           this.step = 2;
         } catch (e) {
           Toast(e.message, {}, ERROR);
+          throw new Error(e);
         }
       };
       reader.readAsBinaryString(e.target.files[0]);

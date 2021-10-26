@@ -89,7 +89,7 @@
     -->
                   <nft-manager-details
                     :loading="loadingTokens"
-                    :on-click="openNftSend"
+                    :on-click="goToSend"
                     :get-image-url="getImageUrl"
                     :token="token"
                   />
@@ -124,7 +124,7 @@
     -->
         <nft-manager-send
           v-if="onNftSend"
-          :close="closeNftSend"
+          :close="toggleNftSend"
           :get-image-url="getImageUrl"
           :nft="selectedNft"
           :nft-category="selectedContract.name"
@@ -150,7 +150,6 @@ import getService from '@/core/helpers/getService';
 import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import handlerNft from './handlers/handlerNft.mixin';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
@@ -215,7 +214,7 @@ export default {
      * Check if address is valid
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress);
+      return this.nft.isValidAddress(this.toAddress) && this.address !== '';
     }
   },
   watch: {
@@ -248,16 +247,14 @@ export default {
     /**
      * Send NFT
      */
-    openNftSend(selectedNft) {
+    toggleNftSend() {
+      this.onNftSend = !this.onNftSend;
+    },
+    goToSend(selectedNft) {
       if (selectedNft) {
         this.selectedNft = selectedNft;
       }
-      this.onNftSend = true;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER_SEND.NAME });
-    },
-    closeNftSend() {
-      this.onNftSend = false;
-      this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
+      this.toggleNftSend();
     },
     sendTx() {
       if (this.isValid) {
@@ -282,7 +279,7 @@ export default {
             .catch(e => {
               Toast(e.message, {}, ERROR);
             });
-          this.closeNftSend();
+          this.toggleNftSend();
           this.selectedNft = {};
         } catch (e) {
           Toast(e.message, {}, WARNING);

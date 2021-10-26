@@ -1,5 +1,4 @@
-import ZEROX from './zerox';
+import DexAg from './dex-ag';
 import OneInch from './one-inch';
-import ParaSwap from './paraswap';
 import Changelly from './changelly';
-export { ZEROX, OneInch, ParaSwap, Changelly };
+export { DexAg, OneInch, Changelly };

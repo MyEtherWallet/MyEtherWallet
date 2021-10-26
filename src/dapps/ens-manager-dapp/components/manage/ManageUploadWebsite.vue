@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width">
+  <div>
     <div
       v-if="settingIpfs"
       class="d-flex flex-column align-center justify-center"
@@ -33,7 +33,7 @@
         @input="setHash"
       />
     </div>
-    <div v-if="!settingIpfs" class="d-flex align-center justify-center mt-3">
+    <div class="d-flex align-center justify-center mt-3">
       <mew-button
         :disabled="!isValidIPFS"
         :title="$t('ens.set-hash')"

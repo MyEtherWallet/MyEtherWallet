@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width">
+  <v-sheet class="pa-10 mt-5" width="700" :rounded="true">
     <!--
   =====================================================================================
     Address Book - add address mode
@@ -12,7 +12,6 @@
       :placeholder="$t('interface.address-book.enter-addr')"
       :value="addressToAdd"
       :rules="addressRules"
-      autofocus
       :resolved-addr="resolvedAddr"
       @input="setAddress"
     />
@@ -34,7 +33,7 @@
         </h5>
         <div class="d-flex align-center">
           <span id="item-addr" class="monospace mr-3 truncate">
-            {{ checksumAddressToAdd }}
+            {{ addressToAdd }}
           </span>
           <mew-copy :copy-value="item.address" :tooltip="$t('common.copy')" />
         </div>
@@ -84,13 +83,13 @@
     >
       {{ $t('interface.address-book.remove-addr') }}
     </div>
-  </div>
+  </v-sheet>
 </template>
 
 <script>
+import utils from 'web3-utils';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
-import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
 
 const modes = ['add', 'edit'];
 
@@ -111,23 +110,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'web3']),
-    ...mapState('custom', ['addressBook']),
-    ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('addressBook', ['isMigrated']),
+    ...mapState('wallet', ['address']),
+    ...mapState('global', ['addressBook']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
         return (
           !this.addressToAdd ||
           !this.validAddress ||
-          this.nickname?.length > 20 ||
+          this.nickname.length > 20 ||
           this.alreadyExists
         );
       }
       if (this.editMode) {
         return (
-          this.nickname === this.item.nickname || this.nickname?.length > 20
+          this.nickname === this.item.nickname || this.nickname.length > 20
         );
       }
       return true;
@@ -146,14 +143,14 @@ export default {
     nicknameRules() {
       return [
         value =>
-          (value && value.length < 20) ||
+          value.length < 20 ||
           this.$t('interface.address-book.validations.nickname-length')
       ];
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd);
+        ? utils.isAddress(this.resolvedAddr)
+        : utils.isAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
@@ -161,79 +158,49 @@ export default {
     addMode() {
       return this.mode === modes[0];
     },
-    isMyAddress() {
-      return this.address?.toLowerCase() === this.addressToAdd?.toLowerCase();
-    },
     alreadyExists() {
       if (this.addMode) {
-        if (this.isMyAddress) {
+        if (this.address === this.addressToAdd) {
           return true;
         }
-        return Object.keys(this.addressBookStore).some(key => {
+        return Object.keys(this.addressBook).some(key => {
           return (
-            this.addressBookStore[key].address.toLowerCase() ===
-            this.addressToAdd?.toLowerCase()
+            this.addressBook[key].address.toLowerCase() ===
+            this.addressToAdd.toLowerCase()
           );
         });
       }
       return false;
-    },
-    checksumAddressToAdd() {
-      if (this.addressToAdd !== '' && isAddress(this.addressToAdd)) {
-        return toChecksumAddress(this.addressToAdd);
-      }
-      return this.addressToAdd;
     }
   },
   watch: {
-    toAddress(newVal) {
-      this.addressToAdd = newVal;
-    },
     addressToAdd() {
       this.resolveName();
-    },
-    web3() {
-      if (this.network.type.ens) {
-        this.nameResolver = new NameResolver(this.network, this.web3);
-      } else {
-        this.nameResolver = null;
-      }
     }
   },
   mounted() {
-    if (!this.isMigrated) {
-      this.addressBook.forEach(address => {
-        this.addressBookStore.push(address);
-      });
-      this.setMigrated(true);
-    }
     if (this.network.type.ens)
-      this.nameResolver = new NameResolver(this.network, this.web3);
+      this.nameResolver = new NameResolver(this.network);
     if (this.addMode && this.toAddress) {
       this.addressToAdd = this.toAddress;
     }
     if (this.editMode) {
       this.addressToAdd = this.item.address;
       this.nickname = this.item.nickname;
-      this.currentIdx = this.addressBookStore.findIndex(
+      this.currentIdx = this.addressBook.findIndex(
         item => item.address === this.item.address
       );
     }
   },
   methods: {
-    ...mapActions('addressBook', ['setAddressBook']),
-    ...mapActions('addressBook', ['setMigrated']),
+    ...mapActions('global', ['setAddressBook']),
     reset() {
       this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
     },
     async resolveName() {
-      if (
-        this.nameResolver &&
-        this.addressToAdd &&
-        this.addressToAdd.includes('.')
-      ) {
+      if (this.nameResolver) {
         await this.nameResolver
           .resolveName(this.addressToAdd)
           .then(addr => {
@@ -245,21 +212,20 @@ export default {
       }
     },
     setAddress(value) {
-      this.addressToAdd = value ? value : '';
+      this.addressToAdd = value;
     },
     setNickname(value) {
       this.nickname = value;
     },
     update() {
-      this.addressBookStore[this.currentIdx].address =
-        this.checksumAddressToAdd;
-      this.addressBookStore[this.currentIdx].nickname = this.nickname;
-      this.setAddressBook(this.addressBookStore);
+      this.addressBook[this.currentIdx].address = this.addressToAdd;
+      this.addressBook[this.currentIdx].nickname = this.nickname;
+      this.setAddressBook(this.addressBook);
       this.$emit('back', 3);
     },
     remove() {
-      this.addressBookStore.splice(this.currentIdx, 1);
-      this.setAddressBook(this.addressBookStore);
+      this.addressBook.splice(this.currentIdx, 1);
+      this.setAddressBook(this.addressBook);
       this.reset();
       this.$emit('back', 3);
     },
@@ -268,12 +234,12 @@ export default {
         this.reset();
         return;
       }
-      this.addressBookStore.push({
-        address: this.checksumAddressToAdd,
+      this.addressBook.push({
+        address: this.addressToAdd,
         resolvedAddr: this.resolvedAddr,
-        nickname: this.nickname || (this.addressBookStore.length + 1).toString()
+        nickname: this.nickname || (this.addressBook.length + 1).toString()
       });
-      this.setAddressBook(this.addressBookStore);
+      this.setAddressBook(this.addressBook);
       this.reset();
       this.$emit('back', 3);
     }

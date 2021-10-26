@@ -9,10 +9,9 @@ export default [
   ...Object.values(dappsmeta).map(dm => {
     return {
       path: dm.path,
-      name: dm.name,
+      name: dm.path,
       component: dm.layout,
-      meta: dm.meta,
-      children: dm.children
+      meta: dm.meta
     };
   })
 ];

@@ -8,11 +8,7 @@
             <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
             <div align="left" class="mt-5">
               <a
-                :href="
-                  isMobile()
-                    ? 'https://apps.apple.com/app/id1464614025'
-                    : 'https://mewwallet.com'
-                "
+                href="https://apps.apple.com/app/id1464614025"
                 target="_blank"
                 class="mr-1"
               >
@@ -23,11 +19,7 @@
                 />
               </a>
               <a
-                :href="
-                  isMobile()
-                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-                    : 'https://mewwallet.com'
-                "
+                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
                 target="_blank"
               >
                 <img
@@ -48,18 +40,14 @@
               class="mr-4"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
-              "
+              @click.native="$router.push({ name: 'CreateWallet' })"
             />
             <mew-button
               color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
-              "
+              @click.native="$router.push({ name: 'AccessWallet' })"
             />
           </div>
         </div>
@@ -74,11 +62,7 @@
             <h1 class="white--text">Ready to explore Ethereum?</h1>
             <div align="left" class="mt-5">
               <a
-                :href="
-                  isMobile()
-                    ? 'https://apps.apple.com/app/id1464614025'
-                    : 'https://mewwallet.com'
-                "
+                href="https://apps.apple.com/app/id1464614025"
                 target="_blank"
                 class="mr-1"
               >
@@ -89,11 +73,7 @@
                 />
               </a>
               <a
-                :href="
-                  isMobile()
-                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
-                    : 'https://mewwallet.com'
-                "
+                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
                 target="_blank"
               >
                 <img
@@ -110,9 +90,7 @@
                 has-full-width
                 title="Create a new wallet"
                 btn-size="xlarge"
-                @click.native="
-                  $router.push({ name: ROUTES_HOME.CREATE_WALLET.NAME })
-                "
+                @click.native="$router.push({ name: 'CreateWallet' })"
               />
             </v-col>
             <v-col cols="12" sm="6" class="mb-n2">
@@ -121,9 +99,7 @@
                 btn-style="outline"
                 title="Access my wallet"
                 btn-size="xlarge"
-                @click.native="
-                  $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
-                "
+                @click.native="$router.push({ name: 'AccessWallet' })"
               />
             </v-col>
           </v-row>
@@ -134,23 +110,11 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '../configs/configRoutes';
-const platform = require('platform');
 export default {
   name: 'GetStarted',
   components: {},
   data() {
-    return {
-      ROUTES_HOME: ROUTES_HOME
-    };
-  },
-  methods: {
-    isMobile() {
-      return (
-        platform.os.family.includes('iOS') ||
-        platform.os.family.includes('Android')
-      );
-    }
+    return {};
   }
 };
 </script>

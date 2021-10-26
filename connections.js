@@ -12,6 +12,7 @@ module.exports = [
   'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
+  'wss://bridge.walletconnect.org:443',
   'https://unstoppabledomains.com:443',
   'https://o382951.ingest.sentry.io:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
@@ -31,22 +32,5 @@ module.exports = [
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'https://api.wallet.coinbase.com:443',
-  'data:',
-  'https://mainnet.infura.io:443',
-  'https://registry.walletconnect.org:443',
-  'https://cdn.live.ledger.com:443',
-  'https://app.lokalise.com:443',
-  'https://registry.walletconnect.org:443/data/wallets.json',
-  'wss://*.bridge.walletconnect.org:443',
-  'https://myetherwallet.matomo.cloud:443',
-  'wss://rpc.gochain.io:443/ws',
-  // intercom stuff
-  'api-iam.intercom.io:443',
-  'https://api.zilliqa.com:443',
-  'https://widget.intercom.io:443',
-  'https://api-iam.intercom.io:443',
-  'https://js.intercomcdn.com:443',
-  'wss://nexus-websocket-a.intercom.io:443',
-  'https://js.intercomcdn.com:443',
-  'https://uploads.intercomcdn.com:443'
+  'data:'
 ];

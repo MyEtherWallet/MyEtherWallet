@@ -11,8 +11,7 @@ const WalletErrorHandler = (errors, warnings) => {
   const warningValues = Object.keys(warnings);
   return err => {
     const foundError = errorValues.find(item => {
-      const message = err.message?.message || err.message;
-      return message.includes(item);
+      return err.message.includes(item);
     });
     const foundWarning = warningValues.find(item => {
       return err.message.includes(item);

@@ -1,18 +1,13 @@
 import NameResolver from '../index';
-import Web3 from 'web3';
-const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
-const nameResolver = new NameResolver(
-  {
-    type: {
-      ens: {
-        registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
-      }
-    },
-    url: 'https://nodes.mewapi.io/rpc/eth',
-    port: 443
+const nameResolver = new NameResolver({
+  type: {
+    ens: {
+      registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+    }
   },
-  web3Instance
-);
+  url: 'https://cloudflare-eth.com',
+  port: 443
+});
 
 describe('Ethereum Name Resolver', () => {
   test('it should ens name: myetherwallet.eth', () => {

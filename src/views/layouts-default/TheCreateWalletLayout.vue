@@ -79,9 +79,7 @@
           :right-icon="
             require('@/assets/images/icons/icon-hardware-wallet.png')
           "
-          @click.native="
-            $router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME })
-          "
+          @click.native="$router.push({ name: 'BuyHardwareWallet' })"
         />
         <!--
         =====================================================================================
@@ -127,8 +125,6 @@
 import ModuleCreateWalletSoftware from '@/modules/create-wallet/ModuleCreateWalletSoftware';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
-
 export default {
   name: 'TheCreateWalletLayout',
   components: {
@@ -152,14 +148,13 @@ export default {
     titleRoute: {
       text: 'Access Wallet',
       routeName: 'AccessWallet'
-    },
-    ROUTES_HOME: ROUTES_HOME
+    }
   }),
   methods: {
     openSoftwareModule() {
       try {
         this.$router.push({
-          name: ROUTES_HOME.CREATE_WALLET.NAME,
+          name: 'CreateWallet',
           params: { overlay: 'software' },
           query: { type: 'overview' }
         });
@@ -170,7 +165,7 @@ export default {
     closeSoftwareModule() {
       try {
         this.$router.push({
-          name: ROUTES_HOME.CREATE_WALLET.NAME
+          name: 'CreateWallet'
         });
       } catch (e) {
         Toast(e, {}, ERROR);

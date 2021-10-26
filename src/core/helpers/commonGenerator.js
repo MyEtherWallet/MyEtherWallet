@@ -1,10 +1,11 @@
-import Common, { Hardfork } from '@ethereumjs/common';
+import Common from 'ethereumjs-common';
 
 const commonGenerator = network => {
-  return Common.custom({
-    chainId: network.type.chainID,
-    defaultHardfork: Hardfork.London
+  const customCommon = Common.forCustomChain('mainnet', {
+    name: network.type.name_long,
+    chainId: network.type.chainID
   });
+  return new Common(customCommon._chainParams, 'petersburg', ['petersburg']);
 };
 
 export default commonGenerator;

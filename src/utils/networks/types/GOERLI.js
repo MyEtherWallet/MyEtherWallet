@@ -29,6 +29,5 @@ export default {
     blockExplorerAddr: '',
     websocket: null
   },
-  gasPriceMultiplier: 1,
   coingeckoID: null
 };

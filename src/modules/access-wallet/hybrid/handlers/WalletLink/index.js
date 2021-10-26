@@ -1,7 +1,7 @@
 import WalletLink from 'walletlink';
 
 import store from '@/core/store';
-import { Transaction } from '@ethereumjs/tx';
+import { Transaction } from 'ethereumjs-tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   getSignTransactionObject,
@@ -30,8 +30,9 @@ class WalletLinkWallet {
       'realrpcurlnotrequired',
       0
     );
+    this.connection._storage.clear();
     this.connection.disconnect = () => {
-      this.connection?._storage.clear && this.connection?._storage.clear();
+      this.connection._storage.clear();
     };
     this.meta = {
       name: 'WalletLink',
@@ -93,7 +94,7 @@ class WalletLinkWallet {
               msgSigner,
               this.connection,
               errorHandler,
-              this.meta
+              this.icon
             )
           );
         })

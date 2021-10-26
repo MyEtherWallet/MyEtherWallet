@@ -1,7 +1,7 @@
-import WalletConnect from '@walletconnect/client';
+import WalletConnect from '@walletconnect/browser';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
-import { Transaction } from '@ethereumjs/tx';
+import { Transaction } from 'ethereumjs-tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -20,25 +20,23 @@ class WalletConnectWallet {
   constructor() {
     this.identifier = WALLET_TYPES.WALLET_CONNECT;
     this.isHardware = IS_HARDWARE;
-    const walletConnect = new WalletConnect({
-      bridge: BRIDGE_URL,
-      qrcodeModal: WalletConnectQRCodeModal
-    });
-
-    if (
-      walletConnect &&
-      walletConnect.connected &&
-      walletConnect._sessionStorage
-    ) {
-      walletConnect._sessionStorage.removeSession();
-      walletConnect.killSession(); // remove any leftover connections
+    const tempConnection = new WalletConnect({ bridge: BRIDGE_URL });
+    if (tempConnection && tempConnection.connected && tempConnection._storage) {
+      tempConnection._storage.removeSession();
+      tempConnection.killSession(); // remove any leftover connections
     }
-    this.walletConnect = walletConnect;
+    this.walletConnect = new WalletConnect({
+      bridge: BRIDGE_URL
+    });
+    this.isKilled = true;
     this.walletConnect.on('disconnect', () => {
-      store.dispatch('wallet/removeWallet');
+      if (!this.isKilled) {
+        store.dispatch('wallet/removeWallet');
+      }
     });
 
     this.walletConnect.disconnect = () => {
+      this.isKilled = true;
       this.walletConnect.killSession();
     };
     this.meta = {
@@ -93,7 +91,7 @@ class WalletConnectWallet {
         .then(() => {
           const uri = this.walletConnect.uri;
           // eslint-disable-next-line security/detect-non-literal-fs-filename
-          this.walletConnect._qrcodeModal.open(uri, () => {
+          WalletConnectQRCodeModal.open(uri, () => {
             reject(new Error('QR Code Modal closed'));
           });
         })
@@ -102,7 +100,8 @@ class WalletConnectWallet {
         if (error) {
           return reject(error);
         }
-        this.walletConnect._qrcodeModal.close();
+        this.isKilled = false;
+        WalletConnectQRCodeModal.close();
         const { accounts } = payload.params[0];
         resolve(
           new HybridWalletInterface(

@@ -12,7 +12,7 @@ export default class NFT {
     this.currentPage = 1;
   }
   isValidAddress(hash) {
-    return hash !== '' && utils.isAddress(hash);
+    return utils.isAddress(hash);
   }
 
   /**

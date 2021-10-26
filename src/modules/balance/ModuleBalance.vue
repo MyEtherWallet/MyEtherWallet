@@ -110,12 +110,10 @@ import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
-  formatPercentageValue,
   formatFiatValue,
-  formatFloatingPointValue
+  formatBalanceEthValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
     BalanceChart,
@@ -153,7 +151,7 @@ export default {
      * ie: $12.45 per 1 ETH
      */
     title() {
-      return `${formatFloatingPointValue(this.balanceInETH).value} ${
+      return `${formatBalanceEthValue(this.balanceInWei).value} ${
         this.network.type.name
       }`;
     },
@@ -178,9 +176,7 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return formatPercentageValue(
-          this.networkTokenUSDMarket.price_change_percentage_24h
-        ).value;
+        return this.networkTokenUSDMarket.price_change_percentage_24h;
       }
       return '';
     },
@@ -285,7 +281,7 @@ export default {
       this.scale = 'hours';
     },
     navigateToSend() {
-      this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
+      this.$router.push({ name: 'SendTX' });
     }
   }
 };

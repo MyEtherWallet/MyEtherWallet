@@ -1,7 +1,8 @@
-import utils, { toBN } from 'web3-utils';
+import utils from 'web3-utils';
 import { toPayload } from '../jsonrpc';
 import EthCalls from '../web3Calls';
 import * as locstore from 'store';
+import BigNumber from 'bignumber.js';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 
 export default async ({ payload, store, requestManager }, res, next) => {
@@ -25,14 +26,14 @@ export default async ({ payload, store, requestManager }, res, next) => {
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
   if (timeDiff > 1) {
     const liveNonce = await ethCalls.getTransactionCount(addr);
-    const liveNonceBN = toBN(liveNonce);
-    const cachedNonceBN = toBN(cached.nonce);
+    const liveNonceBN = BigNumber(liveNonce);
+    const cachedNonceBN = BigNumber(cached.nonce);
     if (timeDiff > 15) {
       cached = {
         nonce: sanitizeHex(liveNonceBN.toString(16)),
         timestamp: +new Date()
       };
-    } else if (liveNonceBN.gt(cachedNonceBN)) {
+    } else if (liveNonceBN.isGreaterThan(cachedNonceBN)) {
       cached = {
         nonce: sanitizeHex(liveNonceBN.toString(16)),
         timestamp: +new Date()

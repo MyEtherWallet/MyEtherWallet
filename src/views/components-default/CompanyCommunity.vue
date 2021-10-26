@@ -14,7 +14,7 @@
             <app-block-title no-page-title :data="titleData" />
             <mew-button
               class="mt-5"
-              btn-link="https://help.myetherwallet.com/en/"
+              btn-link="https://kb.myetherwallet.com/"
               :has-full-width="false"
               title="Visit Help Center"
               btn-size="xlarge"

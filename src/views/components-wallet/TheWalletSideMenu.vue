@@ -11,8 +11,8 @@
       <template #prepend>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
-            <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
+            <router-link :to="{ name: 'Dashboard' }">
+              <img width="120" src="@/assets/images/icons/logo-mew.png" />
             </router-link>
             <!--
             =====================================================================================
@@ -127,7 +127,6 @@
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
-          :to="item.route"
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">
@@ -141,38 +140,25 @@
             />
           </v-list-item-content>
         </v-list-item>
-        <div class="mt-3 px-8">
-          <div class="matomo-tracking-switch">
-            <v-switch
-              :input-value="consentToTrack"
-              inset
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="primary"
-              off-icon="mdi-alert-circle"
-              @change="setConsent"
-            />
-          </div>
-          <div class="d-flex align-center justify-space-between">
-            <!-- <theme-switch /> -->
-            <div class="searchText--text">v{{ version }}</div>
-          </div>
+
+        <div class="mt-3 px-8 d-flex align-center justify-space-between">
+          <!-- <theme-switch /> -->
+          <div class="searchText--text">v{{ version }}</div>
         </div>
       </v-list>
     </v-navigation-drawer>
     <mew-popup
-      max-width="400px"
-      hide-close-btn
-      :show="showLogoutPopup"
+      :is-open="showLogoutPopup"
       :title="$t('interface.menu.logout')"
-      :left-btn="{ text: 'Cancel', method: toggleLogout, color: 'basic' }"
-      :right-btn="{
-        text: 'Log out',
-        color: 'error',
-        method: onLogout,
-        enabled: true
-      }"
+      :button-left="logout.btnLeft"
+      :button-right="logout.btnRight"
+      popup-type="confirm"
+      @onClick="onLogout"
     ></mew-popup>
-    <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
+    <module-settings
+      :on-settings="onSettings"
+      @closeSettings="toggleSettings"
+    />
     <!--
     =====================================================================================
       Navigation Bar on top of the screen for xs-md screens
@@ -189,11 +175,8 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link
-          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
-          style="line-height: 0"
-        >
-          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
+        <router-link :to="{ name: 'Dashboard' }">
+          <img width="80" src="@/assets/images/icons/logo-mew.png" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />
@@ -221,9 +204,17 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
+const routeNames = {
+  dashboard: 'Dashboard',
+  sendtx: 'SendTX',
+  nftmanager: 'NFTManager',
+  swap: 'Swap',
+  dapps: 'Dapps',
+  deploycontract: 'DeployContract',
+  interactcontract: 'InteractWithContract',
+  signmsg: 'SignMessage',
+  verifymsg: 'verifyMessage'
+};
 export default {
   components: {
     AppBtnMenu,
@@ -231,7 +222,6 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
-  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -239,30 +229,40 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
+      logout: {
+        btnLeft: {
+          title: 'Cancel',
+          colorTheme: 'basic'
+        },
+        btnRight: {
+          title: 'Log out',
+          colorTheme: 'error'
+        }
+      },
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
-          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+          route: { name: routeNames.dashboard },
           icon: dashboard
         },
         {
           title: this.$t('sendTx.send-tx'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
+          route: { name: routeNames.sendtx },
           icon: send
         },
         {
           title: this.$t('interface.menu.nft'),
-          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
+          route: { name: routeNames.nftmanager },
           icon: nft
         },
         {
           title: this.$t('common.swap'),
-          route: { name: ROUTES_WALLET.SWAP.NAME },
+          route: { name: routeNames.swap },
           icon: swap
         },
         {
           title: this.$t('interface.menu.dapps'),
-          route: { name: ROUTES_WALLET.DAPPS.NAME },
+          route: { name: routeNames.dapps },
           icon: dapp
         },
         {
@@ -271,11 +271,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.deploy'),
-              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+              route: { name: routeNames.deploycontract }
             },
             {
               title: this.$t('interface.menu.interact-contract'),
-              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+              route: { name: routeNames.interactcontract }
             }
           ]
         },
@@ -285,11 +285,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.sign-message'),
-              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+              route: { name: routeNames.signmsg }
             },
             {
               title: this.$t('interface.menu.verify-message'),
-              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
+              route: { name: routeNames.verifymsg }
             }
           ]
         }
@@ -298,8 +298,7 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
+          fn: this.toggleSettings
         },
         {
           title: this.$t('common.logout'),
@@ -308,22 +307,18 @@ export default {
         }
       ],
       routeNetworks: {
-        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
-      },
-      ROUTES_WALLET: ROUTES_WALLET
+        [routeNames.swap]: [ETH, BSC, MATIC],
+        [routeNames.nftmanager]: [ETH]
+      }
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapGetters('global', ['network']),
     ...mapState('wallet', ['instance'])
   },
   mounted() {
-    if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
-      this.openSettings();
-    }
-    EventBus.$on('openSettings', () => {
-      this.openSettings();
+    EventBus.$on('toggleSettings', () => {
+      this.toggleSettings();
     });
   },
   methods: {
@@ -340,23 +335,20 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    openSettings() {
-      this.onSettings = true;
+    toggleSettings() {
+      this.onSettings = !this.onSettings;
     },
-    closeSettings() {
-      this.onSettings = false;
-      this.$router.go(-1);
-    },
-    onLogout() {
+    onLogout(res) {
       this.showLogoutPopup = false;
-      this.removeWallet();
+      if (res.title === this.logout.btnRight.title) {
+        this.removeWallet();
+      }
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
     },
     openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
+      window.open('https://ccswap.myetherwallet.com', '_blank');
     }
   }
 };
@@ -455,11 +447,6 @@ export default {
 
     &::-webkit-scrollbar-corner {
       background: transparent;
-    }
-  }
-  .matomo-tracking-switch {
-    .v-label {
-      color: var(--v-white-base);
     }
   }
 }

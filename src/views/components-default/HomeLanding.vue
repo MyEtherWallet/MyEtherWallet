@@ -23,24 +23,14 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.CREATE_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="$router.push({ name: 'CreateWallet', params: {} })"
             />
             <mew-button
               :has-full-width="false"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="$router.push({ name: 'AccessWallet', params: {} })"
             />
           </div>
         </v-card>
@@ -72,12 +62,7 @@
               :has-full-width="false"
               title="Create a new wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.CREATE_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="$router.push({ name: 'CreateWallet', params: {} })"
             />
             <mew-button
               class="width--full"
@@ -85,12 +70,7 @@
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"
-              @click.native="
-                $router.push({
-                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
-                  params: {}
-                })
-              "
+              @click.native="$router.push({ name: 'AccessWallet', params: {} })"
             />
           </div>
         </v-card>
@@ -100,21 +80,9 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
 export default {
   name: 'HomeLanding',
   components: {},
-  mixins: [handlerAnalytics],
-  data() {
-    return { ROUTES_HOME: ROUTES_HOME };
-  },
-  mounted() {
-    setTimeout(() => {
-      this.trackLandingPage();
-    }, 1000);
-  },
   methods: {}
 };
 </script>

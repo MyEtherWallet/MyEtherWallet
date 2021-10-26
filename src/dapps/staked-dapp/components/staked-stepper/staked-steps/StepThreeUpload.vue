@@ -5,6 +5,8 @@
     ===================================================
     -->
   <div>
+    <v-divider />
+
     <div class="mx-auto mb-3" style="max-width: 550px">
       <div class="mew-heading-2 pt-8 pb-7 text-center">
         {{ titleDetails.title }}

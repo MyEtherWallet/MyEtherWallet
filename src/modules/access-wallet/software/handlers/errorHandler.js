@@ -7,8 +7,7 @@ import {
 const ERRORS = [
   'public key only wallets needs a signer',
   'err',
-  'Invalid networkId signature returned.',
-  'Private key does not satisfy the curve requirements (ie. it is invalid)'
+  'Invalid networkId signature returned.'
 ];
 const WARNINGS = {};
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width">
+  <div>
     <mew-select
       :has-filter="true"
       :label="$t('ens.request.choose-term')"

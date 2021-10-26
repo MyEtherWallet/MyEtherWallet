@@ -3,6 +3,7 @@ const state = {
   address: null,
   balance: '0',
   blockNumber: 0,
+  ens: null,
   identifier: '',
   isHardware: false,
   instance: null,

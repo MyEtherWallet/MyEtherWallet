@@ -27,8 +27,7 @@ export default {
 </script>
 
 <style lang="scss">
-.mew-component--theme-switch,
-.matomo-tracking-switch {
+.mew-component--theme-switch {
   .v-input--switch .v-input--switch__track {
     color: #ffffff91 !important;
   }

@@ -1,108 +1,117 @@
 <template>
-  <div class="full-width">
-    <v-row
-      v-if="!isSwapPage && hasNetworks"
-      class="align-end justify-center justify-sm-space-between pa-0"
+  <v-sheet color="white" max-width="740px" width="100%" class="mx-auto">
+    <v-sheet
+      color="transparent"
+      max-width="516px"
+      width="100%"
+      class="mx-auto pb-2 pb-am-8 px-3 pt-3 px-sm-0"
     >
-      <!--
+      <v-row
+        v-if="!isSwapPage && hasNetworks"
+        class="align-end justify-center justify-sm-space-between px-0 pt-5 pt-3"
+      >
+        <!--
             =====================================================================================
               Toggle: Main/Test/All
             =====================================================================================
             -->
-      <div
-        class="
-          align-center align-sm-end
-          justify-center
-          pr-sm-3
-          pb-sm-3
-          order-sm-2
-        "
-      >
-        <v-btn-toggle
-          v-model="toggleType"
-          mandatory
-          active-class="titlePrimary white--text alig-end"
+        <div
+          class="
+            align-center align-sm-end
+            justify-center
+            pr-sm-3
+            pb-sm-3
+            order-sm-2
+          "
         >
-          <v-btn small>Main</v-btn>
-          <v-btn small>Test</v-btn>
-          <v-btn small>All</v-btn>
-        </v-btn-toggle>
-      </div>
-      <!--
+          <v-btn-toggle
+            v-model="toggleType"
+            mandatory
+            active-class="titlePrimary white--text alig-end"
+          >
+            <v-btn small>Main</v-btn>
+            <v-btn small>Test</v-btn>
+            <v-btn small>All</v-btn>
+          </v-btn-toggle>
+        </div>
+        <!--
             =====================================================================================
               Search Data
             =====================================================================================
             -->
-      <v-col cols="12" sm="7" class="order-sm-1">
-        <mew-search
-          placeholder="Find Network"
-          :value="searchInput"
-          @input="setSearch"
-        />
-      </v-col>
-    </v-row>
-    <!--
+        <v-col cols="12" sm="7" class="order-sm-1">
+          <mew-search
+            placeholder="Find Network"
+            :value="searchInput"
+            @input="setSearch"
+          />
+        </v-col>
+      </v-row>
+      <!--
           =====================================================================================
             Empty Search Message
           =====================================================================================
           -->
-    <app-user-msg-block
-      v-if="showEmptySearch || isSwapPage"
-      :message="emptySearchMes"
-      :is-alert="isSwapPage"
-      class="mt-5"
-    />
-    <!--
+      <app-user-msg-block
+        v-if="showEmptySearch || isSwapPage"
+        :message="emptySearchMes"
+        :is-alert="isSwapPage"
+        class="mt-5"
+      />
+      <!--
           =====================================================================================
             Networks
           =====================================================================================
           -->
-    <v-radio-group v-model="networkSelected">
-      <v-container
-        v-for="(network, i) in networks"
-        :key="network.name"
-        :class="[
-          { 'network-border-first': i === 0 },
-          { 'network-border-last': i + 1 === networks.length },
-          'py-4 px-5 network-border'
-        ]"
-      >
-        <v-row class="pa-0 mew-body align-center justify-start">
-          <!--
+      <v-radio-group v-model="networkSelected" class="networks-container">
+        <v-container
+          v-for="(network, i) in networks"
+          :key="network.name"
+          :class="[
+            { 'network-border-first': i === 0 },
+            { 'network-border-last': i + 1 === networks.length },
+            'py-4 px-5 network-border'
+          ]"
+        >
+          <v-row class="pa-0 mew-body align-center justify-start">
+            <!--
                 =====================================================================================
                   Incon
                 =====================================================================================
                 -->
-          <v-img
-            :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
-            contain
-            max-height="24px"
-            max-width="24px"
-          />
-          <!--
+            <v-img
+              :src="network.icon"
+              :lazy-src="
+                require('@/assets/images/currencies/icon-eth-grey.svg')
+              "
+              contain
+              max-height="24px"
+              max-width="24px"
+            />
+            <!--
                 =====================================================================================
                   Symbol/Namte
                 =====================================================================================
                 -->
-          <div class="titlePrimary--text Capitalize pl-3">
-            {{ network.name }}
-          </div>
-          <div class="px-2 textSecondary--text">-</div>
-          <div class="textSecondary--text">
-            {{ network.name_long }}
-          </div>
-          <v-spacer />
-          <!--
+            <div class="titlePrimary--text Capitalize pl-3">
+              {{ network.name }}
+            </div>
+            <div class="px-2 textSecondary--text">-</div>
+            <div class="textSecondary--text">
+              {{ network.name_long }}
+            </div>
+            <v-spacer />
+            <!--
                 =====================================================================================
                   Radio
                 =====================================================================================
                 -->
-          <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
-        </v-row>
-      </v-container>
-    </v-radio-group>
-  </div>
+            <v-radio :value="network.name" :class="['py-2 mb-0']"> </v-radio>
+          </v-row>
+        </v-container>
+      </v-radio-group>
+    </v-sheet>
+  </v-sheet>
 </template>
 
 <script>
@@ -111,13 +120,11 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import { debounce } from 'underscore';
-import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { _ } from 'web3-utils';
 
 export default {
   name: 'NetworkSwitch',
   components: { AppUserMsgBlock },
-  mixins: [handlerAnalytics],
   props: {
     isWallet: { type: Boolean, default: true },
     /** Set this prop to pass specific networks to be displayed */
@@ -286,7 +293,7 @@ export default {
      * Debounce network switch from user input
      * @return {void}
      */
-    setNetworkDebounced: debounce(function (value) {
+    setNetworkDebounced: _.debounce(function (value) {
       const found = Object.values(this.nodes).filter(item => {
         if (item.type.name === value) {
           return item;
@@ -302,7 +309,6 @@ export default {
               SUCCESS
             );
           }
-          this.trackNetworkSwitch(found[0].type.name);
           this.$emit('newNetwork');
         });
       } catch (e) {
@@ -314,6 +320,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 $borderNetwork: 1px solid #ececec;
+.networks-container {
+  max-width: 516px;
+}
 .network-border {
   border-bottom: $borderNetwork;
   border-right: $borderNetwork;

@@ -1,14 +1,12 @@
 import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import SanitizeHex from '@/core/helpers/sanitizeHex';
-import { Transaction } from '@ethereumjs/tx';
+import { Transaction } from 'ethereumjs-tx';
 import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
-import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
-
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
@@ -103,7 +101,8 @@ class SendTransaction {
       data: this.TX.data,
       from: this.TX.from,
       to: this.TX.to,
-      value: this.TX.value
+      value: this.TX.value,
+      gasPrice: this.TX.gasPrice
     });
   }
   isToken() {
@@ -146,8 +145,7 @@ class SendTransaction {
       this._setGasPrice();
       const nonce = await this.web3().eth.getTransactionCount(this.address());
       this.setNonce(nonce);
-      this.TX.gasLimit = this.TX.gas;
-      const _tx = Transaction.fromTxData(this.TX);
+      const _tx = new Transaction(this.TX);
       const json = _tx.toJSON(true);
       json.from = this.address();
       json.toDetails = this.TX.toDetails;
@@ -158,6 +156,10 @@ class SendTransaction {
   }
 }
 SendTransaction.helpers = {
-  hasValidDecimals
+  hasValidDecimals(amountStr, numDecimals) {
+    const decimals = amountStr.split('.')[1];
+    if (!decimals) return true;
+    return decimals.length <= numDecimals;
+  }
 };
 export default SendTransaction;

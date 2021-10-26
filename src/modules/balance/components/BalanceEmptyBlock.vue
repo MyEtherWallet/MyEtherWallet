@@ -24,7 +24,7 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          :btn-link="swapLink"
+          btn-link="https://ccswap.myetherwallet.com/#/"
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>
@@ -71,8 +71,6 @@
 </template>
 
 <script>
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { mapGetters } from 'vuex';
 export default {
   name: 'BalanceEmptyBlock',
   props: {
@@ -89,16 +87,13 @@ export default {
       default: true
     }
   },
-  computed: {
-    ...mapGetters('global', ['swapLink'])
-  },
   methods: {
     /**
      * Method which naviagates to the swap page.
      * Used in Empty Tokens Block
      */
     navigateToSwap() {
-      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
+      this.$router.push({ name: 'Swap' });
     }
   }
 };

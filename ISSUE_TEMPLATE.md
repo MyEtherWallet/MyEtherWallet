@@ -1,9 +1,9 @@
-* <b>I'm submitting a ...</b>
+* **I'm submitting a ...**
 
   * \[ ] Feature request
   * \[ ] Bug report
 
-* <b>Feature Request</b>
+* **Feature Request**
 
   * Briefly explain the feature you would like us to implement
   * What are the current issues this feature will solve
@@ -11,7 +11,7 @@
   * Are you willing to help us with development support if required
   * Where can this be added? e.g: `/interface`, `/create-wallet`, etc.
 
-* <b>Bug Report</b>
+* **Bug Report**
   * What is the current behavior?
   * If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem
   * What is the expected behavior?

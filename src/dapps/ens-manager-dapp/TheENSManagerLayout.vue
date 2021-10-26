@@ -32,13 +32,15 @@
               <v-row class="mx-0">
                 <v-col class="pr-0" cols="8">
                   <mew-input
+                    :error-messages="
+                      domainTaken ? $t('ens.domain-taken') : null
+                    "
                     :value="name"
                     :has-clear-btn="true"
                     :rules="rules"
                     :label="$t('ens.register.domain-name')"
                     :placeholder="$t('ens.ph.three-char')"
                     class="mr-3 flex-grow-1"
-                    :error-messages="errorMessages"
                     @input="setName"
                   />
                 </v-col>
@@ -49,7 +51,7 @@
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
-                      (name && name.split('.').length > 2)
+                      name.split('.').length > 2
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
@@ -259,10 +261,7 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import normalise from '@/core/helpers/normalise';
 export default {
-  name: 'ENSManagerLayout',
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
     return {
@@ -278,7 +277,6 @@ export default {
       nameHandler: {},
       ensManager: {},
       onRegister: false,
-      searchError: '',
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -322,17 +320,12 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
-    errorMessages() {
-      if (this.domainTaken) return this.$t('ens.domain-taken');
-      return this.searchError;
-    },
     rules() {
       return [
-        this.searchError === '' || this.searchError,
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        (this.name && this.name.split('.').length <= 2) ||
+        this.name.split('.').length <= 2 ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
@@ -511,21 +504,13 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+      this.$refs.registerDomain.reset();
     },
     setName(name) {
-      this.searchError = '';
       if (this.name === null || this.name === '') {
         this.nameHandler = {};
       }
-      try {
-        this.name = normalise(name);
-      } catch (e) {
-        this.searchError = e.message.includes('Failed to validate')
-          ? 'Invalid name!'
-          : e.message;
-        this.name = name;
-      }
+      this.name = name;
     },
     register(duration) {
       this.nameHandler
@@ -534,7 +519,7 @@ export default {
           Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
           this.closeRegister();
         })
-        .once('receipt', () => {
+        .on('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);

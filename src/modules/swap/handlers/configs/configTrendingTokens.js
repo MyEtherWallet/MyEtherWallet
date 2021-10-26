@@ -3,10 +3,6 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 const TRENDING_LIST = {
   [ETH.name]: [
     {
-      contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      isEth: true
-    },
-    {
       contract: '0xbtc',
       decimals: 18,
       img: 'https://img.mewapi.io/?image=https://web-api.changelly.com/api/coins/btc.png',

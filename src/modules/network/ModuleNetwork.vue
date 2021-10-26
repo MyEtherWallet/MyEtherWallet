@@ -1,18 +1,17 @@
 <template>
   <div class="mew-component--side-info-network">
     <mew-overlay
-      :footer="{
-        text: 'Need help?',
-        linkTitle: 'Contact support',
-        link: 'mailto:support@myetherwallet.com'
-      }"
-      :show-overlay="isOpenNetworkOverlay"
+      :show-overlay="openNetworkOverlay"
       title="Select Network"
-      content-size="large"
-      :close="closeNetworkOverlay"
+      left-btn-text=""
+      right-btn-text="Close"
+      @closeOverlay="openNetworkOverlay = false"
     >
-      <network-switch :filter-types="filterNetworks" />
+      <template #mewOverlayBody>
+        <network-switch :filter-types="filterNetworks" />
+      </template>
     </mew-overlay>
+
     <mew6-white-sheet
       :sideinfo="!mobile"
       class="px-5 px-lg-7 py-5 d-flex justify-space-between"
@@ -25,7 +24,7 @@
             depressed
             color="secondary"
             class="title-button"
-            @click.native="openNetworkOverlay"
+            @click.native="openNetworkOverlay = true"
           >
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
@@ -46,17 +45,9 @@ import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
-import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
-  beforeRouteLeave(to, from, next) {
-    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
-      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
-    } else {
-      next();
-    }
-  },
   props: {
     mobile: {
       type: Boolean,
@@ -65,7 +56,7 @@ export default {
   },
   data() {
     return {
-      isOpenNetworkOverlay: false
+      openNetworkOverlay: false
     };
   },
   computed: {
@@ -95,21 +86,6 @@ export default {
         return [];
       }
       return [];
-    }
-  },
-  mounted() {
-    this.$route.name == ROUTES_WALLET.NETWORK.NAME
-      ? this.openNetworkOverlay()
-      : '';
-  },
-  methods: {
-    openNetworkOverlay() {
-      this.$router.push({ name: ROUTES_WALLET.NETWORK.NAME });
-      this.isOpenNetworkOverlay = true;
-    },
-    closeNetworkOverlay() {
-      this.$router.go(-1);
-      this.isOpenNetworkOverlay = false;
     }
   }
 };

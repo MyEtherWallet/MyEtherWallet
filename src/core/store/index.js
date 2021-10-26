@@ -5,8 +5,6 @@ import wallet from './wallet';
 import notifications from './notifications';
 import externalData from './external';
 import swap from './swap';
-import custom from './custom';
-import addressBook from './addressBook';
 import Configs from './configs';
 import LocalStore from 'store';
 Vue.use(Vuex);
@@ -17,9 +15,7 @@ const store = new Vuex.Store({
     wallet: wallet,
     external: externalData,
     notifications: notifications,
-    swap: swap,
-    custom: custom,
-    addressBook: addressBook
+    swap: swap
   }
 });
 
