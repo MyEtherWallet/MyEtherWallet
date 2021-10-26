@@ -109,93 +109,24 @@
           Ledger
         =====================================================================================
         -->
-      <span v-if="onLedger">
-        <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-        <div>
-          <mew-select
-            v-if="onLedger"
-            v-model="ledgerApp"
-            :items="ledgerApps"
-            :is-custom="true"
-          />
-          <div class="text-right">
-            <access-wallet-derivation-path
-              :selected-path="selectedPath"
-              :paths="paths"
-              @setPath="setPath"
-            />
-          </div>
-          <div class="d-flex flex-column align-center justify-center">
-            <div class="pb-8 pt-15 pt-md-18">
-              <v-img
-                :src="
-                  require('@/assets/images/hardware-wallets/ledger-graphic.svg')
-                "
-                alt="Ledger Wallet"
-                max-width="21em"
-                max-height="10em"
-                contain
-              />
-            </div>
-            <v-card-title
-              v-if="!ledgerConnected"
-              class="border justify-center font-wrapping"
-            >
-              <div class="mew-heading-4 font-weight-medium pl-1">
-                Connect your Ledger device and open Ethereum app
-              </div>
-            </v-card-title>
-            <v-card-title
-              v-if="ledgerConnected"
-              class="border justify-center font-wrapping"
-            >
-              <img
-                src="@/assets/images/icons/icon-checked.svg"
-                alt="Green check mark"
-                height="20"
-              />
-              <div class="mew-heading-4 font-weight-medium pl-1">
-                Ledger connected
-              </div>
-            </v-card-title>
-          </div>
-        </div>
-        <div class="text-center">
-          <mew-button
-            btn-size="xlarge"
-            :has-full-width="true"
-            title="Unlock wallet"
-            :disabled="!ledgerConnected"
-            @click.native="nextStep"
-          />
-        </div>
-      </span>
+      <access-wallet-ledger
+        v-if="onLedger"
+        :ledger-unlock="nextStep"
+        :ledger-apps="ledgerApps"
+        :ledger-connected="ledgerConnected"
+        :paths="paths"
+        :selected-path="selectedPath"
+        @setPath="setPath"
+      />
+
       <!--
         =====================================================================================
           Trezor
         =====================================================================================
         -->
-      <span v-if="onTrezor">
-        <div class="d-flex flex-column align-center">
-          <div class="titlePrimary-text">
-            Follow the instructions in the Trezor connection tab. If it did not
-            open automatically, click below.
-          </div>
-          <div>
-            <mew-button
-              class="mt-7"
-              title="Connect Trezor"
-              icon="mdi-open-in-new"
-              icon-type="mdi"
-              @click.native="trezorUnlock"
-            />
-          </div>
-          <div class="primary--text my-8 cursor--pointer" @click="reset">
-            <v-icon small class="primary--text">mdi-arrow-left</v-icon>
-            Connect a different wallet
-          </div>
-        </div></span
-      >
+      <div v-if="onTrezor">
+        <access-wallet-trezor :trezor-unlock="trezorUnlock" :reset="reset" />
+      </div>
     </div>
     <!--
       =====================================================================================
@@ -226,8 +157,9 @@ import { _ } from 'web3-utils';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
-import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
+import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
+import AccessWalletLedger from './hardware/components/AccessWalletLedger.vue';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
@@ -244,7 +176,8 @@ export default {
     AccessWalletKeepkey,
     MewSuperButtonRevised,
     AccessWalletCoolWallet,
-    AccessWalletDerivationPath,
+    AccessWalletTrezor,
+    AccessWalletLedger,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
   },
@@ -703,18 +636,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.border {
-  border: 1px solid var(--v-inputBorder-base);
-  border-radius: 5px;
-  padding: 20px;
-  margin-bottom: 30px;
-  width: 100%;
-}
-.font-wrapping {
-  text-align: center;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
 .subtitle-container {
   background-color: rgba(109, 137, 166, 0.06);
 }
