@@ -82,7 +82,12 @@
         ===================================================
         -->
       <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
-        <mew-button has-full-width title="Send ETH Block" btn-style="outline" />
+        <mew-button
+          has-full-width
+          title="Send ETH Block"
+          btn-style="outline"
+          @click.native="emitOpenSend()"
+        />
       </v-col>
       <!--
         ===================================================
@@ -239,6 +244,11 @@ export default {
     emitMint() {
       if (this.isAvailable) {
         this.$emit('mint');
+      }
+    },
+    emitOpenSend() {
+      if (this.isOwned) {
+        this.$emit('openSend');
       }
     }
   }

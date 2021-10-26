@@ -1,10 +1,15 @@
 import axios from 'axios';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
-import { URL_POST_META, URL_POST_MINT, IMAGE_PROXY } from './configs';
+import {
+  URL_POST_META,
+  URL_POST_MINT,
+  URL_POST_TRANSFER,
+  IMAGE_PROXY
+} from './configs';
 
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
-export default class HandlerBlockInfo {
+export default class HandlerBlock {
   constructor(_web3, _network, _blockNumber, _currAdr) {
     /**
      * set up the variables
@@ -29,6 +34,7 @@ export default class HandlerBlockInfo {
     this.gasUsed = 0;
     this.uncles = 0;
     this.isMinting = false;
+    this.isSending = false;
   }
   /**
    * Get BlockInfo
@@ -103,6 +109,46 @@ export default class HandlerBlockInfo {
           }
         })
         .catch(err => {
+          this.isMinting = false;
+          Toast(err, {}, ERROR);
+        });
+    }
+  }
+  /**
+   * Methods posts to transfer url to get Send Tx data for web3
+   * @param {string} toAdr - to address in the param
+   * @void
+   */
+  transferBlock(toAdr) {
+    if (this.owner === this.currAdr) {
+      this.isSending = true;
+      const payload = {
+        from: this.currAdr,
+        to: toAdr,
+        chainId: this.network.type.chainID,
+        blockNumber: this.blockNumber
+      };
+      return axios
+        .post(URL_POST_TRANSFER, payload, {
+          header: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(resp => {
+          console.log(resp);
+          if (resp.data && resp.data.txData) {
+            resp.data.txData.from = this.currAdr;
+            this.web3.eth.sendTransaction(resp.data.txData);
+            this.isSending = false;
+          }
+          if (resp.data.error) {
+            this.getBlock();
+            this.isSending = false;
+            Toast(resp.data.error, {}, ERROR);
+          }
+        })
+        .catch(err => {
+          this.isSending = false;
           Toast(err, {}, ERROR);
         });
     }

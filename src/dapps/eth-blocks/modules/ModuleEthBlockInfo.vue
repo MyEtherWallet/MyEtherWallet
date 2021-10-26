@@ -47,7 +47,7 @@
         <div class="border-container d-none d-md-flex pa-1 mr-md-11">
           <v-img
             lazy-src="../assets/temp-block.svg"
-            :src="handlerBlockInfo.img"
+            :src="handlerBlock.img"
             max-width="332"
             contain
           />
@@ -73,7 +73,9 @@
           :owner="alertOwner"
           :price="alertMintPrice"
           :disable-mint="isMinting"
+          :disable-send="isSending"
           @mint="mintBlock"
+          @openSend="openSendBlockOverlay"
         />
         <!--
         ===================================================
@@ -82,7 +84,7 @@
         -->
         <div class="border-container mt-4 mt-md-5 pa-5">
           <div class="mb-2 textMedium--text">
-            {{ handlerBlockInfo.description }}
+            {{ handlerBlock.description }}
           </div>
           <a
             v-if="!isTestNetwork"
@@ -128,14 +130,22 @@
       </v-col>
     </v-row>
     <blocks-loading v-else />
+    <block-send
+      :open="openSendOverlay"
+      :close="closeSendOverlay"
+      :block-number="blockNumberFormatted"
+      :is-sending="isSending"
+      @send="sendBlock"
+    />
   </v-container>
 </template>
 
 <script>
 import BlockInfoAlert from '../components/BlockInfoAlert.vue';
 import BlockSearch from '../components/BlockSearch.vue';
+import BlockSend from '../components/BlockSend.vue';
 import BlocksLoading from '../components/BlocksLoading.vue';
-import HandlerBlockInfo from '../handlers/handlerBlockInfo';
+import handlerBlock from '../handlers/handlerBlock';
 import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
@@ -146,7 +156,8 @@ export default {
   components: {
     BlockInfoAlert,
     BlockSearch,
-    BlocksLoading
+    BlocksLoading,
+    BlockSend
   },
   props: {
     blockRef: {
@@ -160,8 +171,9 @@ export default {
   },
   data() {
     return {
-      handlerBlockInfo: {},
-      ROUTES: ETH_BLOCKS_ROUTE
+      handlerBlock: {},
+      ROUTES: ETH_BLOCKS_ROUTE,
+      openSendOverlay: false
     };
   },
   computed: {
@@ -179,7 +191,7 @@ export default {
      * if HandelrBlockInfo.loading equals false,  returns false, otherwise returns true
      */
     loading() {
-      return this.handlerBlockInfo && this.handlerBlockInfo.loading === false
+      return this.handlerBlock && this.handlerBlock.loading === false
         ? false
         : true;
     },
@@ -190,18 +202,18 @@ export default {
      * - address !== wallet address -> not available
      */
     alert() {
-      if (!this.loading && this.handlerBlockInfo.hasOwner) {
-        return this.address === this.handlerBlockInfo.owner
+      if (!this.loading && this.handlerBlock.hasOwner) {
+        return this.address === this.handlerBlock.owner
           ? BLOCK_ALERT.OWNED
           : BLOCK_ALERT.NOT_AVAILABLE;
       }
       return BLOCK_ALERT.AVAILABLE;
     },
     alertOwner() {
-      return this.loading ? '' : this.handlerBlockInfo.owner;
+      return this.loading ? '' : this.handlerBlock.owner;
     },
     alertMintPrice() {
-      return this.loading ? '' : this.handlerBlockInfo.mintPrice;
+      return this.loading ? '' : this.handlerBlock.mintPrice;
     },
 
     /**
@@ -209,28 +221,28 @@ export default {
      */
     properties() {
       if (!this.loading) {
-        const author = `${this.handlerBlockInfo.author.substr(
+        const author = `${this.handlerBlock.author.substr(
           0,
           6
-        )}...${this.handlerBlockInfo.author.substr(
-          this.handlerBlockInfo.author.length - 4,
+        )}...${this.handlerBlock.author.substr(
+          this.handlerBlock.author.length - 4,
           4
         )}`;
         return [
           { text: 'Number', value: this.blockNumberFormatted },
-          { text: 'Date Created', value: this.handlerBlockInfo.date },
+          { text: 'Date Created', value: this.handlerBlock.date },
           { text: 'Author', value: author },
           {
             text: 'Transactions',
-            value: formatIntegerToString(this.handlerBlockInfo.transactions)
+            value: formatIntegerToString(this.handlerBlock.transactions)
           },
           {
             text: 'Gas Used',
-            value: formatIntegerToString(this.handlerBlockInfo.gasUsed)
+            value: formatIntegerToString(this.handlerBlock.gasUsed)
           },
           {
             text: 'Uncles',
-            value: formatIntegerToString(this.handlerBlockInfo.transactions)
+            value: formatIntegerToString(this.handlerBlock.transactions)
           }
         ];
       }
@@ -240,7 +252,13 @@ export default {
      * @returns {boolean}:
      */
     isMinting() {
-      return this.loading ? false : this.handlerBlockInfo.isMinting;
+      return this.loading ? false : this.handlerBlock.isMinting;
+    },
+    /**
+     * @returns {boolean}:
+     */
+    isSending() {
+      return this.loading ? false : this.handlerBlock.isSending;
     }
   },
   watch: {
@@ -248,21 +266,21 @@ export default {
      * Update HandelrBlockInfo on block number change and fetch data
      */
     blockRef(newVal) {
-      this.handlerBlockInfo.setBlockNumber(newVal);
-      this.handlerBlockInfo.getBlock();
+      this.handlerBlock.setBlockNumber(newVal);
+      this.handlerBlock.getBlock();
     }
   },
   mounted() {
     /**
      * Initiate Block Info Handler
      */
-    this.handlerBlockInfo = new HandlerBlockInfo(
+    this.handlerBlock = new handlerBlock(
       this.web3,
       this.network,
       this.blockRef,
       this.address
     );
-    this.handlerBlockInfo.getBlock();
+    this.handlerBlock.getBlock();
   },
 
   methods: {
@@ -276,11 +294,34 @@ export default {
       return _value % 2 == 0;
     },
     /**
-     * Method mints blocks.
+     * Method mints a blocks.
      * Responds, to child Alert component on emit 'mint' event
      */
     mintBlock() {
-      this.handlerBlockInfo.mintBlock();
+      this.handlerBlock.mintBlock();
+    },
+
+    /**
+     * Method opens send overlay .
+     * Responds, to child Alert component on emit 'openSend' event
+     */
+    openSendBlockOverlay() {
+      this.openSendOverlay = true;
+    },
+    /**
+     * Method closes send overlay .
+     * Responds, to child Alert component on emit 'close' event
+     */
+    closeSendOverlay() {
+      this.openSendOverlay = false;
+    },
+    /**
+     * Method sends EthBlock .
+     * Responds, to child Alert component on emit 'send' event
+     * @param {string} value - to address
+     */
+    sendBlock(value) {
+      this.handlerBlock.transferBlock(value);
     }
   }
 };
