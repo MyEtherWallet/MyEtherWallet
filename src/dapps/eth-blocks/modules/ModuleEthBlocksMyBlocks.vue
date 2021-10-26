@@ -100,7 +100,7 @@
             </template>
           </v-img>
           <div class="my-2 mew-heading-2 textDark--text">
-            Block #{{ formatBlockNumber(block.block) }}
+            Block #{{ formatBlockNumber(block.blockNumber) }}
           </div>
         </div>
       </v-col>
@@ -152,15 +152,6 @@ export default {
           default:
             return this.handlerMyBlocks.blocks.newest;
         }
-
-        // if (this.activeSort === ) {
-        //   return this.isReverseSort
-        //     ? this.handlerMyBlocks.blocks.newest
-        //     : this.handlerMyBlocks.blocks.oldest;
-        // }
-        // return this.isReverseSort
-        //   ? this.handlerMyBlocks.blocks.ascend
-        //   : this.handlerMyBlocks.blocks.dscend;
       }
       return [];
     },
