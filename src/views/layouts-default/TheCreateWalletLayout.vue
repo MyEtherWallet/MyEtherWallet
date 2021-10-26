@@ -84,32 +84,34 @@
           </div>
         </mew-button>
 
-        <mew-button
-          class="mb-5"
-          color-theme="basic"
-          btn-style="outline"
-          style="height: 160px; position: relative"
-          @click.native="openSoftwareModule"
-        >
+        <div class="position--relative">
           <div
             class="warning--text text--darken-1 mew-label"
-            style="position: absolute; top: -30px; right: 0px"
+            style="position: absolute; top: 15px; right: 25px"
           >
             NOT RECOMMENDED
           </div>
-          <div class="px-2 textDark--text text-left">
-            <div class="mb-2 d-flex align-center">
-              <div class="mew-heading-2 white--text">Software</div>
-              <v-icon dense color="warning darken-1" class="ml-1">
-                mdi-alert
-              </v-icon>
+          <mew-button
+            class="mb-5"
+            color-theme="basic"
+            btn-style="outline"
+            style="height: 160px; position: relative"
+            @click.native="openSoftwareModule"
+          >
+            <div class="px-2 textDark--text text-left">
+              <div class="mb-2 d-flex align-center">
+                <div class="mew-heading-2 white--text">Software</div>
+                <v-icon dense color="warning darken-1" class="ml-1">
+                  mdi-alert
+                </v-icon>
+              </div>
+              <div class="break-word white--text">
+                Download our official app and connect to MEW web using your
+                mobile phone. Available on iOS and Android.
+              </div>
             </div>
-            <div class="break-word white--text">
-              Download our official app and connect to MEW web using your mobile
-              phone. Available on iOS and Android.
-            </div>
-          </div>
-        </mew-button>
+          </mew-button>
+        </div>
       </div>
     </v-container>
     <div class="spacer-y-medium" />
