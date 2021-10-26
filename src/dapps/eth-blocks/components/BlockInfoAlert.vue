@@ -209,7 +209,6 @@ export default {
      * Property returns formatted owner string such as '0x4356...5a24'
      */
     ownerFormatted() {
-      console.log('owner: ', this.owner);
       return this.owner && this.owner !== ''
         ? `${this.owner.substr(0, 6)}...${this.owner.substr(
             this.owner.length - 4,

@@ -13,8 +13,8 @@
     <div class="full-width pt-8 pt-md-0">
       <module-address-book
         ref="addressInput"
-        @setAddress="setAddress"
         class="mb-4"
+        @setAddress="setAddress"
       />
       <mew-button
         title="Send ETH Block"

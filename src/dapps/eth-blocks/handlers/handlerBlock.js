@@ -95,7 +95,6 @@ export default class HandlerBlock {
         })
         .then(resp => {
           //Set Block Data
-          console.log(resp);
           if (resp.data && resp.data.txData) {
             const txData = resp.data.txData;
             txData.from = this.currAdr;
@@ -135,7 +134,6 @@ export default class HandlerBlock {
           }
         })
         .then(resp => {
-          console.log(resp);
           if (resp.data && resp.data.txData) {
             resp.data.txData.from = this.currAdr;
             this.web3.eth.sendTransaction(resp.data.txData);
