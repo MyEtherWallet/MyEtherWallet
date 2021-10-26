@@ -1,51 +1,90 @@
 <template>
   <div class="mew-overview pt-5">
-    <!--
-    =====================================================================================
-      Keystore File Button
-    =====================================================================================
-    -->
-    <mew-super-button
-      class="mb-5"
-      color-theme="basic"
-      font-class="mew-heading-2"
-      title="Keystore File"
-      subtitle="Using a keystore file online makes your wallet more vulnerable to loss of funds. We don’t recommend this method of wallet creation."
-      title-icon-type="mdi"
-      title-icon-class="primary--text"
-      right-icon-type="img"
-      :right-icon="require('@/assets/images/icons/icon-keystore-file.svg')"
-      @click.native="selectWalletType(walletTypes.KEYSTORE)"
-    />
-    <!--
-    =====================================================================================
-      Mnemonic Phrase Button
-    =====================================================================================
-    -->
-    <mew-super-button
-      class="mb-5"
-      color-theme="basic"
-      font-class="mew-heading-2"
-      title="Mnemonic Phrase"
-      subtitle="Using a keystore file online makes your wallet more vulnerable to loss of funds. We don’t recommend this method of wallet creation."
-      title-mdi-icon="mdi-shield-check"
-      title-icon-type="mdi"
-      title-icon-class="primary--text"
-      right-icon-type="img"
-      :right-icon="require('@/assets/images/icons/icon-mnemonic.svg')"
-      @click.native="selectWalletType(walletTypes.MNEMONIC)"
-    />
-    <!--
-    =====================================================================================
-      Warning Block
-    =====================================================================================
-    -->
-    <mew-warning-sheet
-      class="mb-0"
-      title="NOT RECOMMENDED"
-      :link-obj="linkToLearnMore"
-      description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
-    />
+    <div style="max-width: 650px; width: 100%" class="mx-auto">
+      <!--
+      =====================================================================================
+        Keystore File Button
+      =====================================================================================
+      -->
+      <div class="mb-5">
+        <mew-button
+          has-full-width
+          color-theme="basic"
+          btn-style="light"
+          style="height: 160px"
+          @click.native="selectWalletType(walletTypes.KEYSTORE)"
+        >
+          <div
+            class="text-left d-flex align-center justify-space-between px-2"
+            style="width: 100%"
+          >
+            <div>
+              <div class="mew-heading-2 titlePrimary--text mb-2">
+                Keystore File
+              </div>
+              <div class="break-word titlePrimary--text">
+                Using a keystore file online makes your wallet more vulnerable
+                to loss of funds. We don’t recommend this method of wallet
+                creation.
+              </div>
+            </div>
+            <img
+              width="80"
+              class="mx-4 d-none d-sm-block"
+              src="@/assets/images/icons/icon-keystore-file.svg"
+            />
+          </div>
+        </mew-button>
+      </div>
+
+      <!--
+      =====================================================================================
+        Mnemonic Phrase Button
+      =====================================================================================
+      -->
+      <div class="mb-5">
+        <mew-button
+          has-full-width
+          color-theme="basic"
+          btn-style="light"
+          style="height: 160px"
+          @click.native="selectWalletType(walletTypes.MNEMONIC)"
+        >
+          <div
+            class="text-left d-flex align-center justify-space-between px-2"
+            style="width: 100%"
+          >
+            <div>
+              <div class="mew-heading-2 titlePrimary--text mb-2">
+                Mnemonic Phrase
+              </div>
+              <div class="break-word titlePrimary--text">
+                Using a Mnemonic Phrase online makes your wallet more vulnerable
+                to loss of funds. We don’t recommend this method of wallet
+                creation.
+              </div>
+            </div>
+            <img
+              width="80"
+              class="mx-4 d-none d-sm-block"
+              src="@/assets/images/icons/icon-mnemonic.svg"
+            />
+          </div>
+        </mew-button>
+      </div>
+
+      <!--
+      =====================================================================================
+        Warning Block
+      =====================================================================================
+      -->
+      <mew-warning-sheet
+        class="mt-3"
+        title="NOT RECOMMENDED"
+        :link-obj="linkToLearnMore"
+        description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
+      />
+    </div>
   </div>
 </template>
 
