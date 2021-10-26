@@ -717,6 +717,7 @@ export default {
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
       this.sendTx.setLocalGasPrice(this.actualGasPrice);
+      this.amount = 0;
     }
   }
 };
