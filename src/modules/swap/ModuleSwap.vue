@@ -1018,6 +1018,11 @@ export default {
         return;
       }
 
+      if (isEmpty(this.fromTokenType)) {
+        Toast('From token cannot be empty!', {}, ERROR);
+        return;
+      }
+
       if (
         !Swapper.helpers.hasValidDecimals(
           this.tokenInValue,
