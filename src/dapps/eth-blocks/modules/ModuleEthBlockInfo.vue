@@ -29,8 +29,9 @@
     >
       <div class="border-container d-block pa-1 mx-auto">
         <v-img
-          src="../assets/temp-block.svg"
+          src="../assets/loading-block.svg"
           :max-width="$vuetify.breakpoint.xs ? '160' : '240'"
+          class="pointer-image"
           contain
         />
       </div>
@@ -44,14 +45,18 @@
         ===================================================
         -->
       <div class="d-block">
-        <div class="border-container d-none d-md-flex pa-1 mr-md-11">
+        <a
+          :href="handlerBlock.rawImg"
+          target="_blank"
+          class="border-container d-none d-md-flex pa-1 mr-md-11 cursor-image"
+        >
           <v-img
-            lazy-src="../assets/temp-block.svg"
+            lazy-src="../assets/loading-block.svg"
             :src="handlerBlock.img"
             max-width="332"
             contain
           />
-        </div>
+        </a>
       </div>
 
       <v-col>
@@ -346,5 +351,10 @@ export default {
   .table-properties--last-row {
     border-radius: 0% 0% 10px 10px;
   }
+}
+.cursor-image {
+  cursor: -moz-zoom-in;
+  cursor: -webkit-zoom-in;
+  cursor: zoom-in;
 }
 </style>

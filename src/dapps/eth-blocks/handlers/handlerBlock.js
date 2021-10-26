@@ -26,6 +26,7 @@ export default class HandlerBlock {
     //Block Data:
     this.owner = null;
     this.img = '';
+    this.rawImg = '';
     this.mintPrice = '';
     this.description = '';
     this.date = '';
@@ -63,6 +64,7 @@ export default class HandlerBlock {
         const meta = resp.data.metadata;
         this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
         this.owner = resp.data.tokenOwner;
+        this.rawImg = meta.image;
         this.img = `${IMAGE_PROXY}${meta.image}`;
         this.mintPrice = meta.mintPrice;
         this.description = meta.description;

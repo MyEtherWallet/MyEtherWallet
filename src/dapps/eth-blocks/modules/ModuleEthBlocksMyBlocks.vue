@@ -47,11 +47,6 @@
       -->
       <v-col cols="12" md="3">
         <v-row class="d-flex align-center">
-          <!-- <div
-            class="d-block white-space--nowrap textLight--text mew-caption pl-3"
-          >
-            sort by
-          </div> -->
           <v-col class="pl-2">
             <blocks-sort @setSort="setActiveSort" />
           </v-col>
@@ -92,10 +87,14 @@
         md="3"
       >
         <div
-          class="border-container px-5 pt-5 pb-8"
+          class="border-container px-5 pt-5 pb-8 fill-height"
           @click="routeTo(block.blockNumber)"
         >
-          <v-img :src="block.image" lazy-src="../assets/temp-block.svg" contain>
+          <v-img
+            :src="block.image"
+            lazy-src="../assets/loading-block.svg"
+            contain
+          >
             <template #placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
@@ -201,5 +200,6 @@ export default {
 .border-container {
   border: 1px solid var(--v-greyMedium-base);
   border-radius: 12px;
+  cursor: pointer;
 }
 </style>
