@@ -45,7 +45,7 @@ export default {
       if (this.searchBlock && this.searchBlock !== '') {
         const block = BigNumber(this.searchBlock);
         if (!block.isInteger()) {
-          return 'value must be a whole number';
+          return 'value must be an integer';
         }
         if (!block.gte(0)) {
           return 'block number should be a positive number';

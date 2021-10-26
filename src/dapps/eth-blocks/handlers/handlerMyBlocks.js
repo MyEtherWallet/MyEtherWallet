@@ -14,7 +14,7 @@ class SortedBlocks {
     const newBlocks = [..._blocks];
     return [
       ...newBlocks.sort(function (a, b) {
-        return a.block - b.block;
+        return a.blockNumber - b.blockNumber;
       })
     ];
   }
@@ -62,5 +62,17 @@ export default class MyBlocks {
         this.loading = false;
         Toast(err, {}, ERROR);
       });
+  }
+
+  /**
+   * Methods checks if there is block with specific number
+   * @param {string} block
+   * @returns {boolean}
+   */
+  checkHasBlock(block) {
+    const filtered = this.blocks.oldest.filter(value =>
+      value.blockNumber.toString().toLowerCase().includes(block.toLowerCase())
+    );
+    return filtered.length > 0;
   }
 }

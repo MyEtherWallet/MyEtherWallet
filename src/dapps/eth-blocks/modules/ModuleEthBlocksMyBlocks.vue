@@ -37,7 +37,13 @@
       ===================================================
       -->
       <v-col cols="12" md="3">
-        <mew-search placeholder="Find my block" is-compact />
+        <mew-search
+          placeholder="Find my block"
+          is-compact
+          :value="filterBlock"
+          :error-messages="filterErrorMessage"
+          @input="setFilter"
+        />
       </v-col>
       <!--
       ===================================================
@@ -121,14 +127,15 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { mapState, mapGetters } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-
+import BigNumber from 'bignumber.js';
 export default {
   name: 'ModuleEthBlocksMyBlocks',
   components: { BlocksLoading, BlocksSort },
   data() {
     return {
       handlerMyBlocks: {},
-      activeSort: 0
+      activeSort: 0,
+      filterBlock: ''
     };
   },
   computed: {
@@ -147,21 +154,41 @@ export default {
       if (!this.loading) {
         switch (this.activeSort) {
           case 0:
-            return this.handlerMyBlocks.blocks.newest;
+            return this.filter(this.handlerMyBlocks.blocks.newest);
           case 1:
-            return this.handlerMyBlocks.blocks.oldest;
+            return this.filter(this.handlerMyBlocks.blocks.oldest);
           case 2:
-            return this.handlerMyBlocks.blocks.ascend;
+            return this.filter(this.handlerMyBlocks.blocks.ascend);
           case 3:
-            return this.handlerMyBlocks.blocks.dscend;
+            return this.filter(this.handlerMyBlocks.blocks.dscend);
           default:
-            return this.handlerMyBlocks.blocks.newest;
+            return this.fitler(this.handlerMyBlocks.blocks.newest);
         }
       }
       return [];
     },
     hasBlocks() {
       return this.handlerMyBlocks.totalBlocks > 0;
+    },
+    /**
+     * Property returns an error message based onthe filter input
+     * @returns {string}
+     */
+    filterErrorMessage() {
+      if (this.filterBlock && this.filterBlock !== '') {
+        console.log('checking');
+        const block = BigNumber(this.filterBlock);
+        if (!block.isInteger()) {
+          return 'value must be an integer';
+        }
+        if (!block.gte(0)) {
+          return 'block number should be a positive number';
+        }
+        if (!this.handlerMyBlocks.checkHasBlock(this.filterBlock)) {
+          return `You do not own block #${this.filterBlock}`;
+        }
+      }
+      return '';
     }
   },
   mounted() {
@@ -191,6 +218,34 @@ export default {
     },
     setActiveSort(value) {
       this.activeSort = value;
+    },
+    /**
+     * Methods sets this.filterBlock based on the use input in search block component
+     * @param {any}
+     * If value is undefined or null sets filter block to empry string
+     */
+    setFilter(block) {
+      if (block) {
+        this.filterBlock = block;
+      } else {
+        this.filterBlock = '';
+      }
+    },
+    /**
+     * Methods filters array based on the search input provided by user
+     * @param {Array} blocks
+     * @return {Array}
+     */
+    filter(blocks) {
+      if (this.filterBlock !== '' && this.filterErrorMessage === '') {
+        return blocks.filter(value =>
+          value.blockNumber
+            .toString()
+            .toLowerCase()
+            .includes(this.filterBlock.toLowerCase())
+        );
+      }
+      return blocks;
     }
   }
 };
