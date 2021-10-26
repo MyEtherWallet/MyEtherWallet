@@ -1026,17 +1026,14 @@ export default {
       }
 
       if (_.isEmpty(this.fromTokenType)) {
-        Toast(
-          "The 'from token' is not valid. Please check the 'from token.'",
-          {},
-          ERROR
-        );
+        Toast('From token cannot be empty!', {}, ERROR);
+        return;
       }
 
       if (
         !Swapper.helpers.hasValidDecimals(
           this.tokenInValue,
-          !this.fromTokenType.decimals ? 18 : this.fromTokenType.decimals
+          this.fromTokenType.decimals
         )
       ) {
         return;
