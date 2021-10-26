@@ -1,209 +1,201 @@
 <template>
-  <mew-overlay :show-overlay="open" right-btn-text="Close" :close="close">
-    <template #mewOverlayBody>
-      <div v-if="!confirmationStep">
-        <h2 class="text-center mb-10">{{ $t('unstoppable.buyDomain') }}</h2>
-        <mew6-white-sheet>
-          <div class="pa-8">
-            <div>
-              <v-sheet
-                color="transparent"
-                width="600px"
-                class="
-                  mx-auto
-                  mb-10
-                  border-radius--10px
-                  informationBlock
-                  py-5
-                  px-7
-                "
-              >
-                <div>
-                  <div class="d-flex align-center justify-space-between">
-                    <div>{{ $t('unstoppable.price') }}</div>
-                    <div class="font-weight-medium">
-                      {{ convertedEthPrice }} ETH (${{ domainPrice }})
-                    </div>
-                  </div>
-                </div>
-              </v-sheet>
-              <v-sheet color="transparent" width="450px" class="mx-auto">
-                <div class="d-flex align-center justify-space-between mb-5">
-                  <div
-                    id="crypto"
-                    :class="[
-                      crypto
-                        ? 'mew-heading-1'
-                        : 'font-weight-medium primary--text'
-                    ]"
-                    style="cursor: pointer"
-                    @click="selectTab($event)"
-                  >
-                    {{ $t('unstoppable.pay-with-crypto') }}
-                  </div>
-                  <div
-                    id="credit"
-                    :class="[
-                      credit
-                        ? 'mew-heading-1'
-                        : 'font-weight-medium primary--text'
-                    ]"
-                    style="cursor: pointer"
-                    @click="selectTab($event)"
-                  >
-                    {{ $t('unstoppable.pay-with-credit-card') }}
-                  </div>
-                </div>
-
-                <v-card
-                  v-if="crypto"
-                  outlined
-                  class="
-                    pa-4
-                    d-flex
-                    align-center
-                    justify-space-between
-                    bordered-red
-                    informationBG
-                  "
-                  :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
-                >
-                  <div class="d-flex align-center">
-                    <img
-                      src="@/assets/images/currencies/icon-eth-blue.svg"
-                      alt="Crypto"
-                    />
-                    <div class="font-weight-medium ml-3">
-                      {{ convertedEthPrice }}
-                      <span class="primary--text">ETH</span>
-                    </div>
-                  </div>
-                  <v-icon class="primary--text">mdi-check-circle</v-icon>
-                </v-card>
-
-                <v-card
-                  v-if="credit"
-                  outlined
-                  class="
-                    pa-4
-                    d-flex
-                    align-center
-                    justify-space-between
-                    bordered-red
-                    greenBorder
-                    informationBG
-                  "
-                >
-                  <div class="d-flex align-center">
-                    <img
-                      src="@/assets/images/currencies/usd.png"
-                      :style="{ width: '28px' }"
-                      alt="USD"
-                    />
-                    <div class="font-weight-medium ml-3">
-                      {{ domainPrice }}
-                      <span class="primary--text">USD</span>
-                    </div>
-                  </div>
-                  <v-icon class="primary--text">mdi-check-circle</v-icon>
-                </v-card>
-                <div v-if="credit" class="stripe-card-input mt-8">
-                  <card
-                    :class="{ complete }"
-                    :stripe="publishableKey"
-                    :options="{}"
-                    @change="complete = $event.complete"
-                  />
-                </div>
-
-                <v-progress-linear
-                  v-if="loading"
-                  style="margin: 32px auto 40px auto; max-width: 200px"
-                  indeterminate
-                  color="primary"
-                ></v-progress-linear>
-
-                <div
-                  v-if="paymentError"
-                  class="error--text mt-3 mb-7 font-weight-medium"
-                >
-                  {{ paymentError }}
-                </div>
-
-                <div
-                  v-if="notEnoughBalance && crypto"
-                  class="error--text mt-3 mb-7 font-weight-medium"
-                >
-                  {{ $t('unstoppable.insufficient-balance') }}
-                  <a
-                    href="https://ccswap.myetherwallet.com/#/"
-                    target="_blank"
-                    class="text-decoration--underline"
-                  >
-                    {{ $t('unstoppable.insufficient-balance-advice') }}
-                  </a>
-                </div>
-
-                <div class="d-flex justify-center mt-5">
-                  <mew-button
-                    :title="$t('unstoppable.pay')"
-                    btn-size="xlarge"
-                    @click.native="pay"
-                  />
-                </div>
-              </v-sheet>
+  <mew-overlay
+    :show-overlay="open"
+    right-btn-text="Close"
+    :close="close"
+    content-size="large"
+  >
+    <div>
+      <v-sheet width="450px" height="100%" color="transparent">
+        <!--
+        =====================================================================================
+          Panel: Payment Buttons
+        =====================================================================================
+        -->
+        <div class="d-flex align-center justify-center">
+          <div class="d-flex flex-column align-start">
+            <mew-button
+              id="crypto"
+              title="Pay with Crypto"
+              btn-style="transparent"
+              color-theme="#4b83e8"
+              has-full-width
+              :class="[crypto ? 'selectedBorder' : '']"
+              class="my-2"
+              @click.native="selectTab($event)"
+            />
+            <mew-button
+              id="credit"
+              title="Pay with Credit"
+              btn-style="transparent"
+              color-theme="#4b83e8"
+              has-full-width
+              :class="[credit ? 'selectedBorder' : '']"
+              class="my-2"
+              @click.native="selectTab($event)"
+            />
+            <div class="buy-domain-info pa-4">
+              <div class="d-flex flex-column">
+                <div class="bluePrimary--text py-1">DOMAIN</div>
+                <div>bob.crypto</div>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="bluePrimary--text py-1">TOTAL</div>
+                <div>{{ convertedEthPrice }} ETH ${{ domainPrice }}</div>
+              </div>
             </div>
           </div>
-        </mew6-white-sheet>
-      </div>
-      <div v-if="confirmationStep">
-        <h2 class="text-center mb-10">{{ $t('unstoppable.confirmation') }}</h2>
-        <mew6-white-sheet>
-          <div class="pa-8">
-            <v-sheet
-              color="transparent"
+
+          <v-divider vertical class="mx-5" />
+
+          <div style="width: 100%">
+            <h2 class="mb-3">Select Payment</h2>
+            <v-card
+              v-if="crypto"
+              outlined
               class="
-                mx-auto
-                mb-10
-                border-radius--10px
-                informationBlock
-                py-5
-                px-7
+                pa-2
+                d-flex
+                align-center
+                justify-space-between
+                bordered-red
+                informationBG
               "
+              :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
             >
-              <div class="d-flex flex-column">
-                <div class="d-flex justify-space-between">
-                  <div>{{ $t('unstoppable.domain-name') }}</div>
-                  <div class="font-weight-medium">{{ domain.name }}</div>
-                </div>
-                <div class="d-flex align-center justify-space-between">
-                  <div>{{ $t('unstoppable.price') }}</div>
-                  <div class="font-weight-medium">
-                    {{ convertedEthPrice }} ETH (${{ domainPrice }})
-                  </div>
+              <div class="d-flex align-center">
+                <img
+                  src="@/assets/images/currencies/icon-eth-blue.svg"
+                  alt="Crypto"
+                />
+                <div class="font-weight-medium ml-3">
+                  {{ convertedEthPrice }}
+                  <span class="primary--text">ETH</span>
                 </div>
               </div>
-            </v-sheet>
+              <v-icon class="primary--text">mdi-check-circle</v-icon>
+            </v-card>
+
+            <v-card
+              v-if="credit"
+              outlined
+              class="
+                pa-4
+                d-flex
+                align-center
+                justify-space-between
+                bordered-red
+                greenBorder
+                informationBG
+              "
+            >
+              <div class="d-flex align-center">
+                <img
+                  src="@/assets/images/currencies/usd.png"
+                  :style="{ width: '28px' }"
+                  alt="USD"
+                />
+                <div class="font-weight-medium ml-3">
+                  {{ domainPrice }}
+                  <span class="primary--text">USD</span>
+                </div>
+              </div>
+              <v-icon class="primary--text">mdi-check-circle</v-icon>
+            </v-card>
+            <div v-if="credit" class="stripe-card-input mt-8">
+              <card
+                :class="{ complete }"
+                :stripe="publishableKey"
+                :options="{}"
+                @change="complete = $event.complete"
+              />
+            </div>
+
             <v-progress-linear
-              style="margin: 130px auto 40px auto; max-width: 200px"
+              v-if="loading"
+              style="margin: 32px auto 40px auto; max-width: 200px"
               indeterminate
               color="primary"
             ></v-progress-linear>
-            <h4 class="font-weight-bold text-center">
-              {{ $t('unstoppable.processing-registration') }}
-            </h4>
-            <v-sheet
-              color="transparent"
-              max-width="300px"
-              class="text-center mx-auto mt-3"
+
+            <div
+              v-if="paymentError"
+              class="error--text mt-3 mb-7 font-weight-medium"
             >
-              {{ $t('unstoppable.processing-registration-advice') }}
-            </v-sheet>
+              {{ paymentError }}
+            </div>
+
+            <div
+              v-if="notEnoughBalance && crypto"
+              class="error--text mt-3 mb-7 font-weight-medium"
+            >
+              {{ $t('unstoppable.insufficient-balance') }}
+              <a
+                href="https://ccswap.myetherwallet.com/#/"
+                target="_blank"
+                class="text-decoration--underline"
+              >
+                {{ $t('unstoppable.insufficient-balance-advice') }}
+              </a>
+            </div>
+
+            <div class="d-flex justify-space-between my-3">
+              <div>Network Fee</div>
+              <div class="lightPrimary--text">5 ETH</div>
+            </div>
+
+            <div class="d-flex justify-center mt-5">
+              <mew-button
+                title="Next step"
+                btn-size="xlarge"
+                has-full-width
+                @click.native="pay"
+              />
+            </div>
           </div>
-          <div class="py-10"></div>
-        </mew6-white-sheet>
-      </div>
-    </template>
+        </div>
+      </v-sheet>
+    </div>
+    <div v-if="confirmationStep">
+      <h2 class="text-center mb-10">{{ $t('unstoppable.confirmation') }}</h2>
+      <mew6-white-sheet>
+        <div class="pa-8">
+          <v-sheet
+            color="transparent"
+            class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
+          >
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-space-between">
+                <div>{{ $t('unstoppable.domain-name') }}</div>
+                <div class="font-weight-medium">{{ domain.name }}</div>
+              </div>
+              <div class="d-flex align-center justify-space-between">
+                <div>{{ $t('unstoppable.price') }}</div>
+                <div class="font-weight-medium">
+                  {{ convertedEthPrice }} ETH (${{ domainPrice }})
+                </div>
+              </div>
+            </div>
+          </v-sheet>
+          <v-progress-linear
+            style="margin: 130px auto 40px auto; max-width: 200px"
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
+          <h4 class="font-weight-bold text-center">
+            {{ $t('unstoppable.processing-registration') }}
+          </h4>
+          <v-sheet
+            color="transparent"
+            max-width="300px"
+            class="text-center mx-auto mt-3"
+          >
+            {{ $t('unstoppable.processing-registration-advice') }}
+          </v-sheet>
+        </div>
+        <div class="py-10"></div>
+      </mew6-white-sheet>
+    </div>
   </mew-overlay>
 </template>
 
@@ -217,6 +209,7 @@ import {
 } from '../handlers/resellerApi';
 
 export default {
+  name: 'UnstoppableDomainBuyOverlay',
   components: { Card },
   props: {
     open: { default: false, type: Boolean },
@@ -373,6 +366,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$textDark: #192133;
+$greyMedium: #d7dae3;
+$bluePrimary: #4b83e8;
+
+.bluePrimary--text {
+  font-weight: bold;
+  color: $bluePrimary;
+}
+
+.lightPrimary--text {
+  color: $textDark;
+}
+
+.buy-domain-info {
+  border: 1px solid $greyMedium;
+  border-radius: 12px;
+  width: 100%;
+}
+
 .informationBG {
   background-color: var(--v-informationBlock-base) !important;
   border-color: var(--v-informationBlock-base);
@@ -382,5 +394,8 @@ export default {
 }
 .greenBorder {
   border-color: green !important;
+}
+.selectedBorder {
+  background-color: #d4e1f9;
 }
 </style>
