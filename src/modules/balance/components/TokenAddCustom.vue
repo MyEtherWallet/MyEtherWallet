@@ -207,6 +207,7 @@ export default {
       return (
         this.loading ||
         (this.step === 1 && !this.contractAddress) ||
+        (this.step === 1 && !isAddress(this.contractAddress)) ||
         (this.step === 2 &&
           (this.symbolLengthTooLong.length > 0 ||
             this.nameLengthTooLong.length > 0 ||
@@ -378,9 +379,9 @@ export default {
         this.contractAddress = '';
         this.loading = false;
         Toast('A token with this address already exists!', {}, ERROR);
-        return;
+      } else {
+        this.findTokenInfo();
       }
-      this.findTokenInfo();
     },
     /**
      * finds more token info
@@ -405,7 +406,9 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
+          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value
+            ? formatFiatValue(this.token.usdBalance).value
+            : formatFiatValue(0);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();

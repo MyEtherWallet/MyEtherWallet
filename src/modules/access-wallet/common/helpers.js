@@ -1,7 +1,9 @@
 import Wallet from 'ethereumjs-wallet';
 import walletConfigs from './walletConfigs';
-import { bufferToInt } from 'ethereumjs-util';
+import { bufferToInt, bnToHex } from 'ethereumjs-util';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+import { getMinPriorityFee } from '@/core/helpers/gasPriceHelper';
+import { toBN } from 'web3-utils';
 /* These needs to be changed further due to the new async library */
 const fromMyEtherWalletV2 = json => {
   if (json.privKey.length !== 64) {
@@ -72,7 +74,7 @@ const getHexTxObject = tx => {
     to: sanitizeHex(tx.to.toString('hex')),
     value: sanitizeHex(tx.value.toString('hex')),
     data: sanitizeHex(tx.data.toString('hex')),
-    chainId: tx.getChainId(),
+    chainId: tx.common.chainId(),
     nonce: sanitizeHex(tx.nonce.toString('hex')),
     gasLimit: sanitizeHex(tx.gasLimit.toString('hex')),
     gasPrice: sanitizeHex(tx.gasPrice.toString('hex'))
@@ -83,7 +85,13 @@ const getSignTransactionObject = tx => {
     rawTransaction: bufferToHex(tx.serialize()),
     tx: {
       nonce: bufferToHex(tx.nonce),
-      gasPrice: bufferToHex(tx.gasPrice),
+      gasPrice: tx.gasPrice
+        ? bufferToHex(tx.gasPrice)
+        : bufferToHex(tx.maxFeePerGas),
+      maxFeePerGas: tx.maxFeePerGas ? bufferToHex(tx.maxFeePerGas) : null,
+      maxPriorityFeePerGas: tx.maxPriorityFeePerGas
+        ? bufferToHex(tx.maxPriorityFeePerGas)
+        : null,
       gas: tx.gasLimit ? bufferToHex(tx.gasLimit) : bufferToHex(tx.gas),
       to: bufferToHex(tx.to),
       value: bufferToHex(tx.value),
@@ -94,6 +102,18 @@ const getSignTransactionObject = tx => {
       hash: bufferToHex(tx.hash())
     }
   };
+};
+const eip1559Params = (gasPrice, feeMarket) => {
+  const tip = toBN(gasPrice).sub(feeMarket.baseFeePerGas);
+  const fees = {
+    maxPriorityFeePerGas: tip.lt(getMinPriorityFee())
+      ? bnToHex(getMinPriorityFee())
+      : tip.gt(feeMarket.maxPriorityFeePerGas)
+      ? bnToHex(feeMarket.maxPriorityFeePerGas)
+      : bnToHex(tip),
+    maxFeePerGas: gasPrice
+  };
+  return fees;
 };
 const calculateChainIdFromV = v => {
   const sigV = bufferToInt(v);
@@ -112,5 +132,6 @@ export {
   calculateChainIdFromV,
   walletRequirePass,
   createKeystore,
-  unlockKeystore
+  unlockKeystore,
+  eip1559Params
 };

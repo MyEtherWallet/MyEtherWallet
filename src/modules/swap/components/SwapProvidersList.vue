@@ -136,7 +136,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { _ } from 'web3-utils';
+import _ from 'underscore';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',

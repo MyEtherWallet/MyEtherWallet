@@ -9,7 +9,7 @@ import errorHandler from './errorHandler';
 import HybridWalletInterface from '../walletInterface';
 import mewwallet from '@/assets/images/icons/wallets/mewwallet.svg';
 import store from '@/core/store';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import commonGenerator from '@/core/helpers/commonGenerator';
 const IS_HARDWARE = true;
 class MEWconnectWallet {

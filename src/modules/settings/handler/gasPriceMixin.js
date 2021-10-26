@@ -1,13 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { SENTRY, Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
-import {
-  getGasBasedOnType,
-  gasPriceTypes
-} from '@/core/helpers/gasPriceHelper';
+import { gasPriceTypes, estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { fromWei, toWei } from 'web3-utils';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import { toBN } from 'web3-utils';
 
 const gasPriceMixin = {
   data() {
@@ -18,61 +13,52 @@ const gasPriceMixin = {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['gasPrice', 'network']),
+    ...mapGetters('global', ['gasPrice', 'network', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('global', ['gasPriceType', 'baseGasPrice']),
     gasButtons() {
-      if (!this.localGas) return [];
-      const economy = fromWei(
-        getGasBasedOnType(this.localGas, gasPriceTypes.ECONOMY),
-        'gwei'
-      );
-      const regular = fromWei(
-        getGasBasedOnType(this.localGas, gasPriceTypes.REGULAR),
-        'gwei'
-      );
-      const fast = fromWei(
-        getGasBasedOnType(this.localGas, gasPriceTypes.FAST),
-        'gwei'
-      );
+      if (!this.gasPrice) return [];
+      const economy = fromWei(this.gasPriceByType(gasPriceTypes.ECONOMY));
+      const regular = fromWei(this.gasPriceByType(gasPriceTypes.REGULAR));
+      const fast = fromWei(this.gasPriceByType(gasPriceTypes.FAST));
       return [
         {
-          icon: 'bicycle',
           title: gasPriceTypes.ECONOMY,
           gas: `${economy}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(economy, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(economy)))
             ).value
-          }`
+          }`,
+          time: estimatedTime(gasPriceTypes.ECONOMY),
+          priority: 'Normal priority'
         },
         {
-          icon: 'car',
           title: gasPriceTypes.REGULAR,
           gas: `${regular}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(regular, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(regular)))
             ).value
-          }`
+          }`,
+          time: estimatedTime(gasPriceTypes.REGULAR),
+          priority: 'Higher priority'
         },
         {
-          icon: 'rocket',
           title: gasPriceTypes.FAST,
           gas: `${fast}`,
           usd: `$ ${
             formatFiatValue(
-              BigNumber(this.fiatValue).times(fromWei(toWei(fast, 'gwei')))
+              BigNumber(this.fiatValue).times(fromWei(toWei(fast)))
             ).value
-          }`
+          }`,
+          time: estimatedTime(gasPriceTypes.FAST),
+          priority: 'Highest priority'
         }
       ];
     }
   },
   watch: {
-    gasPrice() {
-      this.fetchGasPrice();
-    },
     web3() {
       this.fetchGasPrice();
     }
@@ -81,35 +67,12 @@ const gasPriceMixin = {
     this.fetchGasPrice();
   },
   methods: {
-    ...mapActions('global', ['setGasPrice', 'setGasPriceType']),
+    ...mapActions('global', ['setGasPriceType', 'updateGasPrice']),
     setSelected(selected) {
-      try {
-        this.setGasPriceType(selected).then(() => {
-          this.setGasPrice(this.localGas);
-        });
-      } catch (e) {
-        Toast(e, {}, SENTRY);
-      }
-    },
-    setCustomGasPrice(customGasPrice) {
-      this.setGasPriceType(gasPriceTypes.STORED).then(() => {
-        this.setGasPrice(
-          getGasBasedOnType(toWei(customGasPrice, 'gwei'), gasPriceTypes.STORED)
-        );
-        Toast(
-          `You have set custom gas price at: ${customGasPrice}`,
-          {},
-          SUCCESS
-        );
-      });
+      this.setGasPriceType(selected);
     },
     fetchGasPrice() {
-      this.web3.eth.getGasPrice().then(gp => {
-        const modifiedGasPrice = toBN(gp).muln(
-          this.network.type.gasPriceMultiplier
-        );
-        this.localGas = modifiedGasPrice.toString();
-      });
+      this.updateGasPrice();
     }
   }
 };
