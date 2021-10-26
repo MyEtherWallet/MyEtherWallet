@@ -2,6 +2,39 @@
   <div class="core--components--app-transaction-fee">
     <!--
     =====================================================
+      AppModal
+    =====================================================
+    -->
+    <app-modal
+      :show="openHighFeeNote"
+      :close="closeHighFeeNote"
+      :has-buttons="false"
+    >
+      <template #dialogBody>
+        <div class="mew-heading-1 mb-2">How are fees determined?</div>
+        <div class="mt-6 textPrimary--text">
+          Transaction fees are charged by Ethereum miners, not MEW. We can't
+          influence them and we don't receive any part of the transaction fees
+          that you pay.
+        </div>
+        <div class="mew-heading-1 my-2 mt-6">What should I do?</div>
+        <div class="mt-6 textPrimary--text">
+          Good news! You have options! If you’re not in a hurry, you can use the
+          “Economy” setting and your transaction will be mined at a later time.
+          MEW supports Ethereum scaling solutions Polygon and Binance Smart
+          Chain (accessible on MEW web and Android). Consider using these chains
+          to avoid congestion and save on fees. Learn how
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://help.myetherwallet.com/en/?q=network"
+            >here</a
+          >.
+        </div>
+      </template>
+    </app-modal>
+    <!--
+    =====================================================
       AppNetworkSettings
     =====================================================
     -->
@@ -40,43 +73,53 @@
     </div>
 
     <v-row v-if="!gettingFee && showFee">
-      <v-col cols="auto">
+      <v-col cols="12">
         <!--
       =====================================================
         Transaction fee selector button
       =====================================================
       -->
-        <div class="d-flex align-center flex-wrap mb-2">
-          <v-btn
-            depressed
-            class="text-transform--initial"
-            @click="openGasPriceModal"
-          >
-            <div class="d-flex align-center">
-              <div :class="hasError ? 'error--text' : 'textBlack2--text'">
-                {{ feeInUsd }}
-              </div>
-              <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
-                mdi-arrow-right
-              </v-icon>
+        <div class="d-flex align-center justify-space-between flex-wrap mb-2">
+          <div class="d-flex align-center flex-wrap flex-grow-1">
+            <v-btn
+              depressed
+              class="text-transform--initial"
+              @click="openGasPriceModal"
+            >
               <div class="d-flex align-center">
-                <v-icon :color="hasError ? 'error' : ''" small>
-                  mdi-clock-outline
-                </v-icon>
-                <div :class="hasError ? 'error--text' : ''">
-                  {{ timeWillTake }}
+                <div :class="hasError ? 'error--text' : 'textBlack2--text'">
+                  {{ feeInUsd }}
                 </div>
+                <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
+                  mdi-arrow-right
+                </v-icon>
+                <div class="d-flex align-center">
+                  <v-icon :color="hasError ? 'error' : ''" small>
+                    mdi-clock-outline
+                  </v-icon>
+                  <div :class="hasError ? 'error--text' : ''">
+                    {{ timeWillTake }}
+                  </div>
+                </div>
+                <v-icon :color="hasError ? 'error' : ''" class="ml-3">
+                  mdi-chevron-down
+                </v-icon>
               </div>
-              <v-icon :color="hasError ? 'error' : ''" class="ml-3">
-                mdi-chevron-down
-              </v-icon>
+            </v-btn>
+            <div
+              :class="hasError ? 'error--text' : 'textSecondary--text'"
+              class="ml-3 py-1"
+            >
+              {{ txFeeFormatted }} {{ network.type.currencyName }}
             </div>
-          </v-btn>
-          <div
-            :class="hasError ? 'error--text' : 'textSecondary--text'"
-            class="ml-3 py-1"
-          >
-            {{ txFeeFormatted }} {{ network.type.currencyName }}
+          </div>
+          <div v-if="fromEth">
+            <div class="py-2 ml-2 text-right">
+              <div>
+                <span class="mr-2">Total:</span>
+                {{ actualCostFormatted }} {{ network.type.currencyName }}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -85,31 +128,30 @@
         Not enough balance warning / Error
       =====================================================
       -->
-        <div
-          v-if="!gettingFee & hasError"
-          :class="[hasError ? 'error--text' : '']"
-          class="ml-2"
-        >
-          {{ message }}
-          <a
-            v-if="notEnoughEth"
-            rel="noopener noreferrer"
-            target="_blank"
-            :href="swapLink"
+        <div class="d-flex flex-wrap justify-space-between">
+          <div
+            v-if="!gettingFee & hasError"
+            :class="[hasError ? 'error--text' : '']"
+            class="ml-2"
           >
-            Buy more ETH
-          </a>
-        </div>
-      </v-col>
-
-      <v-spacer />
-
-      <v-col v-if="fromEth" cols="12" lg="auto">
-        <v-divider class="py-2 d-block d-lg-none" />
-        <div class="py-2 ml-2 text-right">
+            {{ message }}
+            <a
+              v-if="notEnoughEth"
+              rel="noopener noreferrer"
+              target="_blank"
+              :href="swapLink"
+            >
+              Buy more ETH
+            </a>
+          </div>
           <div>
-            <span class="mr-2">Total:</span>
-            {{ actualCostFormatted }} {{ network.type.currencyName }}
+            <div
+              v-if="isEthNetwork"
+              class="ml-2 primary--text cursor--pointer user-select--none"
+              @click="showHighNote"
+            >
+              How are fees determined?
+            </div>
           </div>
         </div>
       </v-col>
@@ -121,6 +163,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import AppNetworkSettingsModal from './AppNetworkSettingsModal.vue';
+import AppModal from '@/core/components/AppModal.vue';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -129,7 +172,7 @@ import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { fromWei } from 'web3-utils';
 export default {
   name: 'AppTransactionFee',
-  components: { AppNetworkSettingsModal },
+  components: { AppNetworkSettingsModal, AppModal },
   props: {
     showFee: {
       type: Boolean,
@@ -169,7 +212,7 @@ export default {
     }
   },
   data() {
-    return { gasPriceModal: false };
+    return { gasPriceModal: false, openHighFeeNote: false };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
@@ -223,6 +266,12 @@ export default {
     },
     handleLocalGasPrice(val) {
       this.$emit('onLocalGasPrice', val);
+    },
+    showHighNote() {
+      this.openHighFeeNote = true;
+    },
+    closeHighFeeNote() {
+      this.openHighFeeNote = false;
     }
   }
 };
