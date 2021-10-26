@@ -4,7 +4,7 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <div class="pt-10 pb-13 px-3 pa-sm-15">
+  <div class="pt-5 pb-13 px-3 pa-sm-15">
     <v-sheet max-width="680" class="mx-auto">
       <v-row no-gutters>
         <!--
@@ -35,13 +35,18 @@
           ===================================================
           -->
           <div class="text-center">
-            <v-img src="../assets/eth-blocks-qrs.svg" height="129" contain />
+            <v-img
+              src="../assets/eth-blocks-qrs.svg"
+              height="129"
+              contain
+              class="mt-8 mt-md-0"
+            />
             <div class="mt-5 mb-2 mew-heading-1">ETH Blocks</div>
-            <h4 class="mb-6 textMedium--text">
-              Generated a unique QR art-piecebased on your favorite block on the
-              blockchain. From block 0 to the latest block, and expanding into
-              the future. Let all those nosey people spying on your wallet
-              collectibles wonder why you like a specific block!
+            <h4 class="mb-8 textMedium--text">
+              Own the unownable. Mint your very own unique QR NFT of a specific
+              block on the Ethereum blockchain. From Genesis, to the block of
+              your first crypto transaction, or the block that took you to the
+              moon. Forge a piece of crypto history with a MEW ETH Blocks.
             </h4>
           </div>
         </v-col>

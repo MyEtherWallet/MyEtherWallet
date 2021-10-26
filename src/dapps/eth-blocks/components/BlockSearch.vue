@@ -5,7 +5,7 @@
       Max Block
     ===================================================
     -->
-    <p class="primary--text mb-1 ml-2">Max block number: {{ maxBlock }}</p>
+    <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
     <!--
     ===================================================
       Search Field

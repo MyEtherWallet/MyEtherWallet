@@ -27,7 +27,7 @@ export default {
     return {
       header: {
         title: 'ETH Blocks',
-        subtext: 'Mint stunning QR art-pieces based on your favorite blocks.'
+        subtext: 'Mint generative art NFTs of Ethereum blocks. '
       },
       activeTab: 0,
       tabs: [
