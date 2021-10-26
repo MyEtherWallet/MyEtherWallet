@@ -3,12 +3,13 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import {
   getSignTransactionObject,
   getHexTxObject,
   getBufferFromHex,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  eip1559Params
 } from '@/modules/access-wallet/common/helpers';
 import toBuffer from '@/core/helpers/toBuffer';
 import errorHandler from './errorHandler';
@@ -47,29 +48,58 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, {
+      const _tx = new Transaction(tx, {
         common: commonGenerator(store.getters['global/network'])
       });
-      const networkId = tx.getChainId();
-      const options = {
-        path: this.basePath + '/' + idx,
-        transaction: getHexTxObject(tx)
+      const legacySigner = async _txParams => {
+        const networkId = _tx.common.chainId();
+        const options = {
+          path: this.basePath + '/' + idx,
+          transaction: getHexTxObject(_tx)
+        };
+        const result = await Trezor.ethereumSignTransaction(options);
+        if (!result.success) throw new Error(result.payload.error);
+        _txParams.v = getBufferFromHex(result.payload.v);
+        _txParams.r = getBufferFromHex(result.payload.r);
+        _txParams.s = getBufferFromHex(result.payload.s);
+        const signedChainId = calculateChainIdFromV(_txParams.v);
+        if (signedChainId !== networkId)
+          throw new Error(
+            Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
+              got: signedChainId,
+              expected: networkId
+            }),
+            'InvalidNetworkId'
+          );
+        return getSignTransactionObject(Transaction.fromTxData(_txParams));
       };
-      const result = await Trezor.ethereumSignTransaction(options);
-      if (!result.success) throw new Error(result.payload.error);
-      tx.v = getBufferFromHex(result.payload.v);
-      tx.r = getBufferFromHex(result.payload.r);
-      tx.s = getBufferFromHex(result.payload.s);
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        throw new Error(
-          Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
-            got: signedChainId,
-            expected: networkId
-          }),
-          'InvalidNetworkId'
-        );
-      return getSignTransactionObject(tx);
+      if (store.getters['global/isEIP1559SupportedNetwork']) {
+        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+        const txParams = getHexTxObject(_tx);
+        Object.assign(txParams, eip1559Params(txParams.gasPrice, feeMarket));
+        delete txParams.gasPrice;
+        try {
+          const options = {
+            path: this.basePath + '/' + idx,
+            transaction: txParams
+          };
+          const result = await Trezor.ethereumSignTransaction(options);
+          if (!result.success) throw new Error(result.payload.error);
+          txParams.v = getBufferFromHex(result.payload.v);
+          txParams.r = getBufferFromHex(result.payload.r);
+          txParams.s = getBufferFromHex(result.payload.s);
+          return getSignTransactionObject(
+            FeeMarketEIP1559Transaction.fromTxData(txParams)
+          );
+        } catch (e) {
+          //unsupported trezor version
+          if (e.message === 'Parameter "gasPrice" is missing.')
+            return legacySigner(tx);
+          throw e;
+        }
+      } else {
+        return legacySigner(tx);
+      }
     };
     const msgSigner = async msg => {
       const result = await Trezor.ethereumSignMessage({

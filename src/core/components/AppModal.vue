@@ -28,7 +28,7 @@
         Dialog Body: Scrollable
       =====================================================================================
       -->
-      <v-card-text v-if="!anchored" class="py-0 px-5 px-md-0">
+      <v-card-text v-if="!anchored" class="py-3 px-5 px-md-0">
         <slot name="dialogBody">
           <div>This is a test value</div>
         </slot>

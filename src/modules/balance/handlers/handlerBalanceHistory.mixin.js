@@ -29,7 +29,7 @@ export default {
       update: data => data.getTimeseriesData,
       skip() {
         const acceptableScales = ['seconds', 'minutes', 'hours', 'days'];
-        return !acceptableScales.includes(this.scale);
+        return !acceptableScales.includes(this.scale) || !this.isEthNetwork;
       },
       result() {
         const parsedResult = this._parseResult(this.getTimeseriesData.items);
@@ -52,7 +52,7 @@ export default {
           }
         } while (nextKey);
       },
-      error({ error }) {
+      error(error) {
         Toast(error.message, {}, ERROR);
       }
     }
@@ -62,15 +62,17 @@ export default {
      * Parse Apollo Data into chart format.
      */
     _parseResult(data) {
-      return data.map(item => {
-        const fromWei = utils.fromWei(item.value);
-        const value = BigNumber(fromWei).toFixed(4);
-        const returnedValue = BigNumber(value).toNumber();
-        const actualTimeStamp = BigNumber(item.timestamp)
-          .times(1000)
-          .toNumber();
-        return [actualTimeStamp, returnedValue];
-      });
+      return data
+        ? data.map(item => {
+            const fromWei = utils.fromWei(item.value);
+            const value = BigNumber(fromWei).toFixed(4);
+            const returnedValue = BigNumber(value).toNumber();
+            const actualTimeStamp = BigNumber(item.timestamp)
+              .times(1000)
+              .toNumber();
+            return [actualTimeStamp, returnedValue];
+          })
+        : [];
     }
   }
 };

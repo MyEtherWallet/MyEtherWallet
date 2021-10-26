@@ -83,6 +83,7 @@ import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const STATIC_PAIRS = [
   {
@@ -165,6 +166,7 @@ const STATIC_PAIRS = [
 ];
 export default {
   components: {},
+  mixins: [handlerAnalytics],
   props: {
     mobile: {
       type: Boolean,
@@ -204,9 +206,9 @@ export default {
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
-              res[idx].length === 0
-                ? false
-                : formatFloatingPointValue(res[idx][0].amount).value;
+              res[idx].length !== 0 && res[idx][0] && res[idx][0]?.amount
+                ? formatFloatingPointValue(res[idx][0]?.amount).value
+                : false;
             return itm;
           });
           this.loading = false;
@@ -223,7 +225,7 @@ export default {
         toToken: data.toT.contract,
         amount: '1'
       };
-
+      this.trackSwapRate(data.fromT.symbol + ' to ' + data.toT.symbol);
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

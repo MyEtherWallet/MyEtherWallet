@@ -13,7 +13,6 @@
           x-large
           v-bind="attrs"
           :ripple="false"
-          @click="menuOpen()"
           v-on="on"
         >
           <mew-button
@@ -41,7 +40,6 @@
           class="d-lg-none"
           v-bind="attrs"
           v-on="on"
-          @click="menuOpen()"
         >
           <img
             src="@/assets/images/icons/icon-grid-dot.png"
@@ -92,7 +90,6 @@ export default {
   props: {},
   data() {
     return {
-      top: undefined,
       tools: [
         {
           label: 'MEW wallet app',
@@ -112,7 +109,7 @@ export default {
         {
           label: 'Help center',
           img: require('@/assets/images/icons/icon-customer-support.svg'),
-          link: 'https://kb.myetherwallet.com/'
+          link: 'https://help.myetherwallet.com/en/'
         },
         {
           label: 'MEWconnect protocol',
@@ -121,21 +118,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    menuOpen() {
-      const checkExist = setInterval(() => {
-        const menu = document.querySelector('.v-menu__content');
-        if (menu !== null) {
-          clearInterval(checkExist);
-          if (this.top === undefined) {
-            this.top = parseInt(menu.style.top.replace('px', ''));
-          }
-          menu.style.top = this.top + 5 + 'px';
-          menu.classList.add('mew-tools-menu-container');
-        }
-      }, 100); // check every 100ms
-    }
   }
 };
 </script>
@@ -192,10 +174,5 @@ export default {
       margin-right: 6px !important;
     }
   }
-}
-
-.mew-tools-menu-container {
-  border: 0 !important;
-  border-radius: 6px !important;
 }
 </style>

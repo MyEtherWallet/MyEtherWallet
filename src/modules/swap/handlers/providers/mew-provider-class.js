@@ -1,12 +1,13 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-const HOST_URL = 'https://staging.mewwallet.dev/v3';
+const HOST_URL = 'https://mainnet.mewwallet.dev/v3';
 const GET_LIST = '/swap/list';
 const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
 import Configs from '../configs';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class MEWPClass {
   constructor(providerName, web3, supportednetworks, chain) {
     this.web3 = web3;
@@ -33,6 +34,9 @@ class MEWPClass {
             type: 'ERC20'
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   isValidToAddress({ address }) {
@@ -65,10 +69,9 @@ class MEWPClass {
             toContractAddress: toAddress,
             amount: queryAmount.toFixed(fromT.decimals),
             chain: this.chain,
-            excludeDexes:
-              this.provider === MEWPClass.supportedDexes.DEX_AG
-                ? MEWPClass.supportedDexes.ONE_INCH
-                : MEWPClass.supportedDexes.DEX_AG
+            excludeDexes: Object.values(MEWPClass.supportedDexes)
+              .filter(dex => dex !== this.provider)
+              .join(',')
           }
         })
         .then(response => {
@@ -118,13 +121,14 @@ class MEWPClass {
           provider: this.provider,
           transactions: response.data.transactions
         };
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = tradeObj.gasPrice
-      ? tradeObj.gasPrice
-      : await this.web3.eth.getGasPrice();
+    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
         this.web3.eth
@@ -216,7 +220,8 @@ class MEWPClass {
   }
 }
 MEWPClass.supportedDexes = {
-  DEX_AG: 'DEX_AG',
-  ONE_INCH: 'ONE_INCH'
+  ZERO_X: 'ZERO_X',
+  ONE_INCH: 'ONE_INCH',
+  PARASWAP: 'PARASWAP'
 };
 export default MEWPClass;

@@ -5,8 +5,6 @@
     ===================================================
     -->
   <div>
-    <v-divider />
-
     <div class="mx-auto mb-3" style="max-width: 550px">
       <div class="mew-heading-2 py-8 text-center">
         Here is your new Eth2 Address

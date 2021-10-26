@@ -1,12 +1,9 @@
 <template>
   <div class="wallet-main">
     <the-wallet-side-menu />
-    <the-wallet-header />
     <v-main>
-      <v-container
-        class="pa-2 pa-md-3 mb-14 align-center wallet-content-container"
-        fluid
-      >
+      <v-container class="pa-2 pa-md-3 mb-14" fluid>
+        <the-wallet-header />
         <module-confirmation />
         <router-view />
       </v-container>
@@ -17,18 +14,18 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
-import { hexToNumber } from 'web3-utils';
+import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
-import { gasPriceTypes } from '@/core/helpers/gasPriceHelper.js';
 import nodeList from '@/utils/networks';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
+import { ERROR, Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 export default {
   components: {
     TheWalletSideMenu,
@@ -40,15 +37,18 @@ export default {
   computed: {
     ...mapState('wallet', ['address', 'web3', 'identifier']),
     ...mapState('global', ['online', 'gasPriceType', 'baseGasPrice']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', [
+      'network',
+      'gasPrice',
+      'isEIP1559SupportedNetwork'
+    ]),
     ...mapState('external', ['coinGeckoTokens']),
-    ...mapGetters('external', ['contractToToken']),
     ...mapGetters('wallet', ['balanceInWei'])
   },
   watch: {
     address() {
       if (!this.address) {
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: ROUTES_HOME.HOME.NAME });
       }
     },
     network() {
@@ -56,7 +56,6 @@ export default {
     },
     web3() {
       this.subscribeToBlockNumber();
-      this.setGas();
       this.setTokensAndBalance();
     },
     coinGeckoTokens() {
@@ -66,8 +65,11 @@ export default {
   mounted() {
     if (this.online) {
       this.setup();
-
       if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
+        const web3Instance = new Web3(window.ethereum);
+        web3Instance.eth.net.getId().then(id => {
+          this.findAndSetNetwork(id);
+        });
         this.web3Listeners();
       }
     }
@@ -77,11 +79,14 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
-    ...mapActions('global', ['setGasPrice', 'setNetwork']),
+    ...mapActions('global', [
+      'setNetwork',
+      'setBaseFeePerGas',
+      'updateGasPrice'
+    ]),
     ...mapActions('external', ['setCoinGeckoTokens', 'setTokenAndEthBalance']),
     setup() {
       this.setTokensAndBalance();
-      this.setGas();
       this.subscribeToBlockNumber();
     },
     setTokensAndBalance() {
@@ -91,20 +96,25 @@ export default {
         this.setTokens([]);
       }
     },
-    setGas() {
-      this.web3.eth.getGasPrice().then(res => {
-        if (this.gasPriceType === gasPriceTypes.STORED) {
-          this.setGasPrice(this.baseGasPrice);
-        } else {
-          this.setGasPrice(res);
-        }
-      });
+    checkAndSetBaseFee(baseFee) {
+      if (baseFee) {
+        this.setBaseFeePerGas(toBN(baseFee));
+      } else {
+        this.setBaseFeePerGas(toBN('0'));
+      }
+      this.updateGasPrice();
     },
     subscribeToBlockNumber() {
-      this.web3.eth.getBlockNumber().then(res => {
-        this.setBlockNumber(res);
-        this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-          this.setBlockNumber(res.number);
+      this.web3.eth.getBlockNumber().then(bNumber => {
+        this.setBlockNumber(bNumber);
+        this.web3.eth.getBlock(bNumber).then(block => {
+          this.checkAndSetBaseFee(block.baseFeePerGas);
+          this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+            if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
+              this.setBaseFeePerGas(toBN(res.baseFeePerGas));
+            }
+            this.setBlockNumber(res.number);
+          });
         });
       });
     },
@@ -113,25 +123,33 @@ export default {
      * and setup listenerss for metamask changes
      */
     web3Listeners() {
-      const metamaskChainId = hexToNumber(window.ethereum.chainId);
-      const currentChainId = this.network.type.chainID;
-      if (metamaskChainId !== currentChainId) {
-        this.findAndSetNetwork(metamaskChainId);
+      if (window.ethereum.on) {
+        window.ethereum.on('chainChanged', chainId => {
+          this.findAndSetNetwork(chainId);
+        });
+
+        window.ethereum.on('networkChanged', chainId => {
+          this.findAndSetNetwork(chainId);
+        });
+
+        window.ethereum.on('accountsChanged', acc => {
+          if (acc[0]) {
+            const web3 = new Web3(window.ethereum);
+            const wallet = new Web3Wallet(acc[0]);
+            this.setWallet([wallet, web3.currentProvider]);
+          }
+        });
+      } else {
+        Toast(
+          'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
+          {},
+          ERROR
+        );
       }
-
-      window.ethereum.on('chainChanged', chainId => {
-        this.findAndSetNetwork(hexToNumber(chainId));
-      });
-
-      window.ethereum.on('accountsChanged', acc => {
-        const web3 = new Web3(window.ethereum);
-        const wallet = new Web3Wallet(acc[0]);
-        this.setWallet([wallet, web3.currentProvider]);
-      });
     },
-    findAndSetNetwork(metamaskChain) {
+    findAndSetNetwork(web3ChainId) {
       const foundNetwork = Object.values(nodeList).find(item => {
-        if (item[0].type.chainID === metamaskChain) return item;
+        if (toBN(web3ChainId).toNumber() === item[0].type.chainID) return item;
       });
 
       if (foundNetwork) {

@@ -58,6 +58,7 @@ import {
   formatFloatingPointValue,
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   name: 'AaveTable',
@@ -514,7 +515,7 @@ export default {
      */
     onSwapClick(newVal) {
       this.$router.push({
-        name: 'Swap',
+        name: ROUTES_WALLET.SWAP.NAME,
         query: {
           fromT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
           toT: newVal.address,

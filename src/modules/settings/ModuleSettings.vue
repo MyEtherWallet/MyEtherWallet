@@ -1,81 +1,75 @@
 <template>
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :title="title"
     :show-overlay="onSettings"
+    :back="editMode || addMode ? back : null"
+    content-size="xlarge"
     :close="close"
-    :back="back"
-    :left-btn-text="addMode || editMode ? $t('common.back') : ''"
-    :right-btn-text="$t('common.close')"
   >
-    <template #mewOverlayBody>
-      <v-sheet
-        v-if="!editMode && !addMode"
-        class="mt-5"
-        max-width="700"
-        color="transparent"
-      >
-        <mew-expand-panel
-          :panel-items="panelItems"
-          :idx-to-expand="idxToExpand"
-        >
-          <template #panelBody1>
-            <settings-gas-price
-              :buttons="gasButtons"
-              :selected="gasPriceType"
-              :set-selected="setSelected"
-              :gas-price="gasPrice"
-              :set-custom-gas-price="setCustomGasPrice"
-              :global="true"
-            />
-          </template>
-          <template #panelBody2>
-            <settings-import-config :import-config="settingsHandler" />
-          </template>
-          <template #panelBody3>
-            <settings-export-config
-              :export-config="settingsHandler.exportStore"
-            />
-          </template>
-          <template #panelBody4>
-            <div class="pa-6">
-              <div class="mb-4">
-                {{ $t('interface.address-book.add-up-to') }}
-              </div>
-              <mew-table
-                :table-headers="tableHeaders"
-                :table-data="tableData"
-                has-color
-                :success-toast="$t('common.copied')"
-                @onClick="onEdit"
-              />
+    <mew-expand-panel
+      v-if="!editMode && !addMode"
+      :panel-items="panelItems"
+      :idx-to-expand="idxToExpand"
+    >
+      <template #panelBody1>
+        <settings-gas-price
+          :buttons="gasButtons"
+          :selected="gasPriceType"
+          :set-selected="setSelected"
+          :total-gas-limit="gasPrice"
+          :global="true"
+          :from-settings="true"
+        />
+      </template>
+      <template #panelBody2>
+        <settings-import-config :import-config="settingsHandler" />
+      </template>
+      <template #panelBody3>
+        <settings-export-config :export-config="exportStore" />
+      </template>
+      <template #panelBody4>
+        <div class="pa-6">
+          <div class="mb-4">
+            {{ $t('interface.address-book.add-up-to') }}
+          </div>
+          <mew-table
+            :table-headers="tableHeaders"
+            :table-data="tableData"
+            has-color
+            :success-toast="$t('common.copied')"
+            @onClick="onEdit"
+          />
 
-              <div class="d-flex justify-center mt-5">
-                <mew-button
-                  :disabled="addressBook.length > 10"
-                  title="+ Add"
-                  btn-size="xlarge"
-                  @click.native="addMode = !addMode"
-                />
-              </div>
-            </div>
-          </template>
-          <!-- <template #panelBody5>
-            <notifications />
-          </template> -->
-        </mew-expand-panel>
-      </v-sheet>
-      <!--
-    =====================================================================================
-     Add / Edit Address Book overlay
-    =====================================================================================
-    -->
-      <address-book-add-edit
-        v-if="addMode || editMode"
-        :item="itemToEdit"
-        :mode="onMode"
-        @back="back"
-      />
-    </template>
+          <div class="d-flex justify-center mt-5">
+            <mew-button
+              :disabled="addressBookStore.length > 10"
+              title="+ Add"
+              btn-size="xlarge"
+              @click.native="addMode = !addMode"
+            />
+          </div>
+        </div>
+      </template>
+      <!-- <template #panelBody5>
+        <notifications />
+      </template> -->
+    </mew-expand-panel>
+    <!--
+  =====================================================================================
+    Add / Edit Address Book overlay
+  =====================================================================================
+  -->
+    <address-book-add-edit
+      v-if="addMode || editMode"
+      :item="itemToEdit"
+      :mode="onMode"
+      @back="back"
+    />
   </mew-overlay>
 </template>
 
@@ -86,8 +80,8 @@ import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
 
 export default {
@@ -99,6 +93,13 @@ export default {
     AddressBookAddEdit
   },
   mixins: [gasPriceMixin],
+  beforeRouteLeave(to, from, next) {
+    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+    } else {
+      next();
+    }
+  },
   props: {
     onSettings: { default: false, type: Boolean }
   },
@@ -144,14 +145,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
     panelItems() {
       return [
         {
-          name: 'Gas price',
-          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
-            this.gasPriceType
-          })`
+          name: 'Default transaction priority',
+          subtext: this.setPriority(this.gasPriceType)
         },
         {
           name: 'Import configurations'
@@ -178,7 +177,7 @@ export default {
     }
   },
   watch: {
-    addressBook: {
+    addressBookStore: {
       deep: true,
       handler: function () {
         this.getAddressBookTableData();
@@ -194,12 +193,12 @@ export default {
   methods: {
     getAddressBookTableData() {
       this.tableData = [];
-      this.addressBook.forEach((item, idx) => {
+      this.addressBookStore.forEach((item, idx) => {
         this.tableData.push({
           number: idx + 1,
           address: item.address,
           nickname: item.nickname,
-          resolvedAddr: item.resolvedAddr,
+          resolvedAddr: item.address.includes('.') ? item.resolvedAddr : null,
           callToAction: [
             {
               title: 'Edit',
@@ -212,7 +211,9 @@ export default {
       });
     },
     back(idx) {
-      this.idxToExpand = idx ? idx : null;
+      if (!isNaN(idx)) {
+        this.idxToExpand = idx ? idx : null;
+      }
       this.addMode = false;
       this.editMode = false;
     },
@@ -225,6 +226,17 @@ export default {
       this.idxToExpand = null;
       this.addMode = false;
       this.editMode = false;
+    },
+    exportStore() {
+      this.settingsHandler.exportStore();
+    },
+    setPriority(priority) {
+      const priorities = {
+        economy: 'Normal',
+        regular: 'Higher',
+        fast: 'Highest'
+      };
+      return priorities[priority];
     }
   }
 };

@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import { getBufferFromHex } from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
 import metamask from '@/assets/images/icons/wallets/metamask.svg';
-
+import { CustomRequestManager } from '@/utils/web3-provider/providers/given-provider';
 class Web3Wallet extends WalletInterface {
   static get errorHandler() {
     return errorHandler;
@@ -12,12 +12,8 @@ class Web3Wallet extends WalletInterface {
   constructor(address) {
     super(address, true, WALLET_TYPES.WEB3_WALLET);
     this.errorHandler = errorHandler;
-    if (window.ethereum) {
-      this.web3 = new Web3(window.ethereum);
-    } else {
-      this.web3 = new Web3(window.web3.currentProvider);
-    }
-    if (!this.web3) throw new Error('No Web3 instance found');
+    if (!window.ethereum) throw new Error('No Web3 instance found');
+    this.web3 = new Web3(new CustomRequestManager(window.ethereum));
     const isMetamask = window.ethereum
       ? window.ethereum.isMetaMask
       : window.web3
