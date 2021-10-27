@@ -25,5 +25,7 @@
   "user-cancelled-request-device-bluetooth": "User cancelled bluetooth connection.  Please try reconnecting.",
   "bluetooth-adapter-not-available": "Bluetooth adapter is not available.",
   "operation-that-changes-interface-state-in-progress": "An operation that changes interface state is in progress.  Please wait.",
-  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again."
+  "connection-not-open-on-send": "There is an issue with the web socket connection.  Please try again.",
+  "firmware-or-mobile": "There may be an issue with firmware or you are trying to access ledger using a mobile device.",
+  "access-denied": "There may be an issue with the firmware or browser you are using.  Please try again using chrome.  If you need to upgrade your firmware, make sure to save your seed phrase."
 }

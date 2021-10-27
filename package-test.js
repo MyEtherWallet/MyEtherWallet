@@ -26,7 +26,7 @@ const EXCEPTIONS = [
   'web3-utils',
   'remark-cli',
   'node-fetch',
-  'eslint' // 8.0.1 causes error [eslint.CLIEngine is not a constructor]
+  'eslint' // not supported by vue yet
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -112,7 +112,7 @@ import { mapGetters, mapState } from 'vuex';
 import {
   formatPercentageValue,
   formatFiatValue,
-  formatBalanceEthValue
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -153,7 +153,7 @@ export default {
      * ie: $12.45 per 1 ETH
      */
     title() {
-      return `${formatBalanceEthValue(this.balanceInWei).value} ${
+      return `${formatFloatingPointValue(this.balanceInETH).value} ${
         this.network.type.name
       }`;
     },

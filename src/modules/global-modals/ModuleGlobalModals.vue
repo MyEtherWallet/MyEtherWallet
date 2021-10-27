@@ -30,7 +30,7 @@ import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
 import { EventBus } from '@/core/plugins/eventBus';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
 export default {
@@ -55,7 +55,7 @@ export default {
       return this.openHardwarePassword;
     },
     title() {
-      const walletName = _.isEmpty(this.deviceInfo)
+      const walletName = isEmpty(this.deviceInfo)
         ? 'wallet'
         : this.deviceInfo.name;
       return `Access your ${walletName}`;
