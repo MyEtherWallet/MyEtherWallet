@@ -102,8 +102,16 @@
     =====================================================================================
     -->
     <router-view v-if="tabItems.length > 0 && isNewHeader && isValidNetwork" />
-    <div v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork">
-      <p>Not valid Network</p>
+    <div
+      v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork"
+      class="px-3 py-8 pa-md-15"
+    >
+      <mew-alert
+        theme="warning"
+        hide-close-icon
+        title="This DApp is not available on this network"
+        :description="networkAlertText"
+      />
     </div>
     <!--
     =====================================================================================
@@ -217,6 +225,11 @@ export default {
         item => item.chainID === chainID
       );
       return validChain.length > 0;
+    },
+    networkAlertText() {
+      const names = this.validNetworks.map(item => item.name_long).join(', ');
+      const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
+      return `Please selelect ${names} ${netString} to use this Dapp.`;
     }
   },
 
