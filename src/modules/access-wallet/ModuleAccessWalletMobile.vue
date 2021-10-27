@@ -24,9 +24,9 @@
       <div v-for="(btn, key) in buttons" :key="key">
         <mew-button
           has-full-width
+          color-theme="inputBorder"
           btn-style="outline"
           style="height: 160px"
-          color-theme="basic"
           class="mb-5"
           @click.native="btn.fn"
         >

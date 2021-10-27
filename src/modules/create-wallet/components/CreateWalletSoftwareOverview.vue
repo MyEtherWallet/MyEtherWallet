@@ -9,8 +9,8 @@
       <div class="mb-5">
         <mew-button
           has-full-width
-          color-theme="basic"
-          btn-style="light"
+          color-theme="inputBorder"
+          btn-style="outline"
           style="height: 160px"
           @click.native="selectWalletType(walletTypes.KEYSTORE)"
         >
@@ -45,8 +45,8 @@
       <div class="mb-5">
         <mew-button
           has-full-width
-          color-theme="basic"
-          btn-style="light"
+          color-theme="inputBorder"
+          btn-style="outline"
           style="height: 160px"
           @click.native="selectWalletType(walletTypes.MNEMONIC)"
         >

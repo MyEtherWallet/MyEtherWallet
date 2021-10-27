@@ -16,19 +16,20 @@
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row
+    <div
       v-if="step === 1"
       :class="[
         'pa-5 mb-4 full-width text-center rounded subtitle-container',
         $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
       ]"
-      ><span class="full-width"
+    >
+      <span class="full-width"
         >The highest standard of security in the crypto space.
         <router-link to="/buy-hardware">
           Get a Hardware Wallet today
         </router-link>
-      </span></v-row
-    >
+      </span>
+    </div>
     <!--
         =====================================================================================
         Step 1: Select hardware wallet
@@ -51,6 +52,7 @@
           <mew-button
             has-full-width
             style="height: 90px"
+            color-theme="inputBorder"
             btn-style="outline"
             @click.native="setWalletInstance(button.type)"
           >

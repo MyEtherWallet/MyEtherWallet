@@ -20,12 +20,7 @@
     -->
       <div style="max-width: 650px" class="mx-auto">
         <a href="https://www.mewwallet.com/" target="_blank">
-          <mew-button
-            class="mb-5"
-            color-theme="basic"
-            btn-style="light"
-            style="height: 160px"
-          >
+          <mew-button class="mb-5" color-theme="white" style="height: 160px">
             <div class="px-2 textDark--text text-left d-flex align-center">
               <div>
                 <div class="mb-2 d-flex align-center">
@@ -53,8 +48,7 @@
 
         <mew-button
           class="mb-5"
-          color-theme="basic"
-          btn-style="light"
+          color-theme="white"
           style="height: 160px"
           @click.native="
             $router.push({ name: ROUTES_HOME.BUY_HARDWARE_WALLET.NAME })
@@ -93,7 +87,7 @@
           </div>
           <mew-button
             class="mb-5"
-            color-theme="basic"
+            color-theme="white"
             btn-style="outline"
             style="height: 160px; position: relative"
             @click.native="openSoftwareModule"

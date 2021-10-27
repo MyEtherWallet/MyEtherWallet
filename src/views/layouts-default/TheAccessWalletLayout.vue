@@ -19,51 +19,59 @@
       =====================================================================================
       -->
       <div style="max-width: 650px" class="mx-auto">
-        <mew-button
-          v-for="btn in buttons"
-          :key="btn.title"
-          has-full-width
-          class="mb-5"
-          color-theme="basic"
-          :btn-style="btn.color === 'outline' ? 'outline' : 'light'"
-          style="height: 160px"
-          @click.native="btn.fn"
-        >
+        <div v-for="btn in buttons" :key="btn.title" class="position--relative">
           <div
-            class="px-2 text-left d-flex align-center justify-space-between"
-            :class="btn.color === 'outline' ? 'white--text' : 'textDark--text'"
-            style="width: 100%"
+            class="warning--text text--darken-1 mew-label"
+            style="position: absolute; top: 15px; right: 25px"
           >
-            <div>
-              <div class="mb-2 d-flex align-center">
-                <div class="mew-heading-2">{{ btn.title }}</div>
-                <v-icon dense :color="btn.titleIconClass" class="ml-1">
-                  {{ btn.titleIcon }}
-                </v-icon>
-              </div>
-              <div class="break-word">
-                {{ btn.subtitle }}
-              </div>
-            </div>
-            <div class="d-none d-sm-flex align-center pl-5">
-              <img
-                v-if="btn.rightIcon"
-                class="mew-wallet-img"
-                :src="btn.rightIcon"
-                :alt="btn.rightIcon"
-                style="height: 90px"
-              />
-              <img
-                v-for="(icon, index) in btn.rightIcons"
-                v-else
-                :key="index"
-                :src="icon"
-                width="70"
-                class="px-2"
-              />
-            </div>
+            NOT RECOMMENDED
           </div>
-        </mew-button>
+          <mew-button
+            has-full-width
+            class="mb-5"
+            :color-theme="btn.color"
+            :btn-style="btn.style === 'outline' ? 'outline' : ''"
+            style="height: 160px"
+            @click.native="btn.fn"
+          >
+            <div
+              class="px-2 text-left d-flex align-center justify-space-between"
+              :class="
+                btn.style === 'outline' ? 'white--text' : 'textDark--text'
+              "
+              style="width: 100%"
+            >
+              <div>
+                <div class="mb-2 d-flex align-center">
+                  <div class="mew-heading-2">{{ btn.title }}</div>
+                  <v-icon dense :color="btn.titleIconClass" class="ml-1">
+                    {{ btn.titleIcon }}
+                  </v-icon>
+                </div>
+                <div class="break-word">
+                  {{ btn.subtitle }}
+                </div>
+              </div>
+              <div class="d-none d-sm-flex align-center pl-5">
+                <img
+                  v-if="btn.rightIcon"
+                  class="mew-wallet-img"
+                  :src="btn.rightIcon"
+                  :alt="btn.rightIcon"
+                  style="height: 90px"
+                />
+                <img
+                  v-for="(icon, index) in btn.rightIcons"
+                  v-else
+                  :key="index"
+                  :src="icon"
+                  width="70"
+                  class="px-2"
+                />
+              </div>
+            </div>
+          </mew-button>
+        </div>
       </div>
 
       <!--
@@ -131,7 +139,7 @@ export default {
       buttons: [
         /* MEW wallet Button */
         {
-          color: 'basic',
+          color: 'white',
           title: 'MEW wallet',
           subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
@@ -145,7 +153,7 @@ export default {
         },
         /* Browser Extension */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Browser Extension',
           subtitle: 'Use your web3 wallet with MEW.',
           note: '',
@@ -159,7 +167,7 @@ export default {
         },
         /* Hardware Wallet */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Hardware Wallets',
           subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
           note: '',
@@ -173,7 +181,7 @@ export default {
         },
         /* Mobile Apps */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Mobile Apps',
           subtitle: 'WalletConnect, WalletLink',
           note: '',
@@ -190,7 +198,8 @@ export default {
         },
         /* Software */
         {
-          color: 'outline',
+          color: 'white',
+          style: 'outline',
           title: 'Software',
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
           note: 'NOT RECOMMENDED',

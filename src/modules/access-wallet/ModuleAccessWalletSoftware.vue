@@ -29,6 +29,7 @@
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
           has-full-width
+          color-theme="inputBorder"
           btn-style="outline"
           style="height: 160px"
           @click.native="btn.fn"
@@ -53,6 +54,7 @@
     <access-wallet-keystore
       v-if="walletType === types.KEYSTORE"
       :handler-access-wallet="accessHandler"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
@@ -63,6 +65,7 @@
     <access-wallet-mnemonic
       v-if="walletType === types.MNEMONIC"
       :handler-access-wallet="accessHandler"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
@@ -73,6 +76,7 @@
     <access-wallet-private-key
       v-else-if="walletType === types.PRIVATE_KEY"
       :handler-access-wallet="accessHandler"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
