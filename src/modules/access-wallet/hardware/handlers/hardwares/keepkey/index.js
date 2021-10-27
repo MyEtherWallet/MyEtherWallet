@@ -15,7 +15,7 @@ import {
   calculateChainIdFromV
 } from '@/modules/access-wallet/common/helpers';
 import HDKey from 'hdkey';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
@@ -23,7 +23,6 @@ import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import keepkeyImg from '@/assets/images/icons/wallets/keepkey.svg';
 import { numberToHex } from 'web3-utils';
-const NEED_PASSWORD = false;
 
 class KeepkeyWallet {
   constructor() {
@@ -33,7 +32,6 @@ class KeepkeyWallet {
     );
     this.identifier = WALLET_TYPES.KEEPKEY;
     this.isHardware = true;
-    this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.KEEPKEY];
     this.meta = {
       name: 'KeepKey',
@@ -48,13 +46,9 @@ class KeepkeyWallet {
     this.isHardened = this.basePath.split('/').length - 1 === 2;
     this.keepkey = await this.keepkeyAdapter.pairDevice(undefined, true);
     this.keyring.on(['*', '*', Events.PIN_REQUEST], () => {
-      EventBus.$emit(
-        'showHardwarePinMatrix',
-        { name: this.identifier },
-        pin => {
-          this.keepkey.sendPin(pin).catch(errorHandler);
-        }
-      );
+      EventBus.$emit('enablePin', { name: this.identifier }, pin => {
+        this.keepkey.sendPin(pin).catch(errorHandler);
+      });
     });
     this.keyring.on(['*', '*', Events.PASSPHRASE_REQUEST], () => {
       EventBus.$emit(
@@ -91,18 +85,18 @@ class KeepkeyWallet {
       derivedKey = this.hdKey.derive('m/' + idx);
       accountPath = this.basePath + '/' + idx;
     }
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParams => {
+      const tx = new Transaction(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const hexTx = getHexTx(tx);
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       hexTx.addressNList = bip32ToAddressNList(accountPath);
       const result = await this.keepkey.ethSignTx(hexTx);
-      tx.v = getBufferFromHex(sanitizeHex(numberToHex(result.v)));
-      tx.r = getBufferFromHex(sanitizeHex(result.r));
-      tx.s = getBufferFromHex(sanitizeHex(result.s));
-      const signedChainId = calculateChainIdFromV(tx.v);
+      txParams.v = getBufferFromHex(sanitizeHex(numberToHex(result.v)));
+      txParams.r = getBufferFromHex(sanitizeHex(result.r));
+      txParams.s = getBufferFromHex(sanitizeHex(result.s));
+      const signedChainId = calculateChainIdFromV(txParams.v);
       if (signedChainId !== networkId)
         throw new Error(
           Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -111,7 +105,7 @@ class KeepkeyWallet {
           }),
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(tx);
+      return getSignTransactionObject(Transaction.fromTxData(txParams));
     };
     const msgSigner = async msg => {
       const response = await this.keepkey.ethSignMessage({

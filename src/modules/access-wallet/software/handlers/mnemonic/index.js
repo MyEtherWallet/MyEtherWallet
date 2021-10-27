@@ -1,5 +1,5 @@
 import * as HDKey from 'hdkey';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';

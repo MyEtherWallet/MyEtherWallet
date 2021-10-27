@@ -1,15 +1,30 @@
 <template>
   <div class="default-header expandHeader">
+    <div
+      class="
+        d-flex
+        align-center
+        justify-center
+        pa-2
+        tableHeader
+        textBlack2--text
+      "
+    >
+      Missing the old version?&nbsp;
+      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
+        You can find version 5 here
+      </a>
+    </div>
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
           <the-default-mobile-navigation class="ml-n2" />
         </v-col>
         <v-col cols="4">
-          <router-link :to="{ name: 'Home', query: {} }">
+          <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
             <v-img
               :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.png"
+              src="@/assets/images/icons/logo-mew.svg"
               max-height="36"
               max-width="130"
             />
@@ -18,17 +33,17 @@
         <v-col class="justify-space-between d-none d-md-flex" cols="4">
           <router-link
             class="white--text text-decoration--none"
-            :to="{ name: 'HowItWorks' }"
+            :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
           >
             What is MEW
           </router-link>
           <mew-menu
-            text-color="white--text"
+            activator-text-color="white--text"
             :list-obj="menuObj"
             @goToPage="routeTo"
           />
           <a
-            href="https://ccswap.myetherwallet.com/#/"
+            :href="swapLink"
             target="_blank"
             class="white--text text-decoration--none"
           >
@@ -46,6 +61,8 @@
 <script>
 import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'TheDefaultHeader',
@@ -59,19 +76,19 @@ export default {
           items: [
             {
               title: 'Send transaction',
-              to: { name: 'SendTX' }
+              to: { name: ROUTES_WALLET.SEND_TX.NAME }
             },
             {
               title: 'Explore DApps',
-              to: { name: 'Dapps' }
+              to: { name: ROUTES_WALLET.DAPPS.NAME }
             },
             {
               title: 'Swap tokens',
-              to: { name: 'Swap' }
+              to: { name: ROUTES_WALLET.SWAP.NAME }
             },
             {
               title: 'Sign message',
-              to: { name: 'SignMessage' }
+              to: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
             }
           ]
         },
@@ -80,13 +97,17 @@ export default {
           items: [
             {
               title: 'Verify message',
-              to: { name: 'Tools', query: { tab: '1' } }
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
             }
           ]
         }
       ]
-    }
+    },
+    ROUTES_HOME: ROUTES_HOME
   }),
+  computed: {
+    ...mapGetters('global', ['swapLink'])
+  },
   methods: {
     routeTo(route) {
       this.$router.push(route);

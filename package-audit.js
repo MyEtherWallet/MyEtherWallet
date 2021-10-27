@@ -5,7 +5,9 @@ const AUDIT_EXCEPTIONS = [
   'trim-newlines',
   'css-what',
   'normalize-url',
-  'diff'
+  'diff',
+  'ansi-html', // no patches available
+  'set-value'
 ];
 const execute = (command, callback) => {
   exec(

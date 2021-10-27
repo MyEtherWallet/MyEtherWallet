@@ -106,8 +106,8 @@ export default {
         logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
         walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '60.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://trezor.io/?offer_id=12&aff_id=2029'
       },
@@ -116,7 +116,7 @@ export default {
         walletImg: require('@/assets/images/hardware-wallets/keepkey.png'),
         priceNote: 'Starting from',
         currency: '$',
-        price: '83.26',
+        price: '79.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
@@ -126,7 +126,7 @@ export default {
         walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
         priceNote: 'Starting from',
         currency: '$',
-        price: '83.26',
+        price: '140.11',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shiftcrypto.ch/'
       },
@@ -135,8 +135,8 @@ export default {
         //logoImg: require('@/assets/images/hardware-wallets/logo-ethercards.png'),
         walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '645.70',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
       },
@@ -145,8 +145,8 @@ export default {
         //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
         walletImg: require('@/assets/images/hardware-wallets/finney.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '999.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
       },
@@ -154,8 +154,8 @@ export default {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
         walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '89.00',
         note: 'Unmatched physical security for your private keys.',
         link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
       }

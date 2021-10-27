@@ -24,6 +24,12 @@ class Web3Calls {
         requestManager
       }),
       new Method({
+        name: 'getMaxPriorityFeePerGas',
+        call: 'eth_maxPriorityFeePerGas',
+        params: 0,
+        requestManager
+      }),
+      new Method({
         name: 'getBlockByNumber',
         call: 'eth_getBlockByNumber',
         params: 2,

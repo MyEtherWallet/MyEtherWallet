@@ -21,13 +21,15 @@ const isContractArgValid = (value, solidityType) => {
       }
       return true;
     }
-    if (solidityType.includes(uint) || solidityType.includes(int))
-      return value !== '' && !isNaN(value) && isInt(value);
-    if (solidityType === address) return isAddress(value);
-    if (solidityType === string) return true;
-    if (solidityType.includes(bytes))
+    if (solidityType.includes(uint) || solidityType.includes(int)) {
+      return (
+        value !== '' && !isNaN(value) && isInt(value) && !hasWhiteSpace(value)
+      );
+    } else if (solidityType === address) return isAddress(value);
+    else if (solidityType === string) return true;
+    else if (solidityType.includes(bytes))
       return value.substr(0, 2) === '0x' && validateHexString(value);
-    if (solidityType === bool)
+    else if (solidityType === bool)
       return typeof value === typeof true || typeof value === typeof false;
     return false;
   } catch (e) {
@@ -39,12 +41,16 @@ const getType = inputType => {
   if (inputType.includes('[]')) {
     return { type: 'string', solidityType: `${inputType}` };
   }
-  if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
-  if (inputType.includes(address))
+  if (inputType.includes(uint) || inputType.includes(int))
+    return { type: 'number', solidityType: uint };
+  else if (inputType.includes(address))
     return { type: 'text', solidityType: address };
-  if (inputType.includes(string)) return { type: 'text', solidityType: string };
-  if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
-  if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+  else if (inputType.includes(string))
+    return { type: 'text', solidityType: string };
+  else if (inputType.includes(bytes))
+    return { type: 'text', solidityType: bytes };
+  else if (inputType.includes(bool))
+    return { type: 'radio', solidityType: bool };
   return { type: 'text', solidityType: string };
 };
 const parseABI = json => {
@@ -77,4 +83,9 @@ const parseJSON = json => {
     return false;
   }
 };
-export { isContractArgValid, parseJSON, parseABI, getType };
+
+const hasWhiteSpace = string => {
+  return /\s/g.test(string);
+};
+
+export { isContractArgValid, parseJSON, parseABI, getType, hasWhiteSpace };

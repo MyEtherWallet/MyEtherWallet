@@ -5,7 +5,7 @@
         Values
       =====================================================================================
     -->
-    <confirmation-values-container :items="valueItems" is-custom />
+    <confirmation-values-container :items="valueItems" is-swap />
     <!--
       =====================================================================================
         Summary
@@ -84,8 +84,8 @@ export default {
       default: ''
     },
     fromUsd: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     },
     toUsd: {
       type: String,

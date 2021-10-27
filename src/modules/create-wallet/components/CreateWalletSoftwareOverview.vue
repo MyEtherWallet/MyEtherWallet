@@ -41,6 +41,7 @@
     =====================================================================================
     -->
     <mew-warning-sheet
+      class="mb-0"
       title="NOT RECOMMENDED"
       :link-obj="linkToLearnMore"
       description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
@@ -55,7 +56,7 @@ export default {
   data: () => ({
     walletTypes: WALLET_TYPES,
     linkToLearnMore: {
-      url: 'https://kb.myetherwallet.com/en/security-and-privacy/not-recommended/',
+      url: 'https://help.myetherwallet.com/en/articles/5377921-mew-says-not-recommended-when-i-access-my-wallet-why',
       title: 'Learn more'
     }
   }),

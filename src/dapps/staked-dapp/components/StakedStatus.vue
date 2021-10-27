@@ -353,11 +353,14 @@ export default {
     pendingValidators() {
       return this.validatorsRaw
         .filter(raw => {
+          const nextDay = 60 * 60 * 24 * 1000;
+          const createdDate = new Date(raw.created).getTime() + nextDay;
+          const withinTheDay = new Date().getTime() <= createdDate;
           return (
             raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
             raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
             raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            raw.status.toLowerCase() === STATUS_TYPES.CREATED
+            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
           );
         })
         .map(raw => {
