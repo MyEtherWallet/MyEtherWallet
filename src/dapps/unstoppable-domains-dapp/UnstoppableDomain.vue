@@ -16,11 +16,22 @@
     </div>
     <mew6-white-sheet>
       <unstoppable-banner />
-      <mew-tabs :items="tabs" has-underline>
+      <mew-tabs
+        :items="tabs"
+        has-underline
+        background="backgroundGrey"
+        active-color="blue500"
+      >
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
-              <div class="d-flex align-start">
+              <mew-search
+                v-model="input"
+                placeholder="Search for your domain"
+                is-search-block
+                @click.native="searchDomain"
+              />
+              <!-- <div class="d-flex align-start">
                 <mew-input
                   v-model="input"
                   :has-clear-btn="true"
@@ -35,7 +46,7 @@
                   title="Search"
                   @click.native="searchDomain"
                 />
-              </div>
+              </div> -->
             </div>
             <div>
               <domain-table
@@ -44,87 +55,12 @@
                 :buy-domain="buyDomain"
               />
             </div>
-            <!-- <div>
-              <div v-if="searchResults.length !== 0" class="mb-3">
-                <div class="mew-heading-3 font-weight-bold">
-                  {{ $t('unstoppable.result') }}
-                </div>
-              </div>
-              <div class="py-2"></div>
-              <v-list-item
-                v-for="(d, key) in searchResults"
-                :key="key"
-                two-line
-                class="px-0"
-              >
-                <v-list-item-content>
-                  <v-card
-                    v-if="!d.available"
-                    flat
-                    color="tableHeader"
-                    class="pa-10"
-                  >
-                    <div class="d-flex align-center justify-space-between mb-8">
-                      <div class="mew-heading-1">{{ d.name }}</div>
-                      <div class="mew-heading-3 orange--text">
-                        {{ $t('unstoppable.unavailable') }}
-                      </div>
-                    </div>
-                    <div v-if="d.records">
-                      <v-list-item
-                        v-for="(r, recordKey) in d.records"
-                        :key="recordKey"
-                        two-line
-                        class="px-0"
-                      >
-                        <v-list-item-content>
-                          <div
-                            class="
-                              mew-body
-                              font-weight-medium
-                              titlePrimary--text
-                              mb-2
-                            "
-                          >
-                            {{ r.label }}:
-                          </div>
-                          <div class="mew-body titlePrimary--text">
-                            {{ r.value }}
-                          </div>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-card>
-                  <v-card
-                    v-if="d.available"
-                    flat
-                    color="tableHeader"
-                    class="pa-10"
-                  >
-                    <div class="d-flex justify-space-between align-center">
-                      <div>
-                        <div class="mew-heading-1 mb-2">{{ d.name }}</div>
-                      </div>
-                      <div class="d-flex align-center">
-                        <div class="mew-heading-3 textLight--text mr-6">
-                          ${{ d.price }}
-                        </div>
-                        <mew-button
-                          :title="$t('unstoppable.buy')"
-                          @click.native="() => buyDomain(d)"
-                        ></mew-button>
-                      </div>
-                    </div>
-                  </v-card>
-                </v-list-item-content>
-              </v-list-item>
-              <v-progress-circular
-                v-if="loading"
-                style="margin: 32px auto 40px auto; max-width: 200px"
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-            </div> -->
+            <v-progress-circular
+              v-if="loading"
+              style="margin: 32px auto 40px auto; max-width: 200px"
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
             <unstoppable-info-card v-if="searchResults.length === 0" />
             <div class="py-10"></div>
           </v-sheet>
@@ -138,6 +74,12 @@
                   >({{ myDomains.length }})</span
                 >
               </h4>
+            </div>
+            <div v-if="myDomains.length === 0">
+              <mew-alert
+                :title="$t('unstoppable.alert.title')"
+                :description="$t('unstoppable.alert.description')"
+              />
             </div>
             <div>
               <mew-expand-panel :panel-items="myDomains">
@@ -362,3 +304,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+// ==================================================================================================
+// Replace with mew-components color variables when mew-components is updated.
+// ==================================================================================================
+$greyMedium: #d7dae3;
+$bluePrimary: #4b83e8;
+$backgroundGrey: #f8f9fb;
+</style>

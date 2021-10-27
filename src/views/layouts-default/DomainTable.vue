@@ -109,46 +109,6 @@ export default {
       default: () => {}
     },
     userMsgText: { default: 'You might like one of these', type: String }
-    // warningText: { default: 'apple is not available', type: String },
-    // tableData: {
-    //   default: () => {
-    //     return [
-    //       {
-    //         domain: 'adapple.mew',
-    //         priceEth: '0.08237',
-    //         priceUsd: '40.00',
-    //         btnFunction: () => {
-    //           console.log('Click');
-    //         }
-    //       },
-    //       {
-    //         domain: 'adapple.mew',
-    //         priceEth: '0.08237',
-    //         priceUsd: '40.00',
-    //         btnFunction: () => {
-    //           console.log('Click');
-    //         }
-    //       },
-    //       {
-    //         domain: 'adapple.mew',
-    //         priceEth: '0.08237',
-    //         priceUsd: '40.00',
-    //         btnFunction: () => {
-    //           console.log('Click');
-    //         }
-    //       },
-    //       {
-    //         domain: 'adapple.mew',
-    //         priceEth: '0.08237',
-    //         priceUsd: '40.00',
-    //         btnFunction: () => {
-    //           console.log('Click');
-    //         }
-    //       }
-    //     ];
-    //   },
-    //   type: Array
-    // }
   },
   data: () => ({})
 };

@@ -250,6 +250,7 @@ export default {
       'order'
     ]),
     convertedEthPrice() {
+      console.log('domain price', this.domainPrice);
       return BigNumber(this.domainPrice).gt(0)
         ? BigNumber(this.domainPrice).dividedBy(this.fiatValue).toFixed(8)
         : '0';

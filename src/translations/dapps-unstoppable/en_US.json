@@ -5,6 +5,10 @@
   "address": "Address",
   "my-domains": "My domains",
   "resolver": "Resolver",
+  "alert": {
+    "title": "Just purchased a domain?",
+    "description": "If you just purchased a domain, please check back in a few minutes for the transaction to be completed. Once completed, your domain will appear on this list."
+  },
   "what-do-you-want-to-do-with-domain": "What do you want to do with the domain?",
   "manage-crypto-records": "Manage Crypto Records",
   "manage-ipfs-website": "Manage Ipfs Website",
