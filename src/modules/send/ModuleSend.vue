@@ -504,6 +504,7 @@ export default {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
           this.setAmountError(this.amount);
+          this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
       },
@@ -641,7 +642,6 @@ export default {
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
@@ -713,11 +713,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
-      this.amount = 0;
+      this.amount = '0';
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(this.actualGasPrice);
+      this.sendTx.setLocalGasPrice(BigNumber(e));
     }
   }
 };
