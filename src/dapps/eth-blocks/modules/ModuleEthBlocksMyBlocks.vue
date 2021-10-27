@@ -4,7 +4,7 @@
     My Blocks Tab
     ===================================================
     -->
-  <div class="pt-5 pb-13 px-3 pa-sm-15">
+  <div class="pt-5 pb-13 px-3 px-sm-15 pb-sm-15 pt-md-8">
     <!--
     ===================================================
     Loading
@@ -25,7 +25,7 @@
         Order: 1st
       ===================================================
       -->
-      <v-col cols="12" md="3" class="py-0">
+      <v-col cols="12" md="3" class="pt-0">
         <div class="mew-heading-3 textDark--text">
           My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
         </div>
@@ -36,7 +36,7 @@
         Search Blocks
       ===================================================
       -->
-      <v-col cols="12" md="3" class="py-0">
+      <v-col cols="12" md="3" class="pt-0">
         <mew-search
           placeholder="Find my block"
           is-compact
@@ -51,13 +51,8 @@
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col cols="12" md="3" class="py-0">
-        <div class="d-flex flex-row flex-nowrap align-center">
-          <div class="textLight--text mew-label pr-2 text-uppercase">Sort</div>
-          <v-col class="pa-0">
-            <blocks-sort @setSort="setActiveSort" />
-          </v-col>
-        </div>
+      <v-col cols="12" md="3" class="pt-0">
+        <blocks-sort @setSort="setActiveSort" />
       </v-col>
 
       <!--
@@ -109,7 +104,7 @@
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular
                   indeterminate
-                  color="grey lighten-5"
+                  color="disabledPrimary"
                 ></v-progress-circular>
               </v-row>
             </template>
