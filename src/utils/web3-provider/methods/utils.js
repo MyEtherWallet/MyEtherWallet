@@ -3,8 +3,8 @@ import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
 } from '@/modules/notifications/handlers/handlerNotification';
-
-import { _ } from 'web3-utils';
+import { clone } from 'underscore';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 const getSanitizedTx = tx => {
   return new Promise((resolve, reject) => {
     if (!tx.gas && !tx.gasLimit && !tx.chainId)
@@ -30,7 +30,7 @@ const getSanitizedTx = tx => {
 
 const setEvents = (promiObj, tx, dispatch) => {
   // create a no reference copy specifically for notification
-  const newTxObj = _.clone(tx);
+  const newTxObj = clone(tx);
   newTxObj.type = NOTIFICATION_TYPES.OUT;
   const isExempt = newTxObj.hasOwnProperty('handleNotification');
 
@@ -68,6 +68,10 @@ const setEvents = (promiObj, tx, dispatch) => {
       }
     })
     .on('error', err => {
+      if (!newTxObj.hash) {
+        Toast(err, {}, ERROR);
+        return;
+      }
       newTxObj.status = NOTIFICATION_STATUS.FAILED;
       newTxObj.errMessage = err.message;
       if (!newTxObj.hasOwnProperty('hash')) {

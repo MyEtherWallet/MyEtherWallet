@@ -61,7 +61,7 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
@@ -140,7 +140,7 @@ export default {
   },
   watch: {
     preSelectedToken(newVal) {
-      if (newVal && !_.isEmpty(newVal)) {
+      if (newVal && !isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }

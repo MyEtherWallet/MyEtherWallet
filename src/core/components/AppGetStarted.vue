@@ -8,7 +8,11 @@
             <h1 class="white--text mb-3">Ready to explore Ethereum?</h1>
             <div align="left" class="mt-5">
               <a
-                href="https://apps.apple.com/app/id1464614025"
+                :href="
+                  isMobile()
+                    ? 'https://apps.apple.com/app/id1464614025'
+                    : 'https://mewwallet.com'
+                "
                 target="_blank"
                 class="mr-1"
               >
@@ -19,7 +23,11 @@
                 />
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
+                :href="
+                  isMobile()
+                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
+                    : 'https://mewwallet.com'
+                "
                 target="_blank"
               >
                 <img
@@ -66,7 +74,11 @@
             <h1 class="white--text">Ready to explore Ethereum?</h1>
             <div align="left" class="mt-5">
               <a
-                href="https://apps.apple.com/app/id1464614025"
+                :href="
+                  isMobile()
+                    ? 'https://apps.apple.com/app/id1464614025'
+                    : 'https://mewwallet.com'
+                "
                 target="_blank"
                 class="mr-1"
               >
@@ -77,7 +89,11 @@
                 />
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
+                :href="
+                  isMobile()
+                    ? 'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet'
+                    : 'https://mewwallet.com'
+                "
                 target="_blank"
               >
                 <img
@@ -119,6 +135,7 @@
 
 <script>
 import { ROUTES_HOME } from '../configs/configRoutes';
+const platform = require('platform');
 export default {
   name: 'GetStarted',
   components: {},
@@ -126,6 +143,14 @@ export default {
     return {
       ROUTES_HOME: ROUTES_HOME
     };
+  },
+  methods: {
+    isMobile() {
+      return (
+        platform.os.family.includes('iOS') ||
+        platform.os.family.includes('Android')
+      );
+    }
   }
 };
 </script>
