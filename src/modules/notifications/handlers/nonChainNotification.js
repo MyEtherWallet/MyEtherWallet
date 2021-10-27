@@ -1,4 +1,4 @@
-import { isAddress } from 'web3-utils';
+import { isAddress, numberToHex, isBN } from 'web3-utils';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -6,20 +6,13 @@ import Notification, {
 import BigNumber from 'bignumber.js';
 
 const VALID_ARGUMENTS = [
-  'validUntil', // number
-  'toVal', // string
-  'toUsdVal', // string
-  'toType', // string
-  'toImg', // string
-  'to', // string
-  'selectedProvider', // obj
-  'refundAddress', // string
-  'fromImg', // string
-  'fromType', // string
-  'fromUsdVal', // string
-  'fromVal', // string
-  'actualTrade', // object
-  'type' // string
+  'from', // string
+  'type', // string
+  'network', // string
+  'status', // string
+  'fromTxData', // obj
+  'toTxData', // obj
+  'swapObj' // obj
 ];
 
 export default class NonChainNotification extends Notification {
@@ -43,19 +36,25 @@ export default class NonChainNotification extends Notification {
     const notification = {
       from: obj.from,
       to: obj.to,
-      fromType: obj.fromType,
+      fromType: obj.fromTxData.fromType,
       toType: obj.toType,
       fromImg: obj.fromImg,
       toImg: obj.toImg,
-      fromVal: obj.fromVal,
+      fromVal: obj.fromTxData.fromVal,
       toVal: obj.toVal,
       toUsdVal: obj.toUsdVal,
-      fromUsdVal: obj.fromUsdVal,
+      fromUsdVal: obj.fromTxData.fromUsdVal,
       validUntil: date,
       selectedProvider: obj.selectedProvider,
       totalFees: obj.totalFees,
       gasPriceType: obj.gasPriceType,
-      actualTrade: obj.actualTrade
+      actualTrade: obj.actualTrade,
+      status: obj.status,
+      type: obj.type,
+      network: obj.network,
+      gas: isBN(obj.gas) ? numberToHex(obj.gas) : obj.gas,
+      gasPrice: isBN(obj.gasPrice) ? numberToHex(obj.gasPrice) : obj.gasPrice,
+      value: isBN(obj.value) ? numberToHex(obj.value) : obj.value
     };
     if (notification.status === '0x1' || notification.status === '0x0')
       notification.status =

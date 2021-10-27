@@ -201,7 +201,7 @@
              Providers List
             =====================================================================================
             -->
-          <div>
+          <div v-if="hasMinEth">
             <v-slide-y-transition hide-on-leave group>
               <swap-provider-mentions
                 v-if="showAnimation"
@@ -230,36 +230,35 @@
                   :class="isFromNative ? '' : 'mt-7'"
                 />
                 <!--
-                =====================================================================================
-                Swap Fee
-                =====================================================================================
+                  =====================================================================================
+                  Swap Fee
+                  =====================================================================================
                 -->
-                <div>
-                  <app-network-fee
-                    v-if="showNetworkFee"
-                    :show-fee="showSwapFee"
-                    :getting-fee="loadingFee"
-                    :error="feeError"
-                    :total-fees="totalFees"
-                    :gas-price-type="localGasType"
-                    :message="feeError"
-                    :not-enough-eth="notEnoughEth"
-                    is-custom
-                    class="mt-10 mt-sm-16"
-                    @onLocalGasPrice="handleLocalGasPrice"
+                <app-transaction-fee
+                  v-if="showNetworkFee"
+                  :show-fee="showSwapFee"
+                  :getting-fee="loadingFee"
+                  :error="feeError"
+                  :total-cost="totalCost"
+                  :tx-fee="txFee"
+                  :total-gas-limit="totalGasLimit"
+                  :message="feeError"
+                  :not-enough-eth="notEnoughEth"
+                  :from-eth="isFromTokenMain"
+                  class="mt-10 mt-sm-16"
+                  @onLocalGasPrice="handleLocalGasPrice"
+                />
+                <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+                  <mew-button
+                    title="Next"
+                    :has-full-width="true"
+                    :disabled="disableNext"
+                    btn-size="xlarge"
+                    style="max-width: 240px"
+                    @click.native="
+                      !isFromNative ? showConfirm() : showTradeConfirm()
+                    "
                   />
-                  <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
-                    <mew-button
-                      title="Next"
-                      :has-full-width="true"
-                      :disabled="disableNext"
-                      btn-size="xlarge"
-                      style="max-width: 240px"
-                      @click.native="
-                        !isFromNative ? showConfirm() : showTradeConfirm()
-                      "
-                    />
-                  </div>
                 </div>
               </div>
             </v-slide-y-transition>
@@ -288,8 +287,9 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SwapProvidersList from './components/SwapProvidersList.vue';
 import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
-import { toBN, fromWei, toWei, _, isAddress } from 'web3-utils';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
+import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
+import { isEmpty, clone, isUndefined, debounce } from 'underscore';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -317,7 +317,7 @@ export default {
     ModuleAddressBook,
     SwapProvidersList,
     SwapProviderMentions,
-    AppNetworkFee
+    AppTransactionFee
   },
   mixins: [handlerAnalytics],
   props: {
@@ -350,9 +350,8 @@ export default {
         fromType: '',
         toType: '',
         validUntil: 0,
-        selectedProvider: {},
-        totalFees: '',
-        actualTrade: {}
+        selectedProvider: '',
+        txFee: ''
       },
       swapper: null,
       toTokenType: {},
@@ -369,23 +368,14 @@ export default {
       defaults: {
         fromToken: this.fromToken
       },
-      exPannel: [
-        {
-          name: 'Transaction Fee',
-          subtext: '$0.00',
-          tooltip:
-            'Transaction fee is automatically calculated. If you want to customize the Transaction fee, you can do it here.'
-        }
-      ],
       isLoadingProviders: false,
       showAnimation: false,
       checkLoading: true,
       addressValue: {},
       selectedProvider: {},
-      localGasPrice: '0',
-      localGasType: 'economy',
       refundAddress: '',
-      isValidRefundAddr: false
+      isValidRefundAddr: false,
+      localGasPrice: '0'
     };
   },
   computed: {
@@ -394,9 +384,9 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('global', [
       'network',
-      'gasPrice',
       'isEthNetwork',
-      'swapLink'
+      'swapLink',
+      'gasPriceByType'
     ]),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -510,7 +500,7 @@ export default {
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
-      return disableSet && this.refundAddress === '';
+      return disableSet || (this.refundAddress === '' && this.actualTrade);
     },
     providersErrorMsg() {
       let msg = '';
@@ -552,10 +542,10 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        !_.isEmpty(this.fromTokenType) &&
-        !_.isEmpty(this.toTokenType) &&
-        !_.isEmpty(this.fromTokenType?.symbol) &&
-        !_.isEmpty(this.toTokenType?.symbol)
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
       );
     },
     /**
@@ -738,10 +728,13 @@ export default {
         return token;
       });
     },
-    totalFees() {
-      const gasPrice =
-        this.localGasPrice === '0' ? this.gasPrice : this.localGasPrice;
-      return toBN(this.totalGasLimit).mul(toBN(gasPrice)).toString();
+    txFee() {
+      return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
+    },
+    totalCost() {
+      const amount = this.isFromTokenMain ? this.tokenInValue : '0';
+      const amountWei = toWei(amount);
+      return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
       if (this.currentTrade) {
@@ -767,11 +760,9 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
-      return !this.isFromNative
-        ? toBN(this.balanceInWei).gt(
-            toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
-          )
-        : true;
+      return toBN(this.balanceInWei).gte(
+        toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
+      );
     },
 
     /**
@@ -780,8 +771,8 @@ export default {
      */
     notEnoughEth() {
       try {
-        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalFees));
-        const isNotEnoughEth = this.isFromTokenMain
+        const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
+        const isNotEnoughEth = !this.isFromTokenMain
           ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
           : balanceAfterFees.isNeg();
         return isNotEnoughEth;
@@ -803,10 +794,13 @@ export default {
             token.contract.toLowerCase() ===
             this.fromTokenType.contract.toLowerCase()
         );
-        return hasBalance && hasBalance.balance && hasBalance.decimals
+        return this.isFromTokenMain
+          ? this.getTokenBalance(this.balanceInWei, 18)
+          : hasBalance && hasBalance.balance && hasBalance.decimals
           ? this.getTokenBalance(hasBalance.balance, hasBalance.decimals)
           : new BigNumber(0);
       }
+
       return new BigNumber(0);
     },
     /**
@@ -821,7 +815,7 @@ export default {
      * Used to show error messages for the amount input component
      */
     amountErrorMessage() {
-      if (!this.initialLoad && !this.isLoading) {
+      if (!this.initialLoad && !this.isLoading && this.fromTokenType?.name) {
         /* Balance is <= 0*/
 
         if (this.availableBalance.lte(0)) {
@@ -885,17 +879,14 @@ export default {
      * @returns{boolean}
      */
     hasSelectedProvider() {
-      return !_.isEmpty(this.selectedProvider);
+      return !isEmpty(this.selectedProvider);
     }
   },
   watch: {
-    $route: {
-      handler: function () {
-        this.setTokenFromURL();
-      },
-      immediate: true
+    gasPriceType() {
+      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
     },
-    totalFees: {
+    txFee: {
       handler: function () {
         this.checkFeeBalance();
       },
@@ -954,10 +945,8 @@ export default {
         this.setDefaults();
         this.isLoading = false;
       }
-      this.handleLocalGasPrice({
-        gasType: this.gasPriceType,
-        gasPrice: this.gasPrice
-      });
+
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     // reset values after executing transaction
     clear() {
@@ -970,8 +959,8 @@ export default {
         fromType: '',
         toType: '',
         validUntil: 0,
-        selectedProvider: {},
-        totalFees: '',
+        selectedProvider: '',
+        txFee: '',
         actualTrade: {}
       };
 
@@ -995,7 +984,6 @@ export default {
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
-      this.localGasType = 'economy';
       this.$refs.toToken.clear();
       this.$refs.amountInput.clear();
       this.setupSwap();
@@ -1065,14 +1053,14 @@ export default {
       window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
-      const fromToken = _.clone(this.fromTokenType);
-      const toToken = _.clone(this.toTokenType);
+      const fromToken = clone(this.fromTokenType);
+      const toToken = clone(this.toTokenType);
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
     processTokens(tokens, storeTokens) {
       this.availableTokens = tokens;
-      if (_.isUndefined(storeTokens)) {
+      if (isUndefined(storeTokens)) {
         this.setSwapTokens(tokens);
       }
     },
@@ -1106,7 +1094,7 @@ export default {
       }
       this.setTokenInValue(this.tokenInValue);
     },
-    setTokenInValue: _.debounce(function (value) {
+    setTokenInValue: debounce(function (value) {
       /**
        * Ensure that both pairs have been set
        * before calling the providers
@@ -1117,11 +1105,18 @@ export default {
       // Check if (in amount) is larger than (available balance)
       if (
         !this.isFromNative &&
-        this.availableBalance.lt(new BigNumber(this.tokenInValue))
+        (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
+          !this.hasMinEth)
       ) {
         this.step = 0;
         return;
       }
+
+      if (isEmpty(this.fromTokenType)) {
+        Toast('From token cannot be empty!', {}, ERROR);
+        return;
+      }
+
       if (
         !Swapper.helpers.hasValidDecimals(
           this.tokenInValue,
@@ -1187,7 +1182,7 @@ export default {
         }
       });
     },
-    getTrade: _.debounce(function (idx) {
+    getTrade: debounce(function (idx) {
       if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
       if (this.isFromNative && !this.isValidRefundAddr) return;
       this.step = 1;
@@ -1228,13 +1223,11 @@ export default {
       }
       this.feeError = '';
       this.currentTrade = trade;
+      this.currentTrade.gasPrice = this.localGasPrice;
       this.step = 2;
       this.loadingFee = false;
       if (!this.isFromNative) {
         this.currentTrade.gasPrice = this.localGasPrice;
-        this.exPannel[0].subtext = `${fromWei(this.totalFees)} ${
-          this.network.type.name
-        }`;
         this.checkFeeBalance();
       }
     },
@@ -1258,8 +1251,8 @@ export default {
         fromUsdVal: BigNumber(fromPrice).times(this.tokenInValue).toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
-        totalFees: this.totalFees,
-        gasPriceType: this.localGasType,
+        txFee: this.txFee,
+        gasPriceType: this.gasPriceType,
         actualTrade: this.currentTrade
       };
     },
@@ -1272,11 +1265,25 @@ export default {
       );
     },
     sentCrossChain(val) {
-      if (!val) {
-        const obj = Object.assign({}, this.confirmInfo, {
+      if (val) {
+        const obj = {
+          from: this.address,
           type: NOTIFICATION_TYPES.SWAP,
-          status: NOTIFICATION_STATUS.SUBMITTED
-        });
+          network: this.network.type.name,
+          status: NOTIFICATION_STATUS.PENDING,
+          fromTxData: {
+            currency: this.confirmInfo.fromType,
+            amount: this.confirmInfo.fromVal,
+            icon: this.confirmInfo.fromImg
+          },
+          toTxData: {
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
+            to: this.confirmInfo.to
+          },
+          swapObj: this.confirmInfo
+        };
         this.addNotification(new NonChainNotification(obj)).then(this.clear);
       } else {
         this.clear();
@@ -1293,7 +1300,7 @@ export default {
       return true;
     },
     executeTrade() {
-      const currentTradeCopy = _.clone(this.currentTrade);
+      const currentTradeCopy = clone(this.currentTrade);
       this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
@@ -1341,14 +1348,8 @@ export default {
     checkFeeBalance() {
       this.feeError = '';
       if (this.notEnoughEth) {
-        const buyMoreStr = this.isEthNetwork ? ' or buy more ETH.' : '.';
-        this.feeError = `Not enough ${this.network.type.name} to cover network fee. Select a different provider${buyMoreStr}`;
+        this.feeError = `Not enough ${this.network.type.name} to pay for transaction fee.`;
       }
-    },
-    handleLocalGasPrice(e) {
-      this.localGasPrice = e.gasPrice;
-      if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
-      this.localGasType = e.gasType;
     },
     setTokenFromURL() {
       if (Object.keys(this.$route.query).length > 0) {
@@ -1373,6 +1374,9 @@ export default {
       if (!this.isLoadingProviders && val) {
         this.showAnimation = false;
       }
+    },
+    handleLocalGasPrice(e) {
+      this.localGasPrice = e;
     }
   }
 };

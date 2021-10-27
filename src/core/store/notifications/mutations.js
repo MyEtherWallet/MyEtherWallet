@@ -2,12 +2,16 @@
 import localStore from 'store';
 import Configs from '../configs';
 import Notification from '@/modules/notifications/handlers/handlerNotification';
+import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification.js';
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
     savedStore.notifications = savedStore.notifications.map(item => {
+      console.log(item);
       delete item.notification;
-      return new Notification(item);
+      return item.hasOwnProperty('hash')
+        ? new Notification(item)
+        : new NonChainNotification(item);
     });
     if (savedStore.stateVersion === Configs.VERSION.notifications) {
       Object.assign(state, savedStore);

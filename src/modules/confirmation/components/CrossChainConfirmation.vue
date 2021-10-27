@@ -3,13 +3,13 @@
     <app-modal
       :show="showCrossChainModal"
       :title="title"
-      :close="reset"
+      :close="locReset"
       :btn-action="btnAction"
       :btn-text="buttonTitle"
       :is-persistent="true"
       :accept-only="true"
       width="560"
-      @close="reset"
+      @close="locReset"
     >
       <template #dialogBody>
         <div>
@@ -162,13 +162,9 @@ export default {
     },
     btnAction() {
       if (this.timerFinished) {
-        return this.reset;
+        return this.locReset;
       }
-      return this.sentBtc;
-    },
-    locReset() {
-      this.sentBtc(true);
-      this.reset();
+      return this.userSent;
     },
     timerFinished() {
       return this.time === '00:00';
@@ -200,6 +196,13 @@ export default {
         {},
         INFO
       );
+    },
+    locReset() {
+      this.sentBtc(false);
+      this.reset();
+    },
+    userSent() {
+      this.sentBtc(true);
     }
   }
 };

@@ -8,9 +8,10 @@ import {
  * Formatted notification for mew-notification component
  */
 const formatNotification = (obj, network) => {
+  console.log(obj);
   const newObj = {
     txHash: {
-      value: obj.hash,
+      value: obj.hash ? obj.hash : '',
       string: 'Transaction Hash',
       link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },

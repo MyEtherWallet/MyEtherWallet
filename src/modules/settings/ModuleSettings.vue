@@ -21,9 +21,9 @@
           :buttons="gasButtons"
           :selected="gasPriceType"
           :set-selected="setSelected"
-          :gas-price="gasPrice"
-          :set-custom-gas-price="setCustomGasPrice"
+          :total-gas-limit="gasPrice"
           :global="true"
+          :from-settings="true"
         />
       </template>
       <template #panelBody2>
@@ -47,7 +47,7 @@
 
           <div class="d-flex justify-center mt-5">
             <mew-button
-              :disabled="addressBook.length > 10"
+              :disabled="addressBookStore.length > 10"
               title="+ Add"
               btn-size="xlarge"
               @click.native="addMode = !addMode"
@@ -80,7 +80,6 @@ import SettingsGasPrice from './components/SettingsGasPrice';
 import AddressBookAddEdit from '@/modules/address-book/components/AddressBookAddEdit';
 import handlerSettings from './handler/handlerSettings';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
 import gasPriceMixin from './handler/gasPriceMixin';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
@@ -146,14 +145,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
     panelItems() {
       return [
         {
-          name: 'Gas price',
-          subtext: `${fromWei(this.gasPrice, 'gwei')} Gwei (${
-            this.gasPriceType
-          })`
+          name: 'Default transaction priority',
+          subtext: this.setPriority(this.gasPriceType)
         },
         {
           name: 'Import configurations'
@@ -180,7 +177,7 @@ export default {
     }
   },
   watch: {
-    addressBook: {
+    addressBookStore: {
       deep: true,
       handler: function () {
         this.getAddressBookTableData();
@@ -196,7 +193,7 @@ export default {
   methods: {
     getAddressBookTableData() {
       this.tableData = [];
-      this.addressBook.forEach((item, idx) => {
+      this.addressBookStore.forEach((item, idx) => {
         this.tableData.push({
           number: idx + 1,
           address: item.address,
@@ -232,6 +229,14 @@ export default {
     },
     exportStore() {
       this.settingsHandler.exportStore();
+    },
+    setPriority(priority) {
+      const priorities = {
+        economy: 'Normal',
+        regular: 'Higher',
+        fast: 'Highest'
+      };
+      return priorities[priority];
     }
   }
 };

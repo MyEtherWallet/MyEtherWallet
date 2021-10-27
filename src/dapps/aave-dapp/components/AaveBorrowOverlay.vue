@@ -73,7 +73,7 @@ import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { mapState } from 'vuex';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 
 export default {
@@ -138,7 +138,7 @@ export default {
   },
   watch: {
     preSelectedToken(newVal) {
-      if (newVal && !_.isEmpty(newVal)) {
+      if (newVal && !isEmpty(newVal)) {
         this.handleSelectedBorrow(this.preSelectedToken);
       }
     }

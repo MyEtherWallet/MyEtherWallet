@@ -1,6 +1,7 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -111,11 +112,7 @@ class Swap {
 }
 
 Swap.helpers = {
-  hasValidDecimals(amountStr, numDecimals) {
-    const decimals = amountStr.split('.')[1];
-    if (!decimals) return true;
-    return decimals.length <= numDecimals;
-  }
+  hasValidDecimals
 };
 
 export default Swap;
