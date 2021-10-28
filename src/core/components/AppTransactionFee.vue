@@ -212,7 +212,7 @@ export default {
     }
   },
   data() {
-    return { gasPriceModal: false, openHighFeeNote: false };
+    return { gasPriceModal: false, openHighFeeNote: false, interval: () => {} };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
@@ -248,14 +248,23 @@ export default {
       return estimatedTime(this.gasPriceType);
     }
   },
+  watch: {
+    gasPriceModal() {
+      clearInterval(this.interval);
+      this.interval = this.setGasPriceInterval();
+    }
+  },
   mounted() {
     // update gasprice every 2 minutes
-    setInterval(() => {
-      this.handleLocalGasPrice(this.gasPriceByType(this.gasPrice));
-    }, 60 * 2000);
+    this.interval = this.setGasPriceInterval();
   },
   methods: {
     ...mapActions('global', ['updateGasPrice']),
+    setGasPriceInterval() {
+      return setInterval(() => {
+        this.handleLocalGasPrice(this.gasPriceByType(this.gasPrice));
+      }, 60 * 2000);
+    },
     closeGasPrice() {
       this.gasPriceModal = false;
     },

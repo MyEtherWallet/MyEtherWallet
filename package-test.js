@@ -27,6 +27,7 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'eslint', // not supported by vue yet
+  'stylelint-config-standard',
   // updating after release
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb'
