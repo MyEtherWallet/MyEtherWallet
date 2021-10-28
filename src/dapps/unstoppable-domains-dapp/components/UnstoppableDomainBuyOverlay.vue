@@ -18,7 +18,7 @@
               id="crypto"
               title="Pay with Crypto"
               btn-style="transparent"
-              color-theme="#4b83e8"
+              color-theme="secondary"
               has-full-width
               :class="[crypto ? 'selectedBorder' : '']"
               class="my-2"
@@ -28,7 +28,7 @@
               id="credit"
               title="Pay with Credit"
               btn-style="transparent"
-              color-theme="#4b83e8"
+              color-theme="secondary"
               has-full-width
               :class="[credit ? 'selectedBorder' : '']"
               class="my-2"
@@ -49,37 +49,38 @@
           <v-divider vertical class="mx-5" />
 
           <div style="width: 100%">
-            <h2 class="mb-3">Select Payment</h2>
             <!--
             =====================================================================================
               Panel: Crypto
             =====================================================================================
             -->
-            <v-card
-              v-if="crypto"
-              outlined
-              class="
-                pa-2
-                d-flex
-                align-center
-                justify-space-between
-                bordered-red
-                informationBG
-              "
-              :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
-            >
-              <div class="d-flex align-center">
-                <img
-                  src="@/assets/images/currencies/icon-eth-blue.svg"
-                  alt="Crypto"
-                />
-                <div class="font-weight-medium ml-3">
-                  {{ convertedEthPrice }}
-                  <span class="primary--text">ETH</span>
+            <div v-if="crypto">
+              <h2 class="mb-3">Select Payment</h2>
+              <v-card
+                outlined
+                class="
+                  pa-2
+                  d-flex
+                  align-center
+                  justify-space-between
+                  bordered-red
+                  informationBG
+                "
+                :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
+              >
+                <div class="d-flex align-center">
+                  <img
+                    src="@/assets/images/currencies/icon-eth-blue.svg"
+                    alt="Crypto"
+                  />
+                  <div class="font-weight-medium ml-3">
+                    {{ convertedEthPrice }}
+                    <span class="primary--text">ETH</span>
+                  </div>
                 </div>
-              </div>
-              <v-icon class="primary--text">mdi-check-circle</v-icon>
-            </v-card>
+                <v-icon class="primary--text">mdi-check-circle</v-icon>
+              </v-card>
+            </div>
 
             <!--
             =====================================================================================
@@ -87,6 +88,7 @@
             =====================================================================================
             -->
             <div v-if="credit">
+              <h2 class="mb-3">Enter card information</h2>
               <v-row no-gutters>
                 <v-col cols="12">
                   <mew-input placeholder="Cardholder's Name" />
@@ -250,7 +252,6 @@ export default {
       'order'
     ]),
     convertedEthPrice() {
-      console.log('domain price', this.domainPrice);
       return BigNumber(this.domainPrice).gt(0)
         ? BigNumber(this.domainPrice).dividedBy(this.fiatValue).toFixed(8)
         : '0';

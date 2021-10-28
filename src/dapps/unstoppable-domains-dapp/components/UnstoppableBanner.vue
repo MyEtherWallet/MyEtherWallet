@@ -1,18 +1,18 @@
 <template>
   <v-container>
     <v-row class="ml-4" align="center" justify="center">
-      <v-col lg="1">
+      <v-col cols="1">
         <v-img
           src="@/assets/images/icons/icons-dapp-unstoppable.svg"
           max-width="88px"
         />
       </v-col>
-      <v-col lg="11">
+      <v-col cols="11">
         <div>
           <div class="bluePrimary--text">Dapps</div>
           <h2 class="my-1">Unstoppable Domain</h2>
           <div class="textLight--text">
-            Replace your crypto addres with a human readable name
+            Replace your crypto address with a human readable name
           </div>
         </div>
       </v-col>

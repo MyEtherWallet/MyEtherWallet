@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--domain-table">
+  <div>
     <div class="px-4">
       <!-- 
       =============================================================
@@ -7,28 +7,14 @@
       =============================================================
       -->
       <div>
-        <!-- 
-        =============================================================
-        Table item
-        =============================================================
-        -->
-        <div v-for="(d, key) in searchResults" :key="key">
+        <div v-for="(d, key) in searchResults" :key="`${key}unavailable`">
           <!-- 
           =============================================================
           Top warning message
           =============================================================
           -->
-          <div v-if="!d.available">
-            <div
-              class="
-                pa-5
-                table-border-bottom
-                warning--text
-                text--darken-2
-                d-flex
-                align-center
-              "
-            >
+          <div v-if="!d.available" class="domain-list-items">
+            <div class="pa-5 d-flex align-center">
               <v-icon class="mr-2" color="warning darken-2" small>
                 mdi-block-helper
               </v-icon>
@@ -43,25 +29,29 @@
                 {{ d.name }} is unavailable
               </div>
             </div>
-            <!-- 
-            =============================================================
-            Second row message
-            =============================================================
-            -->
-            <div class="pt-6 pb-4 px-2 bluePrimary--text font-weight-bold">
-              {{ userMsgText }}
-            </div>
           </div>
+          <!-- 
+          =============================================================
+          Second row message
+          =============================================================
+          -->
+          <div
+            v-if="!d.available"
+            class="pt-6 pb-4 px-2 bluePrimary--text font-weight-bold"
+          >
+            {{ userMsgText }}
+          </div>
+        </div>
+      </div>
+      <div class="domain-list-items px-5">
+        <div
+          v-for="(d, key) in searchResults"
+          :key="key"
+          class="table-border-top"
+        >
           <div
             v-if="d.available"
-            class="
-              table-border-top
-              py-6
-              px-5
-              d-md-flex
-              align-center
-              justify-space-between
-            "
+            class="py-6 px-5 d-md-flex align-center justify-space-between"
           >
             <div
               :class="
@@ -108,7 +98,10 @@ export default {
       type: Function,
       default: () => {}
     },
-    userMsgText: { default: 'You might like one of these', type: String }
+    userMsgText: {
+      default: 'You might like one of these',
+      type: String
+    }
   },
   data: () => ({})
 };
@@ -128,18 +121,17 @@ $bluePrimary: #4b83e8;
 .textLight--text {
   color: #939fb9;
 }
-// ==================================================================================================
 
-.mew-component--domain-table {
+.domain-list-items {
   border: 1px solid $greyMedium;
   border-radius: 12px;
 }
 
-.table-border-bottom {
-  border-bottom: 1px solid $greyMedium;
+.hide-list-items {
+  border: none;
 }
 
 .table-border-top {
-  border-top: 1px solid $greyMedium;
+  border-bottom: 1px solid $greyMedium;
 }
 </style>

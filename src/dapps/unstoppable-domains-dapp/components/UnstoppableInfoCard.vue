@@ -8,7 +8,7 @@
         <h2 class="mb-5">
           Replace your crypto addresses with a human readable name
         </h2>
-        <div class="mb-4 d-flex">
+        <div class="mb-4 d-flex align-center">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-dapp-friend.svg" />
           </div>
@@ -18,7 +18,7 @@
           </div>
         </div>
 
-        <div class="mb-4 d-flex">
+        <div class="mb-4 d-flex align-center">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-dapp-bag.svg" />
           </div>
@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="d-flex">
+        <div class="mb-4 d-flex align-center">
           <div class="mr-3">
             <v-img src="@/assets/images/icons/icon-dapp-share.svg" />
           </div>

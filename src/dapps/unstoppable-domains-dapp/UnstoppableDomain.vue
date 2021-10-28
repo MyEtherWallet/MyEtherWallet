@@ -25,13 +25,13 @@
         <template #tabContent1>
           <v-sheet color="transparent" max-width="700px" class="mx-auto py-12">
             <div class="mb-5">
-              <mew-search
+              <!-- <mew-search
                 v-model="input"
                 placeholder="Search for your domain"
                 is-search-block
                 @click.native="searchDomain"
-              />
-              <!-- <div class="d-flex align-start">
+              /> -->
+              <div class="d-flex align-start">
                 <mew-input
                   v-model="input"
                   :has-clear-btn="true"
@@ -46,7 +46,7 @@
                   title="Search"
                   @click.native="searchDomain"
                 />
-              </div> -->
+              </div>
             </div>
             <div>
               <domain-table
@@ -154,7 +154,7 @@ import UnstoppableManageRecordsOverlay from './components/UnstoppableManageRecor
 import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOverlay';
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
 import UnstoppableBanner from './components/UnstoppableBanner.vue';
-import DomainTable from '@/views/layouts-default/DomainTable.vue';
+import DomainTable from './components/UnstoppableDomainTable.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
 import { fetchResellerApi, fetchSimillarities } from './handlers/resellerApi';
