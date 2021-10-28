@@ -75,7 +75,7 @@ import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 import { mapState } from 'vuex';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import {
   formatFiatValue,
@@ -149,7 +149,7 @@ export default {
   },
   watch: {
     preSelectedToken(newVal) {
-      if (newVal && !_.isEmpty(newVal)) {
+      if (newVal && !isEmpty(newVal)) {
         this.handleSelectedBorrow(this.preSelectedToken);
       }
     }

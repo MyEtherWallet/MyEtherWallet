@@ -44,10 +44,6 @@ fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
 }
 
 fragment UserReserveData on UserReserve {
-  principalATokenBalance
-  userBalanceIndex
-  redirectedBalance
-  interestRedirectionAddress
   reserve {
     id
     underlyingAsset
@@ -62,10 +58,6 @@ fragment UserReserveData on UserReserve {
     }
   }
   usageAsCollateralEnabledOnUser
-  borrowRate
-  borrowRateMode
-  originationFee
-  principalBorrows
   variableBorrowIndex
   lastUpdateTimestamp
   __typename
@@ -83,7 +75,6 @@ fragment ReserveData on Reserve {
   stableBorrowRateEnabled
   baseLTVasCollateral
   optimalUtilisationRate
-  averageStableBorrowRate
   stableRateSlope1
   stableRateSlope2
   baseVariableBorrowRate
@@ -95,18 +86,8 @@ fragment ReserveData on Reserve {
   aToken {
     id
   }
-  availableLiquidity
-  stableBorrowRate
-  liquidityRate
-  totalBorrows
-  totalBorrowsStable
-  totalBorrowsVariable
-  totalLiquidity
-  utilizationRate
-  reserveLiquidationBonus
-  variableBorrowRate
+ 
   price {
     priceInEth
   }
-  lastUpdateTimestamp
 }

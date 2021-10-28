@@ -2,7 +2,7 @@ import { ETH } from '@/utils/networks/types';
 import layout from './TheAaveLayout';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
-  title: 'Aave V1',
+  title: 'Aave V2',
   subtitle: 'Earn passive income on your deposits and borrow assets',
   tag: '#DeFi',
   rightIconType: 'mew',

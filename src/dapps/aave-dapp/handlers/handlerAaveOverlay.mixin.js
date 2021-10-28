@@ -1,6 +1,6 @@
-import { _ } from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { isEmpty } from 'underscore';
 
 const handlerAaveOverlay = {
   props: {
@@ -35,8 +35,8 @@ const handlerAaveOverlay = {
     ...mapState('wallet', ['address']),
     ...mapGetters('external', ['fiatValue']),
     actualSelectedToken() {
-      const selectedTokens = _.isEmpty(this.selectedToken)
-        ? _.isEmpty(this.preSelectedToken)
+      const selectedTokens = isEmpty(this.selectedToken)
+        ? isEmpty(this.preSelectedToken)
           ? {}
           : this.preSelectedToken
         : this.selectedToken;

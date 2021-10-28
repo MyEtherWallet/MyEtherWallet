@@ -10,6 +10,8 @@ import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
 import eth from '@/assets/images/currencies/eth.png';
+import { mapState } from 'vuex';
+
 import {
   depositDetails,
   borrowDetails,
@@ -34,6 +36,9 @@ export default {
       usdPriceEth: '',
       userSummary: {}
     };
+  },
+  computed: {
+    ...mapState('external', ['coinGeckoTokens'])
   },
   apollo: {
     $subscribe: {
