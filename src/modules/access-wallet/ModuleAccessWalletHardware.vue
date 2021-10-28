@@ -153,7 +153,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -326,7 +326,7 @@ export default {
     onCoolWallet() {
       return (
         this.walletType === WALLET_TYPES.COOL_WALLET &&
-        _.isEmpty(this.hwWalletInstance)
+        isEmpty(this.hwWalletInstance)
       );
     },
     /**
@@ -410,8 +410,8 @@ export default {
     },
     bitBox2NotPaired() {
       return (
-        _.isEmpty(this.hwWalletInstance) ||
-        (!_.isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
+        isEmpty(this.hwWalletInstance) ||
+        (!isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
       );
     },
     bitBox2Connected() {
