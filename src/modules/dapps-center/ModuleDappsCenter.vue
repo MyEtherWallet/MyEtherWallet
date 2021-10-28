@@ -89,9 +89,6 @@ export default {
       });
     }
   },
-  mounted() {
-    console.log(this.dapps);
-  },
   methods: {
     routeTo(name) {
       this.trackDapp(name);
