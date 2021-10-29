@@ -34,6 +34,7 @@ export default class HandlerBlock {
     this.isMinting = false;
     this.isSending = false;
     this.pendignInterval = null;
+    this.extra = [];
     //Add to display you are minting this block
     this.pendingTxHash = _pendingTxHash;
   }
@@ -74,7 +75,9 @@ export default class HandlerBlock {
   getBlock() {
     if (this.description === '') {
       this.loading = true;
+      this.extra = [];
     }
+
     const payload = {
       blockNumber: this.blockNumber,
       chainId: this.network.type.chainID
@@ -100,6 +103,13 @@ export default class HandlerBlock {
         this.gasUsed = meta.attributes[5].value;
         this.uncles = meta.attributes[6].value;
         this.loading = false;
+        if (meta.attributes.length > 7) {
+          meta.attributes.forEach((item, index) => {
+            if (index > 6) {
+              this.extra.push(item);
+            }
+          });
+        }
       })
       .catch(err => {
         this.loading = false;

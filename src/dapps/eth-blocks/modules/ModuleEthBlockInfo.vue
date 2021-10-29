@@ -263,7 +263,8 @@ export default {
           this.handlerBlock.author.length - 4,
           4
         )}`;
-        return [
+
+        const _data = [
           { text: 'Number', value: this.blockNumberFormatted },
           { text: 'Date Created', value: this.handlerBlock.date },
           { text: 'Author', value: author },
@@ -280,6 +281,15 @@ export default {
             value: formatIntegerToString(this.handlerBlock.transactions)
           }
         ];
+        if (this.handlerBlock.extra.length > 0) {
+          this.handlerBlock.extra.forEach(item => {
+            _data.push({
+              text: 'Extra',
+              value: item.value
+            });
+          });
+        }
+        return _data;
       }
       return [];
     },
