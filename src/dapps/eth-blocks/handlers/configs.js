@@ -1,4 +1,4 @@
-const URL_POST = 'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/';
+const URL_POST = 'https://ethblocksapi.mewapi.io/';
 const URL_POST_META = `${URL_POST}meta`;
 const URL_POST_OWNER = `${URL_POST}owner`;
 const URL_POST_MINT = `${URL_POST}mint`;

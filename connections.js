@@ -55,8 +55,8 @@ module.exports = [
   'wss://rpc.gochain.io:443/ws',
   'https://mainnet.infura.io:443',
   // Dapps
-  'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/meta', //Eth Blocks
-  'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/owner', //Eth Blocks
-  'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/mint', //EthBlocks
-  'https://zvt2pei2nl.execute-api.us-east-1.amazonaws.com/dev/transfer' //EthBlocks
+  'https://ethblocksapi.mewapi.io/meta', //Eth Blocks
+  'https://ethblocksapi.mewapi.io/owner', //Eth Blocks
+  'https://ethblocksapi.mewapi.io/mint', //EthBlocks
+  'https://ethblocksapi.mewapi.io/transfer' //EthBlocks
 ];
