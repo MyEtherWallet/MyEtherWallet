@@ -41,7 +41,9 @@ export default {
   computed: {
     ...mapState('wallet', ['blockNumber']),
     maxBlock() {
-      return formatIntegerToString(this.blockNumber);
+      const max = toBN(this.blockNumber).sub(toBN(50));
+      const ZERO = toBN(0);
+      return max.gt(ZERO) ? formatIntegerToString(max.toNumber()) : '';
     },
     searchErrorMessage() {
       if (this.searchBlock && this.searchBlock !== '') {
@@ -49,7 +51,11 @@ export default {
           return 'value must be a positive integer';
         }
         const search = toBN(this.searchBlock);
-        const max = toBN(this.blockNumber);
+        const RESERVED = toBN(10);
+        if (search.lte(RESERVED)) {
+          return 'ETH Blocks 1-10 are reserved for the Ethereum founders';
+        }
+        const max = toBN(this.blockNumber).sub(toBN(50));
         if (search.gt(max)) {
           return `block number must be smaller or equal to ${this.maxBlock}`;
         }
