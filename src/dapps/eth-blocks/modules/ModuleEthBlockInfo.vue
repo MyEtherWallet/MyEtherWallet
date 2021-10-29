@@ -21,27 +21,42 @@
         <div>Back to all My blocks</div>
       </v-row>
     </router-link>
-
+    <!--
+      ===================================================
+        NFT Image: XS AND SM
+      ===================================================
+      -->
     <v-row
       v-if="!loading"
       no-gutters
       class="justify-center mb-2 d-flex d-md-none align-center"
     >
-      <div class="border-container d-block pa-1 mx-auto">
+      <a
+        :href="handlerBlock.rawImg"
+        target="_blank"
+        class="border-container d-block pa-1 mx-auto cursor-image"
+      >
         <v-img
-          src="../assets/loading-block.svg"
+          lazy-src="../assets/loading-block.svg"
+          :src="handlerBlock.img"
           :max-width="$vuetify.breakpoint.xs ? '160' : '240'"
-          class="pointer-image"
           contain
-        />
-      </div>
+        >
+          <template #placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="disabledPrimary"
+              ></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
+      </a>
     </v-row>
     <v-row v-if="!loading" no-gutters class="justify-center">
       <!--
         ===================================================
-          NFT Image
-
-          NOTE: ADD magnifying glass and link out to view full image src
+          NFT Image: MD AND UP
         ===================================================
         -->
       <div class="d-block">
