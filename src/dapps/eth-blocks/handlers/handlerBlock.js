@@ -41,6 +41,7 @@ export default class HandlerBlock {
    * Get BlockInfo
    */
   setBlockNumber(blockNumber) {
+    this.description = '';
     this.blockNumber = toBN(blockNumber).toNumber();
   }
 
@@ -49,6 +50,7 @@ export default class HandlerBlock {
    * @param {Obeject}_network - network object
    */
   setNetwork(_network) {
+    this.description = '';
     this.network = _network;
   }
   /**
