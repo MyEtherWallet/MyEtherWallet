@@ -90,6 +90,7 @@ export default class HandlerBlock {
           throw new Error(resp.data.error);
         }
         //Set Block Data
+        this.extra = [];
         const meta = resp.data.metadata;
         this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
         this.owner = resp.data.tokenOwner;

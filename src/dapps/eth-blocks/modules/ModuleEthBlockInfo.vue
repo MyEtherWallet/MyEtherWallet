@@ -390,11 +390,12 @@ export default {
     resetBlock() {
       clearInterval(this.pendingInterval);
       this.handlerBlock.getBlock();
-      this.handlerBlock.pendingTxHash = null;
       const tx = this.getBlockTx();
       if (tx) {
         this.handlerBlock.pendingTxHash = tx.hash;
         this.setPendingFetchInterval();
+      } else {
+        this.handlerBlock.pendingTxHash = null;
       }
     },
 

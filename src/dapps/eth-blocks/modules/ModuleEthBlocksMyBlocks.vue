@@ -48,7 +48,7 @@
         Search Blocks
       ===================================================
       -->
-      <v-col cols="12" md="3" class="pt-0 pb-2 pb-md-3" v-if="hasBlocks">
+      <v-col v-if="hasBlocks" cols="12" md="3" class="pt-0 pb-2 pb-md-3">
         <mew-search
           placeholder="Find my block"
           is-compact
@@ -63,7 +63,7 @@
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col cols="12" md="3" class="py-0 pb-md-3" v-if="hasBlocks">
+      <v-col v-if="hasBlocks" cols="12" md="3" class="py-0 pb-md-3">
         <blocks-sort @setSort="setActiveSort" />
       </v-col>
     </v-row>
