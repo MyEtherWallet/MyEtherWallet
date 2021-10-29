@@ -44,9 +44,24 @@ export default class HandlerBlock {
     this.blockNumber = toBN(blockNumber).toNumber();
   }
 
+  /**
+   * Sets network in the class
+   * @param {Obeject}_network - network object
+   */
   setNetwork(_network) {
     this.network = _network;
   }
+  /**
+   * Sets network in the class
+   * @param {string}_address - current connected address
+   */
+  setAddress(_address) {
+    this.currAdr = _address;
+  }
+  /**
+   * Sets pendingTxHash
+   * @param {string} _pendingTxHash
+   */
   setPendingTx(_pendingTxHash) {
     this.pendingTxHash = _pendingTxHash;
   }

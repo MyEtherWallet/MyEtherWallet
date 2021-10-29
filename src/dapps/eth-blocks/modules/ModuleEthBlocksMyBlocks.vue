@@ -187,9 +187,21 @@ export default {
     }
   },
   watch: {
+    /**
+     * Update HandelrMyBlocks on network change and fetch data
+     */
     network(newVal) {
       if (newVal) {
         this.handlerMyBlocks.setNetwork(newVal);
+        this.handlerMyBlocks.getBlocks();
+      }
+    },
+    /**
+     * Update HandelrMyBlocks on address change and fetch data
+     */
+    address(newVal) {
+      if (newVal) {
+        this.handlerMyBlocks.setAddress(newVal);
         this.handlerMyBlocks.getBlocks();
       }
     }

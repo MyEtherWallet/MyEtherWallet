@@ -40,6 +40,14 @@ export default class MyBlocks {
   }
 
   /**
+   * Sets network in the class
+   * @param {string}_address - current connected address
+   */
+  setAddress(_address) {
+    this.address = _address;
+  }
+
+  /**
    * Get Block Info
    */
   getBlocks() {

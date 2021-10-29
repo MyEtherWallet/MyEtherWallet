@@ -86,8 +86,8 @@
           :block-alert="alert"
           :owner="alertOwner"
           :price="alertMintPrice"
-          :disableAction="isActionInProgress"
-          :isPending="hasPendingTx"
+          :disable-action="isActionInProgress"
+          :is-pending="hasPendingTx"
           @mint="mintBlock"
           @openSend="openSendBlockOverlay"
         />
@@ -312,6 +312,16 @@ export default {
     network(newVal) {
       if (newVal) {
         this.handlerBlock.setNetwork(newVal);
+        this.resetBlock();
+      }
+    },
+
+    /**
+     * Update HandelrBlockInfo on network change and fetch data
+     */
+    address(newVal) {
+      if (newVal) {
+        this.handlerBlock.setAddress(newVal);
         this.resetBlock();
       }
     },
