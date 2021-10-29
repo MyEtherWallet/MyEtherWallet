@@ -4,19 +4,19 @@
     Blocks Mint Tab
     ===================================================
     -->
-  <v-container class="px-3 pb-13 pt-5 px-md-16 pb-md-15 pt-md-15">
+  <v-container class="px-3 pb-13 pt-5 px-md-15 pb-md-15 pt-md-8">
     <!--
         ===================================================
           Block Search or BlockInfo
         ===================================================
         -->
-    <block-search v-if="hasSearch" class="mb-8 mb-md-5" />
+    <block-search v-if="hasSearch" class="mb-8 mb-md-5 mt-md-7" />
     <router-link
       v-else
       :to="{ name: ROUTES.MY_BLOCKS.NAME }"
       class="blue500--text"
     >
-      <v-row class="align-center mt-3 mt-md-3 mb-7 mb-md-8" no-gutters>
+      <v-row class="align-center mt-3 mb-7 mb-md-8" no-gutters>
         <v-icon class="bluePrimary--text" size="20"> mdi-chevron-left</v-icon>
         <div>Back to all My blocks</div>
       </v-row>
@@ -29,7 +29,7 @@
     <v-row
       v-if="!loading"
       no-gutters
-      class="justify-center mb-2 d-flex d-md-none align-center"
+      class="justify-center mb-4 d-flex d-md-none align-center"
     >
       <a
         :href="handlerBlock.rawImg"
@@ -53,7 +53,7 @@
         </v-img>
       </a>
     </v-row>
-    <v-row v-if="!loading" no-gutters class="justify-center">
+    <v-row v-if="!loading" no-gutters class="justify-center mt-md-5">
       <!--
         ===================================================
           NFT Image: MD AND UP
@@ -63,7 +63,7 @@
         <a
           :href="handlerBlock.rawImg"
           target="_blank"
-          class="border-container d-none d-md-flex pa-1 mr-md-11 cursor-image"
+          class="border-container d-none d-md-flex pa-1 mr-md-10 cursor-image"
         >
           <v-img
             lazy-src="../assets/loading-block.svg"
@@ -89,7 +89,7 @@
           NFT Title
         ===================================================
         -->
-        <h2 class="mb-4 mb-md-8 text-center text-md-left">
+        <h2 class="mb-4 mb-md-5 text-center text-md-left">
           Block #{{ blockNumberFormatted }}
         </h2>
         <!--
@@ -156,7 +156,7 @@
             ]"
           >
             <div>{{ item.text }}</div>
-            <div class="monospace">{{ item.value }}</div>
+            <div>{{ item.value }}</div>
           </div>
         </div>
       </v-col>
