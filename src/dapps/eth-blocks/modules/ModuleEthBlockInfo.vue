@@ -86,8 +86,8 @@
           :block-alert="alert"
           :owner="alertOwner"
           :price="alertMintPrice"
-          :disable-mint="isMinting"
-          :disable-send="isSending"
+          :disableAction="isActionInProgress"
+          :isPending="hasPendingTx"
           @mint="mintBlock"
           @openSend="openSendBlockOverlay"
         />
@@ -166,9 +166,8 @@ import handlerBlock from '../handlers/handlerBlock';
 import { BLOCK_ALERT } from '../handlers/helpers/blockAlertType';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
-
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
@@ -191,12 +190,15 @@ export default {
     return {
       handlerBlock: {},
       ROUTES: ETH_BLOCKS_ROUTE,
-      openSendOverlay: false
+      openSendOverlay: false,
+      pendingInterval: false
     };
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('ethBlocksTxs', ['getEthBlockTx']),
+
     /**
      * @returns {string}:
      * formatted string of the block number
@@ -269,14 +271,27 @@ export default {
     /**
      * @returns {boolean}:
      */
-    isMinting() {
-      return this.loading ? false : this.handlerBlock.isMinting;
-    },
-    /**
-     * @returns {boolean}:
-     */
     isSending() {
       return this.loading ? false : this.handlerBlock.isSending;
+    },
+    /**
+     * Used in alert ui, disals button after user clicks send/mint to show that soemthign is happening
+     * @returns {boolean}
+     */
+    isActionInProgress() {
+      return this.loading
+        ? false
+        : this.handlerBlock.isMinting || this.handlerBlock.isSending;
+    },
+    hasPendingTx() {
+      return !(this.handlerBlock.pendingTxHash === null);
+    },
+    storeBlock() {
+      return {
+        blockNumber: this.blockRef.toString(),
+        hash: this.handlerBlock.pendingTxHash,
+        network: this.network.type.name
+      };
     }
   },
   watch: {
@@ -286,15 +301,32 @@ export default {
     blockRef(newVal) {
       if (validBlockNumber(newVal)) {
         this.handlerBlock.setBlockNumber(newVal);
-        this.handlerBlock.getBlock();
+        this.resetBlock();
       } else {
         this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
       }
     },
+    /**
+     * Update HandelrBlockInfo on network change and fetch data
+     */
     network(newVal) {
       if (newVal) {
         this.handlerBlock.setNetwork(newVal);
-        this.handlerBlock.getBlock();
+        this.resetBlock();
+      }
+    },
+    hasPendingTx(newVal, oldVal) {
+      /* New Hash was asigned */ {
+        if (newVal && newVal !== oldVal) {
+          if (this.openSendOverlay) {
+            this.closeSendOverlay();
+          }
+          this.addEthBlockTx(this.storeBlock);
+          this.setPendingFetchInterval();
+        }
+        if (newVal === false) {
+          clearInterval(this.pendingInterval);
+        }
       }
     }
   },
@@ -309,13 +341,32 @@ export default {
         this.blockRef,
         this.address
       );
-      this.handlerBlock.getBlock();
+      this.resetBlock();
     } else {
       this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
     }
   },
-
+  beforeDestroy() {
+    clearInterval(this.pendingInterval);
+  },
   methods: {
+    ...mapActions('ethBlocksTxs', ['addEthBlockTx', 'deleteEthBlockTx']),
+
+    resetBlock() {
+      clearInterval(this.pendingInterval);
+      this.handlerBlock.getBlock();
+      this.handlerBlock.pendingTxHash = null;
+      const tx = this.getBlockTx();
+      if (tx) {
+        this.handlerBlock.pendingTxHash = tx.hash;
+        this.setPendingFetchInterval();
+      }
+    },
+
+    getBlockTx() {
+      return this.getEthBlockTx(this.storeBlock);
+    },
+
     /**
      * Method returns whether or no number is even.
      * Used in table component, to determine row color
@@ -331,6 +382,24 @@ export default {
      */
     mintBlock() {
       this.handlerBlock.mintBlock();
+    },
+
+    setPendingFetchInterval() {
+      clearInterval(this.pendingInterval);
+      this.pendingInterval = setInterval(() => {
+        if (this.handlerBlock.pendingTxHash) {
+          this.web3.eth
+            .getTransactionReceipt(this.handlerBlock.pendingTxHash)
+            .then(receipt => {
+              if (receipt && receipt.status) {
+                clearInterval(this.pendingInterval);
+                this.handlerBlock.setPendingTx(null);
+                this.handlerBlock.getBlock();
+                this.deleteEthBlockTx(this.storeBlock);
+              }
+            });
+        }
+      }, 5000);
     },
 
     /**

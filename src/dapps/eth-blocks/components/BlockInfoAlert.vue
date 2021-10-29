@@ -70,11 +70,24 @@
         -->
       <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex justify-end">
         <mew-button
+          v-if="!isPending"
           :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
-          :disabled="disableMint"
-          :loading="disableMint"
+          :disabled="disableAction"
+          :loading="disableAction"
           @click.native="emitMint()"
         />
+        <mew-button v-else disabled btn-style="light">
+          <div class="d-flex flex-row align-center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              class="ma-auto"
+              size="16"
+              width="2"
+            ></v-progress-circular>
+            <div class="textDark--text pl-2">Pending</div>
+          </div>
+        </mew-button>
       </v-col>
       <!--
         ===================================================
@@ -83,11 +96,26 @@
         -->
       <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
         <mew-button
+          v-if="!isPending"
           has-full-width
           title="Send ETH Block"
           btn-style="outline"
+          :disabled="disableAction"
+          :loading="disableAction"
           @click.native="emitOpenSend()"
         />
+        <mew-button v-else disabled btn-style="light">
+          <div class="d-flex flex-row align-center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              class="ma-auto"
+              size="16"
+              width="2"
+            ></v-progress-circular>
+            <div class="textDark--text pl-2">Pending</div>
+          </div>
+        </mew-button>
       </v-col>
       <!--
         ===================================================
@@ -95,7 +123,7 @@
         ===================================================
         -->
       <v-col v-if="isOwned" cols="12" sm="6" class="mt-5 mb-2 mt-sm-4 pl-sm-2">
-        <mew-button has-full-width>
+        <mew-button v-if="!isPending" has-full-width>
           <v-row class="align-center justify-center">
             <div>List for sale</div>
             <v-icon class="ml-2 white--text" size="16px"
@@ -135,7 +163,11 @@ export default {
       type: String,
       default: ''
     },
-    disableMint: {
+    disableAction: {
+      type: Boolean,
+      default: false
+    },
+    isPending: {
       type: Boolean,
       default: false
     }

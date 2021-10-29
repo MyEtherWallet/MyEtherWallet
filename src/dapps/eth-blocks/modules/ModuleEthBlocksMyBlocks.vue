@@ -211,7 +211,7 @@ export default {
       try {
         this.$router.push({
           name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
-          params: { blockRef: block }
+          params: { blockRef: block.toString() }
         });
       } catch (e) {
         Toast(e, {}, ERROR);

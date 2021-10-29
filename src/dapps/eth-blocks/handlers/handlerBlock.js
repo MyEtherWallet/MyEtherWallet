@@ -9,7 +9,7 @@ import {
 import { toBN } from 'web3-utils';
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
 export default class HandlerBlock {
-  constructor(_web3, _network, _blockNumber, _currAdr) {
+  constructor(_web3, _network, _blockNumber, _currAdr, _pendingTxHash = null) {
     /**
      * set up the variables
      */
@@ -20,8 +20,6 @@ export default class HandlerBlock {
     this.hasOwner = false;
     this.blockNumber = toBN(_blockNumber).toNumber();
     this.currAdr = _currAdr;
-    //Add to display you are minting this block
-    this.pendingTxHash = '';
     //Block Data:
     this.owner = null;
     this.img = '';
@@ -35,6 +33,9 @@ export default class HandlerBlock {
     this.uncles = 0;
     this.isMinting = false;
     this.isSending = false;
+    this.pendignInterval = null;
+    //Add to display you are minting this block
+    this.pendingTxHash = _pendingTxHash;
   }
   /**
    * Get BlockInfo
@@ -46,12 +47,17 @@ export default class HandlerBlock {
   setNetwork(_network) {
     this.network = _network;
   }
+  setPendingTx(_pendingTxHash) {
+    this.pendingTxHash = _pendingTxHash;
+  }
 
   /**
    * Get Block Info
    */
   getBlock() {
-    this.loading = true;
+    if (this.description === '') {
+      this.loading = true;
+    }
     const payload = {
       blockNumber: this.blockNumber,
       chainId: this.network.type.chainID
@@ -102,7 +108,9 @@ export default class HandlerBlock {
           }
           const txData = resp.data.txData;
           txData.from = this.currAdr;
-          this.web3.eth.sendTransaction(txData);
+          this.web3.eth.sendTransaction(txData).on('transactionHash', hash => {
+            this.pendingTxHash = hash;
+          });
           this.isMinting = false;
         })
         .catch(err => {
@@ -134,7 +142,11 @@ export default class HandlerBlock {
             throw new Error(resp.data.error);
           }
           resp.data.txData.from = this.currAdr;
-          this.web3.eth.sendTransaction(resp.data.txData);
+          this.web3.eth
+            .sendTransaction(resp.data.txData)
+            .on('transactionHash', hash => {
+              this.pendingTxHash = hash;
+            });
           this.isSending = false;
         })
         .catch(err => {

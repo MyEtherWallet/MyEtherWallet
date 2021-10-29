@@ -8,6 +8,8 @@ import swap from './swap';
 import custom from './custom';
 import Configs from './configs';
 import LocalStore from 'store';
+import { dappStore } from '@/dapps/dappsStore';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -17,7 +19,8 @@ const store = new Vuex.Store({
     external: externalData,
     notifications: notifications,
     swap: swap,
-    custom: custom
+    custom: custom,
+    ...dappStore
   }
 });
 
