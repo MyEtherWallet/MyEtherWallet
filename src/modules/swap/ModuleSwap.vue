@@ -838,7 +838,6 @@ export default {
     ...mapActions('swap', ['setSwapTokens']),
     setupSwap() {
       this.isLoading = !this.prefetched;
-      this.localGasPrice = this.gasPrice;
       this.swapper = new Swapper(this.web3, this.network.type.name);
       if (!this.prefetched) {
         this.swapper

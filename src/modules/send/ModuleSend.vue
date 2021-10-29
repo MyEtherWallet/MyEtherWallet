@@ -272,9 +272,9 @@ export default {
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
       if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
-        return BigNumber(this.balanceInETH)
-          .minus(this.txFeeETH)
-          .gte(this.amount);
+        return BigNumber(this.amount)
+          .plus(this.txFeeETH)
+          .lte(this.balanceInETH);
       }
       // Check whether user has enough eth to cover tx fee + user has enough token balance for the amount to send
       return BigNumber(this.balanceInETH).gte(this.txFeeETH);
@@ -468,8 +468,9 @@ export default {
   },
   watch: {
     multiwatch() {
-      this.gasEstimationIsReady = false;
-      this.debounceEstimateGas(this.allValidInputs);
+      if (this.allValidInputs) {
+        this.debounceEstimateGas();
+      }
     },
 
     isPrefilled() {
@@ -504,6 +505,7 @@ export default {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
           this.setAmountError(this.amount);
+          this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
       },
@@ -538,8 +540,8 @@ export default {
     this.debounceAmountError = debounce(value => {
       this.setAmountError(value);
     }, 1000);
-    this.debounceEstimateGas = debounce(allValidInputs => {
-      if (allValidInputs) {
+    this.debounceEstimateGas = debounce(() => {
+      if (this.allValidInputs) {
         this.estimateAndSetGas();
       }
     }, 500);
@@ -638,11 +640,12 @@ export default {
       this.sendTx = new SendTransaction(this.$store);
     },
     estimateAndSetGas() {
+      this.gasEstimationIsReady = false;
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
+          this.defaultGasLimit = toBN(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -713,11 +716,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+      this.amount = '0';
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(this.actualGasPrice);
-      this.amount = 0;
+      this.sendTx.setLocalGasPrice(BigNumber(e));
     }
   }
 };
