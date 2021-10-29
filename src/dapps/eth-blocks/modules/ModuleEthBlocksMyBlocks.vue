@@ -18,14 +18,26 @@
     Overview Header
     ===================================================
     -->
-    <v-row v-else class="align-center justify-start">
+    <v-row
+      v-else
+      class="
+        align-center
+        justify-start
+        overview-container-my-blocks
+        mb-5 mb-md-0
+      "
+    >
       <!--
       ===================================================
         Block Count
         Order: 1st
       ===================================================
       -->
-      <v-col cols="12" md="3" class="pt-0">
+      <v-col
+        cols="12"
+        md="3"
+        :class="['pt-3 pt-md-0 pb-0 ', { 'pb-md-3 pt-2': hasBlocks }]"
+      >
         <div class="mew-heading-3 textDark--text">
           My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
         </div>
@@ -36,7 +48,7 @@
         Search Blocks
       ===================================================
       -->
-      <v-col cols="12" md="3" class="pt-0">
+      <v-col cols="12" md="3" class="pt-0 pb-2 pb-md-3" v-if="hasBlocks">
         <mew-search
           placeholder="Find my block"
           is-compact
@@ -51,21 +63,17 @@
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col cols="12" md="3" class="pt-0">
+      <v-col cols="12" md="3" class="py-0 pb-md-3" v-if="hasBlocks">
         <blocks-sort @setSort="setActiveSort" />
       </v-col>
-
-      <!--
+    </v-row>
+    <!--
       ===================================================
         Alert: No Blocks Owned
       ===================================================
       -->
-      <v-col
-        v-if="!hasBlocks"
-        cols="12"
-        order="last"
-        class="mt-10 mb-13 mb-md-16 pb-md-16"
-      >
+    <v-row v-if="!hasBlocks && !loading" class="mt-0">
+      <v-col cols="12" order="last" class="pb-md-16 mb-md-16">
         <mew-alert
           title="You do not have any ETH Blocks"
           description="If you recently minted or purchased an ETH Block, please wait until the transaction has been minted and come back. If you haven’t minted one, what are you waiting for? Mint a block!"
@@ -81,8 +89,8 @@
     ===================================================
     -->
     <v-row
-      v-if="hasBlocks"
-      class="align-top justify-center justify-sm-start mt-5 mt-md-0"
+      v-if="hasBlocks && !loading"
+      class="align-top justify-center justify-sm-start"
     >
       <v-col
         v-for="block in blocks"
@@ -272,5 +280,11 @@ export default {
   border: 1px solid var(--v-greyMedium-base);
   border-radius: 12px;
   cursor: pointer;
+}
+
+.overview-container-my-blocks {
+  @media (min-width: 960px) {
+    min-height: 74px;
+  }
 }
 </style>
