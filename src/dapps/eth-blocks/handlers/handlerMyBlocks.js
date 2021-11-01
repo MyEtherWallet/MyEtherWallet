@@ -56,6 +56,8 @@ export default class MyBlocks {
       address: this.address,
       chainId: this.network.type.chainID
     };
+    this.blocks = {};
+    this.totalBlocks = 0;
     return axios
       .post(URL_POST_OWNER, payload)
       .then(resp => {

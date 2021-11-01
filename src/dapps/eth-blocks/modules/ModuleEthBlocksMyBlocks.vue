@@ -36,7 +36,7 @@
       <v-col
         cols="12"
         md="3"
-        :class="['pt-3 pt-md-0 pb-0 ', { 'pb-md-3 pt-2': hasBlocks }]"
+        :class="['pt-3 pt-md-0 pb-0 ', { 'pt-2': hasBlocks }]"
       >
         <div class="mew-heading-3 textDark--text">
           My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
@@ -48,7 +48,7 @@
         Search Blocks
       ===================================================
       -->
-      <v-col v-if="hasBlocks" cols="12" md="3" class="pt-0 pb-2 pb-md-3">
+      <v-col v-if="hasBlocks" cols="12" md="3" class="pt-0 pb-2 pb-md-0">
         <mew-search
           placeholder="Find my block"
           is-compact
@@ -63,7 +63,7 @@
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col v-if="hasBlocks" cols="12" md="3" class="py-0 pb-md-3">
+      <v-col v-if="hasBlocks" cols="12" md="3" class="py-0 pb-md-0">
         <blocks-sort @setSort="setActiveSort" />
       </v-col>
     </v-row>
@@ -73,7 +73,7 @@
       ===================================================
       -->
     <v-row v-if="!hasBlocks && !loading" class="mt-0">
-      <v-col cols="12" order="last" class="pb-md-16 mb-md-16">
+      <v-col cols="12" class="pb-md-16 mb-md-16">
         <mew-alert
           title="You do not have any ETH Blocks"
           description="If you recently minted or purchased an ETH Block, please wait until the transaction has been minted and come back. If you haven’t minted one, what are you waiting for? Mint a block!"
@@ -90,7 +90,7 @@
     -->
     <v-row
       v-if="hasBlocks && !loading"
-      class="align-top justify-center justify-sm-start"
+      class="align-top justify-center justify-sm-start mt-0"
     >
       <v-col
         v-for="block in blocks"
