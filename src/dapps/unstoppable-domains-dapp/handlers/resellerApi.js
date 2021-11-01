@@ -70,9 +70,9 @@ export async function createResellerOrder({
 export async function getCoinbaseChargeInfo({ resellerId, email, chargeId }) {
   return fetch(
     `${api}/resellers/${resellerId}/users/${email}/orders/coinbase-charge/${chargeId}`
-  ).then(resp => {
-    if (resp.status === 200) {
-      return resp.json();
+  ).then(res => {
+    if (res.status === 200) {
+      return res.json();
     }
     throw new Error('Failed to get charge info');
   });

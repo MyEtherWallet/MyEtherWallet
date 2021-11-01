@@ -37,11 +37,11 @@
             <div class="buy-domain-info pa-4">
               <div class="d-flex flex-column">
                 <div class="bluePrimary--text py-1">DOMAIN</div>
-                <div>bob.crypto</div>
+                <div>{{ domain.name }}</div>
               </div>
               <div class="d-flex flex-column">
                 <div class="bluePrimary--text py-1">TOTAL</div>
-                <div>{{ convertedEthPrice }} ETH ${{ domainPrice }}</div>
+                <div>{{ convertedEthPrice }} ETH ${{ domain.price }}</div>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@
               Panel: Credit
             =====================================================================================
             -->
-            <div v-if="credit">
+            <!-- <div v-if="credit">
               <h2 class="mb-3">Enter card information</h2>
               <v-row no-gutters>
                 <v-col cols="12">
@@ -109,21 +109,40 @@
               </v-row>
               <v-row no-gutters justify="space-between">
                 <v-col class="pr-1" cols="5">
-                  <mew-button btn-style="outline" title="Cancel Payment" />
+                  <mew-button
+                    btn-style="outline"
+                    title="Cancel Payment"
+                    @click.native="close"
+                  />
                 </v-col>
                 <v-col class="pl-1" cols="5">
-                  <mew-button title="Pay $40" />
+                  <mew-button
+                    :title="`Pay $${domain.price}`"
+                    @click.native="pay"
+                  />
                 </v-col>
               </v-row>
-            </div>
+            </div> -->
 
-            <div v-if="credit" class="stripe-card-input mt-8">
+            <!-- <div v-if="credit" class="stripe-card-input mt-8">
               <card
                 :class="{ complete }"
                 :stripe="publishableKey"
                 :options="{}"
                 @change="complete = $event.complete"
               />
+            </div> -->
+
+            <div v-if="credit" class="payment-simple">
+              <StripeElements
+                v-slot="{ elements }"
+                ref="elms"
+                :stripe-key="stripeKey"
+              >
+                <StripeElement ref="card" type="card" :elements="elements">
+                </StripeElement>
+              </StripeElements>
+              <button type="button" @click="pay2">Pay</button>
             </div>
 
             <v-progress-linear
@@ -154,11 +173,6 @@
               </a>
             </div>
 
-            <div v-if="crypto" class="d-flex justify-space-between my-3">
-              <div>Network Fee</div>
-              <div class="lightPrimary--text">5 ETH</div>
-            </div>
-
             <div v-if="crypto" class="d-flex justify-center mt-5">
               <mew-button
                 title="Next step"
@@ -171,52 +185,12 @@
         </div>
       </v-sheet>
     </div>
-    <div v-if="confirmationStep">
-      <h2 class="text-center mb-10">{{ $t('unstoppable.confirmation') }}</h2>
-      <mew6-white-sheet>
-        <div class="pa-8">
-          <v-sheet
-            color="transparent"
-            class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
-          >
-            <div class="d-flex flex-column">
-              <div class="d-flex justify-space-between">
-                <div>{{ $t('unstoppable.domain-name') }}</div>
-                <div class="font-weight-medium">{{ domain.name }}</div>
-              </div>
-              <div class="d-flex align-center justify-space-between">
-                <div>{{ $t('unstoppable.price') }}</div>
-                <div class="font-weight-medium">
-                  {{ convertedEthPrice }} ETH (${{ domainPrice }})
-                </div>
-              </div>
-            </div>
-          </v-sheet>
-          <v-progress-linear
-            style="margin: 130px auto 40px auto; max-width: 200px"
-            indeterminate
-            color="primary"
-          ></v-progress-linear>
-          <h4 class="font-weight-bold text-center">
-            {{ $t('unstoppable.processing-registration') }}
-          </h4>
-          <v-sheet
-            color="transparent"
-            max-width="300px"
-            class="text-center mx-auto mt-3"
-          >
-            {{ $t('unstoppable.processing-registration-advice') }}
-          </v-sheet>
-        </div>
-        <div class="py-10"></div>
-      </mew6-white-sheet>
-    </div>
   </mew-overlay>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-import { Card, createToken } from 'vue-stripe-elements-plus';
+import { StripeElements, StripeElement } from 'vue-stripe-elements-plus';
 import BigNumber from 'bignumber.js';
 import {
   createResellerOrder,
@@ -225,7 +199,7 @@ import {
 
 export default {
   name: 'UnstoppableDomainBuyOverlay',
-  components: { Card },
+  components: { StripeElements, StripeElement },
   props: {
     open: { default: false, type: Boolean },
     close: { default: () => {}, type: Function }
@@ -234,11 +208,11 @@ export default {
     return {
       crypto: true,
       credit: false,
-      complete: false,
       paymentError: '',
       confirmationStep: false,
-      publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
-      loading: false
+      // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
+      loading: false,
+      stripeKey: 'pk_test_TYooMQauvdEDq54NiTphI7jx' // test key, don't hardcode
     };
   },
   computed: {
@@ -315,25 +289,32 @@ export default {
     },
     async payWithStripe() {
       try {
-        let stripeToken = await createToken();
-        if (stripeToken.error) {
-          throw stripeToken.error;
-        }
-        stripeToken = stripeToken.token.id;
-        this.loading = true;
-        const response = await createResellerOrder({
-          domain: this.domain.name,
-          email: this.email,
-          resellerId: this.resellerId,
-          address: this.address,
-          payment: {
-            type: 'stripe',
-            tokenId: stripeToken
-          }
-        });
-        this.confirmationStep = true;
-        this.SET_ORDER({ value: response.order });
-        this.loading = false;
+        const groupComponent = this.$refs.elms;
+        const cardComponent = this.$refs.card;
+        const cardElement = cardComponent.stripeElement;
+
+        groupComponent.instance
+          .createToken(cardElement)
+          .then(async stripeToken => {
+            if (stripeToken.error) {
+              throw stripeToken.error;
+            }
+            stripeToken = stripeToken.token.id;
+            this.loading = true;
+            const response = await createResellerOrder({
+              domain: this.domain.name,
+              email: this.email,
+              resellerId: this.resellerId,
+              address: this.address,
+              payment: {
+                type: 'stripe',
+                tokenId: stripeToken
+              }
+            });
+            this.confirmationStep = true;
+            this.SET_ORDER({ value: response.order });
+            this.loading = false;
+          });
       } catch (error) {
         this.loading = false;
         this.paymentError = error.message;
@@ -341,7 +322,6 @@ export default {
     },
     async payWithCrypto() {
       try {
-        this.loading = true;
         const response = await createResellerOrder({
           domain: this.domain.name,
           email: this.email,

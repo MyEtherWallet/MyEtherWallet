@@ -1,95 +1,91 @@
 <template>
   <mew-overlay :show-overlay="open" right-btn-text="Close" :close="closing">
-    <template #mewOverlayBody>
-      <h2 class="text-center mb-10">
-        {{ $t('unstoppable.manage-your-crypto-records') }}
-      </h2>
-      <mew6-white-sheet min-width="600px">
+    <h2 class="text-center mb-10">
+      {{ $t('unstoppable.manage-your-crypto-records') }}
+    </h2>
+    <div
+      v-if="loading"
+      class="pa-8 d-flex flex-column align-center justify-center"
+      style="min-height: 466px"
+    >
+      <v-progress-circular indeterminate />
+      <span class="mew-heading-2 mt-8">
+        {{ $t('unstoppable.updating-your-records') }}
+      </span>
+      <span class="mew-body d-flex text-center mt-4" style="width: 317px">
+        {{ $t('unstoppable.processing-registration-advice') }}
+      </span>
+    </div>
+    <div v-if="!loading" class="pa-8">
+      <h3 class="font-weight-medium">{{ managedDomain.name || '' }}</h3>
+      <div class="mt-8">
         <div
-          v-if="loading"
-          class="pa-8 d-flex flex-column align-center justify-center"
-          style="min-height: 466px"
+          v-for="(value, record) in records"
+          :key="record"
+          class="d-flex align-center justify-space-between mb-8"
         >
-          <v-progress-circular indeterminate />
-          <span class="mew-heading-2 mt-8">
-            {{ $t('unstoppable.updating-your-records') }}
+          <span class="font-weight-medium">
+            {{ record }}
           </span>
-          <span class="mew-body d-flex text-center mt-4" style="width: 317px">
-            {{ $t('unstoppable.processing-registration-advice') }}
-          </span>
-        </div>
-        <div v-if="!loading" class="pa-8">
-          <h3 class="font-weight-medium">{{ managedDomain.name || '' }}</h3>
-          <div class="mt-8">
-            <div
-              v-for="(value, record) in records"
-              :key="record"
-              class="d-flex align-center justify-space-between mb-8"
-            >
-              <span class="font-weight-medium">
-                {{ record }}
-              </span>
-              <div style="min-width: 300px" class="d-flex align-center">
-                <mew-input
-                  v-model="records[record]"
-                  style="max-height: 50px"
-                  :has-clear-btn="true"
-                  label="Address"
-                  :rules="[
-                    v =>
-                      validateRecord(record, value) ||
-                      $t('unstoppable.wrong-address-format')
-                  ]"
-                />
-                <mew-icon
-                  v-if="!value"
-                  icon-name="xwallet"
-                  :img-height="20"
-                  :style="'cursor: pointer; margin-left: 4px; margin-top: 12px;'"
-                  @click.native="handleRemoveRecord(record)"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-space-between align-center">
-            <mew-button
-              :title="$t('unstoppable.save-changes')"
-              btn-size="large"
-              :disabled="disabled"
-              @click.native="saveRecords"
+          <div style="min-width: 300px" class="d-flex align-center">
+            <mew-input
+              v-model="records[record]"
+              style="max-height: 50px"
+              :has-clear-btn="true"
+              label="Address"
+              :rules="[
+                v =>
+                  validateRecord(record, value) ||
+                  $t('unstoppable.wrong-address-format')
+              ]"
             />
-
-            <div class="cursor--pointer" @click="rotate">
-              <div class="d-flex align-center justify-right">
-                <span class="mew-caption mr-2">
-                  {{ $t('unstoppable.more-curriencies') }}
-                </span>
-                <mew-icon
-                  icon-name="arrow"
-                  :img-height="20"
-                  :style="`transform: rotate(${rotation}deg);`"
-                />
-              </div>
-              <div v-if="dropdownOpen" class="dropdown-list-box">
-                <ul>
-                  <li
-                    v-for="key of additionalRecords"
-                    :key="key"
-                    @click="handleAddRecord(key)"
-                  >
-                    <div>
-                      <p>
-                        {{ key }}
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <mew-icon
+              v-if="!value"
+              icon-name="xwallet"
+              :img-height="20"
+              :style="'cursor: pointer; margin-left: 4px; margin-top: 12px;'"
+              @click.native="handleRemoveRecord(record)"
+            />
           </div>
         </div>
-      </mew6-white-sheet>
-    </template>
+      </div>
+      <div class="d-flex justify-space-between align-center">
+        <mew-button
+          :title="$t('unstoppable.save-changes')"
+          btn-size="large"
+          :disabled="disabled"
+          @click.native="saveRecords"
+        />
+
+        <div class="cursor--pointer" @click="rotate">
+          <div class="d-flex align-center justify-right">
+            <span class="mew-caption mr-2">
+              {{ $t('unstoppable.more-curriencies') }}
+            </span>
+            <mew-icon
+              icon-name="arrow"
+              :img-height="20"
+              :style="`transform: rotate(${rotation}deg);`"
+            />
+          </div>
+          <div v-if="dropdownOpen" class="dropdown-list-box">
+            <ul>
+              <li
+                v-for="key of additionalRecords"
+                :key="key"
+                @click="handleAddRecord(key)"
+              >
+                <div>
+                  <p>
+                    {{ key }}
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </mew-overlay>
 </template>
 

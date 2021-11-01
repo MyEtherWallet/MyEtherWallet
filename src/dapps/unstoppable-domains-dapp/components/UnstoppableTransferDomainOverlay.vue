@@ -46,7 +46,7 @@
               max-width="300px"
               class="text-center mx-auto mt-3"
             >
-              Please do not exit the Dapp or close your browser, it takes a
+              Please do not exit the Dapp or close your browser. It takes a
               short while for registration…
             </v-sheet>
           </div>

@@ -82,61 +82,30 @@
               />
             </div>
             <div>
-              <mew-expand-panel :panel-items="myDomains">
+              <mew-expand-panel :panel-items="myDomains" is-grey-theme>
                 <template v-for="(d, id) in myDomains" #[`panelBody${++id}`]>
-                  <div :key="id">
-                    <div class="header-block bg_datablock mx-auto">
-                      <v-row>
-                        <v-col cols="6">
-                          <div class="d-flex align-center">
-                            <div>
-                              {{ $t('unstoppable.resolver') }}
-                            </div>
-                            <mew-blockie
-                              width="25px"
-                              height="25px"
-                              class="mx-3"
-                            />
-                            <div class="monospace truncate">
-                              {{ d.resolver }}
-                            </div>
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </div>
-                    <div>
-                      <div
-                        class="
-                          d-flex
-                          align-center
-                          justify-space-between
-                          border-bottom
-                          py-5
-                          px-4
-                        "
+                  <div :key="id" class="pa-5">
+                    <v-row>
+                      <v-col
+                        v-for="(f, key) in domainFunctions"
+                        :key="key"
+                        cols="4"
+                        class="text-center"
+                        @click="f.open(d)"
                       >
-                        <div class="mew-heading-3">
-                          {{
-                            $t('unstoppable.what-do-you-want-to-do-with-domain')
-                          }}
-                        </div>
-                      </div>
-                      <v-divider></v-divider>
-                      <div class="pa-5">
-                        <v-row>
-                          <v-col
-                            v-for="(f, key) in domainFunctions"
-                            :key="key"
-                            cols="2"
-                            class="text-center"
-                            @click="f.open(d)"
-                          >
-                            <mew-icon icon-name="ensManager" :img-height="75" />
-                            <div>{{ f.label }}</div>
-                          </v-col>
-                        </v-row>
-                      </div>
-                    </div>
+                        <mew-super-button
+                          style="max-height: 108px"
+                          title="Resolve Domains"
+                          :subtitle="f.subtitle"
+                          font-class="mew-heading-3"
+                          right-icon-type="mdi"
+                          :right-icon="f.icon"
+                          right-cols-num="3"
+                          left-cols-num="9"
+                          @click.native="f.open(d)"
+                        />
+                      </v-col>
+                    </v-row>
                   </div>
                 </template>
               </mew-expand-panel>
@@ -181,12 +150,16 @@ export default {
       searchResults: [],
       domainFunctions: [
         {
-          label: this.$t('unstoppable.manage-crypto-records'),
-          open: this.openManageRecordsOverlay
+          label: this.$t('unstoppable.resolve-domain'),
+          subtitle: this.$t('unstoppable.link-your-wallets'),
+          open: this.openManageRecordsOverlay,
+          icon: 'mdi-link-variant-plus'
         },
         {
           label: this.$t('unstoppable.manage-ipfs-website'),
-          open: this.openUploadIpfsOverlay
+          subtitle: this.$t('unstoppable.publish-your-website'),
+          open: this.openUploadIpfsOverlay,
+          icon: 'mdi-web'
         }
       ]
     };

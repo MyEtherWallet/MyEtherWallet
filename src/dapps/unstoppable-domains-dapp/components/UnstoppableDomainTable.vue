@@ -75,7 +75,7 @@
                 btn-style="light"
                 :btn-size="$vuetify.breakpoint.mdAndUp ? 'large' : 'small'"
                 :title="$vuetify.breakpoint.mdAndUp ? 'Buy domain' : 'Buy'"
-                @click.native="buyDomain"
+                @click.native="buyDomain(d)"
               />
             </div>
           </div>
