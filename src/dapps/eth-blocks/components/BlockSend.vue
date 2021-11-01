@@ -12,6 +12,7 @@
   >
     <div class="full-width pt-8 pt-md-0">
       <module-address-book
+        v-if="open"
         ref="addressInput"
         class="mb-4"
         @setAddress="setAddress"
@@ -66,6 +67,13 @@ export default {
     },
     disableSend() {
       return !this.isValidAddress || this.isSending;
+    }
+  },
+  watch: {
+    open(newVal) {
+      if (newVal === false) {
+        this.$refs.addressInput.clear();
+      }
     }
   },
   methods: {
