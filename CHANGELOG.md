@@ -4,6 +4,7 @@
 
 * refactor trezor wallet into own component [#3481](https://github.com/MyEtherWallet/MyEtherWallet/pull/3481)
 * migrate addressBook store [#3514](https://github.com/MyEtherWallet/MyEtherWallet/pull/3514)
+* add back how fees are determined [#3523](https://github.com/MyEtherWallet/MyEtherWallet/pull/3523)
 
 ### feat
 
@@ -19,6 +20,7 @@
 * fix add in more ledger error handling [#3507](https://github.com/MyEtherWallet/MyEtherWallet/pull/3507)
 * fix amount undefined [#3511](https://github.com/MyEtherWallet/MyEtherWallet/pull/3511)
 * add in links for mew mobile or web [#3513](https://github.com/MyEtherWallet/MyEtherWallet/pull/3513)
+* fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
 * fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
 
 ### Release v6.2.1

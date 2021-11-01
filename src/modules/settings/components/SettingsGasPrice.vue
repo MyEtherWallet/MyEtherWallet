@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class="mt-4 d-flex flex-column align-center">
-      <div v-if="!fromSettings && showNotEnoughEthWarning" class="mt-3">
+      <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
         <a target="_blank" :href="swapLink"> Buy more ETH </a>
       </div>
@@ -153,7 +153,6 @@ export default {
     return {
       gasPriceTypes: gasPriceTypes,
       previousSelected: null,
-      showNotEnoughEthWarning: false,
       economyDisabled: false,
       regularDisabled: false,
       fastDisabled: false
@@ -190,6 +189,16 @@ export default {
     fastInUsd() {
       const txFee = this.calcTxFee(gasPriceTypes.FAST);
       return this.formatInUsd(txFee);
+    },
+    showGetMoreEth() {
+      let counter = 0;
+      Object.values(this.gasPriceTypes).forEach(item => {
+        if (!this[`${item}Disabled`]) {
+          counter++;
+        }
+      });
+
+      return counter < 3;
     }
   },
   watch: {
@@ -209,7 +218,6 @@ export default {
           this.fastDisabled = true;
         }
         this.setSelected(this.previousSelected);
-        this.showNotEnoughEthWarning = true;
       }
 
       if (!this.notEnoughEth) {
@@ -222,15 +230,11 @@ export default {
     costInEth() {
       this.recalculate();
     },
-    notEnoughEth(newVal) {
-      this.showNotEnoughEthWarning = newVal;
+    notEnoughEth() {
       this.recalculate();
     }
   },
   mounted() {
-    if (this.notEnoughEth) {
-      this.showNotEnoughEthWarning = true;
-    }
     this.recalculate();
     this.previousSelected = this.gasPriceType;
   },

@@ -13,7 +13,7 @@ class SendTransaction {
   constructor() {
     this.$store = vuexStore;
     Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
+    Object.assign(this, mapGetters('global', ['network']));
     this.currency = null;
     this.localGasPrice = '0';
     this.TX = {
@@ -44,10 +44,7 @@ class SendTransaction {
     else throw ErrorList.INVALID_FROM_ADDRESS;
   }
   _setGasPrice() {
-    this.TX.gasPrice =
-      this.localGasPrice === '0'
-        ? toHex(toBN(this.gasPrice()))
-        : toHex(toBN(this.localGasPrice));
+    this.TX.gasPrice = toHex(toBN(this.localGasPrice));
   }
   setGasLimit(_gasLimit) {
     this.TX.gas = toHex(toBN(_gasLimit));
@@ -85,14 +82,14 @@ class SendTransaction {
     if (this.isToken()) {
       return this.currency.balance;
     }
-    const gasPriceBN = toBN(this.gasPrice());
+    const gasPriceBN = toBN(this.localGasPrice);
     const fee = gasPriceBN.mul(toBN(this.TX.gas));
     return this.balance().gt(this.balance().sub(fee)) > 0
       ? this.balance().sub(fee)
       : 0;
   }
   txFee() {
-    return toBN(this.gasPrice()).mul(toBN(this.TX.gas));
+    return toBN(this.localGasPrice).mul(toBN(this.TX.gas));
   }
   estimateGas() {
     this.setFrom(this.address());
