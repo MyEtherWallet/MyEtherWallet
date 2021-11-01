@@ -8,6 +8,8 @@ import {
 } from './configs';
 import { toBN } from 'web3-utils';
 const NO_OWNER = '0x0000000000000000000000000000000000000000';
+import store from '@/core/store';
+
 export default class HandlerBlock {
   constructor(_web3, _network, _blockNumber, _currAdr, _pendingTxHash = null) {
     /**
@@ -137,7 +139,12 @@ export default class HandlerBlock {
           const txData = resp.data.txData;
           txData.from = this.currAdr;
           this.web3.eth.sendTransaction(txData).on('transactionHash', hash => {
-            this.pendingTxHash = hash;
+            const _block = {
+              blockNumber: this.blockNumber.toString(),
+              hash: hash,
+              network: this.network.type.name
+            };
+            store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
           });
           this.isMinting = false;
         })
@@ -173,7 +180,12 @@ export default class HandlerBlock {
           this.web3.eth
             .sendTransaction(resp.data.txData)
             .on('transactionHash', hash => {
-              this.pendingTxHash = hash;
+              const _block = {
+                blockNumber: this.blockNumber.toString(),
+                hash: hash,
+                network: this.network.type.name
+              };
+              store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
             });
           this.isSending = false;
         })

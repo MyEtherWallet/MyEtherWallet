@@ -205,8 +205,7 @@ export default {
     return {
       handlerBlock: {},
       ROUTES: ETH_BLOCKS_ROUTE,
-      openSendOverlay: false,
-      pendingInterval: false
+      openSendOverlay: false
     };
   },
   computed: {
@@ -309,14 +308,12 @@ export default {
         : this.handlerBlock.isMinting || this.handlerBlock.isSending;
     },
     hasPendingTx() {
-      return !(this.handlerBlock.pendingTxHash === null);
-    },
-    storeBlock() {
-      return {
+      const _block = {
         blockNumber: this.blockRef.toString(),
         hash: this.handlerBlock.pendingTxHash,
         network: this.network.type.name
       };
+      return this.getEthBlockTx(_block) ? true : false;
     }
   },
   watch: {
@@ -350,17 +347,21 @@ export default {
         this.resetBlock();
       }
     },
+
+    /**
+     * Watch hasPending txs
+     * if newVal - close send overlay
+     * if !newVal - refetch block info
+     */
     hasPendingTx(newVal, oldVal) {
       /* New Hash was asigned */ {
         if (newVal && newVal !== oldVal) {
           if (this.openSendOverlay) {
             this.closeSendOverlay();
           }
-          this.addEthBlockTx(this.storeBlock);
-          this.setPendingFetchInterval();
         }
         if (newVal === false) {
-          clearInterval(this.pendingInterval);
+          this.resetBlock();
         }
       }
     }
@@ -381,26 +382,12 @@ export default {
       this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
     }
   },
-  beforeDestroy() {
-    clearInterval(this.pendingInterval);
-  },
+
   methods: {
-    ...mapActions('ethBlocksTxs', ['addEthBlockTx', 'deleteEthBlockTx']),
+    ...mapActions('ethBlocksTxs', ['addEthBlockTx']),
 
     resetBlock() {
-      clearInterval(this.pendingInterval);
       this.handlerBlock.getBlock();
-      const tx = this.getBlockTx();
-      if (tx) {
-        this.handlerBlock.pendingTxHash = tx.hash;
-        this.setPendingFetchInterval();
-      } else {
-        this.handlerBlock.pendingTxHash = null;
-      }
-    },
-
-    getBlockTx() {
-      return this.getEthBlockTx(this.storeBlock);
     },
 
     /**
@@ -418,24 +405,6 @@ export default {
      */
     mintBlock() {
       this.handlerBlock.mintBlock();
-    },
-
-    setPendingFetchInterval() {
-      clearInterval(this.pendingInterval);
-      this.pendingInterval = setInterval(() => {
-        if (this.handlerBlock.pendingTxHash) {
-          this.web3.eth
-            .getTransactionReceipt(this.handlerBlock.pendingTxHash)
-            .then(receipt => {
-              if (receipt && receipt.status) {
-                clearInterval(this.pendingInterval);
-                this.handlerBlock.setPendingTx(null);
-                this.handlerBlock.getBlock();
-                this.deleteEthBlockTx(this.storeBlock);
-              }
-            });
-        }
-      }, 5000);
     },
 
     /**

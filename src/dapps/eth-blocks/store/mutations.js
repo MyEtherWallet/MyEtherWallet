@@ -15,7 +15,7 @@ const INIT_STORE = function (state) {
  * @param {Object} obj - block object: {network: 'ETH', blockNumber: 223, hash: '0x...'}
  */
 const ADD_ETH_BLOCK_TX = function (state, obj) {
-  if (state.ethBlocksTxs.length >= 10) {
+  if (state.ethBlocksTxs.length >= 100) {
     state.ethBlocksTxs.shift();
   }
   state.ethBlocksTxs.push(obj);
@@ -31,7 +31,7 @@ const DELETE_ETH_BLOCK_TX = function (state, obj) {
       return item;
     }
   });
-  if (idx) {
+  if (idx >= 0) {
     state.ethBlocksTxs.splice(idx, 1);
   }
 };
