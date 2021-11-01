@@ -10,7 +10,9 @@
     "description": "If you just purchased a domain, please check back in a few minutes for the transaction to be completed. Once completed, your domain will appear on this list."
   },
   "what-do-you-want-to-do-with-domain": "What do you want to do with the domain?",
-  "manage-crypto-records": "Manage Crypto Records",
+  "resolve-domain": "Resolve Domain",
+  "link-your-wallets": "Link your wallets to this domain",
+  "publish-your-website": "Publish your website to IPFS with a zip file or IPFS Hash",
   "manage-ipfs-website": "Manage Ipfs Website",
   "buyDomain": "Buy Domain",
   "manage-domain": "Manage Domain",
