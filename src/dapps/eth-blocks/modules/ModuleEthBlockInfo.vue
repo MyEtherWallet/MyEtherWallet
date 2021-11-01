@@ -111,7 +111,7 @@
           Block Description
         ===================================================
         -->
-        <div class="border-container mt-4 mt-md-5 pa-5">
+        <div v-if="!isReserved" class="border-container mt-4 mt-md-5 pa-5">
           <div class="textMedium--text">
             {{ handlerBlock.description }}
           </div>
@@ -131,7 +131,7 @@
         XS12
       ===================================================
       -->
-      <v-col cols="12" class="mt-4 mt-md-11">
+      <v-col v-if="!isReserved" cols="12" class="mt-4 mt-md-11">
         <div class="table-properties">
           <div
             class="
@@ -183,6 +183,8 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
+import { toBN } from 'web3-utils';
+
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
@@ -236,6 +238,9 @@ export default {
      * - address !== wallet address -> not available
      */
     alert() {
+      if (this.isReserved) {
+        return BLOCK_ALERT.RESERVED;
+      }
       if (!this.loading && this.handlerBlock.hasOwner) {
         return this.address === this.handlerBlock.owner
           ? BLOCK_ALERT.OWNED
@@ -314,6 +319,11 @@ export default {
         network: this.network.type.name
       };
       return this.getEthBlockTx(_block) ? true : false;
+    },
+    isReserved() {
+      const _currBlock = toBN(this.blockRef);
+      const RESERVED = toBN(10);
+      return _currBlock.lte(RESERVED);
     }
   },
   watch: {

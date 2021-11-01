@@ -132,6 +132,16 @@
           </v-row>
         </mew-button>
       </v-col>
+      <!--
+        ===================================================
+          Block is reserved
+        ===================================================
+        -->
+      <v-col v-if="isReserved" cols="12" class="d-flex align-center mt-3">
+        <p class="mb-0 textLight--text">
+          ETH Blocks 1-10 are reserved for the Ethereum founders
+        </p>
+      </v-col>
     </v-row>
   </mew-alert>
 </template>
@@ -184,6 +194,8 @@ export default {
           return 'warning';
         case BLOCK_ALERT.AVAILABLE:
           return 'success';
+        case BLOCK_ALERT.RESERVED:
+          return 'error';
         default:
           return 'info';
       }
@@ -197,6 +209,8 @@ export default {
           return 'This block in not available';
         case BLOCK_ALERT.AVAILABLE:
           return 'This block is available';
+        case BLOCK_ALERT.RESERVED:
+          return 'This block is reserved';
         default:
           return 'You own this ETH Block';
       }
@@ -210,6 +224,8 @@ export default {
           return 'orangePrimary--text';
         case BLOCK_ALERT.AVAILABLE:
           return 'greenPrimary--text';
+        case BLOCK_ALERT.RESERVED:
+          return 'redPrimary--text';
         default:
           return 'bluePrimary--text';
       }
@@ -223,6 +239,8 @@ export default {
           return 'mdi-alert';
         case BLOCK_ALERT.AVAILABLE:
           return 'mdi-checkbox-marked-circle';
+        case BLOCK_ALERT.RESERVED:
+          return 'mdi-close-circle';
         default:
           return 'mdi-information';
       }
@@ -235,6 +253,9 @@ export default {
     },
     isOwned() {
       return this.blockAlert === BLOCK_ALERT.OWNED;
+    },
+    isReserved() {
+      return this.blockAlert === BLOCK_ALERT.RESERVED;
     },
     /**
      * @returns{string}
