@@ -149,6 +149,8 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
+
     /**
      * @returns {boolean}:
      * if HandelrMyBlocks.loading equals false,  returns false, otherwise returns true
@@ -210,6 +212,11 @@ export default {
     address(newVal) {
       if (newVal) {
         this.handlerMyBlocks.setAddress(newVal);
+        this.handlerMyBlocks.getBlocks();
+      }
+    },
+    getAllEthBlocksTxs(newVal) {
+      if (newVal) {
         this.handlerMyBlocks.getBlocks();
       }
     }
