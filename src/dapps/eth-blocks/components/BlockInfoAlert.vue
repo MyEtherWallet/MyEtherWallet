@@ -39,11 +39,7 @@
         ===================================================
         -->
       <v-col v-if="isNotAvailable" cols="12" class="mt-1">
-        <a
-          href="https://www.ethvm.com/address/0x64bbde373e909501de1309231336761adeaa07d5"
-          target="_blank"
-          class="d-flex align-center"
-        >
+        <a :href="openSeaLink" target="_blank" class="d-flex align-center">
           <p class="mb-0">See if it's available on OpenSea</p>
           <v-icon class="ml-2 greenPrimary--text" size="16px"
             >mdi-open-in-new</v-icon
@@ -123,7 +119,7 @@
         ===================================================
         -->
       <v-col v-if="isOwned" cols="12" sm="6" class="mt-5 mb-2 mt-sm-4 pl-sm-2">
-        <mew-button v-if="!isPending" has-full-width>
+        <mew-button v-if="!isPending" has-full-width :btn-link="openSeaLink">
           <v-row class="align-center justify-center">
             <div>List for sale</div>
             <v-icon class="ml-2 white--text" size="16px"
@@ -158,6 +154,10 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+const OPENSEA =
+  'https://opensea.io/assets/0x01234567bac6ff94d7e4f0ee23119cf848f93245/';
+const OPENSEA_TEST =
+  'https://testnets.opensea.io/assets/0x01234567bac6ff94d7e4f0ee23119cf848f93245/';
 export default {
   name: 'BlockInfoAlert',
   props: {
@@ -180,6 +180,10 @@ export default {
     isPending: {
       type: Boolean,
       default: false
+    },
+    blockNumber: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -285,6 +289,18 @@ export default {
         BigNumber(fromWei(this.price)).times(this.fiatValue)
       ).value;
       return `~ ${'$' + value}`;
+    },
+
+    /**
+     *
+     */
+    openSeaLink() {
+      if (this.blockNumber !== '') {
+        return this.isTestNetwork
+          ? `${OPENSEA_TEST}${this.blockNumber}`
+          : `${OPENSEA}${this.blockNumber}`;
+      }
+      return '';
     }
   },
   methods: {

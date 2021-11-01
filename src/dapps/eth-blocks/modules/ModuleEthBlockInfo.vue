@@ -99,6 +99,7 @@
         -->
         <block-info-alert
           :block-alert="alert"
+          :block-number="blockRef"
           :owner="alertOwner"
           :price="alertMintPrice"
           :disable-action="isActionInProgress"
