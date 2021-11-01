@@ -14,7 +14,6 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  'vuetify',
   'sass-loader',
   'husky',
   '@aave/protocol-js',

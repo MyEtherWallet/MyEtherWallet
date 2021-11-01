@@ -15,16 +15,69 @@
             Address
           =====================================================================================
           -->
-          <div
-            class="
-              info-container--text
-              font-weight-bold
-              text-uppercase
-              white--text
-            "
-          >
-            MY Personal Account
-          </div>
+          <v-menu offset-y>
+            <template #activator="{ on }">
+              <div
+                class="
+                  d-flex
+                  align-center
+                  cursor--pointer
+                  personal-account-container
+                "
+                v-on="on"
+              >
+                <div
+                  class="
+                    info-container--text
+                    font-weight-bold
+                    text-uppercase
+                    white--text
+                  "
+                >
+                  MY Personal Account
+                </div>
+                <v-icon class="white--text ml-2" small dense>
+                  mdi-menu-down
+                </v-icon>
+              </div>
+            </template>
+            <v-list dense>
+              <v-list-item class="cursor-pointer" @click="refresh">
+                <v-list-item-icon
+                  ><v-icon>mdi-refresh</v-icon></v-list-item-icon
+                >
+                <v-list-item-title>Refresh Balance</v-list-item-title>
+              </v-list-item>
+              <v-list-item class="cursor-pointer">
+                <v-list-item-icon
+                  ><v-icon>mdi-printer</v-icon></v-list-item-icon
+                >
+                <v-list-item-title>View paper wallet</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                v-if="isHardware && canDisplayAddress"
+                class="cursor-pointer"
+              >
+                <v-list-item-icon
+                  ><mew-icon :icon-name="identifier" :img-height="24"
+                /></v-list-item-icon>
+                <v-list-item-title
+                  >View address on {{ walletName }}</v-list-item-title
+                >
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item class="cursor-pointer">
+                <v-list-item-icon
+                  ><v-icon>mdi-account-box-multiple</v-icon></v-list-item-icon
+                >
+                <v-list-item-title>Switch Account</v-list-item-title>
+              </v-list-item>
+              <v-list-item class="cursor-pointer">
+                <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
+                <v-list-item-title>Logout</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <div class="d-flex align-center">
             <v-tooltip top content-class="tooltip-inner">
               <template #activator="{ on }">
@@ -50,40 +103,8 @@
                 getChecksumAddressString
               }}</span>
             </v-tooltip>
-            <!--
-            =====================================================================================
-              Print Button
-            =====================================================================================
-            -->
-            <v-tooltip top content-class="tooltip-inner">
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  class="info-container--action-print px-0 ml-1 drop-shadow"
-                  fab
-                  depressed
-                  color="white"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="openPaperWallet = true"
-                  ><v-icon size="10px">mdi-printer</v-icon></v-btn
-                >
-              </template>
-              <span class="titlePrimary--text">Print account info</span>
-            </v-tooltip>
           </div>
         </div>
-        <!--
-            =====================================================================================
-              Refresh Button
-            =====================================================================================
-            -->
-        <v-icon
-          color="rgba(255, 255, 255, 0.72)"
-          class="cursor-pointer refresh-icon"
-          size="20"
-          @click="refresh"
-          >mdi-refresh</v-icon
-        >
       </div>
       <!--
       =====================================================================================
@@ -194,6 +215,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { isEmpty } from 'underscore';
 
 export default {
   components: {
@@ -211,7 +233,7 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapState('wallet', ['address', 'instance', 'identifier']),
+    ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',
@@ -220,6 +242,19 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
     getChecksumAddressString() {
       return this.address ? toChecksumAddress(this.address) : '';
+    },
+    canDisplayAddress() {
+      return (
+        !isEmpty(this.instance) &&
+        this.instance.hasOwnProperty('displayAddress') &&
+        this.instance.displayAddress
+      );
+    },
+    walletName() {
+      return !isEmpty(this.instance) &&
+        this.instance.meta.hasOwnProperty('name')
+        ? this.instance.meta.name
+        : '';
     },
     totalTokenBalance() {
       return this.totalTokenFiatValue;
@@ -392,5 +427,14 @@ export default {
 
 .refresh-icon.v-icon.v-icon::after {
   background-color: transparent;
+}
+
+.personal-account-container {
+  border-radius: 10px;
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    padding-left: 8px;
+    margin-left: -8px;
+  }
 }
 </style>
