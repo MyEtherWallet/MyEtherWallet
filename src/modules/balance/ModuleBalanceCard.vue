@@ -48,7 +48,7 @@
                 >
                 <v-list-item-title>Refresh Balance</v-list-item-title>
               </v-list-item>
-              <v-list-item class="cursor-pointer">
+              <v-list-item class="cursor-pointer" @click="openPaperWallet">
                 <v-list-item-icon
                   ><v-icon>mdi-printer</v-icon></v-list-item-icon
                 >
@@ -57,6 +57,7 @@
               <v-list-item
                 v-if="isHardware && canDisplayAddress"
                 class="cursor-pointer"
+                @click="viewAddressOnDevice"
               >
                 <v-list-item-icon
                   ><mew-icon :icon-name="identifier" :img-height="24"
@@ -184,7 +185,7 @@
       :switch-address="!!instance.path"
     />
     <balance-address-paper-wallet
-      :open="openPaperWallet"
+      :open="showPaperWallet"
       :close="closePaperWallet"
       @close="closePaperWallet"
     />
@@ -227,7 +228,7 @@ export default {
   data() {
     return {
       openChangeAddress: false,
-      openPaperWallet: false,
+      showPaperWallet: false,
       openQR: false
     };
   },
@@ -240,9 +241,18 @@ export default {
       'totalTokenFiatValue'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    /**
+     * returns checksummed address
+     */
     getChecksumAddressString() {
       return this.address ? toChecksumAddress(this.address) : '';
     },
+    /**
+     * checks whether hardware wallet
+     * can display address with the device
+     *
+     * returns @Boolean
+     */
     canDisplayAddress() {
       return (
         !isEmpty(this.instance) &&
@@ -250,15 +260,27 @@ export default {
         this.instance.displayAddress
       );
     },
+    /**
+     * returns hardware wallet name
+     * returns @String
+     */
     walletName() {
       return !isEmpty(this.instance) &&
         this.instance.meta.hasOwnProperty('name')
         ? this.instance.meta.name
         : '';
     },
+    /**
+     * returns token values
+     * returns @String
+     */
     totalTokenBalance() {
       return this.totalTokenFiatValue;
     },
+    /**
+     * returns total value including tokens
+     * returns @String
+     */
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
@@ -266,6 +288,10 @@ export default {
       }
       return this.walletChainBalance;
     },
+    /**
+     * returns formatted wallet balance
+     * returns @String
+     */
     walletChainBalance() {
       return `${formatFloatingPointValue(this.balanceInETH).value}`;
     },
@@ -298,6 +324,17 @@ export default {
     refresh() {
       this.setTokenAndEthBalance();
     },
+    /**
+     * calls hardware wallet show address function
+     */
+    viewAddressOnDevice() {
+      if (this.canDisplayAddress) {
+        this.instance.displayAddress();
+      }
+    },
+    /**
+     * Animates wallet card
+     */
     animateMewCard() {
       const el = document.querySelector('.mew-card');
       if (el) {
@@ -311,16 +348,38 @@ export default {
         });
       }
     },
+    /**
+     * set openChangeAddress to false
+     * to close the modal
+     */
     closeChangeAddress() {
       this.openChangeAddress = false;
     },
+    /**
+     * set showPaperWallet to false
+     * to close the modal
+     */
     closePaperWallet() {
-      this.openPaperWallet = false;
+      this.showPaperWallet = false;
     },
+    /**
+     * sets showPaperWallet to true
+     * to open the modal
+     */
+    openPaperWallet() {
+      this.showPaperWallet = true;
+    },
+    /**
+     * Copies address
+     */
     copyAddress() {
       clipboardCopy(this.getChecksumAddressString);
       Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     },
+    /**
+     * set openQR to false
+     * to close the modal
+     */
     closeQR() {
       this.openQR = false;
     }
@@ -389,7 +448,7 @@ export default {
     font-size: 16px !important;
   }
 
-  .info-container--action-print {
+  .info-container--action- {
     opacity: 0.6;
     border-radius: 4px !important;
     height: 14px !important;
@@ -400,7 +459,7 @@ export default {
   }
 
   .info-container--action-btn:hover,
-  .info-container--action-print:hover {
+  .info-container--action-:hover {
     opacity: 1;
   }
   .info-container--icon:hover {
