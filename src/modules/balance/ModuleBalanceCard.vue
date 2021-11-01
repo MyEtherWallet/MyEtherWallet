@@ -67,13 +67,17 @@
                 >
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item class="cursor-pointer">
+              <v-list-item
+                v-if="canSwitch"
+                class="cursor-pointer"
+                @click="openChangeAddress"
+              >
                 <v-list-item-icon
                   ><v-icon>mdi-account-box-multiple</v-icon></v-list-item-icon
                 >
                 <v-list-item-title>Switch Account</v-list-item-title>
               </v-list-item>
-              <v-list-item class="cursor-pointer">
+              <v-list-item class="cursor-pointer" @click="openLogout">
                 <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
                 <v-list-item-title>Logout</v-list-item-title>
               </v-list-item>
@@ -177,13 +181,11 @@
         </div>
       </div>
     </div>
-
-    <module-access-wallet-hardware
-      v-if="!!instance.path"
-      :open="openChangeAddress"
-      :close="closeChangeAddress"
-      :switch-address="!!instance.path"
-    />
+    <!--
+    =====================================================================================
+      Wallet card modals
+    =====================================================================================
+    -->
     <balance-address-paper-wallet
       :open="showPaperWallet"
       :close="closePaperWallet"
@@ -199,6 +201,25 @@
         <app-addr-qr />
       </template>
     </app-modal>
+    <module-access-wallet-hardware
+      v-if="!!instance.path"
+      :open="showChangeAddress"
+      :close="closeChangeAddress"
+      :switch-address="!!instance.path"
+    />
+    <mew-popup
+      max-width="400px"
+      hide-close-btn
+      :show="showLogout"
+      :title="$t('interface.menu.logout')"
+      :left-btn="{ text: 'Cancel', method: closeLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
+    ></mew-popup>
   </div>
 </template>
 
@@ -206,7 +227,6 @@
 import anime from 'animejs/lib/anime.es.js';
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
@@ -217,6 +237,8 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'underscore';
+import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
+import wallets from './handlers/config';
 
 export default {
   components: {
@@ -227,9 +249,11 @@ export default {
   },
   data() {
     return {
-      openChangeAddress: false,
+      showChangeAddress: false,
       showPaperWallet: false,
-      openQR: false
+      openQR: false,
+      showLogout: false,
+      wallets: wallets
     };
   },
   computed: {
@@ -259,6 +283,13 @@ export default {
         this.instance.hasOwnProperty('displayAddress') &&
         this.instance.displayAddress
       );
+    },
+    /**
+     * checks whether wallet can switch address
+     * returns @Boolean
+     */
+    canSwitch() {
+      return !isEmpty(this.instance) && this.wallets[this.identifier];
     },
     /**
      * returns hardware wallet name
@@ -318,6 +349,7 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setTokenAndEthBalance']),
+    ...mapActions('wallet', ['removeWallet']),
     /**
      * refreshes the token and eth balance
      */
@@ -349,11 +381,18 @@ export default {
       }
     },
     /**
-     * set openChangeAddress to false
+     * set showChangeAddress to false
      * to close the modal
      */
     closeChangeAddress() {
-      this.openChangeAddress = false;
+      this.showChangeAddress = false;
+    },
+    /**
+     * set showChangeAddress to true
+     * to open the modal
+     */
+    openChangeAddress() {
+      this.showChangeAddress = true;
     },
     /**
      * set showPaperWallet to false
@@ -382,6 +421,28 @@ export default {
      */
     closeQR() {
       this.openQR = false;
+    },
+    /**
+     * set showLogout to false
+     * to close the modal
+     */
+    closeLogout() {
+      this.showLogout = false;
+    },
+    /**
+     * set showLogout to true
+     * to open the modal
+     */
+    openLogout() {
+      this.showLogout = true;
+    },
+    /**
+     * calls removeWallet
+     * and closes modal
+     */
+    onLogout() {
+      this.closeLogout();
+      this.removeWallet();
     }
   }
 };

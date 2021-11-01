@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 1 ? null : back"
+    :back="showBack ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -91,7 +91,7 @@
         :paths="paths"
         :selected-path="selectedPath"
         :handler-loaded="loaded"
-        @setPath="setPath"
+        :set-path="setPath"
       />
       <!--
         =====================================================================================
@@ -116,7 +116,7 @@
         :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
-        @setPath="setPath"
+        :set-path="setPath"
       />
 
       <!--
@@ -145,6 +145,7 @@
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
+      :hide-networks="switchAddress"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />
@@ -305,8 +306,15 @@ export default {
       // }
       return {
         title: 'Hardware Wallets',
-        url: 'https://help.myetherwallet.com/en/'
+        url: 'https://help.myetherwallet.com/en/collections/3043244-access-wallet'
       };
+    },
+    showBack() {
+      if (this.switchAddress) {
+        return this.step === 2;
+      }
+
+      return this.step === 1;
     },
     /**
      * On Bitbox2
@@ -400,6 +408,7 @@ export default {
      * Overlay title
      */
     title() {
+      if (this.switchAddress) return 'Switch Address';
       if (this.step > this.wallets[this.walletType]?.when) {
         return 'Select Network and Address';
       } else if (this.step === 1) {
@@ -456,8 +465,7 @@ export default {
   },
   mounted() {
     if (this.switchAddress) {
-      this.nextStep(this.identifier);
-      this.walletType = this.identifier;
+      this.setupSwitchAddress();
     }
   },
   methods: {
@@ -472,6 +480,21 @@ export default {
       this.selectedLedgerApp = this.ledgerApps[0];
       this.password = '';
       this.walletType = '';
+    },
+    /**
+     * Sets up switch address
+     */
+    setupSwitchAddress() {
+      this.walletType = this.identifier;
+      this.step = 2;
+    },
+    /**
+     * calls this.close and this.setupSwitchAddress
+     */
+    closeAndSetupSwitch() {
+      this.reset();
+      this.setupSwitchAddress();
+      this.close();
     },
     /**
      * Overlay Action: Back

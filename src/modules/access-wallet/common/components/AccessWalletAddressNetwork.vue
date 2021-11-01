@@ -153,7 +153,7 @@
             Panel: Network
           =====================================================================================
           -->
-      <template #panelBody2>
+      <template v-if="hideNetworks" #panelBody2>
         <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
       </template>
     </mew-expand-panel>
@@ -239,6 +239,10 @@ export default {
      * hides access wallet derivation path component
      */
     hideCustomPaths: {
+      type: Boolean,
+      default: false
+    },
+    hideNetworks: {
       type: Boolean,
       default: false
     }
@@ -344,20 +348,23 @@ export default {
      * Property returns expand panel items for the Address and Network
      */
     panelItems() {
-      return [
+      const panelItems = [
         {
           name: 'Address',
           subtext: this.panelAddressSubstring,
           colorTheme: 'superPrimary',
           hasActiveBorder: true
-        },
-        {
+        }
+      ];
+      if (!this.hideNetworks) {
+        panelItems.push({
           name: 'Network',
           subtext: this.panelNetworkSubstring,
           colorTheme: 'superPrimary',
           hasActiveBorder: true
-        }
-      ];
+        });
+      }
+      return panelItems;
     },
     /**
      * Property returns default network and nodes items
