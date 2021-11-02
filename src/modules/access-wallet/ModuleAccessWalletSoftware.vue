@@ -21,20 +21,31 @@
       Overview: prompts user to select options
     =====================================================================================
     -->
-    <v-row v-if="walletType === types.OVERVIEW">
-      <v-col v-for="(btn, key) in buttons" :key="key" cols="12" sm="12">
-        <mew-super-button
-          font-class="mew-heading-2"
-          btn-mode="small-right-image"
-          :title="btn.label"
-          :subtitle="btn.description"
-          :right-icon="btn.icon"
-          right-icon-type="mew"
-          color-theme="basic"
+    <div
+      v-if="walletType === types.OVERVIEW"
+      style="max-width: 650px; width: 100%"
+      class="mx-auto"
+    >
+      <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
+        <mew-button
+          has-full-width
+          color-theme="inputBorder"
+          btn-style="outline"
+          style="height: 160px"
           @click.native="btn.fn"
-        />
-      </v-col>
-    </v-row>
+        >
+          <div
+            class="text-left d-flex align-center justify-space-between px-2"
+            style="width: 100%"
+          >
+            <div class="mew-heading-2 titlePrimary--text">
+              {{ btn.label }}
+            </div>
+            <img width="80" class="mr-4 d-none d-sm-block" :src="btn.icon" />
+          </div>
+        </mew-button>
+      </div>
+    </div>
     <!--
     =====================================================================================
       Access With Keystore
@@ -43,6 +54,7 @@
     <access-wallet-keystore
       v-if="walletType === types.KEYSTORE"
       :handler-access-wallet="accessHandler"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
@@ -54,6 +66,7 @@
       v-if="walletType === types.MNEMONIC"
       :handler-access-wallet="accessHandler"
       :switch-address="switchAddress"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
@@ -64,6 +77,7 @@
     <access-wallet-private-key
       v-else-if="walletType === types.PRIVATE_KEY"
       :handler-access-wallet="accessHandler"
+      class="mb-6"
       @unlock="unlockWallet"
     />
     <!--
@@ -75,7 +89,7 @@
       title="Not Recommended"
       description="This information is sensitive, and these options should only be used in offline settings by experienced crypto users."
       :link-obj="warningSheetObj"
-      class="mt-6 mb-0"
+      class="mt-0 mb-0"
     />
   </mew-overlay>
 </template>
@@ -129,7 +143,7 @@ export default {
         /* Keystore Button */
         {
           label: 'Keystore',
-          icon: 'keystore',
+          icon: require('@/assets/images/icons/icon-keystore-file.svg'),
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.KEYSTORE);
           }
@@ -137,7 +151,7 @@ export default {
         /* Mnemonic */
         {
           label: 'Mnemonic Phrase',
-          icon: 'mnemonic',
+          icon: require('@/assets/images/icons/icon-mnemonic.svg'),
           fn: () => {
             this.setType(SOFTWARE_WALLET_TYPES.MNEMONIC);
           }
@@ -145,7 +159,7 @@ export default {
         /* Private Key */
         {
           label: 'Private Key',
-          icon: 'privateKey',
+          icon: require('@/assets/images/icons/icon-private-key-grey.png'),
           fn: () => {
             if (process.env.VUE_APP_PRIV_KEY) {
               this.accessHandler.unlockPrivateKeyWallet(

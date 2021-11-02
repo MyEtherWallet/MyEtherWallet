@@ -154,7 +154,9 @@
           =====================================================================================
           -->
       <template #panelBody2>
-        <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+        <div class="px-5">
+          <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+        </div>
       </template>
     </mew-expand-panel>
     <!--

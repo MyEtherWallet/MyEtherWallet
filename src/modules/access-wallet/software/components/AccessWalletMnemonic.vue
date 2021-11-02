@@ -76,12 +76,14 @@
               :idx-to-expand="null"
             >
               <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
+                <div class="px-5">
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Enter Extra word"
+                    placeholder="Enter your extra word"
+                  />
+                </div>
               </template>
             </mew-expand-panel>
             <!--
@@ -217,7 +219,7 @@ export default {
       return [
         {
           name: 'Do you have an extra word?',
-          subtext: 'Add your word'
+          toggleTitle: 'Add your word'
         }
       ];
     },
