@@ -26,7 +26,8 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'eslint', // not supported by vue yet
-  'stylelint-config-standard'
+  'stylelint-config-standard',
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

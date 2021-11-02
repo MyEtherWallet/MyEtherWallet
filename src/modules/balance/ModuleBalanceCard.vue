@@ -202,11 +202,19 @@
       </template>
     </app-modal>
     <module-access-wallet-hardware
-      v-if="!!instance.path"
+      v-if="showHardware"
       :open="showChangeAddress"
       :close="closeChangeAddress"
       :switch-address="!!instance.path"
     />
+    <module-access-wallet-software
+      v-else
+      :open="showChangeAddress"
+      :close="closeChangeAddress"
+      :switch-address="!!instance.path"
+      :wallet-type="identifier"
+    />
+
     <mew-popup
       max-width="400px"
       hide-close-btn
@@ -238,14 +246,17 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'underscore';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
+import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import wallets from './handlers/config';
+import WALLET_TYPES from '../access-wallet/common/walletTypes';
 
 export default {
   components: {
     BalanceAddressPaperWallet,
     AppModal,
     AppAddrQr,
-    ModuleAccessWalletHardware
+    ModuleAccessWalletHardware,
+    ModuleAccessWalletSoftware
   },
   data() {
     return {
@@ -265,6 +276,17 @@ export default {
       'totalTokenFiatValue'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    /**
+     * Shows hardware access or software access
+     * returns @Boolean
+     */
+    showHardware() {
+      return (
+        !isEmpty(this.instance) &&
+        this.instance.path &&
+        this.identifier !== WALLET_TYPES.MNEMONIC
+      );
+    },
     /**
      * returns checksummed address
      */

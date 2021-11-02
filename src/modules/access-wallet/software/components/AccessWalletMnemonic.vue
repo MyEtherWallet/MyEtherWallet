@@ -134,6 +134,7 @@
         :handler-wallet="walletInstance"
         :selected-path="selectedPath"
         :paths="parsedPaths"
+        :hide-networks="switchAddress"
         @setPath="setPath"
         @unlock="accessWallet"
       />
@@ -145,7 +146,7 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -161,6 +162,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    switchAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -258,7 +263,7 @@ export default {
     phrase: {
       deep: true,
       handler: function (newval) {
-        if (newval && !_.isEmpty(newval)) {
+        if (newval && !isEmpty(newval)) {
           const splitVal = newval[1].split(' ');
           if (splitVal.length === 12 || splitVal.length === 24) {
             this.length = splitVal.length;
@@ -319,6 +324,23 @@ export default {
       this.length = 12;
     },
     /**
+     * reset component
+     */
+    reset() {
+      this.step = 1;
+      /*Phrase Items: */
+      this.extraWord = '';
+      this.phrase = {};
+      this.length = 12;
+      /* Derivation Path */
+      this.selectedPath = {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      };
+      this.walletInstance = {};
+    },
+    /**
      * Methods emits parent to unlock wallet
      * and passes account withinMnemonic Phrase
      * Used in STEP 2
@@ -326,6 +348,7 @@ export default {
     accessWallet(account) {
       if (account) {
         this.$emit('unlock', account);
+        this.reset();
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }
