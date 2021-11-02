@@ -137,6 +137,7 @@ export default class HandlerBlock {
             throw new Error(resp.data.error);
           }
           const txData = resp.data.txData;
+          console.log('MINT', txData);
           txData.from = this.currAdr;
           this.web3.eth.sendTransaction(txData).on('transactionHash', hash => {
             const _block = {
@@ -177,6 +178,7 @@ export default class HandlerBlock {
             throw new Error(resp.data.error);
           }
           resp.data.txData.from = this.currAdr;
+          console.log('transfer', resp.data);
           this.web3.eth
             .sendTransaction(resp.data.txData)
             .on('transactionHash', hash => {
