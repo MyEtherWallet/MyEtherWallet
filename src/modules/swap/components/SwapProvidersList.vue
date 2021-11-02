@@ -75,10 +75,10 @@
                           class="d-flex order-sm-1 justify-start align-center"
                         >
                           <div class="mb-0 mew-heading-3 font-weight-medium">
-                            {{ quote.rate }} {{ toTokenSymbol }}
+                            {{ quote.amount }} {{ toTokenSymbol }}
                           </div>
                           <mew-tooltip
-                            v-if="quote.tooltip && quote.tooltip !== ''"
+                            v-if="quote.amount && quote.amount !== ''"
                             class="pl-1"
                             :text="quote.tooltip"
                           />
@@ -136,7 +136,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { _ } from 'web3-utils';
+import _ from 'underscore';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -217,9 +217,11 @@ export default {
             : this.availableQuotes.filter(item => !!item);
         const returnedList = list.map(quote => {
           const formatted = formatFloatingPointValue(quote.rate * 100);
+          const formattedAmt = formatFloatingPointValue(quote.amount);
           return {
             rate: formatted.value,
-            tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
+            amount: formattedAmt.value,
+            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
           };
         });
         if (returnedList) return returnedList;

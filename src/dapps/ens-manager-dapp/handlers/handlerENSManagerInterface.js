@@ -9,7 +9,8 @@ import textrecords from './handlerTextRecords';
 import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
-import { toChecksumAddress, _ } from 'web3-utils';
+import { toChecksumAddress } from 'web3-utils';
+import { clone } from 'underscore';
 import normalise from '@/core/helpers/normalise';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 
@@ -317,7 +318,7 @@ export default class ENSManagerInterface {
   async _setMulticoins() {
     const newObj = {};
     Object.keys(multicoins).forEach(item => {
-      newObj[item] = _.clone(multicoins[item]);
+      newObj[item] = clone(multicoins[item]);
     });
     this.multiCoin = newObj;
     try {

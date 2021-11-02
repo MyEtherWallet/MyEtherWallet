@@ -10,73 +10,80 @@
         <v-row>
           <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
             <a :href="b.link" target="_blank">
-              <v-card
-                height="100%"
-                color="white"
-                class="
-                  btn-custom
-                  border-radius--10px
-                  pa-8 pa-md-10
-                  d-flex
-                  align-center
-                  justify-space-between
-                "
+              <mew-button
+                color-theme="basic"
+                btn-style="light"
+                style="height: 200px"
+                has-full-width
               >
-                <div>
-                  <v-img
-                    v-if="b.logoImg"
-                    max-height="30px"
-                    max-width="120px"
-                    :src="b.logoImg"
-                    alt="Hardware wallet"
-                    class="mb-3"
-                  />
-                  <div
-                    v-if="b.logoText"
-                    class="d-flex align-center mb-3"
-                    :class="
-                      !$vuetify.breakpoint.smAndDown
-                        ? 'mew-subtitle'
-                        : 'mew-heading-2'
-                    "
-                  >
-                    {{ b.logoText }}
-                  </div>
-                  <div
-                    class="
-                      mew-caption
-                      text-uppercase
-                      font-weight-bold
-                      textPrimary--text
-                      text--lighten-1
-                    "
-                  >
-                    {{ b.priceNote }}
+                <div
+                  class="
+                    px-5
+                    text-left
+                    d-flex
+                    align-center
+                    justify-space-between
+                  "
+                  style="width: 100%"
+                >
+                  <div>
+                    <v-img
+                      v-if="b.logoImg"
+                      max-height="30px"
+                      max-width="120px"
+                      :src="b.logoImg"
+                      alt="Hardware wallet"
+                      class="mb-3"
+                    />
+                    <div
+                      v-if="b.logoText"
+                      class="d-flex align-center mb-3"
+                      :class="
+                        !$vuetify.breakpoint.smAndDown
+                          ? 'mew-subtitle'
+                          : 'mew-heading-2'
+                      "
+                    >
+                      {{ b.logoText }}
+                    </div>
+                    <div
+                      class="
+                        mew-caption
+                        text-uppercase
+                        font-weight-bold
+                        textPrimary--text
+                        text--lighten-1
+                      "
+                    >
+                      {{ b.priceNote }}
+                    </div>
+
+                    <div class="textDark--text d-flex">
+                      <div class="mew-caption mr-1 font-weight-black">
+                        {{ b.currency }}
+                      </div>
+                      <div
+                        class="mew-heading-2 text-uppercase font-weight-bold"
+                      >
+                        {{ b.price }}
+                      </div>
+                    </div>
+                    <div class="mt-3 primary--text font-weight-medium">
+                      Learn more >
+                    </div>
                   </div>
 
-                  <div class="d-flex">
-                    <div class="mew-caption mr-1 font-weight-black">
-                      {{ b.currency }}
-                    </div>
-                    <div class="mew-heading-2 text-uppercase font-weight-bold">
-                      {{ b.price }}
-                    </div>
-                  </div>
-                  <div class="mt-3 primary--text font-weight-medium">
-                    Learn more >
+                  <div class="pl-4">
+                    <v-img
+                      :src="b.walletImg"
+                      alt="Hardware Wallet"
+                      max-width="90px"
+                      max-height="100px"
+                      contain
+                    />
                   </div>
                 </div>
-
-                <div class="pl-4">
-                  <v-img
-                    :src="b.walletImg"
-                    alt="Hardware Wallet"
-                    max-width="90px"
-                    max-height="100px"
-                    contain
-                  />
-                </div>
-              </v-card>
+              </mew-button>
             </a>
           </v-col>
         </v-row>

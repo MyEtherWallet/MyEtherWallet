@@ -10,7 +10,6 @@ const state = {
   localStore: true,
   consentToTrack: false,
   displayedTrackingPopup: false,
-  addressBook: [],
   Errors: {},
   online: true,
   linkQuery: {},
@@ -24,7 +23,12 @@ const state = {
     : Object.assign({}, nodeList['ETH'][0]),
   preferredCurrency: 'USD',
   customPaths: [],
-  localContracts: {}
+  localContracts: {},
+  eip1559: {
+    baseFeePerGas: '0',
+    maxPriorityFeePerGas: '0'
+  },
+  showedBanner: false
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

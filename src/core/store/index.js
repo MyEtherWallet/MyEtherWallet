@@ -6,6 +6,7 @@ import notifications from './notifications';
 import externalData from './external';
 import swap from './swap';
 import custom from './custom';
+import addressBook from './addressBook';
 import Configs from './configs';
 import LocalStore from 'store';
 import { dappStore } from '@/dapps/dappsStore';
@@ -20,6 +21,7 @@ const store = new Vuex.Store({
     notifications: notifications,
     swap: swap,
     custom: custom,
+    addressBook: addressBook,
     ...dappStore
   }
 });

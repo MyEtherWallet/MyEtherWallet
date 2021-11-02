@@ -16,19 +16,20 @@
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row
+    <div
       v-if="step === 1"
       :class="[
         'pa-5 mb-4 full-width text-center rounded subtitle-container',
         $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
       ]"
-      ><span class="full-width"
+    >
+      <span class="full-width"
         >The highest standard of security in the crypto space.
         <router-link to="/buy-hardware">
           Get a Hardware Wallet today
         </router-link>
-      </span></v-row
-    >
+      </span>
+    </div>
     <!--
         =====================================================================================
         Step 1: Select hardware wallet
@@ -48,11 +49,20 @@
           cols="12"
           sm="6"
         >
-          <mew-super-button-revised
-            :title="button.label"
-            :left-icon="button.icon"
+          <mew-button
+            has-full-width
+            style="height: 90px"
+            color-theme="inputBorder"
+            btn-style="outline"
             @click.native="setWalletInstance(button.type)"
-          />
+          >
+            <div class="text-left d-flex align-center" style="width: 100%">
+              <img width="40" class="mr-4" :src="button.icon" />
+              <div class="mew-heading-3 titlePrimary--text">
+                {{ button.label }}
+              </div>
+            </div>
+          </mew-button>
         </v-col>
       </v-row>
     </div>
@@ -109,93 +119,24 @@
           Ledger
         =====================================================================================
         -->
-      <span v-if="onLedger">
-        <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
-        <div>
-          <mew-select
-            v-if="onLedger"
-            v-model="ledgerApp"
-            :items="ledgerApps"
-            :is-custom="true"
-          />
-          <div class="text-right">
-            <access-wallet-derivation-path
-              :selected-path="selectedPath"
-              :paths="paths"
-              @setPath="setPath"
-            />
-          </div>
-          <div class="d-flex flex-column align-center justify-center">
-            <div class="pb-8 pt-15 pt-md-18">
-              <v-img
-                :src="
-                  require('@/assets/images/hardware-wallets/ledger-graphic.svg')
-                "
-                alt="Ledger Wallet"
-                max-width="21em"
-                max-height="10em"
-                contain
-              />
-            </div>
-            <v-card-title
-              v-if="!ledgerConnected"
-              class="border justify-center font-wrapping"
-            >
-              <div class="mew-heading-4 font-weight-medium pl-1">
-                Connect your Ledger device and open Ethereum app
-              </div>
-            </v-card-title>
-            <v-card-title
-              v-if="ledgerConnected"
-              class="border justify-center font-wrapping"
-            >
-              <img
-                src="@/assets/images/icons/icon-checked.svg"
-                alt="Green check mark"
-                height="20"
-              />
-              <div class="mew-heading-4 font-weight-medium pl-1">
-                Ledger connected
-              </div>
-            </v-card-title>
-          </div>
-        </div>
-        <div class="text-center">
-          <mew-button
-            btn-size="xlarge"
-            :has-full-width="true"
-            title="Unlock wallet"
-            :disabled="!ledgerConnected"
-            @click.native="nextStep"
-          />
-        </div>
-      </span>
+      <access-wallet-ledger
+        v-if="onLedger"
+        :ledger-unlock="nextStep"
+        :ledger-apps="ledgerApps"
+        :ledger-connected="ledgerConnected"
+        :paths="paths"
+        :selected-path="selectedPath"
+        @setPath="setPath"
+      />
+
       <!--
         =====================================================================================
           Trezor
         =====================================================================================
         -->
-      <span v-if="onTrezor">
-        <div class="d-flex flex-column align-center">
-          <div class="titlePrimary-text">
-            Follow the instructions in the Trezor connection tab. If it did not
-            open automatically, click below.
-          </div>
-          <div>
-            <mew-button
-              class="mt-7"
-              title="Connect Trezor"
-              icon="mdi-open-in-new"
-              icon-type="mdi"
-              @click.native="trezorUnlock"
-            />
-          </div>
-          <div class="primary--text my-8 cursor--pointer" @click="reset">
-            <v-icon small class="primary--text">mdi-arrow-left</v-icon>
-            Connect a different wallet
-          </div>
-        </div></span
-      >
+      <div v-if="onTrezor">
+        <access-wallet-trezor :trezor-unlock="trezorUnlock" :reset="reset" />
+      </div>
     </div>
     <!--
       =====================================================================================
@@ -210,6 +151,7 @@
     <access-wallet-address-network
       v-if="step === 3"
       :back="null"
+      :hide-custom-paths="onKeepkey || onLedger"
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
@@ -221,15 +163,13 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
-// import BitBoxPopup from './hardware/components/BitBoxPopup';
-// import AccessWalletPassword from './hardware/components/AccessWalletPassword';
-// import AccessWalletPaths from './hardware/components/AccessWalletPaths';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
-import AccessWalletDerivationPath from './hardware/components/AccessWalletDerivationPath.vue';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
+import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
+import AccessWalletLedger from './hardware/components/AccessWalletLedger.vue';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
@@ -237,21 +177,17 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
-import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    MewSuperButtonRevised,
     AccessWalletCoolWallet,
-    AccessWalletDerivationPath,
+    AccessWalletTrezor,
+    AccessWalletLedger,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
-    // AccessWalletPassword,
-    // AccessWalletPaths,
-    // BitBoxPopup
   },
   filters: {
     concatAddress(val) {
@@ -398,7 +334,7 @@ export default {
     onCoolWallet() {
       return (
         this.walletType === WALLET_TYPES.COOL_WALLET &&
-        _.isEmpty(this.hwWalletInstance)
+        isEmpty(this.hwWalletInstance)
       );
     },
     /**
@@ -482,8 +418,8 @@ export default {
     },
     bitBox2NotPaired() {
       return (
-        _.isEmpty(this.hwWalletInstance) ||
-        (!_.isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
+        isEmpty(this.hwWalletInstance) ||
+        (!isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
       );
     },
     bitBox2Connected() {
@@ -516,6 +452,14 @@ export default {
       if (this.bitBox2Initialized)
         return 'Bitbox 02 succesfully initialized. Loading wallet';
       return this.wallets[this.walletType].title;
+    }
+  },
+  watch: {
+    selectedPath: {
+      handler: function () {
+        if (this.walletType) this[`${this.walletType}Unlock`]();
+      },
+      deep: true
     }
   },
   mounted() {
@@ -583,9 +527,6 @@ export default {
     trezorUnlock() {
       this.unlockPathOnly();
     },
-    bitboxUnlock() {
-      this.unlockPathAndPassword(this.hasPath, this.password);
-    },
     bitbox02Unlock() {
       this.unlockPathOnly();
     },
@@ -601,6 +542,11 @@ export default {
     unlockPathOnly() {
       return this.wallets[this.walletType]
         .create(this.hasPath)
+        .catch(err => {
+          Toast(err, {}, ERROR);
+          if (this.onLedger) this.step--;
+          return;
+        })
         .then(_hwWallet => {
           this.loaded = true;
           this.hwWalletInstance = _hwWallet;
@@ -698,18 +644,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.border {
-  border: 1px solid var(--v-inputBorder-base);
-  border-radius: 5px;
-  padding: 20px;
-  margin-bottom: 30px;
-  width: 100%;
-}
-.font-wrapping {
-  text-align: center;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
 .subtitle-container {
   background-color: rgba(109, 137, 166, 0.06);
 }

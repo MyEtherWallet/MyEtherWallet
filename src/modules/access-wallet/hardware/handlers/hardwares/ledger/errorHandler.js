@@ -1,15 +1,16 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 
 const ERRORS = {
+  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
+  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
+  'UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
+  'UNKNOWN_ERROR (0x650f)': 'ledgerError.unknown-0x6boc',
   'Failed to sign with Ledger device: U2F TIMEOUT':
     'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
     'ledgerError.failed-sign-ineligible',
-  'UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown-0x6801',
-  'UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
-  'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown-0x6804',
-  'Ledger device: UNKNOWN_ERROR (0x6b0c)': 'ledgerError.unknown-0x6boc',
-  'Ledger device: UNKNOWN_ERROR (0x650f)': 'ledgerError.wrong-wallet',
+  'Failed to sign with Ledger device: U2F OTHER_ERROR':
+    'ledgerError.u2f-other-error',
   'Ledger device: Invalid data received (0x6a80)':
     'ledgerError.invalid-data-0x6a80',
   'Ledger device: CLA_NOT_SUPPORTED (0x6e00)':
@@ -26,8 +27,6 @@ const ERRORS = {
   'No Ledger device found (timeout)': 'ledgerError.no-device',
   'Ledger Device is busy': 'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
-    'ledgerError.failed-to-sign-other',
-  'Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failed-to-sign-other',
   'Invalid networkId signature returned.': 'ledgerError.invalid-network-id',
   'Please enable Contract data on the Ethereum app Settings':
@@ -47,7 +46,11 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'ledgerError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'ledgerError.operation-that-changes-interface-state-in-progress'
+    'ledgerError.operation-that-changes-interface-state-in-progress',
+  'connection not open': 'ledgerError.connection-not-open-on-send',
+  "undefined is not an object (evaluating 'e.decorateAppAPIMethods')":
+    'ledgerError.firmware-or-mobile',
+  'Access denied.': 'ledgerError.access-denied'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

@@ -46,7 +46,7 @@ import { isValidPrivate } from 'ethereumjs-util';
 import {
   getBufferFromHex,
   sanitizeHex
-} from '../../../access-wallet/common/utils';
+} from '../../../access-wallet/common/helpers';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {
@@ -91,7 +91,7 @@ export default {
      * @returns actual private without '0x' prefix
      */
     actualPrivateKey() {
-      return this.privateKey.substr(0, 2) === '0x'
+      return this.privateKey && this.privateKey.substr(0, 2) === '0x'
         ? this.privateKey.replace('0x', '')
         : this.privateKey;
     },

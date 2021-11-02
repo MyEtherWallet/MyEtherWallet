@@ -13,18 +13,33 @@
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
-          <mew-super-button
-            :cols-num="8"
-            :title="dapp.title"
-            :subtitle="dapp.subtitle"
-            :tag="dapp.tag"
-            :is-new="dapp.isNew"
-            :title-icon-type="dapp.titleIconType"
-            :title-icon="dapp.titleIcon"
-            :right-icon-type="dapp.rightIconType"
-            :right-icon="dapp.rightIcon"
+          <mew-button
+            color-theme="backgroundGrey"
+            btn-style="light"
+            style="height: 160px"
             @click.native="routeTo(dappName(dapp))"
-          />
+          >
+            <div
+              class="px-2 text-left d-flex align-center justify-space-between"
+              :class="
+                dapp.style === 'outline' ? 'white--text' : 'textDark--text'
+              "
+              style="width: 100%"
+            >
+              <div>
+                <div class="mb-2 d-flex align-center">
+                  <div class="mew-heading-3">{{ dapp.title }}</div>
+                </div>
+                <div class="break-word">
+                  {{ dapp.subtitle }}
+                </div>
+                <div class="body-2 mt-1 tagLabel--text">{{ dapp.tag }}</div>
+              </div>
+              <div class="d-none d-sm-flex align-center pl-5">
+                <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
+              </div>
+            </div>
+          </mew-button>
         </v-col>
       </v-row>
       <v-row v-if="!dapps.length">

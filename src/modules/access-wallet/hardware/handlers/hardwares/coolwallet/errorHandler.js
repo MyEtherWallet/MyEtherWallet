@@ -18,7 +18,8 @@ const ERRORS = {
   'Bluetooth adapter not available.':
     'coolWalletError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
-    'coolWalletError.operation-that-changes-interface-state-in-progress'
+    'coolWalletError.operation-that-changes-interface-state-in-progress',
+  'connection not open': 'coolWalletError.connection-not-open-on-send'
 };
 const WARNINGS = {};
 export default WalletErrorHandler(ERRORS, WARNINGS);
