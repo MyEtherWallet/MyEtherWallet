@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 const getUint8Tx = tx => {
   return {
     to: new Uint8Array(tx.to),
@@ -11,10 +13,10 @@ const getUint8Tx = tx => {
 };
 const getHexTx = tx => {
   return {
-    to: '0x' + tx.to.toString('hex'),
+    to: tx.to.toString('hex'),
     value: '0x' + tx.value.toString('hex'),
     data: '0x' + tx.data.toString('hex'),
-    chainId: tx.common.chainId(),
+    chainId: '0x' + BigNumber(tx.common.chainId()).toString(16),
     nonce: '0x' + tx.nonce.toString('hex'),
     gasLimit: tx.gasLimit
       ? '0x' + tx.gasLimit.toString('hex')

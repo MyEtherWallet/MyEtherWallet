@@ -26,10 +26,7 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'eslint', // not supported by vue yet
-  'stylelint-config-standard',
-  // updating after release
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
