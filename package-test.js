@@ -27,7 +27,8 @@ const EXCEPTIONS = [
   'node-fetch',
   'eslint', // not supported by vue yet
   'stylelint-config-standard',
-  'vuetify' // update this for 6.4.0
+  'stylelint',
+  'vuetify' // update after release
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
