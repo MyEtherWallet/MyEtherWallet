@@ -153,7 +153,7 @@
             Panel: Network
           =====================================================================================
           -->
-      <template v-if="hideNetworks" #panelBody2>
+      <template #panelBody2>
         <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
       </template>
     </mew-expand-panel>

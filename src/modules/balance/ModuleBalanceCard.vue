@@ -44,13 +44,17 @@
             <v-list dense>
               <v-list-item class="cursor-pointer" @click="refresh">
                 <v-list-item-icon
-                  ><v-icon>mdi-refresh</v-icon></v-list-item-icon
+                  ><v-icon color="textDark"
+                    >mdi-refresh</v-icon
+                  ></v-list-item-icon
                 >
                 <v-list-item-title>Refresh Balance</v-list-item-title>
               </v-list-item>
               <v-list-item class="cursor-pointer" @click="openPaperWallet">
                 <v-list-item-icon
-                  ><v-icon>mdi-printer</v-icon></v-list-item-icon
+                  ><v-icon color="textDark"
+                    >mdi-printer</v-icon
+                  ></v-list-item-icon
                 >
                 <v-list-item-title>View paper wallet</v-list-item-title>
               </v-list-item>
@@ -60,7 +64,7 @@
                 @click="viewAddressOnDevice"
               >
                 <v-list-item-icon
-                  ><mew-icon :icon-name="identifier" :img-height="24"
+                  ><mew-icon :icon-name="iconIdentifier" :img-height="24"
                 /></v-list-item-icon>
                 <v-list-item-title
                   >View address on {{ walletName }}</v-list-item-title
@@ -73,12 +77,18 @@
                 @click="openChangeAddress"
               >
                 <v-list-item-icon
-                  ><v-icon>mdi-account-box-multiple</v-icon></v-list-item-icon
+                  ><v-icon color="textDark"
+                    >mdi-account-box-multiple</v-icon
+                  ></v-list-item-icon
                 >
                 <v-list-item-title>Switch Account</v-list-item-title>
               </v-list-item>
               <v-list-item class="cursor-pointer" @click="openLogout">
-                <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
+                <v-list-item-icon
+                  ><v-icon color="textDark"
+                    >mdi-logout</v-icon
+                  ></v-list-item-icon
+                >
                 <v-list-item-title>Logout</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -305,6 +315,16 @@ export default {
         this.instance.hasOwnProperty('displayAddress') &&
         this.instance.displayAddress
       );
+    },
+    /**
+     * adds checks for icons that mew-components doesn't have
+     * returns @String
+     */
+    iconIdentifier() {
+      if (this.identifier === WALLET_TYPES.BITBOX2) {
+        return 'bitbox';
+      }
+      return this.identifier;
     },
     /**
      * checks whether wallet can switch address
