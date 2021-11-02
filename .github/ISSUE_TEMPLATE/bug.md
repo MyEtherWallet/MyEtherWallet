@@ -1,3 +1,9 @@
+---
+name: 'Bug report'
+about: 'Create a report to help us fix a bug'
+labels: fix
+---
+
 ###### Info
 
 - **Version**:
