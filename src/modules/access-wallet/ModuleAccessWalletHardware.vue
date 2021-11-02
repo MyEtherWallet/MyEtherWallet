@@ -636,9 +636,12 @@ export default {
         this.setWallet([wallet])
           .then(() => {
             this.trackAccessWallet(wallet.identifier);
-            if (!this.switchAddress)
+            if (!this.switchAddress) {
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            else this.close();
+            } else {
+              this.reset();
+              this.close();
+            }
           })
           .catch(e => {
             this.reset();
