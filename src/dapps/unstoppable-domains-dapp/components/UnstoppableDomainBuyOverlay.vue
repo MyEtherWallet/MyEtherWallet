@@ -212,7 +212,7 @@ export default {
       confirmationStep: false,
       // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
       loading: false,
-      stripeKey: 'pk_test_TYooMQauvdEDq54NiTphI7jx' // test key, don't hardcode
+      stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o' // test key, don't hardcode
     };
   },
   computed: {
@@ -302,7 +302,7 @@ export default {
             stripeToken = stripeToken.token.id;
             this.loading = true;
             const response = await createResellerOrder({
-              domain: this.domain.name,
+              domain: 'reseller-test-myetherwallet-12323123.crypto',
               email: this.email,
               resellerId: this.resellerId,
               address: this.address,

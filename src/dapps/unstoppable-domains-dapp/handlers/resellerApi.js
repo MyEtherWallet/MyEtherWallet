@@ -60,6 +60,7 @@ export async function createResellerOrder({
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' }
   }).then(res => {
+    console.log('res', res);
     if (!res.ok) {
       throw new Error("Couldn't create an order");
     }
