@@ -87,7 +87,7 @@
               :slot="'panelBody' + (idx + 1)"
               :class="domain.expired ? 'expired' : 'available'"
             >
-              <div :key="idx" class="ma-3">
+              <div :key="idx" class="ma-3 px-5">
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.registrant') }}</div>

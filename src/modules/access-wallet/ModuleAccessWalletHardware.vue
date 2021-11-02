@@ -16,19 +16,20 @@
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row
+    <div
       v-if="step === 1"
       :class="[
         'pa-5 mb-4 full-width text-center rounded subtitle-container',
         $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
       ]"
-      ><span class="full-width"
+    >
+      <span class="full-width"
         >The highest standard of security in the crypto space.
         <router-link to="/buy-hardware">
           Get a Hardware Wallet today
         </router-link>
-      </span></v-row
-    >
+      </span>
+    </div>
     <!--
         =====================================================================================
         Step 1: Select hardware wallet
@@ -48,11 +49,20 @@
           cols="12"
           sm="6"
         >
-          <mew-super-button-revised
-            :title="button.label"
-            :left-icon="button.icon"
+          <mew-button
+            has-full-width
+            style="height: 90px"
+            color-theme="inputBorder"
+            btn-style="outline"
             @click.native="setWalletInstance(button.type)"
-          />
+          >
+            <div class="text-left d-flex align-center" style="width: 100%">
+              <img width="40" class="mr-4" :src="button.icon" />
+              <div class="mew-heading-3 titlePrimary--text">
+                {{ button.label }}
+              </div>
+            </div>
+          </mew-button>
         </v-col>
       </v-row>
     </div>
@@ -153,7 +163,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -167,14 +177,12 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
-import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    MewSuperButtonRevised,
     AccessWalletCoolWallet,
     AccessWalletTrezor,
     AccessWalletLedger,
@@ -326,7 +334,7 @@ export default {
     onCoolWallet() {
       return (
         this.walletType === WALLET_TYPES.COOL_WALLET &&
-        _.isEmpty(this.hwWalletInstance)
+        isEmpty(this.hwWalletInstance)
       );
     },
     /**
@@ -410,8 +418,8 @@ export default {
     },
     bitBox2NotPaired() {
       return (
-        _.isEmpty(this.hwWalletInstance) ||
-        (!_.isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
+        isEmpty(this.hwWalletInstance) ||
+        (!isEmpty(this.hwWalletInstance) && !this.hwWalletInstance?.status)
       );
     },
     bitBox2Connected() {

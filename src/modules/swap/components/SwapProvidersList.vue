@@ -78,7 +78,7 @@
                             {{ quote.amount }} {{ toTokenSymbol }}
                           </div>
                           <mew-tooltip
-                            v-if="quote.tooltip && quote.tooltip !== ''"
+                            v-if="quote.amount && quote.amount !== ''"
                             class="pl-1"
                             :text="quote.tooltip"
                           />
@@ -217,10 +217,11 @@ export default {
             : this.availableQuotes.filter(item => !!item);
         const returnedList = list.map(quote => {
           const formatted = formatFloatingPointValue(quote.rate * 100);
+          const formattedAmt = formatFloatingPointValue(quote.amount);
           return {
             rate: formatted.value,
-            amount: formatFloatingPointValue(quote.amount).value,
-            tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
+            amount: formattedAmt.value,
+            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
           };
         });
         if (returnedList) return returnedList;

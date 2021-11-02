@@ -12,7 +12,8 @@ const ROUTES_HOME = {
   SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
-  TOOLS: { NAME: 'Tools', PATH: 'tools' }
+  TOOLS: { NAME: 'Tools', PATH: 'tools' },
+  CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
