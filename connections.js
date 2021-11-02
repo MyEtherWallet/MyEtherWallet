@@ -55,8 +55,8 @@ module.exports = [
   'wss://rpc.gochain.io:443/ws',
   'https://mainnet.infura.io:443',
   // Dapps
-  'https://ethblocksapi.mewapi.io/meta', //Eth Blocks
-  'https://ethblocksapi.mewapi.io/owner', //Eth Blocks
-  'https://ethblocksapi.mewapi.io/mint', //EthBlocks
-  'https://ethblocksapi.mewapi.io/transfer' //EthBlocks
+  'https://ethblocksapi.mewapi.io/meta:443', //Eth Blocks
+  'https://ethblocksapi.mewapi.io/owner:443', //Eth Blocks
+  'https://ethblocksapi.mewapi.io/mint:443', //EthBlocks
+  'https://ethblocksapi.mewapi.io/transfer:443' //EthBlocks
 ];
