@@ -9,7 +9,7 @@ export default {
   subtitle: 'Mint stunning QR art-pieces based on your favorite blocks.',
   tag: '#NFT',
   rightIconType: 'mew',
-  rightIcon: 'stake',
+  rightIcon: 'ethBlocks',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
