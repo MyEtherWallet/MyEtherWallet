@@ -41,21 +41,13 @@
                 </v-icon>
               </div>
             </template>
-            <v-list dense>
+            <v-list width="232px">
               <v-list-item class="cursor-pointer" @click="refresh">
-                <v-list-item-icon
-                  ><v-icon color="textDark"
-                    >mdi-refresh</v-icon
-                  ></v-list-item-icon
-                >
-                <v-list-item-title>Refresh Balance</v-list-item-title>
+                <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
+                <v-list-item-title> Refresh Balance</v-list-item-title>
               </v-list-item>
               <v-list-item class="cursor-pointer" @click="openPaperWallet">
-                <v-list-item-icon
-                  ><v-icon color="textDark"
-                    >mdi-printer</v-icon
-                  ></v-list-item-icon
-                >
+                <v-icon color="textDark" class="mr-3">mdi-printer</v-icon>
                 <v-list-item-title>View paper wallet</v-list-item-title>
               </v-list-item>
               <v-list-item
@@ -63,32 +55,28 @@
                 class="cursor-pointer"
                 @click="viewAddressOnDevice"
               >
-                <v-list-item-icon
-                  ><mew-icon :icon-name="iconIdentifier" :img-height="24"
-                /></v-list-item-icon>
+                <mew-icon
+                  :icon-name="iconIdentifier"
+                  :img-height="24"
+                  class="mr-3"
+                />
                 <v-list-item-title
                   >View address on {{ walletName }}</v-list-item-title
                 >
               </v-list-item>
-              <v-divider></v-divider>
+              <v-divider class="mx-5 my-4"></v-divider>
               <v-list-item
                 v-if="canSwitch"
                 class="cursor-pointer"
                 @click="openChangeAddress"
               >
-                <v-list-item-icon
-                  ><v-icon color="textDark"
-                    >mdi-account-box-multiple</v-icon
-                  ></v-list-item-icon
+                <v-icon color="textDark" class="mr-3"
+                  >mdi-account-box-multiple</v-icon
                 >
                 <v-list-item-title>Switch Account</v-list-item-title>
               </v-list-item>
               <v-list-item class="cursor-pointer" @click="openLogout">
-                <v-list-item-icon
-                  ><v-icon color="textDark"
-                    >mdi-logout</v-icon
-                  ></v-list-item-icon
-                >
+                <v-icon color="textDark" class="mr-3">mdi-logout</v-icon>
                 <v-list-item-title>Logout</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -237,7 +225,28 @@
         method: onLogout,
         enabled: true
       }"
-    ></mew-popup>
+    />
+    <mew-popup
+      max-width="515px"
+      :show="showVerify"
+      :title="verifyAddressTitle"
+      :has-buttons="false"
+      :has-body-content="true"
+    >
+      <div>
+        <div class="text-center">
+          {{ verifyAddressBody }}
+        </div>
+        <div class="mt-3 verify-popup-border px-12 py-5 text-center">
+          <div class="font-weight-bold greenPrimary--text mew-body">
+            ACCOUNT ADDRESS
+          </div>
+          <div class="pt-3 greenPrimary--text mew-body">
+            {{ getChecksumAddressString }}
+          </div>
+        </div>
+      </div>
+    </mew-popup>
   </div>
 </template>
 
@@ -248,7 +257,7 @@ import AppAddrQr from '@/core/components/AppAddrQr';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   formatFiatValue,
@@ -274,6 +283,7 @@ export default {
       showPaperWallet: false,
       openQR: false,
       showLogout: false,
+      showVerify: false,
       wallets: wallets
     };
   },
@@ -286,6 +296,20 @@ export default {
       'totalTokenFiatValue'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    /**
+     * verify address title
+     * returns @String
+     */
+    verifyAddressTitle() {
+      return `This wallet is accessed with ${this.instance.meta.name}`;
+    },
+    /**
+     * verify address body
+     * returns @String
+     */
+    verifyAddressBody() {
+      return `To verify, check the address on your ${this.instance.meta.name} device & make sure it is the same address as the one shown below.`;
+    },
     /**
      * Shows hardware access or software access
      * returns @Boolean
@@ -400,10 +424,15 @@ export default {
     },
     /**
      * calls hardware wallet show address function
+     * and opens verify modal
      */
     viewAddressOnDevice() {
+      this.showVerify = true;
       if (this.canDisplayAddress) {
-        this.instance.displayAddress();
+        this.instance.displayAddress().then(() => {
+          this.showVerify = false;
+          Toast('Address verified!', {}, SUCCESS);
+        });
       }
     },
     /**
@@ -598,5 +627,10 @@ export default {
     padding-left: 8px;
     margin-left: -8px;
   }
+}
+
+.verify-popup-border {
+  border: 1px solid var(--v-greenMedium-base);
+  border-radius: 4px;
 }
 </style>
