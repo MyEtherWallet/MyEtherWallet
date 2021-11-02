@@ -21,7 +21,7 @@
 * fix amount undefined [#3511](https://github.com/MyEtherWallet/MyEtherWallet/pull/3511)
 * add in links for mew mobile or web [#3513](https://github.com/MyEtherWallet/MyEtherWallet/pull/3513)
 * fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
-* fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
+* fix keepkey send, update gas every block [#3528](https://github.com/MyEtherWallet/MyEtherWallet/pull/3528)
 
 ### Release v6.2.1
 
