@@ -1,87 +1,85 @@
 <template>
   <mew-overlay :show-overlay="open" right-btn-text="Close" :close="closing">
-    <template #mewOverlayBody>
-      <h2 class="text-center mb-10">
-        {{ $t('unstoppable.manage-ipfs-website') }}
-      </h2>
-      <mew6-white-sheet min-width="600px">
-        <div
-          v-if="loading"
-          class="pa-8 d-flex flex-column align-center justify-center"
-          style="min-height: 466px"
-        >
-          <v-progress-circular indeterminate />
-          <span class="mew-heading-2 mt-8"
-            >{{ $t('unstoppable.updating-your-records') }}
-          </span>
-          <span class="mew-body d-flex text-center mt-4" style="width: 317px">
-            {{ $t('unstoppable.processing-registration-advice') }}
-          </span>
-        </div>
-        <div v-if="!loading" class="pa-8" style="min-height: 266px">
-          <div class="d-flex justify-space-between align-center">
-            <h3 class="font-weight-medium">{{ name }}</h3>
-            <div class="label-container">
-              <form
-                enctype="multipart/form-data"
-                novalidate
-                class="file-upload-container"
-              >
-                <input
-                  ref="zipInput"
-                  type="file"
-                  name="file"
-                  accept=".zip"
-                  @change="fileChange"
-                />
-              </form>
-              <span
-                class="mew-body cursor--pointer"
-                style="color: #05c0a5"
-                @click="ipfsClick"
-              >
-                {{ $t('unstoppable.upload-my-website') }}
-              </span>
-            </div>
-          </div>
-          <div class="mt-8 mb-8 label-container">
-            <mew-input
-              v-model="input"
-              style="max-height: 50px"
-              placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
-              :label="$t('unstoppable.ipfs-hash')"
-              :rules="[v => isValidIpfs(v) || 'Invalid format']"
-            />
-          </div>
-          <div v-if="error" class="error--text mb-7 font-weight-medium">
-            {{ error }}
-          </div>
-
-          <div
-            v-if="notEnoughBalance"
-            class="error--text mt-3 mb-7 font-weight-medium"
-          >
-            {{ $t('unstoppable.insufficient-balance') }}
-            <a
-              href="https://ccswap.myetherwallet.com/#/"
-              target="_blank"
-              class="text-decoration--underline"
+    <h2 class="text-center mb-10">
+      {{ $t('unstoppable.manage-ipfs-website') }}
+    </h2>
+    <mew6-white-sheet min-width="600px">
+      <div
+        v-if="loading"
+        class="pa-8 d-flex flex-column align-center justify-center"
+        style="min-height: 466px"
+      >
+        <v-progress-circular indeterminate />
+        <span class="mew-heading-2 mt-8"
+          >{{ $t('unstoppable.updating-your-records') }}
+        </span>
+        <span class="mew-body d-flex text-center mt-4" style="width: 317px">
+          {{ $t('unstoppable.processing-registration-advice') }}
+        </span>
+      </div>
+      <div v-if="!loading" class="pa-8" style="min-height: 266px">
+        <div class="d-flex justify-space-between align-center">
+          <h3 class="font-weight-medium">{{ name }}</h3>
+          <div class="label-container">
+            <form
+              enctype="multipart/form-data"
+              novalidate
+              class="file-upload-container"
             >
-              {{ $t('unstoppable.insufficient-balance-advice') }}
-            </a>
-          </div>
-
-          <div class="d-flex justify-space-between align-center">
-            <mew-button
-              :title="$t('unstoppable.save-changes')"
-              btn-size="large"
-              :disabled="disabled"
-              @click.native="() => saveIpfsHash(input)"
-            />
+              <input
+                ref="zipInput"
+                type="file"
+                name="file"
+                accept=".zip"
+                @change="fileChange"
+              />
+            </form>
+            <span
+              class="mew-body cursor--pointer"
+              style="color: #05c0a5"
+              @click="ipfsClick"
+            >
+              {{ $t('unstoppable.upload-my-website') }}
+            </span>
           </div>
         </div>
-      </mew6-white-sheet>
-    </template>
+        <div class="mt-8 mb-8 label-container">
+          <mew-input
+            v-model="input"
+            style="max-height: 50px"
+            placeholder="QmWXdjNC362aPDtwHPUE9o2VMqPeNeCQuTBTv1NsKtwypg"
+            :label="$t('unstoppable.ipfs-hash')"
+            :rules="[v => isValidIpfs(v) || 'Invalid format']"
+          />
+        </div>
+        <div v-if="error" class="error--text mb-7 font-weight-medium">
+          {{ error }}
+        </div>
+
+        <div
+          v-if="notEnoughBalance"
+          class="error--text mt-3 mb-7 font-weight-medium"
+        >
+          {{ $t('unstoppable.insufficient-balance') }}
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            class="text-decoration--underline"
+          >
+            {{ $t('unstoppable.insufficient-balance-advice') }}
+          </a>
+        </div>
+
+        <div class="d-flex justify-space-between align-center">
+          <mew-button
+            :title="$t('unstoppable.save-changes')"
+            btn-size="large"
+            :disabled="disabled"
+            @click.native="() => saveIpfsHash(input)"
+          />
+        </div>
+      </div>
+    </mew6-white-sheet>
   </mew-overlay>
 </template>
 

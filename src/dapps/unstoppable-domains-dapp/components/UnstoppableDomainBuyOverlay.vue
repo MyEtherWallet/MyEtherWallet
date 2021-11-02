@@ -142,7 +142,7 @@
                 <StripeElement ref="card" type="card" :elements="elements">
                 </StripeElement>
               </StripeElements>
-              <button type="button" @click="pay2">Pay</button>
+              <button type="button" @click="pay">Pay</button>
             </div>
 
             <v-progress-linear

@@ -1,7 +1,12 @@
 <template>
-  <mew-overlay :show-overlay="open" right-btn-text="Close" :close="closing">
-    <h2 class="text-center mb-10">
-      {{ $t('unstoppable.manage-your-crypto-records') }}
+  <mew-overlay
+    :show-overlay="open"
+    right-btn-text="Close"
+    content-size="xlarge"
+    :close="closing"
+  >
+    <h2 class="text-center">
+      {{ $t('unstoppable.resolve-domain') }}
     </h2>
     <div
       v-if="loading"
@@ -17,75 +22,38 @@
       </span>
     </div>
     <div v-if="!loading" class="pa-8">
-      <h3 class="font-weight-medium">{{ managedDomain.name || '' }}</h3>
-      <div class="mt-8">
-        <div
-          v-for="(value, record) in records"
-          :key="record"
-          class="d-flex align-center justify-space-between mb-8"
-        >
-          <span class="font-weight-medium">
-            {{ record }}
-          </span>
-          <div style="min-width: 300px" class="d-flex align-center">
-            <mew-input
-              v-model="records[record]"
-              style="max-height: 50px"
-              :has-clear-btn="true"
-              label="Address"
-              :rules="[
-                v =>
-                  validateRecord(record, value) ||
-                  $t('unstoppable.wrong-address-format')
-              ]"
-            />
-            <mew-icon
-              v-if="!value"
-              icon-name="xwallet"
-              :img-height="20"
-              :style="'cursor: pointer; margin-left: 4px; margin-top: 12px;'"
-              @click.native="handleRemoveRecord(record)"
-            />
-          </div>
+      <div
+        v-for="(value, record) in records"
+        :key="record"
+        class="d-flex align-center justify-space-between mb-8"
+      >
+        <div class="bluePrimary--text font-weight-medium">
+          {{ record }}
         </div>
-      </div>
-      <div class="d-flex justify-space-between align-center">
-        <mew-button
-          :title="$t('unstoppable.save-changes')"
-          btn-size="large"
-          :disabled="disabled"
-          @click.native="saveRecords"
-        />
-
-        <div class="cursor--pointer" @click="rotate">
-          <div class="d-flex align-center justify-right">
-            <span class="mew-caption mr-2">
-              {{ $t('unstoppable.more-curriencies') }}
-            </span>
-            <mew-icon
-              icon-name="arrow"
-              :img-height="20"
-              :style="`transform: rotate(${rotation}deg);`"
-            />
-          </div>
-          <div v-if="dropdownOpen" class="dropdown-list-box">
-            <ul>
-              <li
-                v-for="key of additionalRecords"
-                :key="key"
-                @click="handleAddRecord(key)"
-              >
-                <div>
-                  <p>
-                    {{ key }}
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
+        <div style="min-width: 300px" class="d-flex align-center">
+          <mew-input
+            v-model="records[record]"
+            style="max-height: 50px"
+            :has-clear-btn="true"
+            label="Enter your wallet address"
+            :rules="[
+              v =>
+                validateRecord(record, value) ||
+                $t('unstoppable.wrong-address-format')
+            ]"
+          />
         </div>
       </div>
     </div>
+    <div class="d-flex justify-space-between align-center">
+      <mew-menu :list-obj="menuObj" />
+    </div>
+    <mew-button
+      :title="$t('unstoppable.save-and-close')"
+      btn-size="large"
+      :disabled="disabled"
+      @click.native="saveRecords"
+    />
   </mew-overlay>
 </template>
 
@@ -121,9 +89,25 @@ export default {
       },
       disabled: false,
       loading: false,
-      rotation: 180,
-      dropdownOpen: false,
-      additionalRecords: []
+      // rotation: 180,
+      // dropdownOpen: false,
+      additionalRecords: [],
+      menuObj: {
+        name: 'More currencies',
+        items: [
+          {
+            title: '1st Links',
+            items: [
+              {
+                title: 'Link 1'
+              },
+              {
+                title: 'Link 2'
+              }
+            ]
+          }
+        ]
+      }
     };
   },
   computed: {
@@ -190,17 +174,13 @@ export default {
         .filter(r => r);
       return records;
     },
-    async handleAddRecord(key) {
-      const record = await this.resolution
-        .getRecord(this.managedDomain.name, keyToCryptoKey[key])
-        .catch(() => '');
-      this.records = { ...this.records, [key]: record };
-      this.additionalRecords = this.getAdditionalRecords();
-    },
-    handleRemoveRecord(key) {
-      this.$delete(this.records, key);
-      this.additionalRecords = this.getAdditionalRecords();
-    },
+    // async handleAddRecord(key) {
+    //   const record = await this.resolution
+    //     .getRecord(this.managedDomain.name, keyToCryptoKey[key])
+    //     .catch(() => '');
+    //   this.records = { ...this.records, [key]: record };
+    //   this.additionalRecords = this.getAdditionalRecords();
+    // },
     validateRecord(key, value) {
       if (!value) {
         this.errors = { ...this.errors, [key]: undefined };
@@ -250,11 +230,11 @@ export default {
           this.loading = false;
           this.fetchRecords();
         });
-    },
-    rotate() {
-      this.rotation = this.rotation === 0 ? 180 : 0;
-      this.dropdownOpen = !this.dropdownOpen;
     }
+    // rotate() {
+    //   this.rotation = this.rotation === 0 ? 180 : 0;
+    //   this.dropdownOpen = !this.dropdownOpen;
+    // }
   }
 };
 </script>

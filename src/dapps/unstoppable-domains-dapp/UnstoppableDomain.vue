@@ -93,17 +93,31 @@
                         class="text-center"
                         @click="f.open(d)"
                       >
-                        <mew-super-button
-                          style="max-height: 108px"
-                          title="Resolve Domains"
-                          :subtitle="f.subtitle"
-                          font-class="mew-heading-3"
-                          right-icon-type="mdi"
-                          :right-icon="f.icon"
-                          right-cols-num="3"
-                          left-cols-num="9"
-                          @click.native="f.open(d)"
-                        />
+                        <div>
+                          <mew-button
+                            has-full-width
+                            btn-style="light"
+                            btn-size="xlarge"
+                            @click.native="f.open(d)"
+                          >
+                            <div class="manage-domain-buttons d-flex py-5">
+                              <v-icon color="primary">{{ f.icon }}</v-icon>
+                              <div
+                                class="
+                                  d-flex
+                                  button--container
+                                  flex-column
+                                  align-start
+                                "
+                              >
+                                <div class="black--text font-weight-bold">
+                                  {{ f.label }}
+                                </div>
+                                <div class="black--text">{{ f.subtitle }}</div>
+                              </div>
+                            </div>
+                          </mew-button>
+                        </div>
                       </v-col>
                     </v-row>
                   </div>
@@ -285,4 +299,13 @@ export default {
 $greyMedium: #d7dae3;
 $bluePrimary: #4b83e8;
 $backgroundGrey: #f8f9fb;
+
+.manage-domain-buttons {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+
+.button--label {
+  white-space: normal;
+}
 </style>

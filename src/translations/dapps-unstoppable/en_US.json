@@ -13,7 +13,8 @@
   "resolve-domain": "Resolve Domain",
   "link-your-wallets": "Link your wallets to this domain",
   "publish-your-website": "Publish your website to IPFS with a zip file or IPFS Hash",
-  "manage-ipfs-website": "Manage Ipfs Website",
+  "manage-ipfs-website": "Manage IPFS Website",
+  "resolve-domain-description": "When sending a token to apple.crypto it will be deposited to the wallet entered bellow.",
   "buyDomain": "Buy Domain",
   "manage-domain": "Manage Domain",
   "owner": "Owner",
@@ -28,7 +29,7 @@
   "confirmation": "Confirmation",
   "domain-name": "Domain name:",
   "processing-registration": "Processing the registration",
-  "processing-registration-advice": "Please do not exit the Dapp or close your browser, it takes a short while for registration…",
+  "processing-registration-advice": "Please do not exit the Dapp or close your browser. It takes a short while for registration.",
   "manage-your-crypto-records": "Manage your crypto records",
   "updating-your-records": "Updating your records",
   "wrong-address-format": "Wrong address format",
@@ -38,6 +39,6 @@
   "pay": "Pay",
   "upload-my-website": "Upload my website",
   "ipfs-hash": "IPFS hash",
-  "save-changes": "Save changes",
+  "save-and-close": "Save and close",
   "is-available": "Domain is available"
 }
