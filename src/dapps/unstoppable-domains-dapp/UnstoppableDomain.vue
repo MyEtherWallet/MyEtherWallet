@@ -15,7 +15,11 @@
       />
     </div>
     <mew6-white-sheet>
-      <unstoppable-banner />
+      <the-dapp-header
+        :dapp-name="bannerText.title"
+        :dapp-text="bannerText.subtext"
+        :dapp-img="dappImg"
+      />
       <mew-tabs
         :items="tabs"
         has-underline
@@ -136,7 +140,7 @@ import UnstoppableDomainBuyOverlay from './components/UnstoppableDomainBuyOverla
 import UnstoppableManageRecordsOverlay from './components/UnstoppableManageRecordsOverlay';
 import UnstoppableUploadIpfsOverlay from './components/UnstoppableUploadIpfsOverlay';
 import UnstoppableInfoCard from './components/UnstoppableInfoCard.vue';
-import UnstoppableBanner from './components/UnstoppableBanner.vue';
+import TheDappHeader from '@/core/components/TheDappHeader';
 import DomainTable from './components/UnstoppableDomainTable.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { parseUDRecordToLabel } from './handlers/records';
@@ -146,12 +150,17 @@ export default {
     UnstoppableDomainBuyOverlay,
     UnstoppableManageRecordsOverlay,
     UnstoppableUploadIpfsOverlay,
+    TheDappHeader,
     DomainTable,
-    UnstoppableInfoCard,
-    UnstoppableBanner
+    UnstoppableInfoCard
   },
   data() {
     return {
+      dappImg: require('@/assets/images/icons/icons-dapp-unstoppable.svg'),
+      bannerText: {
+        title: 'Unstoppable Domain',
+        subtext: 'Replace your crypto address with a human readable name'
+      },
       buyOverlay: false,
       manageRecordsOverlay: false,
       uploadIpfsOverlay: false,
