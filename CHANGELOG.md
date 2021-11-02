@@ -1,3 +1,26 @@
+### devop
+
+* * refactor trezor wallet into own component [#3481](https://github.com/MyEtherWallet/MyEtherWallet/pull/3481)
+* * migrate addressBook store [#3514](https://github.com/MyEtherWallet/MyEtherWallet/pull/3514)
+* add back how fees are determined [#3523](https://github.com/MyEtherWallet/MyEtherWallet/pull/3523)
+
+### feat
+
+* eip 1559 support [#3351](https://github.com/MyEtherWallet/MyEtherWallet/pull/3351)
+
+### fix
+
+* * fix add in ledger errors back [#3488](https://github.com/MyEtherWallet/MyEtherWallet/pull/3488)
+* * add in check for swap [#3490](https://github.com/MyEtherWallet/MyEtherWallet/pull/3490)
+* * reset token amount when switching tokens on send [#3501](https://github.com/MyEtherWallet/MyEtherWallet/pull/3501)
+* * fix error handling and formatting for custom token [#3503](https://github.com/MyEtherWallet/MyEtherWallet/pull/3503)
+* * decimal swap undefined error [#3504](https://github.com/MyEtherWallet/MyEtherWallet/pull/3504)
+* * fix add in more ledger error handling [#3507](https://github.com/MyEtherWallet/MyEtherWallet/pull/3507)
+* fix amount undefined [#3511](https://github.com/MyEtherWallet/MyEtherWallet/pull/3511)
+* * add in links for mew mobile or web [#3513](https://github.com/MyEtherWallet/MyEtherWallet/pull/3513)
+* fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
+* fix keepkey send, update gas every block [#3528](https://github.com/MyEtherWallet/MyEtherWallet/pull/3528)
+
 ### Release v6.2.1
 
 ### ui
