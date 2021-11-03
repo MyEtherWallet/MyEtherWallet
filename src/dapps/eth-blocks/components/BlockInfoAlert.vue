@@ -68,7 +68,7 @@
         <mew-button
           v-if="!isPending"
           :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
-          :disabled="disableAction"
+          :disabled="disableActionBtn"
           :loading="disableAction"
           @click.native="emitMint()"
         />
@@ -96,7 +96,7 @@
           has-full-width
           title="Send ETH Block"
           btn-style="outline"
-          :disabled="disableAction"
+          :disabled="disableActionBtn"
           :loading="disableAction"
           @click.native="emitOpenSend()"
         />
@@ -118,7 +118,13 @@
           Block is owned: LIST FOR SALE BUTTON
         ===================================================
         -->
-      <v-col v-if="isOwned" cols="12" sm="6" class="mt-5 mb-2 mt-sm-4 pl-sm-2">
+      <v-col
+        v-if="isOwned"
+        cols="12"
+        sm="6"
+        class="mt-5 mb-2 mt-sm-4 pl-sm-2"
+        :order="$vuetify.breakpoint.xs ? 'last' : ''"
+      >
         <mew-button v-if="!isPending" has-full-width :btn-link="openSeaLink">
           <v-row class="align-center justify-center">
             <div>List for sale</div>
@@ -127,6 +133,30 @@
             >
           </v-row>
         </mew-button>
+      </v-col>
+      <!--
+        ===================================================
+          Block is available OR is Owned: not enough Eth
+        ===================================================
+        -->
+      <v-col
+        v-if="!hasEnoughEth && (isOwned || isAvailable)"
+        cols="12"
+        :class="[
+          'd-flex align-center mt-1',
+          isOwned ? 'justify-start' : 'justify-end'
+        ]"
+      >
+        <div class="mb-0 redPrimary--text mew-label">
+          {{ notEnoughMessage }}
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            :href="swapLink"
+            class="mew-label font-weight-medium"
+            >Buy more {{ network.type.name }}.</a
+          >
+        </div>
       </v-col>
       <!--
         ===================================================
@@ -184,10 +214,14 @@ export default {
     blockNumber: {
       type: String,
       default: ''
+    },
+    hasEnoughEth: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
-    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'swapLink']),
     ...mapGetters('external', ['fiatValue']),
     /**
      * @returns{string}
@@ -301,6 +335,13 @@ export default {
           : `${OPENSEA}${this.blockNumber}`;
       }
       return '';
+    },
+    disableActionBtn() {
+      return !this.hasEnoughEth || this.disableAction;
+    },
+    notEnoughMessage() {
+      const text = this.isOwned ? 'transfer' : 'mint';
+      return `Not enough ${this.network.type.name} to ${text}.`;
     }
   },
   methods: {

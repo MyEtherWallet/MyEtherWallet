@@ -11,7 +11,7 @@ const NO_OWNER = '0x0000000000000000000000000000000000000000';
 import store from '@/core/store';
 
 export default class HandlerBlock {
-  constructor(_web3, _network, _blockNumber, _currAdr, _pendingTxHash = null) {
+  constructor(_web3, _network, _blockNumber, _currAdr) {
     /**
      * set up the variables
      */
@@ -38,13 +38,23 @@ export default class HandlerBlock {
     this.pendignInterval = null;
     this.extra = [];
     //Add to display you are minting this block
-    this.pendingTxHash = _pendingTxHash;
   }
   /**
    * Get BlockInfo
    */
   setBlockNumber(blockNumber) {
+    this.owner = null;
+    this.img = '';
+    this.rawImg = '';
+    this.mintPrice = '';
     this.description = '';
+    this.date = '';
+    this.author = '';
+    this.transactions = 0;
+    this.gasUsed = 0;
+    this.uncles = 0;
+    this.isMinting = false;
+    this.isSending = false;
     this.blockNumber = toBN(blockNumber).toNumber();
   }
 
@@ -62,13 +72,6 @@ export default class HandlerBlock {
    */
   setAddress(_address) {
     this.currAdr = _address;
-  }
-  /**
-   * Sets pendingTxHash
-   * @param {string} _pendingTxHash
-   */
-  setPendingTx(_pendingTxHash) {
-    this.pendingTxHash = _pendingTxHash;
   }
 
   /**
@@ -120,7 +123,7 @@ export default class HandlerBlock {
       });
   }
 
-  mintBlock() {
+  mintBlock(_balanceinWei, _gasprice) {
     if (!this.hasOwner && this.owner) {
       this.isMinting = true;
       const payload = {
@@ -137,17 +140,33 @@ export default class HandlerBlock {
             throw new Error(resp.data.error);
           }
           const txData = resp.data.txData;
-          console.log('MINT', txData);
           txData.from = this.currAdr;
-          this.web3.eth.sendTransaction(txData).on('transactionHash', hash => {
-            const _block = {
-              blockNumber: this.blockNumber.toString(),
-              hash: hash,
-              network: this.network.type.name
-            };
-            store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
-          });
-          this.isMinting = false;
+          if (
+            this.hasEnoughBalance(_balanceinWei, resp.data.txData, _gasprice)
+          ) {
+            this.web3.eth
+              .sendTransaction(txData)
+              .on('transactionHash', hash => {
+                const _block = {
+                  blockNumber: this.blockNumber.toString(),
+                  hash: hash,
+                  network: this.network.type.name
+                };
+                store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
+              })
+              .catch(err => {
+                this.isMinting = false;
+                Toast(err, {}, ERROR);
+              });
+            this.isMinting = false;
+          } else {
+            this.isMinting = false;
+            Toast(
+              `Your balance is too low to mint. Please buy more ${this.network.type.name}`,
+              {},
+              ERROR
+            );
+          }
         })
         .catch(err => {
           this.isMinting = false;
@@ -160,7 +179,7 @@ export default class HandlerBlock {
    * @param {string} toAdr - to address in the param
    * @void
    */
-  transferBlock(toAdr) {
+  transferBlock(toAdr, _balanceinWei, _gasprice) {
     if (this.owner === this.currAdr) {
       this.isSending = true;
       const payload = {
@@ -178,23 +197,43 @@ export default class HandlerBlock {
             throw new Error(resp.data.error);
           }
           resp.data.txData.from = this.currAdr;
-          console.log('transfer', resp.data);
-          this.web3.eth
-            .sendTransaction(resp.data.txData)
-            .on('transactionHash', hash => {
-              const _block = {
-                blockNumber: this.blockNumber.toString(),
-                hash: hash,
-                network: this.network.type.name
-              };
-              store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
-            });
-          this.isSending = false;
+          if (
+            this.hasEnoughBalance(_balanceinWei, resp.data.txData, _gasprice)
+          ) {
+            this.web3.eth
+              .sendTransaction(resp.data.txData)
+              .on('transactionHash', hash => {
+                const _block = {
+                  blockNumber: this.blockNumber.toString(),
+                  hash: hash,
+                  network: this.network.type.name
+                };
+                store.dispatch('ethBlocksTxs/addEthBlockTx', _block);
+              })
+              .catch(err => {
+                this.isSending = false;
+                Toast(err, {}, ERROR);
+              });
+            this.isSending = false;
+          } else {
+            this.isSending = false;
+            Toast(
+              `Your balance is too low to transfer. Please buy more ${this.network.type.name}`,
+              {},
+              ERROR
+            );
+          }
         })
         .catch(err => {
           this.isSending = false;
           Toast(err, {}, ERROR);
         });
     }
+  }
+
+  hasEnoughBalance(_balanceinWei, txData, _gasprice) {
+    const txFee = toBN(txData.gas).mul(toBN(_gasprice));
+    const total = txFee.add(toBN(txData.value));
+    return !toBN(_balanceinWei).sub(total).isNeg();
   }
 }

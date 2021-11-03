@@ -104,6 +104,7 @@
           :price="alertMintPrice"
           :disable-action="isActionInProgress"
           :is-pending="hasPendingTx"
+          :has-enough-eth="hasEnoughEth"
           @mint="mintBlock"
           @openSend="openSendBlockOverlay"
         />
@@ -186,6 +187,9 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
 
+const MIN_GAS_TRANSFER = 150000;
+const MIN_GAS_MINT = 300000;
+
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
@@ -212,9 +216,39 @@ export default {
     };
   },
   computed: {
+    /**
+     * STATE
+     */
     ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('global', ['network', 'isTestNetwork']),
+    ...mapState('global', ['gasPriceType']),
+    /**
+     * GETTERS
+     */
+    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPriceByType']),
     ...mapGetters('ethBlocksTxs', ['getEthBlockTx']),
+    ...mapGetters('wallet', ['balanceInWei']),
+
+    /**
+     * Deteremines if you have default min eth to pay
+     * @returns {boolean}
+     */
+    hasEnoughEth() {
+      if (
+        this.alert === BLOCK_ALERT.OWNED ||
+        this.alert === BLOCK_ALERT.AVAILABLE
+      ) {
+        const gasLimit =
+          this.alert === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
+        const gasPrice = this.gasPriceByType(this.gasPriceType);
+        const txFee = toBN(gasLimit).mul(toBN(gasPrice));
+        const total =
+          this.alert === BLOCK_ALERT.OWNED
+            ? txFee
+            : txFee.add(toBN(this.handlerBlock.mintPrice));
+        return !toBN(this.balanceInWei).sub(total).isNeg();
+      }
+      return true;
+    },
 
     /**
      * @returns {string}:
@@ -415,7 +449,10 @@ export default {
      * Responds, to child Alert component on emit 'mint' event
      */
     mintBlock() {
-      this.handlerBlock.mintBlock();
+      this.handlerBlock.mintBlock(
+        this.balanceInWei,
+        this.gasPriceByType(this.gasPriceType)
+      );
     },
 
     /**
@@ -438,7 +475,11 @@ export default {
      * @param {string} value - to address
      */
     sendBlock(value) {
-      this.handlerBlock.transferBlock(value);
+      this.handlerBlock.transferBlock(
+        value,
+        this.balanceInWei,
+        this.gasPriceByType(this.gasPriceType)
+      );
     }
   }
 };
