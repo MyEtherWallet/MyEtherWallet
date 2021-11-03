@@ -114,14 +114,13 @@
         ===================================================
         -->
         <div v-if="!isReserved" class="border-container mt-4 mt-md-5 pa-5">
-          <div class="textMedium--text">
+          <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
             {{ handlerBlock.description }}
           </div>
           <a
             v-if="!isTestNetwork"
-            href="https://www.ethvm.com/address/0x64bbde373e909501de1309231336761adeaa07d5"
+            :href="`https://www.ethvm.com/block/number/${blockRef}`"
             target="_blank"
-            class="mt-2"
           >
             View block #{{ blockRef }} info on EthVM
           </a>
@@ -358,7 +357,7 @@ export default {
     isReserved() {
       const _currBlock = toBN(this.blockRef);
       const RESERVED = toBN(10);
-      return _currBlock.lte(RESERVED);
+      return !_currBlock.isZero() && _currBlock.lte(RESERVED);
     }
   },
   watch: {

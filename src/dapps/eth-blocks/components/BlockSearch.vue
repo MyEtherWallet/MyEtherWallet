@@ -52,7 +52,7 @@ export default {
         }
         const search = toBN(this.searchBlock);
         const RESERVED = toBN(10);
-        if (search.lte(RESERVED)) {
+        if (!search.isZero() && search.lte(RESERVED)) {
           return 'ETH Blocks 1-10 are reserved for the Ethereum founders';
         }
         const max = toBN(this.blockNumber).sub(toBN(50));
