@@ -14,7 +14,6 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  'vuetify',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
@@ -28,7 +27,7 @@ const EXCEPTIONS = [
   'node-fetch',
   'eslint', // not supported by vue yet
   'stylelint-config-standard',
-  'styelint'
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

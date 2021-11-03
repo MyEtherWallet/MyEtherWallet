@@ -40,7 +40,7 @@ const DELETE_CUSTOM_PATH = function (state, customPaths) {
     }
   });
 
-  if (idx) {
+  if (idx >= 0) {
     state.customPaths.splice(idx, 1);
   }
 };
