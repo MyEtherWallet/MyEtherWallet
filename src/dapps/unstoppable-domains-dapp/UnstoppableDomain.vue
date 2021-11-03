@@ -99,25 +99,24 @@
                       >
                         <div>
                           <mew-button
+                            style="height: 100px; max-width: 300px"
                             has-full-width
                             btn-style="light"
-                            btn-size="xlarge"
                             @click.native="f.open(d)"
                           >
-                            <div class="manage-domain-buttons d-flex py-5">
-                              <v-icon color="primary">{{ f.icon }}</v-icon>
-                              <div
-                                class="
-                                  d-flex
-                                  button--container
-                                  flex-column
-                                  align-start
-                                "
+                            <div class="d-flex align-center">
+                              <v-icon class="mr-3"
+                                >mdi-link-variant-plus</v-icon
                               >
-                                <div class="black--text font-weight-bold">
+                              <div class="text-left">
+                                <div class="black--text font-weight-bold mb-1">
                                   {{ f.label }}
                                 </div>
-                                <div class="black--text">{{ f.subtitle }}</div>
+                                <div class="break-word">
+                                  <div class="black--text">
+                                    {{ f.subtitle }}
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </mew-button>
@@ -300,14 +299,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-// .manage-domain-buttons {
-//   white-space: normal !important;
-//   word-wrap: break-word;
-// }
-
-.button--label {
-  white-space: normal;
-}
-</style>

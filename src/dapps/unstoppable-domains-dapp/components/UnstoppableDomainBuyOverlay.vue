@@ -56,7 +56,7 @@
 
         <v-divider vertical class="mx-5" />
 
-        <div>
+        <div style="width: 100%">
           <!--
           =====================================================================================
             Panel: Crypto
@@ -106,13 +106,6 @@
             </StripeElements>
             <button type="button" @click="pay">Pay</button>
           </div>
-
-          <v-progress-linear
-            v-if="loading"
-            style="margin: 32px auto 40px auto; max-width: 200px"
-            indeterminate
-            color="primary"
-          ></v-progress-linear>
 
           <div
             v-if="paymentError"

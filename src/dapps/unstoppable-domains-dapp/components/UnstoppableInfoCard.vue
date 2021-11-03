@@ -1,7 +1,7 @@
 <template>
   <v-container class="mew-unstoppable-info">
     <v-row class="flex-column flex-lg-row" align="center">
-      <v-col lg="6" class="d-flex justify-end">
+      <v-col lg="6" sm="6" class="d-flex justify-end">
         <v-img src="@/assets/images/snippets/buy-domain.png" />
       </v-col>
       <v-col lg="6" class="text-content pr-12 mt-4 mt-lg-0">
