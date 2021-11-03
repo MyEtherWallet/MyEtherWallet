@@ -14,7 +14,7 @@
   "link-your-wallets": "Link your wallets to this domain",
   "publish-your-website": "Publish your website to IPFS with a zip file or IPFS Hash",
   "manage-ipfs-website": "Manage IPFS Website",
-  "resolve-domain-description": "When sending a token to apple.crypto it will be deposited to the wallet entered bellow.",
+  "resolve-domain-description": "When sending a token to {domain} it will be deposited to the wallet entered bellow.",
   "buyDomain": "Buy Domain",
   "manage-domain": "Manage Domain",
   "owner": "Owner",
@@ -38,7 +38,8 @@
   "buy": "Buy domain",
   "pay": "Pay",
   "upload-my-website": "Upload my website",
-  "ipfs-hash": "IPFS hash",
+  "upload-your-zip-file": "Upload your .zip file",
+  "ipfs-hash": "IPFS Hash",
   "save-and-close": "Save and close",
   "is-available": "Domain is available"
 }

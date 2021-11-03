@@ -2,58 +2,67 @@
   <mew-overlay
     :show-overlay="open"
     right-btn-text="Close"
-    content-size="xlarge"
+    content-size="medium"
     :close="closing"
   >
-    <h2 class="text-center">
-      {{ $t('unstoppable.resolve-domain') }}
-    </h2>
-    <div
-      v-if="loading"
-      class="pa-8 d-flex flex-column align-center justify-center"
-      style="min-height: 466px"
-    >
-      <v-progress-circular indeterminate />
-      <span class="mew-heading-2 mt-8">
-        {{ $t('unstoppable.updating-your-records') }}
-      </span>
-      <span class="mew-body d-flex text-center mt-4" style="width: 317px">
-        {{ $t('unstoppable.processing-registration-advice') }}
-      </span>
-    </div>
-    <div v-if="!loading" class="pa-8">
+    <div class="manage-overlay--component">
+      <h2 class="text-center">
+        {{ $t('unstoppable.resolve-domain') }}
+      </h2>
+      <div class="mt-5 textMedium--text">
+        When sending a token to
+        <span class="font-weight-bold">{{ managedDomain.name }}</span> it will
+        be deposited to the wallet entered below.
+      </div>
       <div
-        v-for="(value, record) in records"
-        :key="record"
-        class="d-flex align-center justify-space-between mb-8"
+        v-if="loading"
+        class="pa-8 d-flex flex-column align-center justify-center"
+        style="min-height: 466px"
       >
-        <div class="bluePrimary--text font-weight-medium">
-          {{ record }}
-        </div>
-        <div style="min-width: 300px" class="d-flex align-center">
-          <mew-input
-            v-model="records[record]"
-            style="max-height: 50px"
-            :has-clear-btn="true"
-            label="Enter your wallet address"
-            :rules="[
-              v =>
-                validateRecord(record, value) ||
-                $t('unstoppable.wrong-address-format')
-            ]"
-          />
+        <v-progress-circular indeterminate />
+        <span class="mew-heading-2 mt-8">
+          {{ $t('unstoppable.updating-your-records') }}
+        </span>
+        <span class="mew-body d-flex text-center mt-4" style="width: 317px">
+          {{ $t('unstoppable.processing-registration-advice') }}
+        </span>
+      </div>
+      <div v-if="!loading" class="pa-7">
+        <div
+          v-for="(value, record) in records"
+          :key="record"
+          class="d-flex align-center justify-space-between mb-8"
+        >
+          <div class="bluePrimary--text font-weight-medium">
+            {{ record }}
+          </div>
+          <div style="min-width: 300px" class="d-flex align-center">
+            <mew-input
+              v-model="records[record]"
+              style="max-height: 50px"
+              :has-clear-btn="true"
+              label="Enter your wallet address"
+              :rules="[
+                v =>
+                  validateRecord(record, value) ||
+                  $t('unstoppable.wrong-address-format')
+              ]"
+            />
+          </div>
         </div>
       </div>
+      <div>
+        <mew-menu activator-text-color="primary--text" :list-obj="menuObj" />
+      </div>
     </div>
-    <div class="d-flex justify-space-between align-center">
-      <mew-menu :list-obj="menuObj" />
+    <div class="mt-3">
+      <mew-button
+        :title="$t('unstoppable.save-and-close')"
+        btn-size="xlarge"
+        :disabled="disabled"
+        @click.native="saveRecords"
+      />
     </div>
-    <mew-button
-      :title="$t('unstoppable.save-and-close')"
-      btn-size="large"
-      :disabled="disabled"
-      @click.native="saveRecords"
-    />
   </mew-overlay>
 </template>
 
@@ -240,6 +249,10 @@ export default {
 </script>
 
 <style lang="scss">
+.manage-overlay--component {
+  width: 100%;
+}
+
 .dropdown-list-box {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   width: 22%;

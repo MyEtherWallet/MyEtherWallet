@@ -4,186 +4,147 @@
     right-btn-text="Close"
     :close="close"
     content-size="large"
+    :footer="helpObj"
   >
-    <div>
-      <v-sheet width="500px" height="100%" color="transparent">
-        <!--
-        =====================================================================================
-          Panel: Payment Buttons
-        =====================================================================================
-        -->
-        <div class="d-flex align-center justify-center">
-          <div class="d-flex flex-column align-start">
-            <mew-button
-              id="crypto"
-              title="Pay with Crypto"
-              btn-style="transparent"
-              color-theme="secondary"
-              has-full-width
-              :class="[crypto ? 'selectedBorder' : '']"
-              class="my-2"
-              @click.native="selectTab($event)"
-            />
-            <mew-button
-              id="credit"
-              title="Pay with Credit"
-              btn-style="transparent"
-              color-theme="secondary"
-              has-full-width
-              :class="[credit ? 'selectedBorder' : '']"
-              class="my-2"
-              @click.native="selectTab($event)"
-            />
-            <div class="buy-domain-info pa-4">
-              <div class="d-flex flex-column">
-                <div class="bluePrimary--text py-1">DOMAIN</div>
-                <div>{{ domain.name }}</div>
+    <div class="payment--component">
+      <!--
+      =====================================================================================
+        Panel: Payment Buttons
+      =====================================================================================
+      -->
+      <div class="d-flex align-center justify-space-between">
+        <div class="d-flex flex-column align-start">
+          <mew-button
+            id="crypto"
+            btn-style="transparent"
+            color-theme="secondary"
+            has-full-width
+            :class="[crypto ? 'selectedBorder' : '']"
+            class="my-2"
+            @click.native="selectTab($event)"
+          >
+            <div>Pay with Crypto</div>
+            <v-icon v-if="crypto" size="20">mdi-chevron-right</v-icon>
+          </mew-button>
+          <mew-button
+            id="credit"
+            btn-style="transparent"
+            color-theme="secondary"
+            has-full-width
+            :class="[credit ? 'selectedBorder' : '']"
+            class="my-2 d-flex align-center justify-space-between"
+            @click.native="selectTab($event)"
+          >
+            <v-icon small>mdi-credit-card-outline</v-icon>
+            <div>Pay with Credit</div>
+            <v-icon v-if="credit" size="20">mdi-chevron-right</v-icon>
+          </mew-button>
+          <div class="buy-domain-info pa-4">
+            <div class="d-flex flex-column">
+              <div class="bluePrimary--text py-1">DOMAIN</div>
+              <div>{{ domain.name }}</div>
+            </div>
+            <div class="d-flex flex-column">
+              <div class="bluePrimary--text py-1">TOTAL</div>
+              <div>
+                {{ convertedEthPrice }} ETH
+                <span class="textLight--text">${{ domain.price }}</span>
               </div>
-              <div class="d-flex flex-column">
-                <div class="bluePrimary--text py-1">TOTAL</div>
-                <div>{{ convertedEthPrice }} ETH ${{ domain.price }}</div>
-              </div>
-            </div>
-          </div>
-
-          <v-divider vertical class="mx-5" />
-
-          <div style="width: 100%">
-            <!--
-            =====================================================================================
-              Panel: Crypto
-            =====================================================================================
-            -->
-            <div v-if="crypto">
-              <h2 class="mb-3">Select Payment</h2>
-              <v-card
-                outlined
-                class="
-                  pa-2
-                  d-flex
-                  align-center
-                  justify-space-between
-                  bordered-red
-                  informationBG
-                "
-                :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
-              >
-                <div class="d-flex align-center">
-                  <img
-                    src="@/assets/images/currencies/icon-eth-blue.svg"
-                    alt="Crypto"
-                  />
-                  <div class="font-weight-medium ml-3">
-                    {{ convertedEthPrice }}
-                    <span class="primary--text">ETH</span>
-                  </div>
-                </div>
-                <v-icon class="primary--text">mdi-check-circle</v-icon>
-              </v-card>
-            </div>
-
-            <!--
-            =====================================================================================
-              Panel: Credit
-            =====================================================================================
-            -->
-            <!-- <div v-if="credit">
-              <h2 class="mb-3">Enter card information</h2>
-              <v-row no-gutters>
-                <v-col cols="12">
-                  <mew-input placeholder="Cardholder's Name" />
-                </v-col>
-              </v-row>
-              <v-row no-gutters>
-                <v-col cols="12">
-                  <mew-input placeholder="Card Number" />
-                </v-col>
-              </v-row>
-              <v-row no-gutters justify="center">
-                <v-col class="pr-1" cols="6">
-                  <mew-input placeholder="Valid Through" />
-                </v-col>
-                <v-col class="pl-1" cols="6">
-                  <mew-input placeholder="CVV" />
-                </v-col>
-              </v-row>
-              <v-row no-gutters justify="space-between">
-                <v-col class="pr-1" cols="5">
-                  <mew-button
-                    btn-style="outline"
-                    title="Cancel Payment"
-                    @click.native="close"
-                  />
-                </v-col>
-                <v-col class="pl-1" cols="5">
-                  <mew-button
-                    :title="`Pay $${domain.price}`"
-                    @click.native="pay"
-                  />
-                </v-col>
-              </v-row>
-            </div> -->
-
-            <!-- <div v-if="credit" class="stripe-card-input mt-8">
-              <card
-                :class="{ complete }"
-                :stripe="publishableKey"
-                :options="{}"
-                @change="complete = $event.complete"
-              />
-            </div> -->
-
-            <div v-if="credit" class="payment-simple">
-              <StripeElements
-                v-slot="{ elements }"
-                ref="elms"
-                :stripe-key="stripeKey"
-              >
-                <StripeElement ref="card" type="card" :elements="elements">
-                </StripeElement>
-              </StripeElements>
-              <button type="button" @click="pay">Pay</button>
-            </div>
-
-            <v-progress-linear
-              v-if="loading"
-              style="margin: 32px auto 40px auto; max-width: 200px"
-              indeterminate
-              color="primary"
-            ></v-progress-linear>
-
-            <div
-              v-if="paymentError"
-              class="error--text mt-3 mb-7 font-weight-medium"
-            >
-              {{ paymentError }}
-            </div>
-
-            <div
-              v-if="notEnoughBalance && crypto"
-              class="error--text mt-3 mb-7 font-weight-medium"
-            >
-              {{ $t('unstoppable.insufficient-balance') }}
-              <a
-                href="https://ccswap.myetherwallet.com/#/"
-                target="_blank"
-                class="text-decoration--underline"
-              >
-                {{ $t('unstoppable.insufficient-balance-advice') }}
-              </a>
-            </div>
-
-            <div v-if="crypto" class="d-flex justify-center mt-5">
-              <mew-button
-                title="Next step"
-                btn-size="xlarge"
-                has-full-width
-                @click.native="pay"
-              />
             </div>
           </div>
         </div>
-      </v-sheet>
+
+        <v-divider vertical class="mx-5" />
+
+        <div>
+          <!--
+          =====================================================================================
+            Panel: Crypto
+          =====================================================================================
+          -->
+          <div v-if="crypto">
+            <h2 class="mb-3">Select Payment</h2>
+            <v-card
+              outlined
+              class="
+                pa-2
+                d-flex
+                align-center
+                justify-space-between
+                bordered-red
+                informationBG
+              "
+              :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
+            >
+              <div class="d-flex align-center">
+                <img
+                  src="@/assets/images/currencies/icon-eth-blue.svg"
+                  alt="Crypto"
+                />
+                <div class="font-weight-medium ml-3">
+                  {{ convertedEthPrice }}
+                  <span class="primary--text">ETH</span>
+                </div>
+              </div>
+              <v-icon class="primary--text">mdi-check-circle</v-icon>
+            </v-card>
+          </div>
+
+          <!--
+          =====================================================================================
+            Panel: Credit
+          =====================================================================================
+          -->
+          <div v-if="credit" class="payment-simple">
+            <StripeElements
+              v-slot="{ elements }"
+              ref="elms"
+              :stripe-key="stripeKey"
+            >
+              <StripeElement ref="card" type="card" :elements="elements">
+              </StripeElement>
+            </StripeElements>
+            <button type="button" @click="pay">Pay</button>
+          </div>
+
+          <v-progress-linear
+            v-if="loading"
+            style="margin: 32px auto 40px auto; max-width: 200px"
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
+
+          <div
+            v-if="paymentError"
+            class="error--text mt-3 mb-7 font-weight-medium"
+          >
+            {{ paymentError }}
+          </div>
+
+          <div
+            v-if="notEnoughBalance && crypto"
+            class="error--text mt-3 mb-7 font-weight-medium"
+          >
+            {{ $t('unstoppable.insufficient-balance') }}
+            <a
+              href="https://ccswap.myetherwallet.com/#/"
+              target="_blank"
+              class="text-decoration--underline"
+            >
+              {{ $t('unstoppable.insufficient-balance-advice') }}
+            </a>
+          </div>
+
+          <div v-if="crypto" class="d-flex justify-center mt-5">
+            <mew-button
+              title="Next step"
+              btn-size="xlarge"
+              has-full-width
+              @click.native="pay"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </mew-overlay>
 </template>
@@ -212,7 +173,12 @@ export default {
       confirmationStep: false,
       // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
       loading: false,
-      stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o' // test key, don't hardcode
+      stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o', // test key,
+      helpObj: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
   computed: {
@@ -364,6 +330,11 @@ export default {
 $textDark: #192133;
 $greyMedium: #d7dae3;
 $bluePrimary: #4b83e8;
+$textLight: #939fb9;
+
+.payment--component {
+  width: 100%;
+}
 
 .bluePrimary--text {
   font-weight: bold;
@@ -372,6 +343,10 @@ $bluePrimary: #4b83e8;
 
 .lightPrimary--text {
   color: $textDark;
+}
+
+.textLight--text {
+  color: $textLight;
 }
 
 .buy-domain-info {
