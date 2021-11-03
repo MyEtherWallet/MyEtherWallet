@@ -113,6 +113,9 @@ const eip1559Params = (gasPrice, feeMarket) => {
       : bnToHex(tip),
     maxFeePerGas: gasPrice
   };
+  if (toBN(fees.maxPriorityFeePerGas).gt(toBN(fees.maxFeePerGas))) {
+    fees.maxFeePerGas = fees.maxPriorityFeePerGas;
+  }
   return fees;
 };
 const calculateChainIdFromV = v => {

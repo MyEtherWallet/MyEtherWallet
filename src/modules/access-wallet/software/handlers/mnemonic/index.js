@@ -61,7 +61,7 @@ class MnemonicWallet {
         });
       }
       const networkId = tx.common.chainId();
-      tx.sign(derivedKey.privateKey);
+      tx = tx.sign(derivedKey.privateKey);
       const signedChainId = tx.chainId
         ? parseInt(tx.chainId.toString())
         : calculateChainIdFromV(tx.v);

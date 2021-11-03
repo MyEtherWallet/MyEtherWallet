@@ -51,12 +51,12 @@ class WalletConnectWallet {
   }
   init() {
     return new Promise((resolve, reject) => {
-      const txSigner = tx => {
-        const from = tx.from;
-        tx = new Transaction(tx, {
+      const txSigner = txParams => {
+        const from = txParams.from;
+        const tx = new Transaction.fromTxData(txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const txJSON = tx.toJSON(true);
+        const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
         this.walletConnect

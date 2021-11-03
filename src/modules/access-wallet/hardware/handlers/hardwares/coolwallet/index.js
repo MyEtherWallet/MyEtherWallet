@@ -122,7 +122,7 @@ class CoolWallet {
   async getAccount(idx) {
     const address = await this.deviceInstance.getAddress(idx);
     const txSigner = async txParams => {
-      const tx = new Transaction(txParams, {
+      const tx = new Transaction.fromTxData(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const cwTx = {
