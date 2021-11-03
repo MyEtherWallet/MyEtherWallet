@@ -86,6 +86,7 @@
         v-for="(item, index) in tabItems"
         :key="item.name"
         :to="item.route"
+        exact
         :class="[
           'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
           { 'ml-3 ml-md-13': index === 0 },
