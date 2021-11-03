@@ -20,7 +20,8 @@ module.exports = {
         'lint',
         'test',
         'translation',
-        'sentry'
+        'sentry',
+        'release'
       ]
     ]
   }
