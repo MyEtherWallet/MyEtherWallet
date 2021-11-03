@@ -27,9 +27,8 @@ const EXCEPTIONS = [
   'node-fetch',
   'eslint', // not supported by vue yet
   'stylelint-config-standard',
-  // updating after release
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  'stylelint',
+  'vuetify' // update after release
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
