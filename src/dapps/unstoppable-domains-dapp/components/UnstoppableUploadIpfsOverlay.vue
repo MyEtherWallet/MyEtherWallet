@@ -4,6 +4,7 @@
     right-btn-text="Close"
     content-size="xlarge"
     :close="closing"
+    :footer="helpObj"
   >
     <div class="upload-ipfs">
       <h2 class="text-center mb-10">
@@ -43,76 +44,61 @@
         </div>
       </v-sheet>
 
+      <div class="my-5 d-flex align-center justify-space-between">
+        <v-divider></v-divider>
+        <div class="px-5">OR</div>
+        <v-divider></v-divider>
+      </div>
+
       <div>
-        <div
-          v-if="loading"
-          class="pa-8 d-flex flex-column align-center justify-center"
-        >
-          <v-progress-circular indeterminate />
-          <span class="mew-heading-2 mt-8"
-            >{{ $t('unstoppable.updating-your-records') }}
-          </span>
-          <span class="mew-body d-flex text-center mt-4" style="width: 317px">
-            {{ $t('unstoppable.processing-registration-advice') }}
-          </span>
-        </div>
-
-        <div class="my-5 d-flex align-center justify-space-between">
-          <v-divider></v-divider>
-          <div class="px-5">OR</div>
-          <v-divider></v-divider>
-        </div>
-
-        <div v-if="!loading">
-          <div class="d-flex justify-space-between align-center">
-            <div class="label-container">
-              <form
-                enctype="multipart/form-data"
-                novalidate
-                class="file-upload-container"
-              >
-                <input
-                  ref="zipInput"
-                  type="file"
-                  name="file"
-                  accept=".zip"
-                  @change="fileChange"
-                />
-              </form>
-            </div>
-          </div>
-
-          <div class="d-flex align-center justify-space-around">
-            <div class="bluePrimary--text font-weight-bold">
-              {{ $t('unstoppable.ipfs-hash') }}
-            </div>
-            <div class="pt-5" style="min-width: 300px">
-              <mew-input
-                v-model="input"
-                placeholder="Know your IPFS Hash? Enter it instead"
-                has-full-width
-                :rules="[v => isValidIpfs(v) || 'Invalid IPFS hash']"
-              />
-            </div>
-          </div>
-
-          <div v-if="error" class="error--text mb-7 font-weight-medium">
-            {{ error }}
-          </div>
-
-          <div
-            v-if="notEnoughBalance"
-            class="error--text mt-3 mb-7 font-weight-medium"
-          >
-            {{ $t('unstoppable.insufficient-balance') }}
-            <a
-              href="https://ccswap.myetherwallet.com/#/"
-              target="_blank"
-              class="text-decoration--underline"
+        <div class="d-flex justify-space-between align-center">
+          <div class="label-container">
+            <form
+              enctype="multipart/form-data"
+              novalidate
+              class="file-upload-container"
             >
-              {{ $t('unstoppable.insufficient-balance-advice') }}
-            </a>
+              <input
+                ref="zipInput"
+                type="file"
+                name="file"
+                accept=".zip"
+                @change="fileChange"
+              />
+            </form>
           </div>
+        </div>
+
+        <div class="d-flex align-center justify-space-around">
+          <div class="bluePrimary--text font-weight-bold">
+            {{ $t('unstoppable.ipfs-hash') }}
+          </div>
+          <div class="pt-5" style="min-width: 300px">
+            <mew-input
+              v-model="input"
+              placeholder="Know your IPFS Hash? Enter it instead"
+              has-full-width
+              :rules="[v => isValidIpfs(v) || 'Invalid IPFS hash']"
+            />
+          </div>
+        </div>
+
+        <div v-if="error" class="error--text mb-7 font-weight-medium">
+          {{ error }}
+        </div>
+
+        <div
+          v-if="notEnoughBalance"
+          class="error--text mt-3 mb-7 font-weight-medium"
+        >
+          {{ $t('unstoppable.insufficient-balance') }}
+          <a
+            href="https://ccswap.myetherwallet.com/#/"
+            target="_blank"
+            class="text-decoration--underline"
+          >
+            {{ $t('unstoppable.insufficient-balance-advice') }}
+          </a>
         </div>
       </div>
     </div>
@@ -145,10 +131,14 @@ export default {
   data() {
     return {
       disabled: false,
-      loading: false,
       input: '',
       error: '',
-      notEnoughBalance: false
+      notEnoughBalance: false,
+      helpObj: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }
     };
   },
   computed: {
@@ -205,7 +195,6 @@ export default {
       input.click();
     },
     fileChange(e) {
-      this.loading = true;
       const TYPES = [
         'application/zip',
         'application/x-zip',
@@ -224,13 +213,11 @@ export default {
         return;
       }
       if (e.target.files[0].size < 500) {
-        this.loading = false;
         this.$refs.zipInput.value = '';
         this.error = 'The website is too small';
         return;
       }
       if (e.target.files[0].size > 50000) {
-        this.loading = false;
         this.$refs.zipInput.value = '';
         this.error = 'The website is too big';
         return;
@@ -263,14 +250,12 @@ export default {
           body: formData
         }).then(response => {
           if (!response.ok) {
-            this.loading = false;
             this.error = 'Upload failed';
             return;
           }
           this.getHashFromFile(content.body.hashResponse);
         });
       } catch (e) {
-        this.loading = false;
         this.error = e.message;
       }
     },
@@ -290,7 +275,6 @@ export default {
             return response.json();
           })
           .catch(e => {
-            this.loading = false;
             Toast(e, {}, ERROR);
           });
         if (ipfsHash.error) {
@@ -300,21 +284,17 @@ export default {
           this.saveIpfsHash(ipfsHash);
         }
       } catch (e) {
-        this.loading = false;
         Toast(e, {}, ERROR);
       }
     },
 
     async saveIpfsHash(hash) {
-      this.loading = true;
-
       const currentResolverAddress = await this.resolution.getResolver(
         this.name
       );
 
       if (!currentResolverAddress) {
         this.error = "Couldn't fetch resolver address";
-        this.loading = false;
         return;
       }
       const resolverContract = new this.web3.eth.Contract(
@@ -331,9 +311,7 @@ export default {
           value: 0
         };
         await this.web3.eth.sendTransaction(txObj);
-        this.loading = false;
       } catch (e) {
-        this.loading = false;
         if (e.message === 'Returned error: insufficient funds for transfer') {
           this.notEnoughBalance = true;
           return;

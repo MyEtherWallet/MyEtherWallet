@@ -4,6 +4,7 @@
     right-btn-text="Close"
     content-size="medium"
     :close="closing"
+    :footer="helpObj"
   >
     <div class="manage-overlay--component">
       <h2 class="text-center">
@@ -14,20 +15,7 @@
         <span class="font-weight-bold">{{ managedDomain.name }}</span> it will
         be deposited to the wallet entered below.
       </div>
-      <div
-        v-if="loading"
-        class="pa-8 d-flex flex-column align-center justify-center"
-        style="min-height: 466px"
-      >
-        <v-progress-circular indeterminate />
-        <span class="mew-heading-2 mt-8">
-          {{ $t('unstoppable.updating-your-records') }}
-        </span>
-        <span class="mew-body d-flex text-center mt-4" style="width: 317px">
-          {{ $t('unstoppable.processing-registration-advice') }}
-        </span>
-      </div>
-      <div v-if="!loading" class="pa-7">
+      <div class="pa-7">
         <div
           v-for="(value, record) in records"
           :key="record"
@@ -97,25 +85,26 @@ export default {
         ETH: null
       },
       disabled: false,
-      loading: false,
-      // rotation: 180,
-      // dropdownOpen: false,
       additionalRecords: [],
       menuObj: {
         name: 'More currencies',
         items: [
           {
-            title: '1st Links',
             items: [
               {
-                title: 'Link 1'
+                title: 'Currency 1'
               },
               {
-                title: 'Link 2'
+                title: 'Currency 2'
               }
             ]
           }
         ]
+      },
+      helpObj: {
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
       }
     };
   },
@@ -183,13 +172,6 @@ export default {
         .filter(r => r);
       return records;
     },
-    // async handleAddRecord(key) {
-    //   const record = await this.resolution
-    //     .getRecord(this.managedDomain.name, keyToCryptoKey[key])
-    //     .catch(() => '');
-    //   this.records = { ...this.records, [key]: record };
-    //   this.additionalRecords = this.getAdditionalRecords();
-    // },
     validateRecord(key, value) {
       if (!value) {
         this.errors = { ...this.errors, [key]: undefined };
@@ -206,7 +188,6 @@ export default {
       return Object.values(errorObj).includes(true);
     },
     async saveRecords() {
-      this.loading = true;
       const resolverAddr =
         this.managedDomain.resolver ||
         (await this.resolution.getResolver(this.managedDomain.name));
@@ -221,7 +202,7 @@ export default {
         }
       }
 
-      const resolverContract = new this.web3.eth.Contract(
+      const resolverContract = await new this.web3.eth.Contract(
         resolverAbi,
         resolverAddr
       );
@@ -231,19 +212,13 @@ export default {
         .send({ from: this.address })
         .on('confirmation', confirmationNumber => {
           if (confirmationNumber === 4) {
-            this.loading = false;
             this.fetchRecords();
           }
         })
         .on('error', () => {
-          this.loading = false;
           this.fetchRecords();
         });
     }
-    // rotate() {
-    //   this.rotation = this.rotation === 0 ? 180 : 0;
-    //   this.dropdownOpen = !this.dropdownOpen;
-    // }
   }
 };
 </script>
@@ -251,37 +226,5 @@ export default {
 <style lang="scss">
 .manage-overlay--component {
   width: 100%;
-}
-
-.dropdown-list-box {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-  width: 22%;
-  position: absolute;
-  user-select: none;
-  background-color: #fff;
-  border: 1px solid #05c0a5;
-  border-radius: 0 0 4px 4px;
-  z-index: 10;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 230px;
-  ul {
-    li {
-      cursor: pointer;
-      padding: 10px 15px;
-      position: relative;
-      display: grid;
-      grid-template-columns: 40px 1fr 70px 25px;
-      align-items: center;
-
-      &:nth-child(odd) {
-        background-color: #fff;
-      }
-
-      &:hover {
-        background-color: #f9f9f9;
-      }
-    }
-  }
 }
 </style>

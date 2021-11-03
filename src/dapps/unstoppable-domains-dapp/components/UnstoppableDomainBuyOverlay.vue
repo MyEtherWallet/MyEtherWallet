@@ -171,9 +171,9 @@ export default {
       credit: false,
       paymentError: '',
       confirmationStep: false,
-      // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P',
+      // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P', // live key
+      stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o', // test key
       loading: false,
-      stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o', // test key,
       helpObj: {
         text: 'Need help?',
         linkTitle: 'Contact support',
@@ -268,7 +268,7 @@ export default {
             stripeToken = stripeToken.token.id;
             this.loading = true;
             const response = await createResellerOrder({
-              domain: 'reseller-test-myetherwallet-12323123.crypto',
+              domain: this.domain.name,
               email: this.email,
               resellerId: this.resellerId,
               address: this.address,

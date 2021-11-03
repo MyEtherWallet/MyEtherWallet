@@ -59,12 +59,12 @@
                 :buy-domain="buyDomain"
               />
             </div>
-            <v-progress-circular
-              v-if="loading"
-              style="margin: 32px auto 40px auto; max-width: 200px"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+            <div v-if="loading" class="d-flex justify-center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </div>
             <unstoppable-info-card v-if="searchResults.length === 0" />
             <div class="py-10"></div>
           </v-sheet>
@@ -302,17 +302,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// ==================================================================================================
-// Replace with mew-components color variables when mew-components is updated.
-// ==================================================================================================
-$greyMedium: #d7dae3;
-$bluePrimary: #4b83e8;
-$backgroundGrey: #f8f9fb;
-
-.manage-domain-buttons {
-  white-space: normal !important;
-  word-wrap: break-word;
-}
+// .manage-domain-buttons {
+//   white-space: normal !important;
+//   word-wrap: break-word;
+// }
 
 .button--label {
   white-space: normal;
