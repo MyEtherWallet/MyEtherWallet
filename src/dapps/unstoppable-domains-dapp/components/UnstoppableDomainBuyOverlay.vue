@@ -64,30 +64,33 @@
           -->
           <div v-if="crypto">
             <h2 class="mb-3">Select Payment</h2>
-            <v-card
-              outlined
-              class="
-                pa-2
-                d-flex
-                align-center
-                justify-space-between
-                bordered-red
-                informationBG
-              "
-              :class="[notEnoughBalance ? 'errorBorder' : 'greenBorder']"
-            >
-              <div class="d-flex align-center">
-                <img
-                  src="@/assets/images/currencies/icon-eth-blue.svg"
-                  alt="Crypto"
-                />
-                <div class="font-weight-medium ml-3">
-                  {{ convertedEthPrice }}
-                  <span class="primary--text">ETH</span>
+            <div v-for="(payment, key) in cryptoPaymentOptions" :key="key">
+              <v-card
+                outlined
+                class="pa-4 my-2 d-flex align-center justify-space-between"
+                :class="[
+                  payment.type === selectedCryptoPayment ? 'greenBorder' : ''
+                ]"
+                @click="
+                  () => {
+                    setSelected(payment.type);
+                  }
+                "
+              >
+                <div class="d-flex align-center">
+                  <img :src="payment.icon" style="width: 24px" alt="Crypto" />
+                  <div class="font-weight-medium ml-3">
+                    {{ convertedEthPrice }}
+                    <span class="textLight--text">{{ payment.type }}</span>
+                  </div>
                 </div>
-              </div>
-              <v-icon class="primary--text">mdi-check-circle</v-icon>
-            </v-card>
+                <v-icon
+                  v-if="payment.type === selectedCryptoPayment"
+                  class="primary--text"
+                  >mdi-check-circle</v-icon
+                >
+              </v-card>
+            </div>
           </div>
 
           <!--
@@ -96,6 +99,7 @@
           =====================================================================================
           -->
           <div v-if="credit" class="payment-simple">
+            <h2 class="mb-3">Enter card information</h2>
             <StripeElements
               v-slot="{ elements }"
               ref="elms"
@@ -171,7 +175,22 @@ export default {
         text: 'Need help?',
         linkTitle: 'Contact support',
         link: 'mailto:support@myetherwallet.com'
-      }
+      },
+      selectedCryptoPayment: 'ETH',
+      cryptoPaymentOptions: [
+        {
+          type: 'ETH',
+          icon: require('@/assets/images/currencies/icon-eth-black.svg')
+        },
+        {
+          type: 'USDC',
+          icon: require('@/assets/images/currencies/usdc.png')
+        },
+        {
+          type: 'DAI',
+          icon: require('@/assets/images/currencies/dai.png')
+        }
+      ]
     };
   },
   computed: {
@@ -214,6 +233,9 @@ export default {
         this.confirmationStep = false;
         this.close();
       }
+    },
+    selectedCryptoPayment(newVal) {
+      return newVal === this.selectedCryptoPayment;
     }
   },
   async mounted() {
@@ -245,6 +267,9 @@ export default {
         return await this.payWithCrypto();
       }
       return await this.payWithStripe();
+    },
+    setSelected(payment) {
+      this.selectedCryptoPayment = payment;
     },
     async payWithStripe() {
       try {
@@ -324,6 +349,7 @@ $textDark: #192133;
 $greyMedium: #d7dae3;
 $bluePrimary: #4b83e8;
 $textLight: #939fb9;
+$primary: #05c0a5;
 
 .payment--component {
   width: 100%;
@@ -356,9 +382,13 @@ $textLight: #939fb9;
   border-color: red !important;
 }
 .greenBorder {
-  border-color: green !important;
+  border-color: $primary !important;
 }
 .selectedBorder {
   background-color: #d4e1f9;
+}
+
+.adjustIconSize {
+  width: 24px;
 }
 </style>
