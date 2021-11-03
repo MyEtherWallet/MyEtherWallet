@@ -26,21 +26,18 @@
         -->
       <v-col v-if="isNotAvailable" cols="12" class="d-flex align-center mt-3">
         <p class="mb-0 mr-1">Owner:</p>
-        <a
-          href="https://www.ethvm.com/address/0x64bbde373e909501de1309231336761adeaa07d5"
-          target="_blank"
-        >
+        <a :href="raribleOwnerLink" target="_blank">
           {{ ownerFormatted }}
         </a>
       </v-col>
       <!--
         ===================================================
-          Block is Not available: OPENSEA LINK
+          Block is Not available: Rarible LINK
         ===================================================
         -->
       <v-col v-if="isNotAvailable" cols="12" class="mt-1">
-        <a :href="openSeaLink" target="_blank" class="d-flex align-center">
-          <p class="mb-0">See if it's available on OpenSea</p>
+        <a :href="raribleLink" target="_blank" class="d-flex align-center">
+          <p class="mb-0">See if it's available on Rarible</p>
           <v-icon class="ml-2 greenPrimary--text" size="16px"
             >mdi-open-in-new</v-icon
           >
@@ -125,7 +122,7 @@
         class="mt-5 mb-2 mt-sm-4 pl-sm-2"
         :order="$vuetify.breakpoint.xs ? 'last' : ''"
       >
-        <mew-button v-if="!isPending" has-full-width :btn-link="openSeaLink">
+        <mew-button v-if="!isPending" has-full-width :btn-link="raribleLink">
           <v-row class="align-center justify-center">
             <div>List for sale</div>
             <v-icon class="ml-2 white--text" size="16px"
@@ -150,6 +147,7 @@
         <div class="mb-0 redPrimary--text mew-label">
           {{ notEnoughMessage }}
           <a
+            v-if="!isTestNetwork"
             rel="noopener noreferrer"
             target="_blank"
             :href="swapLink"
@@ -184,10 +182,14 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
-const OPENSEA =
-  'https://opensea.io/assets/0x01234567bac6ff94d7e4f0ee23119cf848f93245/';
-const OPENSEA_TEST =
-  'https://testnets.opensea.io/assets/0x01234567bac6ff94d7e4f0ee23119cf848f93245/';
+const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
+const RARIBLE = 'https://rarible.com/';
+const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
+const RARIBLE_OWNER = `${RARIBLE}user/`;
+
+const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
+const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
+const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
 export default {
   name: 'BlockInfoAlert',
   props: {
@@ -328,11 +330,21 @@ export default {
     /**
      *
      */
-    openSeaLink() {
+    raribleLink() {
       if (this.blockNumber !== '') {
+        const endLInk = '?tab=details';
         return this.isTestNetwork
-          ? `${OPENSEA_TEST}${this.blockNumber}`
-          : `${OPENSEA}${this.blockNumber}`;
+          ? `${RARIBLE_TEST_TOKEN}${this.blockNumber}${endLInk}`
+          : `${RARIBLE_TOKEN}${this.blockNumber}${endLInk}`;
+      }
+      return '';
+    },
+    raribleOwnerLink() {
+      if (this.blockNumber !== '') {
+        const endLInk = '?tab=owned';
+        return this.isTestNetwork
+          ? `${RARIBLE_TEST_OWNER}${this.owner}${endLInk}`
+          : `${RARIBLE_OWNER}${this.owner}${endLInk}`;
       }
       return '';
     },
