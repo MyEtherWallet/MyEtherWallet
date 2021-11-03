@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.2.1",
+  "version": "6.3.0",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -37,7 +37,7 @@
     "@coolwallets/eth": "0.2.0-beta.1",
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
-    "@ensdomains/address-encoder": "0.2.9",
+    "@ensdomains/address-encoder": "0.2.10",
     "@ensdomains/ens-contracts": "0.0.7",
     "@ethereumjs/common": "2.5.0",
     "@ethereumjs/tx": "3.3.2",
@@ -79,7 +79,7 @@
     "underscore": "1.13.1",
     "vue": "2.6.14",
     "vue-apollo": "3.0.8",
-    "vue-router": "3.5.2",
+    "vue-router": "3.5.3",
     "vuex": "3.6.2",
     "walletlink": "2.1.11"
   },
