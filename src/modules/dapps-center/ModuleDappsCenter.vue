@@ -17,8 +17,8 @@
             color-theme="primary"
             btn-style="light"
             style="height: 160px"
-            @click.native="routeTo(dappName(dapp))"
             has-full-width
+            @click.native="routeTo(dappName(dapp))"
           >
             <div
               class="px-2 text-left d-flex align-center justify-space-between"
