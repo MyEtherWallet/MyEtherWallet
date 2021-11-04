@@ -51,7 +51,12 @@
       </v-row>
       <v-row v-if="!dapps.length">
         <v-col cols="12" class="swap-not-available">
-          <app-user-msg-block :message="noDappsAvailable" />
+          <mew-alert
+            theme="warning"
+            hide-close-icon
+            title="DApps are are not supported on this network"
+            description="Please select a different network."
+          />
         </v-col>
       </v-row>
     </template>
@@ -78,10 +83,6 @@ export default {
       bannerImage: bannerImage,
       bannerText: {
         title: 'Explore MEW DApps'
-      },
-      noDappsAvailable: {
-        title: `DApps are are not supported on this network`,
-        subtitle: 'Please select a different network'
       }
     };
   },
