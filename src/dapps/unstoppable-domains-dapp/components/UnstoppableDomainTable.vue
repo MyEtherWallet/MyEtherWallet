@@ -44,14 +44,17 @@
         </div>
       </div>
       <div class="domain-list-items px-5">
-        <div
-          v-for="(d, key) in searchResults"
-          :key="key"
-          class="table-border-top"
-        >
+        <div v-for="(d, key) in searchResults" :key="key">
           <div
             v-if="d.available"
-            class="py-6 px-5 d-md-flex align-center justify-space-between"
+            class="
+              table-border-bottom
+              py-6
+              px-5
+              d-md-flex
+              align-center
+              justify-space-between
+            "
           >
             <div
               :class="
@@ -108,15 +111,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// ==================================================================================================
-// Replace with mew-components color variables when mew-components is updated.
-// ==================================================================================================
 $greyMedium: #d7dae3;
-$bluePrimary: #4b83e8;
-
-.bluePrimary--text {
-  color: $bluePrimary;
-}
 
 .textLight--text {
   color: #939fb9;
@@ -131,7 +126,7 @@ $bluePrimary: #4b83e8;
   border: none;
 }
 
-.table-border-top {
+.table-border-bottom {
   border-bottom: 1px solid $greyMedium;
 }
 </style>

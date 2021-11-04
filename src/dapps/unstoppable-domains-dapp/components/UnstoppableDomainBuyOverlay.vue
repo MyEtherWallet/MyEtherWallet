@@ -150,6 +150,7 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import { StripeElements, StripeElement } from 'vue-stripe-elements-plus';
 import BigNumber from 'bignumber.js';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import {
   createResellerOrder,
   getCoinbaseChargeInfo
@@ -170,7 +171,6 @@ export default {
       confirmationStep: false,
       // publishableKey: 'pk_live_HAPE6Nv5bfhCJYKe6Nfaaj4P', // live key
       stripeKey: 'pk_test_bERlHfGH5lT9rTIhKPg74H0o', // test key
-      loading: false,
       helpObj: {
         text: 'Need help?',
         linkTitle: 'Contact support',
@@ -284,8 +284,8 @@ export default {
               throw stripeToken.error;
             }
             stripeToken = stripeToken.token.id;
-            this.loading = true;
             const response = await createResellerOrder({
+              // domain: 'reseller-test-myetherwallet-342.crypto', // change number everytime for test
               domain: this.domain.name,
               email: this.email,
               resellerId: this.resellerId,
@@ -297,11 +297,11 @@ export default {
             });
             this.confirmationStep = true;
             this.SET_ORDER({ value: response.order });
-            this.loading = false;
+            this.close();
           });
       } catch (error) {
-        this.loading = false;
         this.paymentError = error.message;
+        Toast(error.message, {}, ERROR);
       }
     },
     async payWithCrypto() {
@@ -325,6 +325,7 @@ export default {
           charge.data.pricing.ethereum.amount,
           'ether'
         );
+        this.close();
         await this.web3.eth
           .sendTransaction({
             from: this.address,
@@ -333,10 +334,8 @@ export default {
           })
           .then(() => {
             this.confirmationStep = true;
-            this.loading = false;
           });
       } catch (err) {
-        this.loading = false;
         this.paymentError = err.message;
       }
     }

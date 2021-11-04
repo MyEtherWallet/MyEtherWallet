@@ -245,6 +245,8 @@ export default {
         domain: desiredDomain,
         resellerId: this.resellerId
       });
+      if (this.searchResults.length > 0) this.searchResults = [];
+
       if (domain.owner) {
         const records = await this.resolution.getAllRecords(domain.name);
         const cryptoRecords = Object.entries(records)
