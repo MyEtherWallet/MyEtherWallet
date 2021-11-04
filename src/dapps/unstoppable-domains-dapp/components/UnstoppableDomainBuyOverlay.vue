@@ -369,7 +369,6 @@ export default {
             if (stripeToken.error) {
               throw stripeToken.error;
             }
-            console.log(stripeToken);
             stripeToken = stripeToken.token.id;
             const response = await createResellerOrder({
               // domain: 'reseller-test-myetherwallet-432.crypto', // change number everytime for test
