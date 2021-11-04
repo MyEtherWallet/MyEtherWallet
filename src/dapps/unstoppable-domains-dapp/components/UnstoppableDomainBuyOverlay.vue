@@ -235,7 +235,7 @@ export default {
     },
     convertedUsdcAndDaiPrice() {
       return BigNumber(this.domainPrice).gt(0)
-        ? new BigNumber(this.domainPrice).toFixed(2)
+        ? new BigNumber(this.domainPrice).toFixed(8)
         : '0';
     },
     notEnoughBalance() {

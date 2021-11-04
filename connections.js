@@ -49,5 +49,7 @@ module.exports = [
   'https://js.intercomcdn.com:443',
   'wss://nexus-websocket-a.intercom.io:443',
   'https://js.intercomcdn.com:443',
-  'https://uploads.intercomcdn.com:443'
+  'https://uploads.intercomcdn.com:443',
+  'https://js.stripe.com/v3/',
+  'https://commerce.coinbase.com/v1/checkout.js'
 ];
