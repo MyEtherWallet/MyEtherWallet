@@ -220,11 +220,11 @@
                 </v-row>
               </v-expansion-panel-header>
               <v-expansion-panel-content :id="i">
-                <div>
+                <div class="pa-6 pt-0">
                   <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
-                    class="d-flex justify-space-between"
+                    class="d-flex justify-space-between mt-3"
                     no-gutters
                   >
                     <v-col
