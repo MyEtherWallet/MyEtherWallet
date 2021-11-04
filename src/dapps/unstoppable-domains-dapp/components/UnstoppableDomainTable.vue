@@ -68,7 +68,7 @@
 
             <div class="d-flex align-center justify-space-between">
               <div class="text-md-right mr-5">
-                <div>{{ d.priceEth }} ETH</div>
+                <div>{{ convertedEthPrice(d.price) }} ETH</div>
                 <div class="textLight--text">${{ d.price }} USD</div>
               </div>
               <mew-button
@@ -89,6 +89,9 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 export default {
   name: 'DomainTable',
   components: {},
@@ -106,7 +109,25 @@ export default {
       type: String
     }
   },
-  data: () => ({})
+  data: () => ({}),
+  computed: {
+    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('unstoppable', [
+      'domain',
+      'email',
+      'domainPrice',
+      'resellerId',
+      'order'
+    ])
+  },
+  methods: {
+    convertedEthPrice(price) {
+      return BigNumber(price).gt(0)
+        ? BigNumber(price).dividedBy(this.fiatValue).toFixed(4)
+        : '0';
+    }
+  }
 };
 </script>
 

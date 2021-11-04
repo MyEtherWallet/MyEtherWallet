@@ -111,28 +111,70 @@
             Panel: Credit
           =====================================================================================
           -->
-          <div v-if="credit" class="payment-simple">
+          <div v-if="credit">
             <h2 class="mb-3">Enter card information</h2>
-            <StripeElements
-              v-slot="{ elements }"
-              ref="elms"
-              :stripe-key="stripeKey"
-            >
-              <StripeElement ref="card" type="card" :elements="elements">
-              </StripeElement>
-            </StripeElements>
-            <div class="d-flex align-center justify-space-around">
-              <mew-button
-                title="Cancel Payment"
-                btn-style="outline"
-                btn-size="large"
-                @click.native="close"
-              />
-              <mew-button
-                :title="`Pay $${domainPrice}`"
-                btn-size="large"
-                @click.native="pay"
-              />
+            <div>
+              <StripeElements
+                ref="elms"
+                v-slot="{ elements }"
+                :stripe-key="stripeKey"
+              >
+                <div class="stripe-form pl-3 d-flex flex-column justify-center">
+                  <StripeElement
+                    ref="cardNumber"
+                    type="cardNumber"
+                    :elements="elements"
+                    :options="stripeOptions"
+                  />
+                </div>
+                <v-row>
+                  <v-col cols="6">
+                    <div
+                      class="stripe-form pl-3 d-flex flex-column justify-center"
+                    >
+                      <StripeElement
+                        ref="cardCvc"
+                        type="cardCvc"
+                        :elements="elements"
+                        :options="stripeOptions"
+                      />
+                    </div>
+                  </v-col>
+                  <v-col cols="6">
+                    <div
+                      class="stripe-form d-flex pl-3 flex-column justify-center"
+                    >
+                      <StripeElement
+                        ref="cardExpiry"
+                        type="cardExpiry"
+                        :elements="elements"
+                        :options="stripeOptions"
+                      />
+                    </div>
+                  </v-col>
+                </v-row>
+              </StripeElements>
+            </div>
+            <div>
+              <v-row>
+                <v-col cols="6">
+                  <mew-button
+                    title="Cancel Payment"
+                    btn-style="outline"
+                    btn-size="xlarge"
+                    has-full-width
+                    @click.native="close"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <mew-button
+                    :title="`Pay $${domainPrice}`"
+                    btn-size="xlarge"
+                    has-full-width
+                    @click.native="pay"
+                  />
+                </v-col>
+              </v-row>
             </div>
           </div>
 
@@ -215,7 +257,21 @@ export default {
           type: 'DAI',
           icon: require('@/assets/images/currencies/dai.png')
         }
-      ]
+      ],
+      stripeOptions: {
+        style: {
+          base: {
+            color: 'black',
+            fontFamily: '"Roboto", sans-serif',
+            fontSize: '20px',
+            fontWeight: '400',
+            fontSmoothing: 'antialiased',
+            '::placeholder': {
+              color: '#5A678A'
+            }
+          }
+        }
+      }
     };
   },
   computed: {
@@ -304,7 +360,7 @@ export default {
     async payWithStripe() {
       try {
         const groupComponent = this.$refs.elms;
-        const cardComponent = this.$refs.card;
+        const cardComponent = this.$refs.cardNumber;
         const cardElement = cardComponent.stripeElement;
 
         groupComponent.instance
@@ -313,6 +369,7 @@ export default {
             if (stripeToken.error) {
               throw stripeToken.error;
             }
+            console.log(stripeToken);
             stripeToken = stripeToken.token.id;
             const response = await createResellerOrder({
               // domain: 'reseller-test-myetherwallet-432.crypto', // change number everytime for test
@@ -430,5 +487,14 @@ $primary: #05c0a5;
 
 .adjustIconSize {
   width: 24px;
+}
+
+.stripe-form {
+  border: 1px solid $primary;
+  border-radius: 12px;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 62px;
 }
 </style>
