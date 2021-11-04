@@ -86,7 +86,7 @@ class KeepkeyWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async txParams => {
-      const tx = new Transaction.fromTxData(txParams, {
+      const tx = new Transaction(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const hexTx = getHexTx(tx);

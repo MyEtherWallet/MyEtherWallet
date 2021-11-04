@@ -84,17 +84,6 @@ class BitBox02Wallet {
       const tx = new Transaction.fromTxData(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
-      // const obj = Object.assign(
-      //   {},
-      //   {
-      //     nonce: tx.nonce.toArrayLike(Buffer, 'be', 32),
-      //     gasPrice: tx.gasPrice.toArrayLike(Buffer, 'be', 32),
-      //     gasLimit: tx.gasLimit.toArrayLike(Buffer, 'be', 32),
-      //     to: BN(tx.to.toBuffer()).toArrayLike(Buffer, 'be', 32),
-      //     value: tx.value.toArrayLike(Buffer, 'be', 32),
-      //     data: tx.data
-      //   }
-      // );
       const networkId = tx.common.chainId();
       const signingData = {
         keypath: this.basePath + '/' + idx,
