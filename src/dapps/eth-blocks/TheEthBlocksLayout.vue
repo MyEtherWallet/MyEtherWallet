@@ -125,12 +125,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.staked-tab-inactive {
-  background-color: rgba(0, 0, 0, 0.24) !important;
-}
-.staked-tab-active::before {
-  opacity: 0 !important;
-}
-</style>

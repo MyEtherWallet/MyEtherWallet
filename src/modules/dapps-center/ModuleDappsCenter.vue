@@ -28,8 +28,14 @@
               style="width: 100%"
             >
               <div>
-                <div class="mb-2 d-flex align-center">
+                <div class="mb-2 d-flex align-center justify-start flex-row">
                   <div class="mew-heading-3">{{ dapp.title }}</div>
+                  <v-icon
+                    v-if="dapp.isNew"
+                    size="24"
+                    class="ml-1 redPrimary--text"
+                    >mdi-new-box</v-icon
+                  >
                 </div>
                 <div class="break-word">
                   {{ dapp.subtitle }}
