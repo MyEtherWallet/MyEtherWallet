@@ -23,8 +23,11 @@
             class="my-2"
             @click.native="selectTab($event)"
           >
-            <div>Pay with Crypto</div>
-            <v-icon v-if="crypto" size="20">mdi-chevron-right</v-icon>
+            <div class="d-flex align-center justify-space-between">
+              <v-icon small>mdi-ethereum</v-icon>
+              <div>Pay with Crypto</div>
+              <v-icon v-if="crypto" size="20">mdi-chevron-right</v-icon>
+            </div>
           </mew-button>
           <mew-button
             id="credit"
@@ -35,9 +38,11 @@
             class="my-2 d-flex align-center justify-space-between"
             @click.native="selectTab($event)"
           >
-            <v-icon small>mdi-credit-card-outline</v-icon>
-            <div>Pay with Credit</div>
-            <v-icon v-if="credit" size="20">mdi-chevron-right</v-icon>
+            <div class="d-flex align-center justify-space-between">
+              <v-icon small>mdi-credit-card-outline</v-icon>
+              <div>Pay with Credit</div>
+              <v-icon v-if="credit" size="20">mdi-chevron-right</v-icon>
+            </div>
           </mew-button>
           <div class="buy-domain-info pa-4">
             <div class="d-flex flex-column">
@@ -79,10 +84,18 @@
               >
                 <div class="d-flex align-center">
                   <img :src="payment.icon" style="width: 24px" alt="Crypto" />
-                  <div class="font-weight-medium ml-3">
-                    {{ convertedEthPrice }}
-                    <span class="textLight--text">{{ payment.type }}</span>
+                  <div class="d-flex align-center px-1">
+                    <div
+                      v-if="payment.type === 'ETH'"
+                      class="font-weight-medium"
+                    >
+                      {{ convertedEthPrice }}
+                    </div>
+                    <div v-else class="font-weight-medium">
+                      {{ convertedUsdcAndDaiPrice }}
+                    </div>
                   </div>
+                  <div class="textLight--text">{{ payment.type }}</div>
                 </div>
                 <v-icon
                   v-if="payment.type === selectedCryptoPayment"
@@ -108,7 +121,19 @@
               <StripeElement ref="card" type="card" :elements="elements">
               </StripeElement>
             </StripeElements>
-            <button type="button" @click="pay">Pay</button>
+            <div class="d-flex align-center justify-space-around">
+              <mew-button
+                title="Cancel Payment"
+                btn-style="outline"
+                btn-size="large"
+                @click.native="close"
+              />
+              <mew-button
+                :title="`Pay $${domainPrice}`"
+                btn-size="large"
+                @click.native="pay"
+              />
+            </div>
           </div>
 
           <div
@@ -208,6 +233,11 @@ export default {
         ? BigNumber(this.domainPrice).dividedBy(this.fiatValue).toFixed(8)
         : '0';
     },
+    convertedUsdcAndDaiPrice() {
+      return BigNumber(this.domainPrice).gt(0)
+        ? new BigNumber(this.domainPrice).toFixed(2)
+        : '0';
+    },
     notEnoughBalance() {
       const domainPriceInWei = new BigNumber(
         this.web3.utils.toWei(this.convertedEthPrice, 'ether')
@@ -285,7 +315,7 @@ export default {
             }
             stripeToken = stripeToken.token.id;
             const response = await createResellerOrder({
-              // domain: 'reseller-test-myetherwallet-342.crypto', // change number everytime for test
+              // domain: 'reseller-test-myetherwallet-432.crypto', // change number everytime for test
               domain: this.domain.name,
               email: this.email,
               resellerId: this.resellerId,
@@ -321,23 +351,34 @@ export default {
           email: this.email,
           chargeId: response.order.payment.tokenId
         });
-        const value = this.web3.utils.toWei(
-          charge.data.pricing.ethereum.amount,
-          'ether'
-        );
-        this.close();
-        await this.web3.eth
-          .sendTransaction({
-            from: this.address,
-            to: charge.data.addresses.ethereum,
-            value
-          })
-          .then(() => {
-            this.confirmationStep = true;
-          });
+        const { ethereum, usdc, dai } = charge.data.pricing;
+        if (this.selectedCryptoPayment === 'ETH') {
+          const value = this.web3.utils.toWei(ethereum.amount, 'ether');
+          await this.sendTransaction(charge.data.addresses.ethereum, value);
+          this.close();
+        }
+        if (this.selectedCryptoPayment === 'USDC') {
+          await this.sendTransaction(charge.data.addresses.usdc, usdc.amount);
+          this.close();
+        }
+        if (this.selectedCryptoPayment === 'DAI') {
+          await this.sendTransaction(charge.data.addresses.dai, dai.amount);
+          this.close();
+        }
       } catch (err) {
         this.paymentError = err.message;
       }
+    },
+    async sendTransaction(sendTo, value) {
+      await this.web3.eth
+        .sendTransaction({
+          from: this.address,
+          to: sendTo,
+          value: value
+        })
+        .then(() => {
+          this.confirmationStep = true;
+        });
     }
   }
 };
