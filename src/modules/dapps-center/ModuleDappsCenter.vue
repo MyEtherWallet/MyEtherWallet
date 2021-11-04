@@ -12,12 +12,13 @@
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>
       <v-row>
-        <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
+        <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" sm="6">
           <mew-button
-            color-theme="backgroundGrey"
+            color-theme="primary"
             btn-style="light"
             style="height: 160px"
             @click.native="routeTo(dappName(dapp))"
+            has-full-width
           >
             <div
               class="px-2 text-left d-flex align-center justify-space-between"
