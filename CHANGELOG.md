@@ -1,3 +1,8 @@
+### fix
+
+* fix eip1559 signing issues on MEWconnect and Mnemonic [#3533](https://github.com/MyEtherWallet/MyEtherWallet/pull/3533)
+* fix address book issue [#3534](https://github.com/MyEtherWallet/MyEtherWallet/pull/3534)
+
 ### Release v6.3.0
 
 ### devop
