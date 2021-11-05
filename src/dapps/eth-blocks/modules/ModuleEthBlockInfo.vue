@@ -121,6 +121,7 @@
             v-if="!isTestNetwork"
             :href="`https://www.ethvm.com/block/number/${blockRef}`"
             target="_blank"
+            @click="trackToEthVM"
           >
             View block #{{ blockRef }} info on EthVM
           </a>
@@ -185,6 +186,7 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_TRANSFER = 150000;
 const MIN_GAS_MINT = 300000;
@@ -197,6 +199,7 @@ export default {
     BlocksLoading,
     BlockSend
   },
+  mixins: [handlerAnalytics],
   props: {
     blockRef: {
       type: String,
@@ -429,7 +432,12 @@ export default {
 
   methods: {
     ...mapActions('ethBlocksTxs', ['addEthBlockTx']),
-
+    /**
+     * tracks when user clicks ethvm from ethblocks
+     */
+    trackToEthVM() {
+      this.trackDapp('ethBlocksToEthVM');
+    },
     resetBlock() {
       this.handlerBlock.getBlock();
     },
@@ -448,6 +456,7 @@ export default {
      * Responds, to child Alert component on emit 'mint' event
      */
     mintBlock() {
+      this.trackDapp('ethBlocksMint');
       this.handlerBlock.mintBlock(
         this.balanceInWei,
         this.gasPriceByType(this.gasPriceType)
@@ -474,6 +483,7 @@ export default {
      * @param {string} value - to address
      */
     sendBlock(value) {
+      this.trackDapp('ethBlocksSendBlock');
       this.handlerBlock.transferBlock(
         value,
         this.balanceInWei,
