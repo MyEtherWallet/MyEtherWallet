@@ -78,6 +78,12 @@
                   v-text="item.title"
                 />
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                new
+              </div>
             </v-list-item>
 
             <v-list-group
@@ -263,7 +269,8 @@ export default {
         {
           title: this.$t('interface.menu.dapps'),
           route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp
+          icon: dapp,
+          hasNew: true
         },
         {
           title: this.$t('interface.menu.contract'),
@@ -363,6 +370,37 @@ export default {
 </script>
 
 <style lang="scss">
+.new-dapp-label {
+  border-radius: 2px;
+  background: #ff445b;
+  animation: pulse 3s infinite;
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+
 .v-system-bar .v-icon {
   font-size: 36px !important;
   color: white !important;
