@@ -153,7 +153,7 @@ import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
-import _ from 'underscore';
+import { debounce } from 'underscore';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -236,7 +236,7 @@ export default {
      * will throw toast error if so
      * also will set error messages if value lengths are too long
      */
-    setInputValue: _.debounce(function (value, idx) {
+    setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
         if (value && value.length > 6) {
           this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';

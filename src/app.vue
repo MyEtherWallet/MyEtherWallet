@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
@@ -23,6 +23,10 @@ import {
 export default {
   name: 'App',
   components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
+  computed: {
+    ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['isMigrated'])
+  },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
@@ -50,10 +54,17 @@ export default {
       this.setOnlineStatus(true);
       this.setCurrency(currencyTypes.USD);
     });
+    if (!this.isMigrated) {
+      // this.addressBook is the old one that resides in custom store
+      this.setAddressBook(this.addressBook).then(() => {
+        this.setMigrated(true);
+      });
+    }
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency'])
+    ...mapActions('external', ['setCurrency']),
+    ...mapActions('addressBook', ['setMigrated', 'setAddressBook'])
   }
 };
 </script>

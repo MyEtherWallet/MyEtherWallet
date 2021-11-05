@@ -56,7 +56,7 @@ class WalletConnectWallet {
         tx = new Transaction(tx, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const txJSON = tx.toJSON(true);
+        const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
         this.walletConnect
