@@ -1,8 +1,3 @@
-### fix
-
-* fix eip1559 signing issues on MEWconnect and Mnemonic [#3533](https://github.com/MyEtherWallet/MyEtherWallet/pull/3533)
-* fix address book issue [#3534](https://github.com/MyEtherWallet/MyEtherWallet/pull/3534)
-
 ### Release v6.3.0
 
 ### devop
@@ -27,6 +22,8 @@
 * add in links for mew mobile or web [#3513](https://github.com/MyEtherWallet/MyEtherWallet/pull/3513)
 * fix balance display [#3515](https://github.com/MyEtherWallet/MyEtherWallet/pull/3515)
 * fix keepkey send, update gas every block [#3528](https://github.com/MyEtherWallet/MyEtherWallet/pull/3528)
+* fix eip1559 signing issues on MEWconnect and Mnemonic [#3533](https://github.com/MyEtherWallet/MyEtherWallet/pull/3533)
+* fix address book issue [#3534](https://github.com/MyEtherWallet/MyEtherWallet/pull/3534)
 
 ### Release v6.2.1
 
