@@ -33,6 +33,7 @@
                 v-model="input"
                 placeholder="Search for your domain"
                 is-search-block
+                :menu-select="menuSelect"
                 @click.native="searchDomain"
               /> -->
               <div class="d-flex align-start">
@@ -184,6 +185,51 @@ export default {
           icon: 'mdi-web'
         }
       ]
+      // menuSelect: {
+      //   label: 'All extensions',
+      //   items: [
+      //     {
+      //       name: '.x',
+      //       value: '.x'
+      //     },
+      //     {
+      //       name: '.crypto',
+      //       value: '.crypto'
+      //     },
+      //     {
+      //       name: '.coin',
+      //       value: '.coin'
+      //     },
+      //     {
+      //       name: '.wallet',
+      //       value: '.wallet'
+      //     },
+      //     {
+      //       name: '.bitcoin',
+      //       value: '.bitcoin'
+      //     },
+      //     {
+      //       name: '.888',
+      //       value: '.888'
+      //     },
+      //     {
+      //       name: '.nft',
+      //       value: '.nft'
+      //     },
+      //     {
+      //       name: '.dao',
+      //       value: '.dao'
+      //     },
+      //     {
+      //       name: '.zil',
+      //       value: '.zil'
+      //     },
+      //     {
+      //       name: '.blockchain',
+      //       value: '.blockchain'
+      //     }
+      //   ]
+      // }
     };
   },
   computed: {
