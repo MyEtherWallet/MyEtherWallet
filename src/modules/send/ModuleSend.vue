@@ -78,15 +78,17 @@
         Network Fee (Note: comes with mt-5(20px) mb-8(32px)))
       =====================================================================================
       -->
-        <v-col cols="12" class="py-0">
-          <app-network-fee
+        <v-col cols="12" class="py-0 mb-8">
+          <app-transaction-fee
             :show-fee="showSelectedBalance"
             :getting-fee="!txFeeIsReady"
             :error="feeError"
-            :total-fees="txFee"
-            :gas-price-type="localGasType"
+            :total-cost="totalCost"
+            :tx-fee="txFee"
+            :total-gas-limit="gasLimit"
             :message="feeError"
             :not-enough-eth="!hasEnoughEth"
+            :from-eth="isFromNetworkCurrency"
             @onLocalGasPrice="handleLocalGasPrice"
           />
         </v-col>
@@ -175,7 +177,8 @@
 </template>
 
 <script>
-import { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
+import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
+import { debounce, isEmpty } from 'underscore';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -184,7 +187,7 @@ import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
-import AppNetworkFee from '@/core/components/AppNetworkFee.vue';
+import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
@@ -192,7 +195,7 @@ export default {
     ModuleAddressBook,
     SendLowBalanceNotice,
     AppButtonBalance,
-    AppNetworkFee
+    AppTransactionFee
   },
   props: {
     prefilledAmount: {
@@ -228,13 +231,12 @@ export default {
           subtext: 'Gas Limit & Data'
         }
       ],
-      localGasPrice: '0',
-      localGasType: 'economy',
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
       gasEstimationError: '',
-      gasEstimationIsReady: false
+      gasEstimationIsReady: false,
+      localGasPrice: '0'
     };
   },
   computed: {
@@ -245,9 +247,13 @@ export default {
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink'
+      'swapLink',
+      'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    isFromNetworkCurrency() {
+      return this.selectedCurrency?.symbol === this.currencyName;
+    },
     isDisabledNextBtn() {
       return (
         this.feeError !== '' ||
@@ -266,9 +272,9 @@ export default {
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
       if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
-        return BigNumber(this.balanceInETH)
-          .minus(this.txFeeETH)
-          .gte(this.amount);
+        return BigNumber(this.amount)
+          .plus(this.txFeeETH)
+          .lte(this.balanceInETH);
       }
       // Check whether user has enough eth to cover tx fee + user has enough token balance for the amount to send
       return BigNumber(this.balanceInETH).gte(this.txFeeETH);
@@ -280,7 +286,7 @@ export default {
     },
     showSelectedBalance() {
       return (
-        !_.isEmpty(this.selectedCurrency) &&
+        !isEmpty(this.selectedCurrency) &&
         this.selectedCurrency.text !== 'Select Token'
       );
     },
@@ -407,6 +413,19 @@ export default {
     txFeeETH() {
       return fromWei(this.txFee);
     },
+    totalCost() {
+      if (
+        !SendTransaction.helpers.hasValidDecimals(
+          this.amount,
+          this.selectedCurrency?.decimals
+        )
+      )
+        return '0';
+      const amountToWei = toWei(this.amount);
+      return this.isFromNetworkCurrency
+        ? BigNumber(this.txFee).plus(amountToWei).toString()
+        : this.txFee;
+    },
     txFee() {
       if (this.isValidGasLimit) {
         return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
@@ -441,7 +460,7 @@ export default {
       if (BigNumber(this.localGasPrice).eq(0)) {
         return BigNumber(this.gasPrice);
       }
-      return BigNumber(fromWei(this.localGasPrice));
+      return BigNumber(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -449,8 +468,9 @@ export default {
   },
   watch: {
     multiwatch() {
-      this.gasEstimationIsReady = false;
-      this.debounceEstimateGas(this.allValidInputs);
+      if (this.allValidInputs) {
+        this.debounceEstimateGas();
+      }
     },
 
     isPrefilled() {
@@ -485,6 +505,7 @@ export default {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
           this.setAmountError(this.amount);
+          this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
       },
@@ -510,20 +531,17 @@ export default {
     this.gasLimit = this.prefilledGasLimit;
     this.selectedCurrency = this.tokensList[0];
     this.sendTx.setCurrency(this.selectedCurrency);
-    this.handleLocalGasPrice({
-      gasType: this.gasPriceType,
-      gasPrice: this.gasPrice
-    });
+    this.sendTx.setLocalGasPrice(this.actualGasPrice);
   },
   created() {
-    this.debouncedGasLimitError = _.debounce(value => {
+    this.debouncedGasLimitError = debounce(value => {
       this.setGasLimitError(value);
     }, 1000);
-    this.debounceAmountError = _.debounce(value => {
+    this.debounceAmountError = debounce(value => {
       this.setAmountError(value);
     }, 1000);
-    this.debounceEstimateGas = _.debounce(allValidInputs => {
-      if (allValidInputs) {
+    this.debounceEstimateGas = debounce(() => {
+      if (this.allValidInputs) {
         this.estimateAndSetGas();
       }
     }, 500);
@@ -542,22 +560,18 @@ export default {
       this.amount = '0';
       this.data = '0x';
       this.userInputType = '';
-      this.localGasPrice = '0';
-      this.localGasType = 'economy';
       this.defaultGasLimit = '21000';
       this.gasLimitError = '';
       this.amountError = '';
       this.gasEstimationError = '';
       this.gasEstimationIsReady = false;
+      this.localGasPrice = '0';
 
       // resets the defaults on mount
       this.setSendTransaction();
       this.gasLimit = this.prefilledGasLimit;
       this.sendTx.setCurrency(this.selectedCurrency);
-      this.handleLocalGasPrice({
-        gasType: this.gasPriceType,
-        gasPrice: this.gasPrice
-      });
+      this.handleLocalGasPrice(this.gasPrice);
     },
     /**
      * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
@@ -616,25 +630,22 @@ export default {
         this.gasLimitError = 'Required';
       }
     },
-    handleLocalGasPrice(e) {
-      this.localGasPrice = toWei(e.gasPrice);
-      this.localGasType = e.gasType;
-      this.sendTx.setLocalGasPrice(this.actualGasPrice);
-    },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
     },
     setSendTransaction() {
+      this.localGasPrice = this.gasPrice;
       this.sendTx = new SendTransaction(this.$store);
     },
     estimateAndSetGas() {
+      this.gasEstimationIsReady = false;
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
+          this.defaultGasLimit = toBN(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -682,7 +693,7 @@ export default {
     },
     setEntireBal() {
       if (
-        _.isEmpty(this.selectedCurrency) ||
+        isEmpty(this.selectedCurrency) ||
         this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS
       ) {
         this.setAmount(
@@ -705,6 +716,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+      this.amount = '0';
+    },
+    handleLocalGasPrice(e) {
+      this.localGasPrice = e;
+      this.sendTx.setLocalGasPrice(BigNumber(e));
     }
   }
 };

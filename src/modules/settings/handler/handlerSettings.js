@@ -1,6 +1,7 @@
 import vuexStore from '@/core/store';
 import { mapActions } from 'vuex';
-import { toWei, _ } from 'web3-utils';
+import { toWei } from 'web3-utils';
+import { contains, isString, keys } from 'underscore';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -63,15 +64,15 @@ export default class Settings {
   // strips strings and only accepts certain keys
   _validateImportObject(obj) {
     const newObj = {};
-    _.keys(obj).forEach(item => {
-      if (_.contains(this.validFields, item)) {
+    keys(obj).forEach(item => {
+      if (contains(this.validFields, item)) {
         if (item === 'gasPrice') {
           // converts gasPrice back to BN instance
           // this is assuming that when exporting, it gets converted to string
           newObj[item] = toWei(item);
         } else {
           // strip tags for string, otherwise return item
-          newObj[item] = _.isString(obj[item]) ? xss(obj[item]) : obj[item];
+          newObj[item] = isString(obj[item]) ? xss(obj[item]) : obj[item];
         }
       }
     });

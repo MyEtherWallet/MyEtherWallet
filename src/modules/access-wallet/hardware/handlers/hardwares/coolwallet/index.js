@@ -1,4 +1,4 @@
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
@@ -121,8 +121,8 @@ class CoolWallet {
 
   async getAccount(idx) {
     const address = await this.deviceInstance.getAddress(idx);
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParam => {
+      const tx = new Transaction.fromTxData(txParam, {
         common: commonGenerator(store.getters['global/network'])
       });
       const cwTx = {
@@ -132,20 +132,19 @@ class CoolWallet {
         nonce: bufferToHex(tx.nonce),
         to: bufferToHex(tx.to),
         value: bufferToHex(tx.value),
-        chainId: store.getters['global/network'].type.chainID
+        chainId: tx.common.chainId()
       };
 
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       const result = await this.deviceInstance
         .signTransaction(cwTx, idx)
         .catch(errorHandler);
 
       if (result) {
-        const resultTx = new Transaction(result);
-        tx.v = getBufferFromHex(sanitizeHex(resultTx.v.toString('hex')));
-        tx.r = getBufferFromHex(sanitizeHex(resultTx.r.toString('hex')));
-        tx.s = getBufferFromHex(sanitizeHex(resultTx.s.toString('hex')));
-        const signedChainId = calculateChainIdFromV(tx.v);
+        const resultTx = Transaction.fromSerializedTx(result, {
+          common: commonGenerator(store.getters['global/network'])
+        });
+        const signedChainId = calculateChainIdFromV(resultTx.v);
         if (signedChainId !== networkId)
           throw new Error(
             Vue.$i18n.t('errorsGlobal.invalid-network-id-sig', {
@@ -154,7 +153,7 @@ class CoolWallet {
             }),
             'InvalidNetworkId'
           );
-        return getSignTransactionObject(tx);
+        return getSignTransactionObject(resultTx);
       }
       return result;
     };

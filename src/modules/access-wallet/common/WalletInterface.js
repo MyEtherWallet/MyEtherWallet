@@ -2,8 +2,9 @@ import {
   getBufferFromHex,
   getSignTransactionObject,
   sanitizeHex,
-  calculateChainIdFromV
-} from './utils';
+  calculateChainIdFromV,
+  eip1559Params
+} from './helpers';
 import {
   hashPersonalMessage,
   publicToAddress,
@@ -15,7 +16,7 @@ import {
 } from 'ethereumjs-util';
 import toBuffer from '@/core/helpers/toBuffer';
 import commonGenerator from '@/core/helpers/commonGenerator';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import store from '@/core/store';
 class WalletInterface {
@@ -96,12 +97,25 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     if (!this.isPubOnly) {
       return new Promise(resolve => {
-        const tx = new Transaction(txParams, {
+        let tx = Transaction.fromTxData(txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const networkId = tx.getChainId();
-        tx.sign(this.privateKey);
-        const signedChainId = calculateChainIdFromV(tx.v);
+        if (store.getters['global/isEIP1559SupportedNetwork']) {
+          const feeMarket = store.getters['global/gasFeeMarketInfo'];
+          const _txParams = Object.assign(
+            eip1559Params(txParams.gasPrice, feeMarket),
+            txParams
+          );
+          delete _txParams.gasPrice;
+          tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
+            common: commonGenerator(store.getters['global/network'])
+          });
+        }
+        const networkId = tx.common.chainId();
+        tx = tx.sign(this.privateKey);
+        const signedChainId = tx.chainId
+          ? parseInt(tx.chainId.toString())
+          : calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)
           throw new Error(
             'Invalid networkId signature returned. Expected: ' +

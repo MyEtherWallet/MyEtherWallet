@@ -108,7 +108,7 @@
             :provider="swapInfo.selectedProvider"
             :to-usd="swapInfo.toUsdVal"
             :from-usd="swapInfo.fromUsdVal"
-            :tx-fee="swapInfo.totalFees"
+            :tx-fee="swapInfo.txFee"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
           />
@@ -287,21 +287,21 @@ import ConfirmWithWallet from './components/ConfirmWithWallet';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
-  _,
   hexToNumberString,
   hexToNumber,
   toWei,
   sha3,
   isHex
 } from 'web3-utils';
+import { isEmpty, isArray } from 'underscore';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
 import { EventBus } from '@/core/plugins/eventBus';
-import { setEvents } from '@/utils/web3-provider/methods/utils.js';
+import { setEvents } from '@/utils/web3-provider/methods/utils';
 import * as locStore from 'store';
-import { sanitizeHex } from '@/modules/access-wallet/common/utils';
+import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 
 export default {
@@ -349,7 +349,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -382,13 +382,13 @@ export default {
       const newArr =
         this.unsignedTxArr.length > 0
           ? [].concat(this.unsignedTxArr)
-          : _.isEmpty(this.tx)
+          : isEmpty(this.tx)
           ? []
           : [this.tx];
       return this.arrayParser(newArr);
     },
     allToDetails() {
-      const toNickname = this.addressBook.find(item => {
+      const toNickname = this.addressBookStore.find(item => {
         return this.tx.to?.toLowerCase() === item.address?.toLowerCase();
       });
       return {
@@ -451,10 +451,10 @@ export default {
       return this.isBatch
         ? this.signedTxArray.length > 0 &&
             this.signedTxArray.length === this.unsignedTxArr.length
-        : !_.isEmpty(this.signedTxObject);
+        : !isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !_.isEmpty(this.swapInfo);
+      return !isEmpty(this.swapInfo);
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -463,7 +463,7 @@ export default {
       if (this.isBatch) {
         return this.unsignedTxArr.length === this.signedTxArray.length;
       }
-      return !_.isEmpty(this.signedTxObject);
+      return !isEmpty(this.signedTxObject);
     },
     /**
      * Property returns string, deodning whether or not this is a swap or send
@@ -714,7 +714,7 @@ export default {
       this.reset();
     },
     showSuccess(param) {
-      if (_.isArray(param)) {
+      if (isArray(param)) {
         const lastHash = param[param.length - 1].tx.hash;
         this.links.ethvm = this.network.type.isEthVMSupported.supported
           ? this.network.type.isEthVMSupported.blockExplorerTX.replace(
@@ -829,7 +829,7 @@ export default {
         if (
           (this.signedTxArray.length === 0 ||
             this.signedTxArray.length < this.unsignedTxArr.length) &&
-          _.isEmpty(this.signedTxObject)
+          isEmpty(this.signedTxObject)
         ) {
           this.isBatch ? this.signBatchTx() : this.signTx();
           return;
