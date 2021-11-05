@@ -121,8 +121,8 @@ class CoolWallet {
 
   async getAccount(idx) {
     const address = await this.deviceInstance.getAddress(idx);
-    const txSigner = async txParams => {
-      const tx = new Transaction.fromTxData(txParams, {
+    const txSigner = async txParam => {
+      const tx = new Transaction.fromTxData(txParam, {
         common: commonGenerator(store.getters['global/network'])
       });
       const cwTx = {
@@ -141,7 +141,9 @@ class CoolWallet {
         .catch(errorHandler);
 
       if (result) {
-        const resultTx = Transaction.fromTxData(result);
+        const resultTx = Transaction.fromSerializedTx(result, {
+          common: commonGenerator(store.getters['global/network'])
+        });
         const signedChainId = calculateChainIdFromV(resultTx.v);
         if (signedChainId !== networkId)
           throw new Error(
