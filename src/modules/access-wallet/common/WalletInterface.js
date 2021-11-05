@@ -111,7 +111,7 @@ class WalletInterface {
             common: commonGenerator(store.getters['global/network'])
           });
         }
-        const networkId = store.getters['global/network'].type.chainID;
+        const networkId = tx.common.chainId();
         tx = tx.sign(this.privateKey);
         const signedChainId = tx.chainId
           ? parseInt(tx.chainId.toString())

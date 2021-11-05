@@ -43,17 +43,17 @@ class WalletLinkWallet {
   }
   init() {
     return new Promise((resolve, reject) => {
-      const txSigner = tx => {
-        const networkId = tx.chainId;
-        tx = new Transaction(tx, {
+      const txSigner = txParams => {
+        const tx = new Transaction.fromTxData(txParams, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const txJSON = tx.toJSON(true);
+        const networkId = tx.common.chainId();
+        const txJSON = tx.toJSON();
         return new Promise((resolve, reject) => {
           this.connection
             .send('eth_signTransaction', txJSON)
             .then(signed => {
-              const _tx = new Transaction(signed);
+              const _tx = new Transaction.fromSerializedTx(signed);
               const signedChainId = calculateChainIdFromV(_tx.v);
               if (signedChainId !== networkId)
                 throw new Error(
