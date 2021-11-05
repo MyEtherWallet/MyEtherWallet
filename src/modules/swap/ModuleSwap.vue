@@ -496,7 +496,6 @@ export default {
      * to swap to
      */
     actualToTokens() {
-      console.log();
       if (this.isLoading) return [];
       const validToTokens = this.toTokens.filter(item => {
         if (
