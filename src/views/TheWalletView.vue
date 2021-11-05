@@ -111,7 +111,7 @@ export default {
           this.checkAndSetBaseFee(block.baseFeePerGas);
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
-              this.setBaseFeePerGas(toBN(res.baseFeePerGas));
+              this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
             }
             this.setBlockNumber(res.number);
           });
