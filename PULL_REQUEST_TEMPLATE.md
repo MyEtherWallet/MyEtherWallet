@@ -13,7 +13,7 @@
 * \[ ] Add test cases or procedure
 * \[ ] Add PR label
 
-### Bug
+### Fix
 
 * \[ ] Added entry to ./changelog
 * \[ ] Is this a user submitted bug?

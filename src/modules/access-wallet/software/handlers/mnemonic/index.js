@@ -1,12 +1,13 @@
 import * as HDKey from 'hdkey';
-import { Transaction } from '@ethereumjs/tx';
+import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx';
 import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import {
   getSignTransactionObject,
-  calculateChainIdFromV
+  calculateChainIdFromV,
+  eip1559Params
 } from '@/modules/access-wallet/common/helpers';
 import errorHandler from './errorHandler';
 import store from '@/core/store';
@@ -44,13 +45,26 @@ class MnemonicWallet {
   }
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParams => {
+      let tx = Transaction.fromTxData(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
-      const networkId = tx.getChainId();
-      tx.sign(derivedKey.privateKey);
-      const signedChainId = calculateChainIdFromV(tx.v);
+      if (store.getters['global/isEIP1559SupportedNetwork']) {
+        const feeMarket = store.getters['global/gasFeeMarketInfo'];
+        const _txParams = Object.assign(
+          eip1559Params(txParams.gasPrice, feeMarket),
+          txParams
+        );
+        delete _txParams.gasPrice;
+        tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
+          common: commonGenerator(store.getters['global/network'])
+        });
+      }
+      const networkId = tx.common.chainId();
+      tx = tx.sign(derivedKey.privateKey);
+      const signedChainId = tx.chainId
+        ? parseInt(tx.chainId.toString())
+        : calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw Vue.$i18n.t('createWallet.mnemonic.invalid-network-id', {
           networkId: networkId,

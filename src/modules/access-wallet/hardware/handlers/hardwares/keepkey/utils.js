@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { isHex } from 'web3-utils';
 
 const getUint8Tx = tx => {
   return {
@@ -13,7 +14,9 @@ const getUint8Tx = tx => {
 };
 const getHexTx = tx => {
   return {
-    to: tx.to.toString('hex'),
+    to: isHex(tx.to.toString('hex'))
+      ? tx.to.toString('hex')
+      : '0x' + tx.to.toString('hex'),
     value: '0x' + tx.value.toString('hex'),
     data: '0x' + tx.data.toString('hex'),
     chainId: '0x' + BigNumber(tx.common.chainId()).toString(16),

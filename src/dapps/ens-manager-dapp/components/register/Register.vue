@@ -67,6 +67,7 @@
 
 <script>
 export default {
+  name: 'EnsRegister',
   props: {
     loadingCommit: {
       default: false,
