@@ -172,7 +172,7 @@ export default {
           case 3:
             return this.filter(this.handlerMyBlocks.blocks.dscend);
           default:
-            return this.fitler(this.handlerMyBlocks.blocks.newest);
+            return this.filter(this.handlerMyBlocks.blocks.newest);
         }
       }
       return [];
