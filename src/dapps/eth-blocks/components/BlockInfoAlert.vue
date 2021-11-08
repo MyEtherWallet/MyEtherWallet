@@ -223,6 +223,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * STORE GETTERS
+     */
     ...mapGetters('global', ['network', 'isTestNetwork', 'swapLink']),
     ...mapGetters('external', ['fiatValue']),
     /**
@@ -311,14 +314,14 @@ export default {
     },
     /**
      * @returns{string}
-     * Property returns formatted formatted ETH price
+     * Property returns formatted ETH price
      */
     formattedPrice() {
       return formatIntegerToString(fromWei(this.price));
     },
     /**
      * @returns{string}
-     * Property returns formatted formatted FIAT price
+     * Property returns formatted FIAT price
      */
     formatFiatPrice() {
       const value = formatFiatValue(
@@ -328,7 +331,8 @@ export default {
     },
 
     /**
-     *
+     * Property returns rarible link to a block based on block number and current netowrk
+     * @returns{string}
      */
     raribleLink() {
       if (this.blockNumber !== '') {
@@ -339,6 +343,10 @@ export default {
       }
       return '';
     },
+    /**
+     * Property returns rarible link to an owner based on owner and current netowrk
+     * @returns{string}
+     */
     raribleOwnerLink() {
       if (this.blockNumber !== '') {
         const endLInk = '?tab=owned';
@@ -348,9 +356,17 @@ export default {
       }
       return '';
     },
+    /**
+     * Property disables action buttons whether or not if was passed or user has enough eth
+     * @returns{boolean}
+     */
     disableActionBtn() {
       return !this.hasEnoughEth || this.disableAction;
     },
+    /**
+     * Property return not enough string based on the netowrk type
+     * @returns{string}
+     */
     notEnoughMessage() {
       const text = this.isOwned ? 'transfer' : 'mint';
       return `Not enough ${this.network.type.name} to ${text}.`;
@@ -367,6 +383,11 @@ export default {
         this.$emit('mint');
       }
     },
+    /**
+     * Emits 'send' to the parent
+     * ONLY USED IN OWNED block alert SEND button
+     * @emits mint
+     */
     emitOpenSend() {
       if (this.isOwned) {
         this.$emit('openSend');

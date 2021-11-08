@@ -64,6 +64,9 @@ export default {
     BlockSearch
   },
   computed: {
+    /**
+     * STORE STATE
+     */
     ...mapState('wallet', ['blockNumber'])
   }
 };

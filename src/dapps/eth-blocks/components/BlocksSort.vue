@@ -1,9 +1,9 @@
 <template>
   <!--
-=====================================================================================
- Derivation Path Component - Access Wallet
-=====================================================================================
--->
+  =====================================================================================
+    Sort Component - Eth Blocks
+  =====================================================================================
+  -->
   <blocks-drop-down :has-close="false" has-icon>
     <template #activatorBtnText>
       <div class="titleMedium--text mew-body activator-btn-text d-flex">
