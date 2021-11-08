@@ -122,7 +122,12 @@
         class="mt-5 mb-2 mt-sm-4 pl-sm-2"
         :order="$vuetify.breakpoint.xs ? 'last' : ''"
       >
-        <mew-button v-if="!isPending" has-full-width :btn-link="raribleLink">
+        <mew-button
+          v-if="!isPending"
+          has-full-width
+          :btn-link="raribleLink"
+          @click.native="trackToRarible"
+        >
           <v-row class="align-center justify-center">
             <div>List for sale</div>
             <v-icon class="ml-2 white--text" size="16px"
@@ -182,6 +187,7 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -190,8 +196,10 @@ const RARIBLE_OWNER = `${RARIBLE}user/`;
 const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
 const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
 const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
+
 export default {
   name: 'BlockInfoAlert',
+  mixins: [handlerAnalytics],
   props: {
     blockAlert: {
       default: BLOCK_ALERT.NOT_AVAILABLE,
@@ -371,6 +379,9 @@ export default {
       if (this.isOwned) {
         this.$emit('openSend');
       }
+    },
+    trackToRarible() {
+      this.trackDapp('ethBlocksToRarible');
     }
   }
 };

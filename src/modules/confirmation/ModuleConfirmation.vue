@@ -303,6 +303,7 @@ import { setEvents } from '@/utils/web3-provider/methods/utils';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleConfirmation',
@@ -314,6 +315,7 @@ export default {
     ConfirmationSendTransactionDetails,
     ConfirmWithWallet
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       showTxOverlay: false,
@@ -705,6 +707,9 @@ export default {
       this.resolver(this.signedTxObject);
       if (this.isSwap) {
         this.showSuccessSwap = true;
+      }
+      if (this.tx.data.includes('0x33aaf6f2')) {
+        this.trackDapp('ethBlocksMinted');
       }
       this.reset();
       this.showSuccess(hash);

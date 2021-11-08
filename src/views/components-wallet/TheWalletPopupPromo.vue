@@ -60,7 +60,8 @@ export default {
      * Edit this function to route to new link
      */
     goToPromo() {
-      this.NEVER_SHOW_WALLET_PROMO();
+      this.setHidePopUp();
+      this.trackDapp('ethBlocksFromPromo');
       this.$router.push({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
     }
   }
