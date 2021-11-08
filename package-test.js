@@ -32,7 +32,8 @@ const EXCEPTIONS = [
   'vuetify',
   '@commitlint/config-conventional',
   'commitlint',
-  'eslint-plugin-vue'
+  'eslint-plugin-vue',
+  'graphql'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
