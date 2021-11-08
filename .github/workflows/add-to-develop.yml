@@ -37,7 +37,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         run: |
-          pip install --user awscli
+          pip install --user awscli==1.21.12
           aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public \
             --acl public-read
           aws s3 cp s3://mewbuilds/develop/service-worker.js s3://mewbuilds/develop/service-worker.js \
