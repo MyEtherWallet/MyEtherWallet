@@ -28,7 +28,11 @@ const EXCEPTIONS = [
   'eslint', // not supported by vue yet
   'stylelint-config-standard',
   'stylelint',
-  'vuetify' // update after release
+  // update after release
+  'vuetify',
+  '@commitlint/config-conventional',
+  'commitlint',
+  'eslint-plugin-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
