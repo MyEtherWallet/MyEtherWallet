@@ -136,7 +136,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import _ from 'underscore';
+import { isArray } from 'underscore';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -256,7 +256,7 @@ export default {
   watch: {
     providersList: {
       handler: function (newVal, oldVal) {
-        const hasOldVal = !oldVal || (_.isArray(oldVal) && oldVal.length === 0);
+        const hasOldVal = !oldVal || (isArray(oldVal) && oldVal.length === 0);
         if (newVal.length > 0 && hasOldVal && !this.hasProviderError) {
           const bestRate = newVal.findIndex(item => {
             return item.rate === this.bestRate;

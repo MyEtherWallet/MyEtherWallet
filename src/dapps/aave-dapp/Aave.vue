@@ -342,6 +342,7 @@ const COLORS = {
 };
 
 export default {
+  name: 'AaveLayout',
   components: {
     TheWrapperDapp,
     AaveBorrowOverlay,

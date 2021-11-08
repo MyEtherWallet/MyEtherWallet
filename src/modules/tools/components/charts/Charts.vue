@@ -6,6 +6,7 @@
 import { Chart } from 'highcharts-vue';
 
 export default {
+  name: 'ChartComponent',
   components: { Chart },
   props: {
     data: {

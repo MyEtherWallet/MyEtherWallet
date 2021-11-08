@@ -162,7 +162,8 @@ const setTokenAndEthBalance = function ({
           commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true })
         )
       );
-    });
+    })
+    .catch(e => Toast(e.message, {}, ERROR));
 };
 export default {
   setLastPath,
