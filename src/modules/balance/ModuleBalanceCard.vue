@@ -232,6 +232,7 @@
       :title="verifyAddressTitle"
       :has-buttons="false"
       :has-body-content="true"
+      :left-btn="{ text: 'Cancel', method: closeVerify, color: 'basic' }"
     >
       <div>
         <div class="text-center">
@@ -499,6 +500,12 @@ export default {
      */
     closeLogout() {
       this.showLogout = false;
+    },
+    /**
+     * close verify address
+     */
+    closeVerify() {
+      this.showVerify = false;
     },
     /**
      * set showLogout to true
