@@ -1093,27 +1093,31 @@ export default {
       this.feeError = '';
       this.loadingFee = true;
       if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
-      this.swapper
-        .getTrade({
-          fromAddress: this.address,
-          toAddress: this.toAddress,
-          provider: this.availableQuotes[idx].provider,
-          fromT: this.fromTokenType,
-          toT: this.toTokenType,
-          quote: this.availableQuotes[idx],
-          fromAmount: new BigNumber(this.tokenInValue).times(
-            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-          )
-        })
-        .then(trade => {
-          this.allTrades[idx] = trade;
-          this.setupTrade(trade);
-        })
-        .catch(e => {
-          if (e) {
-            this.feeError = 'This provider is not available.';
-          }
-        });
+      try {
+        this.swapper
+          .getTrade({
+            fromAddress: this.address,
+            toAddress: this.toAddress,
+            provider: this.availableQuotes[idx].provider,
+            fromT: this.fromTokenType,
+            toT: this.toTokenType,
+            quote: this.availableQuotes[idx],
+            fromAmount: new BigNumber(this.tokenInValue).times(
+              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+            )
+          })
+          .then(trade => {
+            this.allTrades[idx] = trade;
+            this.setupTrade(trade);
+          })
+          .catch(e => {
+            if (e) {
+              this.feeError = 'This provider is not available.';
+            }
+          });
+      } catch (error) {
+        Toast(error.message, {}, ERROR);
+      }
     }, 500),
     setupTrade(trade) {
       if (trade instanceof Error) {

@@ -83,7 +83,6 @@ class Swap {
   getTrade(tradeInfo) {
     for (const p of this.providers) {
       if (p.provider === tradeInfo.provider) return p.getTrade(tradeInfo);
-      throw new Error('This provider is not available.');
     }
   }
   isValidToAddress(addressInfo) {
