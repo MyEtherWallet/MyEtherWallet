@@ -14,7 +14,6 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  'vuetify',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
@@ -25,13 +24,7 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   'remark-cli',
-  'node-fetch',
-  'eslint', // not supported by vue yet
-  'stylelint',
-  'stylelint-config-standard',
-  // updating after release
-  '@shapeshiftoss/hdwallet-core',
-  '@shapeshiftoss/hdwallet-keepkey-webusb'
+  'node-fetch'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -59,11 +59,13 @@
             ]"
           >
             <template #panelBody1>
-              <mew-input
-                v-model="extraWord"
-                label="Extra word"
-                placeholder="Extra word"
-              />
+              <div class="px-5">
+                <mew-input
+                  v-model="extraWord"
+                  label="Extra word"
+                  placeholder="Extra word"
+                />
+              </div>
             </template>
           </mew-expand-panel>
         </div>

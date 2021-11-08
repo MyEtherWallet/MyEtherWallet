@@ -30,6 +30,7 @@ class TrezorWallet {
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.supportedPaths = bip44Paths[WALLET_TYPES.TREZOR];
+    this.model = '';
     this.meta = {
       name: 'Trezor',
       img: {
@@ -41,6 +42,9 @@ class TrezorWallet {
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     const rootPub = await getRootPubKey(this.basePath);
+    Trezor.getFeatures().then(res => {
+      this.model = res.payload.model;
+    });
     this.hdKey = new HDKey();
     this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
     this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
@@ -73,7 +77,10 @@ class TrezorWallet {
           );
         return getSignTransactionObject(Transaction.fromTxData(_txParams));
       };
-      if (store.getters['global/isEIP1559SupportedNetwork']) {
+      if (
+        store.getters['global/isEIP1559SupportedNetwork'] &&
+        this.model === 'T'
+      ) {
         const feeMarket = store.getters['global/gasFeeMarketInfo'];
         const txParams = getHexTxObject(_tx);
         Object.assign(txParams, eip1559Params(txParams.gasPrice, feeMarket));
@@ -83,6 +90,7 @@ class TrezorWallet {
             path: this.basePath + '/' + idx,
             transaction: txParams
           };
+
           const result = await Trezor.ethereumSignTransaction(options);
           if (!result.success) throw new Error(result.payload.error);
           txParams.v = getBufferFromHex(result.payload.v);
