@@ -83,18 +83,23 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 const STATIC_PAIRS = [
+  /**
+   * Temporarily removed BTC from swap list, since ParaSwap doesn't
+   * return valid swap rate.
+   * 
   {
-    toT: {
-      symbol: 'BTC',
-      contract: '0xbtc'
-    },
     fromT: {
       symbol: 'ETH',
       contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
+    toT: {
+      symbol: 'BTC',
+      contract: '0xbtc'
+    },
     fromAmount: '100000000000000000'
   },
+  */
   {
     fromT: {
       symbol: 'ETH',
@@ -235,5 +240,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
