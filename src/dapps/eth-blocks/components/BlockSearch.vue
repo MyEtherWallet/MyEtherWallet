@@ -17,6 +17,7 @@
       :value="searchBlock"
       :on-search="search"
       :error-messages="searchErrorMessage"
+      type="number"
       @input="setBlock"
     />
   </div>
