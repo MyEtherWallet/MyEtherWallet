@@ -2,24 +2,16 @@ module.exports = [
   'https://localhost:8080',
   'wss://localhost:8080',
   'https://swap.mewapi.io:443',
-  'wss://nodes.mewapi.io:443',
   'https://nodes.mewapi.io:443',
-  'wss://api.thegraph.com/subgraphs/name/aave/',
-  'https://api.thegraph.com:443/subgraphs/name/aave/',
   'wss://connect.mewapi.io:443',
   'wss://connect2.mewapi.io:443',
-  'https://protocol-api.aave.com:443',
-  'wss://bridge.walletconnect.org:443',
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
-  'https://unstoppabledomains.com:443',
   'https://o382951.ingest.sentry.io:443',
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
-  'wss://www.walletlink.org:443',
   'https://estimategas.mewapi.io:443',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
-  'wss://www.ethercluster.com:443',
   'https://nft.mewapi.io:443',
   'https://staked.mewapi.io:443',
   'https://stakedtest.mewapi.io:443',
@@ -30,16 +22,13 @@ module.exports = [
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
-  'https://api.wallet.coinbase.com:443',
   'data:',
-  'https://mainnet.infura.io:443',
-  'https://registry.walletconnect.org:443',
-  'https://cdn.live.ledger.com:443',
   'https://app.lokalise.com:443',
-  'https://registry.walletconnect.org:443/data/wallets.json',
-  'wss://*.bridge.walletconnect.org:443',
   'https://myetherwallet.matomo.cloud:443',
+  // nodes
+  'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
+  'wss://www.ethercluster.com:443',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',
@@ -49,6 +38,18 @@ module.exports = [
   'wss://nexus-websocket-a.intercom.io:443',
   'https://js.intercomcdn.com:443',
   'https://uploads.intercomcdn.com:443',
+  // partners
+  'wss://bridge.walletconnect.org:443',
+  'wss://www.walletlink.org:443',
+  'https://api.wallet.coinbase.com:443',
+  'https://registry.walletconnect.org:443',
+  'https://cdn.live.ledger.com:443',
+  'https://registry.walletconnect.org:443/data/wallets.json',
+  'wss://*.bridge.walletconnect.org:443',
   // Dapps
-  'https://ethblocksapi.mewapi.io:443' //Eth Blocks
+  'https://ethblocksapi.mewapi.io:443', // Eth Blocks
+  'https://unstoppabledomains.com:443', // unstoppable
+  'wss://api.thegraph.com/subgraphs/name/aave/', // Aave
+  'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
+  'https://protocol-api.aave.com:443' // Aave
 ];
