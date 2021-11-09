@@ -1,4 +1,4 @@
-import { isHex, toHex, toBN } from 'web3-utils';
+import { isHex } from 'web3-utils';
 
 const getUint8Tx = tx => {
   return {
@@ -18,7 +18,7 @@ const getHexTx = tx => {
       : '0x' + tx.to.toString('hex'),
     value: '0x' + tx.value.toString('hex'),
     data: '0x' + tx.data.toString('hex'),
-    chainId: '0x' + toHex(toBN(tx.common.chainId())), // this might not actually be needed
+    chainId: tx.common.chainId(),
     nonce: '0x' + tx.nonce.toString('hex'),
     gasLimit: tx.gasLimit
       ? '0x' + tx.gasLimit.toString('hex')

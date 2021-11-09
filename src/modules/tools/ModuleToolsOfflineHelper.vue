@@ -92,7 +92,7 @@
             <div
               v-for="(d, key) in details"
               :key="key"
-              class="d-flex align-center justify-space-between mb-3"
+              class="d-flex align-center justify-space-between mb-3 px-5"
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
@@ -137,7 +137,7 @@
             <div
               v-for="(d, key) in details"
               :key="key"
-              class="d-flex align-center justify-space-between mb-3"
+              class="d-flex align-center justify-space-between mb-3 px-5"
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
@@ -148,7 +148,7 @@
             <div
               v-for="(d, key) in details"
               :key="key"
-              class="d-flex align-center justify-space-between mb-3"
+              class="d-flex align-center justify-space-between mb-3 pa-5"
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
               <div v-if="d.value" class="text-right">{{ d.value }}</div>
