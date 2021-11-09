@@ -430,7 +430,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -459,10 +459,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (BigNumber(this.localGasPrice).eq(0)) {
-        return BigNumber(this.gasPrice);
+      if (toBN(this.localGasPrice).eqn(0)) {
+        return toBN(this.gasPrice);
       }
-      return BigNumber(this.localGasPrice);
+      return toBN(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -722,7 +722,7 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(BigNumber(e));
+      this.sendTx.setLocalGasPrice(e);
     }
   }
 };
