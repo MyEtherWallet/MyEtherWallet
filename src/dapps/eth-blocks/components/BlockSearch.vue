@@ -40,12 +40,26 @@ export default {
     };
   },
   computed: {
+    /**
+     * STORE STATE
+     */
     ...mapState('wallet', ['blockNumber']),
+
+    /**
+     * Returns max block that can be minted
+     * current block - 50
+     * @returns {string}
+     */
     maxBlock() {
       const max = toBN(this.blockNumber).sub(toBN(50));
       const ZERO = toBN(0);
       return max.gt(ZERO) ? formatIntegerToString(max.toNumber()) : '';
     },
+    /**
+     * Returns search error messages, empty string if no error.
+     * Rules: x > -1, x is integer, x != 1-10, x <= maxBloc
+     * @returns{string}
+     */
     searchErrorMessage() {
       if (this.searchBlock && this.searchBlock !== '') {
         if (!validBlockNumber(this.searchBlock)) {
@@ -65,6 +79,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * Reroutes to Block Info page
+     */
     search() {
       if (this.searchBlock && this.searchBlock !== '') {
         try {
@@ -77,6 +94,9 @@ export default {
         }
       }
     },
+    /**
+     * Setts serach Block, invoked by MewSearch component
+     */
     setBlock(block) {
       this.searchBlock = block;
     }

@@ -219,12 +219,13 @@ export default {
   },
   computed: {
     /**
-     * STATE
+     * STORE STATE
      */
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('global', ['gasPriceType']),
+
     /**
-     * GETTERS
+     * STORE GETTERS
      */
     ...mapGetters('global', ['network', 'isTestNetwork', 'gasPriceByType']),
     ...mapGetters('ethBlocksTxs', ['getEthBlockTx']),
@@ -285,9 +286,15 @@ export default {
       }
       return BLOCK_ALERT.AVAILABLE;
     },
+    /**
+     * @returns {string} block owner
+     */
     alertOwner() {
       return this.loading ? '' : this.handlerBlock.owner;
     },
+    /**
+     * @returns {string} block mint price
+     */
     alertMintPrice() {
       return this.loading ? '' : this.handlerBlock.mintPrice;
     },
@@ -349,6 +356,10 @@ export default {
         ? false
         : this.handlerBlock.isMinting || this.handlerBlock.isSending;
     },
+    /**
+     * Determines whether or not there is a pending transaction in the current chain for current block
+     * @returns {boolean}
+     */
     hasPendingTx() {
       const _block = {
         blockNumber: this.blockRef.toString(),
@@ -357,6 +368,10 @@ export default {
       };
       return this.getEthBlockTx(_block) ? true : false;
     },
+    /**
+     * Determines whether or not this block is reserved 1-10
+     * @returns {boolean}
+     */
     isReserved() {
       const _currBlock = toBN(this.blockRef);
       const RESERVED = toBN(10);
@@ -416,6 +431,8 @@ export default {
   mounted() {
     /**
      * Initiate Block Info Handler
+     * if valid block number --> fetch block info
+     * if !valid block number --> reroute to default eth blocks route
      */
     if (validBlockNumber(this.blockRef)) {
       this.handlerBlock = new handlerBlock(
@@ -431,6 +448,9 @@ export default {
   },
 
   methods: {
+    /**
+     * STORE ACTIONS
+     */
     ...mapActions('ethBlocksTxs', ['addEthBlockTx']),
     /**
      * tracks when user clicks ethvm from ethblocks

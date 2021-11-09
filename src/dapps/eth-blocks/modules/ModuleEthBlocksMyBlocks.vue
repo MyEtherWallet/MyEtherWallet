@@ -147,7 +147,14 @@ export default {
     };
   },
   computed: {
+    /**
+     * STORE STATE
+     */
     ...mapState('wallet', ['address']),
+
+    /**
+     * STORE GETTERS
+     */
     ...mapGetters('global', ['network', 'isTestNetwork']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
@@ -160,6 +167,10 @@ export default {
         ? false
         : true;
     },
+    /**
+     * Returns filtered array based on the user input
+     * @returns {Array}
+     */
     blocks() {
       if (!this.loading) {
         switch (this.activeSort) {
@@ -177,6 +188,12 @@ export default {
       }
       return [];
     },
+    /**
+     * Returns whether or not you own any blocks
+     * Used to hide/show search components, as well as styling adjustments
+     * @returns {boolean}:
+     *
+     */
     hasBlocks() {
       return this.handlerMyBlocks.totalBlocks > 0;
     },
@@ -198,7 +215,8 @@ export default {
   },
   watch: {
     /**
-     * Update HandelrMyBlocks on network change and fetch data
+     * WATCH: Update HandelrMyBlocks on network change and fetch data
+     *  @param {Object} newVal - current address
      */
     network(newVal) {
       if (newVal) {
@@ -207,7 +225,8 @@ export default {
       }
     },
     /**
-     * Update HandelrMyBlocks on address change and fetch data
+     * WATCH: Update HandelrMyBlocks on address change and fetch data
+     * @param {string} newVal - current address
      */
     address(newVal) {
       if (newVal) {
@@ -215,6 +234,10 @@ export default {
         this.handlerMyBlocks.getBlocks();
       }
     },
+    /**
+     * WATCH: Update HandelrMyBlocks on pending txs resolution
+     * @param {Array} newVal - current address
+     */
     getAllEthBlocksTxs(newVal) {
       if (newVal) {
         this.handlerMyBlocks.getBlocks();
@@ -234,6 +257,11 @@ export default {
   },
 
   methods: {
+    /**
+     * Routes to block info page, based on block number
+     * Used in block containers
+     * @param {number} block
+     */
     routeTo(block) {
       try {
         this.$router.push({
@@ -244,9 +272,18 @@ export default {
         Toast(e, {}, ERROR);
       }
     },
+    /**
+     * Formats block number
+     * @param {number} block
+     * @returns {string}
+     */
     formatBlockNumber(block) {
       return formatIntegerToString(block);
     },
+    /**
+     * Sets Active sort, invoked by emit from BlockSort component
+     * @param {number} value
+     */
     setActiveSort(value) {
       this.activeSort = value;
     },
