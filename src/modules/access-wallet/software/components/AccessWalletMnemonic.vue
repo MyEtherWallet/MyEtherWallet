@@ -203,7 +203,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /*------------------------------------
      * STEP 1 ITEMS
     -------------------------------------*/
@@ -253,7 +253,7 @@ export default {
           newObj['value'] = item['path'];
           return newObj;
         })
-        .concat(this.customPaths);
+        .concat(this.paths);
     }
   },
   watch: {

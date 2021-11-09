@@ -180,12 +180,12 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /**
      * Custom filtered paths based on search
      */
     filteredCustomPaths() {
-      return this.customPaths.filter(path => {
+      return this.paths.filter(path => {
         if (this.searchValue) {
           return (
             path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||

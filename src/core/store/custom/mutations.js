@@ -12,17 +12,17 @@ const INIT_STORE = function (state) {
 };
 const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   const network = rootGetters['global/network'];
-  let customTokensByNetwork = state.customTokens[network.type.name];
-  if (!state.customTokens[network.type.name]) {
+  let customTokensByNetwork = state.tokens[network.type.name];
+  if (!state.tokens[network.type.name]) {
     customTokensByNetwork = [];
   }
   customTokensByNetwork.unshift(token);
-  Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
+  Vue.set(state.tokens, network.type.name, customTokensByNetwork);
 };
 
 const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   const network = rootGetters['global/network'];
-  const currentCustomTokens = state.customTokens[network.type.name].filter(
+  const currentCustomTokens = state.tokens[network.type.name].filter(
     currentTokens => {
       const found = token.find(item => {
         if (item.address === currentTokens.contract) {
@@ -34,18 +34,33 @@ const DELETE_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
       }
     }
   );
-  Vue.set(state.customTokens, network.type.name, currentCustomTokens);
+  Vue.set(state.tokens, network.type.name, currentCustomTokens);
 };
 
 const DELETE_ALL_TOKENS = function (state, { rootGetters }) {
   const network = rootGetters['global/network'];
-  let customTokensByNetwork = state.customTokens[network.type.name];
+  let customTokensByNetwork = state.tokens[network.type.name];
   customTokensByNetwork = [];
-  Vue.set(state.customTokens, network.type.name, customTokensByNetwork);
+  Vue.set(state.tokens, network.type.name, customTokensByNetwork);
 };
 
 const SET_ADDRESS_BOOK = function (state, val) {
   state.addressBook = val;
+};
+
+const ADD_CUSTOM_PATH = function (state, path) {
+  state.paths.push(path);
+};
+const DELETE_CUSTOM_PATH = function (state, paths) {
+  const idx = state.paths.findIndex(item => {
+    if (item.path === paths.path) {
+      return item;
+    }
+  });
+
+  if (idx >= 0) {
+    state.paths.splice(idx, 1);
+  }
 };
 
 export default {
@@ -53,5 +68,7 @@ export default {
   DELETE_ALL_TOKENS,
   DELETE_CUSTOM_TOKEN,
   INIT_STORE,
-  SET_ADDRESS_BOOK
+  SET_ADDRESS_BOOK,
+  ADD_CUSTOM_PATH,
+  DELETE_CUSTOM_PATH
 };
