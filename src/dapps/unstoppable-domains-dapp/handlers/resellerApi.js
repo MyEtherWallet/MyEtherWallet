@@ -61,7 +61,9 @@ export async function createResellerOrder({
     headers: { 'Content-Type': 'application/json' }
   }).then(res => {
     if (!res.ok) {
-      throw new Error("Couldn't create an order");
+      throw new Error(
+        'Payment failed. Please check information and try again.'
+      );
     }
     return res.json();
   });

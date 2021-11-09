@@ -370,20 +370,24 @@ export default {
               throw stripeToken.error;
             }
             stripeToken = stripeToken.token.id;
-            const response = await createResellerOrder({
-              // domain: 'reseller-test-myetherwallet-432.crypto', // change number everytime for test
-              domain: this.domain.name,
-              email: this.email,
-              resellerId: this.resellerId,
-              address: this.address,
-              payment: {
-                type: 'stripe',
-                tokenId: stripeToken
-              }
-            });
-            this.confirmationStep = true;
-            this.SET_ORDER({ value: response.order });
-            this.close();
+            try {
+              const response = await createResellerOrder({
+                domain: 'reseller-test-myetherwallet-434343421.crypto', // change number everytime for test
+                // domain: this.domain.name,
+                email: this.email,
+                resellerId: this.resellerId,
+                address: this.address,
+                payment: {
+                  type: 'stripe',
+                  tokenId: stripeToken
+                }
+              });
+              this.confirmationStep = true;
+              this.SET_ORDER({ value: response.order });
+              this.close();
+            } catch (error) {
+              Toast(error.message, {}, ERROR);
+            }
           });
       } catch (error) {
         this.paymentError = error.message;
@@ -421,8 +425,9 @@ export default {
           await this.sendTransaction(charge.data.addresses.dai, dai.amount);
           this.close();
         }
-      } catch (err) {
-        this.paymentError = err.message;
+      } catch (error) {
+        this.paymentError = error.message;
+        Toast(error.message, {}, ERROR);
       }
     },
     async sendTransaction(sendTo, value) {
