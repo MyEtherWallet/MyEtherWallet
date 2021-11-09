@@ -8,20 +8,16 @@ module.exports = [
   'http://localhost:8178',
   'ws://127.0.0.1:8178',
   'https://o382951.ingest.sentry.io:443',
-  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket',
   'https://estimategas.mewapi.io:443',
   'https://api.ethvm.com:443',
   'wss://apiws.ethvm.com:443',
   'https://nft.mewapi.io:443',
-  'https://staked.mewapi.io:443',
-  'https://stakedtest.mewapi.io:443',
   'https://qa.mewwallet.dev:443',
   'https://mainnet.mewwallet.dev:443',
   'https://staging.mewwallet.dev:443',
   'https://development.mewwallet.dev:443',
   'https://tokenbalance.mewapi.io:443',
   'https://requestcache.mewapi.io:443',
-  'https://api.thegraph.com:443/subgraphs/name/ensdomains/',
   'data:',
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
@@ -47,9 +43,13 @@ module.exports = [
   'https://registry.walletconnect.org:443/data/wallets.json',
   'wss://*.bridge.walletconnect.org:443',
   // Dapps
+  'https://staked.mewapi.io:443', // staked
+  'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
   'https://unstoppabledomains.com:443', // unstoppable
   'wss://api.thegraph.com/subgraphs/name/aave/', // Aave
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
-  'https://protocol-api.aave.com:443' // Aave
+  'https://protocol-api.aave.com:443', // Aave
+  'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
+  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket' // ENS
 ];
