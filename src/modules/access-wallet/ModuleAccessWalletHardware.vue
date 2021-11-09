@@ -423,7 +423,9 @@ export default {
         return 'Select a hardware wallet';
       }
       if (this.onBitbox2) return this.bitbox2Titles;
-      return this.wallets[this.walletType].title;
+      return this.walletType
+        ? this.wallets[this.walletType].title
+        : 'Select a hardware wallet';
     },
     bitBox2NotPaired() {
       return (
@@ -460,7 +462,7 @@ export default {
       if (this.bitBox2Unpaired) return 'Confirm pairing code';
       if (this.bitBox2Initialized)
         return 'Bitbox 02 succesfully initialized. Loading wallet';
-      return this.wallets[this.walletType].title;
+      return this.walletType ? this.wallets[this.walletType].title : '';
     }
   },
   watch: {
@@ -507,12 +509,23 @@ export default {
      * if on keepkey step 3, it will return to step 1 so it will reset everything
      */
     back() {
-      !this.step ? this.close('showHardware') : (this.step -= 1);
-      if (this.onKeepkey && this.step === 2) {
-        this.step = 1;
+      if (this.step > 0) {
+        if (this.step === 1) {
+          this.reset();
+        } else if (this.step === 2) {
+          this.step -= 1;
+        } else {
+          this.hwWalletInstance = {};
+          if (this.onLedger) {
+            this.step -= 1;
+          } else {
+            this.walletType = '';
+            this.step = 1;
+          }
+        }
+      } else {
+        this.close('showHardware');
       }
-      this.step === 1 ? this.reset() : '';
-      this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
     overlayClose() {
       this.reset();
