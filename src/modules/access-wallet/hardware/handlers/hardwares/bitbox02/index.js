@@ -12,6 +12,7 @@ import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
+import { BN } from 'web3-utils';
 
 const NEED_PASSWORD = false;
 
@@ -80,21 +81,28 @@ class BitBox02Wallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async txParams => {
-      const tx = new Transaction(txParams, {
+      const tx = new Transaction.fromTxData(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
       const networkId = tx.common.chainId();
       const signingData = {
         keypath: this.basePath + '/' + idx,
         chainId: networkId,
-        tx: tx
+        tx: {
+          nonce: BN(tx.nonce).toArrayLike(Buffer, 'be', 32),
+          gasPrice: BN(tx.gasPrice).toArrayLike(Buffer, 'be', 32),
+          gasLimit: BN(tx.gasLimit).toArrayLike(Buffer, 'be', 32),
+          to: tx.to.toBuffer(),
+          value: BN(tx.value).toArrayLike(Buffer, 'be', 32),
+          data: tx.data
+        }
       };
       const result = await this.BitBox02.ethSignTransaction(signingData);
-      txParams.r = Buffer.from(result.r);
-      txParams.s = Buffer.from(result.s);
-      txParams.v = Buffer.from(result.v);
+      tx.r = Buffer.from(result.r);
+      tx.s = Buffer.from(result.s);
+      tx.v = Buffer.from(result.v);
 
-      const signedChainId = calculateChainIdFromV(txParams.v);
+      const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
@@ -103,7 +111,7 @@ class BitBox02Wallet {
             signedChainId,
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(Transaction.fromTxData(txParams));
+      return getSignTransactionObject(Transaction.fromTxData(tx));
     };
 
     const msgSigner = async msg => {

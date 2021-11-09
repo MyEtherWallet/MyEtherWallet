@@ -112,9 +112,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'web3']),
-    ...mapState('custom', ['addressBook']),
     ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('addressBook', ['isMigrated']),
     ...mapGetters('global', ['network']),
     disabled() {
       if (this.addMode) {
@@ -201,12 +199,6 @@ export default {
     }
   },
   mounted() {
-    if (!this.isMigrated) {
-      this.addressBook.forEach(address => {
-        this.addressBookStore.push(address);
-      });
-      this.setMigrated(true);
-    }
     if (this.network.type.ens)
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.addMode && this.toAddress) {
@@ -222,7 +214,6 @@ export default {
   },
   methods: {
     ...mapActions('addressBook', ['setAddressBook']),
-    ...mapActions('addressBook', ['setMigrated']),
     reset() {
       this.addressToAdd = '';
       this.nickname = '';

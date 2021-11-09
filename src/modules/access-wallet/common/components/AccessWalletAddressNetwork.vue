@@ -303,7 +303,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
     web3() {
       return new Web3(this.network.url);
     },
@@ -469,7 +469,7 @@ export default {
     },
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
-      const isStored = this.addressBook.find(item => {
+      const isStored = this.addressBookStore.find(item => {
         const address = item.resolvedAddr
           ? toChecksumAddress(item.resolvedAddr)
           : toChecksumAddress(item.address);

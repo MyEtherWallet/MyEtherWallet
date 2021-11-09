@@ -87,7 +87,7 @@ import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 const modes = ['add', 'edit'];
 
 export default {
-  name: 'Settings',
+  name: 'ModuleSettings',
   components: {
     SettingsImportConfig,
     SettingsExportConfig,

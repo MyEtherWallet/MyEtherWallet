@@ -12,7 +12,7 @@ const GLOBAL_ERRORS = {
   'Invalid message type': 'errorsGlobal.invalid-message-type',
   'Device is used in another window':
     'errorsGlobal.device-used-in-another-window',
-  'Wrong previous session': 'errorsGlobal.wrong-previous-session',
+  'wrong previous session': 'errorsGlobal.wrong-previous-session',
   'Something went wrong in mnemonic wallet access':
     'errorsGlobal.mnemonic-wallet-access-error',
   'Expected public key to be an Uint8Array with length [33, 65]':

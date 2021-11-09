@@ -44,7 +44,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
-          pip install --user awscli
+          pip install --user awscli==1.21.12
           mkdir -p ~/.ssh
           ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
           openssl aes-256-cbc -K ${{secrets.FILE_DECRYPT_KEY}} -iv ${{secrets.FILE_DECRYPT_IV}} -in ssh-keys.tar.enc -out ssh-keys.tar -d
