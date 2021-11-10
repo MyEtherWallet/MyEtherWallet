@@ -90,7 +90,6 @@
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
             :value="value"
-            :value-usd="usdValue"
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
@@ -356,9 +355,6 @@ export default {
           ? this.tx.toTxData.to
           : this.tx.to;
       return this.unsignedTxArr[0].to;
-    },
-    usdValue() {
-      return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
       return (

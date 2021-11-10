@@ -89,7 +89,8 @@ export default {
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
-      if (!obj.hasOwnProperty('priceRaw')) obj['priceRaw'] = this.valueUsd;
+      if (!obj.hasOwnProperty('priceRaw'))
+        obj['priceRaw'] = BigNumber(this.sendCurrency.price).toNumber();
       return obj;
     },
     isNetworkCurrency() {
