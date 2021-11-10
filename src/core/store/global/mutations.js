@@ -30,20 +30,6 @@ const SET_NETWORK = function (state, networkObj) {
 const SET_GAS_PRICE_TYPE = function (state, type) {
   state.gasPriceType = type;
 };
-const ADD_CUSTOM_PATH = function (state, path) {
-  state.customPaths.push(path);
-};
-const DELETE_CUSTOM_PATH = function (state, customPaths) {
-  const idx = state.customPaths.findIndex(item => {
-    if (item.path === customPaths.path) {
-      return item;
-    }
-  });
-
-  if (idx >= 0) {
-    state.customPaths.splice(idx, 1);
-  }
-};
 const SET_IMPORTED_STATE = function (currentState, newState) {
   Object.keys(newState).forEach(item => {
     currentState[item] = newState[item];
@@ -89,8 +75,6 @@ export default {
   SET_NETWORK,
   INIT_STORE,
   SET_GAS_PRICE_TYPE,
-  ADD_CUSTOM_PATH,
-  DELETE_CUSTOM_PATH,
   SET_IMPORTED_STATE,
   ADD_LOCAL_CONTRACT,
   SET_BASE_FEE_PER_GAS,
