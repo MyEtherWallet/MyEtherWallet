@@ -12,6 +12,7 @@ import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
+import TheConvertUnits from '@/views/layouts-default/TheConvertUnits';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -109,6 +110,14 @@ export default {
       path: ROUTES_HOME.DAPP_SUBMISSION.PATH,
       name: ROUTES_HOME.DAPP_SUBMISSION.NAME,
       component: TheDappSubmissionLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.CONVERT_UNITS.PATH,
+      name: ROUTES_HOME.CONVERT_UNITS.NAME,
+      component: TheConvertUnits,
       meta: {
         noAuth: true
       }
