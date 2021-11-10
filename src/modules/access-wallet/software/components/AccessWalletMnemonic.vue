@@ -76,12 +76,14 @@
               :idx-to-expand="null"
             >
               <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
+                <div class="px-5">
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Enter Extra word"
+                    placeholder="Enter your extra word"
+                  />
+                </div>
               </template>
             </mew-expand-panel>
             <!--
@@ -145,7 +147,7 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'underscore';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -212,7 +214,7 @@ export default {
       return [
         {
           name: 'Do you have an extra word?',
-          subtext: 'Add your word'
+          toggleTitle: 'Add your word'
         }
       ];
     },
@@ -258,7 +260,7 @@ export default {
     phrase: {
       deep: true,
       handler: function (newval) {
-        if (newval && !_.isEmpty(newval)) {
+        if (newval && !isEmpty(newval)) {
           const splitVal = newval[1].split(' ');
           if (splitVal.length === 12 || splitVal.length === 24) {
             this.length = splitVal.length;

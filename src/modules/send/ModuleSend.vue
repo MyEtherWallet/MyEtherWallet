@@ -106,47 +106,49 @@
             @toggled="closeToggle"
           >
             <template #panelBody1>
-              <!-- Warning Sheet -->
-              <div
-                class="pa-5 warning textBlack2--text border-radius--5px mb-8"
-              >
-                <div class="d-flex font-weight-bold mb-2">
-                  <v-icon class="textBlack2--text mew-body mr-1">
-                    mdi-alert-outline</v-icon
-                  >For advanced users only
-                </div>
-                <div>
-                  Please don’t edit these fields unless you are an expert user &
-                  know what you’re doing. Entering the wrong information could
-                  result in your transaction failing or getting stuck.
-                </div>
-              </div>
-              <div class="d-flex align-center justify-end pb-3">
+              <div class="px-5">
+                <!-- Warning Sheet -->
                 <div
-                  class="mew-body primary--text cursor--pointer"
-                  @click="setGasLimit(defaultGasLimit)"
+                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
                 >
-                  Reset to default: {{ formattedDefaultGasLimit }}
+                  <div class="d-flex font-weight-bold mb-2">
+                    <v-icon class="textBlack2--text mew-body mr-1">
+                      mdi-alert-outline</v-icon
+                    >For advanced users only
+                  </div>
+                  <div>
+                    Please don’t edit these fields unless you are an expert user
+                    & know what you’re doing. Entering the wrong information
+                    could result in your transaction failing or getting stuck.
+                  </div>
                 </div>
+                <div class="d-flex align-center justify-end pb-3">
+                  <div
+                    class="mew-body primary--text cursor--pointer"
+                    @click="setGasLimit(defaultGasLimit)"
+                  >
+                    Reset to default: {{ formattedDefaultGasLimit }}
+                  </div>
+                </div>
+
+                <mew-input
+                  :value="gasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  :error-messages="gasLimitError"
+                  type="number"
+                  @input="setGasLimit"
+                />
+
+                <mew-input
+                  v-show="!isToken"
+                  v-model="data"
+                  :label="$t('sendTx.add-data')"
+                  placeholder="0x..."
+                  :rules="dataRules"
+                  class="mb-8"
+                />
               </div>
-
-              <mew-input
-                :value="gasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                :error-messages="gasLimitError"
-                type="number"
-                @input="setGasLimit"
-              />
-
-              <mew-input
-                v-show="!isToken"
-                v-model="data"
-                :label="$t('sendTx.add-data')"
-                placeholder="0x..."
-                :rules="dataRules"
-                class="mb-8"
-              />
             </template>
           </mew-expand-panel>
         </v-col>
@@ -228,7 +230,7 @@ export default {
       expandPanel: [
         {
           name: this.$t('common.advanced'),
-          subtext: 'Gas Limit & Data'
+          toggleTitle: 'Gas Limit & Data'
         }
       ],
       defaultGasLimit: '21000',
@@ -428,7 +430,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -457,10 +459,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (BigNumber(this.localGasPrice).eq(0)) {
-        return BigNumber(this.gasPrice);
+      if (toBN(this.localGasPrice).eqn(0)) {
+        return toBN(this.gasPrice);
       }
-      return BigNumber(this.localGasPrice);
+      return toBN(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -720,7 +722,7 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(BigNumber(e));
+      this.sendTx.setLocalGasPrice(e);
     }
   }
 };
