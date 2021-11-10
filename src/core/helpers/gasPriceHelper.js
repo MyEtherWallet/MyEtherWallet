@@ -81,17 +81,23 @@ const getMinPriorityFee = () => {
 };
 const getPriorityFeeBasedOnType = (priorityFeeBN, gasPriceType) => {
   const minFee = getMinPriorityFee();
-  const mediumTip = priorityFeeBN.lt(minFee) ? minFee : priorityFeeBN;
+  const mediumTip = priorityFeeBN;
+  let returnVal;
   switch (gasPriceType) {
     case gasPriceTypes.ECONOMY:
-      return mediumTip.muln(0.8);
+      returnVal = mediumTip.muln(0.8);
+      break;
     case gasPriceTypes.REGULAR:
-      return mediumTip;
+      returnVal = mediumTip;
+      break;
     case gasPriceTypes.FAST:
-      return mediumTip.muln(1.25);
+      returnVal = mediumTip.muln(1.25);
+      break;
     default:
-      return minFee;
+      returnVal = minFee;
   }
+  if (returnVal.lt(minFee)) return minFee;
+  return returnVal;
 };
 const getBaseFeeBasedOnType = (baseFeeBN, gasPriceType) => {
   switch (gasPriceType) {
