@@ -75,7 +75,7 @@
     "platform": "1.3.6",
     "qr-code-styling": "1.6.0-rc.1",
     "register-service-worker": "1.7.2",
-    "subscriptions-transport-ws": "0.9.19",
+    "subscriptions-transport-ws": "0.11.0",
     "underscore": "1.13.1",
     "vue": "2.6.14",
     "vue-apollo": "3.0.8",
