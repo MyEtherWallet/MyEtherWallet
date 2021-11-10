@@ -8,7 +8,6 @@ import {
  * Formatted notification for mew-notification component
  */
 const formatNotification = (obj, network) => {
-  console.log(obj);
   const newObj = {
     txHash: {
       value: obj.hash ? obj.hash : '',

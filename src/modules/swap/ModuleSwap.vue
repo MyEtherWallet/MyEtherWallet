@@ -760,6 +760,12 @@ export default {
      * @returns{boolean}
      */
     hasMinEth() {
+      if (
+        this.fromTokenType.hasOwnProperty('isEth') &&
+        !this.fromTokenType.isEth
+      ) {
+        return true;
+      }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );

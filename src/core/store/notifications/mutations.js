@@ -7,7 +7,6 @@ const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.notifications);
     savedStore.notifications = savedStore.notifications.map(item => {
-      console.log(item);
       delete item.notification;
       return item.hasOwnProperty('hash')
         ? new Notification(item)
