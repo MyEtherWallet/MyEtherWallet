@@ -19,7 +19,9 @@ const ERRORS = {
     'bitbox02Error.operation-that-changes-interface-state-in-progress',
   'connection not open': 'bitbox02Error.connection-not-open-on-send',
   'Could not establish a connection to the BitBox02':
-    'bitbox02Error.could-not-establish-connection'
+    'bitbox02Error.could-not-establish-connection',
+  'InvalidStateError: The device is already open.':
+    'Device already connected. Please refresh your browser and try again!'
 };
 const WARNINGS = {
   'Attestation failed': 'bitbox02Error.attestation-failed'

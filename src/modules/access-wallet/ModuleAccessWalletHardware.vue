@@ -12,7 +12,7 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 1 ? null : back"
+    :back="showBack ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
@@ -101,7 +101,7 @@
         :paths="paths"
         :selected-path="selectedPath"
         :handler-loaded="loaded"
-        @setPath="setPath"
+        :set-path="setPath"
       />
       <!--
         =====================================================================================
@@ -126,7 +126,7 @@
         :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
-        @setPath="setPath"
+        :set-path="setPath"
       />
 
       <!--
@@ -155,6 +155,7 @@
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
+      :hide-networks="switchAddress"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />
@@ -313,8 +314,15 @@ export default {
       // }
       return {
         title: 'Hardware Wallets',
-        url: 'https://help.myetherwallet.com/en/'
+        url: 'https://help.myetherwallet.com/en/collections/3043244-access-wallet'
       };
+    },
+    showBack() {
+      if (this.switchAddress) {
+        return this.step === 2;
+      }
+
+      return this.step === 1;
     },
     /**
      * On Bitbox2
@@ -408,13 +416,16 @@ export default {
      * Overlay title
      */
     title() {
+      if (this.switchAddress) return 'Switch Address';
       if (this.step > this.wallets[this.walletType]?.when) {
         return 'Select Network and Address';
       } else if (this.step === 1) {
         return 'Select a hardware wallet';
       }
       if (this.onBitbox2) return this.bitbox2Titles;
-      return this.wallets[this.walletType].title;
+      return this.walletType
+        ? this.wallets[this.walletType].title
+        : 'Select a hardware wallet';
     },
     bitBox2NotPaired() {
       return (
@@ -451,7 +462,7 @@ export default {
       if (this.bitBox2Unpaired) return 'Confirm pairing code';
       if (this.bitBox2Initialized)
         return 'Bitbox 02 succesfully initialized. Loading wallet';
-      return this.wallets[this.walletType].title;
+      return this.walletType ? this.wallets[this.walletType].title : '';
     }
   },
   watch: {
@@ -460,12 +471,9 @@ export default {
         if (this.walletType) this[`${this.walletType}Unlock`]();
       },
       deep: true
-    }
-  },
-  mounted() {
-    if (this.switchAddress) {
-      this.nextStep(this.identifier);
-      this.walletType = this.identifier;
+    },
+    open(newVal) {
+      if (newVal && this.switchAddress) this.setupSwitchAddress();
     }
   },
   methods: {
@@ -482,16 +490,43 @@ export default {
       this.walletType = '';
     },
     /**
+     * Sets up switch address
+     */
+    setupSwitchAddress() {
+      this.walletType = this.identifier;
+      this.nextStep();
+    },
+    /**
+     * calls this.close and this.setupSwitchAddress
+     */
+    closeAndSetupSwitch() {
+      this.reset();
+      this.setupSwitchAddress();
+      this.close();
+    },
+    /**
      * Overlay Action: Back
      * if on keepkey step 3, it will return to step 1 so it will reset everything
      */
     back() {
-      !this.step ? this.close('showHardware') : (this.step -= 1);
-      if (this.onKeepkey && this.step === 2) {
-        this.step = 1;
+      if (this.step > 0) {
+        if (this.step === 1) {
+          this.reset();
+        } else if (this.step === 2) {
+          this.step -= 1;
+        } else {
+          this.hwWalletInstance = {};
+          if (this.onLedger) {
+            this.step -= 1;
+            this[`${this.walletType}Unlock`]();
+          } else {
+            this.walletType = '';
+            this.step = 1;
+          }
+        }
+      } else {
+        this.close('showHardware');
       }
-      this.step === 1 ? this.reset() : '';
-      this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
     overlayClose() {
       this.reset();
@@ -619,9 +654,12 @@ export default {
         this.setWallet([wallet])
           .then(() => {
             this.trackAccessWallet(wallet.identifier);
-            if (!this.switchAddress)
+            if (!this.switchAddress) {
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            else this.close();
+            } else {
+              this.reset();
+              this.close();
+            }
           })
           .catch(e => {
             this.reset();
