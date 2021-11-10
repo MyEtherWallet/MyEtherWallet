@@ -100,8 +100,6 @@
         <v-col cols="12" class="py-4">
           <mew-expand-panel
             ref="expandPanel"
-            is-toggle
-            has-dividers
             :panel-items="expandPanel"
             @toggled="closeToggle"
           >
@@ -253,6 +251,7 @@ export default {
       'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -335,7 +334,7 @@ export default {
             link: this.isEthNetwork ? this.swapLink : ''
           })
         : null;
-      return [
+      const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 5),
@@ -348,6 +347,15 @@ export default {
         },
         ...tokensList
       ];
+      if (this.hasCustom) {
+        return returnedArray.concat([
+          {
+            header: 'Custom Tokens'
+          },
+          ...this.customTokens
+        ]);
+      }
+      return returnedArray;
     },
     /* Property returns either gas estimmation error or amount error*/
     amountErrorMessage() {

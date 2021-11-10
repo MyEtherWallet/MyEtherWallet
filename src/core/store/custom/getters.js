@@ -1,6 +1,6 @@
 const customTokens = function (state, _, rootState, rootGetters) {
   const network = rootGetters['global/network'];
-  return state.customTokens[network.type.name] || [];
+  return state.tokens[network.type.name] || [];
 };
 
 const hasCustom = function (state, _, rootState, rootGetters) {

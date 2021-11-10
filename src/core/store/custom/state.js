@@ -2,7 +2,8 @@ import Configs from '../configs';
 
 const state = {
   localStore: true,
-  customTokens: {},
+  tokens: {},
+  paths: [],
   stateVersion: Configs.VERSION.custom,
   addressBook: []
 };
