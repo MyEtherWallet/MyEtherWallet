@@ -30,7 +30,7 @@
         <h5 class="font-weight-medium">ETH Balance</h5>
         <div class="text-right">
           <h5 class="font-weight-bold">$2,000.00</h5>
-          <div class="primary--text">8.00123 ETH</div>
+          <div class="greenPrimary--text">8.00123 ETH</div>
         </div>
       </div>
       <v-divider />
@@ -39,7 +39,7 @@
         <h5 class="font-weight-medium">Value of Tokens</h5>
         <div class="text-right">
           <h5 class="font-weight-bold">$200.00</h5>
-          <div class="primary--text">4 Tokens</div>
+          <div class="greenPrimary--text">4 Tokens</div>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
         <h5 class="font-weight-medium">Total Wallet Value</h5>
         <div class="text-right">
           <h5 class="font-weight-bold">$2,000.22</h5>
-          <div class="primary--text">18.00123 ETH</div>
+          <div class="greenPrimary--text">18.00123 ETH</div>
         </div>
       </div>
 
@@ -97,14 +97,14 @@
     </v-expansion-panels>
 
     <div
-      class="d-lg-none text-center py-4 primary--text font-weight-medium"
+      class="d-lg-none text-center py-4 greenPrimary--text font-weight-medium"
       @click="openPanel"
     >
       {{ panel.length == 0 ? 'Show tokens' : 'Hide tokens' }}
       <v-icon
         :class="panel.length == 0 ? '' : 'r180'"
         class="rotate"
-        color="primary"
+        color="greenPrimary"
         >mdi-chevron-down</v-icon
       >
     </div>

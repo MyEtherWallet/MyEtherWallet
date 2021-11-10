@@ -25,7 +25,7 @@
               <div>
                 <div class="mb-2 d-flex align-center">
                   <div class="mew-heading-2">Get MEW wallet app</div>
-                  <v-icon dense color="primary" class="ml-1">
+                  <v-icon dense color="greenPrimary" class="ml-1">
                     mdi-shield-check
                   </v-icon>
                 </div>
@@ -58,7 +58,7 @@
             <div>
               <div class="mb-2 d-flex align-center">
                 <div class="mew-heading-2">Get MEW wallet app</div>
-                <v-icon dense color="primary" class="ml-1">
+                <v-icon dense color="greenPrimary" class="ml-1">
                   mdi-shield-check
                 </v-icon>
               </div>

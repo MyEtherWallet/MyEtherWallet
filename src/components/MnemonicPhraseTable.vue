@@ -23,10 +23,10 @@ export default {
 
 <style lang="scss" scoped>
 .phrase {
-  border-bottom: 1px solid var(--v-primary-lighten2);
+  border-bottom: 1px solid var(--v-greenPrimary-base);
   line-height: 30px;
   span {
-    color: var(--v-primary-base);
+    color: var(--v-greenPrimary-base);
   }
 }
 </style>

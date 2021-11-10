@@ -12,13 +12,13 @@
     >
       <template #dialogBody>
         <div class="mew-heading-1 mb-2">How are fees determined?</div>
-        <div class="mt-6 textPrimary--text">
+        <div class="mt-6 textLight--text">
           Transaction fees are charged by Ethereum miners, not MEW. We can't
           influence them and we don't receive any part of the transaction fees
           that you pay.
         </div>
         <div class="mew-heading-1 my-2 mt-6">What should I do?</div>
-        <div class="mt-6 textPrimary--text">
+        <div class="mt-6 textLight--text">
           Good news! You have options! If you’re not in a hurry, you can use the
           “Economy” setting and your transaction will be mined at a later time.
           MEW supports Ethereum scaling solutions Polygon and Binance Smart
@@ -147,7 +147,7 @@
           <div>
             <div
               v-if="isEthNetwork"
-              class="ml-2 primary--text cursor--pointer user-select--none"
+              class="ml-2 greenPrimary--text cursor--pointer user-select--none"
               @click="showHighNote"
             >
               How are fees determined?

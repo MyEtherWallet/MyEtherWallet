@@ -109,10 +109,10 @@
               <div class="px-5">
                 <!-- Warning Sheet -->
                 <div
-                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
+                  class="pa-5 warning greyPrimary--text border-radius--5px mb-8"
                 >
                   <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="textBlack2--text mew-body mr-1">
+                    <v-icon class="greyPrimary--text mew-body mr-1">
                       mdi-alert-outline</v-icon
                     >For advanced users only
                   </div>
@@ -124,7 +124,7 @@
                 </div>
                 <div class="d-flex align-center justify-end pb-3">
                   <div
-                    class="mew-body primary--text cursor--pointer"
+                    class="mew-body greenPrimary--text cursor--pointer"
                     @click="setGasLimit(defaultGasLimit)"
                   >
                     Reset to default: {{ formattedDefaultGasLimit }}

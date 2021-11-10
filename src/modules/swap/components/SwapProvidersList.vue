@@ -62,7 +62,7 @@
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
                           class="
-                            primary--text
+                            greenPrimary--text
                             font-weight-medium
                             mew-label
                             order-sm-12
@@ -113,12 +113,14 @@
     -->
     <div
       v-if="step >= 1 && providersCut > 0 && toTokenSymbol && !hasProviderError"
-      class="cursor--pointer user-select--none primary--text mt-7 ml-4"
+      class="cursor--pointer user-select--none greenPrimary--text mt-7 ml-4"
       @click="showMore = !showMore"
     >
       {{ moreProvidersText }}
-      <v-icon v-show="!showMore" small color="primary">mdi-arrow-down</v-icon>
-      <v-icon v-show="showMore" small color="primary">mdi-arrow-up</v-icon>
+      <v-icon v-show="!showMore" small color="greenPrimary"
+        >mdi-arrow-down</v-icon
+      >
+      <v-icon v-show="showMore" small color="greenPrimary">mdi-arrow-up</v-icon>
     </div>
     <!--
     =====================================================================================
@@ -277,12 +279,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .rate-active {
-  border: 1px solid var(--v-primary-base) !important;
-  background-color: var(--v-superPrimary-base) !important;
+  border: 1px solid var(--v-greenPrimary-base) !important;
+  background-color: var(--v-greyLight-base) !important;
 }
 .rate {
   min-height: 60px;
   border-radius: 8px;
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

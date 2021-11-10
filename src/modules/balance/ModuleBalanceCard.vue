@@ -46,9 +46,7 @@
                   {{ addrlastFour }}
                 </div>
               </template>
-              <span class="titlePrimary--text">{{
-                getChecksumAddressString
-              }}</span>
+              <span class="textDark--text">{{ getChecksumAddressString }}</span>
             </v-tooltip>
             <!--
             =====================================================================================
@@ -68,7 +66,7 @@
                   ><v-icon size="10px">mdi-printer</v-icon></v-btn
                 >
               </template>
-              <span class="titlePrimary--text">Print account info</span>
+              <span class="textDark--text">Print account info</span>
             </v-tooltip>
           </div>
         </div>
@@ -369,7 +367,7 @@ export default {
     opacity: 1;
   }
   .info-container--icon:hover {
-    color: var(--v-primary-base) !important;
+    color: var(--v-greenPrimary-base) !important;
   }
 }
 

@@ -18,7 +18,7 @@
         >
           <mew-button
             class="px-2"
-            color-theme="primary"
+            color-theme="greenPrimary"
             btn-size="large"
             btn-style="outline"
           >
@@ -39,7 +39,7 @@
         -->
         <v-btn
           style="height: 36px; min-width: 36px; padding: 0; border-radius: 10px"
-          color="primary"
+          color="greenPrimary"
           outlined
           class="d-lg-none"
           v-bind="attrs"

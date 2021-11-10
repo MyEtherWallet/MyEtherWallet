@@ -33,7 +33,7 @@
       <div v-if="customTokens.length > 0" class="d-flex justify-center mt-6">
         <mew-button
           title="Next"
-          color-theme="primary"
+          color-theme="greenPrimary"
           :has-full-width="true"
           btn-size="xlarge"
           :disabled="!enableDeleteButton"
@@ -66,7 +66,7 @@
       <div class="mt-9">
         <mew-button
           title="Remove Tokens"
-          color-theme="error"
+          color-theme="redPrimary"
           :has-full-width="true"
           btn-size="xlarge"
           class="mb-4"
@@ -74,7 +74,7 @@
         />
         <mew-button
           title="Keep Tokens"
-          color-theme="basic"
+          color-theme="textDark"
           :has-full-width="true"
           btn-size="xlarge"
           btn-style="outline"

@@ -48,7 +48,7 @@
                 :href="links.etherscan"
                 class="d-flex justify-center justify-sm-start"
                 >View on Etherscan
-                <v-icon color="primary" small>mdi-launch</v-icon></a
+                <v-icon color="greenPrimary" small>mdi-launch</v-icon></a
               >
             </v-col>
             <v-col
@@ -63,7 +63,7 @@
                 :href="links.ethvm"
                 class="d-flex justify-center"
                 >View on EthVM
-                <v-icon color="primary" small>mdi-launch</v-icon></a
+                <v-icon color="greenPrimary" small>mdi-launch</v-icon></a
               >
             </v-col>
           </v-row>
@@ -185,7 +185,7 @@
                         error === '' && isBatch && signedTxArray.length < i + 1
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -195,7 +195,7 @@
                         !isBatch && Object.keys(signedTxObject).length === 0
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -204,7 +204,7 @@
                       v-show="
                         !isBatch && Object.keys(signedTxObject).length !== 0
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>
@@ -212,7 +212,7 @@
                       v-show="
                         error === '' && isBatch && signedTxArray.length >= i + 1
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>

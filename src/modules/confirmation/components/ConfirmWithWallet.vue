@@ -11,13 +11,13 @@
         <img v-else :src="instance.meta.img.value" height="50px" />
       </div>
     </div>
-    <div :class="[error !== '' ? 'error--text' : '', 'text-center mb-5']">
+    <div :class="[error !== '' ? 'redPrimary--text' : '', 'text-center mb-5']">
       <p>{{ bodyText }}</p>
     </div>
     <v-progress-linear
       v-if="error === '' && !signed"
       indeterminate
-      color="primary"
+      color="greenPrimary"
       class="mb-3"
     ></v-progress-linear>
   </div>

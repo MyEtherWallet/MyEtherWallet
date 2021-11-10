@@ -54,15 +54,15 @@
           class="d-flex align-center justify-space-between mx-auto mb-6"
         >
           <div>
-            <v-icon color="primary" large> mdi-circle-medium </v-icon>
+            <v-icon color="greenPrimary" large> mdi-circle-medium </v-icon>
             Success
           </div>
           <div>
-            <v-icon color="orange" large> mdi-circle-medium </v-icon>
+            <v-icon color="orangePrimary" large> mdi-circle-medium </v-icon>
             Pending
           </div>
           <div>
-            <v-icon color="error" large> mdi-circle-medium </v-icon>
+            <v-icon color="redPrimary" large> mdi-circle-medium </v-icon>
             Failed
           </div>
         </v-sheet>
@@ -321,7 +321,7 @@ export default {
   width: 37px;
   height: 37px;
   border-radius: 100%;
-  background-color: var(--v-primary-base);
+  background-color: var(--v-greenPrimary-base);
   cursor: pointer;
 }
 

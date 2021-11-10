@@ -42,7 +42,7 @@ export default {
 <style lang="scss" scoped>
 a {
   text-decoration: none;
-  color: var(--v-primary-base) !important;
+  color: var(--v-greenPrimary-base) !important;
   font-weight: 500;
 }
 
@@ -50,7 +50,7 @@ a {
   font-size: 12px;
   line-height: 15px;
   font-weight: 500;
-  color: var(--v-primary-base);
+  color: var(--v-greenPrimary-base);
 }
 </style>
 

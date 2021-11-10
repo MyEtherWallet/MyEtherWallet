@@ -31,7 +31,12 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex flex-column">
             <div
-              class="mew-body primary--text font-weight-medium cursor--pointer"
+              class="
+                mew-body
+                greenPrimary--text
+                font-weight-medium
+                cursor--pointer
+              "
               @click="openBarcodeModal"
             >
               Transfer {{ currencyName }} from another account
@@ -90,7 +95,7 @@ export default {
 
 <style lang="scss" scoped>
 .modal-caption {
-  color: var(--v-captionPrimary);
+  color: var(--v-textLight);
 }
 
 .address-overflow {
@@ -98,6 +103,6 @@ export default {
 }
 
 .info-container {
-  border: 1px solid var(--v-basicOutlineActive-base);
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>

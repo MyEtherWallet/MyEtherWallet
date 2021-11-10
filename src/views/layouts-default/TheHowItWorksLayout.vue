@@ -64,7 +64,7 @@ export default {
   .v-tabs-slider-wrapper {
     height: 4px !important;
     .v-tabs-slider {
-      background-color: var(--v-primary-base);
+      background-color: var(--v-greenPrimary-base);
     }
   }
 }

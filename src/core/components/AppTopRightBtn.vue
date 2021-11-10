@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss" scoped>
 .mew6-component--top-right-btn {
-  color: var(--v-primaryActive-base);
+  color: var(--v-greenPrimary-base);
   display: inline-block;
   position: absolute;
   top: -12px;

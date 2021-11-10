@@ -6,7 +6,7 @@
     </div>
     <div class="d-block d-sm-flex align-start text-center">
       <v-file-input
-        color="primary"
+        color="greenPrimary"
         label="Upload file..."
         truncate-length="15"
         filled

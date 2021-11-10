@@ -3,7 +3,9 @@
     <div class="d-flex justify-space-between align-start">
       <div class="d-flex align-center">
         <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
-        <div class="primary--text"><span class="mx-3">|</span>Paper Wallet</div>
+        <div class="greenPrimary--text">
+          <span class="mx-3">|</span>Paper Wallet
+        </div>
       </div>
       <div>
         <div class="d-flex align-center mr-3 mb-2">

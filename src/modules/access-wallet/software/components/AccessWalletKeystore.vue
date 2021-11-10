@@ -23,7 +23,7 @@
           <mew-button
             title="Select File"
             btn-style="outline"
-            color-theme="primary"
+            color-theme="greenPrimary"
             btn-size="xlarge"
             :has-full-width="true"
             :shows-active-state="true"
@@ -84,7 +84,7 @@
               <v-row v-else justify="center" align="center" class="pt-5 pb-9">
                 <v-progress-circular
                   indeterminate
-                  color="primary"
+                  color="greenPrimary"
                 ></v-progress-circular>
                 <p class="mb-0 mx-3">
                   Sit tight while we are unlocking your wallet

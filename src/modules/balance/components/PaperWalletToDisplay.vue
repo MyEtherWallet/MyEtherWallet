@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" md="6" class="d-flex align-center mr-auto">
           <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
-          <div class="primary--text">
+          <div class="greenPrimary--text">
             <span class="mx-3">|</span>Paper Wallet
           </div>
         </v-col>
@@ -85,12 +85,17 @@
       <v-row v-if="showPrivateKey">
         <v-col cols="12" md="8" class="mr-auto">
           <div
-            class="mew-heading-1 font-weight-black text-uppercase error--text"
+            class="
+              mew-heading-1
+              font-weight-black
+              text-uppercase
+              redPrimary--text
+            "
           >
-            <v-icon color="error">mdi-alert</v-icon>
+            <v-icon color="redPrimary">mdi-alert</v-icon>
             My Private Key
           </div>
-          <div class="font-weight-black error--text mt-2">
+          <div class="font-weight-black redPrimary--text mt-2">
             You might LOSE your MONEY if you share this Private Key with anyone!
             KEEP YOUR PRIVATE KEY IN SAFE PLACE!
           </div>

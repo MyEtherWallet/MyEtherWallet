@@ -6,7 +6,7 @@
 -->
   <mew-dropdown ref="mewDropdown" popup-title="Select a derivation path">
     <template #activatorBtnText>
-      <span class="titlePrimary--text mew-body capitalize">
+      <span class="textDark--text mew-body capitalize">
         {{ selectedPath.name }}
       </span>
       <span class="path mew-body capitalize">{{ selectedPath.value }}</span>
@@ -47,8 +47,8 @@
             <span
               :class="[
                 filteredCustomPath.name === selectedPath.name
-                  ? 'primary--text'
-                  : 'titlePrimary--text'
+                  ? 'greenPrimary--text'
+                  : 'textDark--text'
               ]"
               >{{ filteredCustomPath.name }}</span
             >
@@ -56,7 +56,7 @@
           <span
             :class="
               filteredCustomPath.value === selectedPath.value
-                ? 'primary--text'
+                ? 'greenPrimary--text'
                 : 'path'
             "
           >
@@ -89,8 +89,8 @@
             <span
               :class="[
                 filteredPath.name === selectedPath.name
-                  ? 'primary--text'
-                  : 'titlePrimary--text'
+                  ? 'greenPrimary--text'
+                  : 'textDark--text'
               ]"
               >{{ filteredPath.name }}</span
             >
@@ -98,7 +98,7 @@
           <span
             :class="
               filteredPath.value === selectedPath.value
-                ? 'primary--text'
+                ? 'greenPrimary--text'
                 : 'path'
             "
           >
@@ -111,7 +111,7 @@
         =====================================================================================
         -->
         <div
-          class="text-right primary--text cursor-pointer"
+          class="text-right greenPrimary--text cursor-pointer"
           @click="showCustomField = !showCustomField"
         >
           + Add Path

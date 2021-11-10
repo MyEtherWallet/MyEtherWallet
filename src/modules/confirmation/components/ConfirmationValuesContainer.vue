@@ -47,7 +47,7 @@
         =====================================================================================
         -->
         <div v-if="isSwap" class="value-container text-center py-6">
-          <div class="mew-caption searchText--text pb-2">
+          <div class="mew-caption textLight--text pb-2">
             {{ item.title }}
           </div>
           <mew-token-container :icon="item.icon" size="medium" />
@@ -106,7 +106,7 @@
             =====================================================================================
             -->
           <div class="pl-2">
-            <div class="mew-caption searchText--text font-weight-medium">
+            <div class="mew-caption textLight--text font-weight-medium">
               {{ item.amount ? 'Sending' : 'To Address' }}
             </div>
             <!--
@@ -121,7 +121,7 @@
                   {{ item.type }}
                 </span>
               </div>
-              <div class="mew-heading-4 textBlack2--text">${{ item.usd }}</div>
+              <div class="mew-heading-4 textMedium--text">${{ item.usd }}</div>
             </div>
             <!--
             =====================================================================================
@@ -139,13 +139,16 @@
                 <mew-transform-hash
                   v-if="item.nickname !== ''"
                   :hash="item.address"
-                  class="textBlack2--text mew-body"
+                  class="textMedium--text mew-body"
                 />
-                <p v-else class="text-wrap textBlack2--text mew-body mb-0">
+                <p v-else class="text-wrap textMedium--text mew-body mb-0">
                   {{ item.address }}
                 </p>
               </div>
-              <div v-if="item.ensName !== ''" class="primary--text mew-body">
+              <div
+                v-if="item.ensName !== ''"
+                class="greenPrimary--text mew-body"
+              >
                 {{ item.ensName }}
               </div>
             </div>
