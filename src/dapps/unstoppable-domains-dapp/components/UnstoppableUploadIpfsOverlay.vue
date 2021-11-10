@@ -5,20 +5,48 @@
     content-size="xlarge"
     :close="closing"
     :footer="helpObj"
+    :back="goBackView"
   >
-    <div class="upload-ipfs">
-      <h2 class="text-center mb-10">
-        {{ $t('unstoppable.manage-ipfs-website') }}
-      </h2>
-
-      <div class="greyPrimary--text mb-5">
-        To link
-        <span class="bluePrimary--text">{{ managedDomain.name }}</span> to your
-        website, upload its .zip file or enter the IPFS hash.
+    <h1 class="text-center my-8">
+      {{ $t('unstoppable.manage-ipfs-website') }}
+    </h1>
+    <div v-if="step === 1" style="width: 50%">
+      <div class="primary--text font-weight-bold text-center my-8">
+        How do you want to upload your site?
       </div>
+      <div class="d-flex flex-column">
+        <mew-button
+          class="my-2"
+          title="Upload by Zip file"
+          btn-style="outline"
+          btn-size="xlarge"
+          color-theme="primary"
+          has-full-width
+          @click.native="setView('zip')"
+        />
+        <mew-button
+          class="my-2"
+          title="Enter IPFS Hash"
+          btn-style="outline"
+          btn-size="xlarge"
+          color-theme="primary"
+          has-full-width
+          @click.native="setView('ipfs')"
+        />
+      </div>
+    </div>
 
+    <!--
+    =====================================================================================
+      Zip
+    =====================================================================================
+    -->
+    <div v-if="view === 'zip' && step === 2" class="upload-ipfs">
+      <div class="text-center primary--text font-weight-bold mb-5">
+        Upload with Zip file
+      </div>
       <v-sheet
-        class="d-flex flex-column justify-center px-5"
+        class="d-flex flex-column justify-center px-5 mb-10"
         color="backgroundGrey"
         height="76"
         rounded
@@ -43,34 +71,37 @@
           </div>
         </div>
       </v-sheet>
-
-      <div class="my-5 d-flex align-center justify-space-between">
-        <v-divider></v-divider>
-        <div class="px-5">OR</div>
-        <v-divider></v-divider>
-      </div>
-
-      <div>
-        <div class="d-flex justify-space-between align-center">
-          <div class="label-container">
-            <form
-              enctype="multipart/form-data"
-              novalidate
-              class="file-upload-container"
-            >
-              <input
-                ref="zipInput"
-                type="file"
-                name="file"
-                accept=".zip"
-                @change="fileChange"
-              />
-            </form>
-          </div>
+      <div class="d-flex justify-space-between align-center">
+        <div class="label-container">
+          <form
+            enctype="multipart/form-data"
+            novalidate
+            class="file-upload-container"
+          >
+            <input
+              ref="zipInput"
+              type="file"
+              name="file"
+              accept=".zip"
+              @change="fileChange"
+            />
+          </form>
         </div>
+      </div>
+    </div>
 
-        <div class="d-flex align-center justify-space-around">
-          <div class="bluePrimary--text font-weight-bold">
+    <div>
+      <!--
+      =====================================================================================
+        IPFS Hash
+      =====================================================================================
+      -->
+      <div
+        v-if="view === 'ipfs' && step === 2"
+        class="d-flex align-center justify-space-around"
+      >
+        <div>
+          <div class="text-center primary--text font-weight-bold">
             {{ $t('unstoppable.ipfs-hash') }}
           </div>
           <div class="pt-5" style="min-width: 300px">
@@ -82,33 +113,35 @@
             />
           </div>
         </div>
+      </div>
 
-        <div v-if="error" class="error--text mb-7 font-weight-medium">
-          {{ error }}
-        </div>
+      <div v-if="error" class="error--text mb-7 font-weight-medium">
+        {{ error }}
+      </div>
 
-        <div
-          v-if="notEnoughBalance"
-          class="error--text mt-3 mb-7 font-weight-medium"
+      <div
+        v-if="notEnoughBalance"
+        class="error--text mt-3 mb-7 font-weight-medium"
+      >
+        {{ $t('unstoppable.insufficient-balance') }}
+        <a
+          href="https://ccswap.myetherwallet.com/#/"
+          target="_blank"
+          class="text-decoration--underline"
         >
-          {{ $t('unstoppable.insufficient-balance') }}
-          <a
-            href="https://ccswap.myetherwallet.com/#/"
-            target="_blank"
-            class="text-decoration--underline"
-          >
-            {{ $t('unstoppable.insufficient-balance-advice') }}
-          </a>
-        </div>
+          {{ $t('unstoppable.insufficient-balance-advice') }}
+        </a>
+      </div>
+
+      <div v-if="step === 2" class="d-flex justify-center">
+        <mew-button
+          :title="$t('unstoppable.upload')"
+          btn-size="xlarge"
+          :disabled="disabled"
+          @click.native="() => saveIpfsHash(input)"
+        />
       </div>
     </div>
-
-    <mew-button
-      :title="$t('unstoppable.save-and-close')"
-      btn-size="xlarge"
-      :disabled="disabled"
-      @click.native="() => saveIpfsHash(input)"
-    />
   </mew-overlay>
 </template>
 
@@ -130,6 +163,8 @@ export default {
   },
   data() {
     return {
+      view: null,
+      step: 1,
       disabled: false,
       input: '',
       error: '',
@@ -174,6 +209,14 @@ export default {
     isValidIpfs(value) {
       this.disabled = !isIpfs.multihash(value);
       return !this.disabled;
+    },
+    goBackView() {
+      this.step = 1;
+      this.view = null;
+    },
+    setView(view) {
+      this.step++;
+      this.view = view;
     },
     closing() {
       this.ipfsHash = '';
@@ -325,7 +368,7 @@ export default {
 
 <style lang="scss">
 .upload-ipfs {
-  width: 100%;
+  width: 90%;
 }
 
 .dropdown-list-box {
@@ -369,7 +412,6 @@ export default {
   // color: $dark-blue-12;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 15px;
   position: relative;
 }
 </style>

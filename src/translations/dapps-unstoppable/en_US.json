@@ -39,7 +39,7 @@
   "pay": "Pay",
   "upload-my-website": "Upload my website",
   "upload-your-zip-file": "Upload your .zip file",
-  "ipfs-hash": "IPFS Hash",
-  "save-and-close": "Save and close",
+  "ipfs-hash": "Enter IPFS Hash",
+  "upload": "Upload",
   "is-available": "Domain is available"
 }
