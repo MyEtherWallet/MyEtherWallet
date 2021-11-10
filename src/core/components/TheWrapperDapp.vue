@@ -81,18 +81,18 @@
       background-color="backgroundGrey"
       color="blue500"
       height="46"
+      active-class="blue500--text"
     >
       <v-tab
         v-for="(item, index) in tabItems"
         :key="item.name"
         :to="item.route"
-        exact
         :class="[
           'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
           { 'ml-3 ml-md-13': index === 0 },
           { 'mr-3 mr-md-13': index + 1 === tabItems.length }
         ]"
-        active-class="blue500--text"
+        exact
       >
         {{ item.name }}
       </v-tab>
@@ -215,7 +215,7 @@ export default {
   data() {
     return {
       bannerTextObj: {},
-      tab: null
+      tab: ''
     };
   },
   computed: {

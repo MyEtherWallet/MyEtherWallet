@@ -4,6 +4,10 @@ const ETH_BLOCKS_ROUTE = {
     NAME: 'EthBlocks',
     PATH: 'eth-blocks'
   },
+  MINT: {
+    NAME: 'EthBlocksMint',
+    PATH: 'mint'
+  },
   BLOCK: {
     NAME: 'EthBlocksBlock',
     PATH: 'block/:blockRef'

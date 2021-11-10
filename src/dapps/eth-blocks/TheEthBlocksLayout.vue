@@ -37,13 +37,11 @@ export default {
       tabs: [
         {
           name: 'Mint a new block',
-          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME }
+          route: ETH_BLOCKS_ROUTE.MINT.PATH
         },
         {
           name: 'My blocks',
-          route: {
-            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
-          }
+          route: ETH_BLOCKS_ROUTE.MY_BLOCKS.PATH
         }
       ],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),

@@ -25,6 +25,11 @@ export default {
       component: ModuleEthBlocksMint
     },
     {
+      name: ETH_BLOCKS_ROUTE.MINT.NAME,
+      path: ETH_BLOCKS_ROUTE.MINT.PATH,
+      component: ModuleEthBlocksMint
+    },
+    {
       path: ETH_BLOCKS_ROUTE.MY_BLOCKS.PATH,
       name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
       component: ModuleEthBlocksMyBlocks
