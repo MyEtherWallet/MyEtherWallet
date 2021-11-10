@@ -543,25 +543,29 @@ export default {
       return this.wallets[this.walletType]
         .create(this.hasPath)
         .then(_hwWallet => {
-          this.loaded = true;
-          this.hwWalletInstance = _hwWallet;
-          if (this.onLedger) this.ledgerConnected = true;
-          if (this.onKeepkey || this.onTrezor) this.step++;
-          if (this.onBitbox2) {
-            _hwWallet
-              .init(this.hasPath)
-              .then(() => {
-                this.nextStep();
-                this.hwWalletInstance = _hwWallet;
-              })
-              .catch(e => {
-                this.wallets[this.walletType].create.errorHandler(e);
-                if (e.message === 'Error: Pairing rejected') {
-                  this.reset();
-                }
-              });
+          try {
+            this.loaded = true;
+            this.hwWalletInstance = _hwWallet;
+            if (this.onLedger) this.ledgerConnected = true;
+            if (this.onKeepkey || this.onTrezor) this.step++;
+            if (this.onBitbox2) {
+              _hwWallet
+                .init(this.hasPath)
+                .then(() => {
+                  this.nextStep();
+                  this.hwWalletInstance = _hwWallet;
+                })
+                .catch(e => {
+                  this.wallets[this.walletType].create.errorHandler(e);
+                  if (e.message === 'Error: Pairing rejected') {
+                    this.reset();
+                  }
+                });
+            }
+            return _hwWallet;
+          } catch (err) {
+            Toast(err, {}, ERROR);
           }
-          return _hwWallet;
         })
         .catch(err => {
           if (this.onLedger) this.step--;
