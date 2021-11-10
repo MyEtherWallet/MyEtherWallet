@@ -31,7 +31,9 @@ class Swap {
           if (idx < 2) return Promise.resolve();
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
-            allTokens = mergeIfNotExists(allTokens, tokens);
+            if (tokens && tokens.length > 0) {
+              allTokens = mergeIfNotExists(allTokens, tokens);
+            }
           });
         })
       ).then(() => {

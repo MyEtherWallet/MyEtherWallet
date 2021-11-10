@@ -11,7 +11,10 @@ const removeWallet = function ({ commit, state }) {
     state.identifier === WALLET_TYPES.WALLET_LINK ||
     state.identifier === WALLET_TYPES.MEW_CONNECT
   ) {
-    state.instance.getConnection().disconnect();
+    const connection = state.instance.getConnection();
+    if (connection) {
+      connection.disconnect();
+    }
   }
   commit('REMOVE_WALLET');
 };

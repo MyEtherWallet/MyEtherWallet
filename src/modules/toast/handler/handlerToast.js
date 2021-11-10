@@ -58,7 +58,7 @@ const Toast = (text, link, type, duration) => {
     );
     return;
   }
-  if (text instanceof Error) {
+  if (text instanceof Error || type === ERROR) {
     text = text.message;
   }
   if (!text || text === '') {
