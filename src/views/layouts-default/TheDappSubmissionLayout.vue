@@ -517,13 +517,13 @@
               Progress (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 d-none d-md-block">
+              <div class="greyLight pa-6 d-none d-md-block">
                 <div class="mew-heading-2">
                   {{ $t('dappsSubmission.progress') }}
                 </div>
                 <v-progress-linear
                   v-model="validRequiredFormsRate"
-                  color="primary"
+                  color="greenPrimary"
                   height="25"
                   class="mt-5"
                 >
@@ -538,7 +538,7 @@
               State of the Dapps (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 mt-6">
+              <div class="greyLight pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
                     {{ $t('dappsSubmission.sotd.title') }}
@@ -569,7 +569,7 @@
               MEW Support (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 mt-6">
+              <div class="greyLight pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
                     {{ $t('dappsSubmission.mew-support.title') }}

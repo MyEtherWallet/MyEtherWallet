@@ -51,7 +51,7 @@
                         mew-caption
                         text-uppercase
                         font-weight-bold
-                        textPrimary--text
+                        textDark--text
                         text--lighten-1
                       "
                     >
@@ -68,7 +68,7 @@
                         {{ b.price }}
                       </div>
                     </div>
-                    <div class="mt-3 primary--text font-weight-medium">
+                    <div class="mt-3 greenPrimary--text font-weight-medium">
                       Learn more >
                     </div>
                   </div>

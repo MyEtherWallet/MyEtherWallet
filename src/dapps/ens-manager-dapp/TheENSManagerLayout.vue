@@ -179,7 +179,9 @@
                       class="text-center cursor-pointer"
                       @click="manage(option.type, idx)"
                     >
-                      <v-icon color="primary" x-large>{{ option.icon }}</v-icon>
+                      <v-icon color="greenPrimary" x-large>{{
+                        option.icon
+                      }}</v-icon>
                       <div>{{ option.label }}</div>
                       <div
                         v-if="domain.expiration && key === 1"
@@ -409,12 +411,10 @@ export default {
           res.forEach(domain => {
             domain.hasActiveBorder = !domain.expired;
             domain.disabled = domain.expired;
-            domain.colorTheme = domain.expired
-              ? 'errorOutlineActive'
-              : 'superPrimary';
+            domain.colorTheme = domain.expired ? 'redMedium' : 'greyLight';
             domain.warningBadge = domain.expired
               ? {
-                  color: 'error',
+                  color: 'redPrimary',
                   text: this.$t('ens.expired')
                 }
               : '';
@@ -593,7 +593,7 @@ export default {
 .my-domains-panel {
   .active-border {
     .subheader-container {
-      background-color: var(--v-superPrimary-base);
+      background-color: var(--v-greyLight-base);
       div {
         max-width: 400px;
       }

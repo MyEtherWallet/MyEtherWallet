@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--home-footer titlePrimary--text">
+  <div class="mew-component--home-footer textDark--text">
     <div class="desktop-content d-none d-lg-block">
       <v-container class="pt-12 pb-6">
         <v-row>
@@ -94,7 +94,7 @@
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="primary"
+              color="greenPrimary"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -118,7 +118,7 @@
           </div>
         </div>
       </v-container>
-      <v-sheet color="titlePrimary" class="py-2">
+      <v-sheet color="textDark" class="py-2">
         <v-container>
           <div class="d-flex align-center">
             <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
@@ -272,7 +272,7 @@
         </v-sheet>
       </v-container>
 
-      <v-sheet color="titlePrimary" class="py-9">
+      <v-sheet color="textDark" class="py-9">
         <v-container>
           <v-sheet color="transparent" max-width="500px" class="mx-auto">
             <div class="d-flex align-center justify-space-between">
@@ -500,7 +500,7 @@ a {
 <style lang="scss">
 .mew-component--home-footer {
   a {
-    color: var(--v-titlePrimary-base) !important;
+    color: var(--v-textDark-base) !important;
   }
   .v-select__selection {
     color: #80deea !important;
