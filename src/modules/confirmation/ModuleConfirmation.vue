@@ -140,6 +140,7 @@
             :signed="signingPending"
             :error="error"
           />
+
           <v-expansion-panels
             v-model="panel"
             accordion
@@ -219,7 +220,7 @@
                 </v-row>
               </v-expansion-panel-header>
               <v-expansion-panel-content :id="i">
-                <div>
+                <div class="px-6 pb-6">
                   <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
