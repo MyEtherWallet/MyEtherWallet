@@ -17,7 +17,7 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="primary--text font-weight-bold mr-3"
+              class="greenPrimary--text font-weight-bold mr-3"
             >
               {{ healthFactor }}
             </div>
@@ -125,7 +125,7 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="primary--text font-weight-bold mr-3"
+              class="greenPrimary--text font-weight-bold mr-3"
             >
               {{ healthFactor }}
             </div>
@@ -319,24 +319,24 @@ import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 const COLORS = {
-  ENJ: 'expandHeader',
-  ETH: 'primary',
-  ZRX: 'secondary',
-  KNC: 'basic',
-  USDT: 'warning base',
-  MKR: 'warning darken1',
-  LEND: 'warning darken2',
-  AAVE: 'textSecondary',
-  DAI: 'tagLabel',
-  SUSD: 'inputLabel',
-  LINK: 'inputBorder',
-  BUSD: 'searchText',
-  REN: 'primaryHover',
-  WBTC: 'basicOutlineActive',
-  UNI: 'errorOutline',
-  REP: 'superPrimary base',
-  MANA: 'superPrimary darken1',
-  BAT: 'overlayBg',
+  ENJ: 'bluePrimary',
+  ETH: 'greenPrimary',
+  ZRX: 'greenMedium',
+  KNC: 'textDark',
+  USDT: 'redPrimary',
+  MKR: 'redPrimary',
+  LEND: 'redPrimary',
+  AAVE: 'textLight',
+  DAI: 'textLight',
+  SUSD: 'greyPrimary',
+  LINK: 'greyMedium',
+  BUSD: 'greyMedium',
+  REN: 'greenPrimary',
+  WBTC: 'greyMedium',
+  UNI: 'redMedium',
+  REP: 'greyLight',
+  MANA: 'greyLight',
+  BAT: 'greyLight',
   YFI: 'white',
   TUSD: 'black'
 };

@@ -18,7 +18,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="titlePrimary white--text alig-end"
+          active-class="textDark white--text alig-end"
         >
           <v-btn small>All</v-btn>
           <v-btn small>Stable</v-btn>
@@ -79,32 +79,32 @@ export default {
       btnDeposit: {
         title: 'Deposit',
         btnStyle: 'background',
-        colorTheme: 'primary',
+        colorTheme: 'greenPrimary',
         method: this.onDepositClick,
         disabled: false
       },
       btnSwap: {
         title: 'Swap',
         btnStyle: 'outline',
-        colorTheme: 'primary',
+        colorTheme: 'greenPrimary',
         method: this.onSwapClick
       },
       btnBorrow: {
         title: 'Borrow',
         btnStyle: 'background',
-        colorTheme: 'primary',
+        colorTheme: 'greenPrimary',
         method: this.onBorrowClick
       },
       btnWithdraw: {
         title: 'Withdraw',
         btnStyle: 'outline',
-        colorTheme: 'primary',
+        colorTheme: 'greenPrimary',
         method: this.onWithdrawClick
       },
       btnRepay: {
         title: 'Repay',
         btnStyle: 'transparent',
-        colorTheme: 'primary',
+        colorTheme: 'greenPrimary',
         method: this.onRepayClick
       },
       tableDepositHeader: [
@@ -405,7 +405,7 @@ export default {
                   new BigNumber(item.borrowRate).multipliedBy(100).toString()
                 ),
                 toggle: {
-                  color: isVariable ? 'secondary' : 'primary',
+                  color: isVariable ? 'greenMedium' : 'greenPrimary',
                   method: this.onToggleAprType,
                   value: isVariable,
                   label: isVariable ? 'variable' : 'stable',

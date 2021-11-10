@@ -36,11 +36,11 @@
             <v-col
               cols="6"
               md="6"
-              class="py-1 text-uppercase captionPrimary--text font-weight-bold"
+              class="py-1 text-uppercase textLight--text font-weight-bold"
             >
               Current APR
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right primary--text">
+            <v-col cols="6" md="6" class="py-1 text-right greenPrimary--text">
               {{ currentAprFormatted }}
             </v-col>
           </v-row>
@@ -51,7 +51,7 @@
               class="
                 py-1
                 text-uppercase
-                captionPrimary--text
+                textLight--text
                 font-weight-bold
                 d-flex
                 align-center

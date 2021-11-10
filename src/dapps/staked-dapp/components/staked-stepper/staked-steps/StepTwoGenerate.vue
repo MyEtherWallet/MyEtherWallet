@@ -29,7 +29,7 @@
       -->
         <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
         <div
-          class="d-flex align-center primary--text cursor-pointer"
+          class="d-flex align-center greenPrimary--text cursor-pointer"
           @click="onContinue(true)"
         >
           Skip this step
@@ -97,7 +97,10 @@
               <div class="ml-3">
                 <div class="mew-heading-4">
                   Keystore file
-                  <v-icon v-if="downloadedKeystore" size="16" color="primary"
+                  <v-icon
+                    v-if="downloadedKeystore"
+                    size="16"
+                    color="greenPrimary"
                     >mdi-checkbox-marked-circle</v-icon
                   >
                 </div>

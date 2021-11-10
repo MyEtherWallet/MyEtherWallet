@@ -32,11 +32,13 @@
             "
           >
             <div class="d-flex align-center">
-              <v-icon class="check-icon primary--text mr-3">
+              <v-icon class="check-icon greenPrimary--text mr-3">
                 mdi-check-circle-outline
               </v-icon>
               <div>
-                <div class="mew-heading-2 primary--text mb-2">Owned domain</div>
+                <div class="mew-heading-2 greenPrimary--text mb-2">
+                  Owned domain
+                </div>
                 <div class="mew-heading-2">mewdev009.eth</div>
               </div>
             </div>

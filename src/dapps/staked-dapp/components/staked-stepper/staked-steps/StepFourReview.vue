@@ -26,7 +26,7 @@
             <div>
               <div
                 class="
-                  captionPrimary--text
+                  textLight--text
                   text-uppercase
                   detail-subtitle
                   font-weight-medium
@@ -37,10 +37,10 @@
               <div class="mew-heading-4 detail-title">{{ detail.title }}</div>
               <mew-transform-hash
                 v-if="detail.isAddress"
-                class="mew-hash-container textPrimary--text font-weight-medium"
+                class="mew-hash-container textLight--text font-weight-medium"
                 :hash="detail.desc"
               />
-              <div v-if="!detail.isAddress" class="textPrimary--text">
+              <div v-if="!detail.isAddress" class="textLight--text">
                 {{ detail.desc }}
               </div>
             </div>
@@ -63,9 +63,9 @@
             mb-3 mb-sm-2
           "
         >
-          <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
+          <div class="mew-caption textLight--text">{{ fee.title }}</div>
           <div>
-            {{ fee.ethValue }} <span class="captionPrimary--text">ETH /</span>
+            {{ fee.ethValue }} <span class="textLight--text">ETH /</span>
             {{ fee.fiatValue }}
           </div>
         </div>
@@ -123,7 +123,7 @@
             <a
               v-if="stakedStep1Title.showContactSupport"
               rel="noopener noreferrer"
-              class="cursor-pointer primary--text text-lowercase"
+              class="cursor-pointer greenPrimary--text text-lowercase"
               href="mailto:support@myetherwallet.com"
               target="_blank"
             >
@@ -147,7 +147,7 @@
           <div class="mew-heading-4 font-weight-medium mb-2">
             Preparing validators
           </div>
-          <div class="textBlack2--text mx-auto" style="max-width: 300px">
+          <div class="textMedium--text mx-auto" style="max-width: 300px">
             This usually takes ~20 seconds, in rare cases it can take up to 10
             min.
           </div>
@@ -156,7 +156,7 @@
               style="max-width: 350px"
               class="mt-4 mx-auto"
               indeterminate
-              color="primary"
+              color="greenPrimary"
             ></v-progress-linear>
           </div>
         </div>
@@ -166,7 +166,7 @@
     ===================================================
     -->
         <div v-if="stakedStep === 3">
-          <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
+          <v-icon color="greenPrimary" class="mr-2">mdi-check-circle</v-icon>
           Ready to stake
         </div>
       </border-block>

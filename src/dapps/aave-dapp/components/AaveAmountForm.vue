@@ -63,7 +63,7 @@
     <div class="mt-12 mb-2">
       <mew-button
         :title="buttonTitle.action"
-        color-theme="primary"
+        color-theme="greenPrimary"
         btn-style="background"
         btn-size="xlarge"
         :disabled="!hasAmount"

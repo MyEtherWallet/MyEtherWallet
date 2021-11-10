@@ -29,7 +29,7 @@
             <v-sheet color="transparent" width="450px" class="mx-auto">
               <div class="d-flex align-center justify-space-between mb-5">
                 <div class="mew-heading-1">Pay with Crypto</div>
-                <div class="font-weight-medium primary--text">
+                <div class="font-weight-medium greenPrimary--text">
                   Pay with Credit Card
                 </div>
               </div>
@@ -44,7 +44,7 @@
                   justify-space-between
                   bordered-red
                 "
-                style="border-color: var(--v-error-base) !important"
+                style="border-color: var(--v-redPrimary-base) !important"
               >
                 <div class="d-flex align-center">
                   <img
@@ -53,13 +53,13 @@
                   />
                   <div class="font-weight-medium ml-3">
                     0.0341234234
-                    <span class="primary--text">ETH</span>
+                    <span class="greenPrimary--text">ETH</span>
                   </div>
                 </div>
-                <v-icon class="primary--text">mdi-check-circle</v-icon>
+                <v-icon class="greenPrimary--text">mdi-check-circle</v-icon>
               </v-card>
 
-              <div class="error--text mt-3 mb-7 font-weight-medium">
+              <div class="redPrimary--text mt-3 mb-7 font-weight-medium">
                 Insufficient balance.
                 <a
                   href="https://ccswap.myetherwallet.com/#/"
@@ -82,7 +82,7 @@
                   />
                   <div class="font-weight-medium ml-3">
                     40.23
-                    <span class="primary--text">USD</span>
+                    <span class="greenPrimary--text">USD</span>
                   </div>
                 </div>
                 <v-icon>mdi-check-circle-outline</v-icon>
@@ -121,7 +121,7 @@
             <v-progress-linear
               style="margin: 130px auto 40px auto; max-width: 200px"
               indeterminate
-              color="primary"
+              color="greenPrimary"
             ></v-progress-linear>
             <h3 class="text-center">Processing the registration</h3>
             <v-sheet

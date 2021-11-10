@@ -66,7 +66,7 @@
                     </div>
                   </div>
                   <div class="d-flex align-center">
-                    <div class="mew-heading-3 primary--text mr-6">
+                    <div class="mew-heading-3 greenPrimary--text mr-6">
                       Available
                     </div>
                     <mew-button title="Buy"></mew-button>
@@ -90,16 +90,11 @@
                 >
                   <v-list-item-content>
                     <div
-                      class="
-                        mew-body
-                        font-weight-medium
-                        titlePrimary--text
-                        mb-2
-                      "
+                      class="mew-body font-weight-medium textDark--text mb-2"
                     >
                       {{ r.label }}:
                     </div>
-                    <div class="mew-body titlePrimary--text">
+                    <div class="mew-body textDark--text">
                       {{ r.value }}
                     </div>
                   </v-list-item-content>
@@ -125,7 +120,7 @@
               <v-sheet color="transparent" max-width="400px" class="mx-auto">
                 <div class="d-flex align-center justify-space-between mb-5">
                   <div class="mew-heading-1">Pay with Crypto</div>
-                  <div class="font-weight-medium primary--text">
+                  <div class="font-weight-medium greenPrimary--text">
                     Pay with Credit Card
                   </div>
                 </div>
@@ -149,10 +144,10 @@
                     />
                     <div class="font-weight-medium ml-3">
                       0.0341234234
-                      <span class="primary--text">ETH</span>
+                      <span class="greenPrimary--text">ETH</span>
                     </div>
                   </div>
-                  <v-icon class="primary--text">mdi-check-circle</v-icon>
+                  <v-icon class="greenPrimary--text">mdi-check-circle</v-icon>
                 </v-card>
 
                 <div class="error--text mt-3 mb-7 font-weight-medium">
@@ -178,7 +173,7 @@
                     />
                     <div class="font-weight-medium ml-3">
                       40.23
-                      <span class="primary--text">USD</span>
+                      <span class="greenPrimary--text">USD</span>
                     </div>
                   </div>
                   <v-icon>mdi-check-circle-outline</v-icon>
@@ -387,7 +382,7 @@ export default {
         {
           name: 'mewdev009.eth',
           toggleTitle: '',
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           warningBadge: {
             color: 'warning darken-2',
             text: 'Expire soon'
@@ -396,7 +391,7 @@ export default {
         {
           name: 'mewdev008.eth',
           toggleTitle: '',
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           warningBadge: {
             color: 'warning darken-2',
             text: 'Expire soon'

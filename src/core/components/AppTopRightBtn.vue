@@ -22,7 +22,7 @@ export default {
   top: -12px;
   right: 20px;
   &:hover {
-    color: var(--v-primaryHover-base);
+    color: var(--v-greenPrimary-base);
   }
 }
 </style>
