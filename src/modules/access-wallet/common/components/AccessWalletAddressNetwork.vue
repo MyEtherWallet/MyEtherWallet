@@ -3,7 +3,7 @@
     <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
-        :paths="paths"
+        :passed-paths="paths"
         @setPath="setPath"
       />
     </div>
@@ -400,9 +400,10 @@ export default {
         this.changeHandler();
       }
     },
-    selectedPath: {
+    handlerWallet: {
       handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
+        console.log(newVal.basePath, oldVal.basePath);
+        if (newVal.basePath !== oldVal.basePath) {
           this.changeHandler();
         }
       },

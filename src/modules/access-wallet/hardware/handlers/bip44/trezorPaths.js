@@ -2,7 +2,6 @@ import {
   ethereum,
   ethereumClassic,
   ropsten,
-  singularDTV,
   expanse,
   ubiq,
   ellaism,
@@ -22,14 +21,12 @@ import {
   iolite,
   rskMainnet,
   rskTestnet,
-  lightstreamsNetwork,
-  ethercore
+  lightstreamsNetwork
 } from '../configs/configPaths';
 export default [
   ethereum,
   ethereumClassic,
   ropsten,
-  singularDTV,
   expanse,
   ubiq,
   ellaism,
@@ -49,6 +46,5 @@ export default [
   iolite,
   rskMainnet,
   rskTestnet,
-  lightstreamsNetwork,
-  ethercore
+  lightstreamsNetwork
 ];
