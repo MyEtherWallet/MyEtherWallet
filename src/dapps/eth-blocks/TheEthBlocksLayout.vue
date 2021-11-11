@@ -87,6 +87,9 @@ export default {
     if (this.hasPendingTxs) {
       this.setCheckPendingInterval();
     }
+    if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+      this.activeTab = this.tabs[1].id;
+    }
   },
   beforeDestroy() {
     clearInterval(this.checkPendingInterval);
