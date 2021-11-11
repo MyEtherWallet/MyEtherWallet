@@ -684,10 +684,7 @@ export default {
     notEnoughEth() {
       try {
         const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
-        const isNotEnoughEth = !this.isFromTokenMain
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
-        return isNotEnoughEth;
+        return balanceAfterFees.isNeg();
       } catch (e) {
         return true;
       }
