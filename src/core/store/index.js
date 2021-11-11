@@ -9,6 +9,8 @@ import custom from './custom';
 import addressBook from './addressBook';
 import Configs from './configs';
 import LocalStore from 'store';
+import { dappStore } from '@/dapps/dappsStore';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -19,7 +21,8 @@ const store = new Vuex.Store({
     notifications: notifications,
     swap: swap,
     custom: custom,
-    addressBook: addressBook
+    addressBook: addressBook,
+    ...dappStore
   }
 });
 

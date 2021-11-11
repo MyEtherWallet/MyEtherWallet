@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.3.0",
+  "version": "6.4.0",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -44,7 +44,7 @@
     "@ensdomains/ensjs": "2.0.1",
     "@mathieustan/vue-intercom": "0.0.7",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.7.11-beta",
+    "@myetherwallet/mew-components": "0.7.13-beta",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.14",
     "@sentry/browser": "6.13.3",
     "@sentry/tracing": "6.13.3",
@@ -149,7 +149,7 @@
     "vue-i18n": "8.26.7",
     "vue-matomo": "4.1.0",
     "vue-template-compiler": "2.6.14",
-    "vuetify": "2.5.12",
+    "vuetify": "2.5.9",
     "wallet-address-validator": "0.2.4",
     "web3": "1.5.0",
     "web3-core-helpers": "1.5.0",
