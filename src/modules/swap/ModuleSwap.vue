@@ -867,11 +867,11 @@ export default {
         txFee: ''
       };
 
-      this.toTokenswapper = null;
-      this.toTokentoTokenType = {};
-      this.toTokenfromTokenType = {};
-      this.toTokentokenInValue = '0';
-      this.toTokentokenOutValue = '0';
+      this.swapper = null;
+      this.toTokenType = {};
+      this.fromTokenType = {};
+      this.tokenInValue = '0';
+      this.tokenOutValue = '0';
       this.availableTokens = { toTokens: [], fromTokens: [] };
       this.availableQuotes = [];
       this.currentTrade = null;
@@ -1136,7 +1136,11 @@ export default {
         toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
           .times(this.tokenOutValue)
           .toFixed(),
-        fromUsdVal: this.fromTokenType.price,
+        fromUsdVal: BigNumber(
+          this.fromTokenType.price ? this.fromTokenType.price : 0
+        )
+          .times(this.tokenInValue)
+          .toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         txFee: this.txFee,
@@ -1162,6 +1166,13 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          if (err && err.statusObj?.hashes?.length > 0) {
+            err.statusObj.hashes.forEach(item => {
+              Toast(item.message, {}, ERROR);
+            });
+            this.clear();
+            return;
+          }
           this.clear();
           Toast(err.message, {}, ERROR);
         });

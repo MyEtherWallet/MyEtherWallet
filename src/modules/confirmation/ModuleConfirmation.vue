@@ -90,7 +90,6 @@
             :tx-fee="txFee"
             :tx-fee-usd="txFeeUSD"
             :value="value"
-            :value-usd="usdValue"
             :to-tx-data="tx.toTxData"
             :to-details="allToDetails"
             :send-currency="sendCurrency"
@@ -141,6 +140,7 @@
             :signed="signingPending"
             :error="error"
           />
+
           <v-expansion-panels
             v-model="panel"
             accordion
@@ -220,11 +220,11 @@
                 </v-row>
               </v-expansion-panel-header>
               <v-expansion-panel-content :id="i">
-                <div>
+                <div class="pa-6 pt-0">
                   <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
-                    class="d-flex justify-space-between"
+                    class="d-flex justify-space-between mt-3"
                     no-gutters
                   >
                     <v-col
@@ -303,6 +303,7 @@ import { setEvents } from '@/utils/web3-provider/methods/utils';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleConfirmation',
@@ -314,6 +315,7 @@ export default {
     ConfirmationSendTransactionDetails,
     ConfirmWithWallet
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       showTxOverlay: false,
@@ -356,9 +358,6 @@ export default {
           ? this.tx.toTxData.to
           : this.tx.to;
       return this.unsignedTxArr[0].to;
-    },
-    usdValue() {
-      return BigNumber(this.fiatValue).toNumber();
     },
     isWeb3Wallet() {
       return (
@@ -705,6 +704,9 @@ export default {
       if (this.isSwap) {
         this.showSuccessSwap = true;
       }
+      if (this.tx.data.includes('0x33aaf6f2')) {
+        this.trackDapp('ethBlocksMinted');
+      }
       this.reset();
       this.showSuccess(hash);
     },
@@ -772,6 +774,7 @@ export default {
             this.signedTxObject = {};
             this.error = e.message;
             this.signing = false;
+            this.instance.errorHandler(e.message);
           });
       }
     },
@@ -808,7 +811,7 @@ export default {
                 });
               })
               .catch(e => {
-                this.instance.errorHandler(e);
+                this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;

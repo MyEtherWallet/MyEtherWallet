@@ -253,19 +253,14 @@
                 </a>
               </div>
               <div class="px-2 px-lg-6 border-right">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/privacy-policy"
-                  >Privacy</a
-                >
+                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                  Privacy
+                </router-link>
               </div>
               <div class="px-2 px-lg-6">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/terms-and-conditions"
-                >
+                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
                   Terms
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -361,7 +356,8 @@ export default {
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' }
+          { label: 'Submit DApp', routerLink: 'DappSubmission' },
+          { label: 'Convert Units', routerLink: 'ConvertUnits' }
         ]
       },
       {

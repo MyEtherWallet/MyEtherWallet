@@ -25,18 +25,9 @@ const EXCEPTIONS = [
   'web3-utils',
   'remark-cli',
   'node-fetch',
-  'eslint', // not supported by vue yet
-  'stylelint-config-standard',
-  'stylelint',
-  // update after release
   'vuetify',
-  '@commitlint/config-conventional',
-  'commitlint',
-  'eslint-plugin-vue',
-  'graphql',
-  'vue-i18n',
-  'subscriptions-transport-ws',
-  'apollo'
+  // update after release
+  'sinon'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

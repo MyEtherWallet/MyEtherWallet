@@ -12,23 +12,24 @@
     }"
     :show-overlay="open"
     :title="title"
-    :back="step === 1 ? null : back"
+    :back="showBack ? null : back"
     :close="overlayClose"
     content-size="xlarge"
   >
-    <v-row
+    <div
       v-if="step === 1"
       :class="[
         'pa-5 mb-4 full-width text-center rounded subtitle-container',
         $vuetify.breakpoint.xs || $vuetify.breakpoint.sm ? 'mt-3' : ''
       ]"
-      ><span class="full-width"
+    >
+      <span class="full-width"
         >The highest standard of security in the crypto space.
         <router-link to="/buy-hardware">
           Get a Hardware Wallet today
         </router-link>
-      </span></v-row
-    >
+      </span>
+    </div>
     <!--
         =====================================================================================
         Step 1: Select hardware wallet
@@ -48,11 +49,20 @@
           cols="12"
           sm="6"
         >
-          <mew-super-button-revised
-            :title="button.label"
-            :left-icon="button.icon"
+          <mew-button
+            has-full-width
+            style="height: 90px"
+            color-theme="inputBorder"
+            btn-style="outline"
             @click.native="setWalletInstance(button.type)"
-          />
+          >
+            <div class="text-left d-flex align-center" style="width: 100%">
+              <img width="40" class="mr-4" :src="button.icon" />
+              <div class="mew-heading-3 titlePrimary--text">
+                {{ button.label }}
+              </div>
+            </div>
+          </mew-button>
         </v-col>
       </v-row>
     </div>
@@ -69,7 +79,6 @@
         -->
       <access-wallet-bitbox
         v-if="onBitbox2"
-        :selected-path="selectedPath"
         :paths="paths"
         :set-path="setPath"
         :hw-wallet-instance="hwWalletInstance"
@@ -91,7 +100,7 @@
         :paths="paths"
         :selected-path="selectedPath"
         :handler-loaded="loaded"
-        @setPath="setPath"
+        :set-path="setPath"
       />
       <!--
         =====================================================================================
@@ -116,7 +125,7 @@
         :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
-        @setPath="setPath"
+        :set-path="setPath"
       />
 
       <!--
@@ -145,6 +154,7 @@
       :handler-wallet="hwWalletInstance"
       :selected-path="selectedPath"
       :paths="paths"
+      :hide-networks="switchAddress"
       @unlock="setHardwareWallet"
       @setPath="setPath"
     />
@@ -167,14 +177,12 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
-import MewSuperButtonRevised from '@/components/mew-super-button-revised/MewSuperButtonRevised';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HardwareAccessOverlay',
   components: {
     AccessWalletKeepkey,
-    MewSuperButtonRevised,
     AccessWalletCoolWallet,
     AccessWalletTrezor,
     AccessWalletLedger,
@@ -305,8 +313,15 @@ export default {
       // }
       return {
         title: 'Hardware Wallets',
-        url: 'https://help.myetherwallet.com/en/'
+        url: 'https://help.myetherwallet.com/en/collections/3043244-access-wallet'
       };
+    },
+    showBack() {
+      if (this.switchAddress) {
+        return this.step === 2;
+      }
+
+      return this.step === 1;
     },
     /**
      * On Bitbox2
@@ -391,22 +406,20 @@ export default {
       }
       return newArr;
     },
-    hasPath() {
-      return this.selectedPath && this.selectedPath.hasOwnProperty('value')
-        ? this.selectedPath.value
-        : this.selectedPath;
-    },
     /**
      * Overlay title
      */
     title() {
+      if (this.switchAddress) return 'Switch Address';
       if (this.step > this.wallets[this.walletType]?.when) {
         return 'Select Network and Address';
       } else if (this.step === 1) {
         return 'Select a hardware wallet';
       }
       if (this.onBitbox2) return this.bitbox2Titles;
-      return this.wallets[this.walletType].title;
+      return this.walletType
+        ? this.wallets[this.walletType].title
+        : 'Select a hardware wallet';
     },
     bitBox2NotPaired() {
       return (
@@ -443,21 +456,20 @@ export default {
       if (this.bitBox2Unpaired) return 'Confirm pairing code';
       if (this.bitBox2Initialized)
         return 'Bitbox 02 succesfully initialized. Loading wallet';
-      return this.wallets[this.walletType].title;
+      return this.walletType ? this.wallets[this.walletType].title : '';
     }
   },
   watch: {
     selectedPath: {
       handler: function () {
-        if (this.walletType) this[`${this.walletType}Unlock`]();
+        if (!isEmpty(this.hwWalletInstance)) {
+          this[`${this.walletType}Unlock`]();
+        }
       },
       deep: true
-    }
-  },
-  mounted() {
-    if (this.switchAddress) {
-      this.nextStep(this.identifier);
-      this.walletType = this.identifier;
+    },
+    open(newVal) {
+      if (newVal && this.switchAddress) this.setupSwitchAddress();
     }
   },
   methods: {
@@ -474,16 +486,43 @@ export default {
       this.walletType = '';
     },
     /**
+     * Sets up switch address
+     */
+    setupSwitchAddress() {
+      this.walletType = this.identifier;
+      this.nextStep();
+    },
+    /**
+     * calls this.close and this.setupSwitchAddress
+     */
+    closeAndSetupSwitch() {
+      this.reset();
+      this.setupSwitchAddress();
+      this.close();
+    },
+    /**
      * Overlay Action: Back
      * if on keepkey step 3, it will return to step 1 so it will reset everything
      */
     back() {
-      !this.step ? this.close('showHardware') : (this.step -= 1);
-      if (this.onKeepkey && this.step === 2) {
-        this.step = 1;
+      if (this.step > 0) {
+        if (this.step === 1) {
+          this.reset();
+        } else if (this.step === 2) {
+          this.step -= 1;
+        } else {
+          this.hwWalletInstance = {};
+          if (this.onLedger) {
+            this.step -= 1;
+            this[`${this.walletType}Unlock`]();
+          } else {
+            this.walletType = '';
+            this.step = 1;
+          }
+        }
+      } else {
+        this.close('showHardware');
       }
-      this.step === 1 ? this.reset() : '';
-      this.step === 2 ? (this.hwWalletInstance = {}) : null;
     },
     overlayClose() {
       this.reset();
@@ -501,6 +540,7 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
+          if (this.onLedger) this.selectedPath = this.paths[0];
           if (
             this.walletType === WALLET_TYPES.COOL_WALLET ||
             this.walletType === WALLET_TYPES.BITBOX2
@@ -532,28 +572,36 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
+      const path = this.selectedPath.hasOwnProperty('value')
+        ? this.selectedPath.value
+        : this.selectedPath;
       return this.wallets[this.walletType]
-        .create(this.hasPath)
+        .create(path)
         .then(_hwWallet => {
-          this.loaded = true;
-          this.hwWalletInstance = _hwWallet;
-          if (this.onLedger) this.ledgerConnected = true;
-          if (this.onKeepkey || this.onTrezor) this.step++;
-          if (this.onBitbox2) {
-            _hwWallet
-              .init(this.hasPath)
-              .then(() => {
-                this.nextStep();
-                this.hwWalletInstance = _hwWallet;
-              })
-              .catch(e => {
-                this.wallets[this.walletType].create.errorHandler(e);
-                if (e.message === 'Error: Pairing rejected') {
-                  this.reset();
-                }
-              });
+          try {
+            this.loaded = true;
+            this.hwWalletInstance = _hwWallet;
+            if (this.onLedger) this.ledgerConnected = true;
+            if ((this.onTrezor || this.onKeepkey) && this.step == 2)
+              this.step++;
+            if (this.onBitbox2) {
+              _hwWallet
+                .init(path)
+                .then(() => {
+                  this.nextStep();
+                  this.hwWalletInstance = _hwWallet;
+                })
+                .catch(e => {
+                  this.wallets[this.walletType].create.errorHandler(e);
+                  if (e.message === 'Error: Pairing rejected') {
+                    this.reset();
+                  }
+                });
+            }
+            return _hwWallet;
+          } catch (err) {
+            Toast(err, {}, ERROR);
           }
-          return _hwWallet;
         })
         .catch(err => {
           if (this.onLedger) this.step--;
@@ -607,9 +655,12 @@ export default {
         this.setWallet([wallet])
           .then(() => {
             this.trackAccessWallet(wallet.identifier);
-            if (!this.switchAddress)
+            if (!this.switchAddress) {
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
-            else this.close();
+            } else {
+              this.reset();
+              this.close();
+            }
           })
           .catch(e => {
             this.reset();

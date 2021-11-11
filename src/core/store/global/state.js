@@ -22,13 +22,13 @@ const state = {
     ? Object.assign({}, defaultNetwork)
     : Object.assign({}, nodeList['ETH'][0]),
   preferredCurrency: 'USD',
-  customPaths: [],
   localContracts: {},
   eip1559: {
     baseFeePerGas: '0',
     maxPriorityFeePerGas: '0'
   },
-  showedBanner: false
+  showedBanner: false,
+  showWalletPromo: true
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name

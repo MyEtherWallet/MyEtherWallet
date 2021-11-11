@@ -29,6 +29,7 @@
 <script>
 import mobileTable from '@/components/mobile-table/MobileTable';
 export default {
+  name: 'TableComponent',
   components: { mobileTable },
   data: () => ({
     mobileTable: [
