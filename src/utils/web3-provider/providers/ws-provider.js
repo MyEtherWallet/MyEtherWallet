@@ -97,6 +97,7 @@ class WSProvider {
         Toast('connection not open', {}, SENTRY);
         return;
       }
+
       const req = {
         payload,
         store: VuexStore,

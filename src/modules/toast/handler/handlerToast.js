@@ -58,7 +58,7 @@ const Toast = (text, link, type, duration) => {
     );
     return;
   }
-  if (text instanceof Error || text.hasOwnProperty('message')) {
+  if (text instanceof Error || (text && text.hasOwnProperty('message'))) {
     text = text.message;
   }
   if (!text) {
@@ -70,6 +70,7 @@ const Toast = (text, link, type, duration) => {
     );
     return;
   }
+
   if (type === SENTRY) {
     if (foundGlobalError(text) || foundGlobalWarning(text)) {
       EventBus.$emit(
