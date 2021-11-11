@@ -119,7 +119,7 @@ export default {
     checkTx(txHash) {
       if (txHash) {
         this.web3.eth.getTransactionReceipt(txHash).then(receipt => {
-          if (receipt && receipt.status) {
+          if (receipt) {
             const _block = {
               hash: txHash
             };
