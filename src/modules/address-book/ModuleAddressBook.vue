@@ -145,7 +145,8 @@ export default {
     setAddress(value, inputType) {
       if (typeof value === 'string') {
         if (
-          this.currency.toLowerCase() === this.network.type.name.toLowerCase()
+          this.currency.toLowerCase() ===
+          this.network.type.currencyName.toLowerCase()
         ) {
           /**
            * Checks if user typed or selected an address from dropdown

@@ -35,6 +35,9 @@ const signatures = {
   },
   '0xf7a16963': () => {
     return 'ENS Registration';
+  },
+  '0x33aaf6f2': () => {
+    return 'ETH Blocks Mint';
   }
 };
 const getSignature = data => data.substr(0, 10);

@@ -18,7 +18,7 @@
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
                   <app-button-balance
-                    v-show="!isFromNative"
+                    v-show="!isFromNonChain"
                     :loading="isLoading"
                     :balance="displayBalance"
                   />
@@ -118,6 +118,14 @@
             :is-valid-address-func="isValidToAddress"
             @setAddress="setToAddress"
           />
+          <module-address-book
+            v-if="isFromNonChain"
+            ref="addressInput"
+            class="pt-4 pb-2 mt-10"
+            :label="nativeLabel"
+            :currency="selectedCurrency"
+            @setAddress="setRefundAddr"
+          />
 
           <!--
           =====================================================================================
@@ -211,14 +219,6 @@
                 @showProviders="showProviders"
               />
               <div v-else key="showAnimation1">
-                <module-address-book
-                  v-if="showRefundAddress"
-                  ref="addressInput"
-                  class="pt-4 pb-2 mt-10"
-                  :label="nativeLabel"
-                  :currency="selectedCurrency"
-                  @setAddress="setRefundAddr"
-                />
                 <swap-providers-list
                   :step="step"
                   :available-quotes="availableQuotes"
@@ -227,7 +227,7 @@
                   :to-token-icon="toTokenType ? toTokenType.img : ''"
                   :is-loading="isLoadingProviders"
                   :providers-error="providersErrorMsg"
-                  :class="isFromNative ? '' : 'mt-7'"
+                  :class="isFromNonChain ? '' : 'mt-7'"
                 />
                 <!--
                   =====================================================================================
@@ -256,7 +256,7 @@
                     btn-size="xlarge"
                     style="max-width: 240px"
                     @click.native="
-                      !isFromNative ? showConfirm() : showTradeConfirm()
+                      !isFromNonChain ? showConfirm() : showTradeConfirm()
                     "
                   />
                 </div>
@@ -407,33 +407,12 @@ export default {
       return `Your ${this.fromTokenType?.name} refund address`;
     },
     /**
-     * @returns string
-     * is used as a label for module-address-book
-     */
-    selectedCurrency() {
-      return !this.isFromNative
-        ? this.network.type.name
-        : this.fromTokenType?.symbol;
-    },
-    /**
-     * @returns a boolean
-     * based on how the swap state is
-     */
-    showRefundAddress() {
-      return (
-        this.isFromNative &&
-        this.step > 0 &&
-        this.providersErrorMsg.subtitle === '' &&
-        !this.isLoadingProviders
-      );
-    },
-    /**
      * @returns a boolean
      * based on how the swap state is
      */
     showNetworkFee() {
       return (
-        !this.isFromNative &&
+        !this.isFromNonChain &&
         this.step > 0 &&
         this.providersErrorMsg.subtitle === '' &&
         !this.isLoadingProviders
@@ -455,11 +434,11 @@ export default {
      * if native token, return empty
      */
     maxBtn() {
-      return this.isFromNative
+      return this.isFromNonChain
         ? {}
         : {
             title: 'Max',
-            disabled: false,
+            disabled: !this.hasMinEth,
             method: this.setMaxAmount
           };
     },
@@ -493,14 +472,19 @@ export default {
     disableNext() {
       const disableSet =
         this.step < 2 ||
-        this.amountErrorMessage !== '' ||
-        this.feeError !== '' ||
+        this.amountErrorMessage ||
+        this.feeError ||
         !this.hasSelectedProvider ||
-        this.providersErrorMsg.subtitle !== '';
+        this.providersErrorMsg.subtitle;
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
-      return disableSet || (this.refundAddress === '' && this.actualTrade);
+      return (
+        disableSet ||
+        (!this.refundAddress &&
+          !this.isValidRefundAddr &&
+          this.actualTrade.length === 0)
+      );
     },
     providersErrorMsg() {
       let msg = '';
@@ -560,7 +544,7 @@ export default {
      * Check if fromTokenType is a native token
      * from other chains
      */
-    isFromNative() {
+    isFromNonChain() {
       if (this.isLoading) return false;
       return this.fromTokenType?.hasOwnProperty('isEth')
         ? !this.fromTokenType?.isEth
@@ -756,11 +740,21 @@ export default {
       return this.addressValue.isValid;
     },
     /**
+     * @returns string
+     * is used as a label for module-address-book
+     */
+    selectedCurrency() {
+      return !this.isFromNonChain
+        ? this.network.type.name
+        : this.fromTokenType?.symbol;
+    },
+    /**
      * Checks whether or not the user has a minimum eth balance to swap:
      * @returns{boolean}
      */
     hasMinEth() {
       if (
+        !isEmpty(this.fromTokenType) &&
         this.fromTokenType.hasOwnProperty('isEth') &&
         !this.fromTokenType.isEth
       ) {
@@ -778,10 +772,7 @@ export default {
     notEnoughEth() {
       try {
         const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
-        const isNotEnoughEth = !this.isFromTokenMain
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
-        return isNotEnoughEth;
+        return balanceAfterFees.isNeg();
       } catch (e) {
         return true;
       }
@@ -829,7 +820,7 @@ export default {
             ? this.errorMsgs.amountEthIsTooLow
             : this.tokensList.length > 0 &&
               !this.isFromTokenMain &&
-              !this.isFromNative
+              !this.isFromNonChain
             ? this.errorMsgs.doNotOwnToken
             : '';
         }
@@ -933,7 +924,7 @@ export default {
     setRefundAddr(address, valid) {
       this.refundAddress = address;
       this.isValidRefundAddr = valid;
-      if (valid) this.setProvider(0);
+      if (valid) this.setTokenInValue(this.tokenInValue);
     },
     setupSwap() {
       this.isLoading = !this.prefetched;
@@ -970,11 +961,11 @@ export default {
         actualTrade: {}
       };
 
-      this.toTokenswapper = null;
-      this.toTokentoTokenType = {};
-      this.toTokenfromTokenType = {};
-      this.toTokentokenInValue = '0';
-      this.toTokentokenOutValue = '0';
+      this.swapper = null;
+      this.toTokenType = {};
+      this.fromTokenType = {};
+      this.tokenInValue = '0';
+      this.tokenOutValue = '0';
       this.availableTokens = { toTokens: [], fromTokens: [] };
       this.availableQuotes = [];
       this.currentTrade = null;
@@ -1110,7 +1101,7 @@ export default {
       this.tokenInValue = value || '0';
       // Check if (in amount) is larger than (available balance)
       if (
-        !this.isFromNative &&
+        !this.isFromNonChain &&
         (this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
           !this.hasMinEth)
       ) {
@@ -1131,6 +1122,8 @@ export default {
       ) {
         return;
       }
+      if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
+        return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1190,7 +1183,7 @@ export default {
     },
     getTrade: debounce(function (idx) {
       if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
-      if (this.isFromNative && !this.isValidRefundAddr) return;
+      if (this.isFromNonChain && !this.isValidRefundAddr) return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
@@ -1207,7 +1200,7 @@ export default {
         )
       };
 
-      if (this.isFromNative) {
+      if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
       this.swapper
@@ -1232,7 +1225,7 @@ export default {
       this.currentTrade.gasPrice = this.localGasPrice;
       this.step = 2;
       this.loadingFee = false;
-      if (!this.isFromNative) {
+      if (!this.isFromNonChain) {
         this.currentTrade.gasPrice = this.localGasPrice;
         this.checkFeeBalance();
       }
@@ -1313,6 +1306,13 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          if (err && err.statusObj?.hashes?.length > 0) {
+            err.statusObj.hashes.forEach(item => {
+              Toast(item.message, {}, ERROR);
+            });
+            this.clear();
+            return;
+          }
           this.clear();
           Toast(err.message, {}, ERROR);
         });

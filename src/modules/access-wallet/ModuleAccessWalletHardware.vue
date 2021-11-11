@@ -79,7 +79,6 @@
         -->
       <access-wallet-bitbox
         v-if="onBitbox2"
-        :selected-path="selectedPath"
         :paths="paths"
         :set-path="setPath"
         :hw-wallet-instance="hwWalletInstance"
@@ -407,11 +406,6 @@ export default {
       }
       return newArr;
     },
-    hasPath() {
-      return this.selectedPath && this.selectedPath.hasOwnProperty('value')
-        ? this.selectedPath.value
-        : this.selectedPath;
-    },
     /**
      * Overlay title
      */
@@ -468,7 +462,9 @@ export default {
   watch: {
     selectedPath: {
       handler: function () {
-        if (this.walletType) this[`${this.walletType}Unlock`]();
+        if (!isEmpty(this.hwWalletInstance)) {
+          this[`${this.walletType}Unlock`]();
+        }
       },
       deep: true
     },
@@ -544,6 +540,7 @@ export default {
       if (this.walletType) {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
+          if (this.onLedger) this.selectedPath = this.paths[0];
           if (
             this.walletType === WALLET_TYPES.COOL_WALLET ||
             this.walletType === WALLET_TYPES.BITBOX2
@@ -575,17 +572,21 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
+      const path = this.selectedPath.hasOwnProperty('value')
+        ? this.selectedPath.value
+        : this.selectedPath;
       return this.wallets[this.walletType]
-        .create(this.hasPath)
+        .create(path)
         .then(_hwWallet => {
           try {
             this.loaded = true;
             this.hwWalletInstance = _hwWallet;
             if (this.onLedger) this.ledgerConnected = true;
-            if (this.onKeepkey || this.onTrezor) this.step++;
+            if ((this.onTrezor || this.onKeepkey) && this.step == 2)
+              this.step++;
             if (this.onBitbox2) {
               _hwWallet
-                .init(this.hasPath)
+                .init(path)
                 .then(() => {
                   this.nextStep();
                   this.hwWalletInstance = _hwWallet;

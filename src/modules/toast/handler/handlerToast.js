@@ -58,10 +58,10 @@ const Toast = (text, link, type, duration) => {
     );
     return;
   }
-  if (text instanceof Error || type === ERROR) {
+  if (text instanceof Error || (text && text.hasOwnProperty('message'))) {
     text = text.message;
   }
-  if (!text || text === '') {
+  if (!text) {
     EventBus.$emit(
       ToastEvents[type],
       'Please provide text to display!',
@@ -70,6 +70,7 @@ const Toast = (text, link, type, duration) => {
     );
     return;
   }
+
   if (type === SENTRY) {
     if (foundGlobalError(text) || foundGlobalWarning(text)) {
       EventBus.$emit(
