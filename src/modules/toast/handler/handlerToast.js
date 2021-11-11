@@ -47,6 +47,7 @@ const foundGlobalWarning = text => {
   return errorValues.includes(text);
 };
 const Toast = (text, link, type, duration) => {
+  console.log(text);
   const acceptableTypes = [SUCCESS, ERROR, WARNING, INFO, SENTRY];
   if (!type && !acceptableTypes.includes(type)) {
     EventBus.$emit(
@@ -61,7 +62,7 @@ const Toast = (text, link, type, duration) => {
   if (text instanceof Error || type === ERROR) {
     text = text.message;
   }
-  if (!text || text === '') {
+  if (!text) {
     EventBus.$emit(
       ToastEvents[type],
       'Please provide text to display!',

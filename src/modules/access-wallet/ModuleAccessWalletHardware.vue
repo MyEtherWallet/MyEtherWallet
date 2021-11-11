@@ -607,6 +607,11 @@ export default {
         .catch(err => {
           if (this.onLedger) this.step--;
           if (this.wallets[this.walletType]) {
+            console.log(
+              'here right?',
+              err.message,
+              this.wallets[this.walletType].create
+            );
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
