@@ -1,3 +1,9 @@
+### Release v6.3.0-hotfix.1
+
+### fix
+
+* fix swap [#3552](https://github.com/MyEtherWallet/MyEtherWallet/pull/3552)
+
 ### Release v6.3.0
 
 ### devop

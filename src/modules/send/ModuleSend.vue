@@ -101,6 +101,7 @@
           <mew-expand-panel
             ref="expandPanel"
             :panel-items="expandPanel"
+            :idx-to-expand="[]"
             @toggled="closeToggle"
           >
             <template #panelBody1>

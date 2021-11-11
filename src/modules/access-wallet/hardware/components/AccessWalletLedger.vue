@@ -6,7 +6,7 @@
       <div class="text-right">
         <access-wallet-derivation-path
           :selected-path="selectedPath"
-          :paths="paths"
+          :passed-paths="paths"
           @setPath="setPath"
         />
       </div>

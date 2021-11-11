@@ -415,7 +415,6 @@ export default {
           : '0x';
         return hexToNumberString(gasLimit);
       }
-
       const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
         return acc.plus(currentValue.gas);
       }, BigNumber(0));
@@ -775,6 +774,7 @@ export default {
             this.signedTxObject = {};
             this.error = e.message;
             this.signing = false;
+            this.instance.errorHandler(e.message);
           });
       }
     },
@@ -811,7 +811,7 @@ export default {
                 });
               })
               .catch(e => {
-                this.instance.errorHandler(e);
+                this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;
@@ -903,10 +903,10 @@ export default {
             title: 'Gas Limit',
             value: hexToNumberString(gasLimit)
           },
-          {
-            title: 'Transaction fee',
-            value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
-          },
+          // {
+          //   title: 'Transaction fee',
+          //   value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
+          // },
           {
             title: 'Nonce',
             value: hexToNumber(item.nonce)
