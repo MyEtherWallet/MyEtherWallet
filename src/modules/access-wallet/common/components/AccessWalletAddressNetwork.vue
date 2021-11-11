@@ -402,7 +402,6 @@ export default {
     },
     handlerWallet: {
       handler: function (newVal, oldVal) {
-        console.log(newVal.basePath, oldVal.basePath);
         if (newVal.basePath !== oldVal.basePath) {
           this.changeHandler();
         }

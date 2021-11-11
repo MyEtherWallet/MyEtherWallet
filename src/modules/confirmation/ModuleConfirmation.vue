@@ -770,6 +770,7 @@ export default {
             this.signedTxObject = {};
             this.error = e.message;
             this.signing = false;
+            this.instance.errorHandler(e.message);
           });
       }
     },
@@ -806,7 +807,7 @@ export default {
                 });
               })
               .catch(e => {
-                this.instance.errorHandler(e);
+                this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;

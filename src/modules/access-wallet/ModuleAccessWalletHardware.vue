@@ -572,7 +572,6 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
-      console.log('should only be called once');
       const path = this.selectedPath.hasOwnProperty('value')
         ? this.selectedPath.value
         : this.selectedPath;
@@ -607,11 +606,6 @@ export default {
         .catch(err => {
           if (this.onLedger) this.step--;
           if (this.wallets[this.walletType]) {
-            console.log(
-              'here right?',
-              err.message,
-              this.wallets[this.walletType].create
-            );
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
             Toast(err, {}, ERROR);
