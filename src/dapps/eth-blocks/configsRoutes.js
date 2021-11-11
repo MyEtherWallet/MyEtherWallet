@@ -34,11 +34,11 @@ const myBlocksProps = route => {
     const block = route.query.block;
     const blockNumber = validBlockNumber(block) ? block : '';
     return {
-      block: blockNumber
+      blockRef: blockNumber
     };
   }
   return {
-    block: ''
+    blockRef: ''
   };
 };
 

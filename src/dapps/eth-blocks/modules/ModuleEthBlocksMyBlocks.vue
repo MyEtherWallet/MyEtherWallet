@@ -5,7 +5,10 @@
     My Blocks Tab
     ===================================================
     -->
-    <div v-if="block === ''" class="pt-5 pb-13 px-3 px-sm-15 pb-sm-15 pt-md-8">
+    <div
+      v-if="blockRef === ''"
+      class="pt-5 pb-13 px-3 px-sm-15 pb-sm-15 pt-md-8"
+    >
       <!--
     ===================================================
     Loading
@@ -125,7 +128,7 @@
         </v-col>
       </v-row>
     </div>
-    <module-eth-block-info v-else :block-ref="block" :has-search="false" />
+    <module-eth-block-info v-else :block-ref="blockRef" :has-search="false" />
   </div>
 </template>
 
@@ -144,7 +147,7 @@ export default {
   name: 'ModuleEthBlocksMyBlocks',
   components: { BlocksLoading, BlocksSort, ModuleEthBlockInfo },
   props: {
-    block: {
+    blockRef: {
       type: String,
       default: ''
     }
