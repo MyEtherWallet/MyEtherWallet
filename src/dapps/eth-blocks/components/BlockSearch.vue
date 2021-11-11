@@ -5,7 +5,7 @@
       Max Block
     ===================================================
     -->
-    <p class="primary--text mb-1 ml-2">Max block: {{ blockNumber }}</p>
+    <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
     <!--
     ===================================================
       Search Field
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { mapState } from 'vuex';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -53,7 +52,7 @@ export default {
     maxBlock() {
       const max = toBN(this.blockNumber).sub(toBN(50));
       const ZERO = toBN(0);
-      return max.gt(ZERO) ? formatIntegerToString(max.toNumber()) : '';
+      return max.gt(ZERO) ? max.toNumber() : '';
     },
     /**
      * Returns search error messages, empty string if no error.
