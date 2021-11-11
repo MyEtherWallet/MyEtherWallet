@@ -79,7 +79,7 @@ export default {
       if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
         this.activeTab = this.tabs[1].id;
       } else {
-        this.activeTab = this.tabs[1].id;
+        this.activeTab = this.tabs[0].id;
       }
     }
   },
