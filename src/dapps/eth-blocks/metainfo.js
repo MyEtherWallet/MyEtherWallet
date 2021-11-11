@@ -1,4 +1,4 @@
-import { ETH_BLOCKS_ROUTE, blockGuard } from './configsRoutes';
+import { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps } from './configsRoutes';
 import layout from './TheEthBlocksLayout';
 import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
 import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
@@ -25,14 +25,10 @@ export default {
       component: ModuleEthBlocksMint
     },
     {
-      name: ETH_BLOCKS_ROUTE.MINT.NAME,
-      path: ETH_BLOCKS_ROUTE.MINT.PATH,
-      component: ModuleEthBlocksMint
-    },
-    {
       path: ETH_BLOCKS_ROUTE.MY_BLOCKS.PATH,
       name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
-      component: ModuleEthBlocksMyBlocks
+      component: ModuleEthBlocksMyBlocks,
+      props: myBlocksProps
     },
     {
       path: ETH_BLOCKS_ROUTE.BLOCK.PATH,

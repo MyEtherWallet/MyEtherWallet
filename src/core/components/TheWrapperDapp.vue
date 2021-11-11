@@ -77,7 +77,7 @@
     -->
     <v-tabs
       v-if="tabItems.length > 0 && isNewHeader"
-      v-model="tab"
+      :value="activeTab"
       background-color="backgroundGrey"
       color="blue500"
       height="46"
@@ -85,14 +85,13 @@
     >
       <v-tab
         v-for="(item, index) in tabItems"
-        :key="item.name"
-        :to="item.route"
+        :key="item.route.name"
         :class="[
           'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
           { 'ml-3 ml-md-13': index === 0 },
           { 'mr-3 mr-md-13': index + 1 === tabItems.length }
         ]"
-        exact
+        @click="routeToTab(item.route)"
       >
         {{ item.name }}
       </v-tab>
@@ -129,6 +128,7 @@
 import bannerImage from '@/assets/images/backgrounds/bg-dapps-center.png';
 import BlockHeader from '@/core/components/AppBlockHeader';
 import TheDappHeader from '@/core/components/TheDappHeader';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { mapGetters } from 'vuex';
 export default {
   components: { BlockHeader, TheDappHeader },
@@ -166,7 +166,7 @@ export default {
       default: () => [],
       type: Array
     },
-    // OLD
+    // USED ALSE IN NEW TAB MENU
     activeTab: {
       default: 0,
       type: Number
@@ -214,8 +214,7 @@ export default {
   },
   data() {
     return {
-      bannerTextObj: {},
-      tab: ''
+      bannerTextObj: {}
     };
   },
   computed: {
@@ -245,6 +244,13 @@ export default {
       this.$router.push({
         name: 'Dapps'
       });
+    },
+    routeToTab(route) {
+      try {
+        this.$router.push(route);
+      } catch (e) {
+        Toast(e, {}, ERROR);
+      }
     }
   }
 };

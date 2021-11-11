@@ -1,12 +1,9 @@
 import { validBlockNumber } from './handlers/helpers/common';
+
 const ETH_BLOCKS_ROUTE = {
   CORE: {
     NAME: 'EthBlocks',
     PATH: 'eth-blocks'
-  },
-  MINT: {
-    NAME: 'EthBlocksMint',
-    PATH: 'mint'
   },
   BLOCK: {
     NAME: 'EthBlocksBlock',
@@ -18,8 +15,6 @@ const ETH_BLOCKS_ROUTE = {
   }
 };
 
-const MY_BLOCKS_PATH = '/wallet/dapps/eth-blocks/my-blocks';
-
 /**
  * Method executes before route is set to : ie: wallet/dapps/eth-blocks/block/130567789
  *  - Checks whether or not blockRef is a positive integer
@@ -27,9 +22,6 @@ const MY_BLOCKS_PATH = '/wallet/dapps/eth-blocks/my-blocks';
  */
 const blockGuard = (to, from, next) => {
   if (validBlockNumber(to.params.blockRef)) {
-    if (from.path === MY_BLOCKS_PATH) {
-      to.params.hasSearch = false;
-    }
     next();
   } else {
     //NOTE: kicks out completely if you are logged in
@@ -37,4 +29,17 @@ const blockGuard = (to, from, next) => {
   }
 };
 
-export { ETH_BLOCKS_ROUTE, blockGuard };
+const myBlocksProps = route => {
+  if (route.query && route.query.block) {
+    const block = route.query.block;
+    const blockNumber = validBlockNumber(block) ? block : '';
+    return {
+      block: blockNumber
+    };
+  }
+  return {
+    block: ''
+  };
+};
+
+export { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps };

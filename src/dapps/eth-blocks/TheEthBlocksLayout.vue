@@ -37,11 +37,15 @@ export default {
       tabs: [
         {
           name: 'Mint a new block',
-          route: ETH_BLOCKS_ROUTE.MINT.PATH
+          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
+          id: 0
         },
         {
           name: 'My blocks',
-          route: ETH_BLOCKS_ROUTE.MY_BLOCKS.PATH
+          route: {
+            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
+          },
+          id: 1
         }
       ],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
@@ -69,6 +73,13 @@ export default {
     hasPendingTxs(newVal) {
       if (newVal) {
         this.setCheckPendingInterval();
+      }
+    },
+    $route(to) {
+      if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else {
+        this.activeTab = this.tabs[1].id;
       }
     }
   },

@@ -1,134 +1,138 @@
 <template>
-  <!--
+  <div>
+    <!--
     ===================================================
     My Blocks Tab
     ===================================================
     -->
-  <div class="pt-5 pb-13 px-3 px-sm-15 pb-sm-15 pt-md-8">
-    <!--
+    <div v-if="block === ''" class="pt-5 pb-13 px-3 px-sm-15 pb-sm-15 pt-md-8">
+      <!--
     ===================================================
     Loading
     ===================================================
     -->
-    <div v-if="loading">
-      <blocks-loading />
-    </div>
-    <!--
+      <div v-if="loading">
+        <blocks-loading />
+      </div>
+      <!--
     ===================================================
     Overview Header
     ===================================================
     -->
-    <v-row
-      v-else
-      class="
-        align-center
-        justify-start
-        overview-container-my-blocks
-        mb-5 mb-md-0
-      "
-    >
-      <!--
+      <v-row
+        v-else
+        class="
+          align-center
+          justify-start
+          overview-container-my-blocks
+          mb-5 mb-md-0
+        "
+      >
+        <!--
       ===================================================
         Block Count
         Order: 1st
       ===================================================
       -->
-      <v-col
-        cols="12"
-        md="3"
-        :class="['pt-3 pt-md-0 pb-0 ', { 'pt-2': hasBlocks }]"
-      >
-        <div class="mew-heading-3 textDark--text">
-          My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
-        </div>
-      </v-col>
-      <v-spacer class="d-none d-md-flex" order="2" />
-      <!--
+        <v-col
+          cols="12"
+          md="3"
+          :class="['pt-3 pt-md-0 pb-0 ', { 'pt-2': hasBlocks }]"
+        >
+          <div class="mew-heading-3 textDark--text">
+            My Blocks <span>({{ handlerMyBlocks.totalBlocks }})</span>
+          </div>
+        </v-col>
+        <v-spacer class="d-none d-md-flex" order="2" />
+        <!--
       ===================================================
         Search Blocks
       ===================================================
       -->
-      <v-col v-if="hasBlocks" cols="12" md="3" class="pt-0 pb-2 pb-md-0">
-        <mew-search
-          placeholder="Find my block"
-          is-compact
-          :value="filterBlock"
-          :error-messages="filterErrorMessage"
-          @input="setFilter"
-        />
-      </v-col>
-      <!--
+        <v-col v-if="hasBlocks" cols="12" md="3" class="pt-0 pb-2 pb-md-0">
+          <mew-search
+            placeholder="Find my block"
+            is-compact
+            :value="filterBlock"
+            :error-messages="filterErrorMessage"
+            @input="setFilter"
+          />
+        </v-col>
+        <!--
       ===================================================
         Sort
         Order: xs-2nd, md-3rd
       ===================================================
       -->
-      <v-col v-if="hasBlocks" cols="12" md="3" class="py-0 pb-md-0">
-        <blocks-sort @setSort="setActiveSort" />
-      </v-col>
-    </v-row>
-    <!--
+        <v-col v-if="hasBlocks" cols="12" md="3" class="py-0 pb-md-0">
+          <blocks-sort @setSort="setActiveSort" />
+        </v-col>
+      </v-row>
+      <!--
       ===================================================
         Alert: No Blocks Owned
       ===================================================
       -->
-    <v-row v-if="!hasBlocks && !loading" class="mt-0">
-      <v-col cols="12" class="pb-md-16 mb-md-16">
-        <mew-alert
-          title="You do not have any ETH Blocks"
-          description="If you recently minted or purchased an ETH Block, please wait until the transaction has been minted and come back. If you haven’t minted one, what are you waiting for? Mint a block!"
-          theme="info"
-          has-white-background
-          hide-close-icon
-        />
-      </v-col>
-    </v-row>
-    <!--
+      <v-row v-if="!hasBlocks && !loading" class="mt-0">
+        <v-col cols="12" class="pb-md-16 mb-md-16">
+          <mew-alert
+            title="You do not have any ETH Blocks"
+            description="If you recently minted or purchased an ETH Block, please wait until the transaction has been minted and come back. If you haven’t minted one, what are you waiting for? Mint a block!"
+            theme="info"
+            has-white-background
+            hide-close-icon
+          />
+        </v-col>
+      </v-row>
+      <!--
     ===================================================
       Owned Blocks
     ===================================================
     -->
-    <v-row
-      v-if="hasBlocks && !loading"
-      class="align-top justify-center justify-sm-start mt-0"
-    >
-      <v-col
-        v-for="block in blocks"
-        :key="block.blockNumber"
-        cols="9"
-        sm="6"
-        md="3"
+      <v-row
+        v-if="hasBlocks && !loading"
+        class="align-top justify-center justify-sm-start mt-0"
       >
-        <div
-          class="border-container px-5 pt-5 pb-8 fill-height"
-          @click="routeTo(block.blockNumber)"
+        <v-col
+          v-for="block in blocks"
+          :key="block.blockNumber"
+          cols="9"
+          sm="6"
+          md="3"
         >
-          <v-img
-            :src="block.image"
-            lazy-src="../assets/loading-block.svg"
-            contain
+          <div
+            class="border-container px-5 pt-5 pb-8 fill-height"
+            @click="routeTo(block.blockNumber)"
           >
-            <template #placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular
-                  indeterminate
-                  color="disabledPrimary"
-                ></v-progress-circular>
-              </v-row>
-            </template>
-          </v-img>
-          <div class="my-2 mew-heading-2 textDark--text">
-            Block #{{ formatBlockNumber(block.blockNumber) }}
+            <v-img
+              :src="block.image"
+              lazy-src="../assets/loading-block.svg"
+              contain
+            >
+              <template #placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular
+                    indeterminate
+                    color="disabledPrimary"
+                  ></v-progress-circular>
+                </v-row>
+              </template>
+            </v-img>
+            <div class="my-2 mew-heading-2 textDark--text">
+              Block #{{ formatBlockNumber(block.blockNumber) }}
+            </div>
           </div>
-        </div>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </div>
+    <module-eth-block-info v-else :block-ref="block" :has-search="false" />
   </div>
 </template>
 
 <script>
 import BlocksLoading from '../components/BlocksLoading.vue';
 import BlocksSort from '../components/BlocksSort.vue';
+import ModuleEthBlockInfo from './ModuleEthBlockInfo.vue';
 import HandlerMyBlocks from '../handlers/handlerMyBlocks';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
@@ -138,7 +142,13 @@ import { validBlockNumber } from '../handlers/helpers/common';
 
 export default {
   name: 'ModuleEthBlocksMyBlocks',
-  components: { BlocksLoading, BlocksSort },
+  components: { BlocksLoading, BlocksSort, ModuleEthBlockInfo },
+  props: {
+    block: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       handlerMyBlocks: {},
@@ -265,8 +275,8 @@ export default {
     routeTo(block) {
       try {
         this.$router.push({
-          name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
-          params: { blockRef: block.toString() }
+          name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
+          query: { block: block.toString() }
         });
       } catch (e) {
         Toast(e, {}, ERROR);
