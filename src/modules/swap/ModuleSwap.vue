@@ -867,11 +867,11 @@ export default {
         txFee: ''
       };
 
-      this.toTokenswapper = null;
-      this.toTokentoTokenType = {};
-      this.toTokenfromTokenType = {};
-      this.toTokentokenInValue = '0';
-      this.toTokentokenOutValue = '0';
+      this.swapper = null;
+      this.toTokenType = {};
+      this.fromTokenType = {};
+      this.tokenInValue = '0';
+      this.tokenOutValue = '0';
       this.availableTokens = { toTokens: [], fromTokens: [] };
       this.availableQuotes = [];
       this.currentTrade = null;
