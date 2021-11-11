@@ -33,7 +33,10 @@ const EXCEPTIONS = [
   '@commitlint/config-conventional',
   'commitlint',
   'eslint-plugin-vue',
-  'graphql'
+  'graphql',
+  'vue-i18n',
+  'subscriptions-transport-ws',
+  'apollo'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
