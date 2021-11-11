@@ -496,7 +496,7 @@
 
             <div
               v-show="validRequiredFormsRate !== 100"
-              class="text-center mx-auto mt-4 mb-4 error--text"
+              class="text-center mx-auto mt-4 mb-4 redPrimary--text"
               style="max-width: 300px"
             >
               {{ $t('dappsSubmission.fill-out-required-fields') }}
@@ -628,10 +628,10 @@
     -->
     <v-dialog v-model="formSubmissionFailed" width="500">
       <div class="pa-5 white">
-        <div class="mew-heading-2 error--text">
+        <div class="mew-heading-2 redPrimary--text">
           {{ $t('dappsSubmission.failed') }}
         </div>
-        <div class="mt-3 error--text">
+        <div class="mt-3 redPrimary--text">
           {{ $t('dappsSubmission.try-again') }}
         </div>
         <mew-button

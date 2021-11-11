@@ -86,7 +86,7 @@
           <span
             :class="[
               'mew-heading-3',
-              hasError ? 'error--text' : 'titlePrimary--text'
+              hasError ? 'redPrimary--text' : 'textDark--text'
             ]"
           >
             {{ uploadedText.title }}
@@ -95,7 +95,7 @@
             style="max-width: 420px"
             :class="[
               'mt-2 mew-body',
-              hasError ? 'error--text' : 'warning--text text--darken-2'
+              hasError ? 'redPrimary--text' : 'orangePrimary--text'
             ]"
           >
             {{ uploadedText.desc }}
@@ -131,9 +131,9 @@
             >
               {{ inputTitle }}
             </div>
-            <v-icon v-if="uploaded && !hasError" size="16" color="primary"
-              >mdi-checkbox-marked-circle</v-icon
-            >
+            <v-icon v-if="uploaded && !hasError" size="16" color="greenPrimary">
+              mdi-checkbox-marked-circle
+            </v-icon>
           </div>
           <mew-button
             class="my-2"

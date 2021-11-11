@@ -29,7 +29,7 @@
       <pre>{{ device.pairingCode }}</pre>
       <mew-button
         title="Confirm"
-        color-theme="greenPrimary"
+        color-theme="primary"
         :has-full-width="false"
         btn-size="medium"
         icon-align="left"

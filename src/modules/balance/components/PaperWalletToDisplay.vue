@@ -44,7 +44,7 @@
         <div>
           Always look for the icon when sending to this wallet. And please keep
           your paper wallet at a
-          <span class="text-uppercase error--text font-weight-medium">
+          <span class="text-uppercase redPrimary--text font-weight-medium">
             Safe Place!
           </span>
         </div>

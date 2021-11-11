@@ -43,7 +43,7 @@
 
           <div class="d-flex">
             <mew-button
-              color-theme="greenPrimary"
+              color-theme="primary"
               btn-style="background"
               class="mr-4"
               title="Create a new wallet"
@@ -53,7 +53,7 @@
               "
             />
             <mew-button
-              color-theme="greenPrimary"
+              color-theme="primary"
               btn-style="outline"
               title="Access my wallet"
               btn-size="xlarge"

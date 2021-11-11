@@ -135,7 +135,7 @@
                     justify-space-between
                     bordered-red
                   "
-                  style="border-color: var(--v-error-base) !important"
+                  style="border-color: var(--v-redPrimary-base) !important"
                 >
                   <div class="d-flex align-center">
                     <img
@@ -150,7 +150,7 @@
                   <v-icon class="greenPrimary--text">mdi-check-circle</v-icon>
                 </v-card>
 
-                <div class="error--text mt-3 mb-7 font-weight-medium">
+                <div class="redPrimary--text mt-3 mb-7 font-weight-medium">
                   Insufficient balance.
                   <a
                     href="https://ccswap.myetherwallet.com/#/"

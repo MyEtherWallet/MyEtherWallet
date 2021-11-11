@@ -9,7 +9,7 @@
       <div class="mb-5">
         <mew-button
           has-full-width
-          color-theme="inputBorder"
+          color-theme="greyLight"
           btn-style="outline"
           style="height: 160px"
           @click.native="selectWalletType(walletTypes.KEYSTORE)"

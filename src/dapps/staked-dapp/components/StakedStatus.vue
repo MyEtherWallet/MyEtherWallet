@@ -137,7 +137,7 @@
               v-if="pending.status.toLowerCase() === STATUS_TYPES.FAILED"
               class="d-flex align-center"
             >
-              <v-icon size="20" color="error">mdi-close-circle</v-icon>
+              <v-icon size="20" color="redPrimary">mdi-close-circle</v-icon>
               <span class="ml-2">Failed</span>
             </div>
             <!--

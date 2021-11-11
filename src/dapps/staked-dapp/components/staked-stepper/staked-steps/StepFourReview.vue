@@ -115,7 +115,7 @@
           <div
             :class="[
               'mx-auto',
-              stakedStep1Title.error ? 'error--text' : 'textBlack2--text'
+              stakedStep1Title.error ? 'redPrimary--text' : 'textMedium--text'
             ]"
             style="max-width: 300px"
           >

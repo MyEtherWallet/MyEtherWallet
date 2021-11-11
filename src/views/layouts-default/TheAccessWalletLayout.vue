@@ -206,7 +206,7 @@ export default {
           rightIcon: '',
           titleIcon: 'mdi-alert',
           titleIconType: 'mdi',
-          titleIconClass: 'warning darken-1',
+          titleIconClass: 'orangePrimary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }

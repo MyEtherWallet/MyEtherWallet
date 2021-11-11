@@ -7,7 +7,7 @@
       <v-col cols="12" justify="center" align="center">
         <mew-button
           title="Unlock Bitbox 02"
-          color-theme="greenPrimary"
+          color-theme="primary"
           :has-full-width="true"
           btn-size="xlarge"
           btn-style="background"
@@ -38,7 +38,7 @@
       </div>
       <mew-button
         title="Confirm"
-        color-theme="greenPrimary"
+        color-theme="primary"
         :has-full-width="true"
         class="mt-5"
         btn-size="xlarge"

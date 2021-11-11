@@ -18,7 +18,7 @@
         >
           <mew-button
             class="px-2"
-            color-theme="greenPrimary"
+            color-theme="primary"
             btn-size="large"
             btn-style="outline"
           >

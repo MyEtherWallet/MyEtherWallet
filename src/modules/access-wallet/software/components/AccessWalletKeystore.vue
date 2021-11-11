@@ -23,7 +23,7 @@
           <mew-button
             title="Select File"
             btn-style="outline"
-            color-theme="greenPrimary"
+            color-theme="primary"
             btn-size="xlarge"
             :has-full-width="true"
             :shows-active-state="true"

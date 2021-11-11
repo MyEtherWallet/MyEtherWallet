@@ -87,27 +87,33 @@
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
-                <div :class="hasError ? 'error--text' : 'textBlack2--text'">
+                <div
+                  :class="hasError ? 'redPrimary--text' : 'textBlack2--text'"
+                >
                   {{ feeInUsd }}
                 </div>
-                <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
+                <v-icon
+                  :color="hasError ? 'redPrimary' : ''"
+                  small
+                  class="mx-2"
+                >
                   mdi-arrow-right
                 </v-icon>
                 <div class="d-flex align-center">
-                  <v-icon :color="hasError ? 'error' : ''" small>
+                  <v-icon :color="hasError ? 'redPrimary' : ''" small>
                     mdi-clock-outline
                   </v-icon>
-                  <div :class="hasError ? 'error--text' : ''">
+                  <div :class="hasError ? 'redPrimary--text' : ''">
                     {{ timeWillTake }}
                   </div>
                 </div>
-                <v-icon :color="hasError ? 'error' : ''" class="ml-3">
+                <v-icon :color="hasError ? 'redPrimary' : ''" class="ml-3">
                   mdi-chevron-down
                 </v-icon>
               </div>
             </v-btn>
             <div
-              :class="hasError ? 'error--text' : 'textSecondary--text'"
+              :class="hasError ? 'redPrimary--text' : 'textLight--text'"
               class="ml-3 py-1"
             >
               {{ txFeeFormatted }} {{ network.type.currencyName }}
@@ -131,7 +137,7 @@
         <div class="d-flex flex-wrap justify-space-between">
           <div
             v-if="!gettingFee & hasError"
-            :class="[hasError ? 'error--text' : '']"
+            :class="[hasError ? 'redPrimary--text' : '']"
             class="ml-2"
           >
             {{ message }}
