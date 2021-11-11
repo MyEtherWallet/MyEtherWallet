@@ -14,9 +14,19 @@ const setAddressBook = function ({ commit }, addressBook) {
   commit('SET_ADDRESS_BOOK', addressBook);
 };
 
+const addCustomPath = function ({ commit }, val) {
+  commit('ADD_CUSTOM_PATH', val);
+};
+
+const deleteCustomPath = function ({ commit }, val) {
+  commit('DELETE_CUSTOM_PATH', val);
+};
+
 export default {
   setAddressBook,
   setCustomToken,
   deleteAll,
-  deleteToken
+  deleteToken,
+  addCustomPath,
+  deleteCustomPath
 };

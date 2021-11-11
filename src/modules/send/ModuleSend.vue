@@ -100,8 +100,6 @@
         <v-col cols="12" class="py-4">
           <mew-expand-panel
             ref="expandPanel"
-            is-toggle
-            has-dividers
             :panel-items="expandPanel"
             @toggled="closeToggle"
           >
@@ -253,6 +251,7 @@ export default {
       'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -335,7 +334,7 @@ export default {
             link: this.isEthNetwork ? this.swapLink : ''
           })
         : null;
-      return [
+      const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 5),
@@ -348,6 +347,15 @@ export default {
         },
         ...tokensList
       ];
+      if (this.hasCustom) {
+        return returnedArray.concat([
+          {
+            header: 'Custom Tokens'
+          },
+          ...this.customTokens
+        ]);
+      }
+      return returnedArray;
     },
     /* Property returns either gas estimmation error or amount error*/
     amountErrorMessage() {
@@ -430,7 +438,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -459,10 +467,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (BigNumber(this.localGasPrice).eq(0)) {
-        return BigNumber(this.gasPrice);
+      if (toBN(this.localGasPrice).eqn(0)) {
+        return toBN(this.gasPrice);
       }
-      return BigNumber(this.localGasPrice);
+      return toBN(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -722,7 +730,7 @@ export default {
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(BigNumber(e));
+      this.sendTx.setLocalGasPrice(e);
     }
   }
 };
