@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--token-table tableHeader pa-5">
+  <div class="mew-component--token-table greyLight pa-5">
     <div v-if="token" class="d-flex align-center justify-space-between mb-3">
       <div class="d-flex align-center">
         <img

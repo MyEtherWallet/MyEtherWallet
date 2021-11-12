@@ -10,7 +10,7 @@
         <app-addr-qr />
       </template>
     </app-modal>
-    <v-row class="pa-2 selectHeaderBg border-radius--5px">
+    <v-row class="pa-2 backgroundGrey border-radius--5px">
       <v-col cols="12">
         <v-row align-content="center" justify="space-around">
           <v-col cols="12" class="pb-0">
@@ -22,7 +22,7 @@
             </p>
           </v-col>
           <v-col cols="12" sm="6">
-            <div class="mew-body textBlack2--text">
+            <div class="mew-body textMedium--text">
               Every transaction requires a small amount of
               {{ currencyName }} to execute. Even if you have tokens to swap,
               when your {{ currencyName }} balance is close to zero, you won't

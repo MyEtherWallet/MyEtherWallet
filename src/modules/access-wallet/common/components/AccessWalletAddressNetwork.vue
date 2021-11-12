@@ -350,13 +350,13 @@ export default {
         {
           name: 'Address',
           subtext: this.panelAddressSubstring,
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           hasActiveBorder: true
         },
         {
           name: 'Network',
           subtext: this.panelNetworkSubstring,
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           hasActiveBorder: true
         }
       ];

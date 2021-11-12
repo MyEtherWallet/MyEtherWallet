@@ -56,7 +56,7 @@
               <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">Results</div>
               </div>
-              <v-card flat color="tableHeader" class="pa-10">
+              <v-card flat color="greyLight" class="pa-10">
                 <div class="d-flex justify-space-between align-center">
                   <div>
                     <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
@@ -74,7 +74,7 @@
                 </div>
               </v-card>
               <div class="py-2"></div>
-              <v-card flat color="tableHeader" class="pa-10">
+              <v-card flat color="greyLight" class="pa-10">
                 <div class="d-flex align-center justify-space-between mb-8">
                   <div class="mew-heading-1">myetherwallet.crypto</div>
                   <div class="mew-heading-3 orange--text">Unavailable</div>
@@ -107,7 +107,7 @@
             <div>
               <v-card
                 flat
-                color="tableHeader"
+                color="greyLight"
                 class="d-flex align-center justify-space-between pa-10 mb-10"
               >
                 <div class="mew-heading-1">mewwallet.crypto</div>
@@ -127,7 +127,7 @@
 
                 <v-card
                   outlined
-                  color="tableHeader"
+                  color="greyLight"
                   class="
                     pa-4
                     d-flex
@@ -163,7 +163,7 @@
 
                 <v-card
                   flat
-                  color="tableHeader"
+                  color="greyLight"
                   class="mt-3 pa-4 d-flex align-center justify-space-between"
                 >
                   <div class="d-flex align-center">
@@ -384,7 +384,7 @@ export default {
           toggleTitle: '',
           colorTheme: 'greyLight',
           warningBadge: {
-            color: 'warning darken-2',
+            color: 'orangePrimary',
             text: 'Expire soon'
           }
         },
@@ -393,7 +393,7 @@ export default {
           toggleTitle: '',
           colorTheme: 'greyLight',
           warningBadge: {
-            color: 'warning darken-2',
+            color: 'orangePrimary',
             text: 'Expire soon'
           }
         }

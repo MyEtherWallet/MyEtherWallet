@@ -98,7 +98,7 @@ export default {
 .mew-component--tools.desktop .v-item-group.v-slide-group {
   padding-right: 40px;
   margin-right: 40px;
-  border-right: 1px solid var(--v-selectBorder-base) !important;
+  border-right: 1px solid var(--v-greyLight-base) !important;
 }
 .mew-component--tools.mobile .v-item-group.v-slide-group {
   display: none !important;

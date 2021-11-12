@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="mew-component--swap-btn" color="maxButton" depressed>
+  <v-btn class="mew-component--swap-btn" color="greyLight" depressed>
     <v-icon large>mdi-swap-horizontal</v-icon>
   </v-btn>
 </template>

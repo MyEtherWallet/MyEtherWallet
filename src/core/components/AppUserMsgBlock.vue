@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="tableHeader" class="border-radius--5px">
+  <v-sheet color="greyLight" class="border-radius--5px">
     <div v-if="isAlert" class="pa-5">
       <div v-if="message.title !== ''" class="d-flex align-center mb-2">
         <v-icon color="textDark" class="mr-1 ml-n1">

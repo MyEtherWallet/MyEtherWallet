@@ -119,7 +119,7 @@
               py-6
               pr-6
               warning
-              textBlack2--text
+              textMedium--text
               border-radius--5px
               mb-5
             "
@@ -168,13 +168,15 @@
                       {{ transactions.length > 1 ? `${i + 1}` : `details` }}
                     </span>
                     <br />
-                    <span v-if="isBatch" class="ma-0 mew-label searchText--text"
+                    <span
+                      v-if="isBatch"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ isSwap ? 'Swap ' : '' }} part {{ i + 1 }} -
                       {{ dataToAction(unsignedTxArr[i]) }}</span
                     >
                     <span
                       v-else-if="dataToAction(tx) !== ''"
-                      class="ma-0 mew-label searchText--text"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ dataToAction(tx) }}</span
                     >
                   </p>
@@ -230,7 +232,7 @@
                     <v-col
                       cols="12"
                       md="3"
-                      class="d-flex d-sm-block ma-0 searchText--text"
+                      class="d-flex d-sm-block ma-0 greyPrimary--text"
                     >
                       {{ txVal.title }}
                     </v-col>
@@ -923,7 +925,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$borderPanels: 1px solid var(--v-selectBorder-base) !important;
+$borderPanels: 1px solid var(--v-greyLight-base) !important;
 .expansion-border {
   border: $borderPanels;
   border-radius: 8px;

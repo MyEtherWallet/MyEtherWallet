@@ -100,7 +100,7 @@ export default {
 
 <style lang="scss" scoped>
 .border {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 30px;

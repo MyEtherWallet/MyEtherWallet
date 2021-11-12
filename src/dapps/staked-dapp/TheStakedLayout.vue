@@ -68,7 +68,7 @@
             >
               My stake
             </div>
-            <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
+            <div v-if="!loadingValidators" class="mew-caption textLight--text">
               {{ !loadingValidators ? myETHTotalStaked : '--' }}
             </div>
           </div>

@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$greyBackground: var(--v-tableHeader-base);
+$greyBackground: var(--v-greyLight-base);
 
 .icon-disabled {
   filter: grayscale(100%);

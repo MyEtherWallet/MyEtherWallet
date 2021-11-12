@@ -28,7 +28,7 @@
             class="mr-1 ml-n1 text-center"
             style="width: 40px; line-height: 0"
           >
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textDark">
               mdi-check
             </v-icon>
             <img

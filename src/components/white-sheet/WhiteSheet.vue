@@ -3,7 +3,7 @@
     :max-width="maxWidth"
     :min-width="minWidth"
     :width="fullWidth ? '100%' : ''"
-    color="mewBg"
+    color="white"
     class="mew-component--white-sheet border-radius--10px"
     :class="[
       sideinfo ? 'sideinfo' : '',
@@ -35,7 +35,7 @@ export default {
 
 <style lang="scss">
 .mew-component--white-sheet.box-shadow-light {
-  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+  box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
 }
 .mew-component--white-sheet.box-shadow-dark {
   box-shadow: 0 0 15px #3c3c3c !important;

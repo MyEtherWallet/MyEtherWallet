@@ -195,7 +195,7 @@ export default {
               class:
                 this.currentHealthFactor > this.nextHealthFactor
                   ? 'redPrimary--text'
-                  : 'primary--text',
+                  : 'greenPrimary--text',
               indicator:
                 this.currentHealthFactor > this.nextHealthFactor
                   ? 'mdi-arrow-down-bold'
@@ -256,7 +256,7 @@ export default {
       if (type.toLowerCase() === INTEREST_TYPES.stable) {
         return 'secondary--text';
       }
-      return 'warning--text text--darken-1';
+      return 'orangePrimary';
     }
   }
 };

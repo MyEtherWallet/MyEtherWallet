@@ -123,7 +123,7 @@ table {
   border-collapse: collapse;
   tbody {
     tr {
-      border-bottom: 1px solid var(--v-inputBorder-base);
+      border-bottom: 1px solid var(--v-greyMedium-base);
       td {
         padding: 20px;
       }

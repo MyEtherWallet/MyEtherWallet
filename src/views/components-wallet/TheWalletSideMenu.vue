@@ -154,7 +154,7 @@
           </div>
           <div class="d-flex align-center justify-space-between">
             <!-- <theme-switch /> -->
-            <div class="searchText--text">v{{ version }}</div>
+            <div class="greyPrimary--text">v{{ version }}</div>
           </div>
         </div>
       </v-list>

@@ -88,7 +88,7 @@
             >
               <div class="d-flex align-center">
                 <div
-                  :class="hasError ? 'redPrimary--text' : 'textBlack2--text'"
+                  :class="hasError ? 'redPrimary--text' : 'textMedium--text'"
                 >
                   {{ feeInUsd }}
                 </div>

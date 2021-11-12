@@ -232,7 +232,7 @@ export default {
 
 <style lang="scss" scoped>
 .clickable-content:hover {
-  background-color: var(--v-tableHeader-base);
+  background-color: var(--v-greyLight-base);
 }
 .what-we-collect-ul {
   list-style-type: disc;

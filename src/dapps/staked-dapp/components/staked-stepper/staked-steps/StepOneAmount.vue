@@ -66,7 +66,7 @@
           </v-row>
         </div>
 
-        <v-divider class="inputBorder my-6" />
+        <v-divider class="greyMedium my-6" />
 
         <!--
       ===================================================
@@ -106,7 +106,7 @@
     User information
     ===================================================
     -->
-      <div class="tableHeader px-6 px-sm-12 py-8 mt-2 border-radius--10px">
+      <div class="greyLight px-6 px-sm-12 py-8 mt-2 border-radius--10px">
         <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>

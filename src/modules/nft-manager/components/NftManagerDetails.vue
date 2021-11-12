@@ -4,7 +4,7 @@
     Nft Manager Details Component
   =====================================================================================
   -->
-  <v-card flat color="tableHeader" class="rounded-lg pa-2 d-flex align-center">
+  <v-card flat color="greyLight" class="rounded-lg pa-2 d-flex align-center">
     <!--
   =====================================================================================
     Loading Details
@@ -12,7 +12,7 @@
   -->
     <v-skeleton-loader
       v-if="loading"
-      class="nft-manager-details-loader tableHeader py-2"
+      class="nft-manager-details-loader greyLight py-2"
       width="100%"
       height="100%"
       type="list-item-avatar"

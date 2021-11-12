@@ -19,7 +19,7 @@
           cols="12"
           sm="6"
         >
-          <div class="tableHeader pa-5 d-flex align-center rounded-lg">
+          <div class="greyLight pa-5 d-flex align-center rounded-lg">
             <div class="mr-3 mt-1">
               <img :src="detail.img" height="25" alt="eth icon" />
             </div>
@@ -75,24 +75,24 @@
     Terms & Conditions
     ===================================================
     -->
-      <div class="mt-11 mt-sm-10 pa-5 tableHeader">
+      <div class="mt-11 mt-sm-10 pa-5 greyLight">
         <mew-checkbox
           v-model="firstCondition"
           dense
           class="mb-4"
-          color-text="textBlack2--text"
+          color-text="textMedium--text"
           label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
         />
         <mew-checkbox
           v-model="secondCondition"
           dense
-          color-text="textBlack2--text"
+          color-text="textMedium--text"
           label="I understand that staking involves slashing risks and my funds can be lost."
         />
         <mew-checkbox
           v-model="thirdCondition"
           dense
-          color-text="textBlack2--text"
+          color-text="textMedium--text"
         >
           <template #contentSlot>
             <span

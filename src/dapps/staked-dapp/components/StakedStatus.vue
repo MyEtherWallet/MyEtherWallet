@@ -55,7 +55,7 @@
     -->
           <div
             :class="[
-              'rounded-t-lg header-container tableHeader pa-5 full-width d-flex flex-row align-center justify-space-between',
+              'rounded-t-lg header-container greyLight pa-5 full-width d-flex flex-row align-center justify-space-between',
               isExpanded(idx) ? 'rounded-t-lg' : 'rounded-lg'
             ]"
             @click="expand(idx)"
@@ -78,7 +78,7 @@
                 color="greenPrimary"
                 indeterminate
               />
-              <v-icon class="ml-5" color="searchText" size="22">{{
+              <v-icon class="ml-5" color="greyPrimary" size="22">{{
                 isExpanded(idx) ? 'mdi-chevron-up' : 'mdi-chevron-down'
               }}</v-icon>
             </div>
@@ -499,6 +499,6 @@ export default {
   max-width: 500px;
 }
 .border-container {
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

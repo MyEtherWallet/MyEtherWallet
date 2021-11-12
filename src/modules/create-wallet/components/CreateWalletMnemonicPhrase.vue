@@ -381,8 +381,8 @@ export default {
 }
 
 .radio-group {
-  box-shadow: 0 0px 10px var(--v-boxShadow-base) !important;
-  border: 1px solid var(--v-inputBorder-base);
+  box-shadow: 0 0px 10px var(--v-greyMedium-base) !important;
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
 }
 </style>

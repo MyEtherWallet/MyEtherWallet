@@ -14,7 +14,7 @@
       <v-row>
         <v-col v-for="(dapp, key) in dapps" :key="key" cols="12" md="6" lg="4">
           <mew-button
-            color-theme="backgroundGrey"
+            color-theme="greyLight"
             btn-style="light"
             style="height: 160px"
             @click.native="routeTo(dapp.name)"
@@ -33,7 +33,7 @@
                 <div class="break-word">
                   {{ dapp.subtitle }}
                 </div>
-                <div class="body-2 mt-1 tagLabel--text">{{ dapp.tag }}</div>
+                <div class="body-2 mt-1 textLight--text">{{ dapp.tag }}</div>
               </div>
               <div class="d-none d-sm-flex align-center pl-5">
                 <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
