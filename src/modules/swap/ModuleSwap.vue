@@ -733,7 +733,9 @@ export default {
     },
     toAddress() {
       if (this.toTokenType?.isEth) return this.address;
-      return this.addressValue.value;
+      return !isEmpty(this.addressValue)
+        ? this.addressValue.value
+        : this.address;
     },
     isToAddressValid() {
       if (this.toTokenType?.isEth) return true;
@@ -983,6 +985,8 @@ export default {
       this.localGasPrice = '0';
       this.$refs.toToken.clear();
       this.$refs.amountInput.clear();
+      this.refundAddress = '';
+      this.isValidRefundAddr = false;
       this.setupSwap();
     },
     formatTokensForSelect(tokens) {
@@ -1237,7 +1241,7 @@ export default {
     setConfirmInfo() {
       const toPrice = this.toTokenType.price ? this.toTokenType.price : 0;
       const fromPrice = this.fromTokenType.price ? this.fromTokenType.price : 0;
-      this.confirmInfo = {
+      const obj = {
         from: this.address,
         to: this.toAddress,
         fromType: this.fromTokenType.symbol,
@@ -1254,6 +1258,11 @@ export default {
         gasPriceType: this.gasPriceType,
         actualTrade: this.currentTrade
       };
+
+      if (this.isFromNonChain) {
+        obj['refundAddress'] = this.refundAddress;
+      }
+      this.confirmInfo = obj;
     },
     showTradeConfirm() {
       this.setConfirmInfo();
@@ -1262,31 +1271,6 @@ export default {
         this.confirmInfo,
         this.sentCrossChain
       );
-    },
-    sentCrossChain(val) {
-      if (val) {
-        const obj = {
-          from: this.address,
-          type: NOTIFICATION_TYPES.SWAP,
-          network: this.network.type.name,
-          status: NOTIFICATION_STATUS.PENDING,
-          fromTxData: {
-            currency: this.confirmInfo.fromType,
-            amount: this.confirmInfo.fromVal,
-            icon: this.confirmInfo.fromImg
-          },
-          toTxData: {
-            currency: this.confirmInfo.toType,
-            amount: this.confirmInfo.toVal,
-            icon: this.confirmInfo.toImg,
-            to: this.confirmInfo.to
-          },
-          swapObj: this.confirmInfo
-        };
-        this.addNotification(new NonChainNotification(obj)).then(this.clear);
-      } else {
-        this.clear();
-      }
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {
@@ -1321,6 +1305,35 @@ export default {
       return new BigNumber(balance.toString()).div(
         new BigNumber(10).pow(decimals)
       );
+    },
+    sentCrossChain(val) {
+      if (val) {
+        this.allTrades.forEach(item => {
+          const obj = Object.assign({
+            from: this.address,
+            type: NOTIFICATION_TYPES.SWAP,
+            network: this.network.type.name,
+            status: NOTIFICATION_STATUS.PENDING,
+            fromTxData: {
+              currency: this.confirmInfo.fromType,
+              amount: this.confirmInfo.fromVal,
+              icon: this.confirmInfo.fromImg
+            },
+            toTxData: {
+              currency: this.confirmInfo.toType,
+              amount: this.confirmInfo.toVal,
+              icon: this.confirmInfo.toImg,
+              to: this.confirmInfo.to
+            },
+            swapObj: this.confirmInfo,
+            item,
+            to: this.toAddress
+          });
+          this.addNotification(new NonChainNotification(obj)).then(this.clear);
+        });
+      } else {
+        this.clear();
+      }
     },
     swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {

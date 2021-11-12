@@ -57,6 +57,15 @@
               <div v-if="!timerFinished">
                 <qr-code :data="payinAddress" :height="160" :width="160" />
               </div>
+              <div v-else class="d-flex align-center justify-center">
+                <v-img
+                  :src="qrDisabled"
+                  width="160"
+                  height="160"
+                  max-width="160"
+                  max-height="160"
+                />
+              </div>
               <div v-if="!timerFinished" class="mew-body textSecondary--text">
                 {{ sendWarning }}
               </div>
@@ -90,6 +99,25 @@
               </div>
             </div>
           </div>
+          <div class="pt-4">
+            <mew-expand-panel :panel-items="panelItems">
+              <template #panelBody1>
+                <div class="px-6 pb-6">
+                  <div class="d-flex align-center justify-space-between">
+                    <div>Refund Address:</div>
+                    <div>{{ refundAddress }}</div>
+                  </div>
+                  <div class="d-flex align-center justify-space-between pt-2">
+                    <div>Rate:</div>
+                    <div>
+                      1 {{ fromCurrency }} = {{ rate }}
+                      {{ toCurrency }}
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </mew-expand-panel>
+          </div>
         </div>
       </template>
     </app-modal>
@@ -97,10 +125,16 @@
 </template>
 
 <script>
-import AppModal from '@/core/components/AppModal';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import moment from 'moment';
+import AppModal from '@/core/components/AppModal';
+import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import qrDisabled from '@/assets/images/icons/qr-disabled.png';
+import { isEmpty } from 'underscore';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+const MILLISECONDS = 1000;
+const MINUTES = 20;
+const SECONDS_IN_MINUTES = 60;
 export default {
   name: 'CrossChainModal',
   components: { AppModal },
@@ -127,7 +161,16 @@ export default {
     }
   },
   data() {
-    return { startingTime: moment(60 * 20 * 1000), counter: () => {} };
+    return {
+      startingTime: moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS),
+      counter: () => {},
+      qrDisabled: qrDisabled,
+      panelItems: [
+        {
+          name: 'View Details'
+        }
+      ]
+    };
   },
   computed: {
     time() {
@@ -149,13 +192,13 @@ export default {
       return this.txObj.fromType;
     },
     fromVal() {
-      return this.txObj.fromVal;
+      return formatFloatingPointValue(this.txObj.fromVal).value;
     },
     toType() {
       return this.txObj.toType;
     },
     toVal() {
-      return this.txObj.toVal;
+      return formatFloatingPointValue(this.txObj.toVal).value;
     },
     toImg() {
       return this.txObj.toImg;
@@ -168,12 +211,36 @@ export default {
     },
     timerFinished() {
       return this.time === '00:00';
+    },
+    refundAddress() {
+      if (!isEmpty(this.txObj)) {
+        return this.txObj.refundAddress;
+      }
+      return '';
+    },
+    fromCurrency() {
+      if (!isEmpty(this.txObj)) {
+        return this.txObj.fromType;
+      }
+      return '';
+    },
+    toCurrency() {
+      if (!isEmpty(this.txObj)) {
+        return this.txObj.toType;
+      }
+      return '';
+    },
+    rate() {
+      if (!isEmpty(this.txObj)) {
+        return formatFloatingPointValue(this.txObj.selectedProvider.rate).value;
+      }
+      return '';
     }
   },
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        this.startingTime = moment(60 * 20 * 1000);
+        this.startingTime = moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS);
         this.counter = setInterval(() => {
           if (this.timerFinished) {
             clearInterval(this.counter);

@@ -1,4 +1,4 @@
-import { isAddress, numberToHex, isBN } from 'web3-utils';
+import { isAddress } from 'web3-utils';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -6,17 +6,26 @@ import Notification, {
 import BigNumber from 'bignumber.js';
 
 const VALID_ARGUMENTS = [
+  'to', // string
   'from', // string
+  // injected from mew
   'type', // string
+  'read', // bool
   'network', // string
+  'transactionFee', // string
+  'date', // number
   'status', // string
   'fromTxData', // obj
   'toTxData', // obj
-  'swapObj' // obj
+  'errMessage', // string
+  'swapObj', // obj
+  'swapResolver',
+  'formatted', //boolean,
+  'refundAddress' // string
 ];
-
 export default class NonChainNotification extends Notification {
   constructor(obj) {
+    console.log(obj);
     super(obj);
   }
 
@@ -36,25 +45,15 @@ export default class NonChainNotification extends Notification {
     const notification = {
       from: obj.from,
       to: obj.to,
-      fromType: obj.fromTxData.fromType,
-      toType: obj.toType,
-      fromImg: obj.fromImg,
-      toImg: obj.toImg,
-      fromVal: obj.fromTxData.fromVal,
-      toVal: obj.toVal,
-      toUsdVal: obj.toUsdVal,
-      fromUsdVal: obj.fromTxData.fromUsdVal,
-      validUntil: date,
-      selectedProvider: obj.selectedProvider,
-      totalFees: obj.totalFees,
-      gasPriceType: obj.gasPriceType,
-      actualTrade: obj.actualTrade,
-      status: obj.status,
+      status: obj.status ? obj.status : NOTIFICATION_STATUS.PENDING,
       type: obj.type,
-      network: obj.network,
-      gas: isBN(obj.gas) ? numberToHex(obj.gas) : obj.gas,
-      gasPrice: isBN(obj.gasPrice) ? numberToHex(obj.gasPrice) : obj.gasPrice,
-      value: isBN(obj.value) ? numberToHex(obj.value) : obj.value
+      date: date,
+      read: !obj.read ? false : obj.read,
+      swapObj: obj.swapObj ? obj.swapObj : '',
+      fromTxData: obj.fromTxData ? obj.fromTxData : {},
+      toTxData: obj.toTxData ? obj.toTxData : {},
+      network: obj.network ? obj.network : '',
+      formatted: true
     };
     if (notification.status === '0x1' || notification.status === '0x0')
       notification.status =
