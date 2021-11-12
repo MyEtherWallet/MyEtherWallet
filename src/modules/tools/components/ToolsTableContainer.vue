@@ -66,18 +66,18 @@
         <div>
           <div class="font-weight-medium input-label--text">Total Value</div>
           <h5 class="font-weight-bold">$2,231.31</h5>
-          <div class="textSecondary--text">12.00431 ETH</div>
+          <div class="textLight--text">12.00431 ETH</div>
         </div>
       </div>
       <div>
         <div class="font-weight-medium input-label--text">ETH Balance</div>
         <h5 class="font-weight-bold">$2,000.00</h5>
-        <div class="textSecondary--text">8.00431 ETH</div>
+        <div class="textLight--text">8.00431 ETH</div>
       </div>
       <div>
         <div class="font-weight-medium input-label--text">Value of Tokens</div>
         <h5 class="font-weight-bold">$231.31</h5>
-        <div class="textSecondary--text">4 tokens</div>
+        <div class="textLight--text">4 tokens</div>
       </div>
       <div>
         <mew-button
@@ -129,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 .block-header {
-  background-color: var(--v-expandHeader-base) !important;
+  background-color: var(--v-textMedium-base) !important;
   color: white;
   padding: 15px 20px;
   border-radius: 10px 10px 0 0;

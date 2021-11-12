@@ -52,13 +52,13 @@
           <mew-button
             has-full-width
             style="height: 90px"
-            color-theme="inputBorder"
+            color-theme="greyMedium"
             btn-style="outline"
             @click.native="setWalletInstance(button.type)"
           >
             <div class="text-left d-flex align-center" style="width: 100%">
               <img width="40" class="mr-4" :src="button.icon" />
-              <div class="mew-heading-3 titlePrimary--text">
+              <div class="mew-heading-3 textDark--text">
                 {{ button.label }}
               </div>
             </div>

@@ -351,13 +351,13 @@ export default {
     border-collapse: collapse;
     thead {
       tr {
-        border-top: 1px solid var(--v-titlePrimary-base);
-        border-bottom: 1px solid var(--v-titlePrimary-base);
+        border-top: 1px solid var(--v-textDark-base);
+        border-bottom: 1px solid var(--v-textDark-base);
       }
     }
     tbody {
       tr:nth-child(even) {
-        background-color: var(--v-tableHeader-base);
+        background-color: var(--v-greyLight-base);
       }
     }
     tr {

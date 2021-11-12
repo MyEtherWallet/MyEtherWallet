@@ -10,7 +10,7 @@
           <span
             v-if="!noBackBtn"
             class="
-              captionPrimary--text
+              textLight--text
               mew-heading-3
               font-weight-medium
               cursor-pointer
@@ -18,7 +18,7 @@
             "
             @click="closeBanner"
           >
-            <v-icon small color="captionPrimary">mdi-arrow-left-thick</v-icon>
+            <v-icon small color="textLight">mdi-arrow-left-thick</v-icon>
             Dapp center
           </span>
         </v-col>

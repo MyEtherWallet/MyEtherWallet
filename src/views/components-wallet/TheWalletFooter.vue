@@ -1,6 +1,6 @@
 <template>
   <v-footer
-    color="mewBg"
+    color="white"
     app
     inset
     absolute
@@ -21,7 +21,7 @@
           <div class="mb-0 text-center text-md-left">
             ©2021 MyEtherWallet. All rights reserved. Pricing taken from
             <a
-              class="titlePrimary--text text-decoration--none"
+              class="textDark--text text-decoration--none"
               href="https://www.coingecko.com/en"
               target="_blank"
             >
@@ -42,7 +42,7 @@
               d-flex
               align-center
               justify-center justify-md-end
-              titlePrimary--text
+              textDark--text
             "
           >
             <a
@@ -119,7 +119,7 @@ export default {
 <style lang="scss">
 .mew-component--wallet-footer {
   .v-select__selection {
-    color: var(--v-titlePrimary-base) !important;
+    color: var(--v-textDark-base) !important;
     width: 100%;
     text-align: right;
   }
@@ -142,7 +142,7 @@ export default {
   }
 
   .v-select .v-icon {
-    color: var(--v-titlePrimary-base) !important;
+    color: var(--v-textDark-base) !important;
   }
 
   .v-select__selection {

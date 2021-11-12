@@ -108,7 +108,7 @@
     -->
         <div
           class="
-            tableHeader
+            greyLight
             mb-8
             input-container
             d-block d-sm-flex
@@ -125,7 +125,7 @@
                 ml-3
                 file-name-container
                 mew-heading-4
-                textSecondary--text
+                textLight--text
                 truncate
               "
             >
@@ -341,7 +341,7 @@ export default {
 
 <style lang="scss" scoped>
 .upload-container {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   .file-name-container {
     max-width: 212px;
   }

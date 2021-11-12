@@ -23,7 +23,7 @@
     ===================================================
     -->
       <div v-if="step === 1" class="full-width">
-        <div class="mew-heading-3 mb-4 titlePrimary--text">
+        <div class="mew-heading-3 mb-4 textDark--text">
           What is the token contract address?
         </div>
         <mew-input
@@ -62,11 +62,11 @@
     -->
           <v-col
             cols="2"
-            class="ml-5 captionPrimary--text mew-body font-weight-bold"
+            class="ml-5 textLight--text mew-body font-weight-bold"
           >
             {{ tkn.name }}
           </v-col>
-          <v-col cols="8" class="titlePrimary--text ml-2"
+          <v-col cols="8" class="textDark--text ml-2"
             ><!--
     ===================================================
     displays all token values if it is there except for icon and contract address
@@ -442,8 +442,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .token-placeholder {
-  color: var(--v-textBlack2-base);
-  background-color: var(--v-disabled-base);
+  color: var(--v-textMedium-base);
+  background-color: var(--v-disabledMedium-base);
   border-radius: 24px;
   height: 24px;
   width: 24px;

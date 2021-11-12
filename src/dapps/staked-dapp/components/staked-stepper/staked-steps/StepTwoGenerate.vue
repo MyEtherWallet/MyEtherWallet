@@ -17,7 +17,7 @@
           rounded
           align-center
           justify-space-between
-          tableHeader
+          greyLight
           px-5
           py-4
         "
@@ -82,7 +82,7 @@
               d-block d-sm-flex
               align-center
               justify-space-between
-              tableHeader
+              greyLight
               py-5
               px-3
               rounded
@@ -106,7 +106,7 @@
                 </div>
                 <div
                   v-if="downloadedKeystore && keystoreName"
-                  class="textSecondary--text"
+                  class="textLight--text"
                 >
                   {{ keystoreName }}
                 </div>

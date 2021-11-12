@@ -19,10 +19,8 @@
             style="width: 100%"
           >
             <div>
-              <div class="mew-heading-2 titlePrimary--text mb-2">
-                Keystore File
-              </div>
-              <div class="break-word titlePrimary--text">
+              <div class="mew-heading-2 textDark--text mb-2">Keystore File</div>
+              <div class="break-word textDark--text">
                 Using a keystore file online makes your wallet more vulnerable
                 to loss of funds. We don’t recommend this method of wallet
                 creation.
@@ -55,10 +53,10 @@
             style="width: 100%"
           >
             <div>
-              <div class="mew-heading-2 titlePrimary--text mb-2">
+              <div class="mew-heading-2 textDark--text mb-2">
                 Mnemonic Phrase
               </div>
-              <div class="break-word titlePrimary--text">
+              <div class="break-word textDark--text">
                 Using a Mnemonic Phrase online makes your wallet more vulnerable
                 to loss of funds. We don’t recommend this method of wallet
                 creation.

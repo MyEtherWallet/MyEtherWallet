@@ -90,7 +90,7 @@ export default {
 .mew-component--banner-ads {
   * {
     user-select: none;
-    color: var(--v-titlePrimary-base) !important;
+    color: var(--v-textDark-base) !important;
   }
 }
 .ad1 {

@@ -53,6 +53,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .custom-icon-style {
-  border: 1px solid var(--v-basicOutlineActive-base);
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>
