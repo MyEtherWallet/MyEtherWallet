@@ -415,6 +415,8 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
+        this.token.decimals = decimals;
+        this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;
         this.step = 2;

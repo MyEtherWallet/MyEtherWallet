@@ -3,7 +3,7 @@
     <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
-        :paths="paths"
+        :passed-paths="paths"
         @setPath="setPath"
       />
     </div>
@@ -243,6 +243,10 @@ export default {
     hideCustomPaths: {
       type: Boolean,
       default: false
+    },
+    hideNetworks: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {
@@ -346,20 +350,23 @@ export default {
      * Property returns expand panel items for the Address and Network
      */
     panelItems() {
-      return [
+      const panelItems = [
         {
           name: 'Address',
           subtext: this.panelAddressSubstring,
           colorTheme: 'greyLight',
           hasActiveBorder: true
-        },
-        {
+        }
+      ];
+      if (!this.hideNetworks) {
+        panelItems.push({
           name: 'Network',
           subtext: this.panelNetworkSubstring,
           colorTheme: 'greyLight',
           hasActiveBorder: true
-        }
-      ];
+        });
+      }
+      return panelItems;
     },
     /**
      * Property returns default network and nodes items
@@ -393,9 +400,9 @@ export default {
         this.changeHandler();
       }
     },
-    selectedPath: {
+    handlerWallet: {
       handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
+        if (newVal.basePath !== oldVal.basePath) {
           this.changeHandler();
         }
       },

@@ -136,6 +136,7 @@
         :handler-wallet="walletInstance"
         :selected-path="selectedPath"
         :paths="parsedPaths"
+        :hide-networks="switchAddress"
         @setPath="setPath"
         @unlock="accessWallet"
       />
@@ -163,6 +164,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    switchAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -203,7 +208,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /*------------------------------------
      * STEP 1 ITEMS
     -------------------------------------*/
@@ -253,7 +258,7 @@ export default {
           newObj['value'] = item['path'];
           return newObj;
         })
-        .concat(this.customPaths);
+        .concat(this.paths);
     }
   },
   watch: {
@@ -321,6 +326,23 @@ export default {
       this.length = 12;
     },
     /**
+     * reset component
+     */
+    reset() {
+      this.step = 1;
+      /*Phrase Items: */
+      this.extraWord = '';
+      this.phrase = {};
+      this.length = 12;
+      /* Derivation Path */
+      this.selectedPath = {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      };
+      this.walletInstance = {};
+    },
+    /**
      * Methods emits parent to unlock wallet
      * and passes account withinMnemonic Phrase
      * Used in STEP 2
@@ -328,6 +350,7 @@ export default {
     accessWallet(account) {
       if (account) {
         this.$emit('unlock', account);
+        this.reset();
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }

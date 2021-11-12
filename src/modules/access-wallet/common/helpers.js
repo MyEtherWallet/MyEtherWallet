@@ -67,7 +67,9 @@ const padLeftEven = hex => {
   return hex;
 };
 const bufferToHex = buffer => {
-  return '0x' + buffer.toString('hex');
+  const hex = buffer.toString('hex');
+  if (hex.substr(0, 2) === '0x') return hex;
+  return '0x' + hex;
 };
 const getHexTxObject = tx => {
   return {

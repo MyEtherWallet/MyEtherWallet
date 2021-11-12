@@ -57,14 +57,14 @@
           <div class="px-2 textDark--text text-left d-flex align-center">
             <div>
               <div class="mb-2 d-flex align-center">
-                <div class="mew-heading-2">Get MEW wallet app</div>
+                <div class="mew-heading-2">Buy a Hardware Wallet</div>
                 <v-icon dense color="greenPrimary" class="ml-1">
                   mdi-shield-check
                 </v-icon>
               </div>
               <div class="break-word">
-                Download our official app and connect to MEW web using your
-                mobile phone. Available on iOS and Android.
+                For the highest standard of security, buy a hardware wallet and
+                use it with MEW.
               </div>
             </div>
             <div class="d-none d-sm-block px-5">
@@ -100,8 +100,8 @@
                 </v-icon>
               </div>
               <div class="break-word white--text">
-                Download our official app and connect to MEW web using your
-                mobile phone. Available on iOS and Android.
+                Software methods like keystore file and mnemonic phrase should
+                only be used in offline settings by experienced users.
               </div>
             </div>
           </mew-button>
