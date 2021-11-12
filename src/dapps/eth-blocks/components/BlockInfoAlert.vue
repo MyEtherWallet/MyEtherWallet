@@ -276,7 +276,7 @@ export default {
     alertTitle() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'This block in not available';
+          return 'This block is not available';
         case BLOCK_ALERT.AVAILABLE:
           return 'This block is available';
         case BLOCK_ALERT.RESERVED:
