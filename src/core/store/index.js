@@ -10,6 +10,8 @@ import addressBook from './addressBook';
 import Configs from './configs';
 import LocalStore from 'store';
 import unstoppableStore from '@/dapps/unstoppable-domains-dapp/store/index.js';
+import { dappStore } from '@/dapps/dappsStore';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -21,7 +23,8 @@ const store = new Vuex.Store({
     swap: swap,
     unstoppable: unstoppableStore,
     custom: custom,
-    addressBook: addressBook
+    addressBook: addressBook,
+    ...dappStore
   }
 });
 

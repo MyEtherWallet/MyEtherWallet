@@ -12,6 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 
+/**Dapps Store */
+import { dappStoreBeforeCreate } from './dapps/dappsStore';
+
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
 Router.prototype.push = function push(path) {
@@ -60,6 +63,7 @@ new Vue({
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.commit('addressBook/INIT_STORE');
+    dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('global/setTracking');
   },
   render: h => h(app)

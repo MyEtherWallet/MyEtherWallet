@@ -24,7 +24,10 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   'web3-utils',
   'remark-cli',
-  'node-fetch'
+  'node-fetch',
+  'vuetify',
+  // update after release
+  'sinon'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
