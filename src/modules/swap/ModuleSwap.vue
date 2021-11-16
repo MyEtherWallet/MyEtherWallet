@@ -255,9 +255,7 @@
                     :disabled="disableNext"
                     btn-size="xlarge"
                     style="max-width: 240px"
-                    @click.native="
-                      !isFromNonChain ? showConfirm() : showTradeConfirm()
-                    "
+                    @click.native="showConfirm()"
                   />
                 </div>
               </div>
@@ -301,12 +299,10 @@ import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { EventBus } from '@/core/plugins/eventBus';
-import EventNames from '@/utils/web3-provider/events.js';
 
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 200000;
 
 export default {
   name: 'ModuleSwap',
@@ -472,10 +468,10 @@ export default {
     disableNext() {
       const disableSet =
         this.step < 2 ||
-        this.amountErrorMessage ||
-        this.feeError ||
+        this.amountErrorMessage !== '' ||
+        this.feeError !== '' ||
         !this.hasSelectedProvider ||
-        this.providersErrorMsg.subtitle;
+        this.providersErrorMsg.subtitle !== '';
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
@@ -483,7 +479,7 @@ export default {
         disableSet ||
         (!this.refundAddress &&
           !this.isValidRefundAddr &&
-          this.actualTrade.length === 0)
+          this.actualTrade?.length === 0)
       );
     },
     providersErrorMsg() {
@@ -1256,21 +1252,14 @@ export default {
         selectedProvider: this.selectedProvider,
         txFee: this.txFee,
         gasPriceType: this.gasPriceType,
-        actualTrade: this.currentTrade
+        actualTrade: this.currentTrade,
+        fromTokenType: this.fromTokenType
       };
 
       if (this.isFromNonChain) {
         obj['refundAddress'] = this.refundAddress;
       }
       this.confirmInfo = obj;
-    },
-    showTradeConfirm() {
-      this.setConfirmInfo();
-      EventBus.$emit(
-        EventNames.SHOW_CROSS_CHAIN_MODAL,
-        this.confirmInfo,
-        this.sentCrossChain
-      );
     },
     isValidToAddress(address) {
       if (this.availableQuotes.length > 0) {
@@ -1306,62 +1295,48 @@ export default {
         new BigNumber(10).pow(decimals)
       );
     },
-    sentCrossChain(val) {
-      if (val) {
-        this.allTrades.forEach(item => {
-          const obj = Object.assign({
-            from: this.address,
-            type: NOTIFICATION_TYPES.SWAP,
-            network: this.network.type.name,
-            status: NOTIFICATION_STATUS.PENDING,
-            fromTxData: {
-              currency: this.confirmInfo.fromType,
-              amount: this.confirmInfo.fromVal,
-              icon: this.confirmInfo.fromImg
-            },
-            toTxData: {
-              currency: this.confirmInfo.toType,
-              amount: this.confirmInfo.toVal,
-              icon: this.confirmInfo.toImg,
-              to: this.confirmInfo.to
-            },
-            swapObj: this.confirmInfo,
-            item,
-            to: this.toAddress
-          });
-          this.addNotification(new NonChainNotification(obj)).then(this.clear);
-        });
-      } else {
-        this.clear();
-      }
-    },
     swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
-        const notif = Object.assign(
-          {
-            hash,
-            from: this.address,
-            type: NOTIFICATION_TYPES.SWAP,
-            network: this.network.type.name,
-            status: NOTIFICATION_STATUS.PENDING,
-            fromTxData: {
-              currency: this.confirmInfo.fromType,
-              amount: this.confirmInfo.fromVal,
-              icon: this.confirmInfo.fromImg
-            },
-            toTxData: {
-              currency: this.confirmInfo.toType,
-              amount: this.confirmInfo.toVal,
-              icon: this.confirmInfo.toImg,
-              to: this.confirmInfo.to
-                ? this.confirmInfo.to
-                : currentTrade.transactions[idx].to
-            },
-            swapObj: obj
+        const main = {
+          from: this.address,
+          type: NOTIFICATION_TYPES.SWAP,
+          network: this.network.type.name,
+          status: NOTIFICATION_STATUS.PENDING,
+          fromTxData: {
+            currency: this.confirmInfo.fromType,
+            amount: this.confirmInfo.fromVal,
+            icon: this.confirmInfo.fromImg
           },
-          currentTrade.transactions[idx]
-        );
-        this.addNotification(new Notification(notif)).then(this.clear);
+          toTxData: {
+            currency: this.confirmInfo.toType,
+            amount: this.confirmInfo.toVal,
+            icon: this.confirmInfo.toImg,
+            to: this.confirmInfo.to
+          }
+        };
+
+        if (this.isFromNonChain) {
+          const notif = Object.assign(
+            {
+              swapObj: obj,
+              to: this.toAddress
+            },
+            main
+          );
+          this.addNotification(new NonChainNotification(notif)).then(
+            this.clear
+          );
+        } else {
+          const notif = Object.assign(
+            {
+              hash,
+              swapObj: obj
+            },
+            main,
+            currentTrade.transactions[idx]
+          );
+          this.addNotification(new Notification(notif)).then(this.clear);
+        }
       });
     },
     checkFeeBalance() {

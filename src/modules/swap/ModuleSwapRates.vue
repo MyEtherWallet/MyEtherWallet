@@ -183,7 +183,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'network'])
   },
   watch: {
     web3(newVal) {
@@ -196,7 +196,7 @@ export default {
   methods: {
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val);
+      this.swapHandler = new handlerSwap(val, this.network.type.name);
       this.fetchRates();
     },
     fetchRates() {

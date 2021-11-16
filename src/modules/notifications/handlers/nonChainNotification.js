@@ -25,7 +25,6 @@ const VALID_ARGUMENTS = [
 ];
 export default class NonChainNotification extends Notification {
   constructor(obj) {
-    console.log(obj);
     super(obj);
   }
 
@@ -49,7 +48,7 @@ export default class NonChainNotification extends Notification {
       type: obj.type,
       date: date,
       read: !obj.read ? false : obj.read,
-      swapObj: obj.swapObj ? obj.swapObj : '',
+      swapObj: obj.swapObj ? obj.swapObj : {},
       fromTxData: obj.fromTxData ? obj.fromTxData : {},
       toTxData: obj.toTxData ? obj.toTxData : {},
       network: obj.network ? obj.network : '',

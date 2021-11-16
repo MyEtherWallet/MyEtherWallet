@@ -163,16 +163,19 @@ export default class Notification {
     if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
       const _this = this;
       _this.swapResolver = setInterval(() => {
-        swapper.getStatus(_this.swapObj).then(res => {
-          const formattedStatus = res.toLowerCase();
-          _this.status =
-            formattedStatus === NOTIFICATION_STATUS.COMPLETED
-              ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
-              : formattedStatus === NOTIFICATION_STATUS.FAILED ||
-                formattedStatus === NOTIFICATION_STATUS.UNKNOWN
-              ? NOTIFICATION_STATUS.FAILED.toUpperCase()
-              : res;
-        });
+        const stat = swapper.getStatus(_this.swapObj);
+        if (stat instanceof Promise) {
+          stat.then(res => {
+            const formattedStatus = res.toLowerCase();
+            _this.status =
+              formattedStatus === NOTIFICATION_STATUS.COMPLETED
+                ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
+                : formattedStatus === NOTIFICATION_STATUS.FAILED ||
+                  formattedStatus === NOTIFICATION_STATUS.UNKNOWN
+                ? NOTIFICATION_STATUS.FAILED.toUpperCase()
+                : res;
+          });
+        }
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
           _this.read = false;
           vuexStore.dispatch('notifications/updateNotification', _this);

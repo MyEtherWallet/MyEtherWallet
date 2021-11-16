@@ -279,10 +279,10 @@ export default {
       }
     },
     selectedPath: {
-      deep: true,
       handler: function () {
         this.nextStepTwo();
-      }
+      },
+      deep: true
     }
   },
   methods: {

@@ -157,7 +157,7 @@ export default {
      * Swap Handler
      */
     swapper() {
-      return new handlerSwap(this.web3);
+      return new handlerSwap(this.web3, this.network.type.name);
     },
     /**
      * Formatted outgoing tx notifications

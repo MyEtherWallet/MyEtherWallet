@@ -7,6 +7,8 @@ import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { EventBus } from '@/core/plugins/eventBus';
+import EventNames from '@/utils/web3-provider/events.js';
 
 const HOST_URL = 'https://swap.mewapi.io/changelly';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
@@ -219,23 +221,47 @@ class Changelly {
     const from = await this.web3.eth.getCoinbase();
     const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     return new Promise((resolve, reject) => {
-      this.web3.eth
-        .sendTransaction(
-          Object.assign(tradeObj.transactions[0], {
-            from,
-            gasPrice,
-            handleNotification: false,
-            confirmInfo: confirmInfo
+      if (
+        confirmInfo.fromTokenType.symbol === ETH.currencyName ||
+        confirmInfo.fromTokenType.isEth
+      ) {
+        this.web3.eth
+          .sendTransaction(
+            Object.assign(tradeObj.transactions[0], {
+              from,
+              gasPrice,
+              handleNotification: false,
+              confirmInfo: confirmInfo
+            })
+          )
+          .on('transactionHash', hash => {
+            return resolve({
+              hashes: [hash],
+              provider: this.provider,
+              statusObj: { id: tradeObj.response.id }
+            });
           })
-        )
-        .on('transactionHash', hash => {
-          return resolve({
-            hashes: [hash],
-            provider: this.provider,
-            statusObj: { id: tradeObj.response.id }
-          });
-        })
-        .catch(reject);
+          .catch(reject);
+      } else {
+        // resolver for when user does non chain transaction
+        const resolver = val => {
+          if (val) {
+            resolve({
+              hashes: [confirmInfo.actualTrade],
+              provider: this.provider,
+              statusObj: { id: tradeObj.response.id }
+            });
+          } else {
+            reject(new Error('User cancelled transaction!'));
+          }
+        };
+
+        EventBus.$emit(
+          EventNames.SHOW_CROSS_CHAIN_MODAL,
+          confirmInfo,
+          resolver
+        );
+      }
     });
   }
   getStatus(statusObj) {
@@ -255,7 +281,7 @@ class Changelly {
         const completedStatuses = ['finished'];
         const failedStatuses = ['failed', 'refunded', 'hold', 'expired'];
         const status = response.data.result;
-        if (submittedStatuses.includes(status)) return Configs.status.SUBMITTED;
+        if (submittedStatuses.includes(status)) return Configs.status.PENDING;
         if (pendingStatuses.includes(status)) return Configs.status.PENDING;
         if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
         if (failedStatuses.includes(status)) return Configs.status.COMPLETED;
