@@ -302,7 +302,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 200000;
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',

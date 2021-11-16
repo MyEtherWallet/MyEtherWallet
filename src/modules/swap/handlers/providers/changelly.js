@@ -284,8 +284,8 @@ class Changelly {
         if (submittedStatuses.includes(status)) return Configs.status.PENDING;
         if (pendingStatuses.includes(status)) return Configs.status.PENDING;
         if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
-        if (failedStatuses.includes(status)) return Configs.status.COMPLETED;
-        return Configs.status.UNKNOWN;
+        if (failedStatuses.includes(status)) return Configs.status.FAILED;
+        return Configs.status.FAILED;
       })
       .catch(err => {
         Toast(err, {}, ERROR);
