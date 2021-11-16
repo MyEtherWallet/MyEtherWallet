@@ -48,7 +48,7 @@
                   "
                   :max-btn-obj="{
                     title: 'Max',
-                    disabled: false,
+                    disabled: disableSwapBtn,
                     method: setMaxAmount
                   }"
                   @input="setTokenInValue"
@@ -692,6 +692,9 @@ export default {
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
+    },
+    disableSwapBtn() {
+      return this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow;
     },
     /**
      * @returns BigNumber of the available balance for the From Token
