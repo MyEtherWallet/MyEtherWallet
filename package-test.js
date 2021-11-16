@@ -27,7 +27,8 @@ const EXCEPTIONS = [
   'node-fetch',
   'vuetify',
   // update after release
-  'sinon'
+  'sinon',
+  'eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
