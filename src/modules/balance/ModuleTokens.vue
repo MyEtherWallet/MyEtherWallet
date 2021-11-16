@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div>
+  <div class="mew-components--module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -17,6 +17,7 @@
       :title="`$ ${totalTokensValue}`"
       :icon="require('@/assets/images/icons/icon-token-grey.png')"
       icon-align="left"
+      :has-elevation="true"
     >
       <template #rightHeaderContainer>
         <div>
