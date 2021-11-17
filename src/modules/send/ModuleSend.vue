@@ -45,7 +45,7 @@
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: false,
+                disabled: disableSwapBtn,
                 method: setEntireBal
               }"
               :buy-more-str="buyMore"
@@ -475,6 +475,12 @@ export default {
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
+    },
+    disableSwapBtn() {
+      return (
+        this.amountErrorMessage === 'Not enough balance to send!' ||
+        this.amountErrorMessage === "Amount can't be negative!"
+      );
     }
   },
   watch: {
