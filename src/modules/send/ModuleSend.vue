@@ -179,7 +179,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'underscore';
+import { debounce, isEmpty } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';

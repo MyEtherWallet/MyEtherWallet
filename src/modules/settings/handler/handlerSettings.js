@@ -1,7 +1,7 @@
 import vuexStore from '@/core/store';
 import { mapActions } from 'vuex';
 import { toWei } from 'web3-utils';
-import { contains, isString, keys } from 'underscore';
+import { includes, isString, keys } from 'lodash';
 import xss from 'xss';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 
@@ -65,7 +65,7 @@ export default class Settings {
   _validateImportObject(obj) {
     const newObj = {};
     keys(obj).forEach(item => {
-      if (contains(this.validFields, item)) {
+      if (includes(this.validFields, item)) {
         if (item === 'gasPrice') {
           // converts gasPrice back to BN instance
           // this is assuming that when exporting, it gets converted to string
