@@ -39,6 +39,7 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     ConfirmationSummaryBlock,
@@ -65,10 +66,10 @@ export default {
       type: String,
       default: '0'
     },
-    valueUsd: {
-      type: Number,
-      default: 0
-    },
+    // valueUsd: {
+    //   type: Number,
+    //   default: 0
+    // },
     toDetails: {
       type: Object,
       default: () => {}
@@ -86,6 +87,7 @@ export default {
     return {};
   },
   computed: {
+    ...mapGetters('external', ['fiatValue']),
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
@@ -107,10 +109,13 @@ export default {
       return this.feeFormatted;
     },
     totalFeeUSD() {
-      const ethFeeToUsd = BigNumber(this.txFee).times(this.valueUsd);
+      const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
       if (this.currency.symbol === this.network.type.currencyName) {
-        const amountToUsd = BigNumber(this.value).times(this.valueUsd);
-        return formatFiatValue(BigNumber(amountToUsd).plus(ethFeeToUsd)).value;
+        // const amountToUsd = BigNumber(this.value).times(this.valueUsd);
+        return formatFiatValue(
+          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
+        ).value;
+        // return formatFiatValue(BigNumber(amountToUsd).plus(ethFeeToUsd)).value;
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
       return formatFiatValue(tokenPrice.plus(ethFeeToUsd)).value;
