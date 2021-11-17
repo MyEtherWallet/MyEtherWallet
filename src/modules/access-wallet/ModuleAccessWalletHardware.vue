@@ -462,6 +462,10 @@ export default {
   watch: {
     selectedPath: {
       handler: function () {
+        /**
+         * only call this when hwWalletInstance is not empty (ledger will error out)
+         * and when walletType has been selected (closing modal will error out)
+         */
         if (this.walletType && !isEmpty(this.hwWalletInstance)) {
           this.hwWalletInstance = {};
           this[`${this.walletType}Unlock`]();

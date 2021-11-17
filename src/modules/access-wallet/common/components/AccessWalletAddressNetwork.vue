@@ -429,6 +429,10 @@ export default {
       this.selectedAddress = '';
       this.accountAddress = '';
       this.currentIdx = 0;
+      /**
+       * prevents error when this.handlerWallet
+       * is empty due to selectedPatch changing
+       */
       if (!isEmpty(this.handlerWallet)) {
         this.setAccounts();
       }
