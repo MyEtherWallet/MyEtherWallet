@@ -195,6 +195,7 @@ import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
+import { isEmpty, isEqual } from 'underscore';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -400,13 +401,18 @@ export default {
         this.changeHandler();
       }
     },
-    handlerWallet: {
+    selectedPath: {
       handler: function (newVal, oldVal) {
-        if (newVal.basePath !== oldVal.basePath) {
+        if (!isEqual(newVal, oldVal)) {
           this.changeHandler();
         }
       },
       deep: true
+    },
+    handlerWallet(newVal, oldVal) {
+      if (!isEqual(newVal, oldVal)) {
+        this.changeHandler();
+      }
     }
   },
   mounted() {
@@ -423,7 +429,9 @@ export default {
       this.selectedAddress = '';
       this.accountAddress = '';
       this.currentIdx = 0;
-      this.setAccounts();
+      if (!isEmpty(this.handlerWallet)) {
+        this.setAccounts();
+      }
     },
     /**
      * Async method that gets accounts according to the pagination

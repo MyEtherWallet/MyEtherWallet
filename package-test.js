@@ -26,8 +26,8 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
-  // update after release
-  'sinon'
+  // eslint broken again
+  'eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -462,7 +462,8 @@ export default {
   watch: {
     selectedPath: {
       handler: function () {
-        if (!isEmpty(this.hwWalletInstance)) {
+        if (this.walletType && !isEmpty(this.hwWalletInstance)) {
+          this.hwWalletInstance = {};
           this[`${this.walletType}Unlock`]();
         }
       },
@@ -575,12 +576,11 @@ export default {
       const path = this.selectedPath.hasOwnProperty('value')
         ? this.selectedPath.value
         : this.selectedPath;
-      return this.wallets[this.walletType]
+      this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            this.hwWalletInstance = _hwWallet;
             if (this.onLedger) this.ledgerConnected = true;
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
@@ -597,10 +597,11 @@ export default {
                     this.reset();
                   }
                 });
+            } else {
+              this.hwWalletInstance = _hwWallet;
             }
-            return _hwWallet;
           } catch (err) {
-            Toast(err, {}, ERROR);
+            this.wallets[this.walletType].create.errorHandler(err);
           }
         })
         .catch(err => {
