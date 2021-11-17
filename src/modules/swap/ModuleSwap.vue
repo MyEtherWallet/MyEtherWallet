@@ -645,8 +645,14 @@ export default {
             return item;
         }
       });
+      let nonChainTokens = this.availableTokens.fromTokens.filter(item => {
+        if (item.hasOwnProperty('isEth') && !item.isEth) {
+          return item;
+        }
+      });
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      const returnableTokens = [
+      nonChainTokens = this.formatTokensForSelect(nonChainTokens);
+      let returnableTokens = [
         {
           text: 'Select Token',
           imgs: this.getPlaceholderImgs(true),
@@ -660,15 +666,23 @@ export default {
         {
           header: 'My Wallet'
         },
-        ...tradebleWalletTokens,
-        ...filteredTrendingTokens,
+        ...tradebleWalletTokens
+      ];
+      if (nonChainTokens.length > 0) {
+        returnableTokens = returnableTokens.concat([
+          {
+            header: 'Non-Chain Tokens'
+          },
+          ...nonChainTokens
+        ]);
+      }
+      return returnableTokens.concat([
         {
           header: 'Other Tokens'
         },
         ...validFromTokens,
         ...filteredTrendingTokens
-      ];
-      return returnableTokens;
+      ]);
     },
     /**
      * @returns object of other tokens

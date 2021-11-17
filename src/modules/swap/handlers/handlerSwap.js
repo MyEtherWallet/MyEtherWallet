@@ -27,8 +27,7 @@ class Swap {
     return this.providers[0].getSupportedTokens().then(baseList => {
       allTokens = allTokens.concat(baseList);
       return Promise.all(
-        this.providers.map((p, idx) => {
-          if (idx < 2) return Promise.resolve();
+        this.providers.map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             if (tokens && tokens.length > 0) {
