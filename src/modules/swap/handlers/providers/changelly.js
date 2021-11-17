@@ -42,7 +42,8 @@ class Changelly {
             img: `https://img.mewapi.io/?image=${d.image}`,
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
-            isEth: d.contractAddress ? true : false
+            isEth: d.contractAddress ? true : false,
+            cgid: d.ticker
           };
         });
       })

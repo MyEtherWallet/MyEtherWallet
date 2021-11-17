@@ -27,7 +27,8 @@ const EXCEPTIONS = [
   'node-fetch',
   'vuetify',
   // eslint broken again
-  'eslint'
+  'eslint',
+  '@unstoppabledomains/resolution'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

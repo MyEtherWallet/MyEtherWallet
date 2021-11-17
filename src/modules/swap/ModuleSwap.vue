@@ -123,7 +123,7 @@
             ref="addressInput"
             class="pt-4 pb-2 mt-10"
             :label="nativeLabel"
-            :currency="selectedCurrency"
+            :is-valid-address-func="isValidToAddress"
             @setAddress="setRefundAddr"
           />
 
@@ -614,9 +614,10 @@ export default {
           foundToken.isEth = token.isEth;
           return foundToken;
         }
+        const name = token.name;
         token.price = '';
-        token.subtext = token.name;
-        token.value = token.name;
+        token.subtext = name;
+        token.value = name;
         token.name = token.symbol;
         return token;
       });
@@ -695,9 +696,10 @@ export default {
           foundToken.isEth = token.isEth;
           return foundToken;
         }
+        const name = token.name;
         token.price = '0.00';
-        token.subtext = token.name;
-        token.value = token.name;
+        token.subtext = name;
+        token.value = name;
         token.name = token.symbol;
         return token;
       });
@@ -750,15 +752,6 @@ export default {
     isToAddressValid() {
       if (this.toTokenType?.isEth) return true;
       return this.addressValue.isValid;
-    },
-    /**
-     * @returns string
-     * is used as a label for module-address-book
-     */
-    selectedCurrency() {
-      return !this.isFromNonChain
-        ? this.network.type.name
-        : this.fromTokenType?.symbol;
     },
     /**
      * Checks whether or not the user has a minimum eth balance to swap:
@@ -1002,9 +995,11 @@ export default {
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
-        t.totalBalance = t.usdBalancef;
-        t.tokenBalance = t.balancef;
-        t.price = t.pricef;
+        t.totalBalance = t.hasOwnProperty('usdBalancef')
+          ? t.usdBalancef
+          : '0.00';
+        t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
+        t.price = t.hasOwnProperty('pricef') ? t.pricef : '0.00';
         return t;
       });
     },
