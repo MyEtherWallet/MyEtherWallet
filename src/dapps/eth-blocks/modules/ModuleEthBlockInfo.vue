@@ -103,6 +103,7 @@
           :owner="alertOwner"
           :price="alertMintPrice"
           :disable-action="isActionInProgress"
+          :estimated-total-wei="estimatedTotal"
           :is-pending="hasPendingTx"
           :has-enough-eth="hasEnoughEth"
           @mint="mintBlock"
@@ -189,7 +190,7 @@ import { toBN } from 'web3-utils';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_TRANSFER = 150000;
-const MIN_GAS_MINT = 300000;
+const MIN_GAS_MINT = 350000;
 
 export default {
   name: 'ModuleEthBlockInfo',
@@ -222,12 +223,11 @@ export default {
      * STORE STATE
      */
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('global', ['gasPriceType']),
 
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPriceByType']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
     ...mapGetters('ethBlocksTxs', ['getEthBlockTx']),
     ...mapGetters('wallet', ['balanceInWei']),
 
@@ -240,17 +240,23 @@ export default {
         this.alert === BLOCK_ALERT.OWNED ||
         this.alert === BLOCK_ALERT.AVAILABLE
       ) {
-        const gasLimit =
-          this.alert === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
-        const gasPrice = this.gasPriceByType(this.gasPriceType);
-        const txFee = toBN(gasLimit).mul(toBN(gasPrice));
-        const total =
-          this.alert === BLOCK_ALERT.OWNED
-            ? txFee
-            : txFee.add(toBN(this.handlerBlock.mintPrice));
-        return !toBN(this.balanceInWei).sub(total).isNeg();
+        return !toBN(this.balanceInWei).sub(toBN(this.estimatedTotal)).isNeg();
       }
       return true;
+    },
+    estimatedTotal() {
+      if (
+        this.alert === BLOCK_ALERT.OWNED ||
+        this.alert === BLOCK_ALERT.AVAILABLE
+      ) {
+        const gasLimit =
+          this.alert === BLOCK_ALERT.OWNED ? MIN_GAS_TRANSFER : MIN_GAS_MINT;
+        const txFee = toBN(gasLimit).mul(toBN(this.gasPrice));
+        return this.alert === BLOCK_ALERT.OWNED
+          ? txFee.toString()
+          : txFee.add(toBN(this.handlerBlock.mintPrice)).toString();
+      }
+      return '0';
     },
 
     /**
@@ -477,10 +483,7 @@ export default {
      */
     mintBlock() {
       this.trackDapp('ethBlocksMint');
-      this.handlerBlock.mintBlock(
-        this.balanceInWei,
-        this.gasPriceByType(this.gasPriceType)
-      );
+      this.handlerBlock.mintBlock(this.balanceInWei, this.gasPrice);
     },
 
     /**
@@ -504,11 +507,7 @@ export default {
      */
     sendBlock(value) {
       this.trackDapp('ethBlocksSendBlock');
-      this.handlerBlock.transferBlock(
-        value,
-        this.balanceInWei,
-        this.gasPriceByType(this.gasPriceType)
-      );
+      this.handlerBlock.transferBlock(value, this.balanceInWei, this.gasPrice);
     }
   }
 };
