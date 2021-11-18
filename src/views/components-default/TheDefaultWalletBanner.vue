@@ -80,9 +80,7 @@
             class="mew-body font-weight-medium footer-text"
           >
             <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
-            <a
-              :href="isMobile() ? btn.url : 'https://mewwallet.com'"
-              target="_blank"
+            <a href="https://mewwallet.com" target="_blank"
               >{{ $t('home.mew-wallet-modal.learn-more') }}...
             </a>
           </div>
