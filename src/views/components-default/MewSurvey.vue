@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    :value="showSurvey"
+    :value="show"
     :vertical="true"
     multi-line
     height="176px"
@@ -10,6 +10,7 @@
     right
     rounded
     class="mr-16 pr-10"
+    transition="scale-transition"
     content-class="mew-survey-content d-flex flex-column justify-space-between pa-3"
   >
     <div class="mew-heading-4 text-center whiteAlways--text">
@@ -35,14 +36,40 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 export default {
+  data() {
+    return {
+      show: false
+    };
+  },
   computed: {
     ...mapState('global', ['showSurvey'])
+  },
+  watch: {
+    showSurvey(newVal) {
+      if (newVal) {
+        this.delayOpenSnackBar();
+      } else {
+        this.show = newVal;
+      }
+    }
+  },
+  mounted() {
+    this.delayOpenSnackBar();
   },
   methods: {
     ...mapActions('global', ['setShowSurvey']),
     openSurvey() {
       window.open('https://zjevge12plr.typeform.com/to/bheAMSYf', '_blank');
       this.setShowSurvey(false);
+    },
+    delayOpenSnackBar() {
+      // add 6 secs delay
+      // on load when showSurvey is true
+      if (this.showSurvey) {
+        setTimeout(() => {
+          this.show = this.showSurvey;
+        }, 6000);
+      }
     }
   }
 };
