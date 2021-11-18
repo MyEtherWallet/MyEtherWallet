@@ -38,7 +38,8 @@ import { mapActions, mapState } from 'vuex';
 export default {
   data() {
     return {
-      show: false
+      show: false,
+      timeoutHolder: null
     };
   },
   computed: {
@@ -46,6 +47,7 @@ export default {
   },
   watch: {
     showSurvey(newVal) {
+      if (this.timeoutHolder) clearTimeout(this.timeoutHolder);
       if (newVal) {
         this.delayOpenSnackBar();
       } else {
@@ -66,7 +68,7 @@ export default {
       // add 6 secs delay
       // on load when showSurvey is true
       if (this.showSurvey) {
-        setTimeout(() => {
+        this.timeoutHolder = setTimeout(() => {
           this.show = this.showSurvey;
         }, 6000);
       }
