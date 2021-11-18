@@ -166,8 +166,9 @@ class Changelly {
         }
       })
       .then(async response => {
-        if (Array.isArray(response.data.result))
+        if (Array.isArray(response.data.result)) {
           return new Error('Invalid input');
+        }
         /**
          * Differentiate between
          * in network swap vs cross chain

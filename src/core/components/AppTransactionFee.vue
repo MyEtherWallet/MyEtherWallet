@@ -134,7 +134,7 @@
             :class="[hasError ? 'error--text' : '']"
             class="ml-2"
           >
-            {{ message }}
+            {{ error }}
             <a
               v-if="notEnoughEth"
               rel="noopener noreferrer"
@@ -193,10 +193,6 @@ export default {
     totalCost: {
       type: String,
       default: '0'
-    },
-    message: {
-      type: String,
-      default: ''
     },
     notEnoughEth: {
       type: Boolean,

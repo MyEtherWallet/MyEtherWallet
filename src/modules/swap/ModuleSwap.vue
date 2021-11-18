@@ -236,13 +236,13 @@
                 -->
                 <app-transaction-fee
                   v-if="showNetworkFee"
+                  :is-from-chain="!isFromNonChain"
                   :show-fee="showSwapFee"
                   :getting-fee="loadingFee"
                   :error="feeError"
                   :total-cost="totalCost"
                   :tx-fee="txFee"
                   :total-gas-limit="totalGasLimit"
-                  :message="feeError"
                   :not-enough-eth="notEnoughEth"
                   :from-eth="isFromTokenMain"
                   class="mt-10 mt-sm-16"
@@ -408,7 +408,6 @@ export default {
      */
     showNetworkFee() {
       return (
-        !this.isFromNonChain &&
         this.step > 0 &&
         this.providersErrorMsg.subtitle === '' &&
         !this.isLoadingProviders
@@ -1225,6 +1224,8 @@ export default {
         });
     }, 500),
     setupTrade(trade) {
+      this.step = 2;
+      this.loadingFee = false;
       if (trade instanceof Error) {
         this.feeError = 'Provider issue';
         return;
@@ -1232,8 +1233,6 @@ export default {
       this.feeError = '';
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
-      this.step = 2;
-      this.loadingFee = false;
       if (!this.isFromNonChain) {
         this.currentTrade.gasPrice = this.localGasPrice;
         this.checkFeeBalance();

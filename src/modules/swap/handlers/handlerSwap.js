@@ -37,7 +37,7 @@ class Swap {
         })
       ).then(() => {
         const sorted = allTokens.sort((a, b) => {
-          if (a.name > b.name) return 1;
+          if (a.symbol > b.symbol) return 1;
           return -1;
         });
         return {
