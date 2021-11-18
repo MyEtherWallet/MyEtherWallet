@@ -43,7 +43,7 @@
               title="Access your wallet to Mint"
               @click.native="
                 $router.push({
-                  name: ROUTES_HOME.ACCESS_WALLET.NAME,
+                  name: 'EthBlocks',
                   params: {}
                 })
               "
@@ -56,13 +56,10 @@
 </template>
 
 <script>
-import { ROUTES_HOME } from '@/core/configs/configRoutes';
-
 export default {
   name: 'HomeEthBlocks',
   components: {},
   data: () => ({
-    ROUTES_HOME: ROUTES_HOME,
     blocks: [
       {
         title: 'Block #42',
@@ -101,9 +98,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mew-component--home--eth-blocks {
-  //padding: 80px 0;
-}
 .block-card-container {
   &:nth-child(even) .block-card {
     box-shadow: 0 15px 30px #cecece;
