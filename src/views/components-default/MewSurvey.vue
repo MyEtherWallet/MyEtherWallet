@@ -7,9 +7,10 @@
     width="257px"
     :timeout="-1"
     color="#0C4180"
-    right
+    :right="shouldCenter"
+    :center="!shouldCenter"
     rounded
-    class="mr-16 pr-10"
+    :class="shouldCenter ? 'mr-16 pr-10' : ''"
     transition="scale-transition"
     content-class="mew-survey-content d-flex flex-column justify-space-between pa-3"
   >
@@ -43,7 +44,14 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['showSurvey'])
+    ...mapState('global', ['showSurvey']),
+    shouldCenter() {
+      return (
+        this.$vuetify.breakpoint.lg ||
+        this.$vuetify.breakpoint.xl ||
+        this.$vuetify.breakpoint.md
+      );
+    }
   },
   watch: {
     showSurvey(newVal) {
