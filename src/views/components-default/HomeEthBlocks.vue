@@ -12,7 +12,7 @@
               sm="4"
               class="block-card-container"
             >
-              <div class="pa-4 block-card">
+              <div class="pa-4 block-card white">
                 <img :src="b.img" alt="Eth Block" style="width: 100%" />
                 <div class="mt-3 font-weight-bold mew-label">{{ b.title }}</div>
                 <div class="filled-block"></div>
