@@ -3,23 +3,18 @@
     <v-container>
       <v-row>
         <v-col class="pa-0" cols="12" md="6">
-          <v-row style="max-width: 520px; margin: 0 auto">
-            <v-col
-              v-for="(b, key) in blocksFiltered"
-              :key="key"
-              style="padding: 14px"
-              cols="6"
-              sm="4"
-              class="block-card-container"
-            >
-              <div class="pa-4 block-card white">
-                <img :src="b.img" alt="Eth Block" style="width: 100%" />
-                <div class="mt-3 font-weight-bold mew-label">{{ b.title }}</div>
-                <div class="filled-block"></div>
-                <div class="filled-block"></div>
-              </div>
-            </v-col>
-          </v-row>
+          <div style="max-width: 520px; margin: 0 auto">
+            <img
+              class="d-lg-none d-md-none d-inline"
+              width="100%"
+              :src="three"
+            />
+            <img
+              class="d-lg-inline d-md-inline d-none"
+              width="100%"
+              :src="six"
+            />
+          </div>
         </v-col>
         <v-col
           cols="12"
@@ -56,43 +51,16 @@
 </template>
 
 <script>
+import ethBlocksThree from '@/assets/images/icons/eth-blocks-3.png';
+import ethBlocksSix from '@/assets/images/icons/eth-blocks-6.png';
 export default {
   name: 'HomeEthBlocks',
   components: {},
-  data: () => ({
-    blocks: [
-      {
-        title: 'Block #42',
-        img: require('@/assets/images/icons/nft/eth-block/block-2.jpeg')
-      },
-      {
-        title: 'Block #2,734,221',
-        img: require('@/assets/images/icons/nft/eth-block/block-1.jpeg')
-      },
-      {
-        title: 'Block #7,351',
-        img: require('@/assets/images/icons/nft/eth-block/block-3.jpeg')
-      },
-      {
-        title: 'Block #745',
-        img: require('@/assets/images/icons/nft/eth-block/block-6.jpeg')
-      },
-      {
-        title: 'Block #453,551',
-        img: require('@/assets/images/icons/nft/eth-block/block-5.jpeg')
-      },
-      {
-        title: 'Block #1,000',
-        img: require('@/assets/images/icons/nft/eth-block/block-4.jpeg')
-      }
-    ]
-  }),
-  computed: {
-    blocksFiltered() {
-      if (this.$vuetify.breakpoint.xs) return this.blocks.slice(0, 2);
-      if (this.$vuetify.breakpoint.sm) return this.blocks.slice(0, 3);
-      return this.blocks;
-    }
+  data() {
+    return {
+      three: ethBlocksThree,
+      six: ethBlocksSix
+    };
   }
 };
 </script>
