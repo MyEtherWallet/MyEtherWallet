@@ -70,7 +70,7 @@ export default {
       if (this.showSurvey) {
         this.timeoutHolder = setTimeout(() => {
           this.show = this.showSurvey;
-        }, 6000);
+        }, 3000);
       }
     }
   }
