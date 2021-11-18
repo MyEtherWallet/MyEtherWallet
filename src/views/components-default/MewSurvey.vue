@@ -3,18 +3,24 @@
     :value="show"
     :vertical="true"
     multi-line
-    height="176px"
-    width="257px"
+    height="208px"
+    min-height="208px"
+    :width="width"
+    :min-width="width"
     :timeout="-1"
     color="#0C4180"
-    :right="shouldCenter"
-    :center="!shouldCenter"
+    right
     rounded
-    :class="shouldCenter ? 'mr-16 pr-10' : ''"
+    :class="[notSmallOrXs ? 'pr-12' : 'pr-6', 'mr-16 snackbar-container']"
     transition="scale-transition"
     content-class="mew-survey-content d-flex flex-column justify-space-between pa-3"
   >
-    <div class="mew-heading-4 text-center whiteAlways--text">
+    <div
+      :class="[
+        notSmallOrXs ? 'text-center' : 'text-left',
+        'mew-heading-4 whiteAlways--text'
+      ]"
+    >
       Want to help improve MEW web?
     </div>
     <mew-button
@@ -45,12 +51,20 @@ export default {
   },
   computed: {
     ...mapState('global', ['showSurvey']),
-    shouldCenter() {
+    notSmallOrXs() {
       return (
         this.$vuetify.breakpoint.lg ||
         this.$vuetify.breakpoint.xl ||
         this.$vuetify.breakpoint.md
       );
+    },
+    width() {
+      if (this.notSmallOrXs) {
+        return '281px';
+      } else if (this.$vuetify.breakpoint.sm) {
+        return '235px';
+      }
+      return '211px';
     }
   },
   watch: {
@@ -87,5 +101,9 @@ export default {
 <style lang="scss">
 .mew-survey-content {
   width: 100% !important;
+}
+
+.snackbar-container {
+  margin-bottom: -80px;
 }
 </style>
