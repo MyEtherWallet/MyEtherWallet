@@ -357,7 +357,8 @@ export default {
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
           { label: 'Submit DApp', routerLink: 'DappSubmission' },
-          { label: 'Convert Units', routerLink: 'ConvertUnits' }
+          { label: 'Convert Units', routerLink: 'ConvertUnits' },
+          { label: 'Jobs', routerLink: 'Jobs' }
         ]
       },
       {

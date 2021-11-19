@@ -13,6 +13,7 @@ import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayo
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 import TheConvertUnits from '@/views/layouts-default/TheConvertUnits';
+import TheJobs from '@/views/layouts-default/TheJobs';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -118,6 +119,14 @@ export default {
       path: ROUTES_HOME.CONVERT_UNITS.PATH,
       name: ROUTES_HOME.CONVERT_UNITS.NAME,
       component: TheConvertUnits,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.JOBS.PATH,
+      name: ROUTES_HOME.JOBS.NAME,
+      component: TheJobs,
       meta: {
         noAuth: true
       }
