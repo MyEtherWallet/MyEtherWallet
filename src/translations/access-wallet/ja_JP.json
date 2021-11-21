@@ -57,7 +57,7 @@
   },
   "metamask": {
     "option-title": "Metamask",
-    "option-text": "Use the MetaMask extension to access my wallet",
+    "option-text": "Use the MetaMask extension to access wallet",
     "warning": {
       "safari": "MetaMask is only available in these browsers:",
       "install-promt": "Please install the Metamask extension and refresh your page.",
@@ -68,7 +68,7 @@
       "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
       "button-install": "Install Metamask",
       "button-refresh": "Refresh",
-      "terms": "To Access my Wallet, I accept {terms}."
+      "terms": "To access wallet, I accept {terms}."
     }
   },
   "mnemonic": {
@@ -112,12 +112,12 @@
     "string": "PIN",
     "enter": "Enter PIN for your {device}",
     "layout": "The PIN layout is displayed on your Hardware wallet",
-    "access": "To access my wallet,",
+    "access": "To access wallet,",
     "accept": "I accept the",
     "terms": "Terms and Conditions"
   },
   "json-file": "Keystore File",
-  "accept-terms": "To Access my Wallet, I accept {terms}",
+  "accept-terms": "To access wallet, I accept {terms}",
   "hd-derivation-path": "HD Derivation Path",
   "custom-paths": "Custom Paths",
   "add-custom-path": "Add Custom Path",

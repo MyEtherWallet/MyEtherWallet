@@ -12,7 +12,7 @@
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
+              <img width="204" src="@/assets/images/icons/logo-light2.png" />
             </router-link>
             <!--
             =====================================================================================
@@ -23,35 +23,6 @@
               <v-icon color="white">mdi-close</v-icon>
             </v-btn>
           </div>
-          <balance-card />
-
-          <v-btn
-            v-if="network.type.name === 'ETH'"
-            class="mt-3"
-            color="white"
-            outlined
-            x-large
-            width="100%"
-            @click.native="openSimplex"
-          >
-            <div class="d-flex align-center justify-space-between width--full">
-              <div>Buy ETH here</div>
-
-              <div class="d-flex align-center">
-                <img
-                  src="@/assets/images/icons/icon-visa-white.png"
-                  alt="Master card"
-                  height="11"
-                />
-                <img
-                  src="@/assets/images/icons/icon-mastercard-mew.png"
-                  alt="Master card"
-                  height="16"
-                  class="ml-2"
-                />
-              </div>
-            </div>
-          </v-btn>
         </div>
       </template>
 
@@ -142,19 +113,8 @@
           </v-list-item-content>
         </v-list-item>
         <div class="mt-3 px-8">
-          <div class="matomo-tracking-switch">
-            <v-switch
-              :input-value="consentToTrack"
-              inset
-              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="primary"
-              off-icon="mdi-alert-circle"
-              @change="setConsent"
-            />
-          </div>
           <div class="d-flex align-center justify-space-between">
             <!-- <theme-switch /> -->
-            <div class="searchText--text">v{{ version }}</div>
           </div>
         </div>
       </v-list>
@@ -215,7 +175,6 @@ import contract from '@/assets/images/icons/icon-contract-enable.png';
 import message from '@/assets/images/icons/icon-message-enable.png';
 import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
-import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
 // import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -227,7 +186,6 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 export default {
   components: {
     AppBtnMenu,
-    BalanceCard,
     ModuleSettings,
     ModuleNotifications
   },
@@ -235,7 +193,6 @@ export default {
   data() {
     return {
       navOpen: null,
-      version: VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
@@ -353,10 +310,6 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
-    },
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
     }
   }
 };

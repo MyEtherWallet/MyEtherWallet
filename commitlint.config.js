@@ -17,9 +17,6 @@ module.exports = {
         'refactor',
         'revert',
         'style',
-        'lint',
-        'test',
-        'translation',
         'sentry',
         'release'
       ]

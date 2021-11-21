@@ -21,7 +21,7 @@
     <div class="text-center">
       <mew-checkbox
         v-model="acceptTerms"
-        label="To access my wallet, I accept "
+        label="To access wallet, I accept "
         :link="link"
         class="justify-center"
       />

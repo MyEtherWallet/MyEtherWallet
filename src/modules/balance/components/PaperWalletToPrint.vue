@@ -2,7 +2,7 @@
   <div class="mew-component--paper-wallet-content" style="width: 800px">
     <div class="d-flex justify-space-between align-start">
       <div class="d-flex align-center">
-        <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
+        <img height="35" src="@/assets/images/icons/logo.svg" />
         <div class="primary--text"><span class="mx-3">|</span>Paper Wallet</div>
       </div>
       <div>

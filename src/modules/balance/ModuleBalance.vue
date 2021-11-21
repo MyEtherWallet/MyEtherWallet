@@ -91,22 +91,11 @@
         </div>
       </template>
     </mew-module>
-    <!--
-    =====================================================================================
-      display if the user has no eth balance
-    =====================================================================================
-    -->
-    <balance-empty-block
-      v-if="!hasBalance && !loading"
-      :network-type="network.type.name"
-      :is-eth="isEthNetwork"
-    />
   </div>
 </template>
 
 <script>
 import BalanceChart from '@/modules/balance/components/BalanceChart';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
@@ -118,8 +107,7 @@ import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
-    BalanceChart,
-    BalanceEmptyBlock
+    BalanceChart
   },
   mixins: [handlerBalanceHistory],
   data() {

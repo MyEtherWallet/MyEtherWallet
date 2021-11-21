@@ -13,7 +13,7 @@
     />
 
     <mew-button
-      title="Access My Wallet"
+      title="Access Wallet"
       btn-size="xlarge"
       :disabled="!(password !== '' && acceptTerms)"
       @click.native="
@@ -25,7 +25,7 @@
 
     <mew-checkbox
       v-model="acceptTerms"
-      label="To access my wallet, I accept "
+      label="To access wallet, I accept "
       :link="link"
       class="justify-center"
     />

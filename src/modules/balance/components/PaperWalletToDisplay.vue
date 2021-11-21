@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="6" class="d-flex align-center mr-auto">
-          <img height="35" src="@/assets/images/icons/logo-mew-dark.png" />
+          <img height="35" src="@/assets/images/icons/logo.svg" />
           <div class="primary--text">
             <span class="mx-3">|</span>Paper Wallet
           </div>

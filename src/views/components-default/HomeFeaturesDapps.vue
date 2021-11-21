@@ -55,16 +55,6 @@ export default {
   data: () => ({
     dapps: [
       {
-        label: 'Stake on ETH 2.0',
-        icon: require('@/assets/images/icons/icon-dapp-eth20.png'),
-        isAccessible: true
-      },
-      {
-        label: 'ENS Manager',
-        icon: require('@/assets/images/icons/icon-dapp-ens-manager.png'),
-        isAccessible: true
-      },
-      {
         label: 'MakerDAO',
         icon: require('@/assets/images/icons/icon-dapp-makerdao.png')
       },

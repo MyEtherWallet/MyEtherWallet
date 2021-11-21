@@ -66,11 +66,6 @@ const hasSwap = function (state, getters) {
   return name === ETH.name || name === BSC.name || name === MATIC.name;
 };
 
-const swapLink = function (state, getters, rootState) {
-  const hasAddress = rootState.wallet.address;
-  const link = 'https://ccswap.myetherwallet.com/#/';
-  return hasAddress ? `${link}?to=${hasAddress}` : link;
-};
 const isEIP1559SupportedNetwork = function (state) {
   return state.eip1559.baseFeePerGas !== '0';
 };
@@ -102,7 +97,6 @@ export default {
   localContracts,
   isTestNetwork,
   hasSwap,
-  swapLink,
   isEIP1559SupportedNetwork,
   gasFeeMarketInfo,
   gasPriceByType

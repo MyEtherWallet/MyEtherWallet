@@ -5,11 +5,6 @@
 =====================================================================================
 -->
   <mew-overlay
-    :footer="{
-      text: step === 1 ? 'Need help? Read about' : 'Need help? Read',
-      linkTitle: footerLink.title,
-      link: footerLink.url
-    }"
     :show-overlay="open"
     :title="title"
     :back="step === 1 ? null : back"

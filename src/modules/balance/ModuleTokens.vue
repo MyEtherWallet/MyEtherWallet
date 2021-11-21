@@ -82,14 +82,12 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
-import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
-    BalanceEmptyBlock,
     TokenDeleteCustom,
     TokenAddCustom
   },

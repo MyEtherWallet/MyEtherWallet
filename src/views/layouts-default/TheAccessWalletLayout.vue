@@ -7,9 +7,8 @@
       =====================================================================================
       -->
       <the-layout-header
-        title="Access My Wallet"
+        title="Access Wallet"
         subtitle-line-one=" Please select a method to access your wallet."
-        subtitle-line-two="Don't have a wallet?"
         :route-obj="titleRoute"
         has-link
       />
@@ -20,12 +19,6 @@
       -->
       <div style="max-width: 650px" class="mx-auto">
         <div v-for="btn in buttons" :key="btn.title" class="position--relative">
-          <div
-            class="warning--text text--darken-1 mew-label"
-            style="position: absolute; top: 15px; right: 25px"
-          >
-            NOT RECOMMENDED
-          </div>
           <mew-button
             has-full-width
             class="mb-5"
@@ -92,9 +85,6 @@
 </template>
 
 <script>
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
-import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
-import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
 import {
   Toast,
   ERROR,
@@ -114,9 +104,6 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 export default {
   name: 'TheAccessWalletLayout',
   components: {
-    ModuleAccessWalletHardware,
-    ModuleAccessWalletSoftware,
-    ModuleAccessWalletMobile,
     TheLayoutHeader
   },
   mixins: [handlerAnalytics],
@@ -132,30 +119,12 @@ export default {
   },
   data() {
     return {
-      titleRoute: {
-        text: 'Create Wallet',
-        routeName: 'CreateWallet'
-      },
       buttons: [
-        /* MEW wallet Button */
-        {
-          color: 'white',
-          title: 'MEW wallet',
-          subtitle: 'Connect MEW wallet app to MEW web',
-          note: '',
-          rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
-          titleIcon: 'mdi-shield-check',
-          titleIconType: 'mdi',
-          titleIconClass: 'primary',
-          fn: () => {
-            this.openMEWconnect();
-          }
-        },
         /* Browser Extension */
         {
           color: 'white',
           title: 'Browser Extension',
-          subtitle: 'Use your web3 wallet with MEW.',
+          subtitle: 'Use your web3 wallet.',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
           titleIcon: 'mdi-shield-check',
@@ -194,21 +163,6 @@ export default {
           titleIconClass: 'primary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
-          }
-        },
-        /* Software */
-        {
-          color: 'white',
-          style: 'outline',
-          title: 'Software',
-          subtitle: 'Keystore files, Mnemonic phrase, Private key',
-          note: 'NOT RECOMMENDED',
-          rightIcon: '',
-          titleIcon: 'mdi-alert',
-          titleIconType: 'mdi',
-          titleIconClass: 'warning darken-1',
-          fn: () => {
-            this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
         }
       ],

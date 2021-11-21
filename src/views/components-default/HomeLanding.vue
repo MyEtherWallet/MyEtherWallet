@@ -33,7 +33,7 @@
             <mew-button
               :has-full-width="false"
               btn-style="outline"
-              title="Access my wallet"
+              title="Access Wallet"
               btn-size="xlarge"
               @click.native="
                 $router.push({
@@ -83,7 +83,7 @@
               class="width--full"
               :has-full-width="false"
               btn-style="outline"
-              title="Access my wallet"
+              title="Access Wallet"
               btn-size="xlarge"
               @click.native="
                 $router.push({

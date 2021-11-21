@@ -1,10 +1,5 @@
 <template>
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
     color-type="mewBg"
     :show-overlay="isOverlayOpen"
     title="My paper wallet"

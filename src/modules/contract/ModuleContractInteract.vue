@@ -53,11 +53,6 @@
       ============================================================================
       -->
       <mew-overlay
-        :footer="{
-          text: 'Need help?',
-          linkTitle: 'Contact support',
-          link: 'mailto:support@myetherwallet.com'
-        }"
         title="Interact with contract"
         :show-overlay="interact"
         :close="closeInteract"

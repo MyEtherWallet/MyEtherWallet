@@ -1,21 +1,5 @@
 <template>
   <div class="d-flex align-center py-4 px-1">
-    <div class="d-flex align-center">
-      <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
-      <div>
-        <div class="font-weight-bold">MEWtopia</div>
-        <div>
-          Getting started on Ethereum? Visit our blog MEWtopia for tips,
-          resources and guides.
-          <a
-            href="https://www.mewtopia.com/tag/getting-started/"
-            rel="noopener noreferrer"
-            target="_blank"
-            >Read...</a
-          >
-        </div>
-      </div>
-    </div>
     <div class="ml-auto d-flex align-center">
       <div class="align-center d-none d-lg-block">
         <notification-overlay />

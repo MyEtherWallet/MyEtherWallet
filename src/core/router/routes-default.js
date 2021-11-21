@@ -1,5 +1,4 @@
 import TheDefaultView from '@/views/TheDefaultView';
-import TheHomeLayout from '@/views/layouts-default/TheHomeLayout';
 import TheHowItWorksLayout from '@/views/layouts-default/TheHowItWorksLayout';
 import TheCompanyLayout from '@/views/layouts-default/TheCompanyLayout';
 import TheTeamLayout from '@/views/layouts-default/TheTeamLayout';
@@ -27,12 +26,14 @@ export default {
   props: true,
   children: [
     {
-      path: ROUTES_HOME.HOME.PATH,
-      name: ROUTES_HOME.HOME.NAME,
-      component: TheHomeLayout,
+      path: ROUTES_HOME.ACCESS_WALLET.PATH,
+      name: ROUTES_HOME.ACCESS_WALLET.NAME,
+      component: TheAccessWalletLayout,
+      props: accessWalletProps,
       meta: {
         noAuth: true
-      }
+      },
+      beforeEnter: accessRouteGuard
     },
     {
       path: ROUTES_HOME.HOW_IT_WORKS.PATH,

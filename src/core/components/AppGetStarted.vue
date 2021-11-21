@@ -55,7 +55,7 @@
             <mew-button
               color-theme="primary"
               btn-style="outline"
-              title="Access my wallet"
+              title="Access wallet"
               btn-size="xlarge"
               @click.native="
                 $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })
@@ -119,7 +119,7 @@
               <mew-button
                 has-full-width
                 btn-style="outline"
-                title="Access my wallet"
+                title="Access wallet"
                 btn-size="xlarge"
                 @click.native="
                   $router.push({ name: ROUTES_HOME.ACCESS_WALLET.NAME })

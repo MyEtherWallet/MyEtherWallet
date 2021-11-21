@@ -187,7 +187,6 @@ import SendTransaction from '@/modules/send/handlers/handlerSend';
 import { ETH } from '@/utils/networks/types';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
@@ -195,7 +194,6 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   components: {
     ModuleAddressBook,
-    SendLowBalanceNotice,
     AppButtonBalance,
     AppTransactionFee
   },
@@ -249,7 +247,6 @@ export default {
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink',
       'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
@@ -267,8 +264,8 @@ export default {
     buyMore() {
       return this.isEthNetwork &&
         MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
-        this.amountError === 'Not enough balance to send!'
-        ? 'Buy more.'
+        this.amountError === 'Not enough balance to send! Buy more.'
+        ? ''
         : '';
     },
     hasEnoughEth() {
@@ -330,9 +327,7 @@ export default {
         ? tokensList.unshift({
             hasNoEth: true,
             disabled: true,
-            text: 'Your wallet is empty.',
-            linkText: this.isEthNetwork ? 'Buy ETH' : '',
-            link: this.isEthNetwork ? this.swapLink : ''
+            text: 'Your wallet is empty. Buy ETH.'
           })
         : null;
       return [

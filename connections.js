@@ -39,14 +39,5 @@ module.exports = [
   'https://registry.walletconnect.org:443/data/wallets.json',
   'wss://*.bridge.walletconnect.org:443',
   'https://myetherwallet.matomo.cloud:443',
-  'wss://rpc.gochain.io:443/ws',
-  // intercom stuff
-  'api-iam.intercom.io:443',
-  'https://api.zilliqa.com:443',
-  'https://widget.intercom.io:443',
-  'https://api-iam.intercom.io:443',
-  'https://js.intercomcdn.com:443',
-  'wss://nexus-websocket-a.intercom.io:443',
-  'https://js.intercomcdn.com:443',
-  'https://uploads.intercomcdn.com:443'
+  'wss://rpc.gochain.io:443/ws'
 ];

@@ -8,9 +8,6 @@ import './main/matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import { v4 as uuidv4 } from 'uuid';
-
-import VueIntercom from '@mathieustan/vue-intercom';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -38,9 +35,6 @@ import i18n from './main/i18n';
 // Directives
 Vue.directive('lottie', LottieAnimation);
 
-// eslint-disable-next-line
-Vue.use(VueIntercom, { appId: 'ja20qe25' });
-
 //Router
 Vue.use(Router);
 Vue.use(Vuex);
@@ -53,9 +47,6 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
-    this.$intercom.boot({
-      user_id: uuidv4()
-    });
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');

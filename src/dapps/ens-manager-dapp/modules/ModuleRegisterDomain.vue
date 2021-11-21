@@ -1,10 +1,5 @@
 <template>
   <mew-overlay
-    :footer="{
-      text: 'Need help?',
-      linkTitle: 'Contact support',
-      link: 'mailto:support@myetherwallet.com'
-    }"
     :show-overlay="onRegister"
     :title="$t('ens.register-domain')"
     content-size="xlarge"

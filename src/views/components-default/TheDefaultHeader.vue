@@ -1,20 +1,5 @@
 <template>
   <div class="default-header expandHeader">
-    <div
-      class="
-        d-flex
-        align-center
-        justify-center
-        pa-2
-        tableHeader
-        textBlack2--text
-      "
-    >
-      Missing the old version?&nbsp;
-      <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
-        You can find version 5 here
-      </a>
-    </div>
     <v-container class="d-flex align-center pt-8">
       <v-row align="center" no-gutters>
         <v-col class="d-md-none" cols="4">
@@ -24,31 +9,11 @@
           <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
             <v-img
               :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.svg"
-              max-height="36"
-              max-width="130"
+              src="@/assets/images/icons/logo-light2.png"
+              max-height="38"
+              max-width="204"
             />
           </router-link>
-        </v-col>
-        <v-col class="justify-space-between d-none d-md-flex" cols="4">
-          <router-link
-            class="white--text text-decoration--none"
-            :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
-          >
-            What is MEW
-          </router-link>
-          <mew-menu
-            activator-text-color="white--text"
-            :list-obj="menuObj"
-            @goToPage="routeTo"
-          />
-          <a
-            :href="swapLink"
-            target="_blank"
-            class="white--text text-decoration--none"
-          >
-            Buy ETH
-          </a>
         </v-col>
         <v-col cols="4" class="text-right">
           <mew-tools class="ml-auto" />
@@ -68,6 +33,7 @@ export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
   data: () => ({
+    // eslint-disable-next-line
     menuObj: {
       name: 'Wallet actions',
       items: [
@@ -107,11 +73,6 @@ export default {
   }),
   computed: {
     ...mapGetters('global', ['swapLink'])
-  },
-  methods: {
-    routeTo(route) {
-      this.$router.push(route);
-    }
   }
 };
 </script>

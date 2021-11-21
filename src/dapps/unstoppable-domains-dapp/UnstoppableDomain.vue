@@ -155,17 +155,6 @@
                   <v-icon class="primary--text">mdi-check-circle</v-icon>
                 </v-card>
 
-                <div class="error--text mt-3 mb-7 font-weight-medium">
-                  Insufficient balance.
-                  <a
-                    href="https://ccswap.myetherwallet.com/#/"
-                    target="_blank"
-                    class="text-decoration--underline"
-                  >
-                    Buy more ETH
-                  </a>
-                </div>
-
                 <v-card
                   flat
                   color="tableHeader"
