@@ -149,16 +149,30 @@
           isOwned ? 'justify-start' : 'justify-end'
         ]"
       >
-        <div class="mb-0 redPrimary--text mew-label">
-          {{ notEnoughMessage }}
-          <a
-            v-if="!isTestNetwork"
-            rel="noopener noreferrer"
-            target="_blank"
-            :href="swapLink"
-            class="mew-label font-weight-medium"
-            >Buy more {{ network.type.name }}.</a
-          >
+        <div class="mb-0 redPrimary--text mew-label d-flex">
+          <span
+            >{{ notEnoughMessage }}
+            <a
+              v-if="!isTestNetwork"
+              rel="noopener noreferrer"
+              target="_blank"
+              :href="swapLink"
+              class="mew-label font-weight-medium buy-more-link"
+            >
+              Buy more {{ network.type.name }}.
+
+              <span
+                ><mew-tooltip
+                  class="d-inline-block"
+                  :text="estimatedFeesTooltip"
+              /></span>
+            </a>
+            <span v-else
+              ><mew-tooltip
+                class="buy-more-link d-inline-block"
+                :text="estimatedFeesTooltip"
+            /></span>
+          </span>
         </div>
       </v-col>
       <!--
@@ -184,7 +198,8 @@ import { fromWei } from 'web3-utils';
 import { mapGetters } from 'vuex';
 import {
   formatIntegerToString,
-  formatFiatValue
+  formatFiatValue,
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -228,6 +243,10 @@ export default {
     hasEnoughEth: {
       type: Boolean,
       default: true
+    },
+    estimatedTotalWei: {
+      type: String,
+      default: '0'
     }
   },
   computed: {
@@ -257,7 +276,7 @@ export default {
     alertTitle() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'This block in not available';
+          return 'This block is not available';
         case BLOCK_ALERT.AVAILABLE:
           return 'This block is available';
         case BLOCK_ALERT.RESERVED:
@@ -377,7 +396,16 @@ export default {
      */
     notEnoughMessage() {
       const text = this.isOwned ? 'transfer' : 'mint';
-      return `Not enough ${this.network.type.name} to ${text}.`;
+      return `Not enough ${this.network.type.name} to ${text}. `;
+    },
+    estimatedFeesTooltip() {
+      const formattedTotal = formatFloatingPointValue(
+        fromWei(this.estimatedTotalWei)
+      ).value;
+      const estimate = this.isOwned
+        ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
+        : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
+      return estimate;
     }
   },
   methods: {
@@ -407,3 +435,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.buy-more-link {
+  padding-left: 2px;
+}
+</style>
