@@ -1,3 +1,16 @@
+### Release v6.4.1
+
+### feat
+
+* add survey to dashboard [#3565](https://github.com/MyEtherWallet/MyEtherWallet/pull/3565)
+
+### fix
+
+* * getting stuck at pending on failed transaction\* adds estimated fees tooltip
+* menu highlight on direct navigation to my-blocks
+  [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* * add eth blocks landing page section [#3566](https://github.com/MyEtherWallet/MyEtherWallet/pull/3566)
+
 ### Release v6.4.0-hotfix.1
 
 ### feat
