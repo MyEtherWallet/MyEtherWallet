@@ -477,10 +477,10 @@ export default {
       return formatIntegerToString(this.defaultGasLimit);
     },
     disableSwapBtn() {
-      return (
-        this.amountErrorMessage === 'Not enough balance to send!' ||
-        this.amountErrorMessage === "Amount can't be negative!"
-      );
+      if (this.sendTx) {
+        return !this.sendTx.hasEnoughBalance();
+      }
+      return true;
     }
   },
   watch: {
