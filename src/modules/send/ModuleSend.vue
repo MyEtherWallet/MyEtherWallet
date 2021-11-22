@@ -477,7 +477,7 @@ export default {
       return formatIntegerToString(this.defaultGasLimit);
     },
     disableSwapBtn() {
-      if (this.sendTx) {
+      if (!isEmpty(this.sendTx) && !isEmpty(this.selectedCurrency)) {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
