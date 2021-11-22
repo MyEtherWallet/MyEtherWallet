@@ -27,7 +27,11 @@ const EXCEPTIONS = [
   'node-fetch',
   'vuetify',
   '@unstoppabledomains/resolution',
-  'eslint'
+  'eslint',
+  // update after release
+  '@mdi/font',
+  'stylelint',
+  'styellint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
