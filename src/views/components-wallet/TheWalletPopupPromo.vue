@@ -30,7 +30,7 @@
 
 <script>
 import AppModal from '@/core/components/AppModal';
-import { mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { ETH_BLOCKS_ROUTE } from '@/dapps/eth-blocks/configsRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
@@ -42,17 +42,23 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('global', ['showWalletPromo'])
+    ...mapState('global', ['showWalletPromo', 'showSurvey'])
   },
-
+  mounted() {
+    if (this.showWalletPromo && this.showSurvey) {
+      this.setShowSurvey(false);
+    }
+  },
   methods: {
     /**NEW */
-    ...mapMutations('global', ['NEVER_SHOW_WALLET_PROMO']),
+    ...mapActions('global', ['neverShowPromo', 'setShowSurvey']),
     /**
      * Hides promo popup forever
      */
     setHidePopUp() {
-      this.NEVER_SHOW_WALLET_PROMO();
+      this.neverShowPromo().then(() => {
+        this.setShowSurvey(true);
+      });
     },
 
     /**

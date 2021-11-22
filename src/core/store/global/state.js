@@ -28,7 +28,8 @@ const state = {
     maxPriorityFeePerGas: '0'
   },
   showedBanner: false,
-  showWalletPromo: true
+  showWalletPromo: true,
+  showSurvey: true
 };
 state.currentNetwork.type = {
   name: state.currentNetwork.type.name
