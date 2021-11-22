@@ -1,3 +1,9 @@
+### Release v6.4.0-hotfix.1
+
+### feat
+
+* Fix/eth blocks [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+
 ### Release v6.4.0
 
 ### feat

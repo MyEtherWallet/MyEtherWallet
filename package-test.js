@@ -26,9 +26,12 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
+  '@unstoppabledomains/resolution',
+  'eslint',
   // update after release
-  'sinon',
-  'eslint'
+  '@mdi/font',
+  'stylelint',
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
