@@ -31,7 +31,7 @@ const EXCEPTIONS = [
   // update after release
   '@mdi/font',
   'stylelint',
-  'styelelint-config-standard'
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
