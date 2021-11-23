@@ -13,7 +13,7 @@ import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayo
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 import TheConvertUnits from '@/views/layouts-default/TheConvertUnits';
-import TheJobs from '@/views/layouts-default/TheJobs';
+import TheJobPostings from '@/views/layouts-default/TheJobPostings';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -126,7 +126,7 @@ export default {
     {
       path: ROUTES_HOME.JOBS.PATH,
       name: ROUTES_HOME.JOBS.NAME,
-      component: TheJobs,
+      component: TheJobPostings,
       meta: {
         noAuth: true
       }

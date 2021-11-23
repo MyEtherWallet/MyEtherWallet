@@ -358,7 +358,7 @@ export default {
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
           { label: 'Submit DApp', routerLink: 'DappSubmission' },
           { label: 'Convert Units', routerLink: 'ConvertUnits' },
-          { label: 'Jobs', routerLink: 'Jobs' }
+          { label: 'Job Postings', routerLink: 'JobPostings' }
         ]
       },
       {
