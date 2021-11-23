@@ -99,8 +99,8 @@
               </div>
             </div>
           </div>
-          <div class="pt-4">
-            <mew-expand-panel :panel-items="panelItems">
+          <div class="py-4">
+            <mew-expand-panel :panel-items="panelItems" :idx-to-expand="[null]">
               <template #panelBody1>
                 <div class="px-6 pb-6">
                   <div class="d-flex align-center justify-space-between">
@@ -118,6 +118,13 @@
               </template>
             </mew-expand-panel>
           </div>
+          <div>
+            By sending {{ fromCurrency }} to the above address, I agree to the
+            <a href="https://changelly.com/aml-kyc" target="_blank">
+              Changelly AML/KYC
+            </a>
+            and <router-link :to="termRoute">Terms of Service</router-link>
+          </div>
         </div>
       </template>
     </app-modal>
@@ -132,6 +139,7 @@ import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
 import { isEmpty } from 'underscore';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
 const MILLISECONDS = 1000;
 const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
@@ -169,7 +177,8 @@ export default {
         {
           name: 'View Details'
         }
-      ]
+      ],
+      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
     };
   },
   computed: {

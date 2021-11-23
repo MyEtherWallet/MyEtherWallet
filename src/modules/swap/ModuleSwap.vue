@@ -739,14 +739,16 @@ export default {
       return '0';
     },
     toAddress() {
-      if (this.toTokenType?.isEth) return this.address;
-      return !isEmpty(this.addressValue)
+      const address = !isEmpty(this.addressValue)
         ? this.addressValue.value
-        : this.address;
+        : '';
+      if (!this.fromTokenType?.isEth) return address;
+      if (this.toTokenType?.isEth) return this.address;
+      return this.address;
     },
     isToAddressValid() {
       if (this.toTokenType?.isEth) return true;
-      return this.addressValue.isValid;
+      return !isEmpty(this.addressValue) ? this.addressValue.isValid : false;
     },
     /**
      * Checks whether or not the user has a minimum eth balance to swap:
@@ -1077,7 +1079,7 @@ export default {
         value,
         isValid
       };
-      if (isValid) this.setProvider(0);
+      if (isValid) this.setTokenInValue(this.tokenInValue);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1128,8 +1130,12 @@ export default {
       }
       if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
         return;
-
-      if (this.showToAddress && !this.toAddress && !this.addressValue.isValid)
+      if (
+        this.showToAddress &&
+        isEmpty(this.addressValue) &&
+        !this.toAddress &&
+        !this.isToAddressValid
+      )
         return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
