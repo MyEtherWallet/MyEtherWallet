@@ -1,0 +1,150 @@
+[
+  {
+    "_comment": "Developer Department ===================================================================",
+    "department": "Developer",
+    "jobs": [
+      {
+        "jobTitle": "Front End Developer (Entry level)",
+        "jobDetails": [
+          {
+            "subtitle": "About the role",
+            "data": "With a wide range of Fortune 500 enterprises, government organizations and top systems integrators as our clients, we not only provide you with the skills needed to succeed through an employer-paid training program but will also give you the opportunity to put those skills to use, on projects that matter."
+          },
+          {
+            "subtitle": "What we are looking for",
+            "data": [
+              "College degree (Associates or Bachelors)",
+              "Must be authorized to work in the US",
+              "Strong desire to learn to code – No prior professional experience required.",
+              "A natural problem solver",
+              "Strong communication and interpersonal skills",
+              "Willing to relocate anywhere in the US – Relocation assistance provided"
+            ]
+          },
+          {
+            "subtitle": "What we offer",
+            "data": [
+              "Competitive salary",
+              "Relocation & housing assistance",
+              "Health, vision & dental insurance",
+              "Paid time off",
+              "Industry Certifications",
+              "Life Insurance Policy",
+              "401k",
+              "Mentoring program and ongoing support throughout your entire Revature career",
+              "Experience with the largest and most reputable companies in the US"
+            ]
+          }
+        ]
+      },
+      {
+        "jobTitle": "Front End Developer (Entry level)",
+        "jobDetails": [
+          {
+            "subtitle": "About the role",
+            "data": "We are currently seeking two qualified Front-End full stack developers to assist primarly with our browser-based gameplay mechanics. The successful candidates must have solid experience working with javascript (vanilla) in general and ideally some experience with various javascript frameworks (svelte, react, etc....) They will also be responsible for wiring the front end up to the available API's, pulling data from the blockchain and smart contracts. This role will work closely with our UI/UX Design team, our Smart Contract Team and our Game Mechanics group. Strong communication and team work capabilities are mandatory."
+          },
+          {
+            "subtitle": "What we are looking for",
+            "data": [
+              "College degree (Associates or Bachelors)",
+              "Must be authorized to work in the US",
+              "Strong desire to learn to code – No prior professional experience required.",
+              "A natural problem solver",
+              "Strong communication and interpersonal skills",
+              "Willing to relocate anywhere in the US – Relocation assistance provided"
+            ]
+          },
+          {
+            "subtitle": "What we offer",
+            "data": [
+              "Competitive salary",
+              "Relocation & housing assistance",
+              "Health, vision & dental insurance",
+              "Paid time off",
+              "Industry Certifications",
+              "Life Insurance Policy",
+              "401k",
+              "Mentoring program and ongoing support throughout your entire Revature career",
+              "Experience with the largest and most reputable companies in the US"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_comment": "Customer Support Department ===================================================================",
+    "department": "Customer Support",
+    "jobs": [
+      {
+        "jobTitle": "Front End Developer (Entry level)",
+        "jobDetails": [
+          {
+            "subtitle": "About the role",
+            "data": "With a wide range of Fortune 500 enterprises, government organizations and top systems integrators as our clients, we not only provide you with the skills needed to succeed through an employer-paid training program but will also give you the opportunity to put those skills to use, on projects that matter."
+          },
+          {
+            "subtitle": "What we are looking for",
+            "data": [
+              "College degree (Associates or Bachelors)",
+              "Must be authorized to work in the US",
+              "Strong desire to learn to code – No prior professional experience required.",
+              "A natural problem solver",
+              "Strong communication and interpersonal skills",
+              "Willing to relocate anywhere in the US – Relocation assistance provided"
+            ]
+          },
+          {
+            "subtitle": "What we offer",
+            "data": [
+              "Competitive salary",
+              "Relocation & housing assistance",
+              "Health, vision & dental insurance",
+              "Paid time off",
+              "Industry Certifications",
+              "Life Insurance Policy",
+              "401k",
+              "Mentoring program and ongoing support throughout your entire Revature career",
+              "Experience with the largest and most reputable companies in the US"
+            ]
+          }
+        ]
+      },
+      {
+        "jobTitle": "Front End Developer (Entry level)",
+        "jobDetails": [
+          {
+            "subtitle": "About the role",
+            "data": "We are currently seeking two qualified Front-End full stack developers to assist primarly with our browser-based gameplay mechanics. The successful candidates must have solid experience working with javascript (vanilla) in general and ideally some experience with various javascript frameworks (svelte, react, etc....) They will also be responsible for wiring the front end up to the available API's, pulling data from the blockchain and smart contracts. This role will work closely with our UI/UX Design team, our Smart Contract Team and our Game Mechanics group. Strong communication and team work capabilities are mandatory."
+          },
+          {
+            "subtitle": "What we are looking for",
+            "data": [
+              "College degree (Associates or Bachelors)",
+              "Must be authorized to work in the US",
+              "Strong desire to learn to code – No prior professional experience required.",
+              "A natural problem solver",
+              "Strong communication and interpersonal skills",
+              "Willing to relocate anywhere in the US – Relocation assistance provided"
+            ]
+          },
+          {
+            "subtitle": "What we offer",
+            "data": [
+              "Competitive salary",
+              "Relocation & housing assistance",
+              "Health, vision & dental insurance",
+              "Paid time off",
+              "Industry Certifications",
+              "Life Insurance Policy",
+              "401k",
+              "Mentoring program and ongoing support throughout your entire Revature career",
+              "Experience with the largest and most reputable companies in the US"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
