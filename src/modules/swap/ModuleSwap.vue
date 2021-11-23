@@ -295,7 +295,7 @@ import Notification, {
 } from '@/modules/notifications/handlers/handlerNotification';
 import NonChainNotification from '@/modules/notifications/handlers/nonChainNotification';
 import BigNumber from 'bignumber.js';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -1331,9 +1331,15 @@ export default {
             },
             main
           );
-          this.addNotification(new NonChainNotification(notif)).then(
-            this.clear
-          );
+          this.addNotification(new NonChainNotification(notif)).then(() => {
+            const currency = this.fromTokenType.symbol;
+            Toast(
+              `Swap initiated, you should receive ${currency} in 1-3 hours. You will be notified when it's completed`,
+              {},
+              SUCCESS
+            );
+            this.clear();
+          });
         } else {
           const notif = Object.assign(
             {
