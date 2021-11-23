@@ -302,7 +302,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 200000;
 
 export default {
   name: 'ModuleSwap',
@@ -407,11 +407,7 @@ export default {
      * based on how the swap state is
      */
     showNetworkFee() {
-      return (
-        this.step > 0 &&
-        this.providersErrorMsg.subtitle === '' &&
-        !this.isLoadingProviders
-      );
+      return this.showNextButton && !this.isFromNonChain;
     },
     /**
      * @returns a boolean
@@ -1131,6 +1127,9 @@ export default {
         return;
       }
       if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
+        return;
+
+      if (this.showToAddress && !this.toAddress && !this.addressValue.isValid)
         return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
