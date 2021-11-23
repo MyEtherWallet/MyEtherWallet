@@ -66,10 +66,6 @@ export default {
       type: String,
       default: '0'
     },
-    // valueUsd: {
-    //   type: Number,
-    //   default: 0
-    // },
     toDetails: {
       type: Object,
       default: () => {}
