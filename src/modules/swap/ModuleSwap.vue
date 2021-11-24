@@ -302,7 +302,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 200000;
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -601,21 +601,30 @@ export default {
      */
     toTokens() {
       if (this.isLoading) return [];
-      return this.availableTokens.toTokens.map(token => {
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          foundToken.contract = token.contract;
-          foundToken.price = foundToken.pricef;
-          foundToken.isEth = token.isEth;
-          return foundToken;
-        }
-        const name = token.name;
-        token.price = '';
-        token.subtext = name;
-        token.value = name;
-        token.name = token.symbol;
-        return token;
-      });
+      return this.availableTokens.toTokens
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = foundToken.pricef;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            foundToken.contract = token.contract;
+            foundToken.price = foundToken.pricef;
+            foundToken.isEth = token.isEth;
+            return foundToken;
+          }
+          const name = token.name;
+          token.price = '';
+          token.subtext = name;
+          token.value = name;
+          token.name = token.symbol;
+          return token;
+        })
+        .filter(
+          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
+        );
     },
     /**
      * @returns object of all token data
@@ -623,11 +632,6 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      const filteredTrendingTokens = this.trendingTokens.length
-        ? this.trendingTokens.filter(token => {
-            return token.contract !== this.toTokenType?.contract;
-          })
-        : [];
       const validFromTokens = this.fromTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
@@ -642,7 +646,13 @@ export default {
         }
       });
       let nonChainTokens = this.availableTokens.fromTokens.filter(item => {
-        if (item.hasOwnProperty('isEth') && !item.isEth) {
+        if (
+          item.hasOwnProperty('isEth') &&
+          !item.isEth &&
+          item.name &&
+          item.symbol &&
+          item.subtext
+        ) {
           return item;
         }
       });
@@ -676,8 +686,7 @@ export default {
         {
           header: 'Other Tokens'
         },
-        ...validFromTokens,
-        ...filteredTrendingTokens
+        ...validFromTokens
       ]);
     },
     /**
@@ -685,19 +694,30 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens.map(token => {
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          foundToken.isEth = token.isEth;
-          return foundToken;
-        }
-        const name = token.name;
-        token.price = '0.00';
-        token.subtext = name;
-        token.value = name;
-        token.name = token.symbol;
-        return token;
-      });
+      return this.availableTokens.fromTokens
+        .map(token => {
+          if (token.cgid) {
+            const foundToken = this.getCoinGeckoTokenById(token.cgid);
+            foundToken.price = foundToken.pricef;
+            return Object.assign(token, foundToken);
+          }
+          const foundToken = this.contractToToken(token.contract);
+          if (foundToken) {
+            foundToken.contract = token.contract;
+            foundToken.price = foundToken.pricef;
+            foundToken.isEth = token.isEth;
+            return foundToken;
+          }
+          const name = token.name;
+          token.price = '0.00';
+          token.subtext = name;
+          token.value = name;
+          token.name = token.symbol;
+          return token;
+        })
+        .filter(
+          item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
+        );
     },
     /**
      * @returns all trending tokens

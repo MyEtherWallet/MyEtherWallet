@@ -43,7 +43,7 @@ class Changelly {
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
             isEth: d.contractAddress ? true : false,
-            cgid: d.ticker
+            cgid: d.fullName.toLowerCase()
           };
         });
       })
