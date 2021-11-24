@@ -7,7 +7,7 @@
     -->
     <the-layout-header
       title="Join Us"
-      subtitle-line-one="We're on a mission to make crypto more accessable for normal users. Join us!"
+      subtitle-line-one="We're on a mission to make crypto more accessable for normal users. Join us and make crypto better here in MEW!"
     />
 
     <v-container class="my-15">
@@ -25,10 +25,46 @@
 
       <!-- 
       ==========================================================================
+      What we do and why you should join
+      ==========================================================================
+      -->
+      <div class="mb-15">
+        <div class="pa-3 mew-heading-1 text-center">
+          what we do and why you should join us
+        </div>
+        <div class="mx-auto text-center" style="max-width: 600px">
+          At MEW, we believe that collective success is an integral part of the
+          wellbeing of all in the workplace. Whatever the environment in which
+          our employees work, we strive to offer them stimulating working
+          conditions so they can give the best of themselves: safe and pleasant
+          spaces, motivating remuneration, social protection, respect for
+          work/life balance.
+        </div>
+      </div>
+
+      <!-- 
+      ==========================================================================
+      What we do and why you should join
+      ==========================================================================
+      -->
+      <div class="mb-12">
+        <div class="pa-3 mew-heading-1 text-center">Contact us</div>
+        <div class="mx-auto text-center" style="max-width: 600px">
+          Email us at
+          <a href="mailto:support@myetherwallet.com" target="_blank">
+            support@myetherwallet.com
+          </a>
+          if you have any questions about available positions or use resume
+          submit form to send us your resume.
+        </div>
+      </div>
+
+      <!-- 
+      ==========================================================================
       Clickable job lists
       ==========================================================================
       -->
-      <div style="max-width: 700px" class="mx-auto">
+      <div style="max-width: 600px" class="mx-auto pt-1">
         <div v-for="(dep, depKey) in jobsData" :key="depKey" class="mt-15">
           <div class="pa-3 mew-heading-1">{{ dep.department }}</div>
           <v-divider class="mb-4" />
