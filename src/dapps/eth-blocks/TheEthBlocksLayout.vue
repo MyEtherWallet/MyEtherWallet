@@ -87,6 +87,9 @@ export default {
     if (this.hasPendingTxs) {
       this.setCheckPendingInterval();
     }
+    if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+      this.activeTab = this.tabs[1].id;
+    }
   },
   beforeDestroy() {
     clearInterval(this.checkPendingInterval);
@@ -119,7 +122,7 @@ export default {
     checkTx(txHash) {
       if (txHash) {
         this.web3.eth.getTransactionReceipt(txHash).then(receipt => {
-          if (receipt && receipt.status) {
+          if (receipt) {
             const _block = {
               hash: txHash
             };
