@@ -41,5 +41,6 @@
   "upload-your-zip-file": "Upload your .zip file",
   "ipfs-hash": "Enter IPFS Hash",
   "upload": "Upload",
-  "is-available": "Domain is available"
+  "is-available": "Domain is available",
+  "save-and-close": "Save and close"
 }

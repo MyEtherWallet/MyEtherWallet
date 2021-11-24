@@ -12,35 +12,35 @@
       </h2>
       <div class="mt-5 textMedium--text">
         When sending a token to
-        <span class="font-weight-bold">{{ managedDomain.name }}</span> it will
-        be deposited to the wallet entered below.
+        <span class="primary--text font-weight-bold">{{
+          managedDomain.name
+        }}</span>
+        it will be deposited to the wallet entered below.
       </div>
       <div class="pa-7">
-        <div
-          v-for="(value, record) in records"
-          :key="record"
-          class="d-flex align-center justify-space-between mb-8"
-        >
-          <div class="bluePrimary--text font-weight-medium">
-            {{ record }}
+        <div v-for="(value, record) in records" :key="record">
+          <div class="d-flex align-center justify-space-between mb-8">
+            <div class="font-weight-medium">
+              {{ record }}
+            </div>
+            <div style="min-width: 300px" class="d-flex align-center">
+              <mew-input
+                v-model="records[record]"
+                style="max-height: 50px"
+                :has-clear-btn="true"
+                label="Enter your wallet address"
+                :rules="[
+                  v =>
+                    validateRecord(record, value) ||
+                    $t('unstoppable.wrong-address-format')
+                ]"
+              />
+            </div>
           </div>
-          <div style="min-width: 300px" class="d-flex align-center">
-            <mew-input
-              v-model="records[record]"
-              style="max-height: 50px"
-              :has-clear-btn="true"
-              label="Enter your wallet address"
-              :rules="[
-                v =>
-                  validateRecord(record, value) ||
-                  $t('unstoppable.wrong-address-format')
-              ]"
-            />
+          <div v-if="record === 'ETH'">
+            <mew-search placeholder="Find a token" is-compact />
           </div>
         </div>
-      </div>
-      <div>
-        <mew-menu activator-text-color="primary--text" :list-obj="menuObj" />
       </div>
     </div>
     <div class="mt-3">
@@ -86,21 +86,6 @@ export default {
       },
       disabled: false,
       additionalRecords: [],
-      menuObj: {
-        name: 'More currencies',
-        items: [
-          {
-            items: [
-              {
-                title: 'Currency 1'
-              },
-              {
-                title: 'Currency 2'
-              }
-            ]
-          }
-        ]
-      },
       helpObj: {
         text: 'Need help?',
         linkTitle: 'Contact support',
@@ -136,7 +121,6 @@ export default {
     ...mapMutations('unstoppable', ['SET_ACTIVE_OVERLAY']),
     closing() {
       this.records = {
-        ETH: '',
         BTC: '',
         LTC: '',
         ZIL: ''
