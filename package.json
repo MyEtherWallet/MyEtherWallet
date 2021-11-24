@@ -84,7 +84,7 @@
     "walletlink": "2.2.8"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "14.1.0",
+    "@commitlint/config-conventional": "15.0.0",
     "@ledgerhq/hw-app-eth": "6.6.0",
     "@ledgerhq/hw-transport-webusb": "6.11.2",
     "@mdi/font": "6.5.95",
@@ -105,7 +105,7 @@
     "bignumber.js": "9.0.1",
     "bip39": "3.0.4",
     "codecov": "3.8.3",
-    "commitlint": "14.1.0",
+    "commitlint": "15.0.0",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",

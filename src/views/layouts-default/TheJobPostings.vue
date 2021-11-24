@@ -20,7 +20,7 @@
         style="width: 100%"
         src="@/assets/images/team/mew-collage.jpg"
         alt="Members"
-        class="mb-8"
+        class="mb-8 mt-0 mt-md-10"
       />
 
       <!-- 
