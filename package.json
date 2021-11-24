@@ -124,7 +124,7 @@
     "is-ipfs": "6.0.2",
     "jest-skipped-reporter": "0.0.5",
     "minizlib": "2.1.2",
-    "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
+    "multicoin-address-validator": "0.4.5",
     "node-fetch": "2.6.1",
     "node-sass": "6.0.1",
     "postcss-import": "12.0.1",
