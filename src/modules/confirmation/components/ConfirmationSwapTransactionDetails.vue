@@ -84,8 +84,8 @@ export default {
       default: ''
     },
     fromUsd: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     toUsd: {
       type: String,

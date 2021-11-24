@@ -64,6 +64,14 @@ const NEVER_SHOW_BANNER = function (state) {
   state.showedBanner = true;
 };
 
+const NEVER_SHOW_WALLET_PROMO = function (state) {
+  state.showWalletPromo = false;
+};
+
+const SET_SHOW_SURVEY = function (state, val) {
+  state.showSurvey = val;
+};
+
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
@@ -77,5 +85,7 @@ export default {
   SET_MAX_PRIORITY_FEE_PER_GAS,
   SET_TRACKING_CONSENT,
   NEVER_SHOW_TRACKING,
-  NEVER_SHOW_BANNER
+  NEVER_SHOW_BANNER,
+  NEVER_SHOW_WALLET_PROMO,
+  SET_SHOW_SURVEY
 };

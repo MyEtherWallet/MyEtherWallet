@@ -1,3 +1,59 @@
+### Release v6.4.1
+
+### feat
+
+* add survey to dashboard [#3565](https://github.com/MyEtherWallet/MyEtherWallet/pull/3565)
+
+### Release v6.4.0-hotfix.1
+
+### fix
+
+* getting stuck at pending on failed transaction adds estimated fees tooltip [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* menu highlight on direct navigation to my-blocks [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* add eth blocks landing page section [#3566](https://github.com/MyEtherWallet/MyEtherWallet/pull/3566)
+
+### Release v6.4.0
+
+### feat
+
+* Add ETH blocks dapp ui and functionality, Created New Dapps Header [#3527](https://github.com/MyEtherWallet/MyEtherWallet/pull/3527)
+* Added template for dapp store in eth blocks in dappsStore.js [#3527](https://github.com/MyEtherWallet/MyEtherWallet/pull/3527)
+* Added new menu in Dapp Wrapper, with routes [#3527](https://github.com/MyEtherWallet/MyEtherWallet/pull/3527)
+* update wallet card [#3530](https://github.com/MyEtherWallet/MyEtherWallet/pull/3530)
+
+### devop
+
+* add new templates for issues [#3529](https://github.com/MyEtherWallet/MyEtherWallet/pull/3529)
+* temporary release holder [#3538](https://github.com/MyEtherWallet/MyEtherWallet/pull/3538)
+
+### fix
+
+* add convert units page [#3516](https://github.com/MyEtherWallet/MyEtherWallet/pull/3516)
+* replace mew-super-button and other buttons with mew-button [#3518](https://github.com/MyEtherWallet/MyEtherWallet/pull/3518)
+* fix failed to fetch and wrong prev session [#3525](https://github.com/MyEtherWallet/MyEtherWallet/pull/3525)
+* add a check for when tokens undefined or empty [#3526](https://github.com/MyEtherWallet/MyEtherWallet/pull/3526)
+* add in connection check [#3532](https://github.com/MyEtherWallet/MyEtherWallet/pull/3532)
+* add more error handling for trezor wallet popup [#3535](https://github.com/MyEtherWallet/MyEtherWallet/pull/3535)
+* allow users to send custom tokens [#3545](https://github.com/MyEtherWallet/MyEtherWallet/pull/3545)
+* change error message when user decides to cancel metamask tx [#3546](https://github.com/MyEtherWallet/MyEtherWallet/pull/3546)
+* fix terms on mobile [#3547](https://github.com/MyEtherWallet/MyEtherWallet/pull/3547)
+* ens and max amount in send [#3548](https://github.com/MyEtherWallet/MyEtherWallet/pull/3548)
+* price error on confirm when sending tokens [#3549](https://github.com/MyEtherWallet/MyEtherWallet/pull/3549)
+* check for undefined hardware wallet [#3550](https://github.com/MyEtherWallet/MyEtherWallet/pull/3550)
+* fix path issue with hardware wallets [#3553](https://github.com/MyEtherWallet/MyEtherWallet/pull/3553)
+
+### Release v6.3.0-hotfix.2
+
+### fix
+
+* fix token to token swap [#3553](https://github.com/MyEtherWallet/MyEtherWallet/pull/3553)
+
+### Release v6.3.0-hotfix.1
+
+### fix
+
+* fix swap [#3552](https://github.com/MyEtherWallet/MyEtherWallet/pull/3552)
+
 ### Release v6.3.0
 
 ### devop

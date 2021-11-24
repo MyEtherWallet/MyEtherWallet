@@ -220,11 +220,11 @@
                 </v-row>
               </v-expansion-panel-header>
               <v-expansion-panel-content :id="i">
-                <div class="px-6 pb-6">
+                <div class="pa-6 pt-0">
                   <v-row
                     v-for="txVal in transaction"
                     :key="`${txVal.title}${txVal.value}`"
-                    class="d-flex justify-space-between"
+                    class="d-flex justify-space-between mt-3"
                     no-gutters
                   >
                     <v-col
@@ -303,6 +303,7 @@ import { setEvents } from '@/utils/web3-provider/methods/utils';
 import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'ModuleConfirmation',
@@ -314,6 +315,7 @@ export default {
     ConfirmationSendTransactionDetails,
     ConfirmWithWallet
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       showTxOverlay: false,
@@ -413,7 +415,6 @@ export default {
           : '0x';
         return hexToNumberString(gasLimit);
       }
-
       const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
         return acc.plus(currentValue.gas);
       }, BigNumber(0));
@@ -703,6 +704,9 @@ export default {
       if (this.isSwap) {
         this.showSuccessSwap = true;
       }
+      if (this.tx.data.includes('0x33aaf6f2')) {
+        this.trackDapp('ethBlocksMinted');
+      }
       this.reset();
       this.showSuccess(hash);
     },
@@ -770,6 +774,7 @@ export default {
             this.signedTxObject = {};
             this.error = e.message;
             this.signing = false;
+            this.instance.errorHandler(e.message);
           });
       }
     },
@@ -806,7 +811,7 @@ export default {
                 });
               })
               .catch(e => {
-                this.instance.errorHandler(e);
+                this.instance.errorHandler(e.message);
               });
           }
           this.signedTxArray = signed;
@@ -898,10 +903,10 @@ export default {
             title: 'Gas Limit',
             value: hexToNumberString(gasLimit)
           },
-          {
-            title: 'Transaction fee',
-            value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
-          },
+          // {
+          //   title: 'Transaction fee',
+          //   value: `${this.txFee} ${this.network.type.currencyName} ~ $${this.txFeeUSD}`
+          // },
           {
             title: 'Nonce',
             value: hexToNumber(item.nonce)

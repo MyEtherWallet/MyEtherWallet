@@ -28,7 +28,8 @@ const ERRORS = {
   'connection not open': 'trezorError.connection-not-open-on-send',
   'Iframe blocked': 'trezorError.iframe-blocked',
   'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md':
-    'trezorError.manifest-not-set'
+    'trezorError.manifest-not-set',
+  'Forbidden key path': 'Path not supported!'
 };
 
 const WARNINGS = {};
