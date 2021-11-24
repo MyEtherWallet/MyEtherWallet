@@ -66,7 +66,7 @@
       -->
       <div style="max-width: 600px" class="mx-auto pt-1">
         <div v-for="(dep, depKey) in jobsData" :key="depKey" class="mt-15">
-          <div class="pa-3 mew-heading-1">{{ dep.department }}</div>
+          <div class="pa-3 mew-heading-2">{{ dep.department }}</div>
           <v-divider class="mb-4" />
 
           <div
