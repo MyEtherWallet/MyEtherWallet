@@ -73,7 +73,7 @@ import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
 import { mapState } from 'vuex';
-import { isEmpty } from 'underscore';
+import { isEmpty } from 'lodash';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 
 export default {

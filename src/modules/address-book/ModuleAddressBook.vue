@@ -41,7 +41,7 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import { isObject, debounce } from 'underscore';
+import { isObject, debounce } from 'lodash';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 const USER_INPUT_TYPES = {

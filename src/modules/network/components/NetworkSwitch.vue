@@ -111,7 +111,7 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import { debounce } from 'underscore';
+import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {

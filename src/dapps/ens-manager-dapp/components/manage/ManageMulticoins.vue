@@ -24,7 +24,7 @@
 
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import { clone } from 'underscore';
+import { clone } from 'lodash';
 export default {
   props: {
     setMulticoin: {
