@@ -1,4 +1,4 @@
-import { isEmpty } from 'underscore';
+import { isEmpty } from 'lodash';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 

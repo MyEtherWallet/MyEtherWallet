@@ -136,7 +136,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { isArray } from 'underscore';
+import { isArray } from 'lodash';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',

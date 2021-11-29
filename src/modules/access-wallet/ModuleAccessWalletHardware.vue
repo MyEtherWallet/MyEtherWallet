@@ -163,7 +163,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'underscore';
+import { isEmpty } from 'lodash';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
