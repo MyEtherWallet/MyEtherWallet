@@ -182,7 +182,7 @@
       next-btn-text="Access my wallet"
       :next-btn-method="accessWallet"
       :back-btn-method="null"
-      :next-disable="!acceptTerms"
+      :next-disable="!buttonDisabled"
     />
   </div>
 </template>
@@ -308,6 +308,9 @@ export default {
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('addressBook', ['addressBookStore']),
+    buttonDisabled() {
+      return this.acceptTerms && this.selectedAddress === '';
+    },
     web3() {
       return new Web3(this.network.url);
     },

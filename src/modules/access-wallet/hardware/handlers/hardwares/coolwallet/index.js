@@ -6,7 +6,7 @@ import cwsETH from '@coolwallets/eth';
 import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
-import cwsTransportLib from '@coolwallets/transport-web-ble';
+import cwsTransportLib from '@coolwallet/transport-web-ble';
 import Vue from 'vue';
 import coolwallet from '@/assets/images/icons/wallets/coolwallet.svg';
 import * as locstore from 'store';
