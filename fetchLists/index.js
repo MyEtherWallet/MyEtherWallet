@@ -3,11 +3,16 @@ const fs = require('fs');
 const configs = require('./configs');
 const contractList = require('./lists/contracts.json');
 const IMAGE_PROXY = 'https://img.mewapi.io/?image=';
+const v4 = require('uuid').v4;
 if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
   fs.mkdirSync(configs.GENERATED_FOLDER_PATH);
 }
 const getFormattedList = async (url, network) => {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': v4()
+    }
+  });
   const data = await response.json();
   const tokens = Object.values(data.tokens)
     .map(t => {
