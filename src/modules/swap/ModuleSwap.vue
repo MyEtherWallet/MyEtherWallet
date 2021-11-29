@@ -1106,9 +1106,9 @@ export default {
       });
       if (trade instanceof Promise) {
         trade
-          .then(trade => {
-            this.allTrades[idx] = trade;
-            this.setupTrade(trade);
+          .then(tradeResponse => {
+            this.allTrades[idx] = tradeResponse;
+            this.setupTrade(tradeResponse);
           })
           .catch(e => {
             if (e) {
