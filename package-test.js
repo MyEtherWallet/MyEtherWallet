@@ -25,7 +25,8 @@ const EXCEPTIONS = [
   'web3-utils',
   'remark-cli',
   'node-fetch',
-  'vuetify'
+  'vuetify',
+  'eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
