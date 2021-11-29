@@ -50,7 +50,9 @@ const ERRORS = {
   'connection not open': 'ledgerError.connection-not-open-on-send',
   "undefined is not an object (evaluating 'e.decorateAppAPIMethods')":
     'ledgerError.firmware-or-mobile',
-  'Access denied.': 'ledgerError.access-denied'
+  'Access denied.': 'ledgerError.access-denied',
+  'WebUsb not supported.  Please try a different browser.':
+    'ledgerError.web-usb-not-supported'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
