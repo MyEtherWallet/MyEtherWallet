@@ -1093,19 +1093,19 @@ export default {
       this.feeError = '';
       this.loadingFee = true;
       if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
-      try {
-        this.swapper
-          .getTrade({
-            fromAddress: this.address,
-            toAddress: this.toAddress,
-            provider: this.availableQuotes[idx].provider,
-            fromT: this.fromTokenType,
-            toT: this.toTokenType,
-            quote: this.availableQuotes[idx],
-            fromAmount: new BigNumber(this.tokenInValue).times(
-              new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-            )
-          })
+      const trade = this.swapper.getTrade({
+        fromAddress: this.address,
+        toAddress: this.toAddress,
+        provider: this.availableQuotes[idx].provider,
+        fromT: this.fromTokenType,
+        toT: this.toTokenType,
+        quote: this.availableQuotes[idx],
+        fromAmount: new BigNumber(this.tokenInValue).times(
+          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        )
+      });
+      if (trade instanceof Promise) {
+        trade
           .then(trade => {
             this.allTrades[idx] = trade;
             this.setupTrade(trade);
@@ -1115,8 +1115,6 @@ export default {
               this.feeError = 'This provider is not available.';
             }
           });
-      } catch (error) {
-        Toast(error.message, {}, ERROR);
       }
     }, 500),
     setupTrade(trade) {
