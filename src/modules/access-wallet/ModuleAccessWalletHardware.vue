@@ -239,7 +239,7 @@ export default {
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET
+          type: WALLET_TYPES.COOL_WALLET_S
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -340,7 +340,7 @@ export default {
      */
     onCoolWallet() {
       return (
-        this.walletType === WALLET_TYPES.COOL_WALLET &&
+        this.walletType === WALLET_TYPES.COOL_WALLET_S &&
         isEmpty(this.hwWalletInstance)
       );
     },
@@ -462,7 +462,12 @@ export default {
   watch: {
     selectedPath: {
       handler: function () {
-        if (!isEmpty(this.hwWalletInstance)) {
+        /**
+         * only call this when hwWalletInstance is not empty (ledger will error out)
+         * and when walletType has been selected (closing modal will error out)
+         */
+        if (this.walletType && !isEmpty(this.hwWalletInstance)) {
+          this.hwWalletInstance = {};
           this[`${this.walletType}Unlock`]();
         }
       },
@@ -542,7 +547,7 @@ export default {
         if (this.step === this.wallets[this.walletType].when) {
           if (this.onLedger) this.selectedPath = this.paths[0];
           if (
-            this.walletType === WALLET_TYPES.COOL_WALLET ||
+            this.walletType === WALLET_TYPES.COOL_WALLET_S ||
             this.walletType === WALLET_TYPES.BITBOX2
           )
             return;
@@ -575,12 +580,11 @@ export default {
       const path = this.selectedPath.hasOwnProperty('value')
         ? this.selectedPath.value
         : this.selectedPath;
-      return this.wallets[this.walletType]
+      this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            this.hwWalletInstance = _hwWallet;
             if (this.onLedger) this.ledgerConnected = true;
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
@@ -597,10 +601,11 @@ export default {
                     this.reset();
                   }
                 });
+            } else {
+              this.hwWalletInstance = _hwWallet;
             }
-            return _hwWallet;
           } catch (err) {
-            Toast(err, {}, ERROR);
+            this.wallets[this.walletType].create.errorHandler(err);
           }
         })
         .catch(err => {
@@ -627,7 +632,7 @@ export default {
           if (this.wallets[this.walletType]) {
             if (
               e.message === 'Wrong Password' &&
-              this.walletType === WALLET_TYPES.COOL_WALLET
+              this.walletType === WALLET_TYPES.COOL_WALLET_S
             ) {
               this.passwordError = true;
             } else {

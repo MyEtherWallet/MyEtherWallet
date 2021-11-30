@@ -279,10 +279,11 @@ export default {
       }
     },
     selectedPath: {
-      deep: true,
       handler: function () {
+        this.walletInstance = {};
         this.nextStepTwo();
-      }
+      },
+      deep: true
     }
   },
   methods: {

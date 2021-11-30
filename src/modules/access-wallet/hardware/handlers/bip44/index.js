@@ -12,5 +12,5 @@ export default {
   [WALLET_TYPES.BITBOX2]: bitbox02Paths,
   [WALLET_TYPES.KEEPKEY]: keepkeyPaths,
   [WALLET_TYPES.MNEMONIC]: mnemonicPaths,
-  [WALLET_TYPES.COOL_WALLET]: coolWalletPaths
+  [WALLET_TYPES.COOL_WALLET_S]: coolWalletPaths
 };

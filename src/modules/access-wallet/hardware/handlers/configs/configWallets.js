@@ -47,7 +47,7 @@ export default {
     requiresPassword: false,
     title: 'Connect your KeepKey'
   },
-  [WALLET_TYPES.COOL_WALLET]: {
+  [WALLET_TYPES.COOL_WALLET_S]: {
     create: CoolWallet,
     when: 2,
     hasPaths: false,

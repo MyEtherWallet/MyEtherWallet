@@ -28,14 +28,14 @@ const CW_DEVICE_NAME = 'coolWallet-deviceName';
 
 class CoolWallet {
   constructor() {
-    this.identifier = WALLET_TYPES.COOL_WALLET;
+    this.identifier = WALLET_TYPES.COOL_WALLET_S;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.transport = {};
     this.deviceInstance = {};
-    this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET_S];
     this.meta = {
-      name: 'Cool Wallet',
+      name: 'CoolWallet S',
       img: {
         type: 'img',
         value: coolwallet
