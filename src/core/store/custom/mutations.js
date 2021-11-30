@@ -16,7 +16,14 @@ const SET_CUSTOM_TOKEN = function (state, { token, rootGetters }) {
   if (!state.tokens[network.type.name]) {
     customTokensByNetwork = [];
   }
-  customTokensByNetwork.unshift(token);
+  const found = customTokensByNetwork.findIndex(
+    t => t.contract.toLowerCase() === token.contract.toLowerCase()
+  );
+  if (found !== -1) {
+    customTokensByNetwork[found] = token;
+  } else {
+    customTokensByNetwork.unshift(token);
+  }
   Vue.set(state.tokens, network.type.name, customTokensByNetwork);
 };
 
