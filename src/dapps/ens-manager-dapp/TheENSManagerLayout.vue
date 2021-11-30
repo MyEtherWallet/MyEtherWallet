@@ -546,11 +546,13 @@ export default {
         });
     },
     commit() {
+      let waitingTime;
       this.nameHandler
         .createCommitment()
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
+            waitingTime = parseInt(resp);
           });
         })
         .on('receipt', () => {
@@ -559,7 +561,7 @@ export default {
           setTimeout(() => {
             this.committed = true;
             this.loadingCommit = false;
-          }, 60 * 1000);
+          }, waitingTime * 1000);
         })
         .on('error', err => {
           this.closeRegister();
