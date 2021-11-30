@@ -1,158 +1,57 @@
 [
   {
-    "_comment": "Engineering Department ===================================================================",
-    "department": "Engineering",
-    "jobs": [
-      {
-        "jobTitle": "Front End Developer (Entry level)",
-        "location": "Los Angeles, CA",
-        "type": "Full time",
-        "jobDetails": [
-          {
-            "subtitle": "About the role",
-            "data": "With a wide range of Fortune 500 enterprises, government organizations and top systems integrators as our clients, we not only provide you with the skills needed to succeed through an employer-paid training program but will also give you the opportunity to put those skills to use, on projects that matter."
-          },
-          {
-            "subtitle": "What we are looking for",
-            "data": [
-              "College degree (Associates or Bachelors)",
-              "Must be authorized to work in the US",
-              "Strong desire to learn to code – No prior professional experience required.",
-              "A natural problem solver",
-              "Strong communication and interpersonal skills",
-              "Willing to relocate anywhere in the US – Relocation assistance provided"
-            ]
-          },
-          {
-            "subtitle": "What we offer",
-            "data": [
-              "Competitive salary",
-              "Relocation & housing assistance",
-              "Health, vision & dental insurance",
-              "Paid time off",
-              "Industry Certifications",
-              "Life Insurance Policy",
-              "401k",
-              "Mentoring program and ongoing support throughout your entire Revature career",
-              "Experience with the largest and most reputable companies in the US"
-            ]
-          }
-        ]
-      },
-      {
-        "jobTitle": "Front End Developer (Entry level)",
-        "location": "Los Angeles, CA",
-        "type": "Full time",
-        "jobDetails": [
-          {
-            "subtitle": "About the role",
-            "data": "We are currently seeking two qualified Front-End full stack developers to assist primarly with our browser-based gameplay mechanics. The successful candidates must have solid experience working with javascript (vanilla) in general and ideally some experience with various javascript frameworks (svelte, react, etc....) They will also be responsible for wiring the front end up to the available API's, pulling data from the blockchain and smart contracts. This role will work closely with our UI/UX Design team, our Smart Contract Team and our Game Mechanics group. Strong communication and team work capabilities are mandatory."
-          },
-          {
-            "subtitle": "What we are looking for",
-            "data": [
-              "College degree (Associates or Bachelors)",
-              "Must be authorized to work in the US",
-              "Strong desire to learn to code – No prior professional experience required.",
-              "A natural problem solver",
-              "Strong communication and interpersonal skills",
-              "Willing to relocate anywhere in the US – Relocation assistance provided"
-            ]
-          },
-          {
-            "subtitle": "What we offer",
-            "data": [
-              "Competitive salary",
-              "Relocation & housing assistance",
-              "Health, vision & dental insurance",
-              "Paid time off",
-              "Industry Certifications",
-              "Life Insurance Policy",
-              "401k",
-              "Mentoring program and ongoing support throughout your entire Revature career",
-              "Experience with the largest and most reputable companies in the US"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "_comment": "Customer Support Department ===================================================================",
+    "_comment": "Customer Support ===================================================================",
     "department": "Customer Support",
     "jobs": [
       {
-        "jobTitle": "Front End Developer (Entry level)",
+        "jobTitle": "Customer Care Representative",
         "location": "Los Angeles, CA",
         "type": "Full time",
         "jobDetails": [
           {
-            "subtitle": "About the role",
-            "data": "With a wide range of Fortune 500 enterprises, government organizations and top systems integrators as our clients, we not only provide you with the skills needed to succeed through an employer-paid training program but will also give you the opportunity to put those skills to use, on projects that matter."
+            "subtitle": "WHO WE ARE",
+            "data": "MyEtherWallet is Free, open-source, client-side interface for generating Ethereum wallets & more. We enable our users to interact with the Ethereum blockchain easily & securely. We are looking to hire team players with a desire to learn about the blockchain world and help grow our community."
           },
           {
-            "subtitle": "What we are looking for",
+            "subtitle": "WHO ARE WE LOOKING FOR",
+            "data": "We are looking for a customer service representative with a profound understanding of Blockchain. Our potential candidate must be able to commit full time from 9 am-6pm, as well as be comfortable handling confidential information and must sign a nondisclosure agreement."
+          },
+          {
+            "subtitle": "JOB SUMMARY",
+            "data": "You as a candidate will provide customer support to users that have questions, concerns or confusion that occur when using our technology. As well as, provide feedback on secure use of online wallets. You must be able to answer support tickets through email, our company’s social media accounts and more. As a candidate you must be prepared to be the voice of the brand, and maintain a strong and good relationship between our clients and our team members. Paid Training is included."
+          },
+          {
+            "subtitle": "KEY JOB RESPONSIBILITIES",
             "data": [
-              "College degree (Associates or Bachelors)",
-              "Must be authorized to work in the US",
-              "Strong desire to learn to code – No prior professional experience required.",
-              "A natural problem solver",
-              "Strong communication and interpersonal skills",
-              "Willing to relocate anywhere in the US – Relocation assistance provided"
+              "Communicate with clients through email, Facebook messages, Twitter mentions, Reddit posts and more",
+              "Resolve issues by understanding why the client is seeking assistance; determining the cause of the problem; selecting and explaining the best solution for the client's problem; following up to ensure resolution",
+              "Provide calm and prompt responses to clients",
+              "Being able to recognize and forward complicated support issues to the supervising staff",
+              "Manage a large amount of support tickets",
+              "Maintain professional conduct/attitude"
             ]
           },
           {
-            "subtitle": "What we offer",
+            "subtitle": "REQUIREMENTS",
             "data": [
-              "Competitive salary",
-              "Relocation & housing assistance",
-              "Health, vision & dental insurance",
-              "Paid time off",
-              "Industry Certifications",
-              "Life Insurance Policy",
-              "401k",
-              "Mentoring program and ongoing support throughout your entire Revature career",
-              "Experience with the largest and most reputable companies in the US"
-            ]
-          }
-        ]
-      },
-      {
-        "jobTitle": "Front End Developer (Entry level)",
-        "location": "Los Angeles, CA",
-        "type": "Full time",
-        "jobDetails": [
-          {
-            "subtitle": "About the role",
-            "data": "We are currently seeking two qualified Front-End full stack developers to assist primarly with our browser-based gameplay mechanics. The successful candidates must have solid experience working with javascript (vanilla) in general and ideally some experience with various javascript frameworks (svelte, react, etc....) They will also be responsible for wiring the front end up to the available API's, pulling data from the blockchain and smart contracts. This role will work closely with our UI/UX Design team, our Smart Contract Team and our Game Mechanics group. Strong communication and team work capabilities are mandatory."
-          },
-          {
-            "subtitle": "What we are looking for",
-            "data": [
-              "College degree (Associates or Bachelors)",
-              "Must be authorized to work in the US",
-              "Strong desire to learn to code – No prior professional experience required.",
-              "A natural problem solver",
-              "Strong communication and interpersonal skills",
-              "Willing to relocate anywhere in the US – Relocation assistance provided"
-            ]
-          },
-          {
-            "subtitle": "What we offer",
-            "data": [
-              "Competitive salary",
-              "Relocation & housing assistance",
-              "Health, vision & dental insurance",
-              "Paid time off",
-              "Industry Certifications",
-              "Life Insurance Policy",
-              "401k",
-              "Mentoring program and ongoing support throughout your entire Revature career",
-              "Experience with the largest and most reputable companies in the US"
+              "( MUST )",
+              "1 year + customer support experience",
+              "Be familiar with Blockchain, online wallets",
+              "Strong communication skills",
+              "Strong problem solving skills",
+              "Familiarity with social media, Slack",
+              "Be able to commit full time",
+              "Ability to multitask, prioritize and manage time effectively",
+              "Being able to handle sensitive and private information",
+              "Must sign non disclosure agreement",
+              "( PLUS )",
+              "Computer Science background",
+              "Bachelor’s degree or equivalent",
+              "Familiarity with Ethereum, Bitcoin"
             ]
           }
         ]
       }
     ]
-  }
+  }  
 ]
