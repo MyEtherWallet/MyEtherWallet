@@ -31,7 +31,8 @@ const EXCEPTIONS = [
   // update after release
   '@mdi/font',
   'stylelint',
-  'stylelint-config-standard'
+  'stylelint-config-standard',
+  'eslint-plugin-vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
