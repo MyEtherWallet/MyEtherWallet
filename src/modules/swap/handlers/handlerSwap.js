@@ -76,7 +76,7 @@ class Swap {
   }
   getQuotesForSet(arr) {
     const quotes = [];
-    const provider = this.providers[2];
+    const provider = this.providers[3];
     for (let i = 0; i < arr.length; i++) {
       quotes.push(provider.getQuote(arr[i]));
     }
