@@ -1,5 +1,104 @@
 [
   {
+    "_comment": "Developer ===================================================================",
+    "department": "Developer",
+    "jobs": [
+      {
+        "jobTitle": "Full Stack Developer",
+        "location": "Los Angeles, CA",
+        "type": "Full time",
+        "indeedLink": "https://www.indeed.com/jobs?q=myetherwallet&l=los%20angeles&vjk=ac46fd48fc7e69dc&advn=3314243344609839",
+        "jobDetails": [
+          {
+            "subtitle": "WHO WE ARE",
+            "data": "MyEtherWallet is Free, open-source, client-side interface for generating Ethereum wallets & more. We enable our users to interact with the Ethereum blockchain easily & securely. We are looking to hire team players with a desire to learn about the blockchain world and help grow our community."
+          },
+          {
+            "subtitle": "WHO ARE WE LOOKING FOR",
+            "data": "We are looking for an experienced, Full Stack Developer with deep knowledge of web technologies including Node.js, Typescript/JavaScript, and VUE.js frameworks. Also the candidate must possess knowledge in database development and implementation process and ideally know one or more: MongoDB, RethinkDB, PostgreSQL, DynamoDB etc."
+          },
+          {
+            "subtitle": "JOB SUMMARY",
+            "data": "The chosen candidate will be working in an agile, startup environment as a senior project developer. They will design, develop, and deliver new full-stack web applications, and oversee development of our planned mobile integration. The candidate will be working with our in-house team, as well as, remote team and will ensure that the project is scoped, resourced, and delivered as a professional product. A candidate will ensure partner and user satisfaction throughout the development cycle and after project completion. They will be expected to participate in management meetings and help set strategies and resources for the project."
+          },
+          {
+            "subtitle": "KEY JOB RESPONSIBILITIES",
+            "data": [
+              "Develop web-based tools and applications",
+              "Perform high development standards, especially for code quality, code reviews, unit testing, continuous integration and deployment",
+              "Develop proof of concept and integrate it into a working prototype from back end to front end"
+            ]
+          },
+          {
+            "subtitle": "REQUIREMENTS",
+            "data": [
+              "+3 years of web development",
+              "NODE.js, Javascript or Typescript, HTML, CSS, VUE.js, Git, Sass",
+              "Knowledge in SQL and no-SQL databases, such as, PostgreSQL and Amazon"
+            ]
+          },
+          {
+            "subtitle": "DynamoDB",
+            "data": [
+              "Understanding of REST API design and experience with GraphQL",
+              "Experience in creating user authentication and authorization between multiple systems, servers, and environments",
+              "Ability to integrate multiple data sources and databases into one system",
+              "Some experience working with AWS",
+              "Knowledge on management of the hosting environment, including database administration and scaling an application to support load changes",
+              "Demonstrated knowledge of software development processes",
+              "Driven decision maker, excellent problem solver, and fast learner"
+            ]
+          },
+          {
+            "subtitle": "Plus",
+            "data": "Knowledge of blockchain technology in particular Ethereum; Web3; Geth, cryptocurrencies, extensive AWS experience, such as working with S3, AWS Lambda, Docker and love of dogs. LOCAL CANDIDATES ONLY - SORRY THIS IS NOT A REMOTE POSITION"
+          },
+          {
+            "subtitle": "Pay",
+            "data": "$90,000.00 - $110,000.00 per year"
+          },
+          {
+            "subtitle": "Benefits",
+            "data": [
+              "Dental insurance",
+              "Health insurance",
+              "Paid time off"
+            ]
+          },
+          {
+            "subtitle": "Schedule",
+            "data": [
+              "Monday to Friday"
+            ]
+          },
+          {
+            "subtitle": "COVID-19 considerations",
+            "data": "Everyone is currently working remotely, but we hope to get back into the office in Downtown LA when its safe and appropriate."
+          },
+          {
+            "subtitle": "Application Question(s)",
+            "data": [
+              "Do you have any knowledge of blockchain technology?"
+            ]
+          },
+          {
+            "subtitle": "Experience",
+            "data": [
+              "Full stack web development: 3 years (Required)"
+            ]
+          },
+          {
+            "subtitle": "Work Location",
+            "data": [
+              "One location",
+              "MyEtherWallet in Los Angeles, CA 90014"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "_comment": "Customer Support ===================================================================",
     "department": "Customer Support",
     "jobs": [
@@ -7,6 +106,7 @@
         "jobTitle": "Customer Care Representative",
         "location": "Los Angeles, CA",
         "type": "Full time",
+        "indeedLink": "",
         "jobDetails": [
           {
             "subtitle": "WHO WE ARE",

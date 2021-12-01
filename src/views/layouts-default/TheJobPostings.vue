@@ -292,6 +292,19 @@
         </v-row>
       </div>
     </v-dialog>
+    <mew-toast
+      v-model="successToast"
+      text="Thank you. We are currently reviewing your documents and shall get in touch with you shortly."
+      toast-type="success"
+      can-close
+    ></mew-toast>
+
+    <mew-toast
+      v-model="failedToast"
+      text="There was an error while sending your application. Please contact us at support@myetherwallet.com"
+      toast-type="error"
+      can-close
+    ></mew-toast>
   </div>
 </template>
 
@@ -305,6 +318,8 @@ export default {
   components: { TheLayoutHeader },
   data() {
     return {
+      successToast: false,
+      failedToast: false,
       jobsData: jobs,
       jobInfo: null,
       dialog: false,
@@ -320,17 +335,22 @@ export default {
         aboutMyself: '',
         whyWantToWorkAtMew: ''
       },
-      areAllRequiredFormsValid: true,
-      formSubmissionSuccessful: null,
-      formSubmissionFailed: null
+      areAllRequiredFormsValid: true
     };
   },
   methods: {
+    /*
     openDetailsDialog(job, department) {
       this.jobInfo = job;
       this.jobInfo.department = department;
 
       this.dialog = true;
+    },
+    */
+    openDetailsDialog(job) {
+      if (job.indeedLink) {
+        window.location = job.indeedLink;
+      }
     },
     imgPreview(e, targetVar) {
       if (e) {
@@ -346,11 +366,6 @@ export default {
         formData.append(key, this.form[key]);
       }
 
-      /*
-      console.log(formData);
-      return;
-      */
-
       if (this.areAllRequiredFormsValid) {
         axios({
           method: 'post',
@@ -359,10 +374,10 @@ export default {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
           .then(() => {
-            this.formSubmissionSuccessful = true;
+            this.successToast = !this.successToast;
           })
           .catch(() => {
-            this.formSubmissionFailed = true;
+            this.failedToast = !this.failedToast;
           });
       }
     }
