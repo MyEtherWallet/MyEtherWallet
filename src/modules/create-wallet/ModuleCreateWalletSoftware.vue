@@ -14,7 +14,7 @@
       :show-overlay="open"
       :title="typeTitle"
       :close="close"
-      :back="goBack"
+      :back="isOverview ? null : goBack"
       content-size="large"
     >
       <!--
