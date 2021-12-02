@@ -7,7 +7,7 @@
 
     <div class="px-3 my-12 mx-auto" style="max-width: 800px">
       <mew-tabs
-        :is-vertical="true"
+        :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
         :items="items"
         :active-tab="activeTab"
         @onTab="tabChanged"
@@ -142,8 +142,5 @@ export default {
   padding-right: 40px;
   margin-right: 40px;
   border-right: 1px solid var(--v-selectBorder-base) !important;
-}
-.mew-component--tools.mobile .v-item-group.v-slide-group {
-  display: none !important;
 }
 </style>
