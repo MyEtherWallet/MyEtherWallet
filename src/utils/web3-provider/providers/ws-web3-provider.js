@@ -2,7 +2,7 @@
 
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 const errors = require('web3-core-helpers').errors;
-import { isArray, isFunction } from 'underscore';
+import { isArray, isFunction } from 'lodash';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;

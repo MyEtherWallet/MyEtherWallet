@@ -10,7 +10,7 @@ import registrarInterface from './configs/configRegistrarInterface';
 import * as nameHashPckg from 'eth-ens-namehash';
 import contentHash from 'content-hash';
 import { toChecksumAddress } from 'web3-utils';
-import { clone } from 'underscore';
+import { clone } from 'lodash';
 import normalise from '@/core/helpers/normalise';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 

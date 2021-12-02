@@ -291,6 +291,7 @@ export default {
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
+          this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

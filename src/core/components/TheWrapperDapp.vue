@@ -56,7 +56,7 @@
       ]"
       :items="tabItems"
       :active-tab="activeTab"
-      :background="transparent"
+      background="transparent"
       has-underline
       active-color="textDark"
       @onTab="onTab"
