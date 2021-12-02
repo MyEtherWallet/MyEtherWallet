@@ -120,6 +120,12 @@ export default {
      * Used in overlay back button
      */
     goBack() {
+      /**
+       * Make back button to go back to previous url
+       */
+      this.$router.go(-1);
+
+      /*
       if (this.isOverview) {
         try {
           this.$router.go(-1);
@@ -127,6 +133,7 @@ export default {
           Toast(e, {}, ERROR);
         }
       }
+      */
     },
     /**
      * Sets a wallet type and the step according to the provided wallet type
