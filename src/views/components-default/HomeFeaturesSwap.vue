@@ -20,15 +20,7 @@
           <v-sheet
             v-if="data.rate"
             color="tableHeader"
-            class="
-              d-flex
-              align-center
-              justify-space-between
-              border-radius--5px
-              py-5
-              px-4
-              cursor cursor--pointer
-            "
+            class="d-flex align-center justify-space-between border-radius--5px py-5 px-4 cursor cursor--pointer"
             @click="goToSwap(data)"
           >
             <div class="text-uppercase">
