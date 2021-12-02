@@ -6,7 +6,12 @@
     <the-layout-header title="Tools" />
 
     <div class="px-3 my-12 mx-auto" style="max-width: 800px">
-      <mew-tabs :is-vertical="true" :items="items">
+      <mew-tabs
+        :is-vertical="true"
+        :items="items"
+        :active-tab="activeTab"
+        @onTab="tabChanged"
+      >
         <template #tabItemContent1>
           <module-message-verify />
         </template>
@@ -36,7 +41,7 @@ import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
-  name: 'MoreActions',
+  name: 'TheToolsLayout',
   components: {
     TheLayoutHeader,
     AppGetStarted,
@@ -46,7 +51,8 @@ export default {
     ModuleMessageVerify
   },
   data: () => ({
-    currentTool: 'watch',
+    currentTool: '',
+    activeTab: 0,
     items: [
       /*
       {
@@ -65,6 +71,10 @@ export default {
       {
         name: 'Verify message',
         val: 'verify'
+      },
+      {
+        name: 'Convert Units',
+        val: 'convert'
       }
     ]
   }),
@@ -86,8 +96,41 @@ export default {
       // Check if tool value from URL is valid
       if (tools.includes(this.$route.query.tool)) {
         this.currentTool = this.$route.query.tool;
+
+        switch (this.currentTool) {
+          case 'verify':
+            this.activeTab = 0;
+            this.currentTool = 'verify';
+            break;
+
+          case 'convert':
+            this.activeTab = 1;
+            this.currentTool = 'convert';
+            break;
+
+          default:
+            this.activeTab = 0;
+            this.currentTool = 'verify';
+        }
       } else {
+        this.activeTab = 0;
         this.currentTool = 'verify';
+      }
+    },
+    tabChanged(tab) {
+      this.activeTab = tab;
+
+      switch (tab) {
+        case 0:
+          this.currentTool = 'verify';
+          break;
+
+        case 1:
+          this.currentTool = 'convert';
+          break;
+
+        default:
+          this.currentTool = 'verify';
       }
     }
   }
