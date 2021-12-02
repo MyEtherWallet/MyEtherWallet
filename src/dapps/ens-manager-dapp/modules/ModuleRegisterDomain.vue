@@ -125,16 +125,26 @@ export default {
   watch: {
     onStep(newStep) {
       if (newStep == 2) {
-        this.$router.push({ name: ROUTES_WALLET.ENS_2.NAME });
+        this.$router.push({
+          name: ROUTES_WALLET.ENS.NAME,
+          query: { step: '2' }
+        });
       } else if (newStep == 3) {
-        this.$router.push({ name: ROUTES_WALLET.ENS_3.NAME });
+        this.$router.push({
+          name: ROUTES_WALLET.ENS.NAME,
+          query: { step: '3' }
+        });
       } else {
         this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
       }
     }
   },
   mounted() {
-    if (this.onStep == 1) this.$router.push({ name: ROUTES_WALLET.ENS_1.NAME });
+    if (this.onStep == 1)
+      this.$router.push({
+        name: ROUTES_WALLET.ENS.NAME,
+        query: { step: '1' }
+      });
   },
   methods: {
     onRequest(val) {
