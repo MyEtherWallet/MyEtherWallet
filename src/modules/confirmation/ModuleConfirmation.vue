@@ -113,15 +113,7 @@
           />
           <!-- Warning Sheet -->
           <div
-            class="
-              px-4
-              py-6
-              pr-6
-              warning
-              textBlack2--text
-              border-radius--5px
-              mb-5
-            "
+            class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Canceling or
             reversing a transaction cannot be guaranteed. You will still be

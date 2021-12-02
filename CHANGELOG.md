@@ -2,22 +2,22 @@
 
 ### devop
 
-* * migrate underscore to lodash [#3564](https://github.com/MyEtherWallet/MyEtherWallet/pull/3564)
+* migrate underscore to lodash [#3564](https://github.com/MyEtherWallet/MyEtherWallet/pull/3564)
 * update packages [#3573](https://github.com/MyEtherWallet/MyEtherWallet/pull/3573)
 * show private key for mnemonic wallets [#3576](https://github.com/MyEtherWallet/MyEtherWallet/pull/3576)
 
 ### fix
 
-* * return error when no providers provided [#3531](https://github.com/MyEtherWallet/MyEtherWallet/pull/3531)
-* * getting stuck at pending on failed transaction\* adds estimated fees tooltip
-* menu highlight on direct navigation to my-blocks
-  [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
-* * disable swap button in swap when balance is low or 0 [#3561](https://github.com/MyEtherWallet/MyEtherWallet/pull/3561)
+* return error when no providers provided [#3531](https://github.com/MyEtherWallet/MyEtherWallet/pull/3531)
+* getting stuck at pending on failed transaction [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* adds estimated fees tooltip [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* menu highlight on direct navigation to my-blocks [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
+* disable swap button in swap when balance is low or 0 [#3561](https://github.com/MyEtherWallet/MyEtherWallet/pull/3561)
 * stabilize all hardware wallet access and mnemonic [#3562](https://github.com/MyEtherWallet/MyEtherWallet/pull/3562)
-* * show cost in confirmation modal [#3563](https://github.com/MyEtherWallet/MyEtherWallet/pull/3563)
-* * fix mew wallet banner invalid url bug [#3567](https://github.com/MyEtherWallet/MyEtherWallet/pull/3567)
-* * add in additional ledger error check [#3574](https://github.com/MyEtherWallet/MyEtherWallet/pull/3574)
-* * add check for reading disconnects [#3575](https://github.com/MyEtherWallet/MyEtherWallet/pull/3575)
+* show cost in confirmation modal [#3563](https://github.com/MyEtherWallet/MyEtherWallet/pull/3563)
+* fix mew wallet banner invalid url bug [#3567](https://github.com/MyEtherWallet/MyEtherWallet/pull/3567)
+* add in additional ledger error check [#3574](https://github.com/MyEtherWallet/MyEtherWallet/pull/3574)
+* add check for reading disconnects [#3575](https://github.com/MyEtherWallet/MyEtherWallet/pull/3575)
 * refresh custom token balance after sending [#3580](https://github.com/MyEtherWallet/MyEtherWallet/pull/3580)
 * fix ens commit [#3581](https://github.com/MyEtherWallet/MyEtherWallet/pull/3581)
 
