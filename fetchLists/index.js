@@ -171,6 +171,7 @@ const fetchMasterFile = async () => {
       `${configs.MASTER_FILE_PATH}/master-file.json`,
       JSON.stringify(response)
     );
+    console.log('Wrote masterfile');
   } catch (e) {
     console.error(e); // Not captured by sentry
   }
