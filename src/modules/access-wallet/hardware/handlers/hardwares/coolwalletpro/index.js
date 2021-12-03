@@ -2,8 +2,9 @@ import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import errorHandler from './errorHandler';
-import cwsETH from '@coolwallets/eth';
-import cwsWallet, { generateKeyPair } from '@coolwallets/wallet';
+import cwsETH from '@coolwallet/eth';
+import cwsBSC from '@coolwallet/bsc';
+import * as core from '@coolwallet/core';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import { bufferToHex } from 'ethereumjs-util';
 import cwsTransportLib from '@coolwallet/transport-web-ble';
@@ -25,10 +26,11 @@ const APP_ID = 'coolWalletPro-appId';
 const APP_PRIVATE_KEY = 'coolWalletPro-appPrivateKey';
 const APP_PUBLIC_KEY = 'coolWalletPro-appPublicKey';
 const CW_DEVICE_NAME = 'coolWalletPro-deviceName';
+const CW_SE_PUBKEY = 'coolWalletPro-SEPublicKey';
 
 class CoolWallet {
   constructor() {
-    this.identifier = WALLET_TYPES.COOL_WALLET_S;
+    this.identifier = WALLET_TYPES.COOL_WALLET_PRO;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
     this.transport = {};
@@ -72,10 +74,19 @@ class CoolWallet {
               if (_this.lastCWDeviceUsed !== device.name) throw '';
               locstore.set(CW_DEVICE_NAME, device.name);
               _this.connectToCW();
-              await _this.deviceInstance.getAddress(0);
+              const chainID = store.getters['global/network'].type.chainID;
+              await _this.deviceInstance[chainID].getAddress(
+                _this.transport,
+                _this.appPrivateKey,
+                _this.appId,
+                0
+              );
               resolve();
             } catch (e) {
-              this.generateAndRegister(password, resolve, device, reject);
+              core.config.getSEPublicKey(_this.transport).then(res => {
+                localStorage.setItem(CW_SE_PUBKEY, res);
+                this.generateAndRegister(password, resolve, device, reject);
+              });
             }
           });
         } else {
@@ -86,23 +97,19 @@ class CoolWallet {
   }
 
   generateAndRegister(password, cb, device, reject) {
+    const sePublicKey = localStorage.getItem(CW_SE_PUBKEY) || '';
     const { publicKey: appPublicKey, privateKey: appPrivateKey } =
-      generateKeyPair();
+      core.crypto.key.generateKeyPair();
     this.appPrivateKey = appPrivateKey;
     this.appPublicKey = appPublicKey;
-    const coolWalletInstance = new cwsWallet(
-      this.transport,
-      this.appPrivateKey
-    );
-    coolWalletInstance
-      .register(this.appPublicKey, password, APP_NAME)
+    core.apdu.pair
+      .register(this.transport, appPublicKey, password, APP_NAME, sePublicKey)
       .then(appId => {
         this.appId = appId;
         locstore.set(APP_ID, appId);
         locstore.set(APP_PUBLIC_KEY, appPublicKey);
         locstore.set(APP_PRIVATE_KEY, appPrivateKey);
         locstore.set(CW_DEVICE_NAME, device.name);
-        coolWalletInstance.setAppId(appId);
         this.connectToCW();
         cb();
       })
@@ -112,15 +119,20 @@ class CoolWallet {
   }
 
   connectToCW() {
-    this.deviceInstance = new cwsETH(
-      this.transport,
-      this.appPrivateKey,
-      this.appId
-    );
+    this.deviceInstance = {
+      1: new cwsETH(),
+      56: new cwsBSC()
+    };
   }
 
   async getAccount(idx) {
-    const address = await this.deviceInstance.getAddress(idx);
+    const chainID = store.getters['global/network'].type.chainID;
+    const address = await this.deviceInstance[chainID].getAddress(
+      this.transport,
+      this.appPrivateKey,
+      this.appId,
+      idx
+    );
     const txSigner = async txParam => {
       const tx = new Transaction.fromTxData(txParam, {
         common: commonGenerator(store.getters['global/network'])
@@ -135,9 +147,17 @@ class CoolWallet {
         chainId: tx.common.chainId()
       };
 
+      const signTxData = {
+        transport: this.transport,
+        appPrivateKey: this.appPrivateKey,
+        appId: this.appId,
+        transaction: cwTx,
+        addressIndex: idx
+      };
+
       const networkId = tx.common.chainId();
-      const result = await this.deviceInstance
-        .signTransaction(cwTx, idx)
+      const result = await this.deviceInstance[chainID]
+        .signTransaction(signTxData)
         .catch(errorHandler);
 
       if (result) {
@@ -158,7 +178,16 @@ class CoolWallet {
       return result;
     };
     const msgSigner = async msg => {
-      const result = await this.deviceInstance.signMessage(msg, idx);
+      const signMsgData = {
+        transport: this.transport,
+        appPrivateKey: this.appPrivateKey,
+        appId: this.appId,
+        message: msg,
+        addressIndex: idx
+      };
+      const result = await this.deviceInstance[chainID].signMessage(
+        signMsgData
+      );
       if (result) {
         const signature = result.substr(2);
         const r = '0x' + signature.slice(0, 64);

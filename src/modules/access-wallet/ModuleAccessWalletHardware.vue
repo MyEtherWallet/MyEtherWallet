@@ -108,8 +108,10 @@
         =====================================================================================
         -->
       <access-wallet-cool-wallet
-        v-if="onCoolWallet"
-        :cool-wallet-unlock="coolWalletUnlock"
+        v-if="onCoolWalletS || onCoolWalletPro"
+        :cool-wallet-unlock="
+          onCoolWalletS ? coolWalletSUnlock : coolWalletProUnlock
+        "
         :password-error="passwordError"
         @password="setPassword"
       />
@@ -237,9 +239,14 @@ export default {
           type: WALLET_TYPES.BITBOX2
         },
         {
-          label: 'CoolWallet',
+          label: 'CoolWallet S',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
           type: WALLET_TYPES.COOL_WALLET_S
+        },
+        {
+          label: 'CoolWallet Pro',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
+          type: WALLET_TYPES.COOL_WALLET_PRO
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -293,9 +300,9 @@ export default {
       //     title: 'Using a KeepKey Hardware wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-keepkey-with-mew/'
       //   };
-      // } else if (this.onCoolWallet) {
+      // } else if (this.onCoolWalletS) {
       //   return {
-      //     title: 'Using a CoolWallet Hardware Wallet with MEW',
+      //     title: 'Using a CoolWallet S Hardware Wallet with MEW',
       //     url: 'https://kb.myetherwallet.com/en/hardware-wallets/using-coolwallet-with-mew/'
       //   };
       // }
@@ -336,11 +343,20 @@ export default {
       return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
-     * On CoolWallet
+     * On CoolWallet S
      */
-    onCoolWallet() {
+    onCoolWalletS() {
       return (
         this.walletType === WALLET_TYPES.COOL_WALLET_S &&
+        isEmpty(this.hwWalletInstance)
+      );
+    },
+    /**
+     * On CoolWallet Pro
+     */
+    onCoolWalletPro() {
+      return (
+        this.walletType === WALLET_TYPES.COOL_WALLET_PRO &&
         isEmpty(this.hwWalletInstance)
       );
     },
@@ -548,6 +564,7 @@ export default {
           if (this.onLedger) this.selectedPath = this.paths[0];
           if (
             this.walletType === WALLET_TYPES.COOL_WALLET_S ||
+            this.walletType === WALLET_TYPES.COOL_WALLET_PRO ||
             this.walletType === WALLET_TYPES.BITBOX2
           )
             return;
@@ -570,7 +587,10 @@ export default {
     keepkeyUnlock() {
       this.unlockPathOnly();
     },
-    coolWalletUnlock() {
+    coolWalletSUnlock() {
+      this.unlockPathAndPassword(null, this.password);
+    },
+    coolWalletProUnlock() {
       this.unlockPathAndPassword(null, this.password);
     },
     /**

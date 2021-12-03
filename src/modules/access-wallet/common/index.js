@@ -3,7 +3,8 @@ import {
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
-  CoolWallet
+  CoolWalletS,
+  CoolWalletPro
 } from '@/modules/access-wallet/hardware/handlers';
 import WalletInterface from './WalletInterface';
 import { MnemonicWallet, Web3Wallet } from '../software/handlers';
@@ -18,7 +19,8 @@ export {
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
-  CoolWallet,
+  CoolWalletS,
+  CoolWalletPro,
   MewConnectWallet,
   WalletConnectWallet,
   WalletLinkWallet,
