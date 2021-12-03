@@ -35,7 +35,7 @@ class CoolWallet {
     this.needPassword = NEED_PASSWORD;
     this.transport = {};
     this.deviceInstance = {};
-    this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET_S];
+    this.supportedPaths = bip44Paths[WALLET_TYPES.COOL_WALLET];
     this.meta = {
       name: 'CoolWallet Pro',
       img: {

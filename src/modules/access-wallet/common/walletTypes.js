@@ -9,8 +9,7 @@ const WALLET_TYPES = {
   MNEMONIC: 'mnemonic',
   WEB3_WALLET: 'web3Wallet',
   PRIV_KEY: 'privKey',
-  COOL_WALLET_S: 'coolWalletS',
-  COOL_WALLET_PRO: 'coolWalletPro',
+  COOL_WALLET: 'coolWallet',
   WALLET_LINK: 'walletLink',
   MEW_WALLET: 'mewWallet'
 };

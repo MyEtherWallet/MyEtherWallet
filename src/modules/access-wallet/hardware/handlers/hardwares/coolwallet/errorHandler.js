@@ -5,12 +5,12 @@ const ERRORS = {
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
-  'Max number of App paired. Delete one of the paired app.':
-    'coolWalletError.max-app-instance',
   'browser not supported': 'coolWalletError.no-bluetooth',
   'User cancelled the requestDevice() chooser': 'User cancelled action!',
   'NetworkError: GATT operation already in progress.':
     'Unknown CoolWallet Error!',
+  'NotSupportedError: GATT operation failed for unknown reason.':
+    'CoolWallet Disconnected unexpectedly! Please Try again!',
   'Card Locked. Unlock with a registered App or reset your wallet.':
     'Card Locked. Unlock with a registered App or reset your wallet.',
   'Invalid hex string':
@@ -19,7 +19,18 @@ const ERRORS = {
     'coolWalletError.bluetooth-adapter-not-available',
   'An operation that changes interface state is in progress.':
     'coolWalletError.operation-that-changes-interface-state-in-progress',
-  'connection not open': 'coolWalletError.connection-not-open-on-send'
+  'connection not open': 'coolWalletError.connection-not-open-on-send',
+  'error function: executeAPDU, message: executeAPDU error: NotSupportedError: GATT operation failed for unknown reason.':
+    'Unexpected error! Please refresh page and try again!',
+  'REGISTER - ': 'Registration Error! Please refresh page and try again',
+  'invalid remainder': 'Not enough balance!'
 };
-const WARNINGS = {};
+const WARNINGS = {
+  'command info: {"CLA":"80","INS":"1C","P1":"00","P2":"00"}, returnCode: 6A84, message: file full':
+    'coolWalletError.max-app-instance',
+  'error function: executeAPDU, message: executeAPDU error: NetworkError: GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.':
+    'System Paired successfully, Please refresh page and try again!',
+  'Max number of App paired. Delete one of the paired app.':
+    'coolWalletError.max-app-instance'
+};
 export default WalletErrorHandler(ERRORS, WARNINGS);

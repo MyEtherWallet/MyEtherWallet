@@ -108,10 +108,8 @@
         =====================================================================================
         -->
       <access-wallet-cool-wallet
-        v-if="onCoolWalletS || onCoolWalletPro"
-        :cool-wallet-unlock="
-          onCoolWalletS ? coolWalletSUnlock : coolWalletProUnlock
-        "
+        v-if="onCoolWallet"
+        :cool-wallet-unlock="coolWalletUnlock"
         :password-error="passwordError"
         @password="setPassword"
       />
@@ -239,14 +237,9 @@ export default {
           type: WALLET_TYPES.BITBOX2
         },
         {
-          label: 'CoolWallet S',
+          label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET_S
-        },
-        {
-          label: 'CoolWallet Pro',
-          icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET_PRO
+          type: WALLET_TYPES.COOL_WALLET
         }
       ],
       ledgerApps: appPaths.map(item => {
@@ -343,20 +336,11 @@ export default {
       return this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
-     * On CoolWallet S
+     * On CoolWallet
      */
-    onCoolWalletS() {
+    onCoolWallet() {
       return (
-        this.walletType === WALLET_TYPES.COOL_WALLET_S &&
-        isEmpty(this.hwWalletInstance)
-      );
-    },
-    /**
-     * On CoolWallet Pro
-     */
-    onCoolWalletPro() {
-      return (
-        this.walletType === WALLET_TYPES.COOL_WALLET_PRO &&
+        this.walletType === WALLET_TYPES.COOL_WALLET &&
         isEmpty(this.hwWalletInstance)
       );
     },
@@ -563,8 +547,7 @@ export default {
         if (this.step === this.wallets[this.walletType].when) {
           if (this.onLedger) this.selectedPath = this.paths[0];
           if (
-            this.walletType === WALLET_TYPES.COOL_WALLET_S ||
-            this.walletType === WALLET_TYPES.COOL_WALLET_PRO ||
+            this.walletType === WALLET_TYPES.COOL_WALLET ||
             this.walletType === WALLET_TYPES.BITBOX2
           )
             return;
@@ -587,10 +570,7 @@ export default {
     keepkeyUnlock() {
       this.unlockPathOnly();
     },
-    coolWalletSUnlock() {
-      this.unlockPathAndPassword(null, this.password);
-    },
-    coolWalletProUnlock() {
+    coolWalletUnlock() {
       this.unlockPathAndPassword(null, this.password);
     },
     /**
@@ -652,7 +632,7 @@ export default {
           if (this.wallets[this.walletType]) {
             if (
               e.message === 'Wrong Password' &&
-              this.walletType === WALLET_TYPES.COOL_WALLET_S
+              this.walletType === WALLET_TYPES.COOL_WALLET
             ) {
               this.passwordError = true;
             } else {

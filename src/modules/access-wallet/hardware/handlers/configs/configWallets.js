@@ -5,8 +5,7 @@ import {
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
-  CoolWalletS,
-  CoolWalletPro
+  CoolWallet
 } from '@/modules/access-wallet/common';
 
 /**
@@ -48,15 +47,8 @@ export default {
     requiresPassword: false,
     title: 'Connect your KeepKey'
   },
-  [WALLET_TYPES.COOL_WALLET_S]: {
-    create: CoolWalletS,
-    when: 2,
-    hasPaths: false,
-    requiresPassword: true,
-    title: 'Enter pairing password'
-  },
-  [WALLET_TYPES.COOL_WALLET_PRO]: {
-    create: CoolWalletPro,
+  [WALLET_TYPES.COOL_WALLET]: {
+    create: CoolWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: true,
