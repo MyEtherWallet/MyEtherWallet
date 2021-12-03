@@ -1,60 +1,5 @@
 <template>
   <div class="modules--swap--components--swap-providers-list my-5">
-    <div v-if="step > 0 || isLoading" class="mew-heading-3 mb-5 pl-4">
-      Select rate
-    </div>
-    <!--
-    =====================================================================================
-      Providers Message
-    =====================================================================================
-    -->
-    <app-user-msg-block
-      v-if="(step == 0 && !isLoading) || !toTokenSymbol"
-      :message="providersMessage"
-      :is-alert="false"
-    />
-
-    <!--
-    =====================================================================================
-      Sceleton Loader (desktop/mobile)
-    =====================================================================================
-    -->
-    <div v-if="isLoading">
-      <div class="loading align-center px-5 py-3 rate d-none d-sm-flex">
-        <div class="d-flex align-center">
-          <v-skeleton-loader type="avatar" class="mr-3" />
-          <v-skeleton-loader type="heading" />
-        </div>
-        <v-spacer />
-        <div class="textSecondary--text font-weight-medium">
-          Finding best rates...
-        </div>
-        <v-spacer />
-        <div class="d-flex align-center">
-          <v-skeleton-loader type="heading" class="mr-3" />
-          <v-skeleton-loader type="avatar" />
-        </div>
-      </div>
-
-      <div
-        class="
-          loading
-          align-center
-          px-5
-          py-5
-          tableHeader
-          border-radius--10px
-          d-flex d-sm-none
-        "
-      >
-        <div class="textSecondary--text font-weight-medium mew-body">
-          Finding best rates...
-        </div>
-        <v-spacer />
-        <v-skeleton-loader type="avatar" />
-      </div>
-    </div>
-
     <!--
     =====================================================================================
       Provider Rate Row
@@ -62,6 +7,9 @@
     -->
     <v-item-group v-if="step >= 1 && toTokenSymbol && !hasProviderError">
       <v-row no-gutters>
+        <div v-if="providersList.length > 0" class="mew-heading-3 mb-5 pl-4">
+          Select rate
+        </div>
         <v-col
           v-for="(quote, idx) in providersList"
           :key="`quote-${idx}`"
@@ -104,22 +52,11 @@
                       =====================================================================================
                       -->
                       <div
-                        class="
-                          d-block d-sm-flex
-                          mx-2 mx-sm-4
-                          align-center
-                          justify-start
-                        "
+                        class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
                       >
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="
-                            primary--text
-                            font-weight-medium
-                            mew-label
-                            order-sm-12
-                            pl-sm-2
-                          "
+                          class="primary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
                         >
                           Best Rate
                         </div>
@@ -127,10 +64,10 @@
                           class="d-flex order-sm-1 justify-start align-center"
                         >
                           <div class="mb-0 mew-heading-3 font-weight-medium">
-                            {{ quote.rate }} {{ toTokenSymbol }}
+                            {{ quote.amount }} {{ toTokenSymbol }}
                           </div>
                           <mew-tooltip
-                            v-if="quote.tooltip && quote.tooltip !== ''"
+                            v-if="quote.amount && quote.amount !== ''"
                             class="pl-1"
                             :text="quote.tooltip"
                           />
@@ -188,6 +125,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import { isArray } from 'lodash';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -228,12 +166,7 @@ export default {
   },
   data() {
     return {
-      showMore: false,
-      providersMessage: {
-        title: 'Select token and enter amount to see rates.',
-        subtitle:
-          'MEW finds the best price for you across multiple DEXs and exchange services.'
-      }
+      showMore: false
     };
   },
   computed: {
@@ -271,13 +204,16 @@ export default {
                 .slice(0, MAX_PROVIDERS)
                 .filter(item => !!item)
             : this.availableQuotes.filter(item => !!item);
-        return list.map(quote => {
+        const returnedList = list.map(quote => {
           const formatted = formatFloatingPointValue(quote.rate * 100);
+          const formattedAmt = formatFloatingPointValue(quote.amount);
           return {
             rate: formatted.value,
-            tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
+            amount: formattedAmt.value,
+            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
           };
         });
+        if (returnedList) return returnedList;
       }
       return [];
     },
@@ -307,51 +243,35 @@ export default {
     }
   },
   watch: {
-    providersList(newValue, oldVal) {
-      if (
-        newValue.length > 0 &&
-        oldVal.length === 0 &&
-        !this.hasProviderError
-      ) {
-        const bestRate = newValue.findIndex(item => {
-          return item.rate === this.bestRate;
-        });
-        this.$nextTick(() => {
-          if (bestRate !== -1) {
-            this.$refs[`card${bestRate}`][0].toggle();
-            this.setProvider(bestRate);
-          }
-        });
-      }
+    providersList: {
+      handler: function (newVal, oldVal) {
+        const hasOldVal = !oldVal || (isArray(oldVal) && oldVal.length === 0);
+        if (newVal.length > 0 && hasOldVal && !this.hasProviderError) {
+          const bestRate = newVal.findIndex(item => {
+            return item.rate === this.bestRate;
+          });
+
+          this.$nextTick(() => {
+            if (bestRate !== -1) {
+              this.$refs[`card${bestRate}`][0].toggle();
+              this.setProvider(bestRate);
+            }
+          });
+        }
+      },
+      immediate: true
     }
   }
 };
 </script>
-
-<style lang="scss">
-.modules--swap--components--swap-providers-list {
-  .loading {
-    .v-skeleton-loader__avatar {
-      height: 25px !important;
-      width: 25px !important;
-    }
-    .v-skeleton-loader__heading {
-      height: 25px !important;
-      width: 100px !important;
-      border-radius: 15px !important;
-    }
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .rate-active {
   border: 1px solid var(--v-primary-base) !important;
   background-color: var(--v-superPrimary-base) !important;
 }
 .rate {
-  background-color: var(--v-tableHeader-base);
   min-height: 60px;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--v-selectBorder-base);
 }
 </style>

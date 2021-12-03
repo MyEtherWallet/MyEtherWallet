@@ -15,7 +15,7 @@ import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
 import ModuleContractInteract from '@/modules/contract/ModuleContractInteract.vue';
 
 export default {
-  name: '',
+  name: 'InteracContractLayout',
   components: {
     ModuleContractInteract,
     ModuleSwapRates,

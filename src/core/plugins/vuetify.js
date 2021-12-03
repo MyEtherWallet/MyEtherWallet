@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import vuetifyTheme from '@myetherwallet/mew-components/src/assets/styles/vuetifyTheme.js';
 import 'vuetify/dist/vuetify.min.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 import Vuetify, {
+  VAlert,
   VApp,
   VBtn,
   VBtnToggle,
@@ -57,6 +59,7 @@ import Vuetify, {
   VSlider,
   VDataTable,
   VCarousel,
+  VSlideYTransition,
   VSlideXReverseTransition,
   VCarouselItem,
   VListGroup,
@@ -77,11 +80,13 @@ import Vuetify, {
   VScrollYTransition,
   VSkeletonLoader,
   VChip,
-  VSystemBar
+  VSystemBar,
+  VSnackbar
 } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
   components: {
+    VAlert,
     VApp,
     VBtn,
     VBtnToggle,
@@ -136,6 +141,7 @@ Vue.use(Vuetify, {
     VSlider,
     VDataTable,
     VCarousel,
+    VSlideYTransition,
     VSlideXReverseTransition,
     VCarouselItem,
     VListGroup,
@@ -156,7 +162,8 @@ Vue.use(Vuetify, {
     VScrollYTransition,
     VSkeletonLoader,
     VChip,
-    VSystemBar
+    VSystemBar,
+    VSnackbar
   }
 });
 

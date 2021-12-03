@@ -39,14 +39,7 @@
         <div
           v-for="(pending, idx) in allPendingValidators"
           :key="pending + idx"
-          class="
-            mt-4
-            d-flex
-            flex-column
-            align-center
-            cursor-pointer
-            justify-space-between
-          "
+          class="mt-4 d-flex flex-column align-center cursor-pointer justify-space-between"
         >
           <!--
     ===================================================
@@ -213,14 +206,7 @@
         <div
           v-for="(active, idx) in activeValidators"
           :key="active + idx"
-          class="
-            border-container
-            rounded-lg
-            pa-5
-            mt-4
-            d-flex
-            justify-space-between
-          "
+          class="border-container rounded-lg pa-5 mt-4 d-flex justify-space-between"
         >
           <div class="left-container d-flex">
             <img :src="iconETHNavy" height="26" alt="ethereum" />
@@ -353,11 +339,14 @@ export default {
     pendingValidators() {
       return this.validatorsRaw
         .filter(raw => {
+          const nextDay = 60 * 60 * 24 * 1000;
+          const createdDate = new Date(raw.created).getTime() + nextDay;
+          const withinTheDay = new Date().getTime() <= createdDate;
           return (
             raw.status.toLowerCase() === STATUS_TYPES.DEPOSITED ||
             raw.status.toLowerCase() === STATUS_TYPES.PENDING ||
             raw.status.toLowerCase() === STATUS_TYPES.FAILED ||
-            raw.status.toLowerCase() === STATUS_TYPES.CREATED
+            (raw.status.toLowerCase() === STATUS_TYPES.CREATED && withinTheDay)
           );
         })
         .map(raw => {

@@ -5,9 +5,14 @@
   =====================================================================================
   -->
   <mew-overlay
+    :footer="{
+      text: 'Need help?',
+      linkTitle: 'Contact support',
+      link: 'mailto:support@myetherwallet.com'
+    }"
     :show-overlay="open"
     title="Access Wallet with Mobile Apps"
-    right-btn-text="Close"
+    content-size="large"
     :close="close"
   >
     <!--
@@ -15,31 +20,32 @@
       Mobile Connection Protocol Buttons
     =====================================================================================
     -->
-    <template #mewOverlayBody>
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <v-row>
-          <v-col v-for="(btn, key) in buttons" :key="key" cols="12">
-            <mew-super-button
-              font-class="mew-heading-2"
-              :title="btn.label"
-              :subtitle="btn.description"
-              color-theme="basic"
-              @click.native="btn.fn"
-            >
-              <template #contentSlot>
-                <v-img
-                  :src="btn.icon"
-                  max-width="90px"
-                  min-width="40px"
-                  class="px-4 px-sm-3"
-                  contain
-                />
-              </template>
-            </mew-super-button>
-          </v-col>
-        </v-row>
-      </v-sheet>
-    </template>
+    <div style="max-width: 650px; width: 100%" class="mx-auto mb-n5">
+      <div v-for="(btn, key) in buttons" :key="key">
+        <mew-button
+          has-full-width
+          color-theme="inputBorder"
+          btn-style="outline"
+          style="height: 160px"
+          class="mb-5"
+          @click.native="btn.fn"
+        >
+          <div
+            class="d-flex align-center justify-space-between px-2"
+            style="width: 100%"
+          >
+            <div class="mew-heading-2 textDark--text">{{ btn.label }}</div>
+            <v-img
+              :src="btn.icon"
+              max-width="90px"
+              min-width="40px"
+              class="px-4 px-sm-3"
+              contain
+            />
+          </div>
+        </mew-button>
+      </div>
+    </div>
   </mew-overlay>
 </template>
 
@@ -51,8 +57,12 @@ import {
 } from '@/modules/access-wallet/hybrid/handlers';
 import { mapActions } from 'vuex';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from './common/walletTypes';
+
 export default {
   name: 'ModuleAccessWalletMobile',
+  mixins: [handlerAnalytics],
   props: {
     open: {
       type: Boolean,
@@ -90,6 +100,7 @@ export default {
         WalletConnectWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_CONNECT);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })
@@ -105,6 +116,7 @@ export default {
         WalletLinkWallet()
           .then(_newWallet => {
             this.setWallet([_newWallet]).then(() => {
+              this.trackAccessWallet(WALLET_TYPES.WALLET_LINK);
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             });
           })

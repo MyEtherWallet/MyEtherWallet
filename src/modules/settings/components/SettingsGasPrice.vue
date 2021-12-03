@@ -1,115 +1,129 @@
 <template>
-  <div class="pa-6">
-    <div v-if="!isSwap" class="mb-6">
-      {{ $t('interface.gas.desc') }}
+  <div>
+    <div class="textPrimary--text mb-5">
+      This fee is charged by the Ethereum network and fluctuates depending on
+      network traffic. MEW does not profit from this fee.
     </div>
+
     <!--
     =====================================================================================
       Economic / Regular / Fast
     =====================================================================================
     -->
-    <v-sheet color="transparent" max-width="500px" class="mx-auto">
-      <v-row>
-        <v-col v-for="(b, key) in buttons" :key="key" cols="12" sm="4">
+    <div>
+      <div
+        v-for="(b, key) in buttons"
+        :id="$data[`${b.title}Disabled`] ? 'disabled' : ''"
+        :key="key"
+        class="mb-2 d-flex align-center justify-space-between group-button"
+        :class="[gasPriceType === b.title ? 'active' : '']"
+        @click.stop="
+          () => {
+            setSelected(b.title);
+          }
+        "
+      >
+        <div class="d-flex align-center">
           <div
-            :class="[
-              selected === b.title ? 'active' : '',
-              'text-center group-button pb-5 pt-2'
-            ]"
-            @click.stop="
-              () => {
-                setSelected(b.title);
-              }
-            "
+            class="mr-1 ml-n1 text-center"
+            style="width: 40px; line-height: 0"
           >
-            <mew-icon :icon-name="b.icon" :img-height="80" />
-            <h5 class="font-weight-bold mb-2 text-capitalize">{{ b.title }}</h5>
-            <div class="font-weight-bold mb-2">
-              ~ {{ b.gas | twoDecimalPoint }} Gwei
-            </div>
-            <div>{{ b.usd }} {{ b.time }}</div>
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+              mdi-check
+            </v-icon>
+            <img
+              v-if="b.title === gasPriceTypes.REGULAR"
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
+            <img
+              v-if="b.title === gasPriceTypes.FAST"
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
+            <img
+              v-if="b.title === gasPriceTypes.FAST"
+              src="@/assets/images/icons/icon-arrow-up.svg"
+              alt="arrow up"
+              height="15"
+            />
           </div>
-        </v-col>
-      </v-row>
-      <!--
-      =====================================================================================
-        Divider
-      =====================================================================================
-      -->
-      <v-row v-if="!isSwap" align="center" class="pt-3 pb-9 px-3">
-        <v-divider />
-        <p class="mb-0 mx-4 basicOutlineActive--text font-weight-bold">OR</p>
-        <v-divider />
-      </v-row>
-      <!--
-      =====================================================================================
-       Custom Gas
-      =====================================================================================
-      -->
-      <div v-if="!isSwap" class="d-sm-flex text-center">
-        <mew-input
-          v-model="customGasPrice"
-          label="Customize"
-          placeholder=" "
-          right-label="Gwei"
-          class="mr-0 mr-sm-3"
-        />
-        <mew-button
-          :title="customBtn.text"
-          btn-size="xlarge"
-          :btn-style="customBtn.style"
-          :has-full-width="isSwap"
-          @click.native="setCPrice"
-        />
-        <p v-if="isSwap" class="pt-2">
-          {{ $t('interface.gas.change-gas') }}
-          <span
-            class="cursor--pointer go-to-global-text"
-            @click="openGlobalSettings"
-            >{{ $t('interface.gas.global-setting') }}</span
-          >
-        </p>
+          <div>
+            <div class="mew-heading-3 font-weight-regular">
+              {{ b.priority }}
+            </div>
+            <div v-if="!fromSettings" class="prices d-flex">
+              <div
+                v-if="b.title === gasPriceTypes.ECONOMY"
+                class="secondary--text mr-2"
+              >
+                {{ economyInEth }} {{ currencyName }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.REGULAR"
+                class="secondary--text mr-2"
+              >
+                {{ regularInEth }} {{ currencyName }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.FAST"
+                class="secondary--text mr-2"
+              >
+                {{ fastInEth }} {{ currencyName }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.ECONOMY"
+                class="textSecondary--text"
+              >
+                ${{ economyInUsd }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.REGULAR"
+                class="textSecondary--text"
+              >
+                ${{ regularInUsd }}
+              </div>
+              <div
+                v-if="b.title === gasPriceTypes.FAST"
+                class="textSecondary--text"
+              >
+                ${{ fastInUsd }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Show Priority Time-->
+        <div class="d-flex align-center">
+          <v-icon class="mr-1" color="primary" small>mdi-clock-outline</v-icon>
+          <div class="primary--text">{{ b.time }}</div>
+        </div>
       </div>
-      <v-row v-if="hasCustom" align="start" class="px-3">
-        <mew-button
-          :title="customBtn.text"
-          btn-size="xlarge"
-          :btn-style="customBtn.style"
-          :has-full-width="true"
-          @click.native="setCPrice"
-        />
-        <p class="pt-2">
-          {{ $t('interface.gas.change-gas') }}
-          <span
-            class="cursor--pointer go-to-global-text"
-            @click="openGlobalSettings"
-            >{{ $t('interface.gas.global-setting') }}</span
-          >
-        </p>
-      </v-row>
-    </v-sheet>
+    </div>
+    <div class="mt-4 d-flex flex-column align-center">
+      <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
+        <span class="secondary--text">Can't increase priority? </span>
+        <a target="_blank" :href="swapLink"> Buy more ETH </a>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
+import { toBN, fromWei } from 'web3-utils';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
-import { fromWei, toWei } from 'web3-utils';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
+
 export default {
   name: 'SettingsGasPrice',
-  filters: {
-    twoDecimalPoint: function (value) {
-      if (value.includes('.')) return BigNumber(value).toFixed(2);
-      return value;
-    }
-  },
   props: {
-    selected: {
-      type: String,
-      default: gasPriceTypes.ECONOMY
-    },
     setSelected: {
       type: Function,
       default: () => {}
@@ -118,58 +132,133 @@ export default {
       type: Array,
       default: () => []
     },
-    gasPrice: {
-      type: String,
-      default: '0'
-    },
-    setCustomGasPrice: {
-      type: Function,
-      default: () => {}
-    },
-    isSwap: {
+    notEnoughEth: {
       type: Boolean,
       default: false
     },
-    openGlobalSettings: {
-      type: Function,
-      default: () => {}
+    totalGasLimit: {
+      type: String,
+      default: '0'
+    },
+    fromSettings: {
+      type: Boolean,
+      default: false
+    },
+    costInEth: {
+      type: String,
+      default: '0'
     }
   },
   data() {
     return {
-      customGasPrice: '0'
+      gasPriceTypes: gasPriceTypes,
+      previousSelected: null,
+      economyDisabled: false,
+      regularDisabled: false,
+      fastDisabled: false
     };
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('global', ['gasPriceType']),
-    customBtn() {
-      const defaultGasPrice = !this.customGasPrice ? '0' : this.customGasPrice;
-      const usdValue = BigNumber(this.fiatValue).times(
-        fromWei(toWei(defaultGasPrice, 'gwei'), 'ether')
-      );
-      return {
-        text: this.isSwap
-          ? `Custom: ${defaultGasPrice} Gwei $ ${
-              formatFiatValue(usdValue).value
-            }`
-          : 'Confirm',
-        style: this.isSwap ? 'outline' : 'background'
-      };
+    ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
+    ...mapState('global', ['gasPriceType', 'gasPrice']),
+    ...mapGetters('wallet', ['balanceInETH']),
+    currencyName() {
+      return this.network.type.currencyName;
     },
-    hasCustom() {
-      return this.isSwap && this.gasPriceType === gasPriceTypes.STORED;
+    economyInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
+      return this.formatInEth(txFee);
+    },
+    regularInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
+      return this.formatInEth(txFee);
+    },
+    fastInEth() {
+      const txFee = this.calcTxFee(gasPriceTypes.FAST);
+      return this.formatInEth(txFee);
+    },
+    economyInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.ECONOMY);
+      return this.formatInUsd(txFee);
+    },
+    regularInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.REGULAR);
+      return this.formatInUsd(txFee);
+    },
+    fastInUsd() {
+      const txFee = this.calcTxFee(gasPriceTypes.FAST);
+      return this.formatInUsd(txFee);
+    },
+    showGetMoreEth() {
+      let counter = 0;
+      Object.values(this.gasPriceTypes).forEach(item => {
+        if (!this[`${item}Disabled`]) {
+          counter++;
+        }
+      });
+
+      return counter < 3;
+    }
+  },
+  watch: {
+    /**
+     * If not enough balance to cover new priority, go back to previous priority
+     */
+    gasPriceType() {
+      if (this.notEnoughEth) {
+        if (this.gasPriceType == 'regular') {
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        } else if (this.gasPriceType == 'fast') {
+          this.fastDisabled = true;
+        } else {
+          this.economyDisabled = true;
+          this.regularDisabled = true;
+          this.fastDisabled = true;
+        }
+        this.setSelected(this.previousSelected);
+      }
+
+      if (!this.notEnoughEth) {
+        this.previousSelected = this.gasPriceType;
+      }
+    },
+    gasPrice() {
+      this.recalculate();
+    },
+    costInEth() {
+      this.recalculate();
+    },
+    notEnoughEth() {
+      this.recalculate();
     }
   },
   mounted() {
-    this.customGasPrice =
-      this.gasPriceType === gasPriceTypes.STORED
-        ? fromWei(this.gasPrice, 'gwei')
-        : '0';
+    this.recalculate();
+    this.previousSelected = this.gasPriceType;
   },
   methods: {
-    setCPrice() {
-      this.setCustomGasPrice(this.customGasPrice);
+    calcTxFee(priority) {
+      return fromWei(
+        toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
+      ).toString();
+    },
+    formatInEth(fee) {
+      return formatFloatingPointValue(fee).value;
+    },
+    formatInUsd(fee) {
+      return formatFiatValue(BigNumber(fee).times(this.fiatValue).toFixed(2))
+        .value;
+    },
+    recalculate() {
+      const amount = BigNumber(this.costInEth).minus(
+        this[`${this.gasPriceType}InEth`]
+      );
+      Object.values(this.gasPriceTypes).forEach(item => {
+        const withFee = BigNumber(amount).plus(this[`${item}InEth`]);
+        this[`${item}Disabled`] = withFee.gt(this.balanceInETH);
+      });
     }
   }
 };
@@ -177,21 +266,36 @@ export default {
 
 <style lang="scss" scoped>
 .group-button {
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #d0f4f8;
-  opacity: 0.5;
+  min-height: 72px;
+  padding: 5px 16px;
+  border-radius: 8px;
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid transparent;
+  border: 1px solid #eaedf7;
+  &#disabled {
+    filter: grayscale(1);
+    opacity: 0.25 !important;
+    pointer-events: none;
+    border: 1px solid #eaedf7;
+  }
+  &:hover {
+    background-color: #e9eff4;
+  }
   &.active {
-    border: 1px solid var(--v-primary-base);
-    background-color: #f2fafa;
+    border: 2px solid #05c0a5;
     opacity: 1;
+    &:hover {
+      opacity: 1;
+      background-color: #d5edef;
+    }
   }
 }
-.go-to-global-text {
-  color: var(--v-primary-base);
+.buy-eth:hover {
+  cursor: pointer;
+}
+.prices {
+  white-space: nowrap;
+  font-size: 14px;
 }
 </style>

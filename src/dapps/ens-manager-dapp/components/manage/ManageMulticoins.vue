@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <div v-for="(coin, idx) in coins" :key="coin + idx">
       <mew-input
         :id="idx"
@@ -24,7 +24,7 @@
 
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { clone } from 'lodash';
 export default {
   props: {
     setMulticoin: {
@@ -98,7 +98,7 @@ export default {
       /** Creates a no reference clone to be submitted to the contract */
       const copyMulticoin = Object.keys(this.multicoin)
         .map(item => {
-          const newItem = Object.assign({}, _.clone(this.multicoin[item]));
+          const newItem = Object.assign({}, clone(this.multicoin[item]));
           newItem.value = this.setCoins[item];
           return newItem;
         })

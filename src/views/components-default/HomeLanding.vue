@@ -2,12 +2,7 @@
   <div class="mew-component--landing">
     <div class="desktop-content d-none d-lg-block expandHeader">
       <v-container
-        class="
-          banner-content-container
-          d-flex
-          align-center
-          justify-space-between
-        "
+        class="banner-content-container d-flex align-center justify-space-between"
       >
         <v-card color="transparent" flat tile max-width="430px">
           <div class="white--text mew-title">
@@ -107,12 +102,19 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'HomeLanding',
   components: {},
+  mixins: [handlerAnalytics],
   data() {
     return { ROUTES_HOME: ROUTES_HOME };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.trackLandingPage();
+    }, 1000);
   },
   methods: {}
 };

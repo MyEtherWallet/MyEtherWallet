@@ -1,15 +1,17 @@
 <template>
   <div class="mew-component--side-info-network">
     <mew-overlay
+      :footer="{
+        text: 'Need help?',
+        linkTitle: 'Contact support',
+        link: 'mailto:support@myetherwallet.com'
+      }"
       :show-overlay="isOpenNetworkOverlay"
       title="Select Network"
-      left-btn-text=""
-      right-btn-text="Close"
-      @closeOverlay="closeNetworkOverlay"
+      content-size="large"
+      :close="closeNetworkOverlay"
     >
-      <template #mewOverlayBody>
-        <network-switch :filter-types="filterNetworks" />
-      </template>
+      <network-switch :filter-types="filterNetworks" />
     </mew-overlay>
     <mew6-white-sheet
       :sideinfo="!mobile"
@@ -44,10 +46,17 @@ import NetworkSwitch from './components/NetworkSwitch';
 import { mapGetters, mapState } from 'vuex';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import WALLET_TYPES from '../access-wallet/common/walletTypes';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleNetwork',
   components: { NetworkSwitch },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == ROUTES_HOME.ACCESS_WALLET.NAME) {
+      next({ name: ROUTES_WALLET.DASHBOARD.NAME });
+    } else {
+      next();
+    }
+  },
   props: {
     mobile: {
       type: Boolean,

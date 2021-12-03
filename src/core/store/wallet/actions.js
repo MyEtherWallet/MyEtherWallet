@@ -11,7 +11,10 @@ const removeWallet = function ({ commit, state }) {
     state.identifier === WALLET_TYPES.WALLET_LINK ||
     state.identifier === WALLET_TYPES.MEW_CONNECT
   ) {
-    state.instance.getConnection().disconnect();
+    const connection = state.instance.getConnection();
+    if (connection && connection.disconnect) {
+      connection.disconnect();
+    }
   }
   commit('REMOVE_WALLET');
 };
@@ -67,8 +70,7 @@ const setWeb3Instance = function (
           to: arr[i].to,
           data: arr[i].data,
           from: arr[i].from,
-          value: arr[i].value,
-          gasPrice: arr[i].gasPrice
+          value: arr[i].value
         };
         const gas = await (arr[i].gas === undefined
           ? web3Instance.eth.estimateGas(localTx)
@@ -78,6 +80,7 @@ const setWeb3Instance = function (
           : arr[i].nonce);
         arr[i].nonce = web3.utils.toBN(nonce).addn(i).toString();
         arr[i].gas = gas;
+        arr[i].gasLimit = gas;
         arr[i].chainId = !arr[i].chainId
           ? rootGetters['global/network'].type.chainID
           : arr[i].chainId;
@@ -100,10 +103,6 @@ const setWeb3Instance = function (
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
-const setENS = function ({ commit }, ens) {
-  commit('SET_ENS', ens);
-};
-
 const setOwnedDomains = function ({ commit }, ownedDomains) {
   commit('SET_OWNED_DOMAINS', ownedDomains);
 };
@@ -116,7 +115,6 @@ export default {
   removeWallet,
   setWallet,
   setAccountBalance,
-  setENS,
   setWeb3Instance,
   setBlockNumber,
   setOwnedDomains,

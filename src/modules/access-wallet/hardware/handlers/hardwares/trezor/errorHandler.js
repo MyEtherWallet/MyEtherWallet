@@ -11,13 +11,25 @@ const ERRORS = {
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'trezorError.turn-on-contract-data',
   'Initialize failed: Response of unexpected type: Address. Should be Features':
-    'trezor.initializing-failed',
+    'trezorError.initializing-failed',
   Cancelled: 'trezorError.cancelled',
-  'Iframe timeout': 'trezor.iframe-timeout',
-  'Browser not supported': 'trezor.unsupported-browser',
-  'popup failed to open': 'trezor.popup-failed-to-open',
-  'Safety check failed': 'trezor.safety-check-failed',
-  'TrezorConnect not yet initialized': 'trezor.trezor-connect-not-initialized'
+  'Iframe timeout': 'trezorError.iframe-timeout',
+  'Browser not supported': 'trezorError.unsupported-browser',
+  'popup failed to open': 'trezorError.popup-failed-to-open',
+  'Safety check failed': 'trezorError.safety-check-failed',
+  'TrezorConnect not yet initialized':
+    'trezorError.trezor-connect-not-initialized',
+  'User cancelled the requestDevice() chooser.':
+    'trezorError.user-cancelled-request-device-bluetooth',
+  'Bluetooth adapter not available.':
+    'trezorError.bluetooth-adapter-not-available',
+  'An operation that changes interface state is in progress.':
+    'trezorError.operation-that-changes-interface-state-in-progress',
+  'connection not open': 'trezorError.connection-not-open-on-send',
+  'Iframe blocked': 'trezorError.iframe-blocked',
+  'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md':
+    'trezorError.manifest-not-set',
+  'Forbidden key path': 'Path not supported!'
 };
 
 const WARNINGS = {};

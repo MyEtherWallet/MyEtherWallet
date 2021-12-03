@@ -2,60 +2,57 @@
   <mew-overlay
     :show-overlay="open"
     :title="header"
-    right-btn-text="Close"
     :close="handleCancel"
     class="mew-component--aave-deposit-overlay"
   >
-    <template #mewOverlayBody>
-      <!--
+    <!--
       =====================================================================================
         Aave token deposit table
       =====================================================================================
       -->
-      <v-sheet
-        v-if="step === 0"
-        color="white"
-        max-width="650px"
-        class="border-radius--10px pa-4"
-      >
-        <aave-table
-          :handler="handler"
-          :table-header="depositHeader"
-          @selectedDeposit="handleSelectedDeposit"
-        />
-      </v-sheet>
-      <!--
+    <v-sheet
+      v-if="step === 0"
+      color="white"
+      max-width="650px"
+      class="border-radius--10px pa-4"
+    >
+      <aave-table
+        :handler="handler"
+        :table-header="depositHeader"
+        @selectedDeposit="handleSelectedDeposit"
+      />
+    </v-sheet>
+    <!--
         =====================================================================================
           Aave Summary
         =====================================================================================
         -->
-      <div v-if="step === 1 || step === 3">
-        <aave-summary
-          :selected-token="selectedToken"
-          :handler="handler"
-          :amount="amount"
-          :amount-usd="amountUsd"
-          :step="step"
-          :action-type="depositHeader"
-          @confirmed="handleConfirm"
-          @onConfirm="emitDeposit"
-        />
-      </div>
-      <div v-if="step === 2">
-        <aave-amount-form
-          :selected-token="selectedToken"
-          :handler="handler"
-          :show-toggle="aaveDepositForm.showToggle"
-          :left-side-values="aaveDepositForm.leftSideValues"
-          :right-side-values="aaveDepositForm.rightSideValues"
-          :form-text="aaveDepositForm.formText"
-          :button-title="aaveDepositForm.buttonTitle"
-          :token-balance="tokenBalance"
-          @cancel="handleCancel"
-          @emitValues="handleDepositAmount"
-        />
-      </div>
-    </template>
+    <div v-if="step === 1 || step === 3">
+      <aave-summary
+        :selected-token="selectedToken"
+        :handler="handler"
+        :amount="amount"
+        :amount-usd="amountUsd"
+        :step="step"
+        :action-type="depositHeader"
+        @confirmed="handleConfirm"
+        @onConfirm="emitDeposit"
+      />
+    </div>
+    <div v-if="step === 2">
+      <aave-amount-form
+        :selected-token="selectedToken"
+        :handler="handler"
+        :show-toggle="aaveDepositForm.showToggle"
+        :left-side-values="aaveDepositForm.leftSideValues"
+        :right-side-values="aaveDepositForm.rightSideValues"
+        :form-text="aaveDepositForm.formText"
+        :button-title="aaveDepositForm.buttonTitle"
+        :token-balance="tokenBalance"
+        @cancel="handleCancel"
+        @emitValues="handleDepositAmount"
+      />
+    </div>
   </mew-overlay>
 </template>
 
@@ -64,7 +61,7 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import { AAVE_TABLE_HEADER, convertToFixed } from '../handlers/helpers';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'lodash';
 import aaveOverlayMixin from '../handlers/aaveOverlayMixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
@@ -143,7 +140,7 @@ export default {
   },
   watch: {
     preSelectedToken(newVal) {
-      if (newVal && !_.isEmpty(newVal)) {
+      if (newVal && !isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }

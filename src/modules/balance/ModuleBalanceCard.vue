@@ -15,27 +15,67 @@
             Address
           =====================================================================================
           -->
-          <div
-            class="
-              info-container--text
-              font-weight-bold
-              text-uppercase
-              white--text
-            "
-          >
-            MY Personal Account
-          </div>
+          <v-menu offset-y>
+            <template #activator="{ on }">
+              <div
+                class="d-flex align-center cursor--pointer personal-account-container"
+                v-on="on"
+              >
+                <div
+                  class="info-container--text font-weight-bold text-uppercase white--text"
+                >
+                  MY Personal Account
+                </div>
+                <v-icon class="white--text ml-2" small dense>
+                  mdi-menu-down
+                </v-icon>
+              </div>
+            </template>
+            <v-list width="232px">
+              <v-list-item class="cursor-pointer" @click="refresh">
+                <v-icon color="textDark" class="mr-3">mdi-refresh</v-icon>
+                <v-list-item-title> Refresh Balance</v-list-item-title>
+              </v-list-item>
+              <v-list-item class="cursor-pointer" @click="openPaperWallet">
+                <v-icon color="textDark" class="mr-3">mdi-printer</v-icon>
+                <v-list-item-title>View paper wallet</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                v-if="isHardware && canDisplayAddress"
+                class="cursor-pointer"
+                @click="viewAddressOnDevice"
+              >
+                <mew-icon
+                  :icon-name="iconIdentifier"
+                  :img-height="24"
+                  class="mr-3"
+                />
+                <v-list-item-title
+                  >View address on {{ walletName }}</v-list-item-title
+                >
+              </v-list-item>
+              <v-divider class="mx-5 my-4"></v-divider>
+              <v-list-item
+                v-if="canSwitch"
+                class="cursor-pointer"
+                @click="openChangeAddress"
+              >
+                <v-icon color="textDark" class="mr-3"
+                  >mdi-account-box-multiple</v-icon
+                >
+                <v-list-item-title>Switch Account</v-list-item-title>
+              </v-list-item>
+              <v-list-item class="cursor-pointer" @click="openLogout">
+                <v-icon color="textDark" class="mr-3">mdi-logout</v-icon>
+                <v-list-item-title>Logout</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <div class="d-flex align-center">
             <v-tooltip top content-class="tooltip-inner">
               <template #activator="{ on }">
                 <div
-                  class="
-                    justify-start
-                    d-flex
-                    align-center
-                    info-container--addr
-                    monospace
-                  "
+                  class="justify-start d-flex align-center info-container--addr monospace"
                   v-on="on"
                 >
                   {{ addrFirstSix }}
@@ -50,40 +90,8 @@
                 getChecksumAddressString
               }}</span>
             </v-tooltip>
-            <!--
-            =====================================================================================
-              Print Button
-            =====================================================================================
-            -->
-            <v-tooltip top content-class="tooltip-inner">
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  class="info-container--action-print px-0 ml-1 drop-shadow"
-                  fab
-                  depressed
-                  color="white"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="openPaperWallet = true"
-                  ><v-icon size="10px">mdi-printer</v-icon></v-btn
-                >
-              </template>
-              <span class="titlePrimary--text">Print account info</span>
-            </v-tooltip>
           </div>
         </div>
-        <!--
-            =====================================================================================
-              Refresh Button
-            =====================================================================================
-            -->
-        <v-icon
-          color="rgba(255, 255, 255, 0.72)"
-          class="cursor-pointer refresh-icon"
-          size="20"
-          @click="refresh"
-          >mdi-refresh</v-icon
-        >
       </div>
       <!--
       =====================================================================================
@@ -155,16 +163,15 @@
         </div>
       </div>
     </div>
-
-    <module-access-wallet-hardware
-      v-if="!!instance.path"
-      :open="openChangeAddress"
-      :close="closeChangeAddress"
-      :switch-address="!!instance.path"
-    />
+    <!--
+    =====================================================================================
+      Wallet card modals
+    =====================================================================================
+    -->
     <balance-address-paper-wallet
-      :open="openPaperWallet"
+      :open="showPaperWallet"
       :close="closePaperWallet"
+      @close="closePaperWallet"
     />
     <app-modal
       :show="openQR"
@@ -176,6 +183,55 @@
         <app-addr-qr />
       </template>
     </app-modal>
+    <module-access-wallet-hardware
+      v-if="showHardware"
+      :open="showChangeAddress"
+      :close="closeChangeAddress"
+      :switch-address="!!instance.path"
+    />
+    <module-access-wallet-software
+      v-else
+      :open="showChangeAddress"
+      :close="closeChangeAddress"
+      :switch-address="!!instance.path"
+      :wallet-type="identifier"
+    />
+
+    <mew-popup
+      max-width="400px"
+      hide-close-btn
+      :show="showLogout"
+      :title="$t('interface.menu.logout')"
+      :left-btn="{ text: 'Cancel', method: closeLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
+    />
+    <mew-popup
+      max-width="515px"
+      :show="showVerify"
+      :title="verifyAddressTitle"
+      :has-buttons="false"
+      :has-body-content="true"
+      :left-btn="{ text: 'Cancel', method: closeVerify, color: 'basic' }"
+    >
+      <div>
+        <div class="text-center">
+          {{ verifyAddressBody }}
+        </div>
+        <div class="mt-3 verify-popup-border px-12 py-5 text-center">
+          <div class="font-weight-bold greenPrimary--text mew-body">
+            ACCOUNT ADDRESS
+          </div>
+          <div class="pt-3 greenPrimary--text mew-body">
+            {{ getChecksumAddressString }}
+          </div>
+        </div>
+      </div>
+    </mew-popup>
   </div>
 </template>
 
@@ -183,46 +239,130 @@
 import anime from 'animejs/lib/anime.es.js';
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
-import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import BalanceAddressPaperWallet from './components/BalanceAddressPaperWallet';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import clipboardCopy from 'clipboard-copy';
-import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
+import { Toast, INFO, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   formatFiatValue,
-  formatBalanceEthValue
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { isEmpty } from 'lodash';
+import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
+import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
+import wallets from './handlers/config';
+import WALLET_TYPES from '../access-wallet/common/walletTypes';
 
 export default {
   components: {
     BalanceAddressPaperWallet,
     AppModal,
     AppAddrQr,
-    ModuleAccessWalletHardware
+    ModuleAccessWalletHardware,
+    ModuleAccessWalletSoftware
   },
   data() {
     return {
-      openChangeAddress: false,
-      openPaperWallet: false,
-      openQR: false
+      showChangeAddress: false,
+      showPaperWallet: false,
+      openQR: false,
+      showLogout: false,
+      showVerify: false,
+      wallets: wallets
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInWei', 'tokensList']),
-    ...mapState('wallet', ['address', 'instance', 'identifier']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',
       'totalTokenFiatValue'
     ]),
     ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    /**
+     * verify address title
+     * returns @String
+     */
+    verifyAddressTitle() {
+      return `This wallet is accessed with ${this.instance.meta.name}`;
+    },
+    /**
+     * verify address body
+     * returns @String
+     */
+    verifyAddressBody() {
+      return `To verify, check the address on your ${this.instance.meta.name} device & make sure it is the same address as the one shown below.`;
+    },
+    /**
+     * Shows hardware access or software access
+     * returns @Boolean
+     */
+    showHardware() {
+      return (
+        !isEmpty(this.instance) &&
+        this.instance.path &&
+        this.identifier !== WALLET_TYPES.MNEMONIC
+      );
+    },
+    /**
+     * returns checksummed address
+     */
     getChecksumAddressString() {
       return this.address ? toChecksumAddress(this.address) : '';
     },
+    /**
+     * checks whether hardware wallet
+     * can display address with the device
+     *
+     * returns @Boolean
+     */
+    canDisplayAddress() {
+      return (
+        !isEmpty(this.instance) &&
+        this.instance.hasOwnProperty('displayAddress') &&
+        this.instance.displayAddress
+      );
+    },
+    /**
+     * adds checks for icons that mew-components doesn't have
+     * returns @String
+     */
+    iconIdentifier() {
+      if (this.identifier === WALLET_TYPES.BITBOX2) {
+        return 'bitbox';
+      }
+      return this.identifier;
+    },
+    /**
+     * checks whether wallet can switch address
+     * returns @Boolean
+     */
+    canSwitch() {
+      return !isEmpty(this.instance) && this.wallets[this.identifier];
+    },
+    /**
+     * returns hardware wallet name
+     * returns @String
+     */
+    walletName() {
+      return !isEmpty(this.instance) &&
+        this.instance.meta.hasOwnProperty('name')
+        ? this.instance.meta.name
+        : '';
+    },
+    /**
+     * returns token values
+     * returns @String
+     */
     totalTokenBalance() {
       return this.totalTokenFiatValue;
     },
+    /**
+     * returns total value including tokens
+     * returns @String
+     */
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
@@ -230,8 +370,12 @@ export default {
       }
       return this.walletChainBalance;
     },
+    /**
+     * returns formatted wallet balance
+     * returns @String
+     */
     walletChainBalance() {
-      return `${formatBalanceEthValue(this.balanceInWei).value}`;
+      return `${formatFloatingPointValue(this.balanceInETH).value}`;
     },
     /**
      * @returns {string} first 6 letters in the address
@@ -256,12 +400,29 @@ export default {
   },
   methods: {
     ...mapActions('external', ['setTokenAndEthBalance']),
+    ...mapActions('wallet', ['removeWallet']),
     /**
      * refreshes the token and eth balance
      */
     refresh() {
       this.setTokenAndEthBalance();
     },
+    /**
+     * calls hardware wallet show address function
+     * and opens verify modal
+     */
+    viewAddressOnDevice() {
+      this.showVerify = true;
+      if (this.canDisplayAddress) {
+        this.instance.displayAddress().then(() => {
+          this.showVerify = false;
+          Toast('Address verified!', {}, SUCCESS);
+        });
+      }
+    },
+    /**
+     * Animates wallet card
+     */
     animateMewCard() {
       const el = document.querySelector('.mew-card');
       if (el) {
@@ -275,18 +436,75 @@ export default {
         });
       }
     },
+    /**
+     * set showChangeAddress to false
+     * to close the modal
+     */
     closeChangeAddress() {
-      this.openChangeAddress = false;
+      this.showChangeAddress = false;
     },
+    /**
+     * set showChangeAddress to true
+     * to open the modal
+     */
+    openChangeAddress() {
+      this.showChangeAddress = true;
+    },
+    /**
+     * set showPaperWallet to false
+     * to close the modal
+     */
     closePaperWallet() {
-      this.openPaperWallet = false;
+      this.showPaperWallet = false;
     },
+    /**
+     * sets showPaperWallet to true
+     * to open the modal
+     */
+    openPaperWallet() {
+      this.showPaperWallet = true;
+    },
+    /**
+     * Copies address
+     */
     copyAddress() {
       clipboardCopy(this.getChecksumAddressString);
       Toast(`Copied ${this.getChecksumAddressString} successfully!`, {}, INFO);
     },
+    /**
+     * set openQR to false
+     * to close the modal
+     */
     closeQR() {
       this.openQR = false;
+    },
+    /**
+     * set showLogout to false
+     * to close the modal
+     */
+    closeLogout() {
+      this.showLogout = false;
+    },
+    /**
+     * close verify address
+     */
+    closeVerify() {
+      this.showVerify = false;
+    },
+    /**
+     * set showLogout to true
+     * to open the modal
+     */
+    openLogout() {
+      this.showLogout = true;
+    },
+    /**
+     * calls removeWallet
+     * and closes modal
+     */
+    onLogout() {
+      this.closeLogout();
+      this.removeWallet();
     }
   }
 };
@@ -353,7 +571,7 @@ export default {
     font-size: 16px !important;
   }
 
-  .info-container--action-print {
+  .info-container--action- {
     opacity: 0.6;
     border-radius: 4px !important;
     height: 14px !important;
@@ -364,7 +582,7 @@ export default {
   }
 
   .info-container--action-btn:hover,
-  .info-container--action-print:hover {
+  .info-container--action-:hover {
     opacity: 1;
   }
   .info-container--icon:hover {
@@ -391,5 +609,19 @@ export default {
 
 .refresh-icon.v-icon.v-icon::after {
   background-color: transparent;
+}
+
+.personal-account-container {
+  border-radius: 10px;
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    padding-left: 8px;
+    margin-left: -8px;
+  }
+}
+
+.verify-popup-border {
+  border: 1px solid var(--v-greenMedium-base);
+  border-radius: 4px;
 }
 </style>

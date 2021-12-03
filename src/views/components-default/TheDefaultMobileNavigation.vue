@@ -11,7 +11,7 @@
       <v-list-item class="pt-8 pb-8 pl-4 pr-1">
         <v-img
           class="mx-auto"
-          src="@/assets/images/icons/logo-mew.png"
+          src="@/assets/images/icons/logo-mew.svg"
           max-height="36"
           max-width="130"
           @click="pushRoute({ name: 'Home' })"

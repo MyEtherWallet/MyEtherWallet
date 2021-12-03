@@ -46,11 +46,10 @@
                   <mew-button
                     :loading="loading"
                     :disabled="
-                      errorMessages ||
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
-                      name.split('.').length > 2
+                      (name && name.split('.').length > 2)
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
@@ -86,9 +85,11 @@
             <template
               v-for="(domain, idx) in myDomains"
               :slot="'panelBody' + (idx + 1)"
-              :class="domain.expired ? 'expired' : 'available'"
             >
-              <div :key="idx" class="ma-3">
+              <div
+                :key="idx"
+                :class="[domain.expired ? 'expired' : 'available', 'ma-3 px-5']"
+              >
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.registrant') }}</div>
@@ -150,14 +151,7 @@
                 </v-row>
 
                 <div
-                  class="
-                    d-flex
-                    align-center
-                    justify-space-between
-                    pb-5
-                    pt-8
-                    px-7
-                  "
+                  class="d-flex align-center justify-space-between pb-5 pt-8 px-7"
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
@@ -333,7 +327,7 @@ export default {
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        this.name.split('.').length <= 2 ||
+        (this.name && this.name.split('.').length <= 2) ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
@@ -545,11 +539,13 @@ export default {
         });
     },
     commit() {
+      let waitingTime;
       this.nameHandler
         .createCommitment()
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
+            waitingTime = parseInt(resp);
           });
         })
         .on('receipt', () => {
@@ -558,7 +554,7 @@ export default {
           setTimeout(() => {
             this.committed = true;
             this.loadingCommit = false;
-          }, 60 * 1000);
+          }, waitingTime * 1000);
         })
         .on('error', err => {
           this.closeRegister();

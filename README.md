@@ -7,20 +7,20 @@
 [![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json) [![Greenkeeper badge](https://badges.greenkeeper.io/MyEtherWallet/MyEtherWallet.svg)](https://greenkeeper.io/)
 ![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square) [![Codecov badge](https://img.shields.io/codecov/c/github/MyEtherWallet/MyEtherWallet/develop.svg?style=flat-square)](https://codecov.io/github/MyEtherWallet/MyEtherWallet?branch=develop)
 
-MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. -*Stephen, #MEWForce*
+MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage their own funds without a centralized platform. - <i>Stephen, #MEWForce</i>
 
 !["MyEtherWallet Logo](./src/assets/images/backgrounds/v6-landing-screen-shot.png "MyEtherWallet")
 
 ## Philosophy
 
-* **Empower the people**: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
-* **Make it easy & free**: Everyone should be able to create a wallet and send Ether & Tokens without additional cost.
-* **People are the Priority**: People are the most important & their experience trumps all else. If monetization worsens the experience, we don't do it. (e.g. ads)
-* **A learning experience, too**: We want to educate about Ethereum, security, privacy, the importance of controlling your own keys, how the blockchain works, and how Ethereum and blockchain technologies enable a better world.
-* **If it can be hacked, it will be hacked**: Never save, store, or transmit secret info, like passwords or keys.
-* **Offline / Client-Side**: User should be able to run locally and offline without issue.
-* **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
-* **Open source & auditable**
+* <b>Empower the people</b>: Give people the ability to interact with the Ethereum blockchain easily, without having to run a full node.
+* <b>Make it easy & free</b>: Everyone should be able to create a wallet and send Ether & Tokens without additional cost.
+* <b>People are the Priority</b>: People are the most important & their experience trumps all else. If monetization worsens the experience, we don't do it. (e.g. ads)
+* <b>A learning experience, too</b>: We want to educate about Ethereum, security, privacy, the importance of controlling your own keys, how the blockchain works, and how Ethereum and blockchain technologies enable a better world.
+* <b>If it can be hacked, it will be hacked</b>: Never save, store, or transmit secret info, like passwords or keys.
+* <b>Offline / Client-Side</b>: User should be able to run locally and offline without issue.
+* <b>Private</b>: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
+* <b>Open source & auditable</b>
 
 ## MEW Around the Web
 
@@ -32,7 +32,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 * [MEW CX: https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm](https://chrome.google.com/webstore/detail/myetherwallet-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm)
 * [MEW Team](https://team.myetherwallet.com/)
 * [MEWtopia](https://www.mewtopia.com/)
-* [MEW Knowledgebase](https://kb.myetherwallet.com/)
+* [MEW Help Center](https://help.myetherwallet.com/)
 * [FB: https://www.facebook.com/MyEtherWallet/](https://www.facebook.com/MyEtherWallet/)
 * [Twitter: https://twitter.com/myetherwallet](https://twitter.com/myetherwallet)
 * [YouTube: https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA](https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA)
@@ -72,3 +72,22 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
+
+## Integrations
+
+### Hardware Wallets
+
+Prior to submitting a request to integrate a hardware wallet, please review hardware wallet requirements that followed recent updates on MyEtherWallet and Ethereum protocol.
+
+*A Hardware wallet must meet the following minimum requirements:*
+
+1. Message signing
+2. Data signing
+3. Must be able to sign other ethereum-based chains, specifically, Matic and BSC.
+4. EIP1559 signing
+
+Reach out to us at <integrations@myetherwallet.com>, so we can determine if we will be able to integrate your hardware wallet.
+
+### DApps
+
+Please fill out the form [here](https://www.myetherwallet.com/dapp-submission). We will reach out to you as soon as we can.

@@ -10,7 +10,18 @@ const ERRORS = {
   'Expected one BitBox02': 'bitbox02Error.expected-one',
   'Pairing rejected': 'bitbox02Error.pairing-rejected',
   'Your BitBox02 is busy': 'bitbox02Error.busy',
-  'Unsupported device': 'bitbox02Error.unsupported-device'
+  'Unsupported device': 'bitbox02Error.unsupported-device',
+  'User cancelled the requestDevice() chooser.':
+    'bitbox02Error.user-cancelled-request-device-bluetooth',
+  'Bluetooth adapter not available.':
+    'bitbox02Error.bluetooth-adapter-not-available',
+  'An operation that changes interface state is in progress.':
+    'bitbox02Error.operation-that-changes-interface-state-in-progress',
+  'connection not open': 'bitbox02Error.connection-not-open-on-send',
+  'Could not establish a connection to the BitBox02':
+    'bitbox02Error.could-not-establish-connection',
+  'InvalidStateError: The device is already open.':
+    'Device already connected. Please refresh your browser and try again!'
 };
 const WARNINGS = {
   'Attestation failed': 'bitbox02Error.attestation-failed'

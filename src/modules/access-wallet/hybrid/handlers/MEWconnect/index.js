@@ -9,7 +9,7 @@ import errorHandler from './errorHandler';
 import HybridWalletInterface from '../walletInterface';
 import mewwallet from '@/assets/images/icons/wallets/mewwallet.svg';
 import store from '@/core/store';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import commonGenerator from '@/core/helpers/commonGenerator';
 const IS_HARDWARE = true;
 class MEWconnectWallet {
@@ -37,32 +37,35 @@ class MEWconnectWallet {
         store.dispatch('wallet/removeWallet');
       }
     });
-    const txSigner = async tx => {
+    const txSigner = async txParams => {
       let tokenInfo;
       if (
-        tx.data.slice(0, 10) === '0xa9059cbb' ||
-        tx.data.slice(0, 10) === '0x095ea7b3'
+        txParams.data.slice(0, 10) === '0xa9059cbb' ||
+        txParams.data.slice(0, 10) === '0x095ea7b3'
       ) {
-        tokenInfo = store.getters['external/contractToToken'](tx.to);
+        tokenInfo = store.getters['external/contractToToken'](txParams.to);
         if (tokenInfo) {
-          tx.currency = {
+          txParams.currency = {
             symbol: tokenInfo.symbol,
             decimals: tokenInfo.decimals,
             address: tokenInfo.contract
           };
         }
       }
-      const networkId = tx.chainId;
       return new Promise((resolve, reject) => {
-        if (!tx.gasLimit) {
-          tx.gasLimit = tx.gas;
-        }
-        this.mewConnect.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
-        this.mewConnect.mewConnect.once('signTx', result => {
+        this.mewConnect.mewConnect.sendRtcMessage(
+          'signTx',
+          JSON.stringify(txParams)
+        );
+        this.mewConnect.mewConnect.once('signTx', signedTx => {
           this.mewConnect.mewConnect.removeAllListeners('reject');
-          tx = new Transaction(sanitizeHex(result), {
-            common: commonGenerator(store.getters['global/network'])
-          });
+          const tx = Transaction.fromSerializedTx(
+            Buffer.from(signedTx, 'hex'),
+            {
+              common: commonGenerator(store.getters['global/network'])
+            }
+          );
+          const networkId = tx.common.chainId();
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
             return reject(

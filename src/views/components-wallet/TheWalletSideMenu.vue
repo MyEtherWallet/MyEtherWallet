@@ -12,7 +12,7 @@
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
             <!--
             =====================================================================================
@@ -78,6 +78,12 @@
                   v-text="item.title"
                 />
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                new
+              </div>
             </v-list-item>
 
             <v-list-group
@@ -141,20 +147,36 @@
             />
           </v-list-item-content>
         </v-list-item>
-
-        <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <!-- <theme-switch /> -->
-          <div class="searchText--text">v{{ version }}</div>
+        <div class="mt-3 px-8">
+          <div class="matomo-tracking-switch">
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="primary"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <!-- <theme-switch /> -->
+            <div class="searchText--text">v{{ version }}</div>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
     <mew-popup
-      :is-open="showLogoutPopup"
+      max-width="400px"
+      hide-close-btn
+      :show="showLogoutPopup"
       :title="$t('interface.menu.logout')"
-      :button-left="logout.btnLeft"
-      :button-right="logout.btnRight"
-      popup-type="confirm"
-      @onClick="onLogout"
+      :left-btn="{ text: 'Cancel', method: toggleLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
     ></mew-popup>
     <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
@@ -173,8 +195,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
-          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        <router-link
+          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+          style="line-height: 0"
+        >
+          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />
@@ -203,6 +228,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   components: {
@@ -211,6 +237,7 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -218,16 +245,6 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      logout: {
-        btnLeft: {
-          title: 'Cancel',
-          colorTheme: 'basic'
-        },
-        btnRight: {
-          title: 'Log out',
-          colorTheme: 'error'
-        }
-      },
       sectionOne: [
         {
           title: this.$t('interface.menu.dashboard'),
@@ -252,7 +269,8 @@ export default {
         {
           title: this.$t('interface.menu.dapps'),
           route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp
+          icon: dapp,
+          hasNew: true
         },
         {
           title: this.$t('interface.menu.contract'),
@@ -287,7 +305,7 @@ export default {
         {
           title: this.$t('common.settings'),
           icon: settings,
-          fn: this.toggleSettings,
+          fn: this.openSettings,
           route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
         {
@@ -308,8 +326,11 @@ export default {
     ...mapState('wallet', ['instance'])
   },
   mounted() {
-    EventBus.$on('toggleSettings', () => {
-      this.toggleSettings();
+    if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
+      this.openSettings();
+    }
+    EventBus.$on('openSettings', () => {
+      this.openSettings();
     });
   },
   methods: {
@@ -326,18 +347,16 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    toggleSettings() {
-      this.onSettings = !this.onSettings;
+    openSettings() {
+      this.onSettings = true;
     },
     closeSettings() {
-      this.toggleSettings();
+      this.onSettings = false;
       this.$router.go(-1);
     },
-    onLogout(res) {
+    onLogout() {
       this.showLogoutPopup = false;
-      if (res.title === this.logout.btnRight.title) {
-        this.removeWallet();
-      }
+      this.removeWallet();
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
@@ -351,6 +370,37 @@ export default {
 </script>
 
 <style lang="scss">
+.new-dapp-label {
+  border-radius: 2px;
+  background: #ff445b;
+  animation: pulse 3s infinite;
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+
 .v-system-bar .v-icon {
   font-size: 36px !important;
   color: white !important;
@@ -443,6 +493,11 @@ export default {
 
     &::-webkit-scrollbar-corner {
       background: transparent;
+    }
+  }
+  .matomo-tracking-switch {
+    .v-label {
+      color: var(--v-white-base);
     }
   }
 }

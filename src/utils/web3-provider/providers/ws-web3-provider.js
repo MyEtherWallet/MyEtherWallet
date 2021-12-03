@@ -1,8 +1,8 @@
 'use strict';
 
-const utils = require('web3-utils');
+import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 const errors = require('web3-core-helpers').errors;
-
+import { isArray, isFunction } from 'lodash';
 let Ws = null;
 let _btoa = null;
 let parseURL = null;
@@ -46,7 +46,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
     const data = typeof e.data === 'string' ? e.data : '';
     _this._parseResponse(data).forEach(function (result) {
       let id = null;
-      if (utils._.isArray(result)) {
+      if (isArray(result)) {
         result.forEach(function (load) {
           if (_this.responseCallbacks[load.id]) id = load.id;
         });
@@ -60,7 +60,7 @@ const WebsocketProvider = function WebsocketProvider(url, options) {
         result.method.indexOf('_subscription') !== -1
       ) {
         _this.notificationCallbacks.forEach(function (callback) {
-          if (utils._.isFunction(callback)) callback(result);
+          if (isFunction(callback)) callback(result);
         });
       } else if (_this.responseCallbacks[id]) {
         _this.responseCallbacks[id](null, result);
@@ -164,10 +164,7 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     return;
   }
   if (this.connection.readyState !== this.connection.OPEN) {
-    if (typeof this.connection.onerror === 'function') {
-      this.connection.onerror(new Error('connection not open'));
-    }
-    callback(new Error('connection not open'));
+    Toast('connection not open', {}, SENTRY);
     return;
   }
 

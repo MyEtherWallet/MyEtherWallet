@@ -13,19 +13,23 @@
           x-large
           v-bind="attrs"
           :ripple="false"
+          style="height: 50px"
           v-on="on"
         >
           <mew-button
             class="px-2"
-            :title="$vuetify.breakpoint.mdAndUp ? 'MEW Hub' : ''"
             color-theme="primary"
-            :has-full-width="false"
             btn-size="large"
             btn-style="outline"
-            :icon="require('@/assets/images/icons/icon-grid-dot.png')"
-            :icon-type="'img'"
-            icon-align="left"
-          />
+          >
+            <div class="d-flex align-center">
+              <img
+                src="@/assets/images/icons/icon-grid-dot.png"
+                alt="Mew tools"
+              />
+              <div class="d-none d-md-block mew-label">MEW Hub</div>
+            </div>
+          </mew-button>
         </v-btn>
 
         <!--
@@ -34,7 +38,7 @@
         =============================================================
         -->
         <v-btn
-          style="height: 36px; min-width: 36px; padding: 0"
+          style="height: 36px; min-width: 36px; padding: 0; border-radius: 10px"
           color="primary"
           outlined
           class="d-lg-none"
@@ -109,7 +113,7 @@ export default {
         {
           label: 'Help center',
           img: require('@/assets/images/icons/icon-customer-support.svg'),
-          link: 'https://kb.myetherwallet.com/'
+          link: 'https://help.myetherwallet.com/en/'
         },
         {
           label: 'MEWconnect protocol',

@@ -62,7 +62,7 @@
             </a>
           </v-col>
         </v-row>
-        <div class="d-flex align-center mt-12">
+        <div class="d-flex align-center justify-space-between mt-12">
           <div class="d-flex align-center mx-n6">
             <div class="d-flex align-center line-height-small">
               <div class="px-6 border-right">
@@ -86,7 +86,16 @@
               </div>
             </div>
           </div>
-          <v-spacer />
+          <div v-if="displayedTrackingPopup" class="matomo-tracking-switch">
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="primary"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
           <div class="social-icons d-flex align-center">
             <a
               v-for="(i, key) in socialIcons"
@@ -240,19 +249,14 @@
                 </a>
               </div>
               <div class="px-2 px-lg-6 border-right">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/privacy-policy"
-                  >{{ $t('footer.privacy') }}</a
-                >
+                <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
+                  Privacy
+                </router-link>
               </div>
               <div class="px-2 px-lg-6">
-                <a
-                  class="color--inherit"
-                  href="https://www.myetherwallet.com/terms-and-conditions"
-                >
-                  {{ $t('footer.tos') }}
-                </a>
+                <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
+                  Terms
+                </router-link>
               </div>
             </div>
           </div>
@@ -298,9 +302,11 @@
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import { loadLanguageAsync } from '@/main/i18n';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
   name: 'TheDefaultFooter',
+  mixins: [handlerAnalytics],
   data: () => ({
     // eslint-disable-next-line
     ethDonationAddress: ETH_DONATION_ADDRESS,
@@ -324,6 +330,10 @@ export default {
             link: 'http://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
           },
           {
+            label: 'CoolWallet',
+            link: 'https://www.coolwallet.io/mew/?ref=myetherwallet1'
+          },
+          {
             label: 'Billfodl',
             link: 'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
           }
@@ -332,10 +342,10 @@ export default {
       {
         title: 'MEW',
         data: [
-          { label: 'About us', routerLink: 'CompanyPage' },
+          { label: 'About us', routerLink: 'AboutPage' },
           { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
-          { label: 'Help center', link: 'https://kb.myetherwallet.com/' },
+          { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
           {
             label: 'Customer support',
             link: 'mailto:support@myetherwallet.com'
@@ -343,7 +353,8 @@ export default {
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' }
+          { label: 'Submit DApp', routerLink: 'DappSubmission' },
+          { label: 'Convert Units', routerLink: 'ConvertUnits' }
         ]
       },
       {

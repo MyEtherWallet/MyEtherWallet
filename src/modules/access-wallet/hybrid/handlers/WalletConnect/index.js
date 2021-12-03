@@ -1,7 +1,7 @@
-import WalletConnect from '@walletconnect/browser';
+import WalletConnect from '@walletconnect/client';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -34,15 +34,11 @@ class WalletConnectWallet {
       walletConnect.killSession(); // remove any leftover connections
     }
     this.walletConnect = walletConnect;
-    this.isKilled = true;
     this.walletConnect.on('disconnect', () => {
-      if (!this.isKilled) {
-        store.dispatch('wallet/removeWallet');
-      }
+      store.dispatch('wallet/removeWallet');
     });
 
     this.walletConnect.disconnect = () => {
-      this.isKilled = true;
       this.walletConnect.killSession();
     };
     this.meta = {
@@ -60,7 +56,7 @@ class WalletConnectWallet {
         tx = new Transaction(tx, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const txJSON = tx.toJSON(true);
+        const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
         this.walletConnect
@@ -106,7 +102,6 @@ class WalletConnectWallet {
         if (error) {
           return reject(error);
         }
-        this.isKilled = false;
         this.walletConnect._qrcodeModal.close();
         const { accounts } = payload.params[0];
         resolve(

@@ -3,7 +3,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import bip44Paths from '@/modules/access-wallet/hardware/handlers/bip44';
 import HDWalletInterface from '@/modules/access-wallet/common/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import {
   getSignTransactionObject,
   calculateChainIdFromV
@@ -12,6 +12,7 @@ import errorHandler from './errorHandler';
 import store from '@/core/store';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import toBuffer from '@/core/helpers/toBuffer';
+import { BN } from 'web3-utils';
 
 const NEED_PASSWORD = false;
 
@@ -24,7 +25,7 @@ class BitBox02Wallet {
     this.status = undefined;
     this.pairingConfirmed = false;
     this.meta = {
-      name: 'BitBox 2',
+      name: 'BitBox02',
       img: {
         type: 'mew-icon',
         value: 'bitbox'
@@ -38,52 +39,63 @@ class BitBox02Wallet {
 
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
-    await this.BitBox02.connect(
-      pairingCode => {
-        this.pairingCode = pairingCode;
-      },
-      async () => {
-        return new Promise(resolve => {
-          this.pairingConfirmed = true;
-          this.pairingConfirmationResolve = resolve;
-        });
-      },
-      attestationResult => {
-        this.attestation = attestationResult;
-      },
-      () => {
-        store.dispatch('wallet/removeWallet');
-      },
-      status => {
-        this.status = status;
+    try {
+      await this.BitBox02.connect(
+        pairingCode => {
+          this.pairingCode = pairingCode;
+        },
+        async () => {
+          return new Promise(resolve => {
+            this.pairingConfirmed = true;
+            this.pairingConfirmationResolve = resolve;
+          });
+        },
+        attestationResult => {
+          this.attestation = attestationResult;
+        },
+        () => {
+          store.dispatch('wallet/removeWallet');
+        },
+        status => {
+          this.status = status;
+        }
+      );
+
+      if (
+        this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
+      ) {
+        throw new Error('Unsupported device');
       }
-    );
 
-    if (
-      this.BitBox02.firmware().Product() !== constants.Product.BitBox02Multi
-    ) {
-      throw new Error('Unsupported device');
-    }
+      const rootPub = await this.BitBox02.ethGetRootPubKey(this.basePath);
+      this.hdKey = HDKey.fromExtendedKey(rootPub);
 
-    const rootPub = await this.BitBox02.ethGetRootPubKey(this.basePath);
-    this.hdKey = HDKey.fromExtendedKey(rootPub);
-
-    if (!this.attestation) {
-      errorHandler('Attestation failed');
+      if (!this.attestation) {
+        errorHandler({ message: 'Attestation failed' });
+      }
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
-    const txSigner = async tx => {
-      tx = new Transaction(tx, {
+    const txSigner = async txParams => {
+      const tx = new Transaction.fromTxData(txParams, {
         common: commonGenerator(store.getters['global/network'])
       });
-      const networkId = tx.getChainId();
+      const networkId = tx.common.chainId();
       const signingData = {
         keypath: this.basePath + '/' + idx,
         chainId: networkId,
-        tx: tx
+        tx: {
+          nonce: BN(tx.nonce).toArrayLike(Buffer, 'be', 32),
+          gasPrice: BN(tx.gasPrice).toArrayLike(Buffer, 'be', 32),
+          gasLimit: BN(tx.gasLimit).toArrayLike(Buffer, 'be', 32),
+          to: tx.to.toBuffer(),
+          value: BN(tx.value).toArrayLike(Buffer, 'be', 32),
+          data: tx.data
+        }
       };
       const result = await this.BitBox02.ethSignTransaction(signingData);
       tx.r = Buffer.from(result.r);
@@ -99,7 +111,7 @@ class BitBox02Wallet {
             signedChainId,
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(tx);
+      return getSignTransactionObject(Transaction.fromTxData(tx));
     };
 
     const msgSigner = async msg => {
@@ -141,9 +153,13 @@ class BitBox02Wallet {
 }
 
 const createWallet = async () => {
-  const _bb02Wallet = new BitBox02Wallet();
-  await _bb02Wallet.connect();
-  return _bb02Wallet;
+  try {
+    const _bb02Wallet = new BitBox02Wallet();
+    await _bb02Wallet.connect();
+    return _bb02Wallet;
+  } catch (e) {
+    errorHandler(e);
+  }
 };
 createWallet.errorHandler = errorHandler;
 

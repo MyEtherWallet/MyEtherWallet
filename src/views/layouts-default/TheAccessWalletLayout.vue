@@ -18,50 +18,68 @@
         Options
       =====================================================================================
       -->
-      <v-sheet color="transparent" max-width="650px" class="mx-auto">
-        <div v-for="btn in buttons" :key="btn.title" class="mb-5">
-          <mew-super-button
-            font-class="mew-heading-2"
+      <div style="max-width: 650px" class="mx-auto">
+        <div v-for="btn in buttons" :key="btn.title" class="position--relative">
+          <div
+            class="warning--text text--darken-1 mew-label"
+            style="position: absolute; top: 15px; right: 25px"
+          >
+            NOT RECOMMENDED
+          </div>
+          <mew-button
+            has-full-width
+            class="mb-5"
             :color-theme="btn.color"
-            :title="btn.title"
-            :subtitle="btn.subtitle"
-            :title-icon="btn.titleIcon"
-            :title-icon-type="btn.titleIconType"
-            :title-icon-class="btn.titleIconClass"
-            :note="btn.note"
+            :btn-style="btn.style === 'outline' ? 'outline' : ''"
+            style="height: 160px"
             @click.native="btn.fn"
           >
-            <template v-if="btn.rightIcon || btn.rightIcons" #contentSlot>
-              <v-row v-if="btn.rightIcon" class="align-center justify-end">
-                <v-img
+            <div
+              class="px-2 text-left d-flex align-center justify-space-between"
+              :class="
+                btn.style === 'outline' ? 'white--text' : 'textDark--text'
+              "
+              style="width: 100%"
+            >
+              <div>
+                <div class="mb-2 d-flex align-center">
+                  <div class="mew-heading-2">{{ btn.title }}</div>
+                  <v-icon dense :color="btn.titleIconClass" class="ml-1">
+                    {{ btn.titleIcon }}
+                  </v-icon>
+                </div>
+                <div class="break-word">
+                  {{ btn.subtitle }}
+                </div>
+              </div>
+              <div class="d-none d-sm-flex align-center pl-5">
+                <img
+                  v-if="btn.rightIcon"
+                  class="mew-wallet-img"
                   :src="btn.rightIcon"
-                  max-width="100px"
-                  min-width="40px"
-                  class="px-4 px-sm-3"
-                  contain
+                  :alt="btn.rightIcon"
+                  style="height: 90px"
                 />
-              </v-row>
-              <v-row v-else class="align-center justify-end">
-                <v-img
+                <img
                   v-for="(icon, index) in btn.rightIcons"
+                  v-else
                   :key="index"
                   :src="icon"
-                  max-width="70px"
-                  contain
-                  class="px-4 px-sm-3"
+                  width="70"
+                  class="px-2"
                 />
-              </v-row>
-            </template>
-          </mew-super-button>
+              </div>
+            </div>
+          </mew-button>
         </div>
-      </v-sheet>
+      </div>
+
       <!--
       =====================================================================================
         Acccess Wallet Module Overlays - activate on Options Button click
       =====================================================================================
       -->
       <div class="spacer-y-medium" />
-      <browser-extension-overlay :open="showBrowser" :close="close" />
       <module-access-wallet-mobile :open="showMobile" :close="close" />
       <module-access-wallet-hardware :open="showHardware" :close="close" />
       <module-access-wallet-software
@@ -74,7 +92,6 @@
 </template>
 
 <script>
-import browserExtensionOverlay from '@/modules/access-wallet/software/components/BrowserExtensionOverlay';
 import ModuleAccessWalletHardware from '@/modules/access-wallet/ModuleAccessWalletHardware';
 import ModuleAccessWalletSoftware from '@/modules/access-wallet/ModuleAccessWalletSoftware';
 import ModuleAccessWalletMobile from '@/modules/access-wallet/ModuleAccessWalletMobile';
@@ -91,16 +108,18 @@ import Web3 from 'web3';
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import { MewConnectWallet } from '@/modules/access-wallet/common';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 export default {
   name: 'TheAccessWalletLayout',
   components: {
-    browserExtensionOverlay,
     ModuleAccessWalletHardware,
     ModuleAccessWalletSoftware,
     ModuleAccessWalletMobile,
     TheLayoutHeader
   },
+  mixins: [handlerAnalytics],
   props: {
     overlay: {
       type: String,
@@ -120,49 +139,49 @@ export default {
       buttons: [
         /* MEW wallet Button */
         {
-          color: 'basic',
+          color: 'white',
           title: 'MEW wallet',
           subtitle: 'Connect MEW wallet app to MEW web',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openMEWconnect();
           }
         },
         /* Browser Extension */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Browser Extension',
           subtitle: 'Use your web3 wallet with MEW.',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-mew-cx.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openWeb3Wallet();
           }
         },
         /* Hardware Wallet */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Hardware Wallets',
           subtitle: 'Ledger, Trezor, KeepKey, FINNEY, BitBox',
           note: '',
           rightIcon: require('@/assets/images/icons/icon-hardware-wallet.png'),
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.HARDWARE);
           }
         },
         /* Mobile Apps */
         {
-          color: 'basic',
+          color: 'white',
           title: 'Mobile Apps',
           subtitle: 'WalletConnect, WalletLink',
           note: '',
@@ -172,21 +191,22 @@ export default {
           ],
           titleIcon: 'mdi-shield-check',
           titleIconType: 'mdi',
-          titleIconClass: 'primary--text',
+          titleIconClass: 'primary',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.MOBILE);
           }
         },
         /* Software */
         {
-          color: 'outline',
+          color: 'white',
+          style: 'outline',
           title: 'Software',
           subtitle: 'Keystore files, Mnemonic phrase, Private key',
           note: 'NOT RECOMMENDED',
           rightIcon: '',
           titleIcon: 'mdi-alert',
           titleIconType: 'mdi',
-          titleIconClass: 'warning--text text--darken-1',
+          titleIconClass: 'warning darken-1',
           fn: () => {
             this.openOverlay(ACCESS_VALID_OVERLAYS.SOFTWARE);
           }
@@ -271,6 +291,7 @@ export default {
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
+          this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {
@@ -290,6 +311,7 @@ export default {
       MewConnectWallet()
         .then(_newWallet => {
           this.setWallet([_newWallet]).then(() => {
+            this.trackAccessWallet(WALLET_TYPES.MEW_WALLET);
             this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
           });
         })

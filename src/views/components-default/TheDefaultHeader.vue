@@ -1,14 +1,7 @@
 <template>
   <div class="default-header expandHeader">
     <div
-      class="
-        d-flex
-        align-center
-        justify-center
-        pa-2
-        tableHeader
-        textBlack2--text
-      "
+      class="d-flex align-center justify-center pa-2 tableHeader textBlack2--text"
     >
       Missing the old version?&nbsp;
       <a href="https://v5.myetherwallet.com" rel="noopener noreferrer">
@@ -24,7 +17,7 @@
           <router-link :to="{ name: ROUTES_HOME.HOME.NAME, query: {} }">
             <v-img
               :class="$vuetify.breakpoint.smAndDown ? 'mx-auto' : ''"
-              src="@/assets/images/icons/logo-mew.png"
+              src="@/assets/images/icons/logo-mew.svg"
               max-height="36"
               max-width="130"
             />
@@ -38,7 +31,7 @@
             {{ $t('header.what-is-mew') }}
           </router-link>
           <mew-menu
-            text-color="white--text"
+            activator-text-color="white--text"
             :list-obj="menuObj"
             @goToPage="routeTo"
           />

@@ -11,7 +11,7 @@
           <img
             :src="d.icon"
             :alt="d.label"
-            height="80"
+            height="85"
             class="mr-2"
             :class="{ 'icon-disabled': !d.isAccessible }"
           />
@@ -54,6 +54,12 @@ export default {
   components: {},
   data: () => ({
     dapps: [
+      {
+        label: 'ETH Blocks',
+        icon: require('@/assets/images/icons/icon-eth-blocks-logo.png'),
+        isAccessible: true,
+        isNew: true
+      },
       {
         label: 'Stake on ETH 2.0',
         icon: require('@/assets/images/icons/icon-dapp-eth20.png'),

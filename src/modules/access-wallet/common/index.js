@@ -1,10 +1,8 @@
 import {
   LedgerWallet,
   TrezorWallet,
-  BitBoxWallet,
   BitBox02Wallet,
   KeepkeyWallet,
-  BCVaultWallet,
   CoolWallet
 } from '@/modules/access-wallet/hardware/handlers';
 import WalletInterface from './WalletInterface';
@@ -18,7 +16,6 @@ import {
 export {
   LedgerWallet,
   TrezorWallet,
-  BitBoxWallet,
   BitBox02Wallet,
   KeepkeyWallet,
   CoolWallet,
@@ -27,6 +24,5 @@ export {
   WalletLinkWallet,
   WalletInterface,
   Web3Wallet,
-  MnemonicWallet,
-  BCVaultWallet
+  MnemonicWallet
 };
