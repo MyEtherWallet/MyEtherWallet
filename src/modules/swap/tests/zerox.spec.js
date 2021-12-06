@@ -37,7 +37,7 @@ describe('Zerox Swap', () => {
         expect(isValid).toBe(false);
       });
   });
-  xtest('it should return a quote', () => {
+  test('it should return a quote', () => {
     return zeroX
       .getQuote({
         toT: {
