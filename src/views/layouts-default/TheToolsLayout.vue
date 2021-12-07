@@ -10,6 +10,7 @@
         :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
         :items="items"
         :active-tab="activeTab"
+        show-arrows
         @onTab="tabChanged"
       >
         <template #tabItemContent1>
