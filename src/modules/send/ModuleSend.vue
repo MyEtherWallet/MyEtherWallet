@@ -45,7 +45,7 @@
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: false,
+                disabled: disableSwapBtn,
                 method: setEntireBal
               }"
               :buy-more-str="buyMore"
@@ -179,7 +179,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'underscore';
+import { debounce, isEmpty } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -474,6 +474,12 @@ export default {
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
+    },
+    disableSwapBtn() {
+      if (!isEmpty(this.sendTx) && !isEmpty(this.selectedCurrency)) {
+        return !this.sendTx.hasEnoughBalance();
+      }
+      return true;
     }
   },
   watch: {

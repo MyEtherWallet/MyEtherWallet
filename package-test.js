@@ -26,7 +26,6 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
-  // eslint is broken again
   'eslint'
 ];
 const CUSTOM_DIST = {

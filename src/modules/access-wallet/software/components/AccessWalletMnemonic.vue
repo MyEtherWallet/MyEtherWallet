@@ -148,7 +148,7 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'underscore';
+import { isEmpty } from 'lodash';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -280,6 +280,7 @@ export default {
     },
     selectedPath: {
       handler: function () {
+        this.walletInstance = {};
         this.nextStepTwo();
       },
       deep: true

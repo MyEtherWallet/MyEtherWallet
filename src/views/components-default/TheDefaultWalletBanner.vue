@@ -44,14 +44,7 @@
         cols="12"
         offset-lg="1"
         lg="7"
-        class="
-          d-flex
-          align-center
-          mx-auto
-          justify-lg-start
-          flex-column flex-lg-row flex-md-row
-          justify-center
-        "
+        class="d-flex align-center mx-auto justify-lg-start flex-column flex-lg-row flex-md-row justify-center"
       >
         <div
           :class="[
@@ -80,9 +73,7 @@
             class="mew-body font-weight-medium footer-text"
           >
             <p>{{ $t('home.mew-wallet-modal.footer-text') }}</p>
-            <a
-              :href="isMobile() ? btn.url : 'https://mewwallet.com'"
-              target="_blank"
+            <a href="https://mewwallet.com" target="_blank"
               >{{ $t('home.mew-wallet-modal.learn-more') }}...
             </a>
           </div>

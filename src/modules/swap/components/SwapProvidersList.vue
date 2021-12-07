@@ -52,22 +52,11 @@
                       =====================================================================================
                       -->
                       <div
-                        class="
-                          d-block d-sm-flex
-                          mx-2 mx-sm-4
-                          align-center
-                          justify-start
-                        "
+                        class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
                       >
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="
-                            primary--text
-                            font-weight-medium
-                            mew-label
-                            order-sm-12
-                            pl-sm-2
-                          "
+                          class="primary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
                         >
                           Best Rate
                         </div>
@@ -136,7 +125,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import { isArray } from 'underscore';
+import { isArray } from 'lodash';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',

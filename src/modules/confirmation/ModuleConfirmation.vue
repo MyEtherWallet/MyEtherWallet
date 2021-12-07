@@ -60,15 +60,7 @@
           />
           <!-- Warning Sheet -->
           <div
-            class="
-              px-4
-              py-6
-              pr-6
-              warning
-              textBlack2--text
-              border-radius--5px
-              mb-5
-            "
+            class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Canceling or
             reversing a transaction cannot be guaranteed. You will still be
@@ -244,7 +236,7 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'underscore';
+import { isEmpty, isArray } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';

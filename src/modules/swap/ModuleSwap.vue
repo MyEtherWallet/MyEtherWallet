@@ -287,7 +287,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce } from 'underscore';
+import { isEmpty, clone, isUndefined, debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -429,7 +429,9 @@ export default {
         ? {}
         : {
             title: 'Max',
-            disabled: !this.hasMinEth,
+            disabled:
+              !this.hasMinEth &&
+              this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow,
             method: this.setMaxAmount
           };
     },
@@ -1239,8 +1241,18 @@ export default {
       this.swapper
         .getTrade(swapObj)
         .then(trade => {
-          this.allTrades[idx] = trade;
-          this.setupTrade(trade);
+          if (trade instanceof Promise) {
+            trade
+              .then(tradeResponse => {
+                this.allTrades[idx] = tradeResponse;
+                this.setupTrade(tradeResponse);
+              })
+              .catch(e => {
+                if (e) {
+                  this.feeError = 'This provider is not available.';
+                }
+              });
+          }
         })
         .catch(e => {
           if (e) {

@@ -18,14 +18,7 @@
             <div class="py-3 text-center tableHeader border-radius--5px">
               <div class="mew-heading-4">Please Send</div>
               <div
-                class="
-                  mew-heading-4
-                  d-flex
-                  align-center
-                  justify-center
-                  pt-2
-                  text-center
-                "
+                class="mew-heading-4 d-flex align-center justify-center pt-2 text-center"
               >
                 <img :src="fromImg" width="30" class="mr-2" />
                 <div class="mew-heading-2 no-decoration">
@@ -82,14 +75,7 @@
             <div class="py-3 text-center tableHeader border-radius--5px">
               <div class="mew-heading-4">You'll get</div>
               <div
-                class="
-                  mew-heading-4
-                  d-flex
-                  align-center
-                  justify-center
-                  pt-2
-                  text-center
-                "
+                class="mew-heading-4 d-flex align-center justify-center pt-2 text-center"
               >
                 <img :src="toImg" width="30" class="mr-2" />
                 <div class="mew-heading-2 no-decoration">
