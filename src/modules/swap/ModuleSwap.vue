@@ -56,8 +56,10 @@
               <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
                 <div class="d-flex align-center justify-center pb-sm-10">
                   <mew-icon-button
-                    mdi-icon="mdi-swap-horizontal"
+                    mdi-icon="swap-horizontal"
                     class="pa-2 d-flex align-center justify-center"
+                    color-theme="basic"
+                    btn-style="light"
                     :disabled="!enableTokenSwitch"
                     @click.native="switchTokens"
                   />
@@ -285,7 +287,6 @@
 </template>
 
 <script>
-import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -312,7 +313,6 @@ const MIN_GAS_LIMIT = 800000;
 export default {
   name: 'ModuleSwap',
   components: {
-    SwapBtn,
     AppButtonBalance,
     AppUserMsgBlock,
     ModuleAddressBook,
