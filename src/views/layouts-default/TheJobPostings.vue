@@ -18,7 +18,7 @@
       -->
       <img
         style="width: 100%"
-        src="@/assets/images/team/mew-collage.jpg"
+        src="@/assets/images/team/mew-collage-small.jpg"
         alt="Members"
         class="mb-8 mt-0 mt-md-10"
       />
