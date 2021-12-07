@@ -55,18 +55,22 @@
               /></v-col>
               <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
                 <div class="d-flex align-center justify-center pb-sm-10">
-                  <swap-btn
-                    :class="[
-                      enableTokenSwitch
-                        ? 'cursor--pointer'
-                        : 'pointer-event--none',
-                      'd-flex align-center justify-center'
-                    ]"
+                  <mew-icon-button
+                    mdi-icon="mdi-swap-horizontal"
+                    class="pa-2 d-flex align-center justify-center"
+                    :disabled="!enableTokenSwitch"
                     @click.native="switchTokens"
                   />
                 </div>
               </v-col>
-              <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
+              <v-col
+                cols="12"
+                sm="5"
+                :class="[
+                  amountErrorMessage !== '' ? 'pb-sm-8' : 'pb-sm-3',
+                  'pl-sm-0 pb-0'
+                ]"
+              >
                 <mew-select
                   ref="toToken"
                   :value="toTokenType"
@@ -470,10 +474,10 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        !isEmpty(this.fromTokenType) &&
-        !isEmpty(this.toTokenType) &&
-        !isEmpty(this.fromTokenType?.symbol) &&
-        !isEmpty(this.toTokenType?.symbol)
+        ((!isEmpty(this.fromTokenType) &&
+          !isEmpty(this.fromTokenType?.symbol)) ||
+          (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol))) &&
+        !this.amountErrorMessage
       );
     },
     /**
