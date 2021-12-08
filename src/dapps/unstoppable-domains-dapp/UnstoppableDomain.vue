@@ -90,12 +90,7 @@
                 >
                   <v-list-item-content>
                     <div
-                      class="
-                        mew-body
-                        font-weight-medium
-                        titlePrimary--text
-                        mb-2
-                      "
+                      class="mew-body font-weight-medium titlePrimary--text mb-2"
                     >
                       {{ r.label }}:
                     </div>
@@ -133,13 +128,7 @@
                 <v-card
                   outlined
                   color="tableHeader"
-                  class="
-                    pa-4
-                    d-flex
-                    align-center
-                    justify-space-between
-                    bordered-red
-                  "
+                  class="pa-4 d-flex align-center justify-space-between bordered-red"
                   style="border-color: var(--v-error-base) !important"
                 >
                   <div class="d-flex align-center">
@@ -243,14 +232,7 @@
                     </div>
                     <div>
                       <div
-                        class="
-                          d-flex
-                          align-center
-                          justify-space-between
-                          border-bottom
-                          py-5
-                          px-0
-                        "
+                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
@@ -312,14 +294,7 @@
                     </div>
                     <div>
                       <div
-                        class="
-                          d-flex
-                          align-center
-                          justify-space-between
-                          border-bottom
-                          py-5
-                          px-0
-                        "
+                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?

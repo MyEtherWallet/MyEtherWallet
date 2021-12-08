@@ -137,13 +137,7 @@
       <v-col v-if="!isReserved" cols="12" class="mt-4 mt-md-11">
         <div class="table-properties">
           <div
-            class="
-              table-properties--header
-              py-3
-              px-5
-              textLight--text
-              mew-caption
-            "
+            class="table-properties--header py-3 px-5 textLight--text mew-caption"
           >
             properties
           </div>
