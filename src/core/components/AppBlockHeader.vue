@@ -9,7 +9,13 @@
         <v-col cols="12" md="3">
           <span
             v-if="!noBackBtn"
-            class="captionPrimary--text mew-heading-3 font-weight-medium cursor-pointer pa-1"
+            class="
+              captionPrimary--text
+              mew-heading-3
+              font-weight-medium
+              cursor-pointer
+              pa-1
+            "
             @click="closeBanner"
           >
             <v-icon small color="captionPrimary">mdi-arrow-left-thick</v-icon>

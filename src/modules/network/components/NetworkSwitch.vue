@@ -10,7 +10,13 @@
             =====================================================================================
             -->
       <div
-        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
+        class="
+          align-center align-sm-end
+          justify-center
+          pr-sm-3
+          pb-sm-3
+          order-sm-2
+        "
       >
         <v-btn-toggle
           v-model="toggleType"

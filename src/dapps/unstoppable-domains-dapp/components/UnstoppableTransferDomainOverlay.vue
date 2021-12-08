@@ -21,7 +21,14 @@
           <div class="pa-8">
             <v-sheet
               color="transparent"
-              class="mx-auto mb-10 border-radius--10px informationBlock py-5 px-7"
+              class="
+                mx-auto
+                mb-10
+                border-radius--10px
+                informationBlock
+                py-5
+                px-7
+              "
             >
               <div class="d-flex align-center justify-space-between">
                 <div>Domain name:</div>

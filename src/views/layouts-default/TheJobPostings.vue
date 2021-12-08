@@ -244,10 +244,6 @@
 
                 <div>
                   <div class="mew-heading-3">Where are you located?*</div>
-                  <div class="mb-3 textLight--text">
-                    Please note that we currently only hire in Los Angeles,
-                    California area.
-                  </div>
                   <mew-input v-model="form.location" />
                 </div>
 

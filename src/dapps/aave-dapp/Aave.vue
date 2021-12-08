@@ -67,7 +67,14 @@
             </v-col>
             <v-col cols="12" md="6">
               <div
-                class="tableHeader pa-5 border-radius--5px height-100 d-flex flex-column"
+                class="
+                  tableHeader
+                  pa-5
+                  border-radius--5px
+                  height-100
+                  d-flex
+                  flex-column
+                "
               >
                 <div class="d-flex aling-center">
                   <h5 class="font-weight-bold mr-auto">Earnings</h5>
