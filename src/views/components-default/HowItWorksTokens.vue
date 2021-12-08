@@ -25,11 +25,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Buy Tokens
+                {{
+                  $t('howItWorks.tokens.info-one.title')
+                    | lokalise('howItWorks.tokens.info-one.title')
+                }}
               </div>
               <p class="white--text">
-                Swap for ERC20 tokens and stablecoins through our decentralized
-                providers.
+                {{
+                  $t('howItWorks.tokens.info-one.text')
+                    | lokalise('howItWorks.tokens.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -40,12 +45,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Custom Tokens
+                {{
+                  $t('howItWorks.tokens.info-two.title')
+                    | lokalise('howItWorks.tokens.info-two.title')
+                }}
               </div>
               <p class="white--text">
-                MEW automatically supports most ERC20 tokens through our API,
-                but if you don’t see the token you’re looking for, you can add
-                it as a custom token right in the interface!
+                {{
+                  $t('howItWorks.tokens.info-two.text')
+                    | lokalise('howItWorks.tokens.info-two.text')
+                }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a
@@ -73,7 +82,7 @@ export default {
       textProps: 'white--text',
       toptitle: '',
       title: 'Tokens',
-      description: 'If it is on Ethereum you can manage it with MEW.',
+      description: 'If it is on Ethereum, you can manage it with MEW.',
       centered: false
     }
   })
