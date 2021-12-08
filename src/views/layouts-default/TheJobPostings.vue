@@ -178,6 +178,12 @@
               ==========================================================================
               -->
               <v-tab-item key="Overview" class="pt-8">
+                <div v-if="jobInfo.indeedLink" class="mb-10">
+                  <a :href="jobInfo.indeedLink" target="_blank">
+                    Click here to apply this position at Indeed.com
+                  </a>
+                </div>
+
                 <div
                   v-for="(details, detailsKey) in jobInfo.jobDetails"
                   :key="detailsKey"
@@ -324,7 +330,7 @@ export default {
       jobInfo: null,
       dialog: false,
       tab: null,
-      tabItems: ['Overview', 'Application'],
+      tabItems: ['Overview' /*, 'Application'*/],
       resumePreviewImg: '',
       form: {
         name: '',
@@ -339,19 +345,21 @@ export default {
     };
   },
   methods: {
-    /*
     openDetailsDialog(job, department) {
       this.jobInfo = job;
       this.jobInfo.department = department;
 
       this.dialog = true;
     },
-    */
+
+    /*
     openDetailsDialog(job) {
       if (job.indeedLink) {
         window.location = job.indeedLink;
       }
     },
+    */
+
     imgPreview(e, targetVar) {
       if (e) {
         this[targetVar] = URL.createObjectURL(e);
