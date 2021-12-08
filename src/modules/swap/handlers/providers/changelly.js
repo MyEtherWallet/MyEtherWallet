@@ -100,7 +100,7 @@ class Changelly {
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (!minmax.minFrom) return [];
+      if (!minmax || !minmax.minFrom) return [];
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),

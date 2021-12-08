@@ -491,11 +491,14 @@ export default {
         } else if (
           new BigNumber(this.tokenInValue).gt(this.selectedProvider.maxFrom)
         ) {
-          msg = 'The maximum requirement for this provider i';
+          msg = 'The maximum requirement for this provider is';
           subError = `${this.selectedProvider.maxFrom} ${this.fromTokenType.symbol}`;
         } else if (this.availableQuotes.length === 0) {
           msg =
             'No providers found for this token pair. Select a different token pair or try again later.';
+        } else if (this.feeError === 'Invalid Input') {
+          msg =
+            'Provided input is invalid or provider is having issues. Please try again!';
         } else {
           msg = '';
           subError = '';
@@ -763,7 +766,7 @@ export default {
     toAddress() {
       const address = !isEmpty(this.addressValue)
         ? this.addressValue.value
-        : '';
+        : this.address;
       if (!this.fromTokenType?.isEth) return address;
       if (this.toTokenType?.isEth) return this.address;
       return this.address;
@@ -1248,16 +1251,14 @@ export default {
                 this.setupTrade(tradeResponse);
               })
               .catch(e => {
-                if (e) {
-                  this.feeError = 'This provider is not available.';
-                }
+                this.setupTrade(e);
               });
+          } else {
+            this.setupTrade(trade);
           }
         })
         .catch(e => {
-          if (e) {
-            this.feeError = 'This provider is not available.';
-          }
+          this.setupTrade(e);
         });
     }, 500),
     setupTrade(trade) {
