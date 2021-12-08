@@ -51,7 +51,7 @@
     "@sentry/vue": "6.15.0",
     "@shapeshiftoss/hdwallet-core": "1.18.2",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.18.2",
-    "@unstoppabledomains/resolution": "6.0.3",
+    "@unstoppabledomains/resolution": "7.0.0",
     "@walletconnect/client": "1.6.6",
     "@walletconnect/qrcode-modal": "1.6.6",
     "animejs": "3.2.1",
