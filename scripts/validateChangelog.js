@@ -1,5 +1,4 @@
 const fs = require('fs');
-const version = require('./package.json').version;
 const devmoji = require('./devmoji.config');
 const ACCEPTABLE_ENTRIES = devmoji.devmoji.map(i => i.code);
 const CHANGELOG_DIR = './changelog';
