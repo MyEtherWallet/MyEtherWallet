@@ -16,14 +16,7 @@
     </div>
     <div
       v-if="minimumAge || canRegister"
-      class="
-        timer-container
-        d-flex
-        flex-column
-        align-center
-        justify-center
-        mt-4
-      "
+      class="timer-container d-flex flex-column align-center justify-center mt-4"
     >
       <mew-icon
         class="canRegister ? 'disabled' : ''"
