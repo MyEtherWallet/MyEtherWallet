@@ -21,12 +21,9 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              Love MEW?
+              {{ $t('footer.donation.heading') }}
             </div>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
@@ -39,7 +36,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>
@@ -74,17 +71,17 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
-                  Privacy
+                  {{ $t('footer.privacy') }}
                 </router-link>
               </div>
               <div class="px-6">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
-                  Terms
+                  {{ $t('footer.tos') }}
                 </router-link>
               </div>
             </div>
@@ -124,17 +121,17 @@
             <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+              {{ $t('footer.copyright') }}
               <a
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
                 target="_blank"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >.
             </p>
             <v-spacer />
             <v-sheet width="150" color="transparent">
-              <!-- <v-select
+              <v-select
                 v-model="select"
                 append-icon="mdi-chevron-down"
                 :items="languages"
@@ -143,7 +140,7 @@
                 return-object
                 single-line
                 dark
-              ></v-select> -->
+              ></v-select>
             </v-sheet>
           </div>
         </v-container>
@@ -185,11 +182,10 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="mb-3 d-flex align-center">Love MEW?</h3>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <h3 class="mb-3 d-flex align-center">
+              {{ $t('footer.donation.heading') }}
+            </h3>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
               target="_blank"
@@ -220,7 +216,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.btc') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -249,7 +245,7 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-2 px-lg-6 border-right">
@@ -273,7 +269,7 @@
             <div class="d-flex align-center justify-space-between">
               <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
               <v-sheet width="150" color="transparent">
-                <!-- <v-select
+                <v-select
                   v-model="select"
                   append-icon="mdi-chevron-down"
                   :items="languages"
@@ -282,17 +278,17 @@
                   return-object
                   single-line
                   dark
-                ></v-select> -->
+                ></v-select>
               </v-sheet>
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+                {{ $t('footer.copyright') }}
                 <a
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
                   target="_blank"
-                  >Coingecko</a
+                  >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
             </v-sheet>
@@ -305,6 +301,7 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { loadLanguageAsync } from '@/main/i18n';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
@@ -400,39 +397,39 @@ export default {
         ]
       }
     ],
-    // select: 'en',
-    // languages: [
-    //   {
-    //     name: 'English',
-    //     value: 'en',
-    //     flag: require('@/assets/images/flags/uk.png')
-    //   },
-    //   {
-    //     name: 'Russian',
-    //     value: 'ru',
-    //     flag: require('@/assets/images/flags/russia.png')
-    //   },
-    //   {
-    //     name: 'Germany',
-    //     value: 'ge',
-    //     flag: require('@/assets/images/flags/germany.png')
-    //   },
-    //   {
-    //     name: 'Chinese',
-    //     value: 'ch',
-    //     flag: require('@/assets/images/flags/china.png')
-    //   },
-    //   {
-    //     name: 'Korean',
-    //     value: 'kr',
-    //     flag: require('@/assets/images/flags/korea.png')
-    //   },
-    //   {
-    //     name: 'Japanese',
-    //     value: 'jp',
-    //     flag: require('@/assets/images/flags/japan.png')
-    //   }
-    // ],
+    select: 'en_US',
+    languages: [
+      {
+        name: 'English',
+        value: 'en_US',
+        flag: require('@/assets/images/flags/uk.png')
+      },
+      {
+        name: 'Russian',
+        value: 'ru_RU',
+        flag: require('@/assets/images/flags/russia.png')
+      }
+      //   {
+      //     name: 'Germany',
+      //     value: 'ge',
+      //     flag: require('@/assets/images/flags/germany.png')
+      //   },
+      //   {
+      //     name: 'Chinese',
+      //     value: 'ch',
+      //     flag: require('@/assets/images/flags/china.png')
+      //   },
+      //   {
+      //     name: 'Korean',
+      //     value: 'kr',
+      //     flag: require('@/assets/images/flags/korea.png')
+      //   },
+      //   {
+      //     name: 'Japanese',
+      //     value: 'jp',
+      //     flag: require('@/assets/images/flags/japan.png')
+      //   }
+    ],
     socialIcons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
@@ -472,7 +469,12 @@ export default {
       }
     ],
     ROUTES_HOME: ROUTES_HOME
-  })
+  }),
+  watch: {
+    select({ value }) {
+      loadLanguageAsync(value);
+    }
+  }
 };
 </script>
 

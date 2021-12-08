@@ -4,7 +4,7 @@
     max-width="700px"
   >
     <div class="mew-heading-1 mb-3">
-      MEW supports ETH and all ERC-20 tokens!
+      {{ $t('home.features.tokens.heading') }}
     </div>
     <div class="mt-10">
       <v-row>
