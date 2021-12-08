@@ -6,7 +6,7 @@
     =====================================================================================
     -->
     <div class="mew-heading-2 mb-3 mr-3">
-      My public address to receive funds
+      {{ $t('interface.qr.title') }}
     </div>
 
     <!--
@@ -15,8 +15,7 @@
     =====================================================================================
     -->
     <div class="textPrimary--text mb-8">
-      To receive ETH from another account, send ETH from that account to this
-      address.
+      {{ $t('interface.qr.desc') }}
     </div>
 
     <!--
@@ -26,7 +25,9 @@
     -->
     <div class="d-flex align-center mb-4">
       <mew-blockie :address="address" width="22px" height="22px" />
-      <div class="pl-1 mew-body font-weight-bold">My main account</div>
+      <div class="pl-1 mew-body font-weight-bold">
+        {{ $t('interface.qr.my-main-account') }}
+      </div>
     </div>
 
     <!--

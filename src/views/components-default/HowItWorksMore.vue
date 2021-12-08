@@ -17,8 +17,12 @@
           class="pb-12"
         >
           <img :src="content.img" height="60" />
-          <h5 class="font-weight-bold mt-3">{{ content.title }}</h5>
-          <div class="mt-3 pr-md-12">{{ content.description }}</div>
+          <h5 class="font-weight-bold mt-3">
+            {{ $t(content.title) }}
+          </h5>
+          <div class="mt-3 pr-md-12">
+            {{ $t(content.description) }}
+          </div>
         </v-col>
       </v-row>
     </v-container>
