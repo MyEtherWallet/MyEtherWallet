@@ -5,18 +5,23 @@
       <v-container>
         <v-sheet color="transparent" max-width="400px">
           <div class="mew-heading-3 text-uppercase textLight--text mb-1">
-            Why MEW
+            {{
+              $t('home.about-mew.subheading')
+                | lokalise('home.about-mew.subheading')
+            }}
           </div>
           <h1 class="mb-9">
-            Easy and secure access to the Ethereum Blockchain
+            {{
+              $t('home.about-mew.heading') | lokalise('home.about-mew.heading')
+            }}
           </h1>
         </v-sheet>
 
         <div class="d-flex">
           <mew-info-card
             class="d-flex align-end block-box-shadow"
-            title="Friendly to use"
-            desc="Access the Ethereum blockchain's original and most-trusted wallet, now with a host of new features all contained in an elegant and friendly interface."
+            :title="$t('home.about-mew.card-one.title')"
+            :desc="$t('home.about-mew.card-one.text')"
             :icon="require('@/assets/images/icons/icon-faces-mew.svg')"
           />
           <div class="pa-4"></div>
@@ -25,24 +30,24 @@
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Swaps, DeFi, DApps, NFTs, Stablecoins"
-              desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+              :title="$t('home.about-mew.card-two.title')"
+              :desc="$t('home.about-mew.card-two.text')"
             />
             <div class="pa-4"></div>
             <mew-info-card
               class="full-height"
               max-width="600"
-              title="Hardware wallet support"
-              desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
+              :title="$t('home.about-mew.card-three.title')"
+              :desc="$t('home.about-mew.card-three.text')"
             />
           </div>
 
           <div class="pa-4"></div>
           <mew-info-card
-            title="MEW wallet"
-            desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
+            :title="$t('home.about-mew.card-four.title')"
+            :desc="$t('home.about-mew.card-four.text')"
             :link="{
-              title: 'Get the App',
+              title: $t('home.about-mew.card-four.link'),
               url: 'https://www.mewwallet.com/'
             }"
           >
@@ -76,15 +81,15 @@
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <v-sheet color="transparent" max-width="400px" class="mb-9">
             <h5 class="font-weight-bold text-uppercase textLight--text mb-2">
-              Why Mew
+              {{ $t('home.about-mew.subheading') }}
             </h5>
-            <h1>Make Ethereum Blockchain easy and secure</h1>
+            <h1>{{ $t('home.about-mew.heading') }}</h1>
           </v-sheet>
 
           <mew-info-card
             class="d-flex align-end block-box-shadow mx-auto mb-6"
-            title="Friendly to use"
-            desc="Access the Ethereum blockchains original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy and friendly interface."
+            :title="$t('home.about-mew.card-one.title')"
+            :desc="$t('home.about-mew.card-one.text')"
             :link="{
               title: 'Learn more',
               url: 'www.myetherwallet.com'
@@ -94,8 +99,8 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Swaps, DeFi, DApps, NFTs, Stablecoins"
-            desc="Partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+            :title="$t('home.about-mew.card-two.title')"
+            :desc="$t('home.about-mew.card-two.text')"
             :link="{
               title: 'Learn more',
               url: 'www.myetherwallet.com'
@@ -104,8 +109,8 @@
 
           <mew-info-card
             class="full-height mx-auto mb-6"
-            title="Hardware wallet support"
-            desc="MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
+            :title="$t('home.about-mew.card-three.title')"
+            :desc="$t('home.about-mew.card-three.text')"
             :link="{
               title: 'Learn more',
               url: 'www.myetherwallet.com'
@@ -114,10 +119,10 @@
 
           <mew-info-card
             class="mx-auto"
-            title="MEW wallet"
-            desc="MEW brings a hardware wallet style security to your iOS or Android smart phone, helping you to secure your funds as never before."
+            :title="$t('home.about-mew.card-four.title')"
+            :desc="$t('home.about-mew.card-four.text')"
             :link="{
-              title: 'Get the App',
+              title: $t('home.about-mew.card-four.link'),
               url: 'www.myetherwallet.com'
             }"
           >

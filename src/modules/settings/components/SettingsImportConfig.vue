@@ -1,8 +1,7 @@
 <template>
   <div class="pa-6">
     <div class="descriptions mb-7">
-      Please upload the file and click the button to open and import your
-      configuration file from your local computer.
+      {{ $t('interface.import.desc') }}
     </div>
     <div class="d-block d-sm-flex align-start text-center">
       <v-file-input

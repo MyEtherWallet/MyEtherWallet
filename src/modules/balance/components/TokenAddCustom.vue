@@ -103,13 +103,7 @@
             />
             <div
               v-if="isIcon(tkn.name) && !tkn.value"
-              class="
-                token-placeholder
-                mew-caption
-                d-flex
-                align-center
-                justify-center
-              "
+              class="token-placeholder mew-caption d-flex align-center justify-center"
             >
               NA
             </div>
@@ -153,7 +147,7 @@ import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
-import { debounce } from 'underscore';
+import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,

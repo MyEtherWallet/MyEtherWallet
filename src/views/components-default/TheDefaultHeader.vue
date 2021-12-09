@@ -28,7 +28,7 @@
             class="white--text text-decoration--none"
             :to="{ name: ROUTES_HOME.HOW_IT_WORKS.NAME }"
           >
-            What is MEW
+            {{ $t('header.what-is-mew') }}
           </router-link>
           <mew-menu
             activator-text-color="white--text"
@@ -40,7 +40,7 @@
             target="_blank"
             class="white--text text-decoration--none"
           >
-            Buy ETH
+            {{ $t('header.buy-eth') }}
           </a>
         </v-col>
         <v-col cols="4" class="text-right">

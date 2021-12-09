@@ -1,0 +1,9 @@
+{
+  "title": "Name Your Wallet",
+  "dapp-desc": "Give your address a human readable subdomain on a registered ENS domain",
+  "ph-enter-name": "Please Enter Sub Domain Name",
+  "check": "Check",
+  "buy": "Buy",
+  "invalid-symbol": "Invalid symbols",
+  "all": "All Sub Domains"
+}

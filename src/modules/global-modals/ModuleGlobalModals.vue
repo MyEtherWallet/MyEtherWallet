@@ -30,7 +30,7 @@ import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
 import { EventBus } from '@/core/plugins/eventBus';
-import { isEmpty } from 'underscore';
+import { isEmpty } from 'lodash';
 const OPEN_HARDWARE_PASSWORD = 'showHardwarePassword';
 const ISSUE_MODAL = 'issueModal';
 export default {

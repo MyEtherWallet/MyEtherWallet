@@ -1,10 +1,10 @@
 <template>
   <div class="mew-component--how-it-works">
-    <the-layout-header title="How it works" />
+    <the-layout-header :title="$t('howItWorks.title')" />
     <div class="py-7" />
     <v-container>
       <v-sheet color="transparent" max-width="500px" class="mx-auto mb-10">
-        <h1 class="text-sm-center">Your Gateway to The Ethereum Blockchain</h1>
+        <h1 class="text-sm-center">{{ $t('home.features.heading') }}</h1>
       </v-sheet>
     </v-container>
 

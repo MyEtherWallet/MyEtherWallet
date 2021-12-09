@@ -48,7 +48,7 @@
                   "
                   :max-btn-obj="{
                     title: 'Max',
-                    disabled: false,
+                    disabled: disableSwapBtn,
                     method: setMaxAmount
                   }"
                   @input="setTokenInValue"
@@ -290,7 +290,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce } from 'underscore';
+import { isEmpty, clone, isUndefined, debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -693,6 +693,9 @@ export default {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
     },
+    disableSwapBtn() {
+      return this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow;
+    },
     /**
      * @returns BigNumber of the available balance for the From Token
      */
@@ -1090,27 +1093,29 @@ export default {
       this.feeError = '';
       this.loadingFee = true;
       if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
-      this.swapper
-        .getTrade({
-          fromAddress: this.address,
-          toAddress: this.toAddress,
-          provider: this.availableQuotes[idx].provider,
-          fromT: this.fromTokenType,
-          toT: this.toTokenType,
-          quote: this.availableQuotes[idx],
-          fromAmount: new BigNumber(this.tokenInValue).times(
-            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-          )
-        })
-        .then(trade => {
-          this.allTrades[idx] = trade;
-          this.setupTrade(trade);
-        })
-        .catch(e => {
-          if (e) {
-            this.feeError = 'This provider is not available.';
-          }
-        });
+      const trade = this.swapper.getTrade({
+        fromAddress: this.address,
+        toAddress: this.toAddress,
+        provider: this.availableQuotes[idx].provider,
+        fromT: this.fromTokenType,
+        toT: this.toTokenType,
+        quote: this.availableQuotes[idx],
+        fromAmount: new BigNumber(this.tokenInValue).times(
+          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        )
+      });
+      if (trade instanceof Promise) {
+        trade
+          .then(tradeResponse => {
+            this.allTrades[idx] = tradeResponse;
+            this.setupTrade(tradeResponse);
+          })
+          .catch(e => {
+            if (e) {
+              this.feeError = 'This provider is not available.';
+            }
+          });
+      }
     }, 500),
     setupTrade(trade) {
       if (trade instanceof Error) {

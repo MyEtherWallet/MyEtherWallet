@@ -26,8 +26,6 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
-  // update after release
-  'sinon',
   'eslint'
 ];
 const CUSTOM_DIST = {

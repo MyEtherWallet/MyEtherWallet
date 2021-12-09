@@ -83,7 +83,7 @@ class MnemonicWallet {
     };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
-      derivedKey.publicKey,
+      derivedKey.privateKey,
       this.isHardware,
       this.identifier,
       errorHandler,

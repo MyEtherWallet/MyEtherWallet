@@ -39,14 +39,7 @@
         <div
           v-for="(pending, idx) in allPendingValidators"
           :key="pending + idx"
-          class="
-            mt-4
-            d-flex
-            flex-column
-            align-center
-            cursor-pointer
-            justify-space-between
-          "
+          class="mt-4 d-flex flex-column align-center cursor-pointer justify-space-between"
         >
           <!--
     ===================================================
@@ -218,14 +211,7 @@
         <div
           v-for="(active, idx) in activeValidators"
           :key="active + idx"
-          class="
-            border-container
-            rounded-lg
-            pa-5
-            mt-4
-            d-flex
-            justify-space-between
-          "
+          class="border-container rounded-lg pa-5 mt-4 d-flex justify-space-between"
         >
           <div class="left-container d-flex">
             <img :src="iconETHNavy" height="26" alt="ethereum" />

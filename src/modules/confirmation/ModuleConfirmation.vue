@@ -295,7 +295,7 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'underscore';
+import { isEmpty, isArray } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';

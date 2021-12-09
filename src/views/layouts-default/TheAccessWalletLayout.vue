@@ -7,9 +7,9 @@
       =====================================================================================
       -->
       <the-layout-header
-        title="Access My Wallet"
-        subtitle-line-one=" Please select a method to access your wallet."
-        subtitle-line-two="Don't have a wallet?"
+        :title="$t('home.access-my-wallet.title')"
+        :subtitle-line-one="$t('home.access-my-wallet.subtitle-one')"
+        :subtitle-line-two="$t('home.access-my-wallet.subtitle-two')"
         :route-obj="titleRoute"
         has-link
       />
@@ -291,6 +291,7 @@ export default {
           const acc = await web3.eth.getAccounts();
           const wallet = new Web3Wallet(acc[0]);
           this.setWallet([wallet, window.ethereum]);
+          this.trackAccessWallet(WALLET_TYPES.WEB3_WALLET);
           if (this.path !== '') {
             this.$router.push({ path: this.path });
           } else {

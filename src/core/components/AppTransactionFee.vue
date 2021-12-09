@@ -20,7 +20,7 @@
         <div class="mew-heading-1 my-2 mt-6">What should I do?</div>
         <div class="mt-6 textLight--text">
           Good news! You have options! If you’re not in a hurry, you can use the
-          “Economy” setting and your transaction will be mined at a later time.
+          “Normal” setting and your transaction will be mined at a later time.
           MEW supports Ethereum scaling solutions Polygon and Binance Smart
           Chain (accessible on MEW web and Android). Consider using these chains
           to avoid congestion and save on fees. Learn how
