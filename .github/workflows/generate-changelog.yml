@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12'
       - name: Compile changelog entries
-        run: npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node prepChangelog.js && npm run lint:md
+        run: npm install --no-package-lock --no-save --quiet remark-cli remark-preset-lint-recommended && node ./scripts/prepChangelog.js && npm run lint:md
       - name: Create PR
         uses: peter-evans/create-pull-request@v3
         with:
