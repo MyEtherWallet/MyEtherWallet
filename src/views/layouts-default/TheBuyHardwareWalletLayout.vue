@@ -17,13 +17,7 @@
                 has-full-width
               >
                 <div
-                  class="
-                    px-5
-                    text-left
-                    d-flex
-                    align-center
-                    justify-space-between
-                  "
+                  class="px-5 text-left d-flex align-center justify-space-between"
                   style="width: 100%"
                 >
                   <div>
@@ -47,13 +41,7 @@
                       {{ b.logoText }}
                     </div>
                     <div
-                      class="
-                        mew-caption
-                        text-uppercase
-                        font-weight-bold
-                        textPrimary--text
-                        text--lighten-1
-                      "
+                      class="mew-caption text-uppercase font-weight-bold textPrimary--text text--lighten-1"
                     >
                       {{ b.priceNote }}
                     </div>
