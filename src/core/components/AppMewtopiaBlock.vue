@@ -4,13 +4,7 @@
     <div class="desktop-content d-none d-lg-block">
       <v-container>
         <div
-          class="
-            border-radius--10px
-            card-content
-            d-flex
-            align-center
-            justify-space-between
-          "
+          class="border-radius--10px card-content d-flex align-center justify-space-between"
         >
           <div>
             <h1 class="white--text">{{ $t('home.mewtopia-block.title') }}</h1>
