@@ -5,7 +5,7 @@
   >
     <the-layout-header title="Tools" />
 
-    <div class="px-3 my-12 mx-auto" style="max-width: 800px">
+    <v-container class="px-3 my-12">
       <mew-tabs
         :is-vertical="$vuetify.breakpoint.smAndDown ? false : true"
         :items="items"
@@ -26,7 +26,7 @@
           <module-tools-watch-only />
         </template>
       </mew-tabs>
-    </div>
+    </v-container>
     <app-get-started />
   </div>
 </template>

@@ -25,7 +25,12 @@
             </div>
             <div>
               <div
-                class="captionPrimary--text text-uppercase detail-subtitle font-weight-medium"
+                class="
+                  captionPrimary--text
+                  text-uppercase
+                  detail-subtitle
+                  font-weight-medium
+                "
               >
                 {{ detail.subtitle }}
               </div>
@@ -51,7 +56,12 @@
         <div
           v-for="(fee, idx) in fees"
           :key="fee + idx"
-          class="d-block d-sm-flex align-center justify-space-between mb-3 mb-sm-2"
+          class="
+            d-block d-sm-flex
+            align-center
+            justify-space-between
+            mb-3 mb-sm-2
+          "
         >
           <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
           <div>
@@ -166,7 +176,13 @@
     ===================================================
     -->
       <div
-        class="mt-10 d-flex flex-column-reverse flex-md-row align-center justify-center"
+        class="
+          mt-10
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
       >
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"

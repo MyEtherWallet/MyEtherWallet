@@ -25,7 +25,14 @@
         @click.native="isDropdownOpen = !isDropdownOpen"
       >
         <div
-          class="d-flex flex-row px-3 align-center width--full justify-space-between"
+          class="
+            d-flex
+            flex-row
+            px-3
+            align-center
+            width--full
+            justify-space-between
+          "
         >
           <slot name="activatorBtnText" />
           <v-icon v-if="hasIcon" class="textMedium--text text-end"
