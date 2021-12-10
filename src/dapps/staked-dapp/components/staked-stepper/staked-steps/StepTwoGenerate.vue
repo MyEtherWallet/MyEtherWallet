@@ -10,17 +10,7 @@
         Here is your new Eth2 Address
       </div>
       <div
-        class="
-          skip-container
-          d-flex
-          flex-column flex-sm-row
-          rounded
-          align-center
-          justify-space-between
-          greyLight
-          px-5
-          py-4
-        "
+        class="skip-container d-flex flex-column flex-sm-row rounded align-center justify-space-between greyLight px-5 py-4"
       >
         <!--
       ===================================================
@@ -78,15 +68,7 @@
             2. Download your keystore file
           </div>
           <div
-            class="
-              d-block d-sm-flex
-              align-center
-              justify-space-between
-              greyLight
-              py-5
-              px-3
-              rounded
-            "
+            class="d-block d-sm-flex align-center justify-space-between greyLight py-5 px-3 rounded"
           >
             <div class="d-flex align-center">
               <img
@@ -136,13 +118,7 @@
     ======================================================
     -->
       <div
-        class="
-          mt-10
-          d-flex
-          flex-column-reverse flex-md-row
-          align-center
-          justify-center
-        "
+        class="mt-10 d-flex flex-column-reverse flex-md-row align-center justify-center"
       >
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"

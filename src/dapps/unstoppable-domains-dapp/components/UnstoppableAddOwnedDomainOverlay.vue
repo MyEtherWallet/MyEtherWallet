@@ -22,14 +22,7 @@
         </v-sheet>
         <mew6-white-sheet class="pa-3">
           <div
-            class="
-              d-flex
-              align-center
-              justify-space-between
-              informationBlock
-              pa-6
-              border-radius--10px
-            "
+            class="d-flex align-center justify-space-between informationBlock pa-6 border-radius--10px"
           >
             <div class="d-flex align-center">
               <v-icon class="check-icon greenPrimary--text mr-3">

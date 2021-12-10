@@ -31,12 +31,7 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex flex-column">
             <div
-              class="
-                mew-body
-                greenPrimary--text
-                font-weight-medium
-                cursor--pointer
-              "
+              class="mew-body greenPrimary--text font-weight-medium cursor--pointer"
               @click="openBarcodeModal"
             >
               Transfer {{ currencyName }} from another account

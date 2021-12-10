@@ -128,13 +128,7 @@
                 <v-card
                   outlined
                   color="greyLight"
-                  class="
-                    pa-4
-                    d-flex
-                    align-center
-                    justify-space-between
-                    bordered-red
-                  "
+                  class="pa-4 d-flex align-center justify-space-between bordered-red"
                   style="border-color: var(--v-redPrimary-base) !important"
                 >
                   <div class="d-flex align-center">
@@ -238,14 +232,7 @@
                     </div>
                     <div>
                       <div
-                        class="
-                          d-flex
-                          align-center
-                          justify-space-between
-                          border-bottom
-                          py-5
-                          px-0
-                        "
+                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?
@@ -307,14 +294,7 @@
                     </div>
                     <div>
                       <div
-                        class="
-                          d-flex
-                          align-center
-                          justify-space-between
-                          border-bottom
-                          py-5
-                          px-0
-                        "
+                        class="d-flex align-center justify-space-between border-bottom py-5 px-0"
                       >
                         <div class="mew-heading-3">
                           What do you want to do with the domain?

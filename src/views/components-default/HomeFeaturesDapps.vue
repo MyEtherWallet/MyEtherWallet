@@ -18,14 +18,7 @@
           <div>
             <div
               v-if="!d.isAccessible"
-              class="
-                badge
-                mew-label
-                disabledPrimary--text
-                d-block
-                text--center
-                mt-3
-              "
+              class="badge mew-label disabledPrimary--text d-block text--center mt-3"
             >
               Coming soon
             </div>

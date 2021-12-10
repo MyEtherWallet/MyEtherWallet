@@ -16,14 +16,7 @@
           -->
         <div class="d-flex align-center justify-end pb-4">
           <div
-            class="
-              greenPrimary--text
-              cursor--pointer
-              d-flex
-              align-center
-              mr-2
-              pa-2
-            "
+            class="greenPrimary--text cursor--pointer d-flex align-center mr-2 pa-2"
             @click="setPhrase"
           >
             <v-icon small color="greenPrimary" class="mr-1">mdi-sync</v-icon>

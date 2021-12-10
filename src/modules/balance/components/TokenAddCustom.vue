@@ -103,13 +103,7 @@
             />
             <div
               v-if="isIcon(tkn.name) && !tkn.value"
-              class="
-                token-placeholder
-                mew-caption
-                d-flex
-                align-center
-                justify-center
-              "
+              class="token-placeholder mew-caption d-flex align-center justify-center"
             >
               NA
             </div>
