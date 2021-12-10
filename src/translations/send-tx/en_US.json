@@ -1,57 +1,20 @@
 {
-  "tx": "Transaction",
-  "tx-detail": "Transaction Detail",
-  "send": "Send",
-  "sender": "Sender",
-  "receiver": "Receiver",
   "send-tx": "Send Transaction",
-  "send-tx-break": "Send {transaction}",
-  "send-offline": "Send Offline",
   "to-addr": "To Address",
-  "from-addr": "From Address",
-  "raw-tx": "Raw Transaction",
-  "type": "Type",
   "amount": "Amount",
-  "tx-fee": "Transaction Fee",
-  "tx-hash": "Transaction Hash",
-  "max-tx-fee": "Max Transaction Fee",
-  "cost-eth-usd": "Cost {txFeeEth} ETH = ${usd}",
   "add-data": "Add Data",
-  "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",
   "nonce": "Nonce",
-  "data": "Data",
-  "data-gas": "Data & Gas Limit",
-  "dep-amount": "Deposit Amount",
-  "button-entire": "Entire Balance",
   "enter-addr": "Enter address",
-  "transaction-receipt": "Transaction Receipt",
-  "confirmation": {
-    "title": "Confirmation",
-    "detail-info": "Detail Information",
-    "button": "Confirm and Send"
-  },
-  "generate-tx": "Generate Transaction",
-  "generate-info": "Generate Information",
-  "not-enough-funds": "You have insufficient funds.",
-  "signed": {
-    "tx": "Signed Transaction",
-    "raw": "Raw",
-    "button-copy-cont": "Copy and Continue",
-    "scan": "Scan QR code",
-    "or": "or",
-    "download": "Download JSON"
-  },
   "success": {
-    "title": "Success",
-    "sub-title": "Transaction sent!",
-    "button-check-status": "Check Status on Etherscan.io",
-    "button-check-explorer": "Check Status on {explorrerName}"
+    "title": "Success"
   },
-  "invalid-data": "Provided data is invalid or empty!",
-  "via-contract": "Via Contract",
-  "import-json": "Import JSON",
-  "retrieved": "Retrieved",
-  "at-block": "at block",
-  "invalid-signature": "Invalid Signature",
-  "signed-chain-id": "Signed Chain ID {network} does not match chain id for selected network"
+  "network-fee": {
+    "title": "Network fee",
+    "desc": "This fee is calculated by multiplying the gas price and gas limit for your transaction. Higher fees result in faster transactions.",
+    "learn-more": "Learn more"
+  },
+  "advanced": {
+    "title": "For advanced users only",
+    "desc": "Please don’t edit these fields unless you are an expert user & know what you’re doing. Entering the wrong information could result in your transaction failing or getting stuck."
+  }
 }

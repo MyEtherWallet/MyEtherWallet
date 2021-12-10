@@ -1158,7 +1158,6 @@ export default {
       if (
         this.showToAddress &&
         isEmpty(this.addressValue) &&
-        !this.toAddress &&
         !this.isToAddressValid
       )
         return;

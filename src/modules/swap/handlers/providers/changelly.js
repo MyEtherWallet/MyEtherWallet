@@ -53,6 +53,7 @@ class Changelly {
   }
   isValidToAddress({ toT, address }) {
     const type = toT.symbol.toLowerCase();
+    console.log(toT.symbol.toLowerCase());
     return axios
       .post(`${HOST_URL}`, {
         id: uuidv4(),
@@ -64,6 +65,7 @@ class Changelly {
         }
       })
       .then(response => {
+        console.log(response);
         return response.data.result.result;
       })
       .catch(err => {
