@@ -26,8 +26,7 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
-  'eslint',
-  'apollo-link-rest'
+  'eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

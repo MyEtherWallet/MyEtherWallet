@@ -308,7 +308,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 200000;
 
 export default {
   name: 'ModuleSwap',
@@ -1048,7 +1048,10 @@ export default {
       if (
         this.tokenInValue !== '' &&
         this.tokenInValue > 0 &&
-        this.enableTokenSwitch
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
       ) {
         this.isLoadingProviders = true;
         this.showAnimation = true;
@@ -1109,21 +1112,16 @@ export default {
         )
       });
       if (trade instanceof Promise) {
-        trade
-          .then(tradeResponse => {
-            this.allTrades[idx] = tradeResponse;
-            this.setupTrade(tradeResponse);
-          })
-          .catch(e => {
-            if (e) {
-              this.feeError = 'This provider is not available.';
-            }
-          });
+        trade.then(tradeResponse => {
+          this.allTrades[idx] = tradeResponse;
+          this.setupTrade(tradeResponse);
+        });
       }
     }, 500),
     setupTrade(trade) {
-      if (trade instanceof Error) {
+      if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
+        this.loadingFee = false;
         return;
       }
       this.currentTrade = trade;

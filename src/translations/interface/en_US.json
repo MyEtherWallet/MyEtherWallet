@@ -1,56 +1,15 @@
 {
-  "network-modal": {
-    "custom": "Custom Networks",
-    "add-custom": "Add Custom Network/Node",
-    "http-access": "HTTP Basic Access Authentication",
-    "warning": "Warning: This information will be saved to your local storage, make sure your computer is secure.",
-    "dont-know": "Don't know what it is?",
-    "eth-node": "ETH Node Name",
-    "user-name": "User Name",
-    "port": "Port",
-    "button-change": "Change",
-    "popup-open-networks": "Open Networks",
-    "last-block": "Last block"
+  "header": {
+    "desc":"Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
+    "read": "Read..."
   },
-  "check-balance": {
-    "string": "Check Balance",
-    "equivalent": "Equivalent Values",
-    "total-balance": "Total Balance",
-    "refresh": "Refresh Balance"
-  },
-  "addr": {
-    "button-switch": "Switch",
-    "copied-private-key": "Successfully copied Private Key!"
-  },
-  "tokens": {
-    "custom": "Custom Tokens",
-    "warning-offline": "Can't load balances in offline mode",
-    "no-tokens": "No tokens found :(",
-    "modal": {
-      "title": "Add Custom Tokens",
-      "ph-contract-addr": "Token Contract Address",
-      "ph-symbol": "Token Symbol",
-      "ph-decimals": "Decimals",
-      "error": {
-        "decimals": "Invalid Decimal. Decimal can only be between 0 and 18.",
-        "addr": "Invalid address given."
-      }
-    },
-    "token-added-success": "Successfully added token!"
-  },
-  "ads": {
-    "buy-with-credit": "Buy ETH with Credit Card",
-    "ios": "Available for iOS",
-    "android": "and Android",
-    "twitter": "Follow us on Twitter",
-    "new": "new",
-    "mew-wallet": "MEW wallet {new} {officially-released}",
-    "officially-released": "Officially Released"
+  "qr": {
+    "title": "My public address to receive funds",
+    "desc": "To receive ETH from another account, send ETH from that account to this address.",
+    "my-main-account": "My Main Account"
   },
   "menu": {
-    "string": "Menu",
     "dashboard": "Dashboard",
-    "send": "Send",
     "nft": "NFT Manager",
     "contract": "Contract",
     "interact-contract": "Interact with Contract",
@@ -59,81 +18,34 @@
     "sign-message": "Sign Message",
     "verify-message": "Verify Message",
     "dapps": "DApps",
-    "dapps-center": "DApps Center",
-    "tools": "Tools",
     "logout": "Are you sure you want to log out?"
   },
-  "actions": "Actions",
-  "view-all": "View All",
-  "settings": "Settings",
-  "logout": "Log Out",
-  "logout-wallet": "Log Out of Wallet",
-  "logout-warning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
-  "oops": "Oops!",
-  "language": "Language",
-  "change-addr": "Change Address",
-  "created-contract": "Created Contract Address",
-  "go-back": "Go back",
-  "tx-history": "Transaction History",
-  "investigate": "Use the transaction hash to investigate why this transaction failed.",
-  "contract-creation": "Contract Creation",
-  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect / MEW wallet, please reconnect using the App.",
-  "config": {
-    "tx-speed": "Transaction Speed",
-    "import": "Import Configuration",
-    "import-desc": "Please click the button below to open and import you configuration file from your local computer.",
-    "import-success": "Imported file successfully!",
-    "export-short": "Export",
-    "import-short": "Import",
-    "export": "Export Configurations",
-    "export-desc": "Please click the button below to download your configuration file into your local computer.",
-    "upload-f": "Upload File...",
-    "add-contact": "Add Contact"
-  },
-  "no-avail": "This function is not available.",
-  "dashboard-swap": "MEW has partnered with DEX.AG, Changelly, Bity, and Simplex to offer competitive rates for all ETH and token swaps, as well as ETH <-> Fiat and ETH <-> BTC",
-  "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
-  "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
     "edit": "Edit",
-    "add": "Add",
     "title": "Manage Contact Addresses",
     "add-up-to": "You can add up to 10 contact addresses.",
     "nickname": "Nickname",
     "enter-addr": "Enter an address",
     "enter-nickname": "Enter a nickname",
-    "remove-addr": "Remove Address",
     "add-addr": "Add a contact address",
-    "successfully-added": "Successfully added to the address book",
-    "add-new": "Add a New Contact",
-    "edit-addr": "Edit Address",
     "address": "Address",
     "update": "Update",
-    "success-update": "Successfully updated",
-    "save-addr": "Save Address",
     "validations": {
-      "invalid-name": "This is an invalid name",
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",
       "already-exists": "This address already exists in the contact book",
       "addr-required": "Address is required"
     }
   },
-  "web3-not-found": "Web3 Instance not found!",
-  "import-error": "Something went wrong while importing file, please make sure it is a valid file",
-  "account-content": {
-    "header": "MY ADDRESS ICON",
-    "subheader": "Always look for this icon when sending to this wallet",
-    "paper": "Paper Wallet",
-    "link2": "https://www.myetherwallet.com",
-    "my-priv": "MY PRIVATE KEY",
-    "warning": "Please Keep Your Paper Wallet at a {safe} Place! {extend}",
-    "dont-share-priv-key": "Please {doNot} Share Your Private Key With Anyone!",
-    "safe": "SAFE",
-    "do-not": "DO NOT"
+  "gas": {
+    "desc": "Please select a default gas price for your transaction fee",
+    "change-gas": "To change the custom gas price, go to",
+    "global-setting": "global settings"
   },
-  "select-item": "Select an item",
-  "economy": "Economy",
-  "regular": "Regular",
-  "fast": "Fast"
+  "import": {
+    "desc": "Please upload the file and click the button to open and import your configuration file from your local computer."
+  },
+  "export": {
+    "desc": "Export your configuration file and save it on your local computer for later use."
+  }
 }
