@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="textLight--text mb-5">
+    <div class="textMedium--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
       network traffic. MEW does not profit from this fee.
     </div>
@@ -274,7 +274,7 @@ export default {
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid #eaedf7;
+  border: 1px solid var(--v-greyLight-base);
   &#disabled {
     filter: grayscale(1);
     opacity: 0.25 !important;

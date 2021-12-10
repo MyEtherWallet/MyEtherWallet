@@ -44,7 +44,14 @@
         cols="12"
         offset-lg="1"
         lg="7"
-        class="d-flex align-center mx-auto justify-lg-start flex-column flex-lg-row flex-md-row justify-center"
+        class="
+          d-flex
+          align-center
+          mx-auto
+          justify-lg-start
+          flex-column flex-lg-row flex-md-row
+          justify-center
+        "
       >
         <div
           :class="[

@@ -82,6 +82,7 @@
         <div class="d-flex align-center justify-space-between flex-wrap mb-2">
           <div class="d-flex align-center flex-wrap flex-grow-1">
             <v-btn
+              color="greyLight"
               depressed
               class="text-transform--initial"
               @click="openGasPriceModal"
@@ -121,8 +122,8 @@
           </div>
           <div v-if="fromEth">
             <div class="py-2 ml-2 text-right">
-              <div>
-                <span class="mr-2">Total:</span>
+              <div class="textMedium--text">
+                <span class="mr-2 textMedium--text">Total:</span>
                 {{ actualCostFormatted }} {{ network.type.currencyName }}
               </div>
             </div>

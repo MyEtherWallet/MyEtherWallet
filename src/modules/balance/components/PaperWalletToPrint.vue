@@ -84,7 +84,12 @@
             KEEP YOUR PRIVATE KEY IN SAFE PLACE!
           </div>
           <div
-            class="mew-heading-3 mew-address font-weight-bold word-break--break-all mt-4"
+            class="
+              mew-heading-3 mew-address
+              font-weight-bold
+              word-break--break-all
+              mt-4
+            "
           >
             {{ key }}
           </div>

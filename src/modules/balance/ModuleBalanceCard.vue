@@ -18,11 +18,21 @@
           <v-menu offset-y>
             <template #activator="{ on }">
               <div
-                class="d-flex align-center cursor--pointer personal-account-container"
+                class="
+                  d-flex
+                  align-center
+                  cursor--pointer
+                  personal-account-container
+                "
                 v-on="on"
               >
                 <div
-                  class="info-container--text font-weight-bold text-uppercase white--text"
+                  class="
+                    info-container--text
+                    font-weight-bold
+                    text-uppercase
+                    white--text
+                  "
                 >
                   MY Personal Account
                 </div>
@@ -75,7 +85,13 @@
             <v-tooltip top content-class="tooltip-inner">
               <template #activator="{ on }">
                 <div
-                  class="justify-start d-flex align-center info-container--addr monospace"
+                  class="
+                    justify-start
+                    d-flex
+                    align-center
+                    info-container--addr
+                    monospace
+                  "
                   v-on="on"
                 >
                   {{ addrFirstSix }}
