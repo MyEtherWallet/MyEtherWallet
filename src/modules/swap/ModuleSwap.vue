@@ -371,6 +371,8 @@ export default {
       selectedProvider: {},
       refundAddress: '',
       isValidRefundAddr: false,
+      userToAddress: '',
+      isValidToAddr: false,
       localGasPrice: '0'
     };
   },
@@ -764,16 +766,9 @@ export default {
       return '0';
     },
     toAddress() {
-      const address = !isEmpty(this.addressValue)
-        ? this.addressValue.value
-        : this.address;
-      if (!this.fromTokenType?.isEth) return address;
+      if (!this.toTokenType?.isEth) return this.userToAddress;
       if (this.toTokenType?.isEth) return this.address;
       return this.address;
-    },
-    isToAddressValid() {
-      if (this.toTokenType?.isEth) return true;
-      return !isEmpty(this.addressValue) ? this.addressValue.isValid : false;
     },
     /**
      * Checks whether or not the user has a minimum eth balance to swap:
@@ -1100,11 +1095,8 @@ export default {
       }, 500);
     },
     setToAddress(value, isValid) {
-      this.addressValue = {
-        value,
-        isValid
-      };
-      if (isValid) this.setTokenInValue(this.tokenInValue);
+      this.userToAddress = value;
+      this.isValidToAddr = isValid;
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1155,12 +1147,7 @@ export default {
       }
       if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
         return;
-      if (
-        this.showToAddress &&
-        isEmpty(this.addressValue) &&
-        !this.isToAddressValid
-      )
-        return;
+      if (this.showToAddress && !this.isValidToAddr) return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1219,7 +1206,7 @@ export default {
       });
     },
     getTrade: debounce(function (idx) {
-      if (!this.isToAddressValid || !this.availableQuotes[idx]) return;
+      if (!this.isValidToAddr || !this.availableQuotes[idx]) return;
       if (this.isFromNonChain && !this.isValidRefundAddr) return;
       this.step = 1;
       this.feeError = '';
