@@ -70,8 +70,8 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { isEmpty } from 'underscore';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 export default {

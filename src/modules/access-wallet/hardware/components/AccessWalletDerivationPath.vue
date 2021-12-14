@@ -156,7 +156,7 @@ import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathH
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
-    paths: {
+    passedPaths: {
       type: Array,
       default: () => []
     },
@@ -180,12 +180,12 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /**
      * Custom filtered paths based on search
      */
     filteredCustomPaths() {
-      return this.customPaths.filter(path => {
+      return this.paths.filter(path => {
         if (this.searchValue) {
           return (
             path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
@@ -199,7 +199,7 @@ export default {
      * Filtered paths based on search
      */
     filteredPaths() {
-      return this.paths.filter(path => {
+      return this.passedPaths.filter(path => {
         if (this.searchValue) {
           return (
             path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||

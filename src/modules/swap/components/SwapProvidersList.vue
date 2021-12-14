@@ -52,22 +52,11 @@
                       =====================================================================================
                       -->
                       <div
-                        class="
-                          d-block d-sm-flex
-                          mx-2 mx-sm-4
-                          align-center
-                          justify-start
-                        "
+                        class="d-block d-sm-flex mx-2 mx-sm-4 align-center justify-start"
                       >
                         <div
                           v-if="bestRate !== null && bestRate === quote.rate"
-                          class="
-                            primary--text
-                            font-weight-medium
-                            mew-label
-                            order-sm-12
-                            pl-sm-2
-                          "
+                          class="primary--text font-weight-medium mew-label order-sm-12 pl-sm-2"
                         >
                           Best Rate
                         </div>
@@ -78,7 +67,7 @@
                             {{ quote.amount }} {{ toTokenSymbol }}
                           </div>
                           <mew-tooltip
-                            v-if="quote.tooltip && quote.tooltip !== ''"
+                            v-if="quote.amount && quote.amount !== ''"
                             class="pl-1"
                             :text="quote.tooltip"
                           />
@@ -136,7 +125,7 @@
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import _ from 'underscore';
+import { isArray } from 'lodash';
 const MAX_PROVIDERS = 3;
 export default {
   name: 'SwapProvidersList',
@@ -217,10 +206,11 @@ export default {
             : this.availableQuotes.filter(item => !!item);
         const returnedList = list.map(quote => {
           const formatted = formatFloatingPointValue(quote.rate * 100);
+          const formattedAmt = formatFloatingPointValue(quote.amount);
           return {
             rate: formatted.value,
-            amount: formatFloatingPointValue(quote.amount).value,
-            tooltip: `${formatted.tooltipText} ${this.toTokenSymbol}`
+            amount: formattedAmt.value,
+            tooltip: `${formattedAmt.tooltipText} ${this.toTokenSymbol}`
           };
         });
         if (returnedList) return returnedList;
@@ -255,7 +245,7 @@ export default {
   watch: {
     providersList: {
       handler: function (newVal, oldVal) {
-        const hasOldVal = !oldVal || (_.isArray(oldVal) && oldVal.length === 0);
+        const hasOldVal = !oldVal || (isArray(oldVal) && oldVal.length === 0);
         if (newVal.length > 0 && hasOldVal && !this.hasProviderError) {
           const bestRate = newVal.findIndex(item => {
             return item.rate === this.bestRate;

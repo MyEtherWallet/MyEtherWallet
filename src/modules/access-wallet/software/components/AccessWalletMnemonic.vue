@@ -76,12 +76,14 @@
               :idx-to-expand="null"
             >
               <template #panelBody1>
-                <mew-input
-                  v-model="extraWord"
-                  type="password"
-                  label="Enter Extra word"
-                  placeholder="Enter your extra word"
-                />
+                <div class="px-5">
+                  <mew-input
+                    v-model="extraWord"
+                    type="password"
+                    label="Enter Extra word"
+                    placeholder="Enter your extra word"
+                  />
+                </div>
               </template>
             </mew-expand-panel>
             <!--
@@ -134,6 +136,7 @@
         :handler-wallet="walletInstance"
         :selected-path="selectedPath"
         :paths="parsedPaths"
+        :hide-networks="switchAddress"
         @setPath="setPath"
         @unlock="accessWallet"
       />
@@ -145,7 +148,7 @@
 import phraseBlock from '@/components/PhraseBlock';
 import { mapActions, mapState } from 'vuex';
 import { Toast, ERROR, SENTRY } from '@/modules/toast/handler/handlerToast';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'lodash';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import paths from '@/modules/access-wallet/hardware/handlers/bip44';
@@ -161,6 +164,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    switchAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -201,7 +208,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /*------------------------------------
      * STEP 1 ITEMS
     -------------------------------------*/
@@ -212,7 +219,7 @@ export default {
       return [
         {
           name: 'Do you have an extra word?',
-          subtext: 'Add your word'
+          toggleTitle: 'Add your word'
         }
       ];
     },
@@ -251,14 +258,14 @@ export default {
           newObj['value'] = item['path'];
           return newObj;
         })
-        .concat(this.customPaths);
+        .concat(this.paths);
     }
   },
   watch: {
     phrase: {
       deep: true,
       handler: function (newval) {
-        if (newval && !_.isEmpty(newval)) {
+        if (newval && !isEmpty(newval)) {
           const splitVal = newval[1].split(' ');
           if (splitVal.length === 12 || splitVal.length === 24) {
             this.length = splitVal.length;
@@ -272,10 +279,11 @@ export default {
       }
     },
     selectedPath: {
-      deep: true,
       handler: function () {
+        this.walletInstance = {};
         this.nextStepTwo();
-      }
+      },
+      deep: true
     }
   },
   methods: {
@@ -319,6 +327,23 @@ export default {
       this.length = 12;
     },
     /**
+     * reset component
+     */
+    reset() {
+      this.step = 1;
+      /*Phrase Items: */
+      this.extraWord = '';
+      this.phrase = {};
+      this.length = 12;
+      /* Derivation Path */
+      this.selectedPath = {
+        name: 'Ethereum',
+        subtext: "m/44'/60'/0'/0",
+        value: "m/44'/60'/0'/0"
+      };
+      this.walletInstance = {};
+    },
+    /**
      * Methods emits parent to unlock wallet
      * and passes account withinMnemonic Phrase
      * Used in STEP 2
@@ -326,6 +351,7 @@ export default {
     accessWallet(account) {
       if (account) {
         this.$emit('unlock', account);
+        this.reset();
       } else {
         Toast('Something went wrong in mnemonic wallet access', {}, SENTRY);
       }

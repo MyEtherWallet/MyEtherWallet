@@ -1,6 +1,6 @@
 import { mapState, mapGetters } from 'vuex';
+import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { isEmpty } from 'underscore';
 
 const handlerAaveOverlay = {
   props: {

@@ -4,6 +4,7 @@ import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 
 import Vuetify, {
+  VAlert,
   VApp,
   VBtn,
   VBtnToggle,
@@ -80,11 +81,12 @@ import Vuetify, {
   VSkeletonLoader,
   VChip,
   VSystemBar,
-  VAlert
+  VSnackbar
 } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
   components: {
+    VAlert,
     VApp,
     VBtn,
     VBtnToggle,
@@ -161,7 +163,7 @@ Vue.use(Vuetify, {
     VSkeletonLoader,
     VChip,
     VSystemBar,
-    VAlert
+    VSnackbar
   }
 });
 

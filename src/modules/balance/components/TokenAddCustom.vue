@@ -103,13 +103,7 @@
             />
             <div
               v-if="isIcon(tkn.name) && !tkn.value"
-              class="
-                token-placeholder
-                mew-caption
-                d-flex
-                align-center
-                justify-center
-              "
+              class="token-placeholder mew-caption d-flex align-center justify-center"
             >
               NA
             </div>
@@ -153,7 +147,7 @@ import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
-import _ from 'underscore';
+import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -236,7 +230,7 @@ export default {
      * will throw toast error if so
      * also will set error messages if value lengths are too long
      */
-    setInputValue: _.debounce(function (value, idx) {
+    setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
         if (value && value.length > 6) {
           this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';
@@ -415,6 +409,8 @@ export default {
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
+        this.token.decimals = decimals;
+        this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;
         this.step = 2;

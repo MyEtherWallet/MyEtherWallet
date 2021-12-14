@@ -41,13 +41,6 @@ const setImportedState = function ({ commit }, stateObj) {
   stateObj['localStore'] = true;
   commit('SET_IMPORTED_STATE', stateObj);
 };
-const addCustomPath = function ({ commit }, val) {
-  commit('ADD_CUSTOM_PATH', val);
-};
-
-const deleteCustomPath = function ({ commit }, val) {
-  commit('DELETE_CUSTOM_PATH', val);
-};
 const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
   commit('SET_MAX_PRIORITY_FEE_PER_GAS', valBN);
 };
@@ -56,9 +49,17 @@ const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
 
+const setShowSurvey = function ({ commit }, val) {
+  commit('SET_SHOW_SURVEY', val);
+};
+
 const setTrackingConsent = function ({ commit, dispatch }, val) {
   commit('SET_TRACKING_CONSENT', val);
   dispatch('setTracking');
+};
+
+const neverShowPromo = function ({ commit }) {
+  commit('NEVER_SHOW_WALLET_PROMO');
 };
 
 const setTracking = function ({ state }) {
@@ -92,10 +93,10 @@ export default {
   setGasPriceType,
   setImportedState,
   addLocalContract,
-  addCustomPath,
-  deleteCustomPath,
   setMaxPriorityFeePerGas,
   setBaseFeePerGas,
+  setShowSurvey,
   setTrackingConsent,
-  setTracking
+  setTracking,
+  neverShowPromo
 };

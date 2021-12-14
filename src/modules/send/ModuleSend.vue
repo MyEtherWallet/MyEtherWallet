@@ -45,7 +45,7 @@
               :error-messages="amountErrorMessage"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: false,
+                disabled: disableSwapBtn,
                 method: setEntireBal
               }"
               :buy-more-str="buyMore"
@@ -100,53 +100,54 @@
         <v-col cols="12" class="py-4">
           <mew-expand-panel
             ref="expandPanel"
-            is-toggle
-            has-dividers
             :panel-items="expandPanel"
+            :idx-to-expand="[]"
             @toggled="closeToggle"
           >
             <template #panelBody1>
-              <!-- Warning Sheet -->
-              <div
-                class="pa-5 warning textBlack2--text border-radius--5px mb-8"
-              >
-                <div class="d-flex font-weight-bold mb-2">
-                  <v-icon class="textBlack2--text mew-body mr-1">
-                    mdi-alert-outline</v-icon
-                  >For advanced users only
-                </div>
-                <div>
-                  Please don’t edit these fields unless you are an expert user &
-                  know what you’re doing. Entering the wrong information could
-                  result in your transaction failing or getting stuck.
-                </div>
-              </div>
-              <div class="d-flex align-center justify-end pb-3">
+              <div class="px-5">
+                <!-- Warning Sheet -->
                 <div
-                  class="mew-body primary--text cursor--pointer"
-                  @click="setGasLimit(defaultGasLimit)"
+                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
                 >
-                  Reset to default: {{ formattedDefaultGasLimit }}
+                  <div class="d-flex font-weight-bold mb-2">
+                    <v-icon class="textBlack2--text mew-body mr-1">
+                      mdi-alert-outline</v-icon
+                    >For advanced users only
+                  </div>
+                  <div>
+                    Please don’t edit these fields unless you are an expert user
+                    & know what you’re doing. Entering the wrong information
+                    could result in your transaction failing or getting stuck.
+                  </div>
                 </div>
+                <div class="d-flex align-center justify-end pb-3">
+                  <div
+                    class="mew-body primary--text cursor--pointer"
+                    @click="setGasLimit(defaultGasLimit)"
+                  >
+                    Reset to default: {{ formattedDefaultGasLimit }}
+                  </div>
+                </div>
+
+                <mew-input
+                  :value="gasLimit"
+                  :label="$t('common.gas.limit')"
+                  placeholder=""
+                  :error-messages="gasLimitError"
+                  type="number"
+                  @input="setGasLimit"
+                />
+
+                <mew-input
+                  v-show="!isToken"
+                  v-model="data"
+                  :label="$t('sendTx.add-data')"
+                  placeholder="0x..."
+                  :rules="dataRules"
+                  class="mb-8"
+                />
               </div>
-
-              <mew-input
-                :value="gasLimit"
-                :label="$t('common.gas.limit')"
-                placeholder=""
-                :error-messages="gasLimitError"
-                type="number"
-                @input="setGasLimit"
-              />
-
-              <mew-input
-                v-show="!isToken"
-                v-model="data"
-                :label="$t('sendTx.add-data')"
-                placeholder="0x..."
-                :rules="dataRules"
-                class="mb-8"
-              />
             </template>
           </mew-expand-panel>
         </v-col>
@@ -178,7 +179,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'underscore';
+import { debounce, isEmpty } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -228,7 +229,7 @@ export default {
       expandPanel: [
         {
           name: this.$t('common.advanced'),
-          subtext: 'Gas Limit & Data'
+          toggleTitle: 'Gas Limit & Data'
         }
       ],
       defaultGasLimit: '21000',
@@ -251,6 +252,7 @@ export default {
       'gasPriceByType'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('custom', ['hasCustom', 'customTokens']),
     isFromNetworkCurrency() {
       return this.selectedCurrency?.symbol === this.currencyName;
     },
@@ -272,9 +274,9 @@ export default {
     hasEnoughEth() {
       // Check whether user has enough eth to cover tx fee + amount to send
       if (this.selectedCurrency?.contract === MAIN_TOKEN_ADDRESS) {
-        return BigNumber(this.balanceInETH)
-          .minus(this.txFeeETH)
-          .gte(this.amount);
+        return BigNumber(this.amount)
+          .plus(this.txFeeETH)
+          .lte(this.balanceInETH);
       }
       // Check whether user has enough eth to cover tx fee + user has enough token balance for the amount to send
       return BigNumber(this.balanceInETH).gte(this.txFeeETH);
@@ -333,7 +335,7 @@ export default {
             link: this.isEthNetwork ? this.swapLink : ''
           })
         : null;
-      return [
+      const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 5),
@@ -346,6 +348,15 @@ export default {
         },
         ...tokensList
       ];
+      if (this.hasCustom) {
+        return returnedArray.concat([
+          {
+            header: 'Custom Tokens'
+          },
+          ...this.customTokens
+        ]);
+      }
+      return returnedArray;
     },
     /* Property returns either gas estimmation error or amount error*/
     amountErrorMessage() {
@@ -428,7 +439,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return toBN(this.actualGasPrice).mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -457,19 +468,26 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (BigNumber(this.localGasPrice).eq(0)) {
-        return BigNumber(this.gasPrice);
+      if (toBN(this.localGasPrice).eqn(0)) {
+        return toBN(this.gasPrice);
       }
-      return BigNumber(this.localGasPrice);
+      return toBN(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
+    },
+    disableSwapBtn() {
+      if (!isEmpty(this.sendTx) && !isEmpty(this.selectedCurrency)) {
+        return !this.sendTx.hasEnoughBalance();
+      }
+      return true;
     }
   },
   watch: {
     multiwatch() {
-      this.gasEstimationIsReady = false;
-      this.debounceEstimateGas(this.allValidInputs);
+      if (this.allValidInputs) {
+        this.debounceEstimateGas();
+      }
     },
 
     isPrefilled() {
@@ -504,6 +522,7 @@ export default {
         if (this.sendTx) {
           this.sendTx.setCurrency(newVal);
           this.setAmountError(this.amount);
+          this.gasLimit = this.defaultGasLimit;
         }
         this.data = '0x';
       },
@@ -538,8 +557,8 @@ export default {
     this.debounceAmountError = debounce(value => {
       this.setAmountError(value);
     }, 1000);
-    this.debounceEstimateGas = debounce(allValidInputs => {
-      if (allValidInputs) {
+    this.debounceEstimateGas = debounce(() => {
+      if (this.allValidInputs) {
         this.estimateAndSetGas();
       }
     }, 500);
@@ -638,11 +657,12 @@ export default {
       this.sendTx = new SendTransaction(this.$store);
     },
     estimateAndSetGas() {
+      this.gasEstimationIsReady = false;
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.defaultGasLimit = toBN(res).toString();
           this.gasLimit = toBN(res).toString();
+          this.defaultGasLimit = toBN(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -713,11 +733,11 @@ export default {
     },
     setCurrency(value) {
       this.selectedCurrency = value;
+      this.amount = '0';
     },
     handleLocalGasPrice(e) {
       this.localGasPrice = e;
-      this.sendTx.setLocalGasPrice(this.actualGasPrice);
-      this.amount = 0;
+      this.sendTx.setLocalGasPrice(e);
     }
   }
 };

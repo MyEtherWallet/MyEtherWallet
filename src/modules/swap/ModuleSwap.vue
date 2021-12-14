@@ -48,7 +48,7 @@
                   "
                   :max-btn-obj="{
                     title: 'Max',
-                    disabled: false,
+                    disabled: disableSwapBtn,
                     method: setMaxAmount
                   }"
                   @input="setTokenInValue"
@@ -290,7 +290,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce } from 'underscore';
+import { isEmpty, clone, isUndefined, debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -684,10 +684,7 @@ export default {
     notEnoughEth() {
       try {
         const balanceAfterFees = toBN(this.balance).sub(toBN(this.totalCost));
-        const isNotEnoughEth = !this.isFromTokenMain
-          ? balanceAfterFees.sub(toBN(toWei(this.tokenInValue))).isNeg()
-          : balanceAfterFees.isNeg();
-        return isNotEnoughEth;
+        return balanceAfterFees.isNeg();
       } catch (e) {
         return true;
       }
@@ -695,6 +692,9 @@ export default {
     showToAddress() {
       if (typeof this.toTokenType?.isEth === 'undefined') return false;
       return !this.toTokenType?.isEth;
+    },
+    disableSwapBtn() {
+      return this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow;
     },
     /**
      * @returns BigNumber of the available balance for the From Token
@@ -838,7 +838,6 @@ export default {
     ...mapActions('swap', ['setSwapTokens']),
     setupSwap() {
       this.isLoading = !this.prefetched;
-      this.localGasPrice = this.gasPrice;
       this.swapper = new Swapper(this.web3, this.network.type.name);
       if (!this.prefetched) {
         this.swapper
@@ -871,11 +870,11 @@ export default {
         txFee: ''
       };
 
-      this.toTokenswapper = null;
-      this.toTokentoTokenType = {};
-      this.toTokenfromTokenType = {};
-      this.toTokentokenInValue = '0';
-      this.toTokentokenOutValue = '0';
+      this.swapper = null;
+      this.toTokenType = {};
+      this.fromTokenType = {};
+      this.tokenInValue = '0';
+      this.tokenOutValue = '0';
       this.availableTokens = { toTokens: [], fromTokens: [] };
       this.availableQuotes = [];
       this.currentTrade = null;
@@ -1094,27 +1093,29 @@ export default {
       this.feeError = '';
       this.loadingFee = true;
       if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
-      this.swapper
-        .getTrade({
-          fromAddress: this.address,
-          toAddress: this.toAddress,
-          provider: this.availableQuotes[idx].provider,
-          fromT: this.fromTokenType,
-          toT: this.toTokenType,
-          quote: this.availableQuotes[idx],
-          fromAmount: new BigNumber(this.tokenInValue).times(
-            new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
-          )
-        })
-        .then(trade => {
-          this.allTrades[idx] = trade;
-          this.setupTrade(trade);
-        })
-        .catch(e => {
-          if (e) {
-            this.feeError = 'This provider is not available.';
-          }
-        });
+      const trade = this.swapper.getTrade({
+        fromAddress: this.address,
+        toAddress: this.toAddress,
+        provider: this.availableQuotes[idx].provider,
+        fromT: this.fromTokenType,
+        toT: this.toTokenType,
+        quote: this.availableQuotes[idx],
+        fromAmount: new BigNumber(this.tokenInValue).times(
+          new BigNumber(10).pow(new BigNumber(this.fromTokenType.decimals))
+        )
+      });
+      if (trade instanceof Promise) {
+        trade
+          .then(tradeResponse => {
+            this.allTrades[idx] = tradeResponse;
+            this.setupTrade(tradeResponse);
+          })
+          .catch(e => {
+            if (e) {
+              this.feeError = 'This provider is not available.';
+            }
+          });
+      }
     }, 500),
     setupTrade(trade) {
       if (trade instanceof Error) {
@@ -1140,7 +1141,11 @@ export default {
         toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
           .times(this.tokenOutValue)
           .toFixed(),
-        fromUsdVal: this.fromTokenType.price,
+        fromUsdVal: BigNumber(
+          this.fromTokenType.price ? this.fromTokenType.price : 0
+        )
+          .times(this.tokenInValue)
+          .toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
         txFee: this.txFee,
@@ -1166,6 +1171,13 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          if (err && err.statusObj?.hashes?.length > 0) {
+            err.statusObj.hashes.forEach(item => {
+              Toast(item.message, {}, ERROR);
+            });
+            this.clear();
+            return;
+          }
           this.clear();
           Toast(err.message, {}, ERROR);
         });

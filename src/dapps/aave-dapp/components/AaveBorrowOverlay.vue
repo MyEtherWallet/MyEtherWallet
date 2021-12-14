@@ -75,12 +75,12 @@ import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_HEADER } from '../handlers/helpers';
 import { mapState } from 'vuex';
-import { isEmpty } from 'underscore';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import { isEmpty } from 'lodash';
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
