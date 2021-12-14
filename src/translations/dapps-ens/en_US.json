@@ -148,5 +148,9 @@
     "controller": "Controller",
     "what-to-do": "What do you want to do with this domain?"
   },
-  "buy-domain": "Buy Domain"
+  "buy-domain": "Buy Domain",
+  "claim-tokens": "Claim Tokens",
+  "claim-token-title": "Claim",
+  "claim-token-desc": "Claim your ENS tokens",
+  "delegator": "Delegator Address"
 }

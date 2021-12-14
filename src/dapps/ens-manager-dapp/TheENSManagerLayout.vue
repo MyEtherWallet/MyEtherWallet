@@ -194,6 +194,44 @@
           </mew-expand-panel>
         </v-sheet>
       </template>
+      <template #tabContent3>
+        <v-sheet
+          min-height="500px"
+          max-width="700px"
+          color="transparent"
+          class="py-15 mx-auto"
+        >
+          <div class="d-flex align-center justify-space-between mb-7">
+            <span class="mew-heading-2 font-weight-bold">
+              {{ $t('ens.claim-token-desc') }}
+            </span>
+          </div>
+          <form @submit.prevent="claimTokens">
+            <v-row class="mx-0">
+              <v-col class="pr-0" cols="12">
+                <mew-input
+                  :value="delegatorAddress"
+                  :has-clear-btn="true"
+                  :label="$t('ens.delegator')"
+                  class="mr-3 flex-grow-1"
+                  :error-messages="delegatorErrors"
+                  @input="setDelegatorAddress"
+                />
+              </v-col>
+              <v-col class="pr-0" cols="4">
+                <mew-button
+                  :loading="loading"
+                  :disabled="isClaimDisabled"
+                  :has-full-width="true"
+                  btn-size="xlarge"
+                  :title="$t('ens.claim-token-title')"
+                  @click.native="claimTokens"
+                />
+              </v-col>
+            </v-row>
+          </form>
+        </v-sheet>
+      </template>
     </the-wrapper-dapp>
     <!--
     =====================================================================================
@@ -256,6 +294,7 @@ import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import normalise from '@/core/helpers/normalise';
+import { isAddress } from '@/core/helpers/addressUtils';
 export default {
   name: 'ENSManagerLayout',
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
@@ -303,14 +342,16 @@ export default {
       ],
       tabs: [
         { name: this.$t('ens.register-domain') },
-        { name: this.$t('ens.manage-domain') }
+        { name: this.$t('ens.manage-domain') },
+        { name: this.$t('ens.claim-tokens') }
       ],
       myDomains: [],
       ensBannerImg: ensBannerImg,
       bannerText: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
-      }
+      },
+      delegatorAddress: ''
     };
   },
   computed: {
@@ -320,6 +361,15 @@ export default {
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
       return this.searchError;
+    },
+    delegatorErrors() {
+      if (this.delegatorAddress && !isAddress(this.delegatorAddress)) {
+        return 'Invalid address!';
+      }
+      return '';
+    },
+    isClaimDisabled() {
+      return this.delegatorErrors === '' || this.delegatorAddress === '';
     },
     rules() {
       return [
@@ -384,6 +434,10 @@ export default {
     this.getDomains();
   },
   methods: {
+    claimTokens() {},
+    setDelegatorAddress(address) {
+      this.delegatorAddress = address;
+    },
     buyDomain() {
       this.activeTab = 0;
     },
