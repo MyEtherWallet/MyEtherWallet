@@ -208,17 +208,23 @@
           </div>
           <form @submit.prevent="claimTokens">
             <v-row class="mx-0">
-              <v-col class="pr-0" cols="12">
-                <mew-input
+              <v-col class="pr-0" cols="8">
+                <!-- <mew-input
                   :value="delegatorAddress"
                   :has-clear-btn="true"
                   :label="$t('ens.delegator')"
                   class="mr-3 flex-grow-1"
                   :error-messages="delegatorErrors"
                   @input="setDelegatorAddress"
+                /> -->
+                <module-address-book
+                  class="mr-3 flex-grow-1"
+                  :label="$t('ens.delegator')"
+                  :is-valid-address-func="isValidDelegatorAddress"
+                  @setAddress="setDelegatorAddress"
                 />
               </v-col>
-              <v-col class="pr-0" cols="4">
+              <v-col class="pl-0" cols="4">
                 <mew-button
                   :loading="loading"
                   :disabled="isClaimDisabled"
@@ -295,9 +301,15 @@ import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 export default {
   name: 'ENSManagerLayout',
-  components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
+  components: {
+    ModuleRegisterDomain,
+    ModuleManageDomain,
+    TheWrapperDapp,
+    ModuleAddressBook
+  },
   data() {
     return {
       activeTab: 0,
@@ -437,6 +449,9 @@ export default {
     claimTokens() {},
     setDelegatorAddress(address) {
       this.delegatorAddress = address;
+    },
+    isValidDelegatorAddress(address) {
+      return isAddress(address);
     },
     buyDomain() {
       this.activeTab = 0;
