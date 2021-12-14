@@ -353,8 +353,7 @@ export default {
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' },
-          { label: 'Convert Units', routerLink: 'ConvertUnits' }
+          { label: 'Submit DApp', routerLink: 'DappSubmission' }
         ]
       },
       {
@@ -369,6 +368,11 @@ export default {
             label: 'Verify message',
             routerLink: 'Tools',
             query: { tool: 'verify' }
+          },
+          {
+            label: 'Convert units',
+            routerLink: 'Tools',
+            query: { tool: 'convert' }
           }
           /*
           ,
