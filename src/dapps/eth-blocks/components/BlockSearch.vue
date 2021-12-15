@@ -6,6 +6,7 @@
     ===================================================
     -->
     <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
+    <date-selector-popup :show-popup="showDate" />
     <!--
     ===================================================
       Search Field
@@ -16,6 +17,8 @@
       placeholder="Enter a block number"
       :value="searchBlock"
       :on-search="search"
+      can-search-date
+      :on-date-search="showDatePopup"
       :error-messages="searchErrorMessage"
       type="number"
       @input="setBlock"
@@ -29,13 +32,17 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { validBlockNumber } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
+import DateSelectorPopup from './DateSelectorPopup.vue';
 
 export default {
   name: 'ModuleEthBlocksMint',
-
+  components: {
+    DateSelectorPopup
+  },
   data() {
     return {
-      searchBlock: ''
+      searchBlock: '',
+      showDate: false
     };
   },
   computed: {
@@ -92,6 +99,10 @@ export default {
           Toast(e, {}, ERROR);
         }
       }
+    },
+    showDatePopup() {
+      console.log('huh?');
+      this.showDate = true;
     },
     /**
      * Setts serach Block, invoked by MewSearch component

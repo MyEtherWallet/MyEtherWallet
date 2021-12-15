@@ -1,4 +1,5 @@
 import { validBlockNumber } from './handlers/helpers/common';
+import moment from 'moment';
 
 const ETH_BLOCKS_ROUTE = {
   CORE: {
@@ -21,7 +22,13 @@ const ETH_BLOCKS_ROUTE = {
  *  - Checks if router FROM was my-blocks and sets  prop hasSearch to false
  */
 const blockGuard = (to, from, next) => {
-  if (validBlockNumber(to.params.blockRef)) {
+  if (to.params.blockRef && validBlockNumber(to.params.blockRef)) {
+    next();
+  } else if (
+    to.params.dateSearch &&
+    moment(to.params.dateSearch).isAfter(moment().subtract(10, 'minutes')) && // only allow date from 10 mins before current
+    moment(to.params.dateSearch).isAfter(moment('07-30-2015 15:26:13')) // only allow date after 1st block mined
+  ) {
     next();
   } else {
     //NOTE: kicks out completely if you are logged in
