@@ -6,7 +6,7 @@
     ===================================================
     -->
     <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
-    <date-selector-popup :show-popup="showDate" />
+    <date-selector-popup :show-popup="showDate" :hide-popup="hidePopup" />
     <!--
     ===================================================
       Search Field
@@ -101,8 +101,10 @@ export default {
       }
     },
     showDatePopup() {
-      console.log('huh?');
       this.showDate = true;
+    },
+    hidePopup() {
+      this.showDate = false;
     },
     /**
      * Setts serach Block, invoked by MewSearch component
