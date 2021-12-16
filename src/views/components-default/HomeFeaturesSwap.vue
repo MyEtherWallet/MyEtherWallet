@@ -3,10 +3,9 @@
     class="mew-component--features-swap pa-6 pa-md-10"
     max-width="700px"
   >
-    <div class="mew-heading-1 mb-3">Swap with MEW</div>
+    <div class="mew-heading-1 mb-3">{{ $t('home.features.swap.heading') }}</div>
     <div>
-      Swap fiat to ETH, ETH to BTC, and ETH to ERC20 tokens via integrated
-      partners 1inch, DEX AG, Changelly, Bity, and Simplex.
+      {{ $t('home.features.swap.title') }}
     </div>
     <div class="mt-10">
       <v-row v-if="!loading && !error">
@@ -73,6 +72,7 @@ import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { isEmpty } from 'lodash';
 
 const STATIC_PAIRS = [
   {
@@ -189,7 +189,7 @@ export default {
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
-              res[idx].length === 0
+              res[idx].length === 0 || isEmpty(res[idx])
                 ? false
                 : formatFloatingPointValue(res[idx][0].amount).value;
             return itm;

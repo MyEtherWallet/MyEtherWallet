@@ -37,6 +37,7 @@ describe('Zerox Swap', () => {
         expect(isValid).toBe(false);
       });
   });
+  /*
   test('it should return a quote', () => {
     return zeroX
       .getQuote({
@@ -56,4 +57,5 @@ describe('Zerox Swap', () => {
         expect(quotes[0].provider).toBe('ZERO_X');
       });
   });
+  */
 });

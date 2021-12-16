@@ -5,12 +5,16 @@
         class="banner-content-container d-flex align-center justify-space-between"
       >
         <v-card color="transparent" flat tile max-width="430px">
-          <div class="white--text mew-title">Ethereum's Original Wallet</div>
+          <div class="white--text mew-title">
+            <span>
+              {{ $t('home.tagline1') | lokalise('home.tagline1') }}
+            </span>
+            <span>
+              {{ $t('home.tagline2') | lokalise('home.tagline2') }}
+            </span>
+          </div>
           <p class="white--text mt-3">
-            MEW (MyEtherWallet) is a free, client-side interface helping you
-            interact with the Ethereum blockchain. Our easy-to-use, open-source
-            platform allows you to generate wallets, interact with smart
-            contracts, and so much more.
+            {{ $t('home.subheading') | lokalise('home.subheading') }}
           </p>
           <div class="mt-9 d-flex">
             <mew-button
@@ -53,13 +57,15 @@
             class="white--text font-weight-bold mb-4"
             style="font-size: 3rem; line-height: 3.3rem"
           >
-            Ethereum's Original Wallet
+            <span>
+              {{ $t('home.tagline1') | lokalise('home.tagline2') }}
+            </span>
+            <span>
+              {{ $t('home.tagline2') | lokalise('home.tagline2') }}
+            </span>
           </div>
           <p class="white--text mt-3">
-            MEW (MyEtherWallet) is a free, client-side interface helping you
-            interact with the Ethereum blockchain. Our easy-to-use, open-source
-            platform allows you to generate wallets, interact with smart
-            contracts, and so much more.
+            {{ $t('home.subheading') | lokalise('home.subheading') }}
           </p>
           <div class="mt-12">
             <mew-button
