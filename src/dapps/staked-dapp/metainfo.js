@@ -12,6 +12,7 @@ export default {
   path: ROUTES_WALLET.STAKED.PATH,
   networks: [ETH, GOERLI],
   layout,
+  release: '07/09/2021',
   meta: {
     noAuth: false
   },
