@@ -1,3 +1,20 @@
+### Release v6.4.3
+
+### devop
+
+* add translations and live editor plugin [#3264](https://github.com/MyEtherWallet/MyEtherWallet/pull/3264)
+* upload translation files to lokalise when there are translation files changed [#3341](https://github.com/MyEtherWallet/MyEtherWallet/pull/3341)
+* add 3 week release timer for new dapps [#3596](https://github.com/MyEtherWallet/MyEtherWallet/pull/3596)
+
+### fix
+
+* fix missing bitcoin rate for swap [#3584](https://github.com/MyEtherWallet/MyEtherWallet/pull/3584)
+* remove error popup when sending transaction with wallet link [#3586](https://github.com/MyEtherWallet/MyEtherWallet/pull/3586)
+* move convert unit to tools page [#3587](https://github.com/MyEtherWallet/MyEtherWallet/pull/3587)
+* fix back button on create wallet overlay [#3588](https://github.com/MyEtherWallet/MyEtherWallet/pull/3588)
+* check for undefined in home feature swap [#3593](https://github.com/MyEtherWallet/MyEtherWallet/pull/3593)
+* fix bitbox2 access [#3595](https://github.com/MyEtherWallet/MyEtherWallet/pull/3595)
+
 ### Release v6.4.2
 
 ### devop

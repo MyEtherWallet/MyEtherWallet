@@ -18,13 +18,17 @@
               <v-img src="@/assets/images/icons/icon-dapps-mew.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-bold subtitle-1">DApps Center</div>
+              <div class="mb-1 font-weight-bold subtitle-1">
+                {{
+                  $t('howItWorks.dapps.info-one.title')
+                    | lokalise('howItWorks.dapps.info-one.title')
+                }}
+              </div>
               <p>
-                Explore our integrated DApps to fully experience Ethereum’s
-                capabilities. Take advantage of DeFi services with our partners
-                Aave and MakerDAO, and register a domain name for your wallet
-                through ENS or Unstoppable Domains. We are constantly adding
-                more DApps!
+                {{
+                  $t('howItWorks.dapps.info-one.text')
+                    | lokalise('howItWorks.dapps.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -35,16 +39,23 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">
-                Submit Your Own DApp!
+                {{
+                  $t('howItWorks.dapps.info-two.title')
+                    | lokalise('howItWorks.dapps.info-two.title')
+                }}
               </div>
               <p>
-                MEW is dedicated to being decentralized and open-source, so we
-                are excited about working with DApp developers and making DApp
-                integrations easy. You can fill out your details through our
+                {{
+                  $t('howItWorks.dapps.info-two.text')
+                    | lokalise('howItWorks.dapps.info-two.text')
+                }}
                 <a
                   href="https://www.myetherwallet.com/dapp-submission"
                   target="_blank"
-                  >DApp Submit Form</a
+                  >{{
+                    $t('howItWorks.dapps.info-two.link')
+                      | lokalise('howItWorks.dapps.info-two.link')
+                  }}</a
                 >.
               </p>
               <!-- <div class="d-flex align-center mt-10">

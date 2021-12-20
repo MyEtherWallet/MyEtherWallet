@@ -31,6 +31,7 @@ import store from '@/core/store';
 import Vuex from 'vuex';
 
 import LottieAnimation from '@/core/directives/lottie';
+import lokalise from './core/filters/lokalise';
 
 // etc
 import '@/core/plugins/registerServiceWorker';
@@ -40,6 +41,9 @@ import i18n from './main/i18n';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
+
+// Filters
+Vue.filter('lokalise', lokalise);
 
 // eslint-disable-next-line
 Vue.use(VueIntercom, { appId: 'ja20qe25' });

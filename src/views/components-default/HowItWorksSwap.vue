@@ -25,11 +25,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Cross-Chain Swaps
+                {{
+                  $t('howItWorks.swap.info-one.title')
+                    | lokalise('howItWorks.swap.info-one.title')
+                }}
               </div>
               <p class="white--text">
-                MEW offers cross-chain swaps for a variety of popular coins.
-                Swap between Ether and Bitcoin, Litecoin, or even DOGE!
+                {{
+                  $t('howItWorks.swap.info-one.text')
+                    | lokalise('howItWorks.swap.info-one.text')
+                }}
               </p>
             </div>
           </div>
@@ -40,12 +45,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Competitive Rates
+                {{
+                  $t('howItWorks.swap.info-two.title')
+                    | lokalise('howItWorks.swap.info-two.title')
+                }}
               </div>
               <p class="white--text">
-                MEW works with decentralized exchange aggregators 1inch and
-                DEX.AG to find the best price on your token swap. This way you
-                don’t have to deal with multiple platforms to get the best rate.
+                {{
+                  $t('howItWorks.swap.info-two.text')
+                    | $t('howItWorks.swap.info-two.text')
+                }}
               </p>
             </div>
           </div>
@@ -56,11 +65,16 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
-                Cash Out to Fiat
+                {{
+                  $t('howItWorks.swap.info-three.title')
+                    | lokalise('howItWorks.swap.info-three.title')
+                }}
               </div>
               <p class="white--text">
-                Our partner Bity allows anyone to cash out their Ether for Euros
-                or Swiss Francs.
+                {{
+                  $t('howItWorks.swap.info-three.text')
+                    | lokalise('howItWorks.swap.info-three.text')
+                }}
               </p>
               <!-- <div class="d-flex align-center mt-10">
                 <a

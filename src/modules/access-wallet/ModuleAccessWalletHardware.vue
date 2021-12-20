@@ -546,11 +546,7 @@ export default {
         this.step++;
         if (this.step === this.wallets[this.walletType].when) {
           if (this.onLedger) this.selectedPath = this.paths[0];
-          if (
-            this.walletType === WALLET_TYPES.COOL_WALLET ||
-            this.walletType === WALLET_TYPES.BITBOX2
-          )
-            return;
+          if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
         }
       }
@@ -589,11 +585,11 @@ export default {
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {
-              _hwWallet
-                .init(path)
+              this.hwWalletInstance = _hwWallet;
+              this.hwWalletInstance
+                .init()
                 .then(() => {
                   this.nextStep();
-                  this.hwWalletInstance = _hwWallet;
                 })
                 .catch(e => {
                   this.wallets[this.walletType].create.errorHandler(e);

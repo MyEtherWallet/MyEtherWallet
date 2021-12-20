@@ -8,9 +8,9 @@
         class="mx-auto text-center"
       >
         <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
-          Features
+          {{ $t('home.features.subheading') }}
         </div>
-        <h1 class="mb-9">Your Gateway to the Ethereum Blockchain</h1>
+        <h1 class="mb-9">{{ $t('home.features.heading') }}</h1>
       </v-sheet>
       <div class="features-tabs-container">
         <v-container>
@@ -41,10 +41,9 @@
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
-            Features
+            {{ $t('home.features.subheading') }}
           </h5>
-          <h1 class="mb-10">Your Gateway to the Ethereum Blockchain</h1>
-
+          <h1 class="mb-10">{{ $t('home.features.heading') }}</h1>
           <v-tabs v-model="mobileTab" fixed-tabs>
             <v-tab v-for="item in mobileItems" :key="item.tab">
               {{ item.tab }}

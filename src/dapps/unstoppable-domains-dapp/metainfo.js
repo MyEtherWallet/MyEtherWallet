@@ -11,6 +11,7 @@ export default {
   path: ROUTES_WALLET.UNSTOPPABLE.PATH,
   networks: [ETH],
   layout,
+  release: '07/09/2021', // placeholder
   meta: {
     noAuth: false
   }
