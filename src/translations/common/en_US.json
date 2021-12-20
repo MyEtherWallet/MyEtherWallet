@@ -54,5 +54,6 @@
   "clear-all": "Clear All",
   "logout": "Logout",
   "settings": "Settings",
-  "exit-dapp": "Exit Dapp"
+  "exit-dapp": "Exit Dapp",
+  "dapps": "DApps"
 }
