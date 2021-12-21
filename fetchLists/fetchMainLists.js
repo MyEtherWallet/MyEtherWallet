@@ -18,6 +18,6 @@ const fetchLists = async () => {
     await fetchLists();
     console.log('Done');
   } catch (e) {
-    console.error(e);
+    console.error('Fetch list errored!', e);
   }
 })();
