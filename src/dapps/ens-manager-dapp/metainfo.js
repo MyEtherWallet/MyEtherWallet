@@ -14,6 +14,7 @@ export default {
   component: ENSManagerLayout,
   networks: [ETH, GOERLI, RIN, ROP],
   layout,
+  release: '07/08/2021',
   meta: {
     noAuth: false
   },

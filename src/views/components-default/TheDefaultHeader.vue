@@ -90,7 +90,11 @@ export default {
           items: [
             {
               title: 'Verify message',
-              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tab: '1' } }
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'verify' } }
+            },
+            {
+              title: 'Convert units',
+              to: { name: ROUTES_HOME.TOOLS.NAME, query: { tool: 'convert' } }
             }
           ]
         }
