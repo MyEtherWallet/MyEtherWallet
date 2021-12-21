@@ -229,7 +229,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
+import dappsMeta from '@/dapps/metainfo-dapps';
 export default {
   components: {
     AppBtnMenu,
@@ -245,7 +245,41 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      sectionOne: [
+      sectionTwo: [
+        {
+          title: this.$t('common.settings'),
+          icon: settings,
+          fn: this.openSettings,
+          route: { name: ROUTES_WALLET.SETTINGS.NAME }
+        },
+        {
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
+        }
+      ],
+      routeNetworks: {
+        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
+      },
+      ROUTES_WALLET: ROUTES_WALLET
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapState('wallet', ['instance']),
+    sectionOne() {
+      const hasNew = Object.values(dappsMeta).filter(item => {
+        const dateToday = new Date();
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+        const releaseDate = new Date(item.release);
+        const daysFromRelease =
+          (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+        if (Math.ceil(daysFromRelease) <= 21) {
+          return item;
+        }
+      });
+      return [
         {
           title: this.$t('interface.menu.dashboard'),
           route: { name: ROUTES_WALLET.DASHBOARD.NAME },
@@ -270,7 +304,7 @@ export default {
           title: this.$t('interface.menu.dapps'),
           route: { name: ROUTES_WALLET.DAPPS.NAME },
           icon: dapp,
-          hasNew: true
+          hasNew: hasNew.length > 0
         },
         {
           title: this.$t('interface.menu.contract'),
@@ -300,30 +334,8 @@ export default {
             }
           ]
         }
-      ],
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
-      routeNetworks: {
-        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
-      },
-      ROUTES_WALLET: ROUTES_WALLET
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network', 'swapLink']),
-    ...mapState('wallet', ['instance'])
+      ];
+    }
   },
   mounted() {
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
