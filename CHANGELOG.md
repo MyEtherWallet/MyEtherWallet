@@ -1,3 +1,9 @@
+### Release v6.4.3-hotfix.1
+
+### fix
+
+* fix dapps tranlsations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
+
 ### Release v6.4.3
 
 ### devop

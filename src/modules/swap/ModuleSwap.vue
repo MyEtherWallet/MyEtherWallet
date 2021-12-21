@@ -308,7 +308,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 200000;
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -474,10 +474,9 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        ((!isEmpty(this.fromTokenType) &&
+        (!isEmpty(this.fromTokenType) &&
           !isEmpty(this.fromTokenType?.symbol)) ||
-          (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol))) &&
-        !this.amountErrorMessage
+        (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol))
       );
     },
     /**
@@ -965,6 +964,7 @@ export default {
     switchTokens() {
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
+      this.tokenInValue = '0';
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
