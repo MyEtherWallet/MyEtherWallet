@@ -80,6 +80,7 @@ import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { isEmpty } from 'lodash';
 
 const STATIC_PAIRS = [
   {
@@ -196,7 +197,7 @@ export default {
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
-              res[idx].length === 0
+              res[idx].length === 0 || isEmpty(res[idx])
                 ? false
                 : formatFloatingPointValue(res[idx][0].amount).value;
             return itm;

@@ -8,7 +8,9 @@ const ERRORS = {
     'This Browser is not supported',
   'Session currently connected': 'Session currently connected',
   "Cannot read property 'setItem' of null":
-    'Issue accessing WalletConnect! Please try clearing your cache'
+    'Issue accessing WalletConnect! Please try clearing your cache',
+  'this.fromValuesArray is not a function':
+    'Error occurred with WalletLink. Please try again.'
 };
 const WARNINGS = {};
 
