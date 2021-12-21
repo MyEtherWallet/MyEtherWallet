@@ -6,7 +6,11 @@
     ===================================================
     -->
     <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
-    <date-selector-popup :show-popup="showDate" :hide-popup="hidePopup" />
+    <date-selector-popup
+      :show-popup="showDate"
+      :search-date="searchByDate"
+      :hide-popup="hidePopup"
+    />
     <!--
     ===================================================
       Search Field
@@ -95,6 +99,23 @@ export default {
             name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
             params: { blockRef: this.searchBlock }
           });
+        } catch (e) {
+          Toast(e, {}, ERROR);
+        }
+      }
+    },
+    /**
+     * Search via date
+     */
+    searchByDate(timeString) {
+      if (timeString && timeString !== '') {
+        try {
+          this.$router
+            .push({
+              name: ETH_BLOCKS_ROUTE.DATE_SEARCH.NAME,
+              params: { dateString: timeString }
+            })
+            .then(this.hidePopup);
         } catch (e) {
           Toast(e, {}, ERROR);
         }

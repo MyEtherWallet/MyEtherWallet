@@ -10,23 +10,42 @@
     >
       <div>
         <v-row>
-          <v-col cols="6">
+          <v-col sm="12" lg="6" md="6">
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
               full-width
             />
           </v-col>
-          <v-col cols="6">
+          <v-col sm="12" lg="6" md="6">
             <v-time-picker v-model="time" format="ampm" full-width />
           </v-col>
         </v-row>
+        <div class="d-flex align-center justify-end py-7 px-5">
+          <mew-button
+            btn-size="large"
+            btn-style="transparent"
+            title="Cancel"
+            color-theme="primary"
+            @click.native="hidePopup"
+          />
+          <mew-button
+            btn-size="large"
+            btn-style="background"
+            title="Next"
+            color-theme="primary"
+            class="ml-2"
+            :disabled="!disableNext"
+            @click.native="next"
+          />
+        </div>
       </div>
     </mew-popup>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   name: 'DateSelectorPopup',
   props: {
@@ -35,6 +54,10 @@ export default {
       default: false
     },
     hidePopup: {
+      type: Function,
+      default: () => {}
+    },
+    searchDate: {
       type: Function,
       default: () => {}
     }
@@ -54,6 +77,17 @@ export default {
         method: this.hidePopup
       }
     };
+  },
+  computed: {
+    disableNext() {
+      return this.time && this.date;
+    }
+  },
+  methods: {
+    next() {
+      const time = moment(`${this.date} ${this.time}`).valueOf();
+      this.searchDate(time);
+    }
   }
 };
 </script>

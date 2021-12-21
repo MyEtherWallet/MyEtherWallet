@@ -10,6 +10,10 @@ const ETH_BLOCKS_ROUTE = {
     NAME: 'EthBlocksBlock',
     PATH: 'block/:blockRef'
   },
+  DATE_SEARCH: {
+    NAME: 'EthBlocksDateSearch',
+    PATH: 'date/:dateString'
+  },
   MY_BLOCKS: {
     NAME: 'EthBlocksMyBlocks',
     PATH: 'my-blocks'
@@ -23,12 +27,6 @@ const ETH_BLOCKS_ROUTE = {
  */
 const blockGuard = (to, from, next) => {
   if (to.params.blockRef && validBlockNumber(to.params.blockRef)) {
-    next();
-  } else if (
-    to.params.dateSearch &&
-    moment(to.params.dateSearch).isAfter(moment().subtract(10, 'minutes')) && // only allow date from 10 mins before current
-    moment(to.params.dateSearch).isAfter(moment('07-30-2015 15:26:13')) // only allow date after 1st block mined
-  ) {
     next();
   } else {
     //NOTE: kicks out completely if you are logged in
@@ -49,4 +47,17 @@ const myBlocksProps = route => {
   };
 };
 
-export { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps };
+const dateSearchGuard = (to, from, next) => {
+  if (
+    to.params.dateString &&
+    moment(to.params.dateString).isBefore(moment().subtract(10, 'minutes')) && // only allow date from 10 mins before now
+    moment(to.params.dateString).isAfter(moment('07-30-2015 15:26:13')) // only allow date after 1st block mined
+  ) {
+    next();
+  } else {
+    //NOTE: kicks out completely if you are logged in
+    next({ name: ETH_BLOCKS_ROUTE.CORE.NAME });
+  }
+};
+
+export { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps, dateSearchGuard };

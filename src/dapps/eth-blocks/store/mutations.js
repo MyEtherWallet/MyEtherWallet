@@ -36,8 +36,29 @@ const DELETE_ETH_BLOCK_TX = function (state, obj) {
   }
 };
 
+/**
+ *
+ * @param {string} blockNumber
+ */
+const ADD_BLOCK_TO_CART = function (state, blockNumber) {
+  if (state.cart.length >= 100) {
+    state.cart.shift();
+  }
+  state.cart.push(blockNumber);
+};
+
+/**
+ *
+ * @param {class} EthDater
+ */
+const SETUP_ETH_DATE = function (state, ethDater) {
+  state.ethDater = ethDater;
+};
+
 export default {
   INIT_STORE,
   ADD_ETH_BLOCK_TX,
-  DELETE_ETH_BLOCK_TX
+  DELETE_ETH_BLOCK_TX,
+  ADD_BLOCK_TO_CART,
+  SETUP_ETH_DATE
 };

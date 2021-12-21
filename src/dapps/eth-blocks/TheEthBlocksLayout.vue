@@ -84,6 +84,7 @@ export default {
     }
   },
   mounted() {
+    this.setDater();
     if (this.hasPendingTxs) {
       this.setCheckPendingInterval();
     }
@@ -95,7 +96,7 @@ export default {
     clearInterval(this.checkPendingInterval);
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx']),
+    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx', 'setDater']),
     /**
      * Sets interval to start checking pending transactions
      */
