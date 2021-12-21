@@ -72,7 +72,7 @@ export default {
         '%cWhoa whoa whoa!',
         'font-weight: bold',
         '\n\nThis feature is intended only for developers.  Using it without knowing exactly what you are doing can expose your wallet keys and lead to the loss of your funds.',
-        '\n\nOn the other hand, if you are a developer and do know what you’re doing, MEW is hiring and we probably want to talk to you.  Send us an email at Careers@MyEtherWallet.com with the subject line: I am a rockstar developer.'
+        '\n\nOn the other hand, if you are a developer and do know what you’re doing, MEW is hiring and we probably want to talk to you. Send us an email at careers@myetherwallet.com with the subject line: I am a software developer.'
       );
       /* eslint-enable no-console */
     }

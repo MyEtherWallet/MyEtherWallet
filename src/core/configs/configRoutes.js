@@ -14,7 +14,7 @@ const ROUTES_HOME = {
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
-  JOBS: { NAME: 'JobPostings', PATH: 'careers' }
+  JOBS: { NAME: 'Careers', PATH: 'careers' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },
