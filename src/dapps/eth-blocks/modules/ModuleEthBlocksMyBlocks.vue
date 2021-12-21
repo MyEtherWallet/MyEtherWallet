@@ -24,7 +24,12 @@
     -->
       <v-row
         v-else
-        class="align-center justify-start overview-container-my-blocks mb-5 mb-md-0"
+        class="
+          align-center
+          justify-start
+          overview-container-my-blocks
+          mb-5 mb-md-0
+        "
       >
         <!--
       ===================================================

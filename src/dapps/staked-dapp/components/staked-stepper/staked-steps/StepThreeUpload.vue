@@ -58,7 +58,14 @@
     -->
         <div
           v-if="uploaded"
-          class="text-center d-flex align-center flex-column font-weight-bold mb-6"
+          class="
+            text-center
+            d-flex
+            align-center
+            flex-column
+            font-weight-bold
+            mb-6
+          "
         >
           <img
             v-if="hasError"
@@ -100,12 +107,27 @@
     ===================================================
     -->
         <div
-          class="tableHeader mb-8 input-container d-block d-sm-flex rounded align-center justify-space-between pa-5"
+          class="
+            tableHeader
+            mb-8
+            input-container
+            d-block d-sm-flex
+            rounded
+            align-center
+            justify-space-between
+            pa-5
+          "
         >
           <div class="d-flex align-center">
             <mew-icon :img-height="32" icon-name="keystore" />
             <div
-              class="ml-3 file-name-container mew-heading-4 textSecondary--text truncate"
+              class="
+                ml-3
+                file-name-container
+                mew-heading-4
+                textSecondary--text
+                truncate
+              "
             >
               {{ inputTitle }}
             </div>
@@ -150,7 +172,13 @@
     ===================================================
     -->
       <div
-        class="mt-7 d-flex flex-column-reverse flex-md-row align-center justify-center"
+        class="
+          mt-7
+          d-flex
+          flex-column-reverse flex-md-row
+          align-center
+          justify-center
+        "
       >
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"

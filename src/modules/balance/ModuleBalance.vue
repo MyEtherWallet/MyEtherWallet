@@ -48,7 +48,12 @@
           class="full-width mt-5 pa-md-3"
         />
         <div
-          class="pa-3 pa-sm-7 d-block d-md-flex align-center justify-space-between"
+          class="
+            pa-3 pa-sm-7
+            d-block d-md-flex
+            align-center
+            justify-space-between
+          "
         >
           <div
             class="d-flex flex-column flex-sm-row align-center justify-center"

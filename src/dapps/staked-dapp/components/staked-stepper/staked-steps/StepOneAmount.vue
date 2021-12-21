@@ -48,7 +48,14 @@
             <v-col
               cols="6"
               md="6"
-              class="py-1 text-uppercase captionPrimary--text font-weight-bold d-flex align-center"
+              class="
+                py-1
+                text-uppercase
+                captionPrimary--text
+                font-weight-bold
+                d-flex
+                align-center
+              "
             >
               Staking Fee
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />

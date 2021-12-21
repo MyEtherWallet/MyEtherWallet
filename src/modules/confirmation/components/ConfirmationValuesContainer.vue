@@ -63,7 +63,14 @@
         -->
         <div
           v-else
-          class="value-container d-flex align-center justify-start pa-6 fill-height"
+          class="
+            value-container
+            d-flex
+            align-center
+            justify-start
+            pa-6
+            fill-height
+          "
         >
           <!--
             =====================================================================================

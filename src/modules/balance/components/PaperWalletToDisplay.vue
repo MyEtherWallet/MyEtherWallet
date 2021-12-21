@@ -57,12 +57,22 @@
       <v-row class="align-center">
         <v-col cols="12" md="8" class="mr-auto">
           <div
-            class="mew-heading-1 word-break--break-all font-weight-black text-uppercase"
+            class="
+              mew-heading-1
+              word-break--break-all
+              font-weight-black
+              text-uppercase
+            "
           >
             My wallet address
           </div>
           <div
-            class="mew-heading-3 mew-address word-break--break-all font-weight-bold mt-4"
+            class="
+              mew-heading-3 mew-address
+              word-break--break-all
+              font-weight-bold
+              mt-4
+            "
           >
             {{ getChecksumAddressString }}
           </div>
@@ -85,7 +95,12 @@
             KEEP YOUR PRIVATE KEY IN SAFE PLACE!
           </div>
           <div
-            class="mew-heading-3 mew-address font-weight-bold word-break--break-all mt-4"
+            class="
+              mew-heading-3 mew-address
+              font-weight-bold
+              word-break--break-all
+              mt-4
+            "
           >
             {{ key }}
           </div>
