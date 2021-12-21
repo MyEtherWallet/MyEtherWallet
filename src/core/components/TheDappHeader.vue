@@ -37,7 +37,7 @@
         >
           <v-row class="align-center" no-gutters>
             <v-icon class="blue500--text" size="20"> mdi-chevron-left</v-icon>
-            <div>{{ $t('common.dapps') }}</div>
+            <div>{{ $t('common.exit-dapp') }}</div>
           </v-row>
         </router-link>
         <!--
