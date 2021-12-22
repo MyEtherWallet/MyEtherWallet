@@ -34,20 +34,6 @@ export default {
         subtext: 'Mint generative art NFTs of Ethereum blocks. '
       },
       activeTab: 0,
-      tabs: [
-        {
-          name: 'Mint a new block',
-          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
-          id: 0
-        },
-        {
-          name: 'My blocks',
-          route: {
-            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
-          },
-          id: 1
-        }
-      ],
       headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       checkPendingInterval: false
@@ -55,6 +41,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
+    ...mapState('ethBlocksTxs', ['cart']),
     ...mapGetters('global', ['network']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
@@ -64,6 +51,33 @@ export default {
      */
     hasPendingTxs() {
       return this.getAllEthBlocksTxs.length > 0;
+    },
+    tabs() {
+      return [
+        {
+          name: 'Mint a new block',
+          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
+          id: 0,
+          hasBadge: false
+        },
+        {
+          name: 'My blocks',
+          route: {
+            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
+          },
+          id: 1,
+          hasBadge: false
+        },
+        {
+          name: `Batch Minting `,
+          route: {
+            name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
+          },
+          id: 2,
+          hasBadge: true,
+          badgeContent: this.cart.length > 0 ? `${this.cart.length}` : ''
+        }
+      ];
     }
   },
   watch: {

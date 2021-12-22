@@ -17,6 +17,10 @@ const ETH_BLOCKS_ROUTE = {
   MY_BLOCKS: {
     NAME: 'EthBlocksMyBlocks',
     PATH: 'my-blocks'
+  },
+  BATCH_MINTING: {
+    NAME: 'EthBlocksBatchMinting',
+    PATH: 'batch'
   }
 };
 

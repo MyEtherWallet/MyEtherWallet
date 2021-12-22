@@ -93,7 +93,17 @@
         ]"
         @click="routeToTab(item.route)"
       >
-        {{ item.name }}
+        <v-badge
+          v-if="item.hasBadge"
+          color="red"
+          :content="item.badgeContent"
+          :dot="item.badgeContent === ''"
+        >
+          {{ item.name }}
+        </v-badge>
+        <div v-else>
+          {{ item.name }}
+        </div>
       </v-tab>
     </v-tabs>
     <!--
