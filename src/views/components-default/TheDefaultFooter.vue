@@ -118,7 +118,12 @@
       <v-sheet color="titlePrimary" class="py-2">
         <v-container>
           <div class="d-flex align-center">
-            <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+              target="_blank"
+              class="cyan--text text--lighten-3 ma-0"
+              >v{{ version }}</a
+            >
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
               {{ $t('footer.copyright') }}
@@ -267,7 +272,12 @@
         <v-container>
           <v-sheet color="transparent" max-width="500px" class="mx-auto">
             <div class="d-flex align-center justify-space-between">
-              <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
+              <a
+                :ref="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+                target="_blank"
+                class="cyan--text text--lighten-3 ma-0"
+                >v{{ version }}</a
+              >
               <v-sheet width="150" color="transparent">
                 <v-select
                   v-model="select"
@@ -343,6 +353,7 @@ export default {
         title: 'MEW',
         data: [
           { label: 'About us', routerLink: 'AboutPage' },
+          { label: 'Careers', routerLink: 'Careers' },
           { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
           { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
