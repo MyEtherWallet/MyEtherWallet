@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 px-12 pb-12">
+  <div class="pt-8 px-3 px-lg-12 pb-12">
     <block-search />
     <div class="pt-12">
       <div v-if="foundBlocks.length > 0">
@@ -8,7 +8,7 @@
           :key="block.blockNumber"
           :block-handler="block"
           :is-loading="false"
-          :has-border="idx != foundBlocks.length"
+          :has-border="idx != foundBlocks.length - 1"
         />
       </div>
       <div v-else>

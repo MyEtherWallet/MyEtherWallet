@@ -67,12 +67,6 @@ export default {
     return {
       date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
       time: '',
-      allowedDates: val => {
-        return (
-          new Date(val).getTime() >= new Date('07-30-2015').getTime() &&
-          new Date(val).getTime() <= new Date().getTime()
-        );
-      },
       leftBtn: {
         method: this.hidePopup
       }
@@ -87,6 +81,12 @@ export default {
     next() {
       const time = moment(`${this.date} ${this.time}`).valueOf();
       this.searchDate(time);
+    },
+    allowedDates(val) {
+      return (
+        new Date(val).getTime() >= new Date('07-30-2015').getTime() &&
+        new Date(val).getTime() <= new Date().getTime()
+      );
     }
   }
 };

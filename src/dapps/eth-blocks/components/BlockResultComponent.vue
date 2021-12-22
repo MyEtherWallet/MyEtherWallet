@@ -71,8 +71,8 @@
           :class="[
             isAvailable
               ? 'primary--text cursor--pointer'
-              : 'd-none d-large-flex d-xl-flex disabledPrimary--text pointer-event--none',
-            'd-flex align-center ml-12'
+              : 'disabledPrimary--text pointer-event--none',
+            'd-flex align-center ml-lg-12 ml-2'
           ]"
           @click="addToCart"
         >
@@ -84,12 +84,25 @@
                   ? 'white primary--text pointer-event--none'
                   : 'primary white--text'
                 : 'disabledPrimary white--text',
-              'mr-3 custom-icon-container'
+              'mr-3 d-none d-md-flex d-lg-flex d-xl-flex custom-icon-container'
             ]"
           >
             {{ mdiIcon }}
           </v-icon>
-          <div>
+          <v-icon
+            medium
+            :class="[
+              isAvailable
+                ? isAdded
+                  ? 'white primary--text pointer-event--none'
+                  : 'primary white--text'
+                : 'disabledPrimary white--text',
+              'pa-2 d-flex d-md-none d-lg-none d-xl-none custom-icon-container'
+            ]"
+          >
+            {{ mdiIcon }}
+          </v-icon>
+          <div class="d-none d-md-flex d-lg-flex d-xl-flex">
             {{ addText }}
           </div>
         </div>
@@ -225,7 +238,7 @@ export default {
 }
 
 .custom-icon-container {
-  padding: 2px;
   border-radius: 50%;
+  padding: 2px;
 }
 </style>
