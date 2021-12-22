@@ -4,10 +4,11 @@
     <div class="pt-12">
       <div v-if="foundBlocks.length > 0">
         <block-result-component
-          v-for="block in foundBlocks"
+          v-for="(block, idx) in foundBlocks"
           :key="block.blockNumber"
           :block-handler="block"
           :is-loading="false"
+          :has-border="idx != foundBlocks.length"
         />
       </div>
       <div v-else>
@@ -28,8 +29,10 @@ import handlerBlock from '../handlers/handlerBlock';
 // import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import BlockSearch from '../components/BlockSearch';
 import BlockResultComponent from '../components/BlockResultComponent';
-
-const STARTING_BLOCKS = 13078142; // testing purposes
+import { toBN } from 'web3-utils';
+import EthDater from 'ethereum-block-by-date';
+import moment from 'moment';
+import _ from 'lodash';
 export default {
   name: 'ModuleEthBlocksDateSearch',
   components: {
@@ -38,7 +41,8 @@ export default {
   },
   data() {
     return {
-      foundBlocks: []
+      foundBlocks: [],
+      totalResult: 0
     };
   },
   computed: {
@@ -47,24 +51,79 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['blockNumber']),
+    /**
+     * Returns max block that can be minted
+     * current block - 50
+     * @returns {string}
+     */
+    maxBlock() {
+      const max = toBN(this.blockNumber).sub(toBN(50));
+      const ZERO = toBN(0);
+      return max.gt(ZERO) ? max.toNumber() : 0;
+    }
+  },
+  watch: {
+    '$route.params': {
+      deep: true,
+      handler: function () {
+        this.fetchBlocksByDate();
+      }
+    }
   },
   mounted() {
-    const newResultArray = [];
-    this.foundBlocks = newResultArray;
-    // testing purposes
-    for (let index = 0; index < 10; index++) {
-      const block = new handlerBlock(
-        this.web3,
-        this.network,
-        STARTING_BLOCKS + index,
-        this.address
-      );
-      block.getBlock().then(() => {
-        newResultArray.push(block);
-      });
+    this.fetchBlocksByDate();
+  },
+  methods: {
+    // initializes the block searcher
+    // loops through the result and fetch the
+    // block meta before pushing to empty array
+    async fetchBlocksByDate() {
+      const newResultArray = [];
+      this.foundBlocks = [];
+      const dater = new EthDater(this.web3);
+      const startTimeString = this.$route.params.dateString;
+      const endTimeString = startTimeString + 1000 * 60; // adds a minute to starting range
+      try {
+        const blocks = await dater.getEvery(
+          'seconds',
+          moment(startTimeString),
+          moment(endTimeString),
+          1,
+          true
+        );
+        const filterBlocks = _.uniqBy(blocks, 'block');
+        this.totalResult = filterBlocks.length;
+        for (let index = 0; index < filterBlocks.length; index++) {
+          if (filterBlocks[index].block <= this.maxBlock) {
+            const block = new handlerBlock(
+              this.web3,
+              this.network,
+              filterBlocks[index].block,
+              this.address
+            );
+
+            newResultArray.push(
+              block.getBlock().then(() => {
+                return block;
+              })
+            );
+          }
+        }
+        Promise.all(newResultArray).then(values => {
+          this.foundBlocks = values.sort((a, b) => {
+            return a.blockNumber < b.blockNumber
+              ? -1
+              : a.blockNumber > b.blockNumber
+              ? 1
+              : 0;
+          });
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
-    this.foundBlocks = newResultArray;
   }
 };
 </script>
