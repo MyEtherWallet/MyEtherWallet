@@ -25,6 +25,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
 // import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import BlockSearch from '../components/BlockSearch';
@@ -121,7 +122,7 @@ export default {
           });
         });
       } catch (e) {
-        console.log(e);
+        Toast(e, {}, ERROR);
       }
     }
   }

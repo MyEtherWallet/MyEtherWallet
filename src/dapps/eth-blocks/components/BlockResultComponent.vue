@@ -1,113 +1,140 @@
 <template>
-  <div
-    :class="[
-      hasBorder ? 'container-border' : '',
-      'py-5 d-flex align-center justify-space-between'
-    ]"
-  >
-    <v-row v-if="isLoading" dense>
-      <v-col class="d-flex">
-        <v-skeleton-loader
-          width="48px"
-          max-height="48px"
-          type="image"
-          class="mr-6"
-        />
-        <v-skeleton-loader
-          width="100px"
-          max-height="48px"
-          type="text"
-          class="mt-5"
-        />
-      </v-col>
-      <v-col class="d-flex justify-end">
-        <v-skeleton-loader
-          width="100px"
-          max-height="48px"
-          type="text"
-          class="mt-5"
-        />
-        <v-skeleton-loader
-          v-if="showAdd"
-          width="100px"
-          max-height="48px"
-          type="text"
-          class="ml-12 mt-5"
-        />
-      </v-col>
-    </v-row>
-    <v-row v-else dense>
-      <v-col class="d-flex">
-        <img :src="img" width="48" height="48" class="mr-6" />
-        <div>
-          <div class="mew-heading-4 font-weight-bold">
-            {{ blockNumber }}
-          </div>
+  <div :class="hasBorder ? 'container-border' : ''">
+    <div class="py-5 d-flex align-center justify-space-between">
+      <v-row v-if="isLoading" dense>
+        <v-col class="d-flex">
+          <v-skeleton-loader
+            width="48px"
+            max-height="48px"
+            type="image"
+            class="mr-6"
+          />
+          <v-skeleton-loader
+            width="100px"
+            max-height="48px"
+            type="text"
+            class="mt-5"
+          />
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <v-skeleton-loader
+            width="100px"
+            max-height="48px"
+            type="text"
+            class="mt-5"
+          />
+          <v-skeleton-loader
+            v-if="showAdd"
+            width="100px"
+            max-height="48px"
+            type="text"
+            class="ml-12 mt-5"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-else dense>
+        <v-col class="d-flex">
+          <img :src="img" width="48" height="48" class="mr-6" />
           <div>
-            <div
-              class="textLight--text cursor--pointer text-decoration--underline"
-              @click="navigateToBlockInfo"
-            >
-              View Block
+            <div class="mew-heading-4 font-weight-bold">
+              {{ blockNumber }}
             </div>
-            <div v-if="!showAdd"></div>
+            <div :class="[showAdd ? '' : 'd-flex']">
+              <div
+                v-if="!showAdd"
+                class="textLight--text cursor--pointer text-decoration--underline mr-2"
+                @click="showPanel"
+              >
+                Remove
+              </div>
+              <div
+                class="textLight--text cursor--pointer text-decoration--underline"
+                @click="navigateToBlockInfo"
+              >
+                View Block
+              </div>
+            </div>
           </div>
-        </div>
-      </v-col>
-      <v-col class="d-flex align-center justify-end">
-        <div v-if="isAvailable">
-          <div class="mew-heading-4">
-            {{ mintPrice }}
+        </v-col>
+        <v-col class="d-flex align-center justify-end">
+          <div v-if="isAvailable">
+            <div class="mew-heading-4">
+              {{ mintPrice }}
+            </div>
+            <div class="mew-heading-4 textLight--text">
+              {{ mintFiatPrice }}
+            </div>
           </div>
-          <div class="mew-heading-4 textLight--text">
-            {{ mintFiatPrice }}
+          <div v-else :class="[blockStatusStyle, 'mew-heading-4']">
+            {{ blockStatusText }}
           </div>
-        </div>
-        <div v-else :class="[blockStatusStyle, 'mew-heading-4']">
-          {{ blockStatusText }}
-        </div>
-        <div
-          v-if="showAdd"
-          :class="[
-            isAvailable
-              ? 'primary--text cursor--pointer'
-              : 'disabledPrimary--text pointer-event--none',
-            'd-flex align-center ml-lg-12 ml-2'
-          ]"
-          @click="addToCart"
-        >
-          <v-icon
-            x-small
+          <div
+            v-if="showAdd"
             :class="[
               isAvailable
-                ? isAdded
-                  ? 'white primary--text pointer-event--none'
-                  : 'primary white--text'
-                : 'disabledPrimary white--text',
-              'mr-3 d-none d-md-flex d-lg-flex d-xl-flex custom-icon-container'
+                ? 'primary--text cursor--pointer'
+                : 'disabledPrimary--text pointer-event--none',
+              'd-flex align-center ml-lg-12 ml-2'
             ]"
+            @click="addToCart"
           >
-            {{ mdiIcon }}
-          </v-icon>
-          <v-icon
-            medium
-            :class="[
-              isAvailable
-                ? isAdded
-                  ? 'white primary--text pointer-event--none'
-                  : 'primary white--text'
-                : 'disabledPrimary white--text',
-              'pa-2 d-flex d-md-none d-lg-none d-xl-none custom-icon-container'
-            ]"
-          >
-            {{ mdiIcon }}
-          </v-icon>
-          <div class="d-none d-md-flex d-lg-flex d-xl-flex">
-            {{ addText }}
+            <v-icon
+              x-small
+              :class="[
+                isAvailable
+                  ? isAdded
+                    ? 'white primary--text pointer-event--none'
+                    : 'primary white--text'
+                  : 'disabledPrimary white--text',
+                'mr-3 d-none d-md-flex d-lg-flex d-xl-flex custom-icon-container'
+              ]"
+            >
+              {{ mdiIcon }}
+            </v-icon>
+            <v-icon
+              medium
+              :class="[
+                isAvailable
+                  ? isAdded
+                    ? 'white primary--text pointer-event--none'
+                    : 'primary white--text'
+                  : 'disabledPrimary white--text',
+                'pa-2 d-flex d-md-none d-lg-none d-xl-none custom-icon-container'
+              ]"
+            >
+              {{ mdiIcon }}
+            </v-icon>
+            <div class="d-none d-md-flex d-lg-flex d-xl-flex">
+              {{ addText }}
+            </div>
           </div>
+        </v-col>
+      </v-row>
+    </div>
+    <v-expand-transition v-if="!isLoading">
+      <div
+        v-if="showRemove"
+        class="d-flex py-6 align-center justify-space-between remove-container-border"
+      >
+        <div class="font-weight-bold">Remove?</div>
+        <div class="d-flex">
+          <mew-button
+            title="Keep"
+            btn-style="transparent"
+            btn-size="large"
+            color-theme="error"
+            @click.native="hideRemove"
+          />
+          <mew-button
+            title="Remove"
+            btn-style="background"
+            btn-size="large"
+            color-theme="error"
+            @click.native="removeBlock"
+          />
         </div>
-      </v-col>
-    </v-row>
+      </div>
+    </v-expand-transition>
   </div>
 </template>
 
@@ -140,6 +167,11 @@ export default {
       type: Boolean,
       default: true
     }
+  },
+  data() {
+    return {
+      showRemove: false
+    };
   },
   computed: {
     ...mapState('wallet', ['address']),
@@ -216,7 +248,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['addBlockToCart']),
+    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
+    showPanel() {
+      this.showRemove = true;
+    },
+    hideRemove() {
+      this.showRemove = false;
+    },
+    removeBlock() {
+      this.removeBlockFromCart(this.blockHandler.blockNumber);
+    },
     addToCart() {
       if (this.isAvailable && !this.isAdded) {
         this.addBlockToCart(this.blockHandler.blockNumber);
@@ -240,5 +281,9 @@ export default {
 .custom-icon-container {
   border-radius: 50%;
   padding: 2px;
+}
+
+.remove-container-border {
+  border-top: 1px solid var(--v-greyMedium-base);
 }
 </style>

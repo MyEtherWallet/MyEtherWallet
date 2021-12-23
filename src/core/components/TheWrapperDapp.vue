@@ -98,6 +98,8 @@
           color="red"
           :content="item.badgeContent"
           :dot="item.badgeContent === ''"
+          :inline="item.badgeContent !== ''"
+          right
         >
           {{ item.name }}
         </v-badge>

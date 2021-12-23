@@ -47,9 +47,20 @@ const ADD_BLOCK_TO_CART = function (state, blockNumber) {
   state.cart.push(blockNumber);
 };
 
+/**
+ *
+ * @param {string} blockNumber
+ */
+const REMOVE_FROM_CART = function (state, blockNumber) {
+  state.cart = state.cart.filter(item => {
+    if (item !== blockNumber) return item;
+  });
+};
+
 export default {
   INIT_STORE,
   ADD_ETH_BLOCK_TX,
   DELETE_ETH_BLOCK_TX,
-  ADD_BLOCK_TO_CART
+  ADD_BLOCK_TO_CART,
+  REMOVE_FROM_CART
 };

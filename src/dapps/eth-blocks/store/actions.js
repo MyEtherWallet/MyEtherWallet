@@ -21,8 +21,17 @@ const addBlockToCart = function ({ commit }, val) {
   commit('ADD_BLOCK_TO_CART', val);
 };
 
+/**
+ * remove blockNumber to cart
+ * @param {string} val
+ */
+const removeBlockFromCart = function ({ commit }, val) {
+  commit('REMOVE_FROM_CART', val);
+};
+
 export default {
   addEthBlockTx,
   deleteEthBlockTx,
-  addBlockToCart
+  addBlockToCart,
+  removeBlockFromCart
 };
