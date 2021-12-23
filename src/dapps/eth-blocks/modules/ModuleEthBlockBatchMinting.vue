@@ -110,7 +110,9 @@ export default {
       gasLimit: '21000',
       batchMintData: [],
       mintContract: {},
-      totalMintValue: '0'
+      totalMintValue: '0',
+      localGasPrice: '0', // will be updated in 5 min intervals
+      gasPriceInterval: 0
     };
   },
   computed: {
@@ -141,7 +143,7 @@ export default {
     },
     totalTransactionPrice() {
       const val = BigNumber(this.gasLimit)
-        .times(this.gasPrice)
+        .times(this.localGasPrice)
         .plus(toWei(this.totalMintPrice));
       return formatFloatingPointValue(fromWei(val.toString())).value;
     },
@@ -161,7 +163,15 @@ export default {
     }
   },
   mounted() {
+    const timer = 5 * 60 * 1000;
     this.fetchBlocks();
+    this.localGasPrice = this.gasPrice;
+    this.gasPriceInterval = setInterval(() => {
+      this.localGasPrice = this.gasPrice;
+    }, timer);
+  },
+  destroyed() {
+    clearInterval(this.gasPriceInterval);
   },
   methods: {
     /**
@@ -255,9 +265,9 @@ export default {
      */
     async fetchGasLimits() {
       this.mintContract.methods
-        .multicall(this.batchMintData) // array of data
+        .multicall(this.batchMintData)
         .estimateGas({
-          value: this.totalMintValue // .2 in wei
+          value: this.totalMintValue
         })
         .then(res => {
           this.gasLimit = res;

@@ -98,8 +98,14 @@ export default class HandlerBlock {
         //Set Block Data
         this.extra = [];
         const meta = resp.data.metadata;
-        this.hasOwner = resp.data.tokenOwner !== NO_OWNER;
-        this.owner = resp.data.tokenOwner;
+        this.hasOwner =
+          this.blockNumber === 13784390
+            ? true
+            : resp.data.tokenOwner !== NO_OWNER;
+        this.owner =
+          this.blockNumber === 13784390
+            ? '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            : resp.data.tokenOwner;
         this.rawImg = meta.image;
         this.img = `${IMAGE_PROXY}${meta.image}`;
         this.mintPrice = meta.mintPrice;

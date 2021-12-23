@@ -36,19 +36,32 @@
         <v-col class="d-flex">
           <img :src="img" width="48" height="48" class="mr-6" />
           <div>
-            <div class="mew-heading-4 font-weight-bold">
+            <div
+              :class="[
+                !showAdd && isUnavailable ? 'redPrimary--text' : '',
+                'mew-heading-4 font-weight-bold'
+              ]"
+            >
               {{ blockNumber }}
             </div>
             <div :class="[showAdd ? '' : 'd-flex']">
               <div
                 v-if="!showAdd"
-                class="textLight--text cursor--pointer text-decoration--underline mr-2"
+                :class="[
+                  isUnavailable ? 'redPrimary--text' : 'textLight--text',
+                  'cursor--pointer text-decoration--underline mr-2'
+                ]"
                 @click="showPanel"
               >
                 Remove
               </div>
               <div
-                class="textLight--text cursor--pointer text-decoration--underline"
+                :class="[
+                  !showAdd && isUnavailable
+                    ? 'redPrimary--text'
+                    : 'textLight--text',
+                  'cursor--pointer text-decoration--underline'
+                ]"
                 @click="navigateToBlockInfo"
               >
                 View Block
@@ -214,6 +227,8 @@ export default {
     blockStatusStyle() {
       if (this.isOwned) {
         return 'bluePrimary--text';
+      } else if (!this.showAdd && this.isUnavailable) {
+        return 'redPrimary--text';
       } else if (this.isUnavailable) {
         return 'orangePrimary--text';
       }
@@ -227,7 +242,7 @@ export default {
         : '';
     },
     isAvailable() {
-      return !this.isOwned || !this.isUnavailable;
+      return this.isOwned || !this.isUnavailable;
     },
     addText() {
       return this.isAdded && this.isAvailable
