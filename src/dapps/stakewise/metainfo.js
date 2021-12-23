@@ -5,11 +5,11 @@ import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
-  title: 'ETH Blocks',
-  subtitle: 'Mint stunning QR art-pieces based on your favorite blocks.',
+  title: 'Stakewise',
+  subtitle: 'Stake any amount of ETH and begin earning rewards.',
   tag: '#NFT',
   rightIconType: 'mew',
-  rightIcon: 'ethBlocks',
+  rightIcon: 'stakewise',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,

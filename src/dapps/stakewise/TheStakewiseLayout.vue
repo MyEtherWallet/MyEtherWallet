@@ -30,25 +30,25 @@ export default {
   data() {
     return {
       header: {
-        title: 'ETH Blocks',
-        subtext: 'Mint generative art NFTs of Ethereum blocks. '
+        title: 'Stakewise',
+        subtext: 'Stake any amount of ETH and begin earning rewards.'
       },
       activeTab: 0,
       tabs: [
         {
-          name: 'Mint a new block',
+          name: 'Start staking',
           route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
           id: 0
         },
         {
-          name: 'My blocks',
+          name: 'My stake',
           route: {
             name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
           },
           id: 1
         }
       ],
-      headerImg: require('@/assets/images/icons/icon-dapp-eth-blocks.svg'),
+      headerImg: require('@/assets/images/icons/icon-dapp-stakewise.svg'),
       validNetworks: SUPPORTED_NETWORKS,
       checkPendingInterval: false
     };

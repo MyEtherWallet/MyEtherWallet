@@ -2,8 +2,8 @@ import { validBlockNumber } from './handlers/helpers/common';
 
 const ETH_BLOCKS_ROUTE = {
   CORE: {
-    NAME: 'EthBlocks',
-    PATH: 'eth-blocks'
+    NAME: 'Stakewise',
+    PATH: 'stakewise'
   },
   BLOCK: {
     NAME: 'EthBlocksBlock',
