@@ -1,22 +1,23 @@
 <template>
-  <!--
-    ===================================================
-    The Staked Layout
-    ===================================================
-    -->
-  <the-wrapper-dapp
-    :is-new-header="true"
-    :dapp-img="headerImg"
-    :banner-text="header"
-    :tab-items="tabs"
-    :active-tab="activeTab"
-    :valid-networks="validNetworks"
-    top-strip
-  >
-  </the-wrapper-dapp>
+  <the-wrapper-wallet :total-left-col-items="1" :total-right-col-items="2">
+    <template #leftColItem1>
+      <the-wrapper-dapp
+        :is-new-header="true"
+        :dapp-img="headerImg"
+        :banner-text="header"
+        :tab-items="tabs"
+        :active-tab="activeTab"
+        :valid-networks="validNetworks"
+        top-strip
+      >
+      </the-wrapper-dapp>
+    </template>
+    <template #rightColItem1> </template>
+  </the-wrapper-wallet>
 </template>
 
 <script>
+import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import { ETH_BLOCKS_ROUTE } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
@@ -25,7 +26,8 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 export default {
   name: 'TheEthBlocksLayout',
   components: {
-    TheWrapperDapp
+    TheWrapperDapp,
+    TheWrapperWallet
   },
   data() {
     return {
