@@ -11,7 +11,7 @@ class HDWalletInterface extends WalletInterface {
     displayAddress,
     meta
   ) {
-    super(pubkey, true, identifier);
+    super(pubkey, isHardware, identifier);
     this.path = path;
     this.txSigner = txSigner;
     this.msgSigner = msgSigner;

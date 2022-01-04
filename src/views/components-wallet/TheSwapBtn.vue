@@ -1,16 +1,14 @@
 <template>
   <v-btn class="mew-component--swap-btn" color="maxButton" depressed>
-    <img :src="swapIcon" height="25" />
+    <v-icon large>mdi-swap-horizontal</v-icon>
   </v-btn>
 </template>
 
 <script>
-import SwapIcon from '@/assets/images/icons/icon-swap.svg';
-
 export default {
   name: 'SwapBtn',
   props: {},
-  data: () => ({ swapIcon: SwapIcon })
+  data: () => ({})
 };
 </script>
 

@@ -14,10 +14,10 @@
     <template #cardContent>
       <div>
         <!--
-=====================================================================================
- Search Component to search paths
-=====================================================================================
--->
+        =====================================================================================
+        Search Component to search paths
+        =====================================================================================
+        -->
         <mew-search
           :value="searchValue"
           class="mb-8"
@@ -26,10 +26,10 @@
           @input="setSearch"
         />
         <!--
-=====================================================================================
- Displays the filtered customs paths
-=====================================================================================
--->
+        =====================================================================================
+        Displays the filtered customs paths
+        =====================================================================================
+        -->
         <div
           v-for="(filteredCustomPath, idx) in filteredCustomPaths"
           :key="filteredCustomPath.name + idx"
@@ -68,10 +68,10 @@
           class="mb-6"
         />
         <!--
-=====================================================================================
- Displays the filtered paths
-=====================================================================================
--->
+        =====================================================================================
+        Displays the filtered paths
+        =====================================================================================
+        -->
         <div
           v-for="(filteredPath, idx) in filteredPaths"
           :key="filteredPath.name + idx"
@@ -106,10 +106,10 @@
           </span>
         </div>
         <!--
-=====================================================================================
-Custom Path Fields
-=====================================================================================
--->
+        =====================================================================================
+        Custom Path Fields
+        =====================================================================================
+        -->
         <div
           class="text-right primary--text cursor-pointer"
           @click="showCustomField = !showCustomField"
@@ -156,7 +156,7 @@ import { checkCustomPath } from '@/modules/access-wallet/software/handlers/pathH
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
-    paths: {
+    passedPaths: {
       type: Array,
       default: () => []
     },
@@ -180,12 +180,12 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['customPaths']),
+    ...mapState('custom', ['paths']),
     /**
      * Custom filtered paths based on search
      */
     filteredCustomPaths() {
-      return this.customPaths.filter(path => {
+      return this.paths.filter(path => {
         if (this.searchValue) {
           return (
             path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
@@ -199,7 +199,7 @@ export default {
      * Filtered paths based on search
      */
     filteredPaths() {
-      return this.paths.filter(path => {
+      return this.passedPaths.filter(path => {
         if (this.searchValue) {
           return (
             path.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||

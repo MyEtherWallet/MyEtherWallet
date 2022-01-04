@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
@@ -23,6 +23,10 @@ import {
 export default {
   name: 'App',
   components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
+  computed: {
+    ...mapState('custom', ['addressBook']),
+    ...mapState('addressBook', ['isMigrated'])
+  },
   created() {
     const succMsg = this.$t('common.updates.new');
     const updateMsg = this.$t('common.updates.update-found');
@@ -38,6 +42,7 @@ export default {
     });
   },
   mounted() {
+    this.logMessage();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
@@ -50,10 +55,27 @@ export default {
       this.setOnlineStatus(true);
       this.setCurrency(currencyTypes.USD);
     });
+    if (!this.isMigrated) {
+      // this.addressBook is the old one that resides in custom store
+      this.setAddressBook(this.addressBook).then(() => {
+        this.setMigrated(true);
+      });
+    }
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
-    ...mapActions('external', ['setCurrency'])
+    ...mapActions('external', ['setCurrency']),
+    ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
+    logMessage() {
+      /* eslint-disable no-console */
+      console.log(
+        '%cWhoa whoa whoa!',
+        'font-weight: bold',
+        '\n\nThis feature is intended only for developers.  Using it without knowing exactly what you are doing can expose your wallet keys and lead to the loss of your funds.',
+        '\n\nOn the other hand, if you are a developer and do know what you’re doing, MEW is hiring and we probably want to talk to you. Send us an email at careers@myetherwallet.com with the subject line: I am a software developer.'
+      );
+      /* eslint-enable no-console */
+    }
   }
 };
 </script>

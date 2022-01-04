@@ -4,6 +4,7 @@ import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 
 import Vuetify, {
+  VAlert,
   VApp,
   VBtn,
   VBtnToggle,
@@ -52,6 +53,7 @@ import Vuetify, {
   VTabs,
   VTabsItems,
   VTabItem,
+  VTabsSlider,
   VMenu,
   VMain,
   VSpacer,
@@ -79,11 +81,13 @@ import Vuetify, {
   VScrollYTransition,
   VSkeletonLoader,
   VChip,
-  VSystemBar
+  VSystemBar,
+  VSnackbar
 } from 'vuetify/lib';
 
 Vue.use(Vuetify, {
   components: {
+    VAlert,
     VApp,
     VBtn,
     VBtnToggle,
@@ -132,6 +136,7 @@ Vue.use(Vuetify, {
     VTabs,
     VTabsItems,
     VTabItem,
+    VTabsSlider,
     VMenu,
     VMain,
     VSpacer,
@@ -159,7 +164,8 @@ Vue.use(Vuetify, {
     VScrollYTransition,
     VSkeletonLoader,
     VChip,
-    VSystemBar
+    VSystemBar,
+    VSnackbar
   }
 });
 

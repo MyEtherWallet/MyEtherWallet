@@ -5,13 +5,12 @@
       <div>
         <div class="font-weight-bold">MEWtopia</div>
         <div>
-          Getting started on Ethereum? Visit our blog MEWtopia for tips,
-          resources and guides.
+          {{ $t('interface.header.desc') }}
           <a
             href="https://www.mewtopia.com/tag/getting-started/"
             rel="noopener noreferrer"
             target="_blank"
-            >Read...</a
+            >{{ $t('interface.header.read') }}</a
           >
         </div>
       </div>

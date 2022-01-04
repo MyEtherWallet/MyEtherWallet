@@ -43,7 +43,7 @@
         <div class="mew-heading-3 mb-3 black--text">
           Total Value: ${{ totalTokenValues }}
         </div>
-        <module-tokens class="pa-0" dense />
+        <module-tokens class="pa-0" dense @trade="handleTokensPopup" />
       </template>
     </app-modal>
   </div>
@@ -73,10 +73,12 @@ export default {
       return formatFiatValue(this.totalTokenFiatValue).value;
     },
     tokenImages() {
-      const firstFive = this.tokensList.slice(0, 5);
-      return firstFive.map(item => {
-        return item.img;
-      });
+      return this.tokensList
+        .filter(token => token.img)
+        .slice(0, 5)
+        .map(item => {
+          return item.img;
+        });
     },
     moreTokensCount() {
       return this.tokensList.length - this.tokenImages.length;

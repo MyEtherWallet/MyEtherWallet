@@ -1,7 +1,7 @@
 import WalletConnect from '@walletconnect/client';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
 import store from '@/core/store';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import {
   sanitizeHex,
@@ -56,7 +56,7 @@ class WalletConnectWallet {
         tx = new Transaction(tx, {
           common: commonGenerator(store.getters['global/network'])
         });
-        const txJSON = tx.toJSON(true);
+        const txJSON = tx.toJSON();
         txJSON.from = from;
         const prom = PromiEvent(false);
         this.walletConnect

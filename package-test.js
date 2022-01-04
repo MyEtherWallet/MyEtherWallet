@@ -14,7 +14,6 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  'vuetify',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
@@ -26,7 +25,10 @@ const EXCEPTIONS = [
   'web3-utils',
   'remark-cli',
   'node-fetch',
-  'qrcode.vue'
+  'vuetify',
+  'eslint',
+  'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
+  '@vue/eslint-config-prettier' // creates more warnings
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

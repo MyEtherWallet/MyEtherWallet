@@ -2,6 +2,7 @@
   <div>
     <home-landing />
     <home-features />
+    <home-eth-blocks />
     <home-socials />
     <home-why-mew />
     <app-mewtopia-block />
@@ -13,6 +14,7 @@
 <script>
 import HomeLanding from '../components-default/HomeLanding';
 import HomeFeatures from '../components-default/HomeFeatures';
+import HomeEthBlocks from '../components-default/HomeEthBlocks';
 import HomeSocials from '../components-default/HomeSocials.vue';
 import HomeWhyMew from '../components-default/HomeWhyMew';
 import AppMewtopiaBlock from '@/core/components/AppMewtopiaBlock';
@@ -24,6 +26,7 @@ export default {
   components: {
     HomeLanding,
     HomeFeatures,
+    HomeEthBlocks,
     HomeSocials,
     HomeWhyMew,
     AppMewtopiaBlock,

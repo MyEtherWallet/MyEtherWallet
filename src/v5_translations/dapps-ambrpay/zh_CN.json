@@ -1,0 +1,52 @@
+{
+  "ambrpay-popover": "Create and manage recurring payments",
+  "title": "Ambrpay",
+  "withdraw-funds": "Withdraw Funds",
+  "add-funds": "Add Funds",
+  "add": "Add",
+  "withdraw": "Withdraw",
+  "balance": "Subscriptions Balance",
+  "my-subscriptions": "My Subscriptions",
+  "automation-fee": "1% automation-fee will be added on top",
+  "interval": "Interval",
+  "in-every": "In every",
+  "interval-in-every": "Interval in Every",
+  "days": "Day(s)",
+  "days-lowercase": "day(s)",
+  "start-recurring": "Start Recurring",
+  "enter-days": "Enter the number of day(s)",
+  "exit-dapp": "Exit Dapp",
+  "manage-subscriptions": {
+    "title": "Manage Subscriptions",
+    "no-active": "You have no active subscriptions!",
+    "next-payment": "Next payment",
+    "receiver-wallet": "Receiver wallet",
+    "current-cycle": "Current cycle",
+    "sub-plan": "Subscription plan",
+    "sub-currency": "Subscription currency",
+    "sub-status": "Subscription status",
+    "unsubscribe": "Unsubscribe"
+  },
+  "manage-funds": {
+    "add-funds": "Add Funds",
+    "withdraw-funds": "Withdraw Funds",
+    "avail-balance": "Available Balance",
+    "how-much-eth-add": "How much ETH do you want to add ?",
+    "how-much-eth-withdraw": "How much ETH do you want to withdraw ?",
+    "subscription-fund": "Your subscription fund",
+    "should-update": "should be updated within the next minute.",
+    "in-wallet": "should be in your wallet within the next minute.",
+    "withdraw-fund": "Your withdraw fund"
+  },
+  "errors": {
+    "amount-higher-zero": "Amount must be higher than 0",
+    "amount-higher-balance": "Amount higher than balance",
+    "amount-higher-sub-balance": "Amount higher than subscription balance"
+  },
+  "sub-form": {
+    "min-greater": "The minimum amount is 0.01 or greater",
+    "higher-than-bal": "Amount higher than balance (including 1% automation fee)",
+    "enter-correct-num": "Please enter a correct number",
+    "cannot-exceed": "Number cannot exceed 365 days"
+  }
+}

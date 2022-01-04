@@ -1,18 +1,19 @@
 import { toBN, toHex, toChecksumAddress, isHexStrict } from 'web3-utils';
 import { isAddress } from '@/core/helpers/addressUtils';
 import SanitizeHex from '@/core/helpers/sanitizeHex';
-import { Transaction } from 'ethereumjs-tx';
+import { Transaction } from '@ethereumjs/tx';
 import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
 import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 
 class SendTransaction {
   constructor() {
     this.$store = vuexStore;
     Object.assign(this, mapState('wallet', ['balance', 'web3', 'address']));
-    Object.assign(this, mapGetters('global', ['network', 'gasPrice']));
+    Object.assign(this, mapGetters('global', ['network']));
     this.currency = null;
     this.localGasPrice = '0';
     this.TX = {
@@ -43,10 +44,7 @@ class SendTransaction {
     else throw ErrorList.INVALID_FROM_ADDRESS;
   }
   _setGasPrice() {
-    this.TX.gasPrice =
-      this.localGasPrice === '0'
-        ? toHex(toBN(this.gasPrice()))
-        : toHex(toBN(this.localGasPrice));
+    this.TX.gasPrice = toHex(toBN(this.localGasPrice));
   }
   setGasLimit(_gasLimit) {
     this.TX.gas = toHex(toBN(_gasLimit));
@@ -84,14 +82,14 @@ class SendTransaction {
     if (this.isToken()) {
       return this.currency.balance;
     }
-    const gasPriceBN = toBN(this.gasPrice());
+    const gasPriceBN = toBN(this.localGasPrice);
     const fee = gasPriceBN.mul(toBN(this.TX.gas));
     return this.balance().gt(this.balance().sub(fee)) > 0
       ? this.balance().sub(fee)
       : 0;
   }
   txFee() {
-    return toBN(this.gasPrice()).mul(toBN(this.TX.gas));
+    return toBN(this.localGasPrice).mul(toBN(this.TX.gas));
   }
   estimateGas() {
     this.setFrom(this.address());
@@ -102,8 +100,7 @@ class SendTransaction {
       data: this.TX.data,
       from: this.TX.from,
       to: this.TX.to,
-      value: this.TX.value,
-      gasPrice: this.TX.gasPrice
+      value: this.TX.value
     });
   }
   isToken() {
@@ -146,7 +143,8 @@ class SendTransaction {
       this._setGasPrice();
       const nonce = await this.web3().eth.getTransactionCount(this.address());
       this.setNonce(nonce);
-      const _tx = new Transaction(this.TX);
+      this.TX.gasLimit = this.TX.gas;
+      const _tx = Transaction.fromTxData(this.TX);
       const json = _tx.toJSON(true);
       json.from = this.address();
       json.toDetails = this.TX.toDetails;
@@ -157,10 +155,6 @@ class SendTransaction {
   }
 }
 SendTransaction.helpers = {
-  hasValidDecimals(amountStr, numDecimals) {
-    const decimals = amountStr.split('.')[1];
-    if (!decimals) return true;
-    return decimals.length <= numDecimals;
-  }
+  hasValidDecimals
 };
 export default SendTransaction;

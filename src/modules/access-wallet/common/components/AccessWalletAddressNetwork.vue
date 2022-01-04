@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%">
-    <div v-if="paths.length > 0" class="text-right mb-3">
+    <div v-if="paths.length > 0 && !hideCustomPaths" class="text-right mb-3">
       <access-wallet-derivation-path
         :selected-path="selectedPath"
-        :paths="paths"
+        :passed-paths="paths"
         @setPath="setPath"
       />
     </div>
@@ -23,7 +23,7 @@
                 -->
             <v-row dense class="table-header mx-0">
               <v-col offset="3">
-                <p>Adddress</p>
+                <p>Address</p>
               </v-col>
               <v-col cols="4" sm="3">
                 <p class="text-center">{{ network.type.name }} Balance</p>
@@ -154,7 +154,9 @@
           =====================================================================================
           -->
       <template #panelBody2>
-        <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+        <div class="px-5">
+          <network-switch :is-wallet="false" @newNetwork="setNetworkPanel" />
+        </div>
       </template>
     </mew-expand-panel>
     <!--
@@ -193,6 +195,7 @@ import { getEthBalance } from '@/apollo/queries/wallets/wallets.graphql';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { fromWei, toChecksumAddress } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
+import { isEmpty, isEqual } from 'underscore';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -234,6 +237,17 @@ export default {
     selectedPath: {
       type: Object,
       default: () => {}
+    },
+    /**
+     * hides access wallet derivation path component
+     */
+    hideCustomPaths: {
+      type: Boolean,
+      default: false
+    },
+    hideNetworks: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {
@@ -294,7 +308,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('global', ['addressBook']),
+    ...mapState('addressBook', ['addressBookStore']),
     web3() {
       return new Web3(this.network.url);
     },
@@ -337,20 +351,23 @@ export default {
      * Property returns expand panel items for the Address and Network
      */
     panelItems() {
-      return [
+      const panelItems = [
         {
           name: 'Address',
           subtext: this.panelAddressSubstring,
           colorTheme: 'superPrimary',
           hasActiveBorder: true
-        },
-        {
+        }
+      ];
+      if (!this.hideNetworks) {
+        panelItems.push({
           name: 'Network',
           subtext: this.panelNetworkSubstring,
           colorTheme: 'superPrimary',
           hasActiveBorder: true
-        }
-      ];
+        });
+      }
+      return panelItems;
     },
     /**
      * Property returns default network and nodes items
@@ -384,11 +401,17 @@ export default {
         this.changeHandler();
       }
     },
-    handlerWallet: {
+    selectedPath: {
       handler: function (newVal, oldVal) {
-        if (newVal !== oldVal) {
+        if (!isEqual(newVal, oldVal)) {
           this.changeHandler();
         }
+      },
+      deep: true
+    },
+    handlerWallet(newVal, oldVal) {
+      if (!isEqual(newVal, oldVal)) {
+        this.changeHandler();
       }
     }
   },
@@ -406,7 +429,13 @@ export default {
       this.selectedAddress = '';
       this.accountAddress = '';
       this.currentIdx = 0;
-      this.setAccounts();
+      /**
+       * prevents error when this.handlerWallet
+       * is empty due to selectedPatch changing
+       */
+      if (!isEmpty(this.handlerWallet)) {
+        this.setAccounts();
+      }
     },
     /**
      * Async method that gets accounts according to the pagination
@@ -459,7 +488,7 @@ export default {
     },
     getNickname(address) {
       const checksummedAddress = toChecksumAddress(address);
-      const isStored = this.addressBook.find(item => {
+      const isStored = this.addressBookStore.find(item => {
         const address = item.resolvedAddr
           ? toChecksumAddress(item.resolvedAddr)
           : toChecksumAddress(item.address);

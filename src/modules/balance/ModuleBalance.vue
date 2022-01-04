@@ -48,12 +48,7 @@
           class="full-width mt-5 pa-md-3"
         />
         <div
-          class="
-            pa-3 pa-sm-7
-            d-block d-md-flex
-            align-center
-            justify-space-between
-          "
+          class="pa-3 pa-sm-7 d-block d-md-flex align-center justify-space-between"
         >
           <div
             class="d-flex flex-column flex-sm-row align-center justify-center"
@@ -112,7 +107,7 @@ import { mapGetters, mapState } from 'vuex';
 import {
   formatPercentageValue,
   formatFiatValue,
-  formatBalanceEthValue
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
@@ -153,7 +148,7 @@ export default {
      * ie: $12.45 per 1 ETH
      */
     title() {
-      return `${formatBalanceEthValue(this.balanceInWei).value} ${
+      return `${formatFloatingPointValue(this.balanceInETH).value} ${
         this.network.type.name
       }`;
     },

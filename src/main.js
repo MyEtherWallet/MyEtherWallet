@@ -12,6 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import VueIntercom from '@mathieustan/vue-intercom';
 
+/**Dapps Store */
+import { dappStoreBeforeCreate } from './dapps/dappsStore';
+
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
 Router.prototype.push = function push(path) {
@@ -28,6 +31,7 @@ import store from '@/core/store';
 import Vuex from 'vuex';
 
 import LottieAnimation from '@/core/directives/lottie';
+import lokalise from './core/filters/lokalise';
 
 // etc
 import '@/core/plugins/registerServiceWorker';
@@ -37,6 +41,9 @@ import i18n from './main/i18n';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
+
+// Filters
+Vue.filter('lokalise', lokalise);
 
 // eslint-disable-next-line
 Vue.use(VueIntercom, { appId: 'ja20qe25' });
@@ -59,6 +66,8 @@ new Vue({
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
+    this.$store.commit('addressBook/INIT_STORE');
+    dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('global/setTracking');
   },
   render: h => h(app)

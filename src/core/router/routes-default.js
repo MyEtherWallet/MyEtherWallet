@@ -12,6 +12,8 @@ import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
+import TheConvertUnitsLayout from '@/views/layouts-default/TheConvertUnitsLayout';
+import TheCareersLayout from '@/views/layouts-default/TheCareersLayout';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -109,6 +111,22 @@ export default {
       path: ROUTES_HOME.DAPP_SUBMISSION.PATH,
       name: ROUTES_HOME.DAPP_SUBMISSION.NAME,
       component: TheDappSubmissionLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.CONVERT_UNITS.PATH,
+      name: ROUTES_HOME.CONVERT_UNITS.NAME,
+      component: TheConvertUnitsLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.JOBS.PATH,
+      name: ROUTES_HOME.JOBS.NAME,
+      component: TheCareersLayout,
       meta: {
         noAuth: true
       }

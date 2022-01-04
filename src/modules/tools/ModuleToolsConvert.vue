@@ -1,220 +1,392 @@
 <template>
-  <div>
-    <app-block-title
-      max-width="600px"
-      no-page-title
-      :data="title"
-      class="mb-7"
-    />
+  <mew-module
+    class="mew-component--convert-units pt-6"
+    :title="title"
+    :has-elevation="true"
+    :has-indicator="true"
+  >
+    <template #moduleBody>
+      <v-row class="conver-units mx-auto mb-15" style="max-width: 1000px">
+        <v-col cols="12" md="5">
+          <mew-select
+            :has-filter="false"
+            :items="items"
+            :value="selectedLeft"
+            class="mb-2"
+            @input="updateCurrencyLeft"
+          />
+          <mew-input
+            :value="valueLeft"
+            type="number"
+            label="Amount"
+            @input="updateAmountLeft"
+          />
+        </v-col>
+        <v-col cols="12" md="2" class="d-flex align-center justify-center">
+          <v-icon
+            :style="
+              $vuetify.breakpoint.smAndDown ? 'transform: rotate(90deg)' : ''
+            "
+            large
+            >mdi-swap-horizontal</v-icon
+          >
+        </v-col>
+        <v-col cols="12" md="5">
+          <mew-select
+            :has-filter="false"
+            :items="items"
+            :value="selectedRight"
+            class="mb-2"
+            @input="updateCurrencyRight"
+          />
+          <mew-input
+            :value="valueRight"
+            type="number"
+            label="Amount"
+            @input="updateAmountRight"
+          />
+        </v-col>
+      </v-row>
 
-    <div class="d-block d-lg-flex">
-      <div>
-        <mew-select :items="coins" label="From" />
-        <mew-input label="Amount" placeholder=" " />
+      <div class="mew-heading-1">
+        {{ $t('convertUnits.title-refference') }}
       </div>
-      <div class="px-6 mb-8 d-flex align-center justify-center">
-        <img
-          :src="swap"
-          height="35"
-          class="rotate"
-          :class="$vuetify.breakpoint.mdAndDown ? 'r90' : ''"
-        />
-      </div>
-      <div>
-        <mew-select :items="coins" label="To" />
-        <mew-input label="Amount" placeholder=" " />
-      </div>
-    </div>
 
-    <div class="mew-heading-2 mb-3 mt-5">Ether unit reference guide</div>
-
-    <div class="unit-table">
-      <table>
-        <tbody>
-          <tr v-for="eu in etherUnitRef" :key="eu.key">
-            <td>{{ eu.name }}</td>
-            <td class="unit-long">{{ eu.unit1 }}</td>
-            <td class="unit-short">
-              <div>
-                {{ eu.unit2 }}<span>{{ eu.unit2e }}</span>
-              </div>
-            </td>
-            <td>{{ eu.desc }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <div class="unit-table">
+        <table>
+          <thead>
+            <tr class="font-weight-medium">
+              <td>Unit</td>
+              <td>Wei</td>
+              <td>Ether</td>
+              <td>Alternate name</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="eu in etherUnitRef" :key="eu.key">
+              <td>{{ eu.name }}</td>
+              <td>
+                <div class="d-flex align-center">
+                  <div
+                    v-if="false"
+                    v-show="$vuetify.breakpoint.mdAndUp"
+                    class="mr-1"
+                  >
+                    {{ eu.unit1 }} =
+                  </div>
+                  <div class="unit-short">
+                    {{ eu.unit2 }}
+                    <span> {{ eu.unit2e }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-center">
+                  <div
+                    v-if="false"
+                    v-show="$vuetify.breakpoint.lgAndUp"
+                    class="mr-1"
+                  >
+                    {{ eu.etherUnit1 }} =
+                  </div>
+                  <div class="unit-short">
+                    {{ eu.etherUnit2 }}
+                    <span> {{ eu.etherUnit2e }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ eu.desc }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+  </mew-module>
 </template>
 
 <script>
-import AppBlockTitle from '@/core/components/AppBlockTitle';
-import swapIcon from '@/assets/images/icons/icon-swap.svg';
+import { mapState } from 'vuex';
+import { BigNumber } from 'bignumber.js';
+import utils from 'web3-utils';
 
 export default {
-  name: 'ModuleToolsConvert',
-  components: { AppBlockTitle },
-  data: () => ({
-    title: {
-      title: 'Convert units',
-      description:
-        'Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions.'
-    },
-    coins: [
-      {
-        name: 'ETH',
-        subtext: 'Ethereum',
-        value: 'Ethereum'
-      }
-    ],
-    swap: swapIcon,
-    etherUnitRef: [
-      {
+  name: 'TheConvertUnits',
+  components: {},
+  data() {
+    return {
+      title: 'Convert Units',
+      items: [
+        {
+          name: 'Wei',
+          value: 'wei'
+        },
+        {
+          name: 'Kwei',
+          value: 'kwei'
+        },
+        {
+          name: 'Mwei',
+          value: 'mwei'
+        },
+        {
+          name: 'Gwei',
+          value: 'gwei'
+        },
+        {
+          name: 'Szabo',
+          value: 'szabo'
+        },
+        {
+          name: 'Finney',
+          value: 'finney'
+        },
+        {
+          name: 'Ether',
+          value: 'ether'
+        },
+        {
+          name: 'Kether',
+          value: 'kether'
+        },
+        {
+          name: 'Mether',
+          value: 'mether'
+        },
+        {
+          name: 'Gether',
+          value: 'gether'
+        },
+        {
+          name: 'Tether',
+          value: 'tether'
+        }
+      ],
+      selectedLeft: {
         name: 'Wei',
-        unit1: '1',
-        unit2: '1',
-        unit2e: '',
-        desc: ''
+        value: 'wei'
       },
-      {
-        name: 'Kwei',
-        unit1: '1,000',
-        unit2: '10',
-        unit2e: '3',
-        desc: 'ada, femtoether'
-      },
-      {
-        name: 'Mwei',
-        unit1: '1,000,000',
-        unit2: '10',
-        unit2e: '6',
-        desc: 'babbage, picoether'
-      },
-      {
-        name: 'Gwei',
-        unit1: '1,000,000,000',
-        unit2: '10',
-        unit2e: '9',
-        desc: 'shannon, nanoether, nano'
-      },
-      {
-        name: 'Szabo',
-        unit1: '1,000,000,000,000',
-        unit2: '10',
-        unit2e: '12',
-        desc: 'microether, micro'
-      },
-      {
-        name: 'Finney',
-        unit1: '1,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '15',
-        desc: 'milliether, milli'
-      },
-      {
+      selectedRight: {
         name: 'Ether',
-        unit1: '1,000,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '18',
-        desc: ''
+        value: 'ether'
       },
-      {
-        name: 'Kether',
-        unit1: '1,000,000,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '21',
-        desc: 'grand, einstein'
-      },
-      {
-        name: 'Mether',
-        unit1: '1,000,000,000,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '24',
-        desc: ''
-      },
-      {
-        name: 'Gether',
-        unit1: '1,000,000,000,000,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '27',
-        desc: ''
-      },
-      {
-        name: 'Tether',
-        unit1: '1,000,000,000,000,000,000,000,000,000,000',
-        unit2: '10',
-        unit2e: '30',
-        desc: ''
-      }
-    ]
-  })
+      valueLeft: '1000000000000000000',
+      valueRight: '1',
+      etherUnitRef: [
+        {
+          name: 'Wei',
+          unit1: '1',
+          unit2: '1',
+          unit2e: '',
+          etherUnit1: '0.000,000,000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-18',
+          desc: ''
+        },
+        {
+          name: 'Kwei',
+          unit1: '1,000',
+          unit2: '10',
+          unit2e: '3',
+          etherUnit1: '0.000,000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-15',
+          desc: 'ada, femtoether'
+        },
+        {
+          name: 'Mwei',
+          unit1: '1,000,000',
+          unit2: '10',
+          unit2e: '6',
+          etherUnit1: '0.000,000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-12',
+          desc: 'babbage, picoether'
+        },
+        {
+          name: 'Gwei',
+          unit1: '1,000,000,000',
+          unit2: '10',
+          unit2e: '9',
+          etherUnit1: '0.000,000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-9',
+          desc: 'shannon, nanoether, nano'
+        },
+        {
+          name: 'Szabo',
+          unit1: '1,000,000,000,000',
+          unit2: '10',
+          unit2e: '12',
+          etherUnit1: '0.000,001',
+          etherUnit2: '10',
+          etherUnit2e: '-6',
+          desc: 'microether, micro'
+        },
+        {
+          name: 'Finney',
+          unit1: '1,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '15',
+          etherUnit1: '0.001',
+          etherUnit2: '10',
+          etherUnit2e: '-3',
+          desc: 'milliether, milli'
+        },
+        {
+          name: 'Ether',
+          unit1: '1,000,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '18',
+          etherUnit1: '1',
+          etherUnit2: '1',
+          etherUnit2e: '',
+          desc: ''
+        },
+        {
+          name: 'Kether',
+          unit1: '1,000,000,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '21',
+          etherUnit1: '1,000',
+          etherUnit2: '10',
+          etherUnit2e: '3',
+          desc: 'grand, einstein'
+        },
+        {
+          name: 'Mether',
+          unit1: '1,000,000,000,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '24',
+          etherUnit1: '1,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '6',
+          desc: ''
+        },
+        {
+          name: 'Gether',
+          unit1: '1,000,000,000,000,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '27',
+          etherUnit1: '1,000,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '9',
+          desc: ''
+        },
+        {
+          name: 'Tether',
+          unit1: '1,000,000,000,000,000,000,000,000,000,000',
+          unit2: '10',
+          unit2e: '30',
+          etherUnit1: '1,000,000,000,000',
+          etherUnit2: '10',
+          etherUnit2e: '12',
+          desc: ''
+        }
+      ]
+    };
+  },
+  computed: {
+    ...mapState('wallet', ['web3'])
+  },
+  watch: {
+    valueLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        newVal,
+        this.selectedLeft,
+        this.selectedRight
+      );
+    },
+    valueRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        newVal,
+        this.selectedRight,
+        this.selectedLeft
+      );
+    },
+    selectedLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        this.valueLeft,
+        newVal,
+        this.selectedRight
+      );
+    },
+    selectedRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        this.valueRight,
+        newVal,
+        this.selectedLeft
+      );
+    }
+  },
+  methods: {
+    getValueOfUnit(unit) {
+      unit = unit ? unit.value.toLowerCase() : 'ether';
+      const unitValue = utils.unitMap[unit];
+      return new BigNumber(unitValue, 10);
+    },
+    convertFromTo(amt, from, to) {
+      return new BigNumber(String(amt))
+        .times(this.getValueOfUnit(from))
+        .div(this.getValueOfUnit(to))
+        .toString(10);
+    },
+    updateCurrencyLeft(e) {
+      this.selectedLeft = e;
+    },
+    updateCurrencyRight(e) {
+      this.selectedRight = e;
+    },
+    updateAmountLeft(e) {
+      this.valueLeft = e;
+    },
+    updateAmountRight(e) {
+      this.valueRight = e;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-$tablet-width: 1024px;
-$mobile-width: 414px;
-
-// Desktop
-@media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  .wrap {
-    padding: 100px 0;
-    background-position: right top, left 80px;
-  }
-}
-
-// Tablet
-@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .wrap {
-    padding: 50px 0;
-    background-position: calc(100% + 35px) -70px, -60px 80px;
-    background-size: 100px, 200px;
-  }
-}
-
-// Mobile
-@media all and (max-width: $mobile-width) {
-  .wrap {
-    padding: 50px 0;
-    background-position: calc(100% + 35px) -70px, -60px 80px;
-    background-size: 100px, 170px;
-  }
-}
-table {
-  border-collapse: collapse;
-}
-
 .unit-table {
   margin-top: 20px;
   table {
     width: 100%;
-
+    border-collapse: collapse;
+    thead {
+      tr {
+        border-top: 1px solid var(--v-titlePrimary-base);
+        border-bottom: 1px solid var(--v-titlePrimary-base);
+      }
+    }
+    tbody {
+      tr:nth-child(even) {
+        background-color: var(--v-tableHeader-base);
+      }
+    }
     tr {
-      position: relative;
-      border-bottom: 1px solid #e0e0e0;
       td {
-        padding: 18px 10px;
+        padding: 12px 10px;
         position: relative;
-
-        span {
-          position: absolute;
-          top: 3px;
-          left: 17px;
-          font-size: 9px;
-          margin-top: -10px;
-        }
       }
     }
   }
 }
 
 .unit-short {
-  & > div {
-    position: relative;
+  position: relative;
+  span {
+    position: absolute;
+    top: 3px;
+    left: 17px;
+    font-size: 9px;
+    margin-top: -10px;
   }
 }
-@media all and (max-width: 760px) {
-  .unit-long {
+</style>
+
+<style lang="scss">
+.mew-component--convert-units {
+  .v-text-field__details {
     display: none;
   }
 }

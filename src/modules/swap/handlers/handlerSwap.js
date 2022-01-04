@@ -1,7 +1,8 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import Configs from './configs';
+import Configs from './configs.js';
+import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -31,7 +32,9 @@ class Swap {
           if (idx < 2) return Promise.resolve();
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
-            allTokens = mergeIfNotExists(allTokens, tokens);
+            if (tokens && tokens.length > 0) {
+              allTokens = mergeIfNotExists(allTokens, tokens);
+            }
           });
         })
       ).then(() => {
@@ -73,7 +76,7 @@ class Swap {
   }
   getQuotesForSet(arr) {
     const quotes = [];
-    const provider = this.providers[2];
+    const provider = this.providers[3];
     for (let i = 0; i < arr.length; i++) {
       quotes.push(provider.getQuote(arr[i]));
     }
@@ -110,11 +113,7 @@ class Swap {
 }
 
 Swap.helpers = {
-  hasValidDecimals(amountStr, numDecimals) {
-    const decimals = amountStr.split('.')[1];
-    if (!decimals) return true;
-    return decimals.length <= numDecimals;
-  }
+  hasValidDecimals
 };
 
 export default Swap;

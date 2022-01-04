@@ -229,7 +229,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-
 export default {
   components: {
     AppBtnMenu,
@@ -397,12 +396,10 @@ export default {
   font-size: 36px !important;
   color: white !important;
 }
-
 .wallet-sidemenu {
   .v-list-item--link {
     border-top: none;
   }
-
   .v-list-item--active {
     .v-list-item__content {
       .v-list-item__title {
@@ -410,79 +407,62 @@ export default {
       }
     }
   }
-
   .v-list-group__header__append-icon {
     .v-icon {
       color: var(--v-white-base) !important;
     }
   }
-
   .v-divider {
     border-color: rgba(255, 255, 255, 0.22) !important;
   }
-
   .v-list-item--link:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
   }
-
   .v-list-item:after {
     min-height: 40px !important;
   }
-
   .mew-body.font-weight-bold {
     font-weight: 400 !important;
   }
-
   .v-list-item--active.v-list-item:not(.v-list-group__header) {
     background-color: rgba(255, 255, 255, 0.1) !important;
   }
-
   .v-list-item--active::before {
     opacity: 0 !important;
   }
-
   .v-navigation-drawer__content {
     margin-right: 5px;
     margin-bottom: 10px;
-
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
     }
-
     &::-webkit-scrollbar-button {
       width: 0;
       height: 0;
     }
-
     &::-webkit-scrollbar-thumb {
       background: #7b91ac;
       border: 0 none #fff;
       border-radius: 50px;
     }
-
     &::-webkit-scrollbar-thumb:hover {
       background: #7b91ac;
     }
-
     &::-webkit-scrollbar-thumb:active {
       background: #4b4949;
     }
-
     &::-webkit-scrollbar-track {
       background: #e1dfdf;
       border: 0 none #fff;
       border-radius: 39px;
     }
-
     &::-webkit-scrollbar-track:hover {
       background: #ddd5d5;
     }
-
     &::-webkit-scrollbar-track:active {
       background: #dedede;
     }
-
     &::-webkit-scrollbar-corner {
       background: transparent;
     }

@@ -103,13 +103,7 @@
             />
             <div
               v-if="isIcon(tkn.name) && !tkn.value"
-              class="
-                token-placeholder
-                mew-caption
-                d-flex
-                align-center
-                justify-center
-              "
+              class="token-placeholder mew-caption d-flex align-center justify-center"
             >
               NA
             </div>
@@ -153,7 +147,7 @@ import abiERC20 from '../handlers/abiERC20';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 import { isAddress } from '@/core/helpers/addressUtils';
-import { _ } from 'web3-utils';
+import { debounce } from 'lodash';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
@@ -207,6 +201,7 @@ export default {
       return (
         this.loading ||
         (this.step === 1 && !this.contractAddress) ||
+        (this.step === 1 && !isAddress(this.contractAddress)) ||
         (this.step === 2 &&
           (this.symbolLengthTooLong.length > 0 ||
             this.nameLengthTooLong.length > 0 ||
@@ -235,7 +230,7 @@ export default {
      * will throw toast error if so
      * also will set error messages if value lengths are too long
      */
-    setInputValue: _.debounce(function (value, idx) {
+    setInputValue: debounce(function (value, idx) {
       if (idx == 3) {
         if (value && value.length > 6) {
           this.symbolLengthTooLong = 'Symbol cannot exceed 6 characters';
@@ -378,9 +373,9 @@ export default {
         this.contractAddress = '';
         this.loading = false;
         Toast('A token with this address already exists!', {}, ERROR);
-        return;
+      } else {
+        this.findTokenInfo();
       }
-      this.findTokenInfo();
     },
     /**
      * finds more token info
@@ -405,13 +400,17 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value;
+          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value
+            ? formatFiatValue(this.token.usdBalance).value
+            : formatFiatValue(0);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();
           this.token.usdBalancef = '0.00';
           this.token.contract = this.contractAddress;
         }
+        this.token.decimals = decimals;
+        this.token.balance = balance;
         this.token.balancef = this.getTokenBalance(balance, decimals).value;
         this.loading = false;
         this.step = 2;

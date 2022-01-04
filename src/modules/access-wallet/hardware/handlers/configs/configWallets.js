@@ -5,20 +5,25 @@ import {
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
-  BCVaultWallet,
   CoolWallet
 } from '@/modules/access-wallet/common';
 
 /**
  * different types of available hardware wallets
  */
+/**
+ *  create: @Object imported wallet handler,
+ *  when: @Integer which step your wallet should attempt to unlock,
+ *  hasPaths: @Boolean whether your hardware wallet has supported paths,
+ *  requiresPassword: @Boolean whether your hardware wallet requires password,
+ *  title: @String Header title for your wallet
+ */
 export default {
   [WALLET_TYPES.LEDGER]: {
     create: LedgerWallet,
     when: 2,
-    hasPaths: true,
+    hasPaths: false,
     requiresPassword: false,
-    accountOnly: false,
     title: 'Connect your Ledger'
   },
   [WALLET_TYPES.TREZOR]: {
@@ -26,7 +31,6 @@ export default {
     when: 2,
     hasPaths: true,
     requiresPassword: false,
-    accountOnly: false,
     title: 'Connect your Trezor'
   },
   [WALLET_TYPES.BITBOX2]: {
@@ -34,7 +38,6 @@ export default {
     when: 2,
     hasPaths: false,
     requiresPassword: false,
-    accountOnly: false,
     title: 'Connect your BitBox 02'
   },
   [WALLET_TYPES.KEEPKEY]: {
@@ -42,23 +45,13 @@ export default {
     when: 2,
     hasPaths: true,
     requiresPassword: false,
-    accountOnly: false,
     title: 'Connect your KeepKey'
-  },
-  [WALLET_TYPES.BCVAULT]: {
-    create: BCVaultWallet,
-    when: 2,
-    hasPaths: false,
-    requiresPassword: false,
-    accountOnly: true,
-    title: 'Connect your BC Vault'
   },
   [WALLET_TYPES.COOL_WALLET]: {
     create: CoolWallet,
     when: 2,
     hasPaths: false,
     requiresPassword: true,
-    accountOnly: false,
     title: 'Enter pairing password'
   }
 };

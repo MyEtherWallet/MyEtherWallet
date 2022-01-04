@@ -10,13 +10,7 @@
             =====================================================================================
             -->
       <div
-        class="
-          align-center align-sm-end
-          justify-center
-          pr-sm-3
-          pb-sm-3
-          order-sm-2
-        "
+        class="align-center align-sm-end justify-center pr-sm-3 pb-sm-3 order-sm-2"
       >
         <v-btn-toggle
           v-model="toggleType"
@@ -111,7 +105,7 @@ import * as types from '@/utils/networks/types';
 import { mapActions, mapGetters } from 'vuex';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
-import { _ } from 'web3-utils';
+import { debounce } from 'lodash';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
@@ -286,7 +280,7 @@ export default {
      * Debounce network switch from user input
      * @return {void}
      */
-    setNetworkDebounced: _.debounce(function (value) {
+    setNetworkDebounced: debounce(function (value) {
       const found = Object.values(this.nodes).filter(item => {
         if (item.type.name === value) {
           return item;

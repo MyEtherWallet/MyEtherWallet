@@ -25,13 +25,7 @@
     -->
         <v-card-text class="pa-0">
           <div
-            class="
-              titlePrimary--text
-              mew-heading-2
-              font-weight-regular
-              pa-8
-              pb-4
-            "
+            class="titlePrimary--text mew-heading-2 font-weight-regular pa-8 pb-4"
           >
             <span v-if="!onWhatWeCollect" class="break-word"
               >Help us make MEW better by allowing us to measure a few
