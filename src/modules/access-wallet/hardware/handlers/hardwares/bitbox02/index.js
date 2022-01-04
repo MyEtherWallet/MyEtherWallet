@@ -97,6 +97,11 @@ class BitBox02Wallet {
           data: tx.data
         }
       };
+      if (txParams.value === '0x0' && txParams.data === '0x') {
+        throw new Error(
+          "Bitbox02 doesn't support signing a regular transaction with 0 value!"
+        );
+      }
       const result = await this.BitBox02.ethSignTransaction(signingData);
       txParams.r = Buffer.from(result.r);
       txParams.s = Buffer.from(result.s);
