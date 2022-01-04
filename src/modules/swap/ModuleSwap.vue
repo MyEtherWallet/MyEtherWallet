@@ -65,14 +65,7 @@
                   />
                 </div>
               </v-col>
-              <v-col
-                cols="12"
-                sm="5"
-                :class="[
-                  amountErrorMessage !== '' ? 'pb-sm-8' : 'pb-sm-3',
-                  'pl-sm-0 pb-0'
-                ]"
-              >
+              <v-col cols="12" sm="5" :class="[errorPadding, 'pl-sm-0']">
                 <mew-select
                   ref="toToken"
                   :value="toTokenType"
@@ -398,6 +391,13 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    errorPadding() {
+      return this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow
+        ? 'pb-sm-29px'
+        : this.amountErrorMessage !== ''
+        ? 'pb-sm-15px' // weird padding
+        : 'pb-sm-3';
+    },
     /**
      *Returns errors messages based on netowrk
      */
@@ -1328,5 +1328,13 @@ export default {
 .swap-to-input {
   pointer-events: none !important;
   user-select: none !important;
+}
+
+.pb-sm-15px {
+  padding-bottom: 15px !important;
+}
+
+.pb-sm-29px {
+  padding-bottom: 29px !important;
 }
 </style>
