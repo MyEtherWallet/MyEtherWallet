@@ -13,7 +13,7 @@ const WalletErrorHandler = (errors, warnings) => {
     const foundError = errorValues.find(item => {
       const message =
         err && err.message
-          ? err.message.hasOwProperty('message')
+          ? err.message.hasOwnProperty('message')
             ? err.message.message
             : err.message
           : err;
@@ -21,7 +21,14 @@ const WalletErrorHandler = (errors, warnings) => {
       return message.includes(item);
     });
     const foundWarning = warningValues.find(item => {
-      return err.message.includes(item);
+      const message =
+        err && err.message
+          ? err.message.hasOwnProperty('message')
+            ? err.message.message
+            : err.message
+          : err;
+      if (!message) return false;
+      return message.includes(item);
     });
     if (foundError) {
       Toast(Vue.$i18n.t(errors[foundError]), {}, ERROR);
