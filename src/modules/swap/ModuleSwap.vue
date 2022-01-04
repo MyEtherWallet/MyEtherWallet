@@ -474,9 +474,10 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        (!isEmpty(this.fromTokenType) &&
+        !this.isLoading &&
+        ((!isEmpty(this.fromTokenType) &&
           !isEmpty(this.fromTokenType?.symbol)) ||
-        (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol))
+          (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol)))
       );
     },
     /**
