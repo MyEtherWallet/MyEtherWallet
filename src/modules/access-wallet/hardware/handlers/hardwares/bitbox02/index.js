@@ -98,11 +98,11 @@ class BitBox02Wallet {
         }
       };
       const result = await this.BitBox02.ethSignTransaction(signingData);
-      tx.r = Buffer.from(result.r);
-      tx.s = Buffer.from(result.s);
-      tx.v = Buffer.from(result.v);
+      txParams.r = Buffer.from(result.r);
+      txParams.s = Buffer.from(result.s);
+      txParams.v = Buffer.from(result.v);
 
-      const signedChainId = calculateChainIdFromV(tx.v);
+      const signedChainId = calculateChainIdFromV(txParams.v);
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
@@ -111,7 +111,7 @@ class BitBox02Wallet {
             signedChainId,
           'InvalidNetworkId'
         );
-      return getSignTransactionObject(Transaction.fromTxData(tx));
+      return getSignTransactionObject(Transaction.fromTxData(txParams));
     };
 
     const msgSigner = async msg => {
