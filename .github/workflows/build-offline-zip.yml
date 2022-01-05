@@ -1,4 +1,4 @@
-name: build and generate offline zip
+name: generate offline zip
 
 on:
   push:
@@ -44,8 +44,8 @@ jobs:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
           pip install --user awscli
-          cd chrome-extension && zip -r ../OFFLINE-$GITHUB_SHA.zip * && cd ..
-          aws s3 cp --acl public-read ./OFFLINE-$GITHUB_SHA.zip s3://mewbuilds/build/offline-$GITHUB_SHA.zip
+          cd dist && zip -r ../OFFLINE-$GITHUB_SHA.zip * && cd ..
+          aws s3 cp --acl public-read ./OFFLINE-$GITHUB_SHA.zip s3://mewbuilds/offline/OFFLINE-$GITHUB_SHA.zip
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/offline-${GITHUB_SHA}.zip<br/> \"}" \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/offline/OFFLINE-${GITHUB_SHA}.zip<br/> \"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
