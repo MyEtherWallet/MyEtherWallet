@@ -196,7 +196,6 @@ export default {
         this.swapData = null;
         this.loading = true;
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
-          console.log(res);
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
               res[idx].length !== 0 && res[idx][0] && res[idx][0]?.amount
