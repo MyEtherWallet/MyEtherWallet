@@ -1285,7 +1285,8 @@ export default {
         txFee: this.txFee,
         gasPriceType: this.gasPriceType,
         actualTrade: this.currentTrade,
-        fromTokenType: this.fromTokenType
+        fromTokenType: this.fromTokenType,
+        toTokenType: this.toTokenType
       };
 
       if (this.isFromNonChain) {

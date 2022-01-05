@@ -23,6 +23,7 @@
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :btn-text="toNonEth ? 'Proceed with swap' : 'Confirm & Send'"
       :scrollable="true"
       :anchored="true"
       width="650"
@@ -30,6 +31,20 @@
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+          <div
+            v-if="toNonEth"
+            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
+          >
+            <b>Please double check everything.</b> MEW team will not be able to
+            reverse your transaction once its submitted. You will still be
+            charged gas fee even if the transaction fails.
+            <a
+              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more.</a
+            >
+          </div>
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="txTo"
@@ -57,9 +72,13 @@
             :tx-fee="swapInfo.txFee"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
+            :is-to-non-eth="toNonEth"
+            :to-currency="swapInfo.toType"
+            :to-address="swapInfo.to"
           />
           <!-- Warning Sheet -->
           <div
+            v-if="!toNonEth"
             class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Canceling or
@@ -186,6 +205,13 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <div v-if="toNonEth" class="pt-4">
+            By clicking 'Proceed with swap', I agree to the
+            <a href="https://changelly.com/aml-kyc" target="_blank">
+              Changelly AML/KYC
+            </a>
+            and <router-link :to="termRoute">Terms of Service</router-link>
+          </div>
         </v-card-text>
       </template>
     </app-modal>
@@ -247,6 +273,7 @@ import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleConfirmation',
@@ -268,6 +295,7 @@ export default {
       showSuccessModal: false,
       showSuccessSwap: false,
       showCrossChainModal: false,
+      toNonEth: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -284,7 +312,8 @@ export default {
         etherscan: ''
       },
       error: '',
-      panel: []
+      panel: [],
+      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
     };
   },
   computed: {
@@ -482,7 +511,10 @@ export default {
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      _self.title = 'Verify Swap';
+      _self.title = _self.swapInfo.toTokenType.isEth
+        ? 'Verify Swap'
+        : 'Review Swap';
+      _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
       if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
         await _self.signTx();
       }

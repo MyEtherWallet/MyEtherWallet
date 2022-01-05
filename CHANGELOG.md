@@ -1,3 +1,14 @@
+### Release v6.4.3-hotfix.1
+
+### fix
+
+* fix dapps tranlsations, add link out to release [#3601](https://github.com/MyEtherWallet/MyEtherWallet/pull/3601)
+
+### feat
+
+* add in log message on app start [#3572](https://github.com/MyEtherWallet/MyEtherWallet/pull/3572)
+* add job postings page [#3577](https://github.com/MyEtherWallet/MyEtherWallet/pull/3577)
+
 ### Release v6.4.3
 
 ### devop
