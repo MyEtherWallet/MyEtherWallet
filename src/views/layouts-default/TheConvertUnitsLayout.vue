@@ -105,7 +105,7 @@ import { BigNumber } from 'bignumber.js';
 import utils from 'web3-utils';
 
 export default {
-  name: 'TheConvertUnits',
+  name: 'TheConvertUnitsLayout',
   components: {
     TheLayoutHeader,
     AppGetStarted
