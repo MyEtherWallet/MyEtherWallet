@@ -72,7 +72,10 @@ const webpackConfig = {
   }
 };
 const exportObj = {
-  publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
+  publicPath:
+    process.env.ROUTER_MODE === 'history' || process.env.BUILD === 'offline'
+      ? '/'
+      : './',
   configureWebpack: webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
