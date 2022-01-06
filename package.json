@@ -3,7 +3,7 @@
   "version": "6.4.3-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
-    "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
+    "build:offline": "BUILD=offline WEBPACK_INTEGRITY=false npm run build:hash",
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
     "lint": "npm run lint:code && npm run lint:md",

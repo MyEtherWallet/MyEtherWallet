@@ -192,12 +192,12 @@
         />
 
         <div class="mb-3">{{ $t('sendTx.signed.scan') }}</div>
-        <qrcode-vue
+        <!-- <qrcode-vue
           class="mb-3"
           :value="signedTransaction.rawTransaction"
           :size="200"
           level="H"
-        />
+        /> -->
         <div>or</div>
         <a
           :href="jsonFile"
@@ -223,7 +223,6 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import QrcodeVue from 'qrcode.vue';
 import { fromWei, toBN, isHexStrict, _, toWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -240,8 +239,7 @@ export default {
   components: {
     ModuleAddressBook,
     SendLowBalanceNotice,
-    AppButtonBalance,
-    QrcodeVue
+    AppButtonBalance
   },
   props: {
     prefilledAmount: {

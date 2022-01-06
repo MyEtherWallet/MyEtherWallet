@@ -1,10 +1,10 @@
-import app from './main/mainApp';
+import app from './mainApp';
 import '@/assets/fonts/MaterialDesignIcons/css/materialdesignicons.min.css';
 import '@/assets/fonts/Roboto/css/Roboto.css';
 
-import './main/sentry';
-import './main/components';
-import './main/matomo';
+import './sentry';
+import './components';
+import './matomo';
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import VueIntercom from '@mathieustan/vue-intercom';
 
 /**Dapps Store */
-import { dappStoreBeforeCreate } from './dapps/dappsStore';
+import { dappStoreBeforeCreate } from '../dapps/dappsStore';
 
 const originalPush = Router.prototype.push;
 const originalReplace = Router.prototype.replace;
@@ -31,13 +31,13 @@ import store from '@/core/store';
 import Vuex from 'vuex';
 
 import LottieAnimation from '@/core/directives/lottie';
-import lokalise from './core/filters/lokalise';
+import lokalise from '@/core/filters/lokalise';
 
 // etc
 import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
-import apolloProvider from './main/apolloProvider';
-import i18n from './main/i18n';
+import apolloProvider from './apolloProvider';
+import i18n from './i18n';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
