@@ -38,12 +38,12 @@ export default {
       activeTab: 0,
       tabs: [
         {
-          name: 'Start staking',
+          name: 'Stake ETH',
           route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
           id: 0
         },
         {
-          name: 'My stake',
+          name: 'Compound Rewards',
           route: {
             name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
           },
