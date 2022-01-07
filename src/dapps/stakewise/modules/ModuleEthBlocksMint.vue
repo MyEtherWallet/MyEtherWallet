@@ -1,52 +1,22 @@
 <template>
   <div class="pt-5 pb-13 px-3 pa-sm-15">
-    <v-item-group v-model="tab" mandatory class="mb-9">
-      <v-item v-slot="{ active, toggle }" class="mr-3">
-        <v-btn
-          class="text-transform--initial"
-          depressed
-          large
-          :text="!active"
-          :color="active ? 'greyLight' : ''"
-          @click.native="toggle"
-        >
-          Stake
-        </v-btn>
-      </v-item>
-      <v-item v-slot="{ active, toggle }">
-        <v-btn
-          class="text-transform--initial"
-          depressed
-          large
-          :text="!active"
-          :color="active ? 'greyLight' : ''"
-          @click.native="toggle"
-        >
-          Compound
-        </v-btn>
-      </v-item>
-    </v-item-group>
-
-    <v-tabs-items v-model="tab">
-      <v-tab-item>
+    <v-row>
+      <v-col cols="12" md="8">
         <stake-eth />
-      </v-tab-item>
-      <v-tab-item> <compound /> </v-tab-item>
-    </v-tabs-items>
+      </v-col>
+      <v-col cols="12" md="4"> aaa </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 import StakeEth from './ModuleSubStakeEth';
-import Compound from './ModuleSubCompound';
 import { mapState } from 'vuex';
 export default {
   name: 'ModuleEthBlocksMint',
-  components: { StakeEth, Compound },
+  components: { StakeEth },
   data() {
-    return {
-      tab: 'stake'
-    };
+    return {};
   },
   computed: {
     ...mapState('wallet', ['blockNumber'])
