@@ -205,18 +205,16 @@
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.claim-token-desc') }}
             </span>
+            <span class="mew-heading-2 font-weight-bold">
+              Claimed: {{ ensTokens.claimed }}
+            </span>
+            <span class="mew-heading-2 font-weight-bold">
+              Balance: {{ ensTokenBalance }}
+            </span>
           </div>
           <form @submit.prevent="claimTokens">
             <v-row class="mx-0">
               <v-col class="pr-0" cols="8">
-                <!-- <mew-input
-                  :value="delegatorAddress"
-                  :has-clear-btn="true"
-                  :label="$t('ens.delegator')"
-                  class="mr-3 flex-grow-1"
-                  :error-messages="delegatorErrors"
-                  @input="setDelegatorAddress"
-                /> -->
                 <module-address-book
                   class="mr-3 flex-grow-1"
                   :label="$t('ens.delegator')"
@@ -302,6 +300,7 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
 export default {
   name: 'ENSManagerLayout',
   components: {
@@ -325,6 +324,11 @@ export default {
       ensManager: {},
       onRegister: false,
       searchError: '',
+      ensTokens: {
+        claimed: false,
+        balance: '0',
+        proof: ''
+      },
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -370,18 +374,25 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
+    ensTokenBalance() {
+      return fromWei(this.ensTokens.balance);
+    },
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
       return this.searchError;
     },
     delegatorErrors() {
-      if (this.delegatorAddress && !isAddress(this.delegatorAddress)) {
+      if (!isAddress(this.delegatorAddress)) {
         return 'Invalid address!';
       }
       return '';
     },
     isClaimDisabled() {
-      return this.delegatorErrors === '' || this.delegatorAddress === '';
+      return (
+        this.ensTokens.claimed ||
+        this.delegatorErrors !== '' ||
+        this.delegatorAddress === ''
+      );
     },
     rules() {
       return [
@@ -444,9 +455,21 @@ export default {
     );
 
     this.getDomains();
+    hasClaimed(this.address, this.web3).then(data => {
+      this.ensTokens.claimed = data.claimed;
+      this.ensTokens.balance = data.balance;
+      this.ensTokens.proof = data.proof;
+    });
   },
   methods: {
-    claimTokens() {},
+    claimTokens() {
+      submitClaim(
+        this.ensTokens.balance,
+        this.ensTokens.proof,
+        this.delegatorAddress,
+        this.web3
+      );
+    },
     setDelegatorAddress(address) {
       this.delegatorAddress = address;
     },
