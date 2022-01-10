@@ -35,9 +35,9 @@
       :items="summaryItems"
     >
       <template #rightColItem0>
-        <div class="mew-body d-flex">
+        <div class="mew-body d-flex justify-end">
           <mew-blockie :address="toAddress" width="20px" height="20px" />
-          <span class="searchText--text">{{ toAddress }}</span>
+          <span class="searchText--text ml-2">{{ toAddress }}</span>
         </div>
       </template>
       <template #rightColItem1>

@@ -774,7 +774,7 @@ export default {
      */
     toAddress() {
       if (!this.toTokenType?.isEth) {
-        if (this.userAddress) {
+        if (this.userToAddress) {
           return this.userToAddress;
         }
 
@@ -1275,9 +1275,9 @@ export default {
       this.loadingFee = false;
       if (trade instanceof Error) {
         this.feeError = 'Provider issue';
-      } else {
-        this.feeError = '';
+        return;
       }
+      this.feeError = '';
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
       if (!this.isFromNonChain) {
