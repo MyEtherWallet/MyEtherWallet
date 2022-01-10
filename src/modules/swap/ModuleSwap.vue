@@ -14,7 +14,7 @@
             =====================================================================================
             -->
           <div class="input-swap-container pt-7 pb-3 px-5">
-            <v-row class="align-center justify-space-between mt-4">
+            <v-row class="align-start justify-space-between mt-4">
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
                   <app-button-balance
@@ -53,7 +53,12 @@
                   }"
                   @input="setTokenInValue"
               /></v-col>
-              <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+              <v-col
+                cols="12"
+                align-self="center"
+                sm="2"
+                class="px-6 py-0 py-sm-3 mb-3 mb-sm-0"
+              >
                 <div class="d-flex align-center justify-center pb-sm-10">
                   <mew-icon-button
                     mdi-icon="swap-horizontal"
@@ -65,7 +70,7 @@
                   />
                 </div>
               </v-col>
-              <v-col cols="12" sm="5" :class="[errorPadding, 'pl-sm-0']">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pl-sm-0">
                 <mew-select
                   ref="toToken"
                   :value="toTokenType"
@@ -391,13 +396,6 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
-    errorPadding() {
-      return this.amountErrorMessage === this.errorMsgs.amountEthIsTooLow
-        ? 'pb-sm-29px'
-        : this.amountErrorMessage !== ''
-        ? 'pb-sm-15px' // weird padding
-        : 'pb-sm-3';
-    },
     /**
      *Returns errors messages based on netowrk
      */
