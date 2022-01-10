@@ -118,7 +118,7 @@
     "ethereumjs-util": "7.1.3",
     "ethereumjs-wallet": "1.0.2",
     "hdkey": "2.0.1",
-    "html2canvas": "1.3.3",
+    "html2canvas": "1.4.0",
     "husky": "5.0.9",
     "imagemin-mozjpeg": "9.0.0",
     "imagemin-webpack-plugin": "2.4.2",

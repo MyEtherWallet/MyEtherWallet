@@ -123,7 +123,7 @@
             ref="addressInput"
             class="pt-4 pb-2 mt-10"
             :label="nativeLabel"
-            :is-valid-address-func="isValidToAddress"
+            :is-valid-address-func="isValidRefundAddress"
             @setAddress="setRefundAddr"
           />
 
@@ -299,6 +299,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import WAValidator from 'multicoin-address-validator';
 
 import xss from 'xss';
 
@@ -765,8 +766,20 @@ export default {
       }
       return '0';
     },
+    /**
+     * check whether the to token is in ETH chain or not
+     * also checks if the userAddress is not empty
+     *
+     * @returns {String} - Ethereum Address
+     */
     toAddress() {
-      if (!this.toTokenType?.isEth) return this.userToAddress;
+      if (!this.toTokenType?.isEth) {
+        if (this.userAddress) {
+          return this.userToAddress;
+        }
+
+        return this.address;
+      }
       if (this.toTokenType?.isEth) return this.address;
       return this.address;
     },
@@ -948,6 +961,14 @@ export default {
       this.isValidRefundAddr = valid;
       if (valid) this.setTokenInValue(this.tokenInValue);
     },
+    /**
+     * Handles emitted values from module-address-book
+     */
+    setToAddress(value, isValid) {
+      this.userToAddress = value;
+      this.isValidToAddr = isValid;
+      if (isValid) this.setTokenInValue(this.tokenInValue);
+    },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);
@@ -1094,10 +1115,6 @@ export default {
         this.setTokenInValue(this.tokenInValue);
       }, 500);
     },
-    setToAddress(value, isValid) {
-      this.userToAddress = value;
-      this.isValidToAddr = isValid;
-    },
     setFromToken(value) {
       this.fromTokenType = value;
       this.$nextTick(() => {
@@ -1206,8 +1223,14 @@ export default {
       });
     },
     getTrade: debounce(function (idx) {
-      if (!this.isValidToAddr || !this.availableQuotes[idx]) return;
+      if (
+        (!this.isFromNonChain && !this.isValidToAddr) ||
+        !this.availableQuotes[idx]
+      )
+        return;
       if (this.isFromNonChain && !this.isValidRefundAddr) return;
+      if (this.isFromNonChain && !this.isValidToAddr && !this.isValidRefundAddr)
+        return;
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
@@ -1252,9 +1275,9 @@ export default {
       this.loadingFee = false;
       if (trade instanceof Error) {
         this.feeError = 'Provider issue';
-        return;
+      } else {
+        this.feeError = '';
       }
-      this.feeError = '';
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.localGasPrice;
       if (!this.isFromNonChain) {
@@ -1302,7 +1325,28 @@ export default {
           address
         });
       }
-      return true;
+      const symbol = this.toTokenType.hasOwnProperty('symbol')
+        ? this.toTokenType.symbol.toLowerCase()
+        : '';
+      if (symbol !== '') {
+        const currencyExists = WAValidator.findCurrency(symbol);
+        if (currencyExists) {
+          return WAValidator.validate(address, symbol);
+        }
+      }
+      return false;
+    },
+    isValidRefundAddress(address) {
+      const symbol = this.fromTokenType.hasOwnProperty('symbol')
+        ? this.fromTokenType.symbol.toLowerCase()
+        : '';
+      if (symbol !== '') {
+        const currencyExists = WAValidator.findCurrency(symbol);
+        if (currencyExists) {
+          return WAValidator.validate(address, symbol);
+        }
+      }
+      return false;
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
