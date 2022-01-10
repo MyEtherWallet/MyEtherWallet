@@ -225,10 +225,14 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.$router.push({
-                name: ROUTES_WALLET.SWAP.NAME,
-                query: obj
-              });
+              this.$router
+                .push({
+                  name: ROUTES_WALLET.SWAP.NAME,
+                  query: obj
+                })
+                .then(() => {
+                  this.$emit('trade');
+                });
             },
             btnStyle: 'outline',
             colorTheme: 'primary'

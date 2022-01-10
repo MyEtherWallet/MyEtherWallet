@@ -825,6 +825,11 @@ export default {
     },
     amountErrorMessage(newVal) {
       if (newVal !== '') this.availableQuotes.splice(0);
+    },
+    '$route.query': {
+      handler: function () {
+        this.setTokenFromURL();
+      }
     }
   },
   beforeMount() {
