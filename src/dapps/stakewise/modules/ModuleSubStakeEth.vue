@@ -7,7 +7,7 @@
       <div
         class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
       >
-        <div class="mew-caption textLight--text font-weight-regular mb-2">
+        <div class="mew-caption textMedium--text font-weight-regular mb-2">
           You give
         </div>
         <div class="stake-icon">
@@ -52,7 +52,7 @@
     <!-- ======================================================================================= -->
     <!-- How stake works -->
     <!-- ======================================================================================= -->
-    <div class="mt-4">
+    <div class="mt-3">
       <div class="font-weight-bold mb-4">How staking works</div>
       <ul class="textMedium--text">
         <li>
@@ -188,7 +188,6 @@ export default {
   border-radius: 50% !important;
   width: 52px;
   height: 52px;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
   background-color: var(--v-whiteBackground-base);
 
   img {

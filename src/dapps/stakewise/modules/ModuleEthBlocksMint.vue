@@ -4,17 +4,24 @@
       <v-col cols="12" md="8">
         <stake-eth />
       </v-col>
-      <v-col cols="12" md="4"> aaa </v-col>
+      <v-col cols="12" md="4">
+        <side-apr class="mb-4" />
+        <side-staking class="mb-4" />
+        <side-rewards />
+      </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
+import SideApr from './ModuleSideApr';
+import SideStaking from './ModuleSideStaking';
+import SideRewards from './ModuleSideRewards';
 import StakeEth from './ModuleSubStakeEth';
 import { mapState } from 'vuex';
 export default {
   name: 'ModuleEthBlocksMint',
-  components: { StakeEth },
+  components: { SideApr, SideStaking, SideRewards, StakeEth },
   data() {
     return {};
   },
