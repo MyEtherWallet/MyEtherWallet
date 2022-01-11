@@ -13,6 +13,16 @@ const exportObj = {
       template: 'public/index.html',
       filename: 'index.html'
     }
+  },
+  chainWebpack: config => {
+    2;
+    // GraphQL Loader
+    config.module
+      .rule('graphql')
+      .test(/\.graphql$/)
+      .use('graphql-tag/loader')
+      .loader('graphql-tag/loader')
+      .end();
   }
 };
 
