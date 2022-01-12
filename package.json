@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.4.3-hotfix.1",
+  "version": "6.4.3-hotfix.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -86,7 +86,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.0.0",
-    "@ledgerhq/hw-app-eth": "6.18.0",
+    "@ledgerhq/hw-app-eth": "6.20.0",
     "@ledgerhq/hw-transport-webusb": "6.20.0",
     "@mdi/font": "6.5.95",
     "@vue/babel-preset-app": "4.5.15",
@@ -101,7 +101,7 @@
     "axios": "0.24.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
-    "babel-jest": "27.4.6",
+    "babel-jest": "27.4.5",
     "bc-vault-js": "2.1.1",
     "bignumber.js": "9.0.2",
     "bip39": "3.0.4",
