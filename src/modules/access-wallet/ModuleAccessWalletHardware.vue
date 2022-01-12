@@ -139,7 +139,7 @@
     </div>
     <!--
       =====================================================================================
-        Step 3: Select Address and Network | (If Applicable) 
+        Step 3: Select Address and Network | (If Applicable)
       =====================================================================================
       -->
     <!--
@@ -452,10 +452,10 @@ export default {
         : false;
     },
     bitbox2Titles() {
-      if (this.bitBox2Connected) return 'Enter Bitbox 02 password';
+      if (this.bitBox2Connected) return 'Enter BitBox02 password';
       if (this.bitBox2Unpaired) return 'Confirm pairing code';
       if (this.bitBox2Initialized)
-        return 'Bitbox 02 succesfully initialized. Loading wallet';
+        return 'BitBox02 succesfully initialized. Loading wallet';
       return this.walletType ? this.wallets[this.walletType].title : '';
     }
   },

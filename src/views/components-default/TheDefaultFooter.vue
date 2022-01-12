@@ -328,7 +328,7 @@ export default {
         title: 'Affiliate Hardware Wallets',
         data: [
           { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
-          { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
+          { label: 'BitBox02', link: 'https://shiftcrypto.ch/?ref=mew' },
           {
             label: 'Ether Cards',
             link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
