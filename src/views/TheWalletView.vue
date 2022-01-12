@@ -4,6 +4,7 @@
     <v-main>
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
+        <start-staking-popup />
         <module-confirmation />
         <the-wallet-promo-popup />
         <router-view />
@@ -30,6 +31,8 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import StartStakingPopup from '@/dapps/stakewise/TheStartStakingPopup';
+
 export default {
   components: {
     TheWalletSideMenu,
@@ -37,7 +40,8 @@ export default {
     TheWalletFooter,
     TheWalletPromoPopup,
     ModuleConfirmation,
-    MewSurvey
+    MewSurvey,
+    StartStakingPopup
   },
   mixins: [handlerWallet],
   computed: {

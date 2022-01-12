@@ -22,7 +22,32 @@
         <div class="textLight--text">$0.09</div>
       </div>
     </div>
-    <div class="d-flex align-center justify-space-between mt-4">
+
+    <!-- ======================================================================================= -->
+    <!-- not earned any rewards yet user message -->
+    <!-- ======================================================================================= -->
+    <div class="mt-4">
+      You have not earned any rewards yet. Please wait 24 hours after staking to
+      start earning rewards.
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- Active for Stake ETH -->
+    <!-- ======================================================================================= -->
+    <div
+      v-if="compoundRewards"
+      class="d-flex align-center justify-space-between mt-4"
+    >
+      <div class="greenPrimary--text">Redeem to ETH</div>
+      <div class="greenPrimary--text cursor--pointer" @click="routeToSwap">
+        Compound
+      </div>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- Active for Compound Rewards -->
+    <!-- ======================================================================================= -->
+    <div v-else class="d-flex align-center justify-space-between mt-4">
       <div class="greenPrimary--text">Redeem to ETH</div>
       <mew-button title="Compound" />
     </div>
@@ -33,6 +58,12 @@
 export default {
   name: 'ModuleSideRewards',
   components: {},
+  props: {
+    compoundRewards: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {};
   },

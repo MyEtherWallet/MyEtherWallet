@@ -57,6 +57,10 @@
             disabled: false,
             method: setMaxAmount
           }"
+          :image="iconStakewise"
+          label="Amount to compound"
+          placeholder="Enter amount"
+          value=""
         />
       </div>
 
@@ -149,7 +153,9 @@ export default {
   name: 'ModuleSubStakeEth',
   components: { ButtonBalance },
   data() {
-    return {};
+    return {
+      iconStakewise: require('@/assets/images/icons/icon-stakewise-red.svg')
+    };
   },
   computed: {},
   methods: {
@@ -182,8 +188,7 @@ ul {
     &:before {
       font-size: 11px;
       content: '◆';
-      //padding-right: 12px;
-      margin-left: -20px;
+      margin-left: -23px;
       margin-right: 10px;
       color: var(--v-greenPrimary-base);
     }

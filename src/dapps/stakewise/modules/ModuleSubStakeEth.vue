@@ -54,6 +54,10 @@
             disabled: false,
             method: setMaxAmount
           }"
+          :image="iconEth"
+          label="Amount to stake"
+          placeholder="Enter amount"
+          value=""
         />
       </div>
 
@@ -179,7 +183,9 @@ export default {
   name: 'ModuleSubStakeEth',
   components: { ButtonBalance },
   data() {
-    return {};
+    return {
+      iconEth: require('@/assets/images/icons/icon-eth-gray.svg')
+    };
   },
   computed: {},
   methods: {
@@ -212,8 +218,7 @@ ul {
     &:before {
       font-size: 11px;
       content: '◆';
-      //padding-right: 12px;
-      margin-left: -20px;
+      margin-left: -23px;
       margin-right: 10px;
       color: var(--v-greenPrimary-base);
     }

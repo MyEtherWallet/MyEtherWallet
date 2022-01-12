@@ -5,16 +5,19 @@
   or (v-model="") to control dialog
   ==================================================================
   -->
-  <v-dialog v-model="isDialogOpen" :width="width">
-    <div class="white pa-8">
-      <div class="d-flex align-start justify-space-between mb-7">
+  <v-dialog v-model="isDialogOpen" :width="width" :max-width="maxWidth">
+    <div class="white pa-8 pt-5">
+      <div
+        class="d-flex align-start justify-space-between"
+        :class="title ? 'mb-7' : ''"
+      >
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
         <v-btn
           color="textSecondary"
           icon
-          class="mt-n2 mr-n2"
+          class="mt-n2 mr-n4"
           @click="closeDialog"
         >
           <v-icon>mdi-close</v-icon>
@@ -39,7 +42,11 @@ export default {
     },
     width: {
       type: String,
-      default: '600'
+      default: ''
+    },
+    maxWidth: {
+      type: String,
+      default: ''
     },
     title: {
       type: String,
@@ -77,6 +84,10 @@ export default {
         this.closeDialog();
       }
     }
+  },
+  mounted() {
+    // Apply initial v-model value
+    this.isDialogOpen = this.value;
   },
   methods: {
     closeDialog() {

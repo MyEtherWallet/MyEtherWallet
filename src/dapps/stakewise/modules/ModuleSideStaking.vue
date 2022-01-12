@@ -22,11 +22,54 @@
         <div class="textLight--text">$143.09</div>
       </div>
     </div>
-    <div class="d-flex align-center justify-space-between mt-4">
+
+    <!-- ======================================================================================= -->
+    <!-- You are not staking user message -->
+    <!-- ======================================================================================= -->
+    <div class="mt-4">
+      You are currently not staking any ETH. To earn rewards start staking.
+      <span class="greenPrimary--text">Start staking</span>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- Pending -->
+    <!-- ======================================================================================= -->
+    <div class="d-flex justify-space-between mt-4">
+      <div>
+        <v-progress-circular
+          indeterminate
+          color="greenPrimary"
+          :width="2"
+          :size="20"
+          class="mr-1"
+        />
+        0.05 ETH Pending
+      </div>
+      <div class="greenPrimary--text font-weight-medium d-flex align-center">
+        View on EthVM
+        <v-icon color="greenPrimary" small class="ml-1">mdi-open-in-new</v-icon>
+      </div>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- Active for Stake ETH -->
+    <!-- ======================================================================================= -->
+    <div
+      v-if="!compoundRewards"
+      class="d-flex align-center justify-space-between mt-4"
+    >
       <div class="greenPrimary--text">Redeem to ETH</div>
       <div class="greenPrimary--text cursor--pointer" @click="routeToSwap">
         Stake more ETH
       </div>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- Active for Compound Rewards -->
+    <!-- ======================================================================================= -->
+    <div v-else class="d-flex align-center justify-space-between mt-4">
+      <div class="greenPrimary--text">Re=deem to ETH</div>
+      <mew-button title="Stake more ETH" />
     </div>
   </div>
 </template>
@@ -37,6 +80,12 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   name: 'ModuleSideStaking',
   components: {},
+  props: {
+    compoundRewards: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {};
   },
