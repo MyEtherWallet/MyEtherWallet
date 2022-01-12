@@ -87,7 +87,7 @@ import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const _ = require("lodash");
+const _ = require('lodash');
 export default {
   components: {
     BalanceEmptyBlock,
