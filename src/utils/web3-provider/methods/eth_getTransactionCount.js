@@ -7,6 +7,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 export default async ({ payload, store, requestManager }, res, next) => {
   if (payload.method !== 'eth_getTransactionCount') return next();
   const ethCalls = new EthCalls(requestManager);
+  const isTesting = locstore.get('mew-testing');
   const addr = payload.params[0].toLowerCase();
   let cached = {};
   const storeKey = utils.sha3(
@@ -27,18 +28,25 @@ export default async ({ payload, store, requestManager }, res, next) => {
     const liveNonce = await ethCalls.getTransactionCount(addr);
     const liveNonceBN = toBN(liveNonce);
     const cachedNonceBN = toBN(cached.nonce);
-    if (timeDiff > 15) {
-      cached = {
-        nonce: sanitizeHex(liveNonceBN.toString(16)),
-        timestamp: +new Date()
-      };
-    } else if (liveNonceBN.gt(cachedNonceBN)) {
+    if (!isTesting) {
+      if (timeDiff > 15) {
+        cached = {
+          nonce: sanitizeHex(liveNonceBN.toString(16)),
+          timestamp: +new Date()
+        };
+      } else if (liveNonceBN.gt(cachedNonceBN)) {
+        cached = {
+          nonce: sanitizeHex(liveNonceBN.toString(16)),
+          timestamp: +new Date()
+        };
+      }
+      locstore.set(storeKey, cached);
+    } else {
       cached = {
         nonce: sanitizeHex(liveNonceBN.toString(16)),
         timestamp: +new Date()
       };
     }
-    locstore.set(storeKey, cached);
   }
   res(null, toPayload(payload.id, cached.nonce));
 };

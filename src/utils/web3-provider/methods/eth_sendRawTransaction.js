@@ -1,10 +1,12 @@
-// eslint-disable-next-line
 import { toPayload } from '../jsonrpc';
-export default async ({ payload, store }, res, next) => {
+import { randomHex } from 'web3-utils';
+import * as locStore from 'store';
+export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_sendRawTransaction') return next();
-  if (store.state['global/testing']) {
-    res();
-    return;
+  const val = locStore.get('mew-testing');
+  if (val) {
+    res(null, toPayload(payload.id, randomHex(32)));
+  } else {
+    next();
   }
-  res();
 };
