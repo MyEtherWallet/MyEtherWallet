@@ -54,5 +54,7 @@
   "clear-all": "Clear All",
   "logout": "Logout",
   "settings": "Settings",
-  "exit-dapp": "Exit Dapp"
+  "exit-dapp": "Exit Dapp",
+  "learn-more": "Learn More",
+  "here": "here"
 }

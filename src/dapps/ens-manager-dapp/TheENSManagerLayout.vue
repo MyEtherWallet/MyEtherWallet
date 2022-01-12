@@ -197,43 +197,40 @@
       <template #tabContent3>
         <v-sheet
           min-height="500px"
-          max-width="700px"
+          max-width="500px"
           color="transparent"
-          class="py-15 mx-auto"
+          class="pa-3 mx-auto"
         >
-          <div class="d-flex align-center justify-space-between mb-7">
-            <span class="mew-heading-2 font-weight-bold">
-              {{ $t('ens.claim-token-desc') }}
-            </span>
-            <span class="mew-heading-2 font-weight-bold">
-              Claimed: {{ ensTokens.claimed }}
-            </span>
-            <span class="mew-heading-2 font-weight-bold">
-              Balance: {{ ensTokenBalance }}
-            </span>
+          <div class="mb-5">
+            <!--
+            ===================================================
+              Claim TITLE: hasEnsTokenBalance
+            ===================================================
+            -->
+            <claim-balance
+              :balance="ensTokens.balance"
+              :claimed="ensTokens.claimed"
+            />
+            <form
+              v-if="!ensTokens.claimed && hasEnsTokenBalance"
+              @submit.prevent="claimTokens"
+            >
+              <module-address-book
+                :label="$t('ens.delegator.addr')"
+                :is-valid-address-func="isValidDelegatorAddress"
+                preselect-curr-wallet-adr
+                @setAddress="setDelegatorAddress"
+              />
+              <mew-button
+                :loading="loading"
+                :disabled="isClaimDisabled"
+                :has-full-width="true"
+                btn-size="xlarge"
+                :title="$t('ens.claim-token-title')"
+                @click.native="claimTokens"
+              />
+            </form>
           </div>
-          <form @submit.prevent="claimTokens">
-            <v-row class="mx-0">
-              <v-col class="pr-0" cols="8">
-                <module-address-book
-                  class="mr-3 flex-grow-1"
-                  :label="$t('ens.delegator')"
-                  :is-valid-address-func="isValidDelegatorAddress"
-                  @setAddress="setDelegatorAddress"
-                />
-              </v-col>
-              <v-col class="pl-0" cols="4">
-                <mew-button
-                  :loading="loading"
-                  :disabled="isClaimDisabled"
-                  :has-full-width="true"
-                  btn-size="xlarge"
-                  :title="$t('ens.claim-token-title')"
-                  @click.native="claimTokens"
-                />
-              </v-col>
-            </v-row>
-          </form>
         </v-sheet>
       </template>
     </the-wrapper-dapp>
@@ -290,11 +287,12 @@ import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import ClaimBalance from './components/claim/ClaimBalance';
 import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import normalise from '@/core/helpers/normalise';
@@ -307,7 +305,8 @@ export default {
     ModuleRegisterDomain,
     ModuleManageDomain,
     TheWrapperDapp,
-    ModuleAddressBook
+    ModuleAddressBook,
+    ClaimBalance
   },
   data() {
     return {
@@ -374,8 +373,8 @@ export default {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
-    ensTokenBalance() {
-      return fromWei(this.ensTokens.balance);
+    hasEnsTokenBalance() {
+      return toBN(this.ensTokens.balance).gt(toBN(0));
     },
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
@@ -686,5 +685,9 @@ export default {
       }
     }
   }
+}
+
+.claim-border-container {
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>
