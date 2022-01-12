@@ -19,10 +19,9 @@
     -->
       <template #tabContent1>
         <v-sheet
-          min-height="500px"
           max-width="700px"
           color="transparent"
-          class="py-15 mx-auto"
+          class="px-3 py-8 py-md-13 mx-auto"
         >
           <div class="mb-5">
             <div class="mew-heading-2 mb-8 ml-2">
@@ -68,7 +67,7 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet min-height="500px" class="pa-3 pa-md-12">
+        <v-sheet class="px-3 py-8 py-md-13">
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -196,10 +195,9 @@
       </template>
       <template #tabContent3>
         <v-sheet
-          min-height="500px"
           max-width="500px"
           color="transparent"
-          class="pa-3 mx-auto"
+          class="px-3 py-8 py-md-13 mx-auto"
         >
           <div class="mb-5">
             <!--

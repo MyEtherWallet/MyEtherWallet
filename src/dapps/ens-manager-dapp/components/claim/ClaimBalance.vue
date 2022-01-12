@@ -5,7 +5,7 @@
       Claim TITLE:
     ===================================================
     -->
-    <div class="mew-heading-2 mb-2">
+    <div class="mew-heading-2 mb-3">
       {{ $t('ens.claim-token-desc') }}
     </div>
     <div class="textLight--text mb-4">
