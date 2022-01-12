@@ -10,8 +10,8 @@ const ETH_BLOCKS_ROUTE = {
     PATH: 'block/:blockRef'
   },
   MY_BLOCKS: {
-    NAME: 'EthBlocksMyBlocks',
-    PATH: 'my-blocks'
+    NAME: 'Rewards',
+    PATH: 'Stakewise/:rewards'
   }
 };
 
