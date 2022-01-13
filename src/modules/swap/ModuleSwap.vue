@@ -14,7 +14,7 @@
             =====================================================================================
             -->
           <div class="input-swap-container pt-7 pb-3 px-5">
-            <v-row class="align-center justify-space-between mt-4">
+            <v-row class="align-start justify-space-between mt-4">
               <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pr-sm-0">
                 <div class="position--relative">
                   <app-button-balance
@@ -50,20 +50,24 @@
                   :max-btn-obj="maxBtn"
                   @input="setTokenInValue"
               /></v-col>
-              <v-col cols="12" sm="2" class="px-6 py-0 py-sm-3 mb-3 mb-sm-0">
+              <v-col
+                cols="12"
+                align-self="center"
+                sm="2"
+                class="px-6 py-0 py-sm-3 mb-3 mb-sm-0"
+              >
                 <div class="d-flex align-center justify-center pb-sm-10">
-                  <swap-btn
-                    :class="[
-                      enableTokenSwitch
-                        ? 'cursor--pointer'
-                        : 'pointer-event--none',
-                      'd-flex align-center justify-center'
-                    ]"
+                  <mew-icon-button
+                    mdi-icon="swap-horizontal"
+                    class="pa-2 d-flex align-center justify-center"
+                    color-theme="basic"
+                    btn-style="light"
+                    :disabled="!enableTokenSwitch"
                     @click.native="switchTokens"
                   />
                 </div>
               </v-col>
-              <v-col cols="12" sm="5" class="pl-sm-0 pb-0 pb-sm-3">
+              <v-col cols="12" sm="5" class="pb-0 pb-sm-3 pl-sm-0">
                 <mew-select
                   ref="toToken"
                   :value="toTokenType"
@@ -278,7 +282,6 @@
 </template>
 
 <script>
-import SwapBtn from '@/views/components-wallet/TheSwapBtn';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -308,7 +311,6 @@ const MIN_GAS_LIMIT = 800000;
 export default {
   name: 'ModuleSwap',
   components: {
-    SwapBtn,
     AppButtonBalance,
     AppUserMsgBlock,
     ModuleAddressBook,
@@ -525,10 +527,10 @@ export default {
      */
     enableTokenSwitch() {
       return (
-        !isEmpty(this.fromTokenType) &&
-        !isEmpty(this.toTokenType) &&
-        !isEmpty(this.fromTokenType?.symbol) &&
-        !isEmpty(this.toTokenType?.symbol)
+        !this.isLoading &&
+        ((!isEmpty(this.fromTokenType) &&
+          !isEmpty(this.fromTokenType?.symbol)) ||
+          (!isEmpty(this.toTokenType) && !isEmpty(this.toTokenType?.symbol)))
       );
     },
     /**
@@ -941,6 +943,11 @@ export default {
     },
     amountErrorMessage(newVal) {
       if (newVal !== '') this.availableQuotes.splice(0);
+    },
+    '$route.query': {
+      handler: function () {
+        this.setTokenFromURL();
+      }
     }
   },
   beforeMount() {
@@ -1099,6 +1106,7 @@ export default {
     switchTokens() {
       const fromToken = clone(this.fromTokenType);
       const toToken = clone(this.toTokenType);
+      this.tokenInValue = '0';
       this.setFromToken(toToken);
       this.setToToken(fromToken);
     },
@@ -1179,7 +1187,10 @@ export default {
       if (
         this.tokenInValue !== '' &&
         this.tokenInValue > 0 &&
-        this.enableTokenSwitch
+        !isEmpty(this.fromTokenType) &&
+        !isEmpty(this.toTokenType) &&
+        !isEmpty(this.fromTokenType?.symbol) &&
+        !isEmpty(this.toTokenType?.symbol)
       ) {
         this.isLoadingProviders = true;
         this.showAnimation = true;
@@ -1273,8 +1284,9 @@ export default {
     setupTrade(trade) {
       this.step = 2;
       this.loadingFee = false;
-      if (trade instanceof Error) {
+      if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
+        this.loadingFee = false;
         return;
       }
       this.feeError = '';
@@ -1531,5 +1543,13 @@ export default {
 .swap-to-input {
   pointer-events: none !important;
   user-select: none !important;
+}
+
+.pb-sm-15px {
+  padding-bottom: 15px !important;
+}
+
+.pb-sm-29px {
+  padding-bottom: 29px !important;
 }
 </style>

@@ -1,5 +1,4 @@
 FROM node:12-stretch
-
 RUN apt update
 RUN apt install nasm -y
 ENV HOME /home

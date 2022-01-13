@@ -4,6 +4,7 @@ import {
   ERROR,
   SENTRY
 } from '@/modules/toast/handler/handlerToast';
+import { isObject } from 'lodash';
 import Vue from 'vue';
 
 const WalletErrorHandler = (errors, warnings) => {
@@ -13,7 +14,7 @@ const WalletErrorHandler = (errors, warnings) => {
     const foundError = errorValues.find(item => {
       const message =
         err && err.message
-          ? err.message.hasOwProperty('message')
+          ? isObject(err.message)
             ? err.message.message
             : err.message
           : err;
@@ -21,7 +22,14 @@ const WalletErrorHandler = (errors, warnings) => {
       return message.includes(item);
     });
     const foundWarning = warningValues.find(item => {
-      return err.message.includes(item);
+      const message =
+        err && err.message
+          ? isObject(err.message)
+            ? err.message.message
+            : err.message
+          : err;
+      if (!message) return false;
+      return message.includes(item);
     });
     if (foundError) {
       Toast(Vue.$i18n.t(errors[foundError]), {}, ERROR);

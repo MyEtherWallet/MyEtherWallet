@@ -11,6 +11,7 @@
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
+      :show-copy="isValidAddress"
       :error-messages="errorMessages"
       @saveAddress="toggleOverlay"
       @input="setAddress"
