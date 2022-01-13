@@ -666,7 +666,11 @@ export default {
       return this.addressValue.value;
     },
     isToAddressValid() {
-      if (this.toTokenType?.isEth) return true;
+      if (
+        this.toTokenType?.isEth ||
+        this.toTokenType?.contract === MAIN_TOKEN_ADDRESS
+      )
+        return true;
       return this.addressValue.isValid;
     },
     /**
@@ -1103,7 +1107,8 @@ export default {
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
-      if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
+      if (this.allTrades.length > 0 && this.allTrades[idx])
+        return this.setupTrade(this.allTrades[idx]);
       const trade = this.swapper.getTrade({
         fromAddress: this.address,
         toAddress: this.toAddress,
@@ -1120,9 +1125,12 @@ export default {
           this.allTrades[idx] = tradeResponse;
           this.setupTrade(tradeResponse);
         });
+      } else {
+        this.setupTrade(trade);
       }
     }, 500),
     setupTrade(trade) {
+      this.step = 2;
       if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
         this.loadingFee = false;
@@ -1130,7 +1138,6 @@ export default {
       }
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.currentGasPrice;
-      this.step = 2;
       this.loadingFee = false;
       this.checkFeeBalance();
     },
