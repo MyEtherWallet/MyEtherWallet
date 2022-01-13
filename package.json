@@ -164,7 +164,7 @@
   },
   "resolutions": {
     "glob-parent": "5.1.2",
-    "follow-redirects": "1.41.7",
+    "follow-redirects": "1.14.7",
     "handlebars": "4.7.7",
     "axios": "0.24.0",
     "node-fetch": "2.6.1",
