@@ -5,7 +5,7 @@
       display if the user has an eth balance > 0
     =====================================================================================
     -->
-    <loader v-if="loading || true" class="mb-10" />
+    <loader v-if="loading" />
 
     <mew-module
       v-if="hasBalance && !loading"
