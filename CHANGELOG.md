@@ -2,8 +2,6 @@
 
 ### devop
 
-* add translations and live editor plugin [#3264](https://github.com/MyEtherWallet/MyEtherWallet/pull/3264)
-* upload translation files to lokalise when there are translation files changed [#3341](https://github.com/MyEtherWallet/MyEtherWallet/pull/3341)
 * disable copy on module address if invalid, update swap button [#3590](https://github.com/MyEtherWallet/MyEtherWallet/pull/3590)
 * pull in main to develop [#3603](https://github.com/MyEtherWallet/MyEtherWallet/pull/3603)
 * add error for when value is 0 and data is null [#3611](https://github.com/MyEtherWallet/MyEtherWallet/pull/3611)
@@ -11,13 +9,9 @@
 
 ### fix
 
-* fix missing bitcoin rate for swap [#3584](https://github.com/MyEtherWallet/MyEtherWallet/pull/3584)
-* remove error popup when sending transaction with wallet link [#3586](https://github.com/MyEtherWallet/MyEtherWallet/pull/3586)
-* fix back button on create wallet overlay [#3588](https://github.com/MyEtherWallet/MyEtherWallet/pull/3588)
 * fix bitbox02 transaction signing [#3608](https://github.com/MyEtherWallet/MyEtherWallet/pull/3608)
 * fix swap rates fetch [#3613](https://github.com/MyEtherWallet/MyEtherWallet/pull/3613)
 * fix trade button when on swap [#3615](https://github.com/MyEtherWallet/MyEtherWallet/pull/3615)
-* Added Filter to Token List [#3616](https://github.com/MyEtherWallet/MyEtherWallet/pull/3616)
 * Added Filter to Token List [#3616](https://github.com/MyEtherWallet/MyEtherWallet/pull/3616)
 * fix weird loading fee when toToken is ETH [#3622](https://github.com/MyEtherWallet/MyEtherWallet/pull/3622)
 
