@@ -99,6 +99,7 @@ export default {
   },
   methods: {
     routeTo(name) {
+      console.log(name);
       this.trackDapp(name);
       this.$router.push({ name: name });
     },
