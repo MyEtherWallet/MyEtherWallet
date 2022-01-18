@@ -1,4 +1,4 @@
-- updated packages
-  - commitlint
-  - @walletconnect/client
-  - @walletconnect/qrcode-modal
+* updated packages
+  * commitlint
+  * @walletconnect/client
+  * @walletconnect/qrcode-modal
