@@ -306,7 +306,7 @@ import WAValidator from 'multicoin-address-validator';
 
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 200000;
 
 export default {
   name: 'ModuleSwap',
@@ -782,6 +782,10 @@ export default {
 
         return this.address;
       }
+
+      if (this.toTokenType?.contract === MAIN_TOKEN_ADDRESS) {
+        return this.address;
+      }
       if (this.toTokenType?.isEth) return this.address;
       return this.address;
     },
@@ -1245,7 +1249,8 @@ export default {
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
-      if (this.allTrades[idx]) return this.setupTrade(this.allTrades[idx]);
+      if (this.allTrades.length > 0 && this.allTrades[idx])
+        return this.setupTrade(this.allTrades[idx]);
       const swapObj = {
         fromAddress: this.address,
         toAddress: this.toAddress,

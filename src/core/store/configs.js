@@ -9,7 +9,7 @@ export default {
   },
   VERSION: {
     global: '1.0.5',
-    notifications: '1.0.2',
+    notifications: '1.0.3',
     custom: '1.0.4',
     addressBook: '1.0.0',
     ...dappStoreConfigs.VERSION
