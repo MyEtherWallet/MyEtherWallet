@@ -68,7 +68,7 @@
     <!-- Active for Compound Rewards -->
     <!-- ======================================================================================= -->
     <div v-else class="d-flex align-center justify-space-between mt-4">
-      <div class="greenPrimary--text">Re=deem to ETH</div>
+      <div class="greenPrimary--text">Redeem to ETH</div>
       <mew-button title="Stake more ETH" />
     </div>
   </div>
