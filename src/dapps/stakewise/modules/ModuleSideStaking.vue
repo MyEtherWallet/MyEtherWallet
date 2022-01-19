@@ -86,10 +86,6 @@ export default {
       default: false
     }
   },
-  data() {
-    return {};
-  },
-  computed: {},
   methods: {
     routeToSwap() {
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });

@@ -52,7 +52,7 @@ export default {
   name: 'TheStartStakingPopup',
   components: { SimpleDialog },
   data() {
-    return { popup: true };
+    return { popup: false };
   },
   computed: {},
   methods: {}

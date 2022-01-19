@@ -22,13 +22,7 @@
 
 <script>
 export default {
-  name: 'ModuleSideApr',
-  components: {},
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {}
+  name: 'ModuleSideApr'
 };
 </script>
 

@@ -1,8 +1,7 @@
-import { ETH_BLOCKS_ROUTE, blockGuard, myBlocksProps } from './configsRoutes';
+import { STAKEWISE_ROUTES } from './configsRoutes';
 import layout from './TheStakewiseLayout';
-import ModuleEthBlocksMyBlocks from './modules/ModuleEthBlocksMyBlocks';
-import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
-import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
+import ModuleStakewiseRewards from './modules/ModuleStakewiseRewards';
+import ModuleStakewiseStake from './modules/ModuleStakewiseStake';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'Stakewise',
@@ -10,33 +9,29 @@ export default {
   tag: '#NFT',
   rightIconType: 'mew',
   rightIcon: 'stakewise',
-  path: ETH_BLOCKS_ROUTE.CORE.PATH,
+  path: STAKEWISE_ROUTES.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
-  release: '11/11/2021',
-  defaultName: ETH_BLOCKS_ROUTE.CORE.NAME,
+  release: '01/27/2022',
+  defaultName: STAKEWISE_ROUTES.CORE.NAME,
   meta: {
     noAuth: false
   },
   children: [
     {
-      name: ETH_BLOCKS_ROUTE.CORE.NAME,
-      path: '', //selected tab by default
-      component: ModuleEthBlocksMint
+      name: STAKEWISE_ROUTES.CORE.NAME,
+      path: '',
+      component: ModuleStakewiseStake
     },
     {
-      path: ETH_BLOCKS_ROUTE.MY_BLOCKS.PATH,
-      name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME,
-      component: ModuleEthBlocksMyBlocks,
-      props: myBlocksProps
+      name: STAKEWISE_ROUTES.STAKE.NAME,
+      path: STAKEWISE_ROUTES.STAKE.PATH,
+      component: ModuleStakewiseStake
     },
     {
-      path: ETH_BLOCKS_ROUTE.BLOCK.PATH,
-      name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
-      props: true,
-
-      beforeEnter: blockGuard,
-      component: ModuleEthBlockInfo
+      path: STAKEWISE_ROUTES.REWARDS.PATH,
+      name: STAKEWISE_ROUTES.REWARDS.NAME,
+      component: ModuleStakewiseRewards
     }
   ]
 };

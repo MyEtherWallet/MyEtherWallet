@@ -13,12 +13,12 @@
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import { ETH_BLOCKS_ROUTE } from './configsRoutes';
+import { STAKEWISE_ROUTES } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
-  name: 'TheEthBlocksLayout',
+  name: 'TheStakewiseLayout',
   components: {
     TheWrapperDapp
   },
@@ -32,46 +32,28 @@ export default {
       tabs: [
         {
           name: 'Stake ETH',
-          route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
+          route: { name: STAKEWISE_ROUTES.CORE.NAME },
           id: 0
         },
         {
           name: 'Compound Rewards',
           route: {
-            name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
+            name: STAKEWISE_ROUTES.REWARDS.NAME
           },
           id: 1
         }
       ],
       headerImg: require('@/assets/images/icons/icon-stakewise-purple.svg'),
-      validNetworks: SUPPORTED_NETWORKS,
-      checkPendingInterval: false
+      validNetworks: SUPPORTED_NETWORKS
     };
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network']),
-    ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
-
-    /**
-     * Checks if there are pending txs in the dapp
-     * @returns {boolean}
-     */
-    hasPendingTxs() {
-      return this.getAllEthBlocksTxs.length > 0;
-    }
+    ...mapGetters('global', ['network'])
   },
   watch: {
-    /**
-     * Starts interval on new pending txs
-     */
-    hasPendingTxs(newVal) {
-      if (newVal) {
-        this.setCheckPendingInterval();
-      }
-    },
     $route(to) {
-      if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+      if (to.name === STAKEWISE_ROUTES.REWARDS.NAME) {
         this.activeTab = this.tabs[1].id;
       } else {
         this.activeTab = this.tabs[0].id;
@@ -79,56 +61,12 @@ export default {
     }
   },
   mounted() {
-    if (this.hasPendingTxs) {
-      this.setCheckPendingInterval();
-    }
-    if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
+    if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
       this.activeTab = this.tabs[1].id;
     }
   },
-  beforeDestroy() {
-    clearInterval(this.checkPendingInterval);
-  },
   methods: {
-    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx']),
-    /**
-     * Sets interval to start checking pending transactions
-     */
-    setCheckPendingInterval() {
-      clearInterval(this.checkPendingInterval);
-      this.checkPendingInterval = setInterval(() => {
-        if (this.hasPendingTxs) {
-          this.getAllEthBlocksTxs
-            .filter(i => i.network === this.network.type.name)
-            .forEach(i => {
-              this.checkTx(i.hash);
-            });
-        } else {
-          clearInterval(this.checkPendingInterval);
-        }
-      }, 5000);
-    },
-
-    /**
-     * Checks web3 Transaction hash.
-     * If reciept is defined, removes transaction hash from
-     * @param {string} txHash - transaction hash of the
-     */
-    checkTx(txHash) {
-      if (txHash) {
-        this.web3.eth.getTransactionReceipt(txHash).then(receipt => {
-          if (receipt) {
-            const _block = {
-              hash: txHash
-            };
-            this.deleteEthBlockTx(_block);
-            if (this.getAllEthBlocksTxs.length === 0) {
-              clearInterval(this.checkPendingInterval);
-            }
-          }
-        });
-      }
-    }
+    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx'])
   }
 };
 </script>

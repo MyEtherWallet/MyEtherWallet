@@ -63,12 +63,7 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {}
+  }
 };
 </script>
 

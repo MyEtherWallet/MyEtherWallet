@@ -1,9 +1,9 @@
 import Configs from './configs';
 
-const ethBlocksTxs = {
+const stakewiseTxs = {
   localStore: true,
-  ethBlocksTxs: [],
-  stateVersion: Configs.VERSION.ethBlocksTxs
+  stakewiseTxs: [],
+  stateVersion: Configs.VERSION.stakewiseTxs
 };
 
-export default ethBlocksTxs;
+export default stakewiseTxs;
