@@ -1,5 +1,7 @@
 <template>
   <div>
+    <module-moon-pay />
+
     <v-navigation-drawer
       v-model="navOpen"
       app
@@ -223,6 +225,7 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
+import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 // import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
@@ -235,7 +238,8 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications
+    ModuleNotifications,
+    ModuleMoonPay
   },
   mixins: [handlerAnalytics],
   data() {
