@@ -90,15 +90,9 @@ export default {
   components: {},
   data() {
     return {};
-  },
-  mounted() {
-    this.initChart();
-  },
-  methods: {}
+  }
 };
 </script>
-
-<style lang="scss" scoped></style>
 
 <style lang="scss">
 .mew-component--module-balance-loader .v-skeleton-loader__text {
