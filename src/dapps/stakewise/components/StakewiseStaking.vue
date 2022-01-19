@@ -9,7 +9,7 @@
       <div class="d-flex align-center mt-n4">
         <div class="stake-icon mr-2">
           <img
-            src="@/assets/images/icons/icon-stakewise-green.svg"
+            src="@/dapps/stakewise/assets/icon-stakewise-green.svg"
             alt="Stakewise"
           />
         </div>
@@ -18,23 +18,25 @@
         </div>
       </div>
       <div class="text-right">
-        <div class="font-weight-bold mew-heading-3 mb-1">0.5</div>
-        <div class="textLight--text">$143.09</div>
+        <div class="font-weight-bold mew-heading-3 mb-1">{{ sethBalance }}</div>
+        <div class="textLight--text">${{ sethUsdBalance }}</div>
       </div>
     </div>
 
     <!-- ======================================================================================= -->
     <!-- You are not staking user message -->
     <!-- ======================================================================================= -->
-    <div class="mt-4">
+    <div v-if="!hasStaked" class="mt-4">
       You are currently not staking any ETH. To earn rewards start staking.
-      <span class="greenPrimary--text">Start staking</span>
+      <span class="greenPrimary--text cursor--pointer" @click="() => {}"
+        >Start staking</span
+      >
     </div>
 
     <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
-    <div class="d-flex justify-space-between mt-4">
+    <div v-if="hasPending" class="d-flex justify-space-between mt-4">
       <div>
         <v-progress-circular
           indeterminate
@@ -55,28 +57,32 @@
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
     <div
-      v-if="!compoundRewards"
+      v-if="hasStaked"
       class="d-flex align-center justify-space-between mt-4"
     >
-      <div class="greenPrimary--text">Redeem to ETH</div>
-      <div class="greenPrimary--text cursor--pointer" @click="routeToSwap">
-        Stake more ETH
-      </div>
-    </div>
-
-    <!-- ======================================================================================= -->
-    <!-- Active for Compound Rewards -->
-    <!-- ======================================================================================= -->
-    <div v-else class="d-flex align-center justify-space-between mt-4">
-      <div class="greenPrimary--text">Redeem to ETH</div>
-      <mew-button title="Stake more ETH" />
+      <mew-button
+        title="Redeem to ETH"
+        btn-style="transparent"
+        btn-size="small"
+        class="mew-body"
+        @click.native="routeToSwap"
+      />
+      <mew-button
+        title="Stake more ETH"
+        :btn-style="compoundRewards ? 'background' : 'transparent'"
+        btn-size="small"
+        class="mew-body"
+        @click.native="routeToSwap"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-
+import { SETH2_CONTRACT } from '@/dapps/stakewise/handlers/configs.js';
+import _ from 'lodash';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'ModuleSideStaking',
   components: {},
@@ -84,6 +90,26 @@ export default {
     compoundRewards: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    ...mapGetters('wallet', ['tokensList']),
+    ...mapState('stakewise', ['stakewiseTxs']),
+    hasPending() {
+      return this.stakewiseTxs.length > 0;
+    },
+    hasStaked() {
+      const exists = _.find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === SETH2_CONTRACT.toLowerCase()
+      );
+      return exists;
+    },
+    sethBalance() {
+      return this.hasStaked ? this.hasStaked.balancef : '0';
+    },
+    sethUsdBalance() {
+      return this.hasStaked ? this.hasStaked.usdBalancef : '0';
     }
   },
   methods: {

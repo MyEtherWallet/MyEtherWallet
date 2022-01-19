@@ -3,7 +3,7 @@
     <div class="d-flex align-center pr-8 mt-n4">
       <div class="stake-icon mr-4">
         <img
-          src="@/assets/images/icons/icon-stakewise-purple.svg"
+          src="@/dapps/stakewise/assets/icon-stakewise-purple.svg"
           alt="Stakewise"
         />
       </div>

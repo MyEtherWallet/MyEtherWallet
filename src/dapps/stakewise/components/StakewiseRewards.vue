@@ -9,7 +9,7 @@
       <div class="d-flex align-center mt-n4">
         <div class="stake-icon mr-2">
           <img
-            src="@/assets/images/icons/icon-stakewise-red.svg"
+            src="@/dapps/stakewise/assets/icon-stakewise-red.svg"
             alt="Stakewise"
           />
         </div>
@@ -18,15 +18,15 @@
         </div>
       </div>
       <div class="text-right">
-        <div class="font-weight-bold mew-heading-3 mb-1">0.34565</div>
-        <div class="textLight--text">$0.09</div>
+        <div class="font-weight-bold mew-heading-3 mb-1">{{ rethBalance }}</div>
+        <div class="textLight--text">${{ rethUsdBalance }}</div>
       </div>
     </div>
 
     <!-- ======================================================================================= -->
     <!-- not earned any rewards yet user message -->
     <!-- ======================================================================================= -->
-    <div class="mt-4">
+    <div v-if="hasSeth && !hasReth" class="mt-4">
       You have not earned any rewards yet. Please wait 24 hours after staking to
       start earning rewards.
     </div>
@@ -34,27 +34,33 @@
     <!-- ======================================================================================= -->
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
-    <div
-      v-if="compoundRewards"
-      class="d-flex align-center justify-space-between mt-4"
-    >
-      <div class="greenPrimary--text">Redeem to ETH</div>
-      <div class="greenPrimary--text cursor--pointer" @click="routeToSwap">
-        Compound
-      </div>
-    </div>
-
-    <!-- ======================================================================================= -->
-    <!-- Active for Compound Rewards -->
-    <!-- ======================================================================================= -->
-    <div v-else class="d-flex align-center justify-space-between mt-4">
-      <div class="greenPrimary--text">Redeem to ETH</div>
-      <mew-button title="Compound" />
+    <div v-if="hasSeth" class="d-flex align-center justify-space-between mt-4">
+      <mew-button
+        title="Redeem to ETH"
+        btn-style="transparent"
+        btn-size="small"
+        class="mew-body"
+        @click.native="routeToSwap"
+      />
+      <mew-button
+        title="Compound"
+        :btn-style="compoundRewards ? 'transparent' : 'background'"
+        btn-size="small"
+        class="mew-body"
+        @click.native="routeToSwap"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import {
+  SETH2_CONTRACT,
+  RETH2_CONTRACT
+} from '@/dapps/stakewise/handlers/configs.js';
+import _ from 'lodash';
+import { mapGetters } from 'vuex';
 export default {
   name: 'ModuleSideRewards',
   components: {},
@@ -64,9 +70,32 @@ export default {
       default: false
     }
   },
+  computed: {
+    ...mapGetters('wallet', ['tokensList']),
+    hasSeth() {
+      const token = _.find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === SETH2_CONTRACT.toLowerCase()
+      );
+      return token;
+    },
+    hasReth() {
+      const token = _.find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === RETH2_CONTRACT.toLowerCase()
+      );
+      return token;
+    },
+    rethBalance() {
+      return this.hasReth ? this.hasReth.balancef : '0';
+    },
+    rethUsdBalance() {
+      return this.hasReth ? this.hasReth.usdBalancef : '0';
+    }
+  },
   methods: {
     routeToSwap() {
-      this.router.push({ name: 'Swap', params: {} });
+      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }
 };

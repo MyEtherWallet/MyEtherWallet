@@ -1,8 +1,8 @@
 export default {
   LOCAL_STORAGE_KEYS: {
-    stakewiseTxs: 'stakewise-txs-store'
+    stakewise: 'stakewise-store'
   },
   VERSION: {
-    stakewiseTxs: '0.0.1'
+    stakewise: '0.0.1'
   }
 };

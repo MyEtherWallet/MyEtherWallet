@@ -43,7 +43,7 @@
               </div>
               <div class="stake-icon">
                 <img
-                  src="@/assets/images/icons/icon-stakewise-green.svg"
+                  src="@/dapps/stakewise/assets/icon-stakewise-green.svg"
                   alt="Stakewise"
                 />
               </div>
@@ -55,7 +55,7 @@
           <!-- Amount to stake -->
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
-            <button-balance :loading="false" balance="10035342000" />
+            <button-balance :loading="false" :balance="balanceInETH" />
             <mew-input
               type="number"
               :max-btn-obj="{
@@ -189,26 +189,35 @@
         </mew6-white-sheet>
       </v-col>
       <v-col cols="12" md="4">
-        <side-apr class="mb-4" />
-        <side-staking class="mb-4" />
-        <side-rewards />
+        <stakewise-apr class="mb-4" />
+        <stakewise-staking compound-rewards class="mb-4" />
+        <stakewise-rewards compound-rewards />
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import SideApr from './ModuleSideApr';
-import SideStaking from './ModuleSideStaking';
-import SideRewards from './ModuleSideRewards';
+import StakewiseApr from '../components/StakewiseApr';
+import StakewiseStaking from '../components/StakewiseStaking';
+import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
+import { mapGetters } from 'vuex';
 export default {
-  name: 'ModuleEthBlocksMint',
-  components: { SideApr, SideStaking, SideRewards, ButtonBalance },
+  name: 'ModuleStakewiseStake',
+  components: {
+    StakewiseApr,
+    StakewiseStaking,
+    StakewiseRewards,
+    ButtonBalance
+  },
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg')
     };
+  },
+  computed: {
+    ...mapGetters('wallet', ['balanceInETH'])
   }
 };
 </script>

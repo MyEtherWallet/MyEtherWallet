@@ -3,7 +3,7 @@ import Mutations from './mutations';
 import Actions from './actions';
 import Getters from './getters';
 
-const ethBlocksTxs = {
+const stakewise = {
   namespaced: true,
   state: State,
   mutations: Mutations,
@@ -12,4 +12,4 @@ const ethBlocksTxs = {
   strict: false
 };
 
-export default ethBlocksTxs;
+export default stakewise;

@@ -1,9 +1,9 @@
 import Configs from './configs';
 
-const stakewiseTxs = {
+const stakewise = {
   localStore: true,
   stakewiseTxs: [],
-  stateVersion: Configs.VERSION.stakewiseTxs
+  stateVersion: Configs.VERSION.stakewise
 };
 
-export default stakewiseTxs;
+export default stakewise;

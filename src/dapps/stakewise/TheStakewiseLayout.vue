@@ -43,7 +43,7 @@ export default {
           id: 1
         }
       ],
-      headerImg: require('@/assets/images/icons/icon-stakewise-purple.svg'),
+      headerImg: require('@/dapps/stakewise/assets/icon-stakewise-purple.svg'),
       validNetworks: SUPPORTED_NETWORKS
     };
   },
