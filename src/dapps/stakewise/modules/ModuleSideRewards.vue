@@ -63,6 +63,11 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  methods: {
+    routeToSwap() {
+      this.router.push({ name: 'Swap', params: {} });
+    }
   }
 };
 </script>
