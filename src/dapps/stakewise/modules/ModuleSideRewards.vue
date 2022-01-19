@@ -68,7 +68,11 @@ export default {
     return {};
   },
   computed: {},
-  methods: {}
+  methods: {
+    routeToSwap() {
+      this.router.push({ name: 'Swap', params: {} });
+    }
+  }
 };
 </script>
 
