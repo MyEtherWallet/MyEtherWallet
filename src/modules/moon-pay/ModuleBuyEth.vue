@@ -103,17 +103,31 @@
         <div>You get</div>
         <div class="text-right">0.234827 ETH</div>
       </div>
-      <div class="d-flex align-center justify-space-between mt-4">
-        <div></div>
-        <expending-block>
-          <template #header>
-            <div class="text-right greenPrimary--text">Show fees</div>
-          </template>
-          <template #content>
-            <div>Content</div>
-          </template>
-        </expending-block>
-      </div>
+
+      <!-- ============================================================== -->
+      <!-- (Expending block) Show fees -->
+      <!-- ============================================================== -->
+      <expending-block class="mt-4" btn-right>
+        <template #headerShow>
+          <div class="text-right greenPrimary--text">Show fees</div>
+        </template>
+        <template #headerHide>
+          <div class="text-right greenPrimary--text">Hide fees</div>
+        </template>
+        <template #content>
+          <div>
+            <div class="d-flex align-center justify-space-between mt-4">
+              <div>Processing fee</div>
+              <div class="text-right">0.234827 ETH</div>
+            </div>
+            <div class="d-flex align-center justify-space-between mt-4">
+              <div>Network fee</div>
+              <div class="text-right">0.234827 ETH</div>
+            </div>
+          </div>
+        </template>
+      </expending-block>
+
       <div class="d-flex align-center justify-space-between mt-4">
         <div class="font-weight-medium">Total</div>
         <div class="text-right">$1,000 ETH</div>
