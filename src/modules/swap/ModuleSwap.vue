@@ -370,6 +370,7 @@ export default {
       isLoadingProviders: false,
       showAnimation: false,
       checkLoading: true,
+      mounted: false,
       addressValue: {},
       selectedProvider: {},
       localGasPrice: '0'
@@ -842,6 +843,7 @@ export default {
     this.setTokenFromURL();
   },
   mounted() {
+    this.mounted = true;
     this.setupSwap();
   },
   methods: {
@@ -901,8 +903,10 @@ export default {
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
-      this.$refs.toToken.clear();
-      this.$refs.amountInput.clear();
+      if (this.mounted) {
+        this.$refs.toToken.clear();
+        this.$refs.amountInput.clear();
+      }
       this.setupSwap();
     },
     formatTokensForSelect(tokens) {
