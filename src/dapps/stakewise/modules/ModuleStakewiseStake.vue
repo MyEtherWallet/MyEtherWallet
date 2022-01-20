@@ -11,7 +11,9 @@
           class="pa-md-15"
           :no-shadow="$vuetify.breakpoint.smAndDown"
         >
-          <div class="mew-heading-2 mb-8">Stake ETH with Stakewise</div>
+          <div class="mew-heading-2 mb-8">
+            Stake {{ currencyName }} with Stakewise
+          </div>
 
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
@@ -77,12 +79,12 @@
             <div class="font-weight-bold mb-4">How staking works</div>
             <ul class="textMedium--text">
               <li>
-                Anyone can deposit any amount of ETH into the Stakewise pool. No
-                minimum required.
+                Anyone can deposit any amount of {{ currencyName }} into the
+                Stakewise pool. No minimum required.
               </li>
               <li>
                 For each new deposit into the pool, Stakewise mints an equal
-                amount of sETH2 (1 ETH = 1 sETH2).
+                amount of sETH2 (1 {{ currencyName }} = 1 sETH2).
               </li>
               <li>
                 Holders of sETH2 will start accruing rETH2 rewards within 24
@@ -123,8 +125,7 @@
                 Current APR
               </div>
               <div class="text-right">
-                <div class="greenPrimary--text">5.21%</div>
-                <div class="mew-label textLight--text">$120.98</div>
+                <div class="greenPrimary--text">{{ validatorApr }}%</div>
               </div>
             </div>
             <div class="d-flex justify-space-between mb-5">
@@ -134,7 +135,9 @@
                 Total Staked
               </div>
               <div class="text-right">
-                <div class="greenPrimary--text">25,435.22 ETH</div>
+                <div class="greenPrimary--text">
+                  {{ getPoolSupply }} {{ currencyName }}
+                </div>
                 <div class="mew-label textLight--text">$120.98</div>
               </div>
             </div>
@@ -150,7 +153,7 @@
                 </div>
               </div>
               <div class="text-right">
-                <div class="">0.023422 ETH</div>
+                <div class="">0.023422 {{ currencyName }}</div>
                 <div class="mew-label textLight--text">$120.98</div>
               </div>
             </div>
@@ -158,10 +161,10 @@
               <div
                 class="textLight--text mew-label font-weight-medium text-uppercase"
               >
-                0.3% Staking Fee
+                {{ getStakingFee }}% Staking Fee
               </div>
               <div class="text-right">
-                <div class="">0.38421 ETH</div>
+                <div class="">0.38421 {{ currencyName }}</div>
                 <div class="mew-label textLight--text">$120.98</div>
               </div>
             </div>
@@ -202,7 +205,7 @@ import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'ModuleStakewiseStake',
   components: {
@@ -217,7 +220,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH'])
+    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('stakewise', ['getStakingFee', 'getPoolSupply']),
+    ...mapGetters('global', ['network']),
+    ...mapState('stakewise', ['validatorApr']),
+    currencyName() {
+      return this.network.type.currencyName;
+    }
   }
 };
 </script>

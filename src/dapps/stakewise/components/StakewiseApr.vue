@@ -9,20 +9,29 @@
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
         Current APR
       </div>
-      <div class="textLight--text">5.05%</div>
+      <div class="textLight--text">{{ validatorApr }}%</div>
     </div>
     <div class="d-flex align-center justify-space-between">
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
         ETH in pool
       </div>
-      <div>26,345.00 ETH</div>
+      <div>{{ getPoolSupply }} {{ networkName }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 export default {
-  name: 'ModuleSideApr'
+  name: 'StakewiseApr',
+  computed: {
+    ...mapState('stakewise', ['validatorApr']),
+    ...mapGetters('global', ['network']),
+    ...mapGetters('stakewise', ['getPoolSupply']),
+    networkName() {
+      return this.network.type.currencyName;
+    }
+  }
 };
 </script>
 

@@ -16,6 +16,7 @@ import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import { STAKEWISE_ROUTES } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { mapActions, mapGetters, mapState } from 'vuex';
+import handler from './handlers/stakewiseHandler';
 
 export default {
   name: 'TheStakewiseLayout',
@@ -44,7 +45,9 @@ export default {
         }
       ],
       headerImg: require('@/dapps/stakewise/assets/icon-stakewise-purple.svg'),
-      validNetworks: SUPPORTED_NETWORKS
+      validNetworks: SUPPORTED_NETWORKS,
+      stakewiseHandler: {},
+      fetchInterval: null
     };
   },
   computed: {
@@ -64,9 +67,33 @@ export default {
     if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
       this.activeTab = this.tabs[1].id;
     }
+    this.stakewiseHandler = new handler(this.web3);
+    this.collectiveFetch();
+    this.fetchInterval = setInterval(() => {
+      this.collectiveFetch();
+    }, 14000);
+  },
+  beforeDestroy() {
+    clearInterval(this.fetchInterval);
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx'])
+    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx']),
+    ...mapActions('stakewise', [
+      'setPoolSupply',
+      'setStakingFee',
+      'setValidatorApr'
+    ]),
+    collectiveFetch() {
+      this.stakewiseHandler.getEthPool().then(res => {
+        this.setPoolSupply(res);
+      });
+      this.stakewiseHandler.getStakingFee().then(res => {
+        this.setStakingFee(res);
+      });
+      this.stakewiseHandler.getValidatorApr().then(res => {
+        this.setValidatorApr(res);
+      });
+    }
   }
 };
 </script>

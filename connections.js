@@ -46,6 +46,7 @@ module.exports = [
   // Dapps
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
+  'https://api.stakewise.io:443', // stakewise
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
   'https://unstoppabledomains.com:443', // unstoppable
   'wss://api.thegraph.com/subgraphs/name/aave/', // Aave
