@@ -116,12 +116,11 @@ export default {
         link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
       {
-        logoText: 'BitBox',
-        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        logoText: 'BitBox02',
         walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
         priceNote: 'Starting from',
-        currency: '$',
-        price: '140.11',
+        currency: '€',
+        price: '119.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shiftcrypto.ch/'
       },
