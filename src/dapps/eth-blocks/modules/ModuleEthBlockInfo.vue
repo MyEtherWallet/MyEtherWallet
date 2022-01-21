@@ -114,18 +114,10 @@
           Block Description
         ===================================================
         -->
-        <div v-if="!isReserved" class="border-container mt-4 mt-md-5 pa-5">
+        <div v-if="!isReserved" class="mt-4 mt-md-5">
           <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
             {{ handlerBlock.description }}
           </div>
-          <a
-            v-if="!isTestNetwork"
-            :href="`https://www.ethvm.com/block/number/${blockRef}`"
-            target="_blank"
-            @click="trackToEthVM"
-          >
-            View block #{{ blockRef }} info on EthVM
-          </a>
         </div>
       </v-col>
       <!--
@@ -158,6 +150,15 @@
         </div>
       </v-col>
     </v-row>
+    <a
+      class="d-flex flex-row-reverse mt-3"
+      v-if="!isTestNetwork"
+      :href="`https://www.ethvm.com/block/number/${blockRef}`"
+      target="_blank"
+      @click="trackToEthVM"
+    >
+      View block info on EthVM
+    </a>
     <blocks-loading v-else />
     <block-send
       :open="openSendOverlay"
