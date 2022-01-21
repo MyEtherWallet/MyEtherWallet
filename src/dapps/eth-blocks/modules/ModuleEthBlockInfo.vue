@@ -89,9 +89,31 @@
           NFT Title
         ===================================================
         -->
-        <h2 class="mb-4 mb-md-5 text-center text-md-left">
-          Block #{{ blockNumberFormatted }}
-        </h2>
+        <div
+          class="d-flex flex-row align-center justify-space-between mb-4 mb-md-5"
+        >
+          <h2 class="text-center text-md-left">
+            Block #{{ blockNumberFormatted }}
+          </h2>
+          <div>
+            <mew-button
+              class="mr-1"
+              color-theme="basic"
+              btn-size="large"
+              btn-style="light"
+              title="Share"
+            >
+            </mew-button>
+            <mew-button
+              class="ml-1"
+              color-theme="basic"
+              btn-size="large"
+              btn-style="light"
+              title="View in Museum"
+            >
+            </mew-button>
+          </div>
+        </div>
         <!--
         ===================================================
           Block Info Alert component
@@ -151,8 +173,8 @@
       </v-col>
     </v-row>
     <a
-      class="d-flex flex-row-reverse mt-3"
       v-if="!isTestNetwork"
+      class="d-flex flex-row-reverse mt-3"
       :href="`https://www.ethvm.com/block/number/${blockRef}`"
       target="_blank"
       @click="trackToEthVM"
