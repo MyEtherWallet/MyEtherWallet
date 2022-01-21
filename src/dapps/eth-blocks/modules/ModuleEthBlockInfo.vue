@@ -132,20 +132,18 @@
           Block Description
         ===================================================
         -->
-        <div v-if="!isReserved" class="mt-4 mt-md-5">
+        <div v-if="!isReserved" class="mt-10 mt-md-5">
           <div :class="['textMedium--text', { 'mb-2': !isTestNetwork }]">
             {{ handlerBlock.description }}
           </div>
         </div>
-      </v-col>
-      <!--
-      ===================================================
-        NFT Properties
-        XS12
-      ===================================================
-      -->
-      <v-col v-if="!isReserved" cols="12" class="mt-4 mt-md-11">
-        <div class="table-properties">
+        <!--
+        ===================================================
+          NFT Properties
+          XS12
+        ===================================================
+        -->
+        <div v-if="!isReserved" class="table-properties mt-10">
           <div
             class="table-properties--header py-3 px-5 textLight--text mew-caption"
           >
