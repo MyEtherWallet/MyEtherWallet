@@ -95,22 +95,18 @@
           <h2 class="text-center text-md-left">
             Block #{{ blockNumberFormatted }}
           </h2>
-          <div>
-            <mew-button
-              class="mr-1"
-              color-theme="basic"
-              btn-size="large"
-              btn-style="light"
-              title="Share"
-            >
+          <div class="d-flex flex-row align-center justify-space-between">
+            <mew-button class="mr-1" btn-style="light" color-theme="basic">
+              <div class="d-flex align-center">
+                <v-icon left>mdi-twitter</v-icon>
+                <div>Share</div>
+              </div>
             </mew-button>
-            <mew-button
-              class="ml-1"
-              color-theme="basic"
-              btn-size="large"
-              btn-style="light"
-              title="View in Museum"
-            >
+            <mew-button class="ml-1" btn-style="light" color-theme="basic">
+              <div class="d-flex align-center">
+                <v-icon left>mdi-launch</v-icon>
+                <div>View in Museum</div>
+              </div>
             </mew-button>
           </div>
         </div>
@@ -173,7 +169,7 @@
       </v-col>
     </v-row>
     <a
-      v-if="!isTestNetwork"
+      v-if="!isReserved"
       class="d-flex flex-row-reverse mt-3"
       :href="`https://www.ethvm.com/block/number/${blockRef}`"
       target="_blank"
