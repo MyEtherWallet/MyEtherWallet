@@ -5,8 +5,8 @@
       <div>
         <div class="mew-heading-2">My Batch</div>
         <div class="mew-body textMedium--text">
-          You have added {{ cart.length }} ETH Blocks for Minting. Please review
-          and click "Proceed to Minting"
+          You have added {{ cart.length }} ETH {{ pluralizeBlockCount }} for
+          Minting. Please review and click "Proceed to Minting."
         </div>
       </div>
     </div>
@@ -152,6 +152,9 @@ export default {
         BigNumber(this.totalTransactionPrice).times(this.fiatValue).toFixed(2)
       ).value;
       return `$ ${value}`;
+    },
+    pluralizeBlockCount() {
+      return this.cart.length > 1 ? 'Blocks' : 'Block';
     }
   },
   watch: {
