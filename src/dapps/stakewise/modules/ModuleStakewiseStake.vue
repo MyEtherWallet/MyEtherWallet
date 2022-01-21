@@ -59,6 +59,7 @@
           <div class="position--relative mt-15">
             <button-balance :loading="false" :balance="balanceInETH" />
             <mew-input
+              v-model="stakeAmount"
               type="number"
               :max-btn-obj="{
                 title: 'Max',
@@ -68,7 +69,6 @@
               :image="iconEth"
               label="Amount to stake"
               placeholder="Enter amount"
-              value=""
             />
           </div>
 
@@ -119,29 +119,6 @@
           <!-- ======================================================================================= -->
           <div class="stake-status">
             <div class="d-flex justify-space-between mb-5">
-              <div
-                class="textLight--text mew-label font-weight-medium text-uppercase"
-              >
-                Current APR
-              </div>
-              <div class="text-right">
-                <div class="greenPrimary--text">{{ validatorApr }}%</div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mb-5">
-              <div
-                class="textLight--text mew-label font-weight-medium text-uppercase"
-              >
-                Total Staked
-              </div>
-              <div class="text-right">
-                <div class="greenPrimary--text">
-                  {{ getPoolSupply }} {{ currencyName }}
-                </div>
-                <div class="mew-label textLight--text">$120.98</div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mb-5">
               <div>
                 <div
                   class="textLight--text mew-label font-weight-medium text-uppercase"
@@ -154,18 +131,35 @@
               </div>
               <div class="text-right">
                 <div class="">0.023422 {{ currencyName }}</div>
-                <div class="mew-label textLight--text">$120.98</div>
+                <div v-show="isEthNetwork" class="mew-label textLight--text">
+                  $120.98
+                </div>
               </div>
             </div>
             <div class="d-flex justify-space-between mb-5">
               <div
                 class="textLight--text mew-label font-weight-medium text-uppercase"
               >
-                {{ getStakingFee }}% Staking Fee
+                Staking Fee
               </div>
               <div class="text-right">
-                <div class="">0.38421 {{ currencyName }}</div>
-                <div class="mew-label textLight--text">$120.98</div>
+                <div class="">{{ stakingFee }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-label textLight--text">
+                  ${{ stakingFeeFiatValue }}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-space-between mb-5">
+              <div
+                class="textLight--text mew-label font-weight-medium text-uppercase"
+              >
+                Total Staked
+              </div>
+              <div class="text-right">
+                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-label textLight--text">
+                  ${{ totalFiat }}
+                </div>
               </div>
             </div>
           </div>
@@ -205,7 +199,11 @@ import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
+import { fromWei } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import stakeHandler from '../handlers/stakewiseStakeHandler';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleStakewiseStake',
   components: {
@@ -216,16 +214,77 @@ export default {
   },
   data() {
     return {
-      iconEth: require('@/assets/images/icons/icon-eth-gray.svg')
+      iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
+      totalFee: '0',
+      stakeAmount: '0',
+      gasLimit: '21000',
+      stakeHandler: {}
     };
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('stakewise', ['getStakingFee', 'getPoolSupply']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('stakewise', ['getStakingFee']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPrice']),
+    ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapState('wallet', ['web3']),
     currencyName() {
       return this.network.type.currencyName;
+    },
+    stakingFee() {
+      return BigNumber(this.stakeAmount).gt(0)
+        ? BigNumber(this.stakeAmount)
+            .times(BigNumber(this.getStakingFee).div(100))
+            .toString()
+        : '--';
+    },
+    stakingFeeFiatValue() {
+      const fee = BigNumber(this.stakingFee);
+      return fee.gt(0)
+        ? formatFiatValue(fee.times(this.fiatValue).toString()).value
+        : '--';
+    },
+    totalFiat() {
+      const total = BigNumber(this.totalUserStaked);
+      return total.gt(0)
+        ? formatFiatValue(total.times(this.fiatValue).toString()).value
+        : '--';
+    },
+    totalUserStaked() {
+      const total = BigNumber(this.stakeAmount);
+      return total.gt(0)
+        ? total
+            .minus(BigNumber(this.stakeAmount).times(this.getStakingFee))
+            .toString()
+        : '--';
+    }
+  },
+  watch: {
+    gasPriceType() {
+      this.setFee();
+    },
+    gasLimit() {
+      this.setFee();
+    },
+    stakeAmount() {
+      this.setGasLimit();
+    }
+  },
+  mounted() {
+    this.stakeHandler = new stakeHandler(this.web3, this.isEthNetwork);
+    this.setFee();
+  },
+  methods: {
+    setFee() {
+      this.totalFee = fromWei(
+        BigNumber(this.gasPrice).times(this.gasLimit).toString()
+      );
+    },
+    setGasLimit() {
+      this.stakeHandler.getGasLimit(this.stakeAmount).then(res => {
+        this.gasLimit = res;
+      });
     }
   }
 };

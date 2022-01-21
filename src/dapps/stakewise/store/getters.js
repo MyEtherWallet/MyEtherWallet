@@ -3,7 +3,7 @@ import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 
 const getPoolSupply = function (state) {
-  return formatFloatingPointValue(fromWei(state.poolSupply)).value;
+  return fromWei(state.poolSupply);
 };
 
 const getStakingFee = function (state) {

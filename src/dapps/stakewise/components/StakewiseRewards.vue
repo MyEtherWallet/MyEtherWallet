@@ -56,8 +56,10 @@
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import {
-  SETH2_CONTRACT,
-  RETH2_CONTRACT
+  SETH2_MAINNET_CONTRACT,
+  RETH2_MAINNET_CONTRACT,
+  RETH2_GOERLI_CONTRACT,
+  SETH2_GOERLI_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
 import _ from 'lodash';
 import { mapGetters } from 'vuex';
@@ -72,17 +74,24 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('global', ['isEthNetwork']),
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
+    reth2Contract() {
+      return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
+    },
     hasSeth() {
       const token = _.find(
         this.tokensList,
-        item => item.contract.toLowerCase() === SETH2_CONTRACT.toLowerCase()
+        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
       );
       return token;
     },
     hasReth() {
       const token = _.find(
         this.tokensList,
-        item => item.contract.toLowerCase() === RETH2_CONTRACT.toLowerCase()
+        item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
       );
       return token;
     },

@@ -15,12 +15,13 @@
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
         ETH in pool
       </div>
-      <div>{{ getPoolSupply }} {{ networkName }}</div>
+      <div>{{ formattedPoolValue }} {{ networkName }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'StakewiseApr',
@@ -30,6 +31,9 @@ export default {
     ...mapGetters('stakewise', ['getPoolSupply']),
     networkName() {
       return this.network.type.currencyName;
+    },
+    formattedPoolValue() {
+      return formatFloatingPointValue(this.getPoolSupply).value;
     }
   }
 };

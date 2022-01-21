@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network'])
+    ...mapGetters('global', ['isEthNetwork'])
   },
   watch: {
     $route(to) {
@@ -67,7 +67,7 @@ export default {
     if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
       this.activeTab = this.tabs[1].id;
     }
-    this.stakewiseHandler = new handler(this.web3);
+    this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
     this.collectiveFetch();
     this.fetchInterval = setInterval(() => {
       this.collectiveFetch();

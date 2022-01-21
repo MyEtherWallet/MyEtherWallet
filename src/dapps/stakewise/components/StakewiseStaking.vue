@@ -80,7 +80,10 @@
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { SETH2_CONTRACT } from '@/dapps/stakewise/handlers/configs.js';
+import {
+  SETH2_GOERLI_CONTRACT,
+  SETH2_MAINNET_CONTRACT
+} from '@/dapps/stakewise/handlers/configs.js';
 import _ from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 export default {
@@ -94,14 +97,18 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('global', ['isEthNetwork']),
     ...mapState('stakewise', ['stakewiseTxs']),
     hasPending() {
       return this.stakewiseTxs.length > 0;
     },
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
     hasStaked() {
       const exists = _.find(
         this.tokensList,
-        item => item.contract.toLowerCase() === SETH2_CONTRACT.toLowerCase()
+        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
       );
       return exists;
     },
