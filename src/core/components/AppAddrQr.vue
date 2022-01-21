@@ -15,7 +15,7 @@
     =====================================================================================
     -->
     <div class="textPrimary--text mb-8">
-      {{ $t('interface.qr.desc') }}
+      {{ $t('interface.qr.desc').replace(/ETH/g, currency) }}
     </div>
 
     <!--
@@ -71,6 +71,12 @@ import { mapState } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 
 export default {
+  props: {
+    currency: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapState('wallet', ['address']),
     getChecksumAddressString() {
