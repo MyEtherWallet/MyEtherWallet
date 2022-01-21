@@ -5,8 +5,14 @@
   or (v-model="") to control dialog
   ==================================================================
   -->
-  <v-dialog v-model="isDialogOpen" :width="width" :max-width="maxWidth">
-    <div class="white pa-8 pt-5">
+  <v-dialog
+    v-model="isDialogOpen"
+    content-class="whitePopup"
+    :width="width"
+    :max-width="maxWidth"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <div :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'">
       <div
         class="d-flex align-start justify-space-between"
         :class="title ? 'mb-7' : ''"
@@ -14,12 +20,7 @@
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
-        <v-btn
-          color="textSecondary"
-          icon
-          class="mt-n2 mr-n4"
-          @click="closeDialog"
-        >
+        <v-btn color="textSecondary" icon class="" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>

@@ -1,5 +1,8 @@
 <template>
-  <div class="mew-component--app-expending-block">
+  <div
+    class="mew-component--app-expending-block"
+    :class="btnBottom ? 'd-flex flex-column-reverse' : ''"
+  >
     <!-- ================================================================ -->
     <!-- (Slot) (Clickable) Header -->
     <!-- ================================================================ -->
@@ -70,6 +73,10 @@ export default {
       default: false
     },
     btnLeft: {
+      type: Boolean,
+      default: false
+    },
+    btnBottom: {
       type: Boolean,
       default: false
     }

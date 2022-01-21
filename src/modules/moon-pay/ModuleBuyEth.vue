@@ -22,11 +22,12 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- Fiat currency pre-select buttons -->
+    <!-- Fiat currency pre-selection buttons -->
     <!-- ============================================================== -->
     <v-row dense>
       <v-col v-for="(button, bkey) in buttons" :key="bkey" cols="6">
         <mew-button
+          style="height: 96px !important"
           has-full-width
           :btn-style="buttonSelected == button.id ? '' : 'outline'"
           :class="buttonSelected == button.id ? '' : 'not-selected'"
@@ -93,8 +94,15 @@
     <!-- Summary -->
     <!-- ============================================================== -->
     <div class="mt-6">
-      <div class="font-weight-medium">Summary</div>
-
+      <div class="d-flex align-center justify-space-between">
+        <div class="font-weight-medium">Summary</div>
+        <div class="mew-label textMedium--text d-flex align-center">
+          <v-icon color="textMedium" small class="mr-1">
+            mdi-clock-time-three-outline
+          </v-icon>
+          Valid for 9s
+        </div>
+      </div>
       <div class="d-flex align-center justify-space-between mt-4">
         <div>ETH price</div>
         <div class="text-right">$4,352.54</div>
@@ -107,22 +115,22 @@
       <!-- ============================================================== -->
       <!-- (Expending block) Show fees -->
       <!-- ============================================================== -->
-      <expending-block class="mt-4" btn-right>
+      <expending-block class="mt-4" btn-right btn-bottom>
         <template #headerShow>
-          <div class="text-right greenPrimary--text">Show fees</div>
+          <div class="greenPrimary--text">Show fees</div>
         </template>
         <template #headerHide>
-          <div class="text-right greenPrimary--text">Hide fees</div>
+          <div class="greenPrimary--text">Hide fees</div>
         </template>
         <template #content>
           <div>
-            <div class="d-flex align-center justify-space-between mt-4">
-              <div>Processing fee</div>
-              <div class="text-right">0.234827 ETH</div>
+            <div class="d-flex align-center justify-space-between mb-4">
+              <div class="textLight--text">Processing fee</div>
+              <div class="textLight--text text-right">0.234827 ETH</div>
             </div>
-            <div class="d-flex align-center justify-space-between mt-4">
-              <div>Network fee</div>
-              <div class="text-right">0.234827 ETH</div>
+            <div class="d-flex align-center justify-space-between mb-4">
+              <div class="textLight--text">Network fee</div>
+              <div class="textLight--text text-right">0.234827 ETH</div>
             </div>
           </div>
         </template>
@@ -137,7 +145,7 @@
     <!-- ============================================================== -->
     <!-- Buy button -->
     <!-- ============================================================== -->
-    <div class="">
+    <div>
       <div class="d-flex justify-center mt-9 mb-7">
         <mew-checkbox label="Send ETH to current wallet adree" />
       </div>
@@ -149,7 +157,7 @@
 <script>
 import ExpendingBlock from '@/core/components/AppExpendingBlock';
 export default {
-  name: 'MoonPay',
+  name: 'ModuleBuyEth',
   components: { ExpendingBlock },
   data() {
     return {
@@ -174,13 +182,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-btn.mew-button {
-  // Force set button height
-  height: 96px !important;
-
-  // Force set button border color(greyMedium) for not selected buttons
-  &.not-selected {
-    border: 1px solid var(--v-greyMedium-base);
-  }
+// Force set button border color(greyMedium) for not selected buttons
+.not-selected {
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>

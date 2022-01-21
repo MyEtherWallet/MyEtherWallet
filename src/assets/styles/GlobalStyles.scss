@@ -16,73 +16,6 @@ html {
   max-width: 1185px !important;
 }
 
-/* Remove default background color */
-.theme--light.v-application {
-  background: white !important;
-}
-
-/* Remove default v-sheet border-radius */
-.theme--light.v-sheet,
-.theme--dark.v-sheet {
-  border-radius: 8px;
-}
-
-/* Set default text color */
-#app .v-sheet,
-#app .v-application {
-  color: var(--v-titlePrimary-base);
-}
-
-/* (Force) (light theme) default text color */
-#app.theme--light .theme--light-text--dark-space {
-  color: var(--v-titlePrimary-base) !important;
-}
-
-/* (Force) (dark theme) default text color */
-#app.theme--dark .theme--dark-text--blue {
-  color: var(--v-titlePrimary-base) !important;
-}
-
-/* (Force) white text color */
-#app.theme--dark .theme--dark-text--white,
-#app.theme--light .theme--light-text--white {
-  color: white !important;
-}
-
-.v-application ol,
-.v-application ul {
-  list-style-type: none;
-  padding-left: 0 !important;
-}
-
-/* ========== Adjust vuetify ========== */
-.expansion-panels--remove-paddings {
-  .v-expansion-panel-header,
-  .v-expansion-panel-content__wrap {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-}
-
-.v-dialog {
-  border-radius: 8px !important;
-}
-
-/* ========== Fix MEW components ========== */
-.theme--dark.v-expansion-panels .v-expansion-panel {
-  background-color: transparent !important;
-}
-
-.v-application .v-btn.mew-button .v-btn__content span {
-  text-transform: initial;
-  font-size: 0.88rem !important;
-}
-
-.v-application .v-btn.xlarge-btn {
-  height: 3.875rem !important;
-  min-height: 3.875rem !important;
-}
-
 /* ========== CSS Style Reset ========== */
 .monospace {
   font-family: monospace !important;
@@ -95,8 +28,8 @@ i {
 div {
   padding: 0;
   margin: 0;
-  font-size: 1rem;
-  line-height: 1.357rem;
+  font-size: 14px;
+  line-height: 19px;
   font-weight: 400;
 }
 
