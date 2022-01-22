@@ -364,7 +364,9 @@ export default {
     },
     closeSettings() {
       this.onSettings = false;
-      this.$router.go(-1);
+      if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
+        this.$router.go(-1);
+      }
     },
     onLogout() {
       this.showLogoutPopup = false;

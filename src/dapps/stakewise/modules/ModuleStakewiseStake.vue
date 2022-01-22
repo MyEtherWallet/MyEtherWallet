@@ -59,16 +59,18 @@
           <div class="position--relative mt-15">
             <button-balance :loading="false" :balance="balanceInETH" />
             <mew-input
-              v-model="stakeAmount"
               type="number"
               :max-btn-obj="{
                 title: 'Max',
                 disabled: false,
-                method: () => {}
+                method: setMax
               }"
               :image="iconEth"
               label="Amount to stake"
               placeholder="Enter amount"
+              :value="stakeAmount"
+              :error-messages="errorMessages"
+              @input="setAmount"
             />
           </div>
 
@@ -120,44 +122,37 @@
           <div class="stake-status">
             <div class="d-flex justify-space-between mb-5">
               <div>
-                <div
-                  class="textLight--text mew-label font-weight-medium text-uppercase"
-                >
+                <div class="mew-body">
                   Network Fee
-                </div>
-                <div class="textLight--text text-decoration-underline">
-                  Edit priority
+                  <span
+                    class="greenPrimary--text cursor--pointer"
+                    @click="openSettings"
+                  >
+                    Edit
+                  </span>
                 </div>
               </div>
               <div class="text-right">
-                <div class="">0.023422 {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-label textLight--text">
-                  $120.98
+                <div class="">{{ ethTotalFee }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  $ {{ gasPriceFiat }}
                 </div>
               </div>
             </div>
             <div class="d-flex justify-space-between mb-5">
-              <div
-                class="textLight--text mew-label font-weight-medium text-uppercase"
-              >
-                Staking Fee
-              </div>
+              <div class="mew-body">Staking Fee</div>
               <div class="text-right">
                 <div class="">{{ stakingFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-label textLight--text">
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
                   ${{ stakingFeeFiatValue }}
                 </div>
               </div>
             </div>
             <div class="d-flex justify-space-between mb-5">
-              <div
-                class="textLight--text mew-label font-weight-medium text-uppercase"
-              >
-                Total Staked
-              </div>
+              <div class="mew-body">Total Staked</div>
               <div class="text-right">
                 <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-label textLight--text">
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
                   ${{ totalFiat }}
                 </div>
               </div>
@@ -174,6 +169,7 @@
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
             <mew-checkbox
+              v-model="agreeToTerms"
               label="I have read and agreeed to Stakewise terms of
       service."
               :link="{
@@ -181,7 +177,13 @@
                 url: 'https://stakewise.io/terms-and-conditions/'
               }"
             />
-            <mew-button class="mt-8" title="Start staking" btn-size="xlarge" />
+            <mew-button
+              class="mt-8"
+              title="Start staking"
+              btn-size="xlarge"
+              :disabled="!isValid"
+              @click.native="stake"
+            />
           </div>
         </mew6-white-sheet>
       </v-col>
@@ -200,10 +202,14 @@ import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import stakeHandler from '../handlers/stakewiseStakeHandler';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { debounce } from 'lodash';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { EventBus } from '@/core/plugins/eventBus';
+const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
   components: {
@@ -215,20 +221,22 @@ export default {
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
-      totalFee: '0',
       stakeAmount: '0',
+      locGasPrice: '0',
       gasLimit: '21000',
-      stakeHandler: {}
+      stakeHandler: {},
+      agreeToTerms: false,
+      estimateGasError: false
     };
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('stakewise', ['getStakingFee']),
-    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPrice']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -255,36 +263,113 @@ export default {
       const total = BigNumber(this.stakeAmount);
       return total.gt(0)
         ? total
-            .minus(BigNumber(this.stakeAmount).times(this.getStakingFee))
+            .minus(BigNumber(this.stakeAmount).div(this.getStakingFee))
             .toString()
         : '--';
+    },
+    ethTotalFee() {
+      const gasPrice = BigNumber(this.locGasPrice).gt(0)
+        ? BigNumber(this.locGasPrice)
+        : BigNumber(this.gasPriceByType(this.gasPriceType));
+      const gasLimit = BigNumber(this.gasLimit).gt('21000')
+        ? this.gasLimit
+        : MIN_GAS_LIMIT;
+      return fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+    },
+    gasPriceFiat() {
+      const gasPrice = BigNumber(this.ethTotalFee);
+      return gasPrice.gt(0)
+        ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
+        : '--';
+    },
+    hasEnoughBalance() {
+      return BigNumber(this.ethTotalFee)
+        .plus(this.stakeAmount)
+        .lte(this.balanceInETH);
+    },
+    isValid() {
+      return (
+        BigNumber(this.stakeAmount).gt(0) &&
+        this.hasEnoughBalance &&
+        this.agreeToTerms
+      );
+    },
+    errorMessages() {
+      if (!this.hasEnoughBalance) {
+        return 'Not enough balance to send!';
+      }
+      if (this.estimateGasError) {
+        return 'Issue with gas estimation, please check if you have enough balance!';
+      }
+
+      return '';
     }
   },
   watch: {
+    locGasPrice(newVal) {
+      this.stakeHandler._setGasPrice(newVal);
+    },
     gasPriceType() {
-      this.setFee();
+      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     },
-    gasLimit() {
-      this.setFee();
-    },
-    stakeAmount() {
-      this.setGasLimit();
+    stakeAmount(value) {
+      if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
+        this.setGasLimit();
+      }
     }
   },
   mounted() {
-    this.stakeHandler = new stakeHandler(this.web3, this.isEthNetwork);
-    this.setFee();
+    this.stakeHandler = new stakeHandler(
+      this.web3,
+      this.isEthNetwork,
+      this.address
+    );
+    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
-    setFee() {
-      this.totalFee = fromWei(
-        BigNumber(this.gasPrice).times(this.gasLimit).toString()
-      );
-    },
+    ...mapActions('stakewise', ['addToPendingTxs']),
+    setAmount: debounce(function (val) {
+      const value = val ? val : 0;
+      this.stakeHandler._setAmount(BigNumber(value).toString());
+      this.stakeAmount = BigNumber(value).toString();
+    }, 500),
     setGasLimit() {
-      this.stakeHandler.getGasLimit(this.stakeAmount).then(res => {
-        this.gasLimit = res;
-      });
+      this.estimateGasError = false;
+      this.stakeHandler
+        .getTransactionFee()
+        .then(res => {
+          this.gasLimit = res;
+          this.stakeHandler._setGasLimit(res);
+        })
+        .catch(() => {
+          this.estimateGasError = true;
+        });
+    },
+    setMax() {
+      const max = BigNumber(this.balanceInETH).minus(
+        BigNumber(this.ethTotalFee)
+      );
+      this.setAmount(max.toString());
+    },
+    stake() {
+      this.stakeHandler
+        .stake()
+        .on('transactionHash', hash => {
+          const info = {
+            hash: hash,
+            amount: this.totalUserStaked
+          };
+          this.addToPendingTxs(info).then(() => {
+            this.setAmount(0);
+          });
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+          this.setAmount(0);
+        });
+    },
+    openSettings() {
+      EventBus.$emit('openSettings');
     }
   }
 };

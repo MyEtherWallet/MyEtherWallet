@@ -7,5 +7,13 @@ const setStakingFee = function ({ commit }, val) {
 const setValidatorApr = function ({ commit }, val) {
   commit('SET_VALIDATOR_APR', val);
 };
+const addToPendingTxs = function ({ commit }, val) {
+  commit('ADD_TO_PENDING_TXS', val);
+};
 
-export default { setPoolSupply, setStakingFee, setValidatorApr };
+export default {
+  setPoolSupply,
+  setStakingFee,
+  setValidatorApr,
+  addToPendingTxs
+};
