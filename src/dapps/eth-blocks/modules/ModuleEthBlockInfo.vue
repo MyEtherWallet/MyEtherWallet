@@ -95,20 +95,19 @@
           <h2 class="text-center text-md-left">
             Block #{{ blockNumberFormatted }}
           </h2>
-          <div class="d-flex flex-row align-center justify-space-between">
+          <share-network
+            network="twitter"
+            :url="`https://www.ethvm.com/block/number/${blockRef}`"
+            title="Twitter message"
+            hashtags="MyEtherWallet,MEW,EthBlocks"
+          >
             <mew-button class="mr-1" btn-style="light" color-theme="basic">
               <div class="d-flex align-center">
                 <v-icon left>mdi-twitter</v-icon>
                 <div>Share</div>
               </div>
             </mew-button>
-            <mew-button class="ml-1" btn-style="light" color-theme="basic">
-              <div class="d-flex align-center">
-                <v-icon left>mdi-launch</v-icon>
-                <div>View in Museum</div>
-              </div>
-            </mew-button>
-          </div>
+          </share-network>
         </div>
         <!--
         ===================================================

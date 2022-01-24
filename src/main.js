@@ -11,6 +11,7 @@ import Router from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 
 import VueIntercom from '@mathieustan/vue-intercom';
+import VueSocialSharing from 'vue-social-sharing';
 
 /**Dapps Store */
 import { dappStoreBeforeCreate } from './dapps/dappsStore';
@@ -47,6 +48,7 @@ Vue.filter('lokalise', lokalise);
 
 // eslint-disable-next-line
 Vue.use(VueIntercom, { appId: 'ja20qe25' });
+Vue.use(VueSocialSharing);
 
 //Router
 Vue.use(Router);
