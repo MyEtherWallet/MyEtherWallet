@@ -241,8 +241,8 @@ export default {
   methods: {
     calcTxFee(priority) {
       return fromWei(
-        toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority)))
-      ).toString();
+        toBN(this.totalGasLimit).mul(toBN(this.gasPriceByType(priority))).toString()
+      );
     },
     formatInEth(fee) {
       return formatFloatingPointValue(fee).value;
