@@ -1,1 +1,1 @@
-* added mounted check for clear method
+* Added check for elements
