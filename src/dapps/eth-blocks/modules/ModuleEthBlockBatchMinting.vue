@@ -226,39 +226,41 @@ export default {
     async setupMulticall() {
       const multicalls = [];
       this.batchMintData = [];
-      try {
-        this.blocks.forEach(block => {
-          multicalls.push(
-            block.generateMintData().then(() => {
-              return block;
-            })
-          );
-        });
-        Promise.all(multicalls).then(values => {
-          // updates blocks with mintData now
-          this.blocks = values.sort((a, b) => {
-            return a.blockNumber < b.blockNumber
-              ? -1
-              : a.blockNumber > b.blockNumber
-              ? 1
-              : 0;
+      if (this.blocks.length >= 1) {
+        try {
+          this.blocks.forEach(block => {
+            multicalls.push(
+              block.generateMintData().then(() => {
+                return block;
+              })
+            );
           });
-          this.batchMintData = values.map(item => {
-            return item.mintData.data;
+          Promise.all(multicalls).then(values => {
+            // updates blocks with mintData now
+            this.blocks = values.sort((a, b) => {
+              return a.blockNumber < b.blockNumber
+                ? -1
+                : a.blockNumber > b.blockNumber
+                ? 1
+                : 0;
+            });
+            this.batchMintData = values.map(item => {
+              return item.mintData.data;
+            });
+            this.mintContract = new this.web3.eth.Contract(
+              abi,
+              values[0].mintData.to
+            );
+            this.totalMintValue = values.reduce((a, b) => {
+              const parsedValue = b.mintData.value;
+              return BigNumber(a).plus(parsedValue).toString();
+            }, '0');
+            this.fetchGasLimits();
           });
-          this.mintContract = new this.web3.eth.Contract(
-            abi,
-            values[0].mintData.to
-          );
-          this.totalMintValue = values.reduce((a, b) => {
-            const parsedValue = b.mintData.value;
-            return BigNumber(a).plus(parsedValue).toString();
-          }, '0');
-          this.fetchGasLimits();
-        });
-      } catch (e) {
-        this.isLoading = false;
-        Toast(e, {}, ERROR);
+        } catch (e) {
+          this.isLoading = false;
+          Toast(e, {}, ERROR);
+        }
       }
     },
     /**

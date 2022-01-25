@@ -44,15 +44,36 @@
         ===================================================
         -->
         <v-col cols="6">
+          <div>Transaction fee</div>
+        </v-col>
+        <v-col cols="6" class="text-end">
+          <div>
+            <h2 class="mb-1 textDark--text">
+              {{ txFee }} {{ network.type.currencyName }}
+            </h2>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formattedFiatTxFee }}
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="isAvailable" class="mt-1 px-3" align="center">
+        <!--
+        ===================================================
+          Block is available: TOTAL PRICE INFO
+        ===================================================
+        -->
+        <v-col cols="6">
           <div>Total</div>
         </v-col>
         <v-col cols="6" class="text-end">
           <div>
             <h2 class="mb-1 textDark--text">
-              {{ formattedPrice }} {{ network.type.currencyName }}
+              {{ formattedFiatTotalPrice }} {{ network.type.currencyName }}
             </h2>
             <p v-if="!isTestNetwork" class="textLight--text mb-0">
-              {{ formatFiatPrice }}
+              {{ formattedTotalPrice }}
             </p>
           </div>
         </v-col>
@@ -74,11 +95,27 @@
         </v-col>
         <v-col cols="6">
           <mew-button
-            title="Mint now"
+            v-if="!isPending"
+            :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
             btn-style="background"
             color-theme="primary"
             has-full-width
+            :loading="disableAction"
+            :disabled="disableActionBtn"
+            @click.native="emitMint()"
           >
+          </mew-button>
+          <mew-button v-else disabled btn-style="light">
+            <div class="d-flex flex-row align-center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                class="ma-auto"
+                size="16"
+                width="2"
+              ></v-progress-circular>
+              <div class="textDark--text pl-2">Pending</div>
+            </div>
           </mew-button>
         </v-col>
       </v-row>
@@ -338,7 +375,12 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'swapLink']),
+    ...mapGetters('global', [
+      'network',
+      'isTestNetwork',
+      'swapLink',
+      'gasPrice'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     /**
      * @returns{string}
@@ -426,6 +468,25 @@ export default {
     },
     /**
      * @returns{string}
+     * Property returns formatted transaction fee in ETH
+     */
+    txFee() {
+      const GAS_LIMIT = '21000';
+      const val = BigNumber(GAS_LIMIT).times(this.gasPrice);
+      return formatFloatingPointValue(fromWei(val.toString())).value;
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted FIAT price
+     */
+    formattedFiatTxFee() {
+      const value = formatFiatValue(
+        BigNumber(fromWei(this.gasPrice)).times(this.fiatValue)
+      ).value;
+      return `${'$' + value}`;
+    },
+    /**
+     * @returns{string}
      * Property returns formatted ETH price
      */
     formattedPrice() {
@@ -441,7 +502,23 @@ export default {
       ).value;
       return `${'$' + value}`;
     },
-
+    /**
+     * @returns{string}
+     * Property returns formatted Total price
+     */
+    formattedFiatTotalPrice() {
+      return Number(this.txFee) + Number(this.formattedPrice);
+    },
+    /**
+     * @returns{string}
+     * Property returns formatted Total price in ETH
+     */
+    formattedTotalPrice() {
+      const tx = Number(this.formattedFiatTxFee.substring(1));
+      const price = Number(this.formatFiatPrice.substring(1));
+      const total = (tx + price).toFixed(2);
+      return `${'$' + total}`;
+    },
     /**
      * Property returns rarible link to a block based on block number and current netowrk
      * @returns{string}
