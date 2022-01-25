@@ -173,51 +173,29 @@ h6 {
   }
 }
 
-.custom-scroll-bar {
-  &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
-  }
-
-  &::-webkit-scrollbar-button {
-    width: 0;
-    height: 0;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #4f4f4f;
-    border: 0 none #fff;
-    border-radius: 50px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #3b3b3b;
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background: #4b4949;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #e1dfdf;
-    border: 0 none #fff;
-    border-radius: 39px;
-  }
-
-  &::-webkit-scrollbar-track:hover {
-    background: #ddd5d5;
-  }
-
-  &::-webkit-scrollbar-track:active {
-    background: #dedede;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-}
-
 /* ========= Convert SVG to white ========= */
 .make-white-svg {
   filter: brightness(10);
+}
+
+/* ===== Custom Scrollbar ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--v-greenPrimary-base) #d6d6d6;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #d6d6d6;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #949494;
+  border-radius: 0px;
+  border: 0px solid #ffffff;
 }

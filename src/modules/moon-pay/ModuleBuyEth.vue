@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-10">
+  <div class="mew-component--mobule-buy-eth pt-10 custom-scroll-bar">
     <!-- ============================================================== -->
     <!-- Address select -->
     <!-- ============================================================== -->

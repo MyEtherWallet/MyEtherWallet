@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--moon-pay">
-    <app-dialog :is-open="true" max-width="540">
+    <app-dialog v-model="isOpen" max-width="540">
       <mew-tabs
         :items="tabItems"
         :active-tab="activeTab"
@@ -25,8 +25,15 @@ import SellEth from './ModuleSellEth';
 export default {
   name: 'MoonPay',
   components: { AppDialog, BuyEth, SellEth },
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
+      isOpen: false,
       activeTab: 0,
       tabItems: [
         {
@@ -37,6 +44,19 @@ export default {
         }
       ]
     };
+  },
+  watch: {
+    open(newVal) {
+      this.isOpen = newVal;
+    },
+    isOpen(newVal) {
+      if (!newVal) {
+        this.$emit('close', false);
+      }
+    }
+  },
+  mounted() {
+    this.isOpen = this.value;
   },
   methods: {
     onTab(val) {

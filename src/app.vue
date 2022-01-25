@@ -4,13 +4,10 @@
     <module-toast />
     <module-global-modals />
     <module-analytics />
-
-    <module-moon-pay />
   </v-app>
 </template>
 
 <script>
-import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 import { mapActions, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
@@ -26,7 +23,6 @@ import {
 export default {
   name: 'App',
   components: {
-    ModuleMoonPay,
     ModuleToast,
     ModuleGlobalModals,
     ModuleAnalytics
