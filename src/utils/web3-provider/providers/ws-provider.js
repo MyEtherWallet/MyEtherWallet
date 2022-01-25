@@ -8,6 +8,7 @@ import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ethSendTransaction,
+  ethSendRawTransaction,
   ethSignTransaction,
   ethSign,
   ethAccounts,
@@ -106,6 +107,7 @@ class WSProvider {
       };
       const middleware = new MiddleWare();
       middleware.use(ethSendTransaction);
+      middleware.use(ethSendRawTransaction);
       middleware.use(ethSignTransaction);
       middleware.use(ethSign);
       middleware.use(ethAccounts);

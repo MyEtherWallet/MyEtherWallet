@@ -4,6 +4,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
 import {
   ethSendTransaction,
+  ethSendRawTransaction,
   ethSign,
   ethSignTransaction,
   ethGetTransactionCount
@@ -67,6 +68,7 @@ class GivenProvider {
         };
         const middleware = new MiddleWare();
         middleware.use(ethSendTransaction);
+        middleware.use(ethSendRawTransaction);
         middleware.use(ethSignTransaction);
         middleware.use(ethGetTransactionCount);
         middleware.use(ethSign);
