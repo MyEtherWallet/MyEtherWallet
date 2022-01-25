@@ -27,10 +27,18 @@ const ADD_TO_PENDING_TXS = function (state, val) {
   state.stakewiseTxs = stakewiseTxs;
 };
 
+const REMOVE_TO_PENDING_TXS = function (state, val) {
+  const stakewiseTxs = clone(state.stakewiseTxs);
+  state.stakewiseTxs = stakewiseTxs.filter(item => {
+    return item.hash !== val;
+  });
+};
+
 export default {
   INIT_STORE,
   SET_POOL_SUPPLY,
   SET_STAKING_FEE,
   SET_VALIDATOR_APR,
-  ADD_TO_PENDING_TXS
+  ADD_TO_PENDING_TXS,
+  REMOVE_TO_PENDING_TXS
 };

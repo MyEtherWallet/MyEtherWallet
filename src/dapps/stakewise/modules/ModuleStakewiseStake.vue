@@ -360,7 +360,13 @@ export default {
             amount: this.totalUserStaked
           };
           this.addToPendingTxs(info).then(() => {
+            // reset stakewise
             this.setAmount(0);
+            this.stakeAmount = '0';
+            this.locGasPrice = '0';
+            this.gasLimit = '21000';
+            this.agreeToTerms = false;
+            this.estimateGasError = false;
           });
         })
         .catch(err => {

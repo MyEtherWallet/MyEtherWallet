@@ -11,9 +11,14 @@ const addToPendingTxs = function ({ commit }, val) {
   commit('ADD_TO_PENDING_TXS', val);
 };
 
+const removePendingTxs = function ({ commit }, val) {
+  commit('REMOVE_TO_PENDING_TXS', val);
+};
+
 export default {
   setPoolSupply,
   setStakingFee,
   setValidatorApr,
-  addToPendingTxs
+  addToPendingTxs,
+  removePendingTxs
 };

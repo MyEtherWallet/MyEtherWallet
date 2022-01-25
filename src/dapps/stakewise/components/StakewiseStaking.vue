@@ -18,8 +18,10 @@
         </div>
       </div>
       <div class="text-right">
-        <div class="font-weight-bold mew-heading-3 mb-1">{{ sethBalance }}</div>
-        <div class="textLight--text">${{ sethUsdBalance }}</div>
+        <div class="font-weight-bold mew-heading-3 mb-1">{{ balance }}</div>
+        <div v-if="ethvmSupport" class="textLight--text">
+          ${{ sethUsdBalance }}
+        </div>
       </div>
     </div>
 
@@ -27,7 +29,8 @@
     <!-- You are not staking user message -->
     <!-- ======================================================================================= -->
     <div v-if="!hasStaked" class="mt-4">
-      You are currently not staking any ETH. To earn rewards start staking.
+      You are currently not staking any {{ currencyName }}. To earn rewards
+      start staking.
       <span class="greenPrimary--text cursor--pointer" @click="() => {}"
         >Start staking</span
       >
@@ -36,56 +39,73 @@
     <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
-    <div v-if="hasPending" class="d-flex justify-space-between mt-4">
-      <div>
-        <v-progress-circular
-          indeterminate
-          color="greenPrimary"
-          :width="2"
-          :size="20"
-          class="mr-1"
-        />
-        0.05 ETH Pending
-      </div>
-      <div class="greenPrimary--text font-weight-medium d-flex align-center">
-        View on EthVM
-        <v-icon color="greenPrimary" small class="ml-1">mdi-open-in-new</v-icon>
+    <div v-if="hasPending">
+      <div
+        v-for="tx in stakewiseTxs"
+        :key="tx.hash"
+        class="d-flex justify-space-between mt-4"
+      >
+        <div>
+          <v-progress-circular
+            indeterminate
+            color="greenPrimary"
+            :width="2"
+            :size="20"
+            class="mr-1"
+          />
+          {{ tx.amount }} {{ currencyName }} Pending
+        </div>
+        <div
+          class="greenPrimary--text font-weight-medium d-flex align-center cursor--pointer"
+          @click="checkHash(tx.hash)"
+        >
+          View on {{ ethvmSupport ? 'EthVM' : 'EtherScan' }}
+          <v-icon color="greenPrimary" small class="ml-1"
+            >mdi-open-in-new</v-icon
+          >
+        </div>
       </div>
     </div>
 
     <!-- ======================================================================================= -->
-    <!-- Active for Stake ETH -->
+    <!-- Active for Stake currencyName -->
     <!-- ======================================================================================= -->
     <div
       v-if="hasStaked"
       class="d-flex align-center justify-space-between mt-4"
     >
       <mew-button
-        title="Redeem to ETH"
+        v-if="isEthNetwork"
+        :title="`Redeem to ${currencyName}`"
         btn-style="transparent"
         btn-size="small"
         class="mew-body"
         @click.native="routeToSwap"
       />
       <mew-button
-        title="Stake more ETH"
+        :title="`Stake more ${currencyName}`"
         :btn-style="compoundRewards ? 'background' : 'transparent'"
         btn-size="small"
         class="mew-body"
-        @click.native="routeToSwap"
+        @click.native="routeToStakewise"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import {
   SETH2_GOERLI_CONTRACT,
   SETH2_MAINNET_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
+import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
 import _ from 'lodash';
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import { fromWei } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+import { STAKEWISE_ROUTES } from '../configsRoutes';
 export default {
   name: 'ModuleSideStaking',
   components: {},
@@ -95,10 +115,27 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      balance: 0,
+      intervals: {}
+    };
+  },
   computed: {
-    ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['isEthNetwork']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['stakewiseTxs']),
+    currencyName() {
+      return this.network.type.currencyName;
+    },
+    ethvmSupport() {
+      return this.network.type.isEthVMSupported.supported;
+    },
+    linkUrl() {
+      return this.ethvmSupport
+        ? this.network.type.isEthVMSupported.blockExplorerTX
+        : this.network.type.blockExplorerTX;
+    },
     hasPending() {
       return this.stakewiseTxs.length > 0;
     },
@@ -106,22 +143,84 @@ export default {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
     },
     hasStaked() {
-      const exists = _.find(
-        this.tokensList,
-        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-      );
-      return exists;
-    },
-    sethBalance() {
-      return this.hasStaked ? this.hasStaked.balancef : '0';
+      if (this.ethvmSupport) {
+        const exists = _.find(
+          this.tokensList,
+          item =>
+            item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
+        );
+        return exists;
+      }
+      return BigNumber(this.balance).gt(0);
     },
     sethUsdBalance() {
       return this.hasStaked ? this.hasStaked.usdBalancef : '0';
     }
   },
+  watch: {
+    stakewiseTxs: {
+      handler: function (newVal) {
+        if (newVal.length > 0) {
+          newVal.forEach(item => {
+            this.fetcher(item.hash);
+          });
+        }
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    this.fetchBalance();
+    if (this.stakewiseTxs.length > 0) {
+      this.stakewiseTxs.forEach(item => {
+        this.fetcher(item.hash);
+      });
+    }
+  },
+  beforeDestroy() {
+    // clear intervals that may have been setup
+    if (isEmpty(this.intervals)) {
+      Object.values(this.intervals).forEach(item => {
+        clearInterval(item);
+      });
+    }
+  },
   methods: {
+    ...mapActions('stakewise', ['removePendingTxs']),
     routeToSwap() {
-      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
+      this.$router.push({
+        name: ROUTES_WALLET.SWAP.NAME,
+        query: {
+          toToken: this.seth2Contract
+        }
+      });
+    },
+    routeToStakewise() {
+      this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
+    },
+    async fetchBalance() {
+      const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          this.balance = fromWei(res);
+        });
+    },
+    checkHash(hash) {
+      // eslint-disable-next-week
+      window.open(this.linkUrl.replace('[[txHash]]', hash), '_blank');
+    },
+    fetcher(hash) {
+      this.intervals[hash] = setInterval(() => {
+        this.web3.eth.getTransactionReceipt(hash).then(res => {
+          if (res) {
+            clearInterval(this.intervals[hash]);
+            this.removePendingTxs(hash);
+            this.fetchBalance();
+          }
+        });
+      }, 14000);
     }
   }
 };

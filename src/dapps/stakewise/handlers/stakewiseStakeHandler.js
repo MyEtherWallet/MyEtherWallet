@@ -7,6 +7,7 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
     this.value = 0;
     this.gasLimt = '21000';
     this.gasPrice = '0';
+    this.web3 = web3;
   }
 
   getTransactionFee() {
@@ -21,8 +22,7 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
     );
   }
 
-  async stake() {
-    const nonce = await this.web3.eth.getTransactionCount(this.fromAddress);
+  stake() {
     return (
       this.poolContract.methods
         // eslint-disable-next-line
@@ -31,8 +31,7 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
           from: this.fromAddress,
           value: this.value,
           gas: this.gasLimit,
-          gasPrice: this.gasPrice,
-          nonce: nonce
+          gasPrice: this.gasPrice
         })
     );
   }
