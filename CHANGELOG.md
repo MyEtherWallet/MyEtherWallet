@@ -14,7 +14,6 @@
 * fix trade button when on swap [#3615](https://github.com/MyEtherWallet/MyEtherWallet/pull/3615)
 * Added Filter to Token List [#3616](https://github.com/MyEtherWallet/MyEtherWallet/pull/3616)
 * fix weird loading fee when toToken is ETH [#3622](https://github.com/MyEtherWallet/MyEtherWallet/pull/3622)
-* fix undefined reading minFrom [#3630](https://github.com/MyEtherWallet/MyEtherWallet/pull/3630)
 
 ### Release v6.4.3-hotfix.1
 
