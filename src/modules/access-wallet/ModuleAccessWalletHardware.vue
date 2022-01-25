@@ -71,7 +71,7 @@
               Step 2: Start Access to Selected Hardware Wallet
             =====================================================================================
             -->
-    <div v-if="step === 2" class="full-width">
+    <div v-if="step <= walletInitialized" class="full-width">
       <!--
         =====================================================================================
           Bitbox2
@@ -126,6 +126,7 @@
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
+        @ledgerApp="setSelectedApp"
       />
 
       <!--
@@ -148,7 +149,7 @@
     =====================================================================================
     -->
     <access-wallet-address-network
-      v-if="step === 3"
+      v-if="step > walletInitialized"
       :back="null"
       :hide-custom-paths="onKeepkey || onLedger"
       :handler-wallet="hwWalletInstance"
@@ -270,6 +271,11 @@ export default {
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
     ...mapState('wallet', ['identifier']),
+    walletInitialized() {
+      return this.wallets[this.walletType]
+        ? this.wallets[this.walletType]?.when
+        : 1;
+    },
     /**
      * Returns the correct network icon
      */
@@ -411,7 +417,7 @@ export default {
      */
     title() {
       if (this.switchAddress) return 'Switch Address';
-      if (this.step > this.wallets[this.walletType]?.when) {
+      if (this.step > this.walletInitalzed) {
         return 'Select Network and Address';
       } else if (this.step === 1) {
         return 'Select a hardware wallet';
@@ -514,7 +520,7 @@ export default {
         if (this.step === 1) {
           this.reset();
         } else if (this.step === 2) {
-          this.step -= 1;
+          this.step = 1;
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger) {
@@ -544,7 +550,7 @@ export default {
     nextStep() {
       if (this.walletType) {
         this.step++;
-        if (this.step === this.wallets[this.walletType].when) {
+        if (this.step === this.walletInitialized) {
           if (this.onLedger) this.selectedPath = this.paths[0];
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
@@ -678,6 +684,12 @@ export default {
     setPassword(str) {
       this.password = str;
       this.passwordError = false;
+    },
+    /**
+     * Sets selected app for Ledger
+     */
+    setSelectedApp(e) {
+      this.selectedLedgerApp = e;
     }
   }
 };
