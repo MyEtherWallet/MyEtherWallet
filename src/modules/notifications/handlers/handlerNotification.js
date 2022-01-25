@@ -160,6 +160,8 @@ export default class Notification {
    * Check swap status
    */
   checkSwapStatus(swapper) {
+    // eslint-disable-next-line
+    console.log(this.status);
     if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
       const _this = this;
       _this.swapResolver = setInterval(() => {
@@ -174,14 +176,21 @@ export default class Notification {
                   formattedStatus === NOTIFICATION_STATUS.UNKNOWN
                 ? NOTIFICATION_STATUS.FAILED.toUpperCase()
                 : res;
+            this.setStatus(this.status);
           });
         }
-        if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
-          _this.read = false;
-          vuexStore.dispatch('notifications/updateNotification', _this);
-          clearInterval(_this.swapResolver);
-        }
       }, 10000);
+    }
+  }
+
+  /**
+   * set status
+   */
+  setStatus(status) {
+    if (status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
+      this.read = false;
+      vuexStore.dispatch('notifications/updateNotification', this);
+      clearInterval(this.swapResolver);
     }
   }
 
