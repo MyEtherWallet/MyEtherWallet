@@ -197,7 +197,6 @@ import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { validBlockNumber } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
-import { fromWei } from 'web3-utils';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 const MIN_GAS_TRANSFER = 150000;
@@ -313,7 +312,6 @@ export default {
      * @returns {string} block mint price
      */
     alertMintPrice() {
-      console.log('price yoo', fromWei(this.handlerBlock.mintPrice));
       return this.loading ? '' : this.handlerBlock.mintPrice;
     },
 

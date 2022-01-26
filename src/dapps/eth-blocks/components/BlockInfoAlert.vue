@@ -86,10 +86,18 @@
         ===================================================
         -->
         <v-col cols="6">
-          <mew-button btn-style="outline" color-theme="primary" has-full-width>
+          <mew-button
+            btn-style="outline"
+            color-theme="primary"
+            has-full-width
+            :disabled="!isAdded && isAvailable"
+            @click.native="addToCart"
+          >
             <div class="d-flex align-center">
-              <v-icon left>mdi-plus-circle-outline</v-icon>
-              <div>Add to batch</div>
+              <v-icon v-if="isAdded && isAvailable" left
+                >mdi-plus-circle-outline</v-icon
+              >
+              <div>{{ addText }}</div>
             </div>
           </mew-button>
         </v-col>
@@ -317,7 +325,7 @@ import {
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
 import { fromWei } from 'web3-utils';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import {
   formatIntegerToString,
   formatFiatValue,
@@ -382,6 +390,7 @@ export default {
       'gasPrice'
     ]),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('ethBlocksTxs', ['cart']),
     /**
      * @returns{string}
      */
@@ -568,9 +577,24 @@ export default {
         ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
         : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
       return estimate;
+    },
+    isAdded() {
+      if (this.length >= 1) {
+        const found = this.cart.find(item => {
+          return item === this.blockNumber;
+        });
+        return found;
+      }
+      return false;
+    },
+    addText() {
+      return !this.isAdded && this.isAvailable
+        ? 'Added to batch'
+        : 'Add to batch';
     }
   },
   methods: {
+    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
     /**
      * Emits 'mint' to the parent
      * ONLY USED IN AVALAILABLE block alert Mint button
@@ -593,6 +617,11 @@ export default {
     },
     trackToRarible() {
       this.trackDapp('ethBlocksToRarible');
+    },
+    addToCart() {
+      if (this.isAvailable && !this.isAdded) {
+        this.addBlockToCart(this.blockNumber);
+      }
     }
   }
 };
