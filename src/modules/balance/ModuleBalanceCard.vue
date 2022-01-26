@@ -180,7 +180,7 @@
       width="408px"
     >
       <template #dialogBody>
-        <app-addr-qr :currency="getCurrency" />
+        <app-addr-qr />
       </template>
     </app-modal>
     <module-access-wallet-hardware
@@ -294,12 +294,6 @@ export default {
      */
     verifyAddressBody() {
       return `To verify, check the address on your ${this.instance.meta.name} device & make sure it is the same address as the one shown below.`;
-    },
-    /**
-     * returns curreny name
-     */
-    getCurrency() {
-      return this.network.type.currencyName;
     },
     /**
      * Shows hardware access or software access
