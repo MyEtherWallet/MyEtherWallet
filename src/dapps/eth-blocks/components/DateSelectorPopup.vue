@@ -14,11 +14,17 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
+              color="primary"
               full-width
             />
           </v-col>
           <v-col sm="12" lg="6" md="6">
-            <v-time-picker v-model="time" format="ampm" full-width />
+            <v-time-picker
+              v-model="time"
+              format="ampm"
+              color="primary"
+              full-width
+            />
           </v-col>
         </v-row>
         <div class="d-flex align-center justify-end py-7 px-5">
