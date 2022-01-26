@@ -94,20 +94,23 @@ export default async ({ payload, store, requestManager }, res, next) => {
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
-                const storeKey = utils.sha3(
-                  `${
-                    store.getters['global/network'].type.name
-                  }-${store.state.wallet.instance
-                    .getChecksumAddressString()
-                    .toLowerCase()}`
-                );
-                const localStoredObj = locStore.get(storeKey);
-                locStore.set(storeKey, {
-                  nonce: sanitizeHex(
-                    BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                  ),
-                  timestamp: localStoredObj.timestamp
-                });
+                const isTesting = locStore.get('mew-testing');
+                if (!isTesting) {
+                  const storeKey = utils.sha3(
+                    `${
+                      store.getters['global/network'].type.name
+                    }-${store.state.wallet.instance
+                      .getChecksumAddressString()
+                      .toLowerCase()}`
+                  );
+                  const localStoredObj = locStore.get(storeKey);
+                  locStore.set(storeKey, {
+                    nonce: sanitizeHex(
+                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                    ),
+                    timestamp: localStoredObj.timestamp
+                  });
+                }
               }
               res(null, toPayload(payload.id, hash));
             })
