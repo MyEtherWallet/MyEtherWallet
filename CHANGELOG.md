@@ -1,3 +1,27 @@
+### Release v6.4.5
+
+### devop
+
+* updated packages [#3629](https://github.com/MyEtherWallet/MyEtherWallet/pull/3629)
+* Added check for elements [#3632](https://github.com/MyEtherWallet/MyEtherWallet/pull/3632)
+* remove survey [#3642](https://github.com/MyEtherWallet/MyEtherWallet/pull/3642)
+
+### chore
+
+* remove require lodash [#3623](https://github.com/MyEtherWallet/MyEtherWallet/pull/3623)
+* fix imports [#3625](https://github.com/MyEtherWallet/MyEtherWallet/pull/3625)
+* added comment for tokens [#3628](https://github.com/MyEtherWallet/MyEtherWallet/pull/3628)
+
+### feat
+
+* allow test transactions [#3617](https://github.com/MyEtherWallet/MyEtherWallet/pull/3617)
+
+### fix
+
+* fix ledger issue where users can't switch paths [#3626](https://github.com/MyEtherWallet/MyEtherWallet/pull/3626)
+* fix minFrom undefined issue when minmax is undefined [#3630](https://github.com/MyEtherWallet/MyEtherWallet/pull/3630)
+* fix TypeError: e is null Given value: null on SettingsGasPrice calcTxFee methods [#3637](https://github.com/MyEtherWallet/MyEtherWallet/pull/3637)
+
 ### Release v6.4.4
 
 ### devop

@@ -14,6 +14,7 @@ import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLa
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
 import TheConvertUnitsLayout from '@/views/layouts-default/TheConvertUnitsLayout';
 import TheCareersLayout from '@/views/layouts-default/TheCareersLayout';
+import TheQrCodeLayout from '@/views/layouts-default/TheQrCodeLayout';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -127,6 +128,14 @@ export default {
       path: ROUTES_HOME.JOBS.PATH,
       name: ROUTES_HOME.JOBS.NAME,
       component: TheCareersLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.QR_CODE.PATH,
+      name: ROUTES_HOME.QR_CODE.NAME,
+      component: TheQrCodeLayout,
       meta: {
         noAuth: true
       }

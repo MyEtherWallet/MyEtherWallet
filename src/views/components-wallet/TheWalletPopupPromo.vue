@@ -42,23 +42,16 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('global', ['showWalletPromo', 'showSurvey'])
-  },
-  mounted() {
-    if (this.showWalletPromo && this.showSurvey) {
-      this.setShowSurvey(false);
-    }
+    ...mapState('global', ['showWalletPromo'])
   },
   methods: {
     /**NEW */
-    ...mapActions('global', ['neverShowPromo', 'setShowSurvey']),
+    ...mapActions('global', ['neverShowPromo']),
     /**
      * Hides promo popup forever
      */
     setHidePopUp() {
-      this.neverShowPromo().then(() => {
-        this.setShowSurvey(true);
-      });
+      this.neverShowPromo();
     },
 
     /**
