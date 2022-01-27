@@ -317,6 +317,10 @@ export default {
       }
       return '0';
     },
+    /**
+     * Gets tokens from token list
+     * Formats each token to be used in mew-select
+     */
     tokens() {
       // no ref copy
       const tokensList = this.tokensList.slice();
