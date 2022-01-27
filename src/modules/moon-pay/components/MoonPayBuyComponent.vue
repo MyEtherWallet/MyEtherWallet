@@ -3,7 +3,7 @@
     <!-- ============================================================== -->
     <!-- Address select -->
     <!-- ============================================================== -->
-    <mew-address-select label="To Address" />
+    <module-address-book @setAddress="setAddress" />
 
     <!-- ============================================================== -->
     <!-- Fiat currency select -->
@@ -113,9 +113,9 @@
       </div>
 
       <!-- ============================================================== -->
-      <!-- (Expending block) Show fees -->
+      <!-- (Expanding block) Show fees -->
       <!-- ============================================================== -->
-      <expending-block class="mt-4" btn-right btn-bottom>
+      <expanding-block class="mt-4" btn-right btn-bottom>
         <template #headerShow>
           <div class="greenPrimary--text">Show fees</div>
         </template>
@@ -134,7 +134,7 @@
             </div>
           </div>
         </template>
-      </expending-block>
+      </expanding-block>
 
       <div class="d-flex align-center justify-space-between mt-4">
         <div class="font-weight-medium">Total</div>
@@ -155,12 +155,15 @@
 </template>
 
 <script>
-import ExpendingBlock from '@/core/components/AppExpendingBlock';
+import ExpandingBlock from '@/core/components/AppExpandingBlock';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import { isAddress } from '@/core/helpers/addressUtils';
 export default {
   name: 'ModuleBuyEth',
-  components: { ExpendingBlock },
+  components: { ExpandingBlock, ModuleAddressBook },
   data() {
     return {
+      toAddress: '',
       fiatCurrencyItems: ['USD'],
       buttonSelected: '1',
       buttons: [
@@ -176,6 +179,9 @@ export default {
   methods: {
     buttonClicked(btnId) {
       this.buttonSelected = btnId;
+    },
+    setAddress(e) {
+      this.toAddress = isAddress(e) ? e : '';
     }
   }
 };

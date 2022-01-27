@@ -57,7 +57,7 @@
 
 <script>
 export default {
-  name: 'AppExpendingBlock',
+  name: 'AppExpandingBlock',
 
   props: {
     value: {

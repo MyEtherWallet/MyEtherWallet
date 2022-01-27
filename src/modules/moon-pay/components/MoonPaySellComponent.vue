@@ -51,7 +51,7 @@
       <!-- ============================================================== -->
       <!-- (Expending block) Show fees -->
       <!-- ============================================================== -->
-      <expending-block class="mt-4" btn-right btn-bottom>
+      <expanding-block class="mt-4" btn-right btn-bottom>
         <template #headerShow>
           <div class="greenPrimary--text">Show fees</div>
         </template>
@@ -70,7 +70,7 @@
             </div>
           </div>
         </template>
-      </expending-block>
+      </expanding-block>
     </div>
 
     <!-- ============================================================== -->
@@ -87,10 +87,10 @@
 
 <script>
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import ExpendingBlock from '@/core/components/AppExpendingBlock';
+import ExpandingBlock from '@/core/components/AppExpandingBlock';
 export default {
   name: 'ModuleSellEth',
-  components: { ButtonBalance, ExpendingBlock },
+  components: { ButtonBalance, ExpandingBlock },
   data() {
     return {
       currencyItems: [

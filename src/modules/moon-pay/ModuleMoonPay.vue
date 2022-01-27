@@ -1,6 +1,13 @@
 <template>
   <div class="mew-component--moon-pay">
-    <app-dialog v-model="isOpen" max-width="540">
+    <mew-popup
+      :show="open"
+      :has-buttons="false"
+      max-width="540"
+      :left-btn="leftBtn"
+      scrollable
+      has-body-content
+    >
       <mew-tabs
         :items="tabItems"
         :active-tab="activeTab"
@@ -8,23 +15,24 @@
         @onTab="onTab"
       >
         <template #tabContent1>
-          <buy-eth />
+          <buy-eth-component />
         </template>
         <template #tabContent2>
-          <sell-eth />
+          <sell-eth-component />
         </template>
       </mew-tabs>
-    </app-dialog>
+    </mew-popup>
   </div>
 </template>
 
 <script>
-import AppDialog from '@/core/components/AppSimpleDialog';
-import BuyEth from './ModuleBuyEth';
-import SellEth from './ModuleSellEth';
+import { mapState } from 'vuex';
+import BuyEthComponent from './components/MoonPayBuyComponent';
+import SellEthComponent from './components/MoonPaySellComponent';
+import handler from './handlers/moonpayHandler';
 export default {
   name: 'MoonPay',
-  components: { AppDialog, BuyEth, SellEth },
+  components: { BuyEthComponent, SellEthComponent },
   props: {
     open: {
       type: Boolean,
@@ -42,25 +50,32 @@ export default {
         {
           name: 'Sell ETH'
         }
-      ]
+      ],
+      moonpayHandler: {}
     };
+  },
+  computed: {
+    ...mapState('wallet', ['address']),
+    leftBtn() {
+      return {
+        method: this.close
+      };
+    }
   },
   watch: {
     open(newVal) {
       this.isOpen = newVal;
-    },
-    isOpen(newVal) {
-      if (!newVal) {
-        this.$emit('close', false);
-      }
     }
   },
   mounted() {
-    this.isOpen = this.value;
+    this.moonpayHandler = new handler(this.address);
   },
   methods: {
     onTab(val) {
       this.activeTab = val;
+    },
+    close() {
+      this.$emit('close', false);
     }
   }
 };
