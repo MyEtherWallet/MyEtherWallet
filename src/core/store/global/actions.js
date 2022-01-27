@@ -48,11 +48,6 @@ const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
 const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
-
-const setShowSurvey = function ({ commit }, val) {
-  commit('SET_SHOW_SURVEY', val);
-};
-
 const setTrackingConsent = function ({ commit, dispatch }, val) {
   commit('SET_TRACKING_CONSENT', val);
   dispatch('setTracking');
@@ -95,7 +90,6 @@ export default {
   addLocalContract,
   setMaxPriorityFeePerGas,
   setBaseFeePerGas,
-  setShowSurvey,
   setTrackingConsent,
   setTracking,
   neverShowPromo
