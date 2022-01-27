@@ -64,7 +64,10 @@ new Vue({
     this.$intercom.boot({
       user_id: uuidv4()
     });
-    locStore.set('mew-testing', false);
+    console.log(locStore.get('mew-testing'));
+    if (locStore.get('mew-testing') === undefined) {
+      locStore.set('mew-testing', false);
+    }
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
