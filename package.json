@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.4.4",
+  "version": "6.4.5",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -86,7 +86,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.0.0",
-    "@ledgerhq/hw-app-eth": "6.20.0",
+    "@ledgerhq/hw-app-eth": "6.23.1",
     "@ledgerhq/hw-transport-webusb": "6.20.0",
     "@mdi/font": "6.5.95",
     "@vue/babel-preset-app": "4.5.15",
