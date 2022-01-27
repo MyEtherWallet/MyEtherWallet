@@ -1,3 +1,11 @@
+### feat
+
+* add mobile app store redirecting page [#3645](https://github.com/MyEtherWallet/MyEtherWallet/pull/3645)
+
+### fix
+
+* fix value setting for test mode [#3647](https://github.com/MyEtherWallet/MyEtherWallet/pull/3647)
+
 ### Release v6.4.5
 
 ### devop
