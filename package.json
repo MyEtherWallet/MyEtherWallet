@@ -108,7 +108,7 @@
     "bignumber.js": "9.0.2",
     "bip39": "3.0.4",
     "codecov": "3.8.3",
-    "commitlint": "16.0.2",
+    "commitlint": "16.1.0",
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
