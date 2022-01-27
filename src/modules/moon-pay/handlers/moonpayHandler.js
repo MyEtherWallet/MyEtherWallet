@@ -39,25 +39,25 @@ export default class MoonPayHandler {
     });
   }
 
-  getSupportedFiatToBuy() {
+  getSupportedFiatToBuy(symbol) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${API}/v3/purchase/providers/web?iso=us`)
+        .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.filter(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const moonpay = res.data.filter(item => item.name === MOONPAY);
+          resolve(moonpay[0]);
         })
         .catch(reject);
     });
   }
 
-  getSupportedFiatToSell() {
+  getSupportedFiatToSell(symbol) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${API}/v3/sell/providers/web?iso=us`)
+        .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.filter(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const moonpay = res.data.filter(item => item.name === MOONPAY);
+          resolve(moonpay[0]);
         })
         .catch(reject);
     });

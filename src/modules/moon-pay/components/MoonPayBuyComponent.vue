@@ -1,9 +1,14 @@
 <template>
   <div class="mew-component--mobule-buy-eth pt-10 custom-scroll-bar">
     <!-- ============================================================== -->
-    <!-- Address select -->
+    <!-- Currency Select -->
     <!-- ============================================================== -->
-    <module-address-book @setAddress="setAddress" />
+    <mew-select
+      label="Currency"
+      :items="currencyItems"
+      :value="selectedCurrency"
+      @input="setCurrency"
+    />
 
     <!-- ============================================================== -->
     <!-- Fiat currency select -->
@@ -11,6 +16,7 @@
     <div class="d-flex align-center justify-space-between mt-3 mb-3">
       <div class="font-weight-medium">Select amount</div>
       <v-select
+        v-model="selectedFiat"
         style="margin-top: -1px; max-width: 100px"
         hide-details
         :items="fiatCurrencyItems"
@@ -156,32 +162,115 @@
 
 <script>
 import ExpandingBlock from '@/core/components/AppExpandingBlock';
-import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import { isAddress } from '@/core/helpers/addressUtils';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleBuyEth',
-  components: { ExpandingBlock, ModuleAddressBook },
+  components: { ExpandingBlock },
+  props: {
+    handler: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      toAddress: '',
-      fiatCurrencyItems: ['USD'],
+      loading: true,
+      selectedCurrency: {
+        name: 'ETH',
+        subtext: 'Ethereum',
+        value: 'eth'
+      },
+      selectedFiat: 'USD',
       buttonSelected: '1',
-      buttons: [
-        { id: '1', usd: '100', eth: '0.16' },
-        { id: '2', usd: '100', eth: '0.16' },
-        { id: '3', usd: '100', eth: '0.16' },
-        { id: '4', usd: '100', eth: '0.16' },
-        { id: '5', usd: '100', eth: '0.16' },
-        { id: '6', title: 'Custom', subTitle: 'Up to $20,000' }
-      ]
+      currencyItems: [
+        {
+          text: 'Select a currency',
+          selectLabel: true,
+          divider: true
+        },
+        {
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'eth'
+        },
+        {
+          name: 'USDC',
+          subtext: 'USD Coin',
+          value: 'usdc'
+        },
+        {
+          name: 'USDT',
+          subtext: 'Tether',
+          value: 'usdt'
+        }
+      ],
+      fetchedData: {}
     };
+  },
+  computed: {
+    hasData() {
+      return !isEmpty(this.fetchedData);
+    },
+    fiatCurrencyItems() {
+      return this.hasData ? this.fetchedData.fiat_currencies : ['USD'];
+    },
+    buttons() {
+      if (this.hasData) {
+        return [
+          { id: '1', usd: '100', eth: '0.16' },
+          { id: '2', usd: '250', eth: '0.16' },
+          { id: '3', usd: '500', eth: '0.16' },
+          { id: '4', usd: '1000', eth: '0.16' },
+          { id: '5', usd: '5000', eth: '0.16' },
+          { id: '6', title: 'Custom', subTitle: 'Up to $20,000' }
+        ];
+      }
+      return [
+        { id: '1', usd: '100', eth: '0.16' },
+        { id: '2', usd: '250', eth: '0.16' },
+        { id: '3', usd: '500', eth: '0.16' },
+        { id: '4', usd: '1000', eth: '0.16' },
+        { id: '5', usd: '5000', eth: '0.16' },
+        { id: '6', title: 'Custom', subTitle: 'Up to $20,000' }
+      ];
+    }
+  },
+  watch: {
+    selectedCurrency: {
+      handler: function () {
+        this.fetchCurrencyData();
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    this.fetchCurrencyData();
   },
   methods: {
     buttonClicked(btnId) {
       this.buttonSelected = btnId;
     },
-    setAddress(e) {
-      this.toAddress = isAddress(e) ? e : '';
+    setCurrency(e) {
+      this.selectedCurrency = e;
+    },
+    reset() {
+      this.selectedFiat = 'USD';
+      this.buttonSelected = '1';
+      this.loading = true;
+    },
+    fetchCurrencyData() {
+      this.reset();
+      this.handler
+        .getSupportedFiatToBuy(this.selectedCurrency.name)
+        .then(res => {
+          this.loading = false;
+          this.fetchedData = Object.assign({}, res);
+        })
+        .catch(e => {
+          this.loading = false;
+          Toast(e, {}, ERROR);
+        });
     }
   }
 };
