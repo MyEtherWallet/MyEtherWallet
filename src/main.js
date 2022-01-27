@@ -64,7 +64,6 @@ new Vue({
     this.$intercom.boot({
       user_id: uuidv4()
     });
-    console.log(locStore.get('mew-testing'));
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
