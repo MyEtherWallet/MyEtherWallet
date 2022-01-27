@@ -1,12 +1,16 @@
+### Release v6.4.5
+
 ### devop
 
-* * updated packages [#3629](https://github.com/MyEtherWallet/MyEtherWallet/pull/3629)
+* updated packages [#3629](https://github.com/MyEtherWallet/MyEtherWallet/pull/3629)
+* Added check for elements [#3632](https://github.com/MyEtherWallet/MyEtherWallet/pull/3632)
 * remove survey [#3642](https://github.com/MyEtherWallet/MyEtherWallet/pull/3642)
 
 ### chore
 
 * remove require lodash [#3623](https://github.com/MyEtherWallet/MyEtherWallet/pull/3623)
 * fix imports [#3625](https://github.com/MyEtherWallet/MyEtherWallet/pull/3625)
+* added comment for tokens [#3628](https://github.com/MyEtherWallet/MyEtherWallet/pull/3628)
 
 ### feat
 
