@@ -114,7 +114,7 @@
           Block Info Alert component
         ===================================================
         -->
-        <block-info-alert
+        <block-info
           :block-alert="alert"
           :block-number="blockRef"
           :owner="alertOwner"
@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import BlockInfoAlert from '../components/BlockInfoAlert.vue';
+import BlockInfo from '../components/BlockInfo.vue';
 import BlockSearch from '../components/BlockSearch.vue';
 import BlockSend from '../components/BlockSend.vue';
 import BlocksLoading from '../components/BlocksLoading.vue';
@@ -205,7 +205,7 @@ const MIN_GAS_MINT = 350000;
 export default {
   name: 'ModuleEthBlockInfo',
   components: {
-    BlockInfoAlert,
+    BlockInfo,
     BlockSearch,
     BlocksLoading,
     BlockSend

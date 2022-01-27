@@ -13,7 +13,7 @@
         ===================================================
         -->
       <v-col
-        :style="{ 'background-color': '#EBFAF8', padding: '12px' }"
+        :style="{ 'background-color': alertBgColor, padding: '12px' }"
         cols="12"
         class="d-flex align-center"
       >
@@ -91,13 +91,18 @@
           Block is available: MINT BUTTON
         ===================================================
         -->
-      <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex">
+      <v-col
+        v-if="isAvailable"
+        cols="6"
+        class="mt-1 d-flex justify-center pa-3"
+      >
         <mew-button
           v-if="!isPending"
-          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
-          :disabled="disableActionBtn"
-          :loading="disableAction"
-          @click.native="emitMint()"
+          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          :disabled="isAdded"
+          btn-style="outline"
+          has-full-width
+          @click.native="addToCart"
         />
         <mew-button v-else disabled btn-style="light">
           <div class="d-flex flex-row align-center">
@@ -113,12 +118,17 @@
         </mew-button>
       </v-col>
 
-      <v-col v-if="isAvailable" cols="6" class="mt-1 d-flex">
+      <v-col
+        v-if="isAvailable"
+        cols="6"
+        class="mt-1 d-flex justify-center pa-3"
+      >
         <mew-button
           v-if="!isPending"
-          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint Block'"
+          :title="$vuetify.breakpoint.xs ? 'Mint' : 'Mint now'"
           :disabled="disableActionBtn"
           :loading="disableAction"
+          has-full-width
           @click.native="emitMint()"
         />
         <mew-button v-else disabled btn-style="light">
@@ -139,7 +149,7 @@
           Block is owned: SEND NFT BUTTON
         ===================================================
         -->
-      <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2">
+      <v-col v-if="isOwned" cols="12" sm="6" class="mt-4 pr-sm-2 mb-sm-2 pa-3">
         <mew-button
           v-if="!isPending"
           has-full-width
@@ -171,7 +181,7 @@
         v-if="isOwned"
         cols="12"
         sm="6"
-        class="mt-5 mb-2 mt-sm-4 pl-sm-2"
+        class="mt-5 mb-2 mt-sm-4 pl-sm-2 pa-3"
         :order="$vuetify.breakpoint.xs ? 'last' : ''"
       >
         <mew-button
@@ -252,6 +262,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { find } from 'lodash';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -313,33 +324,18 @@ export default {
     /**
      * @returns{string}
      */
-    // alertTheme() {
-    //   switch (this.blockAlert) {
-    //     case BLOCK_ALERT.NOT_AVAILABLE:
-    //       return 'warning';
-    //     case BLOCK_ALERT.AVAILABLE:
-    //       return 'success';
-    //     case BLOCK_ALERT.RESERVED:
-    //       return 'error';
-    //     default:
-    //       return 'info';
-    //   }
-    // },
-    /**
-     * @returns{string}
-     */
-    // alertTitle() {
-    //   switch (this.blockAlert) {
-    //     case BLOCK_ALERT.NOT_AVAILABLE:
-    //       return 'This block is not available';
-    //     case BLOCK_ALERT.AVAILABLE:
-    //       return 'This block is available';
-    //     case BLOCK_ALERT.RESERVED:
-    //       return 'This block is reserved';
-    //     default:
-    //       return 'You own this ETH Block';
-    //   }
-    // },
+    alertTitle() {
+      switch (this.blockAlert) {
+        case BLOCK_ALERT.NOT_AVAILABLE:
+          return 'This block is not available';
+        case BLOCK_ALERT.AVAILABLE:
+          return 'This block is available';
+        case BLOCK_ALERT.RESERVED:
+          return 'This block is reserved';
+        default:
+          return 'You own this ETH Block';
+      }
+    },
     /**
      * @returns{string}
      */
@@ -373,18 +369,18 @@ export default {
     /**
      * @returns{string}
      */
-    // alertBgColor() {
-    //   switch (this.blockAlert) {
-    //     case BLOCK_ALERT.NOT_AVAILABLE:
-    //       return 'orangePrimary';
-    //     case BLOCK_ALERT.AVAILABLE:
-    //       return 'greenPrimary';
-    //     case BLOCK_ALERT.RESERVED:
-    //       return 'redPrimary';
-    //     default:
-    //       return '#EBFAF8';
-    //   }
-    // },
+    alertBgColor() {
+      switch (this.blockAlert) {
+        case BLOCK_ALERT.NOT_AVAILABLE:
+          return 'orangePrimary';
+        case BLOCK_ALERT.AVAILABLE:
+          return 'greenPrimary';
+        case BLOCK_ALERT.RESERVED:
+          return 'redPrimary';
+        default:
+          return '#EBFAF8';
+      }
+    },
     /**
      * @returns{string}
      */
@@ -526,21 +522,12 @@ export default {
         ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
         : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
       return estimate;
+    },
+    isAdded() {
+      return find(this.cart, block => {
+        return block === this.blockNumber;
+      });
     }
-    // isAdded() {
-    //   if (this.cart.length >= 1) {
-    //     const found = this.cart.find(item => {
-    //       return item === this.blockNumber;
-    //     });
-    //     return found;
-    //   }
-    //   return false;
-    // }
-    // addText() {
-    //   return !this.isAdded && this.isAvailable
-    //     ? 'Added to batch'
-    //     : 'Add to batch';
-    // }
   },
   methods: {
     ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
@@ -566,12 +553,12 @@ export default {
     },
     trackToRarible() {
       this.trackDapp('ethBlocksToRarible');
+    },
+    addToCart() {
+      if (this.isAvailable && !this.isAdded) {
+        this.addBlockToCart(this.blockNumber);
+      }
     }
-    // addToCart() {
-    //   if (this.isAvailable && !this.isAdded) {
-    //     this.addBlockToCart(this.blockNumber);
-    //   }
-    // }
   }
 };
 </script>
@@ -579,13 +566,5 @@ export default {
 <style lang="scss">
 .buy-more-link {
   padding-left: 2px;
-}
-.alert-container {
-  border: 1px solid var(--v-greenMedium-base);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.alert-container-top {
-  background-color: #ebfaf8;
 }
 </style>
