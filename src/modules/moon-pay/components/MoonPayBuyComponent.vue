@@ -420,12 +420,12 @@ export default {
       this.handler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          this.loading = false;
+          // this.loading = false;
           this.fetchedData = Object.assign({}, res);
           this.amountToBuy = this.min.toString();
         })
         .catch(e => {
-          this.loading = false;
+          // this.loading = false;
           Toast(e, {}, ERROR);
         });
     },

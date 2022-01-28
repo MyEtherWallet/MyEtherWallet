@@ -12,7 +12,7 @@ export default class MoonPayHandler {
   buy(tokenSymbol, fiatCurrency, amount) {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${API}/v3/purchase/moonpay/order`, {
+        .get(`${API}/v3/purchase/moonpay/order`, {
           address: this.address,
           id: this.id,
           cryptoCurrency: tokenSymbol,
@@ -27,7 +27,7 @@ export default class MoonPayHandler {
   sell(tokenSymbol, fiatCurrency, amount) {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${API}/v3/sell/moonpay/order`, {
+        .get(`${API}/v3/sell/moonpay/order`, {
           address: this.address,
           id: this.id,
           cryptoCurrency: tokenSymbol,

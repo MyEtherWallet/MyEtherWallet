@@ -38,6 +38,7 @@
           <!-- ================================================================================== -->
           <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
             <v-btn
+              v-if="isEthNetwork"
               color="transparent"
               height="65px"
               dark
@@ -59,7 +60,7 @@
               </div>
             </v-btn>
 
-            <v-divider vertical></v-divider>
+            <v-divider v-if="isEthNetwork" vertical></v-divider>
 
             <v-btn
               color="transparent"
@@ -357,7 +358,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork']),
     ...mapState('wallet', ['instance']),
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
