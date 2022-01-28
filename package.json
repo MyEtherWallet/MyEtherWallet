@@ -82,7 +82,7 @@
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vuex": "3.6.2",
-    "walletlink": "2.4.0"
+    "walletlink": "2.4.5"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.0.0",
@@ -146,7 +146,7 @@
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
     "vue-cli-plugin-vuetify": "2.4.5",
-    "vue-i18n": "8.26.8",
+    "vue-i18n": "8.27.0",
     "vue-matomo": "4.1.0",
     "vue-template-compiler": "2.6.14",
     "vuetify": "2.5.9",
