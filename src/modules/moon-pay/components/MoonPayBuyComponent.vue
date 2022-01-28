@@ -173,7 +173,6 @@
 </template>
 
 <script>
-// import ExpandingBlock from '@/core/components/AppExpandingBlock';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
@@ -181,10 +180,13 @@ import { LOCALE } from '../helpers';
 import { mapGetters } from 'vuex';
 export default {
   name: 'ModuleBuyEth',
-  // components: { ExpandingBlock },
   props: {
     handler: {
       type: Object,
+      default: () => {}
+    },
+    close: {
+      type: Function,
       default: () => {}
     }
   },
@@ -430,11 +432,14 @@ export default {
         : BigNumber(this.buttonSelected.fiat);
       this.handler
         .buy(this.selectedCurrency.name, this.selectedFiat, amount.toString())
-        .then(res => {
-          console.log(res);
+        .then(() => {
+          this.reset();
+          this.close();
         })
         .catch(err => {
+          this.reset();
           Toast(err, {}, ERROR);
+          this.close();
         });
     }
   }

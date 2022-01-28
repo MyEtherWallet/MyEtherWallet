@@ -15,10 +15,10 @@
         @onTab="onTab"
       >
         <template #tabContent1>
-          <buy-eth-component :handler="moonpayHandler" />
+          <buy-eth-component :handler="moonpayHandler" :close="close" />
         </template>
         <template #tabContent2>
-          <sell-eth-component :handler="moonpayHandler" />
+          <sell-eth-component :handler="moonpayHandler" :close="close" />
         </template>
       </mew-tabs>
     </mew-popup>
