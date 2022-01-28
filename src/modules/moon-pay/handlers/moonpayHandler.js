@@ -44,8 +44,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.filter(item => item.name === MOONPAY);
-          resolve(moonpay[0]);
+          const moonpay = res.data.find(item => item.name === MOONPAY);
+          resolve(moonpay);
         })
         .catch(reject);
     });
@@ -56,8 +56,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.filter(item => item.name === MOONPAY);
-          resolve(moonpay[0]);
+          const moonpay = res.data.find(item => item.name === MOONPAY);
+          resolve(moonpay);
         })
         .catch(reject);
     });

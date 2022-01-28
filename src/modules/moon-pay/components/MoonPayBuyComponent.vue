@@ -35,29 +35,29 @@
         <mew-button
           style="height: 96px !important"
           has-full-width
-          :btn-style="buttonSelected == button.id ? '' : 'outline'"
-          :class="buttonSelected == button.id ? '' : 'not-selected'"
-          @click.native="buttonClicked(button.id)"
+          :btn-style="buttonSelected.id === button.id ? '' : 'outline'"
+          :class="buttonSelected.id === button.id ? '' : 'not-selected'"
+          @click.native="buttonClicked(button)"
         >
           <div class="py-5">
             <!-- Button top text -->
             <div class="mb-1">
               <div
-                v-if="button.usd"
+                v-if="button.fiatFormatted"
                 class="letter-spacing--none mew-heading-1"
                 :class="
-                  buttonSelected == button.id
+                  buttonSelected.id === button.id
                     ? 'whiteAlways--text'
                     : 'textDark--text'
                 "
               >
-                ${{ button.usd }}
+                {{ button.fiatFormatted }}
               </div>
               <div
                 v-if="button.title"
                 class="letter-spacing--none mew-heading-1"
                 :class="
-                  buttonSelected == button.id
+                  buttonSelected.id === button.id
                     ? 'whiteAlways--text'
                     : 'textDark--text'
                 "
@@ -69,21 +69,21 @@
             <!-- Button bottom text -->
             <div>
               <div
-                v-if="button.eth"
+                v-if="button.crypto"
                 class="letter-spacing--none mew-label"
                 :class="
-                  buttonSelected == button.id
+                  buttonSelected.id === button.id
                     ? 'whiteAlways--text'
                     : 'textMedium--text'
                 "
               >
-                {{ button.eth }} ETH
+                {{ button.crypto }} {{ selectedCurrency.name }}
               </div>
               <div
                 v-if="button.subTitle"
                 class="letter-spacing--none mew-label"
                 :class="
-                  buttonSelected == button.id
+                  buttonSelected.id === button.id
                     ? 'whiteAlways--text'
                     : 'textMedium--text'
                 "
@@ -96,10 +96,21 @@
       </v-col>
     </v-row>
 
+    <div v-if="showAmountInput" class="mt-6">
+      <mew-input
+        v-model="amountToBuy"
+        type="number"
+        label="Amount"
+        placeholder="Enter amount to buy"
+        :max-btn-obj="{}"
+        :error-messages="errorMessages"
+      />
+    </div>
+
     <!-- ============================================================== -->
     <!-- Summary -->
     <!-- ============================================================== -->
-    <div class="mt-6">
+    <!-- <div class="mt-6">
       <div class="d-flex align-center justify-space-between">
         <div class="font-weight-medium">Summary</div>
         <div class="mew-label textMedium--text d-flex align-center">
@@ -118,9 +129,6 @@
         <div class="text-right">0.234827 ETH</div>
       </div>
 
-      <!-- ============================================================== -->
-      <!-- (Expanding block) Show fees -->
-      <!-- ============================================================== -->
       <expanding-block class="mt-4" btn-right btn-bottom>
         <template #headerShow>
           <div class="greenPrimary--text">Show fees</div>
@@ -146,27 +154,39 @@
         <div class="font-weight-medium">Total</div>
         <div class="text-right">$1,000 ETH</div>
       </div>
-    </div>
+    </div> -->
 
     <!-- ============================================================== -->
     <!-- Buy button -->
     <!-- ============================================================== -->
     <div>
       <div class="d-flex justify-center mt-9 mb-7">
-        <mew-checkbox label="Send ETH to current wallet adree" />
+        <mew-checkbox
+          v-model="agreeToSend"
+          :label="`Send ${selectedCurrency.name} to current wallet address`"
+        />
       </div>
-      <mew-button title="Buy now" btn-size="xlarge" has-full-width />
+      <mew-button
+        title="Buy now"
+        btn-size="xlarge"
+        has-full-width
+        :disabled="isBuyDisabled"
+        @click.native="buy"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import ExpandingBlock from '@/core/components/AppExpandingBlock';
+// import ExpandingBlock from '@/core/components/AppExpandingBlock';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
+import BigNumber from 'bignumber.js';
+import { LOCALE } from '../helpers';
+import { mapGetters } from 'vuex';
 export default {
   name: 'ModuleBuyEth',
-  components: { ExpandingBlock },
+  // components: { ExpandingBlock },
   props: {
     handler: {
       type: Object,
@@ -175,6 +195,8 @@ export default {
   },
   data() {
     return {
+      amountToBuy: '0',
+      agreeToSend: false,
       loading: true,
       selectedCurrency: {
         name: 'ETH',
@@ -182,7 +204,12 @@ export default {
         value: 'eth'
       },
       selectedFiat: 'USD',
-      buttonSelected: '1',
+      buttonSelected: {
+        id: '1',
+        fiat: '100',
+        fiatFormatted: '$100',
+        crypto: '0.16'
+      },
       currencyItems: [
         {
           text: 'Select a currency',
@@ -209,34 +236,150 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('global', ['network']),
+    isBuyDisabled() {
+      return this.errorMessages !== '' || !this.agreeToSend;
+    },
+    errorMessages() {
+      if (this.showAmountInput) {
+        if (BigNumber(this.amountToBuy).lt(this.min)) {
+          return `Entered amount is below the provider's minumun: ${this.currencyFormatter(
+            this.min.toString()
+          )}`;
+        }
+        if (BigNumber(this.amountToBuy).gt(this.max)) {
+          return `Entered amount is above the provider's maximum: ${this.currencyFormatter(
+            this.max.toString()
+          )}`;
+        }
+      }
+      return '';
+    },
+    showAmountInput() {
+      return BigNumber(this.buttonSelected.id).eq(6);
+    },
     hasData() {
       return !isEmpty(this.fetchedData);
     },
     fiatCurrencyItems() {
       return this.hasData ? this.fetchedData.fiat_currencies : ['USD'];
     },
+    max() {
+      if (this.hasData) {
+        const foundLimit = this.fetchedData.limits.find(
+          item => item.fiat_currency === this.selectedFiat
+        );
+        return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
+      }
+      return BigNumber(12000);
+    },
+    min() {
+      if (this.hasData) {
+        const foundLimit = this.fetchedData.limits.find(
+          item => item.fiat_currency === this.selectedFiat
+        );
+        return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
+      }
+      return BigNumber(30);
+    },
+    fiatConversion() {
+      if (this.hasData) {
+        const fiatConversion = this.fetchedData.conversion_rates.find(
+          item => item.fiat_currency === this.selectedFiat
+        );
+        return fiatConversion
+          ? BigNumber(fiatConversion.exchange_rate)
+          : BigNumber(1);
+      }
+      return BigNumber(1);
+    },
+    currencyPriceFromProvider() {
+      if (this.hasData) {
+        const selectedCurrencyPrice = this.fetchedData.prices.find(
+          item => item.fiat_currency === this.selectedFiat
+        );
+        return selectedCurrencyPrice
+          ? BigNumber(selectedCurrencyPrice.price)
+          : BigNumber(1);
+      }
+      return BigNumber(1);
+    },
     buttons() {
       if (this.hasData) {
         return [
-          { id: '1', usd: '100', eth: '0.16' },
-          { id: '2', usd: '250', eth: '0.16' },
-          { id: '3', usd: '500', eth: '0.16' },
-          { id: '4', usd: '1000', eth: '0.16' },
-          { id: '5', usd: '5000', eth: '0.16' },
-          { id: '6', title: 'Custom', subTitle: 'Up to $20,000' }
+          {
+            id: '1',
+            fiat: this.fiatConversion.times(100).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(100).toString()
+            ),
+            crypto: BigNumber(100)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .toString()
+          },
+          {
+            id: '2',
+            fiat: this.fiatConversion.times(250).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(250).toString()
+            ),
+            crypto: BigNumber(250)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .toString()
+          },
+          {
+            id: '3',
+            fiat: this.fiatConversion.times(500).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(500).toString()
+            ),
+            crypto: BigNumber(500)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .toString()
+          },
+          {
+            id: '4',
+            fiat: this.fiatConversion.times(1000).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(1000).toString()
+            ),
+            crypto: BigNumber(1000)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .toString()
+          },
+          {
+            id: '5',
+            fiat: this.fiatConversion.times(5000).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(5000).toString()
+            ),
+            crypto: BigNumber(5000)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .toString()
+          },
+          {
+            id: '6',
+            title: 'Custom',
+            subTitle: `Up to ${this.currencyFormatter(this.max)}`
+          }
         ];
       }
       return [
-        { id: '1', usd: '100', eth: '0.16' },
-        { id: '2', usd: '250', eth: '0.16' },
-        { id: '3', usd: '500', eth: '0.16' },
-        { id: '4', usd: '1000', eth: '0.16' },
-        { id: '5', usd: '5000', eth: '0.16' },
-        { id: '6', title: 'Custom', subTitle: 'Up to $20,000' }
+        { id: '1', fiat: '100', fiatFormatted: '$100', crypto: '0.16' },
+        { id: '2', fiat: '250', fiatFormatted: '$250', crypto: '0.16' },
+        { id: '3', fiat: '500', fiatFormatted: '$500', crypto: '0.16' },
+        { id: '4', fiat: '1000', fiatFormatted: '$1000', crypto: '0.16' },
+        { id: '5', fiat: '5000', fiatFormatted: '$5000', crypto: '0.16' },
+        { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
       ];
     }
   },
   watch: {
+    amountToBuy(newVal) {
+      if (!newVal) {
+        this.amountToBuy = '0';
+      }
+    },
     selectedCurrency: {
       handler: function () {
         this.fetchCurrencyData();
@@ -248,16 +391,29 @@ export default {
     this.fetchCurrencyData();
   },
   methods: {
-    buttonClicked(btnId) {
-      this.buttonSelected = btnId;
+    currencyFormatter(value) {
+      const locale = this.hasData ? LOCALE[this.selectedFiat] : 'en-US';
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: this.selectedFiat
+      }).format(value);
+    },
+    buttonClicked(btn) {
+      this.buttonSelected = btn;
     },
     setCurrency(e) {
       this.selectedCurrency = e;
     },
     reset() {
       this.selectedFiat = 'USD';
-      this.buttonSelected = '1';
+      this.buttonSelected = {
+        id: '1',
+        fiat: '100',
+        fiatFormatted: '$100',
+        crypto: '0.16'
+      };
       this.loading = true;
+      this.fetchData = {};
     },
     fetchCurrencyData() {
       this.reset();
@@ -266,10 +422,24 @@ export default {
         .then(res => {
           this.loading = false;
           this.fetchedData = Object.assign({}, res);
+          this.amountToBuy = this.min.toString();
         })
         .catch(e => {
           this.loading = false;
           Toast(e, {}, ERROR);
+        });
+    },
+    buy() {
+      const amount = this.showAmountInput
+        ? BigNumber(this.amountToBuy)
+        : BigNumber(this.buttonSelected.fiat);
+      this.handler
+        .buy(this.selectedCurrency.name, this.selectedFiat, amount.toString())
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
     }
   }
