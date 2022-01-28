@@ -7,6 +7,7 @@
       label="Currency"
       :items="currencyItems"
       :value="selectedCurrency"
+      :disabled="loading"
       @input="setCurrency"
     />
 
@@ -20,6 +21,7 @@
         style="margin-top: -1px; max-width: 100px"
         hide-details
         :items="fiatCurrencyItems"
+        :disabled="loading"
         dense
         solo
         flat
@@ -35,15 +37,19 @@
         <mew-button
           style="height: 96px !important"
           has-full-width
-          :btn-style="buttonSelected.id === button.id ? '' : 'outline'"
-          :class="buttonSelected.id === button.id ? '' : 'not-selected'"
+          :btn-style="
+            buttonSelected.id === button.id && !loading ? '' : 'outline'
+          "
+          :class="
+            buttonSelected.id === button.id && !loading ? '' : 'not-selected'
+          "
+          :disabled="loading"
           @click.native="buttonClicked(button)"
         >
-          <div class="py-5">
+          <div v-if="!loading" class="py-5">
             <!-- Button top text -->
             <div class="mb-1">
               <div
-                v-if="button.fiatFormatted"
                 class="letter-spacing--none mew-heading-1"
                 :class="
                   buttonSelected.id === button.id
@@ -51,25 +57,13 @@
                     : 'textDark--text'
                 "
               >
-                {{ button.fiatFormatted }}
-              </div>
-              <div
-                v-if="button.title"
-                class="letter-spacing--none mew-heading-1"
-                :class="
-                  buttonSelected.id === button.id
-                    ? 'whiteAlways--text'
-                    : 'textDark--text'
-                "
-              >
-                {{ button.title }}
+                {{ button.fiatFormatted ? button.fiatFormatted : button.title }}
               </div>
             </div>
 
             <!-- Button bottom text -->
             <div>
               <div
-                v-if="button.crypto"
                 class="letter-spacing--none mew-label"
                 :class="
                   buttonSelected.id === button.id
@@ -77,19 +71,20 @@
                     : 'textMedium--text'
                 "
               >
-                {{ button.crypto }} {{ selectedCurrency.name }}
+                {{
+                  button.crypto
+                    ? `${button.crypto} ${selectedCurrency.name}`
+                    : button.subTitle
+                }}
               </div>
-              <div
-                v-if="button.subTitle"
-                class="letter-spacing--none mew-label"
-                :class="
-                  buttonSelected.id === button.id
-                    ? 'whiteAlways--text'
-                    : 'textMedium--text'
-                "
-              >
-                {{ button.subTitle }}
-              </div>
+            </div>
+          </div>
+          <div v-else class="py-5">
+            <div class="mb-1">
+              <v-skeleton-loader type="heading" height="32px" width="172px" />
+            </div>
+            <div>
+              <v-skeleton-loader type="text" height="16px" width="172px" />
             </div>
           </div>
         </mew-button>
@@ -420,12 +415,12 @@ export default {
       this.handler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          // this.loading = false;
+          this.loading = false;
           this.fetchedData = Object.assign({}, res);
           this.amountToBuy = this.min.toString();
         })
         .catch(e => {
-          // this.loading = false;
+          this.loading = false;
           Toast(e, {}, ERROR);
         });
     },

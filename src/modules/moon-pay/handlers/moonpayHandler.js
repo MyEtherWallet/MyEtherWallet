@@ -6,36 +6,21 @@ const MOONPAY = 'MOONPAY';
 export default class MoonPayHandler {
   constructor(address) {
     this.address = address;
-    this.id = sha3(address);
+    const id = sha3(address);
+    this.id = `WEB|${id.substring(0, 42)}`;
   }
 
   buy(tokenSymbol, fiatCurrency, amount) {
     return new Promise((resolve, reject) => {
-      axios
-        .get(`${API}/v3/purchase/moonpay/order`, {
-          address: this.address,
-          id: this.id,
-          cryptoCurrency: tokenSymbol,
-          fiatCurrency: fiatCurrency,
-          requestedAmount: amount
-        })
-        .then(resolve)
-        .catch(reject);
+      const parsedUrl = `${API}/v3/purchase/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}`;
+      axios.get(encodeURI(parsedUrl)).then(resolve).catch(reject);
     });
   }
 
   sell(tokenSymbol, fiatCurrency, amount) {
     return new Promise((resolve, reject) => {
-      axios
-        .get(`${API}/v3/sell/moonpay/order`, {
-          address: this.address,
-          id: this.id,
-          cryptoCurrency: tokenSymbol,
-          fiatCurrency: fiatCurrency,
-          amount: amount
-        })
-        .then(resolve)
-        .catch(reject);
+      const parsedUrl = `${API}/v3/sell/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}`;
+      axios.get(encodeURI(parsedUrl)).then(resolve).catch(reject);
     });
   }
 
