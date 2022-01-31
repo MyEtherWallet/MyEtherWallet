@@ -49,7 +49,7 @@
               <div class="mew-body">
                 {{ totalMintPrice }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-label textLight--text">
+              <div class="mew-label textLight--text text-end">
                 {{ totalMintPriceFiat }}
               </div>
             </div>
@@ -57,14 +57,14 @@
           <div class="d-flex justify-space-between pb-4">
             <div>
               <div class="mew-body">Network Fee</div>
-              <div class="mew-body greenPrimary--text">Edit Priority</div>
+              <!-- <div class="mew-body greenPrimary--text">Edit Priority</div> -->
             </div>
             <div>
               <div class="mew-body">
-                {{ totalMintPrice }} {{ network.type.currencyName }}
+                {{ totalNetworkFee }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-label textLight--text">
-                {{ totalMintPriceFiat }}
+              <div class="mew-label textLight--text text-end">
+                {{ totalNetworkFiatFee }}
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
               <div class="mew-heading-3">
                 {{ totalTransactionPrice }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-body textLight--text">
+              <div class="mew-body textLight--text text-end">
                 {{ totalTransactionFiatPrice }}
               </div>
             </div>
@@ -137,6 +137,16 @@ export default {
     totalMintPriceFiat() {
       const value = formatFiatValue(
         BigNumber(this.totalMintPrice).times(this.fiatValue).toFixed(2)
+      ).value;
+      return `$ ${value}`;
+    },
+    totalNetworkFee() {
+      const val = toBN(this.gasLimit).mul(toBN(this.localGasPrice));
+      return formatFloatingPointValue(fromWei(val.toString())).value;
+    },
+    totalNetworkFiatFee() {
+      const value = formatFiatValue(
+        BigNumber(this.totalNetworkFee).times(this.fiatValue).toFixed(2)
       ).value;
       return `$ ${value}`;
     },
@@ -255,8 +265,7 @@ export default {
               return a.add(toBN(parsedValue));
             }, toBN(0));
             this.totalMintValue = totalValue.toString();
-            // this.fetchGasLimits();
-            this.fetchGasLimits2();
+            this.fetchGasLimits();
           });
         } catch (e) {
           this.isLoading = false;
@@ -269,49 +278,25 @@ export default {
      * to fetch gaslimit for mint batch tx
      * using previously setup batch data
      */
-    // async fetchGasLimits() {
-    //   this.mintContract.methods
-    //     .multicall(this.batchMintData)
-    //     .estimateGas({
-    //       value: this.totalMintValue
-    //     })
-    //     .then(res => {
-    //       this.gasLimit = res;
-    //       this.isLoading = false;
-    //     })
-    //     .catch(e => {
-    //       this.isLoading = false;
-    //       Toast(e, {}, ERROR);
-    //     });
-    // },
-    async fetchGasLimits2() {
-      console.log(this.batchMintData, this.totalMintValue);
-      const response = this.mintContract.methods.multicall(this.batchMintData);
-      const res = await response.estimateGas({ value: this.totalMintValue });
-      console.log(res);
+    async fetchGasLimits() {
+      this.mintContract.methods
+        .multicall(this.batchMintData)
+        .estimateGas({
+          value: this.totalMintValue
+        })
+        .then(res => {
+          const val = toBN(res).mul(toBN(this.localGasPrice));
+
+          const val2 = formatFloatingPointValue(fromWei(val.toString())).value;
+          console.log('val', val2);
+          this.gasLimit = res;
+          this.isLoading = false;
+        })
+        .catch(e => {
+          this.isLoading = false;
+          Toast(e, {}, ERROR);
+        });
     }
-    // async fetchGasLimits() {
-    //   this.mintContract.methods
-    //     .multicall(this.batchMintData)
-    //     .estimateGas({
-    //       value: this.totalMintValue
-    //     })
-    //     .then(res => {
-    //       this.gasLimit = res;
-    //       this.isLoading = false;
-    //     })
-    //     .catch(e => {
-    //       this.isLoading = false;
-    //       Toast(e, {}, ERROR);
-    //     });
-    // }
-    // async fetchGasLimits2() {
-    //   const response = await this.mintContract.methods.multicall(
-    //     this.batchMintData
-    //   );
-    //   const res = await response.estimateGas({ gas: this.totalMintValue });
-    //   console.log(res);
-    // }
   }
 };
 </script>
