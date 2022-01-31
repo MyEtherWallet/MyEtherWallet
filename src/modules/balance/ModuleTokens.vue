@@ -87,7 +87,7 @@ import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-const _ = require('lodash');
+import { uniqWith, isEqual } from 'lodash';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -182,7 +182,7 @@ export default {
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
-      const uniqueTokens = _.uniqWith(this.tokensList, _.isEqual);
+      const uniqueTokens = uniqWith(this.tokensList, isEqual);
       const tokenList = uniqueTokens.map(item => {
         return this.formatValues(item);
       });
