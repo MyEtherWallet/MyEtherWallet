@@ -255,8 +255,8 @@ export default {
               const parsedValue = b.mintData.value;
               return BigNumber(a).plus(parsedValue).toString();
             }, '0');
-            // this.fetchGasLimits();
-            this.fetchGasLimits2();
+            this.fetchGasLimits();
+            // this.fetchGasLimits2();
           });
         } catch (e) {
           this.isLoading = false;
@@ -269,28 +269,28 @@ export default {
      * to fetch gaslimit for mint batch tx
      * using previously setup batch data
      */
-    // async fetchGasLimits() {
-    //   this.mintContract.methods
-    //     .multicall(this.batchMintData)
-    //     .estimateGas({
-    //       value: this.totalMintValue
-    //     })
-    //     .then(res => {
-    //       this.gasLimit = res;
-    //       this.isLoading = false;
-    //     })
-    //     .catch(e => {
-    //       this.isLoading = false;
-    //       Toast(e, {}, ERROR);
-    //     });
-    // },
-    async fetchGasLimits2() {
-      const response = await this.mintContract.methods.multicall(
-        this.batchMintData
-      );
-      const res = await response.estimateGas({ gas: this.totalMintValue });
-      console.log(res);
+    async fetchGasLimits() {
+      this.mintContract.methods
+        .multicall(this.batchMintData)
+        .estimateGas({
+          value: this.totalMintValue
+        })
+        .then(res => {
+          this.gasLimit = res;
+          this.isLoading = false;
+        })
+        .catch(e => {
+          this.isLoading = false;
+          Toast(e, {}, ERROR);
+        });
     }
+    // async fetchGasLimits2() {
+    //   const response = await this.mintContract.methods.multicall(
+    //     this.batchMintData
+    //   );
+    //   const res = await response.estimateGas({ gas: this.totalMintValue });
+    //   console.log(res);
+    // }
   }
 };
 </script>

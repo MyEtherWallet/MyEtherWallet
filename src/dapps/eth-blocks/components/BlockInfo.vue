@@ -55,34 +55,40 @@
         -->
 
       <v-col v-if="isAvailable" cols="12">
-        <div class="px-3 d-flex justify-space-between">
+        <div class="pa-3 d-flex justify-space-between">
           <div class="text-end">Price</div>
-          <h2 class="mb-1 textDark--text">
-            {{ formattedPrice }} {{ network.type.currencyName }}
-          </h2>
-          <p v-if="!isTestNetwork" class="textLight--text mb-0">
-            {{ formatFiatPrice }}
-          </p>
+          <div class="d-flex flex-column text-end">
+            <h2 class="mb-1 textDark--text">
+              {{ formattedPrice }} {{ network.type.currencyName }}
+            </h2>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formatFiatPrice }}
+            </p>
+          </div>
         </div>
 
-        <div class="px-3 d-flex justify-space-between">
+        <div class="pa-3 d-flex justify-space-between">
           <div>Transaction fee</div>
-          <h2 class="mb-1 textDark--text">
-            {{ txFee }} {{ network.type.currencyName }}
-          </h2>
-          <p v-if="!isTestNetwork" class="textLight--text mb-0">
-            {{ formattedFiatTxFee }}
-          </p>
+          <div class="d-flex flex-column text-end">
+            <p class="mb-1 textDark--text">
+              {{ txFee }} {{ network.type.currencyName }}
+            </p>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formattedFiatTxFee }}
+            </p>
+          </div>
         </div>
 
-        <div class="px-3 d-flex justify-space-between">
+        <div class="pa-3 d-flex justify-space-between">
           <div>Total</div>
-          <h2 class="mb-1 textDark--text">
-            {{ formattedFiatTotalPrice }} {{ network.type.currencyName }}
-          </h2>
-          <p v-if="!isTestNetwork" class="textLight--text mb-0">
-            {{ formattedTotalPrice }}
-          </p>
+          <div class="d-flex flex-column text-end">
+            <p class="mb-1 textDark--text">
+              {{ formattedFiatTotalPrice }} {{ network.type.currencyName }}
+            </p>
+            <p v-if="!isTestNetwork" class="textLight--text mb-0">
+              {{ formattedTotalPrice }}
+            </p>
+          </div>
         </div>
       </v-col>
 
@@ -461,7 +467,8 @@ export default {
      * Property returns formatted Total price
      */
     formattedFiatTotalPrice() {
-      return Number(this.txFee) + Number(this.formattedPrice);
+      const total = Number(this.txFee) + Number(this.formattedPrice);
+      return total.toFixed(5);
     },
     /**
      * @returns{string}
