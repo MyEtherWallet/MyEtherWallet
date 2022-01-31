@@ -74,7 +74,20 @@ const EXCEPTIONS = [
   'remark-preset-lint-recommended',
   'node-fetch', // 10-4-21 major version change
   'eslint-plugin-prettier', // 10-4-21 major version change
-  'marked' // 10-4-21 major version change
+  'marked', // 10-4-21 major version change
+  '@unstoppabledomains/resolution', // 01-31-22 major version change
+  'chart.js',
+  'core-js',
+  'html2canvas',
+  'subscriptions-transport-ws',
+  'unicode',
+  '@ensdomains/address-encoder',
+  '@vue/eslint-config-prettier',
+  'axios',
+  'fuse.js',
+  'imagemin-mozjpeg',
+  'vue-i18n',
+  'stylelint-config-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -1,3 +1,9 @@
+### v5.8.8
+
+### Fixes
+
+* Update packages, merge fix from bitbox
+
 ### v5.8.7
 
 ### Fixes
