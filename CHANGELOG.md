@@ -1,7 +1,3 @@
-### chore
-
-* update packages [#3652](https://github.com/MyEtherWallet/MyEtherWallet/pull/3652)
-
 ### Release v6.4.5
 
 ### devop
@@ -15,6 +11,7 @@
 * remove require lodash [#3623](https://github.com/MyEtherWallet/MyEtherWallet/pull/3623)
 * fix imports [#3625](https://github.com/MyEtherWallet/MyEtherWallet/pull/3625)
 * added comment for tokens [#3628](https://github.com/MyEtherWallet/MyEtherWallet/pull/3628)
+* update packages [#3652](https://github.com/MyEtherWallet/MyEtherWallet/pull/3652)
 
 ### feat
 
