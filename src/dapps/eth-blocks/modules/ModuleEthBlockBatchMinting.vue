@@ -88,7 +88,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
@@ -97,7 +96,8 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { fromWei, toWei } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+import { fromWei, toWei, toBN } from 'web3-utils';
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
@@ -129,11 +129,10 @@ export default {
     },
     totalMintPrice() {
       const price = this.blocks.reduce((a, b) => {
-        const parsedMintPrice = fromWei(b.mintPrice);
-        return BigNumber(a).plus(parsedMintPrice).toNumber();
-      }, 0);
+        return a.add(toBN(b.mintPrice));
+      }, toBN(0));
 
-      return formatFloatingPointValue(price).value;
+      return formatFloatingPointValue(fromWei(price)).value;
     },
     totalMintPriceFiat() {
       const value = formatFiatValue(
@@ -142,9 +141,9 @@ export default {
       return `$ ${value}`;
     },
     totalTransactionPrice() {
-      const val = BigNumber(this.gasLimit)
-        .times(this.localGasPrice)
-        .plus(toWei(this.totalMintPrice));
+      const val = toBN(this.gasLimit)
+        .mul(toBN(this.localGasPrice))
+        .add(toBN(toWei(this.totalMintPrice)));
       return formatFloatingPointValue(fromWei(val.toString())).value;
     },
     totalTransactionFiatPrice() {
@@ -251,10 +250,11 @@ export default {
               abi,
               values[0].mintData.to
             );
-            this.totalMintValue = values.reduce((a, b) => {
+            const totalValue = values.reduce((a, b) => {
               const parsedValue = b.mintData.value;
-              return BigNumber(a).plus(parsedValue).toString();
-            }, '0');
+              return a.add(toBN(parsedValue));
+            }, toBN(0));
+            this.totalMintValue = totalValue.toString();
             // this.fetchGasLimits();
             this.fetchGasLimits2();
           });
@@ -285,10 +285,9 @@ export default {
     //     });
     // },
     async fetchGasLimits2() {
-      const response = await this.mintContract.methods.multicall(
-        this.batchMintData
-      );
-      const res = await response.estimateGas({ gas: this.totalMintValue });
+      console.log(this.batchMintData, this.totalMintValue);
+      const response = this.mintContract.methods.multicall(this.batchMintData);
+      const res = await response.estimateGas({ value: this.totalMintValue });
       console.log(res);
     }
   }
