@@ -1,3 +1,7 @@
+### chore
+
+* update packages [#3652](https://github.com/MyEtherWallet/MyEtherWallet/pull/3652)
+
 ### Release v6.4.5
 
 ### devop
