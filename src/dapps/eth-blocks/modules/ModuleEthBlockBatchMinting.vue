@@ -285,10 +285,6 @@ export default {
           value: this.totalMintValue
         })
         .then(res => {
-          const val = toBN(res).mul(toBN(this.localGasPrice));
-
-          const val2 = formatFloatingPointValue(fromWei(val.toString())).value;
-          console.log('val', val2);
           this.gasLimit = res;
           this.isLoading = false;
         })
