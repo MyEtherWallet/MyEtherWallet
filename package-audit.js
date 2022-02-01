@@ -20,7 +20,16 @@ const AUDIT_EXCEPTIONS = [
   'css-what', // added 6/23/21
   'trim-newlines', // added 6/23/21
   'socket.io-parser', // added 7/2/21
-  'tar' // added 8/5/21
+  'tar', // added 8/5/21
+  'node-fetch',
+  'marked',
+  'is-svg',
+  'ini',
+  'ssri',
+  'glob-parent',
+  'ansi-html',
+  'follow-redirects',
+  'simple-get'
 ];
 
 const execute = (command, callback) => {

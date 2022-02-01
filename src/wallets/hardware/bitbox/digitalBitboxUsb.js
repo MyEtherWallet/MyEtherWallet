@@ -17,10 +17,10 @@ async function connectWebHID() {
   if (_hidDevice !== null) {
     return;
   }
-  const vendorID = 0x03eb;
-  const productID = 0x2402;
+  const vendorId = 0x03eb;
+  const productId = 0x2402;
   _hidDevice = (
-    await navigator.hid.requestDevice({ filters: [{ vendorID, productID }] })
+    await navigator.hid.requestDevice({ filters: [{ vendorId, productId }] })
   )[0];
   await _hidDevice.open();
   _hidDevice.addEventListener('inputreport', event => {
