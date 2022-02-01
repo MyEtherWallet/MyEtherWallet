@@ -378,11 +378,11 @@ export default {
     alertBgColor() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'orangePrimary';
+          return 'F5A623';
         case BLOCK_ALERT.AVAILABLE:
-          return 'greenPrimary';
+          return '#EBFAF8';
         case BLOCK_ALERT.RESERVED:
-          return 'redPrimary';
+          return 'FF445B';
         default:
           return '#EBFAF8';
       }
