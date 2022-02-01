@@ -73,18 +73,6 @@
         </mew-button>
       </v-col>
     </v-row>
-
-    <!-- ============================================================== -->
-    <!-- Powered by -->
-    <!-- ============================================================== -->
-    <div class="mew-body d-flex justify-center align-center pt-8">
-      Powered By
-      <img
-        src="@/modules/moon-pay/assets/moonpay-logo.svg"
-        width="100px"
-        class="ml-1"
-      />
-    </div>
   </div>
 </template>
 
@@ -105,6 +93,10 @@ export default {
     close: {
       type: Function,
       default: () => {}
+    },
+    currencyItems: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -122,30 +114,6 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    currencyItems() {
-      return [
-        {
-          text: 'Select a currency',
-          selectLabel: true,
-          divider: true
-        },
-        {
-          name: this.network.type.currencyName,
-          subtext: this.network.type.name_long,
-          value: this.network.type.currencyName.toLowerCase()
-        },
-        {
-          name: 'USDC',
-          subtext: 'USD Coin',
-          value: 'usdc'
-        },
-        {
-          name: 'USDT',
-          subtext: 'Tether',
-          value: 'usdt'
-        }
-      ];
-    },
     hasData() {
       return !isEmpty(this.fetchedData);
     },
@@ -269,6 +237,16 @@ export default {
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
+      },
+      deep: true
+    },
+    network: {
+      handler: function () {
+        this.selectedCurrency = {
+          name: this.network.type.currencyName,
+          subtext: this.network.type.name_long,
+          value: this.network.type.currencyName.toLowerCase()
+        };
       },
       deep: true
     }

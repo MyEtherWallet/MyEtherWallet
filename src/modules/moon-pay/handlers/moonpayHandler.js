@@ -23,10 +23,10 @@ export default class MoonPayHandler {
     });
   }
 
-  sell(tokenSymbol, fiatCurrency, amount) {
+  sell(tokenSymbol, amount) {
     return new Promise(resolve => {
       const parsedUrl = encodeURI(
-        `${API}/v3/sell/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}&requestedAmount=${amount}`
+        `${API}/v3/sell/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&requestedAmount=${amount}`
       );
       // eslint-disable-next-line
       window.open(parsedUrl, '_blank');
