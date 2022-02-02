@@ -7,7 +7,8 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url',
   'diff',
   'ansi-html', // no patches available
-  'set-value'
+  'set-value',
+  'simple-get' // work on resolving this after release 6.4.5
 ];
 const execute = (command, callback) => {
   exec(

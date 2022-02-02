@@ -38,6 +38,7 @@ import '@/core/plugins/registerServiceWorker';
 import vuetify from '@/core/plugins/vuetify';
 import apolloProvider from './main/apolloProvider';
 import i18n from './main/i18n';
+import * as locStore from 'store';
 
 // Directives
 Vue.directive('lottie', LottieAnimation);
@@ -63,6 +64,9 @@ new Vue({
     this.$intercom.boot({
       user_id: uuidv4()
     });
+    if (locStore.get('mew-testing') === undefined) {
+      locStore.set('mew-testing', false);
+    }
     this.$store.commit('custom/INIT_STORE');
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
