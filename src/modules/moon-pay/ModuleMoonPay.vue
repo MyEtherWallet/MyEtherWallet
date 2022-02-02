@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
 import handler from './handlers/moonpayHandler';
@@ -68,7 +68,6 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
     currencyItems() {
       return [
         {
@@ -77,9 +76,9 @@ export default {
           divider: true
         },
         {
-          name: this.network.type.currencyName,
-          subtext: this.network.type.name_long,
-          value: this.network.type.currencyName.toLowerCase()
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'eth'
         },
         {
           name: 'USDC',
@@ -101,10 +100,10 @@ export default {
     tabItems() {
       return [
         {
-          name: `Buy ${this.network.type.currencyName}`
+          name: 'Buy ETH'
         },
         {
-          name: `Sell ${this.network.type.currencyName}`
+          name: 'Sell ETH'
         }
       ];
     }

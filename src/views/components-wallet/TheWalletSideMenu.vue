@@ -38,10 +38,10 @@
           <!-- ================================================================================== -->
           <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
             <v-btn
-              v-if="hasSwap"
               color="transparent"
               height="65px"
               dark
+              :disabled="!hasSwapWithTest"
               x-small
               @click="moonPayOpen = true"
             >
@@ -60,7 +60,7 @@
               </div>
             </v-btn>
 
-            <v-divider v-if="hasSwap" vertical></v-divider>
+            <v-divider vertical></v-divider>
 
             <v-btn
               color="transparent"
@@ -316,7 +316,7 @@ import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 // import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import { ETH, BSC, MATIC } from '@/utils/networks/types';
+import { ETH, BSC, MATIC, ROP } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
@@ -358,8 +358,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork', 'hasSwap']),
+    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork']),
     ...mapState('wallet', ['instance']),
+    hasSwapWithTest() {
+      return this.network.type.name === ROP.name || this.isEthNetwork;
+    },
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
         const dateToday = new Date();

@@ -44,10 +44,12 @@
 
 <script>
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { cloneDeep, isEmpty } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
+import handlerSend from '@/modules/send/handlers/handlerSend.js';
+import { toWei } from 'web3-utils';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -68,16 +70,21 @@ export default {
   data() {
     return {
       selectedCurrency: {
-        text: 'Select a currency',
-        selectLabel: true,
-        divider: true
+        name: 'ETH',
+        subtext: 'Ethereum',
+        value: 'eth'
       },
-      amount: '0'
+      amount: '0',
+      fetchedData: {},
+      locGasPrice: '0',
+      sendHandler: {}
     };
   },
   computed: {
+    ...mapState('wallet', ['address']),
+    ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
-    ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     availableCurrencyItems() {
       const arr = cloneDeep(this.currencyItems).splice(0, 2);
       if (this.isEthNetwork) {
@@ -107,7 +114,11 @@ export default {
           return item.name === symbol;
         });
 
-        return isEmpty(found) ? '0' : found.balancef;
+        return isEmpty(found)
+          ? '0'
+          : BigNumber(found.balance)
+              .div(BigNumber(10).pow(found.decimals))
+              .toString();
       }
       return this.balanceInETH;
     },
@@ -120,16 +131,68 @@ export default {
         BigNumber(this.selectedCurrencyBalance).gte(this.amount)
       );
     },
+    min() {
+      const limit = isEmpty(this.fetchedData)
+        ? BigNumber(0.015)
+        : BigNumber(this.fetchedData.limits[0].min);
+      return limit;
+    },
+    max() {
+      const limit = isEmpty(this.fetchedData)
+        ? BigNumber(3)
+        : BigNumber(this.fetchedData.limits[0].max);
+      return limit;
+    },
     errorMessages() {
+      const symbol = this.selectedCurrency?.name
+        ? this.selectedCurrency.name
+        : this.network.type.currencyName;
+      if (BigNumber(this.amount).lt(this.min)) {
+        return `Entered amount is less than allowed minimum value: ${this.min.toString()} ${symbol}`;
+      }
+      if (BigNumber(this.amount).gt(this.max)) {
+        return `Entered amount is greater than allowed maximum value: ${this.max.toString()} ${symbol}`;
+      }
       if (BigNumber(this.amount).gt(this.selectedCurrencyBalance)) {
-        const symbol = this.selectedCurrency?.name
-          ? this.selectedCurrency.name
-          : this.network.type.currencyName;
         return `Entered amount is greater than ${symbol} balance!`;
       }
 
+      if (!this.sendHandler.hasEnoughBalance()) {
+        return `You don't have enough balance to send ${symbol} ${this.amount} and cover the network fees!`;
+      }
+
       return '';
+    },
+    selectedTokensList() {
+      const symbol = this.selectedCurrency.name;
+      const foundItem = this.tokensList.filter(item => {
+        return item.name === symbol;
+      });
+
+      return foundItem[0];
     }
+  },
+  watch: {
+    selectedTokensList: {
+      handler: function (newVal) {
+        this.sendHandler.setCurrency(newVal);
+      },
+      deep: true
+    },
+    amount(newVal) {
+      const newValue = newVal ? toWei(newVal) : toWei(0);
+      this.sendHandler.setValue(newValue);
+    },
+    gasPriceType(newVal) {
+      this.locGasPrice = this.gasPriceByType(newVal);
+    },
+    locGasPrice(val) {
+      this.sendHandler.setLocalGasPrice(val);
+    }
+  },
+  mounted() {
+    this.fetchSellInfo();
+    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
     setCurrency(e) {
@@ -137,14 +200,18 @@ export default {
     },
     reset() {
       this.selectedCurrency = {
-        text: 'Select a currency',
-        selectLabel: true,
-        divider: true
+        name: 'ETH',
+        subtext: 'Ethereum',
+        value: 'eth'
       };
       this.amount = '0';
+      this.sendHandler = {};
     },
     setMax() {
-      this.amount = this.selectedCurrencyBalance;
+      const bal = this.sendHandler.getEntireBal();
+      this.amount = BigNumber(bal)
+        .div(BigNumber(10).pow(this.selectedTokensList.decimals))
+        .toString();
     },
     sell() {
       this.handler
@@ -157,6 +224,21 @@ export default {
           Toast(err, {}, ERROR);
           this.reset();
           this.close();
+        });
+    },
+    fetchSellInfo() {
+      this.reset();
+      this.sendHandler = new handlerSend();
+      this.sendHandler.setTo(this.address, 'TYPED');
+      this.handler
+        .getSupportedFiatToSell(this.selectedCurrency.name)
+        .then(res => {
+          this.loading = false;
+          this.fetchedData = Object.assign({}, res);
+        })
+        .catch(e => {
+          this.loading = false;
+          Toast(e, {}, ERROR);
         });
     }
   }

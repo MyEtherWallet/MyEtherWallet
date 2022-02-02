@@ -242,10 +242,10 @@ export default {
     },
     network: {
       handler: function () {
-        this.selectedCurrency = {
-          name: this.network.type.currencyName,
-          subtext: this.network.type.name_long,
-          value: this.network.type.currencyName.toLowerCase()
+        this.selectedCurrency = this.selectedCurrency = {
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'eth'
         };
       },
       deep: true
@@ -270,9 +270,9 @@ export default {
       this.loading = true;
       this.fetchData = {};
       this.selectedCurrency = {
-        name: this.network.type.currencyName,
-        subtext: this.network.type.name_long,
-        value: this.network.type.currencyName.toLowerCase()
+        name: 'ETH',
+        subtext: 'Ethereum',
+        value: 'eth'
       };
     },
     fetchCurrencyData() {

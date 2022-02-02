@@ -658,7 +658,7 @@ export default {
     },
     setSendTransaction() {
       this.localGasPrice = this.gasPrice;
-      this.sendTx = new SendTransaction(this.$store);
+      this.sendTx = new SendTransaction();
     },
     estimateAndSetGas() {
       this.gasEstimationIsReady = false;
