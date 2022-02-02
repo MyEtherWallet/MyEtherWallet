@@ -1,6 +1,6 @@
 {
   "header": {
-    "desc":"Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
+    "desc": "Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
     "read": "Read..."
   },
   "qr": {
@@ -30,6 +30,7 @@
     "add-addr": "Add a contact address",
     "address": "Address",
     "update": "Update",
+    "remove-addr": "Remove Address",
     "validations": {
       "invalid-address": "Invalid Address",
       "nickname-length": "Nickname cannot be longer than 20 chars",

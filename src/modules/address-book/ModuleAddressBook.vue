@@ -76,7 +76,7 @@ export default {
   },
 
   computed: {
-    ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('custom', ['addressBook']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
     errorMessages() {
@@ -104,7 +104,7 @@ export default {
               nickname: 'My Address',
               resolverAddr: ''
             }
-          ].concat(this.addressBookStore);
+          ].concat(this.addressBook);
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;

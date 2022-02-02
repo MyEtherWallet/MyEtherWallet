@@ -343,7 +343,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
-    ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('custom', ['addressBook']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -379,7 +379,7 @@ export default {
       return this.arrayParser(newArr);
     },
     allToDetails() {
-      const toNickname = this.addressBookStore.find(item => {
+      const toNickname = this.addressBook.find(item => {
         return this.tx.to?.toLowerCase() === item.address?.toLowerCase();
       });
       return {

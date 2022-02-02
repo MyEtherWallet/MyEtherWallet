@@ -49,7 +49,7 @@
 
           <div class="d-flex justify-center mt-5">
             <mew-button
-              :disabled="addressBookStore.length > 10"
+              :disabled="addressBook.length > 10"
               title="+ Add"
               btn-size="xlarge"
               @click.native="addMode = !addMode"
@@ -147,7 +147,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('custom', ['addressBook']),
     panelItems() {
       return [
         {
@@ -179,7 +179,7 @@ export default {
     }
   },
   watch: {
-    addressBookStore: {
+    addressBook: {
       deep: true,
       handler: function () {
         this.getAddressBookTableData();
@@ -195,7 +195,7 @@ export default {
   methods: {
     getAddressBookTableData() {
       this.tableData = [];
-      this.addressBookStore.forEach((item, idx) => {
+      this.addressBook.forEach((item, idx) => {
         this.tableData.push({
           number: idx + 1,
           address: item.address,
