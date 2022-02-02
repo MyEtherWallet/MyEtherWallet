@@ -14,7 +14,7 @@
     <!-- Amount -->
     <!-- ============================================================== -->
     <div class="position--relative mt-9">
-      <button-balance :balance="selectedCurrencyBalance" />
+      <button-balance :balance="selectedCurrencyBalance" :loading="loading" />
       <mew-input
         v-model="amount"
         type="number"
@@ -49,7 +49,6 @@ import { cloneDeep, isEmpty } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
-import { toWei } from 'web3-utils';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -77,7 +76,8 @@ export default {
       amount: '0',
       fetchedData: {},
       locGasPrice: '0',
-      sendHandler: {}
+      sendHandler: {},
+      loading: true
     };
   },
   computed: {
@@ -126,9 +126,10 @@ export default {
       return !BigNumber(this.selectedCurrencyBalance).gt(0);
     },
     disableSell() {
-      return !(
-        BigNumber(this.amount).gt(0) &&
-        BigNumber(this.selectedCurrencyBalance).gte(this.amount)
+      return (
+        BigNumber(this.amount).eq(0) ||
+        this.loading ||
+        this.errorMessages !== ''
       );
     },
     min() {
@@ -157,7 +158,7 @@ export default {
         return `Entered amount is greater than ${symbol} balance!`;
       }
 
-      if (!this.sendHandler.hasEnoughBalance()) {
+      if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
         return `You don't have enough balance to send ${symbol} ${this.amount} and cover the network fees!`;
       }
 
@@ -175,13 +176,32 @@ export default {
   watch: {
     selectedTokensList: {
       handler: function (newVal) {
-        this.sendHandler.setCurrency(newVal);
+        this.amount = '0';
+        if (!isEmpty(this.sendHandler)) {
+          this.sendHandler.setCurrency(newVal);
+        }
       },
       deep: true
     },
     amount(newVal) {
-      const newValue = newVal ? toWei(newVal) : toWei(0);
-      this.sendHandler.setValue(newValue);
+      if (newVal && !isEmpty(this.sendHandler)) {
+        const newValue = BigNumber(newVal ? newVal : 0)
+          .times(BigNumber(10).pow(this.selectedTokensList.decimals))
+          .toString();
+        this.loading = true;
+        this.sendHandler.setValue(newValue);
+        this.sendHandler
+          .estimateGas()
+          .then(() => {
+            this.loading = false;
+          })
+          .catch(err => {
+            this.loading = false;
+            Toast(err, {}, ERROR);
+          });
+      } else {
+        this.amount = '0';
+      }
     },
     gasPriceType(newVal) {
       this.locGasPrice = this.gasPriceByType(newVal);
@@ -229,7 +249,8 @@ export default {
     fetchSellInfo() {
       this.reset();
       this.sendHandler = new handlerSend();
-      this.sendHandler.setTo(this.address, 'TYPED');
+      // eslint-disable-next-line
+      this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
       this.handler
         .getSupportedFiatToSell(this.selectedCurrency.name)
         .then(res => {

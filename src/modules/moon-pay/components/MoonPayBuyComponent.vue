@@ -18,7 +18,7 @@
       <div class="font-weight-medium">Select amount</div>
       <v-select
         v-model="selectedFiat"
-        style="margin-top: -1px; max-width: 100px"
+        style="margin-top: -1px; max-width: 85px"
         hide-details
         :items="fiatCurrencyItems"
         :disabled="loading"

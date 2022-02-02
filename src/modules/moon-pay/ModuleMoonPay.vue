@@ -111,16 +111,17 @@ export default {
   watch: {
     open(newVal) {
       this.isOpen = newVal;
+      if (newVal) {
+        this.moonpayHandler = new handler(this.address);
+      }
     }
-  },
-  mounted() {
-    this.moonpayHandler = new handler(this.address);
   },
   methods: {
     onTab(val) {
       this.activeTab = val;
     },
     close() {
+      this.activeTab = 0;
       this.$emit('close', false);
     }
   }
