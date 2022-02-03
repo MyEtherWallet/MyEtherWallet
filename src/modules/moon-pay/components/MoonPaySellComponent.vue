@@ -7,6 +7,7 @@
       label="Currency"
       :items="availableCurrencyItems"
       :value="selectedCurrency"
+      :disabled="loading"
       @input="setCurrency"
     />
 
@@ -25,6 +26,7 @@
           disabled: disableMax,
           method: setMax
         }"
+        :disabled="loading"
         :error-messages="errorMessages"
       />
     </div>
