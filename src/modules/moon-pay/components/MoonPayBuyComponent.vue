@@ -17,17 +17,23 @@
     <!-- ============================================================== -->
     <div class="d-flex align-center justify-space-between mt-3 mb-3">
       <div class="font-weight-medium">Select amount</div>
-      <v-select
-        v-model="selectedFiat"
-        style="margin-top: -1px; max-width: 85px"
-        hide-details
-        :items="fiatCurrencyItems"
-        :disabled="loading"
-        dense
-        solo
-        flat
-        append-icon="mdi-chevron-down"
-      ></v-select>
+      <div class="d-flex align-center justify-end">
+        <img
+          :src="require(`@/assets/images/currencies/${selectedFiat}.svg`)"
+          class="icon-holder"
+        />
+        <v-select
+          v-model="selectedFiat"
+          style="margin-top: -1px; max-width: 85px"
+          hide-details
+          :items="fiatCurrencyItems"
+          :disabled="loading"
+          dense
+          solo
+          flat
+          append-icon="mdi-chevron-down"
+        />
+      </div>
     </div>
 
     <!-- ============================================================== -->
@@ -329,5 +335,12 @@ export default {
 // Force set button border color(greyMedium) for not selected buttons
 .not-selected {
   border: 1px solid var(--v-greyMedium-base);
+}
+
+.icon-holder {
+  border: 2px solid var(--v-greyMedium-base);
+  border-radius: 100px;
+  width: 18px;
+  height: 18px;
 }
 </style>
