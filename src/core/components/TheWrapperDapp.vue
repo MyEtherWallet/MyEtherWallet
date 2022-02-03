@@ -82,10 +82,11 @@
       color="blue500"
       height="46"
       active-class="blue500--text"
+      @change="onTab"
     >
       <v-tab
         v-for="(item, index) in tabItems"
-        :key="item.route.name"
+        :key="index"
         :class="[
           'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
           { 'ml-3 ml-md-13': index === 0 },
@@ -101,9 +102,24 @@
      NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
     =====================================================================================
     -->
-    <router-view v-if="tabItems.length > 0 && isNewHeader && isValidNetwork" />
+    <slot v-if="activeTab === 0" name="tabContent1" />
+    <slot v-if="activeTab === 1" name="tabContent2" />
+
+    <router-view
+      v-if="
+        tabItems.length > 0 &&
+        isNewHeader &&
+        isValidNetwork &&
+        !externalContents
+      "
+    />
     <div
-      v-if="tabItems.length > 0 && isNewHeader && !isValidNetwork"
+      v-if="
+        tabItems.length > 0 &&
+        isNewHeader &&
+        !isValidNetwork &&
+        !externalContents
+      "
       class="px-3 py-8 pa-md-15"
     >
       <mew-alert
@@ -210,6 +226,10 @@ export default {
     validNetworks: {
       default: () => [],
       type: Array
+    },
+    externalContents: {
+      default: false,
+      type: Boolean
     }
   },
   data() {

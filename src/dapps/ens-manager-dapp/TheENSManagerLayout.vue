@@ -6,11 +6,13 @@
     -->
   <div>
     <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="ensBannerImg"
-      :banner-text="bannerText"
+      :is-new-header="true"
+      :dapp-img="headerImg"
+      :banner-text="header"
       :tab-items="tabs"
       :active-tab="activeTab"
+      external-contents
+      :on-tab="tabChange"
     >
       <!--
     =====================================================================================
@@ -243,8 +245,19 @@
 </template>
 
 <script>
+const ENS_MANAGER_ROUTE = {
+  CORE: {
+    NAME: 'ENSManager',
+    PATH: 'ens-manager'
+  },
+  MANAGE: {
+    NAME: 'ENSManagerManage',
+    PATH: 'manage'
+  }
+};
+
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
+//import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
@@ -261,6 +274,11 @@ export default {
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
   data() {
     return {
+      headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
+      header: {
+        title: this.$t('ens.title'),
+        subtext: this.$t('ens.dapp-desc')
+      },
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -302,15 +320,33 @@ export default {
         }
       ],
       tabs: [
+        {
+          name: this.$t('ens.register-domain'),
+          route: { name: ENS_MANAGER_ROUTE.CORE.NAME },
+          id: 0
+        },
+        {
+          name: this.$t('ens.manage-domain'),
+          route: {
+            name: ENS_MANAGER_ROUTE.MANAGE.NAME
+          },
+          id: 1
+        }
+      ],
+      /*
+      tabs: [
         { name: this.$t('ens.register-domain') },
         { name: this.$t('ens.manage-domain') }
       ],
-      myDomains: [],
+      */
+      myDomains: []
+      /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
       }
+      */
     };
   },
   computed: {
@@ -384,6 +420,10 @@ export default {
     this.getDomains();
   },
   methods: {
+    tabChange(tab) {
+      this.activeTab = tab;
+      //console.log(tab);
+    },
     buyDomain() {
       this.activeTab = 0;
     },
