@@ -14,6 +14,7 @@
         :items="tabItems"
         :active-tab="activeTab"
         active-color="greenPrimary"
+        has-underline
         class="mt-n2"
         @onTab="onTab"
       >
