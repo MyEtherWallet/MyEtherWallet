@@ -271,7 +271,7 @@ export default {
       this.showRemove = false;
     },
     removeBlock() {
-      this.removeBlockFromCart(this.blockHandler.blockNumber);
+      this.removeBlockFromCart(this.blockHandler.blockNumber.toString());
     },
     addToCart() {
       if (this.isAvailable && !this.isAdded) {

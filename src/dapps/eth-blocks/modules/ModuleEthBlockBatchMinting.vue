@@ -5,8 +5,8 @@
       <div>
         <div class="mew-heading-2">My Batch</div>
         <div class="mew-body textMedium--text">
-          You have added {{ cart.length }} ETH Blocks for Minting. Please review
-          and click "Proceed to Minting"
+          You have added {{ cart.length }} ETH {{ pluralizeBlockCount }} for
+          Minting. Please review and click "Proceed to Minting."
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
               <div class="mew-body">
                 {{ totalMintPrice }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-label textLight--text">
+              <div class="mew-label textLight--text text-end">
                 {{ totalMintPriceFiat }}
               </div>
             </div>
@@ -57,14 +57,14 @@
           <div class="d-flex justify-space-between pb-4">
             <div>
               <div class="mew-body">Network Fee</div>
-              <div class="mew-body greenPrimary--text">Edit Priority</div>
+              <!-- <div class="mew-body greenPrimary--text">Edit Priority</div> -->
             </div>
             <div>
               <div class="mew-body">
-                {{ totalMintPrice }} {{ network.type.currencyName }}
+                {{ totalNetworkFee }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-label textLight--text">
-                {{ totalMintPriceFiat }}
+              <div class="mew-label textLight--text text-end">
+                {{ totalNetworkFiatFee }}
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
               <div class="mew-heading-3">
                 {{ totalTransactionPrice }} {{ network.type.currencyName }}
               </div>
-              <div class="mew-body textLight--text">
+              <div class="mew-body textLight--text text-end">
                 {{ totalTransactionFiatPrice }}
               </div>
             </div>
@@ -88,7 +88,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import abi from '../handlers/helpers/multicall.js';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import handlerBlock from '../handlers/handlerBlock';
@@ -97,7 +96,8 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { fromWei, toWei } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+import { fromWei, toWei, toBN } from 'web3-utils';
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
@@ -129,11 +129,10 @@ export default {
     },
     totalMintPrice() {
       const price = this.blocks.reduce((a, b) => {
-        const parsedMintPrice = fromWei(b.mintPrice);
-        return BigNumber(a).plus(parsedMintPrice).toNumber();
-      }, 0);
+        return a.add(toBN(b.mintPrice));
+      }, toBN(0));
 
-      return formatFloatingPointValue(price).value;
+      return formatFloatingPointValue(fromWei(price)).value;
     },
     totalMintPriceFiat() {
       const value = formatFiatValue(
@@ -141,10 +140,20 @@ export default {
       ).value;
       return `$ ${value}`;
     },
+    totalNetworkFee() {
+      const val = toBN(this.gasLimit).mul(toBN(this.localGasPrice));
+      return formatFloatingPointValue(fromWei(val.toString())).value;
+    },
+    totalNetworkFiatFee() {
+      const value = formatFiatValue(
+        BigNumber(this.totalNetworkFee).times(this.fiatValue).toFixed(2)
+      ).value;
+      return `$ ${value}`;
+    },
     totalTransactionPrice() {
-      const val = BigNumber(this.gasLimit)
-        .times(this.localGasPrice)
-        .plus(toWei(this.totalMintPrice));
+      const val = toBN(this.gasLimit)
+        .mul(toBN(this.localGasPrice))
+        .add(toBN(toWei(this.totalMintPrice)));
       return formatFloatingPointValue(fromWei(val.toString())).value;
     },
     totalTransactionFiatPrice() {
@@ -152,6 +161,9 @@ export default {
         BigNumber(this.totalTransactionPrice).times(this.fiatValue).toFixed(2)
       ).value;
       return `$ ${value}`;
+    },
+    pluralizeBlockCount() {
+      return this.cart.length > 1 ? 'Blocks' : 'Block';
     }
   },
   watch: {
@@ -223,39 +235,42 @@ export default {
     async setupMulticall() {
       const multicalls = [];
       this.batchMintData = [];
-      try {
-        this.blocks.forEach(block => {
-          multicalls.push(
-            block.generateMintData().then(() => {
-              return block;
-            })
-          );
-        });
-        Promise.all(multicalls).then(values => {
-          // updates blocks with mintData now
-          this.blocks = values.sort((a, b) => {
-            return a.blockNumber < b.blockNumber
-              ? -1
-              : a.blockNumber > b.blockNumber
-              ? 1
-              : 0;
+      if (this.blocks.length >= 1) {
+        try {
+          this.blocks.forEach(block => {
+            multicalls.push(
+              block.generateMintData().then(() => {
+                return block;
+              })
+            );
           });
-          this.batchMintData = values.map(item => {
-            return item.mintData.data;
+          Promise.all(multicalls).then(values => {
+            // updates blocks with mintData now
+            this.blocks = values.sort((a, b) => {
+              return a.blockNumber < b.blockNumber
+                ? -1
+                : a.blockNumber > b.blockNumber
+                ? 1
+                : 0;
+            });
+            this.batchMintData = values.map(item => {
+              return item.mintData.data;
+            });
+            this.mintContract = new this.web3.eth.Contract(
+              abi,
+              values[0].mintData.to
+            );
+            const totalValue = values.reduce((a, b) => {
+              const parsedValue = b.mintData.value;
+              return a.add(toBN(parsedValue));
+            }, toBN(0));
+            this.totalMintValue = totalValue.toString();
+            this.fetchGasLimits();
           });
-          this.mintContract = new this.web3.eth.Contract(
-            abi,
-            values[0].mintData.to
-          );
-          this.totalMintValue = values.reduce((a, b) => {
-            const parsedValue = b.mintData.value;
-            return BigNumber(a).plus(parsedValue).toString();
-          }, '0');
-          this.fetchGasLimits();
-        });
-      } catch (e) {
-        this.isLoading = false;
-        Toast(e, {}, ERROR);
+        } catch (e) {
+          this.isLoading = false;
+          Toast(e, {}, ERROR);
+        }
       }
     },
     /**

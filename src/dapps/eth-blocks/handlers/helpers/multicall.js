@@ -15,7 +15,7 @@ export default [
         type: 'bytes[]'
       }
     ],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function'
   }
 ];
