@@ -34,7 +34,6 @@ import { toBN } from 'web3-utils';
 import EthDater from 'ethereum-block-by-date';
 import moment from 'moment';
 import _ from 'lodash';
-import Web3 from 'web3';
 export default {
   name: 'ModuleEthBlocksDateSearch',
   components: {
@@ -83,11 +82,8 @@ export default {
     // block meta before pushing to empty array
     async fetchBlocksByDate() {
       const newResultArray = [];
-      const diffWeb3 = new Web3(this.network.url);
       this.foundBlocks = [];
-      // eslint-disable-next-line
-      console.log(diffWeb3.constructor.name, this.web3.constructor.name);
-      const dater = new EthDater(diffWeb3);
+      const dater = new EthDater(this.web3.eth);
       const startTimeString = this.$route.params.dateString;
       const endTimeString = startTimeString + 1000 * 60; // adds a minute to starting range
       try {
