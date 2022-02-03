@@ -115,33 +115,51 @@ export default {
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['tokens']),
     currencyItems() {
-      // no ref copy
-      const tokensList = this.tokens.slice();
-      const filteredList = tokensList.filter(item => {
-        return (
-          item.contract === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ||
-          item.contract === '0xdac17f958d2ee523a2206206994597c13d831ec7' ||
-          item.contract === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-        );
-      });
-      const imgs = filteredList.map(item => {
-        item.totalBalance = item.usdBalancef;
-        item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+      // hard writing for now
+      const tokensList = [
+        {
+          contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'Ethereum',
+          symbol: 'ETH'
+        },
+        {
+          contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
+          name: 'USDT',
+          subtext: 'Tether',
+          value: 'Tether',
+          symbol: 'USDT'
+        },
+        {
+          contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          decimals: 6,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
+          name: 'USDC',
+          subtext: 'USD Coin',
+          value: 'USD Coin',
+          symbol: 'USDC'
+        }
+      ];
+      const imgs = tokensList.map(item => {
         return item.img;
       });
       const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 3),
-          total: `${filteredList.length}`,
+          total: `${tokensList.length}`,
           divider: true,
           selectLabel: true
         },
         {
           header: 'My Wallet'
         },
-        ...filteredList
+        ...tokensList
       ];
       return returnedArray;
     },

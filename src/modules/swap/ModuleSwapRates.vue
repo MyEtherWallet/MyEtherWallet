@@ -157,6 +157,7 @@ const STATIC_PAIRS = [
   }
 ];
 export default {
+  name: 'SwapRates',
   components: {},
   mixins: [handlerAnalytics],
   props: {
