@@ -48,7 +48,7 @@
 <script>
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapGetters, mapState } from 'vuex';
-import { isEmpty } from 'lodash';
+import { isEmpty, debounce } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
@@ -199,29 +199,31 @@ export default {
       },
       deep: true
     },
-    amount(newVal) {
-      if (newVal && !isEmpty(this.sendHandler)) {
-        const newValue = BigNumber(newVal ? newVal : 0)
-          .times(
-            BigNumber(10).pow(
-              this.selectedCurrency?.text ? 18 : this.selectedCurrency.decimals
+    amount: {
+      handler: debounce(function (newVal) {
+        if (newVal && !isEmpty(this.sendHandler)) {
+          const newValue = BigNumber(newVal ? newVal : 0)
+            .times(
+              BigNumber(10).pow(
+                this.selectedCurrency?.text
+                  ? 18
+                  : this.selectedCurrency.decimals
+              )
             )
-          )
-          .toString();
-        this.loading = true;
-        this.sendHandler.setValue(newValue);
-        this.sendHandler
-          .estimateGas()
-          .then(() => {
-            this.loading = false;
-          })
-          .catch(err => {
-            this.loading = false;
-            Toast(err, {}, ERROR);
-          });
-      } else {
-        this.amount = '0';
-      }
+            .toString();
+          this.sendHandler.setValue(newValue);
+          if (this.errorMessages === '') {
+            this.sendHandler
+              .estimateGas()
+              .then(() => {})
+              .catch(err => {
+                Toast(err, {}, ERROR);
+              });
+          }
+        } else {
+          this.amount = '0';
+        }
+      }, 500)
     },
     gasPriceType(newVal) {
       this.locGasPrice = this.gasPriceByType(newVal);
