@@ -91,6 +91,7 @@
               height="65px"
               dark
               x-small
+              :disabled="!hasSwap"
               @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
             >
               <div class="text-center" style="min-width: 50px">
@@ -358,7 +359,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork']),
+    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {

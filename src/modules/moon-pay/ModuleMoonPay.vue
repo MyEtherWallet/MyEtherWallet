@@ -22,14 +22,14 @@
           <buy-eth-component
             :handler="moonpayHandler"
             :close="close"
-            :currency-items="currencyItems"
+            :default-currency="defaltCurrency"
           />
         </template>
         <template #tabContent2>
           <sell-eth-component
             :handler="moonpayHandler"
             :close="close"
-            :currency-items="currencyItems"
+            :default-currency="defaltCurrency"
           />
         </template>
       </mew-tabs>
@@ -49,10 +49,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
 import handler from './handlers/moonpayHandler';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   name: 'MoonPay',
   components: { BuyEthComponent, SellEthComponent },
@@ -71,29 +72,11 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    currencyItems() {
-      return [
-        {
-          text: 'Select a currency',
-          selectLabel: true,
-          divider: true
-        },
-        {
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'eth'
-        },
-        {
-          name: 'USDC',
-          subtext: 'USD Coin',
-          value: 'usdc'
-        },
-        {
-          name: 'USDT',
-          subtext: 'Tether',
-          value: 'usdt'
-        }
-      ];
+    ...mapGetters('wallet', ['tokensList']),
+    defaltCurrency() {
+      return this.tokensList.filter(
+        item => item.contract === MAIN_TOKEN_ADDRESS
+      )[0];
     },
     leftBtn() {
       return {

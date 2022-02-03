@@ -5,9 +5,10 @@
     <!-- ============================================================== -->
     <mew-select
       label="Currency"
-      :items="availableCurrencyItems"
+      :items="currencyItems"
       :value="selectedCurrency"
       :disabled="loading"
+      is-custom
       @input="setCurrency"
     />
 
@@ -47,7 +48,7 @@
 <script>
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapGetters, mapState } from 'vuex';
-import { cloneDeep, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
@@ -63,18 +64,14 @@ export default {
       type: Function,
       default: () => {}
     },
-    currencyItems: {
-      type: Array,
-      default: () => []
+    defaultCurrency: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
-      selectedCurrency: {
-        name: 'ETH',
-        subtext: 'Ethereum',
-        value: 'eth'
-      },
+      selectedCurrency: this.defaultCurrency,
       amount: '0',
       fetchedData: {},
       locGasPrice: '0',
@@ -85,42 +82,45 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
-    availableCurrencyItems() {
-      const arr = cloneDeep(this.currencyItems).splice(0, 2);
-      if (this.isEthNetwork) {
-        const filteredTokensList = this.tokensList.filter(item => {
-          return item.name === 'USDT' || item.name === 'USDC';
-        });
-
-        filteredTokensList.forEach(item => {
-          const found = cloneDeep(this.currencyItems)
-            .splice(1, this.currencyItems.length - 1)
-            .find(currI => {
-              return item.name === currI.name;
-            });
-          if (found) {
-            arr.push(found);
-          }
-        });
-      }
-      return arr;
+    currencyItems() {
+      // no ref copy
+      const tokensList = this.tokensList.slice();
+      const filteredTokens = tokensList.filter(item => {
+        return (
+          item.name === 'ETH' || item.name === 'USDT' || item.name === 'USDC'
+        );
+      });
+      const imgs = filteredTokens.map(item => {
+        item.totalBalance = item.usdBalancef;
+        item.tokenBalance = item.balancef;
+        item.price = item.pricef;
+        return item.img;
+      });
+      const returnedArray = [
+        {
+          text: 'Select Token',
+          imgs: imgs.splice(0, 3),
+          total: `${filteredTokens.length}`,
+          divider: true,
+          selectLabel: true
+        },
+        {
+          header: 'My Wallet'
+        },
+        ...filteredTokens
+      ];
+      return returnedArray;
     },
     selectedCurrencyBalance() {
       if (this.isEthNetwork) {
-        const symbol = this.selectedCurrency?.name
-          ? this.selectedCurrency.name
-          : this.selectedCurrency.text;
-        const found = this.tokensList.find(item => {
-          return item.name === symbol;
-        });
-
-        return isEmpty(found)
-          ? '0'
-          : BigNumber(found.balance)
-              .div(BigNumber(10).pow(found.decimals))
-              .toString();
+        const currency = this.selectedCurrency?.text
+          ? { balance: 0, decimals: 18 }
+          : this.selectedCurrency;
+        return BigNumber(currency.balance)
+          .div(BigNumber(10).pow(currency.decimals))
+          .toString();
       }
       return this.balanceInETH;
     },
@@ -135,16 +135,34 @@ export default {
       );
     },
     min() {
-      const limit = isEmpty(this.fetchedData)
-        ? BigNumber(0.015)
-        : BigNumber(this.fetchedData.limits[0].min);
-      return limit;
+      if (!isEmpty(this.fetchedData)) {
+        const found = this.fetchedData.limits.find(item => {
+          return (
+            item.crypto_currency === this.selectedCurrency.name &&
+            item.type === 'WEB'
+          );
+        });
+
+        if (found) {
+          return BigNumber(found.limit.min);
+        }
+      }
+      return BigNumber(0.015);
     },
     max() {
-      const limit = isEmpty(this.fetchedData)
-        ? BigNumber(3)
-        : BigNumber(this.fetchedData.limits[0].max);
-      return limit;
+      if (!isEmpty(this.fetchedData)) {
+        const found = this.fetchedData.limits.find(item => {
+          return (
+            item.crypto_currency === this.selectedCurrency.name &&
+            item.type === 'WEB'
+          );
+        });
+
+        if (found) {
+          return BigNumber(found.limit.max);
+        }
+      }
+      return BigNumber(3);
     },
     errorMessages() {
       const symbol = this.selectedCurrency?.name
@@ -165,30 +183,30 @@ export default {
       }
 
       return '';
-    },
-    selectedTokensList() {
-      const symbol = this.selectedCurrency.name;
-      const foundItem = this.tokensList.filter(item => {
-        return item.name === symbol;
-      });
-
-      return foundItem[0];
     }
   },
   watch: {
-    selectedTokensList: {
+    selectedCurrency: {
       handler: function (newVal) {
         this.amount = '0';
-        if (!isEmpty(this.sendHandler)) {
+        if (
+          !isEmpty(this.sendHandler) &&
+          this.selectedCurrency.hasOwnProperty('name')
+        ) {
           this.sendHandler.setCurrency(newVal);
         }
+        this.fetchSellInfo();
       },
       deep: true
     },
     amount(newVal) {
       if (newVal && !isEmpty(this.sendHandler)) {
         const newValue = BigNumber(newVal ? newVal : 0)
-          .times(BigNumber(10).pow(this.selectedTokensList.decimals))
+          .times(
+            BigNumber(10).pow(
+              this.selectedCurrency?.text ? 18 : this.selectedCurrency.decimals
+            )
+          )
           .toString();
         this.loading = true;
         this.sendHandler.setValue(newValue);
@@ -221,18 +239,19 @@ export default {
       this.selectedCurrency = e;
     },
     reset() {
-      this.selectedCurrency = {
-        name: 'ETH',
-        subtext: 'Ethereum',
-        value: 'eth'
-      };
       this.amount = '0';
       this.sendHandler = {};
     },
     setMax() {
       const bal = this.sendHandler.getEntireBal();
       this.amount = BigNumber(bal)
-        .div(BigNumber(10).pow(this.selectedTokensList.decimals))
+        .div(
+          BigNumber(10).pow(
+            this.selectedCurrency.hasOwnProperty('name')
+              ? this.selectedCurrency.decimals
+              : 18
+          )
+        )
         .toString();
     },
     sell() {
@@ -241,16 +260,19 @@ export default {
         .then(() => {
           this.reset();
           this.close();
+          this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
           this.reset();
           this.close();
+          this.selectedCurrency = this.defaultCurrency;
         });
     },
     fetchSellInfo() {
       this.reset();
       this.sendHandler = new handlerSend();
+      this.sendHandler.setCurrency(this.selectedCurrency);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
       this.handler

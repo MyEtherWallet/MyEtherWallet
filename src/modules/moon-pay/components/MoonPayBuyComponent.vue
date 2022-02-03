@@ -8,6 +8,7 @@
       :items="currencyItems"
       :value="selectedCurrency"
       :disabled="loading"
+      is-custom
       @input="setCurrency"
     />
 
@@ -54,11 +55,7 @@
             <!-- Button bottom text -->
             <div>
               <div class="letter-spacing--none mew-label textMedium--text">
-                {{
-                  button.crypto
-                    ? `~${button.crypto} ${selectedCurrency.name}`
-                    : button.subTitle
-                }}
+                {{ button.subTitle }}
               </div>
             </div>
           </div>
@@ -81,7 +78,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { isEqual } from 'apollo-utilities';
 export default {
   name: 'ModuleBuyEth',
@@ -94,26 +91,54 @@ export default {
       type: Function,
       default: () => {}
     },
-    currencyItems: {
-      type: Array,
-      default: () => []
+    defaultCurrency: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
+      selectedCurrency: this.defaultCurrency,
       amountToBuy: '0',
       loading: true,
-      selectedCurrency: {
-        name: 'ETH',
-        subtext: 'Ethereum',
-        value: 'eth'
-      },
       selectedFiat: 'USD',
       fetchedData: {}
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['tokens']),
+    currencyItems() {
+      // no ref copy
+      const tokensList = this.tokens.slice();
+      const filteredList = tokensList.filter(item => {
+        return (
+          item.contract === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ||
+          item.contract === '0xdac17f958d2ee523a2206206994597c13d831ec7' ||
+          item.contract === '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        );
+      });
+      const imgs = filteredList.map(item => {
+        item.totalBalance = item.usdBalancef;
+        item.tokenBalance = item.balancef;
+        item.price = item.pricef;
+        return item.img;
+      });
+      const returnedArray = [
+        {
+          text: 'Select Token',
+          imgs: imgs.splice(0, 3),
+          total: `${filteredList.length}`,
+          divider: true,
+          selectLabel: true
+        },
+        {
+          header: 'My Wallet'
+        },
+        ...filteredList
+      ];
+      return returnedArray;
+    },
     hasData() {
       return !isEmpty(this.fetchedData);
     },
@@ -160,10 +185,10 @@ export default {
             fiatFormatted: this.currencyFormatter(
               this.fiatConversion.times(100).toString()
             ),
-            crypto: BigNumber(100)
+            subTitle: `~${BigNumber(100)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()
+              .toString()} ${this.selectedCurrency.name}`
           },
           {
             id: '2',
@@ -171,10 +196,10 @@ export default {
             fiatFormatted: this.currencyFormatter(
               this.fiatConversion.times(250).toString()
             ),
-            crypto: BigNumber(250)
+            subTitle: `~${BigNumber(250)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()
+              .toString()} ${this.selectedCurrency.name}`
           },
           {
             id: '3',
@@ -182,10 +207,10 @@ export default {
             fiatFormatted: this.currencyFormatter(
               this.fiatConversion.times(500).toString()
             ),
-            crypto: BigNumber(500)
+            subTitle: `~${BigNumber(500)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()
+              .toString()} ${this.selectedCurrency.name}`
           },
           {
             id: '4',
@@ -193,10 +218,10 @@ export default {
             fiatFormatted: this.currencyFormatter(
               this.fiatConversion.times(1000).toString()
             ),
-            crypto: BigNumber(1000)
+            subTitle: `~${BigNumber(1000)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()
+              .toString()} ${this.selectedCurrency.name}`
           },
           {
             id: '5',
@@ -204,10 +229,10 @@ export default {
             fiatFormatted: this.currencyFormatter(
               this.fiatConversion.times(5000).toString()
             ),
-            crypto: BigNumber(5000)
+            subTitle: `~${BigNumber(5000)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()
+              .toString()} ${this.selectedCurrency.name}`
           },
           {
             id: '6',
@@ -217,11 +242,11 @@ export default {
         ];
       }
       return [
-        { id: '1', fiat: '100', fiatFormatted: '$100', crypto: '0.16' },
-        { id: '2', fiat: '250', fiatFormatted: '$250', crypto: '0.16' },
-        { id: '3', fiat: '500', fiatFormatted: '$500', crypto: '0.16' },
-        { id: '4', fiat: '1000', fiatFormatted: '$1000', crypto: '0.16' },
-        { id: '5', fiat: '5000', fiatFormatted: '$5000', crypto: '0.16' },
+        { id: '1', fiat: '100', fiatFormatted: '$100', subTitle: '0.16 ETH' },
+        { id: '2', fiat: '250', fiatFormatted: '$250', subTitle: '0.16 ETH' },
+        { id: '3', fiat: '500', fiatFormatted: '$500', subTitle: '0.16 ETH' },
+        { id: '4', fiat: '1000', fiatFormatted: '$1000', subTitle: '0.16 ETH' },
+        { id: '5', fiat: '5000', fiatFormatted: '$5000', subTitle: '0.16 ETH' },
         { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
       ];
     }
@@ -242,11 +267,7 @@ export default {
     },
     network: {
       handler: function () {
-        this.selectedCurrency = this.selectedCurrency = {
-          name: 'ETH',
-          subtext: 'Ethereum',
-          value: 'eth'
-        };
+        this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
     }
@@ -269,11 +290,7 @@ export default {
       this.selectedFiat = 'USD';
       this.loading = true;
       this.fetchData = {};
-      this.selectedCurrency = {
-        name: 'ETH',
-        subtext: 'Ethereum',
-        value: 'eth'
-      };
+      // this.selectedCurrency = this.defaultCurrency;
     },
     fetchCurrencyData() {
       this.reset();
@@ -295,11 +312,13 @@ export default {
         .then(() => {
           this.reset();
           this.close();
+          this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
           this.reset();
           Toast(err, {}, ERROR);
           this.close();
+          this.selectedCurrency = this.defaultCurrency;
         });
     }
   }
