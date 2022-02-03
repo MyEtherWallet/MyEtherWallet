@@ -41,9 +41,9 @@
               color="transparent"
               height="65px"
               dark
-              :disabled="!isEthNetwork"
+              :disabled="!hasSwap"
               x-small
-              @click="moonPayOpen = true"
+              @click="openBuy"
             >
               <div class="text-center" style="min-width: 50px">
                 <img
@@ -55,7 +55,7 @@
                   class="whiteAlways--text mew-label text-transform--initial"
                   style="margin-top: 3px"
                 >
-                  Buy/Sell
+                  {{ buySellText }}
                 </div>
               </div>
             </v-btn>
@@ -361,6 +361,13 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
+    buySellText() {
+      if (this.hasSwap && !this.isEthNetwork) {
+        return 'Buy';
+      }
+
+      return 'Buy/Sell';
+    },
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
         const dateToday = new Date();
@@ -444,6 +451,13 @@ export default {
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    openBuy() {
+      if (this.isEthNetwork) {
+        this.moonPayOpen = true;
+      } else {
+        this.openSimplex();
+      }
+    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -469,13 +483,11 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
-    }
-    /*,
+    },
     openSimplex() {
       // eslint-disable-next-line
       window.open(`${this.swapLink}`, '_blank');
     }
-    */
   }
 };
 </script>
