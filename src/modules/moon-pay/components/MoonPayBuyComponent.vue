@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--mobule-buy-eth pt-10 custom-scroll-bar">
+  <div class="pt-10 px-8">
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->

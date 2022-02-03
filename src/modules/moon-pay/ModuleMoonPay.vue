@@ -4,6 +4,7 @@
       :show="open"
       :has-buttons="false"
       :has-title="false"
+      :has-padding="false"
       max-width="540"
       :left-btn="leftBtn"
       scrollable
@@ -12,6 +13,7 @@
       <mew-tabs
         :items="tabItems"
         :active-tab="activeTab"
+        active-color="greenPrimary"
         class="mt-n2"
         @onTab="onTab"
       >
@@ -33,7 +35,7 @@
       <!-- ============================================================== -->
       <!-- Powered by -->
       <!-- ============================================================== -->
-      <div class="mew-body d-flex justify-center align-center pt-8">
+      <div class="mew-body d-flex justify-center align-center py-8">
         Powered By
         <img
           src="@/modules/moon-pay/assets/moonpay-logo.svg"
