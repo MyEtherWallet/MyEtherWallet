@@ -21,7 +21,7 @@ import {
 export default {
   [WALLET_TYPES.LEDGER]: {
     create: LedgerWallet,
-    when: 2,
+    when: 3,
     hasPaths: false,
     requiresPassword: false,
     title: 'Connect your Ledger'

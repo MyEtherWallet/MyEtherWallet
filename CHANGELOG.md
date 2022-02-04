@@ -1,9 +1,34 @@
+### Release v6.4.5
+
+### devop
+
+* updated packages [#3629](https://github.com/MyEtherWallet/MyEtherWallet/pull/3629)
+* Added check for elements [#3632](https://github.com/MyEtherWallet/MyEtherWallet/pull/3632)
+* remove survey [#3642](https://github.com/MyEtherWallet/MyEtherWallet/pull/3642)
+
+### chore
+
+* remove require lodash [#3623](https://github.com/MyEtherWallet/MyEtherWallet/pull/3623)
+* fix imports [#3625](https://github.com/MyEtherWallet/MyEtherWallet/pull/3625)
+* added comment for tokens [#3628](https://github.com/MyEtherWallet/MyEtherWallet/pull/3628)
+* update packages [#3652](https://github.com/MyEtherWallet/MyEtherWallet/pull/3652)
+
+### feat
+
+* add mobile app store redirecting page [#3645](https://github.com/MyEtherWallet/MyEtherWallet/pull/3645)
+* allow test transactions [#3617](https://github.com/MyEtherWallet/MyEtherWallet/pull/3617)
+
+### fix
+
+* fix value setting for test mode [#3647](https://github.com/MyEtherWallet/MyEtherWallet/pull/3647)
+* fix ledger issue where users can't switch paths [#3626](https://github.com/MyEtherWallet/MyEtherWallet/pull/3626)
+* fix minFrom undefined issue when minmax is undefined [#3630](https://github.com/MyEtherWallet/MyEtherWallet/pull/3630)
+* fix TypeError: e is null Given value: null on SettingsGasPrice calcTxFee methods [#3637](https://github.com/MyEtherWallet/MyEtherWallet/pull/3637)
+
 ### Release v6.4.4
 
 ### devop
 
-* add translations and live editor plugin [#3264](https://github.com/MyEtherWallet/MyEtherWallet/pull/3264)
-* upload translation files to lokalise when there are translation files changed [#3341](https://github.com/MyEtherWallet/MyEtherWallet/pull/3341)
 * disable copy on module address if invalid, update swap button [#3590](https://github.com/MyEtherWallet/MyEtherWallet/pull/3590)
 * pull in main to develop [#3603](https://github.com/MyEtherWallet/MyEtherWallet/pull/3603)
 * add error for when value is 0 and data is null [#3611](https://github.com/MyEtherWallet/MyEtherWallet/pull/3611)
@@ -11,13 +36,9 @@
 
 ### fix
 
-* fix missing bitcoin rate for swap [#3584](https://github.com/MyEtherWallet/MyEtherWallet/pull/3584)
-* remove error popup when sending transaction with wallet link [#3586](https://github.com/MyEtherWallet/MyEtherWallet/pull/3586)
-* fix back button on create wallet overlay [#3588](https://github.com/MyEtherWallet/MyEtherWallet/pull/3588)
 * fix bitbox02 transaction signing [#3608](https://github.com/MyEtherWallet/MyEtherWallet/pull/3608)
 * fix swap rates fetch [#3613](https://github.com/MyEtherWallet/MyEtherWallet/pull/3613)
 * fix trade button when on swap [#3615](https://github.com/MyEtherWallet/MyEtherWallet/pull/3615)
-* Added Filter to Token List [#3616](https://github.com/MyEtherWallet/MyEtherWallet/pull/3616)
 * Added Filter to Token List [#3616](https://github.com/MyEtherWallet/MyEtherWallet/pull/3616)
 * fix weird loading fee when toToken is ETH [#3622](https://github.com/MyEtherWallet/MyEtherWallet/pull/3622)
 
