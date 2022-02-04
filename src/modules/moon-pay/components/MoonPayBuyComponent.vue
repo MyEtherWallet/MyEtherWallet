@@ -331,7 +331,6 @@ export default {
           this.fetchedData = Object.assign({}, res);
         })
         .catch(e => {
-          this.loading = false;
           Toast(e, {}, ERROR);
         });
     },

@@ -152,8 +152,9 @@ export default {
     },
     disableSell() {
       return (
-        BigNumber(this.amount).eq(0) ||
+        !this.amount ||
         this.amount === '' ||
+        BigNumber(this.amount).eq(0) ||
         this.loading ||
         this.errorMessages !== ''
       );
@@ -203,19 +204,23 @@ export default {
         ? this.selectedCurrency.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
+      if (amount.lt(0)) {
+        return "Amount can't be negative.";
+      }
+
+      if (amount.gt(this.selectedCurrencyBalance)) {
+        return `You do not have enough ${symbol} to sell.`;
+      }
+
       if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
         return `You do not have enough ${symbol} to pay for network fee.`;
       }
 
-      if (amount.gt(this.selectedCurrencyBalance)) {
-        return `You do not have enough ${symbol} to sell`;
-      }
-
       if (amount.gt(0) && amount.lt(this.min)) {
-        return `The minimum transaction amount is ${this.min.toString()} ${symbol}`;
+        return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
       }
       if (amount.gt(0) && amount.gt(this.max)) {
-        return `The maximum transaction amount is ${this.max.toString()} ${symbol}`;
+        return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
       }
 
       return '';
@@ -249,9 +254,6 @@ export default {
       deep: true
     },
     amount(newVal) {
-      if (!BigNumber(newVal).eq(this.maxBalance)) {
-        this.hasPersistentHint = false;
-      }
       this.debouncedSetAmount(newVal);
     },
     gasPriceType(newVal) {
@@ -261,7 +263,7 @@ export default {
       this.sendHandler.setLocalGasPrice(val);
     },
     gasLimit(val) {
-      this.setGasLimit(val);
+      this.sendHandler.setGasLimit(val);
     }
   },
   mounted() {
@@ -270,6 +272,13 @@ export default {
   },
   methods: {
     debouncedSetAmount: debounce(function (newVal) {
+      if (!BigNumber(newVal).eq(this.maxBalance)) {
+        this.hasPersistentHint = false;
+      }
+
+      if (BigNumber(newVal).lt(0)) {
+        return;
+      }
       if (newVal && !isEmpty(this.sendHandler)) {
         const newValue = BigNumber(newVal ? newVal : 0)
           .times(
@@ -291,8 +300,6 @@ export default {
               Toast(err, {}, ERROR);
             });
         }
-      } else {
-        this.amount = '0';
       }
     }, 500),
     setCurrency(e) {
@@ -304,7 +311,6 @@ export default {
     },
     setMax() {
       this.amount = this.maxBalance;
-      console.log('AAAA', this.amount);
       this.hasPersistentHint = true;
     },
     sell() {
@@ -326,9 +332,19 @@ export default {
       this.reset();
       this.sendHandler = new handlerSend();
       this.sendHandler.setCurrency(this.selectedCurrency);
-      this.sendHandler.setGasLimit(this.gasLimit);
+      this.sendHandler.setValue(this.amount);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
+      this.estimatingFees = true;
+      this.sendHandler
+        .estimateGas()
+        .then(res => {
+          this.estimatingFees = false;
+          this.gasLimit = res;
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
       this.handler
         .getSupportedFiatToSell(this.selectedCurrency.name)
         .then(res => {
