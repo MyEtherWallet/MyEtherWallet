@@ -29,7 +29,22 @@
         }"
         :disabled="loading"
         :error-messages="errorMessages"
+        :persistent-hint="hasPersistentHint"
+        :hint="persistentHintMessage"
       />
+    </div>
+    <div class="pt-10 pb-13">
+      <div class="d-flex align-center justify-space-between mb-2">
+        <div class="mew-body textDark--text font-weight-bold">
+          Estimated Network Fee
+        </div>
+        <div v-if="!estimatingFees" class="mew-body">~{{ txFeeInEth }}</div>
+        <v-skeleton-loader v-else type="text" width="150px" />
+      </div>
+      <div class="mew-body textMedium--text">
+        After submitting your sell order, you will have to send your crypto to
+        Moonpay. Remember to have enough ETH for the Send Network Fee.
+      </div>
     </div>
     <!-- ============================================================== -->
     <!-- Sell button -->
@@ -38,7 +53,6 @@
       title="Sell now"
       btn-size="xlarge"
       has-full-width
-      class="mt-10"
       :disabled="disableSell"
       @click.native="sell"
     />
@@ -52,6 +66,7 @@ import { isEmpty, debounce } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
+import { fromWei } from 'web3-utils';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -76,7 +91,10 @@ export default {
       fetchedData: {},
       locGasPrice: '0',
       sendHandler: {},
-      loading: true
+      loading: true,
+      hasPersistentHint: false,
+      gasLimit: 21000,
+      estimatingFees: true
     };
   },
   computed: {
@@ -84,6 +102,11 @@ export default {
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
+    persistentHintMessage() {
+      return this.hasPersistentHint
+        ? `Max adjusted to leave sufficient ${this.selectedCurrency.name} for network fee`
+        : '';
+    },
     currencyItems() {
       // no ref copy
       const tokensList = this.tokensList.slice();
@@ -130,6 +153,7 @@ export default {
     disableSell() {
       return (
         BigNumber(this.amount).eq(0) ||
+        this.amount === '' ||
         this.loading ||
         this.errorMessages !== ''
       );
@@ -164,26 +188,49 @@ export default {
       }
       return BigNumber(3);
     },
+    txFee() {
+      return fromWei(
+        BigNumber(this.locGasPrice).times(this.gasLimit).toString()
+      );
+    },
+    txFeeInEth() {
+      return `${BigNumber(this.txFee).decimalPlaces(4)} ${
+        this.network.type.currencyName
+      }`;
+    },
     errorMessages() {
       const symbol = this.selectedCurrency?.name
         ? this.selectedCurrency.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
-      if (amount.gt(0) && amount.lt(this.min)) {
-        return `Entered amount is less than allowed minimum value: ${this.min.toString()} ${symbol}`;
-      }
-      if (amount.gt(0) && amount.gt(this.max)) {
-        return `Entered amount is greater than allowed maximum value: ${this.max.toString()} ${symbol}`;
-      }
-      if (amount.gt(this.selectedCurrencyBalance)) {
-        return `Entered amount is greater than ${symbol} balance!`;
+      if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
+        return `You do not have enough ${symbol} to pay for network fee.`;
       }
 
-      if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
-        return `You don't have enough balance to send ${symbol} ${this.amount} and cover the network fees!`;
+      if (amount.gt(this.selectedCurrencyBalance)) {
+        return `You do not have enough ${symbol} to sell`;
+      }
+
+      if (amount.gt(0) && amount.lt(this.min)) {
+        return `The minimum transaction amount is ${this.min.toString()} ${symbol}`;
+      }
+      if (amount.gt(0) && amount.gt(this.max)) {
+        return `The maximum transaction amount is ${this.max.toString()} ${symbol}`;
       }
 
       return '';
+    },
+    maxBalance() {
+      const bal = this.sendHandler.getEntireBal();
+      return BigNumber(bal)
+        .div(
+          BigNumber(10).pow(
+            this.selectedCurrency.hasOwnProperty('name')
+              ? this.selectedCurrency.decimals
+              : 18
+          )
+        )
+        .toString();
     }
   },
   watch: {
@@ -197,10 +244,14 @@ export default {
           this.sendHandler.setCurrency(newVal);
         }
         this.fetchSellInfo();
+        this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
     amount(newVal) {
+      if (!BigNumber(newVal).eq(this.maxBalance)) {
+        this.hasPersistentHint = false;
+      }
       this.debouncedSetAmount(newVal);
     },
     gasPriceType(newVal) {
@@ -208,6 +259,9 @@ export default {
     },
     locGasPrice(val) {
       this.sendHandler.setLocalGasPrice(val);
+    },
+    gasLimit(val) {
+      this.setGasLimit(val);
     }
   },
   mounted() {
@@ -226,9 +280,13 @@ export default {
           .toString();
         this.sendHandler.setValue(newValue);
         if (this.errorMessages === '') {
+          this.estimatingFees = true;
           this.sendHandler
             .estimateGas()
-            .then(() => {})
+            .then(res => {
+              this.estimatingFees = false;
+              this.gasLimit = res;
+            })
             .catch(err => {
               Toast(err, {}, ERROR);
             });
@@ -245,16 +303,9 @@ export default {
       this.sendHandler = {};
     },
     setMax() {
-      const bal = this.sendHandler.getEntireBal();
-      this.amount = BigNumber(bal)
-        .div(
-          BigNumber(10).pow(
-            this.selectedCurrency.hasOwnProperty('name')
-              ? this.selectedCurrency.decimals
-              : 18
-          )
-        )
-        .toString();
+      this.amount = this.maxBalance;
+      console.log('AAAA', this.amount);
+      this.hasPersistentHint = true;
     },
     sell() {
       this.handler
@@ -275,6 +326,7 @@ export default {
       this.reset();
       this.sendHandler = new handlerSend();
       this.sendHandler.setCurrency(this.selectedCurrency);
+      this.sendHandler.setGasLimit(this.gasLimit);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
       this.handler

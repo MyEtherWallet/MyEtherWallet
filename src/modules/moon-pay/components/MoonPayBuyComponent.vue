@@ -32,7 +32,17 @@
           solo
           flat
           append-icon="mdi-chevron-down"
-        />
+        >
+          <template #item="data">
+            <div class="d-flex align-center">
+              <img
+                :src="require(`@/assets/images/currencies/${data.item}.svg`)"
+                class="icon-holder mr-2"
+              />
+              {{ data.item }}
+            </div>
+          </template>
+        </v-select>
       </div>
     </div>
 
@@ -280,6 +290,8 @@ export default {
         if (!isEqual(newVal, oldVal)) {
           this.fetchCurrencyData();
         }
+
+        this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
