@@ -268,7 +268,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { find } from 'lodash';
+import { some } from 'lodash';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -531,13 +531,14 @@ export default {
       return estimate;
     },
     isAdded() {
-      return find(this.cart, block => {
+      const network = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return some(network, block => {
         return block === this.blockNumber;
       });
     }
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
+    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'addTestBlockToCart']),
     /**
      * Emits 'mint' to the parent
      * ONLY USED IN AVALAILABLE block alert Mint button
@@ -563,7 +564,9 @@ export default {
     },
     addToCart() {
       if (this.isAvailable && !this.isAdded) {
-        this.addBlockToCart(this.blockNumber);
+        this.isTestNetwork
+          ? this.addTestBlockToCart(this.blockNumber)
+          : this.addBlockToCart(this.blockNumber);
       }
     }
   }

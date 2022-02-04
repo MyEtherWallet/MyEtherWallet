@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapState('ethBlocksTxs', ['cart']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
     /**
@@ -51,6 +51,9 @@ export default {
      */
     hasPendingTxs() {
       return this.getAllEthBlocksTxs.length > 0;
+    },
+    identifyNetwork() {
+      return this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
     },
     tabs() {
       return [
@@ -75,7 +78,10 @@ export default {
           },
           id: 2,
           hasBadge: true,
-          badgeContent: this.cart.length > 0 ? `${this.cart.length}` : ''
+          badgeContent:
+            this.identifyNetwork.length > 0
+              ? `${this.identifyNetwork.length}`
+              : ''
         }
       ];
     }

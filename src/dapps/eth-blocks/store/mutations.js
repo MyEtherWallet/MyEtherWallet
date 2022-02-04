@@ -41,10 +41,21 @@ const DELETE_ETH_BLOCK_TX = function (state, obj) {
  * @param {string} blockNumber
  */
 const ADD_BLOCK_TO_CART = function (state, blockNumber) {
-  if (state.cart.length >= 100) {
-    state.cart.shift();
+  if (state.cart.ETH.length >= 100) {
+    state.cart.ETH.shift();
   }
-  state.cart.push(blockNumber);
+  state.cart.ETH.push(blockNumber);
+};
+
+/**
+ *
+ * @param {string} blockNumber
+ */
+const ADD_TEST_BLOCK_TO_CART = function (state, blockNumber) {
+  if (state.cart.RIN.length >= 100) {
+    state.cart.RIN.shift();
+  }
+  state.cart.RIN.push(blockNumber);
 };
 
 /**
@@ -52,7 +63,17 @@ const ADD_BLOCK_TO_CART = function (state, blockNumber) {
  * @param {string} blockNumber
  */
 const REMOVE_FROM_CART = function (state, blockNumber) {
-  state.cart = state.cart.filter(item => {
+  state.cart.ETH = state.cart.ETH.filter(item => {
+    if (item !== blockNumber) return item;
+  });
+};
+
+/**
+ *
+ * @param {string} blockNumber
+ */
+const REMOVE_TEST_FROM_CART = function (state, blockNumber) {
+  state.cart.RIN = state.cart.RIN.filter(item => {
     if (item !== blockNumber) return item;
   });
 };
@@ -62,5 +83,7 @@ export default {
   ADD_ETH_BLOCK_TX,
   DELETE_ETH_BLOCK_TX,
   ADD_BLOCK_TO_CART,
-  REMOVE_FROM_CART
+  ADD_TEST_BLOCK_TO_CART,
+  REMOVE_FROM_CART,
+  REMOVE_TEST_FROM_CART
 };

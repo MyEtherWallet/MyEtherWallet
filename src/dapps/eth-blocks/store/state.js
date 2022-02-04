@@ -4,7 +4,10 @@ const ethBlocksTxs = {
   localStore: true,
   ethBlocksTxs: [],
   stateVersion: Configs.VERSION.ethBlocksTxs,
-  cart: []
+  cart: {
+    ETH: [],
+    RIN: []
+  }
 };
 
 export default ethBlocksTxs;

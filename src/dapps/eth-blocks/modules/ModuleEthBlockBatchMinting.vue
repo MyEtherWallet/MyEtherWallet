@@ -5,7 +5,7 @@
       <div>
         <div class="mew-heading-2">My Batch</div>
         <div class="mew-body textMedium--text">
-          You have added {{ cart.length }} ETH {{ pluralizeBlockCount }} for
+          You have added {{ blockCount }} ETH {{ pluralizeBlockCount }} for
           Minting. Please review and click "Proceed to Minting."
         </div>
       </div>
@@ -118,7 +118,7 @@ export default {
   computed: {
     ...mapState('ethBlocksTxs', ['cart']),
     ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
       return this.blocks.filter(item => {
@@ -162,8 +162,13 @@ export default {
       ).value;
       return `$ ${value}`;
     },
+    blockCount() {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length;
+    },
     pluralizeBlockCount() {
-      return this.cart.length > 1 ? 'Blocks' : 'Block';
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length > 1 ? 'Blocks' : 'Block';
     }
   },
   watch: {
@@ -194,15 +199,16 @@ export default {
       this.isLoading = true;
       const newResultArray = [];
       this.blocks = [];
-      this.totalResult = this.cart.filter(item => {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
       }).length;
       try {
-        for (let index = 0; index < this.cart.length; index++) {
+        for (let index = 0; index < cart.length; index++) {
           const block = new handlerBlock(
             this.web3,
             this.network,
-            this.cart[index],
+            cart[index],
             this.address
           );
 
