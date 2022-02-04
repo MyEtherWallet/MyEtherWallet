@@ -2,6 +2,8 @@ const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UnusedWebpackPlugin = require('unused-webpack-plugin');
+const path = require('path');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const allowedConnections = require('./connections');
@@ -62,7 +64,13 @@ const webpackConfig = {
         }
       ]
     }),
-    new webpack.DefinePlugin(env_vars)
+    new webpack.DefinePlugin(env_vars),
+    new UnusedWebpackPlugin({
+      directories: [path.join(__dirname, 'src/assets')],
+      exclude: ['*.spec.js', '/fonts/*'],
+      root: __dirname,
+      failOnUnused: true
+    })
   ],
   optimization: {
     splitChunks: {
