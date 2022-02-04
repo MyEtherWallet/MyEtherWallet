@@ -105,7 +105,6 @@ export default {
   data() {
     return {
       selectedCurrency: this.defaultCurrency,
-      amountToBuy: '0',
       loading: true,
       selectedFiat: 'USD',
       fetchedData: {}
@@ -276,11 +275,6 @@ export default {
     }
   },
   watch: {
-    amountToBuy(newVal) {
-      if (!newVal) {
-        this.amountToBuy = '0';
-      }
-    },
     selectedCurrency: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {

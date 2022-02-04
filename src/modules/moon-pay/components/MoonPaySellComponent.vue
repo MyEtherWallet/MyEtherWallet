@@ -168,13 +168,14 @@ export default {
       const symbol = this.selectedCurrency?.name
         ? this.selectedCurrency.name
         : this.network.type.currencyName;
-      if (BigNumber(this.amount).lt(this.min)) {
+      const amount = BigNumber(this.amount);
+      if (amount.gt(0) && amount.lt(this.min)) {
         return `Entered amount is less than allowed minimum value: ${this.min.toString()} ${symbol}`;
       }
-      if (BigNumber(this.amount).gt(this.max)) {
+      if (amount.gt(0) && amount.gt(this.max)) {
         return `Entered amount is greater than allowed maximum value: ${this.max.toString()} ${symbol}`;
       }
-      if (BigNumber(this.amount).gt(this.selectedCurrencyBalance)) {
+      if (amount.gt(this.selectedCurrencyBalance)) {
         return `Entered amount is greater than ${symbol} balance!`;
       }
 
@@ -199,31 +200,8 @@ export default {
       },
       deep: true
     },
-    amount: {
-      handler: debounce(function (newVal) {
-        if (newVal && !isEmpty(this.sendHandler)) {
-          const newValue = BigNumber(newVal ? newVal : 0)
-            .times(
-              BigNumber(10).pow(
-                this.selectedCurrency?.text
-                  ? 18
-                  : this.selectedCurrency.decimals
-              )
-            )
-            .toString();
-          this.sendHandler.setValue(newValue);
-          if (this.errorMessages === '') {
-            this.sendHandler
-              .estimateGas()
-              .then(() => {})
-              .catch(err => {
-                Toast(err, {}, ERROR);
-              });
-          }
-        } else {
-          this.amount = '0';
-        }
-      }, 500)
+    amount(newVal) {
+      this.debouncedSetAmount(newVal);
     },
     gasPriceType(newVal) {
       this.locGasPrice = this.gasPriceByType(newVal);
@@ -237,6 +215,28 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    debouncedSetAmount: debounce(function (newVal) {
+      if (newVal && !isEmpty(this.sendHandler)) {
+        const newValue = BigNumber(newVal ? newVal : 0)
+          .times(
+            BigNumber(10).pow(
+              this.selectedCurrency?.text ? 18 : this.selectedCurrency.decimals
+            )
+          )
+          .toString();
+        this.sendHandler.setValue(newValue);
+        if (this.errorMessages === '') {
+          this.sendHandler
+            .estimateGas()
+            .then(() => {})
+            .catch(err => {
+              Toast(err, {}, ERROR);
+            });
+        }
+      } else {
+        this.amount = '0';
+      }
+    }, 500),
     setCurrency(e) {
       this.selectedCurrency = e;
     },

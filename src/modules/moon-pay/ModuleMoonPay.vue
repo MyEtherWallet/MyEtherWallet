@@ -11,6 +11,7 @@
       has-body-content
     >
       <mew-tabs
+        v-if="open"
         :items="tabItems"
         :active-tab="activeTab"
         active-color="greenPrimary"
@@ -22,6 +23,7 @@
           <buy-eth-component
             :handler="moonpayHandler"
             :close="close"
+            :tab="activeTab"
             :default-currency="defaltCurrency"
           />
         </template>
@@ -29,6 +31,7 @@
           <sell-eth-component
             :handler="moonpayHandler"
             :close="close"
+            :tab="activeTab"
             :default-currency="defaltCurrency"
           />
         </template>
