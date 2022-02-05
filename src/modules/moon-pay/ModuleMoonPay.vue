@@ -117,6 +117,7 @@ export default {
       if (newVal) {
         this.moonpayHandler = new handler(this.address);
       }
+      this.selectedCurrency = {};
     }
   },
   methods: {

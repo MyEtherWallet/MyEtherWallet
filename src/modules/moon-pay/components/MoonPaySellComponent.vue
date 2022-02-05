@@ -94,7 +94,8 @@ export default {
       loading: true,
       hasPersistentHint: false,
       gasLimit: 21000,
-      estimatingFees: true
+      estimatingFees: true,
+      maxBalance: '0'
     };
   },
   computed: {
@@ -224,24 +225,14 @@ export default {
       }
 
       return '';
-    },
-    maxBalance() {
-      const bal = this.sendHandler.getEntireBal();
-      return BigNumber(bal)
-        .div(
-          BigNumber(10).pow(
-            this.selectedCurrency.hasOwnProperty('name')
-              ? this.selectedCurrency.decimals
-              : 18
-          )
-        )
-        .toString();
     }
   },
   watch: {
     selectedCurrency: {
       handler: function (newVal) {
         this.amount = '0';
+        this.maxBalance = '0';
+        this.hasPersistentHint = false;
         if (
           !isEmpty(this.sendHandler) &&
           this.selectedCurrency.hasOwnProperty('name')
@@ -267,6 +258,7 @@ export default {
     }
   },
   mounted() {
+    this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
@@ -305,32 +297,37 @@ export default {
     setCurrency(e) {
       this.selectedCurrency = e;
     },
-    reset() {
-      this.amount = '0';
-      this.sendHandler = {};
-    },
     setMax() {
-      this.amount = this.maxBalance;
+      const bal = this.sendHandler.getEntireBal();
+      this.amount = BigNumber(bal)
+        .div(
+          BigNumber(10).pow(
+            this.selectedCurrency.hasOwnProperty('name')
+              ? this.selectedCurrency.decimals
+              : 18
+          )
+        )
+        .toString();
+      this.maxBalance = this.amount;
       this.hasPersistentHint = true;
     },
     sell() {
       this.handler
         .sell(this.selectedCurrency.name, this.amount)
         .then(() => {
-          this.reset();
+          this.amount = '0';
           this.close();
           this.selectedCurrency = this.defaultCurrency;
         })
         .catch(err => {
           Toast(err, {}, ERROR);
-          this.reset();
+          this.amount = '0';
           this.close();
           this.selectedCurrency = this.defaultCurrency;
         });
     },
     fetchSellInfo() {
-      this.reset();
-      this.sendHandler = new handlerSend();
+      this.amount = '0';
       this.sendHandler.setCurrency(this.selectedCurrency);
       this.sendHandler.setValue(this.amount);
       // eslint-disable-next-line
