@@ -156,16 +156,25 @@ export default {
     back() {
       this.onStep -= 1;
     },
+
     /**
      * Emits 'readyToStake' to trigger send transaction
      * and reset the page
      */
+
     readyToStake() {
       this.$emit('readyToStake', this.amount);
     },
+
+    /* 
+    modified reset to set data variables back to their 
+    initial state so user is taken back to step 1 when address is changed
+    */
     // eslint-disable-next-line
     reset() {
-      this.nextStep({ onStep: 1, amount: this.amount });
+      this.onStep = 1;
+      this.amount = 0;
+      this.skipped = false;
     }
   }
 };
