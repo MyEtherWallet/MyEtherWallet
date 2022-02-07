@@ -79,7 +79,12 @@
               </div>
             </div>
           </div>
-          <mew-button title="Proceed to Minting" has-full-width />
+          <mew-button
+            title="Proceed to Minting"
+            has-full-width
+            :disabled="isLoading"
+            @click.native="mintBlocks"
+          />
         </div>
       </v-col>
     </v-row>
@@ -98,6 +103,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
+import { mapActions } from 'vuex';
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
@@ -191,6 +197,7 @@ export default {
     clearInterval(this.gasPriceInterval);
   },
   methods: {
+    ...mapActions('ethBlocksTxs', ['emptyCart']),
     /**
      * Loop through cart (array of blocks)
      * and fetch information to display
@@ -298,6 +305,24 @@ export default {
         .catch(e => {
           this.isLoading = false;
           Toast(e, {}, ERROR);
+        });
+    },
+    async mintBlocks() {
+      this.mintContract.methods
+        .multicall(this.batchMintData)
+        .send({
+          from: this.address,
+          gasPrice: this.gasLimit,
+          value: this.totalMintValue
+        })
+        .on('transactionHash', () => {
+          const network = this.isTestNetwork ? 'RIN' : 'ETH';
+          this.emptyCart(network);
+          this.isLoading = false;
+        })
+        .on('error', err => {
+          this.isLoading = false;
+          Toast(err, {}, ERROR);
         });
     }
   }

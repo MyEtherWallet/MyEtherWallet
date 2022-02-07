@@ -78,6 +78,18 @@ const REMOVE_TEST_FROM_CART = function (state, blockNumber) {
   });
 };
 
+/**
+ *
+ * @param {string} blockNumber
+ */
+const EMPTY_CART = function (state, cartType) {
+  if (cartType === 'RIN') {
+    state.cart.RIN = [];
+  } else {
+    state.cart.ETH = [];
+  }
+};
+
 export default {
   INIT_STORE,
   ADD_ETH_BLOCK_TX,
@@ -85,5 +97,6 @@ export default {
   ADD_BLOCK_TO_CART,
   ADD_TEST_BLOCK_TO_CART,
   REMOVE_FROM_CART,
-  REMOVE_TEST_FROM_CART
+  REMOVE_TEST_FROM_CART,
+  EMPTY_CART
 };

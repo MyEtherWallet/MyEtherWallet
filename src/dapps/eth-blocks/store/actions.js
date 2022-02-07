@@ -45,11 +45,20 @@ const removeTestBlockFromCart = function ({ commit }, val) {
   commit('REMOVE_TEST_FROM_CART', val);
 };
 
+/**
+ * empty cart
+ * @param {string} val
+ */
+const emptyCart = function ({ commit }, val) {
+  commit('EMPTY_CART', val);
+};
+
 export default {
   addEthBlockTx,
   addTestBlockToCart,
   deleteEthBlockTx,
   addBlockToCart,
   removeBlockFromCart,
-  removeTestBlockFromCart
+  removeTestBlockFromCart,
+  emptyCart
 };
