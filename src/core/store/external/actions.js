@@ -9,6 +9,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
 import getTokenInfo from '@/core/helpers/tokenInfo';
+import { localizeCurrency } from '@/core/helpers/localization';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -77,8 +78,10 @@ const setTokenAndEthBalance = function ({
             {
               balance: res,
               balancef: _getTokenBalance(res, token.decimals).value,
-              usdBalance: usdBalance,
-              usdBalancef: formatFiatValue(usdBalance).value
+              usdBalance: localizeCurrency({ number: usdBalance }),
+              usdBalancef: localizeCurrency({
+                number: formatFiatValue(usdBalance).value
+              })
             },
             token
           )

@@ -14,7 +14,7 @@
       v-if="!loading && tokensData.length > 0 && !dense"
       subtitle="My Tokens Value"
       :has-body-padding="false"
-      :title="`$ ${totalTokensValue}`"
+      :title="totalTokensValue"
       :icon="require('@/assets/images/icons/icon-token-grey.png')"
       icon-align="left"
     >
@@ -215,8 +215,7 @@ export default {
           ? item.price_change_percentage_24hf.replaceAll('%', '')
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-      newObj.price =
-        item.pricef && item.pricef !== '0' ? '$' + item.pricef : '';
+      newObj.price = item.pricef && item.pricef !== '0' ? item.pricef : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {
         newObj.callToAction = [

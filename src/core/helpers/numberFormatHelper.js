@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
+import { localizeCurrency } from './localization';
 /**
  * ---------------------------------
  * Number Format Helper.
@@ -369,7 +370,7 @@ const formatFiatValue = _value => {
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero() || value.isNaN()) {
-    return { value: '0.00' };
+    return { value: localizeCurrency({ number: '0.00' }) };
   }
 
   /**

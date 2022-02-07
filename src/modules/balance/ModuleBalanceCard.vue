@@ -104,8 +104,7 @@
           'mew-subtitle text-shadow white--text mt-5 mb-4'
         ]"
       >
-        <span v-if="!isTestNetwork" style="padding-right: 2px">$</span
-        >{{ totalWalletBalance }}
+        {{ totalWalletBalance }}
         <span v-if="isTestNetwork" style="padding-left: 2px; font-size: 14px">{{
           network.type.currencyName
         }}</span>

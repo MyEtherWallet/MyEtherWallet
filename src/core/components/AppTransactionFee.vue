@@ -239,7 +239,7 @@ export default {
       const value = formatFiatValue(
         BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2)
       ).value;
-      return `~${'$' + value}`;
+      return value;
     },
     hasError() {
       return this.error !== '';
