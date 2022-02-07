@@ -77,7 +77,7 @@ export default {
             name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
           },
           id: 2,
-          hasBadge: true,
+          hasBadge: this.identifyNetwork.length > 0 ? true : false,
           badgeContent:
             this.identifyNetwork.length > 0
               ? `${this.identifyNetwork.length}`

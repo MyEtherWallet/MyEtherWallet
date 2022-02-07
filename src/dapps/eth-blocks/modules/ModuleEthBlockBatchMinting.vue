@@ -241,6 +241,7 @@ export default {
     async setupMulticall() {
       const multicalls = [];
       this.batchMintData = [];
+      if (this.blocks.length === 0) this.isLoading = false;
       if (this.blocks.length >= 1) {
         try {
           this.blocks.forEach(block => {
