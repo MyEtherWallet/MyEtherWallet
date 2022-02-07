@@ -17,7 +17,10 @@
     </v-row>
     <v-row v-if="deviceConnected" no-gutters class="py-4">
       <v-col cols="12" justify="center" align="center">
-        <img :src="gifPath" width="100%" />
+        <video style="width: 100%" loop autoplay controls muted>
+          <source :src="videoPath" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </v-col>
     </v-row>
 
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import gifPath from '@/assets/images/hardware-wallets/bb02-pw-entry.gif';
+import videoPath from '@/assets/images/hardware-wallets/bb02-pw-entry.mp4';
 import bitbox2Locked from '@/assets/images/hardware-wallets/bitbox02-locked.png';
 import bitbox2Welcome from '@/assets/images/hardware-wallets/bitbox02-welcome.png';
 export default {
@@ -91,7 +94,7 @@ export default {
   },
   data() {
     return {
-      gifPath: gifPath,
+      videoPath: videoPath,
       lockedImg: bitbox2Locked,
       openImg: bitbox2Welcome
     };
