@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Img assets base path
-const directoryPath = path.join(__dirname, '/src/assets/images/backgrounds');
+const directoryPath = path.join(__dirname, '/src/assets/images/icons');
 const grepCmd = 'grep -R --exclude-dir={node_modules,.git,.github,.vscode,.husky,stories,tests,_generated}';
 
 let imgFiles = [];
@@ -47,7 +47,7 @@ for (const imgFileWithPath of imgFiles) {
         const movedFileName = `${deletedDir}/${fileNameOnly}`;
         fs.rename(imgFileWithPath, movedFileName, function (err) {
           if (err) throw err
-          console.log('Successfully moved!')
+          console.log(`Successfully moved: ${imgFileWithPath}`)
         })
 
         //fs.unlinkSync(imgFileWithPath);
