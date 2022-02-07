@@ -79,6 +79,14 @@ export default {
       }
     },
     /**
+     * Tracks when user changes gas type
+     */
+    trackGasSwitch(action) {
+      if (this.$matomo && action && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.gasSwitch, action);
+      }
+    },
+    /**
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
