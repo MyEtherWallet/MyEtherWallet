@@ -31,7 +31,7 @@ const EXCEPTIONS = [
   '@vue/eslint-config-prettier', // creates more warnings
   // update these after release
   '@ethereumjs/tx',
-  'ethereumjs-utl',
+  'ethereumjs-util',
   // versions for vue3
   'vue-router',
   'vuex',
