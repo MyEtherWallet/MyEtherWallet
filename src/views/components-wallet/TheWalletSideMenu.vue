@@ -109,39 +109,6 @@
               </div>
             </v-btn>
           </div>
-
-          <!-- ================================================================================== -->
-          <!-- (Hide old [Buy Eth Here] button) -->
-          <!-- ================================================================================== -->
-          <!--
-          <v-btn
-            v-if="network.type.name === 'ETH'"
-            class="mt-3"
-            color="white"
-            outlined
-            x-large
-            width="100%"
-            @click.native="openSimplex"
-          >
-            <div class="d-flex align-center justify-space-between width--full">
-              <div>Buy ETH here</div>
-
-              <div class="d-flex align-center">
-                <img
-                  src="@/assets/images/icons/icon-visa-white.png"
-                  alt="Master card"
-                  height="11"
-                />
-                <img
-                  src="@/assets/images/icons/icon-mastercard-mew.png"
-                  alt="Master card"
-                  height="16"
-                  class="ml-2"
-                />
-              </div>
-            </div>
-          </v-btn>
-          -->
         </div>
       </template>
 
@@ -378,25 +345,11 @@ export default {
           route: { name: ROUTES_WALLET.DASHBOARD.NAME },
           icon: dashboard
         },
-        /*
-        {
-          title: this.$t('sendTx.send-tx'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
-          icon: send
-        },
-        */
         {
           title: this.$t('interface.menu.nft'),
           route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
           icon: nft
         },
-        /*
-        {
-          title: this.$t('common.swap'),
-          route: { name: ROUTES_WALLET.SWAP.NAME },
-          icon: swap
-        },
-        */
         {
           title: this.$t('interface.menu.dapps'),
           route: { name: ROUTES_WALLET.DAPPS.NAME },
