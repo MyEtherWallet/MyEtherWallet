@@ -26,12 +26,13 @@ import { mapState } from 'vuex';
 import AppSimpleDialog from './AppSimpleDialog';
 import gasPriceMixin from '@/modules/settings/handler/gasPriceMixin';
 import SettingsGasPrice from '@/modules/settings/components/SettingsGasPrice';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 export default {
   components: {
     AppSimpleDialog,
     SettingsGasPrice
   },
-  mixins: [gasPriceMixin],
+  mixins: [gasPriceMixin, handlerAnalytics],
   props: {
     gasPriceModal: {
       type: Boolean,
@@ -95,6 +96,9 @@ export default {
     setGas(value) {
       this.$emit('onLocalGasPrice', this.gasPriceByType(value));
       this.setSelected(value);
+      this.trackGasSwitch(
+        `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`
+      );
     },
     closeDialog() {
       this.close();
