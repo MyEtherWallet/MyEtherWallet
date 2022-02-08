@@ -8,6 +8,8 @@ import ErrorList from '../errors';
 import Web3Contract from 'web3-eth-contract';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
+import { isNull } from 'lodash';
+import BigNumber from 'bignumber.js';
 
 class SendTransaction {
   constructor() {
@@ -53,8 +55,9 @@ class SendTransaction {
     this.localGasPrice = toHex(toBN(gasPrice));
   }
   setValue(_value) {
-    const _valueBN = toBN(_value);
-    if (!_valueBN.ltn(0)) this.TX.destinationValue = toHex(_valueBN);
+    if (isNaN(_value) || isNull(_value)) _value = 0;
+    const _valueBN = new BigNumber(_value);
+    if (!_valueBN.lt(0)) this.TX.destinationValue = toHex(_valueBN.toFixed());
     else throw ErrorList.NEGATIVE_VALUE;
   }
   _setValue() {

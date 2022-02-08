@@ -55,7 +55,7 @@
                   class="whiteAlways--text mew-label text-transform--initial"
                   style="margin-top: 3px"
                 >
-                  {{ buySellText }}
+                  Buy/Sell
                 </div>
               </div>
             </v-btn>
@@ -361,13 +361,6 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
-    buySellText() {
-      if (this.hasSwap && !this.isEthNetwork) {
-        return 'Buy';
-      }
-
-      return 'Buy/Sell';
-    },
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
         const dateToday = new Date();

@@ -127,31 +127,44 @@ export default {
       // hard writing for now
       const tokensList = [
         {
-          contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
           decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
           name: 'ETH',
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH'
         },
         {
-          contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/MATIC-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-matic.png',
+          name: 'MATIC',
+          subtext: 'Polygon',
+          value: 'Polygon',
+          symbol: 'MATIC (Matic)'
+        },
+        {
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/BNB-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
+          name: 'BNB',
+          subtext: 'Binance Smart Chain',
+          value: 'Binance Smart Chain',
+          symbol: 'BNB (BSC/BEP20)'
+        },
+        {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
           name: 'USDT',
           subtext: 'Tether',
           value: 'Tether',
-          symbol: 'USDT'
+          symbol: 'USDT (ERC20)'
         },
         {
-          contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           decimals: 6,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
           name: 'USDC',
           subtext: 'USD Coin',
           value: 'USD Coin',
-          symbol: 'USDC'
+          symbol: 'USDC (ERC20)'
         }
       ];
       const imgs = tokensList.map(item => {
@@ -164,9 +177,6 @@ export default {
           total: `${tokensList.length}`,
           divider: true,
           selectLabel: true
-        },
-        {
-          header: 'My Wallet'
         },
         ...tokensList
       ];
