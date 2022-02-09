@@ -104,19 +104,20 @@ Note: Great example file structure can be found in `/eth-blocks` dapp.
 
    ##### TheWrapperDapp `Props`
 
-   | Name            | Type                                                                                                                               | Description                                                                                                                                                                                                                                                                                |
-   | --------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-   | `bannerImage`   | `string`                                                                                                                           | Provides Banner Image to the dapp wrapper. default = `@/assets/images/backgrounds/bg-dapps-center.png`                                                                                                                                                                                     |
-   | `bannerText`    | <pre lang="json">Object = { <br> title: i18n // `string`, <br> subtext: i18n // string <br>} </pre>                                | Provides Banner title and subtext. <br> Example: <br> <pre lang="json"> <br> `bannerText` = { <br> title: this.\$t('ens.title'), <br> subtext: this.\$t('ens.dapp-desc') <br>} </pre>                                                                                                      |
-   | `tabItems`      | <pre lang="json">Object Array = [{ <br> name: i18n // string, <br> route: { name: tabName //`string` }, <br> id: 1 //number <br>}] | Provides dapp menu text. Use this prop to display the menu for the dapp or leave it undefined, in that way a menu will not be present. <br> Example: <br> <pre lang="json"> <br> `tabItems` = [ <br> { name: this.\$t('ens.title') }, <br> { name: this.\$t('ens.dapp-desc') }<br>] </pre> |
-   | `activeTab`     | `number`                                                                                                                           | Controls active dapp menu tab. Leave it `undefined` if `tabItems` is `undefined`. <br> default = `0`                                                                                                                                                                                       |
-   | `validNetworks` | `Object Array`                                                                                                                     | Networks that the dapp is accessible on. <br> All network objects can be found here: `src/utils/networks/types`                                                                                                                                                                            |
+   | Name            | Type                                                                                                                             | Description                                                                                                                                                                                                                                                                              |
+   | --------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `bannerImage`   | `string`                                                                                                                         | Provides Banner Image to the dapp wrapper. default = `@/assets/images/backgrounds/bg-dapps-center.png`                                                                                                                                                                                   |
+   | `bannerText`    | <pre lang="json">Object = { <br> title: i18n // string, <br> subtext: i18n // string <br>} </pre>                                | Provides Banner title and subtext. <br> Example: <br> <pre lang="json"> <br> bannerText = { <br> title: this.\$t('ens.title'), <br> subtext: this.\$t('ens.dapp-desc') <br>} </pre>                                                                                                      |
+   | `tabItems`      | <pre lang="json">Object Array = [{ <br> name: i18n // string, <br> route: { name: tabName //string }, <br> id: 1 //number <br>}] | Provides dapp menu text. Use this prop to display the menu for the dapp or leave it undefined, in that way a menu will not be present. <br> Example: <br> <pre lang="json"> <br> tabItems = [ <br> { name: this.\$t('ens.title') }, <br> { name: this.\$t('ens.dapp-desc') }<br>] </pre> |
+   | `activeTab`     | `number`                                                                                                                         | Controls active dapp menu tab. Leave it `undefined` if `tabItems` is `undefined`. <br> default = `0`                                                                                                                                                                                     |
+   | `validNetworks` | `Object Array`                                                                                                                   | Networks that the dapp is accessible on. <br> All network objects can be found here: `src/utils/networks/types`                                                                                                                                                                          |
 
 <br>
 
 #### TheWrapperDapp
 
 **Tab Menu**
+
 To start, you can include the following Vue template:
 
 ```html
@@ -198,6 +199,7 @@ data() {
 ```
 
 **metaInfo.js**
+
 This fill routes to the dapp page and adds the button on the Dapps center page. First create a file `metainfo.js` with the following contents:
 
 ```javascript
@@ -314,12 +316,12 @@ data() {
 When necessary, you can create your own `store` to separate it from the rest of the current `store`. An example can be found at `@/core/store`. This will allow everyone to easily maintain or make changes that will not affect the rest of the application.
 
 ```
-MyEtherWallet
-│  README.md
-└── src
-    └─── dapps
-          └─── your-dapp-folder
-                └─── store
+    MyEtherWallet
+    │  README.md
+    └── src
+        └─── dapps
+              └─── your-dapp-folder
+                    └─── store
 ```
 
 Import your `store` to `@/store`.
@@ -329,7 +331,7 @@ With [Vuex](https://vuex.vuejs.org/), you can specify your namespace for your da
 In your state `index.js`,
 
 ```javascript
-`namespace: ‘yourDappName’
+namespace: ‘yourDappName’
 ```
 
 Using `getters`, `actions`, `mutations`, and `states`:
@@ -363,7 +365,8 @@ If you have any issue, you can always contact us or you can create an issue in o
 
 ---
 
-###Code Style Guide
+### Code Style Guide
+
 Pattern Name conventions:
 
 - `.js` files should start with lowercase letter and use camelCase
