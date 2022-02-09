@@ -41,6 +41,7 @@
               color="transparent"
               height="65px"
               dark
+              depressed
               :disabled="!hasSwap"
               x-small
               @click="openBuy"
@@ -66,6 +67,7 @@
               color="transparent"
               height="65px"
               dark
+              depressed
               x-small
               @click="$router.push({ name: ROUTES_WALLET.SEND_TX.NAME })"
             >
@@ -90,6 +92,7 @@
               color="transparent"
               height="65px"
               dark
+              depressed
               x-small
               :disabled="!hasSwap"
               @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
