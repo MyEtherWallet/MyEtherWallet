@@ -23,7 +23,12 @@
       </div>
     </div>
 
-    <mew-button title="Home" class="mt-8" btn-size="xlarge" />
+    <mew-button
+      title="Home"
+      class="mt-8"
+      btn-size="xlarge"
+      @click.native="$router.push({ name: 'Home' })"
+    />
   </v-container>
 </template>
 
