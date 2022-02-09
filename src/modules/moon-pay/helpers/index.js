@@ -3,6 +3,8 @@ import { isObject } from 'lodash';
 import { sha3 } from 'web3-utils';
 
 const ENCRYPTION_TYPE = 'aes-256-cbc';
+const MOONPAY_EVENT = 'openMoonPay';
+const MOONPAY_OFFER_END = 'Sep 13, 2022';
 const LOCALE = {
   USD: 'en-US',
   RUB: 'ru-RU',
@@ -63,4 +65,4 @@ const encrypt = (value, id, address) => {
   return encryptedString;
 };
 
-export { encrypt, decrypt, LOCALE };
+export { encrypt, decrypt, LOCALE, MOONPAY_EVENT, MOONPAY_OFFER_END };

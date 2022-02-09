@@ -291,6 +291,7 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
+import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 export default {
   components: {
     AppBtnMenu,
@@ -397,15 +398,14 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
+    EventBus.$on(MOONPAY_EVENT, () => {
+      this.openBuy();
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
     openBuy() {
-      if (this.isEthNetwork) {
-        this.moonPayOpen = true;
-      } else {
-        this.openSimplex();
-      }
+      this.moonPayOpen = true;
     },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
@@ -432,11 +432,11 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
-    },
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
     }
+    // openSimplex() {
+    //   // eslint-disable-next-line
+    //   window.open(`${this.swapLink}`, '_blank');
+    // }
   }
 };
 </script>
