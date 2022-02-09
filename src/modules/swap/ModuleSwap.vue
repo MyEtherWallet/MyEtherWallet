@@ -901,8 +901,8 @@ export default {
       this.addressValue = {};
       this.selectedProvider = {};
       this.localGasPrice = '0';
-      this.$refs.toToken.clear();
-      this.$refs.amountInput.clear();
+      if (this.$refs.toToken) this.$refs.toToken.clear();
+      if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.setupSwap();
     },
     formatTokensForSelect(tokens) {

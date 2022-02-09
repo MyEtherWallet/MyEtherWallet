@@ -7,6 +7,7 @@ import {
   gasPriceTypes
 } from '@/core/helpers/gasPriceHelper';
 import { toBN } from 'web3-utils';
+import { isEmpty } from 'lodash';
 
 const Networks = function () {
   return nodeList;
@@ -18,7 +19,9 @@ const network = function (state) {
   }
   const iteratableArr = nodeList[state.currentNetwork.type.name];
   network = Object.assign({}, state.currentNetwork);
-  network.type = nodeList[state.currentNetwork.type.name][0].type;
+  network.type = !isEmpty(nodeList[state.currentNetwork.type.name])
+    ? nodeList[state.currentNetwork.type.name][0].type
+    : ETH;
   for (let index = 0; index < iteratableArr.length; index++) {
     if (state.currentNetwork.service === iteratableArr[index].service) {
       network = iteratableArr[index];
