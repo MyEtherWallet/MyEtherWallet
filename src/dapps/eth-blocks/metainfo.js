@@ -12,8 +12,8 @@ export default {
   rightIcon: 'ethBlocks',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
-  isNew: true,
   layout,
+  release: '11/11/2021',
   defaultName: ETH_BLOCKS_ROUTE.CORE.NAME,
   meta: {
     noAuth: false

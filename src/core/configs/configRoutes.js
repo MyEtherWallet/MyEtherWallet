@@ -13,7 +13,9 @@ const ROUTES_HOME = {
   TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
-  CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' }
+  CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
+  JOBS: { NAME: 'Careers', PATH: 'careers' },
+  QR_CODE: { NAME: 'QrCode', PATH: 'qr-code' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },

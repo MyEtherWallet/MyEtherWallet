@@ -28,7 +28,12 @@ const EXCEPTIONS = [
   'vuetify',
   'eslint',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
-  '@vue/eslint-config-prettier' // creates more warnings
+  '@vue/eslint-config-prettier', // creates more warnings
+  // versions for vue3
+  'vue-router',
+  'vuex',
+  '@vue/test-utils',
+  'vue-i18n'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

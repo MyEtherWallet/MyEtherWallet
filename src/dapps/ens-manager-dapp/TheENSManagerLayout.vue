@@ -437,6 +437,19 @@ export default {
       if (newVal === true) {
         this.onRegister = true;
       }
+    },
+    /* 
+    - watches for address state change
+    - updates ensManager with new address 
+    - if user is onRegister it will reset and take them back
+    - if user is onManage it will run getDomain to refresh domains
+    */
+    address(newVal) {
+      this.ensManager.address = newVal;
+      if (this.onRegister) {
+        this.closeRegister();
+      }
+      this.getDomains();
     }
   },
   mounted() {
