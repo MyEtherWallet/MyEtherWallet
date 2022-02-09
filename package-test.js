@@ -35,7 +35,8 @@ const EXCEPTIONS = [
   // versions for vue3
   'vue-router',
   'vuex',
-  '@vue/test-utils'
+  '@vue/test-utils',
+  'vue-i18n'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
