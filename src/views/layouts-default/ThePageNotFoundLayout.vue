@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <mew-button title="Home" class="mt-8" />
+    <mew-button title="Home" class="mt-8" btn-size="xlarge" />
   </v-container>
 </template>
 
