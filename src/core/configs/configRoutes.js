@@ -15,7 +15,8 @@ const ROUTES_HOME = {
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   JOBS: { NAME: 'Careers', PATH: 'careers' },
-  QR_CODE: { NAME: 'QrCode', PATH: 'qr-code' }
+  QR_CODE: { NAME: 'QrCode', PATH: 'qr-code' },
+  PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' }
 };
 const ROUTES_WALLET = {
   WALLETS: { NAME: 'Wallets', PATH: '' },

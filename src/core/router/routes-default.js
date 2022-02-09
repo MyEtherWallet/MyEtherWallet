@@ -15,6 +15,7 @@ import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLa
 import TheConvertUnitsLayout from '@/views/layouts-default/TheConvertUnitsLayout';
 import TheCareersLayout from '@/views/layouts-default/TheCareersLayout';
 import TheQrCodeLayout from '@/views/layouts-default/TheQrCodeLayout';
+import ThePageNotFoundLayout from '@/views/layouts-default/ThePageNotFoundLayout';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -159,6 +160,14 @@ export default {
         noAuth: true
       },
       beforeEnter: accessRouteGuard
+    },
+    {
+      path: ROUTES_HOME.PAGE_NOT_FOUND.PATH,
+      name: ROUTES_HOME.PAGE_NOT_FOUND.NAME,
+      component: ThePageNotFoundLayout,
+      meta: {
+        noAuth: true
+      }
     }
   ]
 };
