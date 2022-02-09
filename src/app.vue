@@ -46,6 +46,7 @@ export default {
     });
   },
   mounted() {
+    this.footerHideIntercom();
     this.logMessage();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
@@ -79,6 +80,23 @@ export default {
         '\n\nOn the other hand, if you are a developer and do know what you’re doing, MEW is hiring and we probably want to talk to you. Send us an email at careers@myetherwallet.com with the subject line: I am a software developer.'
       );
       /* eslint-enable no-console */
+    },
+    // Hide intercom button when users reach the footer or bottom of screen
+    footerHideIntercom() {
+      window.onscroll = function () {
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100
+        ) {
+          window.Intercom('update', {
+            hide_default_launcher: true
+          });
+        } else {
+          window.Intercom('update', {
+            hide_default_launcher: false
+          });
+        }
+      };
     }
   }
 };

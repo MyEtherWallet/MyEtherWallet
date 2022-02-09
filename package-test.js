@@ -29,8 +29,12 @@ const EXCEPTIONS = [
   'eslint',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
   '@vue/eslint-config-prettier', // creates more warnings
-  'vue-router', // versions for vue3
-  'vuex', // versions for vue3
+  // update these after release
+  '@ethereumjs/tx',
+  'ethereumjs-util',
+  // versions for vue3
+  'vue-router',
+  'vuex',
   '@vue/test-utils'
 ];
 const CUSTOM_DIST = {
