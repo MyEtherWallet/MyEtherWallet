@@ -82,7 +82,7 @@
           <mew-button
             title="Proceed to Minting"
             has-full-width
-            :disabled="isLoading"
+            :disabled="isLoading || isCartEmpty"
             @click.native="mintBlocks"
           />
         </div>
@@ -175,6 +175,10 @@ export default {
     pluralizeBlockCount() {
       const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
       return cart.length > 1 ? 'Blocks' : 'Block';
+    },
+    isCartEmpty() {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length >= 1 ? false : true;
     }
   },
   watch: {
