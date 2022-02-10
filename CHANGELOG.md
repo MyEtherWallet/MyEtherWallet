@@ -1,3 +1,26 @@
+### Release v6.4.6
+
+### ui
+
+* Handle text overflow for tokens [#3658](https://github.com/MyEtherWallet/MyEtherWallet/pull/3658)
+
+### devop
+
+* added gas switch tracker [#3659](https://github.com/MyEtherWallet/MyEtherWallet/pull/3659)
+
+### fix
+
+* fix metamask account change detection on ens and staking so forms and tabs reset when accounts change [#3644](https://github.com/MyEtherWallet/MyEtherWallet/pull/3644)
+* hide intercom on bottom of the screen [#3650](https://github.com/MyEtherWallet/MyEtherWallet/pull/3650)
+* name resolution fix [#3662](https://github.com/MyEtherWallet/MyEtherWallet/pull/3662)
+* handle trezor error popup [#3663](https://github.com/MyEtherWallet/MyEtherWallet/pull/3663)
+* fix bsc popup [#3670](https://github.com/MyEtherWallet/MyEtherWallet/pull/3670)
+
+### sentry
+
+* added bignumber and type checks [#3649](https://github.com/MyEtherWallet/MyEtherWallet/pull/3649)
+* Added check and default value [#3654](https://github.com/MyEtherWallet/MyEtherWallet/pull/3654)
+
 ### Release v6.4.5
 
 ### devop
