@@ -8,7 +8,8 @@ const AUDIT_EXCEPTIONS = [
   'diff',
   'ansi-html', // no patches available
   'set-value',
-  'simple-get' // work on resolving this after release 6.4.5
+  'simple-get', // work on resolving this after release 6.4.5
+  'engine.io'
 ];
 const execute = (command, callback) => {
   exec(
