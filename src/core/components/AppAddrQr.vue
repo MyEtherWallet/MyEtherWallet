@@ -15,9 +15,8 @@
     =====================================================================================
     -->
     <div class="textPrimary--text mb-8">
-      {{ $t('interface.qr.desc') }}
+      {{ $t('interface.qr.desc', { network: getNetwork() }) }}
     </div>
-
     <!--
     =====================================================================================
       Identicon and acount
@@ -62,17 +61,17 @@
     </div>
   </div>
 </template>
-
+qr
 <script>
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
-
 export default {
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapGetters('global', ['network']),
     getChecksumAddressString() {
       return toChecksumAddress(this.address);
     }
@@ -81,6 +80,9 @@ export default {
     copyAddress() {
       clipboardCopy(this.address);
       Toast(`Copied ${this.address} successfully!`, {}, INFO);
+    },
+    getNetwork() {
+      return this.network ? this.network.type.currencyName : 'ETH';
     },
     animateMewCard() {
       const el = document.querySelector('.mew-card');
