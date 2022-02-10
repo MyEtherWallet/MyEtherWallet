@@ -189,7 +189,10 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatIntegerToString
+} from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   components: {
@@ -242,7 +245,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPriceType']),
+    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
       'network',
@@ -325,9 +328,13 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = item.usdBalancef;
+        item.totalBalance = formatFiatValue(item.usdBalancef, {
+          currency: this.preferredCurrency
+        }).value;
         item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+        item.price = formatFiatValue(item.pricef, {
+          currency: this.preferredCurrency
+        }).value;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)

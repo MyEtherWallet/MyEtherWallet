@@ -222,7 +222,7 @@ export default {
       'swapLink',
       'gasPriceByType'
     ]),
-    ...mapState('global', ['online', 'gasPriceType']),
+    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
     txFeeInEth() {
       return fromWei(this.txFee);
     },
@@ -237,7 +237,8 @@ export default {
     },
     feeInUsd() {
       const value = formatFiatValue(
-        BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2)
+        BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2),
+        { currency: this.preferredCurrency }
       ).value;
       return value;
     },

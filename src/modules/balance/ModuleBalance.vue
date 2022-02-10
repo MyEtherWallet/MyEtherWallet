@@ -129,6 +129,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
@@ -161,9 +162,9 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return `${this.networkTokenUSDMarket.symbol}${
-          formatFiatValue(this.balanceFiatValue).value
-        }`;
+        return formatFiatValue(this.balanceFiatValue, {
+          currency: this.preferredCurrency
+        }).value;
       }
       return '';
     },
@@ -185,9 +186,9 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return `${this.networkTokenUSDMarket.symbol}${
-          formatFiatValue(this.fiatValue).value
-        }`;
+        return formatFiatValue(this.fiatValue, {
+          currency: this.preferredCurrency
+        }).value;
       }
       return '';
     },

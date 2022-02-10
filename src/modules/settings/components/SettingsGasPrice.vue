@@ -77,19 +77,19 @@
                 v-if="b.title === gasPriceTypes.ECONOMY"
                 class="textSecondary--text"
               >
-                ${{ economyInUsd }}
+                {{ economyInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.REGULAR"
                 class="textSecondary--text"
               >
-                ${{ regularInUsd }}
+                {{ regularInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.FAST"
                 class="textSecondary--text"
               >
-                ${{ fastInUsd }}
+                {{ fastInUsd }}
               </div>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default {
   computed: {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
-    ...mapState('global', ['gasPriceType', 'gasPrice']),
+    ...mapState('global', ['gasPriceType', 'gasPrice', 'preferredCurrency']),
     ...mapGetters('wallet', ['balanceInETH']),
     currencyName() {
       return this.network.type.currencyName;
@@ -250,8 +250,10 @@ export default {
       return formatFloatingPointValue(fee).value;
     },
     formatInUsd(fee) {
-      return formatFiatValue(BigNumber(fee).times(this.fiatValue).toFixed(2))
-        .value;
+      const number = BigNumber(fee).times(this.fiatValue).toFixed(2);
+      return formatFiatValue(number, {
+        currency: this.preferredCurrency
+      }).value;
     },
     recalculate() {
       const amount = BigNumber(this.costInEth).minus(

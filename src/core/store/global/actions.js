@@ -8,6 +8,9 @@ const setOnlineStatus = function ({ commit, dispatch }, val) {
 const setLocale = function ({ commit }, val) {
   commit('SET_LOCALE', val);
 };
+const setPreferredCurrency = function ({ commit }, val) {
+  commit('SET_Preferred_Currency', val);
+};
 
 const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
@@ -83,6 +86,7 @@ export default {
   updateGasPrice,
   setOnlineStatus,
   setLocale,
+  setPreferredCurrency,
   setNetwork,
   setGasPrice,
   setGasPriceType,

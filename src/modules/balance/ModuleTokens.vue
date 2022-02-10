@@ -166,6 +166,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('custom', ['customTokens', 'hasCustom']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
     ...mapGetters('external', ['totalTokenFiatValue']),
@@ -191,7 +192,9 @@ export default {
       return tokens;
     },
     totalTokensValue() {
-      return formatFiatValue(this.totalTokenFiatValue).value;
+      return formatFiatValue(this.totalTokenFiatValue, {
+        currency: this.preferredCurrency
+      }).value;
     }
   },
   methods: {
@@ -204,7 +207,11 @@ export default {
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
-        '$' + item.usdBalancef ? item.usdBalancef : '0'
+        '$' + item.usdBalancef
+          ? formatFiatValue(item.usdBalancef, {
+              currency: this.preferredCurrency
+            }).value
+          : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
       newObj.token = item.symbol;
@@ -215,7 +222,11 @@ export default {
           ? item.price_change_percentage_24hf.replaceAll('%', '')
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
-      newObj.price = item.pricef && item.pricef !== '0' ? item.pricef : '';
+      newObj.price =
+        item.pricef && item.pricef !== '0'
+          ? formatFiatValue(item.pricef, { currency: this.preferredCurrency })
+              .value
+          : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {
         newObj.callToAction = [

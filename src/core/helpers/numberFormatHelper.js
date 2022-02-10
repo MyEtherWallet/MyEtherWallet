@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { fromWei } from 'web3-utils';
 import { localizeCurrency } from './localization';
+
 /**
  * ---------------------------------
  * Number Format Helper.
@@ -363,14 +364,17 @@ const formatPercentageValue = _value => {
  * @param _value: BigNumber
  * @returns Object FormattedNumber with value as formatted string and tooltipText
  */
-const formatFiatValue = _value => {
+const formatFiatValue = (
+  _value,
+  options = { locale: 'en-US', currency: 'USD' }
+) => {
   const value = new BigNumber(_value);
   /**
    * Case I: value === 0
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero() || value.isNaN()) {
-    return { value: localizeCurrency({ number: '0.00' }) };
+    return { value: localizeCurrency({ number: '0.00', ...options }) };
   }
 
   /**
@@ -378,7 +382,7 @@ const formatFiatValue = _value => {
    * Return: formated integer value with tooltip
    */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return formatIntegerValue(value);
+    return localizeCurrency({ number: formatIntegerValue(value), ...options });
   }
 
   /**
@@ -386,7 +390,12 @@ const formatFiatValue = _value => {
    * Return: rounded number up to 2 decimal points,  no tooltip
    */
   if (value.isGreaterThanOrEqualTo(SmallFiatBreakpoint)) {
-    return { value: getRoundNumber(value, 2, true).value };
+    return {
+      value: localizeCurrency({
+        number: getRoundNumber(value, 2, true).value,
+        ...options
+      })
+    };
   }
 
   /**

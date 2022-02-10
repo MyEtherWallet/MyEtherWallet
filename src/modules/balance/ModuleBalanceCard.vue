@@ -274,6 +274,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',
@@ -365,7 +366,8 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        return formatFiatValue(total).value;
+        return formatFiatValue(total, { currency: this.preferredCurrency })
+          .value;
       }
       return this.walletChainBalance;
     },
