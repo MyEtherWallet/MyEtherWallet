@@ -1,7 +1,3 @@
-### fix
-
-* add state version to address book [#3666](https://github.com/MyEtherWallet/MyEtherWallet/pull/3666)
-
 ### Release v6.4.6
 
 ### ui
@@ -14,6 +10,7 @@
 
 ### fix
 
+* add state version to address book [#3666](https://github.com/MyEtherWallet/MyEtherWallet/pull/3666)
 * fix metamask account change detection on ens and staking so forms and tabs reset when accounts change [#3644](https://github.com/MyEtherWallet/MyEtherWallet/pull/3644)
 * hide intercom on bottom of the screen [#3650](https://github.com/MyEtherWallet/MyEtherWallet/pull/3650)
 * name resolution fix [#3662](https://github.com/MyEtherWallet/MyEtherWallet/pull/3662)
