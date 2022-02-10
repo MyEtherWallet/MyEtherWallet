@@ -1,3 +1,7 @@
+### fix
+
+* add state version to address book [#3666](https://github.com/MyEtherWallet/MyEtherWallet/pull/3666)
+
 ### Release v6.4.6
 
 ### ui
