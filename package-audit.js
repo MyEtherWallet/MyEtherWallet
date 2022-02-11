@@ -7,7 +7,8 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url',
   'diff',
   'ansi-html', // no patches available
-  'set-value'
+  'set-value',
+  'engine.io'
 ];
 const execute = (command, callback) => {
   exec(
