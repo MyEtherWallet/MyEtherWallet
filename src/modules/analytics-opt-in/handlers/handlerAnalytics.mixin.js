@@ -87,6 +87,14 @@ export default {
       }
     },
     /**
+     * Tracks when global error modal pops up
+     */
+    trackGlobalError(action) {
+      if (this.$matomo && this.consentToTrack) {
+        this.$matomo.trackEvent(categories.globalError, action);
+      }
+    },
+    /**
      * Tracks when user logs out of dashboard
      */
     trackLogout() {
