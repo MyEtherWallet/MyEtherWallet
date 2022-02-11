@@ -21,7 +21,7 @@
       dense
       class="d-flex align-center justify-space-between"
     >
-      <div class="d-flex align-center">
+      <div v-if="!promoOver" class="d-flex align-center">
         <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
           <img
             src="@/assets/images/icons/icon-party-popper.png"
@@ -48,7 +48,25 @@
           </span>
         </div>
       </div>
-      <mew-button title="Buy crypto now" btn-size="medium" />
+      <div v-else class="d-flex align-center">
+        <div class="mr-5">
+          <v-icon color="black"> mdi-bank </v-icon>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="mew-body font-weight-bold textDark--text"
+            >You can now Buy crypto with low fees</span
+          >
+          <span class="mew-body textMedium--text"
+            >Enjoy 0.9% fee wen you select ‘Bank account’ as payment
+            method.</span
+          >
+        </div>
+      </div>
+      <mew-button
+        title="Buy crypto now"
+        btn-size="medium"
+        @click.native="buyCryptoNow"
+      />
     </v-col>
     <v-col cols="4" class="ml-auto d-flex align-center justify-end">
       <div class="align-center d-none d-lg-block">
@@ -63,7 +81,8 @@
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
 import moment from 'moment';
 import { mapState } from 'vuex';
-import { MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
+import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   components: {
     notificationOverlay
@@ -84,6 +103,14 @@ export default {
     },
     dayText() {
       return `day${this.daysLeft > 1 ? 's' : ''}`;
+    },
+    promoOver() {
+      return moment(moment()).isAfter(MOONPAY_OFFER_END);
+    }
+  },
+  methods: {
+    buyCryptoNow() {
+      EventBus.$emit(MOONPAY_EVENT);
     }
   }
 };

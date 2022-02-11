@@ -46,6 +46,17 @@ export default class MoonPayHandler {
     });
   }
 
+  getFiatRatesForBuy() {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${API}/v3/purchase/moonpay/quotes`)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(reject);
+    });
+  }
+
   getSupportedFiatToSell(symbol) {
     return new Promise((resolve, reject) => {
       axios

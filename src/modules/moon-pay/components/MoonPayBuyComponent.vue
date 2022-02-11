@@ -95,7 +95,7 @@ import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
 import { mapGetters, mapState } from 'vuex';
-import { isEqual } from 'apollo-utilities';
+import { cloneDeep, isEqual } from 'apollo-utilities';
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -117,7 +117,8 @@ export default {
       selectedCurrency: this.defaultCurrency,
       loading: true,
       selectedFiat: 'USD',
-      fetchedData: {}
+      fetchedData: {},
+      currencyRates: []
     };
   },
   computed: {
@@ -170,6 +171,20 @@ export default {
       const imgs = tokensList.map(item => {
         return item.img;
       });
+      const tokensListWPrice =
+        this.currencyRates.length > 0
+          ? tokensList.map(token => {
+              const priceRate = this.currencyRates.find(rate => {
+                return rate.crypto_currency === token.name;
+              });
+              const actualPrice = priceRate.quotes.find(quote => {
+                return quote.fiat_currency === this.selectedFiat;
+              });
+
+              token.price = actualPrice ? actualPrice.price : '0';
+              return token;
+            })
+          : tokensList;
       const returnedArray = [
         {
           text: 'Select Token',
@@ -178,7 +193,7 @@ export default {
           divider: true,
           selectLabel: true
         },
-        ...tokensList
+        ...tokensListWPrice
       ];
       return returnedArray;
     },
@@ -337,7 +352,10 @@ export default {
       this.handler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          this.loading = false;
+          this.handler.getFiatRatesForBuy().then(res => {
+            this.currencyRates = cloneDeep(res);
+            this.loading = false;
+          });
           this.fetchedData = Object.assign({}, res);
         })
         .catch(e => {

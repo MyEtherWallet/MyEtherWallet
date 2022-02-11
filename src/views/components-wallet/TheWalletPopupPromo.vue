@@ -1,24 +1,48 @@
 <template>
   <app-modal
     width="395"
-    :show="showWalletPromo"
-    title="Buy crypto with 0% fees"
+    :show="showPromo"
+    :title="title"
     has-body-content
     :has-buttons="false"
     :has-close-button="false"
+    :close="setHidePopUp"
   >
     <template #dialogBody>
-      <div class="d-flex align-center justify-center my-5">
-        <img
-          src="@/assets/images/icons/icon-party-popper.png"
-          width="78px"
-          height="78px"
-        />
+      <div v-if="!isPromoOver">
+        <div class="d-flex align-center justify-center my-5">
+          <img
+            src="@/assets/images/icons/icon-party-popper.png"
+            width="78px"
+            height="78px"
+          />
+        </div>
+        <div class="text-center mew-body textMedium--text">
+          MEW has joined with <u>Moonpay</u> to offer more crypto buying and
+          selling options. Help us celebrate with zero fees when you buy and
+          sell crypto this week.
+        </div>
       </div>
-      <div class="text-center mew-body textMedium--text">
-        MEW has joined with <u>Moonpay</u> to offer more crypto buying and
-        selling options. Help us celebrate with zero fees when you buy and sell
-        crypto this week.
+      <div v-else>
+        <div class="text-center mew-body textMedium--text">
+          Enjoy 0.9% fee wen you select ‘Bank account’ as payment method.
+        </div>
+        <div class="d-flex justify-center align-center pa-5 mt-5">
+          <div class="icon-container mr-2 d-flex align-center pa-2">
+            <img
+              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
+              width="34px"
+              height="34px"
+            />
+          </div>
+          <div
+            v-for="icon in tokenIcons"
+            :key="icon"
+            class="icon-container mr-2 d-flex align-center"
+          >
+            <img :src="icon" width="50px" height="50px" />
+          </div>
+        </div>
       </div>
       <mew-button
         class="mt-8"
@@ -43,25 +67,53 @@ import AppModal from '@/core/components/AppModal';
 import { mapActions, mapState } from 'vuex';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { EventBus } from '@/core/plugins/eventBus';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { MOONPAY_EVENT, MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
+import moment from 'moment';
 
 export default {
   name: 'TheWalletPopupPromo',
   components: { AppModal },
   mixins: [handlerAnalytics],
   data() {
-    return {};
+    return {
+      tokenIcons: [
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/MATIC-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-matic.png',
+        'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/BNB-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png'
+      ]
+    };
   },
   computed: {
-    ...mapState('global', ['showWalletPromo'])
+    ...mapState('global', ['showWalletPromo', 'promoOver']),
+    isPromoOver() {
+      return moment(moment()).isAfter(MOONPAY_OFFER_END);
+    },
+    title() {
+      return this.isPromoOver
+        ? 'You can now Buy and Sell crypto with low fees'
+        : 'Buy crypto with 0% fees';
+    },
+    showPromo() {
+      if (this.showWalletPromo) {
+        return this.showWalletPromo;
+      }
+
+      return !this.promoOver;
+    }
   },
   methods: {
-    ...mapActions('global', ['neverShowPromo']),
+    ...mapActions('global', ['neverShowPromo', 'setPromoOver']),
     /**
      * Hides promo popup forever
      */
     setHidePopUp() {
-      this.neverShowPromo();
+      if (this.showWalletPromo) {
+        this.neverShowPromo();
+      }
+      if (!this.promoOver) {
+        this.setPromoOver();
+      }
     },
 
     /**

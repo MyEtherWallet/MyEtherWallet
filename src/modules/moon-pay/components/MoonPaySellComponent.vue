@@ -343,7 +343,7 @@ export default {
           Toast(err, {}, ERROR);
         });
       this.handler
-        .getSupportedFiatToSell(this.selectedCurrency.name)
+        .getSupportedFiatToSell()
         .then(res => {
           this.loading = false;
           this.fetchedData = Object.assign({}, res);

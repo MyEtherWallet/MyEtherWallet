@@ -57,6 +57,10 @@ const neverShowPromo = function ({ commit }) {
   commit('NEVER_SHOW_WALLET_PROMO');
 };
 
+const setPromoOver = function ({ commit }) {
+  commit('SET_PROMO_OVER');
+};
+
 const setTracking = function ({ state }) {
   const matomoExists = () => {
     return new Promise(resolve => {
@@ -92,5 +96,6 @@ export default {
   setBaseFeePerGas,
   setTrackingConsent,
   setTracking,
-  neverShowPromo
+  neverShowPromo,
+  setPromoOver
 };
