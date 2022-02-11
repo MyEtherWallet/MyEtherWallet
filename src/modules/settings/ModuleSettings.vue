@@ -169,7 +169,7 @@ export default {
           name: 'Contact addresses'
         },
         {
-          name: 'Language and Currency'
+          name: 'Currency settings'
         }
       ];
     },
