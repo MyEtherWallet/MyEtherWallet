@@ -88,6 +88,7 @@ import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { uniqWith, isEqual } from 'lodash';
+import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -223,10 +224,13 @@ export default {
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
       newObj.price =
-        item.pricef && item.pricef !== '0'
-          ? formatFiatValue(item.pricef, { currency: this.preferredCurrency })
-              .value
+        item.pricef && currencyToNumber(item.pricef).toString() !== '0'
+          ? formatFiatValue(currencyToNumber(item.pricef), {
+              currency: this.preferredCurrency
+            }).value
           : '';
+      console.log(item);
+      //newObj.price = item.pricef && item.pricef !== '0' ? item.pricef : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {
         newObj.callToAction = [

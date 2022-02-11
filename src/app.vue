@@ -24,7 +24,8 @@ export default {
   components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
   computed: {
     ...mapState('custom', ['addressBook']),
-    ...mapState('addressBook', ['isMigrated'])
+    ...mapState('addressBook', ['isMigrated']),
+    ...mapState('global', ['preferredCurrency'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -65,7 +66,6 @@ export default {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
-    ...mapState('global', ['preferredCurrency']),
     logMessage() {
       /* eslint-disable no-console */
       console.log(

@@ -382,7 +382,9 @@ const formatFiatValue = (
    * Return: formated integer value with tooltip
    */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return localizeCurrency({ number: formatIntegerValue(value), ...options });
+    return {
+      value: localizeCurrency({ number: formatIntegerValue(value), ...options })
+    };
   }
 
   /**

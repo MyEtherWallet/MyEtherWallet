@@ -8,7 +8,7 @@ export default {
     ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {
-    global: '1.0.6',
+    global: '1.0.7',
     notifications: '1.0.1',
     custom: '1.0.4',
     addressBook: '1.0.0',
