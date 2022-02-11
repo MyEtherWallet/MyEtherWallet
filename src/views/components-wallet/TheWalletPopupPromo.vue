@@ -18,9 +18,15 @@
           />
         </div>
         <div class="text-center mew-body textMedium--text">
-          MEW has joined with <u>Moonpay</u> to offer more crypto buying and
-          selling options. Help us celebrate with zero fees when you buy and
-          sell crypto this week.
+          MEW has joined with
+          <a
+            class="textMedium--text"
+            href="https://www.moonpay.com/buy"
+            target="_blank"
+            ><u>Moonpay</u></a
+          >
+          to offer more crypto buying and selling options. Help us celebrate
+          with zero fees when you buy and sell crypto this week.
         </div>
       </div>
       <div v-else>
