@@ -181,7 +181,9 @@ export default {
                 return quote.fiat_currency === this.selectedFiat;
               });
 
-              token.price = actualPrice ? actualPrice.price : '0';
+              token.price = this.currencyFormatter(
+                actualPrice ? actualPrice.price : '0'
+              );
               return token;
             })
           : tokensList;

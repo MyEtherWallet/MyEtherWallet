@@ -16,7 +16,7 @@
         :active-tab="activeTab"
         active-color="greenPrimary"
         has-underline
-        class="mt-n2"
+        class="pt-3"
         @onTab="onTab"
       >
         <template #tabContent1>
