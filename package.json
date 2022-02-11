@@ -45,7 +45,7 @@
     "@lokalise/node-api": "7.1.0",
     "@mathieustan/vue-intercom": "0.0.7",
     "@myetherwallet/eth2-keystore": "0.2.3",
-    "@myetherwallet/mew-components": "0.7.18-beta",
+    "@myetherwallet/mew-components": "0.7.19-beta",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.16",
     "@sentry/browser": "6.16.1",
     "@sentry/tracing": "6.16.1",
