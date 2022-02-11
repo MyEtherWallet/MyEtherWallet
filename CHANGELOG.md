@@ -1,5 +1,7 @@
 ### Release v6.4.5-hotfix.1
 
+* update dapp integration [#3675](https://github.com/MyEtherWallet/MyEtherWallet/pull/3675)
+
 ### Release v6.4.5
 
 ### devop
