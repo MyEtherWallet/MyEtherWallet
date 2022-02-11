@@ -33,7 +33,19 @@
           <span class="mr-2 textMedium--text font-weight-bold">
             Buy & sell crypto with 0% fees
           </span>
-          <span class="mew-label textMedium--text mr-2">Promo ends in:</span>
+          <span class="mew-label textMedium--text mr-2 padding-one-off"
+            >Promo ends in:</span
+          >
+          <span
+            class="pa-2 time-container textMedium--text mew-label mr-1 padding-one-off"
+          >
+            {{ daysLeft }} {{ dayText }}
+          </span>
+          <span
+            class="pa-2 time-container textMedium--text mew-label padding-one-off"
+          >
+            {{ hoursLeft }} h
+          </span>
         </div>
       </div>
       <mew-button title="Buy crypto now" btn-size="medium" />
@@ -49,14 +61,30 @@
 <script>
 // import mobileStatus from './HeaderMobileStatus';
 import notificationOverlay from '@/modules/notifications/ModuleNotifications';
+import moment from 'moment';
 import { mapState } from 'vuex';
+import { MOONPAY_OFFER_END } from '@/modules/moon-pay/helpers';
 export default {
   components: {
     notificationOverlay
     // mobileStatus
   },
   computed: {
-    ...mapState('wallet', ['identifier'])
+    ...mapState('wallet', ['identifier']),
+    daysLeft() {
+      const eventDate = moment(MOONPAY_OFFER_END);
+      const todaysDate = moment();
+      return eventDate.diff(todaysDate, 'days');
+    },
+    hoursLeft() {
+      const today = this.daysLeft === 0 ? moment(MOONPAY_OFFER_END) : moment();
+      const tomorrowsDate = moment().add(1, 'days').startOf('day');
+      const duration = moment.duration(tomorrowsDate.diff(today));
+      return Math.ceil(duration.asHours());
+    },
+    dayText() {
+      return `day${this.daysLeft > 1 ? 's' : ''}`;
+    }
   }
 };
 </script>
@@ -80,5 +108,14 @@ a {
   box-shadow: 0px 5px 30px rgba(166, 173, 201, 0.22),
     0px 5px 5px rgba(154, 160, 185, 0.05);
   border-radius: 100px;
+}
+
+.time-container {
+  background-color: var(--v-greyLight-base);
+  border-radius: 4px;
+}
+
+.padding-one-off {
+  padding-top: 2px;
 }
 </style>

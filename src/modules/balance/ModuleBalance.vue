@@ -78,9 +78,18 @@
           <div class="text-center text-md-right mt-4 mt-md-0">
             <mew-button
               :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
+              :title="sendText"
+              btn-size="large"
+              btn-style="transparent"
+              class="mr-3"
               @click.native="navigateToSend"
+            />
+            <mew-button
+              :has-full-width="false"
+              :title="swapText"
+              btn-size="large"
+              btn-style="outline"
+              @click.native="navigateToSwap"
             />
           </div>
         </div>
@@ -151,6 +160,12 @@ export default {
       return `${formatFloatingPointValue(this.balanceInETH).value} ${
         this.network.type.name
       }`;
+    },
+    sendText() {
+      return `Send ${this.network.type.currencyName}`;
+    },
+    swapText() {
+      return `Swap ${this.network.type.currencyName}`;
     },
     subtitle() {
       return `My ${this.network.type.name} Balance`;
@@ -281,6 +296,9 @@ export default {
     },
     navigateToSend() {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
+    },
+    navigateToSwap() {
+      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }
 };
