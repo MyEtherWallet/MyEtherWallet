@@ -1,3 +1,7 @@
+### chore
+
+* exclude packages [#3679](https://github.com/MyEtherWallet/MyEtherWallet/pull/3679)
+
 ### Release v6.4.6
 
 ### ui
