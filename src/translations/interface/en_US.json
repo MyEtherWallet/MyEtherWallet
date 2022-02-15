@@ -1,11 +1,11 @@
 {
   "header": {
-    "desc":"Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
+    "desc": "Getting started on Ethereum? Visit our blog MEWtopia for tips, resources, and guides.",
     "read": "Read..."
   },
   "qr": {
     "title": "My public address to receive funds",
-    "desc": "To receive ETH from another account, send ETH from that account to this address.",
+    "desc": "To receive {network} from another account, send {network} from that account to this address.",
     "my-main-account": "My Main Account"
   },
   "menu": {
