@@ -29,14 +29,21 @@ const EXCEPTIONS = [
   'eslint',
   'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
   '@vue/eslint-config-prettier', // creates more warnings
-  // update these after release
-  '@ethereumjs/tx',
-  'ethereumjs-util',
   // versions for vue3
   'vue-router',
   'vuex',
   '@vue/test-utils',
-  'vue-i18n'
+  'vue-i18n',
+  // update these after release
+  '@ethereumjs/tx',
+  'ethereumjs-util',
+  '@ethereumjs/common',
+  'walletlink',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/hw-transport-webusb',
+  'babel-jest',
+  'eslint-plugin-vue',
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
