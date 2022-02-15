@@ -8,7 +8,6 @@
         <module-confirmation />
         <the-wallet-promo-popup />
         <router-view />
-        <mew-survey />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -22,7 +21,6 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import TheWalletPromoPopup from './components-wallet/TheWalletPopupPromo';
-import MewSurvey from './components-default/MewSurvey';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -39,9 +37,8 @@ export default {
     TheWalletHeader,
     TheWalletFooter,
     TheWalletPromoPopup,
-    ModuleConfirmation,
-    MewSurvey,
-    StartStakingPopup
+    StartStakingPopup,
+    ModuleConfirmation
   },
   mixins: [handlerWallet],
   computed: {

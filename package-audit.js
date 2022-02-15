@@ -7,7 +7,8 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url',
   'diff',
   'ansi-html', // no patches available
-  'set-value'
+  'set-value',
+  'engine.io' // work on resolving this after release 6.4.6
 ];
 const execute = (command, callback) => {
   exec(
