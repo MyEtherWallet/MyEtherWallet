@@ -1,8 +1,8 @@
+### Release v6.4.6
+
 ### chore
 
 * exclude packages [#3679](https://github.com/MyEtherWallet/MyEtherWallet/pull/3679)
-
-### Release v6.4.6
 
 ### ui
 
@@ -25,6 +25,10 @@
 
 * added bignumber and type checks [#3649](https://github.com/MyEtherWallet/MyEtherWallet/pull/3649)
 * Added check and default value [#3654](https://github.com/MyEtherWallet/MyEtherWallet/pull/3654)
+
+### Release v6.4.5-hotfix.1
+
+* update dapp integration [#3675](https://github.com/MyEtherWallet/MyEtherWallet/pull/3675)
 
 ### Release v6.4.5
 
