@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-center py-4 px-1">
+  <v-row class="d-flex align-center py-2 px-1">
     <!-- <div class="d-flex align-center">
       <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
       <div>
@@ -16,10 +16,17 @@
       </div>
     </div> -->
     <v-col
-      cols="8"
+      cols="12"
+      md="8"
+      lg="8"
       no-gutters
       dense
-      class="d-flex align-center justify-space-between"
+      :class="[
+        $vuetify.breakpoint.md || $vuetify.breakpoint.lg
+          ? 'set-fixed-height'
+          : '',
+        'd-flex align-center justify-space-between'
+      ]"
     >
       <div v-if="!promoOver" class="d-flex align-center">
         <div class="party-popper-container ml-2 mr-3 d-flex pa-3">
@@ -68,7 +75,11 @@
         @click.native="buyCryptoNow"
       />
     </v-col>
-    <v-col cols="4" class="ml-auto d-flex align-center justify-end">
+    <v-col
+      v-if="$vuetify.breakpoint.md || $vuetify.breakpoint.lg"
+      cols="4"
+      class="ml-auto d-flex align-center justify-end"
+    >
       <div class="align-center d-none d-lg-block">
         <notification-overlay />
       </div>
@@ -144,5 +155,9 @@ a {
 
 .padding-one-off {
   padding-top: 2px;
+}
+
+.set-fixed-height {
+  height: 52px;
 }
 </style>
