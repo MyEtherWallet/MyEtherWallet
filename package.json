@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.4.5-hotfix.1",
+  "version": "6.4.6",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -66,9 +66,9 @@
     "apollo-utilities": "1.3.4",
     "bitbox02-api": "0.13.0",
     "clipboard-copy": "4.0.1",
-    "graphql": "16.2.0",
+    "graphql": "16.3.0",
     "graphql-tag": "2.12.6",
-    "highcharts": "9.3.2",
+    "highcharts": "9.3.3",
     "highcharts-vue": "1.4.0",
     "lodash": "4.17.21",
     "lottie-web": "5.8.1",
@@ -82,7 +82,7 @@
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vuex": "3.6.2",
-    "walletlink": "2.4.5"
+    "walletlink": "2.4.6"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.0.0",
@@ -111,7 +111,7 @@
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-security": "1.4.0",
-    "eslint-plugin-vue": "8.3.0",
+    "eslint-plugin-vue": "8.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-common": "1.5.2",
     "ethereumjs-tx": "2.1.2",
@@ -137,6 +137,7 @@
     "remark-preset-lint-recommended": "6.1.2",
     "sass": "1.34.1",
     "sass-loader": "10.1.1",
+    "simple-get": "4.0.1",
     "store": "2.0.12",
     "stylelint": "14.3.0",
     "stylelint-config-prettier": "9.0.3",
@@ -180,6 +181,7 @@
     "css-what": "5.0.1",
     "normalize-url": "6.0.1",
     "scrypt.js": "0.3.0",
+    "simple-get": "4.0.1",
     "shelljs": "0.8.5",
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
