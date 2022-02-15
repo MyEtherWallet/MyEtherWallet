@@ -25,7 +25,7 @@ const ROUTES_WALLET = {
   DASHBOARD: { NAME: 'Dashboard', PATH: 'dashboard' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
-  ENS_MANAGER_MANAGE: { NAME: 'ENSManagerManage', PATH: 'manage' },
+  ENS_MANAGER_MANAGE: { NAME: 'ENSManager', PATH: 'manage' },
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },

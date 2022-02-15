@@ -251,7 +251,7 @@ const ENS_MANAGER_ROUTE = {
     PATH: 'ens-manager'
   },
   MANAGE: {
-    NAME: 'ENSManagerManage',
+    NAME: 'ENSManager',
     PATH: 'manage'
   }
 };
