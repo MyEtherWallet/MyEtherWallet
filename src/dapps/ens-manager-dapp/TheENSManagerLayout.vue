@@ -245,17 +245,6 @@
 </template>
 
 <script>
-const ENS_MANAGER_ROUTE = {
-  CORE: {
-    NAME: 'ENSManager',
-    PATH: 'ens-manager'
-  },
-  MANAGE: {
-    NAME: 'ENSManager',
-    PATH: 'manage'
-  }
-};
-
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 //import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
@@ -268,6 +257,7 @@ import ENS from 'ethereum-ens';
 import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 export default {
   name: 'ENSManagerLayout',
@@ -327,9 +317,7 @@ export default {
         },
         {
           name: this.$t('ens.manage-domain'),
-          route: {
-            name: ENS_MANAGER_ROUTE.MANAGE.NAME
-          },
+          route: { name: ENS_MANAGER_ROUTE.MANAGE.NAME },
           id: 1
         }
       ],

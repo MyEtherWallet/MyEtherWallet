@@ -1,7 +1,6 @@
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
 import { ETH, GOERLI, RIN, ROP } from '@/utils/networks/types';
 import layout from './TheENSManagerLayout';
-import { ensRouterGuard } from '@/core/router/helpers';
 import ENSManagerLayout from '@/dapps/ens-manager-dapp/TheENSManagerLayout';
 export default {
   title: 'ENS manager',
@@ -9,8 +8,8 @@ export default {
   tag: '#Property',
   rightIconType: 'mew',
   rightIcon: 'ensManager',
-  path: ROUTES_WALLET.ENS_MANAGER.PATH,
-  name: ROUTES_WALLET.ENS_MANAGER.NAME,
+  path: ENS_MANAGER_ROUTE.ENS_MANAGER.PATH,
+  name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME,
   component: ENSManagerLayout,
   networks: [ETH, GOERLI, RIN, ROP],
   layout,
@@ -20,18 +19,18 @@ export default {
   },
   children: [
     {
-      path: ROUTES_WALLET.ENS_1.PATH,
-      name: ROUTES_WALLET.ENS_1.NAME,
+      path: ENS_MANAGER_ROUTE.ENS_1.PATH,
+      name: ENS_MANAGER_ROUTE.ENS_1.NAME,
       beforeEnter: ensRouterGuard
     },
     {
-      path: ROUTES_WALLET.ENS_2.PATH,
-      name: ROUTES_WALLET.ENS_2.NAME,
+      path: ENS_MANAGER_ROUTE.ENS_2.PATH,
+      name: ENS_MANAGER_ROUTE.ENS_2.NAME,
       beforeEnter: ensRouterGuard
     },
     {
-      path: ROUTES_WALLET.ENS_3.PATH,
-      name: ROUTES_WALLET.ENS_3.NAME,
+      path: ENS_MANAGER_ROUTE.ENS_3.PATH,
+      name: ENS_MANAGER_ROUTE.ENS_3.NAME,
       beforeEnter: ensRouterGuard
     }
   ]
