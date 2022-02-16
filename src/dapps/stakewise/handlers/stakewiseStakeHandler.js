@@ -12,9 +12,9 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
 
   getTransactionFee() {
     return (
-      this.poolContract.methods
+      this.mewProxyContract.methods
         // eslint-disable-next-line
-        .stakeWithPartner(ETH_DONATION_ADDRESS)
+        .stakeWithPartnerOnBehalf(this.fromAddress, this.poolAddress)
         .estimateGas({
           from: this.fromAddress,
           value: this.value
@@ -24,9 +24,9 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
 
   stake() {
     return (
-      this.poolContract.methods
+      this.mewProxyContract.methods
         // eslint-disable-next-line
-        .stakeWithPartner(ETH_DONATION_ADDRESS)
+        .stakeWithPartnerOnBehalf(this.fromAddress, this.poolAddress)
         .send({
           from: this.fromAddress,
           value: this.value,

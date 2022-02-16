@@ -140,7 +140,7 @@
               </div>
             </div>
             <div class="d-flex justify-space-between mb-5">
-              <div class="mew-body">Staking Fee</div>
+              <div class="mew-body">MEW 1% Staking Fee</div>
               <div class="text-right">
                 <div class="">{{ stakingFee }} {{ currencyName }}</div>
                 <div v-show="isEthNetwork" class="mew-body textLight--text">
@@ -242,9 +242,7 @@ export default {
     },
     stakingFee() {
       return BigNumber(this.stakeAmount).gt(0)
-        ? BigNumber(this.stakeAmount)
-            .times(BigNumber(this.getStakingFee).div(100))
-            .toString()
+        ? BigNumber(this.stakeAmount).times(BigNumber(1).div(100)).toString()
         : '--';
     },
     stakingFeeFiatValue() {
@@ -263,7 +261,7 @@ export default {
       const total = BigNumber(this.stakeAmount);
       return total.gt(0)
         ? total
-            .minus(BigNumber(this.stakeAmount).div(this.getStakingFee))
+            .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
             .toString()
         : '--';
     },
