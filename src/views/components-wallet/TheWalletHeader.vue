@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-center py-2 px-1">
+  <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-1 px-1">
     <!-- <div class="d-flex align-center">
       <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
       <div>
@@ -22,7 +22,9 @@
       no-gutters
       dense
       :class="[
-        $vuetify.breakpoint.md || $vuetify.breakpoint.lg
+        $vuetify.breakpoint.md ||
+        $vuetify.breakpoint.lg ||
+        $vuetify.breakpoint.xl
           ? 'set-fixed-height'
           : '',
         'd-flex align-center justify-space-between'
@@ -76,7 +78,11 @@
       />
     </v-col>
     <v-col
-      v-if="$vuetify.breakpoint.md || $vuetify.breakpoint.lg"
+      v-if="
+        $vuetify.breakpoint.md ||
+        $vuetify.breakpoint.lg ||
+        $vuetify.breakpoint.xl
+      "
       cols="4"
       class="ml-auto d-flex align-center justify-end"
     >

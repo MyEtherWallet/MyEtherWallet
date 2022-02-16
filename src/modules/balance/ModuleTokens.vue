@@ -221,7 +221,7 @@ export default {
       if (this.hasSwap) {
         newObj.callToAction = [
           {
-            title: 'Trade',
+            title: 'Swap',
             method: () => {
               const obj = {
                 fromToken: item.contract,
