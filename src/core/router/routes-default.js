@@ -1,3 +1,4 @@
+import ThePageNotFoundLayout from '@/views/layouts-default/ThePageNotFoundLayout';
 import TheDefaultView from '@/views/TheDefaultView';
 import TheHomeLayout from '@/views/layouts-default/TheHomeLayout';
 import TheHowItWorksLayout from '@/views/layouts-default/TheHowItWorksLayout';
@@ -28,6 +29,14 @@ export default {
   component: TheDefaultView,
   props: true,
   children: [
+    {
+      path: ROUTES_HOME.PAGE_NOT_FOUND.PATH,
+      name: ROUTES_HOME.PAGE_NOT_FOUND.NAME,
+      component: ThePageNotFoundLayout,
+      meta: {
+        noAuth: true
+      }
+    },
     {
       path: ROUTES_HOME.HOME.PATH,
       name: ROUTES_HOME.HOME.NAME,

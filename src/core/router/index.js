@@ -35,7 +35,7 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
+      next({ name: ROUTES_HOME.PAGE_NOT_FOUND.NAME });
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
