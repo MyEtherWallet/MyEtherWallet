@@ -53,16 +53,17 @@
             />
           </div>
           <div>
-            <span class="mew-label textMedium--text mr-2 padding-one-off"
+            <span
+              class="mew-label textMedium--text mr-2 margin-one-off d-none d-md-inline d-lg-inline d-xl-inline"
               >Promo ends in:</span
             >
             <span
-              class="font-weight-medium time-container textMedium--text mew-label mr-1 padding-one-off"
+              class="font-weight-medium time-container textMedium--text mew-label mr-1 margin-one-off pa-1"
             >
               {{ daysLeft }} {{ dayText }}
             </span>
             <span
-              class="font-weight-medium time-container textMedium--text mew-label padding-one-off"
+              class="font-weight-medium time-container textMedium--text mew-label margin-one-off pa-1"
             >
               {{ hoursLeft }} h
             </span>
@@ -73,11 +74,19 @@
         <div class="mr-5">
           <v-icon color="black"> mdi-bank </v-icon>
         </div>
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column align-start">
           <span class="mew-body font-weight-bold textDark--text"
             >You can now Buy crypto with low fees</span
           >
-          <span class="mew-body textMedium--text"
+          <span
+            :class="[
+              $vuetify.breakpoint.md ||
+              $vuetify.breakpoint.lg ||
+              $vuetify.breakpoint.xl
+                ? ''
+                : 'py-2',
+              'mew-body textMedium--text'
+            ]"
             >Enjoy 0.9% fee wen you select ‘Bank account’ as payment
             method.</span
           >
@@ -85,7 +94,6 @@
             title="Buy crypto"
             btn-size="medium"
             class="d-md-none d-lg-none d-xl-none"
-            has-full-width
             @click.native="buyCryptoNow"
           />
         </div>
@@ -176,12 +184,12 @@ a {
 }
 
 .time-container {
-  background-color: var(--v-greyLight-base);
+  background-color: var(--v-blueMedium-base);
   border-radius: 4px;
 }
 
-.padding-one-off {
-  padding-top: 2px;
+.margin-one-off {
+  margin-top: 2px;
 }
 
 .set-fixed-height {
