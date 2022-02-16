@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-1 px-1">
+  <v-row class="d-flex align-center py-2 pb-md-4 pb-lg-2 px-1">
     <!-- <div class="d-flex align-center">
       <img class="ml-2 mr-3" src="@/assets/images/icons/icon-puppy-mew.svg" />
       <div>
@@ -38,23 +38,35 @@
             height="20px"
           />
         </div>
-        <div class="d-flex align-center">
-          <span class="mr-2 textMedium--text font-weight-bold">
-            Buy & sell crypto with 0% fees
-          </span>
-          <span class="mew-label textMedium--text mr-2 padding-one-off"
-            >Promo ends in:</span
-          >
-          <span
-            class="pa-2 time-container textMedium--text mew-label mr-1 padding-one-off"
-          >
-            {{ daysLeft }} {{ dayText }}
-          </span>
-          <span
-            class="pa-2 time-container textMedium--text mew-label padding-one-off"
-          >
-            {{ hoursLeft }} h
-          </span>
+        <div
+          class="d-flex flex-column flex-md-row flex-lg-row flex-xl-row align-start align-md-center align-lg-center align-xl-center"
+        >
+          <div class="d-flex">
+            <span class="mr-2 textMedium--text font-weight-bold">
+              Buy & sell crypto with 0% fees
+            </span>
+            <mew-button
+              title="Buy crypto"
+              btn-size="medium"
+              class="d-md-none d-lg-none d-xl-none"
+              @click.native="buyCryptoNow"
+            />
+          </div>
+          <div>
+            <span class="mew-label textMedium--text mr-2 padding-one-off"
+              >Promo ends in:</span
+            >
+            <span
+              class="font-weight-medium time-container textMedium--text mew-label mr-1 padding-one-off"
+            >
+              {{ daysLeft }} {{ dayText }}
+            </span>
+            <span
+              class="font-weight-medium time-container textMedium--text mew-label padding-one-off"
+            >
+              {{ hoursLeft }} h
+            </span>
+          </div>
         </div>
       </div>
       <div v-else class="d-flex align-center">
@@ -69,11 +81,20 @@
             >Enjoy 0.9% fee wen you select ‘Bank account’ as payment
             method.</span
           >
+          <mew-button
+            title="Buy crypto"
+            btn-size="medium"
+            class="d-md-none d-lg-none d-xl-none"
+            has-full-width
+            @click.native="buyCryptoNow"
+          />
         </div>
       </div>
+      <!-- Hide this button when screen is smaller -->
       <mew-button
         title="Buy crypto now"
         btn-size="medium"
+        class="d-none d-md-inline-flex d-lg-inline-flex d-xl-inline-flex"
         @click.native="buyCryptoNow"
       />
     </v-col>
