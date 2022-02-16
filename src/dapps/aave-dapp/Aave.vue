@@ -302,7 +302,7 @@ import AaveCollateralOverlay from './components/AaveCollateralOverlay';
 import AaveRepayOverlay from './components/AaveRepayOverlay';
 import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
 import AaveSetAprOverlay from './components/AaveSetAprOverlay';
-import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
+import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.jpg';
 import handlerAave from './handlers/handlerAave';
 import AaveCalls from './apollo/queries/queries';
 import { mapGetters } from 'vuex';
