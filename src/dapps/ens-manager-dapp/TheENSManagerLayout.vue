@@ -256,7 +256,6 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { fromWei } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 export default {
@@ -547,7 +546,7 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+      this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
     },
     setName(name) {
       this.searchError = '';
