@@ -94,8 +94,9 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import { cloneDeep, isEqual } from 'apollo-utilities';
+import * as nodes from '@/utils/networks/nodes';
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -118,7 +119,8 @@ export default {
       loading: true,
       selectedFiat: 'USD',
       fetchedData: {},
-      currencyRates: []
+      currencyRates: [],
+      nodes: nodes
     };
   },
   computed: {
@@ -133,7 +135,8 @@ export default {
           name: 'ETH',
           subtext: 'Ethereum',
           value: 'Ethereum',
-          symbol: 'ETH'
+          symbol: 'ETH',
+          network: 1
         },
         {
           decimals: 18,
@@ -141,7 +144,8 @@ export default {
           name: 'MATIC',
           subtext: 'Polygon',
           value: 'Polygon',
-          symbol: 'MATIC (Matic)'
+          symbol: 'MATIC (Matic)',
+          network: 137
         },
         {
           decimals: 18,
@@ -149,7 +153,8 @@ export default {
           name: 'BNB',
           subtext: 'Binance Smart Chain',
           value: 'Binance Smart Chain',
-          symbol: 'BNB (BSC/BEP20)'
+          symbol: 'BNB (BSC/BEP20)',
+          network: 56
         },
         {
           decimals: 18,
@@ -157,7 +162,8 @@ export default {
           name: 'USDT',
           subtext: 'Tether',
           value: 'Tether',
-          symbol: 'USDT (ERC20)'
+          symbol: 'USDT (ERC20)',
+          network: 1
         },
         {
           decimals: 6,
@@ -165,7 +171,8 @@ export default {
           name: 'USDC',
           subtext: 'USD Coin',
           value: 'USD Coin',
-          symbol: 'USDC (ERC20)'
+          symbol: 'USDC (ERC20)',
+          network: 1
         }
       ];
       const imgs = tokensList.map(item => {
@@ -333,6 +340,7 @@ export default {
     this.fetchCurrencyData();
   },
   methods: {
+    ...mapActions('global', ['setNetwork']),
     currencyFormatter(value) {
       const locale = this.hasData ? LOCALE[this.selectedFiat] : 'en-US';
       return new Intl.NumberFormat(locale, {
@@ -369,6 +377,16 @@ export default {
       this.handler
         .buy(this.selectedCurrency.name, this.selectedFiat, amount)
         .then(() => {
+          if (this.network.type.chainID !== this.selectedCurrency.network) {
+            const found = Object.values(this.nodes).filter(item => {
+              if (item.type.chainID === this.selectedCurrency.network) {
+                return item;
+              }
+            });
+            if (found) {
+              this.setNetwork(found[0]);
+            }
+          }
           this.reset();
           this.close();
           this.selectedCurrency = this.defaultCurrency;
