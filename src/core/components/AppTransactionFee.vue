@@ -227,7 +227,8 @@ export default {
       return fromWei(this.txFee);
     },
     costInEth() {
-      return fromWei(this.totalCost);
+      const cost = new BigNumber(this.totalCost).toFixed();
+      return fromWei(cost);
     },
     txFeeFormatted() {
       return formatFloatingPointValue(this.txFeeInEth).value;

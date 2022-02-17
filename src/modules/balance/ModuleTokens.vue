@@ -282,3 +282,9 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>
