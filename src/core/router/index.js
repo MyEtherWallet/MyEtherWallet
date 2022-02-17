@@ -26,6 +26,11 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
+  // If route point doesn't exist, re-route to 404 page
+  if (to.name === null) {
+    next({ name: ROUTES_HOME.PAGE_NOT_FOUND.NAME });
+    return;
+  }
   // Check if user is coming from a path that needs auth
   if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
     store.dispatch('wallet/removeWallet');
@@ -35,7 +40,7 @@ router.beforeResolve((to, from, next) => {
   } else {
     if (store.state.wallet.address === null) {
       store.dispatch('external/setLastPath', to.path);
-      next({ name: ROUTES_HOME.PAGE_NOT_FOUND.NAME });
+      next({ name: ROUTES_HOME.ACCESS_WALLET.NAME });
     } else {
       if (store.state.external.path !== '') {
         const localPath = store.state.external.path;
