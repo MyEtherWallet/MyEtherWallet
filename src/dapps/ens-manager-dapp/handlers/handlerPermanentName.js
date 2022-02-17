@@ -149,6 +149,30 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return promiEvent;
   }
 
+  gasEstimateComittment() {
+    const utils = this.web3.utils;
+    const txObj = { from: this.address };
+    const promiEvent = new EventEmitter();
+    this.registrarControllerContract.methods
+      .makeCommitmentWithConfig(
+        this.parsedHostName,
+        this.address,
+        utils.sha3(this.secretPhrase),
+        this.publicResolverAddress,
+        this.address
+      )
+      .call()
+      .then(commitment => {
+        return this.registrarControllerContract.methods
+          .commit(commitment)
+          .estimateGas(txObj)
+          .then(gasAmount => {
+            return gasAmount;
+          });
+      });
+    return promiEvent;
+  }
+
   async getMinimumAge() {
     const minimumAge = await this.registrarControllerContract.methods
       .minCommitmentAge()

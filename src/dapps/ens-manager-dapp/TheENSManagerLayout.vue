@@ -493,12 +493,31 @@ export default {
     /**
      * Register Domain
      */
-    findDomain() {
+
+    /* run a function that estimates current gas fee let it run on mount then run a watch between balance and gas fee that sets an error*/
+    // estimateGasFee() {
+    //   this.ensManager.gasPrice * this.web3.eth.estimateGas();
+    // },
+    // gasFeeCheck() {
+    //   const gasEstimate = this.nameHandler.gasEstimateComittment() * this.gasPrice;
+    //   console.log('gasUnitEstimate', this.nameHandler.gasEstimateComittment());
+    //   console.log('user balance', this.balanceToWei);
+    //   console.log('final gas etimate', gasEstimate);
+    //   console.log('enough?', this.balanceToWei > gasEstimate);
+    // },
+    async findDomain() {
       try {
-        this.nameHandler = this.ensManager.searchName(this.name);
+        this.nameHandler = await this.ensManager.searchName(this.name);
       } catch (e) {
         Toast(e, {}, ERROR);
       }
+      const int = setInterval(() => {
+        if (this.nameHandler.registrarControllerContract !== null) {
+          //this.gasFeeCheck();
+          console.log('did', this.nameHandler.gasEstimateComittment());
+          clearInterval(int);
+        }
+      }, 3000);
     },
     closeRegister() {
       this.onRegister = false;
