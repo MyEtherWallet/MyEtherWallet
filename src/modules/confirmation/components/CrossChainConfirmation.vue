@@ -226,7 +226,11 @@ export default {
       return '';
     },
     rate() {
-      if (!isEmpty(this.txObj)) {
+      console.log(this.txObj);
+      if (
+        !isEmpty(this.txObj) &&
+        this.txObj.hasOwnProperty('selectedProvider')
+      ) {
         return formatFloatingPointValue(this.txObj.selectedProvider.rate).value;
       }
       return '';

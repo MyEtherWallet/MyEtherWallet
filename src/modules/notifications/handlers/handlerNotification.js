@@ -161,13 +161,15 @@ export default class Notification {
    */
   checkSwapStatus(swapper) {
     // eslint-disable-next-line
-    console.log(this.status);
-    if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
+    if (
+      this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING ||
+      this.status.toLowerCase() === NOTIFICATION_STATUS.SUBMITTED
+    ) {
       const _this = this;
-      _this.swapResolver = setInterval(() => {
+      const swapResolver = setInterval(function () {
         const stat = swapper.getStatus(_this.swapObj);
         if (stat instanceof Promise) {
-          stat.then(res => {
+          stat.then(function (res) {
             const formattedStatus = res.toLowerCase();
             _this.status =
               formattedStatus === NOTIFICATION_STATUS.COMPLETED
@@ -176,7 +178,8 @@ export default class Notification {
                   formattedStatus === NOTIFICATION_STATUS.UNKNOWN
                 ? NOTIFICATION_STATUS.FAILED.toUpperCase()
                 : res;
-            this.setStatus(this.status);
+            _this.setStatus(_this.status);
+            clearInterval(swapResolver);
           });
         }
       }, 10000);
@@ -190,7 +193,6 @@ export default class Notification {
     if (status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
       this.read = false;
       vuexStore.dispatch('notifications/updateNotification', this);
-      clearInterval(this.swapResolver);
     }
   }
 

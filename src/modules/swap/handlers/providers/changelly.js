@@ -283,7 +283,8 @@ class Changelly {
         const completedStatuses = ['finished'];
         const failedStatuses = ['failed', 'refunded', 'hold', 'expired'];
         const status = response.data.result;
-        if (submittedStatuses.includes(status)) return Configs.status.PENDING;
+        console.log('changelly status: ', status);
+        if (submittedStatuses.includes(status)) return Configs.status.SUBMITTED;
         if (pendingStatuses.includes(status)) return Configs.status.PENDING;
         if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
         if (failedStatuses.includes(status)) return Configs.status.FAILED;
