@@ -168,6 +168,7 @@ export default {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
     ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('custom', ['customTokens', 'hasCustom']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
     ...mapGetters('external', ['totalTokenFiatValue']),
@@ -193,8 +194,12 @@ export default {
       return tokens;
     },
     totalTokensValue() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
       return formatFiatValue(this.totalTokenFiatValue, {
-        currency: this.preferredCurrency
+        currency: this.preferredCurrency,
+        rate
       }).value;
     }
   },
@@ -204,13 +209,17 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
       newObj.balance = [
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
-        '$' + item.usdBalancef
-          ? formatFiatValue(item.usdBalancef, {
-              currency: this.preferredCurrency
+        item.usdBalancef
+          ? formatFiatValue(currencyToNumber(item.usdBalancef), {
+              currency: this.preferredCurrency,
+              rate
             }).value
           : '0'
       ];
@@ -223,14 +232,14 @@ export default {
           ? item.price_change_percentage_24hf.replaceAll('%', '')
           : '';
       newObj.status = item.price_change_percentage_24h > 0 ? '+' : '-';
+      const priceUF = currencyToNumber(item.pricef);
       newObj.price =
-        item.pricef && currencyToNumber(item.pricef).toString() !== '0'
-          ? formatFiatValue(currencyToNumber(item.pricef), {
-              currency: this.preferredCurrency
+        item.pricef && priceUF.toString() !== '0'
+          ? formatFiatValue(priceUF, {
+              currency: this.preferredCurrency,
+              rate
             }).value
           : '';
-      console.log(item);
-      //newObj.price = item.pricef && item.pricef !== '0' ? item.pricef : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {
         newObj.callToAction = [

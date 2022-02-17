@@ -194,6 +194,7 @@ import {
   formatIntegerToString
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     ModuleAddressBook,
@@ -246,6 +247,7 @@ export default {
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
       'network',
@@ -327,13 +329,21 @@ export default {
     tokens() {
       // no ref copy
       const tokensList = this.tokensList.slice();
+      const rate = this.currencyRate.data
+        ? new BigNumber(this.currencyRate.data.exchange_rate)
+        : 1;
       const imgs = tokensList.map(item => {
-        item.totalBalance = formatFiatValue(item.usdBalancef, {
-          currency: this.preferredCurrency
-        }).value;
+        item.totalBalance = formatFiatValue(
+          currencyToNumber(item.usdBalancef),
+          {
+            currency: this.preferredCurrency,
+            rate
+          }
+        ).value;
         item.tokenBalance = item.balancef;
-        item.price = formatFiatValue(item.pricef, {
-          currency: this.preferredCurrency
+        item.price = formatFiatValue(currencyToNumber(item.pricef), {
+          currency: this.preferredCurrency,
+          rate
         }).value;
         return item.img;
       });

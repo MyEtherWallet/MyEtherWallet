@@ -65,13 +65,18 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
     ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['totalTokenFiatValue']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
       return formatFiatValue(this.totalTokenFiatValue, {
-        currency: this.preferredCurrency
+        currency: this.preferredCurrency,
+        rate
       }).value;
     },
     tokenImages() {

@@ -366,7 +366,7 @@ const formatPercentageValue = _value => {
  */
 const formatFiatValue = (
   _value,
-  options = { locale: 'en-US', currency: 'USD' }
+  options = { locale: 'en-US', currency: 'USD', rate: 1 }
 ) => {
   const value = new BigNumber(_value);
   /**
@@ -374,7 +374,7 @@ const formatFiatValue = (
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero() || value.isNaN()) {
-    return { value: localizeCurrency({ number: '0.00', ...options }) };
+    return { value: localizeCurrency({ number: value, ...options }) };
   }
 
   /**
@@ -405,7 +405,13 @@ const formatFiatValue = (
    * Return: rounded number up to 6 decimal points", no tooltip
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return { value: getRoundNumber(value, 6).value };
+    return {
+      value: localizeCurrency({
+        number: getRoundNumber(value, 6).value,
+        small: true,
+        ...options
+      })
+    };
   }
 
   /**

@@ -48,7 +48,12 @@
           class="full-width mt-5 pa-md-3"
         />
         <div
-          class="pa-3 pa-sm-7 d-block d-md-flex align-center justify-space-between"
+          class="
+            pa-3 pa-sm-7
+            d-block d-md-flex
+            align-center
+            justify-space-between
+          "
         >
           <div
             class="d-flex flex-column flex-sm-row align-center justify-center"
@@ -130,6 +135,7 @@ export default {
   computed: {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
@@ -162,8 +168,12 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
+        const rate = this.currencyRate.data
+          ? this.currencyRate.data.exchange_rate
+          : 1;
         return formatFiatValue(this.balanceFiatValue, {
-          currency: this.preferredCurrency
+          currency: this.preferredCurrency,
+          rate
         }).value;
       }
       return '';
