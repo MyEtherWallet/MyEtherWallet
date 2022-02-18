@@ -406,6 +406,13 @@ export default {
         this.closeRegister();
       }
       this.getDomains();
+    },
+    $route(to) {
+      if (to.name === ENS_MANAGER_ROUTE.MANAGE.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else {
+        this.activeTab = this.tabs[0].id;
+      }
     }
   },
   mounted() {
