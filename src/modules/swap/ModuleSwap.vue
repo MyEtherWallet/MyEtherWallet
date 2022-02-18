@@ -306,7 +306,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 150000;
 
 export default {
   name: 'ModuleSwap',
