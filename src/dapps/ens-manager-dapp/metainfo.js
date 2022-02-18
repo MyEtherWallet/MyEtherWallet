@@ -19,6 +19,10 @@ export default {
   },
   children: [
     {
+      path: ENS_MANAGER_ROUTE.MANAGE.PATH,
+      name: ENS_MANAGER_ROUTE.MANAGE.NAME
+    },
+    {
       path: ENS_MANAGER_ROUTE.ENS_1.PATH,
       name: ENS_MANAGER_ROUTE.ENS_1.NAME,
       beforeEnter: ensRouterGuard

@@ -316,7 +316,10 @@ export default {
         },
         {
           name: this.$t('ens.manage-domain'),
-          route: { name: ENS_MANAGER_ROUTE.MANAGE.NAME },
+          route: {
+            name: ENS_MANAGER_ROUTE.MANAGE.NAME,
+            path: ENS_MANAGER_ROUTE.MANAGE.PATH
+          },
           id: 1
         }
       ],
