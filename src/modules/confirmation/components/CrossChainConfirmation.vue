@@ -86,7 +86,7 @@
             </div>
           </div>
           <div class="py-4">
-            <mew-expand-panel :panel-items="panelItems" :idx-to-expand="[null]">
+            <mew-expand-panel :panel-items="panelItems">
               <template #panelBody1>
                 <div class="px-6 pb-6">
                   <div class="d-flex align-center justify-space-between">
@@ -156,6 +156,7 @@ export default {
   },
   data() {
     return {
+      time: '20:00',
       startingTime: moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS),
       counter: () => {},
       qrDisabled: qrDisabled,
@@ -168,9 +169,6 @@ export default {
     };
   },
   computed: {
-    time() {
-      return this.startingTime.format('mm:ss');
-    },
     buttonTitle() {
       return `I sent the ${this.txObj?.fromType}`;
     },
@@ -226,7 +224,6 @@ export default {
       return '';
     },
     rate() {
-      console.log(this.txObj);
       if (
         !isEmpty(this.txObj) &&
         this.txObj.hasOwnProperty('selectedProvider')
@@ -239,14 +236,18 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
+        let counter = null;
         this.startingTime = moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS);
-        this.counter = setInterval(() => {
+        this.time = this.startingTime.format('mm:ss');
+        counter = setInterval(() => {
           if (this.timerFinished) {
-            clearInterval(this.counter);
+            clearInterval(counter);
+            counter = null;
           } else {
             this.startingTime = moment(
               this.startingTime.subtract(1, 'seconds')
             );
+            this.time = this.startingTime.format('mm:ss');
           }
         }, 1000);
       } else {

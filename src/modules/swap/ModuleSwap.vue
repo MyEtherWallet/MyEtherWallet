@@ -918,9 +918,18 @@ export default {
      */
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
+    },
+    multiWatchTokens() {
+      return `${this.toTokenType}|${this.fromTokenType}`;
     }
   },
   watch: {
+    multiWatchTokens() {
+      this.refundAddress = '';
+      this.isValidRefundAddr = false;
+      this.userToAddress = '';
+      this.isValidToAddr = false;
+    },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
     },
