@@ -305,6 +305,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -378,7 +379,8 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType']),
+    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -546,7 +548,10 @@ export default {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
           foundToken.contract = token.contract;
-          foundToken.price = foundToken.pricef;
+          foundToken.price = formatFiatValue(
+            foundToken.pricef,
+            this.getLocalOptions
+          ).value;
           foundToken.isEth = token.isEth;
           return foundToken;
         }
@@ -630,13 +635,19 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = foundToken.pricef;
+            foundToken.price = formatFiatValue(
+              foundToken.pricef,
+              this.getLocalOptions
+            ).value;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = token.pricef;
+            token.price = formatFiatValue(
+              token.pricef,
+              this.getLocalOptions
+            ).value;
           }
           return token;
         });
@@ -802,6 +813,16 @@ export default {
      */
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   watch: {
@@ -908,9 +929,12 @@ export default {
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
-        t.totalBalance = t.usdBalancef;
+        t.totalBalance = formatFiatValue(
+          t.usdBalancef,
+          this.getLocalOptions
+        ).value;
         t.tokenBalance = t.balancef;
-        t.price = t.pricef;
+        t.price = formatFiatValue(t.pricef, this.getLocalOptions).value;
         return t;
       });
     },

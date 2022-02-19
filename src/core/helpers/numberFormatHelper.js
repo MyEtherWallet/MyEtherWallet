@@ -374,7 +374,7 @@ const formatFiatValue = (
    * Return: "$0.00"
    */
   if (value === undefined || value.isZero() || value.isNaN()) {
-    return { value: localizeCurrency({ number: value, ...options }) };
+    return { value: localizeCurrency({ number: _value, ...options }) };
   }
 
   /**

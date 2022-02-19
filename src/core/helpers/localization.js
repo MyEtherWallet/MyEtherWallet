@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { isBigNumber } from 'web3-utils';
 
 export const localizeCurrency = ({
   currency = 'USD',
@@ -26,6 +27,8 @@ export const localizeCurrency = ({
       ? currencyToNumber(number)
       : number.tooltipText
       ? currencyToNumber(number.tooltipText)
+      : isBigNumber(number)
+      ? currencyToNumber(number.toString())
       : number;
   const locale = locales[currency] ? locales[currency] : 'en-US';
 

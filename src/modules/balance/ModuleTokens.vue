@@ -217,7 +217,7 @@ export default {
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
         item.usdBalancef
-          ? formatFiatValue(currencyToNumber(item.usdBalancef), {
+          ? formatFiatValue(item.usdBalancef, {
               currency: this.preferredCurrency,
               rate
             }).value
@@ -235,7 +235,7 @@ export default {
       const priceUF = currencyToNumber(item.pricef);
       newObj.price =
         item.pricef && priceUF.toString() !== '0'
-          ? formatFiatValue(priceUF, {
+          ? formatFiatValue(item.pricef, {
               currency: this.preferredCurrency,
               rate
             }).value
