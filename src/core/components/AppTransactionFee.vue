@@ -88,7 +88,7 @@
             >
               <div class="d-flex align-center">
                 <div :class="hasError ? 'error--text' : 'textBlack2--text'">
-                  {{ feeInUsd }}
+                  ~{{ feeInUsd }}
                 </div>
                 <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
                   mdi-arrow-right

@@ -296,6 +296,7 @@ import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   name: 'ModuleConfirmation',
@@ -344,6 +345,8 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('external', ['currencyRate']),
+    ...mapState('global', ['preferredCurrency']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -419,7 +422,13 @@ export default {
       return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      return BigNumber(this.txFee).times(this.fiatValue).toFixed(2);
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      return formatFiatValue(
+        BigNumber(this.txFee).times(this.fiatValue).toFixed(2),
+        { rate, currency: this.preferredCurrency }
+      ).value;
     },
     value() {
       if (!this.isBatch) {

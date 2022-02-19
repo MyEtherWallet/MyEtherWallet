@@ -16,14 +16,14 @@
         <div class="mew-body">
           {{ feeFormatted }}
           <span class="searchText--text">{{ network.type.currencyName }}/</span>
-          ~${{ txFeeUsd }}
+          ~{{ txFeeUsd }}
         </div>
       </template>
       <template #rightColItem1>
         <div class="mew-body">
           {{ totalFee }}
           <span class="searchText--text">{{ network.type.currencyName }}/</span>
-          ~${{ totalFeeUSD }}
+          ~{{ totalFeeUSD }}
         </div>
       </template>
     </confirmation-summary-block>
@@ -39,7 +39,7 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   components: {
     ConfirmationSummaryBlock,
@@ -84,6 +84,8 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('external', ['currencyRate']),
+    ...mapState('global', ['preferredCurrency']),
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
@@ -106,17 +108,28 @@ export default {
     },
     totalFeeUSD() {
       const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
       if (this.currency.symbol === this.network.type.currencyName) {
         return formatFiatValue(
-          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
+          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2),
+          {
+            rate,
+            currency: this.preferredCurrency
+          }
         ).value;
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
       return formatFiatValue(tokenPrice.plus(ethFeeToUsd)).value;
     },
     usdAmount() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
       return formatFiatValue(
-        BigNumber(this.value).times(this.currency.priceRaw)
+        BigNumber(this.value).times(this.currency.priceRaw),
+        { rate, currency: this.preferredCurrency }
       ).value;
     },
     summaryItems() {
