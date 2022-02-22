@@ -88,7 +88,7 @@ export default {
       },
       {
         img: Richie,
-        name: 'Duke & Richie Wolf',
+        name: 'Wolfgang',
         title: 'Blockchain Community Specialist'
       },
       {
