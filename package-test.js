@@ -33,7 +33,8 @@ const EXCEPTIONS = [
   'vue-router',
   'vuex',
   '@vue/test-utils',
-  'vue-i18n'
+  'vue-i18n',
+  'vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
