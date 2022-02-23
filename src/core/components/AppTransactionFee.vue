@@ -239,7 +239,7 @@ export default {
     feeInUsd() {
       const value = formatFiatValue(
         BigNumber(this.txFeeInEth).times(this.fiatValue).toFixed(2),
-        { currency: this.preferredCurrency, rate: 1 }
+        { currency: this.preferredCurrency }
       ).value;
       return value;
     },

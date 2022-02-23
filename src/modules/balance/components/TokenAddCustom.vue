@@ -179,6 +179,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
     ...mapGetters('custom', ['customTokens']),
@@ -220,6 +222,16 @@ export default {
      */
     hasSymbol() {
       return this.tokenDataToDisplay[3].value || this.customSymbol;
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {
@@ -400,9 +412,12 @@ export default {
             .div(denominator)
             .times(this.token.price)
             .toString();
-          this.token.usdBalancef = formatFiatValue(this.token.usdBalance).value
-            ? formatFiatValue(this.token.usdBalance).value
-            : formatFiatValue(0);
+          this.token.usdBalancef = formatFiatValue(
+            this.token.usdBalance,
+            this.getLocalOptions
+          ).value
+            ? formatFiatValue(this.token.usdBalance, this.getLocalOptions).value
+            : formatFiatValue(0, this.getLocalOptions);
         } else {
           this.token.name = await contract.methods.name().call();
           this.token.symbol = await contract.methods.symbol().call();

@@ -108,28 +108,20 @@ export default {
     },
     totalFeeUSD() {
       const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
       if (this.currency.symbol === this.network.type.currencyName) {
         return formatFiatValue(
           BigNumber(this.totalFee).times(this.fiatValue).toFixed(2),
-          {
-            rate,
-            currency: this.preferredCurrency
-          }
+          this.getLocalOptions
         ).value;
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
-      return formatFiatValue(tokenPrice.plus(ethFeeToUsd)).value;
+      return formatFiatValue(tokenPrice.plus(ethFeeToUsd), this.getLocalOptions)
+        .value;
     },
     usdAmount() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
       return formatFiatValue(
         BigNumber(this.value).times(this.currency.priceRaw),
-        { rate, currency: this.preferredCurrency }
+        this.getLocalOptions
       ).value;
     },
     summaryItems() {
@@ -158,6 +150,16 @@ export default {
               : ''
         }
       ];
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   }
 };

@@ -159,6 +159,8 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
@@ -190,7 +192,10 @@ export default {
             name: i + ' ETH',
             value: i + '', //change to string to make mew select filter work
             img: this.networkImg,
-            price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
+            price: formatFiatValue(
+              new BigNumber(i).times(this.fiatValue),
+              this.getLocalOptions
+            ).value
           });
         }
       }
@@ -237,7 +242,8 @@ export default {
           balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(threeMonthsEarning)
-              .times(this.fiatValue)
+              .times(this.fiatValue),
+            this.getLocalOptions
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(threeMonthsEarning)
@@ -249,7 +255,8 @@ export default {
           balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(oneYearEarnings)
-              .times(this.fiatValue)
+              .times(this.fiatValue),
+            this.getLocalOptions
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(oneYearEarnings)
@@ -261,7 +268,8 @@ export default {
           balanceFiat: formatFiatValue(
             new BigNumber(this.amount)
               .plus(twoYearEarnings)
-              .times(this.fiatValue)
+              .times(this.fiatValue),
+            this.getLocalOptions
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(twoYearEarnings)
@@ -269,6 +277,16 @@ export default {
           earningsETH: formatFloatingPointValue(twoYearEarnings).value
         }
       ];
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {

@@ -367,13 +367,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        const rate = this.currencyRate.data
-          ? this.currencyRate.data.exchange_rate
-          : 1;
-        return formatFiatValue(total, {
-          currency: this.preferredCurrency,
-          rate
-        }).value;
+        return formatFiatValue(total, this.getLocalOptions).value;
       }
       return this.walletChainBalance;
     },
@@ -403,6 +397,16 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {

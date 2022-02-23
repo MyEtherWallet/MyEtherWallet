@@ -329,22 +329,16 @@ export default {
     tokens() {
       // no ref copy
       const tokensList = this.tokensList.slice();
-      const rate = this.currencyRate.data
-        ? new BigNumber(this.currencyRate.data.exchange_rate)
-        : 1;
       const imgs = tokensList.map(item => {
         item.totalBalance = formatFiatValue(
           currencyToNumber(item.usdBalancef),
-          {
-            currency: this.preferredCurrency,
-            rate
-          }
+          this.getLocalOptions
         ).value;
         item.tokenBalance = item.balancef;
-        item.price = formatFiatValue(currencyToNumber(item.pricef), {
-          currency: this.preferredCurrency,
-          rate
-        }).value;
+        item.price = formatFiatValue(
+          currencyToNumber(item.pricef),
+          this.getLocalOptions
+        ).value;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -502,6 +496,16 @@ export default {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   watch: {

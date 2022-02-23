@@ -39,8 +39,9 @@ import {
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
+import { currencyToNumber } from '@/core/helpers/localization';
 export default {
   components: {
     ConfirmationSummaryBlock,
@@ -97,13 +98,16 @@ export default {
     }
   },
   computed: {
+    ...mapState('external', ['currencyRate']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('external', ['fiatValue']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      return `$ ${formatFiatValue(feeETH.times(this.fiatValue)).value}`;
+      return formatFiatValue(feeETH.times(this.fiatValue), this.getLocalOptions)
+        .value;
     },
     summaryItems() {
       return ['Exchange rate', 'Transaction fee'];
@@ -135,9 +139,22 @@ export default {
           type: this.toType,
           address: this.to,
           amount: formatFloatingPointValue(this.toVal).value,
-          usd: formatFiatValue(this.toUsd).value
+          usd: formatFiatValue(
+            currencyToNumber(this.toUsd),
+            this.getLocalOptions
+          ).value
         }
       ];
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   }
 };

@@ -195,7 +195,7 @@ import {
   blockAlertValidator
 } from '../handlers/helpers/blockAlertType';
 import { fromWei } from 'web3-utils';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import {
   formatIntegerToString,
   formatFiatValue,
@@ -255,6 +255,8 @@ export default {
      */
     ...mapGetters('global', ['network', 'isTestNetwork', 'swapLink']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     /**
      * @returns{string}
      */
@@ -352,9 +354,10 @@ export default {
      */
     formatFiatPrice() {
       const value = formatFiatValue(
-        BigNumber(fromWei(this.price)).times(this.fiatValue)
+        BigNumber(fromWei(this.price)).times(this.fiatValue),
+        this.getLocalOptions
       ).value;
-      return `~ ${'$' + value}`;
+      return `~${value}`;
     },
 
     /**
@@ -406,6 +409,16 @@ export default {
         ? `Estimated transaction fee is ${formattedTotal} ${this.network.type.name}.`
         : `Estimated total: mint price + transaction fee = ${formattedTotal} ${this.network.type.name}.`;
       return estimate;
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {

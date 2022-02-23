@@ -194,13 +194,18 @@ export default {
       return tokens;
     },
     totalTokensValue() {
+      return formatFiatValue(this.totalTokenFiatValue, this.getLocalOptions)
+        .value;
+    },
+    getLocalOptions() {
       const rate = this.currencyRate.data
         ? this.currencyRate.data.exchange_rate
         : 1;
-      return formatFiatValue(this.totalTokenFiatValue, {
-        currency: this.preferredCurrency,
-        rate
-      }).value;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {
@@ -209,18 +214,12 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
       newObj.balance = [
         item.balancef
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
         item.usdBalancef
-          ? formatFiatValue(item.usdBalancef, {
-              currency: this.preferredCurrency,
-              rate
-            }).value
+          ? formatFiatValue(item.usdBalancef, this.getLocalOptions).value
           : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
@@ -235,10 +234,7 @@ export default {
       const priceUF = currencyToNumber(item.pricef);
       newObj.price =
         item.pricef && priceUF.toString() !== '0'
-          ? formatFiatValue(item.pricef, {
-              currency: this.preferredCurrency,
-              rate
-            }).value
+          ? formatFiatValue(item.pricef, this.getLocalOptions).value
           : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {

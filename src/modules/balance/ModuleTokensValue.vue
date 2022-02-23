@@ -71,13 +71,8 @@ export default {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      return formatFiatValue(this.totalTokenFiatValue, {
-        currency: this.preferredCurrency,
-        rate
-      }).value;
+      return formatFiatValue(this.totalTokenFiatValue, this.getLocalOptions)
+        .value;
     },
     tokenImages() {
       return this.tokensList
@@ -100,6 +95,16 @@ export default {
           : 'more';
       }
       return '';
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   methods: {

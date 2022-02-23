@@ -38,8 +38,8 @@ export const localizeCurrency = ({
   const convertedPrice = small
     ? new BigNumber(number).times(rate).toFixed(6)
     : verySmall
-    ? new BigNumber(number).times(rate)
-    : new BigNumber(number).times(rate).toFixed(2);
+    ? new BigNumber(number).times(rate).toFixed(5)
+    : new BigNumber(number).times(rate);
   return convertNumber({ locale, currency, options, convertedPrice });
 };
 

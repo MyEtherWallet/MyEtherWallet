@@ -306,6 +306,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { currencyToNumber } from '@/core/helpers/localization';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -549,7 +550,7 @@ export default {
         if (foundToken) {
           foundToken.contract = token.contract;
           foundToken.price = formatFiatValue(
-            foundToken.pricef,
+            currencyToNumber(foundToken.pricef),
             this.getLocalOptions
           ).value;
           foundToken.isEth = token.isEth;
@@ -572,8 +573,13 @@ export default {
         if (
           item.contract.toLowerCase() !==
           this.toTokenType?.contract?.toLowerCase()
-        )
+        ) {
+          item.price = formatFiatValue(
+            currencyToNumber(item.pricef),
+            this.getLocalOptions
+          ).value;
           return item;
+        }
       });
       let tradebleWalletTokens = this.tokensList.filter(item => {
         for (const vt of validFromTokens) {
@@ -636,7 +642,7 @@ export default {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
             foundToken.price = formatFiatValue(
-              foundToken.pricef,
+              currencyToNumber(foundToken.pricef),
               this.getLocalOptions
             ).value;
             return Object.assign(token, foundToken);
@@ -645,7 +651,7 @@ export default {
           if (foundToken) {
             token = Object.assign(token, foundToken);
             token.price = formatFiatValue(
-              token.pricef,
+              currencyToNumber(token.pricef),
               this.getLocalOptions
             ).value;
           }
@@ -930,11 +936,14 @@ export default {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = formatFiatValue(
-          t.usdBalancef,
+          currencyToNumber(t.usdBalancef),
           this.getLocalOptions
         ).value;
         t.tokenBalance = t.balancef;
-        t.price = formatFiatValue(t.pricef, this.getLocalOptions).value;
+        t.price = formatFiatValue(
+          currencyToNumber(t.pricef),
+          this.getLocalOptions
+        ).value;
         return t;
       });
     },

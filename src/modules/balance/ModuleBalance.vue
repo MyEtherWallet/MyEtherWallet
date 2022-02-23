@@ -163,13 +163,8 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        const rate = this.currencyRate.data
-          ? this.currencyRate.data.exchange_rate
-          : 1;
-        return formatFiatValue(this.balanceFiatValue, {
-          currency: this.preferredCurrency,
-          rate
-        }).value;
+        return formatFiatValue(this.balanceFiatValue, this.getLocalOptions)
+          .value;
       }
       return '';
     },
@@ -191,9 +186,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return formatFiatValue(this.fiatValue, {
-          currency: this.preferredCurrency
-        }).value;
+        return formatFiatValue(this.fiatValue, this.getLocalOptions).value;
       }
       return '';
     },
@@ -214,6 +207,16 @@ export default {
      */
     hasBalance() {
       return BigNumber(this.balanceInWei).gt(0);
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   watch: {

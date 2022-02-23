@@ -422,12 +422,9 @@ export default {
       return fromWei(parsedTxFee);
     },
     txFeeUSD() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
       return formatFiatValue(
         BigNumber(this.txFee).times(this.fiatValue).toFixed(2),
-        { rate, currency: this.preferredCurrency }
+        this.getLocalOptions
       ).value;
     },
     value() {
@@ -483,6 +480,16 @@ export default {
      */
     successLottie() {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   watch: {

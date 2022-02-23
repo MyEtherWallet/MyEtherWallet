@@ -240,6 +240,8 @@ export default {
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('external', ['currencyRate']),
     ...mapGetters('global', ['gasPrice', 'network']),
 
     /**
@@ -301,8 +303,10 @@ export default {
       const gasPriceETH = formatBalanceEthValue(this.gasPrice).value;
       return {
         eth: gasPriceETH,
-        fiat: formatFiatValue(BigNumber(this.fiatValue).times(gasPriceETH))
-          .value
+        fiat: formatFiatValue(
+          BigNumber(this.fiatValue).times(gasPriceETH),
+          this.getLocalOptions
+        ).value
       };
     },
     /**
@@ -331,8 +335,20 @@ export default {
      * @returns eth staking amount in fiat
      */
     amountFiat() {
-      return formatFiatValue(new BigNumber(this.amount).times(this.fiatValue))
-        .value;
+      return formatFiatValue(
+        new BigNumber(this.amount).times(this.fiatValue),
+        this.getLocalOptions
+      ).value;
+    },
+    getLocalOptions() {
+      const rate = this.currencyRate.data
+        ? this.currencyRate.data.exchange_rate
+        : 1;
+      const currency = this.preferredCurrency;
+      return {
+        rate,
+        currency
+      };
     }
   },
   watch: {
@@ -383,7 +399,10 @@ export default {
       const feesETH = formatBalanceEthValue(feesWEI).value;
       this.serviceFees = {
         eth: feesETH,
-        fiat: formatFiatValue(BigNumber(this.fiatValue).times(feesETH)).value
+        fiat: formatFiatValue(
+          BigNumber(this.fiatValue).times(feesETH),
+          this.getLocalOptions
+        ).value
       };
     },
     /**
