@@ -179,7 +179,7 @@
 
 <script>
 import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'lodash';
+import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -377,7 +377,7 @@ export default {
       if (!this.amount) {
         return false;
       }
-      if (!this.selectedCurrency?.decimals) {
+      if (!isNumber(this.selectedCurrency?.decimals)) {
         return false;
       }
       /** amount is negative */

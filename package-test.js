@@ -33,7 +33,18 @@ const EXCEPTIONS = [
   'vue-router',
   'vuex',
   '@vue/test-utils',
-  'vue-i18n'
+  'vue-i18n',
+  'vue',
+  // update these after release
+  '@ethereumjs/tx',
+  'ethereumjs-util',
+  '@ethereumjs/common',
+  'walletlink',
+  '@ledgerhq/hw-app-eth',
+  '@ledgerhq/hw-transport-webusb',
+  'babel-jest',
+  'eslint-plugin-vue',
+  'stylelint-config-standard'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

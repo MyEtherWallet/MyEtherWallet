@@ -208,7 +208,7 @@ export default {
         });
     },
     checkHash(hash) {
-      // eslint-disable-next-week
+      // eslint-disable-next-line
       window.open(this.linkUrl.replace('[[txHash]]', hash), '_blank');
     },
     fetcher(hash) {
