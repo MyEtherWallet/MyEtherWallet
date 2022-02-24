@@ -33,6 +33,12 @@ const EXCEPTIONS = [
   'vue-router',
   'vuex',
   '@vue/test-utils',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service',
   'vue-i18n',
   'vue'
 ];
