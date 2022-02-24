@@ -370,9 +370,12 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
     hasEnsTokenBalance() {
-      return toBN(this.ensTokens.balance).gt(toBN(0));
+      if (this.ensTokens.balance) {
+        return toBN(this.ensTokens.balance).gt(toBN(0));
+      }
+      return false;
     },
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
@@ -473,12 +476,16 @@ export default {
   },
   methods: {
     claimTokens() {
-      submitClaim(
-        this.ensTokens.balance,
-        this.ensTokens.proof,
-        this.delegatorAddress,
-        this.web3
-      );
+      try {
+        submitClaim(
+          this.ensTokens.balance,
+          this.ensTokens.proof,
+          this.delegatorAddress,
+          this.web3
+        );
+      } catch (e) {
+        this.instance.errorHandler(e);
+      }
     },
     setDelegatorAddress(address) {
       this.delegatorAddress = address;
@@ -533,7 +540,7 @@ export default {
           }, 15000);
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -542,7 +549,7 @@ export default {
         .renew(duration, this.balanceToWei)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -551,7 +558,7 @@ export default {
         .setMulticoin(coin)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -560,7 +567,7 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -577,7 +584,7 @@ export default {
           this.closeManage();
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
     },
     setIpfs(hash) {
@@ -588,7 +595,7 @@ export default {
           this.settingIpfs = false;
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -637,7 +644,7 @@ export default {
           }, 15000);
         })
         .on('error', err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
     },
     commit() {
@@ -659,7 +666,6 @@ export default {
           }, waitingTime * 1000);
         })
         .on('error', err => {
-          this.closeRegister();
           Toast(err, {}, ERROR);
         });
     },
