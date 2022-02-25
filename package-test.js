@@ -34,6 +34,7 @@ const EXCEPTIONS = [
   'vuex',
   '@vue/test-utils',
   'vue-i18n',
+  'vue',
   // update these after release
   '@ethereumjs/tx',
   'ethereumjs-util',
