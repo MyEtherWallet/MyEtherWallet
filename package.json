@@ -78,7 +78,7 @@
     "qr-code-styling": "1.6.0-rc.1",
     "register-service-worker": "1.7.2",
     "subscriptions-transport-ws": "0.11.0",
-    "vue": "3.2.31",
+    "vue": "2.6.14",
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vuex": "3.6.2",
