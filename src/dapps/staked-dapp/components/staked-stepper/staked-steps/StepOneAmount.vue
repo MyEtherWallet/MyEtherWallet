@@ -83,7 +83,7 @@
                 md="6"
                 class="py-1 text-right textSecondary--text"
               >
-                {{ '$' + forecast.balanceFiat }}
+                {{ forecast.balanceFiat }}
               </v-col>
             </v-row>
             <v-row>

@@ -60,7 +60,7 @@
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
                 <div class="textPrimary--text mt-1">
-                  {{ '$' + pending.amountFiat }}
+                  {{ pending.amountFiat }}
                 </div>
               </div>
             </div>
@@ -215,7 +215,7 @@
                 {{ active.totalBalanceETH + ' ETH' }}
               </div>
               <div class="font-weight-medium mt-1">
-                {{ '$' + active.totalBalanceFiat }}
+                {{ active.totalBalanceFiat }}
               </div>
               <div class="textPrimary--text mt-2">
                 Earned

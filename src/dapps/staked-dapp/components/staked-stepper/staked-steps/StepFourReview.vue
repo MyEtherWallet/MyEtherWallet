@@ -281,7 +281,7 @@ export default {
         {
           title: 'Network fee',
           ethValue: this.networkFees.eth,
-          fiatValue: '$' + this.networkFees.fiat
+          fiatValue: this.networkFees.fiat
         },
         {
           title: 'Service fee',
@@ -319,7 +319,10 @@ export default {
         .toFixed();
       return {
         eth: totalETH,
-        fiat: new BigNumber(this.fiatValue).times(totalETH).toFixed()
+        fiat: formatFiatValue(
+          new BigNumber(this.fiatValue).times(totalETH).toFixed(),
+          this.getLocalOptions
+        ).value
       };
     },
     /**
