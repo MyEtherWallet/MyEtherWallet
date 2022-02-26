@@ -418,7 +418,14 @@ const formatFiatValue = (
    * Case V: value < 0.0000001
    * Return: string "< $0.0000001" and tooltip with full value with tooltip
    */
-  return { value: `< ${SmallNumberBreakpoint}`, tooltipText: value.toFormat() };
+  return {
+    value: `< ${localizeCurrency({
+      number: SmallNumberBreakpoint,
+      verySmall: true,
+      ...options
+    })}`,
+    tooltipText: value.toFormat()
+  };
 };
 
 /**
