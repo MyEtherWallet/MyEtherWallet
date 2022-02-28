@@ -13,18 +13,15 @@ const Networks = function () {
   return nodeList;
 };
 const network = function (state) {
-  const currentNetwork = !nodeList[state.currentNetwork.type.name]
-    ? 'ETH'
-    : state.currentNetwork.type.name;
   let network = nodeList['ETH'][0];
-  const iteratableArr = nodeList[currentNetwork];
-  network = !nodeList[state.currentNetwork.type.name]
-    ? network
-    : Object.assign({}, state.currentNetwork);
-  network.type = !isEmpty(nodeList[currentNetwork])
-    ? nodeList[currentNetwork][0].type
+  if (!nodeList[state.currentNetwork.type.name]) {
+    throw new Error('Current network is not in nodeList.');
+  }
+  const iteratableArr = nodeList[state.currentNetwork.type.name];
+  network = Object.assign({}, state.currentNetwork);
+  network.type = !isEmpty(nodeList[state.currentNetwork.type.name])
+    ? nodeList[state.currentNetwork.type.name][0].type
     : ETH;
-
   for (let index = 0; index < iteratableArr.length; index++) {
     if (state.currentNetwork.service === iteratableArr[index].service) {
       network = iteratableArr[index];
