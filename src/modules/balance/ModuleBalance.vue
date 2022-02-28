@@ -85,6 +85,7 @@
               @click.native="navigateToSend"
             />
             <mew-button
+              v-if="hasSwap"
               :has-full-width="false"
               :title="swapText"
               btn-size="large"
@@ -138,7 +139,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'hasSwap']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
       'fiatValue',

@@ -87,7 +87,7 @@
                 : 'py-2',
               'mew-body textMedium--text'
             ]"
-            >Enjoy 0.9% fee wen you select ‘Bank account’ as payment
+            >Enjoy 0.9% fee when you select ‘Bank account’ as payment
             method.</span
           >
           <mew-button

@@ -290,11 +290,7 @@ export default {
         this.setNetwork(found[0]).then(() => {
           if (this.isWallet) {
             this.setWeb3Instance();
-            Toast(
-              `Switched network to: ${found[0].type.name} - ${found[0].service}`,
-              {},
-              SUCCESS
-            );
+            Toast(`Switched network to: ${found[0].type.name}`, {}, SUCCESS);
           }
           this.trackNetworkSwitch(found[0].type.name);
           this.$emit('newNetwork');

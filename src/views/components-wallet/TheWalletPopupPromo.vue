@@ -31,7 +31,7 @@
       </div>
       <div v-else>
         <div class="text-center mew-body textMedium--text">
-          Enjoy 0.9% fee wen you select ‘Bank account’ as payment method.
+          Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
         </div>
         <div class="d-flex justify-center align-center pa-5 mt-5">
           <div class="icon-container mr-2 d-flex align-center pa-2">

@@ -210,7 +210,9 @@ export default {
       return !isEmpty(this.fetchedData);
     },
     fiatCurrencyItems() {
-      return this.hasData ? this.fetchedData.fiat_currencies : ['USD'];
+      return this.hasData
+        ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
+        : ['USD'];
     },
     max() {
       if (this.hasData) {

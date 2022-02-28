@@ -42,7 +42,6 @@
               height="65px"
               dark
               depressed
-              :disabled="!hasSwap"
               x-small
               @click="openBuy"
             >

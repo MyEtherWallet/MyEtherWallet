@@ -98,15 +98,12 @@ export default {
       };
     },
     tabItems() {
-      const symbol = isEmpty(this.selectedCurrency)
-        ? 'ETH'
-        : this.selectedCurrency.name;
       return [
         {
-          name: `Buy ${symbol}`
+          name: `Buy`
         },
         {
-          name: `Sell ${symbol}`
+          name: `Sell`
         }
       ];
     }
