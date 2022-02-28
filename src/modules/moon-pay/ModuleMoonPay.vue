@@ -59,12 +59,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
 import handler from './handlers/moonpayHandler';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
+import nodes from '@/utils/networks';
+import { SUCCESS, Toast } from '../toast/handler/handlerToast';
 export default {
   name: 'MoonPay',
   components: { BuyEthComponent, SellEthComponent },
@@ -79,12 +81,14 @@ export default {
       isOpen: false,
       activeTab: 0,
       moonpayHandler: {},
-      selectedCurrency: {}
+      selectedCurrency: {},
+      nodes: nodes
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('global', ['network']),
     defaltCurrency() {
       return isEmpty(this.selectedCurrency)
         ? this.tokensList.filter(
@@ -118,8 +122,23 @@ export default {
     }
   },
   methods: {
+    ...mapActions('wallet', ['setWeb3Instance']),
+    ...mapActions('global', ['setNetwork']),
     onTab(val) {
       this.activeTab = val;
+      if (val === 1) {
+        this.selectedCurrency = this.defaultCurrency;
+        if (this.network.type.chainID !== 1) {
+          const defaultNetwork = this.nodes['ETH'].find(item => {
+            return item.service === 'myetherwallet.com-ws';
+          });
+
+          this.setNetwork(defaultNetwork).then(() => {
+            this.setWeb3Instance();
+            Toast(`Switched network to: ETH`, {}, SUCCESS);
+          });
+        }
+      }
     },
     close() {
       this.activeTab = 0;

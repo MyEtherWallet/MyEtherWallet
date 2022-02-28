@@ -96,7 +96,6 @@ import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { cloneDeep, isEqual } from 'apollo-utilities';
-import * as nodes from '@/utils/networks/nodes';
 export default {
   name: 'ModuleBuyEth',
   props: {
@@ -119,8 +118,7 @@ export default {
       loading: true,
       selectedFiat: 'USD',
       fetchedData: {},
-      currencyRates: [],
-      nodes: nodes
+      currencyRates: []
     };
   },
   computed: {
@@ -157,7 +155,7 @@ export default {
           network: 56
         },
         {
-          decimals: 18,
+          decimals: 6,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
           name: 'USDT',
           subtext: 'Tether',
@@ -357,7 +355,6 @@ export default {
       this.selectedFiat = 'USD';
       this.loading = true;
       this.fetchData = {};
-      // this.selectedCurrency = this.defaultCurrency;
     },
     fetchCurrencyData() {
       this.reset();
@@ -379,16 +376,6 @@ export default {
       this.handler
         .buy(this.selectedCurrency.name, this.selectedFiat, amount)
         .then(() => {
-          if (this.network.type.chainID !== this.selectedCurrency.network) {
-            const found = Object.values(this.nodes).filter(item => {
-              if (item.type.chainID === this.selectedCurrency.network) {
-                return item;
-              }
-            });
-            if (found) {
-              this.setNetwork(found[0]);
-            }
-          }
           this.reset();
           this.close();
           this.selectedCurrency = this.defaultCurrency;

@@ -16,17 +16,13 @@
     <!-- Amount -->
     <!-- ============================================================== -->
     <div class="position--relative mt-9">
-      <button-balance :balance="selectedCurrencyBalance" :loading="loading" />
+      <button-balance :balance="selectedBalance" :loading="fetchingBalance" />
       <mew-input
         v-model="amount"
         type="number"
         label="Amount"
         placeholder="Enter amount to sell"
-        :max-btn-obj="{
-          title: 'Max',
-          disabled: disableMax,
-          method: setMax
-        }"
+        :max-btn-obj="maxButton"
         :disabled="loading"
         :error-messages="errorMessages"
         :persistent-hint="hasPersistentHint"
@@ -67,6 +63,10 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
+import abi from '@/modules/balance/handlers/abiERC20.js';
+import nodes from '@/utils/networks';
+import Web3 from 'web3';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -93,63 +93,80 @@ export default {
       sendHandler: {},
       loading: true,
       hasPersistentHint: false,
+      fetchingBalance: true,
       gasLimit: 21000,
       estimatingFees: true,
-      maxBalance: '0'
+      maxBalance: '0',
+      selectedBalance: '0'
     };
   },
   computed: {
     ...mapState('wallet', ['address']),
     ...mapState('global', ['gasPriceType']),
-    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     persistentHintMessage() {
       return this.hasPersistentHint
         ? `Max adjusted to leave sufficient ${this.selectedCurrency.name} for network fee`
         : '';
     },
+    maxButton() {
+      return BigNumber(this.selectedBalance).gt(0)
+        ? {
+            title: 'Max',
+            method: this.setMax
+          }
+        : {};
+    },
     currencyItems() {
-      // no ref copy
-      const tokensList = this.tokensList.slice();
-      const filteredTokens = tokensList.filter(item => {
-        return (
-          item.name === 'ETH' || item.name === 'USDT' || item.name === 'USDC'
-        );
-      });
-      const imgs = filteredTokens.map(item => {
-        item.totalBalance = item.usdBalancef;
-        item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+      // hard writing for now
+      const tokensList = [
+        {
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'Ethereum',
+          symbol: 'ETH',
+          network: 1,
+          contract: MAIN_TOKEN_ADDRESS
+        },
+        {
+          decimals: 6,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDT-0xdAC17F958D2ee523a2206206994597C13D831ec7-eth.png',
+          name: 'USDT',
+          subtext: 'Tether',
+          value: 'Tether',
+          symbol: 'USDT (ERC20)',
+          network: 1,
+          contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+        },
+        {
+          decimals: 6,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/USDC-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48-eth.svg',
+          name: 'USDC',
+          subtext: 'USD Coin',
+          value: 'USD Coin',
+          symbol: 'USDC (ERC20)',
+          network: 1,
+          contract: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+        }
+      ];
+      const imgs = tokensList.map(item => {
         return item.img;
       });
+
       const returnedArray = [
         {
           text: 'Select Token',
           imgs: imgs.splice(0, 3),
-          total: `${filteredTokens.length}`,
+          total: `${tokensList.length}`,
           divider: true,
           selectLabel: true
         },
-        {
-          header: 'My Wallet'
-        },
-        ...filteredTokens
+        ...tokensList
       ];
       return returnedArray;
-    },
-    selectedCurrencyBalance() {
-      if (this.isEthNetwork) {
-        const currency = this.selectedCurrency?.text
-          ? { balance: 0, decimals: 18 }
-          : this.selectedCurrency;
-        return BigNumber(currency.balance)
-          .div(BigNumber(10).pow(currency.decimals))
-          .toString();
-      }
-      return this.balanceInETH;
-    },
-    disableMax() {
-      return !BigNumber(this.selectedCurrencyBalance).gt(0);
     },
     disableSell() {
       return (
@@ -209,7 +226,7 @@ export default {
         return "Amount can't be negative.";
       }
 
-      if (amount.gt(this.selectedCurrencyBalance)) {
+      if (amount.gt(this.selectedBalance)) {
         return `You do not have enough ${symbol} to sell.`;
       }
 
@@ -263,6 +280,30 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    getEthBalance() {
+      const web3Instance = new Web3(nodes['ETH'][0].url);
+      web3Instance.eth.getBalance(this.address).then(res => {
+        this.fetchingBalance = false;
+        this.selectedBalance = fromWei(res);
+      });
+    },
+    getTokenBalance() {
+      const web3Instance = new Web3(nodes['ETH'][0].url);
+      const contract = new web3Instance.eth.Contract(
+        abi,
+        this.selectedCurrency.contract
+      );
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          console.log(res, this.selectedCurrency.decimals);
+          this.fetchingBalance = false;
+          this.selectedBalance = BigNumber(res)
+            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
+            .toString();
+        });
+    },
     debouncedSetAmount: debounce(function (newVal) {
       if (!BigNumber(newVal).eq(this.maxBalance)) {
         this.hasPersistentHint = false;
@@ -342,6 +383,12 @@ export default {
         .catch(err => {
           Toast(err, {}, ERROR);
         });
+      this.fetchingBalance = true;
+      if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
+        this.getEthBalance();
+      } else {
+        this.getTokenBalance();
+      }
       this.handler
         .getSupportedFiatToSell(this.selectedCurrency.name)
         .then(res => {
