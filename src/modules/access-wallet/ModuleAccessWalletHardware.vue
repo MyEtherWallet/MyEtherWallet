@@ -164,7 +164,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
+import { isEmpty, isObject } from 'lodash';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -579,9 +579,11 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
-      const path = this.selectedPath.hasOwnProperty('value')
-        ? this.selectedPath.value
-        : this.selectedPath;
+      const path = isObject(this.selectedPath)
+        ? this.selectedPath.hasOwnProperty('value')
+          ? this.selectedPath.value
+          : this.selectedPath
+        : this.paths[0];
       this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {
