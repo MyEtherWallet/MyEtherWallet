@@ -482,7 +482,7 @@ export default {
           this.ensTokens.proof,
           this.delegatorAddress,
           this.web3
-        );
+        ).catch(this.instance.errorHandler);
       } catch (e) {
         this.instance.errorHandler(e);
       }
