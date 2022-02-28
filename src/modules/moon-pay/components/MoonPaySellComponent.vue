@@ -297,7 +297,6 @@ export default {
         .balanceOf(this.address)
         .call()
         .then(res => {
-          console.log(res, this.selectedCurrency.decimals);
           this.fetchingBalance = false;
           this.selectedBalance = BigNumber(res)
             .div(BigNumber(10).pow(this.selectedCurrency.decimals))
@@ -340,15 +339,19 @@ export default {
     },
     setMax() {
       const bal = this.sendHandler.getEntireBal();
-      this.amount = BigNumber(bal)
-        .div(
-          BigNumber(10).pow(
-            this.selectedCurrency.hasOwnProperty('name')
-              ? this.selectedCurrency.decimals
-              : 18
+      if (bal) {
+        this.amount = BigNumber(bal)
+          .div(
+            BigNumber(10).pow(
+              this.selectedCurrency.hasOwnProperty('name')
+                ? this.selectedCurrency.decimals
+                : 18
+            )
           )
-        )
-        .toString();
+          .toString();
+      } else {
+        this.amount = this.selectedBalance;
+      }
       this.maxBalance = this.amount;
       this.hasPersistentHint = true;
     },
