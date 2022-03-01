@@ -168,7 +168,7 @@
     "npm": ">= 6.0.0"
   },
   "resolutions": {
-    "engine.io": "4.0.0",
+    "engine.io": "4.1.2",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.14.7",
     "handlebars": "4.7.7",
