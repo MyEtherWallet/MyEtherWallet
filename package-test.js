@@ -35,6 +35,12 @@ const EXCEPTIONS = [
   '@vue/test-utils',
   'vue-i18n',
   'vue',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service',
   // update these after release
   '@ethereumjs/tx',
   'ethereumjs-util',
