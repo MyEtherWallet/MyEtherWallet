@@ -378,7 +378,7 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType']),
+    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
@@ -546,7 +546,7 @@ export default {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
           foundToken.contract = token.contract;
-          foundToken.price = foundToken.pricef;
+          foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
           return foundToken;
         }
@@ -630,13 +630,13 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = foundToken.pricef;
+            foundToken.price = this.currencyFormatter(foundToken.pricef);
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = token.pricef;
+            token.price = this.currencyFormatter(token.pricef);
           }
           return token;
         });
@@ -905,12 +905,20 @@ export default {
       if (this.$refs.amountInput) this.$refs.amountInput.clear();
       this.setupSwap();
     },
+    // replace this once localization is merged
+    currencyFormatter(val) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: this.preferredCurrency,
+        currencyDisplay: 'narrowSymbol'
+      }).format(val.replace(',', ''));
+    },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
-        t.totalBalance = t.usdBalancef;
-        t.tokenBalance = t.balancef;
-        t.price = t.pricef;
+        t.totalBalance = this.currencyFormatter(t.usdBalancef);
+        t.tokenBalance = this.currencyFormatter(t.balancef);
+        t.price = this.currencyFormatter(t.pricef);
         return t;
       });
     },

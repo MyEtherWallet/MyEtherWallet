@@ -242,7 +242,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPriceType']),
+    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
       'network',
@@ -325,9 +325,14 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = item.usdBalancef;
-        item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+        item.totalBalance = this.currencyFormatter(
+          item.usdBalancef.replace(',', '')
+        );
+        item.tokenBalance = this.currencyFormatter(item.balancef).replace(
+          ',',
+          ''
+        );
+        item.price = this.currencyFormatter(item.pricef.replace(',', ''));
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -568,6 +573,14 @@ export default {
     }, 500);
   },
   methods: {
+    // replace this once localization is merged
+    currencyFormatter(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: this.preferredCurrency,
+        currencyDisplay: 'narrowSymbol'
+      }).format(value);
+    },
     /**
      * Resets values to default
      */

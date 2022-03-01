@@ -159,6 +159,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
@@ -190,7 +191,12 @@ export default {
             name: i + ' ETH',
             value: i + '', //change to string to make mew select filter work
             img: this.networkImg,
-            price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
+            // change this in localization branch
+            price: new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: this.preferredCurrency,
+              currencyDisplay: 'narrowSymbol'
+            }).format(new BigNumber(i).times(this.fiatValue).toString())
           });
         }
       }
