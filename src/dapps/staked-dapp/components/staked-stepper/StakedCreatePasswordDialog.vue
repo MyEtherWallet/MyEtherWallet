@@ -34,7 +34,7 @@
         <div class="mt-1 tableHeader terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
-            color-text="textBlack2--text"
+            class-name="textBlack2--text"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>

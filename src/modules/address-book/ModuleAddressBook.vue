@@ -6,7 +6,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
-      :label="parsedLabel"
+      :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
@@ -71,6 +71,10 @@ export default {
     currency: {
       type: String,
       default: 'ETH'
+    },
+    preselectCurrWalletAdr: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -88,9 +92,6 @@ export default {
     ...mapState('addressBook', ['addressBookStore']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['web3']),
-    parsedLabel() {
-      return this.label ? this.label : this.$t('sendTx.to-addr');
-    },
     errorMessages() {
       if (!this.isValidAddress && this.loadedAddressValidation) {
         return this.$t('interface.address-book.validations.invalid-address');
@@ -120,6 +121,9 @@ export default {
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;
+    },
+    addrLabel() {
+      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
     }
   },
   watch: {
@@ -136,6 +140,13 @@ export default {
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
       this.setDonationAddress();
+    }
+    if (this.preselectCurrWalletAdr) {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+      this.setAddress(
+        toChecksumAddress(this.$store.state.wallet.address),
+        USER_INPUT_TYPES.selected
+      );
     }
   },
   methods: {
