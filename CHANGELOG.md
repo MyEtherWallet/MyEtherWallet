@@ -1,3 +1,17 @@
+### devop
+
+* add claim ens ui as starting point [#3598](https://github.com/MyEtherWallet/MyEtherWallet/pull/3598)
+* add ens claims [#3620](https://github.com/MyEtherWallet/MyEtherWallet/pull/3620)
+* update team name [#3672](https://github.com/MyEtherWallet/MyEtherWallet/pull/3672)
+* add matomo global error tracking [#3674](https://github.com/MyEtherWallet/MyEtherWallet/pull/3674)
+* * change prop names for mew components [#3677](https://github.com/MyEtherWallet/MyEtherWallet/pull/3677)
+* allow more fields to show on career page [#3688](https://github.com/MyEtherWallet/MyEtherWallet/pull/3688)
+* fix order for providers [#3689](https://github.com/MyEtherWallet/MyEtherWallet/pull/3689)
+
+### fix
+
+* [#3691](https://github.com/MyEtherWallet/MyEtherWallet/pull/3691)
+
 ### Release v6.4.6
 
 ### chore
