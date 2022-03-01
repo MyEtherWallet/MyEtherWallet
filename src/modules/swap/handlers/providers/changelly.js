@@ -128,8 +128,8 @@ class Changelly {
                 response.data.result[0].result === 0
                   ? ''
                   : response.data.result[0].id,
-              minFrom: minmax.minFrom,
-              maxFrom: minmax.maxFrom
+              minFrom: minmax?.minFrom ? minmax.minFrom : 0,
+              maxFrom: minmax?.maxFrom ? minmax.maxFrom : 0
             }
           ];
         })

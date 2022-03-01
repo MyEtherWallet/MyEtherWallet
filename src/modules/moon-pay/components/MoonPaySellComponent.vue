@@ -128,7 +128,6 @@ export default {
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH',
-          network: 1,
           contract: MAIN_TOKEN_ADDRESS
         },
         {
@@ -138,7 +137,6 @@ export default {
           subtext: 'Tether',
           value: 'Tether',
           symbol: 'USDT (ERC20)',
-          network: 1,
           contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
         },
         {
@@ -148,7 +146,6 @@ export default {
           subtext: 'USD Coin',
           value: 'USD Coin',
           symbol: 'USDC (ERC20)',
-          network: 1,
           contract: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
         }
       ];
@@ -260,6 +257,9 @@ export default {
         this.$emit('selectedCurrency', newVal);
       },
       deep: true
+    },
+    defaultCurrency(e) {
+      this.selectedCurrency = e;
     },
     amount(newVal) {
       this.debouncedSetAmount(newVal);

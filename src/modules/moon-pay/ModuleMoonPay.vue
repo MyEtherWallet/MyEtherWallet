@@ -92,7 +92,8 @@ export default {
     defaltCurrency() {
       return isEmpty(this.selectedCurrency)
         ? this.tokensList.filter(
-            item => item.contract === MAIN_TOKEN_ADDRESS
+            item =>
+              item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
           )[0]
         : this.selectedCurrency;
     },
@@ -127,7 +128,7 @@ export default {
     onTab(val) {
       this.activeTab = val;
       if (val === 1) {
-        this.selectedCurrency = this.defaultCurrency;
+        this.selectedCurrency = {};
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';

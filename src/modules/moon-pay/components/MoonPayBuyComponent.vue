@@ -138,10 +138,10 @@ export default {
         },
         {
           decimals: 18,
-          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/MATIC-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-matic.png',
+          img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1624446912',
           name: 'MATIC',
           subtext: 'Polygon',
-          value: 'Polygon',
+          value: 'Polygon (Matic)',
           symbol: 'MATIC (Matic)',
           network: 137
         },
