@@ -64,7 +64,7 @@
               :max-btn-obj="{
                 title: 'Max',
                 disabled: false,
-                method: () => {}
+                method: setMax
               }"
               :image="iconStakewise"
               label="Amount to compound"
@@ -157,6 +157,7 @@
               class="mt-8"
               title="Compound Rewards"
               btn-size="xlarge"
+              :value="compoundAmount"
             />
           </div>
         </mew6-white-sheet>
@@ -175,7 +176,10 @@ import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import { mapGetters } from 'vuex';
+import stakeHandler from '../handlers/stakewiseStakeHandler';
+import BigNumber from 'bignumber.js';
+import { debounce } from 'lodash';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
@@ -186,11 +190,42 @@ export default {
   },
   data() {
     return {
-      iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg')
+      iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
+      compoundAmount: '0',
+      locGasPrice: '0',
+      stakeHandler: {}
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH'])
+    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('stakewise', ['getStakingFee']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
+    ...mapGetters('external', ['fiatValue']),
+    ...mapState('stakewise', ['validatorApr']),
+    ...mapState('global', ['gasPriceType']),
+    ...mapState('wallet', ['web3', 'address'])
+  },
+  mounted() {
+    this.stakeHandler = new stakeHandler(
+      this.web3,
+      this.isEthNetwork,
+      this.address
+    );
+    this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+  },
+  methods: {
+    setMax() {
+      // change to rewards
+      const max = BigNumber(this.balanceInETH).minus(
+        BigNumber(this.ethTotalFee)
+      );
+      this.setAmount(max.toString());
+    },
+    setAmount: debounce(function (val) {
+      const value = val ? val : 0;
+      this.stakeHandler._setAmount(BigNumber(value).toString());
+      this.compoundAmount = BigNumber(value).toString();
+    }, 500)
   }
 };
 </script>
