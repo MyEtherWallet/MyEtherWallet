@@ -594,6 +594,12 @@ export default {
               this.step++;
             if (this.onBitbox2) {
               this.hwWalletInstance = _hwWallet;
+              if (!this.hwWalletInstance) {
+                this.wallets[this.walletType].create.errorHandler(
+                  'bitboxInstanceError'
+                );
+                return;
+              }
               this.hwWalletInstance
                 .init()
                 .then(() => {
