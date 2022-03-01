@@ -6,7 +6,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
-      :label="$t('sendTx.to-addr')"
+      :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
@@ -62,6 +62,14 @@ export default {
     isHomePage: {
       type: Boolean,
       default: false
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    preselectCurrWalletAdr: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -108,6 +116,9 @@ export default {
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;
+    },
+    addrLabel() {
+      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
     }
   },
   watch: {
@@ -124,6 +135,13 @@ export default {
       this.nameResolver = new NameResolver(this.network, this.web3);
     if (this.isHomePage) {
       this.setDonationAddress();
+    }
+    if (this.preselectCurrWalletAdr) {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+      this.setAddress(
+        toChecksumAddress(this.$store.state.wallet.address),
+        USER_INPUT_TYPES.selected
+      );
     }
   },
   methods: {
