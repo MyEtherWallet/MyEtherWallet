@@ -44,7 +44,13 @@ const EXCEPTIONS = [
   '@ledgerhq/hw-transport-webusb',
   'babel-jest',
   'eslint-plugin-vue',
-  'stylelint-config-standard'
+  'stylelint-config-standard',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
