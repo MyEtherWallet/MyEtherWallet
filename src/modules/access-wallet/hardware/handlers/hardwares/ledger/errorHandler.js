@@ -52,7 +52,11 @@ const ERRORS = {
     'ledgerError.firmware-or-mobile',
   'Access denied.': 'ledgerError.access-denied',
   'WebUsb not supported.  Please try a different browser.':
-    'ledgerError.web-usb-not-supported'
+    'ledgerError.web-usb-not-supported',
+  'Please enable Blind signing or Contract data in the Ethereum app Settings':
+    'Please enable Blind signing or Contract data in the Ethereum app Settings',
+  'Ledger device: Security not satisfied':
+    'Ledger device is locked or has invalid access rights'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
