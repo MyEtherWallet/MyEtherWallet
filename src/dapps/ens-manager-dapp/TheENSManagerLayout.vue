@@ -246,7 +246,6 @@
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-//import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
