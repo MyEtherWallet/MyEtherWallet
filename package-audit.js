@@ -6,9 +6,7 @@ const AUDIT_EXCEPTIONS = [
   'css-what',
   'normalize-url',
   'diff',
-  'ansi-html', // no patches available
-  'set-value',
-  'engine.io' // work on resolving this after release 6.4.6
+  'ansi-html' // no patches available
 ];
 const execute = (command, callback) => {
   exec(

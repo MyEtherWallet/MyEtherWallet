@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import HardwarePasswordModal from './components/HardwarePasswordModal.vue';
 import AppModal from '@/core/components/AppModal.vue';
 import AppErrorMsg from '@/core/components/AppErrorMsg.vue';
@@ -39,6 +40,7 @@ export default {
     HardwarePasswordModal,
     AppErrorMsg
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       deviceInfo: {},
@@ -69,6 +71,7 @@ export default {
   },
   created() {
     EventBus.$on(ISSUE_MODAL, (errors, callback) => {
+      this.trackNetworkSwitch(errors);
       this.errors = errors;
       this.callback = callback;
       this.openError = true;

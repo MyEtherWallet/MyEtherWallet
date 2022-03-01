@@ -80,9 +80,12 @@
                 {{ job.title }}
               </div>
               <div class="textLight--text">
-                {{ job.other[0] }}
-                <v-icon color="textLight">mdi-circle-small</v-icon>
-                {{ job.other[1] }}
+                <span v-for="(other, indx) in job.other" :key="other + indx">
+                  {{ other }}
+                  <v-icon v-if="indx !== job.other.length - 1" color="textLight"
+                    >mdi-circle-small</v-icon
+                  >
+                </span>
               </div>
             </a>
           </div>
