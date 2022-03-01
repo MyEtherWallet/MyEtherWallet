@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { isNull } from 'lodash';
+import { isNull, isUndefined } from 'lodash';
 import { toBN } from 'web3-utils';
 import { fromWei } from 'web3-utils';
 /**
@@ -487,7 +487,7 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
  *****************************************/
 
 const toBNSafe = number => {
-  if (isNaN(number) || isNull(number) || number === undefined || number === '')
+  if (isNaN(number) || isNull(number) || isUndefined(number) || number === '')
     number = 0;
   number = toBN(new BigNumber(number).toFixed(0));
   return number;
