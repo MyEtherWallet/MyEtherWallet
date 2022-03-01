@@ -8,5 +8,6 @@ export default {
   gasSwitch: 'gasSwitch',
   swap: 'swap',
   dapp: 'dapp',
-  swapRates: 'swapRates'
+  swapRates: 'swapRates',
+  globalError: 'globalError'
 };

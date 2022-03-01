@@ -91,13 +91,17 @@ class Changelly {
         Toast(err, {}, ERROR);
       });
   }
+
   getQuote({ fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (!minmax || !minmax.minFrom) return [];
+      if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
+      if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
+        return [];
+      }
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
