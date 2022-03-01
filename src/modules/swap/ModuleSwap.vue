@@ -607,10 +607,12 @@ export default {
       return this.availableTokens.fromTokens.map(token => {
         const foundToken = this.contractToToken(token.contract);
         if (foundToken) {
+          foundToken.contract = token.contract;
+          foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
           return foundToken;
         }
-        token.price = '0.00';
+        token.price = '';
         token.subtext = token.name;
         token.value = token.name;
         token.name = token.symbol;
