@@ -45,7 +45,7 @@
                       Token Icon
                     =====================================================================================
                     -->
-                      <mew-token-container size="small" :icon="toTokenIcon" />
+                      <mew-token-container size="small" :img="toTokenIcon" />
                       <!--
                       =====================================================================================
                         Rate

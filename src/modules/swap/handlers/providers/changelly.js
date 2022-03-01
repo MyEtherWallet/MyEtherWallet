@@ -72,7 +72,7 @@ class Changelly {
       .post(`${HOST_URL}`, {
         id: uuidv4(),
         jsonrpc: '2.0',
-        method: 'getPairsParams',
+        method: 'getFixRate',
         params: [
           {
             from: fromT.symbol.toLowerCase(),
@@ -83,8 +83,8 @@ class Changelly {
       .then(response => {
         const result = response?.data?.result[0];
         return {
-          minFrom: result?.minAmountFloat,
-          maxFrom: result?.maxAmountFloat
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
         };
       })
       .catch(err => {
@@ -99,11 +99,9 @@ class Changelly {
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
       if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
-      if (
-        BigNumber(minmax.minFrom).gt(queryAmount) ||
-        BigNumber(minmax.maxFrom).lt(queryAmount)
-      )
+      if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
         return [];
+      }
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
