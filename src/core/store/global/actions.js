@@ -1,4 +1,4 @@
-import { toBN } from 'web3-utils';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
   if (val) dispatch('wallet/setWeb3Instance', null, { root: true });
@@ -13,14 +13,16 @@ const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
   if (!getters.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
-      const modifiedGasPrice = toBN(res).muln(
+      const modifiedGasPrice = toBNSafe(res).muln(
         getters.network.type.gasPriceMultiplier
       );
       return dispatch('setGasPrice', modifiedGasPrice.toString());
     });
   }
   return web3.eth.getGasPrice().then(gasPrice => {
-    const priorityFee = toBN(gasPrice).sub(toBN(state.eip1559.baseFeePerGas));
+    const priorityFee = toBNSafe(gasPrice).sub(
+      toBNSafe(state.eip1559.baseFeePerGas)
+    );
     return dispatch('setMaxPriorityFeePerGas', priorityFee);
   });
 };
