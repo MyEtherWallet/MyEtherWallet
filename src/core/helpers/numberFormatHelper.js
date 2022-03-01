@@ -487,7 +487,8 @@ const getRoundNumber = (value, round, hasTrailingZeros = false) => {
  *****************************************/
 
 const toBNSafe = number => {
-  if (isNaN(number) || isNull(number) || undefined || number === '') number = 0;
+  if (isNaN(number) || isNull(number) || number === undefined || number === '')
+    number = 0;
   number = toBN(new BigNumber(number).toFixed(0));
   return number;
 };
