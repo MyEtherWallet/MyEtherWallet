@@ -60,7 +60,7 @@ class Swap {
       })
     ).then(() => {
       allQuotes.sort((q1, q2) => {
-        if (new BigNumber(q1.amount).lt(new BigNumber(q2.amount))) return -1;
+        if (new BigNumber(q1.amount).gt(new BigNumber(q2.amount))) return -1;
         return 1;
       });
       return allQuotes.map(q => {

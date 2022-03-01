@@ -42,9 +42,14 @@ class TrezorWallet {
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     const rootPub = await getRootPubKey(this.basePath);
-    Trezor.getFeatures().then(res => {
-      this.model = res.payload.model;
-    });
+    console.log(rootPub);
+    Trezor.getFeatures()
+      .then(res => {
+        this.model = res.payload.model;
+      })
+      .catch(e => {
+        console.log('getFeatures', e);
+      });
     this.hdKey = new HDKey();
     this.hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex');
     this.hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex');
