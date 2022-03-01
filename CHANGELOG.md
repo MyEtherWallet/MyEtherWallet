@@ -1,3 +1,5 @@
+### Release v6.4.7
+
 ### devop
 
 * add claim ens ui as starting point [#3598](https://github.com/MyEtherWallet/MyEtherWallet/pull/3598)
@@ -7,10 +9,11 @@
 * * change prop names for mew components [#3677](https://github.com/MyEtherWallet/MyEtherWallet/pull/3677)
 * allow more fields to show on career page [#3688](https://github.com/MyEtherWallet/MyEtherWallet/pull/3688)
 * fix order for providers [#3689](https://github.com/MyEtherWallet/MyEtherWallet/pull/3689)
+* revert swap changes [#3698](https://github.com/MyEtherWallet/MyEtherWallet/pull/3698)
 
 ### fix
 
-* [#3691](https://github.com/MyEtherWallet/MyEtherWallet/pull/3691)
+* Fix issue with tokens with 0 decimals [#3691](https://github.com/MyEtherWallet/MyEtherWallet/pull/3691)
 
 ### Release v6.4.6
 
