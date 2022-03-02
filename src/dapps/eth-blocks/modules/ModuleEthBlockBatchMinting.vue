@@ -280,8 +280,7 @@ export default {
                 values[0].mintData.to
               );
               const totalValue = values.reduce((a, b) => {
-                const parsedValue = b.mintPrice;
-                return a.add(toBN(parsedValue));
+                return a.add(toBN(b.mintData.value));
               }, toBN(0));
               this.totalMintValue = totalValue.toString();
               this.fetchGasLimits();
