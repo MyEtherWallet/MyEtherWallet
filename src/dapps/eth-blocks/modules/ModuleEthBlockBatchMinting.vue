@@ -262,29 +262,34 @@ export default {
               })
             );
           });
-          Promise.all(multicalls).then(values => {
-            // updates blocks with mintData now
-            this.blocks = values.sort((a, b) => {
-              return a.blockNumber < b.blockNumber
-                ? -1
-                : a.blockNumber > b.blockNumber
-                ? 1
-                : 0;
+          Promise.all(multicalls)
+            .then(values => {
+              // updates blocks with mintData now
+              this.blocks = values.sort((a, b) => {
+                return a.blockNumber < b.blockNumber
+                  ? -1
+                  : a.blockNumber > b.blockNumber
+                  ? 1
+                  : 0;
+              });
+              this.batchMintData = values.map(item => {
+                return item.mintData.data;
+              });
+              this.mintContract = new this.web3.eth.Contract(
+                abi,
+                values[0].mintData.to
+              );
+              const totalValue = values.reduce((a, b) => {
+                const parsedValue = b.mintPrice;
+                return a.add(toBN(parsedValue));
+              }, toBN(0));
+              this.totalMintValue = totalValue.toString();
+              this.fetchGasLimits();
+            })
+            .catch(e => {
+              this.isLoading = false;
+              Toast(e, {}, ERROR);
             });
-            this.batchMintData = values.map(item => {
-              return item.mintData.data;
-            });
-            this.mintContract = new this.web3.eth.Contract(
-              abi,
-              values[0].mintData.to
-            );
-            const totalValue = values.reduce((a, b) => {
-              const parsedValue = b.mintData.value;
-              return a.add(toBN(parsedValue));
-            }, toBN(0));
-            this.totalMintValue = totalValue.toString();
-            this.fetchGasLimits();
-          });
         } catch (e) {
           this.isLoading = false;
           Toast(e, {}, ERROR);
