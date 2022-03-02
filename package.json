@@ -85,7 +85,7 @@
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vuex": "3.6.2",
-    "walletlink": "2.4.6"
+    "walletlink": "2.5.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.2.1",

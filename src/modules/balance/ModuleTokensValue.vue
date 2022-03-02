@@ -21,7 +21,7 @@
             <v-col v-for="(img, idx) in tokenImages" :key="idx + img" cols="2">
               <img :src="img" height="32px" />
             </v-col>
-            <v-col cols="2">
+            <v-col v-if="tokensList.length > 1" cols="2">
               <div class="circled-total" @click="handleTokensPopup">
                 {{ getText }}
               </div>
