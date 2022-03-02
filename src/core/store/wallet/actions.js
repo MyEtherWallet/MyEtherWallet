@@ -64,7 +64,9 @@ const setWeb3Instance = function (
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
-        const gasPrice = rootGetters['global/gasPrice'];
+        const gasPriceByTypeGetter = rootGetters['global/gasPriceByType'];
+        const gasPriceType = rootState['global/gasPriceType'];
+        const gasPrice = gasPriceByTypeGetter(gasPriceType);
 
         const localTx = {
           to: arr[i].to,
