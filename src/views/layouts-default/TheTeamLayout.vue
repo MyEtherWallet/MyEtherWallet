@@ -46,6 +46,9 @@ import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
 import Semaja from '@/assets/images/team/semaja.jpg';
 import Katya from '@/assets/images/team/katya.jpg';
+import Raden from '@/assets/images/team/raden.jpg';
+import Vince from '@/assets/images/team/vince.jpg';
+import Michael from '@/assets/images/team/michael.jpg';
 
 export default {
   name: 'TheTeamLayout',
@@ -68,12 +71,12 @@ export default {
       { img: Yel, name: 'Yel', title: 'Lead Web Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Jessica', title: 'Full-Stack Developer' },
-      { img: placeholder, name: 'Ryan', title: 'Full-Stack Developer' },
+      { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Andrew', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
       { img: doggiePlaceholder, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
-      { img: placeholder, name: 'Vince', title: 'Marketing Manager' },
+      { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
       { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
       {
@@ -82,7 +85,7 @@ export default {
         title: 'Blockchain Community Specialist'
       },
       {
-        img: placeholder,
+        img: Michael,
         name: 'Michael',
         title: 'Blockchain Community Specialist'
       },
