@@ -5,7 +5,9 @@ export default {
   accessWallet: 'accessWallet',
   exitDashboard: 'exitDashboard',
   networkSwitch: 'networkSwitch',
+  gasSwitch: 'gasSwitch',
   swap: 'swap',
   dapp: 'dapp',
-  swapRates: 'swapRates'
+  swapRates: 'swapRates',
+  globalError: 'globalError'
 };
