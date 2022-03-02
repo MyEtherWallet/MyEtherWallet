@@ -87,6 +87,7 @@ import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { uniqWith, isEqual } from 'lodash';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -181,7 +182,8 @@ export default {
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
-      const tokenList = this.tokensList.map(item => {
+      const uniqueTokens = uniqWith(this.tokensList, isEqual);
+      const tokenList = uniqueTokens.map(item => {
         return this.formatValues(item);
       });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
@@ -225,10 +227,14 @@ export default {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.$router.push({
-                name: ROUTES_WALLET.SWAP.NAME,
-                query: obj
-              });
+              this.$router
+                .push({
+                  name: ROUTES_WALLET.SWAP.NAME,
+                  query: obj
+                })
+                .then(() => {
+                  this.$emit('trade');
+                });
             },
             btnStyle: 'outline',
             colorTheme: 'primary'
@@ -253,3 +259,9 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

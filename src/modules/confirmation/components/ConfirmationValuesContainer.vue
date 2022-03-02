@@ -50,7 +50,7 @@
           <div class="mew-caption searchText--text pb-2">
             {{ item.title }}
           </div>
-          <mew-token-container :icon="item.icon" size="medium" />
+          <mew-token-container :img="item.icon" size="medium" />
           <div class="mew-heading-4 font-weight-medium black--text pt-2">
             {{ item.value }}
             <span class="mew-body font-weight-medium"> {{ item.type }} </span>

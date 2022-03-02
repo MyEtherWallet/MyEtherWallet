@@ -29,7 +29,9 @@ const ERRORS = {
   'Iframe blocked': 'trezorError.iframe-blocked',
   'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md':
     'trezorError.manifest-not-set',
-  'Forbidden key path': 'Path not supported!'
+  'Forbidden key path': 'Path not supported!',
+  'DOMException: Blocked a frame with origin "https://myetherwallet.com" from accessing a cross-origin frame.':
+    'Block frame'
 };
 
 const WARNINGS = {};
