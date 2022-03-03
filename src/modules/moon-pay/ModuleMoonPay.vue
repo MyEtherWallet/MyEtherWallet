@@ -42,10 +42,10 @@
       <!-- Powered by -->
       <!-- ============================================================== -->
       <div class="py-8">
-        <div class="text-center mb-3">
+        <div class="text-center mb-3 textLight--text">
           Moonpay.com will open on a new tab to continue
         </div>
-        <div class="mew-body d-flex justify-center align-center">
+        <div class="mew-body d-flex justify-center align-center textDark--text">
           Powered By
           <img
             src="@/modules/moon-pay/assets/moonpay-logo.svg"
@@ -62,7 +62,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
-import handler from './handlers/moonpayHandler';
+import handler from './handlers/handlerMoonpay';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { isEmpty } from 'lodash';
 import nodes from '@/utils/networks';

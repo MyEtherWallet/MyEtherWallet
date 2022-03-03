@@ -16,7 +16,7 @@
     <!-- Fiat currency select -->
     <!-- ============================================================== -->
     <div class="d-flex align-center justify-space-between mt-3 mb-3">
-      <div class="font-weight-medium">Select amount</div>
+      <div class="font-weight-medium textDark--text">Select amount</div>
       <div class="d-flex align-center justify-end">
         <img
           :src="require(`@/assets/images/currencies/${selectedFiat}.svg`)"
@@ -212,15 +212,15 @@ export default {
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
     },
-    // max() {
-    //   if (this.hasData) {
-    //     const foundLimit = this.fetchedData.limits.find(
-    //       item => item.fiat_currency === this.selectedFiat
-    //     );
-    //     return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
-    //   }
-    //   return BigNumber(12000);
-    // },
+    max() {
+      if (this.hasData) {
+        const foundLimit = this.fetchedData.limits.find(
+          item => item.fiat_currency === this.selectedFiat
+        );
+        return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
+      }
+      return BigNumber(12000);
+    },
     fiatConversion() {
       if (this.hasData) {
         const fiatConversion = this.fetchedData.prices.find(
@@ -270,8 +270,8 @@ export default {
           ...formattedPricing,
           {
             id: '6',
-            title: 'Custom'
-            // subTitle: `Up to ${this.currencyFormatter(this.max)}`
+            title: 'Custom',
+            subTitle: `Up to ${this.currencyFormatter(this.max)}`
           }
         ];
       }
@@ -281,7 +281,7 @@ export default {
         { id: '3', fiat: '500', fiatFormatted: '$500', subTitle: '0.16 ETH' },
         { id: '4', fiat: '1000', fiatFormatted: '$1000', subTitle: '0.16 ETH' },
         { id: '5', fiat: '5000', fiatFormatted: '$5000', subTitle: '0.16 ETH' },
-        { id: '6', title: 'Custom' /*subTitle: `Up to $12,000`*/ }
+        { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
       ];
     }
   },

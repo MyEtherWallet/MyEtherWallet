@@ -29,12 +29,14 @@
         :hint="persistentHintMessage"
       />
     </div>
-    <div class="pt-10 pb-13">
+    <div class="pt-8 pb-13">
       <div class="d-flex align-center justify-space-between mb-2">
         <div class="mew-body textDark--text font-weight-bold">
           Estimated Network Fee
         </div>
-        <div v-if="!estimatingFees" class="mew-body">~{{ txFeeInEth }}</div>
+        <div v-if="!estimatingFees" class="mew-body textDark--text">
+          ~{{ txFeeInEth }}
+        </div>
         <v-skeleton-loader v-else type="text" width="150px" />
       </div>
       <div class="mew-body textMedium--text">
@@ -174,36 +176,36 @@ export default {
         this.errorMessages !== ''
       );
     },
-    // min() {
-    //   if (!isEmpty(this.fetchedData)) {
-    //     const found = this.fetchedData.limits.find(item => {
-    //       return (
-    //         item.crypto_currency === this.selectedCurrency.name &&
-    //         item.type === 'WEB'
-    //       );
-    //     });
+    min() {
+      if (!isEmpty(this.fetchedData)) {
+        const found = this.fetchedData.limits.find(item => {
+          return (
+            item.crypto_currency === this.selectedCurrency.name &&
+            item.type === 'WEB'
+          );
+        });
 
-    //     if (found) {
-    //       return BigNumber(found.limit.min);
-    //     }
-    //   }
-    //   return BigNumber(0.015);
-    // },
-    // max() {
-    //   if (!isEmpty(this.fetchedData)) {
-    //     const found = this.fetchedData.limits.find(item => {
-    //       return (
-    //         item.crypto_currency === this.selectedCurrency.name &&
-    //         item.type === 'WEB'
-    //       );
-    //     });
+        if (found) {
+          return BigNumber(found.limit.min);
+        }
+      }
+      return BigNumber(0.015);
+    },
+    max() {
+      if (!isEmpty(this.fetchedData)) {
+        const found = this.fetchedData.limits.find(item => {
+          return (
+            item.crypto_currency === this.selectedCurrency.name &&
+            item.type === 'WEB'
+          );
+        });
 
-    //     if (found) {
-    //       return BigNumber(found.limit.max);
-    //     }
-    //   }
-    //   return BigNumber(3);
-    // },
+        if (found) {
+          return BigNumber(found.limit.max);
+        }
+      }
+      return BigNumber(3);
+    },
     txFee() {
       return fromWei(
         BigNumber(this.locGasPrice).times(this.gasLimit).toString()
@@ -241,12 +243,12 @@ export default {
         return `Invalid decimals! Max decimals for selected currency is ${this.selectedCurrency.decimals}`;
       }
 
-      // if (amount.gt(0) && amount.lt(this.min)) {
-      //   return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
-      // }
-      // if (amount.gt(0) && amount.gt(this.max)) {
-      //   return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
-      // }
+      if (amount.gt(0) && amount.lt(this.min)) {
+        return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
+      }
+      if (amount.gt(0) && amount.gt(this.max)) {
+        return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
+      }
 
       return '';
     },
