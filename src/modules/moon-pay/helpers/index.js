@@ -4,7 +4,7 @@ import { sha3 } from 'web3-utils';
 
 const ENCRYPTION_TYPE = 'aes-256-cbc';
 const MOONPAY_EVENT = 'openMoonPay';
-const MOONPAY_OFFER_END = new Date('3/2/22 12:00 am');
+const MOONPAY_OFFER_END = new Date('3/30/22 12:00 am');
 const LOCALE = {
   USD: 'en-US',
   EUR: 'es-ES',
