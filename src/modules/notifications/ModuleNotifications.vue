@@ -19,11 +19,11 @@
         />
       </v-btn>
       <div
-        v-if="notificationCount > 0"
+        v-if="newNotificationCount > 0"
         class="notification-count pa-3 cursor--pointer d-flex align-center justify-center white--text error lighten2"
         @click="openNotifications"
       >
-        {{ notificationCount }}
+        {{ newNotificationCount }}
       </div>
     </div>
     <mew-overlay
@@ -56,7 +56,7 @@
             Failed
           </div>
         </v-sheet>
-        <div class="d-flex align-center justify-end">
+        <div class="d-flex align-center justify-end" v-if="hasNotification">
           <!-- <div>
             <div>6 notifications</div>
             <v-btn depressed x-small color="textSecondary" dark>
@@ -208,15 +208,21 @@ export default {
       }
     },
     /**
-     * Notification count
+     * new notification count
      */
-    notificationCount() {
+    newNotificationCount() {
       const unread = this.allNotifications.filter(item => {
         if (!item.read) {
           return item;
         }
       });
       return unread.length;
+    },
+    /**
+     * checks whether user has notifications
+     */
+    hasNotification() {
+      return this.allNotifications.length > 0;
     }
   },
   mounted() {
