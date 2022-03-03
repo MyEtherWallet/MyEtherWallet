@@ -86,7 +86,7 @@
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
     "vuex": "3.6.2",
-    "walletlink": "2.4.6"
+    "walletlink": "2.5.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.2.1",
@@ -143,14 +143,14 @@
     "sass-loader": "10.1.1",
     "simple-get": "4.0.1",
     "store": "2.0.12",
-    "stylelint": "14.3.0",
+    "stylelint": "14.5.3",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
     "trezor-connect": "8.2.6",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",
-    "vue-cli-plugin-vuetify": "2.4.5",
+    "vue-cli-plugin-vuetify": "2.4.6",
     "vue-i18n": "8.27.0",
     "vue-matomo": "4.1.0",
     "vue-template-compiler": "2.6.14",

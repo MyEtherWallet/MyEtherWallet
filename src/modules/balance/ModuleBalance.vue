@@ -1,18 +1,12 @@
 <template>
   <div class="mew6-component--module-balance">
     <!--
-  =====================================================================================
-    display if the user has an eth balance > 0
-  =====================================================================================
-  -->
-    <v-skeleton-loader
-      v-if="loading"
-      class="mx-auto module-balance-loader"
-      width="100%"
-      min-height="352px"
-      max-width="100%"
-      type="card"
-    ></v-skeleton-loader>
+    =====================================================================================
+      display if the user has an eth balance > 0
+    =====================================================================================
+    -->
+    <loader v-if="loading" />
+
     <mew-module
       v-if="hasBalance && !loading"
       :subtitle="subtitle"
@@ -110,6 +104,7 @@
 </template>
 
 <script>
+import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
@@ -123,6 +118,7 @@ import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
+    Loader,
     BalanceChart,
     BalanceEmptyBlock
   },
