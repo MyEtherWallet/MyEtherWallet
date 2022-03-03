@@ -58,7 +58,7 @@
 <script>
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapGetters, mapState } from 'vuex';
-import { isEmpty, debounce } from 'lodash';
+import { isEmpty, debounce, isNumber } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import handlerSend from '@/modules/send/handlers/handlerSend.js';
@@ -174,36 +174,36 @@ export default {
         this.errorMessages !== ''
       );
     },
-    min() {
-      if (!isEmpty(this.fetchedData)) {
-        const found = this.fetchedData.limits.find(item => {
-          return (
-            item.crypto_currency === this.selectedCurrency.name &&
-            item.type === 'WEB'
-          );
-        });
+    // min() {
+    //   if (!isEmpty(this.fetchedData)) {
+    //     const found = this.fetchedData.limits.find(item => {
+    //       return (
+    //         item.crypto_currency === this.selectedCurrency.name &&
+    //         item.type === 'WEB'
+    //       );
+    //     });
 
-        if (found) {
-          return BigNumber(found.limit.min);
-        }
-      }
-      return BigNumber(0.015);
-    },
-    max() {
-      if (!isEmpty(this.fetchedData)) {
-        const found = this.fetchedData.limits.find(item => {
-          return (
-            item.crypto_currency === this.selectedCurrency.name &&
-            item.type === 'WEB'
-          );
-        });
+    //     if (found) {
+    //       return BigNumber(found.limit.min);
+    //     }
+    //   }
+    //   return BigNumber(0.015);
+    // },
+    // max() {
+    //   if (!isEmpty(this.fetchedData)) {
+    //     const found = this.fetchedData.limits.find(item => {
+    //       return (
+    //         item.crypto_currency === this.selectedCurrency.name &&
+    //         item.type === 'WEB'
+    //       );
+    //     });
 
-        if (found) {
-          return BigNumber(found.limit.max);
-        }
-      }
-      return BigNumber(3);
-    },
+    //     if (found) {
+    //       return BigNumber(found.limit.max);
+    //     }
+    //   }
+    //   return BigNumber(3);
+    // },
     txFee() {
       return fromWei(
         BigNumber(this.locGasPrice).times(this.gasLimit).toString()
@@ -231,14 +231,42 @@ export default {
         return `You do not have enough ${symbol} to pay for network fee.`;
       }
 
-      if (amount.gt(0) && amount.lt(this.min)) {
-        return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
-      }
-      if (amount.gt(0) && amount.gt(this.max)) {
-        return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
+      if (
+        this.amount &&
+        !handlerSend.helpers.hasValidDecimals(
+          this.amount,
+          this.selectedCurrency.decimals
+        )
+      ) {
+        return `Invalid decimals! Max decimals for selected currency is ${this.selectedCurrency.decimals}`;
       }
 
+      // if (amount.gt(0) && amount.lt(this.min)) {
+      //   return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
+      // }
+      // if (amount.gt(0) && amount.gt(this.max)) {
+      //   return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
+      // }
+
       return '';
+    },
+    isValidAmount() {
+      /** !amount */
+      if (!this.amount) {
+        return false;
+      }
+      if (!isNumber(this.selectedCurrency?.decimals)) {
+        return false;
+      }
+      /** amount is negative */
+      if (BigNumber(this.amount).lt(0)) {
+        return false;
+      }
+      /** return amount has valid decimals */
+      return handlerSend.helpers.hasValidDecimals(
+        this.amount,
+        this.selectedCurrency.decimals
+      );
     }
   },
   watch: {
@@ -311,7 +339,7 @@ export default {
       if (BigNumber(newVal).lt(0)) {
         return;
       }
-      if (newVal && !isEmpty(this.sendHandler)) {
+      if (newVal && !isEmpty(this.sendHandler) && this.isValidAmount) {
         const newValue = BigNumber(newVal ? newVal : 0)
           .times(
             BigNumber(10).pow(

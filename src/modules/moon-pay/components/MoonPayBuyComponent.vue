@@ -212,23 +212,24 @@ export default {
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
     },
-    max() {
-      if (this.hasData) {
-        const foundLimit = this.fetchedData.limits.find(
-          item => item.fiat_currency === this.selectedFiat
-        );
-        return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
-      }
-      return BigNumber(12000);
-    },
+    // max() {
+    //   if (this.hasData) {
+    //     const foundLimit = this.fetchedData.limits.find(
+    //       item => item.fiat_currency === this.selectedFiat
+    //     );
+    //     return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
+    //   }
+    //   return BigNumber(12000);
+    // },
     fiatConversion() {
       if (this.hasData) {
-        const fiatConversion = this.fetchedData.conversion_rates.find(
+        const fiatConversion = this.fetchedData.prices.find(
           item => item.fiat_currency === this.selectedFiat
         );
-        return fiatConversion
-          ? BigNumber(fiatConversion.exchange_rate)
-          : BigNumber(1);
+        const currencyPerFiat = BigNumber(
+          BigNumber(1).div(fiatConversion.price)
+        ).times(fiatConversion.price);
+        return fiatConversion ? currencyPerFiat : BigNumber(1);
       }
       return BigNumber(1);
     },
@@ -245,66 +246,32 @@ export default {
     },
     buttons() {
       if (this.hasData) {
+        const priceHolder = [
+          this.selectedFiat === 'JPY' ? 10000 : 100,
+          this.selectedFiat === 'JPY' ? 50000 : 250,
+          this.selectedFiat === 'JPY' ? 100000 : 500,
+          this.selectedFiat === 'JPY' ? 150000 : 1000,
+          this.selectedFiat === 'JPY' ? 1000000 : 5000
+        ];
+        const formattedPricing = priceHolder.map((item, idx) => {
+          return {
+            id: `${BigNumber(idx).toString()}${this.selectedFiat}`,
+            fiat: this.fiatConversion.times(item).toString(),
+            fiatFormatted: this.currencyFormatter(
+              this.fiatConversion.times(item).toString()
+            ),
+            subTitle: `~${BigNumber(item)
+              .div(this.currencyPriceFromProvider.decimalPlaces(2))
+              .decimalPlaces(4)
+              .toString()} ${this.selectedCurrency.name}`
+          };
+        });
         return [
-          {
-            id: '1',
-            fiat: this.fiatConversion.times(100).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(100).toString()
-            ),
-            subTitle: `~${BigNumber(100)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          },
-          {
-            id: '2',
-            fiat: this.fiatConversion.times(250).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(250).toString()
-            ),
-            subTitle: `~${BigNumber(250)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          },
-          {
-            id: '3',
-            fiat: this.fiatConversion.times(500).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(500).toString()
-            ),
-            subTitle: `~${BigNumber(500)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          },
-          {
-            id: '4',
-            fiat: this.fiatConversion.times(1000).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(1000).toString()
-            ),
-            subTitle: `~${BigNumber(1000)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          },
-          {
-            id: '5',
-            fiat: this.fiatConversion.times(5000).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(5000).toString()
-            ),
-            subTitle: `~${BigNumber(5000)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          },
+          ...formattedPricing,
           {
             id: '6',
-            title: 'Custom',
-            subTitle: `Up to ${this.currencyFormatter(this.max)}`
+            title: 'Custom'
+            // subTitle: `Up to ${this.currencyFormatter(this.max)}`
           }
         ];
       }
@@ -314,7 +281,7 @@ export default {
         { id: '3', fiat: '500', fiatFormatted: '$500', subTitle: '0.16 ETH' },
         { id: '4', fiat: '1000', fiatFormatted: '$1000', subTitle: '0.16 ETH' },
         { id: '5', fiat: '5000', fiatFormatted: '$5000', subTitle: '0.16 ETH' },
-        { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
+        { id: '6', title: 'Custom' /*subTitle: `Up to $12,000`*/ }
       ];
     }
   },
@@ -357,7 +324,8 @@ export default {
       this.fetchData = {};
     },
     fetchCurrencyData() {
-      this.reset();
+      this.loading = true;
+      this.fetchData = {};
       this.handler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
