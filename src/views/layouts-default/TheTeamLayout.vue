@@ -31,7 +31,6 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-
 import Kosala from '@/assets/images/team/kosala.jpg';
 import Brian from '@/assets/images/team/brian.jpg';
 import Olga from '@/assets/images/team/olga.jpg';
@@ -49,6 +48,10 @@ import Katya from '@/assets/images/team/katya.jpg';
 import Raden from '@/assets/images/team/raden.jpg';
 import Vince from '@/assets/images/team/vince.jpg';
 import Michael from '@/assets/images/team/michael.jpg';
+import Chindalath from '@/assets/images/team/chindalath.jpg';
+import Andrew from '@/assets/images/team/andrew.jpg';
+import Jazmine from '@/assets/images/team/jazmine.jpg';
+import Jason from '@/assets/images/team/jason.jpg';
 
 export default {
   name: 'TheTeamLayout',
@@ -72,7 +75,8 @@ export default {
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: placeholder, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
-      { img: placeholder, name: 'Andrew', title: 'Full-Stack Developer' },
+      { img: Andrew, name: 'Andrew', title: 'Full-Stack Developer' },
+      { img: Chindalath, name: 'Chindalath', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
       { img: doggiePlaceholder, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
@@ -80,7 +84,7 @@ export default {
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
       { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
       {
-        img: placeholder,
+        img: Jazmine,
         name: 'Jazmine',
         title: 'Blockchain Community Specialist'
       },
@@ -97,6 +101,11 @@ export default {
       {
         img: placeholder,
         name: 'Brionne',
+        title: 'Blockchain Community Specialist'
+      },
+      {
+        img: Jason,
+        name: 'Jason',
         title: 'Blockchain Community Specialist'
       }
     ]
