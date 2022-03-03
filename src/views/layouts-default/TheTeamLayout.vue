@@ -39,7 +39,6 @@ import Misha from '@/assets/images/team/misha.jpg';
 import Yel from '@/assets/images/team/gamaliel.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
 import placeholder from '@/assets/images/team/placeholder.jpg';
-import doggiePlaceholder from '@/assets/images/team/doggie.jpg';
 import David from '@/assets/images/team/david.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
@@ -52,6 +51,7 @@ import Chindalath from '@/assets/images/team/chindalath.jpg';
 import Andrew from '@/assets/images/team/andrew.jpg';
 import Jazmine from '@/assets/images/team/jazmine.jpg';
 import Jason from '@/assets/images/team/jason.jpg';
+import Jessica from '@/assets/images/team/jessica.jpg';
 
 export default {
   name: 'TheTeamLayout',
@@ -73,12 +73,12 @@ export default {
       { img: Misha, name: 'Misha', title: 'Lead Mobile Developer' },
       { img: Yel, name: 'Yel', title: 'Lead Web Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
-      { img: placeholder, name: 'Jessica', title: 'Full-Stack Developer' },
+      { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
       { img: Andrew, name: 'Andrew', title: 'Full-Stack Developer' },
       { img: Chindalath, name: 'Chindalath', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: doggiePlaceholder, name: 'Russell', title: 'Product UI/UX' },
+      { img: placeholder, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
