@@ -56,7 +56,7 @@
             Failed
           </div>
         </v-sheet>
-        <div class="d-flex align-center justify-end" v-if="hasNotification">
+        <div v-if="hasNotification" class="d-flex align-center justify-end">
           <!-- <div>
             <div>6 notifications</div>
             <v-btn depressed x-small color="textSecondary" dark>
