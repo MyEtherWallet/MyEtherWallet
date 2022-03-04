@@ -1,8 +1,10 @@
-import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
+import StakewiseHandler from './stakewiseHandler';
+import { OneInch, ZEROX, ParaSwap } from './providers';
 import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import Configs from './configs.js';
+import Configs from './providers/configs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
+
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -13,13 +15,15 @@ const mergeIfNotExists = (baseList, newList) => {
   });
   return baseList;
 };
-class Swap {
+
+export default class StakewiseRewardHandler extends StakewiseHandler {
   constructor(web3, chain) {
+    super(web3, chain);
     this.providers = [
       new OneInch(web3, chain),
       new ZEROX(web3, chain),
-      new ParaSwap(web3, chain),
-      new Changelly(web3, chain)
+      new ParaSwap(web3, chain)
+      // new Changelly(web3, chain)
     ];
     this.chain = chain;
   }
@@ -112,8 +116,6 @@ class Swap {
   }
 }
 
-Swap.helpers = {
+StakewiseRewardHandler.helpers = {
   hasValidDecimals
 };
-
-export default Swap;

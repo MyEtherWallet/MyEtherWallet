@@ -70,6 +70,7 @@
               label="Amount to compound"
               placeholder="Enter amount"
               :value="compoundAmount"
+              @input="getQuote"
             />
           </div>
 
@@ -164,17 +165,18 @@ import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-import stakeHandler from '../handlers/stakewiseStakeHandler';
+// import stakeHandler from '../handlers/stakewiseStakeHandler';
+import RewardSwapper from '../handlers/stakewiseRewardHandler';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
-// import { find } from 'lodash';
-// import {
-//   SETH2_MAINNET_CONTRACT,
-//   RETH2_MAINNET_CONTRACT,
-//   RETH2_GOERLI_CONTRACT
-//   SETH2_GOERLI_CONTRACT
-// } from '@/dapps/stakewise/handlers/configs.js';
+import { find } from 'lodash';
+import {
+  SETH2_MAINNET_CONTRACT,
+  RETH2_MAINNET_CONTRACT,
+  RETH2_GOERLI_CONTRACT,
+  SETH2_GOERLI_CONTRACT
+} from '@/dapps/stakewise/handlers/configs.js';
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
@@ -188,7 +190,8 @@ export default {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
       compoundAmount: '0',
       locGasPrice: '0',
-      stakeHandler: {}
+      rewardSwapper: {}
+      // stakeHandler: {}
     };
   },
   computed: {
@@ -199,26 +202,26 @@ export default {
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['web3', 'address']),
-    // seth2Contract() {
-    //   return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
-    // },
-    // reth2Contract() {
-    //   return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
-    // },
-    // hasSeth() {
-    //   const token = find(
-    //     this.tokensList,
-    //     item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-    //   );
-    //   return token;
-    // },
-    // hasReth() {
-    //   const token = find(
-    //     this.tokensList,
-    //     item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
-    //   );
-    //   return token;
-    // },
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
+    reth2Contract() {
+      return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
+    },
+    hasSeth() {
+      const token = find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
+      );
+      return token;
+    },
+    hasReth() {
+      const token = find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
+      );
+      return token;
+    },
     rethBalance() {
       return '0.19';
       // return this.hasReth ? this.hasReth.balancef : '0';
@@ -228,11 +231,13 @@ export default {
     // }
   },
   mounted() {
-    this.stakeHandler = new stakeHandler(
-      this.web3,
-      this.isEthNetwork,
-      this.address
-    );
+    // this.stakeHandler = new stakeHandler(
+    //   this.web3,
+    //   this.isEthNetwork,
+    //   this.address
+    // );
+    this.rewardSwapper = new RewardSwapper(this.web3, this.network.type.name);
+    console.log('swapper', this.rewardSwapper);
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
@@ -240,10 +245,24 @@ export default {
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
-    setAmount: debounce(function (val) {
+    setAmount: debounce(val => {
       const value = val ? val : 0;
-      this.stakeHandler._setAmount(BigNumber(value).toString());
+      // this.stakeHandler._setAmount(BigNumber(value).toString());
       this.compoundAmount = BigNumber(value).toString();
+    }, 500),
+    getQuote: debounce(() => {
+      return this.rewardSwapper
+        .getAllQuotes({
+          fromT: this.hasSeth,
+          toT: this.hasReth,
+          // hardcoded compound amount for now
+          fromAmount: new BigNumber('0.18').times(
+            new BigNumber(10).pow(new BigNumber(18))
+          )
+        })
+        .then(quotes => {
+          console.log('quotes', quotes);
+        });
     }, 500)
   }
 };
