@@ -225,7 +225,7 @@ export default {
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
       if (this.nonMainnetMetamask) {
-        return 'Please switch your network to the Ethereum Mainnet on Metamask to view your balances.';
+        return 'Please switch your network to the Ethereum Mainnet on Metamask.';
       }
 
       if (amount.lt(0)) {
