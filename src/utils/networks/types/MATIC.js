@@ -18,5 +18,6 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1.5,
+  canBuy: true,
   coingeckoID: 'matic-network'
 };

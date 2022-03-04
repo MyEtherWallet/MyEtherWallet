@@ -21,9 +21,12 @@
           label="Staking amount"
           :items="selectItems"
           :error-messages="errorMessages"
-          :buy-more-str="errorMessages ? 'Buy more.' : null"
+          :buy-more-str="
+            errorMessages ? (network.type.canBuy ? 'Buy more.' : null) : null
+          "
           is-custom
           outlined
+          @buyMore="openMoonpay"
           @input="setAmount"
         />
         <!--
@@ -141,8 +144,10 @@ import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: { BorderBlock },
+  mixins: [buyMore],
   props: {
     currentApr: {
       type: String,

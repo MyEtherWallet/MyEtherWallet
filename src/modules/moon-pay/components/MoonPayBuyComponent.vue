@@ -94,7 +94,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { cloneDeep, isEqual } from 'apollo-utilities';
 export default {
   name: 'ModuleBuyEth',
@@ -123,7 +123,6 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['tokens']),
     currencyItems() {
       // hard writing for now
       const tokensList = [

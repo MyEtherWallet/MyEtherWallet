@@ -90,12 +90,26 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     defaltCurrency() {
-      return isEmpty(this.selectedCurrency)
-        ? this.tokensList.filter(
-            item =>
-              item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
-          )[0]
-        : this.selectedCurrency;
+      if (isEmpty(this.selectedCurrency) && !this.network.type.isTestNetwork) {
+        return this.tokensList.filter(
+          item =>
+            item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
+        )[0];
+      } else if (
+        isEmpty(this.selectedCurrency) &&
+        this.network.type.isTestNetwork
+      ) {
+        return {
+          decimals: 18,
+          img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
+          name: 'ETH',
+          subtext: 'Ethereum',
+          value: 'Ethereum',
+          symbol: 'ETH',
+          network: 1
+        };
+      }
+      return this.selectedCurrency;
     },
     leftBtn() {
       return {
@@ -126,9 +140,8 @@ export default {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
     onTab(val) {
-      this.activeTab = val;
+      this.selectedCurrency = {};
       if (val === 1) {
-        this.selectedCurrency = {};
         if (this.network.type.chainID !== 1) {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';
@@ -136,9 +149,12 @@ export default {
 
           this.setNetwork(defaultNetwork).then(() => {
             this.setWeb3Instance();
+            this.activeTab = val;
             Toast(`Switched network to: ETH`, {}, SUCCESS);
           });
         }
+      } else {
+        this.activeTab = val;
       }
     },
     close() {

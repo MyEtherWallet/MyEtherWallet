@@ -167,6 +167,13 @@ export default {
       ];
       return returnedArray;
     },
+    name() {
+      return this.selectedCurrency.name !== 'ETH' ||
+        this.selectedCurrency.name !== 'USDC' ||
+        this.selectedCurrency.name !== 'MATIC'
+        ? 'ETH'
+        : this.selectedCurrency.name;
+    },
     disableSell() {
       return (
         !this.amount ||
@@ -179,10 +186,7 @@ export default {
     min() {
       if (!isEmpty(this.fetchedData)) {
         const found = this.fetchedData.limits.find(item => {
-          return (
-            item.crypto_currency === this.selectedCurrency.name &&
-            item.type === 'WEB'
-          );
+          return item.crypto_currency === this.name && item.type === 'WEB';
         });
 
         if (found) {
@@ -194,10 +198,7 @@ export default {
     max() {
       if (!isEmpty(this.fetchedData)) {
         const found = this.fetchedData.limits.find(item => {
-          return (
-            item.crypto_currency === this.selectedCurrency.name &&
-            item.type === 'WEB'
-          );
+          return item.crypto_currency === this.name && item.type === 'WEB';
         });
 
         if (found) {
@@ -218,7 +219,7 @@ export default {
     },
     errorMessages() {
       const symbol = this.selectedCurrency?.name
-        ? this.selectedCurrency.name
+        ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
       if (amount.lt(0)) {
@@ -387,7 +388,7 @@ export default {
     },
     sell() {
       this.handler
-        .sell(this.selectedCurrency.name, this.amount)
+        .sell(this.name, this.amount)
         .then(() => {
           this.amount = '0';
           this.close();
@@ -423,7 +424,7 @@ export default {
         this.getTokenBalance();
       }
       this.handler
-        .getSupportedFiatToSell(this.selectedCurrency.name)
+        .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;
           this.fetchedData = Object.assign({}, res);

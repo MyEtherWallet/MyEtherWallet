@@ -93,7 +93,7 @@
               dark
               depressed
               x-small
-              :disabled="!hasSwap"
+              :class="[!hasSwap ? 'pointer-event--none' : '']"
               @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
             >
               <div class="text-center" style="min-width: 50px">
@@ -101,9 +101,13 @@
                   src="@/assets/images/icons/menu/icon-menu-swap.svg"
                   alt="Swap"
                   height="30"
+                  :class="[!hasSwap ? 'opacity--30' : '']"
                 />
                 <div
-                  class="whiteAlways--text mew-label text-transform--initial"
+                  :class="[
+                    !hasSwap ? 'textMedium--text' : '',
+                    'whiteAlways--text mew-label text-transform--initial'
+                  ]"
                   style="margin-top: 3px"
                 >
                   Swap
@@ -570,6 +574,10 @@ export default {
     .v-label {
       color: var(--v-white-base);
     }
+  }
+
+  .opacity--30 {
+    opacity: 30%;
   }
 }
 </style>

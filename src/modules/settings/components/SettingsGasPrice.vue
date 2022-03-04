@@ -105,7 +105,9 @@
     <div class="mt-4 d-flex flex-column align-center">
       <div v-if="!fromSettings && showGetMoreEth" class="mt-3">
         <span class="secondary--text">Can't increase priority? </span>
-        <a target="_blank" :href="swapLink"> Buy more ETH </a>
+        <a v-if="network.type.canBuy" @click="openMoonpay">
+          Buy more {{ network.type.name }}
+        </a>
       </div>
     </div>
   </div>
@@ -120,9 +122,11 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'SettingsGasPrice',
+  mixins: [buyMore],
   props: {
     setSelected: {
       type: Function,

@@ -153,11 +153,9 @@
           <span
             >{{ notEnoughMessage }}
             <a
-              v-if="!isTestNetwork"
-              rel="noopener noreferrer"
-              target="_blank"
-              :href="swapLink"
+              v-if="!isTestNetwork && network.type.canBuy"
               class="mew-label font-weight-medium buy-more-link"
+              @click="openMoonpay"
             >
               Buy more {{ network.type.name }}.
 
@@ -211,10 +209,11 @@ const RARIBLE_OWNER = `${RARIBLE}user/`;
 const RARIBLE_TEST = 'https://rinkeby.rarible.com/';
 const RARIBLE_TEST_TOKEN = `${RARIBLE_TEST}${RARIBLE_CONTRACT}`;
 const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'BlockInfoAlert',
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   props: {
     blockAlert: {
       default: BLOCK_ALERT.NOT_AVAILABLE,
@@ -253,7 +252,7 @@ export default {
     /**
      * STORE GETTERS
      */
-    ...mapGetters('global', ['network', 'isTestNetwork', 'swapLink']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
     ...mapGetters('external', ['fiatValue']),
     /**
      * @returns{string}

@@ -43,7 +43,9 @@
                     isEthNetwork &&
                     (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
                       amountErrorMessage === errorMsgs.amountEthIsTooLow)
-                      ? 'Buy more.'
+                      ? network.type.canBuy
+                        ? 'Buy more.'
+                        : ''
                       : null
                   "
                   :max-btn-obj="{
@@ -51,6 +53,7 @@
                     disabled: disableSwapBtn,
                     method: setMaxAmount
                   }"
+                  @buyMore="openMoonpay"
                   @input="setTokenInValue"
               /></v-col>
               <v-col
@@ -305,6 +308,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -318,7 +322,7 @@ export default {
     SwapProviderMentions,
     AppTransactionFee
   },
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   props: {
     fromToken: {
       type: String,

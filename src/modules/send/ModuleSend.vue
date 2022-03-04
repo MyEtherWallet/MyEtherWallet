@@ -48,7 +48,8 @@
                 disabled: disableSwapBtn,
                 method: setEntireBal
               }"
-              :buy-more-str="buyMore"
+              :buy-more-str="buyMoreStr"
+              @buyMore="openMoonpay"
               @input="setAmount"
             />
           </div>
@@ -191,6 +192,7 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
     ModuleAddressBook,
@@ -198,6 +200,7 @@ export default {
     AppButtonBalance,
     AppTransactionFee
   },
+  mixins: [buyMore],
   props: {
     prefilledAmount: {
       type: String,
@@ -264,11 +267,13 @@ export default {
         !this.gasEstimationIsReady
       );
     },
-    buyMore() {
+    buyMoreStr() {
       return this.isEthNetwork &&
         MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
         this.amountError === 'Not enough balance to send!'
-        ? 'Buy more.'
+        ? this.network.type.canBuy
+          ? 'Buy more.'
+          : ''
         : '';
     },
     hasEnoughEth() {
