@@ -24,7 +24,7 @@
           :has-full-width="false"
           title="Buy ETH with a credit card"
           btn-size="xlarge"
-          :btn-link="swapLink"
+          @click.native="openMoonpay"
         />
         <div class="d-flex align-center mt-5">
           <div>We accept credit card</div>
@@ -72,9 +72,10 @@
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { mapGetters } from 'vuex';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'BalanceEmptyBlock',
+  mixins: [buyMore],
   props: {
     networkType: {
       type: String,
@@ -88,9 +89,6 @@ export default {
       type: Boolean,
       default: true
     }
-  },
-  computed: {
-    ...mapGetters('global', ['swapLink'])
   },
   methods: {
     /**

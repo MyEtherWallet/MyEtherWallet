@@ -164,7 +164,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['swapLink', 'gasPriceByType', 'network']),
+    ...mapGetters('global', ['gasPriceByType', 'network']),
     ...mapState('global', ['gasPriceType', 'gasPrice']),
     ...mapGetters('wallet', ['balanceInETH']),
     currencyName() {

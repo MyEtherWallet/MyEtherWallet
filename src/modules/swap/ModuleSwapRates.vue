@@ -25,11 +25,7 @@
           <div class="d-flex align-center">
             <img
               width="22"
-              :src="
-                require('@/assets/images/currencies/' +
-                  data.fromT.symbol.toLowerCase() +
-                  '.png')
-              "
+              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
               alt="currency-icon"
             />
             <img

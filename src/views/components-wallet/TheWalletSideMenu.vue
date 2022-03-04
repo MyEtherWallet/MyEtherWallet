@@ -333,7 +333,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink', 'isEthNetwork', 'hasSwap']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
@@ -436,10 +436,6 @@ export default {
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
     }
-    // openSimplex() {
-    //   // eslint-disable-next-line
-    //   window.open(`${this.swapLink}`, '_blank');
-    // }
   }
 };
 </script>

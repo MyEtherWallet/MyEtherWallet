@@ -110,10 +110,10 @@
               <mew-button
                 btn-size="small"
                 btn-style="outline"
-                title="Buy Ether"
+                :title="`Buy ${network.typ.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="buyEth"
+                @click.native="openMoonpay"
               />
             </div>
           </app-user-msg-block>
@@ -383,12 +383,7 @@ export default {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('global', ['gasPriceType', 'preferredCurrency']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'swapLink',
-      'gasPriceByType'
-    ]),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -978,10 +973,6 @@ export default {
         });
       }
       return [];
-    },
-    buyEth() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = clone(this.fromTokenType);

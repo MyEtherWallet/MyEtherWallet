@@ -168,9 +168,9 @@ export default {
       return returnedArray;
     },
     name() {
-      return this.selectedCurrency.name !== 'ETH' ||
-        this.selectedCurrency.name !== 'USDC' ||
-        this.selectedCurrency.name !== 'MATIC'
+      return this.selectedCurrency.name !== 'ETH' &&
+        this.selectedCurrency.name !== 'USDC' &&
+        this.selectedCurrency.name !== 'USDT'
         ? 'ETH'
         : this.selectedCurrency.name;
     },
