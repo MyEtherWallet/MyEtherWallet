@@ -69,7 +69,7 @@
               :image="iconStakewise"
               label="Amount to compound"
               placeholder="Enter amount"
-              value=""
+              :value="compoundAmount"
             />
           </div>
 
@@ -157,7 +157,6 @@
               class="mt-8"
               title="Compound Rewards"
               btn-size="xlarge"
-              :value="compoundAmount"
             />
           </div>
         </mew6-white-sheet>
@@ -180,6 +179,13 @@ import stakeHandler from '../handlers/stakewiseStakeHandler';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
+// import { find } from 'lodash';
+// import {
+//   SETH2_MAINNET_CONTRACT,
+//   RETH2_MAINNET_CONTRACT,
+//   RETH2_GOERLI_CONTRACT
+//   SETH2_GOERLI_CONTRACT
+// } from '@/dapps/stakewise/handlers/configs.js';
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
@@ -197,13 +203,40 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('wallet', ['balanceInETH']),
+    ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('stakewise', ['getStakingFee']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address'])
+    ...mapState('wallet', ['web3', 'address']),
+    // seth2Contract() {
+    //   return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    // },
+    // reth2Contract() {
+    //   return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
+    // },
+    // hasSeth() {
+    //   const token = find(
+    //     this.tokensList,
+    //     item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
+    //   );
+    //   return token;
+    // },
+    // hasReth() {
+    //   const token = find(
+    //     this.tokensList,
+    //     item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
+    //   );
+    //   return token;
+    // },
+    rethBalance() {
+      return '0.19';
+      // return this.hasReth ? this.hasReth.balancef : '0';
+    }
+    // rethUsdBalance() {
+    //   return this.hasReth ? this.hasReth.usdBalancef : '0';
+    // }
   },
   mounted() {
     this.stakeHandler = new stakeHandler(
@@ -215,10 +248,7 @@ export default {
   },
   methods: {
     setMax() {
-      // change to rewards
-      const max = BigNumber(this.balanceInETH).minus(
-        BigNumber(this.ethTotalFee)
-      );
+      const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
     setAmount: debounce(function (val) {
