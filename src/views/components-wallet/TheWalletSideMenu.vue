@@ -577,7 +577,7 @@ export default {
   }
 
   .opacity--30 {
-    opacity: 30%;
+    opacity: 30% !important;
   }
 }
 </style>
