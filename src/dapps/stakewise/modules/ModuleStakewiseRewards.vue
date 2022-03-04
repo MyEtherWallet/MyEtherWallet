@@ -124,17 +124,6 @@
                 <div class="mew-label textLight--text">$120.98</div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mb-5">
-              <div
-                class="textLight--text mew-label font-weight-medium text-uppercase"
-              >
-                0.3% Staking Fee
-              </div>
-              <div class="text-right">
-                <div class="">0.38421 ETH</div>
-                <div class="mew-label textLight--text">$120.98</div>
-              </div>
-            </div>
           </div>
 
           <!-- ======================================================================================= -->
