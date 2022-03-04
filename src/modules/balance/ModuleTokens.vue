@@ -15,8 +15,6 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
-      :icon="require('@/assets/images/icons/icon-token-grey.png')"
-      icon-align="left"
     >
       <template #rightHeaderContainer>
         <div>
