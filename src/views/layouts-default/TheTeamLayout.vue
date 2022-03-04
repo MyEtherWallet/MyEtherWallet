@@ -38,7 +38,7 @@ import Alex from '@/assets/images/team/alex.jpg';
 import Misha from '@/assets/images/team/misha.jpg';
 import Yel from '@/assets/images/team/gamaliel.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
-import placeholder from '@/assets/images/team/placeholder.jpg';
+//import placeholder from '@/assets/images/team/placeholder.jpg';
 import David from '@/assets/images/team/david.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
@@ -52,6 +52,10 @@ import Andrew from '@/assets/images/team/andrew.jpg';
 import Jazmine from '@/assets/images/team/jazmine.jpg';
 import Jason from '@/assets/images/team/jason.jpg';
 import Jessica from '@/assets/images/team/jessica.jpg';
+import Brionne from '@/assets/images/team/brionne.jpg';
+import Russell from '@/assets/images/team/russell.jpg';
+import Marcus from '@/assets/images/team/marcus.jpg';
+import AndrewDao from '@/assets/images/team/andrew-dao.jpg';
 
 export default {
   name: 'TheTeamLayout',
@@ -74,15 +78,21 @@ export default {
       { img: Yel, name: 'Yel', title: 'Lead Web Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
+      { img: Marcus, name: 'Marcus', title: 'Full-Stack Developer' },
       { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
       { img: Andrew, name: 'Andrew', title: 'Full-Stack Developer' },
       { img: Chindalath, name: 'Chindalath', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: placeholder, name: 'Russell', title: 'Product UI/UX' },
+      { img: Russell, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
       { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
+      {
+        img: AndrewDao,
+        name: 'Andrew Dao',
+        title: 'Blockchain Community Specialist'
+      },
       {
         img: Jazmine,
         name: 'Jazmine',
@@ -99,7 +109,7 @@ export default {
         title: 'Blockchain Community Specialist'
       },
       {
-        img: placeholder,
+        img: Brionne,
         name: 'Brionne',
         title: 'Blockchain Community Specialist'
       },
