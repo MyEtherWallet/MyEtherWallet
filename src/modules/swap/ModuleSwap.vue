@@ -110,7 +110,7 @@
               <mew-button
                 btn-size="small"
                 btn-style="outline"
-                :title="`Buy ${network.typ.currencyName}`"
+                :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
                 @click.native="openMoonpay"
