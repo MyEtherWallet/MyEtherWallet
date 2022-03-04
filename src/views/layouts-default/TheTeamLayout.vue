@@ -56,6 +56,7 @@ import Brionne from '@/assets/images/team/brionne.jpg';
 import Russell from '@/assets/images/team/russell.jpg';
 import Marcus from '@/assets/images/team/marcus.jpg';
 import AndrewDao from '@/assets/images/team/andrew-dao.jpg';
+import Christian from '@/assets/images/team/christian.jpg';
 
 export default {
   name: 'TheTeamLayout',
@@ -116,6 +117,11 @@ export default {
       {
         img: Jason,
         name: 'Jason',
+        title: 'Blockchain Community Specialist'
+      },
+      {
+        img: Christian,
+        name: 'Christian',
         title: 'Blockchain Community Specialist'
       }
     ]
