@@ -99,7 +99,7 @@ import { cloneDeep, isEqual } from 'apollo-utilities';
 export default {
   name: 'ModuleBuyEth',
   props: {
-    handler: {
+    moonpayHandler: {
       type: Object,
       default: () => {}
     },
@@ -300,6 +300,12 @@ export default {
         this.selectedCurrency = this.defaultCurrency;
       },
       deep: true
+    },
+    moonpayHandler: {
+      handler: function () {
+        this.fetchCurrencyData();
+      },
+      deep: true
     }
   },
   mounted() {
@@ -325,10 +331,10 @@ export default {
     fetchCurrencyData() {
       this.loading = true;
       this.fetchData = {};
-      this.handler
+      this.moonpayHandler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          this.handler.getFiatRatesForBuy().then(res => {
+          this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
           });
@@ -340,7 +346,7 @@ export default {
     },
     buy(btn) {
       const amount = btn.hasOwnProperty('fiat') ? btn.fiat.toString() : null;
-      this.handler
+      this.moonpayHandler
         .buy(this.selectedCurrency.name, this.selectedFiat, amount)
         .then(() => {
           this.reset();

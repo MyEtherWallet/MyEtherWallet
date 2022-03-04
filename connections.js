@@ -24,6 +24,7 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://formspree.io:443/f/mqjndkkx',
   // nodes
+  'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
   'wss://www.ethercluster.com:443',

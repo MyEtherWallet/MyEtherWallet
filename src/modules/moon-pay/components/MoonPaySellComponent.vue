@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import { mapGetters, mapState } from 'vuex';
 import { isEmpty, debounce, isNumber } from 'lodash';
@@ -67,13 +68,13 @@ import handlerSend from '@/modules/send/handlers/handlerSend.js';
 import { fromWei } from 'web3-utils';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
-import nodes from '@/utils/networks';
+// import nodes from '@/utils/networks';
 import Web3 from 'web3';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
   props: {
-    handler: {
+    moonpayHandler: {
       type: Object,
       default: () => {}
     },
@@ -103,7 +104,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['gasPriceType']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
@@ -116,7 +117,8 @@ export default {
       return BigNumber(this.selectedBalance).gt(0)
         ? {
             title: 'Max',
-            method: this.setMax
+            method: this.setMax,
+            disabled: this.nonMainnetMetamask
           }
         : {};
     },
@@ -222,6 +224,10 @@ export default {
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
+      if (this.nonMainnetMetamask) {
+        return 'Please switch your network to the Ethereum Mainnet on Metamask to view your balances.';
+      }
+
       if (amount.lt(0)) {
         return "Amount can't be negative.";
       }
@@ -252,6 +258,12 @@ export default {
       }
 
       return '';
+    },
+    nonMainnetMetamask() {
+      return (
+        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
+        this.network.type.name !== 'ETH'
+      );
     },
     isValidAmount() {
       /** !amount */
@@ -303,6 +315,14 @@ export default {
     },
     gasLimit(val) {
       this.sendHandler.setGasLimit(val);
+    },
+    moonpayHandler: {
+      handler: function () {
+        this.sendHandler = new handlerSend();
+        this.fetchSellInfo();
+        this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+      },
+      deep: true
     }
   },
   mounted() {
@@ -312,14 +332,14 @@ export default {
   },
   methods: {
     getEthBalance() {
-      const web3Instance = new Web3(nodes['ETH'][0].url);
+      const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       web3Instance.eth.getBalance(this.address).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
       });
     },
     getTokenBalance() {
-      const web3Instance = new Web3(nodes['ETH'][0].url);
+      const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       const contract = new web3Instance.eth.Contract(
         abi,
         this.selectedCurrency.contract
@@ -387,7 +407,7 @@ export default {
       this.hasPersistentHint = true;
     },
     sell() {
-      this.handler
+      this.moonpayHandler
         .sell(this.name, this.amount)
         .then(() => {
           this.amount = '0';
@@ -423,7 +443,7 @@ export default {
       } else {
         this.getTokenBalance();
       }
-      this.handler
+      this.moonpayHandler
         .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;

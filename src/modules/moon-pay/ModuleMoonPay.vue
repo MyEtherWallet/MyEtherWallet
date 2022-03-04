@@ -21,7 +21,7 @@
       >
         <template #tabContent1>
           <buy-eth-component
-            :handler="moonpayHandler"
+            :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
             :default-currency="defaltCurrency"
@@ -30,7 +30,7 @@
         </template>
         <template #tabContent2>
           <sell-eth-component
-            :handler="moonpayHandler"
+            :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
             :default-currency="defaltCurrency"
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import BuyEthComponent from './components/MoonPayBuyComponent';
 import SellEthComponent from './components/MoonPaySellComponent';
@@ -86,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     defaltCurrency() {
@@ -106,7 +107,8 @@ export default {
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH',
-          network: 1
+          network: 1,
+          contract: MAIN_TOKEN_ADDRESS
         };
       }
       return this.selectedCurrency;
@@ -134,6 +136,10 @@ export default {
         this.moonpayHandler = new handler(this.address);
       }
       this.selectedCurrency = {};
+    },
+    address(newVal) {
+      this.moonpayHandler = new handler(newVal);
+      this.selectedCurrency = {};
     }
   },
   methods: {
@@ -146,12 +152,13 @@ export default {
           const defaultNetwork = this.nodes['ETH'].find(item => {
             return item.service === 'myetherwallet.com-ws';
           });
-
-          this.setNetwork(defaultNetwork).then(() => {
-            this.setWeb3Instance();
-            this.activeTab = val;
-            Toast(`Switched network to: ETH`, {}, SUCCESS);
-          });
+          if (this.instance.identifier !== WALLET_TYPES.WEB3_WALLET) {
+            this.setNetwork(defaultNetwork).then(() => {
+              this.setWeb3Instance();
+              this.activeTab = val;
+              Toast(`Switched network to: ETH`, {}, SUCCESS);
+            });
+          }
         }
       } else {
         this.activeTab = val;
