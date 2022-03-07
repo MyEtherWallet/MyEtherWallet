@@ -367,7 +367,7 @@ export default {
     alertBorderColor() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return '1px solid #F5A623';
+          return '1px solid #FBDBA7';
         case BLOCK_ALERT.AVAILABLE:
           return '1px solid #C3F0E9';
         case BLOCK_ALERT.RESERVED:
@@ -382,13 +382,13 @@ export default {
     alertBgColor() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'F5A623';
+          return '#FEF4E5';
         case BLOCK_ALERT.AVAILABLE:
           return '#EBFAF8';
         case BLOCK_ALERT.RESERVED:
-          return 'FF445B';
+          return '#FF445B';
         default:
-          return '#EBFAF8';
+          return '#EEF3FD';
       }
     },
     /**
