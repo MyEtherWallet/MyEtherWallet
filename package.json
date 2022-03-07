@@ -49,7 +49,7 @@
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.16",
     "@sentry/browser": "6.18.1",
     "@sentry/tracing": "6.18.1",
-    "@sentry/vue": "6.17.9",
+    "@sentry/vue": "6.18.1",
     "@shapeshiftoss/hdwallet-core": "1.19.0",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.19.0",
     "@unstoppabledomains/resolution": "7.1.4",
