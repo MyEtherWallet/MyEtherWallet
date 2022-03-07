@@ -38,7 +38,7 @@ import Alex from '@/assets/images/team/alex.jpg';
 import Misha from '@/assets/images/team/misha.jpg';
 import Yel from '@/assets/images/team/gamaliel.jpg';
 import Gage from '@/assets/images/team/gage.jpg';
-//import placeholder from '@/assets/images/team/placeholder.jpg';
+import placeholder from '@/assets/images/team/placeholder.jpg';
 import David from '@/assets/images/team/david.jpg';
 import Brittany from '@/assets/images/team/brittany.jpg';
 import Richie from '@/assets/images/team/richie.jpg';
@@ -123,6 +123,11 @@ export default {
         img: Christian,
         name: 'Christian',
         title: 'Blockchain Community Specialist'
+      },
+      {
+        img: placeholder,
+        name: 'Lily',
+        title: 'Executive Assistant'
       }
     ]
   })
