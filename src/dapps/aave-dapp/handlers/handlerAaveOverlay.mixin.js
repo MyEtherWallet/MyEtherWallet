@@ -1,4 +1,4 @@
-import { _ } from 'web3-utils';
+import { isEmpty } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 
@@ -35,16 +35,16 @@ const handlerAaveOverlay = {
     ...mapState('wallet', ['address']),
     ...mapGetters('external', ['fiatValue']),
     actualSelectedToken() {
-      const selectedTokens = _.isEmpty(this.selectedToken)
-        ? _.isEmpty(this.preSelectedToken)
+      const selectedTokens = isEmpty(this.selectedToken)
+        ? isEmpty(this.preSelectedToken)
           ? {}
           : this.preSelectedToken
         : this.selectedToken;
       return selectedTokens;
     },
     actualToken() {
-      if (this.reservesData) {
-        const token = this.reservesData.find(item => {
+      if (this.handler && !isEmpty(this.handler)) {
+        const token = this.handler?.reservesData.find(item => {
           if (item.symbol === this.actualSelectedToken.token) return item;
         });
 

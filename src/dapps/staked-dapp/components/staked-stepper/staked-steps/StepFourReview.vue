@@ -5,8 +5,6 @@
     ===================================================
     -->
   <div>
-    <v-divider />
-
     <div class="mx-auto pb-3" style="max-width: 550px">
       <div class="mew-heading-2 py-8 text-center">Review and stake</div>
       <v-row dense>
@@ -27,12 +25,7 @@
             </div>
             <div>
               <div
-                class="
-                  captionPrimary--text
-                  text-uppercase
-                  detail-subtitle
-                  font-weight-medium
-                "
+                class="captionPrimary--text text-uppercase detail-subtitle font-weight-medium"
               >
                 {{ detail.subtitle }}
               </div>
@@ -58,12 +51,7 @@
         <div
           v-for="(fee, idx) in fees"
           :key="fee + idx"
-          class="
-            d-block d-sm-flex
-            align-center
-            justify-space-between
-            mb-3 mb-sm-2
-          "
+          class="d-block d-sm-flex align-center justify-space-between mb-3 mb-sm-2"
         >
           <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
           <div>
@@ -82,19 +70,19 @@
           v-model="firstCondition"
           dense
           class="mb-4"
-          color-text="textBlack2--text"
+          class-name="textBlack2--text"
           label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
         />
         <mew-checkbox
           v-model="secondCondition"
           dense
-          color-text="textBlack2--text"
+          class-name="textBlack2--text"
           label="I understand that staking involves slashing risks and my funds can be lost."
         />
         <mew-checkbox
           v-model="thirdCondition"
           dense
-          color-text="textBlack2--text"
+          class-name="textBlack2--text"
         >
           <template #contentSlot>
             <span
@@ -178,13 +166,7 @@
     ===================================================
     -->
       <div
-        class="
-          mt-10
-          d-flex
-          flex-column-reverse flex-md-row
-          align-center
-          justify-center
-        "
+        class="mt-10 d-flex flex-column-reverse flex-md-row align-center justify-center"
       >
         <mew-button
           :has-full-width="$vuetify.breakpoint.smAndDown"

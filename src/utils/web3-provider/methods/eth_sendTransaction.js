@@ -36,6 +36,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
+  delete localTx['gasPrice'];
   tx.value = tx.value === '' || tx.value === '0x' ? '0' : tx.value;
   const ethCalls = new EthCalls(requestManager);
   try {
@@ -44,7 +45,11 @@ export default async ({ payload, store, requestManager }, res, next) => {
           store.state.wallet.instance.getAddressString()
         )
       : tx.nonce;
+    if (tx.gasLimit) {
+      tx.gas = tx.gasLimit;
+    }
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
+    tx.gasLimit = tx.gas;
   } catch (e) {
     res(e);
     return;
@@ -89,20 +94,23 @@ export default async ({ payload, store, requestManager }, res, next) => {
           _promiObj
             .once('transactionHash', hash => {
               if (store.state.wallet.instance !== null) {
-                const storeKey = utils.sha3(
-                  `${
-                    store.getters['global/network'].type.name
-                  }-${store.state.wallet.instance
-                    .getChecksumAddressString()
-                    .toLowerCase()}`
-                );
-                const localStoredObj = locStore.get(storeKey);
-                locStore.set(storeKey, {
-                  nonce: sanitizeHex(
-                    BigNumber(localStoredObj.nonce).plus(1).toString(16)
-                  ),
-                  timestamp: localStoredObj.timestamp
-                });
+                const isTesting = locStore.get('mew-testing');
+                if (!isTesting) {
+                  const storeKey = utils.sha3(
+                    `${
+                      store.getters['global/network'].type.name
+                    }-${store.state.wallet.instance
+                      .getChecksumAddressString()
+                      .toLowerCase()}`
+                  );
+                  const localStoredObj = locStore.get(storeKey);
+                  locStore.set(storeKey, {
+                    nonce: sanitizeHex(
+                      BigNumber(localStoredObj.nonce).plus(1).toString(16)
+                    ),
+                    timestamp: localStoredObj.timestamp
+                  });
+                }
               }
               res(null, toPayload(payload.id, hash));
             })

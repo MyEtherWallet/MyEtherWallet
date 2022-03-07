@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <addressBook @setAddress="setAddress" />
     <div class="d-flex align-center justify-center mt-3">
       <mew-button

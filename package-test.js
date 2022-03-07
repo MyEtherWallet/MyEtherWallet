@@ -14,13 +14,33 @@ const EXCEPTIONS = [
   'postcss-url',
   'webpack',
   'copy-webpack-plugin',
-  'vuetify',
   'sass-loader',
   'husky',
   '@aave/protocol-js',
-  '@unstoppabledomains/resolution',
   'sass',
-  'scryptsy'
+  'web3',
+  'web3-core-helpers',
+  'web3-core-method',
+  'web3-core-requestmanager',
+  'web3-utils',
+  'remark-cli',
+  'node-fetch',
+  'vuetify',
+  'eslint',
+  'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
+  '@vue/eslint-config-prettier', // creates more warnings
+  // versions for vue3
+  'vue-router',
+  'vuex',
+  '@vue/test-utils',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service',
+  'vue-i18n',
+  'vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
@@ -66,23 +86,26 @@ const looper = () => {
       const latestVersion = info['dist-tags'][CUSTOM_DIST[_name] || 'latest'];
       const latestVersionTime = info['time'][latestVersion];
       if (ALL_PACKAGES[_name] !== latestVersion) {
-        if (
-          (_name === '@myetherwallet/mew-components' &&
-            new Date(latestVersionTime).getTime() < new Date().getTime()) ||
+        const isBehind =
           new Date(latestVersionTime).getTime() <
-            new Date().getTime() - SAFE_TIME
-        ) {
-          console.error(
-            'ERROR: Update ' +
-              _name +
-              ' from ' +
-              ALL_PACKAGES[_name] +
-              ' to ' +
-              latestVersion +
-              '. Released:',
-            latestVersionTime
-          );
-          updatesFound = true;
+          new Date().getTime() - SAFE_TIME;
+        const isMewComponentBeta =
+          _name === '@myetherwallet/mew-components' &&
+          latestVersion.includes('-beta');
+        if (isBehind) {
+          if (!isMewComponentBeta) {
+            console.error(
+              'ERROR: Update ' +
+                _name +
+                ' from ' +
+                ALL_PACKAGES[_name] +
+                ' to ' +
+                latestVersion +
+                '. Released:',
+              latestVersionTime
+            );
+            updatesFound = true;
+          }
         }
       }
     })

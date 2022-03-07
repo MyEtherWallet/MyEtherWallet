@@ -83,7 +83,7 @@
     <template #HeaderRight>
       <div class="text-right">
         <a
-          href="https://kb.myetherwallet.com/en/dapps/stake-eth2-web/#:~:text=MEW%20has%20integrated%20Staked.us,least%2032%20ETH%20to%20stake."
+          href="https://help.myetherwallet.com/en/articles/5449132-stake-on-eth2-using-mew-web"
           target="_blank"
           class="primary--text font-weight-medium text-right"
         >
@@ -244,6 +244,17 @@ export default {
       if (newVal !== '') {
         this.activeTab = 1;
       }
+      if (this.$refs.stakedStepper) {
+        this.$refs.stakedStepper.reset();
+      }
+    },
+    /* 
+    - watches for address state change
+    - updates handlerStaked with new address
+    - if user is currently onStep within the stakeStepper component, it will run the reset function
+    */
+    address(newVal) {
+      this.handlerStaked.address = newVal;
       if (this.$refs.stakedStepper) {
         this.$refs.stakedStepper.reset();
       }

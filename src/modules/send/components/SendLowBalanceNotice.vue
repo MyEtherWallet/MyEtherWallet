@@ -40,7 +40,7 @@
             <a
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
-              href="https://ccswap.myetherwallet.com/#/"
+              :href="swapLink"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -75,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'swapLink'])
   },
   methods: {
     openBarcodeModal() {

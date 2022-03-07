@@ -4,21 +4,13 @@
     Collateral Overlay
   =====================================================================================
   -->
-  <mew-overlay
-    :show-overlay="open"
-    :title="title"
-    right-btn-text="Close"
-    :close="close"
-  >
-    <template #mewOverlayBody>
-      <aave-summary
-        :user-summary="userSummary"
-        :selected-token="preSelectedToken"
-        :reserves-data="reservesData"
-        :action-type="collateral"
-        @onConfirm="callSwitchCollateral"
-      />
-    </template>
+  <mew-overlay :show-overlay="open" :title="title" :close="close">
+    <aave-summary
+      :handler="handler"
+      :selected-token="preSelectedToken"
+      :action-type="collateral"
+      @onConfirm="callSwitchCollateral"
+    />
   </mew-overlay>
 </template>
 
@@ -31,14 +23,6 @@ export default {
   components: { AaveSummary },
   mixins: [handlerAaveOverlay],
   props: {
-    userSummary: {
-      type: Object,
-      default: () => {}
-    },
-    reservesData: {
-      type: Array,
-      default: () => []
-    },
     preSelectedToken: {
       default: () => {
         return {};

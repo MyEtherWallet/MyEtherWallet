@@ -3,27 +3,28 @@ const fs = require('fs');
 const configs = require('./configs');
 const contractList = require('./lists/contracts.json');
 const IMAGE_PROXY = 'https://img.mewapi.io/?image=';
+const v4 = require('uuid').v4;
 if (!fs.existsSync(configs.GENERATED_FOLDER_PATH)) {
   fs.mkdirSync(configs.GENERATED_FOLDER_PATH);
 }
 const getFormattedList = async (url, network) => {
-  const tokens = await fetch(url)
-    .then(res => res.json())
-    .then(tokens => {
-      tokens = Object.values(tokens.tokens).map(t => {
-        t.contract_address = t.address.toLowerCase();
-        t.icon = IMAGE_PROXY + t.logoURI;
-        t.icon_png = IMAGE_PROXY + t.logoURI;
-        t.network = network;
-        delete t.logoURI;
-        delete t.chainId;
-        return t;
-      });
-      tokens = tokens.filter(
-        t => t.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-      );
-      return tokens;
-    });
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': v4()
+    }
+  });
+  const data = await response.json();
+  const tokens = Object.values(data.tokens)
+    .map(t => {
+      t.contract_address = t.address.toLowerCase();
+      t.icon = IMAGE_PROXY + t.logoURI;
+      t.icon_png = IMAGE_PROXY + t.logoURI;
+      t.network = network;
+      delete t.logoURI;
+      delete t.chainId;
+      return t;
+    })
+    .filter(t => t.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   return tokens;
 };
 const fetchOneInchLists = async () => {
@@ -47,15 +48,15 @@ const fetchOneInchLists = async () => {
 };
 const fetchCGtokenList = async () => {
   const ethTokens = await getFormattedList(
-    'https://tokens.coingecko.com/ethereum/all.json',
+    'https://requestcache.mewapi.io/?url=https://tokens.coingecko.com/ethereum/all.json',
     'eth'
   );
   const bscTokens = await getFormattedList(
-    'https://tokens.coingecko.com/binance-smart-chain/all.json',
+    'https://requestcache.mewapi.io/?url=https://tokens.coingecko.com/binance-smart-chain/all.json',
     'bsc'
   );
   const maticTokens = await getFormattedList(
-    'https://tokens.coingecko.com/polygon-pos/all.json',
+    'https://requestcache.mewapi.io/?url=https://tokens.coingecko.com/polygon-pos/all.json',
     'matic'
   );
   return {
@@ -170,6 +171,7 @@ const fetchMasterFile = async () => {
       `${configs.MASTER_FILE_PATH}/master-file.json`,
       JSON.stringify(response)
     );
+    console.log('Wrote masterfile');
   } catch (e) {
     console.error(e); // Not captured by sentry
   }

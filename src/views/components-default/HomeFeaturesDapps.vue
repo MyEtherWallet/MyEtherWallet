@@ -11,7 +11,7 @@
           <img
             :src="d.icon"
             :alt="d.label"
-            height="80"
+            height="85"
             class="mr-2"
             :class="{ 'icon-disabled': !d.isAccessible }"
           />
@@ -36,12 +36,12 @@
     </v-row>
     <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
       <div class="message--text textBlack2--text text-center">
-        MEW team is working hard to update the DApps Center. Cant’s wait?
+        {{ $t('home.features.dapps.text') }}
         <a
           href="https://v5.myetherwallet.com"
           target="_blank"
           class="primary--text"
-          >Access all DApps in MEW Version 5</a
+          >{{ $t('home.features.dapps.link-text') }}</a
         >
       </div>
     </div>
@@ -54,6 +54,12 @@ export default {
   components: {},
   data: () => ({
     dapps: [
+      {
+        label: 'ETH Blocks',
+        icon: require('@/assets/images/icons/icon-eth-blocks-logo.png'),
+        isAccessible: true,
+        isNew: true
+      },
       {
         label: 'Stake on ETH 2.0',
         icon: require('@/assets/images/icons/icon-dapp-eth20.png'),

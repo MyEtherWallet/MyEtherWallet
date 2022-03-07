@@ -6,15 +6,7 @@
     -->
   <v-sheet class="d-flex align-center flex-column justify-center">
     <div
-      class="
-        cursor-pointer
-        d-flex
-        align-center
-        justify-start
-        full-width
-        mb-4
-        mr-2
-      "
+      class="cursor-pointer d-flex align-center justify-start full-width mb-4 mr-2"
     >
       <mew-button
         class="pl-0"
@@ -35,6 +27,7 @@
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
+      :disabled="disabled"
       title="Send"
       btn-size="large"
       color-theme="primary"
@@ -85,6 +78,10 @@ export default {
     nftCategory: {
       default: '',
       type: String
+    },
+    disabled: {
+      default: false,
+      type: Boolean
     }
   },
   data() {

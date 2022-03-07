@@ -2,65 +2,57 @@
   <mew-overlay
     :show-overlay="open"
     :title="header"
-    right-btn-text="Close"
     :close="handleCancel"
     class="mew-component--aave-deposit-overlay"
   >
-    <template #mewOverlayBody>
-      <!--
+    <!--
       =====================================================================================
         Step 1: Select a token to depost (Aave token deposit table)
       =====================================================================================
       -->
-      <v-sheet
-        v-if="step === 0"
-        color="white"
-        max-width="650px"
-        class="border-radius--10px pa-4"
-      >
-        <aave-table
-          :is-loading-data="isLoadingData"
-          :reserves-data="reservesData"
-          :user-reserves-data="userSummary.reservesData"
-          :table-header="depositHeader"
-          @selectedDeposit="handleSelectedDeposit"
-        />
-      </v-sheet>
-      <!--
+    <v-sheet
+      v-if="step === 0"
+      color="white"
+      max-width="650px"
+      class="border-radius--10px pa-4"
+    >
+      <aave-table
+        :handler="handler"
+        :table-header="depositHeader"
+        @selectedDeposit="handleSelectedDeposit"
+      />
+    </v-sheet>
+    <!--
         =====================================================================================
           Step 2: Select the amount to deposit
         =====================================================================================
         -->
-      <div v-if="step === 1">
-        <aave-amount-form
-          :selected-token="selectedToken"
-          :show-toggle="aaveDepositForm.showToggle"
-          :left-side-values="aaveDepositForm.leftSideValues"
-          :right-side-values="aaveDepositForm.rightSideValues"
-          :form-text="aaveDepositForm.formText"
-          :button-title="aaveDepositForm.buttonTitle"
-          :token-balance="tokenBalance"
-          @cancel="handleCancel"
-          @emitValues="handleDepositAmount"
-        />
-      </div>
-      <!--
-        =====================================================================================
-          Step 3: Summary
-        =====================================================================================
-        -->
-      <div v-if="step === 2">
-        <aave-summary
-          :selected-token="selectedToken"
-          :user-summary="userSummary"
-          :amount="amount"
-          :amount-usd="amountUsd"
-          :step="step"
-          :action-type="depositHeader"
-          @onConfirm="emitDeposit"
-        />
-      </div>
-    </template>
+    <div v-if="step === 1 || step === 3">
+      <aave-summary
+        :selected-token="selectedToken"
+        :handler="handler"
+        :amount="amount"
+        :amount-usd="amountUsd"
+        :step="step"
+        :action-type="depositHeader"
+        @confirmed="handleConfirm"
+        @onConfirm="emitDeposit"
+      />
+    </div>
+    <div v-if="step === 2">
+      <aave-amount-form
+        :selected-token="selectedToken"
+        :handler="handler"
+        :show-toggle="aaveDepositForm.showToggle"
+        :left-side-values="aaveDepositForm.leftSideValues"
+        :right-side-values="aaveDepositForm.rightSideValues"
+        :form-text="aaveDepositForm.formText"
+        :button-title="aaveDepositForm.buttonTitle"
+        :token-balance="tokenBalance"
+        @cancel="handleCancel"
+        @emitValues="handleDepositAmount"
+      />
+    </div>
   </mew-overlay>
 </template>
 
@@ -73,10 +65,11 @@ import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'lodash';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
+
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
   mixins: [handlerAaveOverlay],
@@ -159,7 +152,7 @@ export default {
   },
   watch: {
     preSelectedToken(newVal) {
-      if (newVal && !_.isEmpty(newVal)) {
+      if (newVal && !isEmpty(newVal)) {
         this.handleSelectedDeposit(this.preSelectedToken);
       }
     }

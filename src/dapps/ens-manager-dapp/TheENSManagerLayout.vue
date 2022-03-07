@@ -19,10 +19,9 @@
     -->
       <template #tabContent1>
         <v-sheet
-          min-height="500px"
           max-width="700px"
           color="transparent"
-          class="py-15 mx-auto"
+          class="px-3 py-8 py-md-13 mx-auto"
         >
           <div class="mb-5">
             <div class="mew-heading-2 mb-8 ml-2">
@@ -32,15 +31,13 @@
               <v-row class="mx-0">
                 <v-col class="pr-0" cols="8">
                   <mew-input
-                    :error-messages="
-                      domainTaken ? $t('ens.domain-taken') : null
-                    "
                     :value="name"
                     :has-clear-btn="true"
                     :rules="rules"
                     :label="$t('ens.register.domain-name')"
                     :placeholder="$t('ens.ph.three-char')"
                     class="mr-3 flex-grow-1"
+                    :error-messages="errorMessages"
                     @input="setName"
                   />
                 </v-col>
@@ -51,7 +48,7 @@
                       !name ||
                       (name && name.length < 3) ||
                       loading ||
-                      name.split('.').length > 2
+                      (name && name.split('.').length > 2)
                     "
                     :has-full-width="true"
                     btn-size="xlarge"
@@ -70,7 +67,7 @@
     =====================================================================================
     -->
       <template #tabContent2>
-        <v-sheet min-height="500px" class="pa-3 pa-md-12">
+        <v-sheet class="px-3 py-8 py-md-13">
           <div class="d-flex align-center justify-space-between mb-7">
             <span class="mew-heading-2 font-weight-bold">
               {{ $t('ens.my-domains') }}
@@ -87,9 +84,11 @@
             <template
               v-for="(domain, idx) in myDomains"
               :slot="'panelBody' + (idx + 1)"
-              :class="domain.expired ? 'expired' : 'available'"
             >
-              <div :key="idx" class="ma-3">
+              <div
+                :key="idx"
+                :class="[domain.expired ? 'expired' : 'available', 'ma-3 px-5']"
+              >
                 <v-row class="subheader-container">
                   <v-col cols="12" md="6" class="d-flex align-center">
                     <div>{{ $t('ens.manage-domains.registrant') }}</div>
@@ -151,14 +150,7 @@
                 </v-row>
 
                 <div
-                  class="
-                    d-flex
-                    align-center
-                    justify-space-between
-                    pb-5
-                    pt-8
-                    px-7
-                  "
+                  class="d-flex align-center justify-space-between pb-5 pt-8 px-7"
                 >
                   <span class="mew-heading-3">
                     {{ $t('ens.manage-domains.what-to-do') }}
@@ -199,6 +191,44 @@
               </div>
             </template>
           </mew-expand-panel>
+        </v-sheet>
+      </template>
+      <template #tabContent3>
+        <v-sheet
+          max-width="500px"
+          color="transparent"
+          class="px-3 py-8 py-md-13 mx-auto"
+        >
+          <div class="mb-5">
+            <!--
+            ===================================================
+              Claim TITLE: hasEnsTokenBalance
+            ===================================================
+            -->
+            <claim-balance
+              :balance="ensTokens.balance"
+              :claimed="ensTokens.claimed"
+            />
+            <form
+              v-if="!ensTokens.claimed && hasEnsTokenBalance"
+              @submit.prevent="claimTokens"
+            >
+              <module-address-book
+                :label="$t('ens.delegator.addr')"
+                :is-valid-address-func="isValidDelegatorAddress"
+                preselect-curr-wallet-adr
+                @setAddress="setDelegatorAddress"
+              />
+              <mew-button
+                :loading="loading"
+                :disabled="isClaimDisabled"
+                :has-full-width="true"
+                btn-size="xlarge"
+                :title="$t('ens.claim-token-title')"
+                @click.native="claimTokens"
+              />
+            </form>
+          </div>
         </v-sheet>
       </template>
     </the-wrapper-dapp>
@@ -255,14 +285,27 @@ import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
+import ClaimBalance from './components/claim/ClaimBalance';
 import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
-import { fromWei } from 'web3-utils';
+import { fromWei, toBN } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import normalise from '@/core/helpers/normalise';
+import { isAddress } from '@/core/helpers/addressUtils';
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
 export default {
-  components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
+  name: 'ENSManagerLayout',
+  components: {
+    ModuleRegisterDomain,
+    ModuleManageDomain,
+    TheWrapperDapp,
+    ModuleAddressBook,
+    ClaimBalance
+  },
   data() {
     return {
       activeTab: 0,
@@ -277,6 +320,12 @@ export default {
       nameHandler: {},
       ensManager: {},
       onRegister: false,
+      searchError: '',
+      ensTokens: {
+        claimed: false,
+        balance: '0',
+        proof: ''
+      },
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -306,26 +355,52 @@ export default {
       ],
       tabs: [
         { name: this.$t('ens.register-domain') },
-        { name: this.$t('ens.manage-domain') }
+        { name: this.$t('ens.manage-domain') },
+        { name: this.$t('ens.claim-tokens') }
       ],
       myDomains: [],
       ensBannerImg: ensBannerImg,
       bannerText: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
-      }
+      },
+      delegatorAddress: ''
     };
   },
   computed: {
     ...mapGetters('global', ['network', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
+    hasEnsTokenBalance() {
+      if (this.ensTokens.balance) {
+        return toBN(this.ensTokens.balance).gt(toBN(0));
+      }
+      return false;
+    },
+    errorMessages() {
+      if (this.domainTaken) return this.$t('ens.domain-taken');
+      return this.searchError;
+    },
+    delegatorErrors() {
+      if (!isAddress(this.delegatorAddress)) {
+        return 'Invalid address!';
+      }
+      return '';
+    },
+    isClaimDisabled() {
+      return (
+        this.ensTokens.claimed ||
+        this.delegatorErrors !== '' ||
+        this.delegatorAddress === ''
+      );
+    },
     rules() {
       return [
+        this.searchError === '' || this.searchError,
         (this.name && this.name.length > 2) ||
           this.$t('ens.warning.not-enough-char'),
         !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-        this.name.split('.').length <= 2 ||
+        (this.name && this.name.split('.').length <= 2) ||
           this.$t('ens.warning.invalid-symbol')
       ];
     },
@@ -365,6 +440,19 @@ export default {
       if (newVal === true) {
         this.onRegister = true;
       }
+    },
+    /* 
+    - watches for address state change
+    - updates ensManager with new address 
+    - if user is onRegister it will reset and take them back
+    - if user is onManage it will run getDomain to refresh domains
+    */
+    address(newVal) {
+      this.ensManager.address = newVal;
+      if (this.onRegister) {
+        this.closeRegister();
+      }
+      this.getDomains();
     }
   },
   mounted() {
@@ -380,8 +468,31 @@ export default {
     );
 
     this.getDomains();
+    hasClaimed(this.address, this.web3).then(data => {
+      this.ensTokens.claimed = data.claimed;
+      this.ensTokens.balance = data.balance;
+      this.ensTokens.proof = data.proof;
+    });
   },
   methods: {
+    claimTokens() {
+      try {
+        submitClaim(
+          this.ensTokens.balance,
+          this.ensTokens.proof,
+          this.delegatorAddress,
+          this.web3
+        ).catch(this.instance.errorHandler);
+      } catch (e) {
+        this.instance.errorHandler(e);
+      }
+    },
+    setDelegatorAddress(address) {
+      this.delegatorAddress = address;
+    },
+    isValidDelegatorAddress(address) {
+      return isAddress(address);
+    },
     buyDomain() {
       this.activeTab = 0;
     },
@@ -429,7 +540,7 @@ export default {
           }, 15000);
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -438,7 +549,7 @@ export default {
         .renew(duration, this.balanceToWei)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -447,7 +558,7 @@ export default {
         .setMulticoin(coin)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -456,7 +567,7 @@ export default {
         .setTxtRecord(records)
         .then(this.getDomains)
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -473,7 +584,7 @@ export default {
           this.closeManage();
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
     },
     setIpfs(hash) {
@@ -484,7 +595,7 @@ export default {
           this.settingIpfs = false;
         })
         .catch(err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
       this.closeManage();
     },
@@ -504,13 +615,21 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$refs.registerDomain.reset();
+      this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
     },
     setName(name) {
+      this.searchError = '';
       if (this.name === null || this.name === '') {
         this.nameHandler = {};
       }
-      this.name = name;
+      try {
+        this.name = normalise(name);
+      } catch (e) {
+        this.searchError = e.message.includes('Failed to validate')
+          ? 'Invalid name!'
+          : e.message;
+        this.name = name;
+      }
     },
     register(duration) {
       this.nameHandler
@@ -519,21 +638,23 @@ export default {
           Toast(`ENS name: ${this.name} registered`, {}, SUCCESS);
           this.closeRegister();
         })
-        .on('receipt', () => {
+        .once('receipt', () => {
           setTimeout(() => {
             this.getDomains();
           }, 15000);
         })
         .on('error', err => {
-          Toast(err, {}, ERROR);
+          this.instance.errorHandler(err);
         });
     },
     commit() {
+      let waitingTime;
       this.nameHandler
         .createCommitment()
         .on('transactionHash', () => {
           this.nameHandler.getMinimumAge().then(resp => {
             this.minimumAge = resp;
+            waitingTime = parseInt(resp);
           });
         })
         .on('receipt', () => {
@@ -542,10 +663,9 @@ export default {
           setTimeout(() => {
             this.committed = true;
             this.loadingCommit = false;
-          }, 60 * 1000);
+          }, waitingTime * 1000);
         })
         .on('error', err => {
-          this.closeRegister();
           Toast(err, {}, ERROR);
         });
     },
@@ -582,5 +702,9 @@ export default {
       }
     }
   }
+}
+
+.claim-border-container {
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>

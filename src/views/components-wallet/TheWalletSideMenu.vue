@@ -11,8 +11,8 @@
       <template #prepend>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
-            <router-link :to="{ name: 'Dashboard' }">
-              <img width="120" src="@/assets/images/icons/logo-mew.png" />
+            <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
+              <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
             <!--
             =====================================================================================
@@ -78,6 +78,12 @@
                   v-text="item.title"
                 />
               </v-list-item-content>
+              <div
+                v-if="item.hasNew"
+                class="new-dapp-label white--text mew-label px-1"
+              >
+                new
+              </div>
             </v-list-item>
 
             <v-list-group
@@ -127,6 +133,7 @@
           v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
+          :to="item.route"
           @click="item.fn()"
         >
           <v-list-item-icon class="mx-3">
@@ -140,25 +147,38 @@
             />
           </v-list-item-content>
         </v-list-item>
-
-        <div class="mt-3 px-8 d-flex align-center justify-space-between">
-          <!-- <theme-switch /> -->
-          <div class="searchText--text">v{{ version }}</div>
+        <div class="mt-3 px-8">
+          <div class="matomo-tracking-switch">
+            <v-switch
+              :input-value="consentToTrack"
+              inset
+              :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
+              color="primary"
+              off-icon="mdi-alert-circle"
+              @change="setConsent"
+            />
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <!-- <theme-switch /> -->
+            <div class="searchText--text">v{{ version }}</div>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
     <mew-popup
-      :is-open="showLogoutPopup"
+      max-width="400px"
+      hide-close-btn
+      :show="showLogoutPopup"
       :title="$t('interface.menu.logout')"
-      :button-left="logout.btnLeft"
-      :button-right="logout.btnRight"
-      popup-type="confirm"
-      @onClick="onLogout"
+      :left-btn="{ text: 'Cancel', method: toggleLogout, color: 'basic' }"
+      :right-btn="{
+        text: 'Log out',
+        color: 'error',
+        method: onLogout,
+        enabled: true
+      }"
     ></mew-popup>
-    <module-settings
-      :on-settings="onSettings"
-      @closeSettings="toggleSettings"
-    />
+    <module-settings :on-settings="onSettings" @closeSettings="closeSettings" />
     <!--
     =====================================================================================
       Navigation Bar on top of the screen for xs-md screens
@@ -175,8 +195,11 @@
       <v-row class="pa-3 align-center justify-space-between">
         <app-btn-menu class="mr-3" @click.native="openNavigation" />
 
-        <router-link :to="{ name: 'Dashboard' }">
-          <img width="80" src="@/assets/images/icons/logo-mew.png" />
+        <router-link
+          :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
+          style="line-height: 0"
+        >
+          <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
         <module-notifications invert-icon />
@@ -204,17 +227,9 @@ import ModuleSettings from '@/modules/settings/ModuleSettings';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
-const routeNames = {
-  dashboard: 'Dashboard',
-  sendtx: 'SendTX',
-  nftmanager: 'NFTManager',
-  swap: 'Swap',
-  dapps: 'Dapps',
-  deploycontract: 'DeployContract',
-  interactcontract: 'InteractWithContract',
-  signmsg: 'SignMessage',
-  verifymsg: 'verifyMessage'
-};
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import dappsMeta from '@/dapps/metainfo-dapps';
 export default {
   components: {
     AppBtnMenu,
@@ -222,6 +237,7 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
+  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -229,41 +245,66 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      logout: {
-        btnLeft: {
-          title: 'Cancel',
-          colorTheme: 'basic'
+      sectionTwo: [
+        {
+          title: this.$t('common.settings'),
+          icon: settings,
+          fn: this.openSettings,
+          route: { name: ROUTES_WALLET.SETTINGS.NAME }
         },
-        btnRight: {
-          title: 'Log out',
-          colorTheme: 'error'
+        {
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
         }
+      ],
+      routeNetworks: {
+        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
       },
-      sectionOne: [
+      ROUTES_WALLET: ROUTES_WALLET
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapState('wallet', ['instance']),
+    sectionOne() {
+      const hasNew = Object.values(dappsMeta).filter(item => {
+        const dateToday = new Date();
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+        const releaseDate = new Date(item.release);
+        const daysFromRelease =
+          (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+        if (Math.ceil(daysFromRelease) <= 21) {
+          return item;
+        }
+      });
+      return [
         {
           title: this.$t('interface.menu.dashboard'),
-          route: { name: routeNames.dashboard },
+          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
           icon: dashboard
         },
         {
           title: this.$t('sendTx.send-tx'),
-          route: { name: routeNames.sendtx },
+          route: { name: ROUTES_WALLET.SEND_TX.NAME },
           icon: send
         },
         {
           title: this.$t('interface.menu.nft'),
-          route: { name: routeNames.nftmanager },
+          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
           icon: nft
         },
         {
           title: this.$t('common.swap'),
-          route: { name: routeNames.swap },
+          route: { name: ROUTES_WALLET.SWAP.NAME },
           icon: swap
         },
         {
           title: this.$t('interface.menu.dapps'),
-          route: { name: routeNames.dapps },
-          icon: dapp
+          route: { name: ROUTES_WALLET.DAPPS.NAME },
+          icon: dapp,
+          hasNew: hasNew.length > 0
         },
         {
           title: this.$t('interface.menu.contract'),
@@ -271,11 +312,11 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.deploy'),
-              route: { name: routeNames.deploycontract }
+              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
             },
             {
               title: this.$t('interface.menu.interact-contract'),
-              route: { name: routeNames.interactcontract }
+              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
             }
           ]
         },
@@ -285,40 +326,23 @@ export default {
           children: [
             {
               title: this.$t('interface.menu.sign-message'),
-              route: { name: routeNames.signmsg }
+              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
             },
             {
               title: this.$t('interface.menu.verify-message'),
-              route: { name: routeNames.verifymsg }
+              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
             }
           ]
         }
-      ],
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.toggleSettings
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
-      routeNetworks: {
-        [routeNames.swap]: [ETH, BSC, MATIC],
-        [routeNames.nftmanager]: [ETH]
-      }
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network']),
-    ...mapState('wallet', ['instance'])
+      ];
+    }
   },
   mounted() {
-    EventBus.$on('toggleSettings', () => {
-      this.toggleSettings();
+    if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {
+      this.openSettings();
+    }
+    EventBus.$on('openSettings', () => {
+      this.openSettings();
     });
   },
   methods: {
@@ -335,26 +359,60 @@ export default {
     openNavigation() {
       this.navOpen = true;
     },
-    toggleSettings() {
-      this.onSettings = !this.onSettings;
+    openSettings() {
+      this.onSettings = true;
     },
-    onLogout(res) {
+    closeSettings() {
+      this.onSettings = false;
+      this.$router.go(-1);
+    },
+    onLogout() {
       this.showLogoutPopup = false;
-      if (res.title === this.logout.btnRight.title) {
-        this.removeWallet();
-      }
+      this.removeWallet();
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
     },
     openSimplex() {
-      window.open('https://ccswap.myetherwallet.com', '_blank');
+      // eslint-disable-next-line
+      window.open(`${this.swapLink}`, '_blank');
     }
   }
 };
 </script>
 
 <style lang="scss">
+.new-dapp-label {
+  border-radius: 2px;
+  background: #ff445b;
+  animation: pulse 3s infinite;
+}
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+  }
+}
+
 .v-system-bar .v-icon {
   font-size: 36px !important;
   color: white !important;
@@ -447,6 +505,11 @@ export default {
 
     &::-webkit-scrollbar-corner {
       background: transparent;
+    }
+  }
+  .matomo-tracking-switch {
+    .v-label {
+      color: var(--v-white-base);
     }
   }
 }

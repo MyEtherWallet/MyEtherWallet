@@ -4,9 +4,11 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import BigNumber from 'bignumber.js';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  formatIntegerValue
 } from '@/core/helpers/numberFormatHelper';
 import { toBN } from 'web3-utils';
+import getTokenInfo from '@/core/helpers/tokenInfo';
 
 const setCurrency = async function ({ commit }, val) {
   fetch('https://mainnet.mewwallet.dev/v2/prices/exchange-rates')
@@ -55,6 +57,8 @@ const setTokenAndEthBalance = function ({
     if (decimals) {
       n = n.div(new BigNumber(10).pow(decimals));
       n = formatFloatingPointValue(n);
+    } else {
+      n = formatIntegerValue(n);
     }
     return n;
   };
@@ -84,9 +88,11 @@ const setTokenAndEthBalance = function ({
         .then(() =>
           dispatch('wallet/setAccountBalance', toBN(res), { root: true })
         )
-        .then(() =>
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true })
-        );
+        .then(() => {
+          // dispatch can't be blank
+          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+        });
     });
     return;
   }
@@ -96,14 +102,37 @@ const setTokenAndEthBalance = function ({
   )
     .then(res => res.json())
     .then(res => res.result)
+    .then(preTokens => {
+      const hasPreTokens = preTokens ? preTokens : [];
+      const promises = [];
+
+      hasPreTokens.forEach(t => {
+        const token = getters.contractToToken(t.contract);
+        if (!token) {
+          promises.push(
+            getTokenInfo(t.contract, rootState.wallet.web3).then(info => {
+              if (info) {
+                rootGetters['global/network'].type.tokens.push({
+                  name: info.name,
+                  symbol: info.symbol,
+                  decimals: info.decimals,
+                  address: t.contract
+                });
+              }
+            })
+          );
+        }
+      });
+      return Promise.all(promises).then(() => hasPreTokens);
+    })
     .then(tokens => {
       const formattedList = [];
       tokens.forEach(t => {
         const token = getters.contractToToken(t.contract);
+        if (!token) return;
         if (t.contract === MAIN_TOKEN_ADDRESS) {
           mainTokenBalance = toBN(t.balance);
         }
-        if (!token) return;
         const denominator = new BigNumber(10).pow(token.decimals);
         const usdBalance = new BigNumber(t.balance)
           .div(denominator)
@@ -131,11 +160,14 @@ const setTokenAndEthBalance = function ({
       dispatch('wallet/setTokens', formattedList, { root: true }).then(() =>
         dispatch('wallet/setAccountBalance', mainTokenBalance, {
           root: true
-        }).then(() =>
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true })
-        )
+        }).then(() => {
+          // dispatch can't be blank
+          dispatch('custom/updateCustomTokenBalances', false, { root: true });
+          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+        })
       );
-    });
+    })
+    .catch(e => Toast(e.message, {}, ERROR));
 };
 export default {
   setLastPath,

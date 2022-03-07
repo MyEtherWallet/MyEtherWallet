@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-width">
     <div v-for="(key, idx) in keys" :key="`${key}${idx}`">
       <mew-input
         :id="idx"
@@ -24,7 +24,7 @@
 
 <script>
 import textValidator from '@/dapps/ens-manager-dapp/handlers/handlerTextRecords';
-import { _ } from 'web3-utils';
+import { isEmpty } from 'lodash';
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 
 export default {
@@ -61,7 +61,7 @@ export default {
       );
     },
     isValid() {
-      return !this.hasError && !_.isEmpty(this.setRecords);
+      return !this.hasError && !isEmpty(this.setRecords);
     },
     keys() {
       return Object.keys(this.textRecords);
@@ -106,7 +106,7 @@ export default {
         .forEach(item => {
           newObj[item] = this.setRecords[item];
         });
-      if (!_.isEmpty(newObj)) {
+      if (!isEmpty(newObj)) {
         this.setTextRecords(newObj);
       } else {
         Toast('No changes found!', {}, WARNING);

@@ -52,17 +52,21 @@ jobs:
           chmod 400 ipfs-host.pem
           hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh --`
           HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
-          aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$GITHUB_SHA
-          aws s3 cp s3://mewbuilds/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/build/$GITHUB_SHA/service-worker.js \
+          aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/v6/build/$GITHUB_SHA
+          aws s3 cp s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type application/javascript --acl public-read
-          aws s3 cp s3://mewbuilds/build/$GITHUB_SHA/index.html s3://mewbuilds/build/$GITHUB_SHA/index.html \
+          aws s3 cp s3://mewbuilds/v6/build/$GITHUB_SHA/index.html s3://mewbuilds/v6/build/$GITHUB_SHA/index.html \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
             --content-type text/html --acl public-read
           cd dist && zip -r ../MyEtherWallet-$GITHUB_SHA.zip * && cd ..
-          VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
+          FILE_SHA256=`sha256sum  MyEtherWallet-$GITHUB_SHA.zip | awk '{print $1}'`
+          curl --request GET --url https://www.virustotal.com/api/v3/files/upload_url --header "x-apikey: $VIRUS_TOTAL_API_KEY"
+          UPLOAD_URL=`curl --request GET --url https://www.virustotal.com/api/v3/files/upload_url --header "x-apikey: $VIRUS_TOTAL_API_KEY" | jq --raw-output '.data'`
+          curl --request POST --url "$UPLOAD_URL" --header "x-apikey: $VIRUS_TOTAL_API_KEY" --header 'Accept: application/json' --header 'Content-Type: multipart/form-data' -F "file=@MyEtherWallet-$GITHUB_SHA.zip"
+          VIRUS_TOTAL_URL=https://www.virustotal.com/gui/file/$FILE_SHA256
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://v6.mewbuilds.com/${GITHUB_SHA}/index.html<br/> \
                             https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \

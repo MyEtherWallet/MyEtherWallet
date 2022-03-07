@@ -1,18 +1,12 @@
 <template>
   <div class="mew6-component--module-balance">
     <!--
-  =====================================================================================
-    display if the user has an eth balance > 0
-  =====================================================================================
-  -->
-    <v-skeleton-loader
-      v-if="loading"
-      class="mx-auto module-balance-loader"
-      width="100%"
-      min-height="352px"
-      max-width="100%"
-      type="card"
-    ></v-skeleton-loader>
+    =====================================================================================
+      display if the user has an eth balance > 0
+    =====================================================================================
+    -->
+    <loader v-if="loading" />
+
     <mew-module
       v-if="hasBalance && !loading"
       :subtitle="subtitle"
@@ -48,12 +42,7 @@
           class="full-width mt-5 pa-md-3"
         />
         <div
-          class="
-            pa-3 pa-sm-7
-            d-block d-md-flex
-            align-center
-            justify-space-between
-          "
+          class="pa-3 pa-sm-7 d-block d-md-flex align-center justify-space-between"
         >
           <div
             class="d-flex flex-column flex-sm-row align-center justify-center"
@@ -105,17 +94,21 @@
 </template>
 
 <script>
+import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
 import { mapGetters, mapState } from 'vuex';
 import {
+  formatPercentageValue,
   formatFiatValue,
-  formatBalanceEthValue
+  formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
+    Loader,
     BalanceChart,
     BalanceEmptyBlock
   },
@@ -151,7 +144,7 @@ export default {
      * ie: $12.45 per 1 ETH
      */
     title() {
-      return `${formatBalanceEthValue(this.balanceInWei).value} ${
+      return `${formatFloatingPointValue(this.balanceInETH).value} ${
         this.network.type.name
       }`;
     },
@@ -176,7 +169,9 @@ export default {
      */
     formatChange() {
       if (this.fiatLoaded) {
-        return this.networkTokenUSDMarket.price_change_percentage_24h;
+        return formatPercentageValue(
+          this.networkTokenUSDMarket.price_change_percentage_24h
+        ).value;
       }
       return '';
     },
@@ -281,7 +276,7 @@ export default {
       this.scale = 'hours';
     },
     navigateToSend() {
-      this.$router.push({ name: 'SendTX' });
+      this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
     }
   }
 };

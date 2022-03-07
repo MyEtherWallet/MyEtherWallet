@@ -10,73 +10,68 @@
         <v-row>
           <v-col v-for="(b, key) in buttons" :key="key" cols="12" md="6">
             <a :href="b.link" target="_blank">
-              <v-card
-                height="100%"
-                color="white"
-                class="
-                  btn-custom
-                  border-radius--10px
-                  pa-8 pa-md-10
-                  d-flex
-                  align-center
-                  justify-space-between
-                "
+              <mew-button
+                color-theme="basic"
+                btn-style="light"
+                style="height: 200px"
+                has-full-width
               >
-                <div>
-                  <v-img
-                    v-if="b.logoImg"
-                    max-height="30px"
-                    max-width="120px"
-                    :src="b.logoImg"
-                    alt="Hardware wallet"
-                    class="mb-3"
-                  />
-                  <div
-                    v-if="b.logoText"
-                    class="d-flex align-center mb-3"
-                    :class="
-                      !$vuetify.breakpoint.smAndDown
-                        ? 'mew-subtitle'
-                        : 'mew-heading-2'
-                    "
-                  >
-                    {{ b.logoText }}
-                  </div>
-                  <div
-                    class="
-                      mew-caption
-                      text-uppercase
-                      font-weight-bold
-                      textPrimary--text
-                      text--lighten-1
-                    "
-                  >
-                    {{ b.priceNote }}
+                <div
+                  class="px-5 text-left d-flex align-center justify-space-between"
+                  style="width: 100%"
+                >
+                  <div>
+                    <v-img
+                      v-if="b.logoImg"
+                      max-height="30px"
+                      max-width="120px"
+                      :src="b.logoImg"
+                      alt="Hardware wallet"
+                      class="mb-3"
+                    />
+                    <div
+                      v-if="b.logoText"
+                      class="d-flex align-center mb-3"
+                      :class="
+                        !$vuetify.breakpoint.smAndDown
+                          ? 'mew-subtitle'
+                          : 'mew-heading-2'
+                      "
+                    >
+                      {{ b.logoText }}
+                    </div>
+                    <div
+                      class="mew-caption text-uppercase font-weight-bold textPrimary--text text--lighten-1"
+                    >
+                      {{ b.priceNote }}
+                    </div>
+
+                    <div class="textDark--text d-flex">
+                      <div class="mew-caption mr-1 font-weight-black">
+                        {{ b.currency }}
+                      </div>
+                      <div
+                        class="mew-heading-2 text-uppercase font-weight-bold"
+                      >
+                        {{ b.price }}
+                      </div>
+                    </div>
+                    <div class="mt-3 primary--text font-weight-medium">
+                      Learn more >
+                    </div>
                   </div>
 
-                  <div class="d-flex">
-                    <div class="mew-caption mr-1 font-weight-black">
-                      {{ b.currency }}
-                    </div>
-                    <div class="mew-heading-2 text-uppercase font-weight-bold">
-                      {{ b.price }}
-                    </div>
-                  </div>
-                  <div class="mt-3 primary--text font-weight-medium">
-                    Learn more >
+                  <div class="pl-4">
+                    <v-img
+                      :src="b.walletImg"
+                      alt="Hardware Wallet"
+                      max-width="90px"
+                      max-height="100px"
+                      contain
+                    />
                   </div>
                 </div>
-
-                <div class="pl-4">
-                  <v-img
-                    :src="b.walletImg"
-                    alt="Hardware Wallet"
-                    max-width="90px"
-                    max-height="100px"
-                    contain
-                  />
-                </div>
-              </v-card>
+              </mew-button>
             </a>
           </v-col>
         </v-row>
@@ -106,8 +101,8 @@ export default {
         logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
         walletImg: require('@/assets/images/hardware-wallets/trezor.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '60.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://trezor.io/?offer_id=12&aff_id=2029'
       },
@@ -116,17 +111,16 @@ export default {
         walletImg: require('@/assets/images/hardware-wallets/keepkey.png'),
         priceNote: 'Starting from',
         currency: '$',
-        price: '83.26',
+        price: '79.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
       {
-        logoText: 'BitBox',
-        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        logoText: 'BitBox02',
         walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
         priceNote: 'Starting from',
-        currency: '$',
-        price: '83.26',
+        currency: '€',
+        price: '119.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shiftcrypto.ch/'
       },
@@ -135,8 +129,8 @@ export default {
         //logoImg: require('@/assets/images/hardware-wallets/logo-ethercards.png'),
         walletImg: require('@/assets/images/hardware-wallets/bitmap.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '645.70',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
       },
@@ -145,8 +139,8 @@ export default {
         //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
         walletImg: require('@/assets/images/hardware-wallets/finney.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '999.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shop.sirinlabs.com/?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
       },
@@ -154,8 +148,8 @@ export default {
         logoImg: require('@/assets/images/hardware-wallets/logo-billfodl.png'),
         walletImg: require('@/assets/images/hardware-wallets/billfodl.png'),
         priceNote: 'Starting from',
-        currency: '€',
-        price: '83.26',
+        currency: '$',
+        price: '89.00',
         note: 'Unmatched physical security for your private keys.',
         link: 'https://privacypros.io/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
       }

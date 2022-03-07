@@ -6,6 +6,8 @@ import Configs from '../configs';
 import { toBN, toHex, toWei } from 'web3-utils';
 import Web3Contract from 'web3-eth-contract';
 import { ETH } from '@/utils/networks/types';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+
 const HOST_URL = 'https://swap.mewapi.io/changelly';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 class Changelly {
@@ -41,6 +43,9 @@ class Changelly {
             isEth: d.contractAddress ? true : false
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   isValidToAddress({ toT, address }) {
@@ -57,6 +62,9 @@ class Changelly {
       })
       .then(response => {
         return response.data.result.result;
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   getMinMaxAmount({ fromT, toT }) {
@@ -78,15 +86,22 @@ class Changelly {
           minFrom: result?.minFrom,
           maxFrom: result?.maxFrom
         };
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
+
   getQuote({ fromT, toT, fromAmount }) {
     const fromAmountBN = new BigNumber(fromAmount);
     const queryAmount = fromAmountBN.div(
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (!minmax.minFrom) return [];
+      if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
+      if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
+        return [];
+      }
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
@@ -117,6 +132,9 @@ class Changelly {
               maxFrom: minmax.maxFrom
             }
           ];
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
     });
   }
@@ -173,12 +191,14 @@ class Changelly {
             transactions: [txObj]
           };
         });
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = await this.web3.eth.getGasPrice();
-
+    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
     return new Promise((resolve, reject) => {
       this.web3.eth
         .sendTransaction(
@@ -221,6 +241,9 @@ class Changelly {
         if (completedStatuses.includes(status)) return Configs.status.COMPLETED;
         if (failedStatuses.includes(status)) return Configs.status.COMPLETED;
         return Configs.status.UNKNOWN;
+      })
+      .catch(err => {
+        Toast(err, {}, ERROR);
       });
   }
 }

@@ -14,7 +14,7 @@ import { errorMsgs } from '@/apollo/configs/configErrorMsgs';
 /**
  * Constants
  */
-const MAX_ITEMS = 20;
+const MAX_ITEMS = 15;
 
 export default {
   name: 'HandlerNotification',
@@ -49,7 +49,7 @@ export default {
         );
       },
       result({ data }) {
-        if (data.getEthTransfersV2.transfers) {
+        if (data && data.getEthTransfersV2.transfers) {
           data.getEthTransfersV2.transfers.forEach(transfer => {
             const hash = transfer.transfer.transactionHash;
             !this.txHashes.includes(hash) ? this.txHashes.push(hash) : null;
@@ -71,7 +71,7 @@ export default {
           hashes: this.txHashes
         };
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'cache-and-networ`k`',
       skip() {
         return !this.isEthNetwork || this.txHashes.length === 0;
       },

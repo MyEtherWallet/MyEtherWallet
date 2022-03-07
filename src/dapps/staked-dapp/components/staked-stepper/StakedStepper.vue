@@ -63,6 +63,7 @@ import StepOneAmount from './staked-steps/StepOneAmount';
 import StepTwoGenerate from './staked-steps/StepTwoGenerate';
 import StepFourReview from './staked-steps/StepFourReview';
 import StepThreeUpload from './staked-steps/StepThreeUpload';
+import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
   components: {
@@ -111,6 +112,23 @@ export default {
       address: ''
     };
   },
+  watch: {
+    onStep(newStep) {
+      if (newStep == 2) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_2.NAME });
+      } else if (newStep == 3) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_3.NAME });
+      } else if (newStep == 4) {
+        this.$router.push({ name: ROUTES_WALLET.STAKED_4.NAME });
+      } else {
+        this.$router.push({ name: ROUTES_WALLET.STAKED.NAME });
+      }
+    }
+  },
+  mounted() {
+    if (this.$route.name == ROUTES_WALLET.STAKED.NAME)
+      this.$router.push({ name: ROUTES_WALLET.STAKED_1.NAME });
+  },
   methods: {
     /**
      * Sets the correct values and continues to next step
@@ -138,12 +156,25 @@ export default {
     back() {
       this.onStep -= 1;
     },
+
     /**
      * Emits 'readyToStake' to trigger send transaction
      * and reset the page
      */
+
     readyToStake() {
       this.$emit('readyToStake', this.amount);
+    },
+
+    /* 
+    modified reset to set data variables back to their 
+    initial state so user is taken back to step 1 when address is changed
+    */
+    // eslint-disable-next-line
+    reset() {
+      this.onStep = 1;
+      this.amount = 0;
+      this.skipped = false;
     }
   }
 };

@@ -29,6 +29,15 @@ const signatures = {
   },
   '0xca0bfcce': () => {
     return `Eth2 Staking`;
+  },
+  '0xf14fcbc8': () => {
+    return 'ENS Commitment';
+  },
+  '0xf7a16963': () => {
+    return 'ENS Registration';
+  },
+  '0x33aaf6f2': () => {
+    return 'ETH Blocks Mint';
   }
 };
 const getSignature = data => data.substr(0, 10);
