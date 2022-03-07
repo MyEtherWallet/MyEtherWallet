@@ -29,7 +29,11 @@
           Block is Not available: OWNER INFO
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="d-flex align-center mt-3">
+      <v-col
+        v-if="isNotAvailable"
+        cols="12"
+        class="d-flex pa-3 align-center mt-3"
+      >
         <p class="mb-0 mr-1">Owner:</p>
         <a :href="raribleOwnerLink" target="_blank">
           {{ ownerFormatted }}
@@ -40,7 +44,7 @@
           Block is Not available: Rarible LINK
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="mt-1">
+      <v-col v-if="isNotAvailable" cols="12" class="pa-3 mt-1">
         <a :href="raribleLink" target="_blank" class="d-flex align-center">
           <p class="mb-0">See if it's available on Rarible</p>
           <v-icon class="ml-2 greenPrimary--text" size="16px"
