@@ -166,7 +166,7 @@ import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
 // import stakeHandler from '../handlers/stakewiseStakeHandler';
-import RewardSwapper from '../handlers/stakewiseRewardHandler';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
@@ -189,8 +189,7 @@ export default {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
       compoundAmount: '0',
-      locGasPrice: '0',
-      rewardSwapper: {}
+      locGasPrice: '0'
       // stakeHandler: {}
     };
   },
@@ -199,9 +198,9 @@ export default {
     ...mapGetters('stakewise', ['getStakingFee']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    ...mapState('wallet', ['web3', 'address']),
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
     },
@@ -236,8 +235,6 @@ export default {
     //   this.isEthNetwork,
     //   this.address
     // );
-    this.rewardSwapper = new RewardSwapper(this.web3, this.network.type.name);
-    console.log('swapper', this.rewardSwapper);
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
@@ -251,7 +248,8 @@ export default {
       this.compoundAmount = BigNumber(value).toString();
     }, 500),
     getQuote: debounce(() => {
-      return this.rewardSwapper
+      const swapper = new Swapper(this.web3, this.network.type.name);
+      return swapper
         .getAllQuotes({
           fromT: this.hasSeth,
           toT: this.hasReth,
