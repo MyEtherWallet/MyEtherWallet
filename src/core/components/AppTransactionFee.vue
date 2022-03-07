@@ -220,9 +220,9 @@ export default {
       'network',
       'isEthNetwork',
       'swapLink',
-      'gasPriceByType'
+      'gasPrice'
     ]),
-    ...mapState('global', ['online', 'gasPriceType']),
+    ...mapState('global', ['online']),
     txFeeInEth() {
       return fromWei(this.txFee);
     },
@@ -263,7 +263,7 @@ export default {
     ...mapActions('global', ['updateGasPrice']),
     setGasPriceInterval() {
       return setInterval(() => {
-        this.handleLocalGasPrice(this.gasPriceByType(this.gasPrice));
+        this.handleLocalGasPrice(this.gasPrice);
       }, 60 * 2000);
     },
     closeGasPrice() {

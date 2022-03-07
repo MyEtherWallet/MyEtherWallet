@@ -76,7 +76,7 @@ export default {
      */
     gasPriceModal(newVal) {
       if (newVal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+        this.$emit('onLocalGasPrice', this.gasPrice);
       }
     },
     /**
@@ -85,7 +85,7 @@ export default {
      */
     gasPrice() {
       if (this.gasPriceModal) {
-        this.$emit('onLocalGasPrice', this.gasPriceByType(this.gasPriceType));
+        this.$emit('onLocalGasPrice', this.gasPrice);
       }
     }
   },
@@ -94,7 +94,7 @@ export default {
      * emit selected gas
      */
     setGas(value) {
-      this.$emit('onLocalGasPrice', this.gasPriceByType(value));
+      this.$emit('onLocalGasPrice', this.gasPrice);
       this.setSelected(value);
       this.trackGasSwitch(
         `type:${this.gasPriceType}, gas:${this.txFeeFormatted}`

@@ -28,13 +28,10 @@ export default async ({ payload, store, requestManager }, res, next) => {
     };
   }
   let currency = store.getters['external/contractToToken'](tx.to);
-  const gasPriceByTypeGetter = store.getters['global/gasPriceByType'];
-  const gasPriceType = store.state['global/gasPriceType'];
+  const gasPrice = store.getters['global/gasPrice'];
   if (!currency)
     currency = store.getters['external/contractToToken'](MAIN_TOKEN_ADDRESS);
-  tx.gasPrice = tx.gasPrice
-    ? tx.gasPrice
-    : BigNumber(gasPriceByTypeGetter(gasPriceType)).toFixed();
+  tx.gasPrice = tx.gasPrice ? tx.gasPrice : BigNumber(gasPrice).toFixed();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];

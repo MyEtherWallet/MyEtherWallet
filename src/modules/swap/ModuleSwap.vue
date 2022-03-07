@@ -383,7 +383,7 @@ export default {
       'network',
       'isEthNetwork',
       'swapLink',
-      'gasPriceByType'
+      'gasPrice'
     ]),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -725,7 +725,7 @@ export default {
      */
     currentGasPrice() {
       return BigNumber(this.localGasPrice).eq(0)
-        ? this.gasPriceByType(this.gasPriceType)
+        ? this.gasPrice
         : this.localGasPrice;
     },
     /**
@@ -864,7 +864,7 @@ export default {
         this.isLoading = false;
       }
 
-      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+      this.localGasPrice = this.gasPrice;
     },
     // reset values after executing transaction
     clear() {
