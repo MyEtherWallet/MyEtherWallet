@@ -206,15 +206,24 @@
       :on-register="onRegister"
       :close="closeRegister"
       :register="register"
+      :not-enough-funds="notEnoughFunds"
       :loading-commit="loadingCommit"
       :commited="committed"
       :minimum-age="minimumAge"
       :commit="commit"
+      :no-funds-for-reg-fees="noFundsForRegFees"
+      :commit-fee-in-eth="commitFeeInEth"
+      :commit-fee-in-wei="commitFeeInWei"
+      :commit-fee-usd="commitFeeUsd"
+      :total-cost-usd="totalCostUsd"
+      :total-cost="totalCost"
       :name="nameHandler.name"
       :parsed-host-name="nameHandler.parsedHostName"
       :checking-domain-avail="loading"
       :generate-key-phrase="generateKeyPhrase"
       :get-rent-price="getRentPrice"
+      :waiting-for-reg="waitingForReg"
+      @getCommitFeeOnly="getCommitFeeOnly"
     />
     <!--
     =====================================================================================
@@ -252,10 +261,11 @@ import { mapGetters, mapState } from 'vuex';
 import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
-import { fromWei } from 'web3-utils';
+import { fromWei, toWei, toBN } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import normalise from '@/core/helpers/normalise';
+
 export default {
   name: 'ENSManagerLayout',
   components: { ModuleRegisterDomain, ModuleManageDomain, TheWrapperDapp },
@@ -274,6 +284,16 @@ export default {
       ensManager: {},
       onRegister: false,
       searchError: '',
+      notEnoughFunds: false,
+      noFundsForRegFees: false,
+      durationPick: '',
+      commitFeeInEth: '',
+      commitFeeInWei: '0',
+      commitFeeUsd: '0',
+      regFee: '0',
+      totalCost: '0',
+      totalCostUsd: '0',
+      waitingForReg: true,
       manageDomainOptions: [
         {
           label: this.$t('ens.transfer-domain'),
@@ -314,9 +334,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['network', 'gasPrice', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['balance', 'address', 'web3']),
+    ...mapState('global', ['gasPriceType']),
     errorMessages() {
       if (this.domainTaken) return this.$t('ens.domain-taken');
       return this.searchError;
@@ -339,7 +360,7 @@ export default {
       return false;
     },
     balanceToWei() {
-      return this.web3.utils.toWei(BigNumber(this.balance).toString(), 'ether');
+      return toWei(BigNumber(this.balance).toString(), 'ether');
     },
     loading() {
       return this.nameHandler.checkingDomainAvail;
@@ -380,7 +401,6 @@ export default {
       ens,
       this.gasPrice
     );
-
     this.getDomains();
   },
   methods: {
@@ -490,21 +510,6 @@ export default {
         });
       this.closeManage();
     },
-    /**
-     * Register Domain
-     */
-
-    /* run a function that estimates current gas fee let it run on mount then run a watch between balance and gas fee that sets an error*/
-    // estimateGasFee() {
-    //   this.ensManager.gasPrice * this.web3.eth.estimateGas();
-    // },
-    // gasFeeCheck() {
-    //   const gasEstimate = this.nameHandler.gasEstimateComittment() * this.gasPrice;
-    //   console.log('gasUnitEstimate', this.nameHandler.gasEstimateComittment());
-    //   console.log('user balance', this.balanceToWei);
-    //   console.log('final gas etimate', gasEstimate);
-    //   console.log('enough?', this.balanceToWei > gasEstimate);
-    // },
     async findDomain() {
       try {
         this.nameHandler = await this.ensManager.searchName(this.name);
@@ -513,8 +518,6 @@ export default {
       }
       const int = setInterval(() => {
         if (this.nameHandler.registrarControllerContract !== null) {
-          //this.gasFeeCheck();
-          console.log('did', this.nameHandler.gasEstimateComittment());
           clearInterval(int);
         }
       }, 3000);
@@ -542,6 +545,7 @@ export default {
       }
     },
     register(duration) {
+      console.log('register method triggered');
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
@@ -570,9 +574,11 @@ export default {
         .on('receipt', () => {
           this.loadingCommit = true;
           this.committed = false;
+          this.waitingForReg = true;
           setTimeout(() => {
             this.committed = true;
-            this.loadingCommit = false;
+            this.waitingForReg = false;
+            this.getTotalCost(); //calling total cost for regfees
           }, waitingTime * 1000);
         })
         .on('error', err => {
@@ -580,16 +586,57 @@ export default {
           Toast(err, {}, ERROR);
         });
     },
+
+    async getCommitFeeOnly() {
+      const commitFeeOnly = await this.nameHandler.getCommitmentFees(); // ETH
+      this.commitFeeInEth = commitFeeOnly.toString();
+      this.commitFeeInWei = toWei(commitFeeOnly);
+      this.commitFeeUsd = new BigNumber(this.commitFeeInEth)
+        .times(this.fiatValue)
+        .toFixed(2);
+      if (toBN(this.commitFeeInWei).gte(this.balance)) {
+        // commit fee vs current user balance in wei
+        this.notEnoughFunds = true;
+      } else {
+        this.notEnoughFunds = false;
+      }
+    },
+
+    async getTotalCost() {
+      const registerFeesOnly = await this.nameHandler.getRegFees(
+        this.durationPick,
+        this.balance
+      );
+      if (!registerFeesOnly) {
+        this.noFundsForRegFees = true;
+      } else {
+        this.regFee = registerFeesOnly;
+        const feesAdded = Number(this.regFee) + Number(this.commitFeeInEth);
+        this.totalCost = feesAdded.toString();
+        this.totalCostUsd = new BigNumber(this.totalCost)
+          .times(this.fiatValue)
+          .toFixed(2);
+        if (this.totalCost >= this.balance) {
+          this.noFundsForRegFees = true;
+        } else {
+          this.noFundsForRegFees = false;
+        }
+      }
+      this.loadingCommit = false;
+    },
+
     generateKeyPhrase() {
       if (this.nameHandler.generateKeyPhrase) {
         this.nameHandler.generateKeyPhrase();
       }
     },
+
     getRentPrice(duration) {
+      this.durationPick = duration;
       const handler = this.onManage
         ? this.manageDomainHandler
         : this.nameHandler;
-      return handler.getRentPrice(duration).then(resp => {
+      return handler.getRentPrice(this.durationPick).then(resp => {
         if (resp) {
           const ethValue = fromWei(resp);
           return {

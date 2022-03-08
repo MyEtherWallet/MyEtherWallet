@@ -13,6 +13,68 @@
             : $tc('ens.commit.year', 2, { duration: duration })
         }}</span>
       </div>
+      <div
+        v-if="!committed && !loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Estimated Fee:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="!committed && loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Commitment Cost:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="committed && !loadingCommit && !waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span>Commitment Cost:</span>
+        <span class="font-weight-medium">
+          {{ commitFeeInEth }} ETH (${{ commitFeeUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="!committed && loadingCommit && waitingForReg"
+        class="d-flex justify-space-between"
+      >
+        <span class="font-weight-medium">
+          Generating registration cost, please wait...
+        </span>
+      </div>
+
+      <div
+        v-if="
+          !committed && !loadingCommit && !waitingForReg && !noFundsForRegFees
+        "
+        class="d-flex justify-space-between"
+      >
+        <span>Registration Cost:</span>
+        <span class="font-weight-medium">
+          {{ totalCost }} ETH (${{ totalCostUsd }})
+        </span>
+      </div>
+
+      <div
+        v-if="
+          !committed && !loadingCommit && !waitingForReg && noFundsForRegFees
+        "
+        class="d-flex justify-space-between"
+      >
+        <span>Registration Cost:</span>
+        <span class="font-weight-medium">
+          Not enough funds to complete registration
+        </span>
+      </div>
     </div>
     <div
       v-if="minimumAge || canRegister"
@@ -43,9 +105,26 @@
         }}</span>
       </div>
     </div>
+    <div v-if="notEnoughFunds || noFundsForRegFees">
+      <span class="balance-error d-flex mt-5 justify-center align-center">
+        Not enough balance:
+        <a
+          href="https://ccswap.myetherwallet.com/#/"
+          target="_blank"
+          class="link"
+        >
+          <u>Buy More Eth</u>
+        </a>
+      </span>
+    </div>
     <div class="d-flex justify-center mt-6">
       <mew-button
-        :disabled="loadingCommit || ticker !== '00:00'"
+        :disabled="
+          loadingCommit ||
+          ticker !== '00:00' ||
+          notEnoughFunds ||
+          noFundsForRegFees
+        "
         :title="
           canRegister
             ? $t('ens.register.name')
@@ -62,7 +141,39 @@
 export default {
   name: 'EnsRegister',
   props: {
+    notEnoughFunds: {
+      default: false,
+      type: Boolean
+    },
+    noFundsForRegFees: {
+      default: false,
+      type: Boolean
+    },
+    commitFeeInEth: {
+      type: String,
+      default: ''
+    },
+    commitFeeUsd: {
+      type: String,
+      default: ''
+    },
+    totalCost: {
+      type: String,
+      default: ''
+    },
+    totalCostUsd: {
+      type: String,
+      default: ''
+    },
+    waitingForReg: {
+      default: false,
+      type: Boolean
+    },
     loadingCommit: {
+      default: false,
+      type: Boolean
+    },
+    committed: {
       default: false,
       type: Boolean
     },
@@ -149,5 +260,18 @@ export default {
   .ticket-subtitle {
     line-height: 34px;
   }
+}
+.balance-error {
+  color: #ff445b;
+  font-size: 12px;
+}
+.link {
+  color: #ff445b;
+  font-weight: 600;
+  padding-left: 5px;
+  font-size: 12px;
+}
+.link:hover {
+  color: #e96071;
 }
 </style>
