@@ -18,10 +18,9 @@
               <mew-select
                 ref="mewSelect"
                 label="Token"
-                :items="tokens"
+                :items="[]"
                 :is-custom="true"
                 :value="selectedCurrency"
-                @input="setCurrency"
               />
             </div>
           </v-col>
@@ -33,12 +32,6 @@
                 :value="amount"
                 type="number"
                 :persistent-hint="true"
-                :max-btn-obj="{
-                  title: 'Max',
-                  disabled: false,
-                  method: setEntireBal
-                }"
-                :buy-more-str="buyMore"
                 @input="setAmount"
               />
             </div>
@@ -54,21 +47,11 @@
 
           <v-col cols="12">
             <mew-input
-              v-show="!isToken"
               v-model="localNonce"
               :label="$t('sendTx.nonce')"
               placeholder="0"
               type="number"
               :rules="isInteger"
-            />
-          </v-col>
-          <v-col cols="12">
-            <mew-input
-              v-show="!isToken"
-              v-model="localGasPrice"
-              :label="$t('sendTx.gas-price')"
-              placeholder="1"
-              type="number"
             />
           </v-col>
 
@@ -101,7 +84,7 @@
                     could result in your transaction failing or getting stuck.
                   </div>
                 </div>
-                <div class="d-flex align-center justify-end pb-3">
+                <div class="d-flex align-center justify-end pa-3">
                   <div
                     class="mew-body primary--text cursor--pointer"
                     @click="setGasLimit(defaultGasLimit)"
@@ -116,11 +99,9 @@
                   placeholder=""
                   :error-messages="gasLimitError"
                   type="number"
-                  @input="setGasLimit"
                 />
 
                 <mew-input
-                  v-show="!isToken"
                   v-model="data"
                   :label="$t('sendTx.add-data')"
                   placeholder="0x..."
@@ -203,9 +184,7 @@ import clipboardCopy from 'clipboard-copy';
 import { toBN, isHexStrict, toWei } from 'web3-utils';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
-import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 export default {
   components: {
@@ -261,6 +240,9 @@ export default {
           return isHexStrict(value);
         }
       ];
+    },
+    isDisabledNextBtn() {
+      return false;
     }
   },
   watch: {

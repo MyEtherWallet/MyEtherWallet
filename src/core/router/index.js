@@ -7,6 +7,7 @@ import routesOfflineWallet from './routes-offline-wallet';
 import routesWallet from './routes-wallet';
 import { ROUTES_HOME } from '../configs/configRoutes';
 const routes =
+  // eslint-disable-next-line
   BUILD === 'offline'
     ? [routesOfflineDefault, routesOfflineWallet]
     : [routesDefault, routesWallet];

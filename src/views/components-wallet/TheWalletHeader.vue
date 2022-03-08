@@ -17,7 +17,7 @@
     </div>
     <div class="ml-auto d-flex align-center">
       <div class="align-center d-none d-lg-block">
-        <notification-overlay />
+        <notification-overlay v-if="online" />
       </div>
     </div>
   </div>
@@ -33,7 +33,8 @@ export default {
     // mobileStatus
   },
   computed: {
-    ...mapState('wallet', ['identifier'])
+    ...mapState('wallet', ['identifier']),
+    ...mapState('global', ['online'])
   }
 };
 </script>
