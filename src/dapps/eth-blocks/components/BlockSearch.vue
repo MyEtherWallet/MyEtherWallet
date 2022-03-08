@@ -82,10 +82,15 @@ export default {
         }
         const max = toBN(this.blockNumber).sub(toBN(50));
         if (search.gt(max)) {
-          return `block number must be smaller or equal to ${this.maxBlock}`;
+          return `Block number must be smaller or equal to ${this.maxBlock}`;
         }
       }
       return '';
+    },
+    checkExistingBlock() {
+      const search = toBN(this.searchBlock);
+      const max = toBN(this.blockNumber).sub(toBN(50));
+      return !search.gt(max);
     }
   },
   methods: {
@@ -93,7 +98,11 @@ export default {
      * Reroutes to Block Info page
      */
     search() {
-      if (this.searchBlock && this.searchBlock !== '') {
+      if (
+        this.searchBlock &&
+        this.searchBlock !== '' &&
+        this.checkExistingBlock
+      ) {
         try {
           this.$router.push({
             name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
