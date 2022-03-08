@@ -3,7 +3,7 @@
     <!-- Header titles -->
     <div class="d-flex align-center justify-start">
       <div>
-        <div class="mew-heading-2">My Batch</div>
+        <div class="pb-3 mew-heading-2">My Batch</div>
         <div class="mew-body textMedium--text">
           You have added {{ blockCount }} ETH {{ pluralizeBlockCount }} for
           Minting. Please review and click "Proceed to Minting."
