@@ -16,23 +16,21 @@
           <v-col cols="12" sm="6" class="pr-sm-1 pt-0 pb-0 pb-sm-4">
             <div class="position--relative">
               <mew-select
-                ref="mewSelect"
+                v-model="selectedCurrency"
                 label="Token"
-                :items="[]"
+                :items="tokens"
                 :is-custom="true"
-                :value="selectedCurrency"
               />
             </div>
           </v-col>
           <v-col cols="12" sm="6" class="pl-sm-1 pt-0 pb-2 pb-sm-4">
             <div class="position--relative">
               <mew-input
+                v-model="amount"
                 label="Amount"
                 placeholder="0"
-                :value="amount"
+                :error-messages="amountErrors"
                 type="number"
-                :persistent-hint="true"
-                @input="setAmount"
               />
             </div>
           </v-col>
@@ -51,72 +49,41 @@
               :label="$t('sendTx.nonce')"
               placeholder="0"
               type="number"
-              :rules="isInteger"
+              :error-messages="nonceErrors"
             />
           </v-col>
-
-          <!--
-      =====================================================================================
-        Advanced:
-      =====================================================================================
-      -->
-          <v-col cols="12" class="py-4">
-            <mew-expand-panel
-              ref="expandPanel"
-              is-toggle
-              has-dividers
-              :panel-items="expandPanel"
-              @toggled="closeToggle"
-            >
-              <template #panelBody1>
-                <!-- Warning Sheet -->
-                <div
-                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
-                >
-                  <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="textBlack2--text mew-body mr-1">
-                      mdi-alert-outline</v-icon
-                    >For advanced users only
-                  </div>
-                  <div>
-                    Please don’t edit these fields unless you are an expert user
-                    & know what you’re doing. Entering the wrong information
-                    could result in your transaction failing or getting stuck.
-                  </div>
-                </div>
-                <div class="d-flex align-center justify-end pa-3">
-                  <div
-                    class="mew-body primary--text cursor--pointer"
-                    @click="setGasLimit(defaultGasLimit)"
-                  >
-                    Reset to default: {{ 21000 }}
-                  </div>
-                </div>
-
-                <mew-input
-                  :value="gasLimit"
-                  :label="$t('common.gas.limit')"
-                  placeholder=""
-                  :error-messages="gasLimitError"
-                  type="number"
-                />
-
-                <mew-input
-                  v-model="data"
-                  :label="$t('sendTx.add-data')"
-                  placeholder="0x..."
-                  :rules="dataRules"
-                  class="mb-8"
-                />
-              </template>
-            </mew-expand-panel>
+          <v-col cols="12">
+            <mew-input
+              v-model="data"
+              label="Data"
+              placeholder="0x..."
+              :error-messages="dataErrors"
+              class="mb-8"
+              :disabled="disableData"
+            />
+          </v-col>
+          <v-col cols="12">
+            <mew-input
+              v-model="gasLimit"
+              :label="$t('common.gas.limit')"
+              :error-messages="gasLimitErrors"
+              type="number"
+            />
+          </v-col>
+          <v-col cols="12">
+            <mew-input
+              v-model="gasPrice"
+              label="Gas Price (in gwei)"
+              :error-messages="gasPriceErrors"
+              type="number"
+            />
           </v-col>
         </v-row>
 
         <div class="d-flex flex-column mt-12">
           <div class="text-center">
             <mew-button
-              :title="$t('sendTx.generate-tx')"
+              title="Generate Transaction"
               :has-full-width="false"
               btn-size="xlarge"
               :disabled="isDisabledNextBtn"
@@ -137,7 +104,7 @@
     </mew-module>
     <mew-overlay
       :show-overlay="isSignedTxOpen"
-      :title="$t('sendTx.signed.tx')"
+      title="Signed Transaction"
       :close="() => (isSignedTxOpen = false)"
       content-size="xlarge"
     >
@@ -145,35 +112,24 @@
         <mew-text-area
           ref="signedTxInput"
           style="width: 100%"
-          :label="$t('sendTx.signed.tx')"
+          label="Signed Transaction"
           :value="signedTransaction.rawTransaction"
         />
 
-        <div class="mb-3">{{ $t('sendTx.signed.scan') }}</div>
-        <!-- <qrcode-vue
-          class="mb-3"
-          :value="signedTransaction.rawTransaction"
-          :size="200"
-          level="H"
-        /> -->
-        <div>or</div>
-        <a
-          :href="jsonFile"
-          :download="jsonFileName"
-          rel="noopener noreferrer"
-          >{{ $t('sendTx.signed.download') }}</a
-        >
         <mew-text-area
           class="mt-12"
           style="width: 100%"
-          :label="$t('sendTx.signed.raw')"
+          label="Signed Raw Transaction"
           :value="signed"
         />
         <mew-button
           class="mt-5"
-          :title="$t('sendTx.signed.button-copy-cont')"
+          title="Copy And Continue"
           @click.native="copyAndContinue"
-        ></mew-button>
+        />
+        <a :href="jsonFile" :download="jsonFileName" rel="noopener noreferrer"
+          >Download</a
+        >
       </div>
     </mew-overlay>
   </div>
@@ -182,10 +138,13 @@
 <script>
 import clipboardCopy from 'clipboard-copy';
 import { toBN, isHexStrict, toWei } from 'web3-utils';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
+import Web3 from 'web3';
+import { isValidAddress } from 'ethereumjs-util';
+import { isEmpty } from 'lodash';
 export default {
   components: {
     ModuleAddressBook
@@ -195,20 +154,14 @@ export default {
       isSignedTxOpen: false,
       localNonce: '0',
       gasLimit: '21000',
+      gasPrice: '0',
       toAddress: '',
       isValidAddress: false,
       amount: '0',
       selectedCurrency: {},
       data: '0x',
       userInputType: '',
-      expandPanel: [
-        {
-          name: this.$t('common.advanced'),
-          subtext: 'Gas Limit & Data'
-        }
-      ],
       localGasPrice: '0',
-      localGasType: 'economy',
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
@@ -221,28 +174,71 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address', 'instance']),
-    isValidGasLimit() {
-      if (this.gasLimit) {
-        return (
-          BigNumber(this.gasLimit).gt(0) &&
-          BigNumber(this.gasLimit).dp() < 1 &&
-          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
-        );
-      }
-      return false;
+    ...mapGetters('global', ['network']),
+    networkToken() {
+      return {
+        symbol: this.network.type.currencyName,
+        name: this.network.type.name
+      };
     },
-    isInteger() {
-      return [BigNumber(this.nonce).isInteger() || 'Need integer value.'];
-    },
-    dataRules() {
-      return [
-        value => {
-          return isHexStrict(value);
-        }
-      ];
+    tokens() {
+      return [this.networkToken].concat(this.network.type.tokens);
     },
     isDisabledNextBtn() {
       return false;
+    },
+    nonceErrors() {
+      if (BigNumber(this.nonce).lt(0)) {
+        return 'Nonce has to be greater than or equal to 0!';
+      }
+      return '';
+    },
+    dataErrors() {
+      if (isHexStrict(this.data)) {
+        return '';
+      }
+      return 'Invalid data hex';
+    },
+    gasLimitErrors() {
+      if (!this.gasLimit) {
+        return 'Required';
+      }
+      if (BigNumber(this.gasLimit).lte(0)) {
+        return 'Gas limit must be greater than 0';
+      } else if (BigNumber(this.gasLimit).dp() > 0) {
+        return 'Gas limit can not have decimal points';
+      } else if (toBN(this.gasLimit).lt(toBN(this.defaultGasLimit))) {
+        return 'Amount too low. Transaction will fail';
+      }
+      return '';
+    },
+    gasPriceErrors() {
+      if (!this.gasPrice) {
+        return 'Required';
+      } else if (BigNumber(this.gasPrice).lte(0)) {
+        return 'Gas price must be greater than 0';
+      }
+
+      return '';
+    },
+    amountErrors() {
+      if (!this.amount) {
+        return 'Required';
+      } else if (BigNumber(this.amount).lt(0)) {
+        return 'Amount must be greater than or equal to 0';
+      }
+      return '';
+    },
+    disableData() {
+      return this.selectedCurrency.symbol !== this.network.type.currencyName;
+    },
+    canGenerate() {
+      return (
+        this.toAddress !== '' &&
+        isValidAddress(this.toAddress) &&
+        !isEmpty(this.selectedCurrency) &&
+        this.selectedCurrency.symbol !== this.network.type.currencyName
+      );
     }
   },
   watch: {
@@ -255,11 +251,49 @@ export default {
       this.jsonFileName = `signedTransactionObject-${+new Date()}.json`;
       this.jsonFile = window.URL.createObjectURL(blob);
     },
-    amount() {},
-    data() {},
-    gasLimit() {}
+    selectedCurrency: {
+      handler: function () {
+        if (this.canGenerate) {
+          this.generateData();
+        }
+      },
+      deep: true
+    },
+    toAddress() {
+      if (this.canGenerate) {
+        this.generateData();
+      }
+    }
+  },
+  mounted() {
+    this.selectedCurrency = this.networkToken;
   },
   methods: {
+    generateData() {
+      const web3 = new Web3(this.network.url);
+      const jsonInterface = [
+        {
+          constant: false,
+          inputs: [
+            { name: '_to', type: 'address' },
+            { name: '_amount', type: 'uint256' }
+          ],
+          name: 'transfer',
+          outputs: [{ name: '', type: 'bool' }],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ];
+      const contract = new web3.eth.Contract(
+        jsonInterface,
+        this.selectedCurrency.address
+      );
+      const amount = toBN(this.amount);
+      this.data = contract.methods
+        .transfer(this.toAddress.toLowerCase(), amount)
+        .encodeABI();
+    },
     copyAndContinue() {
       clipboardCopy(this.$refs.signedTxInput.value);
       this.isSignedTxOpen = false;
@@ -271,56 +305,20 @@ export default {
       if (this.$refs && this.$refs.addressInput)
         this.$refs.addressInput.clear();
       this.toAddress = '';
-      this.selectedCurrency = {};
+      this.selectedCurrency = this.networkToken;
       this.isValidAddress = false;
       this.amount = '0';
       this.data = '0x';
       this.userInputType = '';
       this.localGasPrice = '0';
-      this.localGasType = 'economy';
       this.defaultGasLimit = '21000';
       this.gasLimitError = '';
       this.amountError = '';
-    },
-    /**
-     * Method sets gas limit to default when Advanced closed , ONLY IF gasLimit was invalid
-     */
-    closeToggle() {
-      if (!this.isValidGasLimit) {
-        this.gasLimit = this.defaultGasLimit;
-        this.setGasLimitError(this.gasLimit);
-      }
-    },
-    /**
-     * Method sets gasLimitError based on the user input
-     * Has to be set manualy and debouned otherwise error message is not displayed when tokens are switched and gas limit input component is out of focus
-     * @param value {string}
-     */
-    setGasLimitError(value) {
-      if (value) {
-        if (BigNumber(value).lte(0))
-          this.gasLimitError = 'Gas limit must be greater than 0';
-        else if (BigNumber(value).dp() > 0)
-          this.gasLimitError = 'Gas limit can not have decimal points';
-        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
-          this.gasLimitError = 'Amount too low. Transaction will fail';
-        else {
-          this.gasLimitError = '';
-        }
-      } else {
-        this.gasLimitError = 'Required';
-      }
     },
     setAddress(addr, isValidAddress, userInputType) {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
-    },
-    setAmount(value) {
-      this.amount = value;
-    },
-    setGasLimit(value) {
-      this.gasLimit = value;
     },
     async generateTx() {
       const symbol = this.network.type.currencyName;
