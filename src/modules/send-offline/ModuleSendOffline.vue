@@ -185,7 +185,14 @@ export default {
       return [this.networkToken].concat(this.network.type.tokens);
     },
     isDisabledNextBtn() {
-      return false;
+      return (
+        this.nonceErrors !== '' ||
+        this.dataErrors !== '' ||
+        this.gasLimitErrors !== '' ||
+        this.gasPriceErrors !== '' ||
+        this.amountErrors !== '' ||
+        !this.validAddress
+      );
     },
     nonceErrors() {
       if (BigNumber(this.nonce).lt(0)) {
@@ -232,10 +239,12 @@ export default {
     disableData() {
       return this.selectedCurrency.symbol !== this.network.type.currencyName;
     },
+    validAddress() {
+      return this.toAddress !== '' && isValidAddress(this.toAddress);
+    },
     canGenerate() {
       return (
-        this.toAddress !== '' &&
-        isValidAddress(this.toAddress) &&
+        this.validAddress &&
         !isEmpty(this.selectedCurrency) &&
         this.selectedCurrency.symbol !== this.network.type.currencyName
       );
