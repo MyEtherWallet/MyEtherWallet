@@ -36,6 +36,7 @@ Vue.directive('lottie', LottieAnimation);
 // Filters
 Vue.filter('lokalise', lokalise);
 
+console.log('huh?');
 //Router
 Vue.use(Router);
 Vue.use(Vuex);

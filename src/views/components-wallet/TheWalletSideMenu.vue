@@ -26,7 +26,7 @@
           <balance-card />
 
           <v-btn
-            v-if="network.type.name === 'ETH' && !isOfflineApp"
+            v-if="network.type.name === 'ETH' && online"
             class="mt-3"
             color="white"
             outlined
@@ -57,11 +57,7 @@
 
       <v-list>
         <v-list-item-group model="menuSelected">
-          <template
-            v-for="(item, idx) in isOfflineApp
-              ? sectionOneOfflineApp
-              : sectionOne"
-          >
+          <template v-for="(item, idx) in sectionOne">
             <v-list-item
               v-if="!item.children && shouldShow(item.route)"
               :key="item + idx + 1"
@@ -128,9 +124,7 @@
 
       <v-list>
         <v-list-item
-          v-for="(item, idx) in isOfflineApp
-            ? sectionTwoOfflineApp
-            : sectionTwo"
+          v-for="(item, idx) in sectionTwo"
           :key="item + idx"
           dense
           :to="item.route"
@@ -202,7 +196,7 @@
           <img height="26" src="@/assets/images/icons/logo-mew.svg" />
         </router-link>
         <v-spacer />
-        <module-notifications invert-icon />
+        <module-notifications v-if="online" invert-icon />
       </v-row>
     </v-system-bar>
   </div>
@@ -244,80 +238,76 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      sectionOne: [
-        {
-          title: this.$t('interface.menu.dashboard'),
-          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
-          icon: dashboard
-        },
-        {
-          title: this.$t('sendTx.send-tx'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
-          icon: send
-        },
-        {
-          title: this.$t('interface.menu.nft'),
-          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
-          icon: nft
-        },
-        {
-          title: this.$t('common.swap'),
-          route: { name: ROUTES_WALLET.SWAP.NAME },
-          icon: swap
-        },
-        {
-          title: this.$t('interface.menu.dapps'),
-          route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp
-        },
-        {
-          title: this.$t('interface.menu.contract'),
-          icon: contract,
-          children: [
-            {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
-            },
-            {
-              title: this.$t('interface.menu.interact-contract'),
-              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
-            }
-          ]
-        },
-        {
-          title: this.$t('interface.menu.message'),
-          icon: message,
-          children: [
-            {
-              title: this.$t('interface.menu.sign-message'),
-              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-            },
-            {
-              title: this.$t('interface.menu.verify-message'),
-              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
-            }
-          ]
-        }
-      ],
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
-      /**
-       * ====================================================
-       * Menu for offline app
-       * ====================================================
-       */
-      sectionOneOfflineApp: [
+      routeNetworks: {
+        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
+      },
+      ROUTES_WALLET: ROUTES_WALLET
+    };
+  },
+  computed: {
+    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapState('wallet', ['instance']),
+    ...mapState('global', ['online']),
+    sectionOne() {
+      if (this.online) {
+        return [
+          {
+            title: this.$t('interface.menu.dashboard'),
+            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            icon: dashboard
+          },
+          {
+            title: this.$t('sendTx.send-tx'),
+            route: { name: ROUTES_WALLET.SEND_TX.NAME },
+            icon: send
+          },
+          {
+            title: this.$t('interface.menu.nft'),
+            route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
+            icon: nft
+          },
+          {
+            title: this.$t('common.swap'),
+            route: { name: ROUTES_WALLET.SWAP.NAME },
+            icon: swap
+          },
+          {
+            title: this.$t('interface.menu.dapps'),
+            route: { name: ROUTES_WALLET.DAPPS.NAME },
+            icon: dapp
+          },
+          {
+            title: this.$t('interface.menu.contract'),
+            icon: contract,
+            children: [
+              {
+                title: this.$t('interface.menu.deploy'),
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+              },
+              {
+                title: this.$t('interface.menu.interact-contract'),
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+              }
+            ]
+          },
+          {
+            title: this.$t('interface.menu.message'),
+            icon: message,
+            children: [
+              {
+                title: this.$t('interface.menu.sign-message'),
+                route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+              },
+              {
+                title: this.$t('interface.menu.verify-message'),
+                route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
+              }
+            ]
+          }
+        ];
+      }
+      return [
         {
           title: this.$t('sendTx.send-offline'),
           route: { name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME },
@@ -328,24 +318,32 @@ export default {
           route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME },
           icon: message
         }
-      ],
-      sectionTwoOfflineApp: [
+      ];
+    },
+    sectionTwo() {
+      if (this.online) {
+        return [
+          {
+            title: this.$t('common.settings'),
+            icon: settings,
+            fn: this.openSettings,
+            route: { name: ROUTES_WALLET.SETTINGS.NAME }
+          },
+          {
+            title: this.$t('common.logout'),
+            icon: logout,
+            fn: this.toggleLogout
+          }
+        ];
+      }
+      return [
         {
           title: this.$t('common.logout'),
           icon: logout,
           fn: this.toggleLogout
         }
-      ],
-      routeNetworks: {
-        [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
-      },
-      ROUTES_WALLET: ROUTES_WALLET
-    };
-  },
-  computed: {
-    ...mapGetters('global', ['network', 'swapLink']),
-    ...mapState('wallet', ['instance', 'isOfflineApp'])
+      ];
+    }
   },
   mounted() {
     if (this.$route.name == ROUTES_WALLET.SETTINGS.NAME) {

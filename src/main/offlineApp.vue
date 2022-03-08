@@ -9,11 +9,17 @@
 <script>
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
   components: { ModuleToast, ModuleGlobalModals },
-  mounted() {}
+  mounted() {
+    this.setOnlineStatus(false);
+  },
+  methods: {
+    ...mapActions('global', ['setOnlineStatus'])
+  }
 };
 </script>
 
