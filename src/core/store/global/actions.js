@@ -31,8 +31,9 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-const setNetwork = function ({ commit }, networkObj) {
+const setNetwork = function ({ commit, dispatch }, networkObj) {
   commit('SET_NETWORK', networkObj);
+  dispatch('swap/resetPrefetch', null, { root: true });
 };
 const addLocalContract = function ({ commit }, localContract) {
   commit('ADD_LOCAL_CONTRACT', localContract);
