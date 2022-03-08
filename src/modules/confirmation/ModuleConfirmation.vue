@@ -486,6 +486,14 @@ export default {
         this.signedTxObject = {};
       }
     },
+    /**
+     * Closes modal then brings it back to the start fetching new address data
+     */
+    address(newVal) {
+      if (newVal) {
+        this.resetSuccess();
+      }
+    },
     signedTxArray: {
       handler: function (newVal) {
         if (
