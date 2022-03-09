@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mew-component--claimable-tokens-popup">
     <simple-dialog v-model="isDialogOpen" no-title>
       <v-row>
         <v-col cols="12" sm="4" class="d-flex justify-center">
@@ -14,7 +14,7 @@
           <div class="mew-heading-2 mb-3">You have claimable tokens.</div>
           <div class="mb-8">
             There are tokens you can claim. You can see all the claimable tokens
-            on your wallet by clicking button below.
+            in your wallet by clicking button below.
           </div>
           <div class="ma-n1">
             <mew-button title="Show claimable tokens" class="ma-1"></mew-button>
@@ -35,13 +35,21 @@
 import SimpleDialog from '@/core/components/AppSimpleDialog';
 
 export default {
+  name: 'ClaimableTokens',
   components: { SimpleDialog },
-  props: {},
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return { isDialogOpen: false };
   },
-  mounted() {
-    this.isDialogOpen = true;
+  watch: {
+    show(newVal) {
+      this.isDialogOpen = newVal;
+    }
   }
 };
 </script>

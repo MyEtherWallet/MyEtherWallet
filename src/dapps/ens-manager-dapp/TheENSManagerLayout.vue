@@ -280,7 +280,7 @@
     <!-- ===================================================================================== -->
     <!-- Claimable Tokens Overlay -->
     <!-- ===================================================================================== -->
-    <claimable-tokens />
+    <claimable-tokens :show="showClaimableTokenPopup" />
   </div>
 </template>
 
@@ -316,6 +316,7 @@ export default {
   },
   data() {
     return {
+      showClaimableTokenPopup: false,
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -480,6 +481,13 @@ export default {
       this.ensTokens.claimed = data.claimed;
       this.ensTokens.balance = data.balance;
       this.ensTokens.proof = data.proof;
+
+      if (this.ensTokens.balance !== undefined) {
+        const hasBalance = toBN(this.ensTokens.balance).gt(toBN(0));
+        if (!this.ensTokens.claimed && hasBalance) {
+          this.showClaimableTokenPopup = true;
+        }
+      }
     });
   },
   methods: {
