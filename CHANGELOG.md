@@ -1,6 +1,8 @@
+### Release v6.4.8
+
 ### devop
 
-* * Added toBNSafe that safely converts numbers to BN [#3696](https://github.com/MyEtherWallet/MyEtherWallet/pull/3696)
+* Added toBNSafe that safely converts numbers to BN [#3696](https://github.com/MyEtherWallet/MyEtherWallet/pull/3696)
 * update packages from dependabot [#3700](https://github.com/MyEtherWallet/MyEtherWallet/pull/3700)
 * add missing members [#3701](https://github.com/MyEtherWallet/MyEtherWallet/pull/3701)
 
@@ -10,8 +12,8 @@
 
 ### fix
 
-* * replace all old colors with new colors [#3559](https://github.com/MyEtherWallet/MyEtherWallet/pull/3559)
-* * fix wallet balance loading animation [#3624](https://github.com/MyEtherWallet/MyEtherWallet/pull/3624)
+* replace all old colors with new colors [#3559](https://github.com/MyEtherWallet/MyEtherWallet/pull/3559)
+* fix wallet balance loading animation [#3624](https://github.com/MyEtherWallet/MyEtherWallet/pull/3624)
 * fixes: 2929544912, 2780117575, 2688459025, 2735474055, 3042395444, 2505098087, 2504519254 [#3695](https://github.com/MyEtherWallet/MyEtherWallet/pull/3695)
 * fetch tokens when network is changed [#3697](https://github.com/MyEtherWallet/MyEtherWallet/pull/3697)
 * remove more button when the user has no tokens [#3702](https://github.com/MyEtherWallet/MyEtherWallet/pull/3702)
