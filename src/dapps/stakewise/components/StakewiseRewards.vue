@@ -47,7 +47,7 @@
         :btn-style="compoundRewards ? 'transparent' : 'background'"
         btn-size="small"
         class="mew-body"
-        @click.native="routeToSwap"
+        @click.native="routeToStakeEth"
       />
     </div>
   </div>
@@ -55,6 +55,7 @@
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { STAKEWISE_ROUTES } from '@/dapps/stakewise/';
 import {
   SETH2_MAINNET_CONTRACT,
   RETH2_MAINNET_CONTRACT,
@@ -105,6 +106,9 @@ export default {
   methods: {
     routeToSwap() {
       this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
+    },
+    routeToStakeEth() {
+      this.$router.push({ name: STAKEWISE_ROUTES.STAKE.NAME });
     }
   }
 };

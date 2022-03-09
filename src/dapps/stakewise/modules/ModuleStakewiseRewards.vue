@@ -116,13 +116,16 @@
                 >
                   Network Fee
                 </div>
-                <div class="textLight--text text-decoration-underline">
+                <div
+                  class="textLight--text text-decoration-underline cursor--pointer"
+                  @click="openSettings"
+                >
                   Edit priority
                 </div>
               </div>
               <div class="text-right">
-                <div class="">0.023422 ETH</div>
-                <div class="mew-label textLight--text">$120.98</div>
+                <div class="">{{ ethTotalFee }} ETH</div>
+                <div class="mew-label textLight--text">${{ gasPriceFiat }}</div>
               </div>
             </div>
           </div>
@@ -171,12 +174,16 @@ import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import { find } from 'lodash';
+import { fromWei } from 'web3-utils';
+import { EventBus } from '@/core/plugins/eventBus';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import {
   SETH2_MAINNET_CONTRACT,
   RETH2_MAINNET_CONTRACT,
   RETH2_GOERLI_CONTRACT,
   SETH2_GOERLI_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
+const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
@@ -189,7 +196,8 @@ export default {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
       compoundAmount: '0',
-      locGasPrice: '0'
+      locGasPrice: '0',
+      gasLimit: '21000'
       // stakeHandler: {}
     };
   },
@@ -224,10 +232,25 @@ export default {
     rethBalance() {
       return '0.19';
       // return this.hasReth ? this.hasReth.balancef : '0';
-    }
+    },
     // rethUsdBalance() {
     //   return this.hasReth ? this.hasReth.usdBalancef : '0';
     // }
+    ethTotalFee() {
+      const gasPrice = BigNumber(this.locGasPrice).gt(0)
+        ? BigNumber(this.locGasPrice)
+        : BigNumber(this.gasPriceByType(this.gasPriceType));
+      const gasLimit = BigNumber(this.gasLimit).gt('21000')
+        ? this.gasLimit
+        : MIN_GAS_LIMIT;
+      return fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+    },
+    gasPriceFiat() {
+      const gasPrice = BigNumber(this.ethTotalFee);
+      return gasPrice.gt(0)
+        ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
+        : '--';
+    }
   },
   mounted() {
     // this.stakeHandler = new stakeHandler(
@@ -251,8 +274,8 @@ export default {
       const swapper = new Swapper(this.web3, this.network.type.name);
       return swapper
         .getAllQuotes({
-          fromT: this.hasSeth,
-          toT: this.hasReth,
+          fromT: this.hasSeth.contract,
+          toT: this.hasReth.contract,
           // hardcoded compound amount for now
           fromAmount: new BigNumber('0.18').times(
             new BigNumber(10).pow(new BigNumber(18))
@@ -261,7 +284,10 @@ export default {
         .then(quotes => {
           console.log('quotes', quotes);
         });
-    }, 500)
+    }, 500),
+    openSettings() {
+      EventBus.$emit('openSettings');
+    }
   }
 };
 </script>
