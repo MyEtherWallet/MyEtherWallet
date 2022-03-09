@@ -175,7 +175,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .estimateGas(commitTxObj);
       return fromWei(toBN(gasPrice).mul(toBN(gasLimit)));
     } catch (e) {
-      console.log(`not enough funds to commit!`);
       return e;
     }
   }
@@ -293,17 +292,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async getRegFees(duration, balance) {
-    console.log('getRegFees in ENSHandler triggered!');
     try {
       const gasPrice = this.gasPriceByType()(this.gasPriceType());
       const rentPrice = await this.getRentPrice(duration);
-      console.log('rentPrice:', rentPrice);
-      console.log('gasPrice', gasPrice);
       const hasBalance = new BigNumber(balance).gte(rentPrice);
-      if (!hasBalance) {
-        console.log('balance is NOT greater than rent price w/o 5%');
-      } else {
-        console.log('balance is greater than rent price w/o 5%');
+      if (hasBalance) {
         const rentPriceWithFivePercent = new BigNumber(rentPrice)
           .times(1.05)
           .integerValue()
@@ -330,7 +323,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
         );
       }
     } catch (e) {
-      console.log(`not enough funds to commit!`);
       return false;
     }
   }

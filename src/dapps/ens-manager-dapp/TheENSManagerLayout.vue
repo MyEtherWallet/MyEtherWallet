@@ -655,7 +655,6 @@ export default {
       }
     },
     register(duration) {
-      console.log('register method triggered');
       this.nameHandler
         .register(duration, this.balanceToWei)
         .on('transactionHash', () => {
