@@ -104,7 +104,6 @@
 * add job postings page [#3577](https://github.com/MyEtherWallet/MyEtherWallet/pull/3577)
 * add ens dapp balance check [#3710](https://github.com/MyEtherWallet/MyEtherWallet/pull/3710)
 
-
 ### Release v6.4.3
 
 ### devop
