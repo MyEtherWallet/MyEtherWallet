@@ -8,7 +8,6 @@
     :banner-img="bannerImage"
     :banner-text="bannerText"
     no-back-btn
-    class="mt-3"
   >
     <template #content>
       <div class="mew-heading-1 px-4 mb-4">MEW DApps</div>

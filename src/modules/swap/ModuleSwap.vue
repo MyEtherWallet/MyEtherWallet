@@ -822,11 +822,6 @@ export default {
       deep: true,
       immediate: true
     },
-    network() {
-      if (this.isAvailable) {
-        this.clear();
-      }
-    },
     mainTokenDetails() {
       this.setDefaults();
     },
