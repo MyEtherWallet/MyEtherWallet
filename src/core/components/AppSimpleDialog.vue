@@ -7,7 +7,10 @@
   -->
   <v-dialog v-model="isDialogOpen" :width="width">
     <div class="white pa-8">
-      <div class="d-flex align-start justify-space-between mb-7">
+      <div
+        v-if="!noTitle"
+        class="d-flex align-start justify-space-between mb-7"
+      >
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
@@ -44,6 +47,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    noTitle: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

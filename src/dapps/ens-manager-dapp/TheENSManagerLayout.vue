@@ -276,6 +276,11 @@
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
     />
+
+    <!-- ===================================================================================== -->
+    <!-- Claimable Tokens Overlay -->
+    <!-- ===================================================================================== -->
+    <claimable-tokens />
   </div>
 </template>
 
@@ -297,6 +302,8 @@ import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
+import ClaimableTokens from './components/claim/ClaimableTokens';
+
 export default {
   name: 'ENSManagerLayout',
   components: {
@@ -304,7 +311,8 @@ export default {
     ModuleManageDomain,
     TheWrapperDapp,
     ModuleAddressBook,
-    ClaimBalance
+    ClaimBalance,
+    ClaimableTokens
   },
   data() {
     return {
