@@ -29,6 +29,10 @@ class Changelly {
         params: {}
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const data = response.data.result.filter(d => d.fixRateEnabled);
         return data.map(d => {
           const contract = d.contractAddress
@@ -61,6 +65,10 @@ class Changelly {
         }
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         return response.data.result.result;
       })
       .catch(err => {
@@ -81,6 +89,10 @@ class Changelly {
         ]
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const result = response?.data?.result[0];
         return {
           minFrom: result?.minFrom,
@@ -98,7 +110,10 @@ class Changelly {
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
+      if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
+        return [];
+      }
+
       if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
         return [];
       }
@@ -116,6 +131,10 @@ class Changelly {
           ]
         })
         .then(response => {
+          if (response.error) {
+            Toast(response.error, {}, ERROR);
+            return;
+          }
           return [
             {
               exchange: this.provider,
@@ -158,6 +177,10 @@ class Changelly {
         }
       })
       .then(async response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         if (Array.isArray(response.data.result))
           return new Error('Invalid input');
         const txObj = {
@@ -231,6 +254,10 @@ class Changelly {
         }
       })
       .then(async response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const submittedStatuses = ['waiting', 'new'];
         const pendingStatuses = ['confirming', 'exchanging', 'sending'];
         const completedStatuses = ['finished'];
