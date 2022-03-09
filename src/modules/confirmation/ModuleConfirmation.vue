@@ -115,11 +115,11 @@
           <div
             class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
           >
-            <b>Make sure all the information is correct.</b> Canceling or
+            <b>Make sure all the information is correct.</b> Cancelling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              href="https://help.myetherwallet.com/en/articles/5461501-my-transaction-failed-why-was-i-charged"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
