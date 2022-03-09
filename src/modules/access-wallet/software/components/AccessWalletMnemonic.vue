@@ -265,7 +265,7 @@ export default {
     phrase: {
       deep: true,
       handler: function (newval) {
-        if (newval && !isEmpty(newval) && !isEmpty(newval[1])) {
+        if (newval && !isEmpty(newval)) {
           const splitVal = newval[1].split(' ');
           if (splitVal.length === 12 || splitVal.length === 24) {
             this.length = splitVal.length;
