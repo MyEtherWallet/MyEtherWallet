@@ -21,7 +21,7 @@ import {
 export default {
   [WALLET_TYPES.LEDGER]: {
     create: LedgerWallet,
-    when: 2,
+    when: 3,
     hasPaths: false,
     requiresPassword: false,
     title: 'Connect your Ledger'
@@ -38,7 +38,7 @@ export default {
     when: 2,
     hasPaths: false,
     requiresPassword: false,
-    title: 'Connect your BitBox 02'
+    title: 'Connect your BitBox02'
   },
   [WALLET_TYPES.KEEPKEY]: {
     create: KeepkeyWallet,

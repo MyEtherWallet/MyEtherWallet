@@ -70,19 +70,19 @@
           v-model="firstCondition"
           dense
           class="mb-4"
-          color-text="textMedium--text"
+          class-name="textMedium--text"
           label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
         />
         <mew-checkbox
           v-model="secondCondition"
           dense
-          color-text="textMedium--text"
+          class-name="textMedium--text"
           label="I understand that staking involves slashing risks and my funds can be lost."
         />
         <mew-checkbox
           v-model="thirdCondition"
           dense
-          color-text="textMedium--text"
+          class-name="textMedium--text"
         >
           <template #contentSlot>
             <span

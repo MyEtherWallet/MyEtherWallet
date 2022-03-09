@@ -34,7 +34,7 @@
         <div class="mt-1 greyLight terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
-            color-text="textMedium--text"
+            class-name="textMedium--text"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>

@@ -1,4 +1,4 @@
-import { toBN } from 'web3-utils';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 const setOnlineStatus = function ({ commit, dispatch }, val) {
   if (val) dispatch('wallet/setWeb3Instance', null, { root: true });
@@ -13,14 +13,16 @@ const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
   const web3 = rootState.wallet.web3;
   if (!getters.isEIP1559SupportedNetwork) {
     return web3.eth.getGasPrice().then(res => {
-      const modifiedGasPrice = toBN(res).muln(
+      const modifiedGasPrice = toBNSafe(res).muln(
         getters.network.type.gasPriceMultiplier
       );
       return dispatch('setGasPrice', modifiedGasPrice.toString());
     });
   }
   return web3.eth.getGasPrice().then(gasPrice => {
-    const priorityFee = toBN(gasPrice).sub(toBN(state.eip1559.baseFeePerGas));
+    const priorityFee = toBNSafe(gasPrice).sub(
+      toBNSafe(state.eip1559.baseFeePerGas)
+    );
     return dispatch('setMaxPriorityFeePerGas', priorityFee);
   });
 };
@@ -31,8 +33,9 @@ const setGasPrice = function ({ commit }, gasPrice) {
 const setGasPriceType = function ({ commit }, type) {
   commit('SET_GAS_PRICE_TYPE', type);
 };
-const setNetwork = function ({ commit }, networkObj) {
+const setNetwork = function ({ commit, dispatch }, networkObj) {
   commit('SET_NETWORK', networkObj);
+  dispatch('swap/resetPrefetch', null, { root: true });
 };
 const addLocalContract = function ({ commit }, localContract) {
   commit('ADD_LOCAL_CONTRACT', localContract);
@@ -48,11 +51,6 @@ const setMaxPriorityFeePerGas = function ({ commit }, valBN) {
 const setBaseFeePerGas = function ({ commit }, valBN) {
   commit('SET_BASE_FEE_PER_GAS', valBN);
 };
-
-const setShowSurvey = function ({ commit }, val) {
-  commit('SET_SHOW_SURVEY', val);
-};
-
 const setTrackingConsent = function ({ commit, dispatch }, val) {
   commit('SET_TRACKING_CONSENT', val);
   dispatch('setTracking');
@@ -95,7 +93,6 @@ export default {
   addLocalContract,
   setMaxPriorityFeePerGas,
   setBaseFeePerGas,
-  setShowSurvey,
   setTrackingConsent,
   setTracking,
   neverShowPromo

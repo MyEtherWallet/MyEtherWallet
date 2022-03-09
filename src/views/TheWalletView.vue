@@ -7,7 +7,6 @@
         <module-confirmation />
         <the-wallet-promo-popup />
         <router-view />
-        <mew-survey />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -21,7 +20,6 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import TheWalletPromoPopup from './components-wallet/TheWalletPopupPromo';
-import MewSurvey from './components-default/MewSurvey';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -36,8 +34,7 @@ export default {
     TheWalletHeader,
     TheWalletFooter,
     TheWalletPromoPopup,
-    ModuleConfirmation,
-    MewSurvey
+    ModuleConfirmation
   },
   mixins: [handlerWallet],
   computed: {
@@ -114,7 +111,9 @@ export default {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
-          this.checkAndSetBaseFee(block.baseFeePerGas);
+          if (block) {
+            this.checkAndSetBaseFee(block.baseFeePerGas);
+          }
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
               this.checkAndSetBaseFee(toBN(res.baseFeePerGas));

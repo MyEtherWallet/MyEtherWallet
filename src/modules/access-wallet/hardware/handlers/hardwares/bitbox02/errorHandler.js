@@ -21,7 +21,10 @@ const ERRORS = {
   'Could not establish a connection to the BitBox02':
     'bitbox02Error.could-not-establish-connection',
   'InvalidStateError: The device is already open.':
-    'Device already connected. Please refresh your browser and try again!'
+    'Device already connected. Please refresh your browser and try again!',
+  "Bitbox02 doesn't support signing a regular transaction with 0 value!":
+    "Bitbox02 doesn't support signing a regular transaction with 0 value!", // custom error for handling the value
+  bitboxInstanceError: 'Instance was not created successfully. Please try again'
 };
 const WARNINGS = {
   'Attestation failed': 'bitbox02Error.attestation-failed'

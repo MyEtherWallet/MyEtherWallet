@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     setSwapHandler(val) {
-      this.swapHandler = new handlerSwap(val);
+      this.swapHandler = new handlerSwap(val, this.network.type.name);
       this.fetchRates();
     },
     fetchRates() {

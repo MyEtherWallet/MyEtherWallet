@@ -249,6 +249,17 @@ export default {
       if (this.$refs.stakedStepper) {
         this.$refs.stakedStepper.reset();
       }
+    },
+    /* 
+    - watches for address state change
+    - updates handlerStaked with new address
+    - if user is currently onStep within the stakeStepper component, it will run the reset function
+    */
+    address(newVal) {
+      this.handlerStaked.address = newVal;
+      if (this.$refs.stakedStepper) {
+        this.$refs.stakedStepper.reset();
+      }
     }
   },
   mounted() {

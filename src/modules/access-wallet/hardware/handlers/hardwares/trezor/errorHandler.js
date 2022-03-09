@@ -28,8 +28,11 @@ const ERRORS = {
   'connection not open': 'trezorError.connection-not-open-on-send',
   'Iframe blocked': 'trezorError.iframe-blocked',
   'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md':
-    'trezorError.manifest-not-set',
-  'Forbidden key path': 'Path not supported!'
+    'Device is busy! Please try again.',
+  'Forbidden key path': 'Path not supported!',
+  'DOMException: Blocked a frame with origin "https://myetherwallet.com" from accessing a cross-origin frame.':
+    'Block frame',
+  'Manifest not set.': 'Device is busy! Please try again.'
 };
 
 const WARNINGS = {};

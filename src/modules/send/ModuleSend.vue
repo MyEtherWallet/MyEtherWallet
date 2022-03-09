@@ -178,8 +178,8 @@
 </template>
 
 <script>
-import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'lodash';
+import { fromWei, isHexStrict, toWei } from 'web3-utils';
+import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -189,7 +189,10 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import {
+  formatIntegerToString,
+  toBNSafe
+} from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 export default {
   components: {
@@ -317,6 +320,10 @@ export default {
       }
       return '0';
     },
+    /**
+     * Gets tokens from token list
+     * Formats each token to be used in mew-select
+     */
     tokens() {
       // no ref copy
       const tokensList = this.tokensList.slice();
@@ -374,7 +381,7 @@ export default {
       if (!this.amount) {
         return false;
       }
-      if (!this.selectedCurrency?.decimals) {
+      if (!isNumber(this.selectedCurrency?.decimals)) {
         return false;
       }
       /** amount is negative */
@@ -392,7 +399,7 @@ export default {
         return (
           BigNumber(this.gasLimit).gt(0) &&
           BigNumber(this.gasLimit).dp() < 1 &&
-          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
+          toBNSafe(this.gasLimit).gte(toBNSafe(this.defaultGasLimit))
         );
       }
       return false;
@@ -439,7 +446,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBNSafe(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -455,7 +462,7 @@ export default {
       const amount = new BigNumber(this.amount ? this.amount : 0)
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
-      return toBN(amount);
+      return toBNSafe(amount);
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -468,10 +475,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (toBN(this.localGasPrice).eqn(0)) {
-        return toBN(this.gasPrice);
+      if (toBNSafe(this.localGasPrice).eqn(0)) {
+        return toBNSafe(this.gasPrice);
       }
-      return toBN(this.localGasPrice);
+      return toBNSafe(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -638,7 +645,7 @@ export default {
           this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
           this.gasLimitError = 'Gas limit can not have decimal points';
-        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
+        else if (toBNSafe(value).lt(toBNSafe(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {
           this.gasLimitError = '';
@@ -661,8 +668,8 @@ export default {
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.gasLimit = toBN(res).toString();
-          this.defaultGasLimit = toBN(res).toString();
+          this.gasLimit = toBNSafe(res).toString();
+          this.defaultGasLimit = toBNSafe(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -703,7 +710,7 @@ export default {
       }
     },
     convertToDisplay(amount, decimals) {
-      const amt = toBN(amount).toString();
+      const amt = toBNSafe(amount).toString();
       return decimals
         ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
         : amt;
