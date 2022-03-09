@@ -79,16 +79,20 @@ export default {
       { img: Yel, name: 'Yel', title: 'Lead Web Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
-      { img: Marcus, name: 'Marcus', title: 'Full-Stack Developer' },
       { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
       { img: Andrew, name: 'Andrew', title: 'Full-Stack Developer' },
-      { img: Chindalath, name: 'Chindalath', title: 'Full-Stack Developer' },
       { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: Russell, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
-      { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
+      { img: Semaja, name: 'Semaja', title: 'QA Specialist' },
+      { img: Marcus, name: 'Marcus', title: 'Blockchain Community Specialist' },
+      {
+        img: Chindalath,
+        name: 'Chindalath',
+        title: 'Blockchain Community Specialist'
+      },
       {
         img: AndrewDao,
         name: 'Andrew Dao',
