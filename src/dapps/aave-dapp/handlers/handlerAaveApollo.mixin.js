@@ -8,7 +8,7 @@ import {
 } from '@/dapps/aave-dapp/apollo/queries/aave.graphql';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
-import { formatUserSummaryData, formatReserves } from '@aave/protocol-js';
+import { v2 } from '@aave/protocol-js';
 import eth from '@/assets/images/currencies/eth.png';
 import {
   depositDetails,
@@ -55,7 +55,7 @@ export default {
             )?.image;
             return item;
           });
-          this.reservesData = formatReserves(this.rawReserveData).reverse();
+          this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
           this.setFormatUserSummaryData();
         },
         error(error) {
@@ -241,7 +241,7 @@ export default {
         this.userReserveData &&
         this.usdPriceEth
       ) {
-        this.userSummary = formatUserSummaryData(
+        this.userSummary = v2.formatUserSummaryData(
           this.rawReserveData,
           this.userReserveData,
           this.address.toLowerCase(),

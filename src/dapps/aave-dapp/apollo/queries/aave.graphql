@@ -1,34 +1,16 @@
-subscription liquidityRateHistoryUpdate($reserveAddress: String!) {
-  reserveParamsHistoryItems(
-    where: { reserve: $reserveAddress }
-    first: 10
-  ) {
-    variableBorrowRate
-    stableBorrowRate
-    liquidityRate
-    timestamp
+subscription ReserveRatesHistoryUpdate($reserveAddress: String!) {
+  reserveParamsHistoryItems(where: { reserve: $reserveAddress }, first: 100, orderBy: timestamp, orderDirection: desc){
+    ...ReserveRatesHistoryData
   }
 }
 
-subscription reserveUpdateSubscription($poolId: String!) {
-  reserves(where: { pool: $poolId }) {
-    ...ReserveData
-    __typename
-  }
-}
-
-
-subscription userPositionUpdateSubscription(
-  $userAddress: String!
-  $poolId: String!
-) {
-  userReserves(where: { user: $userAddress, pool: $poolId }) {
+subscription UserPositionUpdateSubscription($userAddress: String!, $pool: String) {
+  userReserves(where: {user: $userAddress, pool: $pool}) {
     ...UserReserveData
-    __typename
   }
 }
 
-subscription usdPriceEth {
+subscription UsdPriceEth {
   priceOracle(id: "1") {
     usdPriceEth
   }
@@ -40,14 +22,10 @@ fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
   liquidityRate
   utilizationRate
   timestamp
-  __typename
 }
 
 fragment UserReserveData on UserReserve {
-  principalATokenBalance
-  userBalanceIndex
-  redirectedBalance
-  interestRedirectionAddress
+  scaledATokenBalance
   reserve {
     id
     underlyingAsset
@@ -62,13 +40,12 @@ fragment UserReserveData on UserReserve {
     }
   }
   usageAsCollateralEnabledOnUser
-  borrowRate
-  borrowRateMode
-  originationFee
-  principalBorrows
+  stableBorrowRate
+  stableBorrowLastUpdateTimestamp
+  principalStableDebt
+  scaledVariableDebt
   variableBorrowIndex
   lastUpdateTimestamp
-  __typename
 }
 
 fragment ReserveData on Reserve {
@@ -78,35 +55,43 @@ fragment ReserveData on Reserve {
   symbol
   decimals
   isActive
+  isFrozen
   usageAsCollateralEnabled
   borrowingEnabled
   stableBorrowRateEnabled
   baseLTVasCollateral
   optimalUtilisationRate
-  averageStableBorrowRate
+  averageStableRate
   stableRateSlope1
   stableRateSlope2
   baseVariableBorrowRate
   variableRateSlope1
   variableRateSlope2
+  variableBorrowIndex
+  variableBorrowRate
+  totalScaledVariableDebt
   liquidityIndex
   reserveLiquidationThreshold
-  variableBorrowIndex
   aToken {
+    id
+  }
+  vToken {
+    id
+  }
+  sToken {
     id
   }
   availableLiquidity
   stableBorrowRate
   liquidityRate
-  totalBorrows
-  totalBorrowsStable
-  totalBorrowsVariable
+  totalPrincipalStableDebt
   totalLiquidity
   utilizationRate
   reserveLiquidationBonus
-  variableBorrowRate
   price {
     priceInEth
   }
   lastUpdateTimestamp
+  stableDebtLastUpdateTimestamp
+  reserveFactor
 }
