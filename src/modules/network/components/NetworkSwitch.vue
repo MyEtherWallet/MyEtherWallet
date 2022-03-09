@@ -259,6 +259,7 @@ export default {
   methods: {
     ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     /**
      * Method checks whther symbol or name has searchInput substring
      * @returns {boolean}
@@ -289,7 +290,9 @@ export default {
       try {
         this.setNetwork(found[0]).then(() => {
           if (this.isWallet) {
-            this.setWeb3Instance();
+            this.setWeb3Instance().then(() => {
+              this.setTokenAndEthBalance();
+            });
             Toast(
               `Switched network to: ${found[0].type.name} - ${found[0].service}`,
               {},
