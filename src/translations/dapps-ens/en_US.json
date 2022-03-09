@@ -87,7 +87,13 @@
     "cheers": "Cheers!",
     "domain-claimable": "{domain} is claimable!",
     "owner-set": "Ownership will be set to: {owner}",
-    "string": "Claim"
+    "string": "Claim",
+    "desc": "Claims opened on November 8 2021 and last until May 4 2022, after which any remaining tokens will be sent to the DAO treasury.",
+    "eligibale": "You are eligible for ENS airdop",
+    "non-eligibale": "You are not eligible for ENS airdop at this time",
+    "eligibale-claimed": "You already claimed your tokens",
+    "recieve": "You will receive:",
+    "recieved": "You received:"
   },
   "already-owned": "{domain} is already owned.",
   "label-hash": "Labelhash",
@@ -158,13 +164,5 @@
     "addr": "Delegator Address",
     "desc-one": "By default we preselected your wallet address as a delegator, however, you can delegate to someone else. Just enter an ENS name or Ethereum address of your preferred delegate in the field below. You can see the full list of delegates",
     "desc-two": "Learn more about ENS delegation"
-  },
-  "claim": {
-    "desc": "Claims opened on November 8 2021 and last until May 4 2022, after which any remaining tokens will be sent to the DAO treasury.",
-    "eligibale": "You are eligible for ENS airdop",
-    "non-eligibale": "You are not eligible for ENS airdop at this time",
-    "eligibale-claimed": "You already claimed your tokens",
-    "recieve": "You will receive:",
-    "recieved": "You received:"
   }
 }
