@@ -15,7 +15,7 @@
       <div v-for="(data, key) in swapData" :key="key">
         <v-sheet
           v-if="data.rate"
-          color="tableHeader"
+          color="greyLight"
           class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
           @click="goToSwap(data)"
         >

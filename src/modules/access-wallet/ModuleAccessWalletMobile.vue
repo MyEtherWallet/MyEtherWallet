@@ -24,7 +24,7 @@
       <div v-for="(btn, key) in buttons" :key="key">
         <mew-button
           has-full-width
-          color-theme="inputBorder"
+          color-theme="greyMedium"
           btn-style="outline"
           style="height: 160px"
           class="mb-5"

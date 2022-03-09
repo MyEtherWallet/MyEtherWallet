@@ -15,7 +15,7 @@
         <v-btn-toggle
           v-model="toggleType"
           mandatory
-          active-class="titlePrimary white--text alig-end"
+          active-class="textDark white--text alig-end"
         >
           <v-btn small>Main</v-btn>
           <v-btn small>Test</v-btn>
@@ -79,11 +79,11 @@
                   Symbol/Namte
                 =====================================================================================
                 -->
-          <div class="titlePrimary--text Capitalize pl-3">
+          <div class="textDark--text Capitalize pl-3">
             {{ network.name }}
           </div>
-          <div class="px-2 textSecondary--text">-</div>
-          <div class="textSecondary--text">
+          <div class="px-2 textLight--text">-</div>
+          <div class="textLight--text">
             {{ network.name_long }}
           </div>
           <v-spacer />
