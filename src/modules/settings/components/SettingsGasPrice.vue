@@ -112,12 +112,13 @@
 </template>
 
 <script>
-import { toBN, fromWei } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { gasPriceTypes } from '@/core/helpers/gasPriceHelper';
 import { mapState, mapGetters } from 'vuex';
 import {
   formatFiatValue,
-  formatFloatingPointValue
+  formatFloatingPointValue,
+  toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 
@@ -241,8 +242,8 @@ export default {
   methods: {
     calcTxFee(priority) {
       return fromWei(
-        toBN(this.totalGasLimit)
-          .mul(toBN(this.gasPriceByType(priority)))
+        toBNSafe(this.totalGasLimit)
+          .mul(toBNSafe(this.gasPriceByType(priority)))
           .toString()
       );
     },
