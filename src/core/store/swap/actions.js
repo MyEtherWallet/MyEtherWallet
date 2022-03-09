@@ -5,4 +5,7 @@
 const setSwapTokens = function ({ commit }, tokens) {
   commit('SET_SWAP_TOKENS', tokens);
 };
-export default { setSwapTokens };
+const resetPrefetch = function ({ commit }) {
+  commit('SET_PREFETCH', false);
+};
+export default { setSwapTokens, resetPrefetch };
