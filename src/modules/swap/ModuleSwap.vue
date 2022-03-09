@@ -306,7 +306,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import xss from 'xss';
 
-const MIN_GAS_LIMIT = 300000;
+const MIN_GAS_LIMIT = 800000;
 
 export default {
   name: 'ModuleSwap',
@@ -820,11 +820,6 @@ export default {
       },
       deep: true,
       immediate: true
-    },
-    network() {
-      if (this.isAvailable) {
-        this.clear();
-      }
     },
     mainTokenDetails() {
       this.setDefaults();
