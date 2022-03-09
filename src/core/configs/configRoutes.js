@@ -1,7 +1,7 @@
 const ROUTES_HOME = {
   HOME: { NAME: 'Home', PATH: '' },
   //A-Z
-  PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '404' },
+  PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: 'wallet/access/:overlay?' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },

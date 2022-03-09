@@ -11,12 +11,7 @@
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
-        <v-btn
-          color="textSecondary"
-          icon
-          class="mt-n2 mr-n2"
-          @click="closeDialog"
-        >
+        <v-btn color="textLight" icon class="mt-n2 mr-n2" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>

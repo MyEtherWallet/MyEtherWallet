@@ -3,8 +3,9 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
+import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
-const routes = [routesDefault, routesWallet];
+const routes = [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;
@@ -26,11 +27,6 @@ const router = new Router({
   }
 });
 router.beforeResolve((to, from, next) => {
-  // If route point doesn't exist, re-route to 404 page
-  if (to.name === null) {
-    next({ name: ROUTES_HOME.PAGE_NOT_FOUND.NAME });
-    return;
-  }
   // Check if user is coming from a path that needs auth
   if (!from.meta.noAuth && store.state.wallet.address && to.meta.noAuth) {
     store.dispatch('wallet/removeWallet');

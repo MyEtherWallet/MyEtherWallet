@@ -366,7 +366,7 @@ export default {
     text-transform: uppercase;
     font-weight: 500;
     &:not(:hover) {
-      color: var(--v-searchText-base) !important;
+      color: var(--v-greyPrimary-base) !important;
     }
   }
 }

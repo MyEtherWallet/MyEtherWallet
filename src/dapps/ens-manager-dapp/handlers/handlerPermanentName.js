@@ -144,7 +144,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
           )
           .once('receipt', receipt => promiEvent.emit('receipt', receipt))
           .on('error', err => promiEvent.emit('error', err))
-          .then(receipt => promiEvent.emit('receipt', receipt));
+          .then(receipt => promiEvent.emit('receipt', receipt))
+          .catch(err => promiEvent.emit('error', err));
       });
     return promiEvent;
   }

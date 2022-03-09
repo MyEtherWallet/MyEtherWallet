@@ -52,13 +52,13 @@
           <mew-button
             has-full-width
             style="height: 90px"
-            color-theme="inputBorder"
+            color-theme="greyMedium"
             btn-style="outline"
             @click.native="setWalletInstance(button.type)"
           >
             <div class="text-left d-flex align-center" style="width: 100%">
               <img width="40" class="mr-4" :src="button.icon" />
-              <div class="mew-heading-3 titlePrimary--text">
+              <div class="mew-heading-3 textDark--text">
                 {{ button.label }}
               </div>
             </div>
@@ -164,7 +164,7 @@
 
 <script>
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
+import { isEmpty, isObject } from 'lodash';
 import AccessWalletBitbox from './hardware/components/AccessWalletBitbox';
 import AccessWalletAddressNetwork from '@/modules/access-wallet/common/components/AccessWalletAddressNetwork';
 import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
@@ -579,9 +579,11 @@ export default {
      * Unlock only the path step
      */
     unlockPathOnly() {
-      const path = this.selectedPath.hasOwnProperty('value')
-        ? this.selectedPath.value
-        : this.selectedPath;
+      const path = isObject(this.selectedPath)
+        ? this.selectedPath.hasOwnProperty('value')
+          ? this.selectedPath.value
+          : this.selectedPath
+        : this.paths[0];
       this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {
@@ -592,6 +594,12 @@ export default {
               this.step++;
             if (this.onBitbox2) {
               this.hwWalletInstance = _hwWallet;
+              if (!this.hwWalletInstance) {
+                this.wallets[this.walletType].create.errorHandler(
+                  'bitboxInstanceError'
+                );
+                return;
+              }
               this.hwWalletInstance
                 .init()
                 .then(() => {
