@@ -17,7 +17,11 @@
             in your wallet by clicking button below.
           </div>
           <div class="ma-n1">
-            <mew-button title="Show claimable tokens" class="ma-1"></mew-button>
+            <mew-button
+              title="Show claimable tokens"
+              class="ma-1"
+              @click.native="showClaimableTokens"
+            ></mew-button>
             <mew-button
               btn-style="outline"
               title="Close"
@@ -41,6 +45,10 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    openTab: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -49,6 +57,12 @@ export default {
   watch: {
     show(newVal) {
       this.isDialogOpen = newVal;
+    }
+  },
+  methods: {
+    showClaimableTokens() {
+      this.openTab();
+      this.isDialogOpen = false;
     }
   }
 };

@@ -280,7 +280,10 @@
     <!-- ===================================================================================== -->
     <!-- Claimable Tokens Overlay -->
     <!-- ===================================================================================== -->
-    <claimable-tokens :show="showClaimableTokenPopup" />
+    <claimable-tokens
+      :show="showClaimableTokenPopup"
+      :open-tab="openClaimTokensTab"
+    />
   </div>
 </template>
 
@@ -491,6 +494,9 @@ export default {
     });
   },
   methods: {
+    openClaimTokensTab() {
+      this.activeTab = 2;
+    },
     claimTokens() {
       try {
         submitClaim(
