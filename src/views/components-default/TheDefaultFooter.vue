@@ -370,7 +370,7 @@ export default {
       {
         title: 'Tools',
         data: [
-          { label: 'MEW wallet', routerLink: 'Dashboard' },
+          { label: 'MEW wallet', link: 'https://www.mewwallet.com/' },
           {
             label: 'MEW CX',
             link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
