@@ -55,7 +55,7 @@
 
 <script>
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { STAKEWISE_ROUTES } from '@/dapps/stakewise/';
+import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import {
   SETH2_MAINNET_CONTRACT,
   RETH2_MAINNET_CONTRACT,
