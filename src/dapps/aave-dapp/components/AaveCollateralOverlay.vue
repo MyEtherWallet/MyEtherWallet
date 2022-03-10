@@ -6,7 +6,6 @@
   -->
   <mew-overlay :show-overlay="open" :title="title" :close="close">
     <aave-summary
-      :handler="handler"
       :selected-token="preSelectedToken"
       :action-type="collateral"
       @onConfirm="callSwitchCollateral"

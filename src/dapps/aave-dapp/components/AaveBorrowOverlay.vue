@@ -12,7 +12,6 @@
       class="border-radius--10px pa-4"
     >
       <aave-table
-        :handler="handler"
         :table-header="aaveTableHandler"
         @selectedBorrow="handleSelectedBorrow"
       />
@@ -25,7 +24,6 @@
     <div v-if="step === 1">
       <aave-amount-form
         :selected-token="selectedToken"
-        :handler="handler"
         :action-type="aaveTableHandler"
         :show-toggle="aaveBorrowForm.showToggle"
         :left-side-values="aaveBorrowForm.leftSideValues"
@@ -55,7 +53,6 @@
     <div v-if="step === 3">
       <aave-summary
         :selected-token="selectedToken"
-        :handler="handler"
         :amount="amount"
         :amount-usd="amountUsd"
         :step="step"

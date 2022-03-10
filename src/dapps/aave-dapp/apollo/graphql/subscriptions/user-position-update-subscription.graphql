@@ -1,0 +1,5 @@
+subscription UserPositionUpdateSubscription($userAddress: String!, $pool: String) {
+  userReserves(where: {user: $userAddress, pool: $pool}) {
+    ...UserReserveData
+  }
+}

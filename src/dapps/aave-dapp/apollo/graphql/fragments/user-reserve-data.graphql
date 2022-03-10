@@ -1,0 +1,23 @@
+fragment UserReserveData on UserReserve {
+  scaledATokenBalance
+  reserve {
+    id
+    underlyingAsset
+    name
+    symbol
+    decimals
+    liquidityRate
+    reserveLiquidationBonus
+    lastUpdateTimestamp
+    aToken {
+      id
+    }
+  }
+  usageAsCollateralEnabledOnUser
+  stableBorrowRate
+  stableBorrowLastUpdateTimestamp
+  principalStableDebt
+  scaledVariableDebt
+  variableBorrowIndex
+  lastUpdateTimestamp
+}

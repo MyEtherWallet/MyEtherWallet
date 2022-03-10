@@ -1,0 +1,5 @@
+query ReserveRatesHistoryUpdateQuery($reserveAddress: String!) {
+  reserveParamsHistoryItems(where: { reserve: $reserveAddress }, first: 100, orderBy: timestamp, orderDirection: desc){
+    ...ReserveRatesHistoryData
+  }
+}

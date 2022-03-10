@@ -2,10 +2,10 @@
  * The Aave Apollo Mixin
  */
 import {
-  reserveUpdateSubscription,
-  userPositionUpdateSubscription,
-  usdPriceEth
-} from '@/dapps/aave-dapp/apollo/queries/aave.graphql';
+  ReserveUpdateSubscription,
+  UserPositionUpdateSubscription,
+  UsdPriceEth
+} from '@/dapps/aave-dapp/apollo/graphql/subscriptions';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
 import { v2 } from '@aave/protocol-js';
@@ -41,10 +41,10 @@ export default {
        * Apollo subscription to get reserves
        */
       reserveUpdateSubscription: {
-        query: reserveUpdateSubscription,
+        query: ReserveUpdateSubscription,
         variables() {
           return {
-            poolId: configs.POOL_ID
+            pool: configs.POOL_ID
           };
         },
         client: 'aave',
@@ -66,11 +66,11 @@ export default {
        * Apollo subscription to get user reserves
        */
       userPositionUpdateSubscription: {
-        query: userPositionUpdateSubscription,
+        query: UserPositionUpdateSubscription,
         variables() {
           return {
             userAddress: this.address,
-            poolId: configs.POOL_ID
+            pool: configs.POOL_ID
           };
         },
         client: 'aave',
@@ -94,7 +94,7 @@ export default {
        * Apollo subscription to get usd price
        */
       usdPriceEth: {
-        query: usdPriceEth,
+        query: UsdPriceEth,
         client: 'aave',
         result({ data }) {
           this.usdPriceEth = data.priceOracle.usdPriceEth;

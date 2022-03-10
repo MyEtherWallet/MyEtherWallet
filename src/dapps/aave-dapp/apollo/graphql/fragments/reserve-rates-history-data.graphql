@@ -1,0 +1,7 @@
+fragment ReserveRatesHistoryData on ReserveParamsHistoryItem {
+  variableBorrowRate
+  stableBorrowRate
+  liquidityRate
+  utilizationRate
+  timestamp
+}

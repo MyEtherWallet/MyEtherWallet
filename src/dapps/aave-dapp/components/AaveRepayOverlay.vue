@@ -13,7 +13,6 @@
     <div>
       <aave-amount-form
         :selected-token="preSelectedToken"
-        :handler="handler"
         :show-toggle="aaveRepayForm.showToggle"
         :left-side-values="aaveRepayForm.leftSideValues"
         :right-side-values="aaveRepayForm.rightSideValues"
