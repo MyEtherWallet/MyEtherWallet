@@ -12,7 +12,9 @@ const mergeIfNotExists = (baseList, newList) => {
     }
     baseList.push(t);
   });
-  return baseList;
+  return baseList.map(tokens => {
+    return tokens;
+  });
 };
 class Swap {
   constructor(web3, chain) {
@@ -40,7 +42,9 @@ class Swap {
         })
       ).then(() => {
         const sorted = allTokens
-          .filter(t => isObject(t))
+          .filter(t => {
+            return isObject(t);
+          })
           .sort((a, b) => {
             if (a.name > b.name) return 1;
             return -1;

@@ -41,7 +41,10 @@ class Changelly {
           return {
             contract,
             decimals: 18,
-            img: `https://img.mewapi.io/?image=${d.image}`,
+            img:
+              d.image && d.image !== ''
+                ? `https://img.mewapi.io/?image=${d.image}`
+                : ETH.icon,
             name: d.fullName,
             symbol: d.ticker.toUpperCase(),
             isEth: d.contractAddress ? true : false
