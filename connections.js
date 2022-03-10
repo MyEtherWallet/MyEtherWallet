@@ -26,6 +26,7 @@ module.exports = [
   // nodes
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
+  'wss://mewws.blocksscan.io:443/ws',
   'wss://www.ethercluster.com:443',
   // intercom stuff
   'api-iam.intercom.io:443',
