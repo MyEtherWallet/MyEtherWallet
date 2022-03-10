@@ -68,9 +68,9 @@
               }"
               :image="iconStakewise"
               label="Amount to compound"
-              placeholder="Enter amount"
               :value="compoundAmount"
-              @input="getQuote"
+              placeholder="Enter amount"
+              @input="setAmount"
             />
           </div>
 
@@ -140,7 +140,7 @@
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
             <mew-checkbox
-              label="I have read and agreeed to Stakewise terms of service."
+              label="I have read and agreed to Stakewise terms of service."
               :link="{
                 title: 'Stakewise terms',
                 url: 'https://stakewise.io/terms-and-conditions/'
@@ -150,6 +150,7 @@
               class="mt-8"
               title="Compound Rewards"
               btn-size="xlarge"
+              @click.native="executeTrade"
             />
           </div>
         </mew6-white-sheet>
@@ -168,7 +169,6 @@ import StakewiseApr from '../components/StakewiseApr';
 import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
-// import stakeHandler from '../handlers/stakewiseStakeHandler';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
@@ -177,11 +177,11 @@ import { find } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import {
   SETH2_MAINNET_CONTRACT,
   RETH2_MAINNET_CONTRACT,
-  RETH2_GOERLI_CONTRACT,
-  SETH2_GOERLI_CONTRACT
+  RETH2_GOERLI_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
@@ -197,8 +197,9 @@ export default {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
       compoundAmount: '0',
       locGasPrice: '0',
-      gasLimit: '21000'
-      // stakeHandler: {}
+      gasLimit: '21000',
+      quote: '0',
+      confirmInfo: {}
     };
   },
   computed: {
@@ -209,18 +210,8 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
-    seth2Contract() {
-      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
-    },
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
-    },
-    hasSeth() {
-      const token = find(
-        this.tokensList,
-        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-      );
-      return token;
     },
     hasReth() {
       const token = find(
@@ -230,20 +221,18 @@ export default {
       return token;
     },
     rethBalance() {
-      return '0.19';
-      // return this.hasReth ? this.hasReth.balancef : '0';
+      return this.hasReth ? this.hasReth.balancef : '0';
     },
-    // rethUsdBalance() {
-    //   return this.hasReth ? this.hasReth.usdBalancef : '0';
-    // }
-    ethTotalFee() {
-      const gasPrice = BigNumber(this.locGasPrice).gt(0)
+    gasPrice() {
+      return BigNumber(this.locGasPrice).gt(0)
         ? BigNumber(this.locGasPrice)
         : BigNumber(this.gasPriceByType(this.gasPriceType));
+    },
+    ethTotalFee() {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      return fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+      return fromWei(BigNumber(this.gasPrice).times(gasLimit).toString());
     },
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
@@ -253,38 +242,73 @@ export default {
     }
   },
   mounted() {
-    // this.stakeHandler = new stakeHandler(
-    //   this.web3,
-    //   this.isEthNetwork,
-    //   this.address
-    // );
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    setAmount: debounce(function (val) {
+      const value = val ? val : 0;
+      this.compoundAmount = BigNumber(value).toString();
+    }, 500),
     setMax() {
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
-    setAmount: debounce(val => {
-      const value = val ? val : 0;
-      // this.stakeHandler._setAmount(BigNumber(value).toString());
-      this.compoundAmount = BigNumber(value).toString();
-    }, 500),
-    getQuote: debounce(() => {
+    getQuote() {
       const swapper = new Swapper(this.web3, this.network.type.name);
       return swapper
         .getAllQuotes({
-          fromT: this.hasSeth.contract,
-          toT: this.hasReth.contract,
-          // hardcoded compound amount for now
-          fromAmount: new BigNumber('0.18').times(
+          fromT: SETH2_MAINNET_CONTRACT,
+          toT: RETH2_MAINNET_CONTRACT,
+          fromAmount: new BigNumber(this.rethBalance).div(
             new BigNumber(10).pow(new BigNumber(18))
           )
         })
-        .then(quotes => {
-          console.log('quotes', quotes);
+        .then(function (quotes) {
+          return (this.quote = quotes[0]);
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
         });
-    }, 500),
+    },
+    executeTrade() {
+      this.getQuote();
+      const fromAmt = new BigNumber(this.rethBalance).div(
+        new BigNumber(10).pow(new BigNumber(18))
+      );
+      this.confirmInfo = {
+        from: SETH2_MAINNET_CONTRACT,
+        to: RETH2_MAINNET_CONTRACT,
+        // fromType: this.fromTokenType.symbol,
+        // toType: this.toTokenType.symbol,
+        // fromImg: this.fromTokenType.img,
+        // toImg: this.toTokenType.img,
+        fromVal: fromAmt,
+        // toVal: this.tokenOutValue,
+        // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+        //   .times(this.tokenOutValue)
+        //   .toFixed(),
+        fromUsdVal: formatFiatValue(fromAmt.times(this.fiatValue).toString())
+          .value,
+        validUntil: new Date().getTime() + 10 * 60 * 1000,
+        // selectedProvider: this.selectedProvider,
+        txFee: this.ethTotalFee,
+        gasPriceType: this.gasPriceType,
+        gasPrice: this.gasPrice
+      };
+
+      return new Promise((resolve, reject) => {
+        this.web3.eth
+          .sendTransaction(this.confirmInfo)
+          .on('transactionHash', hash => {
+            return resolve({
+              provider: this.provider,
+              statusObj: { hashes: [hash] },
+              hashes: [hash]
+            });
+          })
+          .catch(reject);
+      });
+    },
     openSettings() {
       EventBus.$emit('openSettings');
     }
