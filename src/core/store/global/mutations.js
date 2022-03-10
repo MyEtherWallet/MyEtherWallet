@@ -1,9 +1,19 @@
 import localStore from 'store';
 import Configs from '../configs';
+import nodeList from '@/utils/networks';
+const defaultNetwork = nodeList['ETH'].find(item => {
+  return item.service === 'myetherwallet.com-ws';
+});
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
     if (savedStore.stateVersion === Configs.VERSION.global) {
+      if (!nodeList[savedStore.currentNetwork.type.name]) {
+        savedStore['currentNetwork'] = defaultNetwork;
+        savedStore.currentNetwork.type = {
+          name: 'ETH'
+        };
+      }
       Object.assign(state, savedStore);
     }
   }

@@ -651,7 +651,7 @@
 
             <div
               v-show="validRequiredFormsRate !== 100"
-              class="text-center mx-auto mt-4 mb-4 error--text"
+              class="text-center mx-auto mt-4 mb-4 redPrimary--text"
               style="max-width: 300px"
             >
               {{ $t('dappsSubmission.fill-out-required-fields') }}
@@ -672,7 +672,7 @@
               Progress (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 d-none d-md-block">
+              <div class="greyLight pa-6 d-none d-md-block">
                 <div class="mew-heading-2">
                   {{
                     $t('dappsSubmission.progress')
@@ -681,7 +681,7 @@
                 </div>
                 <v-progress-linear
                   v-model="validRequiredFormsRate"
-                  color="primary"
+                  color="greenPrimary"
                   height="25"
                   class="mt-5"
                 >
@@ -696,7 +696,7 @@
               State of the Dapps (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 mt-6">
+              <div class="greyLight pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
                     {{
@@ -733,7 +733,7 @@
               MEW Support (side)
               =================================================================
               -->
-              <div class="walletBg pa-6 mt-6">
+              <div class="greyLight pa-6 mt-6">
                 <div class="d-flex align-center justify-space-between">
                   <div class="mew-heading-2">
                     {{
@@ -802,14 +802,15 @@
     Failed (dialog)
     =================================================================
     -->
+
     <v-dialog v-model="formSubmissionFailed" width="500">
       <div class="pa-5 white">
-        <div class="mew-heading-2 error--text">
+        <div class="mew-heading-2 redPrimary--text">
           {{
             $t('dappsSubmission.failed') | lokalise('dappsSubmission.failed')
           }}
         </div>
-        <div class="mt-3 error--text">
+        <div class="mt-3 redPrimary--text">
           {{
             $t('dappsSubmission.try-again')
               | lokalise('dappsSubmission.try-again')
@@ -979,7 +980,7 @@ export default {
 
 <style lang="scss" scoped>
 .border {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 30px;
