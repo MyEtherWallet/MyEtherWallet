@@ -1015,13 +1015,13 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+
       // Check if (in amount) is larger than (available balance)
       if (
         this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
         !this.hasMinEth
       ) {
-        this.step = 0;
-        return;
+        Toast('Amount exceeds your balance!', {}, ERROR);
       }
 
       if (isEmpty(this.fromTokenType)) {
