@@ -4,7 +4,7 @@
       <div v-on="on"><slot /></div>
     </template>
     <div class="pa-5 text-center">
-      <div class="titlePrimary--text subtitle-1 font-weight-bold mb-2">
+      <div class="textDark--text subtitle-1 font-weight-bold mb-2">
         {{ title }}
       </div>
       <qr-code :data="value" :height="140" :width="140" />
@@ -38,7 +38,7 @@ export default {
 <style lang="scss" scoped>
 .v-tooltip__content {
   opacity: 1 !important;
-  background-color: var(--v-mewBg-base);
+  background-color: var(--v-white-base);
 }
 
 .theme--light .v-tooltip__content {

@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--token-table tableHeader pa-5">
+  <div class="mew-component--token-table greyLight pa-5">
     <div v-if="token" class="d-flex align-center justify-space-between mb-3">
       <div class="d-flex align-center">
         <img
@@ -16,13 +16,13 @@
       <div class="d-flex">
         <div
           v-if="button"
-          class="primary--text font-weight-bold cursor--pointer"
+          class="greenPrimary--text font-weight-bold cursor--pointer"
         >
           {{ button }}
         </div>
         <div
           v-if="button2"
-          class="primary--text font-weight-bold ml-4 cursor--pointer"
+          class="greenPrimary--text font-weight-bold ml-4 cursor--pointer"
         >
           {{ button2 }}
         </div>
@@ -43,7 +43,7 @@
         <div>{{ t.label }}</div>
         <div
           v-if="t.link"
-          class="font-weight-bold truncate primary--text"
+          class="font-weight-bold truncate greenPrimary--text"
           style="max-width: 120px"
         >
           <a :href="t.link" target="_blank">{{ t.value }}</a>

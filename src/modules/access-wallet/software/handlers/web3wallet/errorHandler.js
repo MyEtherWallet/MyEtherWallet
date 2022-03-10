@@ -1,9 +1,4 @@
-import {
-  Toast,
-  WARNING,
-  ERROR,
-  SENTRY
-} from '@/modules/toast/handler/handlerToast';
+import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
@@ -16,14 +11,4 @@ const ERRORS = {
 };
 const WARNINGS = {};
 
-export default err => {
-  const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNINGS);
-  if (errorValues.includes(err.message)) {
-    Toast(err.message, {}, ERROR);
-  } else if (warningValues.includes(err.message)) {
-    Toast(err.message, {}, WARNING);
-  } else {
-    Toast(err, {}, SENTRY);
-  }
-};
+export default WalletErrorHandler(ERRORS, WARNINGS);

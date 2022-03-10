@@ -10,6 +10,6 @@ export default {};
 
 <style lang="scss" scoped>
 .border-block {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>
