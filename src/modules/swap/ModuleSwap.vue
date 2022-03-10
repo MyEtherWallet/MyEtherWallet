@@ -1015,14 +1015,14 @@ export default {
       this.belowMinError = false;
       if (this.isLoading || this.initialLoad) return;
       this.tokenInValue = value || '0';
+
       // Check if (in amount) is larger than (available balance)
-      // if (
-      //   this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
-      //   !this.hasMinEth
-      // ) {
-      //   this.step = 0;
-      //   return;
-      // }
+      if (
+        this.availableBalance.lt(new BigNumber(this.tokenInValue)) ||
+        !this.hasMinEth
+      ) {
+        Toast('Amount exceeds your balance!', {}, ERROR);
+      }
 
       if (isEmpty(this.fromTokenType)) {
         Toast('From token cannot be empty!', {}, ERROR);
