@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column align-center">
-    <div class="titlePrimary-text">
+    <div class="textDark-text">
       Follow the instructions in the Trezor connection tab. If it did not open
       automatically, click below.
     </div>
@@ -13,8 +13,8 @@
         @click.native="trezorUnlock"
       />
     </div>
-    <div class="primary--text my-8 cursor--pointer" @click="reset">
-      <v-icon small class="primary--text">mdi-arrow-left</v-icon>
+    <div class="greenPrimary--text my-8 cursor--pointer" @click="reset">
+      <v-icon small class="greenPrimary--text">mdi-arrow-left</v-icon>
       Connect a different wallet
     </div>
   </div>

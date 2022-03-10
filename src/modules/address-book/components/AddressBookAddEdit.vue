@@ -79,7 +79,7 @@
   -->
     <div
       v-if="editMode"
-      class="text-center mt-6 error--text cursor-pointer"
+      class="text-center mt-6 redPrimary--text cursor-pointer"
       @click="remove"
     >
       {{ $t('interface.address-book.remove-addr') }}

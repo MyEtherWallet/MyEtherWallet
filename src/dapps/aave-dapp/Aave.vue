@@ -17,7 +17,7 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="primary--text font-weight-bold mr-3"
+              class="greenPrimary--text font-weight-bold mr-3"
             >
               {{ healthFactor }}
             </div>
@@ -26,7 +26,7 @@
           </div>
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="tableHeader pa-5 border-radius--5px">
+              <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Aggregated Balance</h5>
                 <h3 v-if="!isLoadingData" class="">
                   $ {{ totalLiquidity.usd }}
@@ -67,7 +67,7 @@
             </v-col>
             <v-col cols="12" md="6">
               <div
-                class="tableHeader pa-5 border-radius--5px height-100 d-flex flex-column"
+                class="greyLight pa-5 border-radius--5px height-100 d-flex flex-column"
               >
                 <div class="d-flex aling-center">
                   <h5 class="font-weight-bold mr-auto">Earnings</h5>
@@ -118,7 +118,7 @@
             <div class="mr-3">Health factor</div>
             <div
               v-if="!isLoadingData"
-              class="primary--text font-weight-bold mr-3"
+              class="greenPrimary--text font-weight-bold mr-3"
             >
               {{ healthFactor }}
             </div>
@@ -128,7 +128,7 @@
 
           <v-row class="mb-1 mt-2" dense>
             <v-col cols="12" md="6">
-              <div class="progressBar pa-5 border-radius--5px">
+              <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">You Borrowed</h5>
                 <h3 v-if="!isLoadingData">$ {{ totalBorrow.usd }}</h3>
                 <v-skeleton-loader
@@ -166,7 +166,7 @@
               </div>
             </v-col>
             <v-col cols="12" md="6">
-              <div class="progressBar pa-5 border-radius--5px">
+              <div class="greyLight pa-5 border-radius--5px">
                 <h5 class="mb-2 font-weight-bold">Your Collateral</h5>
                 <h3 v-if="!isLoadingData">$ {{ totalCollateral.usd }}</h3>
                 <v-skeleton-loader
@@ -205,7 +205,7 @@
             </v-col>
 
             <v-col cols="12" class="pt-md-2">
-              <div class="progressBar pa-5 loan-value-container">
+              <div class="greyLight pa-5 loan-value-container">
                 <v-row align="center">
                   <v-col cols="9">
                     <span class="mew-heading-3">Loan to Value</span>
@@ -312,24 +312,24 @@ import AaveTable from './components/AaveTable';
 import { ERROR, SUCCESS, Toast } from '@/modules/toast/handler/handlerToast';
 
 const COLORS = {
-  ENJ: 'expandHeader',
-  ETH: 'primary',
-  ZRX: 'secondary',
-  KNC: 'basic',
-  USDT: 'warning base',
-  MKR: 'warning darken1',
-  LEND: 'warning darken2',
-  AAVE: 'textSecondary',
-  DAI: 'tagLabel',
-  SUSD: 'inputLabel',
-  LINK: 'inputBorder',
-  BUSD: 'searchText',
-  REN: 'primaryHover',
-  WBTC: 'basicOutlineActive',
-  UNI: 'errorOutline',
-  REP: 'superPrimary base',
-  MANA: 'superPrimary darken1',
-  BAT: 'overlayBg',
+  ENJ: 'bluePrimary',
+  ETH: 'greenPrimary',
+  ZRX: 'greenMedium',
+  KNC: 'textDark',
+  USDT: 'redPrimary',
+  MKR: 'redPrimary',
+  LEND: 'redPrimary',
+  AAVE: 'textLight',
+  DAI: 'textLight',
+  SUSD: 'greyPrimary',
+  LINK: 'greyMedium',
+  BUSD: 'greyMedium',
+  REN: 'greenPrimary',
+  WBTC: 'greyMedium',
+  UNI: 'redMedium',
+  REP: 'greyLight',
+  MANA: 'greyLight',
+  BAT: 'greyLight',
   YFI: 'white',
   TUSD: 'black'
 };
