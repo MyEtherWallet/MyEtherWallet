@@ -25,7 +25,7 @@ class MEWPClass {
       .then(response => {
         const data = response.data;
         return data.map(d => {
-          return {
+          const token = {
             contract: d.contract_address.toLowerCase(),
             isEth: true,
             decimals: parseInt(d.decimals),
@@ -37,6 +37,7 @@ class MEWPClass {
             symbol: d.symbol,
             type: 'ERC20'
           };
+          return token;
         });
       })
       .catch(err => {
