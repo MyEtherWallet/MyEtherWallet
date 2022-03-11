@@ -31,7 +31,7 @@
                 :src="
                   require('@/assets/images/currencies/' +
                     data.fromT.symbol.toLowerCase() +
-                    '.png')
+                    '.svg')
                 "
                 alt="currency-icon"
               />
@@ -46,7 +46,7 @@
                 :src="
                   require('@/assets/images/currencies/' +
                     data.toT.symbol.toLowerCase() +
-                    '.png')
+                    '.svg')
                 "
                 alt="eth-icon"
               />
