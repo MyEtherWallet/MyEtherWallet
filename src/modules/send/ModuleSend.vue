@@ -688,8 +688,10 @@ export default {
           this.clear();
         })
         .catch(error => {
+          const exclude = 'Promise was rejected with a falsy value';
           this.clear();
-          this.gasEstimationError = error.message;
+          this.gasEstimationError =
+            error.message !== exclude ? error.message : '';
         });
     },
     prefillForm() {
