@@ -23,7 +23,7 @@
         />
         <!--
     =====================================================================================
-     Display if no nfts owned
+    Display if no nfts owned
     =====================================================================================
     -->
         <v-card
@@ -130,6 +130,7 @@
           :nft-category="selectedContract.name"
           :send="sendTx"
           :disabled="!isValid"
+          :not-enough-funds="notEnoughFunds"
           :set-address="setAddress"
         />
       </template>
@@ -151,6 +152,7 @@ import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { toBN } from 'web3-utils';
 
 export default {
   components: {
@@ -167,13 +169,20 @@ export default {
       hasNoTokens: false,
       selectedNft: {},
       toAddress: '',
-      selectedContract: {}
+      selectedContract: {},
+      gasFees: '0',
+      notEnoughFunds: false
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['network', 'online']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'gasPrice']),
+    ...mapState('global', ['network', 'online', 'gasPriceType']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'gasPrice',
+      'gasPriceByType'
+    ]),
     /**
      * Get Tabs
      */
@@ -259,33 +268,45 @@ export default {
       this.onNftSend = false;
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
-    sendTx() {
+    async sendTx() {
       if (this.isValid) {
-        try {
-          this.nft
-            .send(this.toAddress, this.selectedNft)
-            .then(response => {
-              this.updateValues();
-              Toast(
-                'Cheers! Your transaction was mined. Check it in ',
-                {
-                  title: `${getService(this.network.type.blockExplorerTX)}`,
-                  url: this.network.type.blockExplorerTX.replace(
-                    '[[txHash]]',
-                    response.blockHash
-                  )
-                },
-                SUCCESS,
-                5000
-              );
-            })
-            .catch(e => {
-              Toast(e.message, {}, ERROR);
-            });
-          this.closeNftSend();
-          this.selectedNft = {};
-        } catch (e) {
-          Toast(e.message, {}, WARNING);
+        const gasTypeFee = this.gasPriceByType(this.gasPriceType); //calls getGasFeeMethod in handler
+        const gasFees = await this.nft.getGasFees(
+          this.toAddress,
+          this.selectedNft
+        );
+        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+        this.gasFees = gasFeesToBN.toString();
+        if (this.gasFees >= this.balance) {
+          this.notEnoughFunds = true;
+        } else {
+          try {
+            this.nft
+              .send(this.toAddress, this.selectedNft)
+              .then(response => {
+                this.updateValues();
+                this.notEnoughFunds = false;
+                Toast(
+                  'Cheers! Your transaction was mined. Check it in ',
+                  {
+                    title: `${getService(this.network.type.blockExplorerTX)}`,
+                    url: this.network.type.blockExplorerTX.replace(
+                      '[[txHash]]',
+                      response.blockHash
+                    )
+                  },
+                  SUCCESS,
+                  5000
+                );
+              })
+              .catch(e => {
+                Toast(e.message, {}, ERROR);
+              });
+            this.closeNftSend();
+            this.selectedNft = {};
+          } catch (e) {
+            Toast(e.message, {}, WARNING);
+          }
         }
       }
     },

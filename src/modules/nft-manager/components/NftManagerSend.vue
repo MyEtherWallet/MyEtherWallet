@@ -24,10 +24,22 @@
     />
     <div class="mb-4 mt-2">{{ nft.name }}</div>
     <module-address-book @setAddress="setAddress" />
+    <span
+      v-if="notEnoughFunds"
+      class="d-flex align-center flex-column justify-center"
+      >Not enough balance
+      <a
+        href="https://ccswap.myetherwallet.com/#/"
+        target="_blank"
+        class="link"
+      >
+        <u>Buy More Eth</u>
+      </a>
+    </span>
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
-      :disabled="disabled"
+      :disabled="disabled || notEnoughFunds"
       title="Send"
       btn-size="large"
       color-theme="primary"
@@ -80,6 +92,10 @@ export default {
       type: String
     },
     disabled: {
+      default: false,
+      type: Boolean
+    },
+    notEnoughFunds: {
       default: false,
       type: Boolean
     }
