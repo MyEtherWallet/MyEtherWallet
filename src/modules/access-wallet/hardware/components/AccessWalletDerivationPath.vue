@@ -38,7 +38,7 @@
         >
           <div class="d-flex align-center">
             <v-img
-              :src="require('@/assets/images/currencies/eth.png')"
+              :src="require('@/assets/images/currencies/eth.svg')"
               contain
               class="mr-2"
               max-height="24px"
@@ -80,7 +80,7 @@
         >
           <div class="d-flex align-center">
             <v-img
-              :src="require('@/assets/images/currencies/eth.png')"
+              :src="require('@/assets/images/currencies/eth.svg')"
               contain
               class="mr-2"
               max-height="24px"

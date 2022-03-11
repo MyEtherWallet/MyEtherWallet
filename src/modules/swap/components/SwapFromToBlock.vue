@@ -38,8 +38,8 @@ export default {
     from: { default: '', type: String },
     to: { default: '', type: String },
     fromVal: { default: '0', type: String },
-    fromImg: { default: '@/assets/images/currencies/eth.png', type: String },
-    toImg: { default: '@/assets/images/currencies/eth.png', type: String },
+    fromImg: { default: '@/assets/images/currencies/eth.svg', type: String },
+    toImg: { default: '@/assets/images/currencies/eth.svg', type: String },
     toVal: { default: '0', type: String },
     toType: { default: 'ETH', type: String },
     fromType: { default: 'ETH', type: String }

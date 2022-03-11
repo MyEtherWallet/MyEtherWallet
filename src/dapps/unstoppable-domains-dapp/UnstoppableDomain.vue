@@ -133,7 +133,7 @@
                 >
                   <div class="d-flex align-center">
                     <img
-                      src="@/assets/images/currencies/icon-eth-blue.svg"
+                      src="@/assets/images/currencies/eth.svg"
                       alt="Crypto"
                     />
                     <div class="font-weight-medium ml-3">

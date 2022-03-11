@@ -21,7 +21,7 @@
           />
           <div class="mb-4 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies/icon-btc-white.svg" />
+              <v-img src="@/assets/images/currencies/btc.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
@@ -41,7 +41,7 @@
 
           <div class="mb-4 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/currencies//icon-eth-white.svg" />
+              <v-img src="@/assets/images/currencies/eth.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1 white--text">

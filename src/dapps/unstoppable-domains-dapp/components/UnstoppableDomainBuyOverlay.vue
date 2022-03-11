@@ -34,10 +34,7 @@
                 style="border-color: var(--v-redPrimary-base) !important"
               >
                 <div class="d-flex align-center">
-                  <img
-                    src="@/assets/images/currencies/icon-eth-blue.svg"
-                    alt="Crypto"
-                  />
+                  <img src="@/assets/images/currencies/eth.svg" alt="Crypto" />
                   <div class="font-weight-medium ml-3">
                     0.0341234234
                     <span class="greenPrimary--text">ETH</span>

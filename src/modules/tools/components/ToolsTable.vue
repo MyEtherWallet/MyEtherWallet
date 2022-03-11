@@ -152,7 +152,7 @@ export default {
     initialize() {
       this.addresses = [
         {
-          icon: require('@/assets/images/currencies/icon-btc-gold.svg'),
+          icon: require('@/assets/images/currencies/btc.svg'),
           token: 'Monero(XMR)',
           price: '$8.29',
           marketCap: '$1.56B',
@@ -202,7 +202,7 @@ export default {
           myvalue: '$228.42'
         },
         {
-          icon: require('@/assets/images/currencies/icon-eth-blue.svg'),
+          icon: require('@/assets/images/currencies/eth.svg'),
           token: 'AMIS(AMIS)',
           price: '$10.72',
           marketCap: '$1.56B',
@@ -252,7 +252,7 @@ export default {
           myvalue: '$228.42'
         },
         {
-          icon: require('@/assets/images/currencies/icon-eth-blue.svg'),
+          icon: require('@/assets/images/currencies/eth.svg'),
           token: 'Joack(JCK)',
           price: '$0.21',
           marketCap: '$1.56B',
@@ -302,7 +302,7 @@ export default {
           myvalue: '$228.42'
         },
         {
-          icon: require('@/assets/images/currencies/icon-btc-gold.svg'),
+          icon: require('@/assets/images/currencies/btc.svg'),
           token: 'Amon(AMN)',
           price: '$10.22',
           marketCap: '$1.56B',

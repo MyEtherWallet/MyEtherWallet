@@ -59,7 +59,7 @@
     <div class="pa-7 d-none d-lg-flex justify-space-between align-center">
       <div class="d-flex align-start">
         <img
-          src="@/assets/images/currencies/icon-eth-blue.svg"
+          src="@/assets/images/currencies/eth.svg"
           height="35"
           class="mr-4 mt-1"
         />

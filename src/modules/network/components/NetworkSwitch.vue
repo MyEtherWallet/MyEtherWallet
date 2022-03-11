@@ -69,7 +69,7 @@
                 -->
           <v-img
             :src="network.icon"
-            :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
+            :lazy-src="require('@/assets/images/currencies/eth.svg')"
             contain
             max-height="24px"
             max-width="24px"

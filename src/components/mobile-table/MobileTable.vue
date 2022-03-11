@@ -3,7 +3,7 @@
     <div v-if="token" class="d-flex align-center justify-space-between mb-3">
       <div class="d-flex align-center">
         <img
-          src="@/assets/images/currencies/icon-btc-gold.svg"
+          src="@/assets/images/currencies/btc.svg"
           :alt="token"
           height="35"
           class="mr-3"

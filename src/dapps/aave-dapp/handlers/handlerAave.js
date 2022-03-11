@@ -8,7 +8,7 @@ import {
 } from './graphQLHelpers.js';
 
 import masterFile from '@/_generated/master-file.json';
-import eth from '@/assets/images/currencies/eth.png';
+import eth from '@/assets/images/currencies/eth.svg';
 import { toChecksumAddress } from 'web3-utils';
 
 import vuexStore from '@/core/store';

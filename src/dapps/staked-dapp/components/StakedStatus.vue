@@ -248,7 +248,7 @@
 <script>
 import configNetworkTypes from '@/dapps/staked-dapp/handlers/configNetworkTypes';
 import { mapGetters, mapState } from 'vuex';
-import iconETHNavy from '@/assets/images/currencies/eth-dark-navy.svg';
+import iconETHNavy from '@/assets/images/currencies/eth.svg';
 import BigNumber from 'bignumber.js';
 import {
   formatFloatingPointValue,
