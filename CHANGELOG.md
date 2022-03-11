@@ -1,6 +1,7 @@
 ### Release v6.4.8
 
 ### fix
+
 * fix no error when not enough funds to send NFT [#3727](https://github.com/MyEtherWallet/MyEtherWallet/pull/3727)
 
 ### devop
