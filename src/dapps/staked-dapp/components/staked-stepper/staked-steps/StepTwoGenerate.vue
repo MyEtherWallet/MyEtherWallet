@@ -10,7 +10,7 @@
         Here is your new Eth2 Address
       </div>
       <div
-        class="skip-container d-flex flex-column flex-sm-row rounded align-center justify-space-between tableHeader px-5 py-4"
+        class="skip-container d-flex flex-column flex-sm-row rounded align-center justify-space-between greyLight px-5 py-4"
       >
         <!--
       ===================================================
@@ -19,7 +19,7 @@
       -->
         <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
         <div
-          class="d-flex align-center primary--text cursor-pointer"
+          class="d-flex align-center greenPrimary--text cursor-pointer"
           @click="onContinue(true)"
         >
           Skip this step
@@ -68,7 +68,7 @@
             2. Download your keystore file
           </div>
           <div
-            class="d-block d-sm-flex align-center justify-space-between tableHeader py-5 px-3 rounded"
+            class="d-block d-sm-flex align-center justify-space-between greyLight py-5 px-3 rounded"
           >
             <div class="d-flex align-center">
               <img
@@ -79,13 +79,16 @@
               <div class="ml-3">
                 <div class="mew-heading-4">
                   Keystore file
-                  <v-icon v-if="downloadedKeystore" size="16" color="primary"
+                  <v-icon
+                    v-if="downloadedKeystore"
+                    size="16"
+                    color="greenPrimary"
                     >mdi-checkbox-marked-circle</v-icon
                   >
                 </div>
                 <div
                   v-if="downloadedKeystore && keystoreName"
-                  class="textSecondary--text"
+                  class="textLight--text"
                 >
                   {{ keystoreName }}
                 </div>

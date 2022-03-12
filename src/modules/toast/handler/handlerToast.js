@@ -28,7 +28,10 @@ const GLOBAL_ERRORS = {
   'Non-Error promise rejection captured with keys: code, message':
     'errorsGlobal.non-error-promise-rejection-captured-with-keys-code-message',
   'Network Error': 'errorsGlobal.network-error',
-  'connection not open': 'errorsGlobal.connection-not-open'
+  'connection not open': 'errorsGlobal.connection-not-open',
+  'The execution failed due to an exception. Reverted':
+    'The execution failed due to an exception. Reverted',
+  '_window is null': 'Device busy'
 };
 
 const GLOBAL_WARNING = {

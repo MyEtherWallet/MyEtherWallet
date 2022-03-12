@@ -40,7 +40,7 @@
                 <div class="break-word">
                   {{ dapp.subtitle }}
                 </div>
-                <div class="body-2 mt-1 tagLabel--text">{{ dapp.tag }}</div>
+                <div class="body-2 mt-1 textLight--text">{{ dapp.tag }}</div>
               </div>
               <div class="d-none d-sm-flex align-center pl-5">
                 <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
