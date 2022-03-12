@@ -16,7 +16,7 @@
             </router-link>
             <!--
             =====================================================================================
-             Close Navigation Bar for xs-md screens
+            Close Navigation Bar for xs-md screens
             =====================================================================================
             -->
             <v-btn icon class="d-block d-lg-none" @click="navOpen = false">
