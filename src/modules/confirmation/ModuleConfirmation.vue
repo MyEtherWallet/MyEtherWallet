@@ -526,10 +526,6 @@ export default {
       _self.resolver = resolver;
       _self.showTxOverlay = true;
       _self.tx.transactionFee = this.txFee;
-      console.log(
-        '_self.tx.transactionFee from module pop up:',
-        _self.tx.transactionFee
-      );
       tx[0].transactionFee = this.txFee;
       if (tx.length > 1) {
         _self.toDetails = tx[1];
@@ -833,7 +829,6 @@ export default {
       }
     },
     btnAction() {
-      console.log('confirm & send has been clicked!');
       if (!this.isWeb3Wallet) {
         if (
           (this.signedTxArray.length === 0 ||
