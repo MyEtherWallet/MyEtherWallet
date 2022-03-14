@@ -6,7 +6,7 @@
     <mew-select
       label="Currency"
       :items="currencyItems"
-      :value="selectedCurrency"
+      :value="actualSelectedCurrency"
       :disabled="loading"
       is-custom
       @input="setCurrency"
@@ -110,7 +110,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network', 'gasPriceByType']),
     persistentHintMessage() {
       return this.hasPersistentHint
-        ? `Max adjusted to leave sufficient ${this.selectedCurrency.name} for network fee`
+        ? `Max adjusted to leave sufficient ${this.actualSelectedCurrency.name} for network fee`
         : '';
     },
     maxButton() {
@@ -122,9 +122,23 @@ export default {
           }
         : {};
     },
-    currencyItems() {
+    actualSelectedCurrency() {
+      const isInPreselected = this.preselectedCurrencies.some(item => {
+        return (
+          item.symbol === this.selectedCurrency.symbol &&
+          item.contract === this.selectedCurrency.contract
+        );
+      });
+
+      if (isInPreselected) {
+        return this.selectedCurrency;
+      }
+
+      return this.preselectedCurrencies[0];
+    },
+    preselectedCurrencies() {
       // hard writing for now
-      const tokensList = [
+      return [
         {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
@@ -153,6 +167,9 @@ export default {
           contract: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
         }
       ];
+    },
+    currencyItems() {
+      const tokensList = this.preselectedCurrencies;
       const imgs = tokensList.map(item => {
         return item.img;
       });
@@ -170,11 +187,11 @@ export default {
       return returnedArray;
     },
     name() {
-      return this.selectedCurrency.name !== 'ETH' &&
-        this.selectedCurrency.name !== 'USDC' &&
-        this.selectedCurrency.name !== 'USDT'
+      return this.actualSelectedCurrency.name !== 'ETH' &&
+        this.actualSelectedCurrency.name !== 'USDC' &&
+        this.actualSelectedCurrency.name !== 'USDT'
         ? 'ETH'
-        : this.selectedCurrency.name;
+        : this.actualSelectedCurrency.name;
     },
     disableSell() {
       return (
@@ -215,12 +232,10 @@ export default {
       );
     },
     txFeeInEth() {
-      return `${BigNumber(this.txFee).decimalPlaces(4)} ${
-        this.network.type.currencyName
-      }`;
+      return `${BigNumber(this.txFee).decimalPlaces(4)} ETH`;
     },
     errorMessages() {
-      const symbol = this.selectedCurrency?.name
+      const symbol = this.actualSelectedCurrency?.name
         ? this.name
         : this.network.type.currencyName;
       const amount = BigNumber(this.amount);
@@ -244,10 +259,10 @@ export default {
         this.amount &&
         !handlerSend.helpers.hasValidDecimals(
           this.amount,
-          this.selectedCurrency.decimals
+          this.actualSelectedCurrency.decimals
         )
       ) {
-        return `Invalid decimals! Max decimals for selected currency is ${this.selectedCurrency.decimals}`;
+        return `Invalid decimals! Max decimals for selected currency is ${this.actualSelectedCurrency.decimals}`;
       }
 
       if (amount.gt(0) && amount.lt(this.min)) {
@@ -270,7 +285,7 @@ export default {
       if (!this.amount) {
         return false;
       }
-      if (!isNumber(this.selectedCurrency?.decimals)) {
+      if (!isNumber(this.actualSelectedCurrency?.decimals)) {
         return false;
       }
       /** amount is negative */
@@ -280,19 +295,19 @@ export default {
       /** return amount has valid decimals */
       return handlerSend.helpers.hasValidDecimals(
         this.amount,
-        this.selectedCurrency.decimals
+        this.actualSelectedCurrency.decimals
       );
     }
   },
   watch: {
-    selectedCurrency: {
+    actualSelectedCurrency: {
       handler: function (newVal) {
         this.amount = '0';
         this.maxBalance = '0';
         this.hasPersistentHint = false;
         if (
           !isEmpty(this.sendHandler) &&
-          this.selectedCurrency.hasOwnProperty('name')
+          this.actualSelectedCurrency.hasOwnProperty('name')
         ) {
           this.sendHandler.setCurrency(newVal);
         }
@@ -342,7 +357,7 @@ export default {
       const web3Instance = new Web3('https://nodes.mewapi.io/rpc/eth');
       const contract = new web3Instance.eth.Contract(
         abi,
-        this.selectedCurrency.contract
+        this.actualSelectedCurrency.contract
       );
       contract.methods
         .balanceOf(this.address)
@@ -350,7 +365,7 @@ export default {
         .then(res => {
           this.fetchingBalance = false;
           this.selectedBalance = BigNumber(res)
-            .div(BigNumber(10).pow(this.selectedCurrency.decimals))
+            .div(BigNumber(10).pow(this.actualSelectedCurrency.decimals))
             .toString();
         });
     },
@@ -394,8 +409,8 @@ export default {
         this.amount = BigNumber(bal)
           .div(
             BigNumber(10).pow(
-              this.selectedCurrency.hasOwnProperty('name')
-                ? this.selectedCurrency.decimals
+              this.actualSelectedCurrency.hasOwnProperty('name')
+                ? this.actualSelectedCurrency.decimals
                 : 18
             )
           )
@@ -423,7 +438,7 @@ export default {
     },
     fetchSellInfo() {
       this.amount = '0';
-      this.sendHandler.setCurrency(this.selectedCurrency);
+      this.sendHandler.setCurrency(this.actualSelectedCurrency);
       this.sendHandler.setValue(this.amount);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
@@ -438,7 +453,7 @@ export default {
           Toast(err, {}, ERROR);
         });
       this.fetchingBalance = true;
-      if (this.selectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
+      if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
         this.getEthBalance();
       } else {
         this.getTokenBalance();
