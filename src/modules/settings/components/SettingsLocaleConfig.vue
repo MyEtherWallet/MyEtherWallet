@@ -18,14 +18,18 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import USDIcon from '@/assets/images/currencies/USD.svg';
-import RUBIcon from '@/assets/images/currencies/RUB.svg';
+// import RUBIcon from '@/assets/images/currencies/RUB.svg';
+import EURIcon from '@/assets/images/currencies/EUR.svg';
+import GBPIcon from '@/assets/images/currencies/GBP.svg';
 export default {
   name: 'SettingsLocaleConfig',
   data() {
     return {
       currencyList: [
         { name: 'USD', value: 'USD', img: USDIcon },
-        { name: 'RUB', value: 'RUB', img: RUBIcon }
+        // { name: 'RUB', value: 'RUB', img: RUBIcon },
+        { name: 'EUR', value: 'EUR', img: EURIcon },
+        { name: 'GBP', value: 'GBP', img: GBPIcon }
       ],
       currency: {}
     };

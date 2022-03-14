@@ -59,7 +59,7 @@
       <v-row v-else justify="center" align="center">
         <v-progress-circular
           indeterminate
-          color="primary"
+          color="greenPrimary"
         ></v-progress-circular>
         <p class="mb-0 mx-3">Sit tight while we are encrypting your wallet</p>
       </v-row>
@@ -296,9 +296,9 @@ export default {
   background: transparent !important;
 }
 .border-container {
-  border: 1px solid var(--v-primaryOutlineActive-base);
+  border: 1px solid var(--v-greenPrimary-base);
   border-radius: 7px;
-  box-shadow: 0 8px 15px var(--v-boxShadow-base);
+  box-shadow: 0 8px 15px var(--v-greyLight-base);
   height: 100%;
 }
 </style>

@@ -29,6 +29,10 @@ class Changelly {
         params: {}
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const data = response.data.result.filter(d => d.fixRateEnabled);
         return data.map(d => {
           const contract = d.contractAddress
@@ -61,6 +65,10 @@ class Changelly {
         }
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         return response.data.result.result;
       })
       .catch(err => {
@@ -72,7 +80,7 @@ class Changelly {
       .post(`${HOST_URL}`, {
         id: uuidv4(),
         jsonrpc: '2.0',
-        method: 'getPairsParams',
+        method: 'getFixRate',
         params: [
           {
             from: fromT.symbol.toLowerCase(),
@@ -81,10 +89,14 @@ class Changelly {
         ]
       })
       .then(response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const result = response?.data?.result[0];
         return {
-          minFrom: result?.minAmountFloat,
-          maxFrom: result?.maxAmountFloat
+          minFrom: result?.minFrom,
+          maxFrom: result?.maxFrom
         };
       })
       .catch(err => {
@@ -98,12 +110,13 @@ class Changelly {
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
-      if (
-        BigNumber(minmax.minFrom).gt(queryAmount) ||
-        BigNumber(minmax.maxFrom).lt(queryAmount)
-      )
+      if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
+      }
+
+      if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
+        return [];
+      }
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
@@ -118,6 +131,10 @@ class Changelly {
           ]
         })
         .then(response => {
+          if (response.error) {
+            Toast(response.error, {}, ERROR);
+            return;
+          }
           return [
             {
               exchange: this.provider,
@@ -160,6 +177,10 @@ class Changelly {
         }
       })
       .then(async response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         if (Array.isArray(response.data.result))
           return new Error('Invalid input');
         const txObj = {
@@ -233,6 +254,10 @@ class Changelly {
         }
       })
       .then(async response => {
+        if (response.error) {
+          Toast(response.error, {}, ERROR);
+          return;
+        }
         const submittedStatuses = ['waiting', 'new'];
         const pendingStatuses = ['confirming', 'exchanging', 'sending'];
         const completedStatuses = ['finished'];

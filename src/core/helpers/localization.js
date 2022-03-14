@@ -80,5 +80,7 @@ const convertNumber = ({ locale, currency, options, convertedPrice }) =>
 const locales = {
   USD: 'en-US',
   RUB: 'ru-RU',
-  CNY: 'zh_CN'
+  CNY: 'zh-CN',
+  GBP: 'en-GB',
+  EUR: 'fr-FR'
 };

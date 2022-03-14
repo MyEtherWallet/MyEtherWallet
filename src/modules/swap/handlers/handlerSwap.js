@@ -3,6 +3,7 @@ import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Configs from './configs.js';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
+import { isObject } from 'lodash';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -38,10 +39,12 @@ class Swap {
           });
         })
       ).then(() => {
-        const sorted = allTokens.sort((a, b) => {
-          if (a.name > b.name) return 1;
-          return -1;
-        });
+        const sorted = allTokens
+          .filter(t => isObject(t))
+          .sort((a, b) => {
+            if (a.name > b.name) return 1;
+            return -1;
+          });
         return {
           fromTokens: sorted.filter(t => isAddress(t.contract)),
           toTokens: sorted
@@ -60,7 +63,7 @@ class Swap {
       })
     ).then(() => {
       allQuotes.sort((q1, q2) => {
-        if (new BigNumber(q1.amount).lt(new BigNumber(q2.amount))) return -1;
+        if (new BigNumber(q1.amount).gt(new BigNumber(q2.amount))) return -1;
         return 1;
       });
       return allQuotes.map(q => {

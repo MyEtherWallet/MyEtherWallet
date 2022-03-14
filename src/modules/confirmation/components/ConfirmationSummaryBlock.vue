@@ -9,7 +9,7 @@
       <v-col
         cols="12"
         sm="6"
-        class="text-left mew-caption font-weight-medium searchText--text"
+        class="text-left mew-caption font-weight-medium greyPrimary--text"
       >
         {{ item }}
       </v-col>

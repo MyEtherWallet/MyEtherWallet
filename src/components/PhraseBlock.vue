@@ -14,6 +14,6 @@ export default {
 
 <style lang="scss" scoped>
 .phrase-block {
-  border: 1px solid var(--v-primary-lighten2);
+  border: 1px solid var(--v-greenPrimary-base);
 }
 </style>

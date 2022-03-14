@@ -2,7 +2,7 @@
   <v-container>
     <div class="py-7" />
     <v-sheet align="center">
-      <h1 class="titlePrimary--text pb-5">Join MEW Community</h1>
+      <h1 class="textDark--text pb-5">Join MEW Community</h1>
     </v-sheet>
     <v-sheet color="transparent" max-width="900px" class="mx-auto">
       <v-row align="center" justify="center">
@@ -24,7 +24,7 @@
               style="border-radius: 50%"
             />
           </a>
-          <div class="pt-2 textSecondary--text mew-label text-center">
+          <div class="pt-2 textLight--text mew-label text-center">
             {{ p.label }}
           </div>
         </v-col>

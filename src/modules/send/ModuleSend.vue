@@ -108,10 +108,10 @@
               <div class="px-5">
                 <!-- Warning Sheet -->
                 <div
-                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
+                  class="pa-5 warning greyPrimary--text border-radius--5px mb-8"
                 >
                   <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="textBlack2--text mew-body mr-1">
+                    <v-icon class="greyPrimary--text mew-body mr-1">
                       mdi-alert-outline</v-icon
                     >For advanced users only
                   </div>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="d-flex align-center justify-end pb-3">
                   <div
-                    class="mew-body primary--text cursor--pointer"
+                    class="mew-body greenPrimary--text cursor--pointer"
                     @click="setGasLimit(defaultGasLimit)"
                   >
                     Reset to default: {{ formattedDefaultGasLimit }}
@@ -178,7 +178,7 @@
 </template>
 
 <script>
-import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
+import { fromWei, isHexStrict, toWei } from 'web3-utils';
 import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
@@ -191,7 +191,8 @@ import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import {
   formatFiatValue,
-  formatIntegerToString
+  formatIntegerToString,
+  toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { currencyToNumber } from '@/core/helpers/localization';
@@ -407,7 +408,7 @@ export default {
         return (
           BigNumber(this.gasLimit).gt(0) &&
           BigNumber(this.gasLimit).dp() < 1 &&
-          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
+          toBNSafe(this.gasLimit).gte(toBNSafe(this.defaultGasLimit))
         );
       }
       return false;
@@ -454,7 +455,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBNSafe(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -470,7 +471,7 @@ export default {
       const amount = new BigNumber(this.amount ? this.amount : 0)
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
-      return toBN(amount);
+      return toBNSafe(amount);
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -483,10 +484,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (toBN(this.localGasPrice).eqn(0)) {
-        return toBN(this.gasPrice);
+      if (toBNSafe(this.localGasPrice).eqn(0)) {
+        return toBNSafe(this.gasPrice);
       }
-      return toBN(this.localGasPrice);
+      return toBNSafe(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -663,7 +664,7 @@ export default {
           this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
           this.gasLimitError = 'Gas limit can not have decimal points';
-        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
+        else if (toBNSafe(value).lt(toBNSafe(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {
           this.gasLimitError = '';
@@ -686,8 +687,8 @@ export default {
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.gasLimit = toBN(res).toString();
-          this.defaultGasLimit = toBN(res).toString();
+          this.gasLimit = toBNSafe(res).toString();
+          this.defaultGasLimit = toBNSafe(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -728,7 +729,7 @@ export default {
       }
     },
     convertToDisplay(amount, decimals) {
-      const amt = toBN(amount).toString();
+      const amt = toBNSafe(amount).toString();
       return decimals
         ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
         : amt;

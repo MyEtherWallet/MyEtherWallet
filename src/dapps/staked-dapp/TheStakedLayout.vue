@@ -20,16 +20,16 @@
     ===================================================
     -->
     <template #HeaderBody>
-      <v-divider class="textPrimary my-3" />
+      <v-divider class="textMedium my-3" />
       <div class="d-flex flex-wrap align-center justify-center">
-        <div class="text-uppercase textPrimary--text font-weight-bold">
+        <div class="text-uppercase textMedium--text font-weight-bold">
           Total Staked:
-          <span class="primary--text">{{ totalStaked }}</span>
+          <span class="greenPrimary--text">{{ totalStaked }}</span>
         </div>
-        <v-icon color="textPrimary">mdi-circle-medium</v-icon>
-        <div class="text-uppercase textPrimary--text font-weight-bold">
+        <v-icon color="textMedium">mdi-circle-medium</v-icon>
+        <div class="text-uppercase textMedium--text font-weight-bold">
           Current APR:
-          <span class="primary--text">{{ currentAprFormatted }}</span>
+          <span class="greenPrimary--text">{{ currentAprFormatted }}</span>
         </div>
       </div>
       <!--
@@ -68,7 +68,7 @@
             >
               My stake
             </div>
-            <div v-if="!loadingValidators" class="mew-caption tagLabel--text">
+            <div v-if="!loadingValidators" class="mew-caption textLight--text">
               {{ !loadingValidators ? myETHTotalStaked : '--' }}
             </div>
           </div>
@@ -85,10 +85,12 @@
         <a
           href="https://help.myetherwallet.com/en/articles/5449132-stake-on-eth2-using-mew-web"
           target="_blank"
-          class="primary--text font-weight-medium text-right"
+          class="greenPrimary--text font-weight-medium text-right"
         >
           New to staking? Learn more
-          <v-icon class="ml-1" small color="primary">mdi-open-in-new</v-icon>
+          <v-icon class="ml-1" small color="greenPrimary"
+            >mdi-open-in-new</v-icon
+          >
         </a>
       </div>
     </template>
@@ -166,7 +168,7 @@ export default {
         title: 'Ethereum 2.0 staking',
         subtext:
           'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community.',
-        subtextClass: 'textPrimary--text'
+        subtextClass: 'textMedium--text'
       },
       activeTab: 0,
       handlerStaked: {},
