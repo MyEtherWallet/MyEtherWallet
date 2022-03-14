@@ -4,8 +4,8 @@
       v-if="settingIpfs"
       class="d-flex flex-column align-center justify-center"
     >
-      <v-progress-circular indeterminate color="primary" />
-      <span class="mew-heading-2 titlePrimary--text">{{
+      <v-progress-circular indeterminate color="greenPrimary" />
+      <span class="mew-heading-2 textDark--text">{{
         $t('ens.ipfs-processing')
       }}</span>
       <span>{{ $t('ens.ipfs-processing-description') }}</span>

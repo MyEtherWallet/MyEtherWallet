@@ -46,7 +46,7 @@
           />
         </div>
       </div>
-      <div class="textSecondary--text mt-12">
+      <div class="textLight--text mt-12">
         Tip: You can also send your {{ networkType }} from another wallet!
       </div>
     </div>

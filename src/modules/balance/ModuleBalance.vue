@@ -52,14 +52,14 @@
               <div
                 :class="[
                   'ml-2 font-weight-regular',
-                  priceChange ? 'primary--text' : 'error--text'
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text'
                 ]"
               >
                 {{ formatChange }}
               </div>
               <v-icon
                 :class="[
-                  priceChange ? 'primary--text' : 'error--text',
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text',
                   'body-2'
                 ]"
                 >{{ priceChangeArrow }}</v-icon

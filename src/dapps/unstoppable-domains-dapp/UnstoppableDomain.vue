@@ -56,7 +56,7 @@
               <div class="mb-3">
                 <div class="mew-heading-3 font-weight-bold">Results</div>
               </div>
-              <v-card flat color="tableHeader" class="pa-10">
+              <v-card flat color="greyLight" class="pa-10">
                 <div class="d-flex justify-space-between align-center">
                   <div>
                     <div class="mew-heading-1 mb-2">mewwallet.crypto</div>
@@ -66,7 +66,7 @@
                     </div>
                   </div>
                   <div class="d-flex align-center">
-                    <div class="mew-heading-3 primary--text mr-6">
+                    <div class="mew-heading-3 greenPrimary--text mr-6">
                       Available
                     </div>
                     <mew-button title="Buy"></mew-button>
@@ -74,7 +74,7 @@
                 </div>
               </v-card>
               <div class="py-2"></div>
-              <v-card flat color="tableHeader" class="pa-10">
+              <v-card flat color="greyLight" class="pa-10">
                 <div class="d-flex align-center justify-space-between mb-8">
                   <div class="mew-heading-1">myetherwallet.crypto</div>
                   <div class="mew-heading-3 orange--text">Unavailable</div>
@@ -90,11 +90,11 @@
                 >
                   <v-list-item-content>
                     <div
-                      class="mew-body font-weight-medium titlePrimary--text mb-2"
+                      class="mew-body font-weight-medium textDark--text mb-2"
                     >
                       {{ r.label }}:
                     </div>
-                    <div class="mew-body titlePrimary--text">
+                    <div class="mew-body textDark--text">
                       {{ r.value }}
                     </div>
                   </v-list-item-content>
@@ -107,7 +107,7 @@
             <div>
               <v-card
                 flat
-                color="tableHeader"
+                color="greyLight"
                 class="d-flex align-center justify-space-between pa-10 mb-10"
               >
                 <div class="mew-heading-1">mewwallet.crypto</div>
@@ -120,16 +120,16 @@
               <v-sheet color="transparent" max-width="400px" class="mx-auto">
                 <div class="d-flex align-center justify-space-between mb-5">
                   <div class="mew-heading-1">Pay with Crypto</div>
-                  <div class="font-weight-medium primary--text">
+                  <div class="font-weight-medium greenPrimary--text">
                     Pay with Credit Card
                   </div>
                 </div>
 
                 <v-card
                   outlined
-                  color="tableHeader"
+                  color="greyLight"
                   class="pa-4 d-flex align-center justify-space-between bordered-red"
-                  style="border-color: var(--v-error-base) !important"
+                  style="border-color: var(--v-redPrimary-base) !important"
                 >
                   <div class="d-flex align-center">
                     <img
@@ -138,13 +138,13 @@
                     />
                     <div class="font-weight-medium ml-3">
                       0.0341234234
-                      <span class="primary--text">ETH</span>
+                      <span class="greenPrimary--text">ETH</span>
                     </div>
                   </div>
-                  <v-icon class="primary--text">mdi-check-circle</v-icon>
+                  <v-icon class="greenPrimary--text">mdi-check-circle</v-icon>
                 </v-card>
 
-                <div class="error--text mt-3 mb-7 font-weight-medium">
+                <div class="redPrimary--text mt-3 mb-7 font-weight-medium">
                   Insufficient balance.
                   <a
                     v-if="network.type.canBuy"
@@ -157,7 +157,7 @@
 
                 <v-card
                   flat
-                  color="tableHeader"
+                  color="greyLight"
                   class="mt-3 pa-4 d-flex align-center justify-space-between"
                 >
                   <div class="d-flex align-center">
@@ -167,7 +167,7 @@
                     />
                     <div class="font-weight-medium ml-3">
                       40.23
-                      <span class="primary--text">USD</span>
+                      <span class="greenPrimary--text">USD</span>
                     </div>
                   </div>
                   <v-icon>mdi-check-circle-outline</v-icon>
@@ -364,18 +364,18 @@ export default {
         {
           name: 'mewdev009.eth',
           toggleTitle: '',
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           warningBadge: {
-            color: 'warning darken-2',
+            color: 'orangePrimary',
             text: 'Expire soon'
           }
         },
         {
           name: 'mewdev008.eth',
           toggleTitle: '',
-          colorTheme: 'superPrimary',
+          colorTheme: 'greyLight',
           warningBadge: {
-            color: 'warning darken-2',
+            color: 'orangePrimary',
             text: 'Expire soon'
           }
         }

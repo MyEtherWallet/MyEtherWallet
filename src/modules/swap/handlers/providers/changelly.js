@@ -110,7 +110,10 @@ class Changelly {
       new BigNumber(10).pow(new BigNumber(fromT.decimals))
     );
     return this.getMinMaxAmount({ fromT, toT }).then(minmax => {
-      if (minmax && (!minmax.minFrom || !minmax.maxFrom)) return [];
+      if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
+        return [];
+      }
+
       if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
         return [];
       }

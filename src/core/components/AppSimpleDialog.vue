@@ -20,7 +20,7 @@
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
-        <v-btn color="textSecondary" icon class="" @click="closeDialog">
+        <v-btn color="textLight" icon class="" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>

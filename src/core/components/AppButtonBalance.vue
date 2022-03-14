@@ -13,7 +13,7 @@
     </div>
 
     <div v-else class="d-flex align-center justify-end">
-      <div v-if="!text" class="primary--text mew-body">
+      <div v-if="!text" class="greenPrimary--text mew-body">
         Balance: {{ balanceFormatted.value }}
       </div>
       <div else class="primary--text mew-body">

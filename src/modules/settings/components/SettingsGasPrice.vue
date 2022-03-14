@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="textPrimary--text mb-5">
+    <div class="textMedium--text mb-5">
       This fee is charged by the Ethereum network and fluctuates depending on
       network traffic. MEW does not profit from this fee.
     </div>
@@ -28,7 +28,7 @@
             class="mr-1 ml-n1 text-center"
             style="width: 40px; line-height: 0"
           >
-            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textBlack">
+            <v-icon v-if="b.title === gasPriceTypes.ECONOMY" color="textDark">
               mdi-check
             </v-icon>
             <img
@@ -75,19 +75,19 @@
               </div>
               <div
                 v-if="b.title === gasPriceTypes.ECONOMY"
-                class="textSecondary--text"
+                class="textLight--text"
               >
                 ${{ economyInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.REGULAR"
-                class="textSecondary--text"
+                class="textLight--text"
               >
                 ${{ regularInUsd }}
               </div>
               <div
                 v-if="b.title === gasPriceTypes.FAST"
-                class="textSecondary--text"
+                class="textLight--text"
               >
                 ${{ fastInUsd }}
               </div>
@@ -97,8 +97,10 @@
 
         <!-- Show Priority Time-->
         <div class="d-flex align-center">
-          <v-icon class="mr-1" color="primary" small>mdi-clock-outline</v-icon>
-          <div class="primary--text">{{ b.time }}</div>
+          <v-icon class="mr-1" color="greenPrimary" small
+            >mdi-clock-outline</v-icon
+          >
+          <div class="greenPrimary--text">{{ b.time }}</div>
         </div>
       </div>
     </div>
@@ -279,7 +281,7 @@ export default {
   cursor: pointer;
   user-select: none;
   width: 100%;
-  border: 1px solid #eaedf7;
+  border: 1px solid var(--v-greyLight-base);
   &#disabled {
     filter: grayscale(1);
     opacity: 0.25 !important;

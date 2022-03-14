@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div>
+  <div class="mew-components--module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -20,13 +20,13 @@
         <div>
           <span
             v-if="!hasCustom"
-            class="primary--text cursor-pointer pl-3"
+            class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleAddCustomToken"
             >+ Custom Token</span
           >
           <mew-menu
             v-else
-            activator-text-color="primary--text"
+            activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -235,7 +235,7 @@ export default {
                 });
             },
             btnStyle: 'outline',
-            colorTheme: 'primary'
+            colorTheme: 'greenPrimary'
           }
         ];
       }

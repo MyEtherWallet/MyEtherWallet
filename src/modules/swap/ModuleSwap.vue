@@ -152,13 +152,13 @@
               >
                 <v-expansion-panel>
                   <v-expansion-panel-header
-                    color="tableHeader"
-                    class="textPrimaryModule--text"
+                    color="greyLight"
+                    class="textLight--text"
                   >
                     How can I get wrapped Bitcoin?
                   </v-expansion-panel-header>
-                  <v-expansion-panel-content color="tableHeader" class="pa-0">
-                    <div class="textPrimaryModule--text mb-2">
+                  <v-expansion-panel-content color="greyLight" class="pa-0">
+                    <div class="textLight--text mb-2">
                       When you swap to Bitcoin, it is moved to the Bitcoin
                       blockchain, & requires a Bitcoin wallet. In order to keep
                       Bitcoin in MyEtherWallet, you can swap to wrapped Bitcoin
@@ -1326,7 +1326,7 @@ export default {
 }
 
 .border-top {
-  border-top: 1px solid var(--v-inputBorder-base);
+  border-top: 1px solid var(--v-greyMedium-base);
 }
 
 .swap-not-available {

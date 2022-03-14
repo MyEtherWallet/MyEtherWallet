@@ -11,11 +11,11 @@
         />
       </div>
     </div>
-    <div v-if="!loading && !error" class="pa-3">
+    <div v-if="!loading && !error && hasSwapRates" class="pa-3">
       <div v-for="(data, key) in swapData" :key="key">
         <v-sheet
           v-if="data.rate"
-          color="tableHeader"
+          color="greyLight"
           class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
           @click="goToSwap(data)"
         >
@@ -56,12 +56,14 @@
       <h3 class="ma-3">Loading swap pairs...</h3>
     </div>
     <div
-      v-if="error"
+      v-if="error || !hasSwapRates"
       class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
     >
       <v-progress-circular indeterminate />
       <h3 class="ma-3">Having issues loading tokens.</h3>
-      <h5 class="mb-2 cursor--pointer" @click="fetchRates">Try again?</h5>
+      <h5 class="mb-2 cursor--pointe greenPrimary--text" @click="fetchRates">
+        Try again?
+      </h5>
     </div>
   </mew6-white-sheet>
 </template>
@@ -154,7 +156,7 @@ const STATIC_PAIRS = [
   }
 ];
 export default {
-  name: 'SwapRates',
+  name: 'ModuleSwapRates',
   components: {},
   mixins: [handlerAnalytics],
   props: {
@@ -173,15 +175,23 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'network']),
+    hasSwapRates() {
+      if (this.swapData) {
+        return this.swapData.some(item => {
+          return item.rate;
+        });
+      }
+      return false;
+    }
   },
   watch: {
     web3(newVal) {
-      this.setSwapHandler(newVal);
+      this.setSwapHandler(newVal, this.network.type.name);
     }
   },
   mounted() {
-    this.setSwapHandler(this.web3);
+    this.setSwapHandler(this.web3, this.network.type.name);
   },
   methods: {
     setSwapHandler(val) {

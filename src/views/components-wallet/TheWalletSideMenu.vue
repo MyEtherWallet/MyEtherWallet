@@ -216,14 +216,14 @@
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="primary"
+              color="greenPrimary"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
           </div>
           <div class="d-flex align-center justify-space-between">
             <!-- <theme-switch /> -->
-            <div class="searchText--text">v{{ version }}</div>
+            <div class="greyPrimary--text">v{{ version }}</div>
           </div>
         </div>
       </v-list>

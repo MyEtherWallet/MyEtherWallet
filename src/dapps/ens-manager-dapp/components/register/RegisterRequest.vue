@@ -1,14 +1,14 @@
 <template>
   <div>
     <div v-if="loading" class="d-flex align-center justify-center">
-      <v-progress-circular indeterminate color="primary" />
+      <v-progress-circular indeterminate color="greenPrimary" />
     </div>
-    <div v-if="!loading" class="d-flex align-center pa-6 superPrimary rounded">
-      <v-icon size="80" color="primary" class="mr-3">
+    <div v-if="!loading" class="d-flex align-center pa-6 greyLight rounded">
+      <v-icon size="80" color="greenPrimary" class="mr-3">
         mdi-check-circle-outline
       </v-icon>
       <div>
-        <div class="mew-heading-2 mb-2 primary--text">
+        <div class="mew-heading-2 mb-2 greenPrimary--text">
           {{ $t('ens.is-available') }}
         </div>
         <div class="mew-heading-2">{{ name }}</div>
