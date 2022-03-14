@@ -38,7 +38,7 @@
     "@coolwallets/transport-web-ble": "0.1.0",
     "@coolwallets/wallet": "0.2.0-beta.1",
     "@ensdomains/address-encoder": "0.2.16",
-    "@ensdomains/ens-contracts": "0.0.8",
+    "@ensdomains/ens-contracts": "0.0.11",
     "@ensdomains/ensjs": "2.1.0",
     "@ethereumjs/common": "2.6.2",
     "@ethereumjs/tx": "3.5.0",
@@ -74,7 +74,7 @@
     "highcharts-vue": "1.4.0",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "lottie-web": "5.8.1",
+    "lottie-web": "5.9.1",
     "merkletreejs": "0.2.30",
     "moment": "2.29.1",
     "package-json": "7.0.0",
@@ -161,7 +161,7 @@
     "web3-core-requestmanager": "1.5.0",
     "web3-utils": "1.5.0",
     "webpack": "4.44.2",
-    "xss": "1.0.10"
+    "xss": "1.0.11"
   },
   "engines": {
     "node": ">= 10.0.0 < 12.3.0",
