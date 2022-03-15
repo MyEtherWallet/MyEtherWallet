@@ -19,23 +19,23 @@
           cols="12"
           sm="6"
         >
-          <div class="tableHeader pa-5 d-flex align-center rounded-lg">
+          <div class="greyLight pa-5 d-flex align-center rounded-lg">
             <div class="mr-3 mt-1">
               <img :src="detail.img" height="25" alt="eth icon" />
             </div>
             <div>
               <div
-                class="captionPrimary--text text-uppercase detail-subtitle font-weight-medium"
+                class="textLight--text text-uppercase detail-subtitle font-weight-medium"
               >
                 {{ detail.subtitle }}
               </div>
               <div class="mew-heading-4 detail-title">{{ detail.title }}</div>
               <mew-transform-hash
                 v-if="detail.isAddress"
-                class="mew-hash-container textPrimary--text font-weight-medium"
+                class="mew-hash-container textLight--text font-weight-medium"
                 :hash="detail.desc"
               />
-              <div v-if="!detail.isAddress" class="textPrimary--text">
+              <div v-if="!detail.isAddress" class="textLight--text">
                 {{ detail.desc }}
               </div>
             </div>
@@ -53,9 +53,9 @@
           :key="fee + idx"
           class="d-block d-sm-flex align-center justify-space-between mb-3 mb-sm-2"
         >
-          <div class="mew-caption captionPrimary--text">{{ fee.title }}</div>
+          <div class="mew-caption textLight--text">{{ fee.title }}</div>
           <div>
-            {{ fee.ethValue }} <span class="captionPrimary--text">ETH /</span>
+            {{ fee.ethValue }} <span class="textLight--text">ETH /</span>
             {{ fee.fiatValue }}
           </div>
         </div>
@@ -65,24 +65,24 @@
     Terms & Conditions
     ===================================================
     -->
-      <div class="mt-11 mt-sm-10 pa-5 tableHeader">
+      <div class="mt-11 mt-sm-10 pa-5 greyLight">
         <mew-checkbox
           v-model="firstCondition"
           dense
           class="mb-4"
-          class-name="textBlack2--text"
+          class-name="textMedium--text"
           label="I understand that Staking is currently a one-way-street and won't be able to get my fund back until an unknown date in the future when transfers are enabled in Eth2."
         />
         <mew-checkbox
           v-model="secondCondition"
           dense
-          class-name="textBlack2--text"
+          class-name="textMedium--text"
           label="I understand that staking involves slashing risks and my funds can be lost."
         />
         <mew-checkbox
           v-model="thirdCondition"
           dense
-          class-name="textBlack2--text"
+          class-name="textMedium--text"
         >
           <template #contentSlot>
             <span
@@ -105,7 +105,7 @@
           <div
             :class="[
               'mx-auto',
-              stakedStep1Title.error ? 'error--text' : 'textBlack2--text'
+              stakedStep1Title.error ? 'redPrimary--text' : 'textMedium--text'
             ]"
             style="max-width: 300px"
           >
@@ -113,7 +113,7 @@
             <a
               v-if="stakedStep1Title.showContactSupport"
               rel="noopener noreferrer"
-              class="cursor-pointer primary--text text-lowercase"
+              class="cursor-pointer greenPrimary--text text-lowercase"
               href="mailto:support@myetherwallet.com"
               target="_blank"
             >
@@ -137,7 +137,7 @@
           <div class="mew-heading-4 font-weight-medium mb-2">
             Preparing validators
           </div>
-          <div class="textBlack2--text mx-auto" style="max-width: 300px">
+          <div class="textMedium--text mx-auto" style="max-width: 300px">
             This usually takes ~20 seconds, in rare cases it can take up to 10
             min.
           </div>
@@ -146,7 +146,7 @@
               style="max-width: 350px"
               class="mt-4 mx-auto"
               indeterminate
-              color="primary"
+              color="greenPrimary"
             ></v-progress-linear>
           </div>
         </div>
@@ -156,7 +156,7 @@
     ===================================================
     -->
         <div v-if="stakedStep === 3">
-          <v-icon color="primary" class="mr-2">mdi-check-circle</v-icon>
+          <v-icon color="greenPrimary" class="mr-2">mdi-check-circle</v-icon>
           Ready to stake
         </div>
       </border-block>

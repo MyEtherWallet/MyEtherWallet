@@ -79,7 +79,7 @@
           <span
             :class="[
               'mew-heading-3',
-              hasError ? 'error--text' : 'titlePrimary--text'
+              hasError ? 'redPrimary--text' : 'textDark--text'
             ]"
           >
             {{ uploadedText.title }}
@@ -88,7 +88,7 @@
             style="max-width: 420px"
             :class="[
               'mt-2 mew-body',
-              hasError ? 'error--text' : 'warning--text text--darken-2'
+              hasError ? 'redPrimary--text' : 'orangePrimary--text'
             ]"
           >
             {{ uploadedText.desc }}
@@ -100,18 +100,18 @@
     ===================================================
     -->
         <div
-          class="tableHeader mb-8 input-container d-block d-sm-flex rounded align-center justify-space-between pa-5"
+          class="greyLight mb-8 input-container d-block d-sm-flex rounded align-center justify-space-between pa-5"
         >
           <div class="d-flex align-center">
             <mew-icon :img-height="32" icon-name="keystore" />
             <div
-              class="ml-3 file-name-container mew-heading-4 textSecondary--text truncate"
+              class="ml-3 file-name-container mew-heading-4 textLight--text truncate"
             >
               {{ inputTitle }}
             </div>
-            <v-icon v-if="uploaded && !hasError" size="16" color="primary"
-              >mdi-checkbox-marked-circle</v-icon
-            >
+            <v-icon v-if="uploaded && !hasError" size="16" color="greenPrimary">
+              mdi-checkbox-marked-circle
+            </v-icon>
           </div>
           <mew-button
             class="my-2"
@@ -313,7 +313,7 @@ export default {
 
 <style lang="scss" scoped>
 .upload-container {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   .file-name-container {
     max-width: 212px;
   }

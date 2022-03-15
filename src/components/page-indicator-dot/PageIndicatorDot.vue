@@ -27,12 +27,12 @@ export default {
 
   height: $dot-size;
   width: $dot-size;
-  background-color: var(--v-basicOutlineActive-base);
+  background-color: var(--v-greyMedium-base);
   border-radius: 100%;
   transition: background-color 0.3s ease;
 
   &.active {
-    background-color: var(--v-basic-base);
+    background-color: var(--v-textDark-base);
   }
 }
 </style>
