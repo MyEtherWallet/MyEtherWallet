@@ -8,6 +8,10 @@ const ENS_MANAGER_ROUTE = {
     NAME: 'ENSManagerManage',
     PATH: 'manage'
   },
+  CLAIM: {
+    NAME: 'ENSManagerClame',
+    PATH: 'claim'
+  },
   ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
   ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' }

@@ -23,6 +23,10 @@ export default {
       name: ENS_MANAGER_ROUTE.MANAGE.NAME
     },
     {
+      path: ENS_MANAGER_ROUTE.CLAIM.PATH,
+      name: ENS_MANAGER_ROUTE.CLAIM.NAME
+    },
+    {
       path: ENS_MANAGER_ROUTE.ENS_1.PATH,
       name: ENS_MANAGER_ROUTE.ENS_1.NAME,
       beforeEnter: ensRouterGuard

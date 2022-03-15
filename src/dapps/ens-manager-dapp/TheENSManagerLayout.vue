@@ -374,6 +374,14 @@ export default {
             path: ENS_MANAGER_ROUTE.MANAGE.PATH
           },
           id: 1
+        },
+        {
+          name: this.$t('ens.claim-tokens'),
+          route: {
+            name: ENS_MANAGER_ROUTE.CLAIM.NAME,
+            path: ENS_MANAGER_ROUTE.CLAIM.PATH
+          },
+          id: 2
         }
       ],
       /*
@@ -481,15 +489,13 @@ export default {
       }
       this.getDomains();
     },
-    $route(to) {
-      if (to.name === ENS_MANAGER_ROUTE.MANAGE.NAME) {
-        this.activeTab = this.tabs[1].id;
-      } else {
-        this.activeTab = this.tabs[0].id;
-      }
+    $route() {
+      this.detactUrlChangeTab();
     }
   },
   mounted() {
+    this.detactUrlChangeTab();
+
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
       : null;
@@ -509,9 +515,18 @@ export default {
     });
   },
   methods: {
+    detactUrlChangeTab() {
+      const currentRoute = this.$route.name;
+      if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else if (currentRoute === ENS_MANAGER_ROUTE.CLAIM.NAME) {
+        this.activeTab = this.tabs[2].id;
+      } else {
+        this.activeTab = this.tabs[0].id;
+      }
+    },
     tabChange(tab) {
       this.activeTab = tab;
-      //console.log(tab);
     },
     claimTokens() {
       try {

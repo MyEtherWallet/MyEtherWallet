@@ -104,6 +104,7 @@
     -->
     <slot v-if="activeTab === 0" name="tabContent1" />
     <slot v-if="activeTab === 1" name="tabContent2" />
+    <slot v-if="activeTab === 2" name="tabContent3" />
 
     <router-view
       v-if="
