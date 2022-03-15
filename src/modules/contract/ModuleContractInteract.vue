@@ -160,7 +160,7 @@ import {
   isContractArgValid
 } from './handlers/common';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
-
+import { isString } from 'lodash';
 export default {
   name: 'ModuleContractInteract',
   data() {
@@ -211,9 +211,14 @@ export default {
       return true;
     },
     mergedContracts() {
+      const checkContract = arr =>
+        arr.filter(contract => isString(contract.name));
       return [
         { text: 'Select a Contract', selectLabel: true, divider: true }
-      ].concat(this.localContracts, this.network.type.contracts);
+      ].concat(
+        checkContract(this.localContracts),
+        checkContract(this.network.type.contracts)
+      );
     },
     methods() {
       if (this.canInteract) {
