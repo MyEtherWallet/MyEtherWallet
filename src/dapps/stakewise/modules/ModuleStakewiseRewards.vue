@@ -173,13 +173,14 @@ import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
-import { find } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import {
   SETH2_MAINNET_CONTRACT,
+  SETH2_GOERLI_CONTRACT,
   RETH2_MAINNET_CONTRACT,
   RETH2_GOERLI_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
@@ -198,8 +199,7 @@ export default {
       compoundAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
-      quote: '0',
-      confirmInfo: {}
+      availableQuotes: []
     };
   },
   computed: {
@@ -213,10 +213,20 @@ export default {
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
     },
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
     hasReth() {
       const token = find(
         this.tokensList,
         item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
+      );
+      return token;
+    },
+    hasSeth() {
+      const token = find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
       );
       return token;
     },
@@ -255,59 +265,73 @@ export default {
     },
     getQuote() {
       const swapper = new Swapper(this.web3, this.network.type.name);
-      return swapper
-        .getAllQuotes({
-          fromT: SETH2_MAINNET_CONTRACT,
-          toT: RETH2_MAINNET_CONTRACT,
-          fromAmount: new BigNumber(this.rethBalance).div(
-            new BigNumber(10).pow(new BigNumber(18))
-          )
-        })
-        .then(function (quotes) {
-          return (this.quote = quotes[0]);
-        })
-        .catch(err => {
-          Toast(err, {}, ERROR);
-        });
+      if (
+        this.rethBalance !== '' &&
+        this.rethBalance > 0 &&
+        !isEmpty(this.hasReth) &&
+        !isEmpty(this.hasSeth) &&
+        !isEmpty(this.hasReth?.symbol) &&
+        !isEmpty(this.hasSeth?.symbol)
+      ) {
+        return swapper
+          .getAllQuotes({
+            fromT: this.hasReth,
+            toT: this.hasSeth,
+            fromAmount: new BigNumber(this.rethBalance).times(
+              new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+            )
+          })
+          .then(quotes => {
+            this.availableQuotes = quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.rethBalance))
+                .toString();
+              return q;
+            });
+          })
+          .catch(err => {
+            Toast(err, {}, ERROR);
+          });
+      }
     },
     executeTrade() {
       this.getQuote();
-      const fromAmt = new BigNumber(this.rethBalance).div(
-        new BigNumber(10).pow(new BigNumber(18))
-      );
-      this.confirmInfo = {
-        from: SETH2_MAINNET_CONTRACT,
-        to: RETH2_MAINNET_CONTRACT,
-        // fromType: this.fromTokenType.symbol,
-        // toType: this.toTokenType.symbol,
-        // fromImg: this.fromTokenType.img,
-        // toImg: this.toTokenType.img,
-        fromVal: fromAmt,
-        // toVal: this.tokenOutValue,
-        // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-        //   .times(this.tokenOutValue)
-        //   .toFixed(),
-        fromUsdVal: formatFiatValue(fromAmt.times(this.fiatValue).toString())
-          .value,
-        validUntil: new Date().getTime() + 10 * 60 * 1000,
-        // selectedProvider: this.selectedProvider,
-        txFee: this.ethTotalFee,
-        gasPriceType: this.gasPriceType,
-        gasPrice: this.gasPrice
-      };
+      // const fromAmt = new BigNumber(this.rethBalance).div(
+      //   new BigNumber(10).pow(new BigNumber(18))
+      // );
+      // this.confirmInfo = {
+      //   from: SETH2_MAINNET_CONTRACT,
+      //   to: RETH2_MAINNET_CONTRACT,
+      // fromType: this.fromTokenType.symbol,
+      // toType: this.toTokenType.symbol,
+      // fromImg: this.fromTokenType.img,
+      // toImg: this.toTokenType.img,
+      // fromVal: fromAmt,
+      // toVal: this.tokenOutValue,
+      // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
+      //   .times(this.tokenOutValue)
+      //   .toFixed(),
+      // fromUsdVal: formatFiatValue(fromAmt.times(this.fiatValue).toString())
+      //   .value,
+      // validUntil: new Date().getTime() + 10 * 60 * 1000,
+      // selectedProvider: this.selectedProvider,
+      // txFee: this.ethTotalFee,
+      // gasPriceType: this.gasPriceType,
+      // gasPrice: this.gasPrice
+      // };
 
-      return new Promise((resolve, reject) => {
-        this.web3.eth
-          .sendTransaction(this.confirmInfo)
-          .on('transactionHash', hash => {
-            return resolve({
-              provider: this.provider,
-              statusObj: { hashes: [hash] },
-              hashes: [hash]
-            });
-          })
-          .catch(reject);
-      });
+      // return new Promise((resolve, reject) => {
+      //   this.web3.eth
+      //     .sendTransaction(this.confirmInfo)
+      //     .on('transactionHash', hash => {
+      //       return resolve({
+      //         provider: this.provider,
+      //         statusObj: { hashes: [hash] },
+      //         hashes: [hash]
+      //       });
+      //     })
+      //     .catch(reject);
+      // });
     },
     openSettings() {
       EventBus.$emit('openSettings');
