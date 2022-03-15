@@ -51,7 +51,6 @@ import Chindalath from '@/assets/images/team/chindalath.jpg';
 import Andrew from '@/assets/images/team/andrew.jpg';
 import Jazmine from '@/assets/images/team/jazmine.jpg';
 import Jason from '@/assets/images/team/jason.jpg';
-import Jessica from '@/assets/images/team/jessica.jpg';
 import Brionne from '@/assets/images/team/brionne.jpg';
 import Russell from '@/assets/images/team/russell.jpg';
 import Marcus from '@/assets/images/team/marcus.jpg';
@@ -81,12 +80,21 @@ export default {
       { img: David, name: 'David', title: 'Front-End Developer' },
       { img: Raden, name: 'Raden', title: 'Full-Stack Developer' },
       { img: Andrew, name: 'Andrew', title: 'Full-Stack Developer' },
-      { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
+      { img: Semaja, name: 'Semaja', title: 'QA Specialist' },
       { img: Russell, name: 'Russell', title: 'Product UI/UX' },
       { img: Brittany, name: 'Brittany', title: 'Operations Manager' },
       { img: Vince, name: 'Vince', title: 'Marketing Manager' },
       { img: Katya, name: 'Katya', title: 'Community and Content Lead' },
-      { img: Semaja, name: 'Semaja', title: 'QA Specialist' },
+      {
+        img: Jason,
+        name: 'Jason',
+        title: 'Social Media Specialist'
+      },
+      {
+        img: Brionne,
+        name: 'Brionne',
+        title: 'Educational Content Writer'
+      },
       { img: Marcus, name: 'Marcus', title: 'Blockchain Community Specialist' },
       {
         img: Chindalath,
@@ -111,16 +119,6 @@ export default {
       {
         img: Richie,
         name: 'Wolfgang',
-        title: 'Blockchain Community Specialist'
-      },
-      {
-        img: Brionne,
-        name: 'Brionne',
-        title: 'Blockchain Community Specialist'
-      },
-      {
-        img: Jason,
-        name: 'Jason',
         title: 'Blockchain Community Specialist'
       },
       {
