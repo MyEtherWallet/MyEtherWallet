@@ -1,13 +1,13 @@
 <template>
-  <div class="position--relative superPrimary border-radius--5px">
+  <div class="position--relative backgroundGrey border-radius--5px">
     <div class="right-arrow d-flex align-center justify-center">
-      <v-icon class="searchText--text">mdi-arrow-right-thick</v-icon>
+      <v-icon class="textLight--text">mdi-arrow-right-thick</v-icon>
     </div>
     <v-row>
       <v-col cols="6" class="text-center px-10 py-6">
         <img class="mb-2" :src="fromImg" :alt="fromType" height="40" />
         <div class="font-weight-bold text-uppercase">
-          {{ fromVal }} <span class="searchText--text">{{ fromType }}</span>
+          {{ fromVal }} <span class="greyPrimary--text">{{ fromType }}</span>
         </div>
         <div class="d-flex align-center">
           <div class="text-uppercase monospace address">{{ from }}</div>
@@ -19,7 +19,7 @@
       <v-col cols="6" class="text-center px-10 py-6">
         <img class="mb-2" :src="toImg" :alt="toType" height="40" />
         <div class="font-weight-bold text-uppercase">
-          {{ toVal }} <span class="searchText--text">{{ toType }}</span>
+          {{ toVal }} <span class="greyPrimary--text">{{ toType }}</span>
         </div>
         <div class="d-flex align-center">
           <div class="text-uppercase monospace address">{{ to }}</div>
@@ -58,7 +58,7 @@ export default {
 }
 
 .right-arrow {
-  background-color: var(--v-mew-bg-base);
+  background-color: var(--v-textDark-base);
   border-radius: 100%;
   height: 40px;
   width: 40px;

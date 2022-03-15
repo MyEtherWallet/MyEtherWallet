@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <div class="d-flex justify-space-between mb-2">
-      <v-textarea
-        ref="signatureContent"
-        outlined
-        label="Signature"
-        :value="msg"
-        :auto-grow="true"
-        :readonly="true"
-      ></v-textarea>
-    </div>
+  <div style="width: 100%">
+    <v-row dense no-gutters class="mb-2">
+      <v-col cols="12" align-self="center">
+        <v-textarea
+          ref="signatureContent"
+          outlined
+          label="Signature"
+          :value="msg"
+          full-width
+          readonly
+          auto-grow
+        />
+      </v-col>
+    </v-row>
     <div class="d-flex justify-center my-8">
       <mew-button btn-size="xlarge" title="Copy" @click.native="copy" />
     </div>
-    <mew-warning-sheet :description="warningDescription" />
   </div>
 </template>
 
@@ -30,10 +32,7 @@ export default {
     }
   },
   data: function () {
-    return {
-      warningDescription:
-        'Make sure all your transaction details are CORRECT. Canceling or replacing transactions can not be guaranteed to work. You still be charged gas fee even transaction failing. Learn more here…'
-    };
+    return {};
   }
 };
 </script>

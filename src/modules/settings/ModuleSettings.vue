@@ -205,7 +205,7 @@ export default {
             {
               title: 'Edit',
               btnStyle: 'transparent',
-              colorTheme: 'primary',
+              colorTheme: 'greenPrimary',
               method: this.onEdit
             }
           ]

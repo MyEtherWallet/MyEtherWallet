@@ -44,22 +44,22 @@
           class="d-flex align-center justify-space-between mx-auto mb-6"
         >
           <div>
-            <v-icon color="primary" large> mdi-circle-medium </v-icon>
+            <v-icon color="greenPrimary" large> mdi-circle-medium </v-icon>
             Success
           </div>
           <div>
-            <v-icon color="orange" large> mdi-circle-medium </v-icon>
+            <v-icon color="orangePrimary" large> mdi-circle-medium </v-icon>
             Pending
           </div>
           <div>
-            <v-icon color="error" large> mdi-circle-medium </v-icon>
+            <v-icon color="redPrimary" large> mdi-circle-medium </v-icon>
             Failed
           </div>
         </v-sheet>
         <div v-if="hasNotification" class="d-flex align-center justify-end">
           <!-- <div>
             <div>6 notifications</div>
-            <v-btn depressed x-small color="textSecondary" dark>
+            <v-btn depressed x-small color="textLight" dark>
               Delete all
             </v-btn>
           </div> -->
@@ -257,7 +257,10 @@ export default {
      */
     checkAndSetNotificationStatus(notification) {
       const type = notification.type;
-      if (type === NOTIFICATION_TYPES.SWAP) {
+      if (
+        type === NOTIFICATION_TYPES.SWAP &&
+        notification.status === NOTIFICATION_STATUS.PENDING
+      ) {
         notification.checkSwapStatus(this.swapper);
       }
       if (
@@ -312,7 +315,7 @@ export default {
   width: 37px;
   height: 37px;
   border-radius: 100%;
-  background-color: var(--v-primary-base);
+  background-color: var(--v-greenPrimary-base);
   cursor: pointer;
 }
 

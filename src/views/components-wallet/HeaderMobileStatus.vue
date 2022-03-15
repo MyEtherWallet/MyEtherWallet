@@ -6,7 +6,7 @@
     <v-card color="transparent" width="180px" class="px-1 py-3" flat>
       <div class="d-flex justify-space-between mb-1">
         <div>Status:</div>
-        <div class="primary--text font-weight-bold">Connected</div>
+        <div class="greenPrimary--text font-weight-bold">Connected</div>
       </div>
       <div class="d-flex justify-space-between mb-1">
         <div>Device:</div>

@@ -36,11 +36,11 @@
             <v-col
               cols="6"
               md="6"
-              class="py-1 text-uppercase captionPrimary--text font-weight-bold"
+              class="py-1 text-uppercase textLight--text font-weight-bold"
             >
               Current APR
             </v-col>
-            <v-col cols="6" md="6" class="py-1 text-right primary--text">
+            <v-col cols="6" md="6" class="py-1 text-right greenPrimary--text">
               {{ currentAprFormatted }}
             </v-col>
           </v-row>
@@ -48,18 +48,18 @@
             <v-col
               cols="6"
               md="6"
-              class="py-1 text-uppercase captionPrimary--text font-weight-bold d-flex align-center"
+              class="py-1 text-uppercase textLight--text font-weight-bold d-flex align-center"
             >
               Staking Fee
               <mew-tooltip class="ml-1" :text="toolTipFee" max-width="320px" />
             </v-col>
             <v-col cols="6" md="6" class="py-1 text-right">
-              0.75% <span class="textSecondary--text">0.3 ETH min</span>
+              0.75% <span class="textLight--text">0.3 ETH min</span>
             </v-col>
           </v-row>
         </div>
 
-        <v-divider class="inputBorder my-6" />
+        <v-divider class="greyMedium my-6" />
 
         <!--
       ===================================================
@@ -78,16 +78,12 @@
               <v-col cols="6" md="6" class="py-1">{{
                 forecast.duration
               }}</v-col>
-              <v-col
-                cols="6"
-                md="6"
-                class="py-1 text-right textSecondary--text"
-              >
+              <v-col cols="6" md="6" class="py-1 text-right textLight--text">
                 {{ '$' + forecast.balanceFiat }}
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6" md="6" class="py-1 primary--text">{{
+              <v-col cols="6" md="6" class="py-1 greenPrimary--text">{{
                 forecast.earningsETH + ' ETH'
               }}</v-col>
               <v-col cols="6" md="6" class="py-1 text-right">{{
@@ -103,12 +99,12 @@
     User information
     ===================================================
     -->
-      <div class="tableHeader px-6 px-sm-12 py-8 mt-2 border-radius--10px">
-        <ul class="user-info textBlack2--text">
+      <div class="greyLight px-6 px-sm-12 py-8 mt-2 border-radius--10px">
+        <ul class="user-info textMedium--text">
           <li>Your ETH is staked with our partner Staked.us</li>
           <li>Staked.us will create and maintain Eth2 validators for you</li>
           <li>Earn up to 21% Annualized rewards</li>
-          <li class="warning--text text--darken-2">
+          <li class="orangePrimary--text">
             You can neither spend nor transfer your Eth2 funds until an unknown
             date in the future when transfers are enabled on the Eth2 chain
           </li>

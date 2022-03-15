@@ -43,14 +43,14 @@ Pin Pad
             <div
               :class="[
                 'rounded pin mr-2 mb-2 d-flex cursor-pointer align-center justify-center',
-                pinEnabled ? 'superPrimary' : 'tableHeader'
+                pinEnabled ? 'greyLight' : 'greyLight'
               ]"
               @click="pin += number"
             >
               <div
                 :class="[
                   'pin-inner-circle',
-                  pinEnabled ? 'primary' : 'disabled'
+                  pinEnabled ? 'greenPrimary' : 'disabledPrimary'
                 ]"
               ></div>
             </div>
