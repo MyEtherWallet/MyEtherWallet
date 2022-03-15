@@ -70,7 +70,7 @@
               label="Amount to compound"
               :value="compoundAmount"
               placeholder="Enter amount"
-              @input="setAmount"
+              @input="getTrade"
             />
           </div>
 
@@ -150,7 +150,7 @@
               class="mt-8"
               title="Compound Rewards"
               btn-size="xlarge"
-              @click.native="executeTrade"
+              @click.native="showConfirm"
             />
           </div>
         </mew6-white-sheet>
@@ -173,11 +173,15 @@ import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
-import { find, isEmpty } from 'lodash';
+import { find, isEmpty, clone } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
+import Notification, {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from '@/modules/notifications/handlers/handlerNotification';
 import {
   SETH2_MAINNET_CONTRACT,
   SETH2_GOERLI_CONTRACT,
@@ -199,7 +203,21 @@ export default {
       compoundAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
-      availableQuotes: []
+      availableQuotes: [],
+      selectedProvider: {},
+      currentTrade: null,
+      swapper: null,
+      confirmInfo: {
+        to: '',
+        from: '',
+        fromImg: '',
+        toImg: '',
+        fromType: '',
+        toType: '',
+        validUntil: 0,
+        selectedProvider: '',
+        txFee: ''
+      }
     };
   },
   computed: {
@@ -253,6 +271,7 @@ export default {
   },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    this.swapper = new Swapper(this.web3, this.network.type.name);
   },
   methods: {
     setAmount: debounce(function (val) {
@@ -263,8 +282,14 @@ export default {
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
+    setupTrade(trade) {
+      if (trade instanceof Error || !trade) {
+        return;
+      }
+      this.currentTrade = trade;
+      this.currentTrade.gasPrice = this.currentGasPrice;
+    },
     getQuote() {
-      const swapper = new Swapper(this.web3, this.network.type.name);
       if (
         this.rethBalance !== '' &&
         this.rethBalance > 0 &&
@@ -273,7 +298,7 @@ export default {
         !isEmpty(this.hasReth?.symbol) &&
         !isEmpty(this.hasSeth?.symbol)
       ) {
-        return swapper
+        return this.swapper
           .getAllQuotes({
             fromT: this.hasReth,
             toT: this.hasSeth,
@@ -294,44 +319,90 @@ export default {
           });
       }
     },
-    executeTrade() {
+    getTrade: debounce(() => {
       this.getQuote();
-      // const fromAmt = new BigNumber(this.rethBalance).div(
-      //   new BigNumber(10).pow(new BigNumber(18))
-      // );
-      // this.confirmInfo = {
-      //   from: SETH2_MAINNET_CONTRACT,
-      //   to: RETH2_MAINNET_CONTRACT,
-      // fromType: this.fromTokenType.symbol,
-      // toType: this.toTokenType.symbol,
-      // fromImg: this.fromTokenType.img,
-      // toImg: this.toTokenType.img,
-      // fromVal: fromAmt,
-      // toVal: this.tokenOutValue,
-      // toUsdVal: BigNumber(this.toTokenType.price ? this.toTokenType.price : 0)
-      //   .times(this.tokenOutValue)
-      //   .toFixed(),
-      // fromUsdVal: formatFiatValue(fromAmt.times(this.fiatValue).toString())
-      //   .value,
-      // validUntil: new Date().getTime() + 10 * 60 * 1000,
-      // selectedProvider: this.selectedProvider,
-      // txFee: this.ethTotalFee,
-      // gasPriceType: this.gasPriceType,
-      // gasPrice: this.gasPrice
-      // };
-
-      // return new Promise((resolve, reject) => {
-      //   this.web3.eth
-      //     .sendTransaction(this.confirmInfo)
-      //     .on('transactionHash', hash => {
-      //       return resolve({
-      //         provider: this.provider,
-      //         statusObj: { hashes: [hash] },
-      //         hashes: [hash]
-      //       });
-      //     })
-      //     .catch(reject);
-      // });
+      const trade = this.swapper.getTrade({
+        fromAddress: this.hasReth.contract,
+        toAddress: this.hasSeth.contract,
+        provider: this.availableQuotes[0].provider,
+        fromT: this.hasReth,
+        toT: this.hasSeth,
+        quote: this.availableQuotes[0],
+        fromAmount: new BigNumber(this.rethBalance).times(
+          new BigNumber(10).pow(new BigNumber(this.rethBalance.decimals))
+        )
+      });
+      if (trade instanceof Promise) {
+        trade.then(tradeResponse => {
+          this.setupTrade(tradeResponse);
+        });
+      } else {
+        this.setupTrade(trade);
+      }
+    }, 500),
+    showConfirm() {
+      this.confirmInfo = {
+        from: this.hasReth.contract,
+        to: this.hasSeth.contract,
+        fromType: this.hasReth.symbol,
+        toType: this.hasSeth.symbol,
+        fromImg: this.hasReth.img,
+        toImg: this.hasSeth.img,
+        fromVal: this.rethBalance,
+        toVal: this.rethBalance,
+        toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
+          .times(this.rethBalance)
+          .toFixed(),
+        fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
+          .times(this.rethBalance)
+          .toFixed(),
+        validUntil: new Date().getTime() + 10 * 60 * 1000,
+        selectedProvider: this.selectedProvider,
+        txFee: this.ethTotalFee,
+        gasPriceType: this.gasPriceType
+      };
+      this.executeTrade();
+    },
+    executeTrade() {
+      const swapper = new Swapper(this.web3, this.network.type.name);
+      const currentTradeCopy = clone(this.currentTrade);
+      swapper
+        .executeTrade(this.currentTrade, this.confirmInfo)
+        .then(res => {
+          this.swapNotificationFormatter(res, currentTradeCopy);
+        })
+        .catch(err => {
+          Toast(err.message, {}, ERROR);
+        });
+    },
+    swapNotificationFormatter(obj, currentTrade) {
+      obj.hashes.forEach((hash, idx) => {
+        const notif = Object.assign(
+          {
+            hash,
+            from: this.hasReth.contract,
+            type: NOTIFICATION_TYPES.SWAP,
+            network: this.network.type.name,
+            status: NOTIFICATION_STATUS.PENDING,
+            fromTxData: {
+              currency: this.confirmInfo.fromType,
+              amount: this.confirmInfo.fromVal,
+              icon: this.confirmInfo.fromImg
+            },
+            toTxData: {
+              currency: this.confirmInfo.toType,
+              amount: this.confirmInfo.toVal,
+              icon: this.confirmInfo.toImg,
+              to: this.confirmInfo.to
+                ? this.confirmInfo.to
+                : currentTrade.transactions[idx].to
+            },
+            swapObj: obj
+          },
+          currentTrade.transactions[idx]
+        );
+        this.addNotification(new Notification(notif));
+      });
     },
     openSettings() {
       EventBus.$emit('openSettings');
