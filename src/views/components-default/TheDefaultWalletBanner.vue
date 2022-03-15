@@ -13,14 +13,14 @@
       ]"
       @click="toggleBanner()"
     >
-      <p class="primary--text">
+      <p class="greenPrimary--text">
         {{
           isExpanded
             ? $t('home.mew-wallet-modal.less')
             : $t('home.mew-wallet-modal.more')
         }}
       </p>
-      <v-icon class="ml-2" color="primary" size="12">{{
+      <v-icon class="ml-2" color="greenPrimary" size="12">{{
         isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       }}</v-icon>
     </div>

@@ -14,7 +14,7 @@
       Subtext
     =====================================================================================
     -->
-    <div class="textPrimary--text mb-8">
+    <div class="textDark--text mb-8">
       {{ $t('interface.qr.desc', { network: getNetwork() }) }}
     </div>
     <!--
@@ -46,7 +46,7 @@
           <qr-code :data="address" :height="132" :width="132" />
         </div>
         <div class="pl-3">
-          <div class="d-block monospace titlePrimary-text container-qr--addr">
+          <div class="d-block monospace textDark-text container-qr--addr">
             {{ getChecksumAddressString }}
           </div>
           <div
@@ -61,7 +61,6 @@
     </div>
   </div>
 </template>
-qr
 <script>
 import anime from 'animejs/lib/anime.es.js';
 import clipboardCopy from 'clipboard-copy';

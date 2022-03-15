@@ -29,7 +29,7 @@
       <div v-for="(btn, key) in buttons" :key="key" class="mb-5">
         <mew-button
           has-full-width
-          color-theme="inputBorder"
+          color-theme="greyMedium"
           btn-style="outline"
           style="height: 160px"
           @click.native="btn.fn"
@@ -38,7 +38,7 @@
             class="text-left d-flex align-center justify-space-between px-2"
             style="width: 100%"
           >
-            <div class="mew-heading-2 titlePrimary--text">
+            <div class="mew-heading-2 textDark--text">
               {{ btn.label }}
             </div>
             <img width="80" class="mr-4 d-none d-sm-block" :src="btn.icon" />
