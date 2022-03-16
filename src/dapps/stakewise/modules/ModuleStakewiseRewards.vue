@@ -174,8 +174,8 @@ import ButtonBalance from '@/core/components/AppButtonBalance';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
-import { mapGetters, mapState } from 'vuex';
-import { find, clone } from 'lodash';
+import { mapGetters, mapState, mapActions } from 'vuex';
+import { find, clone, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
@@ -289,11 +289,17 @@ export default {
       return BigNumber(this.gasPrice).times(gasLimit).toString();
     }
   },
+  watch: {
+    gasPriceType() {
+      this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    }
+  },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.swapper = new Swapper(this.web3, this.network.type.name);
   },
   methods: {
+    ...mapActions('notifications', ['addNotification']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toString();
@@ -310,28 +316,37 @@ export default {
       this.currentTrade.gasPrice = this.gasPrice;
     },
     getQuote() {
-      return this.swapper
-        .getAllQuotes({
-          fromT: this.hasReth,
-          toT: this.hasSeth,
-          fromAmount: new BigNumber(this.rethBalance).times(
-            new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
-          )
-        })
-        .then(quotes => {
-          this.availableQuotes = quotes.map(q => {
-            q.rate = new BigNumber(q.amount)
-              .dividedBy(new BigNumber(this.rethBalance))
-              .toString();
-            this.selectedProvider = q;
+      if (
+        this.rethBalance !== '' &&
+        this.rethBalance > 0 &&
+        !isEmpty(this.hasReth) &&
+        !isEmpty(this.hasSeth) &&
+        !isEmpty(this.hasReth?.symbol) &&
+        !isEmpty(this.hasSeth?.symbol)
+      ) {
+        return this.swapper
+          .getAllQuotes({
+            fromT: this.hasReth,
+            toT: this.hasSeth,
+            fromAmount: new BigNumber(this.rethBalance).times(
+              new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+            )
+          })
+          .then(quotes => {
+            this.availableQuotes = quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(this.rethBalance))
+                .toString();
+              this.selectedProvider = q;
 
-            return q;
+              return q;
+            });
+          })
+          .catch(err => {
+            this.loading = false;
+            Toast(err, {}, ERROR);
           });
-        })
-        .catch(err => {
-          this.loading = false;
-          Toast(err, {}, ERROR);
-        });
+      }
     },
     async getTrade() {
       const trade = await this.swapper.getTrade({
@@ -380,7 +395,6 @@ export default {
       this.executeTrade();
     },
     executeTrade() {
-      console.log(this.ethTotalFee);
       const currentTradeCopy = clone(this.currentTrade);
       this.loading = false;
       this.swapper
