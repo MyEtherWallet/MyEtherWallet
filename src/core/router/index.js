@@ -5,12 +5,13 @@ import routesDefault from './routes-default';
 import routesOfflineDefault from './routes-offline-default';
 import routesOfflineWallet from './routes-offline-wallet';
 import routesWallet from './routes-wallet';
+import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
 const routes =
   // eslint-disable-next-line
   BUILD === 'offline'
     ? [routesOfflineDefault, routesOfflineWallet]
-    : [routesDefault, routesWallet];
+    : [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;

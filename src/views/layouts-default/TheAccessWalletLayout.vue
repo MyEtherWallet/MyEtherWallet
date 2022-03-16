@@ -21,7 +21,7 @@
       <div style="max-width: 650px" class="mx-auto">
         <div v-for="btn in buttons" :key="btn.title" class="position--relative">
           <div
-            class="warning--text text--darken-1 mew-label"
+            class="orangePrimary--text mew-label"
             style="position: absolute; top: 15px; right: 25px"
           >
             NOT RECOMMENDED

@@ -25,14 +25,14 @@
     -->
         <v-card-text class="pa-0">
           <div
-            class="titlePrimary--text mew-heading-2 font-weight-regular pa-8 pb-4"
+            class="textDark--text mew-heading-2 font-weight-regular pa-8 pb-4"
           >
             <span v-if="!onWhatWeCollect" class="break-word"
               >Help us make MEW better by allowing us to measure a few
               things?</span
             >
             <span v-else class="cursor-pointer" @click="backToOverview"
-              ><v-icon class="mb-1" color="titleSecondary" size="30px">
+              ><v-icon class="mb-1" color="greyPrimary" size="30px">
                 mdi-chevron-left
               </v-icon>
               Back to overview</span
@@ -59,7 +59,7 @@
                 <v-col cols="8" :class="['py-4 pl-6', option.color + '--text']">
                   <p
                     v-if="option.title"
-                    class="font-weight-bold mb-2 titlePrimary--text"
+                    class="font-weight-bold mb-2 textDark--text"
                   >
                     {{ option.title }}
                   </p>
@@ -72,7 +72,7 @@
                       <v-icon
                         v-if="option.linkIcon"
                         size="small"
-                        color="primary"
+                        color="greenPrimary"
                       >
                         {{ option.linkIcon }}</v-icon
                       ></router-link
@@ -95,10 +95,10 @@
           <div v-show="onWhatWeCollect">
             <v-divider />
             <div class="py-4 px-8">
-              <p class="font-weight-bold titlePrimary--text mb-2">
+              <p class="font-weight-bold textDark--text mb-2">
                 What we collect
               </p>
-              <ul class="what-we-collect-ul titleSecondary--text pl-5">
+              <ul class="what-we-collect-ul greyPrimary--text pl-5">
                 <li
                   v-for="(item, idx) in whatWeCollectItems"
                   :key="item + idx"
@@ -112,7 +112,9 @@
             <div class="pa-8 text-center">
               <router-link :to="{ name: ROUTES_PRIVACY_POLICY }">
                 View our full tracking policy
-                <v-icon size="small" color="primary"> mdi-open-in-new</v-icon>
+                <v-icon size="small" color="greenPrimary">
+                  mdi-open-in-new</v-icon
+                >
               </router-link>
             </div>
           </div>
@@ -131,7 +133,7 @@
             @click.native="onClick(true)"
           />
           <p
-            class="text-center secondary--text mt-3 mb-0 cursor--pointer"
+            class="text-center greyPrimary--text mt-3 mb-0 cursor--pointer"
             @click="onClick(false)"
           >
             Don't allow
@@ -167,7 +169,7 @@ export default {
           text: 'We will only collect data on how users are using the product.',
           linkText: 'What we collect',
           linkClass: 'font-weight-medium',
-          color: 'titleSecondary',
+          color: 'greyPrimary',
           clickFn: () => {
             this.onWhatWeCollect = true;
           }
@@ -176,14 +178,14 @@ export default {
           title: 'Anonymity',
           iconLeft: 'mdi-incognito-circle',
           text: "We will never collect user's full IP address or exact location so you can remain anonymous.",
-          color: 'titleSecondary',
+          color: 'greyPrimary',
           clickFn: () => {}
         },
         {
           title: 'Privacy',
           iconLeft: 'mdi-lock-outline',
           text: 'We cannot access any personal data: No seed words, no private keys, no public address nor passwords.',
-          color: 'titleSecondary',
+          color: 'greyPrimary',
           clickFn: () => {}
         },
         {
@@ -192,7 +194,7 @@ export default {
           linkText: 'View our full tracking policy',
           linkIcon: 'mdi-open-in-new',
           linkClass: 'mt-4',
-          color: 'searchText',
+          color: 'textLight',
           clickFn: () => {}
         }
       ]
@@ -230,7 +232,7 @@ export default {
 
 <style lang="scss" scoped>
 .clickable-content:hover {
-  background-color: var(--v-tableHeader-base);
+  background-color: var(--v-greyLight-base);
 }
 .what-we-collect-ul {
   list-style-type: disc;

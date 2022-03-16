@@ -55,20 +55,6 @@ export default {
     currentTool: '',
     activeTab: 0,
     items: [
-      /*
-      {
-        name: 'Watch only address',
-        val: 'watch'
-      },
-      {
-        name: 'Convert units',
-        val: 'convert'
-      },
-      {
-        name: 'Send offline helper',
-        val: 'offline'
-      },
-      */
       {
         name: 'Verify message',
         val: 'verify'
@@ -76,7 +62,17 @@ export default {
       {
         name: 'Convert Units',
         val: 'convert'
+      },
+      {
+        name: 'Send offline helper',
+        val: 'offline'
       }
+      /*
+      {
+        name: 'Watch only address',
+        val: 'watch'
+      }
+      */
     ]
   }),
   watch: {
@@ -109,6 +105,11 @@ export default {
             this.currentTool = 'convert';
             break;
 
+          case 'offline':
+            this.activeTab = 2;
+            this.currentTool = 'offline';
+            break;
+
           default:
             this.activeTab = 0;
             this.currentTool = 'verify';
@@ -129,6 +130,9 @@ export default {
         case 1:
           this.currentTool = 'convert';
           break;
+        case 2:
+          this.currentTool = 'offline';
+          break;
 
         default:
           this.currentTool = 'verify';
@@ -142,6 +146,6 @@ export default {
 .mew-component--tools.desktop .v-item-group.v-slide-group {
   padding-right: 40px;
   margin-right: 40px;
-  border-right: 1px solid var(--v-selectBorder-base) !important;
+  border-right: 1px solid var(--v-greyLight-base) !important;
 }
 </style>
