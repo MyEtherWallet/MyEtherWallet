@@ -1083,6 +1083,7 @@ export default {
               this.step = 1;
             }
             this.isLoadingProviders = false;
+            this.step = 1;
           });
       }
     }, 1000),
