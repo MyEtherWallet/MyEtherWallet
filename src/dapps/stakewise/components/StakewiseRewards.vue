@@ -123,7 +123,7 @@ export default {
       });
     },
     routeToStakeEth() {
-      this.$router.push({ name: STAKEWISE_ROUTES.STAKE.NAME });
+      this.$router.push({ name: STAKEWISE_ROUTES.REWARDS.NAME });
     }
   }
 };

@@ -58,7 +58,7 @@
           <!-- Amount to stake -->
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
-            <button-balance :loading="false" :balance="balanceInETH" />
+            <button-balance :loading="false" :balance="rethBalance" />
             <mew-input
               type="number"
               :max-btn-obj="{
@@ -160,7 +160,7 @@
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
         <stakewise-staking class="mb-4" />
-        <stakewise-rewards />
+        <stakewise-rewards :set-max="setMax" />
       </v-col>
     </v-row>
   </div>
@@ -272,11 +272,6 @@ export default {
         ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
         : '--';
     },
-    currentGasPrice() {
-      return BigNumber(this.locGasPrice).eq(0)
-        ? this.gasPriceByType(this.gasPriceType)
-        : this.locGasPrice;
-    },
     hasEnoughBalance() {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
     },
@@ -286,6 +281,12 @@ export default {
         this.hasEnoughBalance &&
         this.agreeToTerms
       );
+    },
+    txFee() {
+      const gasLimit = BigNumber(this.gasLimit).gt('21000')
+        ? this.gasLimit
+        : MIN_GAS_LIMIT;
+      return BigNumber(this.gasPrice).times(gasLimit).toString();
     }
   },
   mounted() {
@@ -306,7 +307,7 @@ export default {
         return;
       }
       this.currentTrade = trade;
-      this.currentTrade.gasPrice = this.currentGasPrice;
+      this.currentTrade.gasPrice = this.gasPrice;
     },
     getQuote() {
       return this.swapper
@@ -328,6 +329,7 @@ export default {
           });
         })
         .catch(err => {
+          this.loading = false;
           Toast(err, {}, ERROR);
         });
     },
@@ -372,7 +374,7 @@ export default {
           .toFixed(),
         validUntil: new Date().getTime() + 10 * 60 * 1000,
         selectedProvider: this.selectedProvider,
-        txFee: this.ethTotalFee,
+        txFee: this.txFee,
         gasPriceType: this.gasPriceType
       };
       this.executeTrade();
@@ -387,6 +389,7 @@ export default {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
         .catch(err => {
+          this.loading = false;
           Toast(err.message, {}, ERROR);
         });
     },
