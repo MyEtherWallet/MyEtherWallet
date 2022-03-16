@@ -84,7 +84,7 @@
               <v-row v-else justify="center" align="center" class="pt-5 pb-9">
                 <v-progress-circular
                   indeterminate
-                  color="primary"
+                  color="greenPrimary"
                 ></v-progress-circular>
                 <p class="mb-0 mx-3">
                   Sit tight while we are unlocking your wallet

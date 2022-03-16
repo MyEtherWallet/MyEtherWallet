@@ -17,15 +17,15 @@
     >
       <template #rightColItem0>
         <div class="mew-body">
-          1 <span class="searchText--text">{{ fromType }}</span> =
+          1 <span class="greyPrimary--text">{{ fromType }}</span> =
           {{ formattedRate }}
-          <span class="searchText--text">{{ toType }}</span>
+          <span class="greyPrimary--text">{{ toType }}</span>
         </div>
       </template>
       <template #rightColItem1>
         <div class="mew-body">
           {{ convertedFees.value }}
-          <span class="searchText--text">{{ convertedFees.unit }}</span>
+          <span class="greyPrimary--text">{{ convertedFees.unit }}</span>
           ~{{ txFeeUSD }}
         </div>
       </template>

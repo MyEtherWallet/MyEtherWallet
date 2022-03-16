@@ -10,6 +10,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isNull } from 'lodash';
 import BigNumber from 'bignumber.js';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 
 class SendTransaction {
   constructor() {
@@ -112,7 +113,7 @@ class SendTransaction {
   hasEnoughBalance() {
     const amount = toBN(this.TX.destinationValue);
     if (this.isToken() && this.currency.balance) {
-      const hasAmountToken = amount.lte(toBN(this.currency.balance));
+      const hasAmountToken = amount.lte(toBNSafe(this.currency.balance));
       const hasGas = this.txFee().lte(this.balance());
       return hasAmountToken && hasGas;
     }

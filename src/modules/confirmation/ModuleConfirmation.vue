@@ -79,13 +79,13 @@
           <!-- Warning Sheet -->
           <div
             v-if="!toNonEth"
-            class="px-4 py-6 pr-6 warning textBlack2--text border-radius--5px mb-5"
+            class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
           >
-            <b>Make sure all the information is correct.</b> Canceling or
+            <b>Make sure all the information is correct.</b> Cancelling or
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              href="https://help.myetherwallet.com/en/articles/5461501-my-transaction-failed-why-was-i-charged"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -126,13 +126,15 @@
                       {{ transactions.length > 1 ? `${i + 1}` : `details` }}
                     </span>
                     <br />
-                    <span v-if="isBatch" class="ma-0 mew-label searchText--text"
+                    <span
+                      v-if="isBatch"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ isSwap ? 'Swap ' : '' }} part {{ i + 1 }} -
                       {{ dataToAction(unsignedTxArr[i]) }}</span
                     >
                     <span
                       v-else-if="dataToAction(tx) !== ''"
-                      class="ma-0 mew-label searchText--text"
+                      class="ma-0 mew-label greyPrimary--text"
                       >{{ dataToAction(tx) }}</span
                     >
                   </p>
@@ -143,7 +145,7 @@
                         error === '' && isBatch && signedTxArray.length < i + 1
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -153,7 +155,7 @@
                         !isBatch && Object.keys(signedTxObject).length === 0
                       "
                       indeterminate
-                      color="primary"
+                      color="greenPrimary"
                       size="20"
                       width="2"
                       class="pr-7"
@@ -162,7 +164,7 @@
                       v-show="
                         !isBatch && Object.keys(signedTxObject).length !== 0
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>
@@ -170,7 +172,7 @@
                       v-show="
                         error === '' && isBatch && signedTxArray.length >= i + 1
                       "
-                      color="primary"
+                      color="greenPrimary"
                     >
                       mdi-check
                     </v-icon>
@@ -188,7 +190,7 @@
                     <v-col
                       cols="12"
                       md="3"
-                      class="d-flex d-sm-block ma-0 searchText--text"
+                      class="d-flex d-sm-block ma-0 greyPrimary--text"
                     >
                       {{ txVal.title }}
                     </v-col>
@@ -915,7 +917,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$borderPanels: 1px solid var(--v-selectBorder-base) !important;
+$borderPanels: 1px solid var(--v-greyLight-base) !important;
 .expansion-border {
   border: $borderPanels;
   border-radius: 8px;

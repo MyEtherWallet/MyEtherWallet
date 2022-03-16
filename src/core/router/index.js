@@ -3,8 +3,9 @@ import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
 import routesWallet from './routes-wallet';
+import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
-const routes = [routesDefault, routesWallet];
+const routes = [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;

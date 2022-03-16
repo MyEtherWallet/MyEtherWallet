@@ -4,7 +4,7 @@
       <div class="py-6" />
       <v-container>
         <v-sheet color="transparent" max-width="400px">
-          <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+          <div class="mew-heading-3 text-uppercase textLight--text mb-1">
             {{
               $t('home.about-mew.subheading')
                 | lokalise('home.about-mew.subheading')
@@ -80,7 +80,7 @@
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <v-sheet color="transparent" max-width="400px" class="mb-9">
-            <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
+            <h5 class="font-weight-bold text-uppercase textLight--text mb-2">
               {{ $t('home.about-mew.subheading') }}
             </h5>
             <h1>{{ $t('home.about-mew.heading') }}</h1>
@@ -169,7 +169,7 @@ export default {
   }
   .info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid var(--v-primaryOutlineActive-base) !important;
+    border: 1px solid var(--v-greyMedium-base) !important;
   }
 }
 
@@ -184,7 +184,7 @@ export default {
   }
   .info-card {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid var(--v-primaryOutlineActive-base) !important;
+    border: 1px solid var(--v-greyMedium-base) !important;
   }
 }
 </style>

@@ -2,6 +2,8 @@ import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
 import BigNumber from 'bignumber.js';
 import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
+import { isObject } from 'lodash';
+import { isAddress } from '@/core/helpers/addressUtils';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
@@ -36,12 +38,17 @@ class Swap {
           });
         })
       ).then(() => {
-        const sorted = allTokens.sort((a, b) => {
-          if (a.symbol > b.symbol) return 1;
-          return -1;
-        });
+        const sorted = allTokens
+          .filter(t => isObject(t))
+          .sort((a, b) => {
+            if (a.name > b.name) return 1;
+            return -1;
+          });
         return {
-          fromTokens: sorted,
+          fromTokens: sorted.filter(t => {
+            if (!t || !t.contract) return false;
+            return isAddress(t.contract);
+          }),
           toTokens: sorted
         };
       });

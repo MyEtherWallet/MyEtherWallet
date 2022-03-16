@@ -19,11 +19,11 @@
         />
       </v-btn>
       <div
-        v-if="notificationCount > 0"
+        v-if="newNotificationCount > 0"
         class="notification-count pa-3 cursor--pointer d-flex align-center justify-center white--text error lighten2"
         @click="openNotifications"
       >
-        {{ notificationCount }}
+        {{ newNotificationCount }}
       </div>
     </div>
     <mew-overlay
@@ -44,32 +44,27 @@
           class="d-flex align-center justify-space-between mx-auto mb-6"
         >
           <div>
-            <v-icon color="primary" large> mdi-circle-medium </v-icon>
+            <v-icon color="greenPrimary" large> mdi-circle-medium </v-icon>
             Success
           </div>
           <div>
-            <v-icon color="orange" large> mdi-circle-medium </v-icon>
+            <v-icon color="orangePrimary" large> mdi-circle-medium </v-icon>
             Pending
           </div>
           <div>
-            <v-icon color="error" large> mdi-circle-medium </v-icon>
+            <v-icon color="redPrimary" large> mdi-circle-medium </v-icon>
             Failed
           </div>
         </v-sheet>
-        <div class="d-flex align-center justify-end">
+        <div v-if="hasNotification" class="d-flex align-center justify-end">
           <!-- <div>
             <div>6 notifications</div>
-            <v-btn depressed x-small color="textSecondary" dark>
+            <v-btn depressed x-small color="textLight" dark>
               Delete all
             </v-btn>
           </div> -->
           <v-sheet color="transparent" max-width="150px">
-            <mew-select
-              :has-filter="false"
-              :is-custom="false"
-              :items="items"
-              @input="setSelected"
-            />
+            <mew-select :items="items" @input="setSelected" />
           </v-sheet>
         </div>
         <div
@@ -217,15 +212,21 @@ export default {
       }
     },
     /**
-     * Notification count
+     * new notification count
      */
-    notificationCount() {
+    newNotificationCount() {
       const unread = this.allNotifications.filter(item => {
         if (!item.read) {
           return item;
         }
       });
       return unread.length;
+    },
+    /**
+     * checks whether user has notifications
+     */
+    hasNotification() {
+      return this.allNotifications.length > 0;
     }
   },
   mounted() {
@@ -268,7 +269,10 @@ export default {
      */
     checkAndSetNotificationStatus(notification) {
       const type = notification.type;
-      if (type === NOTIFICATION_TYPES.SWAP) {
+      if (
+        type === NOTIFICATION_TYPES.SWAP &&
+        notification.status === NOTIFICATION_STATUS.PENDING
+      ) {
         notification.checkSwapStatus(this.swapper);
       }
       if (
@@ -323,7 +327,7 @@ export default {
   width: 37px;
   height: 37px;
   border-radius: 100%;
-  background-color: var(--v-primary-base);
+  background-color: var(--v-greenPrimary-base);
   cursor: pointer;
 }
 

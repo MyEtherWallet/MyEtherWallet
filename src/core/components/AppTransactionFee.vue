@@ -12,13 +12,13 @@
     >
       <template #dialogBody>
         <div class="mew-heading-1 mb-2">How are fees determined?</div>
-        <div class="mt-6 textPrimary--text">
+        <div class="mt-6 textLight--text">
           Transaction fees are charged by Ethereum miners, not MEW. We can't
           influence them and we don't receive any part of the transaction fees
           that you pay.
         </div>
         <div class="mew-heading-1 my-2 mt-6">What should I do?</div>
-        <div class="mt-6 textPrimary--text">
+        <div class="mt-6 textLight--text">
           Good news! You have options! If you’re not in a hurry, you can use the
           “Normal” setting and your transaction will be mined at a later time.
           MEW supports Ethereum scaling solutions Polygon and Binance Smart
@@ -82,32 +82,39 @@
         <div class="d-flex align-center justify-space-between flex-wrap mb-2">
           <div class="d-flex align-center flex-wrap flex-grow-1">
             <v-btn
+              color="greyLight"
               depressed
               class="text-transform--initial"
               @click="openGasPriceModal"
             >
               <div class="d-flex align-center">
-                <div :class="hasError ? 'error--text' : 'textBlack2--text'">
+                <div
+                  :class="hasError ? 'redPrimary--text' : 'textMedium--text'"
+                >
                   {{ feeInUsd }}
                 </div>
-                <v-icon :color="hasError ? 'error' : ''" small class="mx-2">
+                <v-icon
+                  :color="hasError ? 'redPrimary' : ''"
+                  small
+                  class="mx-2"
+                >
                   mdi-arrow-right
                 </v-icon>
                 <div class="d-flex align-center">
-                  <v-icon :color="hasError ? 'error' : ''" small>
+                  <v-icon :color="hasError ? 'redPrimary' : ''" small>
                     mdi-clock-outline
                   </v-icon>
-                  <div :class="hasError ? 'error--text' : ''">
+                  <div :class="hasError ? 'redPrimary--text' : ''">
                     {{ timeWillTake }}
                   </div>
                 </div>
-                <v-icon :color="hasError ? 'error' : ''" class="ml-3">
+                <v-icon :color="hasError ? 'redPrimary' : ''" class="ml-3">
                   mdi-chevron-down
                 </v-icon>
               </div>
             </v-btn>
             <div
-              :class="hasError ? 'error--text' : 'textSecondary--text'"
+              :class="hasError ? 'redPrimary--text' : 'textLight--text'"
               class="ml-3 py-1"
             >
               {{ txFeeFormatted }} {{ network.type.currencyName }}
@@ -115,8 +122,8 @@
           </div>
           <div v-if="fromEth">
             <div class="py-2 ml-2 text-right">
-              <div>
-                <span class="mr-2">Total:</span>
+              <div class="textMedium--text">
+                <span class="mr-2 textMedium--text">Total:</span>
                 {{ actualCostFormatted }} {{ network.type.currencyName }}
               </div>
             </div>
@@ -131,7 +138,7 @@
         <div class="d-flex flex-wrap justify-space-between">
           <div
             v-if="!gettingFee & hasError"
-            :class="[hasError ? 'error--text' : '']"
+            :class="[hasError ? 'redPrimary--text' : '']"
             class="ml-2"
           >
             {{ error }}
@@ -147,7 +154,7 @@
           <div>
             <div
               v-if="isEthNetwork"
-              class="ml-2 primary--text cursor--pointer user-select--none"
+              class="ml-2 greenPrimary--text cursor--pointer user-select--none"
               @click="showHighNote"
             >
               How are fees determined?
