@@ -139,6 +139,7 @@
           <!-- ======================================================================================= -->
           <div class="d-flex flex-column align-center">
             <mew-checkbox
+              v-model="agreeToTerms"
               label="I have read and agreed to Stakewise terms of service."
               :link="{
                 title: 'Stakewise terms',
@@ -149,6 +150,8 @@
               class="mt-8"
               title="Compound Rewards"
               btn-size="xlarge"
+              :loading="loading"
+              :disabled="!isValid"
               @click.native="showConfirm"
             />
           </div>
@@ -206,6 +209,8 @@ export default {
       selectedProvider: {},
       currentTrade: null,
       swapper: null,
+      loading: false,
+      agreeToTerms: false,
       confirmInfo: {
         to: '',
         from: '',
@@ -271,6 +276,16 @@ export default {
       return BigNumber(this.locGasPrice).eq(0)
         ? this.gasPriceByType(this.gasPriceType)
         : this.locGasPrice;
+    },
+    hasEnoughBalance() {
+      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
+    },
+    isValid() {
+      return (
+        BigNumber(this.compoundAmount).gt(0) &&
+        this.hasEnoughBalance &&
+        this.agreeToTerms
+      );
     }
   },
   mounted() {
@@ -337,6 +352,7 @@ export default {
       }
     },
     async showConfirm() {
+      this.loading = true;
       await this.getQuote();
       await this.getTrade();
       this.confirmInfo = {
@@ -362,9 +378,10 @@ export default {
       this.executeTrade();
     },
     executeTrade() {
-      const swapper = new Swapper(this.web3, this.network.type.name);
+      console.log(this.ethTotalFee);
       const currentTradeCopy = clone(this.currentTrade);
-      swapper
+      this.loading = false;
+      this.swapper
         .executeTrade(this.currentTrade, this.confirmInfo)
         .then(res => {
           this.swapNotificationFormatter(res, currentTradeCopy);
