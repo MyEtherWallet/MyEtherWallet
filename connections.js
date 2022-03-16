@@ -24,6 +24,7 @@ module.exports = [
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
   'https://formspree.io:443/f/mqjndkkx',
   // nodes
+  'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
   'wss://www.ethercluster.com:443',
@@ -44,6 +45,7 @@ module.exports = [
   'https://cdn.live.ledger.com:443',
   'https://registry.walletconnect.org:443/data/wallets.json',
   'wss://*.bridge.walletconnect.org:443',
+  'https://buy-staging.moonpay.com:443',
   // Dapps
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked

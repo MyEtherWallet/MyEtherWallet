@@ -278,14 +278,6 @@
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
     />
-
-    <!-- ===================================================================================== -->
-    <!-- Claimable Tokens Overlay -->
-    <!-- ===================================================================================== -->
-    <claimable-tokens
-      :show="showClaimableTokenPopup"
-      :open-tab="openClaimTokensTab"
-    />
   </div>
 </template>
 
@@ -307,7 +299,7 @@ import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
-import ClaimableTokens from './components/claim/ClaimableTokens';
+import stripQuery from '@/core/helpers/stripQuery.js';
 
 export default {
   name: 'ENSManagerLayout',
@@ -316,12 +308,10 @@ export default {
     ModuleManageDomain,
     TheWrapperDapp,
     ModuleAddressBook,
-    ClaimBalance,
-    ClaimableTokens
+    ClaimBalance
   },
   data() {
     return {
-      showClaimableTokenPopup: false,
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -469,6 +459,9 @@ export default {
       this.getDomains();
     }
   },
+  beforeMount() {
+    this.setTokenFromURL();
+  },
   mounted() {
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
@@ -486,18 +479,14 @@ export default {
       this.ensTokens.claimed = data.claimed;
       this.ensTokens.balance = data.balance;
       this.ensTokens.proof = data.proof;
-
-      if (this.ensTokens.balance !== undefined) {
-        const hasBalance = toBN(this.ensTokens.balance).gt(toBN(0));
-        if (!this.ensTokens.claimed && hasBalance) {
-          this.showClaimableTokenPopup = true;
-        }
-      }
     });
   },
   methods: {
-    openClaimTokensTab() {
-      this.activeTab = 2;
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { active } = stripQuery(this.$route.query);
+        this.activeTab = BigNumber(active).toNumber();
+      }
     },
     claimTokens() {
       try {

@@ -15,9 +15,6 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
-      :icon="require('@/assets/images/icons/icon-token-grey.png')"
-      icon-align="left"
-      :has-elevation="true"
     >
       <template #rightHeaderContainer>
         <div>
@@ -222,7 +219,7 @@ export default {
       if (this.hasSwap) {
         newObj.callToAction = [
           {
-            title: 'Trade',
+            title: 'Swap',
             method: () => {
               const obj = {
                 fromToken: item.contract,
