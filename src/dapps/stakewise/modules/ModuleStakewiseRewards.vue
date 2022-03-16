@@ -70,7 +70,6 @@
               label="Amount to compound"
               :value="compoundAmount"
               placeholder="Enter amount"
-              @input="getTrade"
             />
           </div>
 
@@ -173,7 +172,7 @@ import Swapper from '@/modules/swap/handlers/handlerSwap';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
-import { find, isEmpty, clone } from 'lodash';
+import { find, clone } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
@@ -267,6 +266,11 @@ export default {
       return gasPrice.gt(0)
         ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
         : '--';
+    },
+    currentGasPrice() {
+      return BigNumber(this.locGasPrice).eq(0)
+        ? this.gasPriceByType(this.gasPriceType)
+        : this.locGasPrice;
     }
   },
   mounted() {
@@ -290,46 +294,38 @@ export default {
       this.currentTrade.gasPrice = this.currentGasPrice;
     },
     getQuote() {
-      if (
-        this.rethBalance !== '' &&
-        this.rethBalance > 0 &&
-        !isEmpty(this.hasReth) &&
-        !isEmpty(this.hasSeth) &&
-        !isEmpty(this.hasReth?.symbol) &&
-        !isEmpty(this.hasSeth?.symbol)
-      ) {
-        return this.swapper
-          .getAllQuotes({
-            fromT: this.hasReth,
-            toT: this.hasSeth,
-            fromAmount: new BigNumber(this.rethBalance).times(
-              new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
-            )
-          })
-          .then(quotes => {
-            this.availableQuotes = quotes.map(q => {
-              q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.rethBalance))
-                .toString();
-              return q;
-            });
-          })
-          .catch(err => {
-            Toast(err, {}, ERROR);
+      return this.swapper
+        .getAllQuotes({
+          fromT: this.hasReth,
+          toT: this.hasSeth,
+          fromAmount: new BigNumber(this.rethBalance).times(
+            new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+          )
+        })
+        .then(quotes => {
+          this.availableQuotes = quotes.map(q => {
+            q.rate = new BigNumber(q.amount)
+              .dividedBy(new BigNumber(this.rethBalance))
+              .toString();
+            this.selectedProvider = q;
+
+            return q;
           });
-      }
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
     },
-    getTrade: debounce(() => {
-      this.getQuote();
-      const trade = this.swapper.getTrade({
-        fromAddress: this.hasReth.contract,
-        toAddress: this.hasSeth.contract,
+    async getTrade() {
+      const trade = await this.swapper.getTrade({
+        fromAddress: this.address,
+        toAddress: this.address,
         provider: this.availableQuotes[0].provider,
         fromT: this.hasReth,
         toT: this.hasSeth,
         quote: this.availableQuotes[0],
         fromAmount: new BigNumber(this.rethBalance).times(
-          new BigNumber(10).pow(new BigNumber(this.rethBalance.decimals))
+          new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
         )
       });
       if (trade instanceof Promise) {
@@ -339,8 +335,10 @@ export default {
       } else {
         this.setupTrade(trade);
       }
-    }, 500),
-    showConfirm() {
+    },
+    async showConfirm() {
+      await this.getQuote();
+      await this.getTrade();
       this.confirmInfo = {
         from: this.hasReth.contract,
         to: this.hasSeth.contract,
