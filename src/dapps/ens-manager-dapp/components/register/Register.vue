@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-column superPrimary pa-6 rounded">
+    <div class="d-flex flex-column greyLight pa-6 rounded">
       <div class="d-flex justify-space-between">
         <span>{{ $t('ens.register.domain-name') }}:</span>
         <span class="font-weight-medium">{{ name }}</span>
@@ -23,7 +23,7 @@
         icon-name="clock"
         :img-height="80"
       />
-      <span class="ticket-subtitle primary--text">{{ ticker }}</span>
+      <span class="ticket-subtitle greenPrimary--text">{{ ticker }}</span>
       <div
         v-if="!canRegister"
         class="d-flex flex-column mt-5 justify-center align-center"

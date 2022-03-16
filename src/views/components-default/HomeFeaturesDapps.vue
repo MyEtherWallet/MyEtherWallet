@@ -18,15 +18,13 @@
           <div>
             <div
               v-if="!d.isAccessible"
-              class="badge mew-label disabled--text d-block text--center mt-3"
+              class="badge mew-label disabledPrimary--text d-block text--center mt-3"
             >
               Coming soon
             </div>
             <v-spacer v-if="!d.isAccessible" />
             <div
-              :class="[
-                d.isAccessible ? 'expandHeader--text ' : 'textBlack2--text'
-              ]"
+              :class="[d.isAccessible ? 'textDark--text ' : 'textMedium--text']"
             >
               {{ d.label }}
             </div>
@@ -35,12 +33,12 @@
       </v-col>
     </v-row>
     <div class="message d-flex align-center justify-center px-3 py-5 mt-7">
-      <div class="message--text textBlack2--text text-center">
+      <div class="message--text textMedium--text text-center">
         {{ $t('home.features.dapps.text') }}
         <a
           href="https://v5.myetherwallet.com"
           target="_blank"
-          class="primary--text"
+          class="greenPrimary--text"
           >{{ $t('home.features.dapps.link-text') }}</a
         >
       </div>
@@ -105,7 +103,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$greyBackground: var(--v-tableHeader-base);
+$greyBackground: var(--v-greyLight-base);
 
 .icon-disabled {
   filter: grayscale(100%);

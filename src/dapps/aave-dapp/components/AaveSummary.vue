@@ -24,14 +24,14 @@
       color="overlayBg"
     >
       <div class="d-flex flex-column align-start">
-        <span class="mew-heading-3 textPrimaryModule--text mb-2"
+        <span class="mew-heading-3 textLight--text mb-2"
           >Amount to Deposit</span
         >
         <!-- dummy data -->
         <span class="mew-heading-1 mb-2"
           >{{ amount }} {{ selectedToken.token }}</span
         >
-        <span class="textPrimaryModule--text">{{ amountUsd }}</span>
+        <span class="textLight--text">{{ amountUsd }}</span>
       </div>
       <img
         :height="$vuetify.breakpoint.mdAndUp ? '80' : '30'"
@@ -185,8 +185,8 @@ export default {
               value: this.currentHealthFactor,
               class:
                 this.currentHealthFactor > this.nextHealthFactor
-                  ? 'primary--text'
-                  : 'error-text'
+                  ? 'greenPrimary--text'
+                  : 'redPrimary--text'
             },
             {
               title: 'Next Health Factor',
@@ -194,8 +194,8 @@ export default {
               value: this.nextHealthFactor,
               class:
                 this.currentHealthFactor > this.nextHealthFactor
-                  ? 'error--text'
-                  : 'primary--text',
+                  ? 'redPrimary--text'
+                  : 'greenPrimary--text',
               indicator:
                 this.currentHealthFactor > this.nextHealthFactor
                   ? 'mdi-arrow-down-bold'
@@ -256,7 +256,7 @@ export default {
       if (type.toLowerCase() === INTEREST_TYPES.stable) {
         return 'secondary--text';
       }
-      return 'warning--text text--darken-1';
+      return 'orangePrimary';
     }
   }
 };

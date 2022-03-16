@@ -31,7 +31,7 @@
             <v-progress-linear
               style="margin: 130px auto 40px auto; max-width: 200px"
               indeterminate
-              color="primary"
+              color="greenPrimary"
             ></v-progress-linear>
             <h3 class="text-center">Processing the registration</h3>
             <v-sheet
