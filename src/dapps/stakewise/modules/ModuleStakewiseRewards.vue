@@ -395,7 +395,7 @@ export default {
         const notif = Object.assign(
           {
             hash,
-            from: this.hasReth.contract,
+            from: this.address,
             type: NOTIFICATION_TYPES.SWAP,
             network: this.network.type.name,
             status: NOTIFICATION_STATUS.PENDING,
