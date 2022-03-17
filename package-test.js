@@ -40,7 +40,19 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue'
+  'vue',
+  // update after hotfix
+  '@ensdomains/ens-contracts',
+  '@lokalise/node-api',
+  '@myetherwallet/mew-components',
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue',
+  'highcharts',
+  'lottie-web',
+  'merkletreejs',
+  'axios',
+  'xss'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
