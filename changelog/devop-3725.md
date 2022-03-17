@@ -1,1 +1,1 @@
-* Added error exclusion
+* display error through wallet error handler
