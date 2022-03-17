@@ -991,7 +991,7 @@ export default {
         value,
         isValid
       };
-      if (isValid) this.setProvider(0);
+      if (isValid) this.setTokenInValue(this.tokenInValue);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1034,6 +1034,15 @@ export default {
           this.tokenInValue,
           this.fromTokenType.decimals
         )
+      ) {
+        return;
+      }
+
+      if (
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        isEmpty(this.addressValue)
       ) {
         return;
       }
