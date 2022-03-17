@@ -116,10 +116,6 @@ class Changelly {
       if (!minmax || (minmax && (!minmax.minFrom || !minmax.maxFrom))) {
         return [];
       }
-
-      if (queryAmount.lt(minmax.minFrom) || queryAmount.gt(minmax.maxFrom)) {
-        return [];
-      }
       return axios
         .post(`${HOST_URL}`, {
           id: uuidv4(),
