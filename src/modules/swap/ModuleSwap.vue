@@ -1101,8 +1101,8 @@ export default {
             }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
-              this.step = 1;
             }
+            this.step = 1;
             this.isLoadingProviders = false;
           });
       }
@@ -1146,7 +1146,11 @@ export default {
       }
     }, 500),
     setupTrade(trade) {
-      this.step = 2;
+      // fixes race case where address gets invalidated when
+      // transaction is still loading
+      if (this.availableQuotes.length > 0) {
+        this.step = 2;
+      }
       if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
         this.loadingFee = false;
