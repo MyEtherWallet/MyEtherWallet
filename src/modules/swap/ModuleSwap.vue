@@ -179,6 +179,7 @@
                           btn-style="outline"
                           title="Swap to renBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('renBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -187,6 +188,7 @@
                           btn-style="outline"
                           title="Swap to wBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('wBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -195,6 +197,7 @@
                           btn-style="outline"
                           title="Swap to PBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('PBTC')"
                         />
                       </v-col>
                     </v-row>
@@ -806,6 +809,9 @@ export default {
     }
   },
   watch: {
+    tokenInValue() {
+      this.feeError = '';
+    },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
     },
@@ -843,6 +849,12 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    swapTo(to) {
+      const findToken = this.toTokens.find(
+        item => item.symbol.toLowerCase() === to.toLowerCase()
+      );
+      this.toTokenType = findToken;
+    },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);
@@ -1057,8 +1069,6 @@ export default {
       ) {
         return;
       }
-
-      this.feeError = '';
       if (
         !BigNumber(value).isNaN() &&
         BigNumber(value).gt(0) &&
