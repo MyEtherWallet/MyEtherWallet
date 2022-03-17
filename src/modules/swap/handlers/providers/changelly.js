@@ -34,21 +34,19 @@ class Changelly {
           return;
         }
         const data = response.data.result.filter(d => d.fixRateEnabled);
-        return data
-          .map(d => {
-            const contract = d.contractAddress
-              ? d.contractAddress.toLowerCase()
-              : '0x' + d.ticker;
-            return {
-              contract,
-              decimals: 18,
-              img: `https://img.mewapi.io/?image=${d.image}`,
-              name: d.fullName,
-              symbol: d.ticker.toUpperCase(),
-              isEth: d.contractAddress ? true : false
-            };
-          })
-          .filter(item => item.isEth);
+        return data.map(d => {
+          const contract = d.contractAddress
+            ? d.contractAddress.toLowerCase()
+            : '0x' + d.ticker;
+          return {
+            contract,
+            decimals: 18,
+            img: `https://img.mewapi.io/?image=${d.image}`,
+            name: d.fullName,
+            symbol: d.ticker.toUpperCase(),
+            isEth: d.contractAddress ? true : false
+          };
+        });
       })
       .catch(err => {
         Toast(err, {}, ERROR);
