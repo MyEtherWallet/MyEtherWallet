@@ -1,8 +1,8 @@
 const ENS_MANAGER_ROUTE = {
-  ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
+  ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens' },
   CORE: {
     NAME: 'ENSManager',
-    PATH: 'ens-manager'
+    PATH: 'ens'
   },
   MANAGE: {
     NAME: 'ENSManagerManage',

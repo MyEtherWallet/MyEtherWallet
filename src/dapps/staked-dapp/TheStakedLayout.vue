@@ -5,14 +5,13 @@
     ===================================================
     -->
   <the-wrapper-dapp
-    :has-exit-btn="true"
-    :banner-img="bgDappsStake"
-    :title-icon="iconColorfulETH"
+    :is-new-header="true"
+    :dapp-img="iconColorfulETH"
     :banner-text="header"
-    :hide-default-tab-header="true"
     :tab-items="tabs"
     :active-tab="activeTab"
-    top-strip
+    external-contents
+    :on-tab="tabChanged"
   >
     <!--
     ===================================================
@@ -141,10 +140,11 @@
 </template>
 
 <script>
-import iconColorfulETH from '@/assets/images/icons/icon-colorful-eth.svg';
+import { STAKED_ROUTE } from './configsRoutes';
+import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import handlerStaked from './handlers/handlerStaked';
-import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
+//import bgDappsStake from '@/assets/images/backgrounds/bg-dapps-stake.svg';
 import { mapGetters, mapState } from 'vuex';
 import StakedStepper from './components/staked-stepper/StakedStepper';
 import StakedStatus from './components/StakedStatus';
@@ -172,8 +172,21 @@ export default {
       },
       activeTab: 0,
       handlerStaked: {},
-      bgDappsStake: bgDappsStake,
-      tabs: [{ name: 'stake' }, { name: 'status' }]
+      tabs: [
+        {
+          name: this.$t('dapps-staked.stake'),
+          route: { name: STAKED_ROUTE.STAKED.NAME },
+          id: 0
+        },
+        {
+          name: this.$t('ens.manage-domain'),
+          route: {
+            name: STAKED_ROUTE.STATUS.NAME,
+            path: STAKED_ROUTE.STATUS.PATH
+          },
+          id: 1
+        }
+      ]
     };
   },
   computed: {
@@ -238,6 +251,9 @@ export default {
     }
   },
   watch: {
+    $route() {
+      this.detactUrlChangeTab();
+    },
     /**
      * @watches pendingTxHash (comes after send transaction)
      * if it gets set then go to staked status
@@ -264,6 +280,11 @@ export default {
   },
   mounted() {
     /**
+     * Check url and change tab on load
+     */
+    this.detactUrlChangeTab();
+
+    /**
      * Initiate Stake Handler
      */
     this.handlerStaked = new handlerStaked(
@@ -273,6 +294,17 @@ export default {
     );
   },
   methods: {
+    detactUrlChangeTab() {
+      const currentRoute = this.$route.name;
+      if (currentRoute === STAKED_ROUTE.STATUS.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else {
+        this.activeTab = this.tabs[0].id;
+      }
+    },
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     /**
      * Start provisioning
      */

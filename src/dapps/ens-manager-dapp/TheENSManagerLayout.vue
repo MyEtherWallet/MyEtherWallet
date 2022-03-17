@@ -12,7 +12,7 @@
       :tab-items="tabs"
       :active-tab="activeTab"
       external-contents
-      :on-tab="tabChange"
+      :on-tab="tabChanged"
     >
       <!--
     =====================================================================================
@@ -494,6 +494,9 @@ export default {
     }
   },
   mounted() {
+    /**
+     * Check url and change tab on load
+     */
     this.detactUrlChangeTab();
 
     const ens = this.network.type.ens
@@ -525,7 +528,7 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    tabChange(tab) {
+    tabChanged(tab) {
       this.activeTab = tab;
     },
     claimTokens() {

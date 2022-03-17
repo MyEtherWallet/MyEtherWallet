@@ -102,9 +102,9 @@
      NEW ROUTER VIEW: FOR is NEW HEADER (specify in dapp metaInfo)
     =====================================================================================
     -->
-    <slot v-if="activeTab === 0" name="tabContent1" />
-    <slot v-if="activeTab === 1" name="tabContent2" />
-    <slot v-if="activeTab === 2" name="tabContent3" />
+    <slot v-if="activeTab === 0 && externalContents" name="tabContent1" />
+    <slot v-if="activeTab === 1 && externalContents" name="tabContent2" />
+    <slot v-if="activeTab === 2 && externalContents" name="tabContent3" />
 
     <router-view
       v-if="
