@@ -4,13 +4,7 @@
     Aave Select Stable or Variable Interest
   =====================================================================================
   -->
-  <v-sheet
-    class="pa-12 text-center aave-select-interest"
-    rounded
-    color="white"
-    elevation="1"
-    :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
-  >
+  <div>
     <div class="text-left">
       Select the type of rate for your loan. Please click on the desired rate
       type and read the info box for more information.
@@ -64,7 +58,7 @@
       :disabled="!apr.type"
       @click.native="onContinue"
     />
-  </v-sheet>
+  </div>
 </template>
 
 <script>

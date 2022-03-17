@@ -1,21 +1,23 @@
 <template>
-  <mew-overlay :show-overlay="open" :title="header" :close="callClose">
+  <mew-overlay
+    :show-overlay="open"
+    :title="header"
+    :close="callClose"
+    content-size="xlarge"
+  >
     <!--
       =====================================================================================
         Aave token borrow table
       =====================================================================================
       -->
-    <v-sheet
+    <aave-table
       v-if="step === 0"
-      color="white"
-      max-width="650px"
-      class="border-radius--10px pa-4"
-    >
-      <aave-table
-        :table-header="aaveTableHandler"
-        @selectedBorrow="handleSelectedBorrow"
-      />
-    </v-sheet>
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-reserves-data="userSummary.reservesData"
+      :table-header="aaveTableHandler"
+      @selectedBorrow="handleSelectedBorrow"
+    />
     <!--
       =====================================================================================
         Aave token borrow form

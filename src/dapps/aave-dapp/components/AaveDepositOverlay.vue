@@ -1,26 +1,23 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    :title="header"
     :close="handleCancel"
-    class="mew-component--aave-deposit-overlay"
+    :title="header"
+    content-size="xlarge"
   >
     <!--
       =====================================================================================
         Step 1: Select a token to depost (Aave token deposit table)
       =====================================================================================
       -->
-    <v-sheet
+    <aave-table
       v-if="step === 0"
-      color="white"
-      max-width="650px"
-      class="border-radius--10px pa-4"
-    >
-      <aave-table
-        :table-header="depositHeader"
-        @selectedDeposit="handleSelectedDeposit"
-      />
-    </v-sheet>
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-reserves-data="userSummary.reservesData"
+      :table-header="depositHeader"
+      @selectedDeposit="handleSelectedDeposit"
+    />
     <!--
         =====================================================================================
           Step 2: Select the amount to deposit

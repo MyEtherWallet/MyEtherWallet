@@ -1,11 +1,5 @@
 <template>
-  <v-sheet
-    class="mew-component--aave-amount-form pa-3 pa-md-5 text-center"
-    rounded
-    color="white"
-    elevation="1"
-    max-width="650"
-  >
+  <div>
     <v-row justify="space-around" dense>
       <v-col cols="12" md="6">
         <mew-module
@@ -79,7 +73,7 @@
         @click.native="cancel"
       />
     </div>
-  </v-sheet>
+  </div>
 </template>
 
 <script>

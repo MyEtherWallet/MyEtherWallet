@@ -5,13 +5,7 @@
     used for deposit, borrow, collateral and select interest details
   =====================================================================================
   -->
-  <v-sheet
-    class="mew-component--aave-summary pa-4 pa-md-12"
-    rounded
-    color="white"
-    elevation="1"
-    :width="$vuetify.breakpoint.mdAndUp ? '650px' : '100%'"
-  >
+  <div>
     <!--
   =====================================================================================
     Deposit/Borrow currency details card
@@ -115,7 +109,7 @@
       btn-size="xlarge"
       @click.native="confirm"
     />
-  </v-sheet>
+  </div>
 </template>
 
 <script>

@@ -579,7 +579,7 @@
 				"Reserve"
 			],
 			"fragmentName": "ReserveData",
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/fragments/pool-reserve-data.graphql",
+			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/reserve-update-subscription.graphql",
 			"source": "fragment ReserveData on Reserve {\n  __typename\n  id\n  underlyingAsset\n  name\n  symbol\n  decimals\n  isActive\n  isFrozen\n  usageAsCollateralEnabled\n  borrowingEnabled\n  stableBorrowRateEnabled\n  baseLTVasCollateral\n  optimalUtilisationRate\n  averageStableRate\n  stableRateSlope1\n  stableRateSlope2\n  baseVariableBorrowRate\n  variableRateSlope1\n  variableRateSlope2\n  variableBorrowIndex\n  variableBorrowRate\n  totalScaledVariableDebt\n  liquidityIndex\n  reserveLiquidationThreshold\n  aToken {\n    __typename\n    id\n  }\n  vToken {\n    __typename\n    id\n  }\n  sToken {\n    __typename\n    id\n  }\n  availableLiquidity\n  stableBorrowRate\n  liquidityRate\n  totalPrincipalStableDebt\n  totalLiquidity\n  utilizationRate\n  reserveLiquidationBonus\n  price {\n    __typename\n    priceInEth\n  }\n  lastUpdateTimestamp\n  stableDebtLastUpdateTimestamp\n  reserveFactor\n}",
 			"fields": [
 				{
@@ -989,7 +989,7 @@
 				"UserReserve"
 			],
 			"fragmentName": "UserReserveData",
-			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/fragments/user-reserve-data.graphql",
+			"filePath": "file:///c%3A/Users/Jess/MyEtherWallet/src/dapps/aave-dapp/apollo/graphql/subscriptions/user-position-update-subscription.graphql",
 			"source": "fragment UserReserveData on UserReserve {\n  __typename\n  scaledATokenBalance\n  reserve {\n    __typename\n    id\n    underlyingAsset\n    name\n    symbol\n    decimals\n    liquidityRate\n    reserveLiquidationBonus\n    lastUpdateTimestamp\n    aToken {\n      __typename\n      id\n    }\n  }\n  usageAsCollateralEnabledOnUser\n  stableBorrowRate\n  stableBorrowLastUpdateTimestamp\n  principalStableDebt\n  scaledVariableDebt\n  variableBorrowIndex\n  lastUpdateTimestamp\n}",
 			"fields": [
 				{
