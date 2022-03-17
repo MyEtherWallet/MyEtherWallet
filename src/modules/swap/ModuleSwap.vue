@@ -285,6 +285,7 @@
 </template>
 
 <script>
+import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -991,7 +992,7 @@ export default {
         value,
         isValid
       };
-      if (isValid) this.setTokenInValue(this.tokenInValue);
+      this.setTokenInValue(this.tokenInValue);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1038,14 +1039,6 @@ export default {
         return;
       }
 
-      if (
-        !isEmpty(this.toTokenType) &&
-        this.toTokenType.hasOwnProperty('isEth') &&
-        !this.toTokenType.isEth &&
-        isEmpty(this.addressValue)
-      ) {
-        return;
-      }
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1055,11 +1048,20 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
+      if (
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        (isEmpty(this.addressValue) ||
+          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
+      ) {
+        return;
+      }
 
       this.feeError = '';
       if (
-        this.tokenInValue !== '' &&
-        this.tokenInValue > 0 &&
+        !BigNumber(value).isNaN() &&
+        BigNumber(value).gt(0) &&
         !isEmpty(this.fromTokenType) &&
         !isEmpty(this.toTokenType) &&
         !isEmpty(this.fromTokenType?.symbol) &&
@@ -1178,7 +1180,10 @@ export default {
           address
         });
       }
-      return true;
+      if (this.toTokenType.isEth) {
+        return MultiCoinValidator.validate(address, 'Ethereum');
+      }
+      return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
