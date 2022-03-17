@@ -267,10 +267,10 @@ export default {
       }
 
       if (amount.gt(0) && amount.lt(this.min)) {
-        return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
+        return `The minimum amount to sell is ${this.min.toString()} ${symbol}.`;
       }
       if (amount.gt(0) && amount.gt(this.max)) {
-        return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
+        return `The maximum amount to sell is ${this.max.toString()} ${symbol}.`;
       }
 
       return '';
