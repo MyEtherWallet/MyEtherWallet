@@ -70,6 +70,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 // import nodes from '@/utils/networks';
 import Web3 from 'web3';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -297,12 +298,17 @@ export default {
         this.amount,
         this.actualSelectedCurrency.decimals
       );
+    },
+    getCalculatedAmount() {
+      const amount = new BigNumber(this.amount ? this.amount : 0)
+        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+        .toFixed(0);
+      return toBNSafe(amount);
     }
   },
   watch: {
     actualSelectedCurrency: {
       handler: function (newVal) {
-        this.amount = '0';
         this.maxBalance = '0';
         this.hasPersistentHint = false;
         if (
@@ -437,9 +443,8 @@ export default {
         });
     },
     fetchSellInfo() {
-      this.amount = '0';
       this.sendHandler.setCurrency(this.actualSelectedCurrency);
-      this.sendHandler.setValue(this.amount);
+      this.sendHandler.setValue(this.getCalculatedAmount);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
       this.estimatingFees = true;
