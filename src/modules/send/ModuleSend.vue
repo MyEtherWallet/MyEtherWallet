@@ -244,7 +244,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['balance', 'web3', 'address', 'instance']),
     ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
@@ -688,10 +688,8 @@ export default {
           this.clear();
         })
         .catch(error => {
-          const exclude = 'Promise was rejected with a falsy value';
           this.clear();
-          this.gasEstimationError =
-            error.message !== exclude ? error.message : '';
+          this.instance.errorHandler(error.message);
         });
     },
     prefillForm() {
