@@ -24,13 +24,13 @@
       color="overlayBg"
     >
       <div class="d-flex flex-column align-start">
-        <span class="mew-heading-3 textPrimaryModule--text mb-2"
-          >Amount to {{ actionTitle }}</span
+        <span class="mew-heading-3 textLight--text mb-2"
+          >Amount to Deposit</span
         >
         <span class="mew-heading-1 mb-2"
           >{{ amount }} {{ selectedToken.token }}</span
         >
-        <span class="textPrimaryModule--text">{{ amountUsd }}</span>
+        <span class="textLight--text">{{ amountUsd }}</span>
       </div>
       <img
         :height="$vuetify.breakpoint.mdAndUp ? '80' : '30'"
@@ -155,15 +155,15 @@ export default {
     }
   },
   computed: {
-    actionTitle() {
-      if (this.isBorrow) {
-        return 'Borrow';
-      }
-      if (this.isRepay) {
-        return 'Repay';
-      }
-      return 'Deposit';
-    },
+    // actionTitle() {
+    //   if (this.isBorrow) {
+    //     return 'Borrow';
+    //   }
+    //   if (this.isRepay) {
+    //     return 'Repay';
+    //   }
+    //   return 'Deposit';
+    // },
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },
@@ -198,17 +198,17 @@ export default {
               value: this.currentHealthFactor,
               class:
                 this.currentHealthFactor > this.nextHealthFactor
-                  ? 'primary--text'
-                  : 'error-text'
+                  ? 'greenPrimary--text'
+                  : 'redPrimary--text'
             },
             {
               title: 'Next Health Factor',
               tooltip: 'Tooltip text',
               value: this.nextHealthFactor,
               class:
-                this.currentHealthFactor <= this.nextHealthFactor
-                  ? 'primary--text'
-                  : 'error--text',
+                this.currentHealthFactor > this.nextHealthFactor
+                  ? 'redPrimary--text'
+                  : 'greenPrimary--text',
               indicator:
                 this.currentHealthFactor == this.nextHealthFactor
                   ? ''
@@ -290,7 +290,17 @@ export default {
   },
   methods: {
     confirm() {
-      this.$emit('onConfirm');
+      if (this.step === 1) {
+        this.$emit('confirmed');
+      } else {
+        this.$emit('onConfirm');
+      }
+    },
+    getInterestTypeClass(type) {
+      if (type.toLowerCase() === INTEREST_TYPES.stable) {
+        return 'secondary--text';
+      }
+      return 'orangePrimary';
     }
   }
 };

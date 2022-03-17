@@ -41,7 +41,7 @@
                       {{ b.logoText }}
                     </div>
                     <div
-                      class="mew-caption text-uppercase font-weight-bold textPrimary--text text--lighten-1"
+                      class="mew-caption text-uppercase font-weight-bold textDark--text text--lighten-1"
                     >
                       {{ b.priceNote }}
                     </div>
@@ -56,7 +56,7 @@
                         {{ b.price }}
                       </div>
                     </div>
-                    <div class="mt-3 primary--text font-weight-medium">
+                    <div class="mt-3 greenPrimary--text font-weight-medium">
                       Learn more >
                     </div>
                   </div>

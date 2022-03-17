@@ -7,7 +7,7 @@
         max-width="400px"
         class="mx-auto text-center"
       >
-        <div class="mew-heading-3 text-uppercase textPrimary--text mb-1">
+        <div class="mew-heading-3 text-uppercase textMedium--text mb-1">
           {{ $t('home.features.subheading') }}
         </div>
         <h1 class="mb-9">{{ $t('home.features.heading') }}</h1>
@@ -40,7 +40,7 @@
       <div class="py-7" />
       <v-container>
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
-          <h5 class="font-weight-bold text-uppercase textPrimary--text mb-2">
+          <h5 class="font-weight-bold text-uppercase textMedium--text mb-2">
             {{ $t('home.features.subheading') }}
           </h5>
           <h1 class="mb-10">{{ $t('home.features.heading') }}</h1>
@@ -138,7 +138,7 @@ export default {
     }
   }
   .mobile-content {
-    background-color: var(--v-overlayBg-base);
+    background-color: var(--v-greyLight-base);
     .v-item-group {
       background-color: transparent !important;
       justify-content: center !important;

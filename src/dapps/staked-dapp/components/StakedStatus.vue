@@ -48,7 +48,7 @@
     -->
           <div
             :class="[
-              'rounded-t-lg header-container tableHeader pa-5 full-width d-flex flex-row align-center justify-space-between',
+              'rounded-t-lg header-container greyLight pa-5 full-width d-flex flex-row align-center justify-space-between',
               isExpanded(idx) ? 'rounded-t-lg' : 'rounded-lg'
             ]"
             @click="expand(idx)"
@@ -59,7 +59,7 @@
                 <div class="mew-heading-3">
                   {{ pending.amount }} <span class="mew-caption">ETH</span>
                 </div>
-                <div class="textPrimary--text mt-1">
+                <div class="textMedium--text mt-1">
                   {{ '$' + pending.amountFiat }}
                 </div>
               </div>
@@ -68,10 +68,10 @@
               <v-progress-circular
                 size="18"
                 width="2"
-                color="primary"
+                color="greenPrimary"
                 indeterminate
               />
-              <v-icon class="ml-5" color="searchText" size="22">{{
+              <v-icon class="ml-5" color="greyPrimary" size="22">{{
                 isExpanded(idx) ? 'mdi-chevron-up' : 'mdi-chevron-down'
               }}</v-icon>
             </div>
@@ -99,7 +99,7 @@
                 class="ml-4"
                 size="18"
                 width="2"
-                color="primary"
+                color="greenPrimary"
                 indeterminate
               />
               <span class="ml-2">{{
@@ -118,7 +118,7 @@
               "
               class="d-flex"
             >
-              <v-icon size="20" color="primary">mdi-check-circle</v-icon>
+              <v-icon size="20" color="greenPrimary">mdi-check-circle</v-icon>
               <span class="ml-2">Deposited</span>
             </div>
             <!--
@@ -130,7 +130,7 @@
               v-if="pending.status.toLowerCase() === STATUS_TYPES.FAILED"
               class="d-flex align-center"
             >
-              <v-icon size="20" color="error">mdi-close-circle</v-icon>
+              <v-icon size="20" color="redPrimary">mdi-close-circle</v-icon>
               <span class="ml-2">Failed</span>
             </div>
             <!--
@@ -146,7 +146,9 @@
                 :href="pending.etherscanUrl"
                 target="_blank"
                 >View on Etherscan
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
               <a
                 v-if="pending.ethVmUrl && !onGoerli"
@@ -155,7 +157,9 @@
                 :href="pending.ethVmUrl"
                 target="_blank"
                 >View on EthVM
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
             </div>
             <!--
@@ -174,13 +178,12 @@
                 <v-progress-circular
                   size="18"
                   width="2"
-                  color="primary"
+                  color="greenPrimary"
                   indeterminate
                 />
                 <span class="ml-2">Waiting for validator activation</span>
               </div>
-              <span
-                class="mew-label font-weight-medium captionPrimary--text mt-1"
+              <span class="mew-label font-weight-medium textLight--text mt-1"
                 >Estimated wait time: {{ pending.estimatedWaitTime }}
               </span>
               <a
@@ -190,7 +193,9 @@
                 :href="pending.url"
                 target="_blank"
                 >Eth2 Beacon Chain transactions
-                <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+                <v-icon color="greenPrimary" size="14"
+                  >mdi-open-in-new</v-icon
+                ></a
               >
             </div>
           </div>
@@ -217,9 +222,11 @@
               <div class="font-weight-medium mt-1">
                 {{ '$' + active.totalBalanceFiat }}
               </div>
-              <div class="textPrimary--text mt-2">
+              <div class="textLight--text mt-2">
                 Earned
-                <span class="primary--text">{{ active.earned + ' ETH' }}</span>
+                <span class="greenPrimary--text">{{
+                  active.earned + ' ETH'
+                }}</span>
                 · Average APR {{ active.averageApr }}
               </div>
             </div>
@@ -230,7 +237,7 @@
             :href="active.url"
             target="_blank"
             >View Eth2 address
-            <v-icon color="primary" size="14">mdi-open-in-new</v-icon></a
+            <v-icon color="greenPrimary" size="14">mdi-open-in-new</v-icon></a
           >
         </div>
       </div>
@@ -478,6 +485,6 @@ export default {
   max-width: 500px;
 }
 .border-container {
-  border: 1px solid var(--v-selectBorder-base);
+  border: 1px solid var(--v-greyLight-base);
 }
 </style>

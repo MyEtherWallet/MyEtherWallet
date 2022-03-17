@@ -115,6 +115,6 @@ export default {
   font-size: 10px;
 }
 .circled-total:hover {
-  background-color: var(--v-superPrimaryHover-base);
+  background-color: var(--v-greyLight-base);
 }
 </style>

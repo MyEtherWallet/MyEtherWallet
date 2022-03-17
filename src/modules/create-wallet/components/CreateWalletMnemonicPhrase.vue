@@ -16,10 +16,10 @@
           -->
         <div class="d-flex align-center justify-end pb-4">
           <div
-            class="primary--text cursor--pointer d-flex align-center mr-2 pa-2"
+            class="greenPrimary--text cursor--pointer d-flex align-center mr-2 pa-2"
             @click="setPhrase"
           >
-            <v-icon small color="primary" class="mr-1">mdi-sync</v-icon>
+            <v-icon small color="greenPrimary" class="mr-1">mdi-sync</v-icon>
             <div class="font-weight-medium">Update</div>
           </div>
           <v-select
@@ -374,8 +374,8 @@ export default {
 }
 
 .radio-group {
-  box-shadow: 0 0px 10px var(--v-boxShadow-base) !important;
-  border: 1px solid var(--v-inputBorder-base);
+  box-shadow: 0 0px 10px var(--v-greyMedium-base) !important;
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
 }
 </style>
