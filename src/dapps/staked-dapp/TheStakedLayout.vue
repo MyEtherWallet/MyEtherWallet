@@ -12,6 +12,7 @@
     :active-tab="activeTab"
     external-contents
     :on-tab="tabChanged"
+    :valid-networks="validNetworks"
   >
     <!--
     ===================================================
@@ -140,6 +141,7 @@
 </template>
 
 <script>
+import { SUPPORTED_NETWORKS } from './handlers/supportedNetworks';
 import { STAKED_ROUTE } from './configsRoutes';
 import iconColorfulETH from '@/assets/images/icons/icon-dapp-eth.svg';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
@@ -162,6 +164,7 @@ export default {
   },
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
       iconColorfulETH: iconColorfulETH,
       amount: 0,
       header: {
@@ -174,12 +177,12 @@ export default {
       handlerStaked: {},
       tabs: [
         {
-          name: this.$t('dapps-staked.stake'),
+          name: 'Stake',
           route: { name: STAKED_ROUTE.STAKED.NAME },
           id: 0
         },
         {
-          name: this.$t('ens.manage-domain'),
+          name: 'Status',
           route: {
             name: STAKED_ROUTE.STATUS.NAME,
             path: STAKED_ROUTE.STATUS.PATH
@@ -248,6 +251,13 @@ export default {
      */
     pendingTxHash() {
       return this.handlerStaked.pendingTxHash;
+    },
+    isValidNetwork() {
+      const chainID = this.network.type.chainID;
+      const validChain = this.validNetworks.filter(
+        item => item.chainID === chainID
+      );
+      return validChain.length > 0;
     }
   },
   watch: {
@@ -287,11 +297,13 @@ export default {
     /**
      * Initiate Stake Handler
      */
-    this.handlerStaked = new handlerStaked(
-      this.web3,
-      this.network,
-      this.address
-    );
+    if (this.isValidNetwork) {
+      this.handlerStaked = new handlerStaked(
+        this.web3,
+        this.network,
+        this.address
+      );
+    }
   },
   methods: {
     detactUrlChangeTab() {

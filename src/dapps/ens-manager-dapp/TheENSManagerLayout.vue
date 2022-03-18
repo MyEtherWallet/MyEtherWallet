@@ -13,6 +13,7 @@
       :active-tab="activeTab"
       external-contents
       :on-tab="tabChanged"
+      :valid-networks="validNetworks"
     >
       <!--
     =====================================================================================
@@ -284,6 +285,7 @@
 </template>
 
 <script>
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
@@ -311,6 +313,7 @@ export default {
   },
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
       headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
       header: {
         title: this.$t('ens.title'),
