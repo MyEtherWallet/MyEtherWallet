@@ -110,16 +110,14 @@
           <div class="stake-status">
             <div class="d-flex justify-space-between mb-5">
               <div>
-                <div
-                  class="textLight--text mew-label font-weight-medium text-uppercase"
-                >
+                <div class="mew-body">
                   Network Fee
-                </div>
-                <div
-                  class="textLight--text text-decoration-underline cursor--pointer"
-                  @click="openSettings"
-                >
-                  Edit priority
+                  <span
+                    class="greenPrimary--text cursor--pointer"
+                    @click="openSettings"
+                  >
+                    Edit
+                  </span>
                 </div>
               </div>
               <div class="text-right">

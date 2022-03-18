@@ -75,6 +75,54 @@
           </div>
 
           <!-- ======================================================================================= -->
+          <!-- Stake status -->
+          <!-- ======================================================================================= -->
+          <div class="stake-status">
+            <div class="d-flex justify-space-between mb-5">
+              <div>
+                <div class="mew-body">
+                  Network Fee
+                  <span
+                    class="greenPrimary--text cursor--pointer"
+                    @click="openSettings"
+                  >
+                    Edit
+                  </span>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="">{{ ethTotalFee }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  $ {{ gasPriceFiat }}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-space-between mb-5">
+              <div class="mew-body">Staking Fee</div>
+              <div class="text-right">
+                <div class="">{{ stakingFee }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  ${{ stakingFeeFiatValue }}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-space-between mb-5">
+              <div class="mew-body">Total Staked</div>
+              <div class="text-right">
+                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  ${{ totalFiat }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ======================================================================================= -->
+          <!-- Divier -->
+          <!-- ======================================================================================= -->
+          <v-divider class="mt-4 mb-9" />
+
+          <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
           <div class="mt-3">
@@ -115,54 +163,6 @@
           <!-- Divier -->
           <!-- ======================================================================================= -->
           <v-divider class="mt-12 mb-5" />
-
-          <!-- ======================================================================================= -->
-          <!-- Stake status -->
-          <!-- ======================================================================================= -->
-          <div class="stake-status">
-            <div class="d-flex justify-space-between mb-5">
-              <div>
-                <div class="mew-body">
-                  Network Fee
-                  <span
-                    class="greenPrimary--text cursor--pointer"
-                    @click="openSettings"
-                  >
-                    Edit
-                  </span>
-                </div>
-              </div>
-              <div class="text-right">
-                <div class="">{{ ethTotalFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  $ {{ gasPriceFiat }}
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mb-5">
-              <div class="mew-body">MEW 1% Staking Fee</div>
-              <div class="text-right">
-                <div class="">{{ stakingFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ stakingFeeFiatValue }}
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mb-5">
-              <div class="mew-body">Total Staked</div>
-              <div class="text-right">
-                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ totalFiat }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ======================================================================================= -->
-          <!-- Divier -->
-          <!-- ======================================================================================= -->
-          <v-divider class="mt-4 mb-9" />
 
           <!-- ======================================================================================= -->
           <!-- Start staking -->
