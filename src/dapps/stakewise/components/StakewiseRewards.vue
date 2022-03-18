@@ -34,7 +34,7 @@
     <!-- ======================================================================================= -->
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
-    <div class="d-flex align-center justify-space-between mt-4">
+    <div v-if="hasReth" class="d-flex align-center justify-space-between mt-4">
       <mew-button
         title="Redeem to ETH"
         btn-style="transparent"

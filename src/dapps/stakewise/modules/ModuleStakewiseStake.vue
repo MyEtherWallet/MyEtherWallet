@@ -62,7 +62,7 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: false,
+                disabled: !hasEnoughBalance,
                 method: setMax
               }"
               :image="iconEth"
