@@ -26,7 +26,7 @@
           <balance-card />
 
           <v-btn
-            v-if="network.type.name === 'ETH'"
+            v-if="canBuy"
             class="mt-3"
             color="white"
             outlined
@@ -268,6 +268,13 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'swapLink']),
     ...mapState('wallet', ['instance']),
+    canBuy() {
+      return (
+        this.network.type.name === 'ETH' ||
+        this.network.type.name === 'MATIC' ||
+        this.network.type.name === 'BSC'
+      );
+    },
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
         const dateToday = new Date();

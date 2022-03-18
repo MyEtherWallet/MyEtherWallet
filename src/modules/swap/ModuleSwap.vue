@@ -183,6 +183,7 @@
                           btn-style="outline"
                           title="Swap to renBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('renBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -191,6 +192,7 @@
                           btn-style="outline"
                           title="Swap to wBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('wBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -199,6 +201,7 @@
                           btn-style="outline"
                           title="Swap to PBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('PBTC')"
                         />
                       </v-col>
                     </v-row>
@@ -282,6 +285,7 @@
 </template>
 
 <script>
+import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -302,7 +306,6 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import WAValidator from 'multicoin-address-validator';
 
 import xss from 'xss';
 
@@ -930,6 +933,9 @@ export default {
       this.userToAddress = '';
       this.isValidToAddr = false;
     },
+    tokenInValue() {
+      this.feeError = '';
+    },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
     },
@@ -980,9 +986,17 @@ export default {
      * Handles emitted values from module-address-book
      */
     setToAddress(value, isValid) {
-      this.userToAddress = value;
-      this.isValidToAddr = isValid;
-      if (isValid) this.setTokenInValue(this.tokenInValue);
+      this.addressValue = {
+        value,
+        isValid
+      };
+      this.setTokenInValue(this.tokenInValue);
+    },
+    swapTo(to) {
+      const findToken = this.toTokens.find(
+        item => item.symbol.toLowerCase() === to.toLowerCase()
+      );
+      this.toTokenType = findToken;
     },
     setupSwap() {
       this.isLoading = !this.prefetched;
@@ -1190,11 +1204,18 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-
-      this.feeError = '';
       if (
-        this.tokenInValue !== '' &&
-        this.tokenInValue > 0 &&
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        (isEmpty(this.addressValue) ||
+          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
+      ) {
+        return;
+      }
+      if (
+        !BigNumber(value).isNaN() &&
+        BigNumber(value).gt(0) &&
         !isEmpty(this.fromTokenType) &&
         !isEmpty(this.toTokenType) &&
         !isEmpty(this.fromTokenType?.symbol) &&
@@ -1224,8 +1245,8 @@ export default {
             }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
-              this.step = 1;
             }
+            this.step = 1;
             this.isLoadingProviders = false;
           });
       }
@@ -1291,11 +1312,14 @@ export default {
         });
     }, 500),
     setupTrade(trade) {
-      this.step = 2;
       this.loadingFee = false;
+      // fixes race case where address gets invalidated when
+      // transaction is still loading
+      if (this.availableQuotes.length > 0) {
+        this.step = 2;
+      }
       if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
-        this.loadingFee = false;
         return;
       }
       this.feeError = '';
@@ -1346,28 +1370,16 @@ export default {
           address
         });
       }
-      const symbol = this.toTokenType.hasOwnProperty('symbol')
-        ? this.toTokenType.symbol.toLowerCase()
-        : '';
-      if (symbol !== '') {
-        const currencyExists = WAValidator.findCurrency(symbol);
-        if (currencyExists) {
-          return WAValidator.validate(address, symbol);
-        }
+      if (this.toTokenType.isEth) {
+        return MultiCoinValidator.validate(address, 'Ethereum');
       }
-      return false;
+      return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     isValidRefundAddress(address) {
-      const symbol = this.fromTokenType.hasOwnProperty('symbol')
-        ? this.fromTokenType.symbol.toLowerCase()
-        : '';
-      if (symbol !== '') {
-        const currencyExists = WAValidator.findCurrency(symbol);
-        if (currencyExists) {
-          return WAValidator.validate(address, symbol);
-        }
+      if (this.toTokenType.isEth) {
+        return MultiCoinValidator.validate(address, 'Ethereum');
       }
-      return false;
+      return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);

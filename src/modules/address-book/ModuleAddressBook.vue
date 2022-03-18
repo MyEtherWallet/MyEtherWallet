@@ -154,7 +154,7 @@ export default {
      * Checks if address is valid
      * and sets the address value
      */
-    setAddress(value, inputType) {
+    async setAddress(value, inputType) {
       if (typeof value === 'string') {
         if (
           this.currency.toLowerCase() ===
@@ -176,9 +176,8 @@ export default {
            */
           const isAddValid = this.isValidAddressFunc(this.inputAddr);
           if (isAddValid instanceof Promise) {
-            isAddValid.then(res => {
-              this.isValidAddress = res;
-            });
+            const validation = await isAddValid;
+            this.isValidAddress = validation;
           } else {
             this.isValidAddress = isAddValid;
           }

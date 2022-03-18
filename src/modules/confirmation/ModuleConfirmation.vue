@@ -853,12 +853,15 @@ export default {
           : item.hasOwnProperty('encodeABI')
           ? item.encodeABI()
           : '0x';
+        const symbol = isEmpty(this.sendCurrency)
+          ? this.network.type.currencyName
+          : this.sendCurrency.symbol;
         const value =
           data !== '0x'
             ? !this.isSwap && !this.isBatch
-              ? `${this.value} ${this.sendCurrency.symbol}`
+              ? `${this.value} ${symbol}`
               : `0 ${this.network.type.currencyName}`
-            : `${this.value} ${this.sendCurrency.symbol}`;
+            : `${this.value} ${symbol}`;
         return [
           {
             title: 'Network',
