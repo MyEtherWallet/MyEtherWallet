@@ -42,7 +42,14 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   // major update
-  'highcharts'
+  'highcharts',
+  // update after release
+  '@lokalise/node-api',
+  '@sentry/browser',
+  '@sentry/tracing',
+  '@sentry/vue',
+  'merkletreejs',
+  'axios'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
