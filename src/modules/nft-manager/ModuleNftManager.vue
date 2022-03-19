@@ -277,7 +277,8 @@ export default {
         );
         const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
-        if (gasFeesToBN.gte(toBN(this.balance))) {//comparing two BN's vs strings
+        if (gasFeesToBN.gte(toBN(this.balance))) {
+          //comparing two BN's vs strings
           this.notEnoughFunds = true;
         } else {
           try {
