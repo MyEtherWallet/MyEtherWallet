@@ -270,7 +270,7 @@ export default {
     },
     async sendTx() {
       if (this.isValid) {
-        const gasTypeFee = this.gasPriceByType(this.gasPriceType); //calls getGasFeeMethod in handler
+        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
         const gasFees = await this.nft.getGasFees(
           this.toAddress,
           this.selectedNft
@@ -278,7 +278,6 @@ export default {
         const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
         if (gasFeesToBN.gte(toBN(this.balance))) {
-          //comparing two BN's vs strings
           this.notEnoughFunds = true;
         } else {
           try {
