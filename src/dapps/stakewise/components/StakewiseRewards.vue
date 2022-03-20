@@ -71,6 +71,10 @@ export default {
     compoundRewards: {
       type: Boolean,
       default: false
+    },
+    setMax: {
+      type: Function,
+      default: () => {}
     }
   },
   computed: {
@@ -123,6 +127,9 @@ export default {
       });
     },
     routeToStakeEth() {
+      if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
+        this.setMax();
+      }
       this.$router.push({ name: STAKEWISE_ROUTES.REWARDS.NAME });
     }
   }

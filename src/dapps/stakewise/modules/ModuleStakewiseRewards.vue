@@ -70,6 +70,8 @@
               label="Amount to compound"
               :value="compoundAmount"
               placeholder="Enter amount"
+              :error-messages="errorMessages"
+              @input="setAmount"
             />
           </div>
 
@@ -277,7 +279,8 @@ export default {
       return (
         BigNumber(this.compoundAmount).gt(0) &&
         this.hasEnoughBalance &&
-        this.agreeToTerms
+        this.agreeToTerms &&
+        this.errorMessages === ''
       );
     },
     txFee() {
@@ -285,6 +288,28 @@ export default {
         ? this.gasLimit
         : MIN_GAS_LIMIT;
       return BigNumber(this.gasPrice).times(gasLimit).toString();
+    },
+    hasMinimum() {
+      // amount > min && this.balance > networkFee
+      if (!isEmpty(this.selectedProvider)) {
+        return (
+          BigNumber(this.selectedProvider.minFrom).lt(this.compoundAmount) &&
+          BigNumber(this.compoundAmount).gt(this.txFee)
+        );
+      }
+      return false;
+    },
+    overMaximum() {
+      return BigNumber(this.compoundAmount).gt(this.rethBalance);
+    },
+    errorMessages() {
+      if (this.overMaximum) {
+        return 'Exceeds RETH balance';
+      }
+      if (this.hasMinimum) {
+        return 'Not enough RETH!';
+      }
+      return '';
     }
   },
   watch: {
@@ -301,6 +326,7 @@ export default {
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toString();
+      this.getQuote();
     }, 500),
     setMax() {
       const max = BigNumber(this.rethBalance);
@@ -313,7 +339,7 @@ export default {
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.gasPrice;
     },
-    getQuote() {
+    getQuote: debounce(function () {
       if (
         this.rethBalance !== '' &&
         this.rethBalance > 0 &&
@@ -336,7 +362,6 @@ export default {
                 .dividedBy(new BigNumber(this.rethBalance))
                 .toString();
               this.selectedProvider = q;
-
               return q;
             });
           })
@@ -345,7 +370,7 @@ export default {
             Toast(err, {}, ERROR);
           });
       }
-    },
+    }, 500),
     async getTrade() {
       const trade = await this.swapper.getTrade({
         fromAddress: this.address,
@@ -368,7 +393,6 @@ export default {
     },
     async showConfirm() {
       this.loading = true;
-      await this.getQuote();
       await this.getTrade();
       this.confirmInfo = {
         from: this.hasReth.contract,
