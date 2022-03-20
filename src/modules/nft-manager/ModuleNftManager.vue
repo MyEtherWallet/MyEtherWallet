@@ -278,6 +278,7 @@ export default {
         const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
         if (gasFeesToBN.gte(toBN(this.balance))) {
+          //gasFeesToBN vs current balance
           this.notEnoughFunds = true;
         } else {
           try {
