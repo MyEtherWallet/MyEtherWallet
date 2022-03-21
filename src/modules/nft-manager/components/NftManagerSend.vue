@@ -39,7 +39,7 @@
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
-      :disabled="disabled || (!enoughFunds && showBalanceError)"
+      :disabled="disabled || !enoughFunds"
       title="Send"
       btn-size="large"
       color-theme="primary"
