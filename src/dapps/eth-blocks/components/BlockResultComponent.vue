@@ -70,10 +70,8 @@
           </div>
         </v-col>
         <v-col class="d-flex align-center justify-end">
-          <div v-if="isAvailable">
-            <div class="mew-heading-4">
-              {{ mintPrice }}
-            </div>
+          <div v-if="isAvailable" class="pr-md-3">
+            <div class="mew-heading-4">{{ mintPrice }}</div>
             <div class="mew-heading-4 textLight--text">
               {{ mintFiatPrice }}
             </div>
@@ -124,7 +122,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-expand-transition v-if="!isLoading">
+    <v-slide-x-transition v-if="!isLoading">
       <div
         v-if="showRemove"
         class="d-flex py-6 align-center justify-space-between remove-container-border"
@@ -147,7 +145,7 @@
           />
         </div>
       </div>
-    </v-expand-transition>
+    </v-slide-x-transition>
   </div>
 </template>
 

@@ -1,17 +1,17 @@
 <template>
-  <div class="py-13 px-15">
+  <div class="py-13 px-5 px-sm-15 px-lg-15">
     <!-- Header titles -->
-    <div class="d-flex align-center justify-start">
-      <div>
-        <div class="pb-3 mew-heading-2">My Batch</div>
-        <div class="mew-body textMedium--text">
-          You have added {{ blockCount }} ETH {{ pluralizeBlockCount }} for
-          Minting. Please review and click "Proceed to Minting."
-        </div>
-      </div>
-    </div>
     <v-row justify-lg="space-between" justify-md="space-between">
       <v-col cols="12" md="6" lg="7">
+        <div class="d-flex align-center justify-start">
+          <div>
+            <div class="pb-3 mew-heading-2">My Batch</div>
+            <div v-if="blockCount >= 1" class="mew-body textMedium--text">
+              You have added {{ blockCount }} ETH {{ pluralizeBlockCount }} for
+              Minting. Please review and click "Proceed to Minting."
+            </div>
+          </div>
+        </div>
         <div v-if="isLoading">
           <block-result-component
             v-for="(block, idx) in 3"

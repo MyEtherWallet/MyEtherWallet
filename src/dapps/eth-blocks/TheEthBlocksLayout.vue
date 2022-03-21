@@ -58,13 +58,13 @@ export default {
     tabs() {
       return [
         {
-          name: 'Mint a new block',
+          name: 'Mint a New block',
           route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
           id: 0,
           hasBadge: false
         },
         {
-          name: 'My blocks',
+          name: 'My Blocks',
           route: {
             name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
           },
@@ -72,7 +72,7 @@ export default {
           hasBadge: false
         },
         {
-          name: `Batch Minting `,
+          name: `Bulk Minting `,
           route: {
             name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
           },
@@ -98,6 +98,8 @@ export default {
     $route(to) {
       if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
         this.activeTab = this.tabs[1].id;
+      } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+        this.activeTab = this.tabs[2].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }
@@ -109,6 +111,9 @@ export default {
     }
     if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
       this.activeTab = this.tabs[1].id;
+    }
+    if (this.$route.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+      this.activeTab = this.tabs[2].id;
     }
   },
   beforeDestroy() {
