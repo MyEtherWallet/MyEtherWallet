@@ -1,3 +1,9 @@
+### Release v6.5.0
+
+### feat
+
+* add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
+
 ### Release v6.4.8-hotfix.1
 
 ### fix
