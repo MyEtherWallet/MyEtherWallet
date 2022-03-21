@@ -49,7 +49,10 @@ const EXCEPTIONS = [
   '@sentry/tracing',
   '@sentry/vue',
   'merkletreejs',
-  'axios'
+  'axios',
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
+  '@ledgerhq/hw-app-eth'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
