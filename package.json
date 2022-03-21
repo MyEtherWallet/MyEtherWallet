@@ -171,7 +171,6 @@
     "glob-parent": "5.1.2",
     "follow-redirects": "1.14.9",
     "handlebars": "4.7.7",
-    "axios": "0.25.0",
     "node-fetch": "2.6.7",
     "cryptiles": "4.1.2",
     "xmlhttprequest-ssl": "1.6.2",
