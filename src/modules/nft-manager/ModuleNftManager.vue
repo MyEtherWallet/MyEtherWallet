@@ -130,7 +130,8 @@
           :nft-category="selectedContract.name"
           :send="sendTx"
           :disabled="!isValid"
-          :not-enough-funds="notEnoughFunds"
+          :enough-funds="enoughFunds"
+          :show-balance-error="showBalanceError"
           :set-address="setAddress"
         />
       </template>
@@ -171,7 +172,8 @@ export default {
       toAddress: '',
       selectedContract: {},
       gasFees: '0',
-      notEnoughFunds: false
+      enoughFunds: false,
+      showBalanceError: false
     };
   },
   computed: {
@@ -224,13 +226,27 @@ export default {
      * Check if address is valid
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress);
+      return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
     }
   },
   watch: {
     contracts(newVal) {
       if (newVal.length > 0) {
         this.onTab(0);
+      }
+    },
+    async toAddress(newVal) {
+      const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+      const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
+      const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+      this.gasFees = gasFeesToBN.toString();
+      if (gasFeesToBN.gte(toBN(this.balance))) {
+        //gasFeesToBN vs current balance
+        this.enoughFunds = false;
+        this.showBalanceError = true;
+      } else {
+        this.enoughFunds = true;
+        this.showBalanceError = false;
       }
     }
   },
@@ -279,14 +295,14 @@ export default {
         this.gasFees = gasFeesToBN.toString();
         if (gasFeesToBN.gte(toBN(this.balance))) {
           //gasFeesToBN vs current balance
-          this.notEnoughFunds = true;
+          this.enoughFunds = false;
         } else {
           try {
             this.nft
               .send(this.toAddress, this.selectedNft)
               .then(response => {
                 this.updateValues();
-                this.notEnoughFunds = false;
+                this.enoughFunds = true;
                 Toast(
                   'Cheers! Your transaction was mined. Check it in ',
                   {
