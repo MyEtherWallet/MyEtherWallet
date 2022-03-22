@@ -25,11 +25,8 @@
           <div class="d-flex align-center">
             <img
               width="22"
-              :src="
-                require('@/assets/images/currencies/' +
-                  data.fromT.symbol.toLowerCase() +
-                  '.png')
-              "
+              height="22"
+              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
               alt="currency-icon"
             />
             <img
@@ -59,7 +56,7 @@
       <h3 class="ma-3">Loading swap pairs...</h3>
     </div>
     <div
-      v-if="error || !hasSwapRates"
+      v-if="showTokenIssue"
       class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
     >
       <v-progress-circular indeterminate />
@@ -179,6 +176,9 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
+    showTokenIssue() {
+      return (this.error || !this.hasSwapRates) && !this.loading;
+    },
     hasSwapRates() {
       if (this.swapData) {
         return this.swapData.some(item => {

@@ -49,11 +49,11 @@
               <div class="redPrimary--text mt-3 mb-7 font-weight-medium">
                 Insufficient balance.
                 <a
-                  href="https://ccswap.myetherwallet.com/#/"
-                  target="_blank"
+                  v-if="network.type.canBuy"
                   class="text-decoration--underline"
+                  @click="openMoonpay"
                 >
-                  Buy more ETH
+                  Buy more {{ network.type.name }}
                 </a>
               </div>
 
@@ -122,8 +122,10 @@
 
 <script>
 // import transactionConfirmation from '@/modules/wallets/components/transaction-confirmation/TransactionConfirmation';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   // components: { transactionConfirmation },
+  mixins: [buyMore],
   props: {
     open: { default: false, type: Boolean }
   },

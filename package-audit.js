@@ -6,7 +6,9 @@ const AUDIT_EXCEPTIONS = [
   'css-what',
   'normalize-url',
   'diff',
-  'ansi-html' // no patches available
+  'node-forge',
+  'ansi-html', // no patches available
+  'minimist' // check after release
 ];
 const execute = (command, callback) => {
   exec(
