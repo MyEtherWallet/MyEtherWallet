@@ -114,18 +114,13 @@
           has-full-width
           @click.native="addToCart"
         />
-        <mew-button v-else disabled btn-style="light">
-          <div class="d-flex flex-row align-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-              class="ma-auto"
-              size="16"
-              width="2"
-            ></v-progress-circular>
-            <div class="textDark--text pl-2">Pending</div>
-          </div>
-        </mew-button>
+        <mew-button
+          v-else
+          disabled
+          btn-style="outline"
+          :title="isAdded ? 'Added to Batch' : 'Add to Batch'"
+          has-full-width
+        />
       </v-col>
 
       <v-col

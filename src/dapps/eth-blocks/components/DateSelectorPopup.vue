@@ -14,7 +14,7 @@
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
-              color="primary"
+              color="#05C0A5"
               full-width
             />
           </v-col>
@@ -22,11 +22,12 @@
             <v-time-picker
               v-model="time"
               format="ampm"
-              color="primary"
+              color="#05C0A5"
               full-width
             />
           </v-col>
         </v-row>
+        <v-divider class="mt-4" />
         <div class="d-flex align-center justify-end py-7 px-5">
           <mew-button
             btn-size="large"

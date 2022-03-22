@@ -62,7 +62,7 @@
                     : 'textLight--text',
                   'cursor--pointer text-decoration--underline'
                 ]"
-                @click="navigateToBlockInfo"
+                @click="showBlockQuickView"
               >
                 View Block
               </div>
@@ -146,6 +146,13 @@
         </div>
       </div>
     </v-slide-x-transition>
+    <block-quick-view-popup
+      :show-block="showBlock"
+      :block-handler="blockHandler"
+      :is-loading="isLoading"
+      @navigate-to-block-info="navigateToBlockInfo"
+      @hide-block-quick-view="hideBlockQuickView"
+    />
   </div>
 </template>
 
@@ -159,8 +166,12 @@ import {
 import { fromWei } from 'web3-utils';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { some, isEmpty } from 'lodash';
+import BlockQuickViewPopup from './BlockQuickViewPopup';
 export default {
   name: 'BlockResultComponent',
+  components: {
+    BlockQuickViewPopup
+  },
   props: {
     blockHandler: {
       type: Object,
@@ -181,7 +192,8 @@ export default {
   },
   data() {
     return {
-      showRemove: false
+      showRemove: false,
+      showBlock: false
     };
   },
   computed: {
@@ -293,6 +305,12 @@ export default {
         name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
         params: { blockRef: `${this.blockHandler.blockNumber}` }
       });
+    },
+    showBlockQuickView() {
+      this.showBlock = true;
+    },
+    hideBlockQuickView() {
+      this.showBlock = false;
     }
   }
 };
