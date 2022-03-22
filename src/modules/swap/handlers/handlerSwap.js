@@ -48,7 +48,10 @@ class Swap {
           // remove once merging to native PR
           .filter(item => item.isEth);
         return {
-          fromTokens: sorted.filter(t => isAddress(t.contract)),
+          fromTokens: sorted.filter(t => {
+            if (!t || !t.contract) return false;
+            return isAddress(t.contract);
+          }),
           toTokens: sorted
         };
       });

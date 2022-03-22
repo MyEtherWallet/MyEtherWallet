@@ -90,6 +90,11 @@ export default {
         name: 'Jason',
         title: 'Social Media Specialist'
       },
+      {
+        img: Brionne,
+        name: 'Brionne',
+        title: 'Educational Content Writer'
+      },
       { img: Marcus, name: 'Marcus', title: 'Blockchain Community Specialist' },
       {
         img: Chindalath,
@@ -114,11 +119,6 @@ export default {
       {
         img: Richie,
         name: 'Wolfgang',
-        title: 'Blockchain Community Specialist'
-      },
-      {
-        img: Brionne,
-        name: 'Brionne',
         title: 'Blockchain Community Specialist'
       },
       {
