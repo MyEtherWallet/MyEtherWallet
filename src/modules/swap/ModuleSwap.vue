@@ -182,6 +182,7 @@
                           btn-style="outline"
                           title="Swap to renBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('renBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -190,6 +191,7 @@
                           btn-style="outline"
                           title="Swap to wBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('wBTC')"
                         />
                       </v-col>
                       <v-col cols="12" md="4">
@@ -198,6 +200,7 @@
                           btn-style="outline"
                           title="Swap to PBTC"
                           :has-full-width="true"
+                          @click.native="swapTo('PBTC')"
                         />
                       </v-col>
                     </v-row>
@@ -288,6 +291,7 @@
 </template>
 
 <script>
+import MultiCoinValidator from 'multicoin-address-validator';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -806,6 +810,9 @@ export default {
     }
   },
   watch: {
+    tokenInValue() {
+      this.feeError = '';
+    },
     gasPriceType() {
       if (this.currentTrade) this.currentTrade.gasPrice = this.localGasPrice;
     },
@@ -843,6 +850,12 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens']),
+    swapTo(to) {
+      const findToken = this.toTokens.find(
+        item => item.symbol.toLowerCase() === to.toLowerCase()
+      );
+      this.toTokenType = findToken;
+    },
     setupSwap() {
       this.isLoading = !this.prefetched;
       this.swapper = new Swapper(this.web3, this.network.type.name);
@@ -996,7 +1009,7 @@ export default {
         value,
         isValid
       };
-      if (isValid) this.setProvider(0);
+      this.setTokenInValue(this.tokenInValue);
     },
     setFromToken(value) {
       this.fromTokenType = value;
@@ -1042,6 +1055,7 @@ export default {
       ) {
         return;
       }
+
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1051,11 +1065,18 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
-
-      this.feeError = '';
       if (
-        this.tokenInValue !== '' &&
-        this.tokenInValue > 0 &&
+        !isEmpty(this.toTokenType) &&
+        this.toTokenType.hasOwnProperty('isEth') &&
+        !this.toTokenType.isEth &&
+        (isEmpty(this.addressValue) ||
+          (!isEmpty(this.addressValue) && !this.addressValue.isValid))
+      ) {
+        return;
+      }
+      if (
+        !BigNumber(value).isNaN() &&
+        BigNumber(value).gt(0) &&
         !isEmpty(this.fromTokenType) &&
         !isEmpty(this.toTokenType) &&
         !isEmpty(this.fromTokenType?.symbol) &&
@@ -1085,8 +1106,8 @@ export default {
             }
             if (quotes.length) {
               this.tokenOutValue = quotes[0].amount;
-              this.step = 1;
             }
+            this.step = 1;
             this.isLoadingProviders = false;
           });
       }
@@ -1130,7 +1151,11 @@ export default {
       }
     }, 500),
     setupTrade(trade) {
-      this.step = 2;
+      // fixes race case where address gets invalidated when
+      // transaction is still loading
+      if (this.availableQuotes.length > 0) {
+        this.step = 2;
+      }
       if (trade instanceof Error || !trade) {
         this.feeError = 'Provider issue';
         this.loadingFee = false;
@@ -1174,7 +1199,10 @@ export default {
           address
         });
       }
-      return true;
+      if (this.toTokenType.isEth) {
+        return MultiCoinValidator.validate(address, 'Ethereum');
+      }
+      return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);

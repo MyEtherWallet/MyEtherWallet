@@ -70,6 +70,7 @@ import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common.js';
 import abi from '@/modules/balance/handlers/abiERC20.js';
 // import nodes from '@/utils/networks';
 import Web3 from 'web3';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSellEth',
   components: { ButtonBalance },
@@ -118,7 +119,9 @@ export default {
         ? {
             title: 'Max',
             method: this.setMax,
-            disabled: this.nonMainnetMetamask
+            disabled:
+              this.nonMainnetMetamask ||
+              BigNumber(this.txFee).gte(this.selectedBalance)
           }
         : {};
     },
@@ -252,7 +255,7 @@ export default {
       }
 
       if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
-        return `You do not have enough ${symbol} to pay for network fee.`;
+        return `You do not have enough ETH to pay for network fee.`;
       }
 
       if (
@@ -266,10 +269,10 @@ export default {
       }
 
       if (amount.gt(0) && amount.lt(this.min)) {
-        return `The minimum transaction amount is ${this.min.toString()} ${symbol}.`;
+        return `The minimum amount to sell is ${this.min.toString()} ${symbol}.`;
       }
       if (amount.gt(0) && amount.gt(this.max)) {
-        return `The maximum transaction amount is ${this.max.toString()} ${symbol}.`;
+        return `The maximum amount to sell is ${this.max.toString()} ${symbol}.`;
       }
 
       return '';
@@ -297,12 +300,17 @@ export default {
         this.amount,
         this.actualSelectedCurrency.decimals
       );
+    },
+    getCalculatedAmount() {
+      const amount = new BigNumber(this.amount ? this.amount : 0)
+        .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
+        .toFixed(0);
+      return toBNSafe(amount);
     }
   },
   watch: {
     actualSelectedCurrency: {
       handler: function (newVal) {
-        this.amount = '0';
         this.maxBalance = '0';
         this.hasPersistentHint = false;
         if (
@@ -437,9 +445,8 @@ export default {
         });
     },
     fetchSellInfo() {
-      this.amount = '0';
       this.sendHandler.setCurrency(this.actualSelectedCurrency);
-      this.sendHandler.setValue(this.amount);
+      this.sendHandler.setValue(this.getCalculatedAmount);
       // eslint-disable-next-line
       this.sendHandler.setTo(ETH_DONATION_ADDRESS, 'TYPED');
       this.estimatingFees = true;
