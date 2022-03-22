@@ -7,7 +7,7 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url',
   'diff',
   'ansi-html', // no patches available
-  'axios'
+  'minimist' // check after release
 ];
 const execute = (command, callback) => {
   exec(

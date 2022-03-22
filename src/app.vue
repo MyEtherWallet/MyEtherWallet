@@ -22,7 +22,11 @@ import {
 } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'App',
-  components: { ModuleToast, ModuleGlobalModals, ModuleAnalytics },
+  components: {
+    ModuleToast,
+    ModuleGlobalModals,
+    ModuleAnalytics
+  },
   computed: {
     ...mapState('custom', ['addressBook']),
     ...mapState('addressBook', ['isMigrated'])
