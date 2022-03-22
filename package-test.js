@@ -41,18 +41,18 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  // update after hotfix
-  '@ensdomains/ens-contracts',
+  // major update
+  'highcharts',
+  // update after release
   '@lokalise/node-api',
-  '@myetherwallet/mew-components',
   '@sentry/browser',
   '@sentry/tracing',
   '@sentry/vue',
-  'highcharts',
-  'lottie-web',
   'merkletreejs',
   'axios',
-  'xss'
+  '@walletconnect/client',
+  '@walletconnect/qrcode-modal',
+  '@ledgerhq/hw-app-eth'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
