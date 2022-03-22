@@ -90,7 +90,11 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
-import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
+import {
+  toChecksumAddress,
+  isAddress,
+  isBtcAddress
+} from '@/core/helpers/addressUtils';
 
 const modes = ['add', 'edit'];
 
@@ -150,8 +154,8 @@ export default {
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd);
+        ? isAddress(this.resolvedAddr) || isBtcAddress(this.resolvedAddr)
+        : isAddress(this.addressToAdd) || isBtcAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];

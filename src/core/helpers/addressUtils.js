@@ -1,4 +1,5 @@
 import web3 from 'web3';
+import { validate } from 'bitcoin-address-validation';
 
 const isAddress = address => {
   return (
@@ -8,4 +9,7 @@ const isAddress = address => {
 const toChecksumAddress = address => {
   return web3.utils.toChecksumAddress(address);
 };
-export { isAddress, toChecksumAddress };
+const isBtcAddress = address => {
+  return validate(address);
+};
+export { isAddress, isBtcAddress, toChecksumAddress };
