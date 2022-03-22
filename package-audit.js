@@ -6,6 +6,7 @@ const AUDIT_EXCEPTIONS = [
   'css-what',
   'normalize-url',
   'diff',
+  'node-forge',
   'ansi-html', // no patches available
   'minimist' // check after release
 ];
