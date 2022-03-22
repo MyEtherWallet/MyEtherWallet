@@ -1,6 +1,7 @@
 import { isAddress, isHexStrict, toBN, numberToHex, isBN } from 'web3-utils';
 import vuexStore from '@/core/store';
 import BigNumber from 'bignumber.js';
+import { isFunction, isObject } from 'lodash';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -163,16 +164,19 @@ export default class Notification {
     if (this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING) {
       const _this = this;
       _this.swapResolver = setInterval(() => {
-        swapper.getStatus(_this.swapObj).then(res => {
-          const formattedStatus = res.toLowerCase();
-          _this.status =
-            formattedStatus === NOTIFICATION_STATUS.COMPLETED
-              ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
-              : formattedStatus === NOTIFICATION_STATUS.FAILED ||
-                formattedStatus === NOTIFICATION_STATUS.UNKNOWN
-              ? NOTIFICATION_STATUS.FAILED.toUpperCase()
-              : res;
-        });
+        const status = swapper.getStatus(_this.swapObj);
+        if (status && isObject(status) && isFunction(status.then)) {
+          status.then(res => {
+            const formattedStatus = res.toLowerCase();
+            _this.status =
+              formattedStatus === NOTIFICATION_STATUS.COMPLETED
+                ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
+                : formattedStatus === NOTIFICATION_STATUS.FAILED ||
+                  formattedStatus === NOTIFICATION_STATUS.UNKNOWN
+                ? NOTIFICATION_STATUS.FAILED.toUpperCase()
+                : res;
+          });
+        }
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
           _this.read = false;
           vuexStore.dispatch('notifications/updateNotification', _this);
