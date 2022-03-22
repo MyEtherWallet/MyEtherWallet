@@ -3,4 +3,8 @@ const SET_SWAP_TOKENS = async function (state, tokens) {
   state.prefetched = true;
 };
 
-export default { SET_SWAP_TOKENS };
+const SET_PREFETCH = async function (state, prefetch) {
+  state.prefetched = prefetch;
+};
+
+export default { SET_SWAP_TOKENS, SET_PREFETCH };

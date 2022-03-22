@@ -1,18 +1,12 @@
 <template>
   <div class="mew6-component--module-balance">
     <!--
-  =====================================================================================
-    display if the user has an eth balance > 0
-  =====================================================================================
-  -->
-    <v-skeleton-loader
-      v-if="loading"
-      class="mx-auto module-balance-loader"
-      width="100%"
-      min-height="352px"
-      max-width="100%"
-      type="card"
-    ></v-skeleton-loader>
+    =====================================================================================
+      display if the user has an eth balance > 0
+    =====================================================================================
+    -->
+    <loader v-if="loading" />
+
     <mew-module
       v-if="hasBalance && !loading"
       :subtitle="subtitle"
@@ -58,14 +52,14 @@
               <div
                 :class="[
                   'ml-2 font-weight-regular',
-                  priceChange ? 'primary--text' : 'error--text'
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text'
                 ]"
               >
                 {{ formatChange }}
               </div>
               <v-icon
                 :class="[
-                  priceChange ? 'primary--text' : 'error--text',
+                  priceChange ? 'greenPrimary--text' : 'redPrimary--text',
                   'body-2'
                 ]"
                 >{{ priceChangeArrow }}</v-icon
@@ -78,9 +72,19 @@
           <div class="text-center text-md-right mt-4 mt-md-0">
             <mew-button
               :has-full-width="false"
-              title="Send Transaction"
-              btn-size="xlarge"
+              :title="sendText"
+              btn-size="large"
+              btn-style="transparent"
+              class="mr-3"
               @click.native="navigateToSend"
+            />
+            <mew-button
+              v-if="hasSwap"
+              :has-full-width="false"
+              :title="swapText"
+              btn-size="large"
+              btn-style="outline"
+              @click.native="navigateToSwap"
             />
           </div>
         </div>
@@ -100,6 +104,7 @@
 </template>
 
 <script>
+import Loader from './ModuleBalanceLoader';
 import BalanceChart from '@/modules/balance/components/BalanceChart';
 import BalanceEmptyBlock from './components/BalanceEmptyBlock';
 import handlerBalanceHistory from './handlers/handlerBalanceHistory.mixin';
@@ -113,6 +118,7 @@ import BigNumber from 'bignumber.js';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 export default {
   components: {
+    Loader,
     BalanceChart,
     BalanceEmptyBlock
   },
@@ -129,7 +135,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'hasSwap']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
       'fiatValue',
@@ -151,6 +157,12 @@ export default {
       return `${formatFloatingPointValue(this.balanceInETH).value} ${
         this.network.type.name
       }`;
+    },
+    sendText() {
+      return `Send ${this.network.type.currencyName}`;
+    },
+    swapText() {
+      return `Swap ${this.network.type.currencyName}`;
     },
     subtitle() {
       return `My ${this.network.type.name} Balance`;
@@ -281,6 +293,9 @@ export default {
     },
     navigateToSend() {
       this.$router.push({ name: ROUTES_WALLET.SEND_TX.NAME });
+    },
+    navigateToSwap() {
+      this.$router.push({ name: ROUTES_WALLET.SWAP.NAME });
     }
   }
 };

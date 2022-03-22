@@ -7,8 +7,7 @@ const AUDIT_EXCEPTIONS = [
   'normalize-url',
   'diff',
   'ansi-html', // no patches available
-  'set-value',
-  'simple-get' // work on resolving this after release 6.4.5
+  'minimist' // check after release
 ];
 const execute = (command, callback) => {
   exec(

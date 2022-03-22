@@ -6,7 +6,7 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
-      :label="$t('sendTx.to-addr')"
+      :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
@@ -62,6 +62,14 @@ export default {
     isHomePage: {
       type: Boolean,
       default: false
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    preselectCurrWalletAdr: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -108,6 +116,9 @@ export default {
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;
+    },
+    addrLabel() {
+      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
     }
   },
   watch: {
@@ -125,13 +136,20 @@ export default {
     if (this.isHomePage) {
       this.setDonationAddress();
     }
+    if (this.preselectCurrWalletAdr) {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+      this.setAddress(
+        toChecksumAddress(this.$store.state.wallet.address),
+        USER_INPUT_TYPES.selected
+      );
+    }
   },
   methods: {
     /**
      * Checks if address is valid
      * and sets the address value
      */
-    setAddress(value, inputType) {
+    async setAddress(value, inputType) {
       if (typeof value === 'string') {
         /**
          * Checks if user typed or selected an address from dropdown
@@ -149,9 +167,8 @@ export default {
          */
         const isAddValid = this.isValidAddressFunc(this.inputAddr);
         if (isAddValid instanceof Promise) {
-          isAddValid.then(res => {
-            this.isValidAddress = res;
-          });
+          const validation = await isAddValid;
+          this.isValidAddress = validation;
         } else {
           this.isValidAddress = isAddValid;
         }

@@ -1,15 +1,29 @@
 import localStore from 'store';
 import Configs from '../configs';
+import nodeList from '@/utils/networks';
+const defaultNetwork = nodeList['ETH'].find(item => {
+  return item.service === 'myetherwallet.com-ws';
+});
 const INIT_STORE = function (state) {
   if (localStore.get(Configs.LOCAL_STORAGE_KEYS.global)) {
     const savedStore = localStore.get(Configs.LOCAL_STORAGE_KEYS.global);
     if (savedStore.stateVersion === Configs.VERSION.global) {
+      if (!nodeList[savedStore.currentNetwork.type.name]) {
+        savedStore['currentNetwork'] = defaultNetwork;
+        savedStore.currentNetwork.type = {
+          name: 'ETH'
+        };
+      }
       Object.assign(state, savedStore);
     }
   }
 };
 const SET_ONLINE_STATUS = async function (state, status) {
   state.online = status;
+};
+
+const SET_PROMO_OVER = async function (state) {
+  state.promoOver = true;
 };
 
 const SET_LOCALE = function (state, { locale }) {
@@ -82,5 +96,6 @@ export default {
   SET_TRACKING_CONSENT,
   NEVER_SHOW_TRACKING,
   NEVER_SHOW_BANNER,
-  NEVER_SHOW_WALLET_PROMO
+  NEVER_SHOW_WALLET_PROMO,
+  SET_PROMO_OVER
 };

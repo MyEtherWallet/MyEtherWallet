@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div>
+  <div class="mew-components--module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -15,20 +15,18 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
-      :icon="require('@/assets/images/icons/icon-token-grey.png')"
-      icon-align="left"
     >
       <template #rightHeaderContainer>
         <div>
           <span
             v-if="!hasCustom"
-            class="primary--text cursor-pointer pl-3"
+            class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleAddCustomToken"
             >+ Custom Token</span
           >
           <mew-menu
             v-else
-            activator-text-color="primary--text"
+            activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -221,7 +219,7 @@ export default {
       if (this.hasSwap) {
         newObj.callToAction = [
           {
-            title: 'Trade',
+            title: 'Swap',
             method: () => {
               const obj = {
                 fromToken: item.contract,
@@ -237,7 +235,7 @@ export default {
                 });
             },
             btnStyle: 'outline',
-            colorTheme: 'primary'
+            colorTheme: 'greenPrimary'
           }
         ];
       }
@@ -259,3 +257,9 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

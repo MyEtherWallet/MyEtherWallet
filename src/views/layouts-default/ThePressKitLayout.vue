@@ -40,11 +40,11 @@
               </div>
               <div class="py-5 d-flex align-center justify-center">
                 <a :href="p.png" target="_blank">
-                  <v-btn outlined medium fab color="primary"> PNG </v-btn>
+                  <v-btn outlined medium fab color="greenPrimary"> PNG </v-btn>
                 </a>
                 <div class="px-2"></div>
                 <a :href="p.svg" target="_blank">
-                  <v-btn outlined medium fab color="primary"> SVG </v-btn>
+                  <v-btn outlined medium fab color="greenPrimary"> SVG </v-btn>
                 </a>
               </div>
             </div>

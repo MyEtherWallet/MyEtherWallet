@@ -48,7 +48,8 @@
                 disabled: disableSwapBtn,
                 method: setEntireBal
               }"
-              :buy-more-str="buyMore"
+              :buy-more-str="buyMoreStr"
+              @buyMore="openMoonpay"
               @input="setAmount"
             />
           </div>
@@ -108,10 +109,10 @@
               <div class="px-5">
                 <!-- Warning Sheet -->
                 <div
-                  class="pa-5 warning textBlack2--text border-radius--5px mb-8"
+                  class="pa-5 warning greyPrimary--text border-radius--5px mb-8"
                 >
                   <div class="d-flex font-weight-bold mb-2">
-                    <v-icon class="textBlack2--text mew-body mr-1">
+                    <v-icon class="greyPrimary--text mew-body mr-1">
                       mdi-alert-outline</v-icon
                     >For advanced users only
                   </div>
@@ -123,7 +124,7 @@
                 </div>
                 <div class="d-flex align-center justify-end pb-3">
                   <div
-                    class="mew-body primary--text cursor--pointer"
+                    class="mew-body greenPrimary--text cursor--pointer"
                     @click="setGasLimit(defaultGasLimit)"
                   >
                     Reset to default: {{ formattedDefaultGasLimit }}
@@ -178,8 +179,8 @@
 </template>
 
 <script>
-import { fromWei, toBN, isHexStrict, toWei } from 'web3-utils';
-import { debounce, isEmpty } from 'lodash';
+import { fromWei, isHexStrict, toWei } from 'web3-utils';
+import { debounce, isEmpty, isNumber } from 'lodash';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import SendTransaction from '@/modules/send/handlers/handlerSend';
@@ -189,8 +190,12 @@ import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import SendLowBalanceNotice from './components/SendLowBalanceNotice.vue';
 import AppButtonBalance from '@/core/components/AppButtonBalance';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
-import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
+import {
+  formatIntegerToString,
+  toBNSafe
+} from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
     ModuleAddressBook,
@@ -198,6 +203,7 @@ export default {
     AppButtonBalance,
     AppTransactionFee
   },
+  mixins: [buyMore],
   props: {
     prefilledAmount: {
       type: String,
@@ -242,7 +248,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPriceType']),
+    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
       'network',
@@ -264,11 +270,13 @@ export default {
         !this.gasEstimationIsReady
       );
     },
-    buyMore() {
+    buyMoreStr() {
       return this.isEthNetwork &&
         MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
         this.amountError === 'Not enough balance to send!'
-        ? 'Buy more.'
+        ? this.network.type.canBuy
+          ? 'Buy more.'
+          : ''
         : '';
     },
     hasEnoughEth() {
@@ -325,9 +333,14 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = item.usdBalancef;
-        item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+        item.totalBalance = this.currencyFormatter(
+          item.usdBalancef.replace(',', '')
+        );
+        item.tokenBalance = this.currencyFormatter(item.balancef).replace(
+          ',',
+          ''
+        );
+        item.price = this.currencyFormatter(item.pricef.replace(',', ''));
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -378,7 +391,7 @@ export default {
       if (!this.amount) {
         return false;
       }
-      if (!this.selectedCurrency?.decimals) {
+      if (!isNumber(this.selectedCurrency?.decimals)) {
         return false;
       }
       /** amount is negative */
@@ -396,7 +409,7 @@ export default {
         return (
           BigNumber(this.gasLimit).gt(0) &&
           BigNumber(this.gasLimit).dp() < 1 &&
-          toBN(this.gasLimit).gte(toBN(this.defaultGasLimit))
+          toBNSafe(this.gasLimit).gte(toBNSafe(this.defaultGasLimit))
         );
       }
       return false;
@@ -443,7 +456,7 @@ export default {
     },
     txFee() {
       if (this.isValidGasLimit) {
-        return this.actualGasPrice.mul(toBN(this.gasLimit)).toString();
+        return this.actualGasPrice.mul(toBNSafe(this.gasLimit)).toString();
       }
       return '0';
     },
@@ -459,7 +472,7 @@ export default {
       const amount = new BigNumber(this.amount ? this.amount : 0)
         .times(new BigNumber(10).pow(this.selectedCurrency.decimals))
         .toFixed(0);
-      return toBN(amount);
+      return toBNSafe(amount);
     },
     allValidInputs() {
       if (this.sendTx && this.sendTx.currency) {
@@ -472,10 +485,10 @@ export default {
       return false;
     },
     actualGasPrice() {
-      if (toBN(this.localGasPrice).eqn(0)) {
-        return toBN(this.gasPrice);
+      if (toBNSafe(this.localGasPrice).eqn(0)) {
+        return toBNSafe(this.gasPrice);
       }
-      return toBN(this.localGasPrice);
+      return toBNSafe(this.localGasPrice);
     },
     formattedDefaultGasLimit() {
       return formatIntegerToString(this.defaultGasLimit);
@@ -568,6 +581,14 @@ export default {
     }, 500);
   },
   methods: {
+    // replace this once localization is merged
+    currencyFormatter(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: this.preferredCurrency,
+        currencyDisplay: 'narrowSymbol'
+      }).format(value);
+    },
     /**
      * Resets values to default
      */
@@ -642,7 +663,7 @@ export default {
           this.gasLimitError = 'Gas limit must be greater than 0';
         else if (BigNumber(value).dp() > 0)
           this.gasLimitError = 'Gas limit can not have decimal points';
-        else if (toBN(value).lt(toBN(this.defaultGasLimit)))
+        else if (toBNSafe(value).lt(toBNSafe(this.defaultGasLimit)))
           this.gasLimitError = 'Amount too low. Transaction will fail';
         else {
           this.gasLimitError = '';
@@ -658,15 +679,15 @@ export default {
     },
     setSendTransaction() {
       this.localGasPrice = this.gasPrice;
-      this.sendTx = new SendTransaction(this.$store);
+      this.sendTx = new SendTransaction();
     },
     estimateAndSetGas() {
       this.gasEstimationIsReady = false;
       this.sendTx
         .estimateGas()
         .then(res => {
-          this.gasLimit = toBN(res).toString();
-          this.defaultGasLimit = toBN(res).toString();
+          this.gasLimit = toBNSafe(res).toString();
+          this.defaultGasLimit = toBNSafe(res).toString();
           this.setGasLimitError(this.gasLimit);
           this.sendTx.setGasLimit(res);
           this.gasEstimationError = '';
@@ -707,7 +728,7 @@ export default {
       }
     },
     convertToDisplay(amount, decimals) {
-      const amt = toBN(amount).toString();
+      const amt = toBNSafe(amount).toString();
       return decimals
         ? BigNumber(amt).div(BigNumber(10).pow(decimals)).toString()
         : amt;
