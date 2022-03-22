@@ -57,7 +57,12 @@
           <div class="d-flex justify-space-between pb-4">
             <div>
               <div class="mew-body">Network Fee</div>
-              <!-- <div class="mew-body greenPrimary--text">Edit Priority</div> -->
+              <div
+                class="mew-body greenPrimary--text cursor--pointer"
+                @click="openSettings"
+              >
+                Edit Priority
+              </div>
             </div>
             <div>
               <div class="mew-body">
@@ -104,6 +109,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
 import { mapActions } from 'vuex';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
@@ -124,7 +130,13 @@ export default {
   computed: {
     ...mapState('ethBlocksTxs', ['cart']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
+    ...mapGetters('global', [
+      'network',
+      'isTestNetwork',
+      'gasPrice',
+      'gasPriceType',
+      'gasPriceByType'
+    ]),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
       return this.blocks.filter(item => {
@@ -193,6 +205,9 @@ export default {
         this.fetchBlocks();
       },
       deep: true
+    },
+    gasPriceType() {
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     }
   },
   mounted() {
@@ -249,6 +264,9 @@ export default {
         this.isLoading = false;
         Toast(e, {}, ERROR);
       }
+    },
+    openSettings() {
+      EventBus.$emit('openSettings');
     },
     /**
      * Loop through cart (array of blocks)
