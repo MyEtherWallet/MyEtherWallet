@@ -82,7 +82,7 @@
           <mew-button
             title="Proceed to Minting"
             has-full-width
-            :disabled="isLoading || isCartEmpty"
+            :disabled="!hasEnoughEth || isLoading || isCartEmpty"
             @click.native="mintBlocks"
           />
         </div>
@@ -123,7 +123,7 @@ export default {
   },
   computed: {
     ...mapState('ethBlocksTxs', ['cart']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
@@ -179,6 +179,12 @@ export default {
     isCartEmpty() {
       const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
       return cart.length >= 1 ? false : true;
+    },
+    hasEnoughEth() {
+      const totalPrice = toBN(this.gasLimit)
+        .mul(toBN(this.localGasPrice))
+        .add(toBN(toWei(this.totalMintPrice)));
+      return totalPrice.lt(this.balance);
     }
   },
   watch: {
