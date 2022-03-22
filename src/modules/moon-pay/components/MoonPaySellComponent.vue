@@ -101,7 +101,8 @@ export default {
       gasLimit: 21000,
       estimatingFees: true,
       maxBalance: '0',
-      selectedBalance: '0'
+      selectedBalance: '0',
+      ethBalance: '0'
     };
   },
   computed: {
@@ -119,7 +120,9 @@ export default {
         ? {
             title: 'Max',
             method: this.setMax,
-            disabled: this.nonMainnetMetamask
+            disabled:
+              this.nonMainnetMetamask ||
+              BigNumber(this.txFee).gte(this.selectedBalance)
           }
         : {};
     },
@@ -253,7 +256,7 @@ export default {
       }
 
       if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
-        return `You do not have enough ${symbol} to pay for network fee.`;
+        return `You do not have enough ETH to pay for network fee.`;
       }
 
       if (
@@ -357,6 +360,7 @@ export default {
       web3Instance.eth.getBalance(this.address).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
+        this.ethBalance = fromWei(res);
       });
     },
     getTokenBalance() {
@@ -458,9 +462,8 @@ export default {
           Toast(err, {}, ERROR);
         });
       this.fetchingBalance = true;
-      if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
-        this.getEthBalance();
-      } else {
+      this.getEthBalance();
+      if (this.actualSelectedCurrency.contract !== MAIN_TOKEN_ADDRESS) {
         this.getTokenBalance();
       }
       this.moonpayHandler
