@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapState('ethBlocksTxs', ['cart']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
     ...mapGetters('ethBlocksTxs', ['getAllEthBlocksTxs']),
 
     /**
@@ -52,16 +52,19 @@ export default {
     hasPendingTxs() {
       return this.getAllEthBlocksTxs.length > 0;
     },
+    identifyNetwork() {
+      return this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+    },
     tabs() {
       return [
         {
-          name: 'Mint a new block',
+          name: 'Mint a New block',
           route: { name: ETH_BLOCKS_ROUTE.CORE.NAME },
           id: 0,
           hasBadge: false
         },
         {
-          name: 'My blocks',
+          name: 'My Blocks',
           route: {
             name: ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME
           },
@@ -69,13 +72,16 @@ export default {
           hasBadge: false
         },
         {
-          name: `Batch Minting `,
+          name: `Bulk Minting `,
           route: {
             name: ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME
           },
           id: 2,
-          hasBadge: true,
-          badgeContent: this.cart.length > 0 ? `${this.cart.length}` : ''
+          hasBadge: this.identifyNetwork.length > 0 ? true : false,
+          badgeContent:
+            this.identifyNetwork.length > 0
+              ? `${this.identifyNetwork.length}`
+              : ''
         }
       ];
     }
@@ -92,6 +98,8 @@ export default {
     $route(to) {
       if (to.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
         this.activeTab = this.tabs[1].id;
+      } else if (to.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+        this.activeTab = this.tabs[2].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }
@@ -103,6 +111,9 @@ export default {
     }
     if (this.$route.name === ETH_BLOCKS_ROUTE.MY_BLOCKS.NAME) {
       this.activeTab = this.tabs[1].id;
+    }
+    if (this.$route.name === ETH_BLOCKS_ROUTE.BATCH_MINTING.NAME) {
+      this.activeTab = this.tabs[2].id;
     }
   },
   beforeDestroy() {

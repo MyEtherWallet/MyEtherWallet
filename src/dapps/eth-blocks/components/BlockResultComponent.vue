@@ -70,10 +70,8 @@
           </div>
         </v-col>
         <v-col class="d-flex align-center justify-end">
-          <div v-if="isAvailable">
-            <div class="mew-heading-4">
-              {{ mintPrice }}
-            </div>
+          <div v-if="isAvailable" class="pr-md-3">
+            <div class="mew-heading-4">{{ mintPrice }}</div>
             <div class="mew-heading-4 textLight--text">
               {{ mintFiatPrice }}
             </div>
@@ -124,7 +122,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-expand-transition v-if="!isLoading">
+    <v-slide-x-transition v-if="!isLoading">
       <div
         v-if="showRemove"
         class="d-flex py-6 align-center justify-space-between remove-container-border"
@@ -147,12 +145,11 @@
           />
         </div>
       </div>
-    </v-expand-transition>
+    </v-slide-x-transition>
   </div>
 </template>
 
 <script>
-import _ from 'lodash';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import BigNumber from 'bignumber.js';
 import {
@@ -161,6 +158,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { fromWei } from 'web3-utils';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
+import { some, isEmpty } from 'lodash';
 export default {
   name: 'BlockResultComponent',
   props: {
@@ -190,9 +188,9 @@ export default {
     ...mapState('wallet', ['address']),
     ...mapState('ethBlocksTxs', ['cart']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'isTestNetwork']),
     isReady() {
-      return !_.isEmpty(this.blockHandler) && !this.isLoading;
+      return !isEmpty(this.blockHandler) && !this.isLoading;
     },
     img() {
       return this.isReady ? this.blockHandler.img : '';
@@ -253,9 +251,10 @@ export default {
       return this.isAdded && this.isAvailable ? 'mdi-check' : 'mdi-plus';
     },
     isAdded() {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
       if (this.isReady) {
-        const found = this.cart.find(item => {
-          return item === this.blockHandler.blockNumber;
+        const found = some(cart, block => {
+          return block === this.blockHandler.blockNumber.toString();
         });
         return found;
       }
@@ -263,7 +262,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
+    ...mapActions('ethBlocksTxs', [
+      'addBlockToCart',
+      'addTestBlockToCart',
+      'removeBlockFromCart',
+      'removeTestBlockFromCart'
+    ]),
     showPanel() {
       this.showRemove = true;
     },
@@ -271,11 +275,17 @@ export default {
       this.showRemove = false;
     },
     removeBlock() {
-      this.removeBlockFromCart(this.blockHandler.blockNumber.toString());
+      this.isTestNetwork
+        ? this.removeTestBlockFromCart(this.blockHandler.blockNumber.toString())
+        : this.removeBlockFromCart(this.blockHandler.blockNumber.toString());
     },
     addToCart() {
       if (this.isAvailable && !this.isAdded) {
-        this.addBlockToCart(this.blockHandler.blockNumber);
+        if (this.isTestNetwork) {
+          this.addTestBlockToCart(this.blockHandler.blockNumber.toString());
+        } else {
+          this.addBlockToCart(this.blockHandler.blockNumber.toString());
+        }
       }
     },
     navigateToBlockInfo() {

@@ -1,17 +1,17 @@
 <template>
-  <div class="py-13 px-15">
+  <div class="py-13 px-5 px-sm-15 px-lg-15">
     <!-- Header titles -->
-    <div class="d-flex align-center justify-start">
-      <div>
-        <div class="mew-heading-2">My Batch</div>
-        <div class="mew-body textMedium--text">
-          You have added {{ cart.length }} ETH {{ pluralizeBlockCount }} for
-          Minting. Please review and click "Proceed to Minting."
-        </div>
-      </div>
-    </div>
     <v-row justify-lg="space-between" justify-md="space-between">
       <v-col cols="12" md="6" lg="7">
+        <div class="d-flex align-center justify-start">
+          <div>
+            <div class="pb-3 mew-heading-2">My Batch</div>
+            <div v-if="blockCount >= 1" class="mew-body textMedium--text">
+              You have added {{ blockCount }} ETH {{ pluralizeBlockCount }} for
+              Minting. Please review and click "Proceed to Minting."
+            </div>
+          </div>
+        </div>
         <div v-if="isLoading">
           <block-result-component
             v-for="(block, idx) in 3"
@@ -79,7 +79,12 @@
               </div>
             </div>
           </div>
-          <mew-button title="Proceed to Minting" has-full-width />
+          <mew-button
+            title="Proceed to Minting"
+            has-full-width
+            :disabled="isLoading || isCartEmpty"
+            @click.native="mintBlocks"
+          />
         </div>
       </v-col>
     </v-row>
@@ -98,6 +103,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei, toBN } from 'web3-utils';
+import { mapActions } from 'vuex';
 export default {
   name: 'ModuleEthBlockBatchMinting',
   components: {
@@ -118,7 +124,7 @@ export default {
   computed: {
     ...mapState('ethBlocksTxs', ['cart']),
     ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('global', ['network', 'gasPrice']),
+    ...mapGetters('global', ['network', 'isTestNetwork', 'gasPrice']),
     ...mapGetters('external', ['fiatValue']),
     totalAvailable() {
       return this.blocks.filter(item => {
@@ -162,8 +168,17 @@ export default {
       ).value;
       return `$ ${value}`;
     },
+    blockCount() {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length;
+    },
     pluralizeBlockCount() {
-      return this.cart.length > 1 ? 'Blocks' : 'Block';
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length > 1 ? 'Blocks' : 'Block';
+    },
+    isCartEmpty() {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return cart.length >= 1 ? false : true;
     }
   },
   watch: {
@@ -186,6 +201,7 @@ export default {
     clearInterval(this.gasPriceInterval);
   },
   methods: {
+    ...mapActions('ethBlocksTxs', ['emptyCart']),
     /**
      * Loop through cart (array of blocks)
      * and fetch information to display
@@ -194,15 +210,16 @@ export default {
       this.isLoading = true;
       const newResultArray = [];
       this.blocks = [];
-      this.totalResult = this.cart.filter(item => {
+      const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
       }).length;
       try {
-        for (let index = 0; index < this.cart.length; index++) {
+        for (let index = 0; index < cart.length; index++) {
           const block = new handlerBlock(
             this.web3,
             this.network,
-            this.cart[index],
+            cart[index],
             this.address
           );
 
@@ -235,6 +252,7 @@ export default {
     async setupMulticall() {
       const multicalls = [];
       this.batchMintData = [];
+      if (this.blocks.length === 0) this.isLoading = false;
       if (this.blocks.length >= 1) {
         try {
           this.blocks.forEach(block => {
@@ -244,29 +262,33 @@ export default {
               })
             );
           });
-          Promise.all(multicalls).then(values => {
-            // updates blocks with mintData now
-            this.blocks = values.sort((a, b) => {
-              return a.blockNumber < b.blockNumber
-                ? -1
-                : a.blockNumber > b.blockNumber
-                ? 1
-                : 0;
+          Promise.all(multicalls)
+            .then(values => {
+              // updates blocks with mintData now
+              this.blocks = values.sort((a, b) => {
+                return a.blockNumber < b.blockNumber
+                  ? -1
+                  : a.blockNumber > b.blockNumber
+                  ? 1
+                  : 0;
+              });
+              this.batchMintData = values.map(item => {
+                return item.mintData.data;
+              });
+              this.mintContract = new this.web3.eth.Contract(
+                abi,
+                values[0].mintData.to
+              );
+              const totalValue = values.reduce((a, b) => {
+                return a.add(toBN(b.mintData.value));
+              }, toBN(0));
+              this.totalMintValue = totalValue.toString();
+              this.fetchGasLimits();
+            })
+            .catch(e => {
+              this.isLoading = false;
+              Toast(e, {}, ERROR);
             });
-            this.batchMintData = values.map(item => {
-              return item.mintData.data;
-            });
-            this.mintContract = new this.web3.eth.Contract(
-              abi,
-              values[0].mintData.to
-            );
-            const totalValue = values.reduce((a, b) => {
-              const parsedValue = b.mintData.value;
-              return a.add(toBN(parsedValue));
-            }, toBN(0));
-            this.totalMintValue = totalValue.toString();
-            this.fetchGasLimits();
-          });
         } catch (e) {
           this.isLoading = false;
           Toast(e, {}, ERROR);
@@ -291,6 +313,24 @@ export default {
         .catch(e => {
           this.isLoading = false;
           Toast(e, {}, ERROR);
+        });
+    },
+    async mintBlocks() {
+      this.mintContract.methods
+        .multicall(this.batchMintData)
+        .send({
+          from: this.address,
+          gasPrice: this.gasLimit,
+          value: this.totalMintValue
+        })
+        .on('transactionHash', () => {
+          const network = this.isTestNetwork ? 'RIN' : 'ETH';
+          this.emptyCart(network);
+          this.isLoading = false;
+        })
+        .on('error', err => {
+          this.isLoading = false;
+          Toast(err, {}, ERROR);
         });
     }
   }

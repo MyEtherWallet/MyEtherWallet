@@ -10,7 +10,7 @@
     >
       <div>
         <v-row>
-          <v-col sm="12" lg="6" md="6">
+          <v-col cols="12" sm="12" lg="6" md="6">
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
@@ -18,7 +18,7 @@
               full-width
             />
           </v-col>
-          <v-col sm="12" lg="6" md="6">
+          <v-col cols="12" sm="12" lg="6" md="6">
             <v-time-picker
               v-model="time"
               format="ampm"

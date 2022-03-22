@@ -29,7 +29,11 @@
           Block is Not available: OWNER INFO
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="d-flex align-center mt-3">
+      <v-col
+        v-if="isNotAvailable"
+        cols="12"
+        class="d-flex pa-3 align-center mt-3"
+      >
         <p class="mb-0 mr-1">Owner:</p>
         <a :href="raribleOwnerLink" target="_blank">
           {{ ownerFormatted }}
@@ -40,7 +44,7 @@
           Block is Not available: Rarible LINK
         ===================================================
         -->
-      <v-col v-if="isNotAvailable" cols="12" class="mt-1">
+      <v-col v-if="isNotAvailable" cols="12" class="pa-3 mt-1">
         <a :href="raribleLink" target="_blank" class="d-flex align-center">
           <p class="mb-0">See if it's available on Rarible</p>
           <v-icon class="ml-2 greenPrimary--text" size="16px"
@@ -268,7 +272,7 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import { find } from 'lodash';
+import { some } from 'lodash';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -363,7 +367,7 @@ export default {
     alertBorderColor() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return '1px solid #F5A623';
+          return '1px solid #FBDBA7';
         case BLOCK_ALERT.AVAILABLE:
           return '1px solid #C3F0E9';
         case BLOCK_ALERT.RESERVED:
@@ -378,13 +382,13 @@ export default {
     alertBgColor() {
       switch (this.blockAlert) {
         case BLOCK_ALERT.NOT_AVAILABLE:
-          return 'F5A623';
+          return '#FEF4E5';
         case BLOCK_ALERT.AVAILABLE:
           return '#EBFAF8';
         case BLOCK_ALERT.RESERVED:
-          return 'FF445B';
+          return '#FF445B';
         default:
-          return '#EBFAF8';
+          return '#EEF3FD';
       }
     },
     /**
@@ -531,13 +535,14 @@ export default {
       return estimate;
     },
     isAdded() {
-      return find(this.cart, block => {
+      const network = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
+      return some(network, block => {
         return block === this.blockNumber;
       });
     }
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'removeBlockFromCart']),
+    ...mapActions('ethBlocksTxs', ['addBlockToCart', 'addTestBlockToCart']),
     /**
      * Emits 'mint' to the parent
      * ONLY USED IN AVALAILABLE block alert Mint button
@@ -563,7 +568,9 @@ export default {
     },
     addToCart() {
       if (this.isAvailable && !this.isAdded) {
-        this.addBlockToCart(this.blockNumber);
+        this.isTestNetwork
+          ? this.addTestBlockToCart(this.blockNumber)
+          : this.addBlockToCart(this.blockNumber);
       }
     }
   }
