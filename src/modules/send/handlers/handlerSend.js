@@ -87,7 +87,7 @@ class SendTransaction {
     }
     const gasPriceBN = toBN(this.localGasPrice);
     const fee = gasPriceBN.mul(toBN(this.TX.gas));
-    return this.balance().gt(this.balance().sub(fee)) > 0
+    return this.balance().gt(this.balance().sub(fee))
       ? this.balance().sub(fee)
       : 0;
   }
