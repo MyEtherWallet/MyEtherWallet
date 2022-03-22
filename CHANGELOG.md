@@ -1,3 +1,7 @@
+### fix
+
+* fix max on moonpay [#3739](https://github.com/MyEtherWallet/MyEtherWallet/pull/3739)
+
 ### Release v6.5.0
 
 ### feat
