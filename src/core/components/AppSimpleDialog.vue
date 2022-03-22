@@ -5,13 +5,22 @@
   or (v-model="") to control dialog
   ==================================================================
   -->
-  <v-dialog v-model="isDialogOpen" :width="width">
-    <div class="white pa-8">
-      <div class="d-flex align-start justify-space-between mb-7">
+  <v-dialog
+    v-model="isDialogOpen"
+    content-class="whitePopup"
+    :width="width"
+    :max-width="maxWidth"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <div :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'">
+      <div
+        class="d-flex align-start justify-space-between"
+        :class="title ? 'mb-7' : ''"
+      >
         <div class="mew-heading-2 pr-5">
           {{ title }}
         </div>
-        <v-btn color="textLight" icon class="mt-n2 mr-n2" @click="closeDialog">
+        <v-btn color="textLight" icon class="" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
@@ -34,7 +43,11 @@ export default {
     },
     width: {
       type: String,
-      default: '600'
+      default: ''
+    },
+    maxWidth: {
+      type: String,
+      default: ''
     },
     title: {
       type: String,
@@ -72,6 +85,13 @@ export default {
         this.closeDialog();
       }
     }
+  },
+  mounted() {
+    // Apply initial v-model value
+    if (this.value) this.isDialogOpen = this.value;
+
+    // Apply initial isOpen value
+    if (this.isOpen) this.isDialogOpen = this.isOpen;
   },
   methods: {
     closeDialog() {

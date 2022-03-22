@@ -1,3 +1,19 @@
+### Release v6.5.0
+
+### feat
+
+* add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
+
+### fix
+
+* fix max on moonpay [#3739](https://github.com/MyEtherWallet/MyEtherWallet/pull/3739)
+
+### Release v6.4.8-hotfix.1
+
+### fix
+
+* remove changelly rates for now, make eth -> btc more consistet [#3732](https://github.com/MyEtherWallet/MyEtherWallet/pull/3732)
+
 ### Release v6.4.8
 
 ### devop

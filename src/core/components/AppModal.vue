@@ -17,7 +17,7 @@
         <div class="mew-heading-2 text-center">
           {{ title }}
         </div>
-        <v-btn icon class="header-close-icon">
+        <v-btn v-if="hasCloseButton" icon class="header-close-icon">
           <v-icon size="x-large" color="grey cursor--pointer" @click="close">
             mdi-close
           </v-icon>
@@ -90,7 +90,7 @@
       </v-card-actions>
     </v-card>
     <v-sheet v-else class="py-6 px-5 px-8 position--relative">
-      <v-btn icon class="header-close-icon">
+      <v-btn v-if="hasCloseButton" icon class="header-close-icon">
         <v-icon size="x-large" color="grey cursor--pointer" @click="close">
           mdi-close
         </v-icon>
@@ -102,7 +102,9 @@
         -->
       <v-row class="header-container">
         <v-col cols="12" align-self="center">
-          <div class="mew-heading-2 text-center">{{ title }}</div>
+          <div :class="['mew-heading-2', titleCenter ? 'text-center' : '']">
+            {{ title }}
+          </div>
         </v-col>
       </v-row>
       <!--
@@ -173,6 +175,10 @@ export default {
       type: String,
       default: ''
     },
+    titleCenter: {
+      type: Boolean,
+      default: true
+    },
     close: {
       type: Function,
       default: () => {}
@@ -223,6 +229,10 @@ export default {
     anchored: {
       type: Boolean,
       default: false
+    },
+    hasCloseButton: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

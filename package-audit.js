@@ -6,8 +6,9 @@ const AUDIT_EXCEPTIONS = [
   'css-what',
   'normalize-url',
   'diff',
-  'ansi-html', // no patches available
-  'axios'
+  // no patches available
+  'ansi-html',
+  'minimist'
 ];
 const execute = (command, callback) => {
   exec(
