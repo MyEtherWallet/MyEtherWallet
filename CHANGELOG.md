@@ -4,6 +4,10 @@
 
 * add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
 
+### fix
+
+* fix max on moonpay [#3739](https://github.com/MyEtherWallet/MyEtherWallet/pull/3739)
+
 ### Release v6.4.8-hotfix.1
 
 ### fix
