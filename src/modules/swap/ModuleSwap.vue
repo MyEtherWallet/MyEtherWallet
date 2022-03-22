@@ -44,10 +44,13 @@
                     isEthNetwork &&
                     (amountErrorMessage === errorMsgs.amountExceedsEthBalance ||
                       amountErrorMessage === errorMsgs.amountEthIsTooLow)
-                      ? 'Buy more.'
+                      ? network.type.canBuy
+                        ? 'Buy more.'
+                        : ''
                       : null
                   "
                   :max-btn-obj="maxBtn"
+                  @buyMore="openMoonpay"
                   @input="setTokenInValue"
               /></v-col>
               <v-col
@@ -103,10 +106,10 @@
               <mew-button
                 btn-size="small"
                 btn-style="outline"
-                title="Buy Ether"
+                :title="`Buy ${network.type.currencyName}`"
                 class="ma-1"
                 :has-full-width="$vuetify.breakpoint.xsOnly"
-                @click.native="buyEth"
+                @click.native="openMoonpay"
               />
             </div>
           </app-user-msg-block>
@@ -308,6 +311,7 @@ import { TRENDING_LIST } from './handlers/configs/configTrendingTokens';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 import xss from 'xss';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 const MIN_GAS_LIMIT = 800000;
 
@@ -321,7 +325,7 @@ export default {
     SwapProviderMentions,
     AppTransactionFee
   },
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   props: {
     fromToken: {
       type: String,
@@ -385,13 +389,8 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'swapLink',
-      'gasPriceByType'
-    ]),
+    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('wallet', [
       'balanceInETH',
       'tokensList',
@@ -618,13 +617,13 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = foundToken.pricef;
+            foundToken.price = this.currencyFormatter(foundToken.pricef);
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = foundToken.pricef;
+            foundToken.price = this.currencyFormatter(foundToken.pricef);
             foundToken.isEth = token.isEth;
             return foundToken;
           }
@@ -707,19 +706,41 @@ export default {
      * to swap from
      */
     fromTokens() {
-      return this.availableTokens.fromTokens
+      return this.availableTokens.fromTokens.map(token => {
+        const foundToken = this.contractToToken(token.contract);
+        if (foundToken) {
+          foundToken.contract = token.contract;
+          foundToken.price = this.currencyFormatter(foundToken.pricef);
+          foundToken.isEth = token.isEth;
+          return foundToken;
+        }
+        token.price = '';
+        token.subtext = token.name;
+        token.value = token.name;
+        token.name = token.symbol;
+        return token;
+      });
+    },
+    /**
+     * @returns all trending tokens
+     * to swap to
+     */
+    trendingTokens() {
+      if (!TRENDING_LIST[this.network.type.name]) return [];
+      return TRENDING_LIST[this.network.type.name]
+        .filter(token => {
+          return token.contract !== this.fromTokenType?.contract;
+        })
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = foundToken.pricef;
+            foundToken.price = this.currencyFormatter(foundToken.pricef);
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
-            foundToken.contract = token.contract;
-            foundToken.price = foundToken.pricef;
-            foundToken.isEth = token.isEth;
-            return foundToken;
+            token = Object.assign(token, foundToken);
+            token.price = this.currencyFormatter(token.pricef);
           }
           const name = token.name;
           token.price = '0.00';
@@ -731,26 +752,6 @@ export default {
         .filter(
           item => item.name !== '' && item.symbol !== '' && item.subtext !== ''
         );
-    },
-    /**
-     * @returns all trending tokens
-     * to swap to
-     */
-    trendingTokens() {
-      if (!TRENDING_LIST[this.network.type.name]) return [];
-      return TRENDING_LIST[this.network.type.name].map(token => {
-        if (token.cgid) {
-          const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = foundToken.pricef;
-          return Object.assign(token, foundToken);
-        }
-        const foundToken = this.contractToToken(token.contract);
-        if (foundToken) {
-          token = Object.assign(token, foundToken);
-          token.price = token.pricef;
-        }
-        return token;
-      });
     },
     txFee() {
       return toBN(this.totalGasLimit).mul(toBN(this.localGasPrice)).toString();
@@ -1059,14 +1060,26 @@ export default {
       this.isValidRefundAddr = false;
       this.setupSwap();
     },
+    // replace this once localization is merged
+    currencyFormatter(val) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: this.preferredCurrency,
+        currencyDisplay: 'narrowSymbol'
+      }).format(val.replace(',', ''));
+    },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? t.usdBalancef
+          ? this.currencyFormatter(t.usdBalancef)
           : '0.00';
-        t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
-        t.price = t.hasOwnProperty('pricef') ? t.pricef : '0.00';
+        t.tokenBalance = t.hasOwnProperty('balancef')
+          ? this.currencyFormatter(t.balancef)
+          : '0.00';
+        t.price = t.hasOwnProperty('pricef')
+          ? this.currencyFormatter(t.pricef)
+          : '0.00';
         return t;
       });
     },
@@ -1120,10 +1133,6 @@ export default {
         });
       }
       return [];
-    },
-    buyEth() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
     },
     switchTokens() {
       const fromToken = clone(this.fromTokenType);

@@ -40,9 +40,8 @@
             <a
               v-if="isEthNetwork"
               class="mew-body font-weight-medium"
-              :href="swapLink"
-              target="_blank"
               rel="noopener noreferrer"
+              @click="openMoonpay"
             >
               Buy {{ currencyName }}
             </a>
@@ -57,12 +56,14 @@
 import AppModal from '@/core/components/AppModal';
 import AppAddrQr from '@/core/components/AppAddrQr';
 import { mapGetters } from 'vuex';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   components: {
     AppModal,
     AppAddrQr
   },
+  mixins: [buyMore],
   props: {
     currencyName: {
       type: String,
@@ -75,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['isEthNetwork', 'swapLink'])
+    ...mapGetters('global', ['isEthNetwork'])
   },
   methods: {
     openBarcodeModal() {

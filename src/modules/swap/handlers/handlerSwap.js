@@ -42,9 +42,7 @@ class Swap {
           .sort((a, b) => {
             if (a.name > b.name) return 1;
             return -1;
-          })
-          // remove once merging to native PR
-          .filter(item => item.isEth);
+          });
         return {
           fromTokens: sorted.filter(t => {
             if (!t || !t.contract) return false;
