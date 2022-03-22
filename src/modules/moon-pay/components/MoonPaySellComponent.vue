@@ -101,8 +101,7 @@ export default {
       gasLimit: 21000,
       estimatingFees: true,
       maxBalance: '0',
-      selectedBalance: '0',
-      ethBalance: '0'
+      selectedBalance: '0'
     };
   },
   computed: {
@@ -360,7 +359,6 @@ export default {
       web3Instance.eth.getBalance(this.address).then(res => {
         this.fetchingBalance = false;
         this.selectedBalance = fromWei(res);
-        this.ethBalance = fromWei(res);
       });
     },
     getTokenBalance() {
@@ -462,8 +460,9 @@ export default {
           Toast(err, {}, ERROR);
         });
       this.fetchingBalance = true;
-      this.getEthBalance();
-      if (this.actualSelectedCurrency.contract !== MAIN_TOKEN_ADDRESS) {
+      if (this.actualSelectedCurrency.contract === MAIN_TOKEN_ADDRESS) {
+        this.getEthBalance();
+      } else {
         this.getTokenBalance();
       }
       this.moonpayHandler
