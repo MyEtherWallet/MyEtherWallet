@@ -123,7 +123,7 @@ const contractToToken =
     }
     if (!networkToken) return null;
     return Object.assign(cgToken, {
-      name: networkToken.symbol,
+      name: networkToken.name,
       symbol: networkToken.symbol,
       subtext: networkToken.name,
       value: networkToken.name,

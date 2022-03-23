@@ -1,3 +1,42 @@
+### Release v6.5.0
+
+### feat
+
+* add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
+
+### fix
+
+* fix max on moonpay [#3739](https://github.com/MyEtherWallet/MyEtherWallet/pull/3739)
+
+### Release v6.4.8-hotfix.1
+
+### fix
+
+* remove changelly rates for now, make eth -> btc more consistet [#3732](https://github.com/MyEtherWallet/MyEtherWallet/pull/3732)
+
+### Release v6.4.8
+
+### devop
+
+* Added toBNSafe that safely converts numbers to BN [#3696](https://github.com/MyEtherWallet/MyEtherWallet/pull/3696)
+* update packages from dependabot [#3700](https://github.com/MyEtherWallet/MyEtherWallet/pull/3700)
+* add missing members [#3701](https://github.com/MyEtherWallet/MyEtherWallet/pull/3701)
+* fix meta icons, catch swap empty ones [#3717](https://github.com/MyEtherWallet/MyEtherWallet/pull/3717)
+
+### feat
+
+* page not found 404 [#3684](https://github.com/MyEtherWallet/MyEtherWallet/pull/3684)
+
+### fix
+
+* replace all old colors with new colors [#3559](https://github.com/MyEtherWallet/MyEtherWallet/pull/3559)
+* fix wallet balance loading animation [#3624](https://github.com/MyEtherWallet/MyEtherWallet/pull/3624)
+* fixes: 2929544912, 2780117575, 2688459025, 2735474055, 3042395444, 2505098087, 2504519254 [#3695](https://github.com/MyEtherWallet/MyEtherWallet/pull/3695)
+* fetch tokens when network is changed [#3697](https://github.com/MyEtherWallet/MyEtherWallet/pull/3697)
+* remove more button when the user has no tokens [#3702](https://github.com/MyEtherWallet/MyEtherWallet/pull/3702)
+* fix icons and link in module confirmation, hide notification dropdown if theres no notifications [#3705](https://github.com/MyEtherWallet/MyEtherWallet/pull/3705)
+* correctly catch changelly errors [#3706](https://github.com/MyEtherWallet/MyEtherWallet/pull/3706)
+
 ### Release v6.4.7
 
 ### devop
