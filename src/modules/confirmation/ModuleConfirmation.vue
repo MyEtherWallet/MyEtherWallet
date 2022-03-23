@@ -1,81 +1,29 @@
 <template>
   <div>
-    <app-modal
-      :show="showSuccessModal"
-      :title="successTitle"
-      :close="resetSuccess"
-      :close-only="true"
-      width="480"
-      @close="resetSuccess"
-    >
-      <template #dialogBody>
-        <div>
-          <!--
-          ====================================================================================
-            Lottie or icon
-          =====================================================================================
-          -->
-          <div
-            v-if="showSuccessModal"
-            v-lottie="successLottie"
-            :class="[{ 'py-7': showSuccessSwap }, 'lottie']"
-          />
-          <!--
-          ====================================================================================
-            Body
-          =====================================================================================
-          -->
-          <div class="mew-body">
-            {{ successBodyText }}
-          </div>
-          <!--
-          ====================================================================================
-            Links
-          =====================================================================================
-          -->
-          <v-row class="justify-sm-space-around align-center pt-3" dense>
-            <v-col cols="12" sm="auto" class="pb-2" order-sm="3">
-              <a
-                class="d-flex justify-center justify-sm-end"
-                @click.stop="viewProgress"
-                >View Progress</a
-              >
-            </v-col>
-            <v-col cols="12" sm="auto" class="pb-2">
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.etherscan"
-                class="d-flex justify-center justify-sm-start"
-                >View on Etherscan
-                <v-icon color="greenPrimary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-            <v-col
-              v-if="network.type.isEthVMSupported.supported"
-              cols="12"
-              sm="auto"
-              class="pb-2"
-            >
-              <a
-                rel="noopener noreferrer"
-                target="_blank"
-                :href="links.ethvm"
-                class="d-flex justify-center"
-                >View on EthVM
-                <v-icon color="greenPrimary" small>mdi-launch</v-icon></a
-              >
-            </v-col>
-          </v-row>
-        </div>
-      </template>
-    </app-modal>
+    <success-modal
+      :show-success-modal="showSuccessModal"
+      :show-success-swap="showSuccessSwap"
+      :success-title="successTitle"
+      :reset-success="resetSuccess"
+      :reset="reset"
+      :network="network"
+      :links="links"
+      :success-body-text="successBodyText"
+    />
+    <cross-chain-confirmation
+      :show-cross-chain-modal="showCrossChainModal"
+      :tx-obj="tx"
+      :title="title"
+      :reset="reset"
+      :sent-btc="resolver"
+    />
     <app-modal
       :show="showTxOverlay"
       :title="title !== '' ? title : 'Confirmation'"
       :close="reset"
       :btn-action="btnAction"
       :btn-enabled="disableBtn"
+      :btn-text="toNonEth ? 'Proceed with swap' : 'Confirm & Send'"
       :scrollable="true"
       :anchored="true"
       width="650"
@@ -83,6 +31,20 @@
     >
       <template #dialogBody>
         <v-card-text ref="scrollableContent" class="py-0 px-5 px-md-0">
+          <div
+            v-if="toNonEth"
+            class="px-4 py-6 pr-6 textBlack2--text border-radius--5px mb-5"
+          >
+            <b>Please double check everything.</b> MEW team will not be able to
+            reverse your transaction once its submitted. You will still be
+            charged gas fee even if the transaction fails.
+            <a
+              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more.</a
+            >
+          </div>
           <confirmation-send-transaction-details
             v-if="!isSwap"
             :to="txTo"
@@ -110,9 +72,13 @@
             :tx-fee="swapInfo.txFee"
             :gas-price-type="swapInfo.gasPriceType"
             :is-hardware="isHardware"
+            :is-to-non-eth="toNonEth"
+            :to-currency="swapInfo.toType"
+            :to-address="swapInfo.to"
           />
           <!-- Warning Sheet -->
           <div
+            v-if="!toNonEth"
             class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Cancelling or
@@ -241,6 +207,13 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <div v-if="toNonEth" class="pt-4">
+            By clicking 'Proceed with swap', I agree to the
+            <a href="https://changelly.com/aml-kyc" target="_blank">
+              Changelly AML/KYC
+            </a>
+            and <router-link :to="termRoute">Terms of Service</router-link>
+          </div>
         </v-card-text>
       </template>
     </app-modal>
@@ -278,6 +251,10 @@ import ConfirmationMesssage from './components/ConfirmationMessage';
 import ConfirmationSwapTransactionDetails from './components/ConfirmationSwapTransactionDetails';
 import ConfirmationSendTransactionDetails from './components/ConfirmationSendTransactionDetails';
 import ConfirmWithWallet from './components/ConfirmWithWallet';
+import CrossChainConfirmation from './components/CrossChainConfirmation';
+
+import SuccessModal from './components/SuccessModal';
+
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
@@ -298,6 +275,7 @@ import * as locStore from 'store';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
 import dataToAction from './handlers/dataToAction';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { ROUTES_HOME } from '@/core/configs/configRoutes';
 
 export default {
   name: 'ModuleConfirmation',
@@ -307,7 +285,9 @@ export default {
     AppModal,
     ConfirmationSwapTransactionDetails,
     ConfirmationSendTransactionDetails,
-    ConfirmWithWallet
+    ConfirmWithWallet,
+    SuccessModal,
+    CrossChainConfirmation
   },
   mixins: [handlerAnalytics],
   data() {
@@ -316,6 +296,8 @@ export default {
       showSignOverlay: false,
       showSuccessModal: false,
       showSuccessSwap: false,
+      showCrossChainModal: false,
+      toNonEth: false,
       tx: {},
       resolver: () => {},
       title: '',
@@ -332,7 +314,8 @@ export default {
         etherscan: ''
       },
       error: '',
-      panel: []
+      panel: [],
+      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
     };
   },
   computed: {
@@ -470,12 +453,6 @@ export default {
       return this.showSuccessSwap
         ? 'Once completed, the token amount will be deposited to your wallet. This should take a few minutes depending on how congested the Ethereum network is.'
         : 'Once completed, the token amount will be deposited to the address you provided. This should take a few minutes depending on how congested the Ethereum network is.';
-    },
-    /**
-     * Property returns string, depending whether or not this is a swap or send
-     */
-    successLottie() {
-      return this.showSuccessSwap ? 'swap' : 'checkmark';
     }
   },
   watch: {
@@ -544,9 +521,12 @@ export default {
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      _self.title = 'Verify Swap';
-      if (!this.isHardware && this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-        await this.signTx();
+      _self.title = _self.swapInfo.toTokenType.isEth
+        ? 'Verify Swap'
+        : 'Review Swap';
+      _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
+      if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
+        await _self.signTx();
       }
     });
 
@@ -569,7 +549,7 @@ export default {
         _self.showTxOverlay = true;
 
         if (!isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.signBatchTx();
+          _self.signBatchTx();
         }
       }
     );
@@ -595,9 +575,22 @@ export default {
           _self.showSignOverlay = true;
         })
         .catch(e => {
-          this.reset();
+          _self.reset();
           _self.instance.errorHandler(e);
         });
+    });
+    /**
+     * receives an @Object which contains info about the currency and rates
+     * and a resolver which resets the module confirmation
+     */
+    EventBus.$on(EventNames.SHOW_CROSS_CHAIN_MODAL, (txObj, resolver) => {
+      _self.title = `Send ${txObj.fromType}`;
+      _self.tx = txObj;
+      _self.showCrossChainModal = true;
+      _self.resolver = val => {
+        resolver(val);
+        _self.reset();
+      };
     });
   },
   methods: {
@@ -626,6 +619,7 @@ export default {
       this.showTxOverlay = false;
       this.showSignOverlay = false;
       this.showSuccessModal = false;
+      this.showCrossChainModal = false;
       this.tx = {};
       this.resolver = () => {};
       this.title = '';
@@ -711,10 +705,6 @@ export default {
       }
       this.reset();
       this.showSuccess(hash);
-    },
-    viewProgress() {
-      EventBus.$emit('openNotifications');
-      this.reset();
     },
     showSuccess(param) {
       if (isArray(param)) {
@@ -863,12 +853,15 @@ export default {
           : item.hasOwnProperty('encodeABI')
           ? item.encodeABI()
           : '0x';
+        const symbol = isEmpty(this.sendCurrency)
+          ? this.network.type.currencyName
+          : this.sendCurrency.symbol;
         const value =
           data !== '0x'
             ? !this.isSwap && !this.isBatch
-              ? `${this.value} ${this.sendCurrency.symbol}`
+              ? `${this.value} ${symbol}`
               : `0 ${this.network.type.currencyName}`
-            : `${this.value} ${this.sendCurrency.symbol}`;
+            : `${this.value} ${symbol}`;
         return [
           {
             title: 'Network',
@@ -941,8 +934,5 @@ $borderPanels: 1px solid var(--v-greyLight-base) !important;
 }
 .expansion-panel-border-bottom {
   border-bottom: $borderPanels;
-}
-.lottie {
-  height: 120px;
 }
 </style>

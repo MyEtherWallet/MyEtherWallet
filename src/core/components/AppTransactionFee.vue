@@ -142,13 +142,8 @@
             class="ml-2"
           >
             {{ message }}
-            <a
-              v-if="notEnoughEth"
-              rel="noopener noreferrer"
-              target="_blank"
-              :href="swapLink"
-            >
-              Buy more ETH
+            <a v-if="notEnoughEth && network.type.canBuy" @click="openMoonpay">
+              Buy more {{ network.type.name }}
             </a>
           </div>
           <div>
@@ -177,9 +172,11 @@ import {
 } from '@/core/helpers/numberFormatHelper';
 import { estimatedTime } from '@/core/helpers/gasPriceHelper';
 import { fromWei } from 'web3-utils';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'AppTransactionFee',
   components: { AppNetworkSettingsModal, AppModal },
+  mixins: [buyMore],
   props: {
     showFee: {
       type: Boolean,
@@ -201,10 +198,6 @@ export default {
       type: String,
       default: '0'
     },
-    message: {
-      type: String,
-      default: ''
-    },
     notEnoughEth: {
       type: Boolean,
       default: false
@@ -223,12 +216,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', [
-      'network',
-      'isEthNetwork',
-      'swapLink',
-      'gasPriceByType'
-    ]),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapState('global', ['online', 'gasPriceType']),
     txFeeInEth() {
       return fromWei(this.txFee);
