@@ -133,6 +133,7 @@
           :enough-funds="enoughFunds"
           :show-balance-error="showBalanceError"
           :set-address="setAddress"
+          @hasMinEth="hasMinEth"
         />
       </template>
     </mew-module>
@@ -155,6 +156,8 @@ import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { toBN } from 'web3-utils';
 
+const MIN_GAS_LIMIT = 21000;
+
 export default {
   components: {
     NftManagerDetails,
@@ -173,12 +176,14 @@ export default {
       selectedContract: {},
       gasFees: '0',
       enoughFunds: false,
-      showBalanceError: false
+      showBalanceError: false,
+      localGasPrice: '0'
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
     ...mapState('global', ['network', 'online', 'gasPriceType']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('global', [
       'isEthNetwork',
       'network',
@@ -240,7 +245,7 @@ export default {
       const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
       const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
       this.gasFees = gasFeesToBN.toString();
-      if (gasFeesToBN.gte(toBN(this.balance))) {
+      if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
         //gasFeesToBN vs current balance
         this.enoughFunds = false;
         this.showBalanceError = true;
@@ -251,16 +256,35 @@ export default {
     }
   },
   mounted() {
-    /**
-     * Init NFT Handler
-     */
-    this.nft = new NFT({
-      network: this.network,
-      address: this.address,
-      web3: this.web3
-    });
+    this.setUpNFT();
+    this.hasMinEth();
   },
   methods: {
+    setUpNFT() {
+      /**
+       * Init NFT Handler
+       */
+      this.nft = new NFT({
+        network: this.network,
+        address: this.address,
+        web3: this.web3
+      });
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+    },
+    hasMinEth() {
+      const currentGasPrice = this.gasPriceByType(this.gasPriceType);
+      if (
+        toBN(this.balanceInWei).gt(
+          toBN(currentGasPrice).mul(toBN(MIN_GAS_LIMIT))
+        )
+      ) {
+        this.enoughFunds = true;
+        this.showBalanceError = false;
+      } else {
+        this.enoughFunds = false;
+        this.showBalanceError = true;
+      }
+    },
     getImageUrl(token) {
       return this.nft.getImageUrl(token.contract, token.token_id);
     },

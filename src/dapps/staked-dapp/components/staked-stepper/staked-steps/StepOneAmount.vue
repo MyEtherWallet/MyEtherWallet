@@ -21,9 +21,12 @@
           label="Staking amount"
           :items="selectItems"
           :error-messages="errorMessages"
-          :buy-more-str="errorMessages ? 'Buy more.' : null"
+          :buy-more-str="
+            errorMessages ? (network.type.canBuy ? 'Buy more.' : null) : null
+          "
           is-custom
           outlined
+          @buyMore="openMoonpay"
           @input="setAmount"
         />
         <!--
@@ -137,8 +140,10 @@ import {
   formatPercentageValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: { BorderBlock },
+  mixins: [buyMore],
   props: {
     currentApr: {
       type: String,
@@ -155,6 +160,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
@@ -186,7 +192,12 @@ export default {
             name: i + ' ETH',
             value: i + '', //change to string to make mew select filter work
             img: this.networkImg,
-            price: formatFiatValue(new BigNumber(i).times(this.fiatValue)).value
+            // change this in localization branch
+            price: new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: this.preferredCurrency,
+              currencyDisplay: 'narrowSymbol'
+            }).format(new BigNumber(i).times(this.fiatValue).toString())
           });
         }
       }

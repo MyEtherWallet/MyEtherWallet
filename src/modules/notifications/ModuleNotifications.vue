@@ -257,7 +257,10 @@ export default {
      */
     checkAndSetNotificationStatus(notification) {
       const type = notification.type;
-      if (type === NOTIFICATION_TYPES.SWAP) {
+      if (
+        type === NOTIFICATION_TYPES.SWAP &&
+        notification.status === NOTIFICATION_STATUS.PENDING
+      ) {
         notification.checkSwapStatus(this.swapper);
       }
       if (
