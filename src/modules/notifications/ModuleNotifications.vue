@@ -100,7 +100,9 @@ import handlerNotification from './handlers/handlerNotification.mixin';
 import handlerSwap from '@/modules/swap/handlers/handlerSwap';
 
 import formatNotification from './helpers/formatNotification';
+import formatNonChainNotification from './helpers/formatNonChainNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
+import NonChainNotification from './handlers/nonChainNotification';
 // import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
@@ -140,7 +142,7 @@ export default {
      * Swap Handler
      */
     swapper() {
-      return new handlerSwap(this.web3);
+      return new handlerSwap(this.web3, this.network.type.name);
     },
     /**
      * Formatted outgoing tx notifications
@@ -148,7 +150,10 @@ export default {
     outgoingTxNotifications() {
       return this.txNotifications
         .map(notification => {
-          return formatNotification(notification, this.network);
+          if (notification.hasOwnProperty('hash')) {
+            return formatNotification(notification, this.network);
+          }
+          return formatNonChainNotification(notification);
         })
         .sort(this.sortByDate);
     },
@@ -166,8 +171,12 @@ export default {
             notification.type = NOTIFICATION_TYPES.IN;
             if (notification.status) notification.read = true;
             else notification.read = false;
-            notification = new Notification(notification);
-            return formatNotification(notification, this.network);
+            if (notification.hasOwnProperty('hash')) {
+              notification = new Notification(notification);
+              return formatNotification(notification, this.network);
+            }
+            notification = new NonChainNotification(notification);
+            return formatNonChainNotification(notification);
           })
           .sort(this.sortByDate);
       }
@@ -248,9 +257,12 @@ export default {
      * Formatted current notifications
      */
     formattedCurrentNotifications() {
-      return this.currentNotifications.map(notification =>
-        formatNotification(notification, this.network)
-      );
+      return this.currentNotifications.map(notification => {
+        if (notification.hasOwnProperty('hash')) {
+          return formatNotification(notification, this.network);
+        }
+        return formatNonChainNotification(notification);
+      });
     },
     /**
      * Check status if it is an outgoing pending tx
