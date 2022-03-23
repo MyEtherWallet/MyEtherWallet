@@ -47,6 +47,7 @@ import {
   getBufferFromHex,
   sanitizeHex
 } from '../../../access-wallet/common/helpers';
+import { isString } from 'lodash';
 export default {
   name: 'AccessWalletPrivateKey',
   props: {
@@ -91,6 +92,7 @@ export default {
      * @returns actual private without '0x' prefix
      */
     actualPrivateKey() {
+      if (!isString(this.privateKey)) return '';
       return this.privateKey && this.privateKey.substr(0, 2) === '0x'
         ? this.privateKey.replace('0x', '')
         : this.privateKey;

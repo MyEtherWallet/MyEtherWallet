@@ -10,7 +10,7 @@ import {
 const formatNotification = (obj, network) => {
   const newObj = {
     txHash: {
-      value: obj.hash,
+      value: obj.hash ? obj.hash : '',
       string: 'Transaction Hash',
       link: `${network.type.blockExplorerTX.replace('[[txHash]]', obj.hash)}`
     },

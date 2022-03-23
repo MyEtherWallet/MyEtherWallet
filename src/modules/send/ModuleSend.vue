@@ -248,8 +248,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
