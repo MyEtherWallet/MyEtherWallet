@@ -154,7 +154,7 @@ import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { toBN } from 'web3-utils';
+import { toBN, isAddress } from 'web3-utils';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -241,17 +241,19 @@ export default {
       }
     },
     async toAddress(newVal) {
-      const gasTypeFee = this.gasPriceByType(this.gasPriceType);
-      const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
-      const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
-      this.gasFees = gasFeesToBN.toString();
-      if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
-        //gasFeesToBN vs current balance
-        this.enoughFunds = false;
-        this.showBalanceError = true;
-      } else {
-        this.enoughFunds = true;
-        this.showBalanceError = false;
+      if (isAddress(newVal)) {
+        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
+        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+        this.gasFees = gasFeesToBN.toString();
+        if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
+          //gasFeesToBN vs current balance
+          this.enoughFunds = false;
+          this.showBalanceError = true;
+        } else {
+          this.enoughFunds = true;
+          this.showBalanceError = false;
+        }
       }
     }
   },
@@ -318,7 +320,6 @@ export default {
         const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
         this.gasFees = gasFeesToBN.toString();
         if (gasFeesToBN.gte(toBN(this.balance))) {
-          //gasFeesToBN vs current balance
           this.enoughFunds = false;
         } else {
           try {
