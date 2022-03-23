@@ -2,9 +2,9 @@
 
 ### devop
 
-* * Added check for contract name [#3723](https://github.com/MyEtherWallet/MyEtherWallet/pull/3723)
-* * Added bn helper to handler send [#3726](https://github.com/MyEtherWallet/MyEtherWallet/pull/3726)
-* * added check to actualprivatekey for string [#3733](https://github.com/MyEtherWallet/MyEtherWallet/pull/3733)
+* Added check for contract name [#3723](https://github.com/MyEtherWallet/MyEtherWallet/pull/3723)
+* Added bn helper to handler send [#3726](https://github.com/MyEtherWallet/MyEtherWallet/pull/3726)
+* added check to actualprivatekey for string [#3733](https://github.com/MyEtherWallet/MyEtherWallet/pull/3733)
 * release holder [#3744](https://github.com/MyEtherWallet/MyEtherWallet/pull/3744)
 
 ### chore
@@ -17,14 +17,12 @@
 
 ### fix
 
-* * getting stuck at pending on failed transaction\* adds estimated fees tooltip
-* menu highlight on direct navigation to my-blocks
-  [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
-* * check for undefined contract address [#3708](https://github.com/MyEtherWallet/MyEtherWallet/pull/3708)
-* * prevents error pop up if first phrase is skipped in mnemonic phrase login [#3711](https://github.com/MyEtherWallet/MyEtherWallet/pull/3711)
+* check for undefined contract address [#3708](https://github.com/MyEtherWallet/MyEtherWallet/pull/3708)
+* prevents error pop up if first phrase is skipped in mnemonic phrase login [#3711](https://github.com/MyEtherWallet/MyEtherWallet/pull/3711)
 * fix Cannot read properties of undefined [#3713](https://github.com/MyEtherWallet/MyEtherWallet/pull/3713)
 * catch error objects for web3 and in general [#3714](https://github.com/MyEtherWallet/MyEtherWallet/pull/3714)
 * catch not allowed error from bitbox02 [#3715](https://github.com/MyEtherWallet/MyEtherWallet/pull/3715)
+* disable next(access wallet) button if there is no password [#3718](https://github.com/MyEtherWallet/MyEtherWallet/pull/3718)
 * update team page [#3722](https://github.com/MyEtherWallet/MyEtherWallet/pull/3722)
 * fix sentry type error undefined "name" [#3730](https://github.com/MyEtherWallet/MyEtherWallet/pull/3730)
 
