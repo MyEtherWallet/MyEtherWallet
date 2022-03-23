@@ -28,7 +28,7 @@
     <!-- ======================================================================================= -->
     <!-- You are not staking user message -->
     <!-- ======================================================================================= -->
-    <div v-if="!hasStaked" class="mt-4">
+    <div v-if="!hasStaked && !hasPending" class="mt-4">
       You are currently not staking any {{ currencyName }}. To earn rewards
       start staking.
       <span class="greenPrimary--text cursor--pointer" @click="() => {}"

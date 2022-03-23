@@ -96,6 +96,24 @@
                 <div class="mew-label textLight--text">${{ gasPriceFiat }}</div>
               </div>
             </div>
+            <div class="d-flex justify-space-between mb-5">
+              <div class="mew-body">Staking Fee</div>
+              <div class="text-right">
+                <div class="">{{ stakingFee }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  ${{ stakingFeeFiatValue }}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-space-between mb-5">
+              <div class="mew-body">Total</div>
+              <div class="text-right">
+                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
+                <div v-show="isEthNetwork" class="mew-body textLight--text">
+                  ${{ totalFiat }}
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- ======================================================================================= -->
@@ -172,6 +190,7 @@ import StakewiseStaking from '../components/StakewiseStaking';
 import StakewiseRewards from '../components/StakewiseRewards';
 import ButtonBalance from '@/core/components/AppButtonBalance';
 import Swapper from '@/modules/swap/handlers/handlerSwap';
+import stakeHandler from '../handlers/stakewiseStakeHandler';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
@@ -207,6 +226,7 @@ export default {
       gasLimit: '21000',
       availableQuotes: [],
       selectedProvider: {},
+      stakeHandler: {},
       currentTrade: null,
       swapper: null,
       loading: false,
@@ -232,6 +252,34 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
+    currencyName() {
+      return this.network.type.currencyName;
+    },
+    stakingFee() {
+      return BigNumber(this.compoundAmount).gt(0)
+        ? BigNumber(this.compoundAmount).times(BigNumber(1).div(100)).toString()
+        : '--';
+    },
+    stakingFeeFiatValue() {
+      const fee = BigNumber(this.compoundAmount);
+      return fee.gt(0)
+        ? formatFiatValue(fee.times(this.fiatValue).toString()).value
+        : '--';
+    },
+    totalFiat() {
+      const total = BigNumber(this.totalUserStaked);
+      return total.gt(0)
+        ? formatFiatValue(total.times(this.fiatValue).toString()).value
+        : '--';
+    },
+    totalUserStaked() {
+      const total = BigNumber(this.compoundAmount);
+      return total.gt(0)
+        ? total
+            .minus(BigNumber(this.compoundAmount).times(BigNumber(1).div(100)))
+            .toString()
+        : '--';
+    },
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
     },
@@ -315,11 +363,21 @@ export default {
   watch: {
     gasPriceType() {
       this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    },
+    compoundAmount(value) {
+      if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
+        this.setGasLimit();
+      }
     }
   },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.swapper = new Swapper(this.web3, this.network.type.name);
+    this.stakeHandler = new stakeHandler(
+      this.web3,
+      this.isEthNetwork,
+      this.address
+    );
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -460,6 +518,17 @@ export default {
     },
     openSettings() {
       EventBus.$emit('openSettings');
+    },
+    setGasLimit() {
+      this.stakeHandler
+        .getTransactionFee()
+        .then(res => {
+          this.gasLimit = res;
+          this.stakeHandler._setGasLimit(res);
+        })
+        .catch(err => {
+          Toast(err, {}, ERROR);
+        });
     }
   }
 };
