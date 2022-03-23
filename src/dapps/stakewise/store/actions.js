@@ -10,9 +10,14 @@ const setValidatorApr = function ({ commit }, val) {
 const addToPendingTxs = function ({ commit }, val) {
   commit('ADD_TO_PENDING_TXS', val);
 };
-
+const addToPendingTxsGoerli = function ({ commit }, val) {
+  commit('ADD_TO_PENDING_TXS_GOERLI', val);
+};
 const removePendingTxs = function ({ commit }, val) {
   commit('REMOVE_TO_PENDING_TXS', val);
+};
+const removePendingTxsGoerli = function ({ commit }, val) {
+  commit('REMOVE_TO_PENDING_TXS_GOERLI', val);
 };
 
 export default {
@@ -20,5 +25,7 @@ export default {
   setStakingFee,
   setValidatorApr,
   addToPendingTxs,
-  removePendingTxs
+  addToPendingTxsGoerli,
+  removePendingTxs,
+  removePendingTxsGoerli
 };

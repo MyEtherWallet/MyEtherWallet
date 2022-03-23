@@ -325,7 +325,7 @@ export default {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
-    ...mapActions('stakewise', ['addToPendingTxs']),
+    ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeHandler._setAmount(BigNumber(value).toString());
@@ -357,7 +357,10 @@ export default {
             hash: hash,
             amount: this.totalUserStaked
           };
-          this.addToPendingTxs(info).then(() => {
+          const addTx = this.isEthNetwork
+            ? this.addToPendingTxs
+            : this.addToPendingTxsGoerli;
+          addTx(info).then(() => {
             // reset stakewise
             this.setAmount(0);
             this.stakeAmount = '0';

@@ -39,9 +39,36 @@
     <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
-    <div v-if="hasPending">
+    <div v-if="isEthNetwork">
       <div
-        v-for="tx in stakewiseTxs"
+        v-for="tx in stakewiseTxs.ETH"
+        :key="tx.hash"
+        class="d-flex justify-space-between mt-4"
+      >
+        <div>
+          <v-progress-circular
+            indeterminate
+            color="greenPrimary"
+            :width="2"
+            :size="20"
+            class="mr-1"
+          />
+          {{ tx.amount }} {{ currencyName }} Pending
+        </div>
+        <div
+          class="greenPrimary--text font-weight-medium d-flex align-center cursor--pointer"
+          @click="checkHash(tx.hash)"
+        >
+          View on {{ ethvmSupport ? 'EthVM' : 'EtherScan' }}
+          <v-icon color="greenPrimary" small class="ml-1"
+            >mdi-open-in-new</v-icon
+          >
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div
+        v-for="tx in stakewiseTxs.GOERLI"
         :key="tx.hash"
         class="d-flex justify-space-between mt-4"
       >
@@ -186,7 +213,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('stakewise', ['removePendingTxs']),
+    ...mapActions('stakewise', ['removePendingTxs', 'removePendingTxsGoerli']),
     routeToSwap() {
       this.$router.push({
         name: ROUTES_WALLET.SWAP.NAME,
@@ -216,7 +243,9 @@ export default {
         this.web3.eth.getTransactionReceipt(hash).then(res => {
           if (res) {
             clearInterval(this.intervals[hash]);
-            this.removePendingTxs(hash);
+            this.isEthNetwork
+              ? this.removePendingTxs(hash)
+              : this.removePendingTxsGoerli(hash);
             this.fetchBalance();
           }
         });
