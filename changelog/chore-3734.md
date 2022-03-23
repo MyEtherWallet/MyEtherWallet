@@ -1,1 +1,1 @@
-* chore sentry unknown path [#3734](https://github.com/MyEtherWallet/MyEtherWallet/pull/3734);
+chore sentry unknown path
