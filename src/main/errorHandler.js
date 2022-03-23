@@ -1,7 +1,6 @@
 import WalletErrorHandler from '@/modules/access-wallet/common/WalletErrorHandler';
-const mewApiError = 'Request Restricted';
-const ERRORS = {};
-const WARNINGS = {
+const mewApiError = 'Websocket connection failed';
+export const knownErrors = {
   "Cannot create property 'request' on string 'wss://nodes.mewapi.io:443/ws/matic":
     mewApiError,
   'can\'t assign to property "request" on "wss://nodes.mewapi.io:443/ws/matic": not an object':
@@ -15,4 +14,4 @@ const WARNINGS = {
   'can\'t assign to property "request" on "wss://nodes.mewapi.io:443/ws/rop": not an object':
     mewApiError
 };
-export default WalletErrorHandler(ERRORS, WARNINGS);
+export default WalletErrorHandler(knownErrors,{});
