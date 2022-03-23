@@ -14,4 +14,4 @@ export const knownErrors = {
   'can\'t assign to property "request" on "wss://nodes.mewapi.io:443/ws/rop": not an object':
     mewApiError
 };
-export default WalletErrorHandler(knownErrors,{});
+export default WalletErrorHandler(knownErrors, {});
