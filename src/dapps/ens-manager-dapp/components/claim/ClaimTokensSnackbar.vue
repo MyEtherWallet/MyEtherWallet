@@ -3,8 +3,8 @@
     :value="show"
     :vertical="true"
     multi-line
-    height="208px"
-    min-height="208px"
+    height="170px"
+    min-height="170px"
     :width="width"
     :min-width="width"
     :timeout="-1"
