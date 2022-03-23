@@ -38,6 +38,7 @@
               <img
                 :src="require(`@/assets/images/currencies/${data.item}.svg`)"
                 class="icon-holder mr-2"
+                style="width: 20px; height: 20px"
               />
               {{ data.item }}
             </div>
@@ -132,7 +133,7 @@ export default {
           name: 'ETH',
           subtext: 'Ethereum',
           value: 'Ethereum',
-          symbol: 'ETH',
+          symbol: 'ETH (ERC20)',
           network: 1
         },
         {
@@ -373,7 +374,7 @@ export default {
 .icon-holder {
   border: 2px solid var(--v-greyMedium-base);
   border-radius: 100px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 </style>
