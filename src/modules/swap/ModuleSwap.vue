@@ -381,8 +381,6 @@ export default {
       selectedProvider: {},
       refundAddress: '',
       isValidRefundAddr: false,
-      userToAddress: '',
-      isValidToAddr: false,
       localGasPrice: '0'
     };
   },
@@ -618,6 +616,7 @@ export default {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
             foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
@@ -625,6 +624,7 @@ export default {
             foundToken.contract = token.contract;
             foundToken.price = this.currencyFormatter(foundToken.pricef);
             foundToken.isEth = token.isEth;
+            foundToken.name = token.symbol;
             return foundToken;
           }
           const name = token.name;
@@ -689,7 +689,7 @@ export default {
       if (nonChainTokens.length > 0) {
         returnableTokens = returnableTokens.concat([
           {
-            header: 'Non-Chain Tokens'
+            header: 'Cross-Chain Tokens'
           },
           ...nonChainTokens
         ]);
@@ -780,8 +780,10 @@ export default {
      */
     toAddress() {
       if (!this.toTokenType?.isEth) {
-        if (this.userToAddress) {
-          return this.userToAddress;
+        if (!isEmpty(this.addressValue)) {
+          return this.addressValue.isValid
+            ? this.addressValue.value
+            : this.address;
         }
 
         return this.address;
@@ -931,8 +933,6 @@ export default {
     multiWatchTokens() {
       this.refundAddress = '';
       this.isValidRefundAddr = false;
-      this.userToAddress = '';
-      this.isValidToAddr = false;
     },
     tokenInValue() {
       this.feeError = '';
@@ -1201,9 +1201,6 @@ export default {
       ) {
         return;
       }
-      if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
-        return;
-      if (this.showToAddress && !this.isValidToAddr) return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1213,6 +1210,11 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
+
+      if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
+        return;
+      if (this.showToAddress && !this.addressValue.isValid) return;
+
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('isEth') &&
@@ -1259,7 +1261,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 1000),
+    }, 500),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1272,14 +1274,12 @@ export default {
       });
     },
     getTrade: debounce(function (idx) {
-      if (
-        (!this.isFromNonChain && !this.isValidToAddr) ||
-        !this.availableQuotes[idx]
-      )
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
-      if (this.isFromNonChain && !this.isValidRefundAddr) return;
-      if (this.isFromNonChain && !this.isValidToAddr && !this.isValidRefundAddr)
+      }
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
+      }
       this.step = 1;
       this.feeError = '';
       this.loadingFee = true;
@@ -1385,10 +1385,7 @@ export default {
       return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     isValidRefundAddress(address) {
-      if (this.toTokenType.isEth) {
-        return MultiCoinValidator.validate(address, 'Ethereum');
-      }
-      return MultiCoinValidator.validate(address, this.toTokenType.name);
+      return MultiCoinValidator.validate(address, this.fromTokenType.name);
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
