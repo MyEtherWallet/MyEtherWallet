@@ -271,13 +271,15 @@ export default {
       const type = notification.type;
       if (
         type === NOTIFICATION_TYPES.SWAP &&
-        notification.status === NOTIFICATION_STATUS.PENDING
+        notification.status.toLowerCase() ===
+          NOTIFICATION_STATUS.PENDING.toLowerCase()
       ) {
         notification.checkSwapStatus(this.swapper);
       }
       if (
         type === NOTIFICATION_TYPES.OUT &&
-        notification.status === NOTIFICATION_STATUS.PENDING
+        notification.status.toLowerCase() ===
+          NOTIFICATION_STATUS.PENDING.toLowerCase()
       ) {
         this.web3.eth.getTransactionReceipt(notification.hash).then(receipt => {
           if (receipt) {

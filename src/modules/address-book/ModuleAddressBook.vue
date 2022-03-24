@@ -48,7 +48,8 @@ import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
-  selected: 'SELECTED'
+  selected: 'SELECTED',
+  resolved: 'RESOLVED'
 };
 
 export default {
@@ -237,6 +238,10 @@ export default {
       this.isValidAddress = false;
       this.loadedAddressValidation = false;
       this.$refs.addressSelect.clear();
+      this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+        type: USER_INPUT_TYPES.typed,
+        value: this.inputAddr
+      });
 
       // Calls setups from mounted
       if (this.network.type.ens)
@@ -266,11 +271,10 @@ export default {
             this.isValidAddress = true;
             this.loadedAddressValidation = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'RESOLVED',
+              type: USER_INPUT_TYPES.resolved,
               value: this.inputAddr
             });
           });
-          // eslint-disable-next-line no-empty
         } catch (e) {
           this.loadedAddressValidation = true;
         }

@@ -119,20 +119,22 @@
               Address Book
             =====================================================================================
             -->
-          <module-address-book
-            v-show="showToAddress"
-            class="mt-10"
-            :is-valid-address-func="isValidToAddress"
-            @setAddress="setToAddress"
-          />
-          <module-address-book
-            v-if="isFromNonChain"
-            ref="addressInput"
-            class="pt-4 pb-2 mt-10"
-            :label="nativeLabel"
-            :is-valid-address-func="isValidRefundAddress"
-            @setAddress="setRefundAddr"
-          />
+          <div class="mt-8">
+            <module-address-book
+              v-if="isFromNonChain"
+              ref="refundAddressInput"
+              :label="nativeLabel"
+              :is-valid-address-func="isValidRefundAddress"
+              @setAddress="setRefundAddr"
+            />
+            <module-address-book
+              v-show="showToAddress"
+              ref="toAddressInput"
+              :is-valid-address-func="isValidToAddress"
+              :label="toAddressLabel"
+              @setAddress="setToAddress"
+            />
+          </div>
 
           <!--
           =====================================================================================
@@ -925,15 +927,15 @@ export default {
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
     },
-    multiWatchTokens() {
-      return `${this.toTokenType}|${this.fromTokenType}`;
+    toAddressLabel() {
+      const name =
+        !isEmpty(this.toTokenType) && this.toTokenType.hasOwnProperty('name')
+          ? this.toTokenType.name
+          : 'ETH';
+      return `To ${name} address`;
     }
   },
   watch: {
-    multiWatchTokens() {
-      this.refundAddress = '';
-      this.isValidRefundAddr = false;
-    },
     tokenInValue() {
       this.feeError = '';
     },
@@ -970,6 +972,20 @@ export default {
   },
   mounted() {
     this.setupSwap();
+    // multi value watcher to clear
+    // refund address and to address
+    this.$watch(
+      vm => [vm.toTokenType, vm.fromTokenType],
+      () => {
+        if (this.$refs.refundAddressInput) {
+          this.$refs.refundAddressInput.clear();
+        }
+
+        if (this.$refs.toAddressInput) {
+          this.$refs.toAddressInput.clear();
+        }
+      }
+    );
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -1211,7 +1227,11 @@ export default {
       this.allTrades = [];
       this.step = 0;
 
-      if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
+      if (
+        this.isFromNonChain &&
+        this.refundAddress === '' &&
+        !this.isValidRefundAddr
+      )
         return;
       if (this.showToAddress && !this.addressValue.isValid) return;
 
@@ -1280,9 +1300,12 @@ export default {
       if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
       }
-      this.step = 1;
+
+      if (this.availableQuotes.length === 0) {
+        return;
+      }
+
       this.feeError = '';
-      this.loadingFee = true;
       if (this.allTrades.length > 0 && this.allTrades[idx])
         return this.setupTrade(this.allTrades[idx]);
       const swapObj = {

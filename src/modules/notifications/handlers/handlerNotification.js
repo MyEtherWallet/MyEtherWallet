@@ -161,7 +161,6 @@ export default class Notification {
    * Check swap status
    */
   checkSwapStatus(swapper) {
-    // eslint-disable-next-line
     if (
       this.status.toLowerCase() === NOTIFICATION_STATUS.PENDING ||
       this.status.toLowerCase() === NOTIFICATION_STATUS.SUBMITTED
