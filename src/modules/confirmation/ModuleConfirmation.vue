@@ -262,7 +262,7 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'lodash';
+import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -776,9 +776,12 @@ export default {
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
         try {
           if (!this.isWeb3Wallet) {
-            const _signedTx = await this.instance.signTransaction(
-              this.unsignedTxArr[i]
-            );
+            const objClone = cloneDeep(this.unsignedTxArr[i]);
+            // fixes circular reference for signing
+            delete objClone['handleNotification'];
+            delete objClone['currency'];
+            delete objClone['confirmInfo'];
+            const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
