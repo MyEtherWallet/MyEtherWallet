@@ -427,7 +427,12 @@ export default {
         : !isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !isEmpty(this.swapInfo);
+      return (
+        !isEmpty(this.swapInfo) ||
+        (!isEmpty(this.tx) &&
+          this.tx.hasOwnProperty('fromTokenType') &&
+          !this.tx.fromTokenType.isEth)
+      );
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;

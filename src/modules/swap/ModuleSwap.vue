@@ -314,7 +314,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import xss from 'xss';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
 
-const MIN_GAS_LIMIT = 800000;
+const MIN_GAS_LIMIT = 100000;
 
 export default {
   name: 'ModuleSwap',
@@ -1426,10 +1426,8 @@ export default {
             err.statusObj.hashes.forEach(item => {
               Toast(item.message, {}, ERROR);
             });
-            this.clear();
             return;
           }
-          this.clear();
           Toast(err.message, {}, ERROR);
         });
     },
