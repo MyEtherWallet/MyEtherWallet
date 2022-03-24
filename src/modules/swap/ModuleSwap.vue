@@ -1308,6 +1308,9 @@ export default {
       this.feeError = '';
       if (this.allTrades.length > 0 && this.allTrades[idx])
         return this.setupTrade(this.allTrades[idx]);
+      if (!this.allTrades[idx]) {
+        this.loadingFee = true;
+      }
       const swapObj = {
         fromAddress: this.address,
         toAddress: this.toAddress,
@@ -1323,25 +1326,15 @@ export default {
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
-      this.swapper
-        .getTrade(swapObj)
-        .then(trade => {
-          if (trade instanceof Promise) {
-            trade
-              .then(tradeResponse => {
-                this.allTrades[idx] = tradeResponse;
-                this.setupTrade(tradeResponse);
-              })
-              .catch(e => {
-                this.setupTrade(e);
-              });
-          } else {
-            this.setupTrade(trade);
-          }
-        })
-        .catch(e => {
-          this.setupTrade(e);
+      const trade = this.swapper.getTrade(swapObj);
+      if (trade instanceof Promise) {
+        trade.then(tradeResponse => {
+          this.allTrades[idx] = tradeResponse;
+          this.setupTrade(tradeResponse);
         });
+      } else {
+        this.setupTrade(trade);
+      }
     }, 500),
     setupTrade(trade) {
       this.loadingFee = false;
