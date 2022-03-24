@@ -382,7 +382,8 @@ export default {
       selectedProvider: {},
       refundAddress: '',
       isValidRefundAddr: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      mainTokenDetails: {}
     };
   },
   computed: {
@@ -474,7 +475,8 @@ export default {
         this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
-        this.providersErrorMsg.subtitle !== '';
+        this.providersErrorMsg.subtitle !== '' ||
+        this.loadingFee;
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
@@ -519,10 +521,10 @@ export default {
      * @rejects object
      * Gets the ETH token dropdown item details
      */
-    mainTokenDetails() {
-      const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      return ethToken;
-    },
+    // mainTokenDetails() {
+    //   const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
+    //   return ethToken;
+    // },
     /**
      * checks whether both token fields are empty
      */
@@ -954,9 +956,6 @@ export default {
       deep: true,
       immediate: true
     },
-    mainTokenDetails() {
-      this.setDefaults();
-    },
     amountErrorMessage(newVal) {
       if (newVal !== '') this.availableQuotes.splice(0);
     },
@@ -970,6 +969,7 @@ export default {
     this.setTokenFromURL();
   },
   mounted() {
+    this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
     this.setupSwap();
     // multi value watcher to clear
     // refund address and to address

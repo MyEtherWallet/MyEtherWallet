@@ -49,7 +49,7 @@
               </div>
               <div v-if="!timerFinished">
                 <qr-code
-                  v-if="hideQr"
+                  v-if="!hideQr"
                   :data="payinAddress"
                   :height="160"
                   :width="160"
@@ -181,7 +181,7 @@ export default {
       return `You can send ${this.txObj?.fromType} to this address only once.`;
     },
     hideQr() {
-      return this.payingAddress && this.payinAddress.length > 42;
+      return this.payinAddress && this.payinAddress.length > 42;
     },
     payinAddress() {
       return this.txObj?.actualTrade?.response?.payinAddress;
