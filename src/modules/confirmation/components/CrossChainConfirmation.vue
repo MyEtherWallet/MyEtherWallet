@@ -247,10 +247,6 @@ export default {
     showCrossChainModal(newVal) {
       if (newVal) {
         if (moment().isBefore(this.txObj.actualTrade.response.payTill)) {
-          // const diff = moment(this.txObj.actualTrade.response.payTill).diff(
-          //   moment()
-          // );
-          // this.startingTime = moment(diff);
           this.time = this.startingTime.format('mm:ss');
           const throttledFunc = debounce(() => {
             const now = new Date();
@@ -261,9 +257,6 @@ export default {
               clearInterval(this.counter);
               this.counter = null;
             } else {
-              // this.startingTime = moment(
-              //   this.startingTime.subtract(1, 'seconds')
-              // );
               this.time = moment.utc(deadline).format('mm:ss');
             }
           }, 200);
