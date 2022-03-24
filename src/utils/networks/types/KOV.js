@@ -22,5 +22,6 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
+  canBuy: false,
   coingeckoID: null
 };

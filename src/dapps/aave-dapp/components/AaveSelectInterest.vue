@@ -22,7 +22,7 @@
         class="cursor-pointer d-flex flex-column py-6 px-8"
         @click.native="setType(interestTypes.stable)"
       >
-        <v-icon color="textMedium">mdi-arrow-right-circle</v-icon>
+        <v-icon x-large color="textMedium">mdi-arrow-right-circle</v-icon>
         <span class="textLight--text my-2">Stable</span>
         <span class="mew-heading-3 textMedium--text">{{ rates.stable }}</span>
       </v-card>
@@ -51,13 +51,15 @@
     Continue button
   =====================================================================================
   -->
-    <mew-button
-      class="my-8"
-      title="Continue"
-      btn-size="xlarge"
-      :disabled="!apr.type"
-      @click.native="onContinue"
-    />
+    <div class="d-flex justify-center">
+      <mew-button
+        class="my-8"
+        title="Continue"
+        btn-size="xlarge"
+        :disabled="!apr.type"
+        @click.native="onContinue"
+      />
+    </div>
   </div>
 </template>
 
@@ -83,17 +85,19 @@ export default {
     rates() {
       const stable = this.selectedToken?.stableBorrowRateEnabled
         ? formatPercentageValue(
-            new BigNumber(this.selectedToken.stableBorrowRate).multipliedBy(100)
+            new BigNumber(this.selectedToken.stableBorrowAPY).multipliedBy(100)
           ).value
         : '--';
       const variable =
-        this.selectedToken.variableBorrowRate > 0
+        this.selectedToken.variableBorrowAPY > 0
           ? formatPercentageValue(
-              new BigNumber(this.selectedToken.variableBorrowRate).multipliedBy(
+              new BigNumber(this.selectedToken.variableBorrowAPY).multipliedBy(
                 100
               )
             ).value
           : '--';
+              console.error('selectedToken', this.selectedToken, stable, variable)
+
       return {
         stable,
         variable

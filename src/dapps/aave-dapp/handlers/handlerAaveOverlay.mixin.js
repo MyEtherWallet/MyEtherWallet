@@ -43,14 +43,9 @@ const handlerAaveOverlay = {
       return selectedTokens;
     },
     actualToken() {
-      if (this.handler && !isEmpty(this.handler)) {
-        const token = this.handler?.reservesData.find(item => {
-          if (item.symbol === this.actualSelectedToken.token) return item;
-        });
-
-        return token;
-      }
-      return {};
+      return this.reservesData.find(item => {
+        if (item.symbol === this.actualSelectedToken.token) return item;
+      });
     },
     selectedTokenUSDValue() {
       return new BigNumber(this.actualToken?.price?.priceInEth || 0).times(

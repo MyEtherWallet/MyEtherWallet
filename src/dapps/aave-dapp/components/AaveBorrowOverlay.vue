@@ -23,45 +23,42 @@
         Aave token borrow form
       =====================================================================================
       -->
-    <div v-if="step === 1">
-      <aave-amount-form
-        :selected-token="selectedToken"
-        :action-type="aaveTableHandler"
-        :show-toggle="aaveBorrowForm.showToggle"
-        :left-side-values="aaveBorrowForm.leftSideValues"
-        :right-side-values="aaveBorrowForm.rightSideValues"
-        :form-text="aaveBorrowForm.formText"
-        :button-title="aaveBorrowForm.buttonTitle"
-        @cancelDeposit="handleCancel"
-        @emitValues="handleValues"
-      />
-    </div>
+    <aave-amount-form
+      v-if="step === 1"
+      :selected-token="selectedToken"
+      :action-type="aaveTableHandler"
+      :show-toggle="aaveBorrowForm.showToggle"
+      :left-side-values="aaveBorrowForm.leftSideValues"
+      :right-side-values="aaveBorrowForm.rightSideValues"
+      :form-text="aaveBorrowForm.formText"
+      :button-title="aaveBorrowForm.buttonTitle"
+      @cancelDeposit="handleCancel"
+      @emitValues="handleValues"
+    />
     <!--
       =====================================================================================
         Aave select interest
       =====================================================================================
       -->
-    <div v-if="step === 2">
-      <aave-select-interest
-        :selected-token="actualToken"
-        @continue="handleContinue"
-      />
-    </div>
+    <aave-select-interest
+      v-if="step === 2"
+      :selected-token="actualToken"
+      @continue="handleContinue"
+    />
     <!--
       =====================================================================================
         Aave Summary
       =====================================================================================
       -->
-    <div v-if="step === 3">
-      <aave-summary
-        :selected-token="selectedToken"
-        :amount="amount"
-        :amount-usd="amountUsd"
-        :step="step"
-        :action-type="aaveTableHandler"
-        @onConfirm="handleConfirm"
-      />
-    </div>
+    <aave-summary
+      v-if="step === 3"
+      :selected-token="selectedToken"
+      :amount="amount"
+      :amount-usd="amountUsd"
+      :step="step"
+      :action-type="aaveTableHandler"
+      @onConfirm="handleConfirm"
+    />
   </mew-overlay>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-row justify="space-around" dense>
+  <div class="full-width">
+    <v-row justify="space-around no-gutters" dense>
       <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
@@ -28,23 +28,21 @@
         />
       </v-col>
     </v-row>
-    <div class="px-2 px-md-12 mt-5">
+    <div class="mt-5">
       <p class="mew-heading-3 text-left">{{ formText.title }}</p>
       <p class="mew-body pt-1 text-left">
         {{ formText.caption }}
       </p>
     </div>
-    <div class="px-0 px-md-12 mt-5">
-      <v-sheet max-width="300px" class="mx-auto">
-        <mew-input
-          :value="amount"
-          label="Amount"
-          :right-label="selectedToken.token"
-          :hide-clear-btn="true"
-          :rules="checkIfNumerical"
-          @input="setAmount"
-        />
-      </v-sheet>
+    <div class="mt-5">
+      <mew-input
+        :value="amount"
+        label="Amount"
+        :right-label="selectedToken.token"
+        :hide-clear-btn="true"
+        :rules="checkIfNumerical"
+        @input="setAmount"
+      />
       <mew-toggle
         v-if="showToggle"
         :button-group="group"
@@ -54,7 +52,7 @@
       />
     </div>
 
-    <div class="mt-12 mb-2">
+    <div class="mt-12 justify-center d-flex">
       <mew-button
         :title="buttonTitle.action"
         color-theme="primary"
@@ -63,12 +61,11 @@
         :disabled="!hasAmount"
         @click.native="emitValues"
       />
-    </div>
-    <div>
       <mew-button
         :title="buttonTitle.cancel"
         color-theme="error"
         btn-style="transparent"
+        class="ml-2"
         btn-size="xlarge"
         @click.native="cancel"
       />

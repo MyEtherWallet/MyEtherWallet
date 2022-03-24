@@ -147,11 +147,11 @@
                 <div class="redPrimary--text mt-3 mb-7 font-weight-medium">
                   Insufficient balance.
                   <a
-                    href="https://ccswap.myetherwallet.com/#/"
-                    target="_blank"
+                    v-if="network.type.canBuy"
                     class="text-decoration--underline"
+                    @click="openMoonpay"
                   >
-                    Buy more ETH
+                    Buy more {{ network.type.name }}
                   </a>
                 </div>
 
@@ -336,6 +336,7 @@ import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import buyOverlay from './components/UnstoppableDomainBuyOverlay';
 import addOwnedDomainOverlay from './components/UnstoppableAddOwnedDomainOverlay';
 import transferDomainOverlay from './components/UnstoppableTransferDomainOverlay';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   components: {
@@ -343,6 +344,7 @@ export default {
     addOwnedDomainOverlay,
     transferDomainOverlay
   },
+  mixins: [buyMore],
   data() {
     return {
       buyOverlay: false,

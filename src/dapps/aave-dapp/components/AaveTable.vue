@@ -141,8 +141,8 @@ export default {
           sortable: true
         },
         {
-          text: 'APR',
-          value: 'apr',
+          text: 'APY',
+          value: 'apy',
           sortable: false,
           width: '14%'
         },
@@ -166,14 +166,14 @@ export default {
           sortable: true
         },
         {
-          text: 'Stable APR',
-          value: 'stableApr',
+          text: 'Stable APY',
+          value: 'stableApy',
           sortable: false,
           width: '15%'
         },
         {
-          text: 'Variable APR',
-          value: 'variableApr',
+          text: 'Variable APY',
+          value: 'variableApy',
           sortable: false,
           width: '15%'
         },
@@ -236,8 +236,8 @@ export default {
           filterable: false
         },
         {
-          text: 'APR',
-          value: 'apr',
+          text: 'APY',
+          value: 'apy',
           sortable: false,
           filterable: false,
           containsLink: true
@@ -332,7 +332,6 @@ export default {
                   return uItem;
                 }
               });
-
               /* Get User Balance for the item */
               const userBalance =
                 item.symbol === 'ETH'
@@ -356,9 +355,7 @@ export default {
                       userDeposited.currentUnderlyingBalance
                     ).value
                   : '0',
-                apr: formatPercentageValue(
-                  new BigNumber(item.liquidityRate).times(100)
-                ).value,
+                apy: this.getDepositAPY(item.liquidityRate),
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
                 callToAction: [depositButton, this.btnSwap]
@@ -371,20 +368,20 @@ export default {
           case AAVE_TABLE_HEADER.BORROW:
             list = list
               .filter(item => {
-                return item.variableBorrowRate > 0;
+                return item.variableBorrowAPY > 0;
               })
               .map(item => {
                 return {
                   token: item.symbol,
                   available: formatFloatingPointValue(item.availableLiquidity)
                     .value,
-                  stableApr: item.stableBorrowRateEnabled
+                  stableApy: item.stableBorrowRateEnabled
                     ? formatPercentageValue(
-                        new BigNumber(item.stableBorrowRate).multipliedBy(100)
+                        new BigNumber(item.stableBorrowAPY).multipliedBy(100)
                       ).value
                     : '--',
-                  variableApr: formatPercentageValue(
-                    new BigNumber(item.variableBorrowRate).multipliedBy(100)
+                  variableApy: formatPercentageValue(
+                    new BigNumber(item.variableBorrowAPY).multipliedBy(100)
                   ).value,
                   tokenImg: `${item.icon}`,
                   address: item.aToken.id,
@@ -443,7 +440,7 @@ export default {
                   }`,
                   `$${formatFiatValue(item.currentBorrowsUSD).value}`
                 ],
-                apr: formatPercentageValue(
+                apy: formatPercentageValue(
                   new BigNumber(item.borrowRate).multipliedBy(100).toString()
                 ).value,
                 toggle: {
@@ -488,6 +485,17 @@ export default {
     }
   },
   methods: {
+    /**
+     * Calculates Deposit APY
+     */
+    getDepositAPY(liqRate) {
+      const ray = Math.pow(10, 27);
+      const SECONDS_PER_YEAR = 31536000;
+      const depositAPR = new BigNumber(liqRate).dividedBy(ray).toFixed();
+      const depositAPY =
+        Math.pow(1 + depositAPR / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
+      return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100)).value;
+    },
     /**
      * Method emits to the parent to open deposit token overlay
      *  Used in deposit Button within the table
