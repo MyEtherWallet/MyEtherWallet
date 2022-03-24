@@ -244,8 +244,11 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
+        const diff = moment(this.txObj.actualTrade.response.payTill).diff(
+          moment()
+        );
         let counter = null;
-        this.startingTime = moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS);
+        this.startingTime = moment(diff);
         this.time = this.startingTime.format('mm:ss');
         counter = setInterval(() => {
           if (this.timerFinished) {
