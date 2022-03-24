@@ -87,7 +87,7 @@
                 : 'disabledPrimary--text pointer-event--none',
               'd-flex align-center ml-lg-12 ml-2'
             ]"
-            @click="addToCart"
+            @click="toggleAddRemoveBlock"
           >
             <v-icon
               x-small
@@ -287,17 +287,24 @@ export default {
       this.showRemove = false;
     },
     removeBlock() {
+      const block = this.blockHandler.blockNumber.toString();
       this.isTestNetwork
-        ? this.removeTestBlockFromCart(this.blockHandler.blockNumber.toString())
-        : this.removeBlockFromCart(this.blockHandler.blockNumber.toString());
+        ? this.removeTestBlockFromCart(block)
+        : this.removeBlockFromCart(block);
     },
     addToCart() {
+      const block = this.blockHandler.blockNumber.toString();
       if (this.isAvailable && !this.isAdded) {
-        if (this.isTestNetwork) {
-          this.addTestBlockToCart(this.blockHandler.blockNumber.toString());
-        } else {
-          this.addBlockToCart(this.blockHandler.blockNumber.toString());
-        }
+        this.isTestNetwork
+          ? this.addTestBlockToCart(block)
+          : this.addBlockToCart(block);
+      }
+    },
+    toggleAddRemoveBlock() {
+      if (this.isAvailable && this.isAdded) {
+        this.removeBlock();
+      } else {
+        this.addToCart();
       }
     },
     navigateToBlockInfo() {
