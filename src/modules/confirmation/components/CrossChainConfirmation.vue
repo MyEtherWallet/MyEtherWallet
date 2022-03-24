@@ -6,6 +6,7 @@
       :close="locReset"
       :btn-action="btnAction"
       :btn-text="buttonTitle"
+      :btn-enabled="!timerFinished"
       :is-persistent="true"
       :accept-only="true"
       width="560"
@@ -128,9 +129,10 @@ import moment from 'moment';
 import AppModal from '@/core/components/AppModal';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
-import { isEmpty } from 'underscore';
+import { isEmpty, debounce } from 'lodash';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
+
 const MILLISECONDS = 1000;
 const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
@@ -244,27 +246,38 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        const diff = moment(this.txObj.actualTrade.response.payTill).diff(
-          moment()
-        );
-        let counter = null;
-        this.startingTime = moment(diff);
-        this.time = this.startingTime.format('mm:ss');
-        counter = setInterval(() => {
-          if (this.timerFinished) {
-            clearInterval(counter);
-            counter = null;
-          } else {
-            this.startingTime = moment(
-              this.startingTime.subtract(1, 'seconds')
-            );
-            this.time = this.startingTime.format('mm:ss');
-          }
-        }, 1000);
+        if (moment().isBefore(this.txObj.actualTrade.response.payTill)) {
+          // const diff = moment(this.txObj.actualTrade.response.payTill).diff(
+          //   moment()
+          // );
+          // this.startingTime = moment(diff);
+          this.time = this.startingTime.format('mm:ss');
+          const throttledFunc = debounce(() => {
+            const now = new Date();
+            const deadline = moment(
+              this.txObj.actualTrade.response.payTill
+            ).diff(now);
+            if (this.timerFinished) {
+              clearInterval(this.counter);
+              this.counter = null;
+            } else {
+              // this.startingTime = moment(
+              //   this.startingTime.subtract(1, 'seconds')
+              // );
+              this.time = moment.utc(deadline).format('mm:ss');
+            }
+          }, 200);
+          this.counter = setInterval(throttledFunc, 1000);
+        } else {
+          this.time = '00:00';
+        }
       } else {
         clearInterval(this.counter);
       }
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.counter);
   },
   methods: {
     copy() {
