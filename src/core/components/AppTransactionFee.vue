@@ -198,10 +198,6 @@ export default {
       type: String,
       default: '0'
     },
-    message: {
-      type: String,
-      default: ''
-    },
     notEnoughEth: {
       type: Boolean,
       default: false

@@ -5,6 +5,7 @@
     :fullscreen="scrollable ? $vuetify.breakpoint.xs : false"
     content-class="core--components--app-modal"
     :scrollable="scrollable"
+    :persistent="isPersistent"
     @click:outside="handleClickOutside"
   >
     <v-card v-if="scrollable" color="white" class="py-0 px-5 px-md-7">
@@ -47,7 +48,7 @@
       <v-card-actions class="py-5 py-md-8">
         <v-row v-if="hasButtons" class="pa-0" justify="space-around" dense>
           <v-col
-            v-if="!closeOnly"
+            v-if="!closeOnly && !acceptOnly"
             cols="12"
             sm="5"
             class="text-right"
@@ -63,7 +64,7 @@
             />
           </v-col>
           <v-col
-            v-if="!closeOnly"
+            v-if="!closeOnly && !acceptOnly"
             cols="12"
             sm="7"
             class="text-left"
@@ -84,6 +85,15 @@
               title="Close"
               :has-full-width="true"
               @click.native="close"
+            />
+          </v-col>
+          <v-col v-if="acceptOnly" cols="12" class="text-left">
+            <mew-button
+              btn-size="xlarge"
+              :title="btnText"
+              :disabled="!btnEnabled"
+              :has-full-width="true"
+              @click.native="btnAction"
             />
           </v-col>
         </v-row>
@@ -214,6 +224,14 @@ export default {
     hasButtons: {
       type: Boolean,
       default: true
+    },
+    acceptOnly: {
+      type: Boolean,
+      default: false
+    },
+    isPersistent: {
+      type: Boolean,
+      default: false
     },
     /**
      * NOTE:

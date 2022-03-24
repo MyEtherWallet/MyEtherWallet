@@ -43,16 +43,6 @@ const EXCEPTIONS = [
   'vue',
   // major update
   'highcharts',
-  // update after release
-  '@lokalise/node-api',
-  '@sentry/browser',
-  '@sentry/tracing',
-  '@sentry/vue',
-  'merkletreejs',
-  'axios',
-  '@walletconnect/client',
-  '@walletconnect/qrcode-modal',
-  '@ledgerhq/hw-app-eth'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
