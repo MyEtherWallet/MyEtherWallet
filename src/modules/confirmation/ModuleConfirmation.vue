@@ -774,13 +774,13 @@ export default {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
+        const objClone = cloneDeep(this.unsignedTxArr[i]);
+        // fixes circular reference for signing
+        delete objClone['handleNotification'];
+        delete objClone['currency'];
+        delete objClone['confirmInfo'];
         try {
           if (!this.isWeb3Wallet) {
-            const objClone = cloneDeep(this.unsignedTxArr[i]);
-            // fixes circular reference for signing
-            delete objClone['handleNotification'];
-            delete objClone['currency'];
-            delete objClone['confirmInfo'];
             const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
@@ -791,7 +791,7 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = this.instance.signTransaction(this.unsignedTxArr[i]);
+            const event = this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
               .on('transactionHash', res => {
