@@ -222,56 +222,55 @@
             =====================================================================================
             -->
           <div v-if="hasMinEth">
-            <v-slide-y-transition hide-on-leave group>
+            <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
               <swap-provider-mentions
-                v-if="showAnimation"
                 key="showAnimation"
                 :is-loading="isLoadingProviders"
                 :check-loading="checkLoading"
                 @showProviders="showProviders"
               />
-              <div v-else key="showAnimation1">
-                <swap-providers-list
-                  :step="step"
-                  :available-quotes="availableQuotes"
-                  :set-provider="setProvider"
-                  :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-                  :to-token-icon="toTokenType ? toTokenType.img : ''"
-                  :is-loading="isLoadingProviders"
-                  :providers-error="providersErrorMsg"
-                  :class="isFromNonChain ? '' : 'mt-7'"
-                />
-                <!--
+            </v-slide-y-transition>
+            <div v-else key="showAnimation1">
+              <swap-providers-list
+                :step="step"
+                :available-quotes="availableQuotes"
+                :set-provider="setProvider"
+                :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+                :to-token-icon="toTokenType ? toTokenType.img : ''"
+                :is-loading="isLoadingProviders"
+                :providers-error="providersErrorMsg"
+                :class="isFromNonChain ? '' : 'mt-7'"
+              />
+              <!--
                   =====================================================================================
                   Swap Fee
                   =====================================================================================
                 -->
-                <app-transaction-fee
-                  v-if="showNetworkFee"
-                  :is-from-chain="!isFromNonChain"
-                  :show-fee="showSwapFee"
-                  :getting-fee="loadingFee"
-                  :error="feeError"
-                  :total-cost="totalCost"
-                  :tx-fee="txFee"
-                  :total-gas-limit="totalGasLimit"
-                  :not-enough-eth="notEnoughEth"
-                  :from-eth="isFromTokenMain"
-                  class="mt-10 mt-sm-16"
-                  @onLocalGasPrice="handleLocalGasPrice"
+              <app-transaction-fee
+                v-if="showNetworkFee"
+                :is-from-chain="!isFromNonChain"
+                :show-fee="showSwapFee"
+                :getting-fee="loadingFee"
+                :error="feeError"
+                :total-cost="totalCost"
+                :tx-fee="txFee"
+                :total-gas-limit="totalGasLimit"
+                :not-enough-eth="notEnoughEth"
+                :from-eth="isFromTokenMain"
+                class="mt-10 mt-sm-16"
+                @onLocalGasPrice="handleLocalGasPrice"
+              />
+              <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+                <mew-button
+                  title="Next"
+                  :has-full-width="true"
+                  :disabled="disableNext"
+                  btn-size="xlarge"
+                  style="max-width: 240px"
+                  @click.native="showConfirm()"
                 />
-                <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
-                  <mew-button
-                    title="Next"
-                    :has-full-width="true"
-                    :disabled="disableNext"
-                    btn-size="xlarge"
-                    style="max-width: 240px"
-                    @click.native="showConfirm()"
-                  />
-                </div>
               </div>
-            </v-slide-y-transition>
+            </div>
           </div>
         </template>
         <!--
@@ -299,7 +298,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce } from 'lodash';
+import { isEmpty, clone, isUndefined, debounce, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -997,7 +996,7 @@ export default {
     setRefundAddr(address, valid) {
       this.refundAddress = address;
       this.isValidRefundAddr = valid;
-      if (valid) this.setTokenInValue(this.tokenInValue);
+      this.setTokenInValue(this.tokenInValue);
     },
     /**
      * Handles emitted values from module-address-book
@@ -1229,8 +1228,7 @@ export default {
 
       if (
         this.isFromNonChain &&
-        this.refundAddress === '' &&
-        !this.isValidRefundAddr
+        (this.refundAddress === '' || !this.isValidRefundAddr)
       )
         return;
       if (this.showToAddress && !this.addressValue.isValid) return;
@@ -1329,7 +1327,12 @@ export default {
       const trade = this.swapper.getTrade(swapObj);
       if (trade instanceof Promise) {
         trade.then(tradeResponse => {
-          this.allTrades[idx] = tradeResponse;
+          if (
+            isObject(tradeResponse) &&
+            tradeResponse.hasOwnProperty('provider')
+          ) {
+            this.allTrades[idx] = tradeResponse;
+          }
           this.setupTrade(tradeResponse);
         });
       } else {
@@ -1401,7 +1404,15 @@ export default {
       return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     isValidRefundAddress(address) {
-      return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      try {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.fromTokenType,
+          address
+        });
+      } catch (e) {
+        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      }
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);

@@ -34,7 +34,7 @@
               </div>
               <div
                 :class="[
-                  'py-2 text-center mew-body',
+                  'py-2 text-center mew-body word-break--break-all',
                   timerFinished ? 'disabled--text' : ''
                 ]"
               >
@@ -48,7 +48,12 @@
                 Copy Address
               </div>
               <div v-if="!timerFinished">
-                <qr-code :data="payinAddress" :height="160" :width="160" />
+                <qr-code
+                  v-if="hideQr"
+                  :data="payinAddress"
+                  :height="160"
+                  :width="160"
+                />
               </div>
               <div v-else class="d-flex align-center justify-center">
                 <v-img
@@ -91,7 +96,7 @@
                 <div class="px-6 pb-6">
                   <div class="d-flex align-center justify-space-between">
                     <div>Refund Address:</div>
-                    <div>{{ refundAddress }}</div>
+                    <div class="word-break--break-all">{{ refundAddress }}</div>
                   </div>
                   <div class="d-flex align-center justify-space-between pt-2">
                     <div>Rate:</div>
@@ -174,6 +179,9 @@ export default {
     },
     sendWarning() {
       return `You can send ${this.txObj?.fromType} to this address only once.`;
+    },
+    hideQr() {
+      return this.payingAddress && this.payinAddress.length > 42;
     },
     payinAddress() {
       return this.txObj?.actualTrade?.response?.payinAddress;

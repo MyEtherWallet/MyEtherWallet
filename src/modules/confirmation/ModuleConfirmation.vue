@@ -78,7 +78,6 @@
           />
           <!-- Warning Sheet -->
           <div
-            v-if="!toNonEth"
             class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Cancelling or
@@ -255,7 +254,6 @@ import CrossChainConfirmation from './components/CrossChainConfirmation';
 
 import SuccessModal from './components/SuccessModal';
 
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
   hexToNumberString,
@@ -521,9 +519,7 @@ export default {
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      _self.title = _self.swapInfo.toTokenType.isEth
-        ? 'Verify Swap'
-        : 'Review Swap';
+      _self.title = 'Verify Swap';
       _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
       if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
         await _self.signTx();
@@ -862,6 +858,8 @@ export default {
               ? `${this.value} ${symbol}`
               : `0 ${this.network.type.currencyName}`
             : `${this.value} ${symbol}`;
+        const from = item.from ? item.from : this.address;
+        const toAdd = item.to ? item.to : this.txTo;
         return [
           {
             title: 'Network',
@@ -873,18 +871,14 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from
-              ? toChecksumAddress(item.from)
-              : toChecksumAddress(this.address)
+            value: from
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: item.to
-              ? toChecksumAddress(item.to)
-              : toChecksumAddress(this.txTo)
+            value: toAdd
           },
           {
             title: 'Sending',
