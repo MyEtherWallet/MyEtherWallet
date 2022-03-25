@@ -103,6 +103,7 @@ import formatNotification from './helpers/formatNotification';
 import formatNonChainNotification from './helpers/formatNonChainNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 import NonChainNotification from './handlers/nonChainNotification';
+import { debounce } from 'lodash';
 // import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
@@ -233,11 +234,12 @@ export default {
     EventBus.$on('openNotifications', () => {
       this.openNotifications();
     });
-    this.statusCheckTimer = setInterval(() => {
+    const debouncedTimer = debounce(function () {
       this.currentNotifications.forEach(notification => {
         this.checkAndSetNotificationStatus(notification);
       });
-    }, 5000);
+    }, 1000);
+    this.statusCheckTimer = setInterval(debouncedTimer, 5000);
   },
   beforeUnmount() {
     clearInterval(this.statusCheckTimer);

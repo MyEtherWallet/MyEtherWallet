@@ -1,7 +1,7 @@
 import { isAddress, isHexStrict, toBN, numberToHex, isBN } from 'web3-utils';
 import vuexStore from '@/core/store';
 import BigNumber from 'bignumber.js';
-import { isFunction, isObject } from 'lodash';
+import { debounce, isFunction, isObject } from 'lodash';
 
 /**
  * NOTE: toTxData can be null if it's just a regular tx
@@ -166,18 +166,21 @@ export default class Notification {
       this.status.toLowerCase() === NOTIFICATION_STATUS.SUBMITTED
     ) {
       const _this = this;
-      const swapResolver = setInterval(function () {
+      const debouncedInterval = debounce(function () {
         const stat = swapper.getStatus(_this.swapObj);
         if (stat && isObject(stat) && isFunction(stat.then)) {
           stat.then(function (res) {
-            const formattedStatus = res.toLowerCase();
-            _this.status =
-              formattedStatus === NOTIFICATION_STATUS.COMPLETED
-                ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
-                : formattedStatus === NOTIFICATION_STATUS.FAILED ||
-                  formattedStatus === NOTIFICATION_STATUS.UNKNOWN
-                ? NOTIFICATION_STATUS.FAILED.toUpperCase()
-                : res;
+            console.log(res);
+            if (res) {
+              const formattedStatus = res.toLowerCase();
+              _this.status =
+                formattedStatus === NOTIFICATION_STATUS.COMPLETED
+                  ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
+                  : formattedStatus === NOTIFICATION_STATUS.FAILED ||
+                    formattedStatus === NOTIFICATION_STATUS.UNKNOWN
+                  ? NOTIFICATION_STATUS.FAILED.toUpperCase()
+                  : res;
+            }
           });
         }
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
@@ -185,7 +188,8 @@ export default class Notification {
           vuexStore.dispatch('notifications/updateNotification', _this);
           clearInterval(swapResolver);
         }
-      }, 10000);
+      }, 1000);
+      const swapResolver = setInterval(debouncedInterval, 10000);
     }
   }
 
