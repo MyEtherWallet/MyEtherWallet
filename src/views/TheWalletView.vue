@@ -111,8 +111,9 @@ export default {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
-          if (block && block.baseFeePerGas)
+          if (block) {
             this.checkAndSetBaseFee(block.baseFeePerGas);
+          }
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
               this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
