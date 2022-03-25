@@ -52,7 +52,12 @@ const EXCEPTIONS = [
   'axios',
   '@walletconnect/client',
   '@walletconnect/qrcode-modal',
-  '@ledgerhq/hw-app-eth'
+  '@ledgerhq/hw-app-eth',
+  'ethers',
+  'commitlint',
+  'prettier',
+  'stylelint',
+  'vue-cli-plugin-vuetify'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
