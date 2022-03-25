@@ -171,14 +171,18 @@ export default class Notification {
         const stat = swapper.getStatus(_this.swapObj);
         if (stat && isObject(stat) && isFunction(stat.then)) {
           stat.then(function (res) {
-            const formattedStatus = res.toLowerCase();
-            _this.status =
-              formattedStatus === NOTIFICATION_STATUS.COMPLETED
-                ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
-                : formattedStatus === NOTIFICATION_STATUS.FAILED ||
-                  formattedStatus === NOTIFICATION_STATUS.UNKNOWN
-                ? NOTIFICATION_STATUS.FAILED.toUpperCase()
-                : res;
+            if (res) {
+              const formattedStatus = res.toLowerCase();
+              _this.status =
+                formattedStatus === NOTIFICATION_STATUS.COMPLETED
+                  ? NOTIFICATION_STATUS.SUCCESS.toUpperCase()
+                  : formattedStatus === NOTIFICATION_STATUS.FAILED ||
+                    formattedStatus === NOTIFICATION_STATUS.UNKNOWN
+                  ? NOTIFICATION_STATUS.FAILED.toUpperCase()
+                  : res;
+            } else {
+              _this.status = NOTIFICATION_STATUS.UNKNOWN;
+            }
           });
         }
         if (_this.status.toLowerCase() !== NOTIFICATION_STATUS.PENDING) {
