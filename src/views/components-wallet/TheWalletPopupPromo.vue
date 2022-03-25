@@ -92,6 +92,7 @@ export default {
   },
   computed: {
     ...mapState('global', ['showWalletPromo', 'promoOver']),
+    ...mapState('ensManagerStore', ['showHasClaimable']),
     isPromoOver() {
       return moment(moment()).isAfter(MOONPAY_OFFER_END);
     },
@@ -108,17 +109,29 @@ export default {
       return !this.promoOver;
     }
   },
+  mounted() {
+    if (this.showPromo && this.showHasClaimable) {
+      this.setShowHasClaimable(false);
+    }
+  },
   methods: {
     ...mapActions('global', ['neverShowPromo', 'setPromoOver']),
-    /**
-     * Hides promo popup forever
-     */
+    ...mapActions('ensManagerStore', ['setShowHasClaimable']),
     setHidePopUp() {
       if (this.showWalletPromo) {
-        this.neverShowPromo();
+        this.neverShowPromo().then(() => {
+          this.hideClaimsForever();
+        });
       }
       if (!this.promoOver) {
-        this.setPromoOver();
+        this.setPromoOver().then(() => {
+          this.hideClaimsForever();
+        });
+      }
+    },
+    hideClaimsForever() {
+      if (!this.showHasClaimable) {
+        this.setShowHasClaimable(true);
       }
     },
 
