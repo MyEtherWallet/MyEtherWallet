@@ -486,6 +486,13 @@ export default {
         .then(res => {
           this.swapNotificationFormatter(res, currentTradeCopy);
         })
+        .then(() => {
+          this.setAmount(0);
+          this.compoundAmount = '0';
+          this.locGasPrice = '0';
+          this.gasLimit = '21000';
+          this.agreeToTerms = false;
+        })
         .catch(err => {
           this.loading = false;
           Toast(err.message, {}, ERROR);
