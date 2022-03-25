@@ -207,7 +207,8 @@ import {
   SETH2_MAINNET_CONTRACT,
   SETH2_GOERLI_CONTRACT,
   RETH2_MAINNET_CONTRACT,
-  RETH2_GOERLI_CONTRACT
+  RETH2_GOERLI_CONTRACT,
+  SETH2_Token
 } from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
@@ -298,6 +299,9 @@ export default {
         this.tokensList,
         item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
       );
+      if (!token) {
+        return SETH2_Token;
+      }
       return token;
     },
     rethBalance() {
