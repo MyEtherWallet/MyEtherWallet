@@ -231,15 +231,16 @@ export default {
     }
   },
   mounted() {
+    const _this = this;
     EventBus.$on('openNotifications', () => {
-      this.openNotifications();
+      _this.openNotifications();
     });
     const debouncedTimer = debounce(function () {
-      this.currentNotifications.forEach(notification => {
-        this.checkAndSetNotificationStatus(notification);
+      _this.currentNotifications.forEach(notification => {
+        _this.checkAndSetNotificationStatus(notification);
       });
     }, 1000);
-    this.statusCheckTimer = setInterval(debouncedTimer, 5000);
+    _this.statusCheckTimer = setInterval(debouncedTimer, 5000);
   },
   beforeUnmount() {
     clearInterval(this.statusCheckTimer);
