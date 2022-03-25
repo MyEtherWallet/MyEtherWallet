@@ -164,7 +164,10 @@ export default {
         : this.network.type.blockExplorerTX;
     },
     hasPending() {
-      return this.stakewiseTxs.length > 0;
+      const txList = this.isEthNetwork
+        ? this.stakewiseTxs.ETH
+        : this.stakewiseTxs.GOERLI;
+      return txList.length > 0;
     },
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
