@@ -42,7 +42,7 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import { isObject, debounce } from 'lodash';
+import { isObject, throttle } from 'lodash';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
@@ -263,7 +263,7 @@ export default {
     /**
      * Resolves name and @returns address
      */
-    resolveName: debounce(async function () {
+    resolveName: throttle(async function () {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {

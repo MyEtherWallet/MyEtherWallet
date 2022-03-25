@@ -170,7 +170,6 @@ export default class Notification {
         const stat = swapper.getStatus(_this.swapObj);
         if (stat && isObject(stat) && isFunction(stat.then)) {
           stat.then(function (res) {
-            console.log(res);
             if (res) {
               const formattedStatus = res.toLowerCase();
               _this.status =

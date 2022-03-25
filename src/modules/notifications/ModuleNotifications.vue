@@ -103,7 +103,6 @@ import formatNotification from './helpers/formatNotification';
 import formatNonChainNotification from './helpers/formatNonChainNotification';
 import { EventBus } from '@/core/plugins/eventBus.js';
 import NonChainNotification from './handlers/nonChainNotification';
-import { debounce } from 'lodash';
 // import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 
 export default {
@@ -124,8 +123,7 @@ export default {
         { name: 'Out', value: NOTIFICATION_TYPES.OUT },
         { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
       ],
-      isOpenNotifications: false,
-      statusCheckTimer: null
+      isOpenNotifications: false
     };
   },
   computed: {
@@ -235,15 +233,9 @@ export default {
     EventBus.$on('openNotifications', () => {
       _this.openNotifications();
     });
-    const debouncedTimer = debounce(function () {
-      _this.currentNotifications.forEach(notification => {
-        _this.checkAndSetNotificationStatus(notification);
-      });
-    }, 1000);
-    _this.statusCheckTimer = setInterval(debouncedTimer, 5000);
-  },
-  beforeUnmount() {
-    clearInterval(this.statusCheckTimer);
+    _this.currentNotifications.forEach(notification => {
+      _this.checkAndSetNotificationStatus(notification);
+    });
   },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
