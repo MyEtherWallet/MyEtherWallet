@@ -115,7 +115,10 @@
             <a href="https://changelly.com/aml-kyc" target="_blank">
               Changelly AML/KYC
             </a>
-            and <router-link :to="termRoute">Terms of Service</router-link>
+            and
+            <router-link :to="termRoute" target="_blank"
+              >Terms of Service</router-link
+            >
           </div>
         </div>
       </template>
@@ -172,7 +175,7 @@ export default {
           name: 'View Details'
         }
       ],
-      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+      termRoute: { name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }
     };
   },
   computed: {

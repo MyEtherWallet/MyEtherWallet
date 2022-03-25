@@ -40,7 +40,7 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue',
+  'vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
