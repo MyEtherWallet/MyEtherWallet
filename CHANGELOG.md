@@ -1,3 +1,9 @@
+### Release v6.5.0-hotfix.1
+
+### revert
+
+* check basGasFeePerGas allowing non 1559 nodes to be true [#3753](https://github.com/MyEtherWallet/MyEtherWallet/pull/3753)
+
 ### Release v6.5.0
 
 ### feat
