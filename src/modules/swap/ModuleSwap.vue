@@ -1405,13 +1405,13 @@ export default {
     },
     isValidRefundAddress(address) {
       try {
+        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      } catch (e) {
         return this.swapper.isValidToAddress({
           provider: 'changelly',
           toT: this.fromTokenType,
           address
         });
-      } catch (e) {
-        return MultiCoinValidator.validate(address, this.fromTokenType.name);
       }
     },
     executeTrade() {

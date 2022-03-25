@@ -236,6 +236,9 @@ export default {
       }
       return '';
     },
+    payTill() {
+      return this.txObj?.actualTrade?.response?.payTill;
+    },
     rate() {
       if (
         !isEmpty(this.txObj) &&
@@ -249,13 +252,11 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        if (moment().isBefore(this.txObj.actualTrade.response.payTill)) {
+        if (moment().isBefore(this.payTill)) {
           this.time = this.startingTime.format('mm:ss');
           const throttledFunc = debounce(() => {
             const now = new Date();
-            const deadline = moment(
-              this.txObj.actualTrade.response.payTill
-            ).diff(now);
+            const deadline = moment(this.payTill).diff(now);
             if (this.timerFinished) {
               clearInterval(this.counter);
               this.counter = null;
