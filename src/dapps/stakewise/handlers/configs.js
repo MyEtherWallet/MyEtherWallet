@@ -9,22 +9,11 @@ const MEW_GOERLI_CONTRACT = '0xf65979689cbc4ec97bacdaa6adce46266be3ad60';
 const POOL_API = 'https://api.stakewise.io/pool-stats';
 
 const SETH2_Token = {
-  balance: '0x00', // don't know what the default for this is
-  balancef: '0.000000',
   contract: SETH2_MAINNET_CONTRACT,
   decimals: 18,
   img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/SETH2-0xFe2e637202056d30016725477c5da089Ab0A043A.png',
-  market_cap: '0',
-  market_capf: '0',
   name: 'sETH2',
-  price: '0',
-  price_change_percentage_24h: '0',
-  price_change_percentage_24hf: '0',
-  pricef: '0',
-  subtext: 'sETH2',
   symbol: 'SETH2',
-  usdBalance: '0',
-  usdBalancef: '0.00',
   value: 'sETH2'
 };
 
