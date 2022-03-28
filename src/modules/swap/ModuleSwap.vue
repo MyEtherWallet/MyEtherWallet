@@ -1088,7 +1088,7 @@ export default {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? this.currencyFormatter(t.usdBalancef)
+          ? `$${t.usdBalancef}`
           : '0.00';
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
