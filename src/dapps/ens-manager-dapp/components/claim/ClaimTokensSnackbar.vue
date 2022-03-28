@@ -35,7 +35,7 @@
       title="Skip"
       btn-style="outline"
       btn-size="large"
-      @click.native="setShowHasClaimable(false)"
+      @click.native="close"
     />
   </v-snackbar>
 </template>
@@ -90,6 +90,10 @@ export default {
   },
   methods: {
     ...mapActions('ensManagerStore', ['setShowHasClaimable']),
+    close() {
+      this.show = false;
+      this.setShowHasClaimable(false);
+    },
     async getData() {
       await hasClaimed(this.address, this.web3).then(data => {
         if (data && data.balance) {
