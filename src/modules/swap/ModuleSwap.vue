@@ -983,6 +983,7 @@ export default {
         if (this.$refs.toAddressInput) {
           this.$refs.toAddressInput.clear();
         }
+        this.selectedProvider = {};
       }
     );
   },
@@ -1401,7 +1402,15 @@ export default {
       if (this.toTokenType.isEth) {
         return MultiCoinValidator.validate(address, 'Ethereum');
       }
-      return MultiCoinValidator.validate(address, this.toTokenType.name);
+      try {
+        return MultiCoinValidator.validate(address, this.toTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.toTokenType,
+          address
+        });
+      }
     },
     isValidRefundAddress(address) {
       try {
