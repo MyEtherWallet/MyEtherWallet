@@ -123,8 +123,7 @@ export default {
         { name: 'Out', value: NOTIFICATION_TYPES.OUT },
         { name: 'Swap', value: NOTIFICATION_TYPES.SWAP }
       ],
-      isOpenNotifications: false,
-      statusCheckTimer: null
+      isOpenNotifications: false
     };
   },
   computed: {
@@ -230,17 +229,13 @@ export default {
     }
   },
   mounted() {
+    const _this = this;
     EventBus.$on('openNotifications', () => {
-      this.openNotifications();
+      _this.openNotifications();
     });
-    this.statusCheckTimer = setInterval(() => {
-      this.currentNotifications.forEach(notification => {
-        this.checkAndSetNotificationStatus(notification);
-      });
-    }, 5000);
-  },
-  beforeUnmount() {
-    clearInterval(this.statusCheckTimer);
+    _this.currentNotifications.forEach(notification => {
+      _this.checkAndSetNotificationStatus(notification);
+    });
   },
   methods: {
     ...mapActions('notifications', ['updateNotification']),
@@ -269,24 +264,30 @@ export default {
      */
     checkAndSetNotificationStatus(notification) {
       const type = notification.type;
-      if (
-        type === NOTIFICATION_TYPES.SWAP &&
-        notification.status === NOTIFICATION_STATUS.PENDING
-      ) {
-        notification.checkSwapStatus(this.swapper);
-      }
-      if (
-        type === NOTIFICATION_TYPES.OUT &&
-        notification.status === NOTIFICATION_STATUS.PENDING
-      ) {
-        this.web3.eth.getTransactionReceipt(notification.hash).then(receipt => {
-          if (receipt) {
-            notification.status = receipt.status
-              ? NOTIFICATION_STATUS.SUCCESS
-              : NOTIFICATION_STATUS.FAILED;
-            this.updateNotification(notification);
-          }
-        });
+      if (notification.status) {
+        if (
+          type === NOTIFICATION_TYPES.SWAP &&
+          notification.status.toLowerCase() ===
+            NOTIFICATION_STATUS.PENDING.toLowerCase()
+        ) {
+          notification.checkSwapStatus(this.swapper);
+        }
+        if (
+          type === NOTIFICATION_TYPES.OUT &&
+          notification.status.toLowerCase() ===
+            NOTIFICATION_STATUS.PENDING.toLowerCase()
+        ) {
+          this.web3.eth
+            .getTransactionReceipt(notification.hash)
+            .then(receipt => {
+              if (receipt) {
+                notification.status = receipt.status
+                  ? NOTIFICATION_STATUS.SUCCESS
+                  : NOTIFICATION_STATUS.FAILED;
+                this.updateNotification(notification);
+              }
+            });
+        }
       }
     },
     /**

@@ -42,13 +42,14 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import { isObject, debounce } from 'lodash';
+import { isObject, throttle } from 'lodash';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
-  selected: 'SELECTED'
+  selected: 'SELECTED',
+  resolved: 'RESOLVED'
 };
 
 export default {
@@ -237,6 +238,10 @@ export default {
       this.isValidAddress = false;
       this.loadedAddressValidation = false;
       this.$refs.addressSelect.clear();
+      this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+        type: USER_INPUT_TYPES.typed,
+        value: this.inputAddr
+      });
 
       // Calls setups from mounted
       if (this.network.type.ens)
@@ -258,7 +263,7 @@ export default {
     /**
      * Resolves name and @returns address
      */
-    resolveName: debounce(async function () {
+    resolveName: throttle(async function () {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
@@ -266,11 +271,10 @@ export default {
             this.isValidAddress = true;
             this.loadedAddressValidation = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'RESOLVED',
+              type: USER_INPUT_TYPES.resolved,
               value: this.inputAddr
             });
           });
-          // eslint-disable-next-line no-empty
         } catch (e) {
           this.loadedAddressValidation = true;
         }

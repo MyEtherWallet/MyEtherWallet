@@ -35,7 +35,7 @@
       title="Skip"
       btn-style="outline"
       btn-size="large"
-      @click.native="setShowHasClaimable(false)"
+      @click.native="close"
     />
   </v-snackbar>
 </template>
@@ -50,7 +50,7 @@ export default {
     return {
       show: false,
       timeoutHolder: null,
-      claimed: false,
+      claimed: true,
       hasTokens: false
     };
   },
@@ -86,16 +86,23 @@ export default {
     }
   },
   mounted() {
-    this.delayOpenSnackBar();
-    hasClaimed(this.address, this.web3).then(data => {
-      if (data && data.balance) {
-        this.claimed = data.claimed;
-        this.hasTokens = BigNumber(data.balance).gt(0);
-      }
-    });
+    this.getData();
   },
   methods: {
     ...mapActions('ensManagerStore', ['setShowHasClaimable']),
+    close() {
+      this.show = false;
+      this.setShowHasClaimable(false);
+    },
+    async getData() {
+      await hasClaimed(this.address, this.web3).then(data => {
+        if (data && data.balance) {
+          this.claimed = data.claimed;
+          this.hasTokens = BigNumber(data.balance).gt(0);
+        }
+      });
+      this.delayOpenSnackBar();
+    },
     openEnsClaimable() {
       this.$router.push({
         name: ROUTES_WALLET.ENS_MANAGER.NAME,
@@ -108,7 +115,7 @@ export default {
     delayOpenSnackBar() {
       // add 6 secs delay
       // on load when showHasClaimable is true
-      if (this.showHasClaimable) {
+      if (this.showHasClaimable && !this.claimed) {
         this.timeoutHolder = setTimeout(() => {
           this.show = this.showHasClaimable;
         }, 3000);
