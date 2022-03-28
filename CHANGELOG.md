@@ -5,7 +5,7 @@
 * Added check for contract name [#3723](https://github.com/MyEtherWallet/MyEtherWallet/pull/3723)
 * Added bn helper to handler send [#3726](https://github.com/MyEtherWallet/MyEtherWallet/pull/3726)
 * added check to actualprivatekey for string [#3733](https://github.com/MyEtherWallet/MyEtherWallet/pull/3733)
-* release holder [#3744](https://github.com/MyEtherWallet/MyEtherWallet/pull/3744)
+* release holder [#3744](https://github.com/MyEtherWallet/MyEtherWallet/pull/3744)\\
 
 ### chore
 
@@ -14,9 +14,13 @@
 ### feat
 
 * add non eth to eth swap [#3524](https://github.com/MyEtherWallet/MyEtherWallet/pull/3524)
+* add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
+* add claimable tokens popup [#3716](https://github.com/MyEtherWallet/MyEtherWallet/pull/3716)
 
 ### fix
 
+* getting stuck at pending on failed transaction adds estimated fees tooltip
+* menu highlight on direct navigation to my-blocks [#3558](https://github.com/MyEtherWallet/MyEtherWallet/pull/3558)
 * check for undefined contract address [#3708](https://github.com/MyEtherWallet/MyEtherWallet/pull/3708)
 * prevents error pop up if first phrase is skipped in mnemonic phrase login [#3711](https://github.com/MyEtherWallet/MyEtherWallet/pull/3711)
 * fix Cannot read properties of undefined [#3713](https://github.com/MyEtherWallet/MyEtherWallet/pull/3713)
@@ -25,6 +29,13 @@
 * disable next(access wallet) button if there is no password [#3718](https://github.com/MyEtherWallet/MyEtherWallet/pull/3718)
 * update team page [#3722](https://github.com/MyEtherWallet/MyEtherWallet/pull/3722)
 * fix sentry type error undefined "name" [#3730](https://github.com/MyEtherWallet/MyEtherWallet/pull/3730)
+* fix swap [#3747](https://github.com/MyEtherWallet/MyEtherWallet/pull/3747)
+
+### Release v6.5.0-hotfix.1
+
+### revert
+
+* check basGasFeePerGas allowing non 1559 nodes to be true [#3753](https://github.com/MyEtherWallet/MyEtherWallet/pull/3753)
 
 ### Release v6.5.0
 

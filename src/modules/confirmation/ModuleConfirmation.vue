@@ -78,7 +78,6 @@
           />
           <!-- Warning Sheet -->
           <div
-            v-if="!toNonEth"
             class="px-4 py-6 pr-6 warning textMedium--text border-radius--5px mb-5"
           >
             <b>Make sure all the information is correct.</b> Cancelling or
@@ -255,7 +254,6 @@ import CrossChainConfirmation from './components/CrossChainConfirmation';
 
 import SuccessModal from './components/SuccessModal';
 
-import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import {
   fromWei,
   hexToNumberString,
@@ -264,7 +262,7 @@ import {
   sha3,
   isHex
 } from 'web3-utils';
-import { isEmpty, isArray } from 'lodash';
+import { isEmpty, isArray, cloneDeep } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
@@ -429,7 +427,12 @@ export default {
         : !isEmpty(this.signedTxObject);
     },
     isSwap() {
-      return !isEmpty(this.swapInfo);
+      return (
+        !isEmpty(this.swapInfo) ||
+        (!isEmpty(this.tx) &&
+          this.tx.hasOwnProperty('fromTokenType') &&
+          !this.tx.fromTokenType.isEth)
+      );
     },
     isBatch() {
       return this.unsignedTxArr.length > 0;
@@ -521,9 +524,7 @@ export default {
       _self.swapInfo = arr[1];
       _self.resolver = resolver;
       _self.showTxOverlay = true;
-      _self.title = _self.swapInfo.toTokenType.isEth
-        ? 'Verify Swap'
-        : 'Review Swap';
+      _self.title = 'Verify Swap';
       _self.toNonEth = !_self.swapInfo.toTokenType.isEth;
       if (!_self.isHardware && _self.identifier !== WALLET_TYPES.WEB3_WALLET) {
         await _self.signTx();
@@ -778,11 +779,14 @@ export default {
         this.signing = true;
       }
       for (let i = 0; i < this.unsignedTxArr.length; i++) {
+        const objClone = cloneDeep(this.unsignedTxArr[i]);
+        // fixes circular reference for signing
+        delete objClone['handleNotification'];
+        delete objClone['currency'];
+        delete objClone['confirmInfo'];
         try {
           if (!this.isWeb3Wallet) {
-            const _signedTx = await this.instance.signTransaction(
-              this.unsignedTxArr[i]
-            );
+            const _signedTx = await this.instance.signTransaction(objClone);
             if (this.unsignedTxArr[i].hasOwnProperty('handleNotification')) {
               _signedTx.tx['handleNotification'] =
                 this.unsignedTxArr[i].handleNotification;
@@ -792,7 +796,7 @@ export default {
               this.btnAction();
             }
           } else {
-            const event = this.instance.signTransaction(this.unsignedTxArr[i]);
+            const event = this.instance.signTransaction(objClone);
             batchTxEvents.push(event);
             event
               .on('transactionHash', res => {
@@ -862,6 +866,8 @@ export default {
               ? `${this.value} ${symbol}`
               : `0 ${this.network.type.currencyName}`
             : `${this.value} ${symbol}`;
+        const from = item.from ? item.from : this.address;
+        const toAdd = item.to ? item.to : this.txTo;
         return [
           {
             title: 'Network',
@@ -873,18 +879,14 @@ export default {
           },
           {
             title: 'From address',
-            value: item.from
-              ? toChecksumAddress(item.from)
-              : toChecksumAddress(this.address)
+            value: from
           },
           {
             title:
               data !== '0x' && !this.isBatch
                 ? 'Via Contract Address'
                 : 'To address',
-            value: item.to
-              ? toChecksumAddress(item.to)
-              : toChecksumAddress(this.txTo)
+            value: toAdd
           },
           {
             title: 'Sending',
