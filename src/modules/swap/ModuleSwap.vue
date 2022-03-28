@@ -1090,9 +1090,7 @@ export default {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
           ? this.currencyFormatter(t.usdBalancef)
           : '0.00';
-        t.tokenBalance = t.hasOwnProperty('balancef')
-          ? this.currencyFormatter(t.balancef)
-          : '0.00';
+        t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
