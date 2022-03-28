@@ -331,14 +331,8 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = this.currencyFormatter(
-          item.usdBalancef.replace(',', '')
-        );
-        item.tokenBalance = this.currencyFormatter(item.balancef).replace(
-          ',',
-          ''
-        );
-        item.price = this.currencyFormatter(item.pricef.replace(',', ''));
+        item.totalBalance = this.currencyFormatter(item.usdBalance);
+        item.tokenBalance = item.balancef;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
