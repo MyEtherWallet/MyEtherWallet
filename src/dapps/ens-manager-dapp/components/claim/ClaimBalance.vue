@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-1">
+  <div class="mb-1 mew-component--claim-balance">
     <!--
     ===================================================
       Claim TITLE:
@@ -98,7 +98,7 @@ export default {
   props: {
     claimed: {
       type: Boolean,
-      defualt: false
+      default: false
     },
     balance: {
       type: String,

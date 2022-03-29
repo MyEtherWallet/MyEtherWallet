@@ -119,20 +119,22 @@
               Address Book
             =====================================================================================
             -->
-          <module-address-book
-            v-show="showToAddress"
-            class="mt-10"
-            :is-valid-address-func="isValidToAddress"
-            @setAddress="setToAddress"
-          />
-          <module-address-book
-            v-if="isFromNonChain"
-            ref="addressInput"
-            class="pt-4 pb-2 mt-10"
-            :label="nativeLabel"
-            :is-valid-address-func="isValidRefundAddress"
-            @setAddress="setRefundAddr"
-          />
+          <div class="mt-8">
+            <module-address-book
+              v-if="isFromNonChain"
+              ref="refundAddressInput"
+              :label="nativeLabel"
+              :is-valid-address-func="isValidRefundAddress"
+              @setAddress="setRefundAddr"
+            />
+            <module-address-book
+              v-show="showToAddress"
+              ref="toAddressInput"
+              :is-valid-address-func="isValidToAddress"
+              :label="toAddressLabel"
+              @setAddress="setToAddress"
+            />
+          </div>
 
           <!--
           =====================================================================================
@@ -220,56 +222,55 @@
             =====================================================================================
             -->
           <div v-if="hasMinEth">
-            <v-slide-y-transition hide-on-leave group>
+            <v-slide-y-transition v-if="showAnimation" hide-on-leave group>
               <swap-provider-mentions
-                v-if="showAnimation"
                 key="showAnimation"
                 :is-loading="isLoadingProviders"
                 :check-loading="checkLoading"
                 @showProviders="showProviders"
               />
-              <div v-else key="showAnimation1">
-                <swap-providers-list
-                  :step="step"
-                  :available-quotes="availableQuotes"
-                  :set-provider="setProvider"
-                  :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
-                  :to-token-icon="toTokenType ? toTokenType.img : ''"
-                  :is-loading="isLoadingProviders"
-                  :providers-error="providersErrorMsg"
-                  :class="isFromNonChain ? '' : 'mt-7'"
-                />
-                <!--
+            </v-slide-y-transition>
+            <div v-else key="showAnimation1">
+              <swap-providers-list
+                :step="step"
+                :available-quotes="availableQuotes"
+                :set-provider="setProvider"
+                :to-token-symbol="toTokenType ? toTokenType.symbol : ''"
+                :to-token-icon="toTokenType ? toTokenType.img : ''"
+                :is-loading="isLoadingProviders"
+                :providers-error="providersErrorMsg"
+                :class="isFromNonChain ? '' : 'mt-7'"
+              />
+              <!--
                   =====================================================================================
                   Swap Fee
                   =====================================================================================
                 -->
-                <app-transaction-fee
-                  v-if="showNetworkFee"
-                  :is-from-chain="!isFromNonChain"
-                  :show-fee="showSwapFee"
-                  :getting-fee="loadingFee"
-                  :error="feeError"
-                  :total-cost="totalCost"
-                  :tx-fee="txFee"
-                  :total-gas-limit="totalGasLimit"
-                  :not-enough-eth="notEnoughEth"
-                  :from-eth="isFromTokenMain"
-                  class="mt-10 mt-sm-16"
-                  @onLocalGasPrice="handleLocalGasPrice"
+              <app-transaction-fee
+                v-if="showNetworkFee"
+                :is-from-chain="!isFromNonChain"
+                :show-fee="showSwapFee"
+                :getting-fee="loadingFee"
+                :error="feeError"
+                :total-cost="totalCost"
+                :tx-fee="txFee"
+                :total-gas-limit="totalGasLimit"
+                :not-enough-eth="notEnoughEth"
+                :from-eth="isFromTokenMain"
+                class="mt-10 mt-sm-16"
+                @onLocalGasPrice="handleLocalGasPrice"
+              />
+              <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
+                <mew-button
+                  title="Next"
+                  :has-full-width="true"
+                  :disabled="disableNext"
+                  btn-size="xlarge"
+                  style="max-width: 240px"
+                  @click.native="showConfirm()"
                 />
-                <div v-if="showNextButton" class="text-center mt-10 mt-sm-15">
-                  <mew-button
-                    title="Next"
-                    :has-full-width="true"
-                    :disabled="disableNext"
-                    btn-size="xlarge"
-                    style="max-width: 240px"
-                    @click.native="showConfirm()"
-                  />
-                </div>
               </div>
-            </v-slide-y-transition>
+            </div>
           </div>
         </template>
         <!--
@@ -297,7 +298,7 @@ import SwapProviderMentions from './components/SwapProviderMentions.vue';
 import Swapper from './handlers/handlerSwap';
 import AppTransactionFee from '@/core/components/AppTransactionFee.vue';
 import { toBN, fromWei, toWei, isAddress } from 'web3-utils';
-import { isEmpty, clone, isUndefined, debounce } from 'lodash';
+import { isEmpty, clone, isUndefined, debounce, isObject } from 'lodash';
 import { mapGetters, mapState, mapActions } from 'vuex';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -381,9 +382,8 @@ export default {
       selectedProvider: {},
       refundAddress: '',
       isValidRefundAddr: false,
-      userToAddress: '',
-      isValidToAddr: false,
-      localGasPrice: '0'
+      localGasPrice: '0',
+      mainTokenDetails: {}
     };
   },
   computed: {
@@ -475,7 +475,8 @@ export default {
         this.amountErrorMessage !== '' ||
         this.feeError !== '' ||
         !this.hasSelectedProvider ||
-        this.providersErrorMsg.subtitle !== '';
+        this.providersErrorMsg.subtitle !== '' ||
+        this.loadingFee;
       if (this.fromTokenType?.isEth) {
         return disableSet;
       }
@@ -520,10 +521,10 @@ export default {
      * @rejects object
      * Gets the ETH token dropdown item details
      */
-    mainTokenDetails() {
-      const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
-      return ethToken;
-    },
+    // mainTokenDetails() {
+    //   const ethToken = this.contractToToken(MAIN_TOKEN_ADDRESS);
+    //   return ethToken;
+    // },
     /**
      * checks whether both token fields are empty
      */
@@ -618,6 +619,7 @@ export default {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
             foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
@@ -625,6 +627,7 @@ export default {
             foundToken.contract = token.contract;
             foundToken.price = this.currencyFormatter(foundToken.pricef);
             foundToken.isEth = token.isEth;
+            foundToken.name = token.symbol;
             return foundToken;
           }
           const name = token.name;
@@ -689,7 +692,7 @@ export default {
       if (nonChainTokens.length > 0) {
         returnableTokens = returnableTokens.concat([
           {
-            header: 'Non-Chain Tokens'
+            header: 'Cross-Chain Tokens'
           },
           ...nonChainTokens
         ]);
@@ -780,8 +783,10 @@ export default {
      */
     toAddress() {
       if (!this.toTokenType?.isEth) {
-        if (this.userToAddress) {
-          return this.userToAddress;
+        if (!isEmpty(this.addressValue)) {
+          return this.addressValue.isValid
+            ? this.addressValue.value
+            : this.address;
         }
 
         return this.address;
@@ -923,17 +928,15 @@ export default {
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
     },
-    multiWatchTokens() {
-      return `${this.toTokenType}|${this.fromTokenType}`;
+    toAddressLabel() {
+      const name =
+        !isEmpty(this.toTokenType) && this.toTokenType.hasOwnProperty('name')
+          ? this.toTokenType.name
+          : 'ETH';
+      return `To ${name} address`;
     }
   },
   watch: {
-    multiWatchTokens() {
-      this.refundAddress = '';
-      this.isValidRefundAddr = false;
-      this.userToAddress = '';
-      this.isValidToAddr = false;
-    },
     tokenInValue() {
       this.feeError = '';
     },
@@ -953,9 +956,6 @@ export default {
       deep: true,
       immediate: true
     },
-    mainTokenDetails() {
-      this.setDefaults();
-    },
     amountErrorMessage(newVal) {
       if (newVal !== '') this.availableQuotes.splice(0);
     },
@@ -969,7 +969,22 @@ export default {
     this.setTokenFromURL();
   },
   mounted() {
+    this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
     this.setupSwap();
+    // multi value watcher to clear
+    // refund address and to address
+    this.$watch(
+      vm => [vm.toTokenType, vm.fromTokenType],
+      () => {
+        if (this.$refs.refundAddressInput) {
+          this.$refs.refundAddressInput.clear();
+        }
+
+        if (this.$refs.toAddressInput) {
+          this.$refs.toAddressInput.clear();
+        }
+      }
+    );
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -981,7 +996,7 @@ export default {
     setRefundAddr(address, valid) {
       this.refundAddress = address;
       this.isValidRefundAddr = valid;
-      if (valid) this.setTokenInValue(this.tokenInValue);
+      this.setTokenInValue(this.tokenInValue);
     },
     /**
      * Handles emitted values from module-address-book
@@ -1201,9 +1216,6 @@ export default {
       ) {
         return;
       }
-      if (this.isFromNonChain && !this.refundAddress && !this.isValidRefundAddr)
-        return;
-      if (this.showToAddress && !this.isValidToAddr) return;
       this.tokenOutValue = '0';
       this.availableQuotes.forEach(q => {
         if (q) {
@@ -1213,6 +1225,14 @@ export default {
       this.availableQuotes = [];
       this.allTrades = [];
       this.step = 0;
+
+      if (
+        this.isFromNonChain &&
+        (this.refundAddress === '' || !this.isValidRefundAddr)
+      )
+        return;
+      if (this.showToAddress && !this.addressValue.isValid) return;
+
       if (
         !isEmpty(this.toTokenType) &&
         this.toTokenType.hasOwnProperty('isEth') &&
@@ -1259,7 +1279,7 @@ export default {
             this.isLoadingProviders = false;
           });
       }
-    }, 1000),
+    }, 500),
     setProvider(idx) {
       this.belowMinError = false;
       this.availableQuotes.forEach((q, _idx) => {
@@ -1272,19 +1292,23 @@ export default {
       });
     },
     getTrade: debounce(function (idx) {
-      if (
-        (!this.isFromNonChain && !this.isValidToAddr) ||
-        !this.availableQuotes[idx]
-      )
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
-      if (this.isFromNonChain && !this.isValidRefundAddr) return;
-      if (this.isFromNonChain && !this.isValidToAddr && !this.isValidRefundAddr)
+      }
+      if (this.isFromNonChain && !this.isValidRefundAddr) {
         return;
-      this.step = 1;
+      }
+
+      if (this.availableQuotes.length === 0) {
+        return;
+      }
+
       this.feeError = '';
-      this.loadingFee = true;
       if (this.allTrades.length > 0 && this.allTrades[idx])
         return this.setupTrade(this.allTrades[idx]);
+      if (!this.allTrades[idx]) {
+        this.loadingFee = true;
+      }
       const swapObj = {
         fromAddress: this.address,
         toAddress: this.toAddress,
@@ -1300,25 +1324,20 @@ export default {
       if (this.isFromNonChain) {
         swapObj['refundAddress'] = this.refundAddress;
       }
-      this.swapper
-        .getTrade(swapObj)
-        .then(trade => {
-          if (trade instanceof Promise) {
-            trade
-              .then(tradeResponse => {
-                this.allTrades[idx] = tradeResponse;
-                this.setupTrade(tradeResponse);
-              })
-              .catch(e => {
-                this.setupTrade(e);
-              });
-          } else {
-            this.setupTrade(trade);
+      const trade = this.swapper.getTrade(swapObj);
+      if (trade instanceof Promise) {
+        trade.then(tradeResponse => {
+          if (
+            isObject(tradeResponse) &&
+            tradeResponse.hasOwnProperty('provider')
+          ) {
+            this.allTrades[idx] = tradeResponse;
           }
-        })
-        .catch(e => {
-          this.setupTrade(e);
+          this.setupTrade(tradeResponse);
         });
+      } else {
+        this.setupTrade(trade);
+      }
     }, 500),
     setupTrade(trade) {
       this.loadingFee = false;
@@ -1385,10 +1404,15 @@ export default {
       return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     isValidRefundAddress(address) {
-      if (this.toTokenType.isEth) {
-        return MultiCoinValidator.validate(address, 'Ethereum');
+      try {
+        return MultiCoinValidator.validate(address, this.fromTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.fromTokenType,
+          address
+        });
       }
-      return MultiCoinValidator.validate(address, this.toTokenType.name);
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
@@ -1402,10 +1426,8 @@ export default {
             err.statusObj.hashes.forEach(item => {
               Toast(item.message, {}, ERROR);
             });
-            this.clear();
             return;
           }
-          this.clear();
           Toast(err.message, {}, ERROR);
         });
     },

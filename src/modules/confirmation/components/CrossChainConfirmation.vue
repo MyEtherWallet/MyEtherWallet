@@ -6,6 +6,7 @@
       :close="locReset"
       :btn-action="btnAction"
       :btn-text="buttonTitle"
+      :btn-enabled="!timerFinished"
       :is-persistent="true"
       :accept-only="true"
       width="560"
@@ -34,7 +35,7 @@
               </div>
               <div
                 :class="[
-                  'py-2 text-center mew-body',
+                  'py-2 text-center mew-body word-break--break-all',
                   timerFinished ? 'disabled--text' : ''
                 ]"
               >
@@ -48,7 +49,12 @@
                 Copy Address
               </div>
               <div v-if="!timerFinished">
-                <qr-code :data="payinAddress" :height="160" :width="160" />
+                <qr-code
+                  v-if="!hideQr"
+                  :data="payinAddress"
+                  :height="160"
+                  :width="160"
+                />
               </div>
               <div v-else class="d-flex align-center justify-center">
                 <v-img
@@ -91,7 +97,7 @@
                 <div class="px-6 pb-6">
                   <div class="d-flex align-center justify-space-between">
                     <div>Refund Address:</div>
-                    <div>{{ refundAddress }}</div>
+                    <div class="word-break--break-all">{{ refundAddress }}</div>
                   </div>
                   <div class="d-flex align-center justify-space-between pt-2">
                     <div>Rate:</div>
@@ -109,7 +115,10 @@
             <a href="https://changelly.com/aml-kyc" target="_blank">
               Changelly AML/KYC
             </a>
-            and <router-link :to="termRoute">Terms of Service</router-link>
+            and
+            <router-link :to="termRoute" target="_blank"
+              >Terms of Service</router-link
+            >
           </div>
         </div>
       </template>
@@ -123,9 +132,10 @@ import moment from 'moment';
 import AppModal from '@/core/components/AppModal';
 import { Toast, INFO } from '@/modules/toast/handler/handlerToast';
 import qrDisabled from '@/assets/images/icons/qr-disabled.png';
-import { isEmpty } from 'underscore';
+import { isEmpty, debounce } from 'lodash';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_HOME } from '@/core/configs/configRoutes.js';
+
 const MILLISECONDS = 1000;
 const MINUTES = 20;
 const SECONDS_IN_MINUTES = 60;
@@ -165,7 +175,7 @@ export default {
           name: 'View Details'
         }
       ],
-      termRoute: ROUTES_HOME.TERMS_OF_SERVICE.NAME
+      termRoute: { name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }
     };
   },
   computed: {
@@ -174,6 +184,9 @@ export default {
     },
     sendWarning() {
       return `You can send ${this.txObj?.fromType} to this address only once.`;
+    },
+    hideQr() {
+      return this.payinAddress && this.payinAddress.length > 42;
     },
     payinAddress() {
       return this.txObj?.actualTrade?.response?.payinAddress;
@@ -223,6 +236,9 @@ export default {
       }
       return '';
     },
+    payTill() {
+      return this.txObj?.actualTrade?.response?.payTill;
+    },
     rate() {
       if (
         !isEmpty(this.txObj) &&
@@ -236,24 +252,29 @@ export default {
   watch: {
     showCrossChainModal(newVal) {
       if (newVal) {
-        let counter = null;
-        this.startingTime = moment(SECONDS_IN_MINUTES * MINUTES * MILLISECONDS);
-        this.time = this.startingTime.format('mm:ss');
-        counter = setInterval(() => {
-          if (this.timerFinished) {
-            clearInterval(counter);
-            counter = null;
-          } else {
-            this.startingTime = moment(
-              this.startingTime.subtract(1, 'seconds')
-            );
-            this.time = this.startingTime.format('mm:ss');
-          }
-        }, 1000);
+        if (moment().isBefore(this.payTill)) {
+          this.time = this.startingTime.format('mm:ss');
+          const throttledFunc = debounce(() => {
+            const now = new Date();
+            const deadline = moment(this.payTill).diff(now);
+            if (this.timerFinished) {
+              clearInterval(this.counter);
+              this.counter = null;
+            } else {
+              this.time = moment.utc(deadline).format('mm:ss');
+            }
+          }, 200);
+          this.counter = setInterval(throttledFunc, 1000);
+        } else {
+          this.time = '00:00';
+        }
       } else {
         clearInterval(this.counter);
       }
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.counter);
   },
   methods: {
     copy() {
