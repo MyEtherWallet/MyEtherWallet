@@ -199,7 +199,7 @@ export default {
   methods: {
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val);
+      this.swapHandler = new handlerSwap(val, this.network.type.name);
       this.fetchRates();
     },
     fetchRates() {

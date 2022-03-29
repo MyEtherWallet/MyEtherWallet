@@ -6,7 +6,7 @@ const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
-import Configs from '../configs';
+import Configs from '../configs/providersConfigs';
 import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class MEWPClass {

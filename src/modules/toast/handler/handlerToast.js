@@ -31,7 +31,13 @@ const GLOBAL_ERRORS = {
   'connection not open': 'errorsGlobal.connection-not-open',
   'The execution failed due to an exception. Reverted':
     'The execution failed due to an exception. Reverted',
-  '_window is null': 'Device busy'
+  '_window is null': 'Device busy',
+  'err: insufficient funds for gas':
+    'Insufficient funds. Please make sure you have enough funds to complete a transaction',
+  'invalid argument':
+    'Invalid argument. Please verify that the argument provided is correct',
+  'execution reverted':
+    'Something went wrong with the transaction: execution reverted'
 };
 
 const GLOBAL_WARNING = {

@@ -51,7 +51,7 @@
             <textarea
               v-model="errorDetails"
               readonly
-              class="error-detail"
+              class="error-detail px-8 pb-6"
             ></textarea>
           </v-expansion-panel-content>
         </v-expansion-panel>

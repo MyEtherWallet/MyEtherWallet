@@ -13,7 +13,6 @@
 import TheDefaultHeader from './components-default/TheDefaultHeader';
 import TheDefaultFooter from './components-default/TheDefaultFooter';
 import TheDefaultWalletBanner from './components-default/TheDefaultWalletBanner';
-
 export default {
   name: 'TheDefaultView',
   components: {
