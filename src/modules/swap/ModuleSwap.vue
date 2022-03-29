@@ -618,14 +618,14 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.isEth = token.isEth;
             foundToken.name = token.symbol;
             return foundToken;
@@ -715,6 +715,7 @@ export default {
           foundToken.contract = token.contract;
           foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
+          foundToken.name = token.symbol;
           return foundToken;
         }
         token.price = '';
@@ -737,16 +738,17 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = this.currencyFormatter(token.pricef);
+            token.price = `$${token.pricef}`;
+          } else {
+            token.price = '0.00';
           }
           const name = token.name;
-          token.price = '0.00';
           token.subtext = name;
           token.value = name;
           token.name = token.symbol;
