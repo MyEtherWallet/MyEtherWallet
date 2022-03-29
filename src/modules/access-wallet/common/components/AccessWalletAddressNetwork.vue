@@ -87,13 +87,19 @@
                     :address="acc.address"
                     class="mr-2"
                   />
-                  <v-col cols="9" class="d-none d-sm-flex flex-column">
-                    <span v-if="acc.nickname" class="font-weight-bold">{{
-                      acc.nickname
-                    }}</span>
-                    <mew-transform-hash :hash="acc.address" />
-                    <span v-if="acc.ensName">{{ acc.ensName }}</span>
-                  </v-col>
+                  <a
+                    :href="setExplorerURL(acc.address)"
+                    target="_blank"
+                    this:rel="noopener noreferrer"
+                  >
+                    <v-col cols="9" class="d-none d-sm-flex flex-column">
+                      <span v-if="acc.nickname" class="font-weight-bold">{{
+                        acc.nickname
+                      }}</span>
+                      <mew-transform-hash :hash="acc.address" />
+                      <span v-if="acc.ensName">{{ acc.ensName }}</span>
+                    </v-col>
+                  </a>
                   <p class="d-block d-sm-none">
                     {{ acc.address | concatAddressXS }}
                   </p>
@@ -537,6 +543,9 @@ export default {
       if (this.walletAccount) {
         this.$emit('unlock', this.walletAccount);
       }
+    },
+    setExplorerURL(addr) {
+      return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
     }
   }
 };
