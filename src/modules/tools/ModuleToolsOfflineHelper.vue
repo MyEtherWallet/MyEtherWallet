@@ -361,16 +361,16 @@ export default {
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
       this.file = window.URL.createObjectURL(blob);
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
-    },
-    uploadFile(e) {
-      // const reader = new FileReader();
-      // let { file, getTransactionDetails } = this;
-      // reader.onloadend = function ({ target: { result,files } }) {
-      //   file = JSON.parse(result);
-      //   getTransactionDetails(file.rawTransaction);
-      // };
-      // reader.readAsBinaryString(e.target.files[0]);
     }
+    // uploadFile(e) {
+    //   // const reader = new FileReader();
+    //   // let { file, getTransactionDetails } = this;
+    //   // reader.onloadend = function ({ target: { result,files } }) {
+    //   //   file = JSON.parse(result);
+    //   //   getTransactionDetails(file.rawTransaction);
+    //   // };
+    //   // reader.readAsBinaryString(e.target.files[0]);
+    // }
   }
 };
 </script>
