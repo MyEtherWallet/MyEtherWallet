@@ -51,10 +51,18 @@
         btn-size="xlarge"
         @click.native="goToPromo()"
       />
-      <div class="mt-5 d-flex justify-center">
-        <img src="@/assets/images/icons/icon-visa.svg" class="mr-5" />
-        <img src="@/assets/images/icons/icon-mastercard.svg" class="mr-5" />
-        <img src="@/assets/images/icons/icon-bank.svg" />
+      <div class="mt-5 d-flex justify-center align-center">
+        <img
+          src="@/assets/images/icons/icon-visa.svg"
+          class="mr-5"
+          height="10"
+        />
+        <img
+          src="@/assets/images/icons/icon-mastercard.svg"
+          class="mr-5"
+          height="16"
+        />
+        <img src="@/assets/images/icons/icon-bank.svg" height="20" />
       </div>
     </template>
   </app-modal>
