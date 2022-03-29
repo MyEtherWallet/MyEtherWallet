@@ -9,7 +9,7 @@
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
         Current APR
       </div>
-      <div class="textLight--text">{{ validatorApr }}%</div>
+      <div class="textLight--text greenPrimary--text">{{ validatorApr }}%</div>
     </div>
     <div class="d-flex align-center justify-space-between">
       <div class="textLight--text text-uppercase mew-label font-weight-medium">
