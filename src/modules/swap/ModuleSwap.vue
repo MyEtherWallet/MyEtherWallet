@@ -983,6 +983,7 @@ export default {
         if (this.$refs.toAddressInput) {
           this.$refs.toAddressInput.clear();
         }
+        this.selectedProvider = {};
       }
     );
   },
@@ -1087,11 +1088,9 @@ export default {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? this.currencyFormatter(t.usdBalancef)
+          ? `$${t.usdBalancef}`
           : '0.00';
-        t.tokenBalance = t.hasOwnProperty('balancef')
-          ? this.currencyFormatter(t.balancef)
-          : '0.00';
+        t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
@@ -1401,7 +1400,15 @@ export default {
       if (this.toTokenType.isEth) {
         return MultiCoinValidator.validate(address, 'Ethereum');
       }
-      return MultiCoinValidator.validate(address, this.toTokenType.name);
+      try {
+        return MultiCoinValidator.validate(address, this.toTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.toTokenType,
+          address
+        });
+      }
     },
     isValidRefundAddress(address) {
       try {
