@@ -384,6 +384,11 @@ export default {
             label: 'Convert units',
             routerLink: 'Tools',
             query: { tool: 'convert' }
+          },
+          {
+            label: 'General keystore file',
+            routerLink: 'Tools',
+            query: { tool: 'generate' }
           }
           /*
           ,

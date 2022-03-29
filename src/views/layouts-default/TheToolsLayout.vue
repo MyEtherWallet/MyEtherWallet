@@ -20,9 +20,12 @@
           <module-tools-convert />
         </template>
         <template #tabItemContent3>
-          <module-tools-offline-helper />
+          <module-tools-generate-keystore-file />
         </template>
         <template #tabItemContent4>
+          <module-tools-offline-helper />
+        </template>
+        <template #tabItemContent5>
           <module-tools-watch-only />
         </template>
       </mew-tabs>
@@ -34,9 +37,9 @@
 <script>
 import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppGetStarted from '@/core/components/AppGetStarted';
-
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
 import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
+import ModuleToolsGenerateKeystoreFile from '@/modules/tools/ModuleToolsGenerateKeystoreFile';
 import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper';
 import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
@@ -48,6 +51,7 @@ export default {
     AppGetStarted,
     ModuleToolsWatchOnly,
     ModuleToolsConvert,
+    ModuleToolsGenerateKeystoreFile,
     ModuleToolsOfflineHelper,
     ModuleMessageVerify
   },
@@ -70,12 +74,16 @@ export default {
       },
       */
       {
-        name: 'Verify message',
+        name: 'Verify Message',
         val: 'verify'
       },
       {
         name: 'Convert Units',
         val: 'convert'
+      },
+      {
+        name: 'Generate Keystore file',
+        val: 'generate'
       }
     ]
   }),
@@ -92,11 +100,12 @@ export default {
   },
   methods: {
     setCurrentTool() {
-      const tools = ['watch', 'convert', 'offline', 'verify'];
+      const tools = ['watch', 'convert', 'offline', 'verify', 'generate'];
 
       // Check if tool value from URL is valid
       if (tools.includes(this.$route.query.tool)) {
         this.currentTool = this.$route.query.tool;
+        console.log(this.$route.query.tool);
 
         switch (this.currentTool) {
           case 'verify':
@@ -107,6 +116,11 @@ export default {
           case 'convert':
             this.activeTab = 1;
             this.currentTool = 'convert';
+            break;
+
+          case 'generate':
+            this.activeTab = 2;
+            this.currentTool = 'generate';
             break;
 
           default:
@@ -128,6 +142,10 @@ export default {
 
         case 1:
           this.currentTool = 'convert';
+          break;
+
+        case 2:
+          this.currentTool = 'generate';
           break;
 
         default:
