@@ -16,6 +16,7 @@
 * add non eth to eth swap [#3524](https://github.com/MyEtherWallet/MyEtherWallet/pull/3524)
 * add moon pay interface [#3640](https://github.com/MyEtherWallet/MyEtherWallet/pull/3640)
 * add claimable tokens popup [#3716](https://github.com/MyEtherWallet/MyEtherWallet/pull/3716)
+* add block explorer links [#3755](https://github.com/MyEtherWallet/MyEtherWallet/pull/3755)
 
 ### fix
 
