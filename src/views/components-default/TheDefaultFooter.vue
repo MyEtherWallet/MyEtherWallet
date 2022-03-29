@@ -384,15 +384,14 @@ export default {
             label: 'Convert units',
             routerLink: 'Tools',
             query: { tool: 'convert' }
-          }
-          /*
-          ,
+          },
           {
             label: 'Send offline help',
             routerLink: 'Tools',
             query: { tool: 'offline' }
-          },
-          {
+          }
+          /*
+          ,{
             label: 'Transaction status',
             routerLink: 'SendTX'
           },

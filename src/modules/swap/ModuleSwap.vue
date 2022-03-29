@@ -378,9 +378,10 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType']),
+    ...mapState('global', ['gasPriceType','Networks']),
     ...mapGetters('global', [
       'network',
+      'Networks',
       'isEthNetwork',
       'swapLink',
       'gasPriceByType'

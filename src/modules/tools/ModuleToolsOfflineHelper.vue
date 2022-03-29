@@ -48,7 +48,11 @@
 
     <div v-if="currentStep === 1">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <v-radio-group v-model="networkSelected" class="pa-7 radio-group">
+        <v-radio-group
+          v-model="networkSelected"
+          class="pa-7 radio-group"
+          @change="setNet"
+        >
           <div v-for="(item, i) in networks" :key="i">
             <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
               {{ item.label }}
@@ -81,8 +85,9 @@
 
     <div v-if="currentStep === 2">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <mew-address-select label="From Address" />
+        <mew-address-select label="From Address" @input="setAddress" />
         <mew-expand-panel
+          v-if="details.length > 1"
           is-toggle
           has-dividers
           :panel-items="exPannelStep2"
@@ -116,10 +121,13 @@
           />
         </div>
         <mew-button
+          v-if="details.length > 1"
           class="mt-2 display--block mx-auto"
           title="Export JSON file"
           btn-size="small"
           btn-style="transparent"
+          :btn-link="file"
+          :download="exportFileName"
         />
       </v-sheet>
     </div>
@@ -185,65 +193,58 @@
 
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-
+import { mapActions, mapState } from 'vuex';
+import { isAddress, fromWei } from 'web3-utils';
+import networks from '@/utils/networks';
+import { BigNumber } from 'bignumber.js';
 export default {
   name: 'ModuleToolsOfflineHelper',
   components: { AppBlockTitle },
   data: () => ({
     dialog: false,
     currentStep: 1,
-    details: [
-      {
-        title: 'Sender',
-        value: '',
-        address: '0x1208D377499bd32c1b995cAEEcA0BE297c242926'
-      },
-      {
-        title: 'Receiver',
-        value: '',
-        address: '0x1208D377499bd32c1b995cAEEcA0BE297c242926'
-      },
-      { title: 'Nonce', value: '0' },
-      { title: 'Value', value: '1 ETH' },
-      { title: 'Date', value: 'Ox' },
-      {
-        title: 'Chain ID',
-        value: '1(Ethereum)'
-      },
-      { title: 'Gas Limit', value: '3000' },
-      { title: 'Gas Price', value: '5 Gwei' },
-      { title: 'Fee', value: '0.001 ETH ($0.03)' }
-    ],
+    fromAddress: '',
+    details: [],
+    exportFileName: '',
+    file: {},
     networkSelected: null,
-    networks: [
-      {
-        label: 'eth',
-        buttons: [
-          { name: 'myetherapi.com', value: 'myetherapi' },
-          { name: 'infura.io', value: 'infura' },
-          { name: 'giveth.io', value: 'giveth' },
-          { name: 'therscan.io', value: 'therscan' }
-        ]
-      },
-      {
-        label: 'rop',
-        buttons: [
-          { name: 'myetherapi.com', value: 'myetherapi1' },
-          { name: 'infura.io', value: 'infura1' },
-          { name: 'giveth.io', value: 'giveth1' },
-          { name: 'therscan.io', value: 'therscan1' }
-        ]
-      },
-      {
-        label: 'rin',
-        buttons: [
-          { name: 'myetherapi.com', value: 'myetherapi2' },
-          { name: 'infura.io', value: 'infura2' },
-          { name: 'giveth.io', value: 'giveth2' },
-          { name: 'therscan.io', value: 'therscan2' }
-        ]
-      }
-    ],
+    networks: Object.values(networks)
+      .flat()
+      .map(network => {
+        return {
+          label: network.type.name,
+          buttons: [{ name: network.service, value: network }]
+        };
+      }),
+    // [
+    //   ({
+    //     label: 'eth',
+    //     buttons: [
+    //       { name: 'myetherapi.com', value: 'myetherapi' },
+    //       { name: 'infura.io', value: 'infura' },
+    //       { name: 'giveth.io', value: 'giveth' },
+    //       { name: 'therscan.io', value: 'therscan' }
+    //     ]
+    //   },
+    //   {
+    //     label: 'rop',
+    //     buttons: [
+    //       { name: 'myetherapi.com', value: 'myetherapi1' },
+    //       { name: 'infura.io', value: 'infura1' },
+    //       { name: 'giveth.io', value: 'giveth1' },
+    //       { name: 'therscan.io', value: 'therscan1' }
+    //     ]
+    //   },
+    //   {
+    //     label: 'rin',
+    //     buttons: [
+    //       { name: 'myetherapi.com', value: 'myetherapi2' },
+    //       { name: 'infura.io', value: 'infura2' },
+    //       { name: 'giveth.io', value: 'giveth2' },
+    //       { name: 'therscan.io', value: 'therscan2' }
+    //     ]
+    //   })
+    // ],
     title: {
       title: 'Send offline helper',
       description:
@@ -276,7 +277,101 @@ export default {
         name: 'STEP 3. Signed transaction'
       }
     ]
-  })
+  }),
+  computed: {},
+  methods: {
+    ...mapState('wallet', ['web3']),
+    ...mapActions('global', ['setNetwork']),
+    ...mapActions('wallet', ['setWeb3Instance']),
+    async setAddress(val = '') {
+      this.fromAddress = val;
+      if (isAddress(this.fromAddress)) {
+        this.setDetails();
+        return;
+      }
+      if (this.details.length > 1) this.setDetails([]);
+    },
+    async setNet(val) {
+      await this.setNetwork(val);
+      this.networkSelected = val;
+      this.setWeb3Instance();
+    },
+    async data() {
+      const { eth } = this.web3();
+      const chainID = await eth.getChainId();
+      const blockNumber = await eth.getBlockNumber();
+      const { gasLimit } = await eth.getBlock(blockNumber);
+      const gasPrice = await eth.getGasPrice();
+      const nonce = await eth.getTransactionCount(this.fromAddress);
+      const netName = this.networkSelected.type.name;
+      const fee = new BigNumber(fromWei(gasPrice)).times(gasLimit).toFixed();
+      const cost = '$0.03';
+      return {
+        data: {
+          address: this.fromAddress,
+          gasPrice,
+          nonce,
+          chainID,
+          timestamp: Date.now()
+        },
+        details: {
+          address: this.fromAddress,
+          nonce: nonce.toString(),
+          value: `1 ${netName}`,
+          chainID,
+          gasLimit,
+          gasPrice: `${fromWei(gasPrice, 'gwei')} Gwei`,
+          fee: `${fee} ${netName} (${cost})`
+        }
+      };
+    },
+    async setDetails(val) {
+      if (val) return (this.details = val);
+      const { details } = await this.data();
+      this.details = [
+        {
+          title: 'Sender',
+          value: '',
+          address: details.address
+        },
+        {
+          title: 'Nonce',
+          value: details.nonce
+        },
+        { title: 'Value', value: details.value },
+        { title: 'Date', value: Date() },
+        {
+          title: 'Chain ID',
+          value: details.chainID
+        },
+        {
+          title: 'Gas Limit',
+          value: details.gasLimit
+        },
+        {
+          title: 'Gas Price',
+          value: details.gasPrice
+        },
+        { title: 'Fee', value: details.fee }
+      ];
+      this.exportFile();
+    },
+    async exportFile() {
+      const { data } = await this.data();
+      const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
+      this.file = window.URL.createObjectURL(blob);
+      this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
+    },
+    uploadFile(e) {
+      // const reader = new FileReader();
+      // let { file, getTransactionDetails } = this;
+      // reader.onloadend = function ({ target: { result,files } }) {
+      //   file = JSON.parse(result);
+      //   getTransactionDetails(file.rawTransaction);
+      // };
+      // reader.readAsBinaryString(e.target.files[0]);
+    }
+  }
 };
 </script>
 
