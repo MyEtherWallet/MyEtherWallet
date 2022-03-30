@@ -105,7 +105,6 @@ export default {
       // Check if tool value from URL is valid
       if (tools.includes(this.$route.query.tool)) {
         this.currentTool = this.$route.query.tool;
-        console.log(this.$route.query.tool);
 
         switch (this.currentTool) {
           case 'verify':
