@@ -42,7 +42,9 @@ const EXCEPTIONS = [
   'vue-i18n',
   'vue',
   // update after release
-  '@ledgerhq/hw-app-eth'
+  '@ledgerhq/hw-app-eth',
+  '@ethereumjs/common',
+  '@ethereumjs/tx'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
