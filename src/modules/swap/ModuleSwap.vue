@@ -702,21 +702,12 @@ export default {
           ...nonChainTokens
         ]);
       }
-      const x = returnableTokens.concat([
+      return returnableTokens.concat([
         {
           header: 'Other Tokens'
         },
         ...validFromTokens
       ]);
-      const ha = x.filter(item => {
-        return (
-          item.contract &&
-          item.contract.toLowerCase() ===
-            '0x0D8775F648430679A709E98d2b0Cb6250d2887EF'.toLowerCase()
-        );
-      });
-      console.log(ha, 'c');
-      return x;
     },
     /**
      * @returns object of other tokens
