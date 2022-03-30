@@ -361,6 +361,18 @@ export default {
       if (this.hasMinimum) {
         return 'Not enough RETH!';
       }
+      if (BigNumber(this.compoundAmount).lt(0)) {
+        return 'Value cannot be negative';
+      }
+      if (
+        BigNumber(this.compoundAmount).gt(0) &&
+        stakeHandler.helpers.hasValidDecimals(
+          BigNumber(this.compoundAmount).toString(),
+          18
+        )
+      ) {
+        return 'Invalid decimals. ETH can only have 18 decimals';
+      }
       return '';
     }
   },
