@@ -1,5 +1,6 @@
 import StakewiseHandler from './stakewiseHandler';
 import { toWei } from 'web3-utils';
+import _hasValidDecimals from '@/core/helpers/hasValidDecimals';
 export default class StakewiseStakeHandler extends StakewiseHandler {
   constructor(web3, isEth, address) {
     super(web3, isEth); // initializes the contracts needed
@@ -37,7 +38,9 @@ export default class StakewiseStakeHandler extends StakewiseHandler {
   }
 
   _setAmount(val) {
-    this.value = toWei(val);
+    if (_hasValidDecimals(val, 18)) {
+      this.value = toWei(val);
+    }
   }
 
   _setGasLimit(val) {
