@@ -300,6 +300,19 @@ export default {
         return 'Issue with gas estimation, please check if you have enough balance!';
       }
 
+      if (BigNumber(this.stakeAmount).lt(0)) {
+        return 'Value cannot be negative';
+      }
+      if (
+        BigNumber(this.stakeAmount).gt(0) &&
+        stakeHandler.helpers.hasValidDecimals(
+          BigNumber(this.stakeAmount).toString(),
+          18
+        )
+      ) {
+        return 'Invalid decimals. ETH can only have 18 decimals';
+      }
+
       return '';
     }
   },
@@ -313,6 +326,11 @@ export default {
     stakeAmount(value) {
       if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
         this.setGasLimit();
+      }
+
+      if (this.errorMessage === '') {
+        const val = value ? value : 0;
+        this.stakeHandler._setAmount(BigNumber(val).toString());
       }
     }
   },
@@ -328,7 +346,6 @@ export default {
     ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
-      this.stakeHandler._setAmount(BigNumber(value).toString());
       this.stakeAmount = BigNumber(value).toString();
     }, 500),
     setGasLimit() {
