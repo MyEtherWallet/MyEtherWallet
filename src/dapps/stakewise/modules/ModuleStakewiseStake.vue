@@ -305,7 +305,7 @@ export default {
       }
       if (
         BigNumber(this.stakeAmount).gt(0) &&
-        stakeHandler.helpers.hasValidDecimals(
+        !stakeHandler.helpers.hasValidDecimals(
           BigNumber(this.stakeAmount).toString(),
           18
         )

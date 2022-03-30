@@ -366,7 +366,7 @@ export default {
       }
       if (
         BigNumber(this.compoundAmount).gt(0) &&
-        stakeHandler.helpers.hasValidDecimals(
+        !stakeHandler.helpers.hasValidDecimals(
           BigNumber(this.compoundAmount).toString(),
           18
         )
