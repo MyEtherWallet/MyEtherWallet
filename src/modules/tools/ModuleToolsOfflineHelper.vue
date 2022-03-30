@@ -85,9 +85,14 @@
 
     <div v-if="currentStep === 2">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <mew-address-select label="From Address" @input="setAddress" />
+        <mew-address-select
+          label="From Address"
+          :error="fromAddressError"
+          :error-messages="fromAddressMessage"
+          @input="setAddress"
+        />
         <mew-expand-panel
-          v-if="details.length > 1"
+          v-if="detailsAvailable"
           is-toggle
           has-dividers
           :panel-items="exPannelStep2"
@@ -117,16 +122,17 @@
             class="mx-1 mb-3"
             title="Next"
             btn-size="xlarge"
+            :disabled="!detailsAvailable"
             @click.native="currentStep = 3"
           />
         </div>
         <mew-button
-          v-if="details.length > 1"
+          v-if="detailsAvailable"
           class="mt-2 display--block mx-auto"
           title="Export JSON file"
           btn-size="small"
           btn-style="transparent"
-          :btn-link="file"
+          :btn-link="fileLink"
           :download="exportFileName"
         />
       </v-sheet>
@@ -134,7 +140,13 @@
 
     <div v-if="currentStep === 3">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <v-textarea outlined label="Signature" value="Value"></v-textarea>
+        <v-textarea
+          outlined
+          label="Signature"
+          :value="signature"
+          :error="signatureError"
+          :error-messages="signatureMessage"
+        ></v-textarea>
         <mew-expand-panel
           is-toggle
           has-dividers
@@ -185,6 +197,8 @@
           title="Upload JSON file"
           btn-size="small"
           btn-style="transparent"
+          type="file"
+          @change="uploadFile"
         />
       </v-sheet>
     </div>
@@ -196,7 +210,7 @@ import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { mapActions, mapState } from 'vuex';
 import { isAddress, fromWei } from 'web3-utils';
 import networks from '@/utils/networks';
-import { BigNumber } from 'bignumber.js';
+//import { BigNumber } from 'bignumber.js';
 export default {
   name: 'ModuleToolsOfflineHelper',
   components: { AppBlockTitle },
@@ -204,9 +218,17 @@ export default {
     dialog: false,
     currentStep: 1,
     fromAddress: '',
+    fromAddressError: Error,
+    fromAddressMessage: [],
     details: [],
     exportFileName: '',
+    signature: '',
+    signatureError: false,
+    signatureMessage: [],
+    rawTransaction: [],
+    transactionDetails: [],
     file: {},
+    fileLink: '',
     networkSelected: null,
     networks: Object.values(networks)
       .flat()
@@ -278,7 +300,11 @@ export default {
       }
     ]
   }),
-  computed: {},
+  computed: {
+    detailsAvailable() {
+      return this.details.length > 1;
+    }
+  },
   methods: {
     ...mapState('wallet', ['web3']),
     ...mapActions('global', ['setNetwork']),
@@ -291,8 +317,8 @@ export default {
       }
       if (this.details.length > 1) this.setDetails([]);
     },
-    async setNet(val) {
-      await this.setNetwork(val);
+    setNet(val) {
+      this.setNetwork(val).then(() => {});
       this.networkSelected = val;
       this.setWeb3Instance();
     },
@@ -304,8 +330,6 @@ export default {
       const gasPrice = await eth.getGasPrice();
       const nonce = await eth.getTransactionCount(this.fromAddress);
       const netName = this.networkSelected.type.name;
-      const fee = new BigNumber(fromWei(gasPrice)).times(gasLimit).toFixed();
-      const cost = '$0.03';
       return {
         data: {
           address: this.fromAddress,
@@ -320,8 +344,7 @@ export default {
           value: `1 ${netName}`,
           chainID,
           gasLimit,
-          gasPrice: `${fromWei(gasPrice, 'gwei')} Gwei`,
-          fee: `${fee} ${netName} (${cost})`
+          gasPrice: `${fromWei(gasPrice, 'gwei')} Gwei`
         }
       };
     },
@@ -359,18 +382,20 @@ export default {
     async exportFile() {
       const { data } = await this.data();
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
-      this.file = window.URL.createObjectURL(blob);
+      this.fileLink = window.URL.createObjectURL(blob);
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
+    },
+    upload: {},
+    uploadFile({ target: { files } }) {
+      const reader = new FileReader();
+      const self = this;
+      reader.onloadend = function ({ target: { result } }) {
+        self.file = JSON.parse(result);
+        console.log(this.file);
+        self.getTransactionDetails(self.file.rawTransaction);
+      };
+      reader.readAsBinaryString(files[0]);
     }
-    // uploadFile(e) {
-    //   // const reader = new FileReader();
-    //   // let { file, getTransactionDetails } = this;
-    //   // reader.onloadend = function ({ target: { result,files } }) {
-    //   //   file = JSON.parse(result);
-    //   //   getTransactionDetails(file.rawTransaction);
-    //   // };
-    //   // reader.readAsBinaryString(e.target.files[0]);
-    // }
   }
 };
 </script>
