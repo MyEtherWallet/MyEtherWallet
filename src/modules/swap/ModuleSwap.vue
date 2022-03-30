@@ -660,19 +660,24 @@ export default {
             return item;
         }
       });
-      let nonChainTokens = this.availableTokens.fromTokens.filter(item => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext
-        ) {
+      const nonChainTokens = this.availableTokens.fromTokens
+        .filter(item => {
+          if (
+            item.hasOwnProperty('isEth') &&
+            !item.isEth &&
+            item.name &&
+            item.symbol &&
+            item.subtext
+          ) {
+            return item;
+          }
+        })
+        .map(item => {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
           return item;
-        }
-      });
+        });
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      nonChainTokens = this.formatTokensForSelect(nonChainTokens);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -697,12 +702,21 @@ export default {
           ...nonChainTokens
         ]);
       }
-      return returnableTokens.concat([
+      const x = returnableTokens.concat([
         {
           header: 'Other Tokens'
         },
         ...validFromTokens
       ]);
+      const ha = x.filter(item => {
+        return (
+          item.contract &&
+          item.contract.toLowerCase() ===
+            '0x0D8775F648430679A709E98d2b0Cb6250d2887EF'.toLowerCase()
+        );
+      });
+      console.log(ha, 'c');
+      return x;
     },
     /**
      * @returns object of other tokens
@@ -715,7 +729,9 @@ export default {
           foundToken.contract = token.contract;
           foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
-          foundToken.name = token.symbol;
+          foundToken.subtext = foundToken.name;
+          foundToken.value = foundToken.name;
+          foundToken.name = foundToken.symbol;
           return foundToken;
         }
         token.price = '';
@@ -1096,6 +1112,9 @@ export default {
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
+        // t.value = t.hasOwnProperty('name') ? t.name : '';
+        // t.subtext = t.hasOwnProperty('name') ? t.name : '';
+        t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
     },
