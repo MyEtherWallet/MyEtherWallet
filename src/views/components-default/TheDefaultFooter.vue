@@ -386,9 +386,9 @@ export default {
             query: { tool: 'convert' }
           },
           {
-            label: 'General keystore file',
+            label: 'Generate keystore file',
             routerLink: 'Tools',
-            query: { tool: 'generate' }
+            query: { tool: 'keystore' }
           }
           /*
           ,

@@ -20,7 +20,7 @@
           <module-tools-convert />
         </template>
         <template #tabItemContent3>
-          <module-tools-generate-keystore-file />
+          <module-tools-generate-keystore />
         </template>
         <template #tabItemContent4>
           <module-tools-offline-helper />
@@ -39,7 +39,7 @@ import TheLayoutHeader from '../components-default/TheLayoutHeader';
 import AppGetStarted from '@/core/components/AppGetStarted';
 import ModuleToolsWatchOnly from '@/modules/tools/ModuleToolsWatchOnly';
 import ModuleToolsConvert from '@/modules/tools/ModuleToolsConvert';
-import ModuleToolsGenerateKeystoreFile from '@/modules/tools/ModuleToolsGenerateKeystoreFile';
+import ModuleToolsGenerateKeystore from '@/modules/tools/ModuleToolsGenerateKeystore/ModuleToolsGenerateKeystore';
 import ModuleToolsOfflineHelper from '@/modules/tools/ModuleToolsOfflineHelper';
 import ModuleMessageVerify from '@/modules/message/ModuleMessageVerify';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
@@ -51,7 +51,7 @@ export default {
     AppGetStarted,
     ModuleToolsWatchOnly,
     ModuleToolsConvert,
-    ModuleToolsGenerateKeystoreFile,
+    ModuleToolsGenerateKeystore,
     ModuleToolsOfflineHelper,
     ModuleMessageVerify
   },
@@ -83,7 +83,7 @@ export default {
       },
       {
         name: 'Generate Keystore file',
-        val: 'generate'
+        val: 'keystore'
       }
     ]
   }),
@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     setCurrentTool() {
-      const tools = ['watch', 'convert', 'offline', 'verify', 'generate'];
+      const tools = ['watch', 'convert', 'offline', 'verify', 'keystore'];
 
       // Check if tool value from URL is valid
       if (tools.includes(this.$route.query.tool)) {
@@ -118,9 +118,9 @@ export default {
             this.currentTool = 'convert';
             break;
 
-          case 'generate':
+          case 'keystore':
             this.activeTab = 2;
-            this.currentTool = 'generate';
+            this.currentTool = 'keystore';
             break;
 
           default:
@@ -145,7 +145,7 @@ export default {
           break;
 
         case 2:
-          this.currentTool = 'generate';
+          this.currentTool = 'keystore';
           break;
 
         default:
