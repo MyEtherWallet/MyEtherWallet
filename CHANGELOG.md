@@ -1,3 +1,5 @@
+### Release v6.5.1-hotfix.1
+
 ### fix
 
 * symbol search from tokens, price for to tokens, counter for moonpay [#3756](https://github.com/MyEtherWallet/MyEtherWallet/pull/3756)
