@@ -299,7 +299,6 @@ export default {
       if (this.estimateGasError) {
         return 'Issue with gas estimation, please check if you have enough balance!';
       }
-
       if (BigNumber(this.stakeAmount).lt(0)) {
         return 'Value cannot be negative';
       }
@@ -312,7 +311,6 @@ export default {
       ) {
         return 'Invalid decimals. ETH can only have 18 decimals';
       }
-
       return '';
     }
   },
@@ -327,8 +325,7 @@ export default {
       if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
         this.setGasLimit();
       }
-
-      if (this.errorMessage === '') {
+      if (this.errorMessages === '') {
         const val = value ? value : 0;
         this.stakeHandler._setAmount(BigNumber(val).toString());
       }

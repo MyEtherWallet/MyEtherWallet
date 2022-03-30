@@ -46,7 +46,7 @@ class StakewiseStakeHandler extends StakewiseHandler {
   }
 
   _setGasPrice(val) {
-    this.gasLimit = val;
+    this.gasPrice = val;
   }
 }
 
