@@ -64,11 +64,10 @@ new Vue({
     const userId = this.$route.query.intercomid
       ? this.$route.query.intercomid
       : uuidv4();
-    if (userId) {
-      this.$intercom.boot({
-        user_id: userId
-      });
-    }
+    !this.$route.query.intercomid
+      ? this.$intercom.boot({ user_id: uuidv4() })
+      : this.$intercom.boot({ user_id: userId });
+
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
