@@ -18,7 +18,7 @@
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
           <!-- ======================================================================================= -->
-          <div class="d-flex align-center text-center">
+          <div ref="input" class="d-flex align-center text-center">
             <div
               class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
@@ -127,7 +127,7 @@
           <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
-          <div class="mt-6">
+          <div class="mt-6" @click="$vuetify.goTo(target)">
             <div class="font-weight-bold mb-2">How staking works</div>
             <ul class="textMedium--text">
               <li class="mb-2">
@@ -193,7 +193,12 @@
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
-        <stakewise-staking compound-rewards class="mb-4" />
+        <stakewise-staking
+          class="mb-4"
+          compound-rewards
+          @set-max="setMax"
+          @scroll="scroll"
+        />
         <stakewise-rewards compound-rewards />
       </v-col>
     </v-row>
@@ -316,6 +321,16 @@ export default {
         return 'Invalid decimals. ETH can only have 18 decimals';
       }
       return '';
+    },
+    target() {
+      const value = this['element'];
+      if (!isNaN(value)) {
+        return Number(value);
+      }
+      return value;
+    },
+    element() {
+      return this.$refs.input;
     }
   },
   watch: {
@@ -395,6 +410,9 @@ export default {
     },
     openSettings() {
       EventBus.$emit('openSettings');
+    },
+    scroll() {
+      this.$vuetify.goTo(this.target);
     }
   }
 };

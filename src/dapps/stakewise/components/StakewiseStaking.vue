@@ -31,7 +31,7 @@
     <div v-if="!hasStaked && !hasPending" class="mt-4">
       You are currently not staking any {{ currencyName }}. To earn rewards
       start staking.
-      <span class="greenPrimary--text cursor--pointer" @click="() => {}"
+      <span class="greenPrimary--text cursor--pointer" @click="scrollToInput"
         >Start staking</span
       >
     </div>
@@ -253,6 +253,16 @@ export default {
           }
         });
       }, 14000);
+    },
+    scrollToInput() {
+      if (this.$route.name !== STAKEWISE_ROUTES.CORE.NAME) {
+        this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
+      }
+
+      this.$emit('scroll');
+      this.$nextTick(() => {
+        this.$emit('set-max');
+      });
     }
   }
 };
