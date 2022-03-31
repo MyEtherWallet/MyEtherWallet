@@ -247,7 +247,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -702,7 +702,7 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.gasEstimationError = error.message;
+          this.instance.errorHandler(error.message);
         });
     },
     prefillForm() {
