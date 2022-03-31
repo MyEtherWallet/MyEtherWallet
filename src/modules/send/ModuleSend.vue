@@ -247,7 +247,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -334,6 +334,9 @@ export default {
       const imgs = tokensList.map(item => {
         item.totalBalance = this.currencyFormatter(item.usdBalance);
         item.tokenBalance = item.balancef;
+        item.subtext = item.name;
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -579,7 +582,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(value);
     },
     /**
@@ -700,7 +703,7 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.gasEstimationError = error.message;
+          this.instance.errorHandler(error.message);
         });
     },
     prefillForm() {
