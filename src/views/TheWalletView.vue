@@ -7,6 +7,7 @@
         <module-confirmation />
         <the-wallet-promo-popup />
         <router-view />
+        <claim-tokens-snackbar />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -28,13 +29,15 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import ClaimTokensSnackbar from '@/dapps/ens-manager-dapp/components/claim/ClaimTokensSnackbar.vue';
 export default {
   components: {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
     TheWalletPromoPopup,
-    ModuleConfirmation
+    ModuleConfirmation,
+    ClaimTokensSnackbar
   },
   mixins: [handlerWallet],
   computed: {

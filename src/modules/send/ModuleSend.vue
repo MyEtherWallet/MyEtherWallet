@@ -48,7 +48,8 @@
                 disabled: disableSwapBtn,
                 method: setEntireBal
               }"
-              :buy-more-str="buyMore"
+              :buy-more-str="buyMoreStr"
+              @buyMore="openMoonpay"
               @input="setAmount"
             />
           </div>
@@ -194,6 +195,7 @@ import {
   toBNSafe
 } from '@/core/helpers/numberFormatHelper';
 import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   components: {
     ModuleAddressBook,
@@ -201,6 +203,7 @@ export default {
     AppButtonBalance,
     AppTransactionFee
   },
+  mixins: [buyMore],
   props: {
     prefilledAmount: {
       type: String,
@@ -244,9 +247,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address', 'instance']),
-    ...mapState('global', ['online', 'gasPriceType']),
-    ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
+    ...mapState('wallet', ['address', 'instance']),
+    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
@@ -267,11 +269,13 @@ export default {
         !this.gasEstimationIsReady
       );
     },
-    buyMore() {
+    buyMoreStr() {
       return this.isEthNetwork &&
         MAIN_TOKEN_ADDRESS === this.selectedCurrency?.contract &&
         this.amountError === 'Not enough balance to send!'
-        ? 'Buy more.'
+        ? this.network.type.canBuy
+          ? 'Buy more.'
+          : ''
         : '';
     },
     hasEnoughEth() {
@@ -328,9 +332,11 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = item.usdBalancef;
+        item.totalBalance = this.currencyFormatter(item.usdBalance);
         item.tokenBalance = item.balancef;
-        item.price = item.pricef;
+        item.subtext = item.name;
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -571,6 +577,14 @@ export default {
     }, 500);
   },
   methods: {
+    // replace this once localization is merged
+    currencyFormatter(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: this.preferredCurrency,
+        currencyDisplay: 'symbol'
+      }).format(value);
+    },
     /**
      * Resets values to default
      */
@@ -661,7 +675,7 @@ export default {
     },
     setSendTransaction() {
       this.localGasPrice = this.gasPrice;
-      this.sendTx = new SendTransaction(this.$store);
+      this.sendTx = new SendTransaction();
     },
     estimateAndSetGas() {
       this.gasEstimationIsReady = false;

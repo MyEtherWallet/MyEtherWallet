@@ -75,6 +75,7 @@
                 next-btn-text="Access Wallet"
                 :next-btn-method="unlockBtn"
                 :back-btn-method="backStepOne"
+                :next-disable="!password"
               />
               <!--
             =====================================================================================

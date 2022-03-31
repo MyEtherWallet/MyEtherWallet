@@ -22,6 +22,10 @@ const SET_ONLINE_STATUS = async function (state, status) {
   state.online = status;
 };
 
+const SET_PROMO_OVER = async function (state) {
+  state.promoOver = true;
+};
+
 const SET_LOCALE = function (state, { locale }) {
   state.locale = locale;
 };
@@ -92,5 +96,6 @@ export default {
   SET_TRACKING_CONSENT,
   NEVER_SHOW_TRACKING,
   NEVER_SHOW_BANNER,
-  NEVER_SHOW_WALLET_PROMO
+  NEVER_SHOW_WALLET_PROMO,
+  SET_PROMO_OVER
 };
