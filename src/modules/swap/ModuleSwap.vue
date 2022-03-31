@@ -1103,8 +1103,6 @@ export default {
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
-        // t.value = t.hasOwnProperty('name') ? t.name : '';
-        // t.subtext = t.hasOwnProperty('name') ? t.name : '';
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
