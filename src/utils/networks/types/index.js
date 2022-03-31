@@ -7,5 +7,6 @@ import ROP from './ROP.js';
 import BSC from './BSC.js';
 import MATIC from './MATIC.js';
 import GO from './GO.js';
+import MINTME from './MINTME';
 
-export { ETH, GOERLI, ETC, KOV, RIN, ROP, BSC, MATIC, GO };
+export { ETH, GOERLI, ETC, KOV, RIN, ROP, BSC, MATIC, GO, MINTME };
