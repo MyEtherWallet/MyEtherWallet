@@ -8,5 +8,6 @@ import BSC from './BSC.js';
 import MATIC from './MATIC.js';
 import GO from './GO.js';
 import MINTME from './MINTME';
+import XDC from './XDC.js';
 
-export { ETH, GOERLI, ETC, KOV, RIN, ROP, BSC, MATIC, GO, MINTME };
+export { ETH, GOERLI, ETC, KOV, RIN, ROP, BSC, MATIC, GO, MINTME, XDC };
