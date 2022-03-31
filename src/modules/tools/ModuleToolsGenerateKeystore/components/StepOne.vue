@@ -7,31 +7,8 @@
   <div>
     <div class="mx-auto mb-3" style="max-width: 550px">
       <div class="mew-heading-2 py-8 text-center">
-        Here is your new Eth2 Address
+        Here is your new Eth2 address
       </div>
-      <div
-        class="skip-container d-flex flex-column flex-sm-row rounded align-center justify-space-between greyLight px-5 py-4"
-      >
-        <!--
-        ===================================================
-        Already have Eth2 Address
-        ===================================================
-        -->
-        <div class="mb-2 mb-sm-0">Already have Eth2 address?</div>
-        <div
-          class="d-flex align-center greenPrimary--text cursor-pointer"
-          @click="onContinue(true)"
-        >
-          Skip this step
-          <img
-            height="17"
-            class="ml-2"
-            src="@/assets/images/icons/button-circle-right-arrow.svg"
-            alt="right arrow"
-          />
-        </div>
-      </div>
-
       <border-block class="mt-4 pa-3 pa-sm-5">
         <!--
         ===================================================

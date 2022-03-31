@@ -16,7 +16,7 @@
       </template>
       <!--
       ===================================================
-      Step 2: Upload Keystore file
+      Step 2: Verify Keystore file
       ===================================================
       -->
       <template v-if="onStep === 2" #stepperContent2>
@@ -52,7 +52,7 @@ export default {
         },
         {
           step: 2,
-          name: 'Upload keystore file'
+          name: 'Verify keystore file'
         }
       ],
       skipped: false,
