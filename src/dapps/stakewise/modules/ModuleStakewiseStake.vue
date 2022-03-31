@@ -78,12 +78,12 @@
           <!-- Stake status -->
           <!-- ======================================================================================= -->
           <div class="stake-status">
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-11">
               <div>
                 <div class="mew-body">
                   Network Fee
                   <span
-                    class="greenPrimary--text cursor--pointer"
+                    class="ml-2 greenPrimary--text cursor--pointer"
                     @click="openSettings"
                   >
                     Edit
@@ -97,7 +97,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Staking Fee</div>
               <div class="text-right">
                 <div class="">{{ stakingFee }} {{ currencyName }}</div>
@@ -106,7 +106,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Total Staked</div>
               <div class="text-right">
                 <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
@@ -120,49 +120,51 @@
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
-          <v-divider class="mt-4 mb-9" />
+          <v-divider class="mt-11" />
 
           <!-- ======================================================================================= -->
           <!-- How stake works -->
           <!-- ======================================================================================= -->
-          <div class="mt-3">
-            <div class="font-weight-bold mb-4">How staking works</div>
+          <div class="mt-6">
+            <div class="font-weight-bold mb-2">How staking works</div>
             <ul class="textMedium--text">
-              <li>
+              <li class="mb-2">
                 Anyone can deposit any amount of {{ currencyName }} into the
                 Stakewise pool. No minimum required.
               </li>
-              <li>
+              <li class="mb-2">
                 For each new deposit into the pool, Stakewise mints an equal
                 amount of sETH2 (1 {{ currencyName }} = 1 sETH2).
               </li>
-              <li>
+              <li class="mb-2">
                 Holders of sETH2 will start accruing rETH2 rewards within 24
                 hours of receiving the sETH2 token.
               </li>
               <li>Stakewise takes 10% of the staking reward.</li>
             </ul>
 
-            <a
-              href="https://www.mewtopia.com/rewards-and-risks-of-staking-crypto/"
-              target="_blank"
-            >
-              <div class="greenPrimary--text mt-6">
-                View StakeWise guide<v-icon
-                  color="greenPrimary"
-                  small
-                  class="ml-2"
-                >
-                  mdi-open-in-new
-                </v-icon>
-              </div>
-            </a>
+            <div class="mt-6">
+              <a
+                href="https://www.mewtopia.com/rewards-and-risks-of-staking-crypto/"
+                target="_blank"
+              >
+                <div class="greenPrimary--text">
+                  View StakeWise guide<v-icon
+                    color="greenPrimary"
+                    small
+                    class="ml-2"
+                  >
+                    mdi-open-in-new
+                  </v-icon>
+                </div>
+              </a>
+            </div>
           </div>
 
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
-          <v-divider class="mt-12 mb-5" />
+          <v-divider class="mt-9 mb-8" />
 
           <!-- ======================================================================================= -->
           <!-- Start staking -->
