@@ -259,19 +259,19 @@ export default {
     stakingFee() {
       return BigNumber(this.compoundAmount).gt(0)
         ? BigNumber(this.compoundAmount).times(BigNumber(1).div(100)).toString()
-        : '--';
+        : '0';
     },
     stakingFeeFiatValue() {
       const fee = BigNumber(this.compoundAmount);
       return fee.gt(0)
         ? formatFiatValue(fee.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     totalFiat() {
       const total = BigNumber(this.totalUserStaked);
       return total.gt(0)
         ? formatFiatValue(total.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     totalUserStaked() {
       const total = BigNumber(this.compoundAmount);
@@ -279,7 +279,7 @@ export default {
         ? total
             .minus(BigNumber(this.compoundAmount).times(BigNumber(1).div(100)))
             .toString()
-        : '--';
+        : '0';
     },
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
@@ -322,7 +322,7 @@ export default {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
         ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     hasEnoughBalance() {
       return BigNumber(this.ethTotalFee).lte(this.balanceInETH);

@@ -243,19 +243,19 @@ export default {
     stakingFee() {
       return BigNumber(this.stakeAmount).gt(0)
         ? BigNumber(this.stakeAmount).times(BigNumber(1).div(100)).toString()
-        : '--';
+        : '0';
     },
     stakingFeeFiatValue() {
       const fee = BigNumber(this.stakingFee);
       return fee.gt(0)
         ? formatFiatValue(fee.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     totalFiat() {
       const total = BigNumber(this.totalUserStaked);
       return total.gt(0)
         ? formatFiatValue(total.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     totalUserStaked() {
       const total = BigNumber(this.stakeAmount);
@@ -263,7 +263,7 @@ export default {
         ? total
             .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
             .toString()
-        : '--';
+        : '0';
     },
     ethTotalFee() {
       const gasPrice = BigNumber(this.locGasPrice).gt(0)
@@ -278,7 +278,7 @@ export default {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
         ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
-        : '--';
+        : '0';
     },
     hasEnoughBalance() {
       return BigNumber(this.ethTotalFee)
@@ -414,8 +414,8 @@ export default {
 
 ul {
   li {
+    list-style: none;
     margin-bottom: 12px;
-    padding-left: 27px;
 
     &:before {
       font-size: 11px;
