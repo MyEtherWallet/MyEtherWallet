@@ -142,15 +142,10 @@ class SendTransaction {
   }
   async submitTransaction() {
     try {
-      console.log('1');
       this._setTo();
-      console.log('2');
       this._setValue();
-      console.log('3');
       this._setGasPrice();
-      console.log('4');
       const nonce = await this.web3().eth.getTransactionCount(this.address());
-      console.log('5');
       this.setNonce(nonce);
       this.TX.gasLimit = this.TX.gas;
       const _tx = Transaction.fromTxData(this.TX);

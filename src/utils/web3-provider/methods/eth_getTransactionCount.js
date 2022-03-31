@@ -23,11 +23,8 @@ export default async ({ payload, store, requestManager }, res, next) => {
   }
   const timeDiff =
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
-  console.log(timeDiff);
   if (timeDiff > 1) {
-    console.log('start here');
     const liveNonce = await ethCalls.getTransactionCount(addr);
-    console.log(liveNonce, 'didnt get here');
     const liveNonceBN = toBN(liveNonce);
     const cachedNonceBN = toBN(cached.nonce);
     if (timeDiff > 15) {
@@ -43,6 +40,5 @@ export default async ({ payload, store, requestManager }, res, next) => {
     }
     locstore.set(storeKey, cached);
   }
-  console.log(cached);
   res(null, toPayload(payload.id, cached.nonce));
 };
