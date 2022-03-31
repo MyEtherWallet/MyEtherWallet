@@ -618,14 +618,14 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.isEth = token.isEth;
             foundToken.name = token.symbol;
             return foundToken;
@@ -660,19 +660,24 @@ export default {
             return item;
         }
       });
-      let nonChainTokens = this.availableTokens.fromTokens.filter(item => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext
-        ) {
+      const nonChainTokens = this.availableTokens.fromTokens
+        .filter(item => {
+          if (
+            item.hasOwnProperty('isEth') &&
+            !item.isEth &&
+            item.name &&
+            item.symbol &&
+            item.subtext
+          ) {
+            return item;
+          }
+        })
+        .map(item => {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
           return item;
-        }
-      });
+        });
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      nonChainTokens = this.formatTokensForSelect(nonChainTokens);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -715,6 +720,9 @@ export default {
           foundToken.contract = token.contract;
           foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
+          foundToken.subtext = foundToken.name;
+          foundToken.value = foundToken.name;
+          foundToken.name = foundToken.symbol;
           return foundToken;
         }
         token.price = '';
@@ -737,16 +745,17 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = this.currencyFormatter(token.pricef);
+            token.price = `$${token.pricef}`;
+          } else {
+            token.price = '0.00';
           }
           const name = token.name;
-          token.price = '0.00';
           token.subtext = name;
           token.value = name;
           token.name = token.symbol;
@@ -1081,7 +1090,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(val.replace(',', ''));
     },
     formatTokensForSelect(tokens) {
@@ -1094,6 +1103,7 @@ export default {
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
+        t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
     },
