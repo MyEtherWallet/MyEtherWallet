@@ -333,6 +333,9 @@ export default {
       const imgs = tokensList.map(item => {
         item.totalBalance = this.currencyFormatter(item.usdBalance);
         item.tokenBalance = item.balancef;
+        item.subtext = item.name;
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
