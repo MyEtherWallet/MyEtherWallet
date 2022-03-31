@@ -90,7 +90,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.2.1",
-    "@ledgerhq/hw-app-eth": "6.26.1",
+    "@ledgerhq/hw-app-eth": "6.27.0",
     "@ledgerhq/hw-transport-webusb": "6.24.1",
     "@mdi/font": "6.5.95",
     "@vue/babel-preset-app": "4.5.15",
