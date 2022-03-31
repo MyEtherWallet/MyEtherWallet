@@ -14,8 +14,11 @@
   >
     <div :class="$vuetify.breakpoint.smAndDown ? 'pa-3' : 'pa-8 pt-5'">
       <div
-        class="d-flex align-start justify-space-between"
-        :class="title ? 'mb-7' : ''"
+        v-if="!noTitle"
+        :class="[
+          title ? 'mb-7' : '',
+          'd-flex align-start justify-space-between'
+        ]"
       >
         <div class="mew-heading-2 pr-5">
           {{ title }}
@@ -52,6 +55,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    noTitle: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

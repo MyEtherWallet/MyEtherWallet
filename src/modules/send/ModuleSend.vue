@@ -332,14 +332,11 @@ export default {
       // no ref copy
       const tokensList = this.tokensList.slice();
       const imgs = tokensList.map(item => {
-        item.totalBalance = this.currencyFormatter(
-          item.usdBalancef.replace(',', '')
-        );
-        item.tokenBalance = this.currencyFormatter(item.balancef).replace(
-          ',',
-          ''
-        );
-        item.price = this.currencyFormatter(item.pricef.replace(',', ''));
+        item.totalBalance = this.currencyFormatter(item.usdBalance);
+        item.tokenBalance = item.balancef;
+        item.subtext = item.name;
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -585,7 +582,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(value);
     },
     /**
