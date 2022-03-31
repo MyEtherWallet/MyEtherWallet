@@ -40,7 +40,9 @@
               class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
-              <div class="mew-caption textLight--text font-weight-regular mb-2">
+              <div
+                class="mew-caption textMedium--text font-weight-regular mb-2"
+              >
                 You will get
               </div>
               <div class="stake-icon">

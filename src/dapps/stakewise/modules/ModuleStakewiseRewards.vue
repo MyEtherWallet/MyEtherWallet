@@ -41,7 +41,9 @@
               class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
             >
-              <div class="mew-caption textLight--text font-weight-regular mb-2">
+              <div
+                class="mew-caption textMedium--text font-weight-regular mb-2"
+              >
                 You will get
               </div>
               <div class="stake-icon">
@@ -79,12 +81,12 @@
           <!-- Stake status -->
           <!-- ======================================================================================= -->
           <div class="stake-status">
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-11">
               <div>
                 <div class="mew-body">
                   Network Fee
                   <span
-                    class="greenPrimary--text cursor--pointer"
+                    class="ml-2 greenPrimary--text cursor--pointer"
                     @click="openSettings"
                   >
                     Edit
@@ -96,7 +98,7 @@
                 <div class="mew-label textLight--text">${{ gasPriceFiat }}</div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Staking Fee</div>
               <div class="text-right">
                 <div class="">{{ stakingFee }} {{ currencyName }}</div>
@@ -105,7 +107,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mb-5">
+            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Total</div>
               <div class="text-right">
                 <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
@@ -119,14 +121,14 @@
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
-          <v-divider class="mt-4 mb-9" />
+          <v-divider class="mt-11" />
 
           <!-- ======================================================================================= -->
           <!-- How compounding works -->
           <!-- ======================================================================================= -->
-          <div class="mt-3">
-            <div class="font-weight-bold mb-4">How Compounding works</div>
-            <div class="textMedium--text">
+          <div class="mt-6">
+            <div class="font-weight-bold mb-2">How Compounding works</div>
+            <div class="textMedium--text mb-5">
               To increase your staking balance and maximize your rewards, you
               can transfer your rETH2 rewards balance to the sETH2 staking pool.
             </div>
@@ -135,7 +137,7 @@
               href="https://www.mewtopia.com/rewards-and-risks-of-staking-crypto/"
               target="_blank"
             >
-              <div class="greenPrimary--text mt-6">
+              <div class="greenPrimary--text">
                 View StakeWise guide<v-icon
                   color="greenPrimary"
                   small
@@ -150,7 +152,7 @@
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
-          <v-divider class="mt-12 mb-5" />
+          <v-divider class="mt-9 mb-8" />
 
           <!-- ======================================================================================= -->
           <!-- Start -->
