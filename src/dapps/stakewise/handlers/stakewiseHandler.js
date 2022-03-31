@@ -52,7 +52,7 @@ export default class StakewiseHandler {
           const val = res.validators_apr;
           // netFee = val - (val * (10/100))
           const netFee = BigNumber(val).minus(
-            BigNumber(val).times(BigNumber(10).div(100))
+            BigNumber(val).times(BigNumber(25).div(100))
           );
           resolve(netFee.toString());
         })
