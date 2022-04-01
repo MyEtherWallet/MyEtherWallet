@@ -20,12 +20,30 @@
         How much do you want to spend?
       </div>
       <div class="d-flex align-center">
-        <mew-input class="mr-2" />
-        <mew-select />
+        <mew-input
+          v-model="amount"
+          :error-messages="amountErrorMessages"
+          class="mr-2"
+        />
+        <mew-select
+          v-model="selectedFiat"
+          :items="fiatCurrencyItems"
+          is-custom
+        />
       </div>
       <div class="d-flex align-center">
-        <mew-button btn-style="outline" title="Min" class="mr-2 flex-grow-1" />
-        <mew-button btn-style="outline" title="Max" class="flex-grow-1" />
+        <mew-button
+          btn-style="outline"
+          title="Min"
+          class="mr-2 flex-grow-1"
+          @click.native="setMin"
+        />
+        <mew-button
+          btn-style="outline"
+          title="Max"
+          class="flex-grow-1"
+          @click.native="setMax"
+        />
       </div>
     </div>
 
@@ -38,17 +56,31 @@
           <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
         </div>
 
-        <div class="mb-4">
+        <div v-if="!loading" class="mb-4">
           <div class="mew-heading-2 textDark--text mb-1">
-            0.00123 <span class="mew-heading-3">ETH</span>
+            {{ cryptoToFiat }}
+            <span class="mew-heading-3">{{ selectedCryptoName }}</span>
           </div>
           <div class="d-flex align-center">
-            <div class="mr-1 textDark--text">≈ $379.28.00</div>
-            <mew-tooltip style="height: 22px" />
+            <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
+            <mew-tooltip style="height: 22px">
+              <template #contentSlot>
+                <div>
+                  Includes {{ percentFee }} fee ($4.47 min)
+                  <br />
+                  <br />
+                  Ethereum network fee (for transfers to your wallet) ~$15.92
+                  <br />
+                  Daily limit: $10,000
+                  <br />
+                  Monthly limit: $50,000
+                </div>
+              </template>
+            </mew-tooltip>
           </div>
         </div>
 
-        <div class="mb-4">
+        <div v-else class="mb-4">
           <v-skeleton-loader type="heading" class="mb-1" />
           <v-skeleton-loader max-width="200px" type="heading" />
         </div>
@@ -73,15 +105,20 @@
             class="mr-2"
           />
           <img
+            v-if="isEUR"
             src="@/assets/images/icons/moonpay/icon-bank.svg"
             alt="Bank"
             height="24"
           />
         </div>
         <div class="mew-label mb-5">
-          Visa, Mastercard, Apple Pay, Bank account
+          {{ paymentOptionString }}
         </div>
-        <mew-button has-full-width title="BUY WITH MOONPAY" />
+        <mew-button
+          has-full-width
+          title="BUY WITH MOONPAY"
+          @click.native="buy"
+        />
       </div>
     </div>
 
@@ -100,12 +137,6 @@
             height="24"
             class="mr-2"
           />
-          <img
-            src="@/assets/images/icons/moonpay/icon-apple-pay.svg"
-            alt="Master"
-            height="24"
-            class="mr-2"
-          />
         </div>
         <img
           src="@/assets/images/icons/icon-simplex.svg"
@@ -113,89 +144,15 @@
           height="28"
         />
       </div>
-      <div class="mew-label mb-5">
-        Visa, Mastercard, Apple Pay, Bank account
-      </div>
-      <mew-button has-full-width btn-style="outline" title="CLICK FOR RATES" />
+      <div class="mew-label mb-5">Visa, Mastercard</div>
+      <mew-button
+        has-full-width
+        btn-style="outline"
+        :disabled="disableSimplex"
+        title="CLICK FOR RATES"
+        @click.native="openSimplex"
+      />
     </div>
-
-    <!-- ============================================================== -->
-    <!-- Fiat currency select -->
-    <!-- ============================================================== -->
-    <div
-      v-if="false"
-      class="d-flex align-center justify-space-between mt-3 mb-3"
-    >
-      <div class="font-weight-medium textDark--text">Select amount</div>
-      <div class="d-flex align-center justify-end">
-        <img
-          :src="require(`@/assets/images/currencies/${selectedFiat}.svg`)"
-          class="icon-holder"
-        />
-        <v-select
-          v-model="selectedFiat"
-          style="margin-top: -1px; max-width: 85px"
-          hide-details
-          :items="fiatCurrencyItems"
-          :disabled="loading"
-          dense
-          solo
-          flat
-          append-icon="mdi-chevron-down"
-        >
-          <template #item="data">
-            <div class="d-flex align-center">
-              <img
-                :src="require(`@/assets/images/currencies/${data.item}.svg`)"
-                class="icon-holder mr-2"
-              />
-              {{ data.item }}
-            </div>
-          </template>
-        </v-select>
-      </div>
-    </div>
-
-    <!-- ============================================================== -->
-    <!-- Fiat currency pre-selection buttons -->
-    <!-- ============================================================== -->
-    <v-row v-show="false" dense>
-      <v-col v-for="(button, bkey) in buttons" :key="bkey" cols="6">
-        <mew-button
-          style="height: 96px !important"
-          has-full-width
-          btn-style="outline"
-          color-theme="basic"
-          class="not-selected"
-          :disabled="loading"
-          @click.native="buy(button)"
-        >
-          <div v-if="!loading" class="py-5">
-            <!-- Button top text -->
-            <div class="mb-1">
-              <div class="letter-spacing--none mew-heading-1 textDark--text">
-                {{ button.fiatFormatted ? button.fiatFormatted : button.title }}
-              </div>
-            </div>
-
-            <!-- Button bottom text -->
-            <div>
-              <div class="letter-spacing--none mew-label textMedium--text">
-                {{ button.subTitle }}
-              </div>
-            </div>
-          </div>
-          <div v-else class="py-5">
-            <div class="mb-1">
-              <v-skeleton-loader type="heading" height="32px" width="172px" />
-            </div>
-            <div>
-              <v-skeleton-loader type="text" height="16px" width="172px" />
-            </div>
-          </div>
-        </mew-button>
-      </v-col>
-    </v-row>
   </div>
 </template>
 
@@ -204,7 +161,7 @@ import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import { cloneDeep, isEqual } from 'apollo-utilities';
 export default {
   name: 'ModuleBuyEth',
@@ -226,13 +183,68 @@ export default {
     return {
       selectedCurrency: this.defaultCurrency,
       loading: true,
-      selectedFiat: 'USD',
+      selectedFiat: {
+        name: 'USD',
+        value: 'USD',
+        // eslint-disable-next-line
+        img: require(`@/assets/images/currencies/USD.svg`)
+      },
       fetchedData: {},
-      currencyRates: []
+      currencyRates: [],
+      amount: '300'
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
+    ...mapState('wallet', ['address']),
+    selectedFiatName() {
+      return this.selectedFiat.name;
+    },
+    // networkFee() {
+    //   return '21000';
+    // },
+    plusFee() {
+      const fee = this.isEUR
+        ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
+        : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
+      return fee.plus(this.amount).toString();
+    },
+    plusFeeF() {
+      return this.currencyFormatter(this.plusFee);
+    },
+    percentFee() {
+      return this.isEUR ? '0.7%' : '3.25%';
+    },
+    selectedCryptoName() {
+      return this.selectedCurrency.name;
+    },
+    isEUR() {
+      return this.selectedFiatName === 'EUR';
+    },
+    disableSimplex() {
+      return (
+        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+      );
+    },
+    paymentOptionString() {
+      return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
+    },
+    amountErrorMessages() {
+      if (BigNumber(this.amount).lt(0)) {
+        return `Amount can't be negative`;
+      }
+      if (this.min.gt(this.amount)) {
+        return `Amount can't be below provider's minimum: ${this.min.toFixed()} ${
+          this.selectedFiatName
+        }`;
+      }
+      if (this.max.lt(this.amount)) {
+        return `Amount can't be above provider's maximum: ${this.max.toFixed()} ${
+          this.selectedFiatName
+        }`;
+      }
+      return '';
+    },
     currencyItems() {
       // hard writing for now
       const tokensList = [
@@ -292,7 +304,7 @@ export default {
                 return rate.crypto_currency === token.name;
               });
               const actualPrice = priceRate.quotes.find(quote => {
-                return quote.fiat_currency === this.selectedFiat;
+                return quote.fiat_currency === this.selectedFiatName;
               });
 
               token.price = this.currencyFormatter(
@@ -316,82 +328,44 @@ export default {
     hasData() {
       return !isEmpty(this.fetchedData);
     },
+    cryptoToFiat() {
+      const priceOb = !isEmpty(this.fetchedData)
+        ? this.fetchedData.prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          )
+        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+      return BigNumber(this.amount).div(priceOb.price).toString();
+    },
     fiatCurrencyItems() {
-      return this.hasData
+      const arrItems = this.hasData
         ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
+      return arrItems.map(item => {
+        return {
+          name: item,
+          value: item,
+          // eslint-disable-next-line
+          img: require(`@/assets/images/currencies/${item}.svg`)
+        };
+      });
     },
     max() {
       if (this.hasData) {
         const foundLimit = this.fetchedData.limits.find(
-          item => item.fiat_currency === this.selectedFiat
+          item => item.fiat_currency === this.selectedFiatName
         );
         return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
       }
       return BigNumber(12000);
     },
-    fiatConversion() {
+    min() {
       if (this.hasData) {
-        const fiatConversion = this.fetchedData.prices.find(
-          item => item.fiat_currency === this.selectedFiat
+        const foundLimit = this.fetchedData.limits.find(
+          item => item.fiat_currency === this.selectedFiatName
         );
-        const currencyPerFiat = BigNumber(
-          BigNumber(1).div(fiatConversion.price)
-        ).times(fiatConversion.price);
-        return fiatConversion ? currencyPerFiat : BigNumber(1);
+        return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
       }
-      return BigNumber(1);
-    },
-    currencyPriceFromProvider() {
-      if (this.hasData) {
-        const selectedCurrencyPrice = this.fetchedData.prices.find(
-          item => item.fiat_currency === this.selectedFiat
-        );
-        return selectedCurrencyPrice
-          ? BigNumber(selectedCurrencyPrice.price)
-          : BigNumber(1);
-      }
-      return BigNumber(1);
-    },
-    buttons() {
-      if (this.hasData) {
-        const priceHolder = [
-          this.selectedFiat === 'JPY' ? 10000 : 100,
-          this.selectedFiat === 'JPY' ? 50000 : 250,
-          this.selectedFiat === 'JPY' ? 100000 : 500,
-          this.selectedFiat === 'JPY' ? 150000 : 1000,
-          this.selectedFiat === 'JPY' ? 1000000 : 5000
-        ];
-        const formattedPricing = priceHolder.map((item, idx) => {
-          return {
-            id: `${BigNumber(idx).toString()}${this.selectedFiat}`,
-            fiat: this.fiatConversion.times(item).toString(),
-            fiatFormatted: this.currencyFormatter(
-              this.fiatConversion.times(item).toString()
-            ),
-            subTitle: `~${BigNumber(item)
-              .div(this.currencyPriceFromProvider.decimalPlaces(2))
-              .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency.name}`
-          };
-        });
-        return [
-          ...formattedPricing,
-          {
-            id: '6',
-            title: 'Custom',
-            subTitle: `Up to ${this.currencyFormatter(this.max)}`
-          }
-        ];
-      }
-      return [
-        { id: '1', fiat: '100', fiatFormatted: '$100', subTitle: '0.16 ETH' },
-        { id: '2', fiat: '250', fiatFormatted: '$250', subTitle: '0.16 ETH' },
-        { id: '3', fiat: '500', fiatFormatted: '$500', subTitle: '0.16 ETH' },
-        { id: '4', fiat: '1000', fiatFormatted: '$1000', subTitle: '0.16 ETH' },
-        { id: '5', fiat: '5000', fiatFormatted: '$5000', subTitle: '0.16 ETH' },
-        { id: '6', title: 'Custom', subTitle: `Up to $12,000` }
-      ];
+      return BigNumber(30);
     }
   },
   watch: {
@@ -402,6 +376,14 @@ export default {
         }
 
         this.$emit('selectedCurrency', newVal);
+      },
+      deep: true
+    },
+    selectedFiat: {
+      handler: function (newVal, oldVal) {
+        if (!isEqual(newVal, oldVal)) {
+          this.amount = Math.ceil(this.min.times(6).toNumber());
+        }
       },
       deep: true
     },
@@ -423,18 +405,38 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    openSimplex() {
+      // eslint-disable-next-line
+      window.open(
+        `https://ccswap.myetherwallet.com/#/?to=${this.address}&amount=${
+          this.amount
+        }&fiat=${this.selectedFiatName.toLowerCase()}`,
+        '_blank'
+      );
+    },
+    setMin() {
+      this.amount = this.min.toNumber();
+    },
+    setMax() {
+      this.amount = this.max.toNumber();
+    },
     currencyFormatter(value) {
-      const locale = this.hasData ? LOCALE[this.selectedFiat] : 'en-US';
+      const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
       return new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: this.selectedFiat
+        currency: this.selectedFiatName
       }).format(value);
     },
     setCurrency(e) {
       this.selectedCurrency = e;
     },
     reset() {
-      this.selectedFiat = 'USD';
+      this.selectedFiatName = {
+        name: 'USD',
+        value: 'USD',
+        // eslint-disable-next-line
+        img: require(`@/assets/images/currencies/USD.svg`)
+      };
       this.loading = true;
       this.fetchData = {};
     },
@@ -454,10 +456,9 @@ export default {
           Toast(e, {}, ERROR);
         });
     },
-    buy(btn) {
-      const amount = btn.hasOwnProperty('fiat') ? btn.fiat.toString() : null;
+    buy() {
       this.moonpayHandler
-        .buy(this.selectedCurrency.name, this.selectedFiat, amount)
+        .buy(this.selectedCurrency.name, this.selectedFiatName, this.amount)
         .then(() => {
           this.reset();
           this.close();
