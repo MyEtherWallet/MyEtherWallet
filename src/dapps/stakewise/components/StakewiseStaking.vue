@@ -200,6 +200,9 @@ export default {
         }
       },
       deep: true
+    },
+    address() {
+      this.fetchBalance();
     }
   },
   mounted() {
