@@ -214,7 +214,10 @@ import { fromWei } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import stakeHandler from '../handlers/stakewiseStakeHandler';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 import { debounce } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
@@ -250,8 +253,11 @@ export default {
       return this.network.type.currencyName;
     },
     stakingFee() {
+      const stakeFee = BigNumber(this.stakeAmount)
+        .times(BigNumber(1).div(100))
+        .toString();
       return BigNumber(this.stakeAmount).gt(0)
-        ? BigNumber(this.stakeAmount).times(BigNumber(1).div(100)).toString()
+        ? formatFloatingPointValue(stakeFee).value
         : '0';
     },
     stakingFeeFiatValue() {
@@ -268,11 +274,10 @@ export default {
     },
     totalUserStaked() {
       const total = BigNumber(this.stakeAmount);
-      return total.gt(0)
-        ? total
-            .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
-            .toString()
-        : '0';
+      const totalStaked = total
+        .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
+        .toString();
+      return total.gt(0) ? formatFloatingPointValue(totalStaked).value : '0';
     },
     ethTotalFee() {
       const gasPrice = BigNumber(this.locGasPrice).gt(0)
@@ -281,7 +286,8 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      return fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+      return formatFloatingPointValue(ethFee).value;
     },
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);

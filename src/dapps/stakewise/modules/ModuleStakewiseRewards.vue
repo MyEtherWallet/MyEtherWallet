@@ -199,7 +199,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
-import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import Notification, {
   NOTIFICATION_TYPES,
@@ -259,8 +262,11 @@ export default {
       return this.network.type.currencyName;
     },
     stakingFee() {
+      const fee = BigNumber(this.compoundAmount)
+        .times(BigNumber(1).div(100))
+        .toString();
       return BigNumber(this.compoundAmount).gt(0)
-        ? BigNumber(this.compoundAmount).times(BigNumber(1).div(100)).toString()
+        ? formatFloatingPointValue(fee).value
         : '0';
     },
     stakingFeeFiatValue() {
@@ -277,11 +283,10 @@ export default {
     },
     totalUserStaked() {
       const total = BigNumber(this.compoundAmount);
-      return total.gt(0)
-        ? total
-            .minus(BigNumber(this.compoundAmount).times(BigNumber(1).div(100)))
-            .toString()
-        : '0';
+      const totalStaked = total
+        .minus(BigNumber(this.compoundAmount).times(BigNumber(1).div(100)))
+        .toString();
+      return total.gt(0) ? formatFloatingPointValue(totalStaked).value : '0';
     },
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
@@ -318,7 +323,10 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      return fromWei(BigNumber(this.gasPrice).times(gasLimit).toString());
+      const ethFee = fromWei(
+        BigNumber(this.gasPrice).times(gasLimit).toString()
+      );
+      return formatFloatingPointValue(ethFee).value;
     },
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
@@ -341,7 +349,8 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      return BigNumber(this.gasPrice).times(gasLimit).toString();
+      const txFee = BigNumber(this.gasPrice).times(gasLimit).toString();
+      return formatFloatingPointValue(txFee).value;
     },
     hasMinimum() {
       // amount > min && this.balance > networkFee

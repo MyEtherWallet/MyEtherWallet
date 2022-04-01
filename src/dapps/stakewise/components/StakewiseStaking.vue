@@ -18,7 +18,9 @@
         </div>
       </div>
       <div class="text-right">
-        <div class="font-weight-bold mew-heading-3 mb-1">{{ balance }}</div>
+        <div class="font-weight-bold mew-heading-3 mb-1">
+          {{ balance }}
+        </div>
         <div v-if="ethvmSupport" class="textLight--text">
           ${{ sethUsdBalance }}
         </div>
@@ -133,6 +135,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '../configsRoutes';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSideStaking',
   components: {},
@@ -234,7 +237,7 @@ export default {
         .balanceOf(this.address)
         .call()
         .then(res => {
-          this.balance = fromWei(res);
+          this.balance = formatFloatingPointValue(fromWei(res)).value;
         });
     },
     checkHash(hash) {
