@@ -10,34 +10,49 @@
       scrollable
       has-body-content
     >
-      <mew-tabs
-        v-if="open"
-        :items="tabItems"
-        :active-tab="activeTab"
-        active-color="greenPrimary"
-        has-underline
-        class="pt-3"
-        @onTab="onTab"
-      >
-        <template #tabContent1>
+      <div>
+        <div v-if="inWallet">
+          <mew-tabs
+            v-if="open"
+            :items="tabItems"
+            :active-tab="activeTab"
+            active-color="greenPrimary"
+            has-underline
+            class="pt-3"
+            @onTab="onTab"
+          >
+            <template #tabContent1>
+              <buy-eth-component
+                :moonpay-handler="moonpayHandler"
+                :close="close"
+                :tab="activeTab"
+                :default-currency="defaltCurrency"
+                :in-wallet="inWallet"
+                @selectedCurrency="setSelectedCurrency"
+              />
+            </template>
+            <template #tabContent2>
+              <sell-eth-component
+                :moonpay-handler="moonpayHandler"
+                :close="close"
+                :tab="activeTab"
+                :default-currency="defaltCurrency"
+                @selectedCurrency="setSelectedCurrency"
+              />
+            </template>
+          </mew-tabs>
+        </div>
+        <div v-else>
           <buy-eth-component
             :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
             :default-currency="defaltCurrency"
+            :in-wallet="inWallet"
             @selectedCurrency="setSelectedCurrency"
           />
-        </template>
-        <template #tabContent2>
-          <sell-eth-component
-            :moonpay-handler="moonpayHandler"
-            :close="close"
-            :tab="activeTab"
-            :default-currency="defaltCurrency"
-            @selectedCurrency="setSelectedCurrency"
-          />
-        </template>
-      </mew-tabs>
+        </div>
+      </div>
     </mew-popup>
   </div>
 </template>
@@ -74,6 +89,11 @@ export default {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
+    inWallet() {
+      return (
+        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
+      );
+    },
     defaltCurrency() {
       if (
         isEmpty(this.selectedCurrency) &&
@@ -107,12 +127,19 @@ export default {
       };
     },
     tabItems() {
+      if (this.inWallet) {
+        return [
+          {
+            name: `Buy`
+          },
+          {
+            name: `Sell`
+          }
+        ];
+      }
       return [
         {
-          name: `Buy`
-        },
-        {
-          name: `Sell`
+          name: 'Buy'
         }
       ];
     }

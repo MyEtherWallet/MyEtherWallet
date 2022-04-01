@@ -279,8 +279,8 @@ export default {
     },
     nonMainnetMetamask() {
       return (
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network.type.name !== 'ETH'
+        this.instance?.identifier === WALLET_TYPES.WEB3_WALLET &&
+        this.network?.type.name !== 'ETH'
       );
     },
     isValidAmount() {

@@ -112,13 +112,15 @@ export default {
               resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
             }
           ]
-        : [
+        : this.$store.state.wallet.address
+        ? [
             {
               address: toChecksumAddress(this.$store.state.wallet.address),
               nickname: 'My Address',
               resolverAddr: ''
             }
-          ].concat(this.addressBookStore);
+          ]
+        : [].concat(this.addressBookStore);
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;

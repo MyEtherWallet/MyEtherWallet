@@ -51,7 +51,7 @@
         ref="toAddress"
         label="To Address"
         :is-valid-address-func="isValidToAddress"
-        is-home-page
+        :preselect-curr-wallet-adr="false"
         @setAddress="setAddress"
       />
     </div>
@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <div class="section-block pa-5">
+    <div v-if="!hideSimplex" class="section-block pa-5">
       <div class="d-flex align-center justify-space-between">
         <div class="d-flex align-start mb-1">
           <img
@@ -170,14 +170,14 @@
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep, isEqual } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
-import { cloneDeep, isEqual } from 'apollo-utilities';
 import { fromWei } from 'web3-utils';
 import Web3 from 'web3';
 import nodeList from '@/utils/networks';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleBuyEth',
   components: { ModuleAddressBook },
@@ -193,6 +193,10 @@ export default {
     defaultCurrency: {
       type: Object,
       default: () => {}
+    },
+    inWallet: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -210,7 +214,8 @@ export default {
       amount: '300',
       toAddress: '',
       validToAddress: false,
-      gasPrice: '0'
+      gasPrice: '0',
+      web3Connections: {}
     };
   },
   computed: {
@@ -222,7 +227,9 @@ export default {
       )} min)`;
     },
     networkFeeText() {
-      return `Ethereum network fee (for transfers to your wallet) ~${this.currencyFormatter(
+      return `${
+        this.selectedCurrency.name
+      } network fee (for transfers to your wallet) ~${this.currencyFormatter(
         this.networkFeeToFiat
       )}`;
     },
@@ -244,11 +251,6 @@ export default {
           : BigNumber(1);
       }
       return BigNumber(1);
-    },
-    inWallet() {
-      return (
-        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
-      );
     },
     selectedFiatName() {
       return this.selectedFiat.name;
@@ -280,9 +282,9 @@ export default {
         ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
         : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
       const withFee = fee.gt(this.minFee)
-        ? fee.plus(this.amount)
-        : fee.plus(this.minFee).plus(this.amount);
-      return withFee.plus(this.networkFeeToFiat).toString();
+        ? BigNumber(this.amount).minus(fee)
+        : BigNumber(this.amount).minus(fee).minus(this.minFee);
+      return withFee.minus(this.networkFeeToFiat).toString();
     },
     plusFeeF() {
       return this.currencyFormatter(this.plusFee);
@@ -296,18 +298,26 @@ export default {
     isEUR() {
       return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
+    hideSimplex() {
+      return (
+        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+      );
+    },
     disableSimplex() {
       return (
-        ((this.selectedCryptoName === 'USDC' ||
-          this.selectedCryptoName === 'USDT') &&
-          this.amountErrorMessages !== '') ||
+        this.amountErrorMessages !== '' ||
         (!this.inWallet && !this.actualValidAddress)
       );
     },
     disableMoonPay() {
+      if (this.inWallet) {
+        return this.amountErrorMessages !== '' || this.loading;
+      }
       return (
         this.amountErrorMessages !== '' ||
-        (!this.inWallet && !this.actualValidAddress)
+        this.loading ||
+        !this.actualValidAddress ||
+        this.actualAddress === ''
       );
     },
     paymentOptionString() {
@@ -416,7 +426,9 @@ export default {
       return !isEmpty(this.fetchedData);
     },
     cryptoToFiat() {
-      return BigNumber(this.amount).div(this.priceOb.price).toString();
+      return formatFloatingPointValue(
+        BigNumber(this.plusFee).div(this.priceOb.price).toString()
+      ).value;
     },
     fiatCurrencyItems() {
       const arrItems = this.hasData
@@ -502,9 +514,11 @@ export default {
         ? this.selectedCurrency.network
         : this.selectedCurrency.name;
       const node = nodeList[nodeType];
-      const web3 = new Web3(node[0].url);
-      const gasPrice = await web3.eth.getGasPrice();
-      this.gasPrice = gasPrice;
+      if (!this.web3Connections[nodeType]) {
+        const web3 = new Web3(node[0].url);
+        this.web3Connections[nodeType] = web3;
+      }
+      this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
     setAddress(address, valid) {
       this.toAddress = address;
