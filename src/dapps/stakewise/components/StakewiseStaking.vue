@@ -123,14 +123,13 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash';
+import { isEmpty, some, find } from 'lodash';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import {
   SETH2_GOERLI_CONTRACT,
   SETH2_MAINNET_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
 import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken.js';
-import _ from 'lodash';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
@@ -153,6 +152,7 @@ export default {
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork', 'network']),
+    ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['stakewiseTxs']),
     currencyName() {
@@ -177,7 +177,7 @@ export default {
     },
     hasStaked() {
       if (this.ethvmSupport) {
-        const exists = _.find(
+        const exists = some(
           this.tokensList,
           item =>
             item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
@@ -187,7 +187,15 @@ export default {
       return BigNumber(this.balance).gt(0);
     },
     sethUsdBalance() {
-      return this.hasStaked ? this.hasStaked.usdBalancef : '0';
+      if (this.ethvmSupport) {
+        const token = find(
+          this.tokensList,
+          item =>
+            item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
+        );
+        return token ? token.usdBalancef : '0';
+      }
+      return '0';
     }
   },
   watch: {
