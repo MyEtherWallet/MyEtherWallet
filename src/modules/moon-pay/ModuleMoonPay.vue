@@ -38,25 +38,6 @@
           />
         </template>
       </mew-tabs>
-      <!-- ============================================================== -->
-      <!-- Powered by -->
-      <!-- ============================================================== -->
-
-      <!--
-      <div class="py-8">
-        <div class="text-center mb-3 textLight--text">
-          Moonpay.com will open on a new tab to continue
-        </div>
-        <div class="mew-body d-flex justify-center align-center textDark--text">
-          Powered By
-          <img
-            src="@/modules/moon-pay/assets/moonpay-logo.svg"
-            width="100px"
-            class="ml-1"
-          />
-        </div>
-      </div>
-      -->
     </mew-popup>
   </div>
 </template>
@@ -94,13 +75,17 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
     defaltCurrency() {
-      if (isEmpty(this.selectedCurrency) && !this.network.type.isTestNetwork) {
+      if (
+        isEmpty(this.selectedCurrency) &&
+        !this.network.type.isTestNetwork &&
+        this.tokensList.length > 0
+      ) {
         return this.tokensList.filter(
           item =>
             item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
         )[0];
       } else if (
-        isEmpty(this.selectedCurrency) &&
+        isEmpty(this.selectedCurrency) ||
         this.network.type.isTestNetwork
       ) {
         return {
@@ -110,7 +95,7 @@ export default {
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH',
-          network: 1,
+          network: 'ETH',
           contract: MAIN_TOKEN_ADDRESS
         };
       }
@@ -136,12 +121,11 @@ export default {
     open(newVal) {
       this.isOpen = newVal;
       if (newVal) {
-        this.moonpayHandler = new handler(this.address);
+        this.moonpayHandler = new handler();
       }
       this.selectedCurrency = {};
     },
-    address(newVal) {
-      this.moonpayHandler = new handler(newVal);
+    address() {
       this.selectedCurrency = {};
     }
   },

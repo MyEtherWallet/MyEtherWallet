@@ -46,7 +46,15 @@
         />
       </div>
     </div>
-
+    <div v-if="!inWallet" class="mb-6">
+      <module-address-book
+        ref="toAddress"
+        label="To Address"
+        :is-valid-address-func="isValidToAddress"
+        is-home-page
+        @setAddress="setAddress"
+      />
+    </div>
     <div class="mb-6">
       <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
 
@@ -56,7 +64,7 @@
           <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
         </div>
 
-        <div v-if="!loading" class="mb-4">
+        <div v-if="!loading && !disableMoonPay" class="mb-4">
           <div class="mew-heading-2 textDark--text mb-1">
             {{ cryptoToFiat }}
             <span class="mew-heading-3">{{ selectedCryptoName }}</span>
@@ -66,14 +74,15 @@
             <mew-tooltip style="height: 22px">
               <template #contentSlot>
                 <div>
-                  Includes {{ percentFee }} fee ($4.47 min)
+                  {{ includesFeeText }}
                   <br />
                   <br />
-                  Ethereum network fee (for transfers to your wallet) ~$15.92
+                  {{ networkFeeText }}
                   <br />
-                  Daily limit: $10,000
                   <br />
-                  Monthly limit: $50,000
+                  {{ dailyLimit }}
+                  <br />
+                  {{ monthlyLimit }}
                 </div>
               </template>
             </mew-tooltip>
@@ -117,6 +126,7 @@
         <mew-button
           has-full-width
           title="BUY WITH MOONPAY"
+          :disabled="disableMoonPay"
           @click.native="buy"
         />
       </div>
@@ -157,14 +167,20 @@
 </template>
 
 <script>
+import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
+import MultiCoinValidator from 'multicoin-address-validator';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { isEmpty } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { LOCALE } from '../helpers';
 import { mapGetters, mapActions, mapState } from 'vuex';
 import { cloneDeep, isEqual } from 'apollo-utilities';
+import { fromWei } from 'web3-utils';
+import Web3 from 'web3';
+import nodeList from '@/utils/networks';
 export default {
   name: 'ModuleBuyEth',
+  components: { ModuleAddressBook },
   props: {
     moonpayHandler: {
       type: Object,
@@ -191,23 +207,82 @@ export default {
       },
       fetchedData: {},
       currencyRates: [],
-      amount: '300'
+      amount: '300',
+      toAddress: '',
+      validToAddress: false,
+      gasPrice: '0'
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['address']),
+    includesFeeText() {
+      return `Includes ${this.percentFee} fee (${this.currencyFormatter(
+        this.minFee
+      )} min)`;
+    },
+    networkFeeText() {
+      return `Ethereum network fee (for transfers to your wallet) ~${this.currencyFormatter(
+        this.networkFeeToFiat
+      )}`;
+    },
+    dailyLimit() {
+      const value = BigNumber(this.fiatMultiplier).times(10000);
+      return `Daily limit: ${this.currencyFormatter(value.toString())}`;
+    },
+    monthlyLimit() {
+      const value = BigNumber(this.fiatMultiplier).times(50000);
+      return `Monthly limit: ${this.currencyFormatter(value.toString())}`;
+    },
+    fiatMultiplier() {
+      if (this.hasData) {
+        const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return selectedCurrencyPrice
+          ? BigNumber(selectedCurrencyPrice.exchange_rate)
+          : BigNumber(1);
+      }
+      return BigNumber(1);
+    },
+    inWallet() {
+      return (
+        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
+      );
+    },
     selectedFiatName() {
       return this.selectedFiat.name;
     },
-    // networkFee() {
-    //   return '21000';
-    // },
+    actualAddress() {
+      return this.inWallet ? this.address : this.toAddress;
+    },
+    actualValidAddress() {
+      return this.inWallet ? true : this.validToAddress;
+    },
+    networkFee() {
+      return fromWei(BigNumber(this.gasPrice).times(21000).toString());
+    },
+    priceOb() {
+      return !isEmpty(this.fetchedData)
+        ? this.fetchedData.prices.find(
+            item => item.fiat_currency === this.selectedFiatName
+          )
+        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
+    },
+    networkFeeToFiat() {
+      return BigNumber(this.networkFee).times(this.priceOb.price).toString();
+    },
+    minFee() {
+      return BigNumber(4.43).times(this.fiatMultiplier).toString();
+    },
     plusFee() {
       const fee = this.isEUR
         ? BigNumber(BigNumber(0.7).div(100)).times(this.amount)
         : BigNumber(BigNumber(3.25).div(100)).times(this.amount);
-      return fee.plus(this.amount).toString();
+      const withFee = fee.gt(this.minFee)
+        ? fee.plus(this.amount)
+        : fee.plus(this.minFee).plus(this.amount);
+      return withFee.plus(this.networkFeeToFiat).toString();
     },
     plusFeeF() {
       return this.currencyFormatter(this.plusFee);
@@ -219,17 +294,29 @@ export default {
       return this.selectedCurrency.name;
     },
     isEUR() {
-      return this.selectedFiatName === 'EUR';
+      return this.selectedFiatName === 'EUR' || this.selectedFiatName === 'GBP';
     },
     disableSimplex() {
       return (
-        this.selectedCryptoName === 'USDC' || this.selectedCryptoName === 'USDT'
+        ((this.selectedCryptoName === 'USDC' ||
+          this.selectedCryptoName === 'USDT') &&
+          this.amountErrorMessages !== '') ||
+        (!this.inWallet && !this.actualValidAddress)
+      );
+    },
+    disableMoonPay() {
+      return (
+        this.amountErrorMessages !== '' ||
+        (!this.inWallet && !this.actualValidAddress)
       );
     },
     paymentOptionString() {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
     },
     amountErrorMessages() {
+      if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
+        return 'Amount required';
+      }
       if (BigNumber(this.amount).lt(0)) {
         return `Amount can't be negative`;
       }
@@ -255,7 +342,7 @@ export default {
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH',
-          network: 1
+          network: 'ETH'
         },
         {
           decimals: 18,
@@ -264,7 +351,7 @@ export default {
           subtext: 'Polygon',
           value: 'Polygon (Matic)',
           symbol: 'MATIC (Matic)',
-          network: 137
+          network: 'MATIC'
         },
         {
           decimals: 18,
@@ -273,7 +360,7 @@ export default {
           subtext: 'Binance Smart Chain',
           value: 'Binance Smart Chain',
           symbol: 'BNB (BSC/BEP20)',
-          network: 56
+          network: 'BSC'
         },
         {
           decimals: 6,
@@ -282,7 +369,7 @@ export default {
           subtext: 'Tether',
           value: 'Tether',
           symbol: 'USDT (ERC20)',
-          network: 1
+          network: 'ETH'
         },
         {
           decimals: 6,
@@ -291,7 +378,7 @@ export default {
           subtext: 'USD Coin',
           value: 'USD Coin',
           symbol: 'USDC (ERC20)',
-          network: 1
+          network: 'ETH'
         }
       ];
       const imgs = tokensList.map(item => {
@@ -329,12 +416,7 @@ export default {
       return !isEmpty(this.fetchedData);
     },
     cryptoToFiat() {
-      const priceOb = !isEmpty(this.fetchedData)
-        ? this.fetchedData.prices.find(
-            item => item.fiat_currency === this.selectedFiatName
-          )
-        : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
-      return BigNumber(this.amount).div(priceOb.price).toString();
+      return BigNumber(this.amount).div(this.priceOb.price).toString();
     },
     fiatCurrencyItems() {
       const arrItems = this.hasData
@@ -382,7 +464,17 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          this.amount = Math.ceil(this.min.times(6).toNumber());
+          const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
+            item => item.fiat_currency === oldVal.name
+          );
+          const revertedVal = BigNumber(this.amount).div(
+            selectedCurrencyPrice.exchange_rate
+          );
+          const value = BigNumber(revertedVal)
+            .times(this.fiatMultiplier)
+            .dp(0)
+            .toFixed();
+          this.amount = value;
         }
       },
       deep: true
@@ -405,20 +497,36 @@ export default {
   },
   methods: {
     ...mapActions('global', ['setNetwork']),
+    async fetchGasPrice() {
+      const nodeType = this.selectedCurrency.hasOwnProperty('network')
+        ? this.selectedCurrency.network
+        : this.selectedCurrency.name;
+      const node = nodeList[nodeType];
+      const web3 = new Web3(node[0].url);
+      const gasPrice = await web3.eth.getGasPrice();
+      this.gasPrice = gasPrice;
+    },
+    setAddress(address, valid) {
+      this.toAddress = address;
+      this.validToAddress = valid;
+    },
+    isValidToAddress(address) {
+      return MultiCoinValidator.validate(address, this.selectedCurrency.name);
+    },
     openSimplex() {
       // eslint-disable-next-line
       window.open(
-        `https://ccswap.myetherwallet.com/#/?to=${this.address}&amount=${
+        `https://ccswap.myetherwallet.com/#/?to=${this.actualAddress}&amount=${
           this.amount
         }&fiat=${this.selectedFiatName.toLowerCase()}`,
         '_blank'
       );
     },
     setMin() {
-      this.amount = this.min.toNumber();
+      this.amount = this.min.toFixed();
     },
     setMax() {
-      this.amount = this.max.toNumber();
+      this.amount = this.max.toFixed();
     },
     currencyFormatter(value) {
       const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';
@@ -431,7 +539,7 @@ export default {
       this.selectedCurrency = e;
     },
     reset() {
-      this.selectedFiatName = {
+      this.selectedFiat = {
         name: 'USD',
         value: 'USD',
         // eslint-disable-next-line
@@ -443,6 +551,7 @@ export default {
     fetchCurrencyData() {
       this.loading = true;
       this.fetchData = {};
+      this.fetchGasPrice();
       this.moonpayHandler
         .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
@@ -458,7 +567,12 @@ export default {
     },
     buy() {
       this.moonpayHandler
-        .buy(this.selectedCurrency.name, this.selectedFiatName, this.amount)
+        .buy(
+          this.selectedCurrency.name,
+          this.selectedFiatName,
+          this.amount,
+          this.actualAddress
+        )
         .then(() => {
           this.reset();
           this.close();

@@ -431,7 +431,7 @@ export default {
     },
     sell() {
       this.moonpayHandler
-        .sell(this.name, this.amount)
+        .sell(this.name, this.amount, this.address)
         .then(() => {
           this.amount = '0';
           this.close();
