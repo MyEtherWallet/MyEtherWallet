@@ -1,21 +1,131 @@
 <template>
-  <div class="pt-10 px-8">
+  <div class="py-8 px-8">
     <!-- ============================================================== -->
     <!-- Currency Select -->
     <!-- ============================================================== -->
-    <mew-select
-      label="Currency"
-      :items="currencyItems"
-      :value="selectedCurrency"
-      :disabled="loading"
-      is-custom
-      @input="setCurrency"
-    />
+    <div class="mb-2">
+      <div class="mew-heading-3 textDark--text mb-5">Select currency</div>
+      <mew-select
+        label="Currency"
+        :items="currencyItems"
+        :value="selectedCurrency"
+        :disabled="loading"
+        is-custom
+        @input="setCurrency"
+      />
+    </div>
+
+    <div class="mb-11">
+      <div class="mew-heading-3 textDark--text mb-5">
+        How much do you want to spend?
+      </div>
+      <div class="d-flex align-center">
+        <mew-input class="mr-2" />
+        <mew-select />
+      </div>
+      <div class="d-flex align-center">
+        <mew-button btn-style="outline" title="Min" class="mr-2 flex-grow-1" />
+        <mew-button btn-style="outline" title="Max" class="flex-grow-1" />
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
+
+      <div class="section-block pa-5">
+        <div class="d-flex align-center justify-space-between mb-2">
+          <div>You will get</div>
+          <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
+        </div>
+
+        <div class="mb-4">
+          <div class="mew-heading-2 textDark--text mb-1">
+            0.00123 <span class="mew-heading-3">ETH</span>
+          </div>
+          <div class="d-flex align-center">
+            <div class="mr-1 textDark--text">≈ $379.28.00</div>
+            <mew-tooltip style="height: 22px" />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <v-skeleton-loader type="heading" class="mb-1" />
+          <v-skeleton-loader max-width="200px" type="heading" />
+        </div>
+
+        <div class="d-flex align-center mb-1">
+          <img
+            src="@/assets/images/icons/moonpay/icon-visa.svg"
+            alt="Visa"
+            height="24"
+            class="mr-2"
+          />
+          <img
+            src="@/assets/images/icons/moonpay/icon-master.svg"
+            alt="Master"
+            height="24"
+            class="mr-2"
+          />
+          <img
+            src="@/assets/images/icons/moonpay/icon-apple-pay.svg"
+            alt="Master"
+            height="24"
+            class="mr-2"
+          />
+          <img
+            src="@/assets/images/icons/moonpay/icon-bank.svg"
+            alt="Bank"
+            height="24"
+          />
+        </div>
+        <div class="mew-label mb-5">
+          Visa, Mastercard, Apple Pay, Bank account
+        </div>
+        <mew-button has-full-width title="BUY WITH MOONPAY" />
+      </div>
+    </div>
+
+    <div class="section-block pa-5">
+      <div class="d-flex align-center justify-space-between">
+        <div class="d-flex align-start mb-1">
+          <img
+            src="@/assets/images/icons/moonpay/icon-visa.svg"
+            alt="Visa"
+            height="24"
+            class="mr-2"
+          />
+          <img
+            src="@/assets/images/icons/moonpay/icon-master.svg"
+            alt="Master"
+            height="24"
+            class="mr-2"
+          />
+          <img
+            src="@/assets/images/icons/moonpay/icon-apple-pay.svg"
+            alt="Master"
+            height="24"
+            class="mr-2"
+          />
+        </div>
+        <img
+          src="@/assets/images/icons/icon-simplex.svg"
+          alt="simplex"
+          height="28"
+        />
+      </div>
+      <div class="mew-label mb-5">
+        Visa, Mastercard, Apple Pay, Bank account
+      </div>
+      <mew-button has-full-width btn-style="outline" title="CLICK FOR RATES" />
+    </div>
 
     <!-- ============================================================== -->
     <!-- Fiat currency select -->
     <!-- ============================================================== -->
-    <div class="d-flex align-center justify-space-between mt-3 mb-3">
+    <div
+      v-if="false"
+      class="d-flex align-center justify-space-between mt-3 mb-3"
+    >
       <div class="font-weight-medium textDark--text">Select amount</div>
       <div class="d-flex align-center justify-end">
         <img
@@ -49,7 +159,7 @@
     <!-- ============================================================== -->
     <!-- Fiat currency pre-selection buttons -->
     <!-- ============================================================== -->
-    <v-row dense>
+    <v-row v-show="false" dense>
       <v-col v-for="(button, bkey) in buttons" :key="bkey" cols="6">
         <mew-button
           style="height: 96px !important"
@@ -375,5 +485,10 @@ export default {
   border-radius: 100px;
   width: 18px;
   height: 18px;
+}
+
+.section-block {
+  border-radius: 8px;
+  border: 1px solid var(--v-greyMedium-base);
 }
 </style>

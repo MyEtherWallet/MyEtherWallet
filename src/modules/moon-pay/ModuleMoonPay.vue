@@ -41,6 +41,8 @@
       <!-- ============================================================== -->
       <!-- Powered by -->
       <!-- ============================================================== -->
+
+      <!--
       <div class="py-8">
         <div class="text-center mb-3 textLight--text">
           Moonpay.com will open on a new tab to continue
@@ -54,6 +56,7 @@
           />
         </div>
       </div>
+      -->
     </mew-popup>
   </div>
 </template>
