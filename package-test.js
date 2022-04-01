@@ -44,7 +44,9 @@ const EXCEPTIONS = [
   // update after release
   '@ledgerhq/hw-app-eth',
   '@ethereumjs/common',
-  '@ethereumjs/tx'
+  '@ethereumjs/tx',
+  'prettier',
+  'stylelint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
