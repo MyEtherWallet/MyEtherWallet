@@ -17,6 +17,7 @@ import { STAKEWISE_ROUTES } from './configsRoutes';
 import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import handler from './handlers/stakewiseHandler';
+import BigNumber from 'bignumber.js';
 
 export default {
   name: 'TheStakewiseLayout',
@@ -91,7 +92,9 @@ export default {
         this.setStakingFee(res);
       });
       this.stakewiseHandler.getValidatorApr().then(res => {
-        this.setValidatorApr(res);
+        this.setValidatorApr(
+          BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
+        );
       });
     }
   }
