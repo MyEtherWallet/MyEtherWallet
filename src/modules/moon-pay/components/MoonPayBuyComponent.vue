@@ -516,9 +516,9 @@ export default {
     openSimplex() {
       // eslint-disable-next-line
       window.open(
-        `https://ccswap.myetherwallet.com/#/?to=${this.actualAddress}&amount=${
+        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
           this.amount
-        }&fiat=${this.selectedFiatName.toLowerCase()}`,
+        }&to=${this.actualAddress}`,
         '_blank'
       );
     },
