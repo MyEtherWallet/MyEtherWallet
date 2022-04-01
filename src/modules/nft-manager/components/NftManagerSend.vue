@@ -26,7 +26,7 @@
     <module-address-book @setAddress="setAddress" />
     <span
       v-if="!enoughFunds && showBalanceError"
-      class="errormessage px-6 py-0 py-sm-3 mb-3 mb-sm-0"
+      class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
       >You do not have enough ETH to send.
       <a
         href="https://ccswap.myetherwallet.com/#/"
@@ -121,9 +121,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.errormessage {
-  color: #ff445b;
-}
-</style>
