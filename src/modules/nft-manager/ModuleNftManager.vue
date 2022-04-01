@@ -274,7 +274,7 @@ export default {
       this.localGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     hasMinEth() {
-      const currentGasPrice = this.gasPriceByType(this.gasPriceType);
+      const currentGasPrice = this.localGasPrice;
       if (
         toBN(this.balanceInWei).gt(
           toBN(currentGasPrice).mul(toBN(MIN_GAS_LIMIT))
@@ -312,7 +312,7 @@ export default {
     },
     async sendTx() {
       if (this.isValid) {
-        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        const gasTypeFee = this.localGasPrice;
         const gasFees = await this.nft.getGasFees(
           this.toAddress,
           this.selectedNft
