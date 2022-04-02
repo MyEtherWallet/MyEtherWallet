@@ -424,7 +424,6 @@ export default {
       this.getQuote();
     }, 500),
     setMax() {
-      console.log('hello');
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
