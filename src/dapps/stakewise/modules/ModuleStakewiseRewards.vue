@@ -16,7 +16,7 @@
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
           <!-- ======================================================================================= -->
-          <div class="d-flex align-center text-center">
+          <div ref="input" class="d-flex align-center text-center">
             <div
               class="border-radius--8px backgroundGrey flex-grow-1 pa-5 d-flex flex-column align-center"
               style="width: 30%"
@@ -180,7 +180,7 @@
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
         <stakewise-staking class="mb-4" />
-        <stakewise-rewards :set-max="setMax" />
+        <stakewise-rewards @set-max="setMax" @scroll="scroll" />
       </v-col>
     </v-row>
   </div>
@@ -385,6 +385,16 @@ export default {
         return 'Invalid decimals. ETH can only have 18 decimals';
       }
       return '';
+    },
+    target() {
+      const value = this['element'];
+      if (!isNaN(value)) {
+        return Number(value);
+      }
+      return value;
+    },
+    element() {
+      return this.$refs.input;
     }
   },
   watch: {
@@ -414,6 +424,7 @@ export default {
       this.getQuote();
     }, 500),
     setMax() {
+      console.log('hello');
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
     },
@@ -552,6 +563,9 @@ export default {
     },
     openSettings() {
       EventBus.$emit('openSettings');
+    },
+    scroll() {
+      this.$vuetify.goTo(this.target);
     },
     setGasLimit() {
       this.stakeHandler

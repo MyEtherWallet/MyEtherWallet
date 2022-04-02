@@ -199,7 +199,11 @@
           @set-max="setMax"
           @scroll="scroll"
         />
-        <stakewise-rewards compound-rewards />
+        <stakewise-rewards
+          compound-rewards
+          @set-max="setMax"
+          @scroll="scroll"
+        />
       </v-col>
     </v-row>
   </div>

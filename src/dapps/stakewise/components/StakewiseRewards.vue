@@ -47,7 +47,7 @@
         :btn-style="compoundRewards ? 'transparent' : 'background'"
         btn-size="small"
         class="mew-body"
-        @click.native="routeToStakeEth"
+        @click.native="scrollToInput"
       />
     </div>
   </div>
@@ -71,10 +71,6 @@ export default {
     compoundRewards: {
       type: Boolean,
       default: false
-    },
-    setMax: {
-      type: Function,
-      default: () => {}
     }
   },
   computed: {
@@ -118,11 +114,15 @@ export default {
         }
       });
     },
-    routeToStakeEth() {
-      if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
-        this.setMax();
+    scrollToInput() {
+      if (this.$route.name !== STAKEWISE_ROUTES.REWARDS.NAME) {
+        this.$router.push({ name: STAKEWISE_ROUTES.REWARDS.NAME });
       }
-      this.$router.push({ name: STAKEWISE_ROUTES.REWARDS.NAME });
+
+      this.$emit('scroll');
+      this.$nextTick(() => {
+        this.$emit('set-max');
+      });
     }
   }
 };
