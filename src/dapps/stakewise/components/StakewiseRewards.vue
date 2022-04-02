@@ -112,16 +112,8 @@ export default {
       this.$router.push({
         name: ROUTES_WALLET.SWAP.NAME,
         query: {
-          fromT: {
-            symbol: 'RETH2',
-            contract: RETH2_MAINNET_CONTRACT,
-            decimals: 18
-          },
-          toT: {
-            symbol: 'SETH2',
-            contract: SETH2_MAINNET_CONTRACT,
-            decimals: 18
-          },
+          fromToken: this.reth2Contract,
+          toToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
           amount: this.rethBalance
         }
       });

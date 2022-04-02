@@ -367,7 +367,7 @@ export default {
     },
     errorMessages() {
       if (this.overMaximum) {
-        return 'Exceeds RETH balance';
+        return 'Exceeds rETH2 balance';
       }
       if (this.hasMinimum) {
         return 'Not enough RETH!';

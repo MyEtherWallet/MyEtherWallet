@@ -22,7 +22,7 @@
           {{ balance }}
         </div>
         <div v-if="ethvmSupport" class="textLight--text">
-          ${{ sethUsdBalance }}
+          ${{ sethToken.usdBalancef }}
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@
         :btn-style="compoundRewards ? 'background' : 'transparent'"
         btn-size="small"
         class="mew-body"
-        @click.native="routeToStakewise"
+        @click.native="scrollToInput"
       />
     </div>
   </div>
@@ -186,14 +186,14 @@ export default {
       }
       return BigNumber(this.balance).gt(0);
     },
-    sethUsdBalance() {
+    sethToken() {
       if (this.ethvmSupport) {
         const token = find(
           this.tokensList,
           item =>
             item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
         );
-        return token ? token.usdBalancef : '0';
+        return token ? token : '0';
       }
       return '0';
     }
@@ -235,12 +235,11 @@ export default {
       this.$router.push({
         name: ROUTES_WALLET.SWAP.NAME,
         query: {
-          toToken: this.seth2Contract
+          fromToken: this.seth2Contract,
+          toToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          amount: this.sethToken.balancef
         }
       });
-    },
-    routeToStakewise() {
-      this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
     },
     async fetchBalance() {
       const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
