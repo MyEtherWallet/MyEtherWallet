@@ -45,7 +45,7 @@
       <div
         v-for="tx in stakewiseTxs.ETH"
         :key="tx.hash"
-        class="d-flex justify-space-between mt-4"
+        class="stake--module--button--layout d-flex justify-space-between mt-4"
       >
         <div>
           <v-progress-circular
@@ -101,7 +101,7 @@
     <!-- ======================================================================================= -->
     <div
       v-if="hasStaked"
-      class="d-flex align-center justify-space-between mt-4"
+      class="d-flex align-center justify-space-between mt-4 stake--module--button--layout"
     >
       <mew-button
         v-if="isEthNetwork"
@@ -211,6 +211,18 @@ export default {
     },
     address() {
       this.fetchBalance();
+    },
+    $route: {
+      handler: function (from) {
+        if (from.query.module === 'stake') {
+          this.$nextTick(() => {
+            this.$emit('scroll');
+            this.$emit('set-max');
+          });
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   mounted() {
@@ -267,14 +279,22 @@ export default {
         });
       }, 14000);
     },
+    changeRoute() {
+      return new Promise(resolve => {
+        resolve(
+          this.$router.push({
+            name: STAKEWISE_ROUTES.REWARDS.NAME,
+            query: { module: 'stake' }
+          })
+        );
+      });
+    },
     scrollToInput() {
-      if (this.$route.name !== STAKEWISE_ROUTES.CORE.NAME) {
-        this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
-      }
-
       this.$emit('scroll');
-      this.$nextTick(() => {
-        this.$emit('set-max');
+      this.changeRoute().then(() => {
+        this.$nextTick(() => {
+          this.$emit('set-max');
+        });
       });
     }
   }
@@ -298,6 +318,15 @@ export default {
 
   img {
     height: 28px;
+  }
+}
+
+.stake--module--button--layout {
+  @media only screen and (max-width: 1078px) and (min-width: 960px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
 }
 </style>

@@ -179,7 +179,7 @@
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
-        <stakewise-staking class="mb-4" />
+        <stakewise-staking class="mb-4" @set-max="setMax" @scroll="scroll" />
         <stakewise-rewards @set-max="setMax" @scroll="scroll" />
       </v-col>
     </v-row>

@@ -34,7 +34,10 @@
     <!-- ======================================================================================= -->
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
-    <div v-if="hasReth" class="d-flex align-center justify-space-between mt-4">
+    <div
+      v-if="hasReth"
+      class="reward--module--button--layout d-flex align-center justify-space-between mt-4"
+    >
       <mew-button
         title="Redeem to ETH"
         btn-style="transparent"
@@ -103,6 +106,20 @@ export default {
       return this.hasReth ? this.hasReth.usdBalancef : '0';
     }
   },
+  watch: {
+    $route: {
+      handler: function (from) {
+        if (from.query.module === 'compound') {
+          this.$nextTick(() => {
+            this.$emit('scroll');
+            this.$emit('set-max');
+          });
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   methods: {
     routeToSwap() {
       this.$router.push({
@@ -114,14 +131,22 @@ export default {
         }
       });
     },
+    changeRoute() {
+      return new Promise(resolve => {
+        resolve(
+          this.$router.push({
+            name: STAKEWISE_ROUTES.REWARDS.NAME,
+            query: { module: 'compound' }
+          })
+        );
+      });
+    },
     scrollToInput() {
-      if (this.$route.name !== STAKEWISE_ROUTES.REWARDS.NAME) {
-        this.$router.push({ name: STAKEWISE_ROUTES.REWARDS.NAME });
-      }
-
       this.$emit('scroll');
-      this.$nextTick(() => {
-        this.$emit('set-max');
+      this.changeRoute().then(() => {
+        this.$nextTick(() => {
+          this.$emit('set-max');
+        });
       });
     }
   }
@@ -144,6 +169,15 @@ export default {
 
   img {
     height: 28px;
+  }
+}
+
+.reward--module--button--layout {
+  @media only screen and (max-width: 1078px) and (min-width: 960px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
 }
 </style>
