@@ -26,7 +26,7 @@
           <v-btn
             v-if="show"
             depressed
-            color="secondary"
+            color="greyLight"
             class="title-button"
             @click.native="openNetworkOverlay"
           >
