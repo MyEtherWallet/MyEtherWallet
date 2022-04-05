@@ -64,6 +64,7 @@ import { EventBus } from '@/core/plugins/eventBus';
 import BigNumber from 'bignumber.js';
 import handler from '@/dapps/stakewise/handlers/stakewiseHandler';
 import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { SUPPORTED_NETWORKS } from '@/dapps/stakewise/handlers/helpers/supportedNetworks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
@@ -79,11 +80,24 @@ export default {
     ...mapGetters('stakewise', ['getPoolSupply']),
     formattedPoolValue() {
       return formatFloatingPointValue(this.getPoolSupply).value;
+    },
+    isSupported() {
+      const isSupported = SUPPORTED_NETWORKS.find(item => {
+        return item === this.network.type.name;
+      });
+      return isSupported;
+    }
+  },
+  watch: {
+    network: {
+      handler: function () {
+        this.setup();
+      },
+      deep: true
     }
   },
   mounted() {
-    this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
-    this.collectiveFetch();
+    this.setup();
   },
   methods: {
     ...mapActions('stakewise', [
@@ -92,6 +106,12 @@ export default {
       'setValidatorApr',
       'closeStakewisePromo'
     ]),
+    setup() {
+      if (this.isSupported) {
+        this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
+        this.collectiveFetch();
+      }
+    },
     collectiveFetch() {
       this.stakewiseHandler.getEthPool().then(res => {
         this.setPoolSupply(res);

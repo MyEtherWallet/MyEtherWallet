@@ -53,7 +53,13 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3', 'address']),
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'network']),
+    isSupported() {
+      const isSupported = this.validNetworks.find(item => {
+        return item === this.network.type.name;
+      });
+      return isSupported;
+    }
   },
   watch: {
     $route(to) {
@@ -63,18 +69,20 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    isEthNetwork() {
-      this.setUp();
-    },
-    address() {
-      this.setUp();
+    network: {
+      handler: function () {
+        if (this.isSupported) this.setUp();
+      },
+      deep: true
     }
   },
   mounted() {
     if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
       this.activeTab = this.tabs[1].id;
     }
-    this.setUp();
+    if (this.isSupported) {
+      this.setUp();
+    }
   },
   beforeDestroy() {
     clearInterval(this.fetchInterval);
