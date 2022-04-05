@@ -86,12 +86,11 @@ export default {
       return moment(moment()).isAfter(STAKEWISE_OFFER_END);
     },
     showPromo() {
-      // if (this.showWalletPromo) {
-      //   return this.showWalletPromo;
-      // }
+      if (this.showWalletPromo) {
+        return this.showWalletPromo;
+      }
 
-      // return !this.promoOver;
-      return true;
+      return !this.promoOver;
     },
     networkName() {
       return this.network.type.currencyName;

@@ -227,8 +227,11 @@ export default {
   },
   mounted() {
     this.fetchBalance();
-    if (this.stakewiseTxs.length > 0) {
-      this.stakewiseTxs.forEach(item => {
+    const txList = this.isEthNetwork
+      ? this.stakewiseTxs.ETH
+      : this.stakewiseTxs.GOERLI;
+    if (txList.length > 0) {
+      txList.forEach(item => {
         this.fetcher(item.hash);
       });
     }
@@ -277,7 +280,7 @@ export default {
             this.fetchBalance();
           }
         });
-      }, 14000);
+      }, 5000);
     },
     changeRoute() {
       return new Promise(resolve => {

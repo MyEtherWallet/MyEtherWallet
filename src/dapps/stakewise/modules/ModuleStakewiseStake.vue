@@ -313,7 +313,7 @@ export default {
     },
     errorMessages() {
       if (!this.hasEnoughBalance) {
-        return 'Not enough balance to send!';
+        return 'Buy more ETH!';
       }
       if (this.estimateGasError) {
         return 'Issue with gas estimation, please check if you have enough balance!';
