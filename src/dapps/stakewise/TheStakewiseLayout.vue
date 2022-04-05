@@ -52,7 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['web3']),
+    ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['isEthNetwork'])
   },
   watch: {
@@ -62,17 +62,19 @@ export default {
       } else {
         this.activeTab = this.tabs[0].id;
       }
+    },
+    isEthNetwork() {
+      this.setUp();
+    },
+    address() {
+      this.setUp();
     }
   },
   mounted() {
     if (this.$route.name === STAKEWISE_ROUTES.REWARDS.NAME) {
       this.activeTab = this.tabs[1].id;
     }
-    this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
-    this.collectiveFetch();
-    this.fetchInterval = setInterval(() => {
-      this.collectiveFetch();
-    }, 14000);
+    this.setUp();
   },
   beforeDestroy() {
     clearInterval(this.fetchInterval);
@@ -84,6 +86,13 @@ export default {
       'setStakingFee',
       'setValidatorApr'
     ]),
+    setUp() {
+      this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
+      this.collectiveFetch();
+      this.fetchInterval = setInterval(() => {
+        this.collectiveFetch();
+      }, 14000);
+    },
     collectiveFetch() {
       this.stakewiseHandler.getEthPool().then(res => {
         this.setPoolSupply(res);
