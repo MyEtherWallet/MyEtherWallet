@@ -38,6 +38,7 @@ const WalletErrorHandler = (errors, warnings) => {
     } else {
       Toast(err, {}, SENTRY);
     }
+    return foundError || foundWarning ? true : false;
   };
 };
 export default WalletErrorHandler;

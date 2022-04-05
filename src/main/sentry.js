@@ -3,9 +3,7 @@ import { Integrations } from '@sentry/tracing';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import store from '@/core/store';
-import { knownErrors } from '@/main/errorHandler';
-import { Toast, ERROR } from '../modules/toast/handler/handlerToast';
-
+import errorHandler from '@/main/errorHandler';
 // Sentry
 Sentry.init({
   Vue,
@@ -32,10 +30,7 @@ Sentry.init({
       walletType: identifier
     };
     const err = event.exception.values[0].value;
-    if (knownErrors[err]) {
-      Toast(knownErrors[err], {}, ERROR);
-      return null;
-    }
+    if (errorHandler(err)) return null;
     return new Promise(resolve => {
       EventBus.$emit('issueModal', event, resolve);
     }).then(res => {
