@@ -199,6 +199,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
+import rEthAbi from '@/dapps/stakewise/handlers/abi/rewardEthToken';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -213,7 +214,8 @@ import {
   SETH2_GOERLI_CONTRACT,
   RETH2_MAINNET_CONTRACT,
   RETH2_GOERLI_CONTRACT,
-  SETH2_Token
+  SETH2_Token,
+  RETH2_Token
 } from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
@@ -227,6 +229,7 @@ export default {
   data() {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
+      rethBalance: '0',
       compoundAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
@@ -299,6 +302,9 @@ export default {
         this.tokensList,
         item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
       );
+      if (!token) {
+        return RETH2_Token;
+      }
       return token;
     },
     hasSeth() {
@@ -310,9 +316,6 @@ export default {
         return SETH2_Token;
       }
       return token;
-    },
-    rethBalance() {
-      return this.hasReth ? this.hasReth.balancef : '0';
     },
     gasPrice() {
       return BigNumber(this.locGasPrice).gt(0)
@@ -342,7 +345,8 @@ export default {
         BigNumber(this.compoundAmount).gt(0) &&
         this.hasEnoughBalance &&
         this.agreeToTerms &&
-        this.errorMessages === ''
+        this.errorMessages === '' &&
+        this.isEthNetwork
       );
     },
     txFee() {
@@ -353,7 +357,6 @@ export default {
       return formatFloatingPointValue(txFee).value;
     },
     hasMinimum() {
-      // amount > min && this.balance > networkFee
       if (!isEmpty(this.selectedProvider)) {
         return (
           BigNumber(this.selectedProvider.minFrom).lt(this.compoundAmount) &&
@@ -405,16 +408,24 @@ export default {
       if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
         this.setGasLimit();
       }
+    },
+    isEthNetwork() {
+      this.setUp();
+      this.fetchBalance();
+    },
+    address() {
+      this.setUp();
+      this.fetchBalance();
+    },
+    rethBalance(newVal) {
+      this.rethBalance = newVal;
     }
   },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.swapper = new Swapper(this.web3, this.network.type.name);
-    this.stakeHandler = new stakeHandler(
-      this.web3,
-      this.isEthNetwork,
-      this.address
-    );
+    this.setUp();
+    this.fetchBalance();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -423,6 +434,13 @@ export default {
       this.compoundAmount = BigNumber(value).toString();
       this.getQuote();
     }, 500),
+    setUp() {
+      this.stakeHandler = new stakeHandler(
+        this.web3,
+        this.isEthNetwork,
+        this.address
+      );
+    },
     setMax() {
       const max = BigNumber(this.rethBalance);
       this.setAmount(max.toString());
@@ -467,69 +485,89 @@ export default {
       }
     }, 500),
     async getTrade() {
-      const trade = await this.swapper.getTrade({
-        fromAddress: this.address,
-        toAddress: this.address,
-        provider: this.availableQuotes[0].provider,
-        fromT: this.hasReth,
-        toT: this.hasSeth,
-        quote: this.availableQuotes[0],
-        fromAmount: new BigNumber(this.rethBalance).times(
-          new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
-        )
-      });
-      if (trade instanceof Promise) {
-        trade.then(tradeResponse => {
-          this.setupTrade(tradeResponse);
+      try {
+        const trade = await this.swapper.getTrade({
+          fromAddress: this.address,
+          toAddress: this.address,
+          provider: this.availableQuotes[0].provider,
+          fromT: this.hasReth,
+          toT: this.hasSeth,
+          quote: this.availableQuotes[0],
+          fromAmount: new BigNumber(this.rethBalance).times(
+            new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+          )
         });
-      } else {
-        this.setupTrade(trade);
+        if (trade instanceof Promise) {
+          trade
+            .then(tradeResponse => {
+              this.setupTrade(tradeResponse);
+            })
+            .catch(err => {
+              this.loading = false;
+              Toast(err, {}, ERROR);
+            });
+        } else {
+          this.setupTrade(trade);
+        }
+      } catch (err) {
+        this.loading = false;
+        Toast(err, {}, ERROR);
       }
     },
     async showConfirm() {
-      this.loading = true;
-      await this.getTrade();
-      this.confirmInfo = {
-        from: this.hasReth.contract,
-        to: this.hasSeth.contract,
-        fromType: this.hasReth.symbol,
-        toType: this.hasSeth.symbol,
-        fromImg: this.hasReth.img,
-        toImg: this.hasSeth.img,
-        fromVal: this.rethBalance,
-        toVal: this.rethBalance,
-        toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
-          .times(this.rethBalance)
-          .toFixed(),
-        fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
-          .times(this.rethBalance)
-          .toFixed(),
-        validUntil: new Date().getTime() + 10 * 60 * 1000,
-        selectedProvider: this.selectedProvider,
-        txFee: this.txFee,
-        gasPriceType: this.gasPriceType
-      };
-      this.executeTrade();
+      try {
+        this.loading = true;
+        await this.getTrade();
+        this.confirmInfo = {
+          from: this.hasReth.contract,
+          to: this.hasSeth.contract,
+          fromType: this.hasReth.symbol,
+          toType: this.hasSeth.symbol,
+          fromImg: this.hasReth.img,
+          toImg: this.hasSeth.img,
+          fromVal: this.rethBalance,
+          toVal: this.rethBalance,
+          toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          validUntil: new Date().getTime() + 10 * 60 * 1000,
+          selectedProvider: this.selectedProvider,
+          txFee: this.txFee,
+          gasPriceType: this.gasPriceType
+        };
+        this.executeTrade();
+      } catch (err) {
+        this.loading = false;
+        Toast(err.message, {}, ERROR);
+      }
     },
     executeTrade() {
       const currentTradeCopy = clone(this.currentTrade);
-      this.loading = false;
-      this.swapper
-        .executeTrade(this.currentTrade, this.confirmInfo)
-        .then(res => {
-          this.swapNotificationFormatter(res, currentTradeCopy);
-        })
-        .then(() => {
-          this.setAmount(0);
-          this.compoundAmount = '0';
-          this.locGasPrice = '0';
-          this.gasLimit = '21000';
-          this.agreeToTerms = false;
-        })
-        .catch(err => {
-          this.loading = false;
-          Toast(err.message, {}, ERROR);
-        });
+      try {
+        this.loading = false;
+        this.swapper
+          .executeTrade(this.currentTrade, this.confirmInfo)
+          .then(res => {
+            this.swapNotificationFormatter(res, currentTradeCopy);
+          })
+          .then(() => {
+            this.setAmount(0);
+            this.compoundAmount = '0';
+            this.locGasPrice = '0';
+            this.gasLimit = '21000';
+            this.agreeToTerms = false;
+          })
+          .catch(err => {
+            this.loading = false;
+            Toast(err.message, {}, ERROR);
+          });
+      } catch (err) {
+        this.loading = false;
+        Toast(err.message, {}, ERROR);
+      }
     },
     swapNotificationFormatter(obj, currentTrade) {
       obj.hashes.forEach((hash, idx) => {
@@ -575,6 +613,15 @@ export default {
         })
         .catch(err => {
           Toast(err, {}, ERROR);
+        });
+    },
+    async fetchBalance() {
+      const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          this.rethBalance = formatFloatingPointValue(fromWei(res)).value;
         });
     }
   }

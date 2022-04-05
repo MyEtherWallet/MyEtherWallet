@@ -17,6 +17,15 @@ const SETH2_Token = {
   value: 'sETH2'
 };
 
+const RETH2_Token = {
+  contract: RETH2_MAINNET_CONTRACT,
+  decimals: 18,
+  img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/rETH2-0x20BC832ca081b91433ff6c17f85701B6e92486c5.png',
+  name: 'rETH2',
+  symbol: 'rETH2',
+  value: 'rETH2'
+};
+
 export {
   IMAGE_PROXY,
   SETH2_MAINNET_CONTRACT,
@@ -27,5 +36,6 @@ export {
   RETH2_GOERLI_CONTRACT,
   POOL_GOERLI_CONTRACT,
   MEW_GOERLI_CONTRACT,
-  SETH2_Token
+  SETH2_Token,
+  RETH2_Token
 };
