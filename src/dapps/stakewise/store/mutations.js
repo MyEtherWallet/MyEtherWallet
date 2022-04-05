@@ -1,4 +1,3 @@
-import { clone } from 'lodash';
 import localStore from 'store';
 import Configs from './configs';
 
@@ -22,27 +21,21 @@ const SET_VALIDATOR_APR = function (state, val) {
 };
 
 const ADD_TO_PENDING_TXS = function (state, val) {
-  const stakewiseTxs = clone(state.stakewiseTxs);
-  stakewiseTxs.ETH.push(val);
-  state.stakewiseTxs = stakewiseTxs;
+  state.stakewiseTxs.ETH.push(val);
 };
 
 const ADD_TO_PENDING_TXS_GOERLI = function (state, val) {
-  const stakewiseTxs = clone(state.stakewiseTxs);
-  stakewiseTxs.GOERLI.push(val);
-  state.stakewiseTxs = stakewiseTxs;
+  state.stakewiseTxs.GOERLI.push(val);
 };
 
 const REMOVE_TO_PENDING_TXS = function (state, val) {
-  const stakewiseTxs = clone(state.stakewiseTxs);
-  state.stakewiseTxs.ETH = stakewiseTxs.ETH.filter(item => {
+  state.stakewiseTxs.ETH = state.stakewiseTxs.ETH.filter(item => {
     return item.hash !== val;
   });
 };
 
 const REMOVE_TO_PENDING_TXS_GOERLI = function (state, val) {
-  const stakewiseTxs = clone(state.stakewiseTxs);
-  state.stakewiseTxs.GOERLI = stakewiseTxs.GOERLI.filter(item => {
+  state.stakewiseTxs.GOERLI = state.stakewiseTxs.GOERLI.filter(item => {
     return item.hash !== val;
   });
 };

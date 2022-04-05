@@ -200,9 +200,10 @@ export default {
   },
   watch: {
     stakewiseTxs: {
-      handler: function (newVal) {
-        if (newVal.length > 0) {
-          newVal.forEach(item => {
+      handler(newVal) {
+        const txList = this.isEthNetwork ? newVal.ETH : newVal.GOERLI;
+        if (txList.length > 0) {
+          txList.forEach(item => {
             this.fetcher(item.hash);
           });
         }
