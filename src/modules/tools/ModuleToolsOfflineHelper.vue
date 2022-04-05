@@ -2,19 +2,33 @@
   <div>
     <v-dialog v-model="dialog" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
-        <h3 class="mb-5 text-center">Transction status</h3>
-        <div class="greyLight pa-5 mb-2">
+        <h3 class="mb-5 text-center">Transaction status</h3>
+        <div v-if="txHash" class="greyLight pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
-          <mew-transform-hash
-            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
-          />
+          <mew-transform-hash :hash="txHash" />
         </div>
-        <div class="greyLight pa-5">
+        <div v-if="txReceipt" class="greyLight pa-5">
           <div class="font-weight-bold">Transaction receipt</div>
-          <mew-transform-hash
-            hash="0xf267c8145dce9092463c6582c8c6f00677e2ab626c8cfc64ea997725ab14a16c"
+          <mew-transform-hash :hash="txReceipt" />
+        </div>
+        <div class="pa-5">
+          <v-progress-linear
+            v-if="txLoading"
+            indeterminate
+            rounded
+            height="6"
           />
         </div>
+        <div class="pa-5">
+          <mew-alert
+            v-if="dialogAlert"
+            hide-close-icon
+            theme="error"
+            title="Error"
+            :description="dialogAlert"
+          />
+        </div>
+
         <div class="text-center">
           <mew-button
             class="mt-6"
@@ -48,32 +62,7 @@
 
     <div v-if="currentStep === 1">
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
-        <v-radio-group
-          v-model="networkSelected"
-          class="pa-7 radio-group"
-          @change="setNet"
-        >
-          <div v-for="(item, i) in networks" :key="i">
-            <div class="text-uppercase font-weight-bold subtitle-1 mb-1">
-              {{ item.label }}
-            </div>
-
-            <v-row no-gutters>
-              <v-col
-                v-for="button in item.buttons"
-                :key="button.value"
-                cols="12"
-                md="6"
-                class="mt-2"
-              >
-                <v-radio :label="button.name" :value="button.value"></v-radio>
-              </v-col>
-            </v-row>
-
-            <div>{{ item.id }}</div>
-            <v-divider v-if="networks.length != i + 1" class="my-5" />
-          </div>
-        </v-radio-group>
+        <network-switch />
       </v-sheet>
       <mew-button
         btn-size="xlarge"
@@ -87,15 +76,15 @@
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
         <mew-address-select
           label="From Address"
-          :error="fromAddressError"
+          :address-value="fromAddress"
           :error-messages="fromAddressMessage"
           @input="setAddress"
         />
         <mew-expand-panel
-          v-if="detailsAvailable"
+          v-if="detailLength"
           is-toggle
           has-dividers
-          :panel-items="exPannelStep2"
+          :panel-items="exPanelStep2"
           class="mt-4 mb-10 swap-expend"
         >
           <template #panelBody1>
@@ -122,12 +111,12 @@
             class="mx-1 mb-3"
             title="Next"
             btn-size="xlarge"
-            :disabled="!detailsAvailable"
+            :disabled="!detailLength"
             @click.native="currentStep = 3"
           />
         </div>
         <mew-button
-          v-if="detailsAvailable"
+          v-if="detailLength"
           class="mt-2 display--block mx-auto"
           title="Export JSON file"
           btn-size="small"
@@ -146,32 +135,41 @@
           :value="signature"
           :error="signatureError"
           :error-messages="signatureMessage"
+          @input="checkTx"
         ></v-textarea>
+        <mew-alert
+          v-if="!addressMatch"
+          hide-close-icon
+          theme="warning"
+          title="Warning"
+          :description="alert"
+        />
         <mew-expand-panel
+          v-if="!signatureError && signature !== ''"
           is-toggle
           has-dividers
-          :panel-items="exPannelStep3"
+          :panel-items="exPanelStep3"
           class="mt-4 mb-10 swap-expend"
         >
           <template #panelBody1>
-            <div
-              v-for="(d, key) in details"
-              :key="key"
-              class="d-flex align-center justify-space-between mb-3 px-5"
-            >
-              <div v-if="d.title" class="pr-3">{{ d.title }}</div>
-              <div v-if="d.value" class="text-right">{{ d.value }}</div>
-              <mew-transform-hash v-if="d.address" :hash="d.address" />
+            <div class="d-flex align-center justify-space-between mb-3 px-5">
+              <v-textarea readonly auto-grow :value="rawTransaction" />
             </div>
           </template>
           <template #panelBody2>
             <div
-              v-for="(d, key) in details"
+              v-for="(d, key) in transactionDetails"
               :key="key"
               class="d-flex align-center justify-space-between mb-3 pa-5"
             >
               <div v-if="d.title" class="pr-3">{{ d.title }}</div>
-              <div v-if="d.value" class="text-right">{{ d.value }}</div>
+              <div
+                v-if="d.value"
+                class="text-right"
+                style="overflow-x: hidden; text-overflow: ellipsis"
+              >
+                {{ d.value }}
+              </div>
               <mew-transform-hash v-if="d.address" :hash="d.address" />
             </div>
           </template>
@@ -189,7 +187,8 @@
             title="Confirm & Send"
             btn-size="xlarge"
             class="mx-1 mb-3"
-            @click.native="dialog = true"
+            :disabled="!validTx"
+            @click.native="sendTx"
           />
         </div>
         <mew-button
@@ -200,6 +199,20 @@
           type="file"
           @change="uploadFile"
         />
+        <div class="d-flex justify-center">
+          <input
+            ref="uploadSig"
+            type="file"
+            style="display: none"
+            accept="json"
+            @change="uploadFile"
+          />
+          <mew-button
+            btn-style="transparent"
+            title="upload"
+            @click.native="$refs.uploadSig.click()"
+          />
+        </div>
       </v-sheet>
     </div>
   </div>
@@ -207,77 +220,48 @@
 
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
-import { mapActions, mapState } from 'vuex';
-import { isAddress, fromWei } from 'web3-utils';
-import networks from '@/utils/networks';
-//import { BigNumber } from 'bignumber.js';
+import { mapGetters, mapState } from 'vuex';
+import { isAddress, fromWei, isHex } from 'web3-utils';
+import { Transaction } from 'ethereumjs-tx';
+import commonGenerator from '@/core/helpers/commonGenerator';
+import sanitizeHex from '@/core/helpers/sanitizeHex';
+import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
+import { BigNumber } from 'bignumber.js';
+import { toChecksumAddress } from 'ethereumjs-util';
 export default {
   name: 'ModuleToolsOfflineHelper',
-  components: { AppBlockTitle },
+  components: { AppBlockTitle, NetworkSwitch },
   data: () => ({
     dialog: false,
     currentStep: 1,
     fromAddress: '',
-    fromAddressError: Error,
     fromAddressMessage: [],
     details: [],
     exportFileName: '',
     signature: '',
     signatureError: false,
     signatureMessage: [],
-    rawTransaction: [],
+    rawTransaction: '',
     transactionDetails: [],
+    validTx: false,
     file: {},
     fileLink: '',
-    networkSelected: null,
-    networks: Object.values(networks)
-      .flat()
-      .map(network => {
-        return {
-          label: network.type.name,
-          buttons: [{ name: network.service, value: network }]
-        };
-      }),
-    // [
-    //   ({
-    //     label: 'eth',
-    //     buttons: [
-    //       { name: 'myetherapi.com', value: 'myetherapi' },
-    //       { name: 'infura.io', value: 'infura' },
-    //       { name: 'giveth.io', value: 'giveth' },
-    //       { name: 'therscan.io', value: 'therscan' }
-    //     ]
-    //   },
-    //   {
-    //     label: 'rop',
-    //     buttons: [
-    //       { name: 'myetherapi.com', value: 'myetherapi1' },
-    //       { name: 'infura.io', value: 'infura1' },
-    //       { name: 'giveth.io', value: 'giveth1' },
-    //       { name: 'therscan.io', value: 'therscan1' }
-    //     ]
-    //   },
-    //   {
-    //     label: 'rin',
-    //     buttons: [
-    //       { name: 'myetherapi.com', value: 'myetherapi2' },
-    //       { name: 'infura.io', value: 'infura2' },
-    //       { name: 'giveth.io', value: 'giveth2' },
-    //       { name: 'therscan.io', value: 'therscan2' }
-    //     ]
-    //   })
-    // ],
+    alert: 'Signer does not match selected address!',
+    dialogAlert: '',
+    txHash: '',
+    txReceipt: '',
+    txLoading: false,
     title: {
       title: 'Send offline helper',
       description:
         'This is a recommended way to view your balance. You can only view your balance via this option.'
     },
-    exPannelStep2: [
+    exPanelStep2: [
       {
         name: 'Details'
       }
     ],
-    exPannelStep3: [
+    exPanelStep3: [
       {
         name: 'Raw transaction'
       },
@@ -301,27 +285,43 @@ export default {
     ]
   }),
   computed: {
-    detailsAvailable() {
-      return this.details.length > 1;
+    detailLength() {
+      return this.details.length > 0;
+    },
+    addressMatch() {
+      if (this.validTx) {
+        const { raw } = this.rawData();
+        return (
+          toChecksumAddress(raw.from) === toChecksumAddress(this.fromAddress)
+        );
+      }
+      return true;
     }
   },
   methods: {
     ...mapState('wallet', ['web3']),
-    ...mapActions('global', ['setNetwork']),
-    ...mapActions('wallet', ['setWeb3Instance']),
-    async setAddress(val = '') {
+    ...mapGetters('global', ['network']),
+
+    /*********************************************
+     * checks if address is valid on each change
+     * shows and hides accordingly to address
+     *********************************************/
+    setAddress(val = '') {
       this.fromAddress = val;
       if (isAddress(this.fromAddress)) {
+        if (this.fromAddressMessage.length > 0) this.fromAddressMessage = [];
         this.setDetails();
         return;
       }
       if (this.details.length > 1) this.setDetails([]);
+      this.fromAddressMessage = ['Not a valid Address'];
     },
-    setNet(val) {
-      this.setNetwork(val).then(() => {});
-      this.networkSelected = val;
-      this.setWeb3Instance();
-    },
+
+    /**********************************************************
+     * Gets data from current network and web3 instance
+     * @returns {object} data - used for exporting to json,
+     * details - details to be displayed to the user
+     **********************************************************/
     async data() {
       const { eth } = this.web3();
       const chainID = await eth.getChainId();
@@ -329,7 +329,7 @@ export default {
       const { gasLimit } = await eth.getBlock(blockNumber);
       const gasPrice = await eth.getGasPrice();
       const nonce = await eth.getTransactionCount(this.fromAddress);
-      const netName = this.networkSelected.type.name;
+      const netName = this.network().type.name;
       return {
         data: {
           address: this.fromAddress,
@@ -348,6 +348,11 @@ export default {
         }
       };
     },
+
+    /*************************************************************
+     * Sets details to current data or specified data from param
+     * @param {array} val - optional, expecting array
+     *************************************************************/
     async setDetails(val) {
       if (val) return (this.details = val);
       const { details } = await this.data();
@@ -361,7 +366,6 @@ export default {
           title: 'Nonce',
           value: details.nonce
         },
-        { title: 'Value', value: details.value },
         { title: 'Date', value: Date() },
         {
           title: 'Chain ID',
@@ -374,36 +378,197 @@ export default {
         {
           title: 'Gas Price',
           value: details.gasPrice
-        },
-        { title: 'Fee', value: details.fee }
+        }
       ];
       this.exportFile();
     },
+
+    /************************
+     * exports data to json
+     ************************/
     async exportFile() {
       const { data } = await this.data();
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
       this.fileLink = window.URL.createObjectURL(blob);
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
     },
-    upload: {},
+
+    /*********************************************
+     * checks if the signature is a valid hex
+     * generates data and details
+     * @param {string} val - value of signature
+     *********************************************/
+    checkTx(val = '') {
+      this.signature = val;
+      if (isHex(this.signature)) this.signature = sanitizeHex(this.signature);
+      else {
+        this.signatureError = true;
+        this.signatureMessage = ['Must be a valid transaction'];
+        this.validTx = false;
+        return;
+      }
+      if (this.signatureError) {
+        this.signatureError = false;
+        this.signatureMessage = [];
+      }
+      this.setRawTransaction();
+      this.setRawDetails();
+    },
+
+    /****************************************************
+     * number helper
+     * @param {int,string} val - number to be evaluated
+     ****************************************************/
+    gtr(val) {
+      return new BigNumber(val).gt(0) ? new BigNumber(val).toFixed() : '0';
+    },
+
+    /***********************************************************************************
+     * creates data and details
+     * handles errors
+     * @return {object}
+     * - raw: raw data
+     * - details: detailed data (includes more fields)
+     ***********************************************************************************/
+    rawData() {
+      try {
+        const tx = new Transaction(this.signature, {
+          common: commonGenerator(this.network())
+        });
+        const txValues = tx.toJSON(true);
+        const txChain = tx.getChainId();
+        const txFrom = sanitizeHex(tx.getSenderAddress().toString('hex'));
+
+        this.validTx = tx.verifySignature();
+        const basicDetails = {
+          from: txFrom,
+          nonce: this.gtr(txValues.nonce),
+          gasPrice: fromWei(this.gtr(txValues.gasPrice)),
+          gasLimit: this.gtr(txValues.gasLimit),
+          to: txValues.to,
+          value: fromWei(this.gtr(txValues.value), 'ether'),
+          data: txValues.data
+        };
+        return {
+          raw: {
+            ...basicDetails
+          },
+          details: {
+            ...basicDetails,
+            chainID: txChain
+          }
+        };
+      } catch ({ message }) {
+        const remainder = 'invalid remainder';
+        const rlp = 'invalid rlp: total length is larger than the data';
+        this.signatureError = true;
+        this.validTx = false;
+        switch (message) {
+          case remainder:
+            this.signatureMessage = ['Must be a valid transaction'];
+            break;
+          case rlp:
+            this.signatureMessage = ['Malformed signature'];
+            break;
+          default:
+            this.signatureMessage = ['Must be a valid transaction'];
+            console.log(message);
+        }
+        return {};
+      }
+    },
+    /**********************************************************
+     * sets raw data to specified value or generated raw data
+     * @param {Object[]} val - array of entries
+     * @param {string} val[].title - Name of value
+     * @param {string|number} val[].value - Value
+     **********************************************************/
+    setRawTransaction(val) {
+      if (val) return (this.rawTransaction = val);
+      const { raw } = this.rawData();
+      if (raw) this.rawTransaction = JSON.stringify(raw, null, 3);
+    },
+
+    /**********************************************************
+     * sets details to specified value or generated details
+     * @param {Object[]} val - array of entries
+     * @param {string} val[].title - Name of value
+     * @param {string|number} val[].value - Value
+     **********************************************************/
+    setRawDetails(val) {
+      if (val) return (this.transactionDetails = val);
+      const { details } = this.rawData();
+      if (details)
+        this.transactionDetails = [
+          {
+            title: 'From',
+            value: '',
+            address: details.from
+          },
+          {
+            title: 'To',
+            value: '',
+            address: details.to
+          },
+          {
+            title: 'Value',
+            value: details.value
+          },
+          {
+            title: 'Gas Price',
+            value: details.gasPrice
+          },
+          {
+            title: 'Gas Limit',
+            value: details.gasLimit
+          },
+          {
+            title: 'Data',
+            value: details.data
+          },
+          {
+            title: 'Chain Id',
+            value: details.chainID
+          }
+        ];
+    },
+
+    /***************************************************
+     * processes uploaded file and gets signature from
+     * rawTransaction value
+     * sets processed signature to signature
+     ***************************************************/
     uploadFile({ target: { files } }) {
       const reader = new FileReader();
       const self = this;
       reader.onloadend = function ({ target: { result } }) {
         self.file = JSON.parse(result);
-        console.log(this.file);
-        self.getTransactionDetails(self.file.rawTransaction);
+        if (self.file.rawTransaction)
+          return (self.signature = self.file.rawTransaction);
+        self.signatureError = true;
+        self.signatureMessage = ['Bad signature upload'];
       };
-      reader.readAsBinaryString(files[0]);
+      if (files[0]) reader.readAsBinaryString(files[0]);
+    },
+    sendTx() {
+      if (this.signature && !this.signatureError) {
+        const { eth } = this.web3();
+        this.dialog = true;
+        this.txLoading = true;
+        eth
+          .sendSignedTransaction(this.signature)
+          .once('transactionHash', hash => {
+            this.txHash = hash;
+          })
+          .then(receipt => {
+            this.txReceipt = receipt;
+          })
+          .catch(({ message }) => {
+            this.dialogAlert = message;
+          });
+        this.txLoading = false;
+      }
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.radio-group {
-  border: 1px solid var(--v-greyMedium-base);
-  border-radius: 10px;
-  box-shadow: 0 10px 15px var(--v-greyLight-base) !important;
-}
-</style>
