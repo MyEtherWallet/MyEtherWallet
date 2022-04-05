@@ -59,15 +59,6 @@ export default {
       address: ''
     };
   },
-  // watch: {
-  //   onStep(newStep) {
-  //     if (newStep == 2) {
-  //       this.$router.push({ name: ROUTES_HOME.TOOLS_KEYSTORE_2.NAME });
-  //     } else {
-  //       this.$router.push({ name: ROUTES_HOME.TOOLS_KEYSTORE_1.NAME });
-  //     }
-  //   }
-  // },
   mounted() {
     if (this.$route.name == ROUTES_HOME.TOOLS_KEYSTORE.NAME) {
       this.$router.push({ name: ROUTES_HOME.TOOLS_KEYSTORE_1.NAME });
