@@ -472,7 +472,6 @@ export default {
             break;
           default:
             this.signatureMessage = ['Must be a valid transaction'];
-            console.log(message);
         }
         return {};
       }
