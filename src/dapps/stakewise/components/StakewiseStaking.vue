@@ -213,6 +213,9 @@ export default {
     address() {
       this.fetchBalance();
     },
+    isEthNetwork() {
+      this.fetchBalance();
+    },
     $route: {
       handler: function (from) {
         if (from.query.module === 'stake') {

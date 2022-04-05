@@ -130,6 +130,9 @@ export default {
     },
     address() {
       this.fetchBalance();
+    },
+    isEthNetwork() {
+      this.fetchBalance();
     }
   },
   mounted() {
