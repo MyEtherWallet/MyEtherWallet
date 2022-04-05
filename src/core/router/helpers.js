@@ -78,7 +78,7 @@ const accessRouteGuard = (to, from, next) => {
       if (validTypes.includes(to.query.type)) {
         next();
       } else {
-        next('*');
+        next('wallet/access/hardware?type=overview'); //redirects to overlay pop up on invalid url type "/wallet/access/hardware"
       }
     }
     if (to.params.overlay === ACCESS_VALID_OVERLAYS.MOBILE) {

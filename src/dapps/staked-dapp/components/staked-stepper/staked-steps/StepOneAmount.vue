@@ -196,7 +196,7 @@ export default {
             price: new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: this.preferredCurrency,
-              currencyDisplay: 'narrowSymbol'
+              currencyDisplay: 'symbol'
             }).format(new BigNumber(i).times(this.fiatValue).toString())
           });
         }

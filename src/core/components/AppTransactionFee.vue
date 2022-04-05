@@ -141,7 +141,7 @@
             :class="[hasError ? 'redPrimary--text' : '']"
             class="ml-2"
           >
-            {{ message }}
+            {{ error }}
             <a v-if="notEnoughEth && network.type.canBuy" @click="openMoonpay">
               Buy more {{ network.type.name }}
             </a>
@@ -197,10 +197,6 @@ export default {
     totalCost: {
       type: String,
       default: '0'
-    },
-    message: {
-      type: String,
-      default: ''
     },
     notEnoughEth: {
       type: Boolean,

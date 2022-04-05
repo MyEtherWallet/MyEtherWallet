@@ -1,14 +1,13 @@
 import { OneInch, ZEROX, ParaSwap, Changelly } from './providers';
-import { isAddress } from 'web3-utils';
 import BigNumber from 'bignumber.js';
-import Configs from './configs.js';
+import Configs from './configs/providersConfigs';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals.js';
 import { isObject } from 'lodash';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
-      if (bl.name.toLowerCase() === t.name.toLowerCase()) return;
-      if (bl.contract.toLowerCase() === t.contract.toLowerCase()) return;
+      if (bl?.name.toLowerCase() === t?.name.toLowerCase()) return;
+      if (bl?.contract.toLowerCase() === t?.contract.toLowerCase()) return;
     }
     baseList.push(t);
   });
@@ -29,8 +28,7 @@ class Swap {
     return this.providers[0].getSupportedTokens().then(baseList => {
       allTokens = allTokens.concat(baseList);
       return Promise.all(
-        this.providers.map((p, idx) => {
-          if (idx < 2) return Promise.resolve();
+        this.providers.map(p => {
           if (!p.isSupportedNetwork(this.chain)) return Promise.resolve();
           return p.getSupportedTokens().then(tokens => {
             if (tokens && tokens.length > 0) {
@@ -44,11 +42,12 @@ class Swap {
           .sort((a, b) => {
             if (a.name > b.name) return 1;
             return -1;
-          })
-          // remove once merging to native PR
-          .filter(item => item.isEth);
+          });
         return {
-          fromTokens: sorted.filter(t => isAddress(t.contract)),
+          fromTokens: sorted.filter(t => {
+            if (!t || !t.contract) return false;
+            return t;
+          }),
           toTokens: sorted
         };
       });
