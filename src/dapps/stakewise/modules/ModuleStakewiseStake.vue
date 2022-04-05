@@ -358,14 +358,16 @@ export default {
         const val = value ? value : 0;
         this.stakeHandler._setAmount(BigNumber(val).toString());
       }
+    },
+    address() {
+      this.setUp();
+    },
+    isEthNetwork() {
+      this.setUp();
     }
   },
   mounted() {
-    this.stakeHandler = new stakeHandler(
-      this.web3,
-      this.isEthNetwork,
-      this.address
-    );
+    this.setUp();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
@@ -374,6 +376,13 @@ export default {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toString();
     }, 500),
+    setUp() {
+      this.stakeHandler = new stakeHandler(
+        this.web3,
+        this.isEthNetwork,
+        this.address
+      );
+    },
     setGasLimit() {
       this.estimateGasError = false;
       this.stakeHandler

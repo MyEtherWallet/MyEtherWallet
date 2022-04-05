@@ -21,9 +21,7 @@
         <div class="font-weight-bold mew-heading-3 mb-1">
           {{ balance }}
         </div>
-        <div v-if="ethvmSupport" class="textLight--text">
-          ${{ sethToken.usdBalancef }}
-        </div>
+        <div v-if="ethvmSupport" class="textLight--text">${{ balanceUsd }}</div>
       </div>
     </div>
 
@@ -134,7 +132,10 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { fromWei } from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '../configsRoutes';
-import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleSideStaking',
   components: {},
@@ -147,6 +148,7 @@ export default {
   data() {
     return {
       balance: 0,
+      balanceUsd: 0,
       intervals: {}
     };
   },
@@ -155,6 +157,7 @@ export default {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['stakewiseTxs']),
+    ...mapGetters('external', ['fiatValue']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -213,6 +216,9 @@ export default {
     address() {
       this.fetchBalance();
     },
+    isEthNetwork() {
+      this.fetchBalance();
+    },
     $route: {
       handler: function (from) {
         if (from.query.module === 'stake') {
@@ -264,6 +270,9 @@ export default {
         .call()
         .then(res => {
           this.balance = formatFloatingPointValue(fromWei(res)).value;
+          this.balanceUsd = formatFiatValue(
+            BigNumber(fromWei(res)).times(this.fiatValue).toString()
+          ).value;
         });
     },
     checkHash(hash) {
