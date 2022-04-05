@@ -6,6 +6,7 @@ const AUDIT_EXCEPTIONS = [
   'css-what',
   'normalize-url',
   'diff',
+  'shelljs',
   // no patches available
   'ansi-html',
   'minimist'
