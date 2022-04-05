@@ -191,14 +191,6 @@
             @click.native="sendTx"
           />
         </div>
-        <mew-button
-          class="mt-2 display--block mx-auto"
-          title="Upload JSON file"
-          btn-size="small"
-          btn-style="transparent"
-          type="file"
-          @change="uploadFile"
-        />
         <div class="d-flex justify-center">
           <input
             ref="uploadSig"
@@ -208,8 +200,10 @@
             @change="uploadFile"
           />
           <mew-button
+            class="mt-2 display--block mx-auto"
+            title="Upload JSON file"
+            btn-size="small"
             btn-style="transparent"
-            title="upload"
             @click.native="$refs.uploadSig.click()"
           />
         </div>
@@ -543,7 +537,7 @@ export default {
       reader.onloadend = function ({ target: { result } }) {
         self.file = JSON.parse(result);
         if (self.file.rawTransaction)
-          return (self.signature = self.file.rawTransaction);
+          return self.checkTx(self.file.rawTransaction);
         self.signatureError = true;
         self.signatureMessage = ['Bad signature upload'];
       };
