@@ -19,7 +19,7 @@
       </div>
       <div class="text-right">
         <div class="font-weight-bold mew-heading-3 mb-1">{{ rethBalance }}</div>
-        <div class="textLight--text">${{ rethUsdBalance }}</div>
+        <div class="textLight--text">${{ rethBalanceFiat }}</div>
       </div>
     </div>
 
@@ -65,8 +65,15 @@ import {
   RETH2_GOERLI_CONTRACT,
   SETH2_GOERLI_CONTRACT
 } from '@/dapps/stakewise/handlers/configs.js';
+import rEthAbi from '@/dapps/stakewise/handlers/abi/rewardEthToken';
+import {
+  formatFloatingPointValue,
+  formatFiatValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
+import { fromWei } from 'web3-utils';
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'ModuleSideRewards',
   components: {},
@@ -76,9 +83,17 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      rethBalance: '0',
+      rethBalanceFiat: '0'
+    };
+  },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapGetters('external', ['fiatValue']),
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
     },
@@ -98,12 +113,6 @@ export default {
         item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
       );
       return token;
-    },
-    rethBalance() {
-      return this.hasReth ? this.hasReth.balancef : '0';
-    },
-    rethUsdBalance() {
-      return this.hasReth ? this.hasReth.usdBalancef : '0';
     }
   },
   watch: {
@@ -118,7 +127,13 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    address() {
+      this.fetchBalance();
     }
+  },
+  mounted() {
+    this.fetchBalance();
   },
   methods: {
     routeToSwap() {
@@ -148,6 +163,18 @@ export default {
           this.$emit('set-max');
         });
       });
+    },
+    async fetchBalance() {
+      const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          this.rethBalance = formatFloatingPointValue(fromWei(res)).value;
+          this.rethBalanceFiat = formatFiatValue(
+            BigNumber(fromWei(res)).times(this.fiatValue).toString()
+          ).value;
+        });
     }
   }
 };
