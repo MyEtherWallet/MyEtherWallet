@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import rewardsAbi from './abi/rewardEthToken';
 import stakedAbi from './abi/stakedEthToken';
 import poolAbi from './abi/pool';
-import mewStakedContract from './abi/mewStakedContract';
 import {
   POOL_API,
   SETH2_MAINNET_CONTRACT,
@@ -10,8 +9,7 @@ import {
   RETH2_MAINNET_CONTRACT,
   RETH2_GOERLI_CONTRACT,
   POOL_GOERLI_CONTRACT,
-  POOL_MAINNET_CONTRACT,
-  MEW_GOERLI_CONTRACT
+  POOL_MAINNET_CONTRACT
 } from './configs';
 
 export default class StakewiseHandler {
@@ -22,15 +20,10 @@ export default class StakewiseHandler {
     const reth2Contract = isEth
       ? RETH2_MAINNET_CONTRACT
       : RETH2_GOERLI_CONTRACT;
-    const mewProxyContract = isEth ? MEW_GOERLI_CONTRACT : MEW_GOERLI_CONTRACT;
     const poolContract = isEth ? POOL_MAINNET_CONTRACT : POOL_GOERLI_CONTRACT;
     this.rewardsContract = new web3.eth.Contract(rewardsAbi, reth2Contract);
     this.stakedContract = new web3.eth.Contract(stakedAbi, seth2Contract);
     this.poolContract = new web3.eth.Contract(poolAbi, poolContract);
-    this.mewProxyContract = new web3.eth.Contract(
-      mewStakedContract,
-      mewProxyContract
-    );
     this.poolAddress = poolContract;
   }
 

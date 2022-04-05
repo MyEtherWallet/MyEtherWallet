@@ -1,15 +1,14 @@
 <template>
   <app-modal
     width="420"
-    :show="showPromo"
-    title=""
+    :show="showInitialPromo"
     has-body-content
     :has-buttons="false"
     :has-close-button="false"
     :close="setHidePopUp"
   >
     <template #dialogBody>
-      <div v-if="!isPromoOver">
+      <div>
         <div class="d-flex">
           <img
             class="eth--icon mr-4"
@@ -43,7 +42,7 @@
           >
             ETH in pool
           </div>
-          <div>{{ formattedPoolValue }} {{ networkName }}</div>
+          <div>{{ formattedPoolValue }} ETH</div>
         </div>
       </div>
       <mew-button
@@ -64,12 +63,8 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { EventBus } from '@/core/plugins/eventBus';
 import BigNumber from 'bignumber.js';
 import handler from '@/dapps/stakewise/handlers/stakewiseHandler';
-import {
-  STAKEWISE_EVENT,
-  STAKEWISE_OFFER_END
-} from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-import moment from 'moment';
 
 export default {
   name: 'TheStakewisePopupPromo',
@@ -78,41 +73,24 @@ export default {
   computed: {
     ...mapState('global', ['showWalletPromo', 'promoOver']),
     ...mapState('ensManagerStore', ['showHasClaimable']),
-    ...mapState('stakewise', ['validatorApr']),
+    ...mapState('stakewise', ['validatorApr', 'showInitialPromo']),
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['network', 'isEthNetwork']),
     ...mapGetters('stakewise', ['getPoolSupply']),
-    isPromoOver() {
-      return moment(moment()).isAfter(STAKEWISE_OFFER_END);
-    },
-    showPromo() {
-      if (this.showWalletPromo) {
-        return this.showWalletPromo;
-      }
-
-      return !this.promoOver;
-    },
-    networkName() {
-      return this.network.type.currencyName;
-    },
     formattedPoolValue() {
       return formatFloatingPointValue(this.getPoolSupply).value;
     }
   },
   mounted() {
-    if (this.showPromo && this.showHasClaimable) {
-      this.setShowHasClaimable(false);
-    }
     this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
     this.collectiveFetch();
   },
   methods: {
-    ...mapActions('global', ['neverShowPromo', 'setPromoOver']),
-    ...mapActions('ensManagerStore', ['setShowHasClaimable']),
     ...mapActions('stakewise', [
       'setPoolSupply',
       'setStakingFee',
-      'setValidatorApr'
+      'setValidatorApr',
+      'closeStakewisePromo'
     ]),
     collectiveFetch() {
       this.stakewiseHandler.getEthPool().then(res => {
@@ -128,21 +106,7 @@ export default {
       });
     },
     setHidePopUp() {
-      if (this.showWalletPromo) {
-        this.neverShowPromo().then(() => {
-          this.hideClaimsForever();
-        });
-      }
-      if (!this.promoOver) {
-        this.setPromoOver().then(() => {
-          this.hideClaimsForever();
-        });
-      }
-    },
-    hideClaimsForever() {
-      if (!this.showHasClaimable) {
-        this.setShowHasClaimable(true);
-      }
+      this.closeStakewisePromo();
     },
     /**
      * Hides promo popup forever and navigates to the promo link.
@@ -150,7 +114,7 @@ export default {
      */
     goToPromo() {
       this.setHidePopUp();
-      this.trackDapp('stakewisePromo');
+      this.trackDapp('stakewiseFromPromo');
       EventBus.$emit(STAKEWISE_EVENT);
     }
   }
