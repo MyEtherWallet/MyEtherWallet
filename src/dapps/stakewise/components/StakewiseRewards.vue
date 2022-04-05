@@ -19,14 +19,16 @@
       </div>
       <div class="text-right">
         <div class="font-weight-bold mew-heading-3 mb-1">{{ rethBalance }}</div>
-        <div class="textLight--text">${{ rethBalanceFiat }}</div>
+        <div v-if="ethvmSupport" class="textLight--text">
+          ${{ rethBalanceFiat }}
+        </div>
       </div>
     </div>
 
     <!-- ======================================================================================= -->
     <!-- not earned any rewards yet user message -->
     <!-- ======================================================================================= -->
-    <div v-if="hasSeth && !hasReth" class="mt-4">
+    <div v-if="hasSeth && !rethBalance" class="mt-4">
       You have not earned any rewards yet. Please wait 24 hours after staking to
       start earning rewards.
     </div>
@@ -35,7 +37,7 @@
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
     <div
-      v-if="hasReth"
+      v-if="rethBalance"
       class="d-flex align-center justify-space-between flex-wrap-reverse mt-4"
     >
       <mew-button
@@ -91,9 +93,12 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapGetters('global', ['isEthNetwork']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('external', ['fiatValue']),
+    ethvmSupport() {
+      return this.network.type.isEthVMSupported.supported;
+    },
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
     },
@@ -104,13 +109,6 @@ export default {
       const token = _.find(
         this.tokensList,
         item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-      );
-      return token;
-    },
-    hasReth() {
-      const token = _.find(
-        this.tokensList,
-        item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
       );
       return token;
     }
