@@ -45,9 +45,9 @@
       <div
         v-for="tx in stakewiseTxs.ETH"
         :key="tx.hash"
-        class="stake--module--button--layout d-flex justify-space-between mt-4"
+        class="d-flex justify-space-between flex-wrap mt-4"
       >
-        <div>
+        <div class="py-1">
           <v-progress-circular
             indeterminate
             color="greenPrimary"
@@ -58,7 +58,7 @@
           {{ tx.amount }} {{ currencyName }} Pending
         </div>
         <div
-          class="greenPrimary--text font-weight-medium d-flex align-center cursor--pointer"
+          class="greenPrimary--text font-weight-medium d-flex align-center cursor--pointer py-1"
           @click="checkHash(tx.hash)"
         >
           View on {{ ethvmSupport ? 'EthVM' : 'EtherScan' }}
@@ -101,21 +101,21 @@
     <!-- ======================================================================================= -->
     <div
       v-if="hasStaked"
-      class="d-flex align-center justify-space-between mt-4 stake--module--button--layout"
+      class="d-flex align-center justify-space-between mt-4 flex-wrap-reverse"
     >
       <mew-button
         v-if="isEthNetwork"
         :title="`Redeem to ${currencyName}`"
         btn-style="transparent"
         btn-size="small"
-        class="mew-body"
+        class="py-1"
         @click.native="routeToSwap"
       />
       <mew-button
         :title="`Stake more ${currencyName}`"
         :btn-style="compoundRewards ? 'background' : 'transparent'"
         btn-size="small"
-        class="mew-body"
+        class="py-1"
         @click.native="scrollToInput"
       />
     </div>
@@ -318,15 +318,6 @@ export default {
 
   img {
     height: 28px;
-  }
-}
-
-.stake--module--button--layout {
-  @media only screen and (max-width: 1078px) and (min-width: 960px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
   }
 }
 </style>

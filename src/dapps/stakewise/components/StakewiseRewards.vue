@@ -36,7 +36,7 @@
     <!-- ======================================================================================= -->
     <div
       v-if="hasReth"
-      class="reward--module--button--layout d-flex align-center justify-space-between mt-4"
+      class="d-flex align-center justify-space-between flex-wrap-reverse mt-4"
     >
       <mew-button
         title="Redeem to ETH"
@@ -169,15 +169,6 @@ export default {
 
   img {
     height: 28px;
-  }
-}
-
-.reward--module--button--layout {
-  @media only screen and (max-width: 1078px) and (min-width: 960px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
   }
 }
 </style>
