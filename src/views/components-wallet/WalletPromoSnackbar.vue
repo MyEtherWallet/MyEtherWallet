@@ -47,7 +47,7 @@
         >
           ETH in pool
         </div>
-        <div>{{ formattedPoolSupply }} ETH</div>
+        <div class="textDark--text">{{ formattedPoolSupply }} ETH</div>
       </div>
     </div>
     <div class="d-flex justify-space-between py-2">
