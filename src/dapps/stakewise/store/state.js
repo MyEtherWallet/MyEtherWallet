@@ -6,6 +6,10 @@ const stakewise = {
   validatorApr: '0',
   poolSupply: '0',
   stakingFee: '0',
+  showInitialPromo: true,
+  closedInitialPromo: '',
+  showForSeven: true,
+  showForFourteen: true,
   stateVersion: Configs.VERSION.stakewise
 };
 

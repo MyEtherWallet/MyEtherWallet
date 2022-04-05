@@ -5,9 +5,9 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <the-stakewise-popup-promo />
+        <wallet-promo-pop-up />
         <router-view />
-        <claim-tokens-snackbar />
+        <wallet-promo-snackbar />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -20,7 +20,7 @@ import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
-import TheStakewisePopupPromo from './components-wallet/TheStakewisePopupPromo';
+import WalletPromoPopUp from './components-wallet/WalletPromoPopUp';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -29,15 +29,15 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import ClaimTokensSnackbar from '@/dapps/ens-manager-dapp/components/claim/ClaimTokensSnackbar';
+import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar.vue';
 export default {
   components: {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
-    TheStakewisePopupPromo,
+    WalletPromoPopUp,
     ModuleConfirmation,
-    ClaimTokensSnackbar
+    WalletPromoSnackbar
   },
   mixins: [handlerWallet],
   computed: {

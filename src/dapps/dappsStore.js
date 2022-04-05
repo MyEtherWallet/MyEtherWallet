@@ -12,7 +12,6 @@ const dappStore = {
 
 const dappStoreBeforeCreate = _store => {
   _store.commit('ethBlocksTxs/INIT_STORE');
-  _store.commit('ensManagerStore/INIT_STORE');
   _store.commit('stakewise/INIT_STORE');
 };
 
