@@ -1,6 +1,7 @@
 import StakewiseHandler from './stakewiseHandler';
 import { toWei } from 'web3-utils';
 import hasValidDecimals from '@/core/helpers/hasValidDecimals';
+import { MEW_REFERRAL_ADDRESS } from './configs';
 class StakewiseStakeHandler extends StakewiseHandler {
   constructor(web3, isEth, address) {
     super(web3, isEth); // initializes the contracts needed
@@ -13,9 +14,9 @@ class StakewiseStakeHandler extends StakewiseHandler {
 
   getTransactionFee() {
     return (
-      this.mewProxyContract.methods
+      this.poolContract.methods
         // eslint-disable-next-line
-        .stakeWithPartnerOnBehalf(this.fromAddress, this.poolAddress)
+        .stakeWithReferrerOnBehalf(MEW_REFERRAL_ADDRESS, this.fromAddress)
         .estimateGas({
           from: this.fromAddress,
           value: this.value
@@ -25,9 +26,9 @@ class StakewiseStakeHandler extends StakewiseHandler {
 
   stake() {
     return (
-      this.mewProxyContract.methods
+      this.poolContract.methods
         // eslint-disable-next-line
-        .stakeWithPartnerOnBehalf(this.fromAddress, this.poolAddress)
+        .stakeWithReferrerOnBehalf(MEW_REFERRAL_ADDRESS, this.fromAddress)
         .send({
           from: this.fromAddress,
           value: this.value,

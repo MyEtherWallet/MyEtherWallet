@@ -4,7 +4,6 @@
     <v-main>
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
-        <start-staking-popup />
         <module-confirmation />
         <the-stakewise-popup-promo />
         <router-view />
@@ -21,7 +20,6 @@ import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
-// import TheWalletPromoPopup from './components-wallet/TheWalletPopupPromo';
 import TheStakewisePopupPromo from './components-wallet/TheStakewisePopupPromo';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
