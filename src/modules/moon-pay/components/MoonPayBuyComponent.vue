@@ -243,7 +243,7 @@ export default {
     },
     fiatMultiplier() {
       if (this.hasData) {
-        const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
+        const selectedCurrencyPrice = this.fetchedData[0].conversion_rates.find(
           item => item.fiat_currency === this.selectedFiatName
         );
         return selectedCurrencyPrice
@@ -266,7 +266,7 @@ export default {
     },
     priceOb() {
       return !isEmpty(this.fetchedData)
-        ? this.fetchedData.prices.find(
+        ? this.fetchedData[0].prices.find(
             item => item.fiat_currency === this.selectedFiatName
           )
         : { crypto_currency: 'ETH', fiat_currency: 'USD', price: '3379.08322' };
@@ -304,16 +304,21 @@ export default {
       );
     },
     disableSimplex() {
+      const simplexMax = this.max.simplex;
+      // simplexMax.lt(BigNumber(this.amount));
       return (
+        simplexMax.lt(BigNumber(this.amount)) ||
         this.amountErrorMessages !== '' ||
         (!this.inWallet && !this.actualValidAddress)
       );
     },
     disableMoonPay() {
+      const moonpayMax = this.max.moonpay;
       if (this.inWallet) {
         return this.amountErrorMessages !== '' || this.loading;
       }
       return (
+        moonpayMax.lt(BigNumber(this.amount)) ||
         this.amountErrorMessages !== '' ||
         this.loading ||
         !this.actualValidAddress ||
@@ -324,6 +329,8 @@ export default {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
     },
     amountErrorMessages() {
+      const moonpayMax = this.max.moonpay;
+      const simplexMax = this.max.simplex;
       if (BigNumber(this.amount).isNaN() || BigNumber(this.amount).eq(0)) {
         return 'Amount required';
       }
@@ -335,8 +342,11 @@ export default {
           this.selectedFiatName
         }`;
       }
-      if (this.max.lt(this.amount)) {
-        return `Amount can't be above provider's maximum: ${this.max.toFixed()} ${
+      if (
+        moonpayMax.lt(BigNumber(this.amount)) &&
+        simplexMax.lt(BigNumber(this.amount))
+      ) {
+        return `Amount can't be above provider's maximum: ${moonpayMax.toFixed()} ${
           this.selectedFiatName
         }`;
       }
@@ -432,7 +442,7 @@ export default {
     },
     fiatCurrencyItems() {
       const arrItems = this.hasData
-        ? this.fetchedData.fiat_currencies.filter(item => item !== 'RUB')
+        ? this.fetchedData[0].fiat_currencies.filter(item => item !== 'RUB')
         : ['USD'];
       return arrItems.map(item => {
         return {
@@ -445,16 +455,29 @@ export default {
     },
     max() {
       if (this.hasData) {
-        const foundLimit = this.fetchedData.limits.find(
+        const moonpayMax = this.fetchedData[0].limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
-        return foundLimit ? BigNumber(foundLimit.limit.max) : BigNumber(12000);
+        const simplexMax = this.fetchedData[1].limits.find(
+          item => item.fiat_currency === this.selectedFiatName
+        );
+        return {
+          moonpay: moonpayMax
+            ? BigNumber(moonpayMax.limit.max)
+            : BigNumber(12000),
+          simplex: simplexMax
+            ? BigNumber(simplexMax.limit.max)
+            : BigNumber(12000)
+        };
       }
-      return BigNumber(12000);
+      return {
+        moonpay: BigNumber(12000),
+        simplex: BigNumber(12000)
+      };
     },
     min() {
       if (this.hasData) {
-        const foundLimit = this.fetchedData.limits.find(
+        const foundLimit = this.fetchedData[0].limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
         return foundLimit ? BigNumber(foundLimit.limit.min) : BigNumber(30);
@@ -476,9 +499,10 @@ export default {
     selectedFiat: {
       handler: function (newVal, oldVal) {
         if (!isEqual(newVal, oldVal)) {
-          const selectedCurrencyPrice = this.fetchedData.conversion_rates.find(
-            item => item.fiat_currency === oldVal.name
-          );
+          const selectedCurrencyPrice =
+            this.fetchedData[0].conversion_rates.find(
+              item => item.fiat_currency === oldVal.name
+            );
           const revertedVal = BigNumber(this.amount).div(
             selectedCurrencyPrice.exchange_rate
           );
@@ -540,7 +564,8 @@ export default {
       this.amount = this.min.toFixed();
     },
     setMax() {
-      this.amount = this.max.toFixed();
+      const simplexMax = this.max.simplex;
+      this.amount = simplexMax.toString();
     },
     currencyFormatter(value) {
       const locale = this.hasData ? LOCALE[this.selectedFiatName] : 'en-US';

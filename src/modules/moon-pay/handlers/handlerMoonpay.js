@@ -1,7 +1,6 @@
 import { sha3 } from 'web3-utils';
 import axios from 'axios';
 const API = 'https://mainnet.mewwallet.dev';
-const MOONPAY = 'MOONPAY';
 
 export default class MoonPayHandler {
   constructor() {}
@@ -39,8 +38,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.find(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const supportedFiat = res.data;
+          resolve(supportedFiat);
         })
         .catch(reject);
     });
@@ -62,8 +61,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.find(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const supportedFiat = res.data;
+          resolve(supportedFiat);
         })
         .catch(reject);
     });
