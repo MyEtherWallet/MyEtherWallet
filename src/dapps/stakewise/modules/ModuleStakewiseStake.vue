@@ -312,12 +312,11 @@ export default {
       this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     },
     stakeAmount(value) {
+      const val = value ? value : 0;
+      this.stakeHandler._setAmount(BigNumber(val).toString());
+
       if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
         this.setGasLimit();
-      }
-      if (this.errorMessages === '') {
-        const val = value ? value : 0;
-        this.stakeHandler._setAmount(BigNumber(val).toString());
       }
     },
     address() {
