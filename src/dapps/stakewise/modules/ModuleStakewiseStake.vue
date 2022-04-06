@@ -99,15 +99,6 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-space-between mt-5">
-              <div class="mew-body">Total Staked</div>
-              <div class="text-right">
-                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ totalFiat }}
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- ======================================================================================= -->
@@ -245,12 +236,6 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     currencyName() {
       return this.network.type.currencyName;
-    },
-    totalFiat() {
-      const total = BigNumber(this.totalUserStaked);
-      return total.gt(0)
-        ? formatFiatValue(total.times(this.fiatValue).toString()).value
-        : '0';
     },
     totalUserStaked() {
       const total = BigNumber(this.stakeAmount);
