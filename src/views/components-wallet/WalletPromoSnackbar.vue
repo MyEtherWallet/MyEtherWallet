@@ -71,12 +71,17 @@
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import moment from 'moment';
+import BigNumber from 'bignumber.js';
+import handler from '@/dapps/stakewise/handlers/stakewiseHandler';
+import { SUPPORTED_NETWORKS } from '@/dapps/stakewise/handlers/helpers/supportedNetworks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 export default {
   data() {
     return {
       timeoutHolder: null,
-      show: false
+      show: false,
+      stakewiseHandler: {},
+      validNetworks: SUPPORTED_NETWORKS
     };
   },
   computed: {
@@ -87,9 +92,16 @@ export default {
       'validatorApr'
     ]),
     ...mapGetters('stakewise', ['getPoolSupply']),
+    ...mapGetters('global', ['network']),
     ...mapState('wallet', ['address', 'web3']),
     formattedPoolSupply() {
       return formatFloatingPointValue(this.getPoolSupply).value;
+    },
+    isSupported() {
+      const isSupported = this.validNetworks.find(item => {
+        return item === this.network.type.name;
+      });
+      return isSupported;
     },
     shouldShow() {
       if (this.diff === 7 && this.showForSeven) {
@@ -135,10 +147,39 @@ export default {
     }
   },
   mounted() {
+    if (this.isSupported) {
+      this.setUp();
+    }
     this.checkAndOpen();
   },
   methods: {
-    ...mapActions('stakewise', ['hideForSeven', 'hideForFourteen']),
+    ...mapActions('stakewise', [
+      'hideForSeven',
+      'hideForFourteen',
+      'setPoolSupply',
+      'setStakingFee',
+      'setValidatorApr'
+    ]),
+    setUp() {
+      this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
+      this.collectiveFetch();
+      this.fetchInterval = setInterval(() => {
+        this.collectiveFetch();
+      }, 14000);
+    },
+    collectiveFetch() {
+      this.stakewiseHandler.getEthPool().then(res => {
+        this.setPoolSupply(res);
+      });
+      this.stakewiseHandler.getStakingFee().then(res => {
+        this.setStakingFee(res);
+      });
+      this.stakewiseHandler.getValidatorApr().then(res => {
+        this.setValidatorApr(
+          BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
+        );
+      });
+    },
     checkAndOpen() {
       if (this.closedInitialPromo) {
         this.delayOpenSnackBar();
@@ -171,10 +212,6 @@ export default {
   }
 };
 </script>
-//
-<style lang="scss">
-//
-</style>
 <style lang="scss">
 .mew-survey-content {
   width: 100% !important;
