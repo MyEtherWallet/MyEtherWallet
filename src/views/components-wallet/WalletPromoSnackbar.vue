@@ -163,7 +163,6 @@ export default {
       'setValidatorApr'
     ]),
     setUp() {
-      console.log('please man');
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
       this.collectiveFetch();
       this.fetchInterval = setInterval(() => {
