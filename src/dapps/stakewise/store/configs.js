@@ -3,6 +3,6 @@ export default {
     stakewise: 'stakewise-store'
   },
   VERSION: {
-    stakewise: '0.0.4'
+    stakewise: '0.0.5'
   }
 };

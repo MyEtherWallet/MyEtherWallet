@@ -56,7 +56,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     isSupported() {
       const isSupported = this.validNetworks.find(item => {
-        return item === this.network.type.name;
+        return item.name === this.network.type.name;
       });
       return isSupported;
     }

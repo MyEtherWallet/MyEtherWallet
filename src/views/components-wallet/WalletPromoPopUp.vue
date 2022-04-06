@@ -83,7 +83,7 @@ export default {
     },
     isSupported() {
       const isSupported = SUPPORTED_NETWORKS.find(item => {
-        return item === this.network.type.name;
+        return item.name === this.network.type.name;
       });
       return isSupported;
     }
@@ -97,9 +97,6 @@ export default {
     }
   },
   mounted() {
-    this.setup();
-  },
-  created() {
     this.setup();
   },
   methods: {

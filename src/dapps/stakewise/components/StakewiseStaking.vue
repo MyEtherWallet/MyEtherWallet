@@ -290,7 +290,7 @@ export default {
             this.fetchBalance();
           }
         });
-      }, 5000);
+      }, 10000);
     },
     changeRoute() {
       return new Promise(resolve => {
