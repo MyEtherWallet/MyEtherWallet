@@ -7,10 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew6-white-sheet
-          class="pa-md-15"
-          :no-shadow="$vuetify.breakpoint.smAndDown"
-        >
+        <mew-sheet class="pa-md-15">
           <div class="mew-heading-2 mb-8">
             Stake {{ currencyName }} with Stakewise
           </div>
@@ -82,7 +79,7 @@
           <!-- Stake status -->
           <!-- ======================================================================================= -->
           <div class="stake-status">
-            <div class="d-flex justify-space-between mt-8">
+            <div class="d-flex justify-space-between">
               <div>
                 <div class="mew-body">
                   Network Fee
@@ -106,7 +103,7 @@
           <!-- ======================================================================================= -->
           <!-- Divier -->
           <!-- ======================================================================================= -->
-          <v-divider class="mt-11" />
+          <v-divider class="mt-8" />
 
           <!-- ======================================================================================= -->
           <!-- How stake works -->
@@ -173,7 +170,7 @@
               @click.native="stake"
             />
           </div>
-        </mew6-white-sheet>
+        </mew-sheet>
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />

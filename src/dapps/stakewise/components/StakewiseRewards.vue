@@ -30,7 +30,7 @@
     <!-- ======================================================================================= -->
     <!-- not earned any rewards yet user message -->
     <!-- ======================================================================================= -->
-    <div v-if="sethBalance > 0 && rethBalance === 0" class="mt-4">
+    <div v-if="hasStakedNoRewards" class="mt-4">
       You have not earned any rewards yet. Please wait 24 hours after staking to
       start earning rewards.
     </div>
@@ -39,7 +39,7 @@
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
     <div
-      v-if="rethBalance > 0"
+      v-if="hasBalance"
       class="d-flex align-center justify-space-between flex-wrap-reverse mt-4"
     >
       <mew-button
@@ -100,6 +100,11 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('external', ['fiatValue']),
+    hasStakedNoRewards() {
+      return (
+        BigNumber(this.sethBalance).gt(0) && BigNumber(this.rethBalance).eq(0)
+      );
+    },
     hasBalance() {
       return BigNumber(this.rethBalance).gt(0);
     },

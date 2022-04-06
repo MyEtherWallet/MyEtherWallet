@@ -7,10 +7,7 @@
         md="8"
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
-        <mew6-white-sheet
-          class="pa-md-15"
-          :no-shadow="$vuetify.breakpoint.smAndDown"
-        >
+        <mew-sheet class="pa-md-15">
           <div class="mew-heading-2 mb-8">Compound Rewards</div>
 
           <!-- ======================================================================================= -->
@@ -162,7 +159,7 @@
               @click.native="showConfirm"
             />
           </div>
-        </mew6-white-sheet>
+        </mew-sheet>
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
@@ -386,7 +383,6 @@ export default {
       return this.$refs.input;
     },
     maxBtnObj() {
-      console.log(this.rethBalance, BigNumber(this.rethBalance).lte(0));
       return {
         title: 'Max',
         disabled: BigNumber(this.rethBalance).lte(0),
