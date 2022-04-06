@@ -63,11 +63,7 @@
             <button-balance :loading="loadingBalance" :balance="rethBalance" />
             <mew-input
               type="number"
-              :max-btn-obj="{
-                title: 'Max',
-                disabled: disableMax,
-                method: setMax
-              }"
+              :max-btn-obj="maxBtnObj"
               :image="iconStakewise"
               label="Amount to compound"
               :value="compoundAmount"
@@ -170,8 +166,17 @@
       </v-col>
       <v-col cols="12" md="4">
         <stakewise-apr class="mb-4" />
-        <stakewise-staking class="mb-4" @set-max="setMax" @scroll="scroll" />
-        <stakewise-rewards @set-max="setMax" @scroll="scroll" />
+        <stakewise-staking
+          class="mb-4"
+          @set-max="setMax"
+          @scroll="scroll"
+          @redeem-to-eth="redeemToEth"
+        />
+        <stakewise-rewards
+          @set-max="setMax"
+          @scroll="scroll"
+          @redeem-to-eth="redeemToEth"
+        />
       </v-col>
     </v-row>
   </div>
@@ -206,7 +211,8 @@ import {
   RETH2_MAINNET_CONTRACT,
   RETH2_GOERLI_CONTRACT,
   SETH2_Token,
-  RETH2_Token
+  RETH2_Token,
+  ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
@@ -378,6 +384,14 @@ export default {
     },
     element() {
       return this.$refs.input;
+    },
+    maxBtnObj() {
+      console.log(this.rethBalance, BigNumber(this.rethBalance).lte(0));
+      return {
+        title: 'Max',
+        disabled: BigNumber(this.rethBalance).lte(0),
+        method: this.setMax
+      };
     }
   },
   watch: {
@@ -413,7 +427,7 @@ export default {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toString();
       this.stakeHandler._setAmount(this.compoundAmount);
-      this.getQuote();
+      this.getQuote(this.hasReth, this.hasSeth, this.rethBalance);
     }, 500),
     setup() {
       this.stakeHandler = new stakeHandler(
@@ -423,8 +437,10 @@ export default {
       );
     },
     setMax() {
-      const max = BigNumber(this.rethBalance);
-      this.setAmount(max.toString());
+      if (this.hasEnoughBalance) {
+        const max = BigNumber(this.rethBalance);
+        this.setAmount(max.toString());
+      }
     },
     setupTrade(trade) {
       if (trade instanceof Error || !trade) {
@@ -433,30 +449,27 @@ export default {
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.gasPrice;
     },
-    disableMax() {
-      return BigNumber(this.rethBalance).lte(0);
-    },
-    getQuote: debounce(function () {
+    getQuote: debounce(function (from, to, balance) {
       if (
-        this.rethBalance !== '' &&
-        this.rethBalance > 0 &&
-        !isEmpty(this.hasReth) &&
-        !isEmpty(this.hasSeth) &&
-        !isEmpty(this.hasReth?.symbol) &&
-        !isEmpty(this.hasSeth?.symbol)
+        balance !== '' &&
+        balance > 0 &&
+        !isEmpty(from) &&
+        !isEmpty(to) &&
+        !isEmpty(from?.symbol) &&
+        !isEmpty(to?.symbol)
       ) {
         return this.swapper
           .getAllQuotes({
-            fromT: this.hasReth,
-            toT: this.hasSeth,
-            fromAmount: new BigNumber(this.rethBalance).times(
-              new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+            fromT: from,
+            toT: to,
+            fromAmount: new BigNumber(balance).times(
+              new BigNumber(10).pow(new BigNumber(from.decimals))
             )
           })
           .then(quotes => {
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
-                .dividedBy(new BigNumber(this.rethBalance))
+                .dividedBy(new BigNumber(balance))
                 .toString();
               this.selectedProvider = q;
               return q;
@@ -468,17 +481,17 @@ export default {
           });
       }
     }, 500),
-    async getTrade() {
+    async getTrade(from, to) {
       try {
         const trade = await this.swapper.getTrade({
           fromAddress: this.address,
           toAddress: this.address,
           provider: this.availableQuotes[0].provider,
-          fromT: this.hasReth,
-          toT: this.hasSeth,
+          fromT: from,
+          toT: to,
           quote: this.availableQuotes[0],
           fromAmount: new BigNumber(this.rethBalance).times(
-            new BigNumber(10).pow(new BigNumber(this.hasReth.decimals))
+            new BigNumber(10).pow(new BigNumber(from.decimals))
           )
         });
         if (trade instanceof Promise) {
@@ -501,7 +514,7 @@ export default {
     async showConfirm() {
       try {
         this.loading = true;
-        await this.getTrade();
+        await this.getTrade(this.hasReth, this.hasSeth);
         this.confirmInfo = {
           from: this.hasReth.contract,
           to: this.hasSeth.contract,
@@ -582,6 +595,38 @@ export default {
         this.addNotification(new Notification(notif));
       });
     },
+    async redeemToEth(type, balance) {
+      const eth = type === 'seth' ? this.hasSeth : this.hasReth;
+      await this.getQuote(eth, ETH_Token, balance);
+      try {
+        this.loading = true;
+        await this.getTrade(eth, ETH_Token);
+        this.confirmInfo = {
+          from: eth.contract,
+          to: ETH_Token.contract,
+          fromType: eth.symbol,
+          toType: ETH_Token.symbol,
+          fromImg: eth.img,
+          toImg: ETH_Token.img,
+          fromVal: balance,
+          toVal: balance,
+          toUsdVal: BigNumber(ETH_Token.price ? ETH_Token.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          fromUsdVal: BigNumber(eth.price ? eth.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          validUntil: new Date().getTime() + 10 * 60 * 1000,
+          selectedProvider: this.selectedProvider,
+          txFee: this.txFee,
+          gasPriceType: this.gasPriceType
+        };
+        await this.executeTrade();
+      } catch (err) {
+        this.loading = false;
+        Toast(err.message, {}, ERROR);
+      }
+    },
     openSettings() {
       EventBus.$emit('openSettings');
     },
@@ -606,7 +651,7 @@ export default {
         .balanceOf(this.address)
         .call()
         .then(res => {
-          this.rethBalance = formatFloatingPointValue(fromWei(res)).value;
+          this.rethBalance = fromWei(res);
           this.loadingBalance = false;
         });
     }
