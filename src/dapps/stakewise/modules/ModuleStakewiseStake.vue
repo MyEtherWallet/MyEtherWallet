@@ -100,15 +100,6 @@
               </div>
             </div>
             <div class="d-flex justify-space-between mt-5">
-              <div class="mew-body">Staking Fee</div>
-              <div class="text-right">
-                <div class="">{{ stakingFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ stakingFeeFiatValue }}
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Total Staked</div>
               <div class="text-right">
                 <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
@@ -247,7 +238,6 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH']),
-    ...mapGetters('stakewise', ['getStakingFee']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('stakewise', ['validatorApr']),
@@ -255,20 +245,6 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     currencyName() {
       return this.network.type.currencyName;
-    },
-    stakingFee() {
-      const stakeFee = BigNumber(this.stakeAmount)
-        .times(BigNumber(1).div(100))
-        .toString();
-      return BigNumber(this.stakeAmount).gt(0)
-        ? formatFloatingPointValue(stakeFee).value
-        : '0';
-    },
-    stakingFeeFiatValue() {
-      const fee = BigNumber(this.stakingFee);
-      return fee.gt(0)
-        ? formatFiatValue(fee.times(this.fiatValue).toString()).value
-        : '0';
     },
     totalFiat() {
       const total = BigNumber(this.totalUserStaked);
@@ -316,7 +292,7 @@ export default {
         return 'Buy more ETH!';
       }
       if (this.estimateGasError) {
-        return 'Issue with gas estimation, please check if you have enough balance!';
+        return 'Issue with gas estimation. Please check if you have enough balance!';
       }
       if (BigNumber(this.stakeAmount).lt(0)) {
         return 'Value cannot be negative';

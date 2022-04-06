@@ -99,15 +99,6 @@
               </div>
             </div>
             <div class="d-flex justify-space-between mt-5">
-              <div class="mew-body">Staking Fee</div>
-              <div class="text-right">
-                <div class="">{{ stakingFee }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ stakingFeeFiatValue }}
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mt-5">
               <div class="mew-body">Total</div>
               <div class="text-right">
                 <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
@@ -255,7 +246,6 @@ export default {
   },
   computed: {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
-    ...mapGetters('stakewise', ['getStakingFee']),
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address']),
@@ -263,20 +253,6 @@ export default {
     ...mapState('global', ['gasPriceType']),
     currencyName() {
       return this.network.type.currencyName;
-    },
-    stakingFee() {
-      const fee = BigNumber(this.compoundAmount)
-        .times(BigNumber(1).div(100))
-        .toString();
-      return BigNumber(this.compoundAmount).gt(0)
-        ? formatFloatingPointValue(fee).value
-        : '0';
-    },
-    stakingFeeFiatValue() {
-      const fee = BigNumber(this.compoundAmount);
-      return fee.gt(0)
-        ? formatFiatValue(fee.times(this.fiatValue).toString()).value
-        : '0';
     },
     totalFiat() {
       const total = BigNumber(this.totalUserStaked);

@@ -296,7 +296,7 @@ export default {
       return new Promise(resolve => {
         resolve(
           this.$router.push({
-            name: STAKEWISE_ROUTES.REWARDS.NAME,
+            name: STAKEWISE_ROUTES.CORE.NAME,
             query: { module: 'stake' }
           })
         );
