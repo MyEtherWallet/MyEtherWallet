@@ -45,6 +45,7 @@
         btn-style="transparent"
         btn-size="small"
         class="mew-body"
+        :disabled="!hasBalance"
         @click.native="routeToSwap"
       />
       <mew-button
@@ -52,6 +53,7 @@
         :btn-style="compoundRewards ? 'transparent' : 'background'"
         btn-size="small"
         class="mew-body"
+        :disabled="!hasBalance"
         @click.native="scrollToInput"
       />
     </div>
@@ -96,6 +98,9 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('external', ['fiatValue']),
+    hasBalance() {
+      return BigNumber(this.rethBalance).gt(0);
+    },
     ethvmSupport() {
       return this.network.type.isEthVMSupported.supported;
     },

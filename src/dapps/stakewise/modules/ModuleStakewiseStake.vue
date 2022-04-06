@@ -72,6 +72,8 @@
               placeholder="Enter amount"
               :value="stakeAmount"
               :error-messages="errorMessages"
+              :buy-more-str="buyMoreStr"
+              @buyMore="openMoonpay"
               @input="setAmount"
             />
           </div>
@@ -207,6 +209,7 @@ import {
 import { debounce } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
@@ -216,6 +219,7 @@ export default {
     StakewiseRewards,
     ButtonBalance
   },
+  mixins: [buyMore],
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
@@ -274,8 +278,9 @@ export default {
     },
     errorMessages() {
       if (!this.hasEnoughBalance) {
-        return 'Buy more ETH!';
+        return 'Not enough balance.';
       }
+
       if (this.estimateGasError) {
         return 'Issue with gas estimation. Please check if you have enough balance!';
       }
@@ -290,6 +295,12 @@ export default {
         )
       ) {
         return 'Invalid decimals. ETH can only have 18 decimals';
+      }
+      return '';
+    },
+    buyMoreStr() {
+      if (!this.hasEnoughBalance) {
+        return 'Buy more ETH';
       }
       return '';
     },
@@ -356,10 +367,12 @@ export default {
         });
     },
     setMax() {
-      const max = BigNumber(this.balanceInETH).minus(
-        BigNumber(this.ethTotalFee)
-      );
-      this.setAmount(max.toString());
+      if (this.hasEnoughBalance) {
+        const max = BigNumber(this.balanceInETH).minus(
+          BigNumber(this.ethTotalFee)
+        );
+        this.setAmount(max.toString());
+      }
     },
     stake() {
       this.stakeHandler

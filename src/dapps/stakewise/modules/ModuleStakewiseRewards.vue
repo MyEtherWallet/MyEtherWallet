@@ -60,12 +60,12 @@
           <!-- Amount to stake -->
           <!-- ======================================================================================= -->
           <div class="position--relative mt-15">
-            <button-balance :loading="false" :balance="rethBalance" />
+            <button-balance :loading="loadingBalance" :balance="rethBalance" />
             <mew-input
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: false,
+                disabled: disableMax,
                 method: setMax
               }"
               :image="iconStakewise"
@@ -231,6 +231,7 @@ export default {
       swapper: null,
       loading: false,
       agreeToTerms: false,
+      loadingBalance: true,
       confirmInfo: {
         to: '',
         from: '',
@@ -432,6 +433,9 @@ export default {
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.gasPrice;
     },
+    disableMax() {
+      return BigNumber(this.rethBalance).lte(0);
+    },
     getQuote: debounce(function () {
       if (
         this.rethBalance !== '' &&
@@ -596,12 +600,14 @@ export default {
         });
     },
     async fetchBalance() {
+      this.loadingBalance = true;
       const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
       contract.methods
         .balanceOf(this.address)
         .call()
         .then(res => {
           this.rethBalance = formatFloatingPointValue(fromWei(res)).value;
+          this.loadingBalance = false;
         });
     }
   }
