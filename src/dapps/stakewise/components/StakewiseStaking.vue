@@ -107,7 +107,7 @@
         btn-style="transparent"
         btn-size="small"
         class="py-1"
-        @click.native="routeToSwap"
+        @click.native="executeSwap"
       />
       <mew-button
         :title="`Stake more ${currencyName}`"
@@ -121,8 +121,7 @@
 </template>
 
 <script>
-import { isEmpty, some, find } from 'lodash';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { isEmpty, some } from 'lodash';
 import {
   SETH2_GOERLI_CONTRACT,
   SETH2_MAINNET_CONTRACT
@@ -188,17 +187,6 @@ export default {
         return exists;
       }
       return BigNumber(this.balance).gt(0);
-    },
-    sethToken() {
-      if (this.ethvmSupport) {
-        const token = find(
-          this.tokensList,
-          item =>
-            item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-        );
-        return token ? token : '0';
-      }
-      return '0';
     }
   },
   watch: {
@@ -253,15 +241,8 @@ export default {
   },
   methods: {
     ...mapActions('stakewise', ['removePendingTxs', 'removePendingTxsGoerli']),
-    routeToSwap() {
-      this.$router.push({
-        name: ROUTES_WALLET.SWAP.NAME,
-        query: {
-          fromToken: this.seth2Contract,
-          toToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          amount: this.sethToken.balancef
-        }
-      });
+    executeSwap() {
+      this.$emit('redeem-to-eth', 'seth', this.balance);
     },
     async fetchBalance() {
       const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);

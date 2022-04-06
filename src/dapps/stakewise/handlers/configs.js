@@ -8,6 +8,15 @@ const POOL_GOERLI_CONTRACT = '0x8c1EfEcFb5c4F1099AB0460b5659342943764Df7';
 const MEW_REFERRAL_ADDRESS = '0xeafbdfca5d8346f409b7c322c77692f89d061c78';
 const POOL_API = 'https://api.stakewise.io/pool-stats';
 
+const ETH_Token = {
+  contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  decimals: 18,
+  img: 'https://img.mewapi.io/?image=https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+  name: 'ETH',
+  symbol: 'ETH',
+  value: 'Ethereum'
+};
+
 const SETH2_Token = {
   contract: SETH2_MAINNET_CONTRACT,
   decimals: 18,
@@ -37,5 +46,6 @@ export {
   POOL_GOERLI_CONTRACT,
   MEW_REFERRAL_ADDRESS,
   SETH2_Token,
-  RETH2_Token
+  RETH2_Token,
+  ETH_Token
 };

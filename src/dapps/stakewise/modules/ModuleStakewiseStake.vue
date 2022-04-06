@@ -72,6 +72,14 @@
               placeholder="Enter amount"
               :value="stakeAmount"
               :error-messages="errorMessages"
+              :buy-more-str="
+                isEthNetwork && !hasEnoughBalance
+                  ? network.type.canBuy
+                    ? 'Buy more.'
+                    : ''
+                  : null
+              "
+              @buyMore="openMoonpay"
               @input="setAmount"
             />
           </div>
@@ -80,7 +88,7 @@
           <!-- Stake status -->
           <!-- ======================================================================================= -->
           <div class="stake-status">
-            <div class="d-flex justify-space-between mt-11">
+            <div class="d-flex justify-space-between mt-8">
               <div>
                 <div class="mew-body">
                   Network Fee
@@ -180,11 +188,13 @@
           compound-rewards
           @set-max="setMax"
           @scroll="scroll"
+          @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
           compound-rewards
           @set-max="setMax"
           @scroll="scroll"
+          @redeem-to-eth="redeemToEth"
         />
       </v-col>
     </v-row>
@@ -200,13 +210,28 @@ import { fromWei } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import stakeHandler from '../handlers/stakewiseStakeHandler';
+import Swapper from '@/modules/swap/handlers/handlerSwap';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 import {
   formatFiatValue,
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
-import { debounce } from 'lodash';
+import { debounce, isEmpty, clone, find } from 'lodash';
 import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
+import Notification, {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_STATUS
+} from '@/modules/notifications/handlers/handlerNotification';
+import {
+  SETH2_MAINNET_CONTRACT,
+  SETH2_GOERLI_CONTRACT,
+  RETH2_MAINNET_CONTRACT,
+  RETH2_GOERLI_CONTRACT,
+  SETH2_Token,
+  RETH2_Token,
+  ETH_Token
+} from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
@@ -216,6 +241,7 @@ export default {
     StakewiseRewards,
     ButtonBalance
   },
+  mixins: [buyMore],
   data() {
     return {
       iconEth: require('@/assets/images/icons/icon-eth-gray.svg'),
@@ -224,7 +250,22 @@ export default {
       gasLimit: '21000',
       stakeHandler: {},
       agreeToTerms: false,
-      estimateGasError: false
+      estimateGasError: false,
+      swapper: null,
+      currentTrade: null,
+      availableQuotes: [],
+      selectedProvider: {},
+      confirmInfo: {
+        to: '',
+        from: '',
+        fromImg: '',
+        toImg: '',
+        fromType: '',
+        toType: '',
+        validUntil: 0,
+        selectedProvider: '',
+        txFee: ''
+      }
     };
   },
   computed: {
@@ -274,7 +315,7 @@ export default {
     },
     errorMessages() {
       if (!this.hasEnoughBalance) {
-        return 'Buy more ETH!';
+        return 'Not enough ETH.';
       }
       if (this.estimateGasError) {
         return 'Issue with gas estimation. Please check if you have enough balance!';
@@ -302,6 +343,39 @@ export default {
     },
     element() {
       return this.$refs.input;
+    },
+    reth2Contract() {
+      return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
+    },
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
+    hasReth() {
+      const token = find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === this.reth2Contract.toLowerCase()
+      );
+      if (!token) {
+        return RETH2_Token;
+      }
+      return token;
+    },
+    hasSeth() {
+      const token = find(
+        this.tokensList,
+        item => item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
+      );
+      if (!token) {
+        return SETH2_Token;
+      }
+      return token;
+    },
+    txFee() {
+      const gasLimit = BigNumber(this.gasLimit).gt('21000')
+        ? this.gasLimit
+        : MIN_GAS_LIMIT;
+      const txFee = BigNumber(this.gasPrice).times(gasLimit).toString();
+      return txFee;
     }
   },
   watch: {
@@ -329,9 +403,11 @@ export default {
   mounted() {
     this.setup();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    this.swapper = new Swapper(this.web3, this.network.type.name);
   },
   methods: {
     ...mapActions('stakewise', ['addToPendingTxs', 'addToPendingTxsGoerli']),
+    ...mapActions('notifications', ['addNotification']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toString();
@@ -359,7 +435,12 @@ export default {
       const max = BigNumber(this.balanceInETH).minus(
         BigNumber(this.ethTotalFee)
       );
-      this.setAmount(max.toString());
+
+      if (max.lt(0)) {
+        this.setAmount(0);
+      } else {
+        this.setAmount(max.toString());
+      }
     },
     stake() {
       this.stakeHandler
@@ -392,6 +473,163 @@ export default {
     },
     scroll() {
       this.$vuetify.goTo(this.target);
+    },
+    setupTrade(trade) {
+      if (trade instanceof Error || !trade) {
+        return;
+      }
+      this.currentTrade = trade;
+      this.currentTrade.gasPrice = this.locGasPrice;
+    },
+    async getQuote(from, to, balance) {
+      if (
+        balance !== '' &&
+        balance > 0 &&
+        !isEmpty(from) &&
+        !isEmpty(to) &&
+        !isEmpty(from?.symbol) &&
+        !isEmpty(to?.symbol)
+      ) {
+        return await this.swapper
+          .getAllQuotes({
+            fromT: from,
+            toT: to,
+            fromAmount: new BigNumber(balance).times(
+              new BigNumber(10).pow(new BigNumber(from.decimals))
+            )
+          })
+          .then(async quotes => {
+            this.availableQuotes = await quotes.map(q => {
+              q.rate = new BigNumber(q.amount)
+                .dividedBy(new BigNumber(balance))
+                .toString();
+              this.selectedProvider = q;
+              return q;
+            });
+          })
+          .catch(err => {
+            this.loading = false;
+            Toast(err, {}, ERROR);
+          });
+      }
+    },
+    async getTrade(from, to) {
+      try {
+        console.log(this.swapper.getTrade);
+        console.log(this.availableQuotes[0].provider);
+        const trade = await this.swapper.getTrade({
+          fromAddress: this.address,
+          toAddress: this.address,
+          provider: this.availableQuotes[0].provider,
+          fromT: from,
+          toT: to,
+          quote: this.availableQuotes[0],
+          fromAmount: new BigNumber(this.rethBalance).times(
+            new BigNumber(10).pow(new BigNumber(from.decimals))
+          )
+        });
+        if (trade instanceof Promise) {
+          trade
+            .then(tradeResponse => {
+              this.setupTrade(tradeResponse);
+            })
+            .catch(err => {
+              this.loading = false;
+              Toast(err, {}, ERROR);
+            });
+        } else {
+          this.setupTrade(trade);
+        }
+      } catch (err) {
+        this.loading = false;
+        Toast(err, {}, ERROR);
+      }
+    },
+    executeTrade() {
+      const currentTradeCopy = clone(this.currentTrade);
+      try {
+        this.loading = false;
+        this.swapper
+          .executeTrade(this.currentTrade, this.confirmInfo)
+          .then(res => {
+            this.swapNotificationFormatter(res, currentTradeCopy);
+          })
+          .then(() => {
+            this.setAmount(0);
+            this.compoundAmount = '0';
+            this.locGasPrice = '0';
+            this.gasLimit = '21000';
+            this.agreeToTerms = false;
+          })
+          .catch(err => {
+            this.loading = false;
+            Toast(err.message, {}, ERROR);
+          });
+      } catch (err) {
+        this.loading = false;
+        Toast(err.message, {}, ERROR);
+      }
+    },
+    swapNotificationFormatter(obj, currentTrade) {
+      obj.hashes.forEach((hash, idx) => {
+        const notif = Object.assign(
+          {
+            hash,
+            from: this.address,
+            type: NOTIFICATION_TYPES.SWAP,
+            network: this.network.type.name,
+            status: NOTIFICATION_STATUS.PENDING,
+            fromTxData: {
+              currency: this.confirmInfo.fromType,
+              amount: this.confirmInfo.fromVal,
+              icon: this.confirmInfo.fromImg
+            },
+            toTxData: {
+              currency: this.confirmInfo.toType,
+              amount: this.confirmInfo.toVal,
+              icon: this.confirmInfo.toImg,
+              to: this.confirmInfo.to
+                ? this.confirmInfo.to
+                : currentTrade.transactions[idx].to
+            },
+            swapObj: obj
+          },
+          currentTrade.transactions[idx]
+        );
+        this.addNotification(new Notification(notif));
+      });
+    },
+    async redeemToEth(type, balance) {
+      const eth = type === 'seth' ? this.hasSeth : this.hasReth;
+      await this.getQuote(eth, ETH_Token, balance);
+      try {
+        this.loading = true;
+        await this.getTrade(eth, ETH_Token);
+        this.confirmInfo = {
+          from: eth.contract,
+          to: ETH_Token.contract,
+          fromType: eth.symbol,
+          toType: ETH_Token.symbol,
+          fromImg: eth.img,
+          toImg: ETH_Token.img,
+          fromVal: balance,
+          toVal: balance,
+          toUsdVal: BigNumber(ETH_Token.price ? ETH_Token.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          fromUsdVal: BigNumber(eth.price ? eth.price : 0)
+            .times(this.rethBalance)
+            .toFixed(),
+          validUntil: new Date().getTime() + 10 * 60 * 1000,
+          selectedProvider: this.selectedProvider,
+          txFee: this.txFee,
+          gasPriceType: this.gasPriceType
+        };
+        await this.executeTrade();
+      } catch (err) {
+        this.loading = false;
+        Toast(err.message, {}, ERROR);
+      }
     }
   }
 };
