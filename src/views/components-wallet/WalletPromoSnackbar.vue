@@ -89,6 +89,7 @@ export default {
     ...mapGetters('stakewise', ['getPoolSupply']),
     ...mapGetters('global', ['network']),
     ...mapState('wallet', ['address', 'web3']),
+    ...mapGetters('global', ['isEthNetwork', 'network']),
     formattedPoolSupply() {
       return formatFloatingPointValue(this.getPoolSupply).value;
     },

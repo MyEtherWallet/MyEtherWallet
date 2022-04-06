@@ -99,9 +99,6 @@ export default {
   mounted() {
     this.setup();
   },
-  created() {
-    this.setup();
-  },
   methods: {
     ...mapActions('stakewise', [
       'setPoolSupply',
