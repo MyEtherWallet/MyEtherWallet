@@ -88,7 +88,6 @@ export default {
     clearInterval(this.fetchInterval);
   },
   methods: {
-    ...mapActions('ethBlocksTxs', ['deleteEthBlockTx']),
     ...mapActions('stakewise', [
       'setPoolSupply',
       'setStakingFee',

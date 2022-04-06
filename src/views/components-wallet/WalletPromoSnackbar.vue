@@ -135,6 +135,9 @@ export default {
     }
   },
   mounted() {
+    if (this.isSupported) {
+      this.setUp();
+    }
     this.checkAndOpen();
   },
   methods: {
@@ -171,10 +174,6 @@ export default {
   }
 };
 </script>
-//
-<style lang="scss">
-//
-</style>
 <style lang="scss">
 .mew-survey-content {
   width: 100% !important;

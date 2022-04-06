@@ -8,7 +8,7 @@
     :close="setHidePopUp"
   >
     <template #dialogBody>
-      <div>
+      <div class="d-flex flex-column align-start">
         <div class="d-flex">
           <img
             class="eth--icon mr-4"
@@ -18,7 +18,7 @@
           />
           <h2>Join the Stakewise pool with any amount of ETH</h2>
         </div>
-        <div class="my-5 text-center mew-body text--lighten-1 textMedium--text">
+        <div class="my-5 mew-body text--lighten-1 textMedium--text">
           Start earning rewards on your ETH within 24 hours. Simplified staking
           with no minimum requirements.
         </div>
@@ -97,6 +97,9 @@ export default {
     }
   },
   mounted() {
+    this.setup();
+  },
+  created() {
     this.setup();
   },
   methods: {

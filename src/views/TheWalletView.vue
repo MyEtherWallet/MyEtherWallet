@@ -29,7 +29,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar.vue';
+import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 export default {
   components: {
     TheWalletSideMenu,
