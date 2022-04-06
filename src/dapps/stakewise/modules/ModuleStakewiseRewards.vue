@@ -408,6 +408,7 @@ export default {
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toString();
+      this.stakeHandler._setAmount(this.compoundAmount);
       this.getQuote();
     }, 500),
     setUp() {
