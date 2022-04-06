@@ -330,13 +330,16 @@ export default {
         ? this.gasLimit
         : MIN_GAS_LIMIT;
       const txFee = BigNumber(this.gasPrice).times(gasLimit).toString();
-      return formatFloatingPointValue(txFee).value;
+      return txFee;
+    },
+    formattedTxFee() {
+      return formatFloatingPointValue(this.txFee).value;
     },
     hasMinimum() {
       if (!isEmpty(this.selectedProvider)) {
         return (
           BigNumber(this.selectedProvider.minFrom).lt(this.compoundAmount) &&
-          BigNumber(this.compoundAmount).gt(this.txFee)
+          BigNumber(this.compoundAmount).gt(this.formattedTxFee)
         );
       }
       return false;
@@ -386,11 +389,11 @@ export default {
       }
     },
     isEthNetwork() {
-      this.setUp();
+      this.setup();
       this.fetchBalance();
     },
     address() {
-      this.setUp();
+      this.setup();
       this.fetchBalance();
     },
     rethBalance(newVal) {
@@ -400,7 +403,7 @@ export default {
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.swapper = new Swapper(this.web3, this.network.type.name);
-    this.setUp();
+    this.setup();
     this.fetchBalance();
   },
   methods: {
@@ -411,7 +414,7 @@ export default {
       this.stakeHandler._setAmount(this.compoundAmount);
       this.getQuote();
     }, 500),
-    setUp() {
+    setup() {
       this.stakeHandler = new stakeHandler(
         this.web3,
         this.isEthNetwork,

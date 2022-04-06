@@ -56,7 +56,7 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     isSupported() {
       const isSupported = this.validNetworks.find(item => {
-        return item === this.network.type.name;
+        return item.name === this.network.type.name;
       });
       return isSupported;
     }
@@ -71,7 +71,7 @@ export default {
     },
     network: {
       handler: function () {
-        if (this.isSupported) this.setUp();
+        if (this.isSupported) this.setup();
       },
       deep: true
     }
@@ -81,7 +81,7 @@ export default {
       this.activeTab = this.tabs[1].id;
     }
     if (this.isSupported) {
-      this.setUp();
+      this.setup();
     }
   },
   beforeDestroy() {
@@ -93,7 +93,7 @@ export default {
       'setStakingFee',
       'setValidatorApr'
     ]),
-    setUp() {
+    setup() {
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
       this.collectiveFetch();
       this.fetchInterval = setInterval(() => {

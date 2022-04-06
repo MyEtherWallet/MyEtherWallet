@@ -87,6 +87,7 @@ export default {
       'validatorApr'
     ]),
     ...mapGetters('stakewise', ['getPoolSupply']),
+    ...mapGetters('global', ['network']),
     ...mapState('wallet', ['address', 'web3']),
     formattedPoolSupply() {
       return formatFloatingPointValue(this.getPoolSupply).value;
@@ -135,9 +136,6 @@ export default {
     }
   },
   mounted() {
-    if (this.isSupported) {
-      this.setUp();
-    }
     this.checkAndOpen();
   },
   methods: {

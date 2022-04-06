@@ -320,14 +320,14 @@ export default {
       }
     },
     address() {
-      this.setUp();
+      this.setup();
     },
     isEthNetwork() {
-      this.setUp();
+      this.setup();
     }
   },
   mounted() {
-    this.setUp();
+    this.setup();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
@@ -336,7 +336,7 @@ export default {
       const value = val ? val : 0;
       this.stakeAmount = BigNumber(value).toString();
     }, 500),
-    setUp() {
+    setup() {
       this.stakeHandler = new stakeHandler(
         this.web3,
         this.isEthNetwork,
