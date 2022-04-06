@@ -511,8 +511,6 @@ export default {
     },
     async getTrade(from, to) {
       try {
-        console.log(this.swapper.getTrade);
-        console.log(this.availableQuotes[0].provider);
         const trade = await this.swapper.getTrade({
           fromAddress: this.address,
           toAddress: this.address,
