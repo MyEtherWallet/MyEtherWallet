@@ -391,7 +391,7 @@ export default {
       const value = val ? val : 0;
       this.compoundAmount = BigNumber(value).toString();
       this.stakeHandler._setAmount(this.compoundAmount);
-      this.getQuote(this.hasReth, this.hasSeth, this.rethBalance);
+      this.getQuote(this.hasReth, this.hasSeth, this.compoundAmount);
     }, 500),
     setup() {
       this.stakeHandler = new stakeHandler(
