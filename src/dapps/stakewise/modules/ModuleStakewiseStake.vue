@@ -374,7 +374,7 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      const txFee = BigNumber(this.gasPrice).times(gasLimit).toString();
+      const txFee = BigNumber(this.locGasPrice).times(gasLimit).toString();
       return txFee;
     }
   },
