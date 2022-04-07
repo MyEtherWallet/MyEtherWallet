@@ -11,13 +11,8 @@
           <div class="font-weight-bold">Transaction receipt</div>
           <mew-transform-hash :hash="txReceipt" />
         </div>
-        <div class="pa-5">
-          <v-progress-linear
-            v-if="txLoading"
-            indeterminate
-            rounded
-            height="6"
-          />
+        <div v-if="txLoading" class="pa-5">
+          <v-progress-linear indeterminate rounded height="6" />
         </div>
         <div class="pa-5">
           <mew-alert
@@ -303,11 +298,15 @@ export default {
     setAddress(val = '') {
       this.fromAddress = val;
       if (isAddress(this.fromAddress)) {
-        if (this.fromAddressMessage.length > 0) this.fromAddressMessage = [];
+        if (this.fromAddressMessage.length) this.fromAddressMessage = [];
         this.setDetails();
         return;
       }
       if (this.details.length > 1) this.setDetails([]);
+      if (this.fromAddress === null || this.fromAddress === '') {
+        if (this.fromAddressMessage.length) this.fromAddressMessage = [];
+        return;
+      }
       this.fromAddressMessage = ['Not a valid Address'];
     },
 
@@ -394,8 +393,12 @@ export default {
      *********************************************/
     checkTx(val = '') {
       this.signature = val;
-      if (isHex(this.signature)) this.signature = sanitizeHex(this.signature);
-      else {
+      if (this.signature === '') {
+        this.signatureError = false;
+        this.signatureMessage = [];
+        return;
+      }
+      if (!isHex(this.signature)) {
         this.signatureError = true;
         this.signatureMessage = ['Must be a valid transaction'];
         this.validTx = false;
@@ -426,7 +429,7 @@ export default {
      ***********************************************************************************/
     rawData() {
       try {
-        const tx = new Transaction(this.signature, {
+        const tx = new Transaction(sanitizeHex(this.signature), {
           common: commonGenerator(this.network())
         });
         const txValues = tx.toJSON(true);
@@ -549,7 +552,7 @@ export default {
         this.dialog = true;
         this.txLoading = true;
         eth
-          .sendSignedTransaction(this.signature)
+          .sendSignedTransaction(sanitizeHex(this.signature))
           .once('transactionHash', hash => {
             this.txHash = hash;
           })
