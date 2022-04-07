@@ -359,7 +359,7 @@ export default {
     maxBtnObj() {
       return {
         title: 'Max',
-        disabled: BigNumber(this.rethBalance).lte(0) || !this.hasMinimum,
+        disabled: BigNumber(this.rethBalance).lte(0),
         method: this.setMax
       };
     }
@@ -402,10 +402,8 @@ export default {
       this.loadingBalance = false;
     },
     setMax() {
-      if (this.hasEnoughBalance) {
-        const max = BigNumber(this.rethBalance);
-        this.setAmount(max.toFixed());
-      }
+      const max = BigNumber(this.rethBalance);
+      this.setAmount(max.toFixed());
     },
     setupTrade(trade) {
       if (trade instanceof Error || !trade) {
