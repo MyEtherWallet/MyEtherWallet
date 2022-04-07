@@ -91,6 +91,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import { toChecksumAddress, isAddress } from '@/core/helpers/addressUtils';
+import { isValidCoinAddress } from '../handlers/handlerMulticoins.js';
 
 const modes = ['add', 'edit'];
 
@@ -150,8 +151,8 @@ export default {
     },
     validAddress() {
       return this.resolvedAddr.length > 0
-        ? isAddress(this.resolvedAddr)
-        : isAddress(this.addressToAdd);
+        ? isAddress(this.resolvedAddr) || isValidCoinAddress(this.resolvedAddr)
+        : isAddress(this.addressToAdd) || isValidCoinAddress(this.addressToAdd);
     },
     editMode() {
       return this.mode === modes[1];
