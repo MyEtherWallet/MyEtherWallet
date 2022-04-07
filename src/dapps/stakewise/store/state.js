@@ -10,7 +10,9 @@ const stakewise = {
   closedInitialPromo: '',
   showForSeven: true,
   showForFourteen: true,
-  stateVersion: Configs.VERSION.stakewise
+  stateVersion: Configs.VERSION.stakewise,
+  rethBalance: '0',
+  sethBalance: '0'
 };
 
 export default stakewise;
