@@ -11,11 +11,11 @@
         />
       </div>
     </div>
-    <div v-if="!loading && !error" class="pa-3">
+    <div v-if="!loading && !error && hasSwapRates" class="pa-3">
       <div v-for="(data, key) in swapData" :key="key">
         <v-sheet
           v-if="data.rate"
-          color="tableHeader"
+          color="greyLight"
           class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
           @click="goToSwap(data)"
         >
@@ -25,11 +25,8 @@
           <div class="d-flex align-center">
             <img
               width="22"
-              :src="
-                require('@/assets/images/currencies/' +
-                  data.fromT.symbol.toLowerCase() +
-                  '.png')
-              "
+              height="22"
+              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
               alt="currency-icon"
             />
             <img
@@ -59,12 +56,14 @@
       <h3 class="ma-3">Loading swap pairs...</h3>
     </div>
     <div
-      v-if="error"
+      v-if="showTokenIssue"
       class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
     >
       <v-progress-circular indeterminate />
       <h3 class="ma-3">Having issues loading tokens.</h3>
-      <h5 class="mb-2 cursor--pointer" @click="fetchRates">Try again?</h5>
+      <h5 class="mb-2 cursor--pointe greenPrimary--text" @click="fetchRates">
+        Try again?
+      </h5>
     </div>
   </mew6-white-sheet>
 </template>
@@ -75,6 +74,7 @@ import { mapState, mapGetters } from 'vuex';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import { toWei } from 'web3-utils';
 
 const STATIC_PAIRS = [
   {
@@ -87,7 +87,7 @@ const STATIC_PAIRS = [
       contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: toWei('1')
   },
   {
     fromT: {
@@ -100,7 +100,7 @@ const STATIC_PAIRS = [
       contract: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6
     },
-    fromAmount: '1000000000000000000'
+    fromAmount: toWei('1')
   },
   {
     fromT: {
@@ -113,7 +113,7 @@ const STATIC_PAIRS = [
       contract: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       toT: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: toWei('1')
   },
   {
     fromT: {
@@ -126,7 +126,7 @@ const STATIC_PAIRS = [
       contract: '0x6b175474e89094c44da98b954eedeac495271d0f',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: toWei('1')
   },
   {
     fromT: {
@@ -139,7 +139,7 @@ const STATIC_PAIRS = [
       contract: '0x514910771af9ca656af840dff83e8264ecf986ca',
       decimals: 18
     },
-    fromAmount: '100000000000000000'
+    fromAmount: toWei('1')
   },
   {
     fromT: {
@@ -152,10 +152,11 @@ const STATIC_PAIRS = [
       contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       decimals: 6
     },
-    fromAmount: '100000000000000000'
+    fromAmount: toWei('1')
   }
 ];
 export default {
+  name: 'ModuleSwapRates',
   components: {},
   mixins: [handlerAnalytics],
   props: {
@@ -174,20 +175,31 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['isEthNetwork'])
+    ...mapGetters('global', ['isEthNetwork', 'network']),
+    showTokenIssue() {
+      return (this.error || !this.hasSwapRates) && !this.loading;
+    },
+    hasSwapRates() {
+      if (this.swapData) {
+        return this.swapData.some(item => {
+          return item.rate;
+        });
+      }
+      return false;
+    }
   },
   watch: {
     web3(newVal) {
-      this.setSwapHandler(newVal);
+      this.setSwapHandler(newVal, this.network.type.name);
     }
   },
   mounted() {
-    this.setSwapHandler(this.web3);
+    this.setSwapHandler(this.web3, this.network.type.name);
   },
   methods: {
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val);
+      this.swapHandler = new handlerSwap(val, this.network.type.name);
       this.fetchRates();
     },
     fetchRates() {
@@ -197,7 +209,10 @@ export default {
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
-              res[idx].length !== 0 && res[idx][0] && res[idx][0]?.amount
+              res[idx] &&
+              res[idx].length !== 0 &&
+              res[idx][0] &&
+              res[idx][0]?.amount
                 ? formatFloatingPointValue(res[idx][0]?.amount).value
                 : false;
             return itm;

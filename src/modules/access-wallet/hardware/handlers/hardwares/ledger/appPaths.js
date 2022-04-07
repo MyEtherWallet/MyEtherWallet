@@ -1,10 +1,11 @@
-import { ETC, ETH, ROP } from '@/utils/networks/types';
+import { ETC, ETH, ROP, GO } from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ropsten
+  ropsten,
+  goChain
 } from '@/modules/access-wallet/hardware/handlers/configs/configPaths';
 const appList = [
   {
@@ -18,6 +19,10 @@ const appList = [
   {
     network: ROP,
     paths: [ropsten]
+  },
+  {
+    network: GO,
+    paths: [goChain]
   }
 ];
 export default appList;

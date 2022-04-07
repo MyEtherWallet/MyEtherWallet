@@ -6,11 +6,12 @@
       :copy-tooltip="$t('common.copy')"
       :save-tooltip="$t('common.save')"
       :enable-save-address="enableSave"
-      :label="$t('sendTx.to-addr')"
+      :label="addrLabel"
       :items="addressBookWithMyAddress"
       :placeholder="$t('sendTx.enter-addr')"
       :success-toast="$t('sendTx.success.title')"
       :is-valid-address="isValidAddress"
+      :show-copy="isValidAddress"
       :error-messages="errorMessages"
       @saveAddress="toggleOverlay"
       @input="setAddress"
@@ -41,12 +42,14 @@ import { isAddress } from '@/core/helpers/addressUtils';
 import { mapGetters, mapState } from 'vuex';
 import NameResolver from '@/modules/name-resolver/index';
 import AddressBookAddEdit from './components/AddressBookAddEdit';
-import { isObject, debounce } from 'lodash';
+import { isObject, throttle } from 'lodash';
 import { toChecksumAddress } from '@/core/helpers/addressUtils';
+import WAValidator from 'multicoin-address-validator';
 
 const USER_INPUT_TYPES = {
   typed: 'TYPED',
-  selected: 'SELECTED'
+  selected: 'SELECTED',
+  resolved: 'RESOLVED'
 };
 
 export default {
@@ -59,6 +62,18 @@ export default {
       default: isAddress
     },
     isHomePage: {
+      type: Boolean,
+      default: false
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    currency: {
+      type: String,
+      default: 'ETH'
+    },
+    preselectCurrWalletAdr: {
       type: Boolean,
       default: false
     }
@@ -107,6 +122,9 @@ export default {
     },
     enableSave() {
       return this.isHomePage ? false : this.isValidAddress;
+    },
+    addrLabel() {
+      return this.label === '' ? this.$t('sendTx.to-addr') : this.label;
     }
   },
   watch: {
@@ -124,47 +142,89 @@ export default {
     if (this.isHomePage) {
       this.setDonationAddress();
     }
+    if (this.preselectCurrWalletAdr) {
+      this.$refs.addressSelect.selectAddress(this.addressBookWithMyAddress[0]);
+      this.setAddress(
+        toChecksumAddress(this.$store.state.wallet.address),
+        USER_INPUT_TYPES.selected
+      );
+    }
   },
   methods: {
     /**
      * Checks if address is valid
      * and sets the address value
      */
-    setAddress(value, inputType) {
+    async setAddress(value, inputType) {
       if (typeof value === 'string') {
-        /**
-         * Checks if user typed or selected an address from dropdown
-         */
-        const typeVal =
-          inputType === USER_INPUT_TYPES.typed
-            ? value
-            : this.addressBookWithMyAddress.find(item => {
-                return value.toLowerCase() === item.address.toLowerCase();
-              });
-        this.inputAddr = value;
-        this.resolvedAddr = '';
-        /**
-         * Checks if the address is valid
-         */
-        const isAddValid = this.isValidAddressFunc(this.inputAddr);
-        if (isAddValid instanceof Promise) {
-          isAddValid.then(res => {
-            this.isValidAddress = res;
-          });
-        } else {
-          this.isValidAddress = isAddValid;
-        }
-        this.loadedAddressValidation = !this.isValidAddress ? false : true;
+        if (
+          this.currency.toLowerCase() ===
+          this.network.type.currencyName.toLowerCase()
+        ) {
+          /**
+           * Checks if user typed or selected an address from dropdown
+           */
+          const typeVal =
+            inputType === USER_INPUT_TYPES.typed
+              ? value
+              : this.addressBookWithMyAddress.find(item => {
+                  return value.toLowerCase() === item.address.toLowerCase();
+                });
+          this.inputAddr = value;
+          this.resolvedAddr = '';
+          /**
+           * Checks if the address is valid
+           */
+          const isAddValid = this.isValidAddressFunc(this.inputAddr);
+          if (isAddValid instanceof Promise) {
+            const validation = await isAddValid;
+            this.isValidAddress = validation;
+          } else {
+            this.isValidAddress = isAddValid;
+          }
+          this.loadedAddressValidation = !this.isValidAddress ? false : true;
 
-        /**
-         * @emits setAddress
-         */
-        this.$emit('setAddress', value, this.isValidAddress, {
-          type: inputType,
-          value: isObject(typeVal) ? typeVal.nickname : typeVal
-        });
-        if (!this.isValidAddress) {
-          this.resolveName();
+          /**
+           * @emits setAddress
+           */
+          this.$emit('setAddress', value, this.isValidAddress, {
+            type: inputType,
+            value: isObject(typeVal) ? typeVal.nickname : typeVal
+          });
+          if (!this.isValidAddress) {
+            this.resolveName();
+          }
+        } else {
+          const currencyExists = WAValidator.findCurrency(
+            this.currency.toLowerCase()
+          );
+          if (currencyExists) {
+            const validate = WAValidator.validate(
+              value,
+              this.currency.toLowerCase()
+            );
+            if (validate) {
+              this.inputAddr = value;
+              this.isValidAddress = true;
+            } else {
+              this.isValidAddress = false;
+            }
+            this.loadedAddressValidation = true;
+            /**
+             * @emits setAddress
+             */
+            this.$emit('setAddress', value, this.isValidAddress, {
+              type: inputType,
+              value: value
+            });
+          } else {
+            this.isValidAddress = false;
+            this.loadedAddressValidation = true;
+            this.$emit('setAddress', value, this.isValidAddress, {
+              type: inputType,
+              value: value
+            });
+          }
         }
       }
     },
@@ -178,6 +238,10 @@ export default {
       this.isValidAddress = false;
       this.loadedAddressValidation = false;
       this.$refs.addressSelect.clear();
+      this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+        type: USER_INPUT_TYPES.typed,
+        value: this.inputAddr
+      });
 
       // Calls setups from mounted
       if (this.network.type.ens)
@@ -199,7 +263,7 @@ export default {
     /**
      * Resolves name and @returns address
      */
-    resolveName: debounce(async function () {
+    resolveName: throttle(async function () {
       if (this.nameResolver) {
         try {
           await this.nameResolver.resolveName(this.inputAddr).then(addr => {
@@ -207,11 +271,10 @@ export default {
             this.isValidAddress = true;
             this.loadedAddressValidation = true;
             this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: 'RESOLVED',
+              type: USER_INPUT_TYPES.resolved,
               value: this.inputAddr
             });
           });
-          // eslint-disable-next-line no-empty
         } catch (e) {
           this.loadedAddressValidation = true;
         }

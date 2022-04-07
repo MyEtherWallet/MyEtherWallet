@@ -4,7 +4,7 @@
   Module Tokens
   =============================================================
   -->
-  <div>
+  <div class="mew-components--module-tokens">
     <v-skeleton-loader
       v-if="loading && tokensData"
       class="mx-auto"
@@ -15,20 +15,18 @@
       subtitle="My Tokens Value"
       :has-body-padding="false"
       :title="`$ ${totalTokensValue}`"
-      :icon="require('@/assets/images/icons/icon-token-grey.png')"
-      icon-align="left"
     >
       <template #rightHeaderContainer>
         <div>
           <span
             v-if="!hasCustom"
-            class="primary--text cursor-pointer pl-3"
+            class="greenPrimary--text cursor-pointer pl-3"
             @click="toggleAddCustomToken"
             >+ Custom Token</span
           >
           <mew-menu
             v-else
-            activator-text-color="primary--text"
+            activator-text-color="greenPrimary--text"
             :list-obj="menuObj"
             @goToPage="customTokenAction"
           />
@@ -87,6 +85,7 @@ import TokenAddCustom from './components/TokenAddCustom';
 import TokenDeleteCustom from './components/TokenDeleteCustom';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { uniqWith, isEqual } from 'lodash';
 export default {
   components: {
     BalanceEmptyBlock,
@@ -181,7 +180,8 @@ export default {
       const customTokens = this.customTokens.map(item => {
         return this.formatValues(item);
       });
-      const tokenList = this.tokensList.map(item => {
+      const uniqueTokens = uniqWith(this.tokensList, isEqual);
+      const tokenList = uniqueTokens.map(item => {
         return this.formatValues(item);
       });
       tokenList.sort((a, b) => b.usdBalance - a.usdBalance);
@@ -219,19 +219,23 @@ export default {
       if (this.hasSwap) {
         newObj.callToAction = [
           {
-            title: 'Trade',
+            title: 'Swap',
             method: () => {
               const obj = {
                 fromToken: item.contract,
                 amount: item.balancef
               };
-              this.$router.push({
-                name: ROUTES_WALLET.SWAP.NAME,
-                query: obj
-              });
+              this.$router
+                .push({
+                  name: ROUTES_WALLET.SWAP.NAME,
+                  query: obj
+                })
+                .then(() => {
+                  this.$emit('trade');
+                });
             },
             btnStyle: 'outline',
-            colorTheme: 'primary'
+            colorTheme: 'greenPrimary'
           }
         ];
       }
@@ -253,3 +257,9 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.mew-table td.text-start:nth-last-of-type(2) div span:first-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

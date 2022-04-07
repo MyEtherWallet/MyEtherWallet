@@ -12,7 +12,9 @@ import TheAccessWalletLayout from '@/views/layouts-default/TheAccessWalletLayout
 import ThePrivacyPolicyLayout from '@/views/layouts-default/ThePrivacyPolicyLayout';
 import TheSecurityPolicyLayout from '@/views/layouts-default/TheSecurityPolicyLayout';
 import TheTermsOfServiceLayout from '@/views/layouts-default/TheTermsOfServiceLayout';
-import TheConvertUnits from '@/views/layouts-default/TheConvertUnits';
+import TheConvertUnitsLayout from '@/views/layouts-default/TheConvertUnitsLayout';
+import TheCareersLayout from '@/views/layouts-default/TheCareersLayout';
+import TheQrCodeLayout from '@/views/layouts-default/TheQrCodeLayout';
 import { ROUTES_HOME } from '../configs/configRoutes';
 import {
   createWalletProps,
@@ -117,7 +119,23 @@ export default {
     {
       path: ROUTES_HOME.CONVERT_UNITS.PATH,
       name: ROUTES_HOME.CONVERT_UNITS.NAME,
-      component: TheConvertUnits,
+      component: TheConvertUnitsLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.JOBS.PATH,
+      name: ROUTES_HOME.JOBS.NAME,
+      component: TheCareersLayout,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.QR_CODE.PATH,
+      name: ROUTES_HOME.QR_CODE.NAME,
+      component: TheQrCodeLayout,
       meta: {
         noAuth: true
       }

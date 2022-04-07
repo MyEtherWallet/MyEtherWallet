@@ -31,10 +31,10 @@
           label="Confirm password"
         />
 
-        <div class="mt-1 tableHeader terms-container pa-5">
+        <div class="mt-1 greyLight terms-container pa-5">
           <mew-checkbox
             v-model="userTermsAgreed"
-            color-text="textBlack2--text"
+            class-name="textMedium--text"
             :label="userTermsLabel"
           ></mew-checkbox>
         </div>

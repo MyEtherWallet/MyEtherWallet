@@ -1,5 +1,5 @@
 <template>
-  <div class="mew-component--home-footer titlePrimary--text">
+  <div class="mew-component--home-footer textDark--text">
     <div class="desktop-content d-none d-lg-block">
       <v-container class="pt-12 pb-6">
         <v-row>
@@ -21,12 +21,9 @@
           </v-col>
           <v-col cols="3">
             <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
-              Love MEW?
+              {{ $t('footer.donation.heading') }}
             </div>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-3"
               target="_blank"
@@ -39,7 +36,7 @@
                 class="mr-2"
               />
               <div>
-                <div>ETH Donation</div>
+                <div>{{ $t('footer.donation.ether') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ ethDonationAddress }}
                 </div>
@@ -74,17 +71,17 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-6 border-right">
                 <router-link :to="{ name: ROUTES_HOME.PRIVACY_POLICY.NAME }">
-                  Privacy
+                  {{ $t('footer.privacy') }}
                 </router-link>
               </div>
               <div class="px-6">
                 <router-link :to="{ name: ROUTES_HOME.TERMS_OF_SERVICE.NAME }">
-                  Terms
+                  {{ $t('footer.tos') }}
                 </router-link>
               </div>
             </div>
@@ -94,7 +91,7 @@
               :input-value="consentToTrack"
               inset
               :label="`Data Tracking ${consentToTrack ? 'On' : 'Off'}`"
-              color="primary"
+              color="greenPrimary"
               off-icon="mdi-alert-circle"
               @change="setConsent"
             />
@@ -118,23 +115,28 @@
           </div>
         </div>
       </v-container>
-      <v-sheet color="titlePrimary" class="py-2">
+      <v-sheet color="textDark" class="py-2">
         <v-container>
           <div class="d-flex align-center">
-            <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+              target="_blank"
+              class="cyan--text text--lighten-3 ma-0"
+              >v{{ version }}</a
+            >
             <v-spacer />
             <p class="teal--text text--lighten-1 ma-0">
-              ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+              {{ $t('footer.copyright') }}
               <a
                 class="cyan--text text--lighten-3"
                 href="https://www.coingecko.com/en"
                 target="_blank"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >.
             </p>
             <v-spacer />
             <v-sheet width="150" color="transparent">
-              <!-- <v-select
+              <v-select
                 v-model="select"
                 append-icon="mdi-chevron-down"
                 :items="languages"
@@ -143,7 +145,7 @@
                 return-object
                 single-line
                 dark
-              ></v-select> -->
+              ></v-select>
             </v-sheet>
           </div>
         </v-container>
@@ -185,11 +187,10 @@
       <v-container class="py-12">
         <v-sheet color="transparent" max-width="500px" class="mx-auto">
           <div>
-            <h3 class="mb-3 d-flex align-center">Love MEW?</h3>
-            <p>
-              Help us keep MEW free and open-source, your donations go a long
-              way towards making that possible.
-            </p>
+            <h3 class="mb-3 d-flex align-center">
+              {{ $t('footer.donation.heading') }}
+            </h3>
+            <p>{{ $t('footer.donation.text') }}</p>
             <a
               class="color--inherit d-flex align-center mb-1"
               target="_blank"
@@ -220,7 +221,7 @@
                 class="mr-2"
               />
               <div>
-                <div>BTC Donation</div>
+                <div>{{ $t('footer.donation.btc') }}</div>
                 <div v-show="false" class="overline">
                   Address: {{ btcDonationAddress }}
                 </div>
@@ -249,7 +250,7 @@
                   href="mailto:support@myetherwallet.com"
                   target="_blank"
                 >
-                  Feedback
+                  {{ $t('footer.feedback') }}
                 </a>
               </div>
               <div class="px-2 px-lg-6 border-right">
@@ -267,13 +268,18 @@
         </v-sheet>
       </v-container>
 
-      <v-sheet color="titlePrimary" class="py-9">
+      <v-sheet color="textDark" class="py-9">
         <v-container>
           <v-sheet color="transparent" max-width="500px" class="mx-auto">
             <div class="d-flex align-center justify-space-between">
-              <p class="cyan--text text--lighten-3 ma-0">v{{ version }}</p>
+              <a
+                :ref="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+                target="_blank"
+                class="cyan--text text--lighten-3 ma-0"
+                >v{{ version }}</a
+              >
               <v-sheet width="150" color="transparent">
-                <!-- <v-select
+                <v-select
                   v-model="select"
                   append-icon="mdi-chevron-down"
                   :items="languages"
@@ -282,17 +288,17 @@
                   return-object
                   single-line
                   dark
-                ></v-select> -->
+                ></v-select>
               </v-sheet>
             </div>
             <v-sheet color="transparent" max-width="300px" class="mx-auto">
               <p class="teal--text text--lighten-1 mt-6 mb-0 text-center">
-                ©2021 MyEtherWallet. All rights reserved. Pricing taken from
+                {{ $t('footer.copyright') }}
                 <a
                   class="cyan--text text--lighten-3"
                   href="https://www.coingecko.com/en"
                   target="_blank"
-                  >Coingecko</a
+                  >{{ $t('footer.coingecko') }}</a
                 >.
               </p>
             </v-sheet>
@@ -305,6 +311,7 @@
 
 <script>
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import { loadLanguageAsync } from '@/main/i18n';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 
 export default {
@@ -321,7 +328,7 @@ export default {
         title: 'Affiliate Hardware Wallets',
         data: [
           { label: 'Ledger', link: 'https://www.ledger.com/?r=fa4b' },
-          { label: 'Bitbox', link: 'https://shiftcrypto.ch/?ref=mew' },
+          { label: 'BitBox02', link: 'https://shiftcrypto.ch/?ref=mew' },
           {
             label: 'Ether Cards',
             link: 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
@@ -346,6 +353,7 @@ export default {
         title: 'MEW',
         data: [
           { label: 'About us', routerLink: 'AboutPage' },
+          { label: 'Careers', routerLink: 'Careers' },
           { label: 'How it works', routerLink: 'HowItWorks' },
           { label: 'Team', routerLink: 'TeamPage' },
           { label: 'Help center', link: 'https://help.myetherwallet.com/en/' },
@@ -356,14 +364,13 @@ export default {
           { label: 'MEWtopia', link: 'https://www.mewtopia.com/' },
           { label: 'Press Kit', routerLink: 'PressKit' },
           { label: 'Security Policy', routerLink: 'SecurityPolicy' },
-          { label: 'Submit DApp', routerLink: 'DappSubmission' },
-          { label: 'Convert Units', routerLink: 'ConvertUnits' }
+          { label: 'Submit DApp', routerLink: 'DappSubmission' }
         ]
       },
       {
         title: 'Tools',
         data: [
-          { label: 'MEW wallet', routerLink: 'Dashboard' },
+          { label: 'MEW wallet', link: 'https://www.mewwallet.com/' },
           {
             label: 'MEW CX',
             link: 'https://chrome.google.com/webstore/detail/mew-cx/nlbmnnijcnlegkjjpcfjclmcfggfefdm?utm_source=chrome-ntp-icon'
@@ -372,6 +379,16 @@ export default {
             label: 'Verify message',
             routerLink: 'Tools',
             query: { tool: 'verify' }
+          },
+          {
+            label: 'Convert units',
+            routerLink: 'Tools',
+            query: { tool: 'convert' }
+          },
+          {
+            label: 'Generate keystore file',
+            routerLink: 'Tools',
+            query: { tool: 'keystore' }
           }
           /*
           ,
@@ -399,39 +416,39 @@ export default {
         ]
       }
     ],
-    // select: 'en',
-    // languages: [
-    //   {
-    //     name: 'English',
-    //     value: 'en',
-    //     flag: require('@/assets/images/flags/uk.png')
-    //   },
-    //   {
-    //     name: 'Russian',
-    //     value: 'ru',
-    //     flag: require('@/assets/images/flags/russia.png')
-    //   },
-    //   {
-    //     name: 'Germany',
-    //     value: 'ge',
-    //     flag: require('@/assets/images/flags/germany.png')
-    //   },
-    //   {
-    //     name: 'Chinese',
-    //     value: 'ch',
-    //     flag: require('@/assets/images/flags/china.png')
-    //   },
-    //   {
-    //     name: 'Korean',
-    //     value: 'kr',
-    //     flag: require('@/assets/images/flags/korea.png')
-    //   },
-    //   {
-    //     name: 'Japanese',
-    //     value: 'jp',
-    //     flag: require('@/assets/images/flags/japan.png')
-    //   }
-    // ],
+    select: 'en_US',
+    languages: [
+      {
+        name: 'English',
+        value: 'en_US',
+        flag: require('@/assets/images/flags/uk.png')
+      },
+      {
+        name: 'Russian',
+        value: 'ru_RU',
+        flag: require('@/assets/images/flags/russia.png')
+      }
+      //   {
+      //     name: 'Germany',
+      //     value: 'ge',
+      //     flag: require('@/assets/images/flags/germany.png')
+      //   },
+      //   {
+      //     name: 'Chinese',
+      //     value: 'ch',
+      //     flag: require('@/assets/images/flags/china.png')
+      //   },
+      //   {
+      //     name: 'Korean',
+      //     value: 'kr',
+      //     flag: require('@/assets/images/flags/korea.png')
+      //   },
+      //   {
+      //     name: 'Japanese',
+      //     value: 'jp',
+      //     flag: require('@/assets/images/flags/japan.png')
+      //   }
+    ],
     socialIcons: [
       {
         link: 'https://www.facebook.com/MyEtherWallet',
@@ -471,7 +488,12 @@ export default {
       }
     ],
     ROUTES_HOME: ROUTES_HOME
-  })
+  }),
+  watch: {
+    select({ value }) {
+      loadLanguageAsync(value);
+    }
+  }
 };
 </script>
 
@@ -495,7 +517,7 @@ a {
 <style lang="scss">
 .mew-component--home-footer {
   a {
-    color: var(--v-titlePrimary-base) !important;
+    color: var(--v-textDark-base) !important;
   }
   .v-select__selection {
     color: #80deea !important;

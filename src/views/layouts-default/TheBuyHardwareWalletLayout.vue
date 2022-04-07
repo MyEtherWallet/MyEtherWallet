@@ -41,7 +41,7 @@
                       {{ b.logoText }}
                     </div>
                     <div
-                      class="mew-caption text-uppercase font-weight-bold textPrimary--text text--lighten-1"
+                      class="mew-caption text-uppercase font-weight-bold textDark--text text--lighten-1"
                     >
                       {{ b.priceNote }}
                     </div>
@@ -56,7 +56,7 @@
                         {{ b.price }}
                       </div>
                     </div>
-                    <div class="mt-3 primary--text font-weight-medium">
+                    <div class="mt-3 greenPrimary--text font-weight-medium">
                       Learn more >
                     </div>
                   </div>
@@ -116,12 +116,11 @@ export default {
         link: 'https://keepkey.myshopify.com/?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
       },
       {
-        logoText: 'BitBox',
-        //logoImg: require('@/assets/images/hardware-wallets/logo-trezor.svg'),
+        logoText: 'BitBox02',
         walletImg: require('@/assets/images/hardware-wallets/bitbox.png'),
         priceNote: 'Starting from',
-        currency: '$',
-        price: '140.11',
+        currency: '€',
+        price: '119.00',
         note: 'The most trusted hardware wallet in the world. Get yours today!',
         link: 'https://shiftcrypto.ch/'
       },

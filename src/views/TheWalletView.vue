@@ -7,7 +7,7 @@
         <module-confirmation />
         <the-wallet-promo-popup />
         <router-view />
-        <mew-survey />
+        <claim-tokens-snackbar />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -21,7 +21,6 @@ import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
 import TheWalletPromoPopup from './components-wallet/TheWalletPopupPromo';
-import MewSurvey from './components-default/MewSurvey';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -30,6 +29,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
+import ClaimTokensSnackbar from '@/dapps/ens-manager-dapp/components/claim/ClaimTokensSnackbar.vue';
 export default {
   components: {
     TheWalletSideMenu,
@@ -37,7 +37,7 @@ export default {
     TheWalletFooter,
     TheWalletPromoPopup,
     ModuleConfirmation,
-    MewSurvey
+    ClaimTokensSnackbar
   },
   mixins: [handlerWallet],
   computed: {
@@ -114,7 +114,9 @@ export default {
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
-          this.checkAndSetBaseFee(block.baseFeePerGas);
+          if (block) {
+            this.checkAndSetBaseFee(block.baseFeePerGas);
+          }
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
               this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
@@ -174,10 +176,10 @@ export default {
 
 <style lang="scss" scoped>
 .box-shadow {
-  box-shadow: 0 0 15px var(--v-boxShadow-base) !important;
+  box-shadow: 0 0 15px var(--v-greyMedium-base) !important;
 }
 .wallet-main {
-  background-color: var(--v-walletBg-base);
+  background-color: var(--v-greyLight-base);
   height: 100%;
 }
 </style>

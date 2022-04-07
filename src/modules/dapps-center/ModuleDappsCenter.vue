@@ -31,7 +31,7 @@
                 <div class="mb-2 d-flex align-center justify-start flex-row">
                   <div class="mew-heading-3">{{ dapp.title }}</div>
                   <v-icon
-                    v-if="dapp.isNew"
+                    v-if="isNew(dapp.release)"
                     size="24"
                     class="ml-1 redPrimary--text"
                     >mdi-new-box</v-icon
@@ -40,7 +40,7 @@
                 <div class="break-word">
                   {{ dapp.subtitle }}
                 </div>
-                <div class="body-2 mt-1 tagLabel--text">{{ dapp.tag }}</div>
+                <div class="body-2 mt-1 textLight--text">{{ dapp.tag }}</div>
               </div>
               <div class="d-none d-sm-flex align-center pl-5">
                 <mew-icon :icon-name="dapp.rightIcon" :img-height="80" />
@@ -107,6 +107,14 @@ export default {
      */
     dappName(dapp) {
       return dapp.name || dapp.defaultName;
+    },
+    isNew(release) {
+      const dateToday = new Date();
+      const millisecondsInDay = 1000 * 60 * 60 * 24;
+      const releaseDate = new Date(release);
+      const daysFromRelease =
+        (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+      return Math.ceil(daysFromRelease) <= 21;
     }
   }
 };

@@ -6,7 +6,8 @@ const GET_QUOTE = '/swap/quote';
 const GET_TRADE = '/swap/trade';
 const REQUEST_CACHER = 'https://requestcache.mewapi.io/?url=';
 import { isAddress } from 'web3-utils';
-import Configs from '../configs';
+import Configs from '../configs/providersConfigs';
+import { ETH } from '@/utils/networks/types';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 class MEWPClass {
   constructor(providerName, web3, supportednetworks, chain) {
@@ -24,15 +25,19 @@ class MEWPClass {
       .then(response => {
         const data = response.data;
         return data.map(d => {
-          return {
+          const token = {
             contract: d.contract_address.toLowerCase(),
             isEth: true,
             decimals: parseInt(d.decimals),
-            img: `https://img.mewapi.io/?image=${d.icon}`,
+            img:
+              d.image && d.image !== ''
+                ? `https://img.mewapi.io/?image=${d.image}`
+                : ETH.icon,
             name: d.name ? d.name : d.symbol,
             symbol: d.symbol,
             type: 'ERC20'
           };
+          return token;
         });
       })
       .catch(err => {

@@ -24,13 +24,13 @@
       <v-card
         v-if="rates.stable !== '--'"
         :flat="isStable"
-        :color="isStable ? 'boxShadow' : 'white'"
+        :color="isStable ? 'greyLight' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8"
         @click.native="setTypeToStable"
       >
-        <v-icon color="secondary">mdi-arrow-right-circle</v-icon>
-        <span class="textSecondary--text my-2">Stable</span>
-        <span class="mew-heading-3 secondary--text">{{ rates.stable }}</span>
+        <v-icon color="textMedium">mdi-arrow-right-circle</v-icon>
+        <span class="textLight--text my-2">Stable</span>
+        <span class="mew-heading-3 textMedium--text">{{ rates.stable }}</span>
       </v-card>
       <!--
   =====================================================================================
@@ -40,14 +40,14 @@
       <v-card
         v-if="rates.variable !== '--'"
         :flat="isVariable"
-        :color="isVariable ? 'boxShadow' : 'white'"
+        :color="isVariable ? 'greyLight' : 'white'"
         class="cursor-pointer d-flex flex-column py-6 px-8 ml-5"
         @click.native="setTypeToVariable"
       >
         <!-- need to update this icon once we have it -->
-        <v-icon x-large color="warning darken-1">mdi-arrow-right-circle</v-icon>
-        <span class="textSecondary--text my-2">Variable</span>
-        <span class="mew-heading-3 warning--text text--darken-1">{{
+        <v-icon x-large color="orangePrimary">mdi-arrow-right-circle</v-icon>
+        <span class="textLight--text my-2">Variable</span>
+        <span class="mew-heading-3 orangePrimary--text">{{
           rates.variable
         }}</span>
       </v-card>

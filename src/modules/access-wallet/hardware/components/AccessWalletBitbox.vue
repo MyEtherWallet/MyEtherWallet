@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" justify="center" align="center">
         <mew-button
-          title="Unlock Bitbox 02"
+          title="Unlock BitBox02"
           color-theme="primary"
           :has-full-width="true"
           btn-size="xlarge"
@@ -109,7 +109,7 @@ export default {
 
 <style lang="scss" scoped>
 .border {
-  border: 1px solid var(--v-inputBorder-base);
+  border: 1px solid var(--v-greyMedium-base);
   border-radius: 5px;
   width: 100%;
 }

@@ -26,7 +26,21 @@ const EXCEPTIONS = [
   'remark-cli',
   'node-fetch',
   'vuetify',
-  'eslint'
+  'eslint',
+  'imagemin-mozjpeg', // issue with importing it to vue config will look into it more if we need it
+  '@vue/eslint-config-prettier', // creates more warnings
+  // versions for vue3
+  'vue-router',
+  'vuex',
+  '@vue/test-utils',
+  '@vue/babel-preset-app',
+  '@vue/cli-plugin-babel',
+  '@vue/cli-plugin-eslint',
+  '@vue/cli-plugin-pwa',
+  '@vue/cli-plugin-unit-jest',
+  '@vue/cli-service',
+  'vue-i18n',
+  'vue'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
