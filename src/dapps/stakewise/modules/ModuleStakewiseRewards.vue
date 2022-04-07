@@ -8,7 +8,7 @@
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-md-15">
-          <div class="mew-heading-2 mb-8">Compound Rewards</div>
+          <div class="mew-heading-2 textDark--text mb-8">Compound Rewards</div>
 
           <!-- ======================================================================================= -->
           <!-- Stake direction information -->
@@ -74,7 +74,7 @@
           <!-- Stake status -->
           <!-- ======================================================================================= -->
           <div class="stake-status">
-            <div class="d-flex justify-space-between mt-11">
+            <div class="d-flex justify-space-between">
               <div>
                 <div class="mew-body">
                   Network Fee
@@ -89,15 +89,6 @@
               <div class="text-right">
                 <div class="">{{ ethTotalFee }} ETH</div>
                 <div class="mew-label textLight--text">${{ gasPriceFiat }}</div>
-              </div>
-            </div>
-            <div class="d-flex justify-space-between mt-5">
-              <div class="mew-body">Total</div>
-              <div class="text-right">
-                <div class="">{{ totalUserStaked }} {{ currencyName }}</div>
-                <div v-show="isEthNetwork" class="mew-body textLight--text">
-                  ${{ totalFiat }}
-                </div>
               </div>
             </div>
           </div>
@@ -254,22 +245,6 @@ export default {
     ...mapState('wallet', ['web3', 'address']),
     ...mapState('stakewise', ['rethBalance']),
     ...mapState('global', ['gasPriceType']),
-    currencyName() {
-      return this.network.type.currencyName;
-    },
-    totalFiat() {
-      const total = BigNumber(this.totalUserStaked);
-      return total.gt(0)
-        ? formatFiatValue(total.times(this.fiatValue).toString()).value
-        : '0';
-    },
-    totalUserStaked() {
-      const total = BigNumber(this.compoundAmount);
-      const totalStaked = total
-        .minus(BigNumber(this.compoundAmount).times(BigNumber(1).div(100)))
-        .toString();
-      return total.gt(0) ? formatFloatingPointValue(totalStaked).value : '0';
-    },
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
     },

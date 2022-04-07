@@ -8,7 +8,7 @@
         :class="$vuetify.breakpoint.smAndDown ? 'my-10' : 'pr-7'"
       >
         <mew-sheet class="pa-md-15">
-          <div class="mew-heading-2 mb-8">
+          <div class="mew-heading-2 textDark--text mb-8">
             Stake {{ currencyName }} with Stakewise
           </div>
 
@@ -155,7 +155,7 @@
           <div class="d-flex flex-column align-center">
             <mew-checkbox
               v-model="agreeToTerms"
-              label="I have read and agreeed to Stakewise terms of
+              label="I have read and agreed to Stakewise terms of
       service."
               :link="{
                 title: 'Stakewise terms',
