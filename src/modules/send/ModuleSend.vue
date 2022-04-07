@@ -553,6 +553,10 @@ export default {
     },
     network() {
       this.clear();
+    },
+    address() {
+      this.clear();
+      this.debounceAmountError('0');
     }
   },
   mounted() {
