@@ -192,7 +192,6 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 import { find, clone, isEmpty } from 'lodash';
 import { fromWei } from 'web3-utils';
 import { EventBus } from '@/core/plugins/eventBus';
-import rEthAbi from '@/dapps/stakewise/handlers/abi/rewardEthToken';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -212,6 +211,7 @@ import {
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
 const MIN_GAS_LIMIT = 150000;
+
 export default {
   name: 'ModuleStakewiseRewards',
   components: {
@@ -223,7 +223,6 @@ export default {
   data() {
     return {
       iconStakewise: require('@/dapps/stakewise/assets/icon-stakewise-red.svg'),
-      rethBalance: '0',
       compoundAmount: '0',
       locGasPrice: '0',
       gasLimit: '21000',
@@ -253,7 +252,7 @@ export default {
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('stakewise', ['validatorApr']),
+    ...mapState('stakewise', ['rethBalance']),
     ...mapState('global', ['gasPriceType']),
     currencyName() {
       return this.network.type.currencyName;
@@ -401,21 +400,15 @@ export default {
     },
     isEthNetwork() {
       this.setup();
-      this.fetchBalance();
     },
     address() {
       this.setup();
-      this.fetchBalance();
-    },
-    rethBalance(newVal) {
-      this.rethBalance = newVal;
     }
   },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
     this.swapper = new Swapper(this.web3, this.network.type.name);
     this.setup();
-    this.fetchBalance();
   },
   methods: {
     ...mapActions('notifications', ['addNotification']),
@@ -431,6 +424,7 @@ export default {
         this.isEthNetwork,
         this.address
       );
+      this.loadingBalance = false;
     },
     setMax() {
       if (this.hasEnoughBalance) {
@@ -520,10 +514,10 @@ export default {
           toImg: this.hasSeth.img,
           fromVal: this.rethBalance,
           toVal: this.rethBalance,
-          toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
+          fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
             .times(this.rethBalance)
             .toFixed(),
-          fromUsdVal: BigNumber(this.hasReth.price ? this.hasReth.price : 0)
+          toUsdVal: BigNumber(this.hasSeth.price ? this.hasSeth.price : 0)
             .times(this.rethBalance)
             .toFixed(),
           validUntil: new Date().getTime() + 10 * 60 * 1000,
@@ -638,17 +632,6 @@ export default {
         })
         .catch(err => {
           Toast(err, {}, ERROR);
-        });
-    },
-    async fetchBalance() {
-      this.loadingBalance = true;
-      const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
-      contract.methods
-        .balanceOf(this.address)
-        .call()
-        .then(res => {
-          this.rethBalance = fromWei(res);
-          this.loadingBalance = false;
         });
     }
   }
