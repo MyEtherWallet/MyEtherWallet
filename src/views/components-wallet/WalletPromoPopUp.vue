@@ -32,9 +32,10 @@
           >
             Current APR
           </div>
-          <div class="textLight--text greenPrimary--text">
+          <div v-if="!loading" class="textLight--text greenPrimary--text">
             {{ validatorApr }}%
           </div>
+          <v-skeleton-loader v-else class="mt-1" type="text" width="63px" />
         </div>
         <div class="d-flex align-center justify-space-between">
           <div
@@ -42,7 +43,8 @@
           >
             ETH in pool
           </div>
-          <div>{{ formattedPoolValue }} ETH</div>
+          <div v-if="!loading">{{ formattedPoolValue }} ETH</div>
+          <v-skeleton-loader v-else class="mt-1" type="text" width="100px" />
         </div>
       </div>
       <mew-button
@@ -71,6 +73,11 @@ export default {
   name: 'TheStakewisePopupPromo',
   components: { AppModal },
   mixins: [handlerAnalytics],
+  data() {
+    return {
+      loading: true
+    };
+  },
   computed: {
     ...mapState('global', ['showWalletPromo', 'promoOver']),
     ...mapState('ensManagerStore', ['showHasClaimable']),
@@ -115,14 +122,17 @@ export default {
     collectiveFetch() {
       this.stakewiseHandler.getEthPool().then(res => {
         this.setPoolSupply(res);
+        this.loading = false;
       });
       this.stakewiseHandler.getStakingFee().then(res => {
         this.setStakingFee(res);
+        this.loading = false;
       });
       this.stakewiseHandler.getValidatorApr().then(res => {
         this.setValidatorApr(
           BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
         );
+        this.loading = false;
       });
     },
     setHidePopUp() {
