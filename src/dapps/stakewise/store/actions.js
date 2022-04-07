@@ -32,6 +32,14 @@ const hideForFourteen = function ({ commit }) {
   commit('HIDE_FOR_FOURTEEN');
 };
 
+const setRewardBalance = function ({ commit }, val) {
+  commit('SET_RETH_BALANCE', val);
+};
+
+const setStakeBalance = function ({ commit }, val) {
+  commit('SET_SETH_BALANCE', val);
+};
+
 export default {
   setPoolSupply,
   setStakingFee,
@@ -42,5 +50,7 @@ export default {
   removePendingTxsGoerli,
   closeStakewisePromo,
   hideForSeven,
-  hideForFourteen
+  hideForFourteen,
+  setRewardBalance,
+  setStakeBalance
 };

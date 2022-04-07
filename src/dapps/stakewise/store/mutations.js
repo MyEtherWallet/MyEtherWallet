@@ -20,6 +20,14 @@ const SET_VALIDATOR_APR = function (state, val) {
   state.validatorApr = val;
 };
 
+const SET_RETH_BALANCE = function (state, val) {
+  state.rethBalance = val;
+};
+
+const SET_SETH_BALANCE = function (state, val) {
+  state.sethBalance = val;
+};
+
 const ADD_TO_PENDING_TXS = function (state, val) {
   state.stakewiseTxs.ETH.push(val);
 };
@@ -63,5 +71,7 @@ export default {
   REMOVE_TO_PENDING_TXS_GOERLI,
   CLOSE_STAKEWISE_PROMO,
   HIDE_FOR_SEVEN,
-  HIDE_FOR_FOURTEEN
+  HIDE_FOR_FOURTEEN,
+  SET_RETH_BALANCE,
+  SET_SETH_BALANCE
 };
