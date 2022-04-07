@@ -266,6 +266,7 @@ export default {
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['web3', 'address']),
+    ...mapState('stakewise', ['sethBalance']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -518,7 +519,7 @@ export default {
           fromT: from,
           toT: to,
           quote: this.availableQuotes[0],
-          fromAmount: new BigNumber(this.rethBalance).times(
+          fromAmount: new BigNumber(this.sethBalance).times(
             new BigNumber(10).pow(new BigNumber(from.decimals))
           )
         });
@@ -609,10 +610,10 @@ export default {
           fromVal: balance,
           toVal: balance,
           toUsdVal: BigNumber(ETH_Token.price ? ETH_Token.price : 0)
-            .times(this.rethBalance)
+            .times(this.sethBalance)
             .toFixed(),
           fromUsdVal: BigNumber(eth.price ? eth.price : 0)
-            .times(this.rethBalance)
+            .times(this.sethBalance)
             .toFixed(),
           validUntil: new Date().getTime() + 10 * 60 * 1000,
           selectedProvider: this.selectedProvider,
