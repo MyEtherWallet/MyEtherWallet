@@ -243,7 +243,7 @@ export default {
     ...mapGetters('global', ['network', 'isEthNetwork', 'gasPriceByType']),
     ...mapGetters('external', ['fiatValue']),
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('stakewise', ['rethBalance']),
+    ...mapState('stakewise', ['rethBalance', 'sethBalance']),
     ...mapState('global', ['gasPriceType']),
     reth2Contract() {
       return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
@@ -412,7 +412,7 @@ export default {
       this.currentTrade = trade;
       this.currentTrade.gasPrice = this.gasPrice;
     },
-    getQuote: debounce(function (from, to, balance) {
+    getQuote(from, to, balance) {
       if (
         balance !== '' &&
         balance > 0 &&
@@ -443,8 +443,9 @@ export default {
             Toast(err, {}, ERROR);
           });
       }
-    }, 500),
-    async getTrade(from, to) {
+    },
+    async getTrade(from, to, type) {
+      const balance = type === 'seth' ? this.sethBalance : this.rethBalance;
       try {
         const trade = await this.swapper.getTrade({
           fromAddress: this.address,
@@ -453,7 +454,7 @@ export default {
           fromT: from,
           toT: to,
           quote: this.availableQuotes[0],
-          fromAmount: new BigNumber(this.rethBalance).times(
+          fromAmount: new BigNumber(balance).times(
             new BigNumber(10).pow(new BigNumber(from.decimals))
           )
         });
@@ -477,7 +478,7 @@ export default {
     async showConfirm() {
       try {
         this.loading = true;
-        await this.getTrade(this.hasReth, this.hasSeth);
+        await this.getTrade(this.hasReth, this.hasSeth, 'reth');
         this.confirmInfo = {
           from: this.hasReth.contract,
           to: this.hasSeth.contract,
@@ -563,7 +564,7 @@ export default {
       await this.getQuote(eth, ETH_Token, balance);
       try {
         this.loading = true;
-        await this.getTrade(eth, ETH_Token);
+        await this.getTrade(eth, ETH_Token, type);
         this.confirmInfo = {
           from: eth.contract,
           to: ETH_Token.contract,

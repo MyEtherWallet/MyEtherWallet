@@ -266,7 +266,7 @@ export default {
     ...mapState('stakewise', ['validatorApr']),
     ...mapState('global', ['gasPriceType']),
     ...mapState('wallet', ['web3', 'address']),
-    ...mapState('stakewise', ['sethBalance']),
+    ...mapState('stakewise', ['sethBalance', 'rethBalance']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -510,7 +510,8 @@ export default {
           });
       }
     },
-    async getTrade(from, to) {
+    async getTrade(from, to, type) {
+      const balance = type === 'seth' ? this.sethBalance : this.rethBalance;
       try {
         const trade = await this.swapper.getTrade({
           fromAddress: this.address,
@@ -519,7 +520,7 @@ export default {
           fromT: from,
           toT: to,
           quote: this.availableQuotes[0],
-          fromAmount: new BigNumber(this.sethBalance).times(
+          fromAmount: new BigNumber(balance).times(
             new BigNumber(10).pow(new BigNumber(from.decimals))
           )
         });
@@ -599,7 +600,7 @@ export default {
       await this.getQuote(eth, ETH_Token, balance);
       try {
         this.loading = true;
-        await this.getTrade(eth, ETH_Token);
+        await this.getTrade(eth, ETH_Token, type);
         this.confirmInfo = {
           from: eth.contract,
           to: ETH_Token.contract,
