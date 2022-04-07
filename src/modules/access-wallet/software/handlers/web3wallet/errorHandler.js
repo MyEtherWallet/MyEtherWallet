@@ -13,7 +13,9 @@ const ERRORS = {
   'invalid argument':
     'Invalid argument. Please verify that the argument provided is correct',
   'execution reverted':
-    'Something went wrong with the transaction: execution reverted'
+    'Something went wrong with the transaction: execution reverted',
+  'MetaMask Message Signature: User denied message signature.':
+    'MetaMask Message Signature: User denied message signature.'
 };
 const WARNINGS = {};
 
