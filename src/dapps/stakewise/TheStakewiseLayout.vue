@@ -18,6 +18,15 @@ import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import handler from './handlers/stakewiseHandler';
 import BigNumber from 'bignumber.js';
+import { fromWei } from 'web3-utils';
+import rEthAbi from '@/dapps/stakewise/handlers/abi/rewardEthToken';
+import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken';
+import {
+  SETH2_MAINNET_CONTRACT,
+  RETH2_MAINNET_CONTRACT,
+  SETH2_GOERLI_CONTRACT,
+  RETH2_GOERLI_CONTRACT
+} from '@/dapps/stakewise/handlers/configs.js';
 
 export default {
   name: 'TheStakewiseLayout',
@@ -59,6 +68,12 @@ export default {
         return item.name === this.network.type.name;
       });
       return isSupported;
+    },
+    seth2Contract() {
+      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
+    },
+    reth2Contract() {
+      return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
     }
   },
   watch: {
@@ -91,7 +106,9 @@ export default {
     ...mapActions('stakewise', [
       'setPoolSupply',
       'setStakingFee',
-      'setValidatorApr'
+      'setValidatorApr',
+      'setRewardBalance',
+      'setStakeBalance'
     ]),
     setup() {
       this.stakewiseHandler = new handler(this.web3, this.isEthNetwork);
@@ -112,6 +129,26 @@ export default {
           BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
         );
       });
+      this.fetchSethBalance();
+      this.fetchRethBalance();
+    },
+    fetchSethBalance() {
+      const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          this.setStakeBalance(fromWei(res));
+        });
+    },
+    fetchRethBalance() {
+      const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
+      contract.methods
+        .balanceOf(this.address)
+        .call()
+        .then(res => {
+          this.setRewardBalance(fromWei(res));
+        });
     }
   }
 };

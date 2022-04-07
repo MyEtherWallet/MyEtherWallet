@@ -19,9 +19,11 @@
       </div>
       <div class="text-right">
         <div class="font-weight-bold mew-heading-3 mb-1">
-          {{ balance }}
+          {{ formattedBalance }}
         </div>
-        <div v-if="ethvmSupport" class="textLight--text">${{ balanceUsd }}</div>
+        <div v-if="ethvmSupport" class="textLight--text">
+          ${{ sethBalanceFiat }}
+        </div>
       </div>
     </div>
 
@@ -121,7 +123,7 @@
 </template>
 
 <script>
-import { isEmpty, some } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
   SETH2_GOERLI_CONTRACT,
   SETH2_MAINNET_CONTRACT
@@ -146,17 +148,15 @@ export default {
   },
   data() {
     return {
-      balance: 0,
-      balanceUsd: 0,
       intervals: {}
     };
   },
   computed: {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('wallet', ['tokensList']),
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapState('stakewise', ['stakewiseTxs']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('stakewise', ['stakewiseTxs', 'sethBalance']),
     currencyName() {
       return this.network.type.currencyName;
     },
@@ -174,19 +174,22 @@ export default {
         : this.stakewiseTxs.GOERLI;
       return txList.length > 0;
     },
+    formattedBalance() {
+      return formatFloatingPointValue(this.sethBalance).value;
+    },
+    sethBalanceFiat() {
+      return formatFiatValue(
+        BigNumber(this.sethBalance).times(this.fiatValue).toString()
+      ).value;
+    },
     seth2Contract() {
       return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
     },
     hasStaked() {
       if (this.ethvmSupport) {
-        const exists = some(
-          this.tokensList,
-          item =>
-            item.contract.toLowerCase() === this.seth2Contract.toLowerCase()
-        );
-        return exists;
+        return BigNumber(this.sethBalance).gt(0);
       }
-      return BigNumber(this.balance).gt(0);
+      return BigNumber(this.sethBalance).gt(0);
     }
   },
   watch: {
@@ -200,12 +203,6 @@ export default {
         }
       },
       deep: true
-    },
-    address() {
-      this.fetchBalance();
-    },
-    isEthNetwork() {
-      this.fetchBalance();
     },
     $route: {
       handler: function (from) {
@@ -221,7 +218,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchBalance();
     const txList = this.isEthNetwork
       ? this.stakewiseTxs.ETH
       : this.stakewiseTxs.GOERLI;
@@ -240,21 +236,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions('stakewise', ['removePendingTxs', 'removePendingTxsGoerli']),
+    ...mapActions('stakewise', [
+      'removePendingTxs',
+      'removePendingTxsGoerli',
+      'setStakeBalance'
+    ]),
     executeSwap() {
-      this.$emit('redeem-to-eth', 'seth', this.balance);
+      this.$emit('redeem-to-eth', 'seth', this.sethBalance);
     },
-    async fetchBalance() {
+    fetchBalance() {
       const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
       contract.methods
         .balanceOf(this.address)
         .call()
-        .then(res => {
-          this.balance = formatFloatingPointValue(fromWei(res)).value;
-          this.balanceUsd = formatFiatValue(
-            BigNumber(fromWei(res)).times(this.fiatValue).toString()
-          ).value;
-        });
+        .then(res => this.setStakeBalance(fromWei(res)));
     },
     checkHash(hash) {
       // eslint-disable-next-line

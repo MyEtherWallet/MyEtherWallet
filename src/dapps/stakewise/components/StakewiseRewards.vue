@@ -63,22 +63,14 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
 import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
-import {
-  SETH2_MAINNET_CONTRACT,
-  RETH2_MAINNET_CONTRACT,
-  RETH2_GOERLI_CONTRACT,
-  SETH2_GOERLI_CONTRACT
-} from '@/dapps/stakewise/handlers/configs.js';
-import rEthAbi from '@/dapps/stakewise/handlers/abi/rewardEthToken';
-import sEthAbi from '@/dapps/stakewise/handlers/abi/stakedEthToken';
+import { mapGetters, mapState } from 'vuex';
 import {
   formatFloatingPointValue,
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
-import BigNumber from 'bignumber.js';
-import { fromWei } from 'web3-utils';
-import { mapGetters, mapState } from 'vuex';
+
 export default {
   name: 'ModuleSideRewards',
   components: {},
@@ -88,18 +80,12 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      sethBalance: '0',
-      rethBalance: '0',
-      rethBalanceFiat: '0'
-    };
-  },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
-    ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('stakewise', ['rethBalance', 'sethBalance']),
     hasStakedNoRewards() {
       return (
         BigNumber(this.sethBalance).gt(0) && BigNumber(this.rethBalance).eq(0)
@@ -111,14 +97,13 @@ export default {
     ethvmSupport() {
       return this.network.type.isEthVMSupported.supported;
     },
-    seth2Contract() {
-      return this.isEthNetwork ? SETH2_MAINNET_CONTRACT : SETH2_GOERLI_CONTRACT;
-    },
-    reth2Contract() {
-      return this.isEthNetwork ? RETH2_MAINNET_CONTRACT : RETH2_GOERLI_CONTRACT;
-    },
     formattedBalance() {
       return formatFloatingPointValue(this.rethBalance).value;
+    },
+    rethBalanceFiat() {
+      return formatFiatValue(
+        BigNumber(this.rethBalance).times(this.fiatValue).toString()
+      ).value;
     }
   },
   watch: {
@@ -133,16 +118,7 @@ export default {
       },
       deep: true,
       immediate: true
-    },
-    address() {
-      this.fetchBalances();
-    },
-    isEthNetwork() {
-      this.fetchBalances();
     }
-  },
-  mounted() {
-    this.fetchBalances();
   },
   methods: {
     executeSwap() {
@@ -165,31 +141,6 @@ export default {
           this.$emit('set-max');
         });
       });
-    },
-    fetchRethBalance() {
-      const contract = new this.web3.eth.Contract(rEthAbi, this.reth2Contract);
-      contract.methods
-        .balanceOf(this.address)
-        .call()
-        .then(res => {
-          this.rethBalance = fromWei(res);
-          this.rethBalanceFiat = formatFiatValue(
-            BigNumber(fromWei(res)).times(this.fiatValue).toString()
-          ).value;
-        });
-    },
-    fetchSethBalance() {
-      const contract = new this.web3.eth.Contract(sEthAbi, this.seth2Contract);
-      contract.methods
-        .balanceOf(this.address)
-        .call()
-        .then(res => {
-          this.sethBalance = formatFloatingPointValue(fromWei(res)).value;
-        });
-    },
-    fetchBalances() {
-      this.fetchRethBalance();
-      this.fetchSethBalance();
     }
   }
 };
