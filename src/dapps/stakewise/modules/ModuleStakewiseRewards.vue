@@ -402,7 +402,7 @@ export default {
       this.loadingBalance = false;
     },
     setMax() {
-      if (this.hasEnoughBalance) {
+      if (this.hasEnoughBalance && this.hasMinimum) {
         const max = BigNumber(this.rethBalance);
         this.setAmount(max.toString());
       }
