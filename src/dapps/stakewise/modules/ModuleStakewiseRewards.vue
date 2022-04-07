@@ -281,14 +281,14 @@ export default {
         ? this.gasLimit
         : MIN_GAS_LIMIT;
       const ethFee = fromWei(
-        BigNumber(this.gasPrice).times(gasLimit).toString()
+        BigNumber(this.gasPrice).times(gasLimit).toFixed()
       );
       return formatFloatingPointValue(ethFee).value;
     },
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
-        ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
+        ? formatFiatValue(gasPrice.times(this.fiatValue).toFixed()).value
         : '0';
     },
     hasEnoughBalance() {
@@ -307,17 +307,14 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      const txFee = BigNumber(this.gasPrice).times(gasLimit).toString();
+      const txFee = BigNumber(this.gasPrice).times(gasLimit).toFixed();
       return txFee;
-    },
-    formattedTxFee() {
-      return formatFloatingPointValue(this.txFee).value;
     },
     hasMinimum() {
       if (!isEmpty(this.selectedProvider)) {
         return (
           BigNumber(this.selectedProvider.minFrom).lt(this.compoundAmount) &&
-          BigNumber(this.compoundAmount).gt(this.formattedTxFee)
+          BigNumber(this.balanceInETH).gte(this.ethTotalFee)
         );
       }
       return false;
@@ -326,19 +323,22 @@ export default {
       return BigNumber(this.compoundAmount).gt(this.rethBalance);
     },
     errorMessages() {
+      if (BigNumber(this.compoundAmount).eq(0)) {
+        return '';
+      }
+      if (BigNumber(this.compoundAmount).lt(0)) {
+        return 'Value cannot be negative';
+      }
       if (this.overMaximum) {
         return 'Exceeds rETH2 balance';
       }
       if (!this.hasMinimum) {
         return 'Not enough rETH2!';
       }
-      if (BigNumber(this.compoundAmount).lt(0)) {
-        return 'Value cannot be negative';
-      }
       if (
         BigNumber(this.compoundAmount).gt(0) &&
         !stakeHandler.helpers.hasValidDecimals(
-          BigNumber(this.compoundAmount).toString(),
+          BigNumber(this.compoundAmount).toFixed(),
           18
         )
       ) {
@@ -389,8 +389,8 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
-      this.compoundAmount = BigNumber(value).toString();
-      this.stakeHandler._setAmount(this.compoundAmount);
+      this.compoundAmount = BigNumber(value).toFixed();
+      this.stakeHandler._setAmount(BigNumber(value).toFixed());
       this.getQuote(this.hasReth, this.hasSeth, this.compoundAmount);
     }, 500),
     setup() {
@@ -402,9 +402,9 @@ export default {
       this.loadingBalance = false;
     },
     setMax() {
-      if (this.hasEnoughBalance && this.hasMinimum) {
+      if (this.hasEnoughBalance) {
         const max = BigNumber(this.rethBalance);
-        this.setAmount(max.toString());
+        this.setAmount(max.toFixed());
       }
     },
     setupTrade(trade) {
@@ -435,7 +435,7 @@ export default {
             this.availableQuotes = quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(balance))
-                .toString();
+                .toFixed();
               this.selectedProvider = q;
               return q;
             });

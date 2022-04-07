@@ -274,7 +274,7 @@ export default {
       const total = BigNumber(this.stakeAmount);
       const totalStaked = total
         .minus(BigNumber(this.stakeAmount).times(BigNumber(1).div(100)))
-        .toString();
+        .toFixed();
       return total.gt(0) ? formatFloatingPointValue(totalStaked).value : '0';
     },
     ethTotalFee() {
@@ -284,13 +284,13 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toString());
+      const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
       return formatFloatingPointValue(ethFee).value;
     },
     gasPriceFiat() {
       const gasPrice = BigNumber(this.ethTotalFee);
       return gasPrice.gt(0)
-        ? formatFiatValue(gasPrice.times(this.fiatValue).toString()).value
+        ? formatFiatValue(gasPrice.times(this.fiatValue).toFixed()).value
         : '0';
     },
     hasEnoughBalance() {
@@ -319,7 +319,7 @@ export default {
       if (
         BigNumber(this.stakeAmount).gt(0) &&
         !stakeHandler.helpers.hasValidDecimals(
-          BigNumber(this.stakeAmount).toString(),
+          BigNumber(this.stakeAmount).toFixed(),
           18
         )
       ) {
@@ -374,7 +374,7 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
-      const txFee = BigNumber(this.locGasPrice).times(gasLimit).toString();
+      const txFee = BigNumber(this.locGasPrice).times(gasLimit).toFixed();
       return txFee;
     }
   },
@@ -387,7 +387,7 @@ export default {
     },
     stakeAmount(value) {
       const val = value ? value : 0;
-      this.stakeHandler._setAmount(BigNumber(val).toString());
+      this.stakeHandler._setAmount(BigNumber(val).toFixed());
 
       if (BigNumber(value).lte(this.balanceInETH) && BigNumber(value).gt(0)) {
         this.setGasLimit();
@@ -410,7 +410,7 @@ export default {
     ...mapActions('notifications', ['addNotification']),
     setAmount: debounce(function (val) {
       const value = val ? val : 0;
-      this.stakeAmount = BigNumber(value).toString();
+      this.stakeAmount = BigNumber(value).toFixed();
     }, 500),
     setup() {
       this.stakeHandler = new stakeHandler(
@@ -436,7 +436,7 @@ export default {
         const max = BigNumber(this.balanceInETH).minus(
           BigNumber(this.ethTotalFee)
         );
-        this.setAmount(max.toString());
+        this.setAmount(max.toFixed());
       }
     },
     stake() {
@@ -499,7 +499,7 @@ export default {
             this.availableQuotes = await quotes.map(q => {
               q.rate = new BigNumber(q.amount)
                 .dividedBy(new BigNumber(balance))
-                .toString();
+                .toFixed();
               this.selectedProvider = q;
               return q;
             });
