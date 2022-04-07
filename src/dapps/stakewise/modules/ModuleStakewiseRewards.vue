@@ -359,7 +359,7 @@ export default {
     maxBtnObj() {
       return {
         title: 'Max',
-        disabled: BigNumber(this.rethBalance).lte(0),
+        disabled: BigNumber(this.rethBalance).lte(0) || !this.hasMinimum,
         method: this.setMax
       };
     }
@@ -404,6 +404,7 @@ export default {
     setMax() {
       if (this.hasEnoughBalance) {
         const max = BigNumber(this.rethBalance);
+        console.log(max.toString());
         this.setAmount(max.toString());
       }
     },
