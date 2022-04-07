@@ -329,8 +329,8 @@ export default {
       if (this.overMaximum) {
         return 'Exceeds rETH2 balance';
       }
-      if (this.hasMinimum) {
-        return 'Not enough RETH!';
+      if (!this.hasMinimum) {
+        return 'Not enough rETH2!';
       }
       if (BigNumber(this.compoundAmount).lt(0)) {
         return 'Value cannot be negative';
