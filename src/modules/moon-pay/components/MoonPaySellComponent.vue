@@ -119,7 +119,9 @@ export default {
         ? {
             title: 'Max',
             method: this.setMax,
-            disabled: this.nonMainnetMetamask
+            disabled:
+              this.nonMainnetMetamask ||
+              BigNumber(this.txFee).gte(this.selectedBalance)
           }
         : {};
     },
@@ -253,7 +255,7 @@ export default {
       }
 
       if (!isEmpty(this.sendHandler) && !this.sendHandler.hasEnoughBalance()) {
-        return `You do not have enough ${symbol} to pay for network fee.`;
+        return `You do not have enough ETH to pay for network fee.`;
       }
 
       if (

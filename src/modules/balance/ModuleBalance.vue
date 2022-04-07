@@ -26,13 +26,6 @@
             @onBtnClick="onToggle"
           />
           <!-- not sure what this button is for, commented out for now -->
-          <!-- <mew-button
-            btn-size="small"
-            icon-type="mdi"
-            icon="mdi-dots-vertical"
-            btn-style="transparent"
-            color-theme="secondary"
-          /> -->
         </div>
       </template>
       <template #moduleBody>
@@ -48,7 +41,9 @@
             class="d-flex flex-column flex-sm-row align-center justify-center"
           >
             <div class="d-flex align-center">
-              <div class="font-weight-bold">{{ network.type.name }} PRICE</div>
+              <div class="font-weight-bold">
+                {{ network.type.currencyName }} PRICE
+              </div>
               <div
                 :class="[
                   'ml-2 font-weight-regular',
@@ -66,7 +61,7 @@
               >
             </div>
             <div class="ml-sm-5">
-              {{ formatFiatPrice }} / 1 {{ network.type.name }}
+              {{ formatFiatPrice }} / 1 {{ network.type.currencyName }}
             </div>
           </div>
           <div class="text-center text-md-right mt-4 mt-md-0">
@@ -97,7 +92,7 @@
     -->
     <balance-empty-block
       v-if="!hasBalance && !loading"
-      :network-type="network.type.name"
+      :network-type="network.type.currencyName"
       :is-eth="isEthNetwork"
     />
   </div>
@@ -155,7 +150,7 @@ export default {
      */
     title() {
       return `${formatFloatingPointValue(this.balanceInETH).value} ${
-        this.network.type.name
+        this.network.type.currencyName
       }`;
     },
     sendText() {
@@ -165,7 +160,7 @@ export default {
       return `Swap ${this.network.type.currencyName}`;
     },
     subtitle() {
-      return `My ${this.network.type.name} Balance`;
+      return `My ${this.network.type.currencyName} Balance`;
     },
     /**
      * Computed property returns formated eth wallet balance value in USD
