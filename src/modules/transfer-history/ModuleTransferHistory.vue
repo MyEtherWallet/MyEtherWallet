@@ -54,6 +54,10 @@ export default {
           if (item.hasOwnProperty('hash')) {
             return formatNotification(item, this.network);
           }
+          /**
+           * Confirmed: data passes in correctly as user must
+           * refresh to see change upon completion of swap
+           */
           return formatNonChainNotification(item);
         })
         .sort(this.sortByDate);
