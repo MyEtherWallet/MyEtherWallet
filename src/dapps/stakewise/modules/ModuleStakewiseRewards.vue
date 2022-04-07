@@ -404,7 +404,6 @@ export default {
     setMax() {
       if (this.hasEnoughBalance) {
         const max = BigNumber(this.rethBalance);
-        console.log(max.toString());
         this.setAmount(max.toString());
       }
     },
