@@ -6,8 +6,8 @@ import { isObject } from 'lodash';
 const mergeIfNotExists = (baseList, newList) => {
   newList.forEach(t => {
     for (const bl of baseList) {
-      if (bl.name.toLowerCase() === t.name.toLowerCase()) return;
-      if (bl.contract.toLowerCase() === t.contract.toLowerCase()) return;
+      if (bl?.name.toLowerCase() === t?.name.toLowerCase()) return;
+      if (bl?.contract.toLowerCase() === t?.contract.toLowerCase()) return;
     }
     baseList.push(t);
   });

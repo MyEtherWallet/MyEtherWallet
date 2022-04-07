@@ -583,7 +583,7 @@ export default {
         ? this.selectedPath.hasOwnProperty('value')
           ? this.selectedPath.value
           : this.selectedPath
-        : this.paths[0];
+        : this.paths[0].value;
       this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {
