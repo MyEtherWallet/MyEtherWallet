@@ -247,7 +247,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
@@ -582,7 +582,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(value);
     },
     /**
@@ -703,7 +703,7 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.gasEstimationError = error.message;
+          this.instance.errorHandler(error.message);
         });
     },
     prefillForm() {
