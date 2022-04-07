@@ -211,7 +211,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('global', ['addCustomPath']),
+    ...mapActions('custom', ['addCustomPath']),
     /**
      * Emits the path value and name back to parent
      * then closes dropdown
@@ -256,7 +256,7 @@ export default {
               name: this.customAlias,
               value: this.customPath
             };
-            this.addCustomPath(newPath).then(() => {
+            this.addCustomPath(newPath)?.then(() => {
               Toast('You have added custom path successfully.', {}, SUCCESS);
             });
             this.showCustomField = false;
