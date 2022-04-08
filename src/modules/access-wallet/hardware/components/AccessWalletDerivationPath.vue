@@ -256,7 +256,7 @@ export default {
               name: this.customAlias,
               value: this.customPath
             };
-            this.addCustomPath(newPath)?.then(() => {
+            this.addCustomPath(newPath).then(() => {
               Toast('You have added custom path successfully.', {}, SUCCESS);
             });
             this.showCustomField = false;
