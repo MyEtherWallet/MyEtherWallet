@@ -84,7 +84,12 @@ export default {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
+    ...mapActions('wallet', [
+      'setBlockNumber',
+      'setTokens',
+      'setWallet',
+      'setWeb3Instance'
+    ]),
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
@@ -136,10 +141,6 @@ export default {
           this.findAndSetNetwork(chainId);
         });
 
-        window.ethereum.on('networkChanged', chainId => {
-          this.findAndSetNetwork(chainId);
-        });
-
         window.ethereum.on('accountsChanged', acc => {
           if (acc[0]) {
             const web3 = new Web3(window.ethereum);
@@ -161,7 +162,9 @@ export default {
       });
 
       if (foundNetwork) {
-        this.setNetwork(foundNetwork[0]).then(this.setup);
+        this.setNetwork(foundNetwork[0]).then(() => {
+          this.setWeb3Instance(new Web3(window.ethereum));
+        });
       } else {
         Toast(
           "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",

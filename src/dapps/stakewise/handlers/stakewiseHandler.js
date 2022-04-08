@@ -35,6 +35,13 @@ export default class StakewiseHandler {
     return this.rewardsContract.methods.protocolFee().call();
   }
 
+  getSethBalance(address) {
+    return this.stakedContract.methods.balanceOf(address).call();
+  }
+  getRethBalance(address) {
+    return this.rewardsContract.methods.balanceOf(address).call();
+  }
+
   getValidatorApr() {
     return new Promise((resolve, reject) => {
       fetch(POOL_API)
