@@ -68,7 +68,7 @@ import handler from '@/dapps/stakewise/handlers/stakewiseHandler';
 import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
 import { SUPPORTED_NETWORKS } from '@/dapps/stakewise/handlers/helpers/supportedNetworks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
-
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   name: 'TheStakewisePopupPromo',
   components: { AppModal },
@@ -134,7 +134,7 @@ export default {
           this.loading = false;
         })
         .catch(e => {
-          console.log(e);
+          Toast(e, {}, ERROR);
         });
     },
     setHidePopUp() {
