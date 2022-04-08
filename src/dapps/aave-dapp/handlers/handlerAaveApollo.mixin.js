@@ -50,7 +50,8 @@ export default {
         client: 'aave',
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
-            item['icon'] = this.findCoinToken(item.name)?.image;
+            item['icon'] =
+              this.contractToToken(item.underlyingAsset)?.img || eth;
             return item;
           });
           this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
@@ -77,9 +78,8 @@ export default {
         },
         result({ data }) {
           this.userReserveData = data.userReserves.map(item => {
-            item.reserve['icon'] = this.findCoinToken(
-              item.reserve?.underlyingAsset
-            )?.image;
+            item.reserve['icon'] =
+              this.contractToToken(item.underlyingAsset)?.img || eth;
             return item;
           });
           this.setFormatUserSummaryData();
@@ -217,18 +217,6 @@ export default {
         return this.web3.eth.sendTransaction(param[0]);
       }
       return new Error('No Parameters sent!');
-    },
-    /**
-     * @return object
-     * Find token from getLatestPrices query
-     * Data comes from coingecko
-     */
-    findCoinToken(name) {
-      if (this.coinGeckoTokens && this.coinGeckoTokens.get && name) {
-        name = name.replace(/\s+/g, '-').toLowerCase();
-        return this.coinGeckoTokens.get(name.toLowerCase()) || { image: eth };
-      }
-      return { image: eth };
     },
     /**
      * @return object
