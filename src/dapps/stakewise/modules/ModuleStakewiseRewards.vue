@@ -201,7 +201,7 @@ import {
   RETH2_Token,
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
-const MIN_GAS_LIMIT = 150000;
+const MIN_GAS_LIMIT = 300000;
 
 export default {
   name: 'ModuleStakewiseRewards',
