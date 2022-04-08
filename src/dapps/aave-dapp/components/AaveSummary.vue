@@ -19,7 +19,7 @@
     >
       <div class="d-flex flex-column align-start">
         <span class="mew-heading-3 textLight--text mb-2"
-          >Amount to Deposit</span
+          >Amount to {{ actionTitle }}</span
         >
         <span class="mew-heading-1 mb-2"
           >{{ amount }} {{ selectedToken.token }}</span
@@ -149,15 +149,15 @@ export default {
     }
   },
   computed: {
-    // actionTitle() {
-    //   if (this.isBorrow) {
-    //     return 'Borrow';
-    //   }
-    //   if (this.isRepay) {
-    //     return 'Repay';
-    //   }
-    //   return 'Deposit';
-    // },
+    actionTitle() {
+      if (this.isBorrow) {
+        return 'Borrow';
+      }
+      if (this.isRepay) {
+        return 'Repay';
+      }
+      return 'Deposit';
+    },
     isDeposit() {
       return this.actionType.toLowerCase() === ACTION_TYPES.deposit;
     },

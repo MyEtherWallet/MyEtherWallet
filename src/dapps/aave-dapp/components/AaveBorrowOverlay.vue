@@ -32,7 +32,7 @@
       :right-side-values="aaveBorrowForm.rightSideValues"
       :form-text="aaveBorrowForm.formText"
       :button-title="aaveBorrowForm.buttonTitle"
-      @cancelDeposit="handleCancel"
+      @cancel="handleCancel"
       @emitValues="handleValues"
     />
     <!--
@@ -56,6 +56,7 @@
       :amount="amount"
       :amount-usd="amountUsd"
       :step="step"
+      :apr="apr"
       :action-type="aaveTableHandler"
       @onConfirm="handleConfirm"
     />

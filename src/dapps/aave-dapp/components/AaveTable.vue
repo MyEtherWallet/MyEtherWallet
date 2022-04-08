@@ -494,7 +494,8 @@ export default {
       const depositAPR = new BigNumber(liqRate).dividedBy(ray).toFixed();
       const depositAPY =
         Math.pow(1 + depositAPR / SECONDS_PER_YEAR, SECONDS_PER_YEAR) - 1;
-      return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100)).value;
+      return formatPercentageValue(new BigNumber(depositAPY).multipliedBy(100))
+        .value;
     },
     /**
      * Method emits to the parent to open deposit token overlay

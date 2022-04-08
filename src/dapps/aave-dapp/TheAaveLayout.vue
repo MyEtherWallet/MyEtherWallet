@@ -389,6 +389,7 @@ export default {
     ...mapState('wallet', ['address', 'coinGeckoTokens', 'web3']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
+    ...mapState('external', ['coinGeckoTokens']),
     ...mapGetters('external', ['fiatValue']),
     isLoadingData() {
       return Object.keys(this.userSummary).length <= 0;

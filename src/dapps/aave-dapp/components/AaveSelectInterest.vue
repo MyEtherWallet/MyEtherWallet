@@ -96,8 +96,6 @@ export default {
               )
             ).value
           : '--';
-              console.error('selectedToken', this.selectedToken, stable, variable)
-
       return {
         stable,
         variable

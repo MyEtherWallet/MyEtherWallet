@@ -50,9 +50,7 @@ export default {
         client: 'aave',
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
-            item['icon'] = this.findCoinToken(
-              item.reserve?.underlyingAsset
-            )?.image;
+            item['icon'] = this.findCoinToken(item.name)?.image;
             return item;
           });
           this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
@@ -225,9 +223,10 @@ export default {
      * Find token from getLatestPrices query
      * Data comes from coingecko
      */
-    findCoinToken(hash) {
-      if (this.coinGeckoTokens && this.coinGeckoTokens.get && hash) {
-        return this.coinGeckoTokens.get(hash.toLowerCase()) || { image: eth };
+    findCoinToken(name) {
+      if (this.coinGeckoTokens && this.coinGeckoTokens.get && name) {
+        name = name.replace(/\s+/g, '-').toLowerCase();
+        return this.coinGeckoTokens.get(name.toLowerCase()) || { image: eth };
       }
       return { image: eth };
     },

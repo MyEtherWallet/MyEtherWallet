@@ -1,4 +1,3 @@
-import { isAddress } from 'web3-utils';
 import Notification, {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUS
@@ -80,11 +79,6 @@ export default class NonChainNotification extends Notification {
         !Object.values(NOTIFICATION_STATUS).includes(
           obj['status'].toLowerCase()
         )
-      ) {
-        this._invalidType(keysArray[i], obj[keysArray[i]]);
-      } else if (
-        (keysArray[i] === 'to' || keysArray[i] === 'from') &&
-        !isAddress(obj[keysArray[i]])
       ) {
         this._invalidType(keysArray[i], obj[keysArray[i]]);
       } else if (obj[keysArray[i]]) {

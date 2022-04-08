@@ -41,9 +41,7 @@ const EXCEPTIONS = [
   '@vue/cli-service',
   'vue-i18n',
   'vue',
-  'graphql',
-  // major update
-  'highcharts',
+  'graphql'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

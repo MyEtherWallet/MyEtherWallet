@@ -55,5 +55,6 @@ module.exports = [
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
   'https://protocol-api.aave.com:443', // Aave
   'https://api.thegraph.com:443/subgraphs/name/ensdomains/', // ENS
-  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket' // ENS
+  'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
+  'https://assets.coingecko.com',
 ];

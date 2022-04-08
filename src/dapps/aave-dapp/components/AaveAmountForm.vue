@@ -1,6 +1,6 @@
 <template>
   <div class="full-width">
-    <v-row justify="space-around no-gutters" dense>
+    <v-row justify="space-around" no-gutters dense>
       <v-col cols="12" md="6">
         <mew-module
           color-type="overlayBg"
