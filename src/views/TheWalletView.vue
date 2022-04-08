@@ -80,6 +80,15 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    if (window.ethereum) {
+      window.ethereum.removeListener(
+        'chainChanged',
+        this.setWeb3WalletInstance
+      );
+      window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+    }
+  },
   destroyed() {
     this.web3.eth.clearSubscriptions();
   },
@@ -137,17 +146,9 @@ export default {
      */
     web3Listeners() {
       if (window.ethereum.on) {
-        window.ethereum.on('chainChanged', chainId => {
-          this.findAndSetNetwork(chainId);
-        });
+        window.ethereum.on('chainChanged', this.setWeb3WalletInstance);
 
-        window.ethereum.on('accountsChanged', acc => {
-          if (acc[0]) {
-            const web3 = new Web3(window.ethereum);
-            const wallet = new Web3Wallet(acc[0]);
-            this.setWallet([wallet, web3.currentProvider]);
-          }
-        });
+        window.ethereum.on('accountsChanged', this.setWeb3Account);
       } else {
         Toast(
           'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
@@ -172,6 +173,14 @@ export default {
           WARNING
         );
       }
+    },
+    setWeb3Account(acc) {
+      const web3 = new Web3(window.ethereum);
+      const wallet = new Web3Wallet(acc[0]);
+      this.setWallet([wallet, web3.currentProvider]);
+    },
+    setWeb3WalletInstance(chainId) {
+      this.findAndSetNetwork(chainId);
     }
   }
 };
