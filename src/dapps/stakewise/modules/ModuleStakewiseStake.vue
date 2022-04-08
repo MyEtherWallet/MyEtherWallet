@@ -223,7 +223,7 @@ import {
   RETH2_Token,
   ETH_Token
 } from '@/dapps/stakewise/handlers/configs.js';
-const MIN_GAS_LIMIT = 300000;
+const MIN_GAS_LIMIT = 150000;
 export default {
   name: 'ModuleStakewiseStake',
   components: {
@@ -375,7 +375,6 @@ export default {
         ? this.gasLimit
         : MIN_GAS_LIMIT;
       const txFee = BigNumber(this.locGasPrice).times(gasLimit).toFixed();
-      console.log(txFee);
       return txFee;
     }
   },
