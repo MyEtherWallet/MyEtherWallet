@@ -96,11 +96,8 @@ export default {
     }
   },
   watch: {
-    network: {
-      handler: function () {
-        this.setup();
-      },
-      deep: true
+    web3() {
+      this.setup();
     }
   },
   mounted() {
@@ -120,20 +117,25 @@ export default {
       }
     },
     collectiveFetch() {
-      this.stakewiseHandler.getEthPool().then(res => {
-        this.setPoolSupply(res);
-        this.loading = false;
-      });
-      this.stakewiseHandler.getStakingFee().then(res => {
-        this.setStakingFee(res);
-        this.loading = false;
-      });
-      this.stakewiseHandler.getValidatorApr().then(res => {
-        this.setValidatorApr(
-          BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
-        );
-        this.loading = false;
-      });
+      Promise.all([
+        this.stakewiseHandler.getEthPool(),
+        this.stakewiseHandler.getStakingFee(),
+        this.stakewiseHandler.getValidatorApr()
+      ])
+        .then(res => {
+          this.setPoolSupply(res[0]);
+          this.setStakingFee(res[1]);
+          this.setValidatorApr(
+            BigNumber(res[2])
+              .minus(BigNumber(res[2]).times(0.1))
+              .dp(2)
+              .toString()
+          );
+          this.loading = false;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     setHidePopUp() {
       this.closeStakewisePromo();

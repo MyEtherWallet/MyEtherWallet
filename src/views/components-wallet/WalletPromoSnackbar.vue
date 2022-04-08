@@ -143,7 +143,6 @@ export default {
     ...mapActions('stakewise', ['hideForSeven', 'hideForFourteen']),
     checkAndOpen() {
       if (this.closedInitialPromo) {
-        this.delayOpenSnackBar();
         if (this.diff === 7 || this.diff === 14) {
           this.delayOpenSnackBar();
         }

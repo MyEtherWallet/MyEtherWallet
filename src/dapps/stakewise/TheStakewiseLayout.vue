@@ -84,11 +84,8 @@ export default {
         this.activeTab = this.tabs[0].id;
       }
     },
-    network: {
-      handler: function () {
-        if (this.isSupported) this.setup();
-      },
-      deep: true
+    web3() {
+      if (this.isSupported) this.setup();
     }
   },
   mounted() {

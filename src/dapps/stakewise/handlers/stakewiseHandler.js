@@ -25,6 +25,8 @@ export default class StakewiseHandler {
     this.stakedContract = new web3.eth.Contract(stakedAbi, seth2Contract);
     this.poolContract = new web3.eth.Contract(poolAbi, poolContract);
     this.poolAddress = poolContract;
+
+    console.log(isEth, seth2Contract, reth2Contract, poolContract);
   }
 
   getEthPool() {
