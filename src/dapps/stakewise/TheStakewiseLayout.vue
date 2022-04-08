@@ -71,7 +71,9 @@ export default {
       }
     },
     web3() {
-      if (this.isSupported) this.setup();
+      if (this.isSupported) {
+        this.setup();
+      }
     }
   },
   mounted() {
@@ -101,22 +103,20 @@ export default {
       }, 14000);
     },
     collectiveFetch() {
-      this.stakewiseHandler.getEthPool().then(res => {
-        this.setPoolSupply(res);
-      });
-      this.stakewiseHandler.getStakingFee().then(res => {
-        this.setStakingFee(res);
-      });
-      this.stakewiseHandler.getValidatorApr().then(res => {
+      Promise.all([
+        this.stakewiseHandler.getEthPool(),
+        this.stakewiseHandler.getStakingFee(),
+        this.stakewiseHandler.getValidatorApr(),
+        this.stakewiseHandler.getSethBalance(this.address),
+        this.stakewiseHandler.getRethBalance(this.address)
+      ]).then(res => {
+        this.setPoolSupply(res[0]);
+        this.setStakingFee(res[1]);
         this.setValidatorApr(
-          BigNumber(res).minus(BigNumber(res).times(0.1)).dp(2).toString()
+          BigNumber(res[2]).minus(BigNumber(res[2]).times(0.1)).dp(2).toString()
         );
-      });
-      this.stakewiseHandler.getSethBalance(this.address).then(res => {
-        this.setStakeBalance(fromWei(res));
-      });
-      this.stakewiseHandler.getRethBalance(this.address).then(res => {
-        this.setRewardBalance(fromWei(res));
+        this.setStakeBalance(fromWei(res[3]));
+        this.setRewardBalance(fromWei(res[4]));
       });
     }
   }
