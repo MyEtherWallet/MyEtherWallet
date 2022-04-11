@@ -156,11 +156,13 @@
         <stakewise-apr class="mb-4" />
         <stakewise-staking
           class="mb-4"
+          :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
+          :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
           @redeem-to-eth="redeemToEth"

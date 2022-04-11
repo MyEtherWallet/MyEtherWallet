@@ -36,6 +36,13 @@
     </div>
 
     <!-- ======================================================================================= -->
+    <!-- have rewards but not enough to cover tx fee -->
+    <!-- ======================================================================================= -->
+    <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
+      You do not have enough ETH to cover transaction fee.
+    </div>
+
+    <!-- ======================================================================================= -->
     <!-- Active for Stake ETH -->
     <!-- ======================================================================================= -->
     <div
@@ -47,7 +54,7 @@
         btn-style="transparent"
         btn-size="small"
         class="mew-body"
-        :disabled="!hasBalance"
+        :disabled="!hasBalance || enoughToCoverRedeem"
         @click.native="executeSwap"
       />
       <mew-button
@@ -55,7 +62,7 @@
         :btn-style="compoundRewards ? 'transparent' : 'background'"
         btn-size="small"
         class="mew-body"
-        :disabled="!hasBalance"
+        :disabled="!hasBalance || enoughToCoverRedeem"
         @click.native="scrollToInput"
       />
     </div>
@@ -78,13 +85,17 @@ export default {
     compoundRewards: {
       type: Boolean,
       default: false
+    },
+    txFee: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['web3', 'address']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
     ...mapState('stakewise', ['rethBalance', 'sethBalance']),
     hasStakedNoRewards() {
       return (
@@ -93,6 +104,14 @@ export default {
     },
     hasBalance() {
       return BigNumber(this.rethBalance).gt(0);
+    },
+    enoughToCoverRedeem() {
+      if (!this.hasBalance) {
+        return false;
+      } else if (BigNumber(this.balance).gt(this.txFee)) {
+        return false;
+      }
+      return true;
     },
     ethvmSupport() {
       return this.network.type.isEthVMSupported.supported;

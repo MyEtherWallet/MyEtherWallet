@@ -177,12 +177,14 @@
         <stakewise-staking
           class="mb-4"
           compound-rewards
+          :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
           @redeem-to-eth="redeemToEth"
         />
         <stakewise-rewards
           compound-rewards
+          :tx-fee="txFee"
           @set-max="setMax"
           @scroll="scroll"
           @redeem-to-eth="redeemToEth"

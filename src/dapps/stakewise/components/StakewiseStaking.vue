@@ -39,6 +39,13 @@
     </div>
 
     <!-- ======================================================================================= -->
+    <!-- have rewards but not enough to cover tx fee -->
+    <!-- ======================================================================================= -->
+    <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
+      You do not have enough ETH to cover transaction fee.
+    </div>
+
+    <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
     <div v-if="isEthNetwork">
@@ -109,6 +116,7 @@
         btn-style="transparent"
         btn-size="small"
         class="py-1"
+        :disabled="enoughToCoverRedeem"
         @click.native="executeSwap"
       />
       <mew-button
@@ -116,6 +124,7 @@
         :btn-style="compoundRewards ? 'background' : 'transparent'"
         btn-size="small"
         class="py-1"
+        :disabled="enoughToCoverRedeem"
         @click.native="scrollToInput"
       />
     </div>
@@ -144,6 +153,10 @@ export default {
     compoundRewards: {
       type: Boolean,
       default: false
+    },
+    txFee: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -155,13 +168,21 @@ export default {
     ...mapGetters('global', ['isEthNetwork', 'network']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('wallet', ['web3', 'address']),
-    ...mapState('stakewise', ['stakewiseTxs', 'sethBalance']),
+    ...mapState('wallet', ['web3', 'address', 'balance']),
+    ...mapState('stakewise', ['stakewiseTxs', 'sethBalance', 'rethBalance']),
     currencyName() {
       return this.network.type.currencyName;
     },
     ethvmSupport() {
       return this.network.type.isEthVMSupported.supported;
+    },
+    enoughToCoverRedeem() {
+      if (!BigNumber(this.rethBalance).gt(0)) {
+        return false;
+      } else if (BigNumber(this.balance).gt(this.txFee)) {
+        return false;
+      }
+      return true;
     },
     linkUrl() {
       return this.ethvmSupport
