@@ -39,13 +39,6 @@
     </div>
 
     <!-- ======================================================================================= -->
-    <!-- have rewards but not enough to cover tx fee -->
-    <!-- ======================================================================================= -->
-    <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
-      You do not have enough ETH to cover transaction fee.
-    </div>
-
-    <!-- ======================================================================================= -->
     <!-- Pending -->
     <!-- ======================================================================================= -->
     <div v-if="isEthNetwork">
@@ -127,6 +120,13 @@
         :disabled="enoughToCoverRedeem"
         @click.native="scrollToInput"
       />
+    </div>
+
+    <!-- ======================================================================================= -->
+    <!-- have rewards but not enough to cover tx fee -->
+    <!-- ======================================================================================= -->
+    <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
+      You do not have enough ETH to cover transaction fee.
     </div>
   </div>
 </template>
