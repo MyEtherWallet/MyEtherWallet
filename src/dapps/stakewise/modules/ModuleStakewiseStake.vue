@@ -178,6 +178,7 @@
           class="mb-4"
           compound-rewards
           :tx-fee="txFee"
+          :has-enough-balance="hasEnoughBalance"
           @set-max="setMax"
           @scroll="scroll"
           @redeem-to-eth="redeemToEth"

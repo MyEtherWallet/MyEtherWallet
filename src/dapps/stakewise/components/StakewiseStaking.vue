@@ -157,6 +157,10 @@ export default {
     txFee: {
       type: String,
       default: ''
+    },
+    hasEnoughBalance: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -177,7 +181,10 @@ export default {
       return this.network.type.isEthVMSupported.supported;
     },
     enoughToCoverRedeem() {
-      if (!BigNumber(this.rethBalance).gt(0)) {
+      console.log(this.hasEnoughBalance);
+      if (!this.hasEnoughBalance) {
+        return true;
+      } else if (!BigNumber(this.rethBalance).gt(0) || !this.hasEnoughBalance) {
         return false;
       } else if (BigNumber(this.balance).gt(this.txFee)) {
         return false;
