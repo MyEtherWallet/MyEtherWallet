@@ -9,7 +9,8 @@ const AUDIT_EXCEPTIONS = [
   'shelljs',
   // no patches available
   'ansi-html',
-  'minimist'
+  'minimist',
+  'moment'
 ];
 const execute = (command, callback) => {
   exec(
