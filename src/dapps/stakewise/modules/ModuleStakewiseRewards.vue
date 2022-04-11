@@ -312,15 +312,6 @@ export default {
       const txFee = BigNumber(this.gasPrice).times(gasLimit).toFixed();
       return txFee;
     },
-    hasMinimum() {
-      if (!isEmpty(this.selectedProvider)) {
-        return (
-          BigNumber(this.selectedProvider.minFrom).lt(this.compoundAmount) &&
-          BigNumber(this.balanceInETH).gte(this.ethTotalFee)
-        );
-      }
-      return false;
-    },
     overMaximum() {
       return BigNumber(this.compoundAmount).gt(this.rethBalance);
     },
@@ -334,9 +325,13 @@ export default {
       if (this.overMaximum) {
         return 'Exceeds rETH2 balance';
       }
-      if (!this.hasMinimum) {
+      if (
+        !isEmpty(this.selectedProvider) &&
+        BigNumber(this.selectedProvider.minFrom).gt(this.compoundAmount)
+      ) {
         return 'Not enough rETH2!';
       }
+
       if (
         BigNumber(this.compoundAmount).gt(0) &&
         !stakeHandler.helpers.hasValidDecimals(
