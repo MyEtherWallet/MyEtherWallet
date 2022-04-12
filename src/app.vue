@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
@@ -29,7 +29,9 @@ export default {
   },
   computed: {
     ...mapState('custom', ['addressBook']),
-    ...mapState('addressBook', ['isMigrated'])
+    ...mapState('addressBook', ['isMigrated']),
+    ...mapState('article', ['timestamp']),
+    ...mapGetters('article', ['articleList'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -66,11 +68,18 @@ export default {
         this.setMigrated(true);
       });
     }
+
+    const temp = new Date(this.timestamp);
+    temp.setHours(72); // Add 3 days to temp date
+    if (temp.getTime() <= Date.now() || !this.articleList) {
+      this.updateArticles();
+    }
   },
   methods: {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
+    ...mapActions('article', ['updateArticles']),
     logMessage() {
       /* eslint-disable no-console */
       console.log(

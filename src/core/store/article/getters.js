@@ -1,5 +1,9 @@
-const articleList = function (state) {
+const articleList = state => {
   return state.articleStore;
 };
 
-export default { articleList };
+const getArticle = state => article => {
+  return state.articleStore[article];
+};
+
+export default { articleList, getArticle };

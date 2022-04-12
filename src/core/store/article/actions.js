@@ -3,10 +3,11 @@ const Url =
 /**
  * Update the articles array
  */
-const updateArticles = async function (state) {
+const updateArticles = async function ({ commit }) {
   const res = await fetch(Url);
   const articles = await res.json();
-  state.commit('SET_ARTICLES', articles);
+  commit('SET_ARTICLES', articles);
+  commit('UPDATE_TIMESTAMP', new Date().getTime());
 };
 
 export default { updateArticles };
