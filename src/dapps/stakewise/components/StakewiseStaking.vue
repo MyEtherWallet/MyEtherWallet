@@ -14,7 +14,7 @@
           />
         </div>
         <div class="textLight--text">
-          <span class="textMedium--text">Staking</span> - SETH2
+          <span class="textMedium--text">Staking</span> - sETH2
         </div>
       </div>
       <div class="text-right">

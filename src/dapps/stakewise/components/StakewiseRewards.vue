@@ -14,7 +14,7 @@
           />
         </div>
         <div class="textLight--text">
-          <span class="textMedium--text">Rewards</span> - RETH2
+          <span class="textMedium--text">Rewards</span> - rETH2
         </div>
       </div>
       <div class="text-right">
