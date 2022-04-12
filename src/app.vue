@@ -71,7 +71,7 @@ export default {
 
     const temp = new Date(this.timestamp);
     temp.setHours(72); // Add 3 days to temp date
-    if (temp.getTime() <= Date.now() || !this.articleList) {
+    if (temp.getTime() <= Date.now() || this.articleList.length == 0) {
       this.updateArticles();
     }
   },
