@@ -11,7 +11,8 @@ const AUDIT_EXCEPTIONS = [
   'ansi-html',
   'minimist',
   'moment',
-  'axios'
+  'axios',
+  'async'
 ];
 const execute = (command, callback) => {
   exec(
