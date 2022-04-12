@@ -92,8 +92,8 @@ export default {
       default: ''
     },
     hasEnoughBalance: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -114,14 +114,14 @@ export default {
       if (this.hasStakedNoRewards) {
         return false;
       }
-      if (!this.hasEnoughBalance) {
-        return true;
-      }
       if (!this.hasBalance) {
         return false;
       }
       if (BigNumber(this.balance).gt(this.txFee)) {
         return false;
+      }
+      if (!this.hasEnoughBalance) {
+        return true;
       }
       return true;
     },

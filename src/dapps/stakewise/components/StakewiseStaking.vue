@@ -159,8 +159,8 @@ export default {
       default: ''
     },
     hasEnoughBalance: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     }
   },
   data() {
