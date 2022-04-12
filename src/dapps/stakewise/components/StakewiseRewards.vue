@@ -43,6 +43,7 @@
       class="d-flex align-center justify-space-between flex-wrap-reverse mt-4"
     >
       <mew-button
+        v-if="isEthNetwork"
         title="Redeem to ETH"
         btn-style="transparent"
         btn-size="small"
@@ -106,9 +107,13 @@ export default {
       return BigNumber(this.rethBalance).gt(0);
     },
     enoughToCoverRedeem() {
+      if (this.hasStakedNoRewards) {
+        return false;
+      }
       if (!this.hasBalance) {
         return false;
-      } else if (BigNumber(this.balance).gt(this.txFee)) {
+      }
+      if (BigNumber(this.balance).gt(this.txFee)) {
         return false;
       }
       return true;

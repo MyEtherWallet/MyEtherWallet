@@ -181,12 +181,19 @@ export default {
       return this.network.type.isEthVMSupported.supported;
     },
     enoughToCoverRedeem() {
-      console.log(this.hasEnoughBalance);
+      if (!this.hasStaked && !this.hasPending) {
+        return false;
+      }
       if (!this.hasEnoughBalance) {
         return true;
-      } else if (!BigNumber(this.rethBalance).gt(0) || !this.hasEnoughBalance) {
+      }
+      if (
+        !BigNumber(this.rethBalance).gt(0) ||
+        !BigNumber(this.sethBalance).gt(0)
+      ) {
         return false;
-      } else if (BigNumber(this.balance).gt(this.txFee)) {
+      }
+      if (BigNumber(this.balance).gt(this.txFee)) {
         return false;
       }
       return true;
