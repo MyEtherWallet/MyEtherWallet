@@ -185,7 +185,7 @@ export default {
         return false;
       }
       if (!this.hasEnoughBalance) {
-        return true;
+        return false;
       }
       if (
         !BigNumber(this.rethBalance).gt(0) ||
