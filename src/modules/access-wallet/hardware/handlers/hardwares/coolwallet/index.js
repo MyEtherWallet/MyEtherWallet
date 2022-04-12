@@ -61,23 +61,26 @@ class CoolWallet {
       cwsTransportLib.listen((error, device) => {
         if (error) reject(error);
         if (device) {
-          cwsTransportLib.connect(device).then(async _transport => {
-            _this.transport = _transport;
-            try {
-              /**
-               * if lastCWDeviceUsed !== device.name
-               * assume that its a different cw device
-               * throw moves it to catch so it registers
-               */
-              if (_this.lastCWDeviceUsed !== device.name) throw '';
-              locstore.set(CW_DEVICE_NAME, device.name);
-              _this.connectToCW();
-              await _this.deviceInstance.getAddress(0);
-              resolve();
-            } catch (e) {
-              this.generateAndRegister(password, resolve, device, reject);
-            }
-          });
+          cwsTransportLib
+            .connect(device)
+            .then(async _transport => {
+              _this.transport = _transport;
+              try {
+                /**
+                 * if lastCWDeviceUsed !== device.name
+                 * assume that its a different cw device
+                 * throw moves it to catch so it registers
+                 */
+                if (_this.lastCWDeviceUsed !== device.name) throw '';
+                locstore.set(CW_DEVICE_NAME, device.name);
+                _this.connectToCW();
+                await _this.deviceInstance.getAddress(0);
+                resolve();
+              } catch (e) {
+                this.generateAndRegister(password, resolve, device, reject);
+              }
+            })
+            .catch(er => reject(new Error(er)));
         } else {
           reject(new Error('no device'));
         }
