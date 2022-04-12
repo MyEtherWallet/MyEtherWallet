@@ -157,10 +157,6 @@ export default {
     txFee: {
       type: String,
       default: ''
-    },
-    hasEnoughBalance: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -182,9 +178,6 @@ export default {
     },
     enoughToCoverRedeem() {
       if (!this.hasStaked && !this.hasPending) {
-        return false;
-      }
-      if (!this.hasEnoughBalance) {
         return false;
       }
       if (
