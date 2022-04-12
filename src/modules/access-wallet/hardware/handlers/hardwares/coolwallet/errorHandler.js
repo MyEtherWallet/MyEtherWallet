@@ -7,6 +7,7 @@ const ERRORS = {
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
   'Max number of App paired. Delete one of the paired app.':
     'coolWalletError.max-app-instance',
+  'Connection failed': 'Connection Failed',
   'browser not supported': 'coolWalletError.no-bluetooth',
   'User cancelled the requestDevice() chooser': 'User cancelled action!',
   'NetworkError: GATT operation already in progress.':
