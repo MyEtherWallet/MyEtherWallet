@@ -90,6 +90,10 @@ export default {
     txFee: {
       type: String,
       default: ''
+    },
+    hasEnoughBalance: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -109,6 +113,9 @@ export default {
     enoughToCoverRedeem() {
       if (this.hasStakedNoRewards) {
         return false;
+      }
+      if (!this.hasEnoughBalance) {
+        return true;
       }
       if (!this.hasBalance) {
         return false;
