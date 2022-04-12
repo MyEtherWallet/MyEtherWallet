@@ -61,7 +61,7 @@
               type="number"
               :max-btn-obj="{
                 title: 'Max',
-                disabled: !hasEnoughBalance,
+                disabled: !hasEnoughBalanceToStake,
                 method: setMax
               }"
               :image="iconEth"
@@ -296,20 +296,23 @@ export default {
         ? formatFiatValue(gasPrice.times(this.fiatValue).toFixed()).value
         : '0';
     },
-    hasEnoughBalance() {
+    hasEnoughBalanceToStake() {
       return BigNumber(this.ethTotalFee)
         .plus(this.stakeAmount)
         .lte(this.balanceInETH);
     },
+    hasEnoughBalance() {
+      return BigNumber(this.ethTotalFee).lte(this.balanceInETH);
+    },
     isValid() {
       return (
         BigNumber(this.stakeAmount).gt(0) &&
-        this.hasEnoughBalance &&
+        this.hasEnoughBalanceToStake &&
         this.agreeToTerms
       );
     },
     errorMessages() {
-      if (!this.hasEnoughBalance) {
+      if (!this.hasEnoughBalanceToStake) {
         return 'Not enough ETH.';
       }
 
@@ -331,7 +334,7 @@ export default {
       return '';
     },
     buyMoreStr() {
-      return this.isEthNetwork && !this.hasEnoughBalance
+      return this.isEthNetwork && !this.hasEnoughBalanceToStake
         ? this.network.type.canBuy
           ? 'Buy more.'
           : ''
@@ -435,7 +438,7 @@ export default {
         });
     },
     setMax() {
-      if (this.hasEnoughBalance) {
+      if (this.hasEnoughBalanceToStake) {
         const max = BigNumber(this.balanceInETH).minus(
           BigNumber(this.ethTotalFee)
         );
