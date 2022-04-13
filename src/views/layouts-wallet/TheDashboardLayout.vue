@@ -20,7 +20,7 @@ import TheWrapperWallet from '@/core/components/TheWrapperWallet';
 import AppCarousel from '@/core/components/AppCarousel';
 import ModuleBalance from '@/modules/balance/ModuleBalance';
 import ModuleTokens from '@/modules/balance/ModuleTokens';
-import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
 
 export default {
   components: {

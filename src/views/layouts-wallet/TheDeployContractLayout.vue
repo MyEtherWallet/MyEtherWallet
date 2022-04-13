@@ -11,8 +11,8 @@
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
-import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy.vue';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
+import ModuleContractDeploy from '@/modules/contract/ModuleContractDeploy';
 
 export default {
   name: 'TheDeployContractLayout',
