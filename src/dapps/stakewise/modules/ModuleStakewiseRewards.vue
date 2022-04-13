@@ -109,7 +109,7 @@
             </div>
 
             <a
-              href="https://www.mewtopia.com/rewards-and-risks-of-staking-crypto/"
+              href="https://help.myetherwallet.com/en/articles/6136823-stake-your-eth-using-stakewise"
               target="_blank"
             >
               <div class="greenPrimary--text">
