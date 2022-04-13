@@ -64,14 +64,13 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapGetters('global', ['currencyConfig']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
     totalTokenValues() {
-      return formatFiatValue(this.totalTokenFiatValue, this.getLocalOptions)
+      return formatFiatValue(this.totalTokenFiatValue, this.currencyConfig)
         .value;
     },
     tokenImages() {
@@ -95,16 +94,6 @@ export default {
           : 'more';
       }
       return '';
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   methods: {

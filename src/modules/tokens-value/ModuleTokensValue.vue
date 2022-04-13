@@ -16,15 +16,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'ModuleTokensValue',
   computed: {
     ...mapGetters('wallet', ['tokensList']),
-    ...mapState('external', ['currencyRate']),
-    ...mapState('global', ['preferredCurrency']),
+    ...mapGetters('global', ['currencyConfig']),
     tokenTitle() {
       return `My Token${this.tokensList.length > 1 ? 's' : ''} Value`;
     },
@@ -34,23 +33,13 @@ export default {
         const value = token.usdBalance ? token.usdBalance : 0;
         total = total.plus(value);
       });
-      return formatFiatValue(total, this.getLocalOptions).value;
+      return formatFiatValue(total, this.currencyConfig).value;
     },
     tokenImages() {
       const firstFive = this.tokensList.slice(0, 5);
       return firstFive.map(item => {
         return item.img;
       });
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   }
 };

@@ -125,9 +125,7 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['address']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currencyConfig']),
     ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
     ...mapGetters('external', [
       'fiatValue',
@@ -159,7 +157,7 @@ export default {
      */
     convertedBalance() {
       if (this.fiatLoaded) {
-        return formatFiatValue(this.balanceFiatValue, this.getLocalOptions)
+        return formatFiatValue(this.balanceFiatValue, this.currencyConfig)
           .value;
       }
       return '';
@@ -182,7 +180,7 @@ export default {
      */
     formatFiatPrice() {
       if (this.fiatLoaded) {
-        return formatFiatValue(this.fiatValue, this.getLocalOptions).value;
+        return formatFiatValue(this.fiatValue, this.currencyConfig).value;
       }
       return '';
     },
@@ -203,16 +201,6 @@ export default {
      */
     hasBalance() {
       return BigNumber(this.balanceInWei).gt(0);
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   watch: {

@@ -39,7 +39,7 @@ import {
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
 import BigNumber from 'bignumber.js';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { fromWei } from 'web3-utils';
 import { currencyToNumber } from '@/core/helpers/localization';
 export default {
@@ -98,15 +98,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('external', ['currencyRate']),
-    ...mapState('global', ['preferredCurrency']),
     ...mapGetters('external', ['fiatValue']),
+    ...mapGetters('global', ['currencyConfig']),
     convertedFees() {
       return formatGasValue(this.txFee);
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
-      return formatFiatValue(feeETH.times(this.fiatValue), this.getLocalOptions)
+      return formatFiatValue(feeETH.times(this.fiatValue), this.currencyConfig)
         .value;
     },
     summaryItems() {
@@ -141,20 +140,10 @@ export default {
           amount: formatFloatingPointValue(this.toVal).value,
           usd: formatFiatValue(
             currencyToNumber(this.toUsd),
-            this.getLocalOptions
+            this.currencyConfig
           ).value
         }
       ];
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   }
 };

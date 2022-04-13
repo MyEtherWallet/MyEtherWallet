@@ -272,14 +272,17 @@ export default {
   computed: {
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapState('wallet', ['address', 'instance', 'identifier', 'isHardware']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
     ...mapGetters('external', [
       'fiatValue',
       'balanceFiatValue',
       'totalTokenFiatValue'
     ]),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'isTestNetwork']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'isTestNetwork',
+      'currencyConfig'
+    ]),
     /**
      * verify address title
      * returns @String
@@ -365,7 +368,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
-        return formatFiatValue(total, this.getLocalOptions).value;
+        return formatFiatValue(total, this.currencyConfig).value;
       }
       return this.walletChainBalance;
     },
@@ -395,16 +398,6 @@ export default {
      */
     nonChainTokensCount() {
       return this.tokensList.length - 1;
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   methods: {

@@ -168,10 +168,13 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList', 'web3']),
     ...mapState('wallet', ['web3', 'loadingWalletInfo']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
     ...mapGetters('custom', ['customTokens', 'hasCustom']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'hasSwap']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'hasSwap',
+      'currencyConfig'
+    ]),
     ...mapGetters('external', ['totalTokenFiatValue']),
     loading() {
       return this.loadingWalletInfo;
@@ -195,18 +198,8 @@ export default {
       return tokens;
     },
     totalTokensValue() {
-      return formatFiatValue(this.totalTokenFiatValue, this.getLocalOptions)
+      return formatFiatValue(this.totalTokenFiatValue, this.currencyConfig)
         .value;
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   methods: {
@@ -220,7 +213,7 @@ export default {
           ? item.balancef + ' ' + item.symbol
           : '0' + ' ' + item.symbol,
         item.usdBalancef
-          ? formatFiatValue(item.usdBalancef, this.getLocalOptions).value
+          ? formatFiatValue(item.usdBalancef, this.currencyConfig).value
           : '0'
       ];
       newObj.usdBalance = item.usdBalance ? item.usdBalance : '0';
@@ -235,7 +228,7 @@ export default {
       const priceUF = currencyToNumber(item.pricef);
       newObj.price =
         item.pricef && priceUF.toString() !== '0'
-          ? formatFiatValue(item.pricef, this.getLocalOptions).value
+          ? formatFiatValue(item.pricef, this.currencyConfig).value
           : '';
       newObj.tokenImg = item.img ? item.img : this.network.type.icon;
       if (this.hasSwap) {

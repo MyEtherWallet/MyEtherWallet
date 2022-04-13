@@ -27,7 +27,7 @@ import {
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
 import { currencyToNumber } from '@/core/helpers/localization';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
   props: {
     getRentPrice: {
@@ -63,15 +63,14 @@ export default {
     this.rentPrice();
   },
   methods: {
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
+    ...mapGetters('global', ['currencyConfig']),
     rentPrice() {
       return this.getRentPrice(this.duration).then(resp => {
         if (resp) {
           this.rentPriceETH = formatFloatingPointValue(resp.eth).value;
           this.rentPriceUSD = formatFiatValue(
             currencyToNumber(resp.usd),
-            this.getLocalOptions
+            this.currencyConfig
           ).value;
         }
       });
@@ -79,16 +78,6 @@ export default {
     setDuration(item) {
       this.duration = parseInt(item.value);
       this.rentPrice();
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   }
 };

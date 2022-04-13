@@ -238,14 +238,12 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currencyConfig']),
     ...mapState('wallet', ['web3']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
     ...mapGetters('global', ['gasPrice', 'network']),
 
     /**
-     * Returns current netork eth icon
+     * Returns current network eth icon
      * @return string
      */
     networkImg() {
@@ -305,7 +303,7 @@ export default {
         eth: gasPriceETH,
         fiat: formatFiatValue(
           BigNumber(this.fiatValue).times(gasPriceETH),
-          this.getLocalOptions
+          this.currencyConfig
         ).value
       };
     },
@@ -321,7 +319,7 @@ export default {
         eth: totalETH,
         fiat: formatFiatValue(
           new BigNumber(this.fiatValue).times(totalETH).toFixed(),
-          this.getLocalOptions
+          this.currencyConfig
         ).value
       };
     },
@@ -340,18 +338,8 @@ export default {
     amountFiat() {
       return formatFiatValue(
         new BigNumber(this.amount).times(this.fiatValue),
-        this.getLocalOptions
+        this.currencyConfig
       ).value;
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   watch: {
@@ -404,7 +392,7 @@ export default {
         eth: feesETH,
         fiat: formatFiatValue(
           BigNumber(this.fiatValue).times(feesETH),
-          this.getLocalOptions
+          this.currencyConfig
         ).value
       };
     },

@@ -247,15 +247,15 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['online', 'gasPriceType', 'preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
+    ...mapState('global', ['online', 'gasPriceType']),
     ...mapGetters('external', ['fiatValue', 'balanceFiatValue']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
       'isEthNetwork',
       'swapLink',
-      'gasPriceByType'
+      'gasPriceByType',
+      'currencyConfig'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -333,12 +333,12 @@ export default {
       const imgs = tokensList.map(item => {
         item.totalBalance = formatFiatValue(
           currencyToNumber(item.usdBalancef),
-          this.getLocalOptions
+          this.currencyConfig
         ).value;
         item.tokenBalance = item.balancef;
         item.price = formatFiatValue(
           currencyToNumber(item.pricef),
-          this.getLocalOptions
+          this.currencyConfig
         ).value;
         return item.img;
       });
@@ -497,16 +497,6 @@ export default {
         return !this.sendTx.hasEnoughBalance();
       }
       return true;
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   watch: {

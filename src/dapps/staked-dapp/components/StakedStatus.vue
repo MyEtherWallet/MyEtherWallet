@@ -294,7 +294,7 @@ export default {
     ...mapState('global', ['preferredCurrency']),
     ...mapState('external', ['currencyRate']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currencyConfig']),
     /**
      * @returns array
      * Returns all the raw objects in all the validators
@@ -333,7 +333,7 @@ export default {
             totalBalanceETH: formatFloatingPointValue(totalBalanceETH).value,
             totalBalanceFiat: formatFiatValue(
               new BigNumber(totalBalanceETH).times(this.fiatValue),
-              this.getLocalOptions
+              this.currencyConfig
             ).value,
             averageApr: formatPercentageValue(
               this.getAverageApr(raw.activation_timestamp, earning, raw.amount)
@@ -364,7 +364,7 @@ export default {
             amount: formatFloatingPointValue(raw.amount).value,
             amountFiat: formatFiatValue(
               new BigNumber(raw.amount).times(this.fiatValue),
-              this.getLocalOptions
+              this.currencyConfig
             ).value,
             status: raw.status,
             ethVmUrl:
@@ -399,7 +399,7 @@ export default {
             amount: formatFloatingPointValue(this.amount).value,
             amountFiat: formatFiatValue(
               new BigNumber(this.amount).times(this.fiatValue),
-              this.getLocalOptions
+              this.currencyConfig
             ).value,
             justStaked: true,
             status: STATUS_TYPES.CREATED,
@@ -423,16 +423,6 @@ export default {
      */
     allPendingValidators() {
       return this.justStakedValidator.concat(this.pendingValidators);
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   methods: {

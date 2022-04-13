@@ -74,6 +74,12 @@ const swapLink = function (state, getters, rootState) {
   const link = 'https://ccswap.myetherwallet.com/#/';
   return hasAddress ? `${link}?to=${hasAddress}` : link;
 };
+const currencyConfig = (state, getters, rootState) => {
+  const currency = state.preferredCurrency;
+  const { currencyRate } = rootState.external;
+  const rate = currencyRate.data ? currencyRate.data.exchange_rate : 1;
+  return { currency, rate };
+};
 const isEIP1559SupportedNetwork = function (state) {
   return state.eip1559.baseFeePerGas !== '0';
 };
@@ -103,6 +109,7 @@ export default {
   gasPrice,
   isEthNetwork,
   localContracts,
+  currencyConfig,
   isTestNetwork,
   hasSwap,
   swapLink,

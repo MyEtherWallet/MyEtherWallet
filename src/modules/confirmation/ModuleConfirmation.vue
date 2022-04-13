@@ -345,10 +345,8 @@ export default {
       'isHardware'
     ]),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currencyConfig']),
     ...mapState('addressBook', ['addressBookStore']),
-    ...mapState('external', ['currencyRate']),
-    ...mapState('global', ['preferredCurrency']),
     txTo() {
       if (!this.isBatch)
         return this.tx.hasOwnProperty('toTxData')
@@ -426,7 +424,7 @@ export default {
     txFeeUSD() {
       return formatFiatValue(
         BigNumber(this.txFee).times(this.fiatValue).toFixed(2),
-        this.getLocalOptions
+        this.currencyConfig
       ).value;
     },
     value() {
@@ -482,16 +480,6 @@ export default {
      */
     successLottie() {
       return this.showSuccessSwap ? 'swap' : 'checkmark';
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   watch: {

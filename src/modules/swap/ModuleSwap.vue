@@ -380,13 +380,13 @@ export default {
   computed: {
     ...mapState('swap', ['prefetched', 'swapTokens']),
     ...mapState('wallet', ['web3', 'address', 'balance']),
-    ...mapState('global', ['gasPriceType', 'preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
+    ...mapState('global', ['gasPriceType']),
     ...mapGetters('global', [
       'network',
       'isEthNetwork',
       'swapLink',
-      'gasPriceByType'
+      'gasPriceByType',
+      'currencyConfig'
     ]),
     ...mapGetters('wallet', [
       'balanceInETH',
@@ -551,7 +551,7 @@ export default {
           foundToken.contract = token.contract;
           foundToken.price = formatFiatValue(
             currencyToNumber(foundToken.pricef),
-            this.getLocalOptions
+            this.currencyConfig
           ).value;
           foundToken.isEth = token.isEth;
           return foundToken;
@@ -576,7 +576,7 @@ export default {
         ) {
           item.price = formatFiatValue(
             currencyToNumber(item.pricef),
-            this.getLocalOptions
+            this.currencyConfig
           ).value;
           return item;
         }
@@ -643,7 +643,7 @@ export default {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
             foundToken.price = formatFiatValue(
               currencyToNumber(foundToken.pricef),
-              this.getLocalOptions
+              this.currencyConfig
             ).value;
             return Object.assign(token, foundToken);
           }
@@ -652,7 +652,7 @@ export default {
             token = Object.assign(token, foundToken);
             token.price = formatFiatValue(
               currencyToNumber(token.pricef),
-              this.getLocalOptions
+              this.currencyConfig
             ).value;
           }
           return token;
@@ -819,16 +819,6 @@ export default {
      */
     hasSelectedProvider() {
       return !isEmpty(this.selectedProvider);
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   watch: {
@@ -932,12 +922,12 @@ export default {
       return tokens.map(t => {
         t.totalBalance = formatFiatValue(
           currencyToNumber(t.usdBalancef),
-          this.getLocalOptions
+          this.currencyConfig
         ).value;
         t.tokenBalance = t.balancef;
         t.price = formatFiatValue(
           currencyToNumber(t.pricef),
-          this.getLocalOptions
+          this.currencyConfig
         ).value;
         return t;
       });

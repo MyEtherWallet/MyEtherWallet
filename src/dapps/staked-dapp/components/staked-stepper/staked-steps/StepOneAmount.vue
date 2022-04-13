@@ -155,11 +155,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['web3']),
-    ...mapState('global', ['preferredCurrency']),
-    ...mapState('external', ['currencyRate']),
     ...mapGetters('wallet', ['balanceInETH']),
     ...mapGetters('external', ['fiatValue']),
-    ...mapGetters('global', ['network']),
+    ...mapGetters('global', ['network', 'currencyConfig']),
     networkImg() {
       return this.network.type.icon;
     },
@@ -190,7 +188,7 @@ export default {
             img: this.networkImg,
             price: formatFiatValue(
               new BigNumber(i).times(this.fiatValue),
-              this.getLocalOptions
+              this.currencyConfig
             ).value
           });
         }
@@ -239,7 +237,7 @@ export default {
             new BigNumber(this.amount)
               .plus(threeMonthsEarning)
               .times(this.fiatValue),
-            this.getLocalOptions
+            this.currencyConfig
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(threeMonthsEarning)
@@ -252,7 +250,7 @@ export default {
             new BigNumber(this.amount)
               .plus(oneYearEarnings)
               .times(this.fiatValue),
-            this.getLocalOptions
+            this.currencyConfig
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(oneYearEarnings)
@@ -265,7 +263,7 @@ export default {
             new BigNumber(this.amount)
               .plus(twoYearEarnings)
               .times(this.fiatValue),
-            this.getLocalOptions
+            this.currencyConfig
           ).value,
           balanceETH: formatFloatingPointValue(
             new BigNumber(this.amount).plus(twoYearEarnings)
@@ -273,16 +271,6 @@ export default {
           earningsETH: formatFloatingPointValue(twoYearEarnings).value
         }
       ];
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   },
   methods: {

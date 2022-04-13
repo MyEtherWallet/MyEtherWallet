@@ -18,7 +18,7 @@
           <span class="greyPrimary--text"
             >{{ network.type.currencyName }}/</span
           >
-          ~${{ txFeeUsd }}
+          ~{{ txFeeUsd }}
         </div>
       </template>
       <template #rightColItem1>
@@ -27,7 +27,7 @@
           <span class="greyPrimary--text"
             >{{ network.type.currencyName }}/</span
           >
-          ~${{ totalFeeUSD }}
+          ~{{ totalFeeUSD }}
         </div>
       </template>
     </confirmation-summary-block>
@@ -43,7 +43,7 @@ import { toChecksumAddress } from '@/core/helpers/addressUtils';
 import BigNumber from 'bignumber.js';
 import ConfirmationSummaryBlock from './ConfirmationSummaryBlock';
 import ConfirmationValuesContainer from './ConfirmationValuesContainer';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     ConfirmationSummaryBlock,
@@ -88,8 +88,7 @@ export default {
   },
   computed: {
     ...mapGetters('external', ['fiatValue']),
-    ...mapState('external', ['currencyRate']),
-    ...mapState('global', ['preferredCurrency']),
+    ...mapGetters('global', ['currencyConfig']),
     currency() {
       const obj = Object.assign({}, this.sendCurrency);
       if (!obj.hasOwnProperty('amount')) obj['amount'] = this.value;
@@ -115,17 +114,17 @@ export default {
       if (this.currency.symbol === this.network.type.currencyName) {
         return formatFiatValue(
           BigNumber(this.totalFee).times(this.fiatValue).toFixed(2),
-          this.getLocalOptions
+          this.currencyConfig
         ).value;
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);
-      return formatFiatValue(tokenPrice.plus(ethFeeToUsd), this.getLocalOptions)
+      return formatFiatValue(tokenPrice.plus(ethFeeToUsd), this.currencyConfig)
         .value;
     },
     usdAmount() {
       return formatFiatValue(
         BigNumber(this.value).times(this.currency.priceRaw),
-        this.getLocalOptions
+        this.currencyConfig
       ).value;
     },
     summaryItems() {
@@ -154,16 +153,6 @@ export default {
               : ''
         }
       ];
-    },
-    getLocalOptions() {
-      const rate = this.currencyRate.data
-        ? this.currencyRate.data.exchange_rate
-        : 1;
-      const currency = this.preferredCurrency;
-      return {
-        rate,
-        currency
-      };
     }
   }
 };
