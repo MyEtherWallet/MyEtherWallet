@@ -33,7 +33,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   transfer(toAddress) {
-    console.log('transfer in handlerPermanent has been triggered!');
     const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,
       toAddress,
@@ -43,15 +42,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
       to: this.registrarAddress,
       from: this.address
     };
-    console.log('transferMethod', transferMethod);
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
     });
     const tx2 = Object.assign({}, baseTx, {
       data: transferMethod.encodeABI()
     });
-    console.log('tx1', tx1);
-    console.log('tx2', tx2);
     return this.web3.mew.sendBatchTransactions([tx1, tx2]);
   }
 
