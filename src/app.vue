@@ -53,7 +53,7 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
-      this.updateArticles(this.timestamp);
+      this.updateArticles(this.timestamp, this.articleList);
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
