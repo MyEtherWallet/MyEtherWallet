@@ -33,7 +33,7 @@
 
 <script>
 import SignAndVerifyMessage from '@/modules/message/handlers';
-import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import { mapState } from 'vuex';
 
 export default {
   name: 'ModuleMessageVerify',
@@ -45,7 +45,9 @@ export default {
       signAndVerify: ''
     };
   },
-  computed: {},
+  computed: {
+    ...mapState('wallet', ['instance'])
+  },
   mounted() {
     this.signAndVerify = new SignAndVerifyMessage();
   },
@@ -53,10 +55,10 @@ export default {
     signMessage() {
       try {
         this.signAndVerify.signMessage(this.message).catch(e => {
-          Toast(e, {}, ERROR);
+          this.instance.errorHandler(e.message);
         });
       } catch (e) {
-        Toast(e, {}, ERROR);
+        this.instance.errorHandler(e.message);
       }
     },
     clearAll() {

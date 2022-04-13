@@ -23,7 +23,7 @@
         />
         <!--
     =====================================================================================
-     Display if no nfts owned
+    Display if no nfts owned
     =====================================================================================
     -->
         <v-card
@@ -130,7 +130,10 @@
           :nft-category="selectedContract.name"
           :send="sendTx"
           :disabled="!isValid"
+          :enough-funds="enoughFunds"
+          :show-balance-error="showBalanceError"
           :set-address="setAddress"
+          @hasMinEth="hasMinEth"
         />
       </template>
     </mew-module>
@@ -151,6 +154,9 @@ import NftManagerDetails from './components/NftManagerDetails';
 import NftManagerSend from './components/NftManagerSend';
 import handlerNft from './handlers/handlerNft.mixin';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { toBN, isAddress } from 'web3-utils';
+
+const MIN_GAS_LIMIT = 21000;
 
 export default {
   components: {
@@ -167,13 +173,23 @@ export default {
       hasNoTokens: false,
       selectedNft: {},
       toAddress: '',
-      selectedContract: {}
+      selectedContract: {},
+      gasFees: '0',
+      enoughFunds: false,
+      showBalanceError: false,
+      localGasPrice: '0'
     };
   },
   computed: {
     ...mapState('wallet', ['balance', 'web3', 'address']),
-    ...mapState('global', ['network', 'online']),
-    ...mapGetters('global', ['isEthNetwork', 'network', 'gasPrice']),
+    ...mapState('global', ['network', 'online', 'gasPriceType']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
+    ...mapGetters('global', [
+      'isEthNetwork',
+      'network',
+      'gasPrice',
+      'gasPriceByType'
+    ]),
     /**
      * Get Tabs
      */
@@ -215,7 +231,7 @@ export default {
      * Check if address is valid
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress);
+      return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
     }
   },
   watch: {
@@ -223,19 +239,54 @@ export default {
       if (newVal.length > 0) {
         this.onTab(0);
       }
+    },
+    async toAddress(newVal) {
+      if (isAddress(newVal)) {
+        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
+        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+        this.gasFees = gasFeesToBN.toString();
+        if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
+          //gasFeesToBN vs current balance
+          this.enoughFunds = false;
+          this.showBalanceError = true;
+        } else {
+          this.enoughFunds = true;
+          this.showBalanceError = false;
+        }
+      }
     }
   },
   mounted() {
-    /**
-     * Init NFT Handler
-     */
-    this.nft = new NFT({
-      network: this.network,
-      address: this.address,
-      web3: this.web3
-    });
+    this.setUpNFT();
+    this.hasMinEth();
   },
   methods: {
+    setUpNFT() {
+      /**
+       * Init NFT Handler
+       */
+      this.nft = new NFT({
+        network: this.network,
+        address: this.address,
+        web3: this.web3
+      });
+      this.localGasPrice = this.gasPriceByType(this.gasPriceType);
+    },
+    hasMinEth() {
+      const currentGasPrice = this.localGasPrice;
+      if (
+        toBN(this.balanceInWei).gt(
+          toBN(currentGasPrice).mul(toBN(MIN_GAS_LIMIT))
+        )
+      ) {
+        this.enoughFunds = true;
+        this.showBalanceError = false;
+      } else {
+        this.enoughFunds = false;
+        this.showBalanceError = true;
+      }
+    },
     getImageUrl(token) {
       return this.nft.getImageUrl(token.contract, token.token_id);
     },
@@ -259,33 +310,45 @@ export default {
       this.onNftSend = false;
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
-    sendTx() {
+    async sendTx() {
       if (this.isValid) {
-        try {
-          this.nft
-            .send(this.toAddress, this.selectedNft)
-            .then(response => {
-              this.updateValues();
-              Toast(
-                'Cheers! Your transaction was mined. Check it in ',
-                {
-                  title: `${getService(this.network.type.blockExplorerTX)}`,
-                  url: this.network.type.blockExplorerTX.replace(
-                    '[[txHash]]',
-                    response.blockHash
-                  )
-                },
-                SUCCESS,
-                5000
-              );
-            })
-            .catch(e => {
-              Toast(e.message, {}, ERROR);
-            });
-          this.closeNftSend();
-          this.selectedNft = {};
-        } catch (e) {
-          Toast(e.message, {}, WARNING);
+        const gasTypeFee = this.localGasPrice;
+        const gasFees = await this.nft.getGasFees(
+          this.toAddress,
+          this.selectedNft
+        );
+        const gasFeesToBN = toBN(gasFees).mul(toBN(gasTypeFee));
+        this.gasFees = gasFeesToBN.toString();
+        if (gasFeesToBN.gte(toBN(this.balance))) {
+          this.enoughFunds = false;
+        } else {
+          try {
+            this.nft
+              .send(this.toAddress, this.selectedNft)
+              .then(response => {
+                this.updateValues();
+                this.enoughFunds = true;
+                Toast(
+                  'Cheers! Your transaction was mined. Check it in ',
+                  {
+                    title: `${getService(this.network.type.blockExplorerTX)}`,
+                    url: this.network.type.blockExplorerTX.replace(
+                      '[[txHash]]',
+                      response.blockHash
+                    )
+                  },
+                  SUCCESS,
+                  5000
+                );
+              })
+              .catch(e => {
+                Toast(e.message, {}, ERROR);
+              });
+            this.closeNftSend();
+            this.selectedNft = {};
+          } catch (e) {
+            Toast(e.message, {}, WARNING);
+          }
         }
       }
     },

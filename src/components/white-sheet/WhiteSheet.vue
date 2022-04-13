@@ -8,7 +8,8 @@
     :class="[
       sideinfo ? 'sideinfo' : '',
       overflowHidden ? 'overflow--hidden' : '',
-      $vuetify.theme.dark ? 'box-shadow-dark' : 'box-shadow-light'
+      $vuetify.theme.dark && !noShadow ? 'box-shadow-dark' : '',
+      !$vuetify.theme.dark && !noShadow ? 'box-shadow-light' : ''
     ]"
   >
     <slot />
@@ -22,7 +23,8 @@ export default {
     overflowHidden: { default: false, type: Boolean },
     maxWidth: { default: '', type: String },
     minWidth: { default: '', type: String },
-    fullWidth: { default: false, type: Boolean }
+    fullWidth: { default: false, type: Boolean },
+    noShadow: { default: false, type: Boolean }
   }
 };
 </script>
