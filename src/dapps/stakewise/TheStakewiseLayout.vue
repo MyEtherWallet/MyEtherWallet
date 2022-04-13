@@ -59,7 +59,7 @@ export default {
       const isSupported = this.validNetworks.find(item => {
         return item.name === this.network.type.name;
       });
-      return isSupported;
+      return !!isSupported;
     }
   },
   watch: {
@@ -71,6 +71,7 @@ export default {
       }
     },
     web3() {
+      clearInterval(this.fetchInterval);
       if (this.isSupported) {
         this.setup();
       }
