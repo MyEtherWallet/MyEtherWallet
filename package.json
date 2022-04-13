@@ -191,7 +191,9 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "tar": "4.4.18"
+    "tar": "4.4.18",
+    "moment": "2.29.2",
+    "async": "3.2.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
