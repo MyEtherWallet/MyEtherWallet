@@ -3,10 +3,13 @@ const Url =
 /**
  * Update the articles array
  */
-const updateArticles = async function ({ commit }, timestamp, articleList) {
-  const temp = new Date(timestamp);
-  temp.setHours(72);
-  if (temp.getTime() <= Date.now() || articleList.length == 0) {
+const updateArticles = async function ({ commit }, stateObj) {
+  const temp = new Date(stateObj.timestamp);
+  temp.setHours(72); // Add 3 days to saved timestamp
+  if (
+    temp.getTime() <= Date.now() ||
+    !Object.keys(stateObj.articleList).length
+  ) {
     const res = await fetch(Url);
     const articles = await res.json();
     commit('SET_ARTICLES', articles);
