@@ -18,6 +18,8 @@ import {
   setUsageAsCollateralDetails,
   withdrawDetails
 } from './graphQLHelpers.js';
+// import { TxBuilderV2, Network, Market } from '@aave/protocol-js';
+// import Web3 from 'web3';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -34,6 +36,16 @@ export default {
       usdPriceEth: '',
       userSummary: {}
     };
+  },
+  mounted() {
+    // const httpProvider = new Web3.providers.HttpProvider(
+    //   'https://nodes.mewapi.io/rpc/eth'
+    // );
+    // const txBuilder = new TxBuilderV2(Network.main, httpProvider);
+    /**
+     * Object that contains all the necessary methods to create Aave lending pool transactions.
+     */
+    // const lendingPool = txBuilder.getLendingPool(Market.main);
   },
   apollo: {
     $subscribe: {

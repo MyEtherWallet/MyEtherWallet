@@ -9,9 +9,6 @@
           :title="leftSideValues.title"
           :caption="leftSideValues.caption"
           class="text-left height--full"
-          :style="
-            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
-          "
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -22,9 +19,6 @@
           :title="rightSideValues.title"
           :caption="rightSideValues.caption"
           class="text-left height--full"
-          :style="
-            $vuetify.breakpoint.smAndDown ? 'padding-top: 0 !important' : ''
-          "
         />
       </v-col>
     </v-row>

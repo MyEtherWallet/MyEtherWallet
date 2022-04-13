@@ -1,7 +1,7 @@
 <template>
   <mew-overlay
     :show-overlay="open"
-    :close="handleCancel"
+    :close="callClose"
     :title="header"
     content-size="xlarge"
   >
@@ -23,30 +23,33 @@
           Step 2: Select the amount to deposit
         =====================================================================================
         -->
-    <div v-if="step === 1 || step === 3">
-      <aave-summary
-        :selected-token="selectedToken"
-        :amount="amount"
-        :amount-usd="amountUsd"
-        :step="step"
-        :action-type="depositHeader"
-        @confirmed="handleConfirm"
-        @onConfirm="emitDeposit"
-      />
-    </div>
-    <div v-if="step === 2">
-      <aave-amount-form
-        :selected-token="selectedToken"
-        :show-toggle="aaveDepositForm.showToggle"
-        :left-side-values="aaveDepositForm.leftSideValues"
-        :right-side-values="aaveDepositForm.rightSideValues"
-        :form-text="aaveDepositForm.formText"
-        :button-title="aaveDepositForm.buttonTitle"
-        :token-balance="tokenBalance"
-        @cancel="handleCancel"
-        @emitValues="handleDepositAmount"
-      />
-    </div>
+    <aave-amount-form
+      v-if="step === 1"
+      :selected-token="selectedToken"
+      :show-toggle="aaveDepositForm.showToggle"
+      :left-side-values="aaveDepositForm.leftSideValues"
+      :right-side-values="aaveDepositForm.rightSideValues"
+      :form-text="aaveDepositForm.formText"
+      :button-title="aaveDepositForm.buttonTitle"
+      :token-balance="tokenBalance"
+      @cancel="callClose"
+      @emitValues="handleDepositAmount"
+    />
+    <!--
+        =====================================================================================
+          Step 3: Deposit Summary
+        =====================================================================================
+        -->
+    <aave-summary
+      v-if="step === 2"
+      :selected-token="selectedToken"
+      :amount="amount"
+      :amount-usd="amountUsd"
+      :user-summary="userSummary"
+      :step="step"
+      :action-type="depositHeader"
+      @onConfirm="handleConfirm"
+    />
   </mew-overlay>
 </template>
 
@@ -160,14 +163,14 @@ export default {
       this.step = 2;
       this.amount = e;
     },
-    handleCancel() {
+    callClose() {
       this.step = 0;
       this.selectedToken = {};
       this.amount = '0';
 
       this.close();
     },
-    emitDeposit() {
+    handleConfirm() {
       const param = {
         aavePool: 'proto',
         userAddress: this.address,
@@ -176,7 +179,7 @@ export default {
         reserve: this.actualToken.underlyingAsset
       };
       this.$emit('onConfirm', param);
-      this.handleCancel();
+      this.callClose();
     }
   }
 };

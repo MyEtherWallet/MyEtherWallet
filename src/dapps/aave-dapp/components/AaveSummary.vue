@@ -5,7 +5,7 @@
     used for deposit, borrow, collateral and select interest details
   =====================================================================================
   -->
-  <div>
+  <div class="full-width">
     <!--
   =====================================================================================
     Deposit/Borrow currency details card
@@ -22,7 +22,7 @@
           >Amount to {{ actionTitle }}</span
         >
         <span class="mew-heading-1 mb-2"
-          >{{ amount }} {{ selectedToken.token }}</span
+          >{{ formattedAmount }} {{ selectedToken.token }}</span
         >
         <span class="textLight--text">{{ amountUsd }}</span>
       </div>
@@ -116,6 +116,7 @@
 import BigNumber from 'bignumber.js';
 import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
+import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 
 export default {
   props: {
@@ -149,6 +150,9 @@ export default {
     }
   },
   computed: {
+    formattedAmount() {
+      return formatFloatingPointValue(this.amount || '0').value;
+    },
     actionTitle() {
       if (this.isBorrow) {
         return 'Borrow';
@@ -200,7 +204,7 @@ export default {
               tooltip: 'Tooltip text',
               value: this.nextHealthFactor,
               class:
-                this.currentHealthFactor > this.nextHealthFactor
+                this.currentHealthFactor >= this.nextHealthFactor
                   ? 'redPrimary--text'
                   : 'greenPrimary--text',
               indicator:

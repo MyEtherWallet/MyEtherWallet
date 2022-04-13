@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 
 const handlerAaveOverlay = {
   props: {
@@ -61,9 +62,12 @@ const handlerAaveOverlay = {
     },
     amountUsd() {
       const amount = this.amount ? this.amount : 0;
-      return `$ ${BigNumber(this.selectedTokenUSDValue)
-        .times(amount)
-        .toFixed(2)}`;
+
+      return `$
+        ${
+          formatFiatValue(BigNumber(this.selectedTokenUSDValue).times(amount))
+            .value
+        }`;
     }
   }
 };
