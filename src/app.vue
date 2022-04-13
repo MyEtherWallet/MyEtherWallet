@@ -53,6 +53,7 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
+      this.updateArticles(this.timestamp);
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
@@ -67,12 +68,6 @@ export default {
       this.setAddressBook(this.addressBook).then(() => {
         this.setMigrated(true);
       });
-    }
-
-    const temp = new Date(this.timestamp);
-    temp.setHours(72);
-    if (temp.getTime() <= Date.now() || this.articleList.length == 0) {
-      this.updateArticles();
     }
   },
   methods: {
