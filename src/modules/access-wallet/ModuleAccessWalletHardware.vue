@@ -54,7 +54,11 @@
             style="height: 90px"
             color-theme="greyMedium"
             btn-style="outline"
-            @click.native="setWalletInstance(button.type)"
+            @click.native="
+              button.bluetooth && !bluetooth
+                ? (bluetoothModal = true)
+                : setWalletInstance(button.type)
+            "
           >
             <div class="text-left d-flex align-center" style="width: 100%">
               <img width="40" class="mr-4" :src="button.icon" />
@@ -65,7 +69,65 @@
           </mew-button>
         </v-col>
       </v-row>
+      <mew-alert
+        v-if="!bluetooth"
+        class="mt-5"
+        title="Bluetooth Required"
+        description="Bluetooth is required for some wallets."
+        theme="warning"
+        hide-close-icon
+      />
     </div>
+    <v-dialog v-model="bluetoothModal" persistent max-width="500">
+      <v-sheet color="white" class="pa-5">
+        <h2 class="mb-5 text-center">Bluetooth Required</h2>
+        <v-list>
+          <h3>Supported Browsers</h3>
+          <v-list-item v-for="(browser, i) in supportedBrowsers" :key="i">
+            <v-list-item-content>
+              <v-list-item-title v-text="browser" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <h4 class="mb-5">* Remember to enable bluetooth on your device</h4>
+        <h3 class="mb-5 text-center">Enable bluetooth on supported browsers</h3>
+        <v-expansion-panels
+          v-for="(browser, i) in enableBluetooth"
+          :key="i"
+          class="mt-1"
+          accordion
+        >
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              {{ browser.title }}
+            </v-expansion-panel-header>
+            <v-expansion-panel-content
+              v-for="(direction, browserIndex) in browser.direction"
+              :key="browserIndex"
+            >
+              <h4 class="mb-3">{{ direction.title }}</h4>
+              <ul v-for="(s, index) in direction.steps" :key="index">
+                <li v-if="s.length" class="mb-1">
+                  {{ s }}
+                </li>
+                <li v-if="!s.length" class="mb-1">
+                  <a :href="s.link" target="_blank">Learn More</a>
+                </li>
+              </ul>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <div class="text-center">
+          <mew-button
+            class="mt-6"
+            title="Close"
+            btn-size="xlarge"
+            btn-style="outline"
+            @click.native="bluetoothModal = false"
+          />
+        </div>
+      </v-sheet>
+    </v-dialog>
     <!--
             =====================================================================================
               Step 2: Start Access to Selected Hardware Wallet
@@ -240,9 +302,61 @@ export default {
         {
           label: 'CoolWallet',
           icon: require('@/assets/images/icons/hardware-wallets/icon-coolwallet.svg'),
-          type: WALLET_TYPES.COOL_WALLET
+          type: WALLET_TYPES.COOL_WALLET,
+          bluetooth: true
         }
       ],
+      enableBluetooth: [
+        {
+          title: 'Chrome',
+          direction: [
+            {
+              title: 'Enable experimental flags',
+              steps: [
+                'chrome://flags/#enable-web-bluetooth',
+                'chrome://flags/#enable-web-bluetooth-new-permissions-backend',
+                'chrome://flags/#enable-experimental-web-platform-features'
+              ]
+            },
+            {
+              title: 'Official browser directions',
+              steps: [
+                {
+                  link: 'https://support.google.com/chrome/answer/6362090?hl=en&co=GENIE.Platform%3DDesktop'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          title: 'Opera',
+          direction: [
+            {
+              title: 'Enable experimental flags',
+              steps: [
+                'opera://flags/#enable-web-bluetooth-new-permissions-backend',
+                'opera://flags/#enable-experimental-web-platform-features'
+              ]
+            }
+          ]
+        },
+        {
+          title: 'Edge',
+          direction: [
+            {
+              title: 'Official browser directions',
+              steps: [
+                {
+                  link: 'https://support.microsoft.com/en-us/microsoft-edge/connect-a-website-to-a-bluetooth-or-usb-device-in-microsoft-edge-107ba8a4-60aa-0fd3-2d26-afd63d0964f4'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      bluetooth: false,
+      bluetoothModal: false,
+      supportedBrowsers: ['Chrome', 'Edge', 'Opera'],
       ledgerApps: appPaths.map(item => {
         return {
           name: item.network.name_long,
@@ -482,6 +596,11 @@ export default {
     open(newVal) {
       if (newVal && this.switchAddress) this.setupSwitchAddress();
     }
+  },
+  async mounted() {
+    const { bluetooth } = navigator;
+    if (!bluetooth) return (this.bluetooth = false);
+    this.bluetooth = await bluetooth.getAvailability();
   },
   methods: {
     ...mapActions('wallet', ['setWallet']),
