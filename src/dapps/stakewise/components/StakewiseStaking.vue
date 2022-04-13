@@ -127,6 +127,7 @@
     <!-- ======================================================================================= -->
     <div v-if="enoughToCoverRedeem" class="mt-4 greyPrimary--text">
       You do not have enough ETH to cover transaction fee.
+      <a rel="noopener noreferrer" @click="openMoonpay"> Buy more ETH</a>
     </div>
   </div>
 </template>
@@ -146,9 +147,11 @@ import {
   formatFloatingPointValue,
   formatFiatValue
 } from '@/core/helpers/numberFormatHelper';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'ModuleSideStaking',
   components: {},
+  mixins: [buyMore],
   props: {
     compoundRewards: {
       type: Boolean,
