@@ -157,6 +157,10 @@ export default {
     txFee: {
       type: String,
       default: ''
+    },
+    hasEnoughBalance: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -180,16 +184,16 @@ export default {
       if (!this.hasStaked && !this.hasPending) {
         return false;
       }
-      console.log('eth balance', fromWei(this.balance));
-      console.log('transaction fee', fromWei(this.txFee));
-
-      if (BigNumber(this.balance).lt(this.txFee)) {
+      if (!this.hasEnoughBalance) {
         return true;
       }
       if (
         !BigNumber(this.rethBalance).gt(0) ||
         !BigNumber(this.sethBalance).gt(0)
       ) {
+        return false;
+      }
+      if (BigNumber(this.balance).gt(this.txFee)) {
         return false;
       }
       return true;
