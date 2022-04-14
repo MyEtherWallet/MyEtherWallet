@@ -69,13 +69,15 @@ import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
 import { SUPPORTED_NETWORKS } from '@/dapps/stakewise/handlers/helpers/supportedNetworks';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import nodes from '@/utils/networks';
 export default {
   name: 'TheStakewisePopupPromo',
   components: { AppModal },
   mixins: [handlerAnalytics],
   data() {
     return {
-      loading: true
+      loading: true,
+      nodes: nodes
     };
   },
   computed: {
@@ -104,6 +106,8 @@ export default {
     this.setup();
   },
   methods: {
+    ...mapActions('global', ['setNetwork']),
+    ...mapActions('wallet', ['setWeb3Instance']),
     ...mapActions('stakewise', [
       'setPoolSupply',
       'setStakingFee',
@@ -140,14 +144,28 @@ export default {
     setHidePopUp() {
       this.closeStakewisePromo();
     },
+    navigate() {
+      this.setHidePopUp();
+      this.trackDapp('stakewiseFromPromo');
+      EventBus.$emit(STAKEWISE_EVENT);
+    },
     /**
      * Hides promo popup forever and navigates to the promo link.
      * Edit this function to route to new link
      */
     goToPromo() {
-      this.setHidePopUp();
-      this.trackDapp('stakewiseFromPromo');
-      EventBus.$emit(STAKEWISE_EVENT);
+      if (!this.isSupported) {
+        const defaultNetwork = this.nodes['ETH'].find(item => {
+          return item.service === 'myetherwallet.com-ws';
+        });
+        this.setNetwork(defaultNetwork).then(() => {
+          this.setWeb3Instance().then(() => {
+            this.navigate();
+          });
+        });
+      } else {
+        this.navigate();
+      }
     }
   }
 };
