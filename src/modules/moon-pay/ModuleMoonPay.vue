@@ -24,7 +24,7 @@
             :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
-            :default-currency="defaltCurrency"
+            :default-currency="defaultCurrency"
             @selectedCurrency="setSelectedCurrency"
           />
         </template>
@@ -33,7 +33,7 @@
             :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
-            :default-currency="defaltCurrency"
+            :default-currency="defaultCurrency"
             @selectedCurrency="setSelectedCurrency"
           />
         </template>
@@ -90,7 +90,7 @@ export default {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
-    defaltCurrency() {
+    defaultCurrency() {
       if (isEmpty(this.selectedCurrency) && !this.network.type.isTestNetwork) {
         return this.tokensList.filter(
           item =>
