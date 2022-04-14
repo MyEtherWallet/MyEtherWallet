@@ -332,9 +332,9 @@ export default {
       this.loading = true;
       this.fetchData = {};
       this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency.name)
+        ?.getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
-          this.moonpayHandler.getFiatRatesForBuy().then(res => {
+          this.moonpayHandler?.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
             this.loading = false;
           });
@@ -347,7 +347,7 @@ export default {
     buy(btn) {
       const amount = btn.hasOwnProperty('fiat') ? btn.fiat.toString() : null;
       this.moonpayHandler
-        .buy(this.selectedCurrency.name, this.selectedFiat, amount)
+        ?.buy(this.selectedCurrency.name, this.selectedFiat, amount)
         .then(() => {
           this.reset();
           this.close();
