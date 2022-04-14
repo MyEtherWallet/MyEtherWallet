@@ -111,8 +111,15 @@ h6 {
 }
 
 /* ========== Border ========== */
+.border-radius--12px {
+  border-radius: 12px !important;
+}
 .border-radius--10px {
   border-radius: 10px !important;
+}
+
+.border-radius--8px {
+  border-radius: 8px !important;
 }
 
 .border-radius--5px {
@@ -170,6 +177,23 @@ h6 {
   &:hover {
     filter: brightness(90%);
   }
+}
+
+// temp addition, remove once stakewise promo is done
+
+.snackbar-border {
+  .v-snack__wrapper {
+    border-radius: 8px !important;
+    border: 1px solid var(--v-greenPrimary-base) !important;
+    background-color: var(--v-whiteBackground-base) !important;
+  }
+  // .white {
+  //   border: 1px solid var(--v-greenPrimary-base) !important;
+  // }
+
+  // .application .white {
+  //   border: 1px solid var(--v-greenPrimary-base) !important;
+  // }
 }
 
 /* ========= Convert SVG to white ========= */
