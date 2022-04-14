@@ -12,7 +12,7 @@ export default {
   path: STAKEWISE_ROUTES.CORE.PATH,
   networks: SUPPORTED_NETWORKS,
   layout,
-  release: '01/27/2022',
+  release: '04/14/2022',
   defaultName: STAKEWISE_ROUTES.CORE.NAME,
   meta: {
     noAuth: false
