@@ -4,7 +4,9 @@ const mewApiError = 'Websocket connection failed';
 
 export const knownErrors = {
   'Can\'t assign to property "request"': mewApiError,
-  "Cannot create property 'request'": mewApiError
+  "Cannot create property 'request'": mewApiError,
+  'Load failed':
+    'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
 };
 
 const handleError = err => {
