@@ -1,3 +1,10 @@
+### Release v6.5.2-hotfix.1
+
+### fix
+
+* websocket fix [#3778](https://github.com/MyEtherWallet/MyEtherWallet/pull/3778)
+* cleanup for stakewise [#3782](https://github.com/MyEtherWallet/MyEtherWallet/pull/3782)
+
 ### Release v6.5.2
 
 ### devop
