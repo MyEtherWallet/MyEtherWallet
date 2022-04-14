@@ -1,3 +1,5 @@
+### Release v6.5.2-hotfix.1
+
 ### fix
 
 * websocket fix [#3778](https://github.com/MyEtherWallet/MyEtherWallet/pull/3778)
