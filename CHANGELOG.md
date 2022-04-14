@@ -1,3 +1,43 @@
+### feature
+
+* * feature add intercom set
+    [#3729](https://github.com/MyEtherWallet/MyEtherWallet/pull/3729)
+
+### devop
+
+* * display error through wallet error handler [#3725](https://github.com/MyEtherWallet/MyEtherWallet/pull/3725)
+* * Added error messages for mewapi requests [#3740](https://github.com/MyEtherWallet/MyEtherWallet/pull/3740)
+* add supported coins to address book [#3749](https://github.com/MyEtherWallet/MyEtherWallet/pull/3749)
+* sync develop with main [#3762](https://github.com/MyEtherWallet/MyEtherWallet/pull/3762)
+* * fixed stepper issue not clearing wallet type [#3773](https://github.com/MyEtherWallet/MyEtherWallet/pull/3773)
+* * added gatt error to waller error handler [#3774](https://github.com/MyEtherWallet/MyEtherWallet/pull/3774)
+
+### chore
+
+* * fix no error when not enough funds to send NFT [#3727](https://github.com/MyEtherWallet/MyEtherWallet/pull/3727)
+
+### feat
+
+* * new dapp feature: stakewise [#3721](https://github.com/MyEtherWallet/MyEtherWallet/pull/3721)
+* * add eth2 keystore generator to tools [#3758](https://github.com/MyEtherWallet/MyEtherWallet/pull/3758)
+* * added block explorer links to address list [#3769](https://github.com/MyEtherWallet/MyEtherWallet/pull/3769)
+
+### fix
+
+* * fix no error when not enough funds to send NFT [#3727](https://github.com/MyEtherWallet/MyEtherWallet/pull/3727) [#3727](https://github.com/MyEtherWallet/MyEtherWallet/pull/3727)
+* * fix sentry invalid attempt to iterate [#3738](https://github.com/MyEtherWallet/MyEtherWallet/pull/3738); [#3738](https://github.com/MyEtherWallet/MyEtherWallet/pull/3738)
+* fix sentry undefined contract [#3750](https://github.com/MyEtherWallet/MyEtherWallet/pull/3750)
+* * check for response data in swap rates [#3751](https://github.com/MyEtherWallet/MyEtherWallet/pull/3751)
+* * make sure base path is string format when accessing keepkey and ledger [#3752](https://github.com/MyEtherWallet/MyEtherWallet/pull/3752)
+* * fix metamask no balance error after switching accounts [#3766](https://github.com/MyEtherWallet/MyEtherWallet/pull/3766)
+* * fix undefined properties of "methods" [#3772](https://github.com/MyEtherWallet/MyEtherWallet/pull/3772)
+* * added catch for connection error [#3775](https://github.com/MyEtherWallet/MyEtherWallet/pull/3775)
+
+### sentry
+
+* replace currencyDisplay: 'narrowSymbol' to currencyDisplay: 'symbol' [#3761](https://github.com/MyEtherWallet/MyEtherWallet/pull/3761)
+* * added 'MetaMask Message Signature: User denied message signature' to error list [#3767](https://github.com/MyEtherWallet/MyEtherWallet/pull/3767)
+
 ### Release v6.5.1-hotfix.1
 
 ### fix
