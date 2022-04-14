@@ -126,27 +126,25 @@ export default {
     },
     subscribeToBlockNumber() {
       this.web3.eth.getBlockNumber().then(bNumber => {
-        // eslint-disable-next-line
-        console.log('bNumber');
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
-          // eslint-disable-next-line
-          console.log('block');
           if (block) {
             this.checkAndSetBaseFee(block.baseFeePerGas);
           }
-          // eslint-disable-next-line
-          console.log('console before subscription');
-          this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
-            // eslint-disable-next-line
-            console.log('subscription res');
-            if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
-              this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
-            }
-            // eslint-disable-next-line
-            console.log('setting block number');
-            this.setBlockNumber(res.number);
-          });
+          try {
+            this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+              if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
+                this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
+              }
+              this.setBlockNumber(res.number);
+            });
+          } catch (e) {
+            Toast(
+              'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe',
+              {},
+              ERROR
+            );
+          }
         });
       });
     },
