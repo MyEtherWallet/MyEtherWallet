@@ -125,7 +125,6 @@ class WSProvider {
     };
 
     this.wsProvider.request = payload => {
-      console.log(payload, 'request');
       return new Promise((resolve, reject) => {
         this.wsProvider.send(
           {
@@ -135,7 +134,6 @@ class WSProvider {
             params: payload.params
           },
           (err, res) => {
-            console.log(err, res);
             if (err) return reject(err);
             else if (res.error) return reject(res.error);
             resolve(res.result);
