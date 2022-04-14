@@ -126,15 +126,25 @@ export default {
     },
     subscribeToBlockNumber() {
       this.web3.eth.getBlockNumber().then(bNumber => {
+        // eslint-disable-next-line
+        console.log(bNumber, 'bNumber');
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {
+          // eslint-disable-next-line
+          console.log(block, 'block');
           if (block) {
             this.checkAndSetBaseFee(block.baseFeePerGas);
           }
+          // eslint-disable-next-line
+          console.log('console before subscription');
           this.web3.eth.subscribe('newBlockHeaders').on('data', res => {
+            // eslint-disable-next-line
+            console.log(res, 'subscription res');
             if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
               this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
             }
+            // eslint-disable-next-line
+            console.log('setting block number');
             this.setBlockNumber(res.number);
           });
         });
