@@ -53,6 +53,7 @@ class WSProvider {
     )}`;
     this.keepAliveTimer = workerTimer.setInterval(keepAlive, 5000);
     delete this.wsProvider['send'];
+
     this.wsProvider.send = (payload, callback) => {
       this.lastMessage = new Date().getTime();
       if (
@@ -85,10 +86,13 @@ class WSProvider {
             this.oWSProvider.connection.CONNECTING
         ) {
           this.connectionRetries++;
-          this.oWSProvider.connection = new Web3WSProvider(
-            host,
-            options
-          ).connection;
+          const tempConn = new Web3WSProvider(host, options);
+          delete tempConn['send'];
+          Object.assign(this.oWSProvider, tempConn);
+          setTimeout(() => {
+            this.wsProvider.send(payload, callback);
+          }, 1000);
+          return;
         }
       }
       if (
@@ -119,6 +123,7 @@ class WSProvider {
         this.wsProvider._addResponseCallback(payload, callback);
       });
     };
+
     this.wsProvider.request = payload => {
       return new Promise((resolve, reject) => {
         this.wsProvider.send(
