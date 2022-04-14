@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
@@ -35,38 +34,32 @@ const handlerAaveOverlay = {
   computed: {
     ...mapState('wallet', ['address']),
     ...mapGetters('external', ['fiatValue']),
-    actualSelectedToken() {
-      const selectedTokens = isEmpty(this.selectedToken)
-        ? isEmpty(this.preSelectedToken)
-          ? {}
-          : this.preSelectedToken
-        : this.selectedToken;
-      return selectedTokens;
+    selectedTokenToUse() {
+      return this.selectedToken || this.preSelectedToken;
     },
-    actualToken() {
+    selectedTokenDetails() {
       return this.reservesData.find(item => {
-        if (item.symbol === this.actualSelectedToken.token) return item;
+        if (item.symbol === this.selectedTokenToUse.token) return item;
       });
     },
-    selectedTokenUSDValue() {
-      return new BigNumber(this.actualToken?.price?.priceInEth || 0).times(
-        this.fiatValue
-      );
+    selectedTokenUSD() {
+      return new BigNumber(
+        this.selectedTokenDetails?.price?.priceInEth || 0
+      ).times(this.fiatValue);
     },
     selectedTokenInUserSummary() {
       return this.userSummary?.reservesData?.find(item => {
-        if (item.reserve.symbol === this.actualSelectedToken.token) {
+        if (item.reserve.symbol === this.selectedTokenToUse.token) {
           return item;
         }
       });
     },
     amountUsd() {
-      const amount = this.amount ? this.amount : 0;
-
       return `$
         ${
-          formatFiatValue(BigNumber(this.selectedTokenUSDValue).times(amount))
-            .value
+          formatFiatValue(
+            BigNumber(this.selectedTokenUSD).times(this.amount || 0)
+          ).value
         }`;
     }
   }

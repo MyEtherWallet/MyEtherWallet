@@ -94,7 +94,7 @@ export default {
         aavePool: 'proto',
         amount: e,
         userAddress: this.address,
-        reserve: this.actualToken.underlyingAsset
+        reserve: this.selectedTokenDetails.underlyingAsset
       };
       this.$emit('onConfirm', param);
       this.handleCancel();

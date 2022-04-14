@@ -57,7 +57,7 @@
 import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
-import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import { AAVE_TABLE_TITLE } from '../handlers/helpers';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -75,7 +75,7 @@ export default {
       step: 0,
       selectedToken: {},
       amount: '0',
-      depositHeader: AAVE_TABLE_HEADER.DEPOSIT
+      depositHeader: AAVE_TABLE_TITLE.deposit
     };
   },
   computed: {
@@ -109,7 +109,7 @@ export default {
       } ${this.selectedToken.token}`;
       const depositedBalanceInUSD = `$ ${
         formatFiatValue(
-          BigNumber(this.selectedTokenUSDValue).times(
+          BigNumber(this.selectedTokenUSD).times(
             hasDeposit?.currentUnderlyingBalance || 0
           )
         ).value
@@ -120,7 +120,7 @@ export default {
       } ${this.selectedToken.token}`;
       const usd = `$ ${
         formatFiatValue(
-          BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
+          BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
         ).value
       }`;
       return {
@@ -176,7 +176,7 @@ export default {
         userAddress: this.address,
         amount: this.amount,
         referralCode: '14',
-        reserve: this.actualToken.underlyingAsset
+        reserve: this.selectedTokenDetails.underlyingAsset
       };
       this.$emit('onConfirm', param);
       this.callClose();

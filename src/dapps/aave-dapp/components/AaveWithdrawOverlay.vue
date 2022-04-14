@@ -62,7 +62,7 @@ export default {
       } ${this.preSelectedToken.token}`;
       const depositedBalanceInUSD = `$ ${
         formatFiatValue(
-          BigNumber(this.selectedTokenUSDValue).times(
+          BigNumber(this.selectedTokenUSD).times(
             hasDeposit?.currentUnderlyingBalance || 0
           )
         ).value
@@ -72,7 +72,7 @@ export default {
       } ${this.preSelectedToken.token}`;
       const usd = `$ ${
         formatFiatValue(
-          BigNumber(this.tokenBalance).times(this.selectedTokenUSDValue)
+          BigNumber(this.tokenBalance).times(this.selectedTokenUSD)
         ).value
       }`;
       return {
@@ -105,7 +105,7 @@ export default {
         aavePool: 'proto',
         amount: e,
         userAddress: this.address,
-        aToken: this.actualToken.aToken.id
+        aToken: this.selectedTokenDetails.aToken.id
       };
 
       this.$emit('onConfirm', param);

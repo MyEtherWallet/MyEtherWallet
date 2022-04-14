@@ -11,7 +11,7 @@
   >
     <div>
       <aave-select-interest
-        :selected-token="actualToken"
+        :selected-token="selectedTokenDetails"
         @continue="handleSetInterestRate"
       />
     </div>
@@ -38,7 +38,7 @@ export default {
       const param = {
         aavePool: 'proto',
         userAddress: this.address,
-        reserve: this.actualToken.underlyingAsset
+        reserve: this.selectedTokenDetails.underlyingAsset
       };
       if (
         e.toLowerCase() ===

@@ -39,7 +39,7 @@
           :table-headers="header"
           :table-data="listData"
           no-data-text="You currently don't have any tokens."
-          :loading="isLoading"
+          :loading="isLoadingData"
         />
       </v-col>
     </v-row>
@@ -48,7 +48,7 @@
 
 <script>
 import {
-  AAVE_TABLE_HEADER,
+  AAVE_TABLE_TITLE,
   INTEREST_TYPES
 } from '@/dapps/aave-dapp/handlers/helpers';
 import BigNumber from 'bignumber.js';
@@ -59,13 +59,19 @@ import {
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import {
+  AAVE_TABLE_BUTTON,
+  AAVE_TABLE_HEADER
+} from '@/dapps/aave-dapp/handlers/helpers';
 
 export default {
   name: 'AaveTable',
+  mixins: [handlerAaveOverlay],
   props: {
-    tableHeader: {
+    title: {
       type: String,
-      default: AAVE_TABLE_HEADER.DEPOSIT
+      default: AAVE_TABLE_TITLE.deposit
     },
     hasSearch: {
       type: Boolean,
@@ -74,215 +80,34 @@ export default {
     hasToggle: {
       type: Boolean,
       default: true
-    },
-    isLoadingData: {
-      type: Boolean,
-      default: true
-    },
-    userReservesData: {
-      type: Array,
-      default: () => []
-    },
-    reservesData: {
-      type: Array,
-      default: () => []
     }
   },
   data() {
     return {
       searchInput: '',
-      toggleType: 0,
-      btnDeposit: {
-        title: 'Deposit',
-        btnStyle: 'background',
-        colorTheme: 'greenPrimary',
-        method: this.onDepositClick,
-        disabled: false
-      },
-      btnSwap: {
-        title: 'Swap',
-        btnStyle: 'outline',
-        colorTheme: 'greenPrimary',
-        method: this.onSwapClick
-      },
-      btnBorrow: {
-        title: 'Borrow',
-        btnStyle: 'background',
-        colorTheme: 'greenPrimary',
-        method: this.onBorrowClick
-      },
-      btnWithdraw: {
-        title: 'Withdraw',
-        btnStyle: 'outline',
-        colorTheme: 'greenPrimary',
-        method: this.onWithdrawClick
-      },
-      btnRepay: {
-        title: 'Repay',
-        btnStyle: 'transparent',
-        colorTheme: 'greenPrimary',
-        method: this.onRepayClick
-      },
-      tableDepositHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: true,
-          width: '15%'
-        },
-        {
-          text: 'Available',
-          value: 'available',
-          sortable: true
-        },
-        {
-          text: 'Deposited',
-          value: 'deposited',
-          sortable: true
-        },
-        {
-          text: 'APY',
-          value: 'apy',
-          sortable: false,
-          width: '14%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          width: '32%'
-        }
-      ],
-      tableBorrowHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: 'Available',
-          value: 'available',
-          sortable: true
-        },
-        {
-          text: 'Stable APY',
-          value: 'stableApy',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: 'Variable APY',
-          value: 'variableApy',
-          sortable: false,
-          width: '15%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          width: '32%'
-        }
-      ],
-      tableBalanceDepositHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false,
-          width: '20%'
-        },
-        {
-          text: 'Deposited',
-          value: 'balance',
-          sortable: false,
-          filterable: false,
-          width: '20%'
-        },
-        {
-          text: 'APY',
-          value: 'apy',
-          sortable: false,
-          filterable: false,
-          width: '20%'
-        },
-        {
-          text: 'Use as collateral',
-          value: 'toggle',
-          sortable: false,
-          filterable: false,
-          width: '10%'
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '30%'
-        }
-      ],
-      tableBalanceBorrowHeader: [
-        {
-          text: 'Token',
-          value: 'token',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'Borrowed',
-          value: 'balance',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: 'APY',
-          value: 'apy',
-          sortable: false,
-          filterable: false,
-          containsLink: true
-        },
-        {
-          text: 'APR Type',
-          value: 'toggle',
-          sortable: false,
-          filterable: false
-        },
-        {
-          text: '',
-          value: 'callToAction',
-          sortable: false,
-          filterable: false,
-          containsLink: true,
-          width: '32%'
-        }
-      ]
+      toggleType: 0
     };
   },
   computed: {
     ...mapGetters('global', ['network']),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
+    userReservesData() {
+      return this.userSummary?.reservesData || [];
+    },
     header() {
-      switch (this.tableHeader) {
-        case AAVE_TABLE_HEADER.DEPOSIT:
-          return this.tableDepositHeader;
-        case AAVE_TABLE_HEADER.BORROW:
-          return this.tableBorrowHeader;
-        case AAVE_TABLE_HEADER.BALANCE_DEPOSIT:
-          return this.tableBalanceDepositHeader;
+      switch (this.title) {
+        case AAVE_TABLE_TITLE.deposit:
+          return AAVE_TABLE_HEADER.deposit;
+        case AAVE_TABLE_TITLE.borrow:
+          return AAVE_TABLE_HEADER.borrow;
+        case AAVE_TABLE_TITLE.balance_deposit:
+          return AAVE_TABLE_HEADER.balanceDeposit;
         default:
-          return this.tableBalanceBorrowHeader;
+          return AAVE_TABLE_HEADER.balanceBorrow;
       }
     },
-    /**
-     * Returns true if the data has not been loaded yet
-     */
-    isLoading() {
-      return this.isLoadingData;
-    },
-
     stableCoins() {
-      if (!this.isLoading) {
+      if (!this.isLoadingData) {
         const stableCoins = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
         const reserves = this.list?.filter(item => {
           if (stableCoins.includes(item.symbol)) return item;
@@ -293,14 +118,14 @@ export default {
     },
 
     list() {
-      if (!this.isLoading) {
+      if (!this.isLoadingData) {
         if (
-          this.tableHeader === AAVE_TABLE_HEADER.DEPOSIT ||
-          this.tableHeader === AAVE_TABLE_HEADER.BORROW
+          this.title === AAVE_TABLE_TITLE.deposit ||
+          this.title === AAVE_TABLE_TITLE.borrow
         ) {
           return this.reservesData;
         }
-        if (this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW) {
+        if (this.title === AAVE_TABLE_TITLE.balance_borrow) {
           return this.userReservesData.filter(item =>
             new BigNumber(item.currentBorrows).gt(0)
           );
@@ -317,14 +142,14 @@ export default {
      * Filters through search requests
      */
     listData() {
-      if (!this.isLoading) {
+      if (!this.isLoadingData) {
         let list = this.toggleType ? this.stableCoins : this.list;
         const userReserves = this.userReservesData;
-        switch (this.tableHeader) {
+        switch (this.title) {
           /**
            * Case: Aave Deposits Table used in Overlay
            */
-          case AAVE_TABLE_HEADER.DEPOSIT:
+          case AAVE_TABLE_TITLE.deposit:
             list = list.map(item => {
               /* Get How much user has already deposited */
               const userDeposited = userReserves.find(uItem => {
@@ -339,11 +164,10 @@ export default {
                   : this.tokensList.find(balance => {
                       return item.symbol === balance.symbol;
                     });
-              /* If !balance or balance = 0, disable deposit button */
-              const depositButton = Object.assign({}, this.btnDeposit);
-              depositButton['disabled'] = userBalance
+              AAVE_TABLE_BUTTON.deposit.disabled = userBalance
                 ? BigNumber(userBalance).lte(0)
                 : true;
+              AAVE_TABLE_BUTTON.swap.method = this.onSwapClick;
               return {
                 price: item.price,
                 token: item.symbol,
@@ -358,14 +182,17 @@ export default {
                 apy: this.getDepositAPY(item.liquidityRate),
                 tokenImg: `${item.icon}`,
                 address: item.aToken.id,
-                callToAction: [depositButton, this.btnSwap]
+                callToAction: [
+                  AAVE_TABLE_BUTTON.deposit,
+                  AAVE_TABLE_BUTTON.swap
+                ]
               };
             });
             break;
           /**
            * Case: Aave Borrow Table used in Overlay
            */
-          case AAVE_TABLE_HEADER.BORROW:
+          case AAVE_TABLE_TITLE.borrow:
             list = list
               .filter(item => {
                 return item.variableBorrowAPY > 0;
@@ -385,15 +212,16 @@ export default {
                   ).value,
                   tokenImg: `${item.icon}`,
                   address: item.aToken.id,
-                  callToAction: [this.btnBorrow]
+                  callToAction: [AAVE_TABLE_BUTTON.borrow]
                 };
               });
             break;
           /**
            * Case: Aave Exhisting Deposits Table
            */
-          case AAVE_TABLE_HEADER.BALANCE_DEPOSIT:
+          case AAVE_TABLE_TITLE.balance_deposit:
             list = list.map(item => {
+              AAVE_TABLE_BUTTON.method = this.onWithdrawClick;
               return {
                 token: item.reserve.symbol,
                 tokenImg: `${item.reserve.icon}`,
@@ -414,15 +242,19 @@ export default {
                   method: this.onToggleClick,
                   value: item.usageAsCollateralEnabledOnUser
                 },
-                callToAction: [this.btnDeposit, this.btnWithdraw]
+                callToAction: [
+                  AAVE_TABLE_BUTTON.deposit,
+                  AAVE_TABLE_BUTTON.withdraw
+                ]
               };
             });
             break;
           /**
            * Case: Aave Exhisting Borrowings Table
            */
-          case AAVE_TABLE_HEADER.BALANCE_BORROW:
+          case AAVE_TABLE_TITLE.balance_borrow:
             list = list.map(item => {
+              AAVE_TABLE_BUTTON.repay.method = this.onRepayClick;
               const isVariable =
                 item.borrowRateMode === INTEREST_TYPES.variable;
               const reserve = this.reservesData.find(reserve => {
@@ -452,7 +284,10 @@ export default {
                     : INTEREST_TYPES.stable,
                   disabled: enableToggle
                 },
-                callToAction: [this.btnBorrow, this.btnRepay]
+                callToAction: [
+                  AAVE_TABLE_BUTTON.borrow,
+                  AAVE_TABLE_BUTTON.repay
+                ]
               };
             });
             break;
@@ -476,13 +311,15 @@ export default {
   mounted() {
     /* Set Button styles to transparent for balance deposit table */
     if (
-      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_DEPOSIT ||
-      this.tableHeader === AAVE_TABLE_HEADER.BALANCE_BORROW
+      this.title === AAVE_TABLE_TITLE.balance_deposit ||
+      this.title === AAVE_TABLE_TITLE.balance_borrow
     ) {
-      this.btnDeposit.btnStyle = 'transparent';
-      this.btnWithdraw.btnStyle = 'transparent';
-      this.btnBorrow.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.deposit.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.withdraw.btnStyle = 'transparent';
+      AAVE_TABLE_BUTTON.borrow.btnStyle = 'transparent';
     }
+    AAVE_TABLE_BUTTON.deposit.method = this.onDepositClick;
+    AAVE_TABLE_BUTTON.borrow.method = this.onBorrowClick;
   },
   methods: {
     /**

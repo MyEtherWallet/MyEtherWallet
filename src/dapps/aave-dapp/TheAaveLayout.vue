@@ -266,9 +266,6 @@
       :pre-selected-token="requestToken"
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       @onConfirm="onBorrow"
     />
     <aave-collateral-overlay
@@ -320,7 +317,7 @@ import AaveSetAprOverlay from './components/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { AAVE_TABLE_HEADER } from '@/dapps/aave-dapp/handlers/helpers';
+import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
 import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
 import {
@@ -380,8 +377,8 @@ export default {
         subtext:
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
-      depositsTableHeader: AAVE_TABLE_HEADER.BALANCE_DEPOSIT,
-      borrowTableHeader: AAVE_TABLE_HEADER.BALANCE_BORROW,
+      depositsTableHeader: AAVE_TABLE_TITLE.balance_deposit,
+      borrowTableHeader: AAVE_TABLE_TITLE.balance_borrow,
       tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }]
     };
   },

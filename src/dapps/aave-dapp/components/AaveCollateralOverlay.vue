@@ -57,9 +57,9 @@ export default {
       const param = {
         aavePool: 'proto',
         userAddress: this.address,
-        reserve: this.actualToken.underlyingAsset,
+        reserve: this.selectedTokenDetails.underlyingAsset,
         interestRateMode: this.type,
-        usageAsCollateral: !this.actualToken.usageAsCollateralEnabled
+        usageAsCollateral: !this.selectedTokenDetails.usageAsCollateralEnabled
       };
 
       this.$emit('onConfirm', param);

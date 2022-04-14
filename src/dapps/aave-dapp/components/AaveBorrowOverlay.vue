@@ -7,15 +7,12 @@
   >
     <!--
       =====================================================================================
-        Aave token borrow table
+        Aave table borrow table
       =====================================================================================
       -->
     <aave-table
       v-if="step === 0"
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-reserves-data="userSummary.reservesData"
-      :table-header="aaveTableHandler"
+      :title="aaveTableBorrowTitle"
       @selectedBorrow="handleSelectedBorrow"
     />
     <!--
@@ -26,7 +23,7 @@
     <aave-amount-form
       v-if="step === 1"
       :selected-token="selectedToken"
-      :action-type="aaveTableHandler"
+      :action-type="aaveTableBorrowTitle"
       :show-toggle="aaveBorrowForm.showToggle"
       :left-side-values="aaveBorrowForm.leftSideValues"
       :right-side-values="aaveBorrowForm.rightSideValues"
@@ -42,7 +39,7 @@
       -->
     <aave-select-interest
       v-if="step === 2"
-      :selected-token="actualToken"
+      :selected-token="selectedTokenDetails"
       @continue="handleContinue"
     />
     <!--
@@ -57,7 +54,7 @@
       :amount-usd="amountUsd"
       :step="step"
       :apr="apr"
-      :action-type="aaveTableHandler"
+      :action-type="aaveTableBorrowTitle"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -68,7 +65,7 @@ import AaveTable from './AaveTable';
 import AaveSummary from './AaveSummary';
 import AaveAmountForm from './AaveAmountForm.vue';
 import AaveSelectInterest from './AaveSelectInterest.vue';
-import { AAVE_TABLE_HEADER } from '../handlers/helpers';
+import { AAVE_TABLE_TITLE } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { isEmpty } from 'lodash';
 import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
@@ -84,7 +81,7 @@ export default {
     return {
       step: 0,
       selectedToken: {},
-      aaveTableHandler: AAVE_TABLE_HEADER.BORROW,
+      aaveTableBorrowTitle: AAVE_TABLE_TITLE.borrow,
       amount: '0',
       apr: {}
     };
@@ -164,7 +161,7 @@ export default {
     callClose() {
       this.step = 0;
       this.selectedToken = {};
-      this.aaveTableHandler = AAVE_TABLE_HEADER.BORROW;
+      this.aaveTableBorrowTitle = AAVE_TABLE_TITLE.borrow;
       this.amount = '0';
       this.close();
     },
@@ -178,7 +175,7 @@ export default {
         userAddress: this.address,
         amount: this.amount,
         referralCode: '14',
-        reserve: this.actualToken.underlyingAsset,
+        reserve: this.selectedTokenDetails.underlyingAsset,
         interestRateMode: this.apr.type
       };
 
