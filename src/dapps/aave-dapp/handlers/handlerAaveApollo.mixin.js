@@ -34,7 +34,8 @@ export default {
       userReserveData: [],
       reservesRates30DaysAgo: [],
       usdPriceEth: '',
-      userSummary: {}
+      userSummary: {},
+      isLoading: true
     };
   },
   mounted() {

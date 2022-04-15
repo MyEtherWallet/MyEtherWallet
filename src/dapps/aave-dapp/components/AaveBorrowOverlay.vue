@@ -12,7 +12,7 @@
       -->
     <aave-table
       v-if="step === 0"
-      :title="aaveTableBorrowTitle"
+      :title="borrowTitle"
       @selectedBorrow="handleSelectedBorrow"
     />
     <!--
@@ -23,7 +23,7 @@
     <aave-amount-form
       v-if="step === 1"
       :selected-token="selectedToken"
-      :action-type="aaveTableBorrowTitle"
+      :action-type="borrowTitle"
       :show-toggle="aaveBorrowForm.showToggle"
       :left-side-values="aaveBorrowForm.leftSideValues"
       :right-side-values="aaveBorrowForm.rightSideValues"
@@ -51,10 +51,9 @@
       v-if="step === 3"
       :selected-token="selectedToken"
       :amount="amount"
-      :amount-usd="amountUsd"
       :step="step"
       :apr="apr"
-      :action-type="aaveTableBorrowTitle"
+      :action-type="borrowTitle"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -81,7 +80,7 @@ export default {
     return {
       step: 0,
       selectedToken: {},
-      aaveTableBorrowTitle: AAVE_TABLE_TITLE.borrow,
+      borrowTitle: AAVE_TABLE_TITLE.borrow,
       amount: '0',
       apr: {}
     };
@@ -161,7 +160,7 @@ export default {
     callClose() {
       this.step = 0;
       this.selectedToken = {};
-      this.aaveTableBorrowTitle = AAVE_TABLE_TITLE.borrow;
+      this.borrowTitle = AAVE_TABLE_TITLE.borrow;
       this.amount = '0';
       this.close();
     },

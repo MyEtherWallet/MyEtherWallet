@@ -117,18 +117,16 @@ import BigNumber from 'bignumber.js';
 import { ACTION_TYPES, INTEREST_TYPES } from '../handlers/helpers';
 import { calculateHealthFactorFromBalancesBigUnits } from '@aave/protocol-js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
+import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
 
 export default {
+  mixins: [handlerAaveOverlay],
   props: {
     actionType: {
       type: String,
       default: ''
     },
     apr: {
-      type: Object,
-      default: () => {}
-    },
-    userSummary: {
       type: Object,
       default: () => {}
     },
@@ -139,10 +137,6 @@ export default {
     amount: {
       type: String,
       default: '0'
-    },
-    amountUsd: {
-      type: String,
-      default: '$ 0.00'
     },
     step: {
       type: Number,

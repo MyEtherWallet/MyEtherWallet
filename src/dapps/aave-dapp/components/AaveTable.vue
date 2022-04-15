@@ -69,6 +69,18 @@ export default {
   name: 'AaveTable',
   mixins: [handlerAaveOverlay],
   props: {
+    isLoadingData: {
+      type: Boolean,
+      default: false
+    },
+    userSummary: {
+      type: Object,
+      default: () => {}
+    },
+    reservesData: {
+      type: Array,
+      default: () => []
+    },
     title: {
       type: String,
       default: AAVE_TABLE_TITLE.deposit
@@ -118,23 +130,24 @@ export default {
     },
 
     list() {
-      if (!this.isLoadingData) {
-        if (
-          this.title === AAVE_TABLE_TITLE.deposit ||
-          this.title === AAVE_TABLE_TITLE.borrow
-        ) {
-          return this.reservesData;
-        }
-        if (this.title === AAVE_TABLE_TITLE.balance_borrow) {
-          return this.userReservesData.filter(item =>
-            new BigNumber(item.currentBorrows).gt(0)
-          );
-        }
-        return this.userReservesData.filter(item => {
-          return new BigNumber(item.principalATokenBalance).gt(0);
-        });
+      if (
+        this.title === AAVE_TABLE_TITLE.deposit ||
+        this.title === AAVE_TABLE_TITLE.borrow
+      ) {
+        return this.reservesData;
       }
-      return undefined;
+      if (this.title === AAVE_TABLE_TITLE.balance_borrow) {
+        return this.userReservesData.filter(item =>
+          new BigNumber(item.currentBorrows).gt(0)
+        );
+      }
+      if (this.title === AAVE_TABLE_TITLE.balance_deposit) {
+        return this.userReservesData.filter(item =>
+          new BigNumber(item.principalATokenBalance).gt(0)
+        );
+      }
+
+      return {};
     },
 
     /**

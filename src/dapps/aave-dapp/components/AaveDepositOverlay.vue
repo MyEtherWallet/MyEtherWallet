@@ -15,7 +15,7 @@
       :is-loading-data="isLoadingData"
       :reserves-data="reservesData"
       :user-reserves-data="userSummary.reservesData"
-      :table-header="depositHeader"
+      :title="depositTitle"
       @selectedDeposit="handleSelectedDeposit"
     />
     <!--
@@ -44,10 +44,8 @@
       v-if="step === 2"
       :selected-token="selectedToken"
       :amount="amount"
-      :amount-usd="amountUsd"
-      :user-summary="userSummary"
       :step="step"
-      :action-type="depositHeader"
+      :action-type="depositTitle"
       @onConfirm="handleConfirm"
     />
   </mew-overlay>
@@ -75,7 +73,7 @@ export default {
       step: 0,
       selectedToken: {},
       amount: '0',
-      depositHeader: AAVE_TABLE_TITLE.deposit
+      depositTitle: AAVE_TABLE_TITLE.deposit
     };
   },
   computed: {

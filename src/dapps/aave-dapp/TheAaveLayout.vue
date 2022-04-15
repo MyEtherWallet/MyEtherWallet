@@ -88,7 +88,7 @@
             </v-col>
             <v-col cols="12" class="pt-md-2">
               <aave-table
-                :table-header="depositsTableHeader"
+                :title="aaveTableTitle.balance_deposit"
                 :is-loading-data="isLoadingData"
                 :reserves-data="reservesData"
                 :user-reserves-data="userSummary.reservesData"
@@ -105,7 +105,7 @@
             <mew-button
               title="Deposit"
               btn-size="xlarge"
-              @click.native="openDepositOverlay"
+              @click.native="toggleDepositOverlayOn(true)"
             />
           </div>
         </v-sheet>
@@ -231,7 +231,7 @@
             </v-col>
             <v-col cols="12" class="pt-md-2">
               <aave-table
-                :table-header="borrowTableHeader"
+                :title="aaveTableTitle.balance_borrow"
                 :is-loading-data="isLoadingData"
                 :reserves-data="reservesData"
                 :user-reserves-data="userSummary.reservesData"
@@ -258,11 +258,14 @@
       :reserves-data="reservesData"
       :user-summary="userSummary"
       :open="showDepositOverlay"
-      :close="closeDepositOverlay"
+      :close="toggleDepositOverlayOn"
       :pre-selected-token="requestToken"
       @onConfirm="onDeposit"
     />
     <aave-borrow-overlay
+      :is-loading-data="isLoadingData"
+      :reserves-data="reservesData"
+      :user-summary="userSummary"
       :pre-selected-token="requestToken"
       :open="showBorrowOverlay"
       :close="closeBorrowOverlay"
@@ -377,9 +380,8 @@ export default {
         subtext:
           'Aave is an Open Source Money Market Protocol, allowing you to earn daily interest on your stablecoins. Borrow against various assets and switch interest between variable and stable rates'
       },
-      depositsTableHeader: AAVE_TABLE_TITLE.balance_deposit,
-      borrowTableHeader: AAVE_TABLE_TITLE.balance_borrow,
-      tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }]
+      tabs: [{ name: 'Deposits' }, { name: 'Borrowings' }],
+      aaveTableTitle: AAVE_TABLE_TITLE
     };
   },
   computed: {
@@ -508,6 +510,12 @@ export default {
     }
   },
   methods: {
+    toggleDepositOverlayOn(boolean) {
+      if (boolean === false) {
+        this.requestToken = {};
+      }
+      this.showDepositOverlay = boolean;
+    },
     openDepositOverlayWithToken(token) {
       this.requestToken = token;
       this.showDepositOverlay = true;
@@ -515,13 +523,6 @@ export default {
     openBorrowOverlayWithToken(token) {
       this.requestToken = token;
       this.showBorrowOverlay = true;
-    },
-    openDepositOverlay() {
-      this.showDepositOverlay = true;
-    },
-    closeDepositOverlay() {
-      this.requestToken = {};
-      this.showDepositOverlay = false;
     },
     openBorrowOverlay() {
       this.showBorrowOverlay = true;
