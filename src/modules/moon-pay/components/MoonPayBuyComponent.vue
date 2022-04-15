@@ -262,7 +262,7 @@ export default {
             subTitle: `~${BigNumber(item)
               .div(this.currencyPriceFromProvider.decimalPlaces(2))
               .decimalPlaces(4)
-              .toString()} ${this.selectedCurrency}`
+              .toString()} ${this.selectedCurrency.name}`
           };
         });
         return [
@@ -332,7 +332,7 @@ export default {
       this.loading = true;
       this.fetchData = {};
       this.moonpayHandler
-        .getSupportedFiatToBuy(this.selectedCurrency)
+        .getSupportedFiatToBuy(this.selectedCurrency.name)
         .then(res => {
           this.moonpayHandler.getFiatRatesForBuy().then(res => {
             this.currencyRates = cloneDeep(res);
