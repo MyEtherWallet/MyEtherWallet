@@ -131,25 +131,23 @@ export default {
           if (block) {
             this.checkAndSetBaseFee(block.baseFeePerGas);
           }
-          try {
-            this.web3.eth
-              .subscribe('newBlockHeaders')
-              .on('data', res => {
-                if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
-                  this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
-                }
-                this.setBlockNumber(res.number);
-              })
-              .on('error', err => {
-                Toast(err, {}, ERROR);
-              });
-          } catch (e) {
-            Toast(
-              'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe',
-              {},
-              ERROR
-            );
-          }
+          this.web3.eth
+            .subscribe('newBlockHeaders')
+            .on('data', res => {
+              if (this.isEIP1559SupportedNetwork && res.baseFeePerGas) {
+                this.checkAndSetBaseFee(toBN(res.baseFeePerGas));
+              }
+              this.setBlockNumber(res.number);
+            })
+            .on('error', err => {
+              Toast(
+                err.message === 'Load failed'
+                  ? 'eth_subscribe is not supported. Please make sure your provider supports eth_subscribe'
+                  : err,
+                {},
+                ERROR
+              );
+            });
         });
       });
     },
