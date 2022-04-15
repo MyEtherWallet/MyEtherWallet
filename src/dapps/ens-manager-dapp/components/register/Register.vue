@@ -108,11 +108,7 @@
     <div v-if="notEnoughFunds || noFundsForRegFees">
       <span class="balance-error d-flex mt-5 justify-center align-center">
         Not enough balance:
-        <a
-          href="https://ccswap.myetherwallet.com/#/"
-          target="_blank"
-          class="link"
-        >
+        <a target="_blank" class="link" @click="buyMoreEth">
           <u>Buy More Eth</u>
         </a>
       </span>
@@ -138,6 +134,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/core/plugins/eventBus';
+import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 export default {
   name: 'EnsRegister',
   props: {
@@ -245,7 +243,13 @@ export default {
   },
   destroyed() {
     clearInterval(this.timer);
+  },
+  methods: {
+    buyMoreEth() {
+      console.log('buyMoreEth has been triggered!');
+      EventBus.$emit(MOONPAY_EVENT);
   }
+}
 };
 </script>
 
