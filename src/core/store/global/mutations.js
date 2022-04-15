@@ -30,7 +30,7 @@ const SET_LOCALE = function (state, { locale }) {
   state.locale = locale;
 };
 
-const SET_Preferred_Currency = function (state, currency) {
+const SET_PREFERRED_CURRENCY = function (state, currency) {
   state.preferredCurrency = currency;
 };
 
@@ -89,7 +89,7 @@ const NEVER_SHOW_WALLET_PROMO = function (state) {
 export default {
   SET_ONLINE_STATUS,
   SET_LOCALE,
-  SET_Preferred_Currency,
+  SET_PREFERRED_CURRENCY,
   SET_GAS_PRICE,
   SET_NETWORK,
   INIT_STORE,

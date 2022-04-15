@@ -9,7 +9,7 @@ const setLocale = function ({ commit }, val) {
   commit('SET_LOCALE', val);
 };
 const setPreferredCurrency = function ({ commit }, val) {
-  commit('SET_Preferred_Currency', val);
+  commit('SET_PREFERRED_CURRENCY', val);
 };
 
 const updateGasPrice = function ({ rootState, dispatch, getters, state }) {
