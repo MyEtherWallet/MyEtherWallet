@@ -309,6 +309,8 @@ import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
+import stripQuery from '@/core/helpers/stripQuery.js';
+
 export default {
   name: 'ENSManagerLayout',
   components: {
@@ -479,6 +481,9 @@ export default {
       this.getDomains();
     }
   },
+  beforeMount() {
+    this.setTokenFromURL();
+  },
   mounted() {
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
@@ -498,6 +503,12 @@ export default {
     });
   },
   methods: {
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { active } = stripQuery(this.$route.query);
+        this.activeTab = BigNumber(active).toNumber();
+      }
+    },
     claimTokens() {
       try {
         submitClaim(

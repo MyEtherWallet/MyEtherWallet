@@ -11,8 +11,8 @@
 
 <script>
 import TheWrapperWallet from '@/core/components/TheWrapperWallet';
-import ModuleSwapRates from '@/modules/swap/ModuleSwapRates.vue';
-import ModuleContractInteract from '@/modules/contract/ModuleContractInteract.vue';
+import ModuleSwapRates from '@/modules/swap/ModuleSwapRates';
+import ModuleContractInteract from '@/modules/contract/ModuleContractInteract';
 
 export default {
   name: 'InteracContractLayout',

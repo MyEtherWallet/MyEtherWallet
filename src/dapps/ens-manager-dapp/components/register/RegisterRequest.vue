@@ -73,7 +73,10 @@ export default {
     items() {
       const items = [];
       for (let i = 0; i < 20; i++) {
-        items.push({ name: i + 1 + ' ' + 'year', value: (i + 1).toString() });
+        items.push({
+          name: i + 1 + ' ' + `year${i < 1 ? '' : 's'}`,
+          value: (i + 1).toString()
+        });
       }
       return items;
     }

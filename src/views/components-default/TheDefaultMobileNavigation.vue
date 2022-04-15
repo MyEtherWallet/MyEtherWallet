@@ -1,6 +1,6 @@
 <template>
   <div class="mew-component--landing-page-menu-mobile">
-    <app-btn-menu @click.native="openMobileMenu" />
+    <app-btn-menu @click="openMobileMenu" />
 
     <v-navigation-drawer
       v-model="isOpen"

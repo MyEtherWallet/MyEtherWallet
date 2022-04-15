@@ -29,7 +29,8 @@ import {
   lightstreamsNetwork,
   mintmeComCoin,
   ethercore,
-  ledgerEthereum
+  ledgerEthereum,
+  ledgerLiveEthereum
 } from '../configs/configPaths';
 const renamedLedger = Object.assign({}, ledgerEthereum);
 renamedLedger.label = 'Ledger';
@@ -39,6 +40,7 @@ export default [
   ethereumClassic,
   ropsten,
   renamedLedger,
+  ledgerLiveEthereum,
   singularDTV,
   expanse,
   ubiq,

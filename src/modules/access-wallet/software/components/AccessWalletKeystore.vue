@@ -2,7 +2,7 @@
   <mew-stepper :items="stepperItems" :on-step="step">
     <!--
     =====================================================================================
-      Step 1: Upload Keystore Files
+      Step 1: Verify Keystore Files
     =====================================================================================
     -->
     <template v-if="step === 1" #stepperContent1>
@@ -75,6 +75,7 @@
                 next-btn-text="Access Wallet"
                 :next-btn-method="unlockBtn"
                 :back-btn-method="backStepOne"
+                :next-disable="!password"
               />
               <!--
             =====================================================================================
