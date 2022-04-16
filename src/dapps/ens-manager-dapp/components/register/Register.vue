@@ -246,10 +246,9 @@ export default {
   },
   methods: {
     buyMoreEth() {
-      console.log('buyMoreEth has been triggered!');
       EventBus.$emit(MOONPAY_EVENT);
+    }
   }
-}
 };
 </script>
 
