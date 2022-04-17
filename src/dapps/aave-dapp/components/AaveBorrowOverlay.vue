@@ -67,7 +67,7 @@ import AaveSelectInterest from './AaveSelectInterest.vue';
 import { AAVE_TABLE_TITLE } from '../handlers/helpers';
 import { mapState } from 'vuex';
 import { isEmpty } from 'lodash';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -75,7 +75,7 @@ import {
 
 export default {
   components: { AaveTable, AaveAmountForm, AaveSelectInterest, AaveSummary },
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   data() {
     return {
       step: 0,

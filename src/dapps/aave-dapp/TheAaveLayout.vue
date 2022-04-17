@@ -89,9 +89,6 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :title="aaveTableTitle.balance_deposit"
-                :is-loading-data="isLoadingData"
-                :reserves-data="reservesData"
-                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedDeposit="openDepositOverlayWithToken"
@@ -105,7 +102,7 @@
             <mew-button
               title="Deposit"
               btn-size="xlarge"
-              @click.native="toggleDepositOverlayOn(true)"
+              @click.native="toggleDepositOverlay(true)"
             />
           </div>
         </v-sheet>
@@ -232,9 +229,6 @@
             <v-col cols="12" class="pt-md-2">
               <aave-table
                 :title="aaveTableTitle.balance_borrow"
-                :is-loading-data="isLoadingData"
-                :reserves-data="reservesData"
-                :user-reserves-data="userSummary.reservesData"
                 :has-search="false"
                 :has-toggle="false"
                 @selectedBorrow="openBorrowOverlayWithToken"
@@ -247,61 +241,40 @@
             <mew-button
               title="Borrow"
               btn-size="xlarge"
-              @click.native="openBorrowOverlay"
+              @click.native="toggleBorrowOverlay(true)"
             />
           </div>
         </v-sheet>
       </template>
     </the-wrapper-dapp>
     <aave-deposit-overlay
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       :open="showDepositOverlay"
-      :close="toggleDepositOverlayOn"
-      :pre-selected-token="requestToken"
+      :close="toggleDepositOverlay"
+      :pre-selected-token="tokenSelected"
       @onConfirm="onDeposit"
     />
     <aave-borrow-overlay
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
-      :pre-selected-token="requestToken"
+      :pre-selected-token="tokenSelected"
       :open="showBorrowOverlay"
-      :close="closeBorrowOverlay"
+      :close="toggleBorrowOverlay"
       @onConfirm="onBorrow"
     />
     <aave-collateral-overlay
-      :pre-selected-token="requestToken"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       :open="showCollateralOverlay"
       :close="closeCollateralOverlay"
       @onConfirm="setCollateral"
     />
     <aave-withdraw-overlay
-      :pre-selected-token="requestToken"
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       :open="showWithdrawOverlay"
       :close="closeWithdrawOverlay"
       @onConfirm="onWithdraw"
     />
     <aave-repay-overlay
-      :pre-selected-token="requestToken"
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       :open="showRepayOverlay"
       :close="closeRepayOverlay"
       @onConfirm="onRepay"
     />
     <aave-set-apr-overlay
-      :pre-selected-token="requestToken"
-      :is-loading-data="isLoadingData"
-      :reserves-data="reservesData"
-      :user-summary="userSummary"
       :open="showAprTypeOverlay"
       :close="closeAprTypeOverlay"
       @onConfirm="setBorrowRate"
@@ -322,7 +295,7 @@ import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { AAVE_TABLE_TITLE } from '@/dapps/aave-dapp/handlers/helpers';
 import AaveTable from './components/AaveTable';
-import handlerAaveApollo from './handlers/handlerAaveApollo.mixin';
+import handlerAave from './handlers/handlerAave.mixin';
 import {
   formatPercentageValue,
   formatFiatValue,
@@ -363,11 +336,11 @@ export default {
     AaveWithdrawOverlay,
     AaveSetAprOverlay
   },
-  mixins: [handlerAaveApollo],
+  mixins: [handlerAave],
   data() {
     return {
       showDepositOverlay: false,
-      requestToken: {},
+      tokenSelected: {},
       showBorrowOverlay: false,
       showWithdrawOverlay: false,
       showCollateralOverlay: false,
@@ -385,13 +358,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['address', 'web3']),
+    ...mapState('wallet', ['web3']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['isEthNetwork']),
     ...mapGetters('external', ['fiatValue', 'contractToToken']),
-    isLoadingData() {
-      return Object.keys(this.userSummary).length <= 0;
-    },
     loanValue() {
       return formatPercentageValue(
         BigNumber(this.userSummary.currentLiquidationThreshold).times(100)
@@ -510,57 +480,56 @@ export default {
     }
   },
   methods: {
-    toggleDepositOverlayOn(boolean) {
+    toggleDepositOverlay(boolean) {
       if (boolean === false) {
-        this.requestToken = {};
+        this.tokenSelected = {};
       }
       this.showDepositOverlay = boolean;
     },
+    toggleBorrowOverlay(boolean) {
+      if (boolean === false) {
+        this.tokenSelected = {};
+      }
+      this.showBorrowOverlay = boolean;
+    },
     openDepositOverlayWithToken(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showDepositOverlay = true;
     },
     openBorrowOverlayWithToken(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showBorrowOverlay = true;
-    },
-    openBorrowOverlay() {
-      this.showBorrowOverlay = true;
-    },
-    closeBorrowOverlay() {
-      this.requestToken = {};
-      this.showBorrowOverlay = false;
     },
     openWithdrawOverlay(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showWithdrawOverlay = true;
     },
     closeWithdrawOverlay() {
-      this.requestToken = {};
+      this.tokenSelected = {};
       this.showWithdrawOverlay = false;
     },
     openCollateralOverlay(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showCollateralOverlay = true;
     },
     closeCollateralOverlay() {
-      this.requestToken = {};
+      this.tokenSelected = {};
       this.showCollateralOverlay = false;
     },
     openRepayOverlay(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showRepayOverlay = true;
     },
     closeRepayOverlay() {
-      this.requestToken = {};
+      this.tokenSelected = {};
       this.showRepayOverlay = false;
     },
     openAprTypeOverlay(token) {
-      this.requestToken = token;
+      this.tokenSelected = token;
       this.showAprTypeOverlay = true;
     },
     closeAprTypeOverlay() {
-      this.requestToken = {};
+      this.tokenSelected = {};
       this.showAprTypeOverlay = false;
     }
   }

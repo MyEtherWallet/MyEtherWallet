@@ -59,7 +59,7 @@ import {
   formatPercentageValue
 } from '@/core/helpers/numberFormatHelper';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import {
   AAVE_TABLE_BUTTON,
   AAVE_TABLE_HEADER
@@ -67,20 +67,8 @@ import {
 
 export default {
   name: 'AaveTable',
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   props: {
-    isLoadingData: {
-      type: Boolean,
-      default: false
-    },
-    userSummary: {
-      type: Object,
-      default: () => {}
-    },
-    reservesData: {
-      type: Array,
-      default: () => []
-    },
     title: {
       type: String,
       default: AAVE_TABLE_TITLE.deposit

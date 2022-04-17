@@ -10,26 +10,24 @@
     right-btn-text="Close"
     :close="close"
   >
-    <div>
-      <aave-amount-form
-        :selected-token="preSelectedToken"
-        :show-toggle="aaveWithdrawForm.showToggle"
-        :left-side-values="aaveWithdrawForm.leftSideValues"
-        :right-side-values="aaveWithdrawForm.rightSideValues"
-        :form-text="aaveWithdrawForm.formText"
-        :button-title="aaveWithdrawForm.buttonTitle"
-        :token-balance="tokenBalance"
-        @cancel="handleCancel"
-        @emitValues="handleWithdrawAmount"
-      />
-    </div>
+    <aave-amount-form
+      :selected-token="preSelectedToken"
+      :show-toggle="aaveWithdrawForm.showToggle"
+      :left-side-values="aaveWithdrawForm.leftSideValues"
+      :right-side-values="aaveWithdrawForm.rightSideValues"
+      :form-text="aaveWithdrawForm.formText"
+      :button-title="aaveWithdrawForm.buttonTitle"
+      :token-balance="tokenBalance"
+      @cancel="handleCancel"
+      @emitValues="handleWithdrawAmount"
+    />
   </mew-overlay>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
 import AaveAmountForm from './AaveAmountForm';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import { mapGetters } from 'vuex';
 import {
   formatFiatValue,
@@ -40,7 +38,7 @@ export default {
   components: {
     AaveAmountForm
   },
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   computed: {
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapGetters('global', ['network']),

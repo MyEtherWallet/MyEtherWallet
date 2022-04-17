@@ -61,13 +61,13 @@ import {
   formatFloatingPointValue
 } from '@/core/helpers/numberFormatHelper';
 import { isEmpty } from 'lodash';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 
 export default {
   components: { AaveTable, AaveSummary, AaveAmountForm },
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   data() {
     return {
       step: 0,

@@ -28,7 +28,7 @@
 
 <script>
 import AaveAmountForm from './AaveAmountForm';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import {
   formatFiatValue,
   formatFloatingPointValue
@@ -38,7 +38,7 @@ export default {
   components: {
     AaveAmountForm
   },
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   data() {
     return {
       amount: ''

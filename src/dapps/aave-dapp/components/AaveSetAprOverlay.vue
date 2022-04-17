@@ -20,13 +20,13 @@
 
 <script>
 import { Toast, WARNING } from '@/modules/toast/handler/handlerToast';
-import handlerAaveOverlay from '../handlers/handlerAaveOverlay.mixin';
+import handlerAave from '../handlers/handlerAave.mixin';
 import AaveSelectInterest from './AaveSelectInterest';
 export default {
   components: {
     AaveSelectInterest
   },
-  mixins: [handlerAaveOverlay],
+  mixins: [handlerAave],
   data() {
     return {
       rateType: ''

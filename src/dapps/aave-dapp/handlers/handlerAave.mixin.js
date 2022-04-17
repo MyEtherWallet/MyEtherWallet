@@ -18,13 +18,32 @@ import {
   setUsageAsCollateralDetails,
   withdrawDetails
 } from './graphQLHelpers.js';
+import { mapState, mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 // import { TxBuilderV2, Network, Market } from '@aave/protocol-js';
 // import Web3 from 'web3';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
 export default {
-  name: 'HandlerAaveApollo',
+  name: 'handlerAave',
+  props: {
+    open: {
+      default: false,
+      type: Boolean
+    },
+    close: {
+      default: () => {},
+      type: Function
+    },
+    preSelectedToken: {
+      default: () => {
+        return {};
+      },
+      type: Object
+    },
+  },
   data() {
     return {
       reservesStable: [],
@@ -35,10 +54,11 @@ export default {
       reservesRates30DaysAgo: [],
       usdPriceEth: '',
       userSummary: {},
-      isLoading: true
+      isLoadingData: true
     };
   },
   mounted() {
+    console.error('this', this.address)
     // const httpProvider = new Web3.providers.HttpProvider(
     //   'https://nodes.mewapi.io/rpc/eth'
     // );
@@ -64,7 +84,7 @@ export default {
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
             item['icon'] =
-              this.contractToToken(item.underlyingAsset)?.img || eth;
+             this.contractToToken(item.underlyingAsset)?.img || eth;
             return item;
           });
           this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
@@ -116,6 +136,42 @@ export default {
         }
       }
     }
+  },
+  computed: {
+    ...mapState('wallet', ['address']),
+    ...mapGetters('wallet', ['tokensList']),
+    ...mapGetters('external', ['contractToToken']),
+    userReservesData() {
+      return this.userSummary.reservesData;
+    },
+    selectedTokenToUse() {
+      return this.selectedToken || this.preSelectedToken;
+    },
+    selectedTokenDetails() {
+      return this.reservesData.find(item => {
+        if (item.symbol === this.selectedTokenToUse.token) return item;
+      });
+    },
+    selectedTokenUSD() {
+      return new BigNumber(
+        this.selectedTokenDetails?.price?.priceInEth || 0
+      ).times(this.fiatValue);
+    },
+    selectedTokenInUserSummary() {
+      return this.userSummary?.reservesData?.find(item => {
+        if (item.reserve.symbol === this.selectedTokenToUse.token) {
+          return item;
+        }
+      });
+    },
+  },
+  amountUsd() {
+    return `$
+      ${
+        formatFiatValue(
+          BigNumber(this.selectedTokenUSD).times(this.amount || 0)
+        ).value
+      }`;
   },
   methods: {
     /**
@@ -291,7 +347,7 @@ export default {
           }
         });
       }
-      this.isLoading = false;
+      this.isLoadingData = false;
     }
   }
 };
