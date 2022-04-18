@@ -131,6 +131,22 @@
 
       <!--
         =====================================================================================
+          LedgerX
+        =====================================================================================
+        -->
+      <access-wallet-ledger-x
+        v-if="onLedgerX"
+        :ledger-x-unlock="nextStep"
+        :ledger-x-apps="ledgerXApps"
+        :ledger-x-connected="ledgerXConnected"
+        :paths="paths"
+        :selected-path="selectedPath"
+        :set-path="setPath"
+        @ledgerApp="setSelectedApp"
+      />
+
+      <!--
+        =====================================================================================
           Trezor
         =====================================================================================
         -->
@@ -171,6 +187,7 @@ import AccessWalletKeepkey from './hardware/components/AccessWalletKeepkey';
 import AccessWalletCoolWallet from './hardware/components/AccessWalletCoolWallet';
 import AccessWalletTrezor from './hardware/components/AccessWalletTrezor.vue';
 import AccessWalletLedger from './hardware/components/AccessWalletLedger.vue';
+import AccessWalletLedgerX from './hardware/components/AccessWalletLedgerX.vue';
 import appPaths from './hardware/handlers/hardwares/ledger/appPaths.js';
 import allPaths from '@/modules/access-wallet/hardware/handlers/bip44';
 import wallets from '@/modules/access-wallet/hardware/handlers/configs/configWallets';
@@ -187,6 +204,7 @@ export default {
     AccessWalletCoolWallet,
     AccessWalletTrezor,
     AccessWalletLedger,
+    AccessWalletLedgerX,
     AccessWalletAddressNetwork,
     AccessWalletBitbox
   },
@@ -221,6 +239,11 @@ export default {
           label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
           type: WALLET_TYPES.LEDGER
+        },
+        {
+          label: 'LedgerX',
+          icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
+          type: WALLET_TYPES.LEDGERX
         },
         {
           label: 'Trezor',
@@ -340,6 +363,12 @@ export default {
      */
     onLedger() {
       return this.walletType === WALLET_TYPES.LEDGER;
+    },
+    /**
+     * On Ledger X
+     */
+    onLedgerX() {
+      return this.walletType === WALLET_TYPES.LEDGERX;
     },
     /**
      * On CoolWallet
