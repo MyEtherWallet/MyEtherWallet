@@ -2,7 +2,7 @@
   <div>
     <div class="subtitle-1 font-weight-bold mb-2">Connecting to:</div>
     <div>
-      <mew-select v-model="ledgerXApp" :items="ledgerXApps" :is-custom="true" />
+      <mew-select v-model="ledgerApp" :items="ledgerApps" :is-custom="true" />
       <div class="text-right">
         <access-wallet-derivation-path
           :selected-path="selectedPath"
@@ -23,11 +23,11 @@
           />
         </div>
         <v-card-title
-          v-if="!ledgerXConnected"
+          v-if="!ledgerConnected"
           class="border justify-center font-wrapping"
         >
           <div class="mew-heading-4 font-weight-medium pl-1">
-            Pair your Ledger Nana X device and open Ethereum app
+            Pair your Ledger Nano X
           </div>
         </v-card-title>
         <v-card-title
@@ -43,6 +43,14 @@
             Ledger Nano X connected
           </div>
         </v-card-title>
+        <v-card-title
+          v-if="address"
+          class="border justify-center font-wrapping"
+        >
+          <div class="mew-heading-4 font-weight-medium pl-1">
+            {{ address }}
+          </div>
+        </v-card-title>
       </div>
     </div>
     <div class="text-center">
@@ -50,13 +58,14 @@
         btn-size="xlarge"
         :has-full-width="true"
         :title="btnTitle"
-        @click.native="ledgerXUnlock"
+        @click.native="createBLE"
       />
     </div>
   </div>
 </template>
 <script>
 import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
+import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 
 export default {
   name: 'AccessWalletLedgerX',
@@ -64,15 +73,15 @@ export default {
     AccessWalletDerivationPath
   },
   props: {
-    ledgerXApps: {
+    ledgerApps: {
       type: Array,
       default: () => []
     },
-    ledgerXConnected: {
+    ledgerConnected: {
       type: Boolean,
       default: false
     },
-    ledgerXUnlock: {
+    ledgerUnlockBle: {
       type: Function,
       default: () => {}
     },
@@ -87,24 +96,36 @@ export default {
     setPath: {
       type: Function,
       default: () => {}
+    },
+    address: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      ledgerXApp: {}
+      ledgerApp: {}
     };
   },
   computed: {
     btnTitle() {
-      return this.ledgerXConnected ? 'Unlock Ledger' : 'Connect Ledger';
+      return this.ledgerConnected
+        ? 'Unlock Ledger Nano X'
+        : 'Connect Ledger Nano X';
     }
   },
   watch: {
-    ledgerXApp: {
+    ledgerApp: {
       handler: function (newVal) {
-        this.$emit('ledgerXApp', newVal);
+        this.$emit('ledgerApp', newVal);
       },
       deep: true
+    }
+  },
+  methods: {
+    async createBLE() {
+      const transport = await TransportWebBLE.create();
+      this.ledgerUnlockBle(transport);
     }
   }
 };

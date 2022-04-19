@@ -136,12 +136,13 @@
         -->
       <access-wallet-ledger-x
         v-if="onLedgerX"
-        :ledger-x-unlock="nextStep"
-        :ledger-x-apps="ledgerXApps"
-        :ledger-x-connected="ledgerXConnected"
+        :ledger-unlock-ble="ledgerXUnlockBLE"
+        :ledger-apps="ledgerApps"
+        :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
+        :address="address"
         @ledgerApp="setSelectedApp"
       />
 
@@ -196,6 +197,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
+import AppEth from '@ledgerhq/hw-app-eth';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -288,7 +290,9 @@ export default {
       ledgerConnected: false,
       callback: () => {},
       unwatch: () => {},
-      passwordError: false
+      passwordError: false,
+      transport: null,
+      address: ''
     };
   },
   computed: {
@@ -495,6 +499,18 @@ export default {
     }
   },
   watch: {
+    async transport(newVal) {
+      if (newVal) {
+        while (!this.address) {
+          await this.fetchAddress(false);
+          await this.delay(500);
+        }
+        this.fetchAddress(true);
+      }
+    },
+    address(newVal) {
+      this.ledgerConnected = !!newVal;
+    },
     selectedPath: {
       handler: function () {
         /**
@@ -592,6 +608,15 @@ export default {
      */
     ledgerUnlock() {
       this.unlockPathOnly();
+    },
+    ledgerXUnlockBLE(transport) {
+      window.ledgerTransport = transport;
+      transport.on('disconnect', () => {
+        this.transport = null;
+        this.address = '';
+      });
+      this.transport = transport;
+      console.log('ledgerXUnlockBLE was completed');
     },
     trezorUnlock() {
       this.unlockPathOnly();
@@ -728,6 +753,21 @@ export default {
      */
     setSelectedApp(e) {
       this.selectedLedgerApp = e;
+    },
+    async fetchAddress(verify) {
+      try {
+        const eth = new AppEth(this.transport);
+        const path = "44'/60'/0'/0/0"; // HD derivation path
+        const { address } = await eth.getAddress(path, verify);
+        this.address = address;
+      } catch (error) {
+        // in this case, user is likely not on Ethereum app
+        console.warn('Failed: ' + error.message);
+        return null;
+      }
+    },
+    delay(ms) {
+      return new Promise(success => setTimeout(success, ms));
     }
   }
 };

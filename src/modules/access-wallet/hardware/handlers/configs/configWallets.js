@@ -2,6 +2,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 import {
   LedgerWallet,
+  LedgerXWallet,
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
@@ -25,6 +26,13 @@ export default {
     hasPaths: false,
     requiresPassword: false,
     title: 'Connect your Ledger'
+  },
+  [WALLET_TYPES.LEDGERX]: {
+    create: LedgerXWallet,
+    when: 3,
+    hasPaths: false,
+    requiresPassword: false,
+    title: 'Connect your Ledger Nano X'
   },
   [WALLET_TYPES.TREZOR]: {
     create: TrezorWallet,

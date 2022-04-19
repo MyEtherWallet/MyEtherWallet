@@ -1,6 +1,6 @@
 const WALLET_TYPES = {
   LEDGER: 'ledger',
-  LEDGERX: 'ledgerx',
+  LEDGERX: 'ledgerX',
   TREZOR: 'trezor',
   BITBOX2: 'bitbox02',
   KEEPKEY: 'keepkey',
