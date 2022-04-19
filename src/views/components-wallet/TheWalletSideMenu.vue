@@ -223,7 +223,12 @@
           </div>
           <div class="d-flex align-center justify-space-between">
             <!-- <theme-switch /> -->
-            <div class="greyPrimary--text">v{{ version }}</div>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+              target="_blank"
+              class="greyPrimary--text"
+              >v{{ version }}</a
+            >
           </div>
         </div>
       </v-list>
