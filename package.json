@@ -76,7 +76,7 @@
     "lodash": "4.17.21",
     "lottie-web": "5.9.2",
     "merkletreejs": "0.2.31",
-    "moment": "2.29.1",
+    "moment": "2.29.2",
     "package-json": "7.0.0",
     "platform": "1.3.6",
     "qr-code-styling": "1.6.0-rc.1",
@@ -191,7 +191,9 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "tar": "4.4.18"
+    "tar": "4.4.18",
+    "moment": "2.29.2",
+    "async": "3.2.2"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
