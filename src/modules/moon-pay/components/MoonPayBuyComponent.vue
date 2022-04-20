@@ -47,7 +47,7 @@
         />
       </div>
     </div>
-    <div v-if="!inWallet" class="mb-6">
+    <!-- <div v-if="!inWallet" class="mb-6">
       <module-address-book
         ref="toAddress"
         label="To Address"
@@ -55,7 +55,7 @@
         :preselect-curr-wallet-adr="false"
         @setAddress="setAddress"
       />
-    </div>
+    </div> -->
     <div class="mb-6">
       <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
       <div
@@ -69,7 +69,7 @@
           <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
         </div>
 
-        <div v-if="!loading && !disableMoonPay" class="mb-4">
+        <div v-if="(!loading && !disableMoonPay) || !inWallet" class="mb-4">
           <div class="mew-heading-3 textDark--text mb-1">
             {{ cryptoToFiat }}
             <span class="mew-heading-3">{{ selectedCryptoName }}</span>
@@ -161,7 +161,10 @@
       </div>
       <div class="mew-label mb-5">Visa, Mastercard</div>
     </div>
-    <div class="pa-5">
+    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
+    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
+    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
+    <div v-if="!inWallet" class="pa-5">
       <div class="mew-heading-3 textDark--text mb-5">
         Where should we send your crypto?
       </div>
@@ -170,13 +173,34 @@
         v-if="!isSimplex"
         has-full-width
         :disabled="!validToAddress || !isMoonpay || disableMoonPay"
+        :is-valid-address-func="isValidToAddress"
+        title="CONTINUE WITH MOONPAY"
+        @click.native="buyFromHome"
+      />
+      <mew-button
+        v-if="isSimplex"
+        has-full-width
+        :disabled="!validToAddress || !isSimplex || disableSimplex"
+        :is-valid-address-func="isValidToAddress"
+        title="CONTINUE WITH SIMPLEX"
+        @click.native="openSimplexFromHome"
+      />
+    </div>
+    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
+    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
+    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
+    <div v-else class="pa-5">
+      <mew-button
+        v-if="!isSimplex"
+        has-full-width
+        :disabled="!isMoonpay || disableMoonPay"
         title="CONTINUE WITH MOONPAY"
         @click.native="buy"
       />
       <mew-button
         v-if="isSimplex"
         has-full-width
-        :disabled="!validToAddress || !isSimplex || disableSimplex"
+        :disabled="!isSimplex || disableSimplex"
         title="CONTINUE WITH SIMPLEX"
         @click.native="openSimplex"
       />
@@ -570,6 +594,7 @@ export default {
       this.gasPrice = await this.web3Connections[nodeType].eth.getGasPrice();
     },
     setAddress(address, valid) {
+      this.acutalAddress = address;
       this.toAddress = address;
       this.validToAddress = valid;
     },
@@ -585,6 +610,15 @@ export default {
       this.isMoonpay = false;
     },
     openSimplex() {
+      // eslint-disable-next-line
+      window.open(
+        `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
+          this.amount
+        }&to=${this.actualAddress}`,
+        '_blank'
+      );
+    },
+    openSimplexFromHome() {
       // eslint-disable-next-line
       window.open(
         `https://ccswap.myetherwallet.com/#/?fiat=${this.selectedFiatName.toLowerCase()}&amount=${
@@ -639,6 +673,26 @@ export default {
         });
     },
     buy() {
+      this.moonpayHandler
+        .buy(
+          this.selectedCurrency.name,
+          this.selectedFiatName,
+          this.amount,
+          this.actualAddress
+        )
+        .then(() => {
+          this.reset();
+          this.close();
+          this.selectedCurrency = this.defaultCurrency;
+        })
+        .catch(err => {
+          this.reset();
+          Toast(err, {}, ERROR);
+          this.close();
+          this.selectedCurrency = this.defaultCurrency;
+        });
+    },
+    buyFromHome() {
       this.moonpayHandler
         .buy(
           this.selectedCurrency.name,
