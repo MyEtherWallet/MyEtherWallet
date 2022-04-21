@@ -6,7 +6,7 @@
         :title="$t('ens.transfer')"
         btn-size="xlarge"
         :disabled="!isvalid"
-        @click.native="transfer(resolvedAddr)"
+        @click.native="transfer(resolvedAddr, manageDomainHandler)"
       />
     </div>
   </div>
@@ -24,6 +24,10 @@ export default {
         return {};
       },
       type: Function
+    },
+    manageDomainHandler: {
+      type: [Object, null],
+      default: null
     }
   },
   data() {

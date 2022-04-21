@@ -32,7 +32,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  transfer(toAddress) {
+  getTransactions(toAddress) {
     const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,
       toAddress,
@@ -48,7 +48,51 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const tx2 = Object.assign({}, baseTx, {
       data: transferMethod.encodeABI()
     });
-    return this.web3.mew.sendBatchTransactions([tx1, tx2]);
+
+    return [tx1, tx2];
+  }
+
+  async estimateGas(toAddress) {
+    const txns = this.getTransactions(toAddress);
+    const gas1 = await this.registrarContract.methods.transfer.estimateGas(
+      txns[0]
+    );
+    const gas2 = await this.registrarContract.methods.transfer.estimateGas(
+      txns[1]
+    );
+    const gasPrice = await this.web3.eth.gasPrice();
+    console.log(`Gas 1: ${gas1}`);
+    console.log(`Gas 2: ${gas2}`);
+    console.log(`Gas Price: ${gasPrice} gwei`);
+    console.log(
+      `Transaction Fee: ${this.web3.utils.fromWei(gasPrice * (gas1 + gas2))}`
+    );
+    return (gas1 + gas2) * gasPrice;
+  }
+
+  transfer(toAddress, manageDomainHandler) {
+    // const transferMethod = this.registrarContract?.methods.transferFrom(
+    //   this.address,
+    //   toAddress,
+    //   this.labelHash
+    // );
+    // const baseTx = {
+    //   to: this.registrarAddress,
+    //   from: this.address
+    // };
+    // const tx1 = Object.assign({}, baseTx, {
+    //   data: this.setController(toAddress, true).encodeABI()
+    // });
+    // const tx2 = Object.assign({}, baseTx, {
+    //   data: transferMethod.encodeABI()
+    // });
+    this.estimateGas(toAddress).then(val => {
+      console.log(val);
+      console.log(manageDomainHandler);
+      return this.web3.mew.sendBatchTransactions(
+        this.getTransactions(toAddress)
+      );
+    });
   }
 
   getActualDuration(duration) {
