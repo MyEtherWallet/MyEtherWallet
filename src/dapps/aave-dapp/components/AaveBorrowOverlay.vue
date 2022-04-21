@@ -169,16 +169,14 @@ export default {
       this.step = 3;
     },
     handleConfirm() {
-      const param = {
-        aavePool: 'proto',
-        userAddress: this.address,
+      const data = {
+        user: this.address,
         amount: this.amount,
         referralCode: '14',
         reserve: this.selectedTokenDetails.underlyingAsset,
         interestRateMode: this.apr.type
       };
-
-      this.$emit('onConfirm', param);
+      this.onBorrow(data);
       this.callClose();
     }
   }

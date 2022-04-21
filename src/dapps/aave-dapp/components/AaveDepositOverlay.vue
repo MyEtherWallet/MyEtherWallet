@@ -170,13 +170,12 @@ export default {
     },
     handleConfirm() {
       const param = {
-        aavePool: 'proto',
-        userAddress: this.address,
+        user: this.address,
         amount: this.amount,
         referralCode: '14',
         reserve: this.selectedTokenDetails.underlyingAsset
       };
-      this.$emit('onConfirm', param);
+      this.onDeposit(param);
       this.callClose();
     }
   }

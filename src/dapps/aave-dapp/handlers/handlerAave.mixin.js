@@ -8,11 +8,11 @@ import {
 } from '@/dapps/aave-dapp/apollo/graphql/subscriptions';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
-import { v2 } from '@aave/protocol-js';
+import { v2, TxBuilderV2, Network, Market } from '@aave/protocol-js';
 import eth from '@/assets/images/currencies/eth.png';
 import {
-  depositDetails,
-  borrowDetails,
+  // depositDetails,
+  // borrowDetails,
   repayDetails,
   swapBorrowRateDetails,
   setUsageAsCollateralDetails,
@@ -21,8 +21,7 @@ import {
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-// import { TxBuilderV2, Network, Market } from '@aave/protocol-js';
-// import Web3 from 'web3';
+import Web3 from 'web3';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -42,7 +41,7 @@ export default {
         return {};
       },
       type: Object
-    },
+    }
   },
   data() {
     return {
@@ -54,19 +53,20 @@ export default {
       reservesRates30DaysAgo: [],
       usdPriceEth: '',
       userSummary: {},
-      isLoadingData: true
+      isLoadingData: true,
+      lendingPool: {}
     };
   },
   mounted() {
-    console.error('this', this.address)
-    // const httpProvider = new Web3.providers.HttpProvider(
-    //   'https://nodes.mewapi.io/rpc/eth'
-    // );
-    // const txBuilder = new TxBuilderV2(Network.main, httpProvider);
+    const httpProvider = new Web3.providers.HttpProvider(
+      'https://nodes.mewapi.io/rpc/eth'
+    );
+    const txBuilder = new TxBuilderV2(Network.mainnet, httpProvider);
     /**
      * Object that contains all the necessary methods to create Aave lending pool transactions.
      */
-    // const lendingPool = txBuilder.getLendingPool(Market.main);
+    this.lendingPool = txBuilder.getLendingPool(Market.Proto);
+    console.error('lendingPoiol', this.lendingPool)
   },
   apollo: {
     $subscribe: {
@@ -84,7 +84,7 @@ export default {
         result({ data }) {
           this.rawReserveData = data.reserves.map(item => {
             item['icon'] =
-             this.contractToToken(item.underlyingAsset)?.img || eth;
+              this.contractToToken(item.underlyingAsset)?.img || eth;
             return item;
           });
           this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
@@ -164,22 +164,22 @@ export default {
         }
       });
     },
-  },
-  amountUsd() {
-    return `$
-      ${
-        formatFiatValue(
-          BigNumber(this.selectedTokenUSD).times(this.amount || 0)
-        ).value
-      }`;
+    amountUsd() {
+      return `$
+        ${
+          formatFiatValue(
+            BigNumber(this.selectedTokenUSD).times(this.amount || 0)
+          ).value
+        }`;
+    }
   },
   methods: {
     /**
-     * Apollo mutation to deposit funds
+     * Deposit funds
      */
     async onDeposit(data) {
       try {
-        return await depositDetails(data).then(res => {
+        return await this.lendingPool.deposit(data).then(res => {
           this.formatTxData(res, 'deposit');
         });
       } catch (e) {
@@ -190,11 +190,12 @@ export default {
      * Apollo mutation to borrow funds
      */
     async onBorrow(data) {
-      data.referralCode = '14';
       try {
-        return await borrowDetails(data).then(res => {
-          this.formatTxData(res, 'borrow');
-        });
+        if (this.lendingPool) {
+          return await this.lendingPool.borrow(data).then(res => {
+            this.formatTxData(res, 'borrow');
+          });
+        }
       } catch (e) {
         throw new Error(e);
       }

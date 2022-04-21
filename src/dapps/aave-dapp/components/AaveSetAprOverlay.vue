@@ -9,12 +9,10 @@
     title="Select your interest rate"
     :close="close"
   >
-    <div>
-      <aave-select-interest
-        :selected-token="selectedTokenDetails"
-        @continue="handleSetInterestRate"
-      />
-    </div>
+    <aave-select-interest
+      :selected-token="selectedTokenDetails"
+      @continue="handleSetInterestRate"
+    />
   </mew-overlay>
 </template>
 

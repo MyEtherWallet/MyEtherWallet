@@ -251,13 +251,11 @@
       :open="showDepositOverlay"
       :close="toggleDepositOverlay"
       :pre-selected-token="tokenSelected"
-      @onConfirm="onDeposit"
     />
     <aave-borrow-overlay
       :pre-selected-token="tokenSelected"
       :open="showBorrowOverlay"
       :close="toggleBorrowOverlay"
-      @onConfirm="onBorrow"
     />
     <aave-collateral-overlay
       :open="showCollateralOverlay"
