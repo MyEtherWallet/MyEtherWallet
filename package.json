@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.5.2-hotfix.1",
+  "version": "6.5.2-hotfix.2",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -74,7 +74,7 @@
     "highcharts-vue": "1.4.0",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "lottie-web": "5.9.1",
+    "lottie-web": "5.9.2",
     "merkletreejs": "0.2.31",
     "moment": "2.29.2",
     "package-json": "7.0.0",
@@ -90,8 +90,8 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "16.2.1",
-    "@ledgerhq/hw-app-eth": "6.27.0",
-    "@ledgerhq/hw-transport-webusb": "6.24.1",
+    "@ledgerhq/hw-app-eth": "6.27.1",
+    "@ledgerhq/hw-transport-webusb": "6.27.1",
     "@mdi/font": "6.6.96",
     "@vue/babel-preset-app": "4.5.15",
     "@vue/cli-plugin-babel": "4.5.15",
@@ -146,7 +146,7 @@
     "stylelint": "14.6.1",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
-    "trezor-connect": "8.2.7",
+    "trezor-connect": "8.2.8",
     "u2f-api": "1.2.1",
     "uglify-es": "3.3.9",
     "uuid": "8.3.2",

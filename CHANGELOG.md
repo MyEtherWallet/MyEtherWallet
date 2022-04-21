@@ -1,3 +1,9 @@
+### Release v6.5.2-hotfix.2
+
+### fix
+
+* * fix polygon websocket issue [#3790](https://github.com/MyEtherWallet/MyEtherWallet/pull/3790)
+
 ### Release v6.5.2-hotfix.1
 
 ### fix

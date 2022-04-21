@@ -1,7 +1,6 @@
 import Web3WSProvider from './ws-web3-provider';
 import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
 import MiddleWare from '../middleware';
-import workerTimer from '@/core/helpers/webWorkerTimer.js';
 import { EventBus } from '@/core/plugins/eventBus';
 import VuexStore from '@/core/store';
 import { Toast, SENTRY } from '@/modules/toast/handler/handlerToast';
@@ -23,37 +22,7 @@ class WSProvider {
     this.oWSProvider = new Web3WSProvider(host, options);
     this.lastMessage = new Date().getTime();
     this.connectionRetries = 0;
-    const keepAlive = () => {
-      if (
-        this.wsProvider.connection.readyState == this.wsProvider.connection.OPEN
-      ) {
-        this.wsProvider.connection.send('');
-      }
-      if (
-        this.oWSProvider.connection.readyState ==
-        this.oWSProvider.connection.OPEN
-      ) {
-        this.oWSProvider.connection.send('');
-      }
-      if (
-        this.wsProvider.connectionId !==
-        VuexStore.state.wallet.web3.currentProvider.connectionId
-      ) {
-        if (this.wsProvider?.disconnect) {
-          this.wsProvider.disconnect();
-        }
-        if (this.oWSProvider?.disconnect) {
-          this.oWSProvider.disconnect();
-        }
-        workerTimer.clearInterval(this.keepAliveTimer);
-      }
-    };
-    this.wsProvider.connectionId = `${new Date().getTime()}${Math.floor(
-      Math.random() * 1000
-    )}`;
-    this.keepAliveTimer = workerTimer.setInterval(keepAlive, 5000);
     delete this.wsProvider['send'];
-
     this.wsProvider.send = (payload, callback) => {
       this.lastMessage = new Date().getTime();
       if (
