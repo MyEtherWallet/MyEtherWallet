@@ -1,3 +1,7 @@
+### devop
+
+* sync develop [#3795](https://github.com/MyEtherWallet/MyEtherWallet/pull/3795)
+
 ### Release v6.5.2-hotfix.2
 
 ### fix
