@@ -69,7 +69,7 @@
           <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
         </div>
 
-        <div v-if="(!loading && !disableMoonPay) || !inWallet" class="mb-4">
+        <div v-if="!loading" class="mb-4">
           <div class="mew-heading-3 textDark--text mb-1">
             {{ cryptoToFiat }}
             <span class="mew-heading-3">{{ selectedCryptoName }}</span>
@@ -351,23 +351,19 @@ export default {
       const simplexMax = this.max.simplex;
       // simplexMax.lt(BigNumber(this.amount));
       return (
-        simplexMax.lt(BigNumber(this.amount)) ||
-        this.amountErrorMessages !== '' ||
+        (!this.inWallet && !this.actualValidAddress) ||
         this.loading ||
-        (!this.inWallet && !this.actualValidAddress)
+        this.amountErrorMessages !== '' ||
+        simplexMax.lt(BigNumber(this.amount))
       );
     },
     disableMoonPay() {
       const moonpayMax = this.max.moonpay;
-      if (this.inWallet) {
-        return this.amountErrorMessages !== '' || this.loading;
-      }
       return (
-        moonpayMax.lt(BigNumber(this.amount)) ||
-        this.amountErrorMessages !== '' ||
+        (!this.inWallet && !this.actualValidAddress) ||
         this.loading ||
-        !this.actualValidAddress ||
-        this.actualAddress === ''
+        this.amountErrorMessages !== '' ||
+        moonpayMax.lt(BigNumber(this.amount))
       );
     },
     disableMax() {
@@ -395,7 +391,7 @@ export default {
         moonpayMax.lt(BigNumber(this.amount)) &&
         simplexMax.lt(BigNumber(this.amount))
       ) {
-        return `Amount can't be above provider's maximum: ${moonpayMax.toFixed()} ${
+        return `Amount can't be above provider's maximum: ${simplexMax.toFixed()} ${
           this.selectedFiatName
         }`;
       }
