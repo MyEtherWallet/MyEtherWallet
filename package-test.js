@@ -40,7 +40,10 @@ const EXCEPTIONS = [
   '@vue/cli-plugin-unit-jest',
   '@vue/cli-service',
   'vue-i18n',
-  'vue'
+  'vue',
+  // update after release
+  '@ethereumjs/common',
+  'ethers'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
