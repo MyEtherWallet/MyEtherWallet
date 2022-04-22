@@ -5,11 +5,16 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import { DNSRegistrar } from '@ensdomains/ens-contracts';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
+import vuexStore from '@/core/store';
+import { mapGetters, mapState } from 'vuex';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, expiry) {
     super(name, address, network, web3, ens);
+    this.$store = vuexStore;
+    Object.assign(this, mapGetters('global', ['gasPriceByType']));
+    Object.assign(this, mapState('global', ['gasPriceType']));
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
@@ -54,20 +59,15 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async estimateGas(toAddress) {
     const txns = this.getTransactions(toAddress);
-    const gas1 = await this.registrarContract.methods.transfer.estimateGas(
-      txns[0]
-    );
-    const gas2 = await this.registrarContract.methods.transfer.estimateGas(
-      txns[1]
-    );
-    const gasPrice = await this.web3.eth.gasPrice();
-    console.log(`Gas 1: ${gas1}`);
-    console.log(`Gas 2: ${gas2}`);
-    console.log(`Gas Price: ${gasPrice} gwei`);
-    console.log(
-      `Transaction Fee: ${this.web3.utils.fromWei(gasPrice * (gas1 + gas2))}`
-    );
-    return (gas1 + gas2) * gasPrice;
+    const gas1 = await this.web3.eth.estimateGas(txns[0]);
+    const gas2 = await this.web3.eth.estimateGas(txns[1]);
+    const gasPrice = this.gasPriceByType(this.gasPriceType)();
+    const calculatedTxFee = BigNumber(gasPrice)
+      .times(BigNumber(gas1).plus(gas2))
+      .toFixed();
+    return new Promise(resolve => {
+      resolve(calculatedTxFee);
+    });
   }
 
   transfer(toAddress, manageDomainHandler) {
@@ -89,9 +89,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
     this.estimateGas(toAddress).then(val => {
       console.log(val);
       console.log(manageDomainHandler);
-      return this.web3.mew.sendBatchTransactions(
-        this.getTransactions(toAddress)
-      );
+      // return this.web3.mew.sendBatchTransactions(
+      //   this.getTransactions(toAddress)
+      // );
     });
   }
 
