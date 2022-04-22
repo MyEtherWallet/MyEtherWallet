@@ -1,6 +1,5 @@
 import {
   LedgerWallet,
-  LedgerX,
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,
@@ -16,7 +15,6 @@ import {
 
 export {
   LedgerWallet,
-  LedgerX,
   TrezorWallet,
   BitBox02Wallet,
   KeepkeyWallet,

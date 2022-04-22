@@ -21,6 +21,9 @@ import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
 import { rlp } from 'ethereumjs-util';
+import './polyfill';
+import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
+import { EventBus } from '@/core/plugins/eventBus.js';
 
 const NEED_PASSWORD = false;
 
@@ -38,10 +41,12 @@ class ledgerWallet {
       }
     };
   }
-  async init(basePath) {
+  async init(basePath, bluetooth) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.isHardened = this.basePath.toString().split('/').length - 1 === 2;
-    this.transport = await getLedgerTransport();
+    this.transport = bluetooth
+      ? await getLedgerXTransport()
+      : await getLedgerTransport();
     this.ledger = new Ledger(this.transport);
     if (!this.isHardened) {
       const rootPub = await getRootPubKey(this.ledger, this.basePath);
@@ -168,9 +173,9 @@ class ledgerWallet {
     return this.supportedPaths;
   }
 }
-const createWallet = async basePath => {
+const createWallet = async (basePath, bluetooth = false) => {
   const _ledgerWallet = new ledgerWallet();
-  await _ledgerWallet.init(basePath);
+  await _ledgerWallet.init(basePath, bluetooth);
   return _ledgerWallet;
 };
 createWallet.errorHandler = errorHandler;
@@ -187,6 +192,31 @@ const getLedgerTransport = async () => {
     transport = await webUsbTransport.create();
   } else {
     throw new Error('WebUsb not supported.  Please try a different browser.');
+  }
+  return transport;
+};
+
+const isWebBLESupported = async () => {
+  const isSupported = await TransportWebBLE.isSupported();
+  return isSupported && platform.name !== 'Opera';
+};
+
+const getLedgerXTransport = async () => {
+  let transport;
+  const support = await isWebBLESupported();
+  if (support) {
+    transport = await TransportWebBLE.create();
+    transport.on('disconnect', () => {
+      transport = null;
+      EventBus.$emit('bleDisconnect');
+      createWallet.errorHandler(
+        'GATT Server is disconnected. Cannot perform GATT operations.'
+      );
+    });
+  } else {
+    throw new Error(
+      'Web bluetooth is not supported.  Please try a different browser.'
+    );
   }
   return transport;
 };

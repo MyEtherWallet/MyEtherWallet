@@ -27,7 +27,7 @@
           class="border justify-center font-wrapping"
         >
           <div class="mew-heading-4 font-weight-medium pl-1">
-            Pair your Ledger Nano X
+            Open the Ethereum App and Pair your Ledger Nano X
           </div>
         </v-card-title>
         <v-card-title
@@ -43,14 +43,6 @@
             Ledger Nano X connected
           </div>
         </v-card-title>
-        <v-card-title
-          v-if="address"
-          class="border justify-center font-wrapping"
-        >
-          <div class="mew-heading-4 font-weight-medium pl-1">
-            {{ address }}
-          </div>
-        </v-card-title>
       </div>
     </div>
     <div class="text-center">
@@ -58,14 +50,13 @@
         btn-size="xlarge"
         :has-full-width="true"
         :title="btnTitle"
-        @click.native="createBLE"
+        @click.native="ledgerUnlockBle"
       />
     </div>
   </div>
 </template>
 <script>
 import AccessWalletDerivationPath from './AccessWalletDerivationPath.vue';
-import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 
 export default {
   name: 'AccessWalletLedgerX',
@@ -96,10 +87,6 @@ export default {
     setPath: {
       type: Function,
       default: () => {}
-    },
-    address: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -120,12 +107,6 @@ export default {
         this.$emit('ledgerApp', newVal);
       },
       deep: true
-    }
-  },
-  methods: {
-    async createBLE() {
-      const transport = await TransportWebBLE.create();
-      this.ledgerUnlockBle(transport);
     }
   }
 };

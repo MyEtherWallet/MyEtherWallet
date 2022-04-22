@@ -54,7 +54,7 @@
             style="height: 90px"
             color-theme="greyMedium"
             btn-style="outline"
-            @click.native="setWalletInstance(button.type)"
+            @click.native="setWalletInstance(button)"
           >
             <div class="text-left d-flex align-center" style="width: 100%">
               <img width="40" class="mr-4" :src="button.icon" />
@@ -136,13 +136,12 @@
         -->
       <access-wallet-ledger-x
         v-if="onLedgerX"
-        :ledger-unlock-ble="ledgerXUnlockBLE"
+        :ledger-unlock-ble="nextStep"
         :ledger-apps="ledgerApps"
         :ledger-connected="ledgerConnected"
         :paths="paths"
         :selected-path="selectedPath"
         :set-path="setPath"
-        :address="address"
         @ledgerApp="setSelectedApp"
       />
 
@@ -197,7 +196,7 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 // TODO: add these changes to mew components
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import AppEth from '@ledgerhq/hw-app-eth';
+import { EventBus } from '@/core/plugins/eventBus.js';
 
 export default {
   name: 'HardwareAccessOverlay',
@@ -240,12 +239,14 @@ export default {
         {
           label: 'Ledger',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
+          ble: false,
           type: WALLET_TYPES.LEDGER
         },
         {
           label: 'LedgerX',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
-          type: WALLET_TYPES.LEDGERX
+          ble: true,
+          type: WALLET_TYPES.LEDGER
         },
         {
           label: 'Trezor',
@@ -292,7 +293,8 @@ export default {
       unwatch: () => {},
       passwordError: false,
       transport: null,
-      address: ''
+      address: '',
+      ledgerBluetooth: true
     };
   },
   computed: {
@@ -366,13 +368,13 @@ export default {
      * On Ledger
      */
     onLedger() {
-      return this.walletType === WALLET_TYPES.LEDGER;
+      return !this.ledgerBluetooth && this.walletType == WALLET_TYPES.LEDGER;
     },
     /**
      * On Ledger X
      */
     onLedgerX() {
-      return this.walletType === WALLET_TYPES.LEDGERX;
+      return this.ledgerBluetooth && this.walletType === WALLET_TYPES.LEDGER;
     },
     /**
      * On CoolWallet
@@ -499,18 +501,6 @@ export default {
     }
   },
   watch: {
-    async transport(newVal) {
-      if (newVal) {
-        while (!this.address) {
-          await this.fetchAddress(false);
-          await this.delay(500);
-        }
-        this.fetchAddress(true);
-      }
-    },
-    address(newVal) {
-      this.ledgerConnected = !!newVal;
-    },
     selectedPath: {
       handler: function () {
         /**
@@ -528,6 +518,14 @@ export default {
       if (newVal && this.switchAddress) this.setupSwitchAddress();
     }
   },
+  mounted() {
+    /**
+     * errors and resets for disconnect of ble
+     */
+    EventBus.$on('bleDisconnect', () => {
+      this.reset();
+    });
+  },
   methods: {
     ...mapActions('wallet', ['setWallet']),
     /**
@@ -540,6 +538,7 @@ export default {
       this.selectedLedgerApp = this.ledgerApps[0];
       this.password = '';
       this.walletType = '';
+      this.ledgerConnected = false;
     },
     /**
      * Sets up switch address
@@ -569,7 +568,7 @@ export default {
           this.walletType = '';
         } else {
           this.hwWalletInstance = {};
-          if (this.onLedger) {
+          if (this.onLedger || this.onLedgerX) {
             this.step -= 1;
             this[`${this.walletType}Unlock`]();
           } else {
@@ -589,15 +588,19 @@ export default {
       this.step = 2;
       this.walletType = WALLET_TYPES.TREZOR;
     },
-    setWalletInstance(str) {
-      this.walletType = str;
+    setWalletInstance(btnObj) {
+      if (btnObj.type === WALLET_TYPES.LEDGER) {
+        this.ledgerBluetooth = btnObj.ble;
+      }
+      this.walletType = btnObj.type;
       this.nextStep();
     },
     nextStep() {
       if (this.walletType) {
         this.step++;
         if (this.step === this.walletInitialized) {
-          if (this.onLedger) this.selectedPath = this.paths[0];
+          if (this.onLedger || this.onLedgerX)
+            this.selectedPath = this.paths[0];
           if (this.onCoolWallet || this.onBitbox2) return;
           this[`${this.walletType}Unlock`]();
         }
@@ -609,14 +612,8 @@ export default {
     ledgerUnlock() {
       this.unlockPathOnly();
     },
-    ledgerXUnlockBLE(transport) {
-      window.ledgerTransport = transport;
-      transport.on('disconnect', () => {
-        this.transport = null;
-        this.address = '';
-      });
-      this.transport = transport;
-      console.log('ledgerXUnlockBLE was completed');
+    ledgerXUnlockBLE() {
+      this.unlockPathOnly();
     },
     trezorUnlock() {
       this.unlockPathOnly();
@@ -640,11 +637,11 @@ export default {
           : this.selectedPath
         : this.paths[0].value;
       this.wallets[this.walletType]
-        .create(path)
+        .create(path, this.ledgerBluetooth)
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            if (this.onLedger) this.ledgerConnected = true;
+            if (this.onLedger || this.onLedgerX) this.ledgerConnected = true;
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {
@@ -674,7 +671,7 @@ export default {
           }
         })
         .catch(err => {
-          if (this.onLedger) this.step--;
+          if (this.onLedger || this.onLedgerX) this.step--;
           if (this.wallets[this.walletType]) {
             this.wallets[this.walletType].create.errorHandler(err);
           } else {
@@ -734,11 +731,11 @@ export default {
           })
           .catch(e => {
             this.reset();
-            Toast(e.message, {}, ERROR);
+            Toast(e, {}, ERROR);
           });
       } catch (e) {
         this.reset();
-        Toast(e.message, {}, ERROR);
+        Toast(e, {}, ERROR);
       }
     },
     /**
@@ -753,21 +750,6 @@ export default {
      */
     setSelectedApp(e) {
       this.selectedLedgerApp = e;
-    },
-    async fetchAddress(verify) {
-      try {
-        const eth = new AppEth(this.transport);
-        const path = "44'/60'/0'/0/0"; // HD derivation path
-        const { address } = await eth.getAddress(path, verify);
-        this.address = address;
-      } catch (error) {
-        // in this case, user is likely not on Ethereum app
-        console.warn('Failed: ' + error.message);
-        return null;
-      }
-    },
-    delay(ms) {
-      return new Promise(success => setTimeout(success, ms));
     }
   }
 };
