@@ -70,29 +70,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     });
   }
 
-  transfer(toAddress, manageDomainHandler) {
-    // const transferMethod = this.registrarContract?.methods.transferFrom(
-    //   this.address,
-    //   toAddress,
-    //   this.labelHash
-    // );
-    // const baseTx = {
-    //   to: this.registrarAddress,
-    //   from: this.address
-    // };
-    // const tx1 = Object.assign({}, baseTx, {
-    //   data: this.setController(toAddress, true).encodeABI()
-    // });
-    // const tx2 = Object.assign({}, baseTx, {
-    //   data: transferMethod.encodeABI()
-    // });
-    this.estimateGas(toAddress).then(val => {
-      console.log(val);
-      console.log(manageDomainHandler);
-      // return this.web3.mew.sendBatchTransactions(
-      //   this.getTransactions(toAddress)
-      // );
-    });
+  transfer(toAddress) {
+    return this.web3.mew.sendBatchTransactions(this.getTransactions(toAddress));
   }
 
   getActualDuration(duration) {
