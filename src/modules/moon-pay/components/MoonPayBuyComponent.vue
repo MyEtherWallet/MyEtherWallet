@@ -56,7 +56,7 @@
         @setAddress="setAddress"
       />
     </div> -->
-    <div class="mb-6">
+    <div class="mb-3">
       <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
       <div
         v-if="!hideSimplex"
@@ -64,18 +64,20 @@
         :class="{ selected: isMoonpay }"
         @click="selectMoonpay"
       >
-        <div class="d-flex align-center justify-space-between mb-2">
-          <div>You will get</div>
-          <img src="@/modules/moon-pay/assets/moonpay-logo.svg" height="18" />
-        </div>
-
-        <div v-if="!loading" class="mb-4">
-          <div class="mew-heading-3 textDark--text mb-1">
-            {{ cryptoToFiat }}
-            <span class="mew-heading-3">{{ selectedCryptoName }}</span>
+        <img
+          class="provider-logo"
+          src="@/modules/moon-pay/assets/moonpay-logo.svg"
+          height="18"
+        />
+        <div v-if="!loading" class="mb-1">
+          <div class="d-flex mb-1 align-center justify-space-between">
+            <div class="d-flex mew-heading-3 textDark--text">
+              {{ cryptoToFiat }}
+              <span class="mew-heading-3 pl-1">{{ selectedCryptoName }}</span>
+            </div>
           </div>
           <div class="d-flex align-center">
-            <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
+            <div class="mr-1 mb-1 textDark--text">≈ {{ plusFeeF }}</div>
             <mew-tooltip style="height: 22px">
               <template #contentSlot>
                 <div>
@@ -94,7 +96,7 @@
           </div>
         </div>
 
-        <div v-else class="mb-4">
+        <div v-else class="mb-1">
           <v-skeleton-loader type="heading" class="mb-1" />
           <v-skeleton-loader max-width="200px" type="heading" />
         </div>
@@ -154,6 +156,7 @@
           />
         </div>
         <img
+          class="provider-logo"
           src="@/assets/images/icons/icon-simplex.svg"
           alt="simplex"
           height="28"
@@ -724,9 +727,18 @@ export default {
   height: 18px;
 }
 .section-block {
-  height: 180px;
-  border-radius: 8px;
-  border: 1px solid var(--v-greyMedium-base);
+  height: 145px;
+  border-radius: 12px;
+  left: 0px;
+  top: 0px;
+  box-sizing: border-box;
+  border: 2px solid var(--v-greyMedium-base);
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 8px 0px;
+  position: relative;
 }
 .section-block:hover {
   cursor: pointer;
@@ -734,7 +746,11 @@ export default {
   background-color: #e5eaee;
 }
 .selected {
-  background-color: #e5eaee;
   border: 2px solid #1eb19b;
+}
+.provider-logo {
+  position: absolute;
+  top: 18px;
+  right: 20px;
 }
 </style>
