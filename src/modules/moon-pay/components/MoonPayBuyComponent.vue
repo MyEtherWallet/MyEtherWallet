@@ -178,7 +178,7 @@
         has-full-width
         :disabled="!validToAddress || !isMoonpay || disableMoonPay"
         :is-valid-address-func="isValidToAddress"
-        title="CONTINUE WITH MOONPAY"
+        :title="moonpayBtnTitle"
         @click.native="buyFromHome"
       />
       <mew-button
@@ -186,7 +186,7 @@
         has-full-width
         :disabled="!validToAddress || !isSimplex || disableSimplex"
         :is-valid-address-func="isValidToAddress"
-        title="CONTINUE WITH SIMPLEX"
+        :title="simplexBtnTitle"
         @click.native="openSimplexFromHome"
       />
     </div>
@@ -361,6 +361,13 @@ export default {
         simplexMax.lt(BigNumber(this.amount))
       );
     },
+    simplexBtnTitle() {
+      const simplexMax = this.max.simplex;
+      if (simplexMax.lt(BigNumber(this.amount))) {
+        return `CANNOT EXCEED PROVIDER MAX OF ${simplexMax}`;
+      }
+      return 'CONTINUE WITH SIMPLEX';
+    },
     disableMoonPay() {
       const moonpayMax = this.max.moonpay;
       return (
@@ -369,6 +376,13 @@ export default {
         this.amountErrorMessages !== '' ||
         moonpayMax.lt(BigNumber(this.amount))
       );
+    },
+    moonpayBtnTitle() {
+      const moonpayMax = this.max.moonpay;
+      if (moonpayMax.lt(BigNumber(this.amount))) {
+        return `CANNOT EXCEED PROVIDER MAX OF ${moonpayMax}`;
+      }
+      return 'CONTINUE WITH MOONPAY';
     },
     disableMax() {
       const simplexMax = this.max.simplex;
