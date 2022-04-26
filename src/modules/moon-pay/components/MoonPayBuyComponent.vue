@@ -282,7 +282,7 @@ export default {
       )}`;
     },
     dailyLimit() {
-      const value = BigNumber(this.fiatMultiplier).times(10000);
+      const value = BigNumber(this.fiatMultiplier).times(12000);
       return `Daily limit: ${this.currencyFormatter(value.toString())}`;
     },
     monthlyLimit() {
