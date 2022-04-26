@@ -21,7 +21,6 @@ import errorHandler from './errorHandler';
 import Vue from 'vue';
 import ledger from '@/assets/images/icons/wallets/ledger.svg';
 import { rlp } from 'ethereumjs-util';
-import './polyfill';
 import TransportWebBLE from '@ledgerhq/hw-transport-web-ble';
 import { EventBus } from '@/core/plugins/eventBus.js';
 
