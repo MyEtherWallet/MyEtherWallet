@@ -29,6 +29,7 @@
           v-model="selectedFiat"
           :items="fiatCurrencyItems"
           is-custom
+          class="selectedFiat"
         />
       </div>
       <div class="d-flex align-center">
@@ -167,7 +168,7 @@
     <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
     <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
     <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-    <div v-if="!inWallet" class="pa-5">
+    <div v-if="!inWallet" class="mt-5">
       <div class="mew-heading-3 textDark--text mb-5">
         Where should we send your crypto?
       </div>
@@ -752,5 +753,8 @@ export default {
   position: absolute;
   top: 18px;
   right: 20px;
+}
+.selectedFiat {
+  max-width: 120px;
 }
 </style>
