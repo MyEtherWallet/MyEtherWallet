@@ -495,7 +495,6 @@ export default {
     async setRawTransaction(val) {
       if (val) return (this.rawTransaction = val);
       const { raw, fee } = this.rawData();
-      console.log(fee);
       if (raw) {
         this.rawTransaction = JSON.stringify(raw, null, 3);
         const { eth } = this.web3();

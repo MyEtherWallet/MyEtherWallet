@@ -521,6 +521,7 @@ export default {
           this.reset();
         } else if (this.step === 2) {
           this.step = 1;
+          this.walletType = '';
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger) {
