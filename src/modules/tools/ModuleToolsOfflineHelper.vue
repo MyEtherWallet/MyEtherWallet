@@ -5,11 +5,17 @@
         <h3 class="mb-5 text-center">Transaction status</h3>
         <div v-if="txHash" class="greyLight pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
-          <mew-transform-hash :hash="txHash" />
+          <div class="d-flex">
+            <mew-transform-hash :hash="txHash" />
+            <mew-copy :copy-value="txHash" tooltip="Copy Me!" class="ml-2" />
+          </div>
         </div>
         <div v-if="txReceipt" class="greyLight pa-5">
-          <div class="font-weight-bold">Transaction receipt</div>
-          <mew-transform-hash :hash="txReceipt" />
+          <div class="font-weight-bold">Transaction Receipt</div>
+          <div class="d-flex">
+            <mew-transform-hash :hash="txReceipt" />
+            <mew-copy :copy-value="txReceipt" tooltip="Copy Me!" class="ml-2" />
+          </div>
         </div>
         <div v-if="txLoading" class="pa-5">
           <v-progress-linear indeterminate rounded height="6" />
@@ -127,17 +133,20 @@
         <v-textarea
           outlined
           label="Signature"
+          class="mb-1"
           :value="signature"
           :error="signatureError"
           :error-messages="signatureMessage"
           @input="checkTx"
         ></v-textarea>
         <mew-alert
-          v-if="!addressMatch"
+          v-for="alert in sortedAlerts"
+          :key="alert.key"
+          class="mb-3"
           hide-close-icon
-          theme="warning"
-          title="Warning"
-          :description="alert"
+          :theme="alert.severity"
+          :title="alert.title"
+          :description="alert.message"
         />
         <mew-expand-panel
           v-if="!signatureError && signature !== ''"
@@ -182,7 +191,7 @@
             title="Confirm & Send"
             btn-size="xlarge"
             class="mx-1 mb-3"
-            :disabled="!validTx"
+            :disabled="!validTx || error"
             @click.native="sendTx"
           />
         </div>
@@ -217,6 +226,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
+import { isJsonValue } from 'apollo-utilities';
 export default {
   name: 'ModuleToolsOfflineHelper',
   components: { AppBlockTitle, NetworkSwitch },
@@ -235,7 +245,7 @@ export default {
     validTx: false,
     file: {},
     fileLink: '',
-    alert: 'Signer does not match selected address!',
+    alerts: [],
     dialogAlert: '',
     txHash: '',
     txReceipt: '',
@@ -277,20 +287,25 @@ export default {
     detailLength() {
       return this.details.length > 0;
     },
-    addressMatch() {
-      if (this.validTx) {
-        const { raw } = this.rawData();
-        return (
-          toChecksumAddress(raw.from) === toChecksumAddress(this.fromAddress)
-        );
-      }
-      return true;
+    sortedAlerts() {
+      const x = this.alerts;
+      return x.sort((a, b) =>
+        a.severity > b.severity ? 1 : a.severity < b.severity ? -1 : 0
+      );
+    },
+    error() {
+      return this.alerts.filter(a => a.severity === 'error').length;
     }
   },
   methods: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['network']),
 
+    clear() {
+      this.fromAddress = '';
+      this.rawTransaction = '';
+      this.currentStep = 1;
+    },
     /*********************************************
      * checks if address is valid on each change
      * shows and hides accordingly to address
@@ -396,6 +411,7 @@ export default {
       if (this.signature === '') {
         this.signatureError = false;
         this.signatureMessage = [];
+        this.alerts = [];
         return;
       }
       if (!isHex(this.signature)) {
@@ -435,8 +451,8 @@ export default {
         const txValues = tx.toJSON(true);
         const txChain = tx.getChainId();
         const txFrom = sanitizeHex(tx.getSenderAddress().toString('hex'));
-
         this.validTx = tx.verifySignature();
+        const fee = tx.getBaseFee().toString();
         const basicDetails = {
           from: txFrom,
           nonce: this.gtr(txValues.nonce),
@@ -447,6 +463,7 @@ export default {
           data: txValues.data
         };
         return {
+          fee,
           raw: {
             ...basicDetails
           },
@@ -456,14 +473,10 @@ export default {
           }
         };
       } catch ({ message }) {
-        const remainder = 'invalid remainder';
         const rlp = 'invalid rlp: total length is larger than the data';
         this.signatureError = true;
         this.validTx = false;
         switch (message) {
-          case remainder:
-            this.signatureMessage = ['Must be a valid transaction'];
-            break;
           case rlp:
             this.signatureMessage = ['Malformed signature'];
             break;
@@ -479,10 +492,31 @@ export default {
      * @param {string} val[].title - Name of value
      * @param {string|number} val[].value - Value
      **********************************************************/
-    setRawTransaction(val) {
+    async setRawTransaction(val) {
       if (val) return (this.rawTransaction = val);
-      const { raw } = this.rawData();
-      if (raw) this.rawTransaction = JSON.stringify(raw, null, 3);
+      const { raw, fee } = this.rawData();
+      console.log(fee);
+      if (raw) {
+        this.rawTransaction = JSON.stringify(raw, null, 3);
+        const { eth } = this.web3();
+        const addressMatch =
+          toChecksumAddress(raw.from) === toChecksumAddress(this.fromAddress);
+        const balance = await eth.getBalance(raw.from);
+        if (!addressMatch)
+          this.alerts.push({
+            name: 'addressMatch',
+            severity: 'warning',
+            title: 'Warning',
+            message: 'Signer does not match selected address!'
+          });
+        if (BigNumber(balance).lt(fee))
+          this.alerts.push({
+            name: 'balance',
+            severity: 'error',
+            title: 'Error',
+            message: "Current address can't afford this transaction"
+          });
+      }
     },
 
     /**********************************************************
@@ -538,7 +572,7 @@ export default {
       const reader = new FileReader();
       const self = this;
       reader.onloadend = function ({ target: { result } }) {
-        self.file = JSON.parse(result);
+        if (isJsonValue(result)) self.file = JSON.parse(result);
         if (self.file.rawTransaction)
           return self.checkTx(self.file.rawTransaction);
         self.signatureError = true;
@@ -547,23 +581,23 @@ export default {
       if (files[0]) reader.readAsBinaryString(files[0]);
     },
     sendTx() {
-      if (this.signature && !this.signatureError) {
-        const { eth } = this.web3();
-        this.dialog = true;
-        this.txLoading = true;
-        eth
-          .sendSignedTransaction(sanitizeHex(this.signature))
-          .once('transactionHash', hash => {
-            this.txHash = hash;
-          })
-          .then(receipt => {
-            this.txReceipt = receipt;
-          })
-          .catch(({ message }) => {
-            this.dialogAlert = message;
-          });
-        this.txLoading = false;
-      }
+      const { eth } = this.web3();
+      this.dialog = true;
+      this.txLoading = true;
+      eth
+        .sendSignedTransaction(sanitizeHex(this.signature))
+        .once('transactionHash', hash => {
+          this.txHash = hash;
+          this.clear();
+        })
+        .once('receipt', receipt => {
+          this.txReceipt = receipt;
+          this.txLoading = false;
+        })
+        .catch(({ message }) => {
+          this.dialogAlert = message;
+          this.txLoading = false;
+        });
     }
   }
 };
