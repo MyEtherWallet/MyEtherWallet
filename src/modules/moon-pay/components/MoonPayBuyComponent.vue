@@ -513,10 +513,10 @@ export default {
     },
     max() {
       if (this.hasData) {
-        const moonpayMax = this.fetchedData[0].limits.find(
+        const moonpayMax = this.fetchedData[0]?.limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
-        const simplexMax = this.fetchedData[1].limits.find(
+        const simplexMax = this.fetchedData[1]?.limits.find(
           item => item.fiat_currency === this.selectedFiatName
         );
         return {
