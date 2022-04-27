@@ -76,7 +76,7 @@
     "lodash": "4.17.21",
     "lottie-web": "5.9.2",
     "merkletreejs": "0.2.31",
-    "moment": "2.29.2",
+    "moment": "2.29.3",
     "package-json": "7.0.0",
     "platform": "1.3.6",
     "qr-code-styling": "1.6.0-rc.1",
@@ -114,7 +114,7 @@
     "copy-webpack-plugin": "6.3.2",
     "eslint": "7.32.0",
     "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-security": "1.4.0",
+    "eslint-plugin-security": "1.5.0",
     "eslint-plugin-vue": "8.6.0",
     "eth-ens-namehash": "2.0.8",
     "ethereumjs-common": "1.5.2",
@@ -169,7 +169,7 @@
   },
   "resolutions": {
     "async": "3.2.2",
-    "moment": "2.29.2",
+    "moment": "2.29.3",
     "engine.io": "4.1.2",
     "glob-parent": "5.1.2",
     "follow-redirects": "1.14.9",
@@ -193,7 +193,9 @@
     "socket.io-parser": "3.4.1",
     "keccak": "3.0.1",
     "diff": "3.5.0",
-    "tar": "4.4.18"
+    "tar": "4.4.18",
+    "ansi-regex": "3.0.1",
+    "ejs": "3.1.7"
   },
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet"
