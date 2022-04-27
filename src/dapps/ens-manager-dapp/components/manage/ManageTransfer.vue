@@ -15,6 +15,8 @@
 <script>
 import addressBook from '@/modules/address-book/ModuleAddressBook';
 import BigNumber from 'bignumber.js';
+import { mapState } from 'vuex';
+import { fromWei } from 'web3-utils';
 export default {
   components: {
     addressBook
@@ -38,12 +40,16 @@ export default {
       isDisabled: true
     };
   },
+  computed: {
+    ...mapState('wallet', ['web3', 'address', 'balance'])
+  },
   mounted() {
     this.toAddress = '';
     this.resolvedAddr = '';
   },
   methods: {
     setAddress(newVal, isvalid) {
+      console.log(newVal);
       this.resolvedAddr = newVal;
       this.isvalid = isvalid;
       if (!this.isvalid) {
@@ -51,26 +57,15 @@ export default {
         return;
       }
       this.manageDomainHandler.estimateGas(this.resolvedAddr).then(val => {
-        this.manageDomainHandler.web3.eth
-          .getBalance(this.resolvedAddr)
-          .then(bal => {
-            const hasBalance = BigNumber(val).lte(bal); // change to lte
-            this.isDisabled = !(isvalid && hasBalance);
-            console.log(
-              'Transaction Fee: ' +
-                this.manageDomainHandler.web3.utils.fromWei(val) +
-                ' ETH'
-            );
-            console.log(
-              'Balance: ' +
-                this.manageDomainHandler.web3.utils.fromWei(bal) +
-                ' ETH'
-            );
-            if (!hasBalance) {
-              //throw new Error('Not enough balance');
-              console.log('Not enough balance!');
-            }
-          });
+        console.log(this.resolvedAddr);
+        const hasBalance = BigNumber(val).lte(this.balance); // change to lte
+        this.isDisabled = !(isvalid && hasBalance);
+        console.log('Transaction Fee: ' + fromWei(val) + ' ETH');
+        console.log('Balance: ' + fromWei(this.balance) + ' ETH');
+        if (!hasBalance) {
+          //throw new Error('Not enough balance');
+          console.log('Not enough balance!');
+        }
       });
     }
   }

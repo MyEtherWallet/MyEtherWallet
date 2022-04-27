@@ -45,7 +45,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
     );
     const baseTx = {
       to: this.registrarAddress,
-      from: this.address
+      from: this.address,
+      value: 0,
+      gasPrice: this.gasPriceByType(this.gasPriceType)()
     };
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
@@ -62,11 +64,11 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const gas1 = await this.web3.eth.estimateGas(txns[0]);
     const gas2 = await this.web3.eth.estimateGas(txns[1]);
     const gasPrice = this.gasPriceByType(this.gasPriceType)();
-    const calculatedTxFee = BigNumber(gasPrice)
-      .times(BigNumber(gas1).plus(gas2))
-      .toFixed();
+    const txFee1 = BigNumber(gasPrice).times(gas1).toFixed();
+    const txFee2 = BigNumber(gasPrice).times(gas2).toFixed();
+    const calculatedFee = BigNumber(txFee1).plus(txFee2).toFixed();
     return new Promise(resolve => {
-      resolve(calculatedTxFee);
+      resolve(calculatedFee);
     });
   }
 
