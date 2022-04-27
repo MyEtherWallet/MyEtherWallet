@@ -40,7 +40,6 @@
           @click.native="setMin"
         />
         <mew-button
-          :disabled="disableMax"
           btn-style="outline"
           title="Max"
           class="flex-grow-1"
@@ -78,8 +77,8 @@
             </div>
           </div>
           <div class="d-flex align-center">
-            <div class="mr-1 mb-1 textDark--text">≈ {{ plusFeeF }}</div>
-            <mew-tooltip style="height: 22px">
+            <div class="mr-1 textDark--text">≈ {{ plusFeeF }}</div>
+            <mew-tooltip style="height: 21px">
               <template #contentSlot>
                 <div>
                   {{ includesFeeText }}
@@ -166,8 +165,6 @@
       <div class="mew-label mb-5">Visa, Mastercard</div>
     </div>
     <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
-    <!------ WEN USER IS NOT IN WALLET, SHOW BELOW -------->
     <div v-if="!inWallet" class="mt-5">
       <div class="mew-heading-3 textDark--text mb-5">
         Where should we send your crypto?
@@ -191,21 +188,19 @@
       />
     </div>
     <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
-    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
-    <!------ WEN USER IS IN WALLET, SHOW BELOW -------->
     <div v-else class="pa-5">
       <mew-button
         v-if="!isSimplex"
         has-full-width
         :disabled="!isMoonpay || disableMoonPay"
-        title="CONTINUE WITH MOONPAY"
+        :title="moonpayBtnTitle"
         @click.native="buy"
       />
       <mew-button
         v-if="isSimplex"
         has-full-width
         :disabled="!isSimplex || disableSimplex"
-        title="CONTINUE WITH SIMPLEX"
+        :title="simplexBtnTitle"
         @click.native="openSimplex"
       />
     </div>
@@ -384,10 +379,10 @@ export default {
       }
       return 'CONTINUE WITH MOONPAY';
     },
-    disableMax() {
-      const simplexMax = this.max.simplex;
-      return simplexMax.lt(BigNumber(this.amount));
-    },
+    // disableMax() {
+    //   const simplexMax = this.max.simplex;
+    //   return simplexMax.lt(BigNumber(this.amount));
+    // },
     paymentOptionString() {
       return `Visa, Mastercard, Apple Pay${this.isEUR ? ', Bank account' : ''}`;
     },
