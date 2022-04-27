@@ -57,7 +57,9 @@ export default class StakewiseHandler {
             );
             resolve(netFee.toString());
           })
-          .catch(reject);
+          .catch(e => {
+            reject(e);
+          });
       } catch {
         reject;
       }
