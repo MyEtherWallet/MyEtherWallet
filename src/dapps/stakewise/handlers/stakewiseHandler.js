@@ -60,8 +60,8 @@ export default class StakewiseHandler {
           .catch(e => {
             reject(e);
           });
-      } catch {
-        reject;
+      } catch (e) {
+        reject(e);
       }
     });
   }
