@@ -16,7 +16,7 @@
 import addressBook from '@/modules/address-book/ModuleAddressBook';
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
-import { fromWei } from 'web3-utils';
+import { ERROR, Toast } from '@/modules/toast/handler/handlerToast';
 export default {
   components: {
     addressBook
@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     setAddress(newVal, isvalid) {
-      console.log(newVal);
       this.resolvedAddr = newVal;
       this.isvalid = isvalid;
       if (!this.isvalid) {
@@ -57,14 +56,10 @@ export default {
         return;
       }
       this.manageDomainHandler.estimateGas(this.resolvedAddr).then(val => {
-        console.log(this.resolvedAddr);
-        const hasBalance = BigNumber(val).lte(this.balance); // change to lte
+        const hasBalance = BigNumber(val).lte(this.balance);
         this.isDisabled = !(isvalid && hasBalance);
-        console.log('Transaction Fee: ' + fromWei(val) + ' ETH');
-        console.log('Balance: ' + fromWei(this.balance) + ' ETH');
         if (!hasBalance) {
-          //throw new Error('Not enough balance');
-          console.log('Not enough balance!');
+          Toast('Not enough balance', {}, ERROR);
         }
       });
     }
