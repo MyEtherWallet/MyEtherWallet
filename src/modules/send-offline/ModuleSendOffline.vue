@@ -129,6 +129,7 @@
           ref="signedTxInput"
           style="width: 100%"
           label="Signed Transaction"
+          readonly
           :value="signedTransaction.rawTransaction"
         />
 
@@ -136,6 +137,7 @@
           class="mt-12"
           style="width: 100%"
           label="Signed Raw Transaction"
+          readonly
           :value="signed"
         />
         <mew-button

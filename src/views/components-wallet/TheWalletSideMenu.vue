@@ -35,7 +35,7 @@
           <!-- Buy Sell / Send / Swap buttons -->
           <!-- ================================================================================== -->
           <div
-            v-show="online"
+            v-if="online"
             class="d-flex align-center justify-space-between pt-6 pb-4 mx-2"
           >
             <v-btn
@@ -211,7 +211,7 @@
             />
           </v-list-item-content>
         </v-list-item>
-        <div class="mt-3 px-8">
+        <div v-if="online" class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
               :input-value="consentToTrack"
@@ -334,6 +334,7 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
+    ...mapState('global', ['online']),
     sectionOne() {
       if (this.online) {
         const hasNew = Object.values(dappsMeta).filter(item => {
