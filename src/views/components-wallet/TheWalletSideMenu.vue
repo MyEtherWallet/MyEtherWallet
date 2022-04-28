@@ -1,5 +1,7 @@
 <template>
   <div>
+    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
+
     <v-navigation-drawer
       v-model="navOpen"
       app
@@ -11,47 +13,108 @@
       <template #prepend>
         <div class="pa-5 pb-3">
           <div class="mt-2 mb-4 d-flex align-center justify-space-between">
+            <!-- ================================================================================== -->
+            <!-- MEW logo -->
+            <!-- ================================================================================== -->
             <router-link :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }">
               <img width="120" src="@/assets/images/icons/logo-mew.svg" />
             </router-link>
-            <!--
-            =====================================================================================
-            Close Navigation Bar for xs-md screens
-            =====================================================================================
-            -->
+
+            <!-- ================================================================================== -->
+            <!-- Close Navigation Bar for xs-md screens -->
+            <!-- ================================================================================== -->
             <v-btn icon class="d-block d-lg-none" @click="navOpen = false">
               <v-icon color="white">mdi-close</v-icon>
             </v-btn>
           </div>
+
+          <!-- ================================================================================== -->
+          <!-- Wallet balance card -->
+          <!-- ================================================================================== -->
           <balance-card />
 
-          <v-btn
-            v-if="canBuy"
-            class="mt-3"
-            color="white"
-            outlined
-            x-large
-            width="100%"
-            @click.native="openSimplex"
-          >
-            <div class="d-flex align-center justify-space-between width--full">
-              <div>Buy ETH here</div>
-
-              <div class="d-flex align-center">
+          <!-- ================================================================================== -->
+          <!-- Buy Sell / Send / Swap buttons -->
+          <!-- ================================================================================== -->
+          <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
+            <v-btn
+              color="transparent"
+              height="65px"
+              dark
+              depressed
+              x-small
+              @click="openBuy"
+            >
+              <div class="text-center" style="min-width: 50px">
                 <img
-                  src="@/assets/images/icons/icon-visa-white.png"
-                  alt="Master card"
-                  height="11"
+                  src="@/assets/images/icons/menu/icon-menu-buy-sell.svg"
+                  alt="Buy or Sell"
+                  height="30"
                 />
-                <img
-                  src="@/assets/images/icons/icon-mastercard-mew.png"
-                  alt="Master card"
-                  height="16"
-                  class="ml-2"
-                />
+                <div
+                  class="whiteAlways--text mew-label text-transform--initial"
+                  style="margin-top: 3px"
+                >
+                  Buy/Sell
+                </div>
               </div>
-            </div>
-          </v-btn>
+            </v-btn>
+
+            <v-divider vertical></v-divider>
+
+            <v-btn
+              color="transparent"
+              height="65px"
+              dark
+              depressed
+              x-small
+              @click="$router.push({ name: ROUTES_WALLET.SEND_TX.NAME })"
+            >
+              <div class="text-center" style="min-width: 50px">
+                <img
+                  src="@/assets/images/icons/menu/icon-menu-send.svg"
+                  alt="Send"
+                  height="30"
+                />
+                <div
+                  class="whiteAlways--text mew-label text-transform--initial"
+                  style="margin-top: 3px"
+                >
+                  Send
+                </div>
+              </div>
+            </v-btn>
+
+            <v-divider vertical></v-divider>
+
+            <v-btn
+              color="transparent"
+              height="65px"
+              dark
+              depressed
+              x-small
+              :class="[!hasSwap ? 'pointer-event--none' : '']"
+              @click="$router.push({ name: ROUTES_WALLET.SWAP.NAME })"
+            >
+              <div class="text-center" style="min-width: 50px">
+                <img
+                  src="@/assets/images/icons/menu/icon-menu-swap.svg"
+                  alt="Swap"
+                  height="30"
+                  :class="[!hasSwap ? 'opacity--30' : '']"
+                />
+                <div
+                  :class="[
+                    !hasSwap ? 'textMedium--text' : '',
+                    'whiteAlways--text mew-label text-transform--initial'
+                  ]"
+                  style="margin-top: 3px"
+                >
+                  Swap
+                </div>
+              </div>
+            </v-btn>
+          </div>
         </div>
       </template>
 
@@ -213,9 +276,9 @@ import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-import send from '@/assets/images/icons/icon-send-enable.png';
+// import send from '@/assets/images/icons/icon-send-enable.png';
 import nft from '@/assets/images/icons/icon-nft.png';
-import swap from '@/assets/images/icons/icon-swap-enable.png';
+// import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import contract from '@/assets/images/icons/icon-contract-enable.png';
 import message from '@/assets/images/icons/icon-message-enable.png';
@@ -223,6 +286,7 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
+import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
 // import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
@@ -230,16 +294,22 @@ import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
+import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
+
 export default {
   components: {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications
+    ModuleNotifications,
+    ModuleMoonPay
   },
   mixins: [handlerAnalytics],
   data() {
     return {
+      moonPayOpen: false,
       navOpen: null,
       version: VERSION,
       background: background,
@@ -266,15 +336,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('global', ['network', 'swapLink']),
+    ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
-    canBuy() {
-      return (
-        this.network.type.name === 'ETH' ||
-        this.network.type.name === 'MATIC' ||
-        this.network.type.name === 'BSC'
-      );
-    },
     sectionOne() {
       const hasNew = Object.values(dappsMeta).filter(item => {
         const dateToday = new Date();
@@ -293,19 +356,9 @@ export default {
           icon: dashboard
         },
         {
-          title: this.$t('sendTx.send-tx'),
-          route: { name: ROUTES_WALLET.SEND_TX.NAME },
-          icon: send
-        },
-        {
           title: this.$t('interface.menu.nft'),
           route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
           icon: nft
-        },
-        {
-          title: this.$t('common.swap'),
-          route: { name: ROUTES_WALLET.SWAP.NAME },
-          icon: swap
         },
         {
           title: this.$t('interface.menu.dapps'),
@@ -351,9 +404,18 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
+    EventBus.$on(MOONPAY_EVENT, () => {
+      this.openBuy();
+    });
+    EventBus.$on(STAKEWISE_EVENT, () => {
+      this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
+    });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
+    openBuy() {
+      this.moonPayOpen = true;
+    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -379,10 +441,6 @@ export default {
     },
     toggleLogout() {
       this.showLogoutPopup = !this.showLogoutPopup;
-    },
-    openSimplex() {
-      // eslint-disable-next-line
-      window.open(`${this.swapLink}`, '_blank');
     }
   }
 };
@@ -518,6 +576,10 @@ export default {
     .v-label {
       color: var(--v-white-base);
     }
+  }
+
+  .opacity--30 {
+    opacity: 30% !important;
   }
 }
 </style>

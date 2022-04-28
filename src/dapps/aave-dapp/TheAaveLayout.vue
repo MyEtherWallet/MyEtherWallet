@@ -282,12 +282,12 @@
 
 <script>
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import AaveBorrowOverlay from './components/AaveBorrowOverlay';
-import AaveDepositOverlay from './components/AaveDepositOverlay';
-import AaveCollateralOverlay from './components/AaveCollateralOverlay';
-import AaveRepayOverlay from './components/AaveRepayOverlay';
-import AaveWithdrawOverlay from './components/AaveWithdrawOverlay';
-import AaveSetAprOverlay from './components/AaveSetAprOverlay';
+import AaveBorrowOverlay from './components/overlays/AaveBorrowOverlay';
+import AaveDepositOverlay from './components/overlays/AaveDepositOverlay';
+import AaveCollateralOverlay from './components/overlays/AaveCollateralOverlay';
+import AaveRepayOverlay from './components/overlays/AaveRepayOverlay';
+import AaveWithdrawOverlay from './components/overlays/AaveWithdrawOverlay';
+import AaveSetAprOverlay from './components/overlays/AaveSetAprOverlay';
 import BG from '@/assets/images/backgrounds/bg-unstoppable-domain.png';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';

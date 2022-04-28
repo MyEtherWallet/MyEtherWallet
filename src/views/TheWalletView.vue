@@ -5,9 +5,9 @@
       <v-container class="pa-2 pa-md-3 mb-14" fluid>
         <the-wallet-header />
         <module-confirmation />
-        <the-wallet-promo-popup />
+        <wallet-promo-pop-up />
         <router-view />
-        <claim-tokens-snackbar />
+        <wallet-promo-snackbar />
       </v-container>
     </v-main>
     <the-wallet-footer />
@@ -20,7 +20,7 @@ import { toBN } from 'web3-utils';
 import TheWalletSideMenu from './components-wallet/TheWalletSideMenu';
 import TheWalletHeader from './components-wallet/TheWalletHeader';
 import TheWalletFooter from './components-wallet/TheWalletFooter';
-import TheWalletPromoPopup from './components-wallet/TheWalletPopupPromo';
+import WalletPromoPopUp from './components-wallet/WalletPromoPopUp';
 import ModuleConfirmation from '@/modules/confirmation/ModuleConfirmation';
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -29,15 +29,15 @@ import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 import { Web3Wallet } from '@/modules/access-wallet/common';
 import Web3 from 'web3';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
-import ClaimTokensSnackbar from '@/dapps/ens-manager-dapp/components/claim/ClaimTokensSnackbar.vue';
+import WalletPromoSnackbar from '@/views/components-wallet/WalletPromoSnackbar';
 export default {
   components: {
     TheWalletSideMenu,
     TheWalletHeader,
     TheWalletFooter,
-    TheWalletPromoPopup,
+    WalletPromoPopUp,
     ModuleConfirmation,
-    ClaimTokensSnackbar
+    WalletPromoSnackbar
   },
   mixins: [handlerWallet],
   computed: {
@@ -80,11 +80,25 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    if (window.ethereum) {
+      window.ethereum.removeListener(
+        'chainChanged',
+        this.setWeb3WalletInstance
+      );
+      window.ethereum.removeListener('accountsChanged', this.setWeb3Account);
+    }
+  },
   destroyed() {
     this.web3.eth.clearSubscriptions();
   },
   methods: {
-    ...mapActions('wallet', ['setBlockNumber', 'setTokens', 'setWallet']),
+    ...mapActions('wallet', [
+      'setBlockNumber',
+      'setTokens',
+      'setWallet',
+      'setWeb3Instance'
+    ]),
     ...mapActions('global', [
       'setNetwork',
       'setBaseFeePerGas',
@@ -132,21 +146,9 @@ export default {
      */
     web3Listeners() {
       if (window.ethereum.on) {
-        window.ethereum.on('chainChanged', chainId => {
-          this.findAndSetNetwork(chainId);
-        });
+        window.ethereum.on('chainChanged', this.setWeb3WalletInstance);
 
-        window.ethereum.on('networkChanged', chainId => {
-          this.findAndSetNetwork(chainId);
-        });
-
-        window.ethereum.on('accountsChanged', acc => {
-          if (acc[0]) {
-            const web3 = new Web3(window.ethereum);
-            const wallet = new Web3Wallet(acc[0]);
-            this.setWallet([wallet, web3.currentProvider]);
-          }
-        });
+        window.ethereum.on('accountsChanged', this.setWeb3Account);
       } else {
         Toast(
           'Something is wrong with Metamask. (window.ethereum.on is not a function).  Please refresh the page and reload Metamask.',
@@ -161,7 +163,9 @@ export default {
       });
 
       if (foundNetwork) {
-        this.setNetwork(foundNetwork[0]).then(this.setup);
+        this.setNetwork(foundNetwork[0]).then(() => {
+          this.setWeb3Instance(new Web3(window.ethereum));
+        });
       } else {
         Toast(
           "Can't find matching nodes for selected MetaMask node! MetaMask may not function properly. Please select a supported node",
@@ -169,6 +173,14 @@ export default {
           WARNING
         );
       }
+    },
+    setWeb3Account(acc) {
+      const web3 = new Web3(window.ethereum);
+      const wallet = new Web3Wallet(acc[0]);
+      this.setWallet([wallet, web3.currentProvider]);
+    },
+    setWeb3WalletInstance(chainId) {
+      this.findAndSetNetwork(chainId);
     }
   }
 };

@@ -54,7 +54,7 @@ export default {
       usdPriceEth: '',
       userSummary: {},
       isLoadingData: true,
-      lendingPool: {}
+      lendingPoolPrototype: {}
     };
   },
   mounted() {
@@ -65,8 +65,8 @@ export default {
     /**
      * Object that contains all the necessary methods to create Aave lending pool transactions.
      */
-    this.lendingPool = txBuilder.getLendingPool(Market.Proto);
-    console.error('lendingPoiol', this.lendingPool)
+    const lendingPool = txBuilder.getLendingPool(Market.Proto);
+    this.lendingPoolPrototype = Object.getPrototypeOf(lendingPool);
   },
   apollo: {
     $subscribe: {
@@ -179,7 +179,7 @@ export default {
      */
     async onDeposit(data) {
       try {
-        return await this.lendingPool.deposit(data).then(res => {
+        return await this.lendingPoolPrototype.deposit(data).then(res => {
           this.formatTxData(res, 'deposit');
         });
       } catch (e) {
@@ -191,11 +191,10 @@ export default {
      */
     async onBorrow(data) {
       try {
-        if (this.lendingPool) {
-          return await this.lendingPool.borrow(data).then(res => {
-            this.formatTxData(res, 'borrow');
-          });
-        }
+        console.error('this', data);
+        return await this.lendingPoolPrototype.borrow(data).then(res => {
+          this.formatTxData(res, 'borrow');
+        });
       } catch (e) {
         throw new Error(e);
       }
