@@ -287,7 +287,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
-import buyMore from '@/core/mixins/buyMore.mixin.js';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
 import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
@@ -300,7 +299,7 @@ export default {
     ModuleSettings,
     ModuleNotifications
   },
-  mixins: [handlerAnalytics, buyMore],
+  mixins: [handlerAnalytics],
   data() {
     return {
       navOpen: null,
@@ -397,9 +396,6 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
-    EventBus.$on(MOONPAY_EVENT, () => {
-      this.openBuy();
-    });
     EventBus.$on(STAKEWISE_EVENT, () => {
       this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
     });
@@ -414,6 +410,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openMoonpay() {
+      EventBus.$emit(MOONPAY_EVENT);
     },
     openNavigation() {
       this.navOpen = true;
