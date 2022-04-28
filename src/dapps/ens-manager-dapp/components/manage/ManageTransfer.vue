@@ -58,7 +58,7 @@ export default {
       this.manageDomainHandler.estimateGas(this.resolvedAddr).then(val => {
         const hasBalance = BigNumber(val).lte(this.balance);
         this.isDisabled = !(isvalid && hasBalance);
-        if (!hasBalance) {
+        if (!hasBalance || val == 0) {
           Toast('Not enough balance', {}, ERROR);
         }
       });
