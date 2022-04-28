@@ -1,3 +1,8 @@
+### devop
+
+* update new moonpay ui [#3764](https://github.com/MyEtherWallet/MyEtherWallet/pull/3764)
+* sync develop [#3795](https://github.com/MyEtherWallet/MyEtherWallet/pull/3795)
+
 ### Release v6.5.2-hotfix.2
 
 ### fix

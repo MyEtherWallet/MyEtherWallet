@@ -1,1 +1,0 @@
-update new moonpay ui
