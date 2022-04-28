@@ -97,17 +97,14 @@ export default {
     defaltCurrency() {
       if (
         isEmpty(this.selectedCurrency) &&
-        !this.network.type.isTestNetwork &&
+        this.supportedBuy &&
         this.tokensList.length > 0
       ) {
         return this.tokensList.filter(
           item =>
             item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
         )[0];
-      } else if (
-        isEmpty(this.selectedCurrency) ||
-        this.network.type.isTestNetwork
-      ) {
+      } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
         return {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
@@ -120,6 +117,13 @@ export default {
         };
       }
       return this.selectedCurrency;
+    },
+    supportedBuy() {
+      return (
+        this.network.type === 'ETH' ||
+        this.network.type === 'BSC' ||
+        this.network.type === 'MATIC'
+      );
     },
     leftBtn() {
       return {
