@@ -91,6 +91,22 @@
             />
           </div>
           <div class="text-center mt-4">
+            <div class="d-flex justify-center">
+              <input
+                ref="upload"
+                type="file"
+                style="display: none"
+                accept="json"
+                @change="upload"
+              />
+              <mew-button
+                class="mt-2 display--block mx-auto"
+                title="Upload JSON file"
+                btn-size="small"
+                btn-style="transparent"
+                @click.native="$refs.upload.click()"
+              />
+            </div>
             <mew-button
               :title="$t('common.clear-all')"
               :has-full-width="false"
@@ -145,6 +161,7 @@ import sanitizeHex from '@/core/helpers/sanitizeHex';
 import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
+import { Toast } from '../toast/handler/handlerToast';
 export default {
   components: {
     ModuleAddressBook
@@ -328,6 +345,24 @@ export default {
       this.toAddress = addr;
       this.isValidAddress = isValidAddress;
       this.userInputType = userInputType;
+    },
+    upload({ target: { files } }) {
+      const reader = new FileReader();
+      const self = this;
+      reader.onloadend = function ({ target: { result } }) {
+        try {
+          const file = JSON.parse(result);
+          if (file.nonce) {
+            self.localNonce = file.nonce.toString();
+            self.gasPrice = file.gasPrice;
+            return;
+          }
+          Toast('Malformed File', '', 'error');
+        } catch {
+          Toast('Incorrect File Type', '', 'error');
+        }
+      };
+      if (files[0]) reader.readAsBinaryString(files[0]);
     },
     async generateTx() {
       const symbol = this.network.type.currencyName;

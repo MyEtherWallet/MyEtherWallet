@@ -219,14 +219,14 @@
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { mapGetters, mapState } from 'vuex';
-import { isAddress, fromWei, isHex } from 'web3-utils';
+import { isAddress, fromWei } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import NetworkSwitch from '@/modules/network/components/NetworkSwitch.vue';
 import { BigNumber } from 'bignumber.js';
 import { toChecksumAddress } from 'ethereumjs-util';
-import { isJsonValue } from 'apollo-utilities';
+import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleToolsOfflineHelper',
   components: { AppBlockTitle, NetworkSwitch },
@@ -333,26 +333,19 @@ export default {
     async data() {
       const { eth } = this.web3();
       const chainID = await eth.getChainId();
-      const blockNumber = await eth.getBlockNumber();
-      const { gasLimit } = await eth.getBlock(blockNumber);
-      const gasPrice = await eth.getGasPrice();
+      const gasPrice = fromWei(await eth.getGasPrice(), 'gwei');
       const nonce = await eth.getTransactionCount(this.fromAddress);
-      const netName = this.network().type.name;
       return {
         data: {
-          address: this.fromAddress,
-          gasPrice,
           nonce,
-          chainID,
-          timestamp: Date.now()
+          gasPrice
         },
         details: {
           address: this.fromAddress,
           nonce: nonce.toString(),
-          value: `1 ${netName}`,
           chainID,
-          gasLimit,
-          gasPrice: `${fromWei(gasPrice, 'gwei')} Gwei`
+          gasLimit: `21000`,
+          gasPrice
         }
       };
     },
@@ -414,12 +407,6 @@ export default {
         this.alerts = [];
         return;
       }
-      if (!isHex(this.signature)) {
-        this.signatureError = true;
-        this.signatureMessage = ['Must be a valid transaction'];
-        this.validTx = false;
-        return;
-      }
       if (this.signatureError) {
         this.signatureError = false;
         this.signatureMessage = [];
@@ -445,7 +432,18 @@ export default {
      ***********************************************************************************/
     rawData() {
       try {
-        const tx = new Transaction(sanitizeHex(this.signature), {
+        let sig = this.signature;
+        try {
+          sig = JSON.parse(sig);
+        } catch {
+          sig = sanitizeHex(sig);
+        }
+        if (typeof sig === 'object') {
+          sig = {
+            to: sig.to
+          };
+        }
+        const tx = new Transaction(sig, {
           common: commonGenerator(this.network())
         });
         const txValues = tx.toJSON(true);
@@ -571,11 +569,15 @@ export default {
       const reader = new FileReader();
       const self = this;
       reader.onloadend = function ({ target: { result } }) {
-        if (isJsonValue(result)) self.file = JSON.parse(result);
-        if (self.file.rawTransaction)
-          return self.checkTx(self.file.rawTransaction);
-        self.signatureError = true;
-        self.signatureMessage = ['Bad signature upload'];
+        try {
+          self.file = JSON.parse(result);
+          if (!isEmpty(self.file))
+            return self.checkTx(JSON.stringify(self.file));
+          throw Error();
+        } catch {
+          self.signatureError = true;
+          self.signatureMessage = ['Bad signature upload'];
+        }
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
     },
