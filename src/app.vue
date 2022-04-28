@@ -4,6 +4,7 @@
     <module-toast />
     <module-global-modals />
     <module-analytics />
+    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
   </v-app>
 </template>
 
@@ -20,12 +21,21 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
+import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
+import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'App',
   components: {
     ModuleToast,
     ModuleGlobalModals,
-    ModuleAnalytics
+    ModuleAnalytics,
+    ModuleMoonPay
+  },
+  data() {
+    return {
+      moonPayOpen: false
+    };
   },
   computed: {
     ...mapState('custom', ['addressBook']),
@@ -46,6 +56,9 @@ export default {
     });
   },
   mounted() {
+    EventBus.$on(MOONPAY_EVENT, () => {
+      this.openBuy();
+    });
     this.footerHideIntercom();
     this.logMessage();
     this.setOnlineStatus(window.navigator.onLine);
@@ -71,6 +84,9 @@ export default {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
+    openBuy() {
+      this.moonPayOpen = true;
+    },
     logMessage() {
       /* eslint-disable no-console */
       console.log(
