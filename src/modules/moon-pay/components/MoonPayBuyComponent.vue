@@ -584,6 +584,16 @@ export default {
         this.fetchCurrencyData();
       },
       deep: true
+    },
+    amount: {
+      handler: function (newVal) {
+        const simplexMax = this.max.simplex;
+        if (simplexMax.lt(newVal)) {
+          this.loading = true;
+        } else {
+          this.loading = false;
+        }
+      }
     }
   },
   mounted() {
