@@ -61,8 +61,7 @@ export default {
       {
         img: BuyEth,
         title: 'Buy ETH',
-        description:
-          'Purchase Ether with a credit card through our provider Simplex.'
+        description: 'Purchase Ether with a credit card through our providers'
       }
     ]
   })
