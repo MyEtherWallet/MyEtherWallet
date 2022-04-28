@@ -1,7 +1,5 @@
 <template>
   <div>
-    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
-
     <v-navigation-drawer
       v-model="navOpen"
       app
@@ -36,14 +34,17 @@
           <!-- ================================================================================== -->
           <!-- Buy Sell / Send / Swap buttons -->
           <!-- ================================================================================== -->
-          <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
+          <div
+            v-show="online"
+            class="d-flex align-center justify-space-between pt-6 pb-4 mx-2"
+          >
             <v-btn
               color="transparent"
               height="65px"
               dark
               depressed
               x-small
-              @click="openBuy"
+              @click="openMoonpay"
             >
               <div class="text-center" style="min-width: 50px">
                 <img
@@ -274,11 +275,10 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import send from '@/assets/images/icons/icon-send-enable.png';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-// import send from '@/assets/images/icons/icon-send-enable.png';
 import nft from '@/assets/images/icons/icon-nft.png';
-// import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import contract from '@/assets/images/icons/icon-contract-enable.png';
 import message from '@/assets/images/icons/icon-message-enable.png';
@@ -286,8 +286,6 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
-import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
-// import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
@@ -303,31 +301,29 @@ export default {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications,
-    ModuleMoonPay
+    ModuleNotifications
   },
   mixins: [handlerAnalytics],
   data() {
     return {
-      moonPayOpen: false,
       navOpen: null,
       version: VERSION,
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
+      // sectionTwo: [
+      //   {
+      //     title: this.$t('common.settings'),
+      //     icon: settings,
+      //     fn: this.openSettings,
+      //     route: { name: ROUTES_WALLET.SETTINGS.NAME }
+      //   },
+      //   {
+      //     title: this.$t('common.logout'),
+      //     icon: logout,
+      //     fn: this.toggleLogout
+      //   }
+      // ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -339,60 +335,98 @@ export default {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
     sectionOne() {
-      const hasNew = Object.values(dappsMeta).filter(item => {
-        const dateToday = new Date();
-        const millisecondsInDay = 1000 * 60 * 60 * 24;
-        const releaseDate = new Date(item.release);
-        const daysFromRelease =
-          (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-        if (Math.ceil(daysFromRelease) <= 21) {
-          return item;
-        }
-      });
+      if (this.online) {
+        const hasNew = Object.values(dappsMeta).filter(item => {
+          const dateToday = new Date();
+          const millisecondsInDay = 1000 * 60 * 60 * 24;
+          const releaseDate = new Date(item.release);
+          const daysFromRelease =
+            (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+          if (Math.ceil(daysFromRelease) <= 21) {
+            return item;
+          }
+        });
+        return [
+          {
+            title: this.$t('interface.menu.dashboard'),
+            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            icon: dashboard
+          },
+          {
+            title: this.$t('interface.menu.nft'),
+            route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
+            icon: nft
+          },
+          {
+            title: this.$t('interface.menu.dapps'),
+            route: { name: ROUTES_WALLET.DAPPS.NAME },
+            icon: dapp,
+            hasNew: hasNew.length > 0
+          },
+          {
+            title: this.$t('interface.menu.contract'),
+            icon: contract,
+            children: [
+              {
+                title: this.$t('interface.menu.deploy'),
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+              },
+              {
+                title: this.$t('interface.menu.interact-contract'),
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+              }
+            ]
+          },
+          {
+            title: this.$t('interface.menu.message'),
+            icon: message,
+            children: [
+              {
+                title: this.$t('interface.menu.sign-message'),
+                route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+              },
+              {
+                title: this.$t('interface.menu.verify-message'),
+                route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
+              }
+            ]
+          }
+        ];
+      }
       return [
         {
-          title: this.$t('interface.menu.dashboard'),
-          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
-          icon: dashboard
+          title: this.$t('sendTx.send-offline'),
+          route: { name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME },
+          icon: send
         },
         {
-          title: this.$t('interface.menu.nft'),
-          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
-          icon: nft
-        },
+          title: this.$t('interface.menu.sign-message'),
+          route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME },
+          icon: message
+        }
+      ];
+    },
+    sectionTwo() {
+      if (this.online) {
+        return [
+          {
+            title: this.$t('common.settings'),
+            icon: settings,
+            fn: this.openSettings,
+            route: { name: ROUTES_WALLET.SETTINGS.NAME }
+          },
+          {
+            title: this.$t('common.logout'),
+            icon: logout,
+            fn: this.toggleLogout
+          }
+        ];
+      }
+      return [
         {
-          title: this.$t('interface.menu.dapps'),
-          route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp,
-          hasNew: hasNew.length > 0
-        },
-        {
-          title: this.$t('interface.menu.contract'),
-          icon: contract,
-          children: [
-            {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
-            },
-            {
-              title: this.$t('interface.menu.interact-contract'),
-              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
-            }
-          ]
-        },
-        {
-          title: this.$t('interface.menu.message'),
-          icon: message,
-          children: [
-            {
-              title: this.$t('interface.menu.sign-message'),
-              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-            },
-            {
-              title: this.$t('interface.menu.verify-message'),
-              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
-            }
-          ]
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
         }
       ];
     }
@@ -404,18 +438,12 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
-    EventBus.$on(MOONPAY_EVENT, () => {
-      this.openBuy();
-    });
     EventBus.$on(STAKEWISE_EVENT, () => {
       this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
     });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
-    openBuy() {
-      this.moonPayOpen = true;
-    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -424,6 +452,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openMoonpay() {
+      EventBus.$emit(MOONPAY_EVENT);
     },
     openNavigation() {
       this.navOpen = true;

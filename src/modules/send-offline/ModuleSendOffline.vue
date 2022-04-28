@@ -143,9 +143,15 @@
           title="Copy And Continue"
           @click.native="copyAndContinue"
         />
-        <a :href="jsonFile" :download="jsonFileName" rel="noopener noreferrer"
-          >Download</a
-        >
+        <div class="pt-3">
+          <a
+            :href="jsonFile"
+            :download="jsonFileName"
+            rel="noopener noreferrer"
+            class="mew-body"
+            >Download</a
+          >
+        </div>
       </div>
     </mew-overlay>
   </div>
