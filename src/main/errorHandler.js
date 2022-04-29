@@ -4,7 +4,10 @@ const mewApiError = 'Websocket connection failed';
 
 export const knownErrors = {
   'Can\'t assign to property "request"': mewApiError,
-  "Cannot create property 'request'": mewApiError
+  "Cannot create property 'request'": mewApiError,
+  "CONNECTION ERROR: Couldn't connect to node on WS":
+    "Couldn't connect to WS node. Please refresh and try again.",
+  'connection not open on send': mewApiError
 };
 
 const handleError = err => {
