@@ -32,7 +32,7 @@
           />
         </v-col>
       </v-row>
-      <v-row v-else dense>
+      <v-row v-else dense class="block-container">
         <v-col class="d-flex">
           <img :src="img" width="48" height="48" class="mr-6" />
           <div>
@@ -120,32 +120,33 @@
             </div>
           </div>
         </v-col>
+        <v-slide-x-transition v-if="!isLoading">
+          <div
+            v-if="showRemove"
+            class="d-flex align-center justify-space-between remove-container"
+          >
+            <div class="font-weight-bold">Remove?</div>
+            <div class="d-flex">
+              <mew-button
+                title="Keep"
+                btn-style="transparent"
+                btn-size="large"
+                color-theme="error"
+                @click.native="hideRemove"
+              />
+              <mew-button
+                title="Remove"
+                btn-style="background"
+                btn-size="large"
+                color-theme="error"
+                @click.native="removeBlock"
+              />
+            </div>
+          </div>
+        </v-slide-x-transition>
       </v-row>
     </div>
-    <v-slide-x-transition v-if="!isLoading">
-      <div
-        v-if="showRemove"
-        class="d-flex py-6 align-center justify-space-between remove-container-border"
-      >
-        <div class="font-weight-bold">Remove?</div>
-        <div class="d-flex">
-          <mew-button
-            title="Keep"
-            btn-style="transparent"
-            btn-size="large"
-            color-theme="error"
-            @click.native="hideRemove"
-          />
-          <mew-button
-            title="Remove"
-            btn-style="background"
-            btn-size="large"
-            color-theme="error"
-            @click.native="removeBlock"
-          />
-        </div>
-      </div>
-    </v-slide-x-transition>
+
     <block-quick-view-popup
       :show-block="showBlock"
       :block-handler="blockHandler"
@@ -333,7 +334,13 @@ export default {
   padding: 2px;
 }
 
-.remove-container-border {
-  border-top: 1px solid var(--v-greyMedium-base);
+.remove-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+.block-container {
+  position: relative;
 }
 </style>
