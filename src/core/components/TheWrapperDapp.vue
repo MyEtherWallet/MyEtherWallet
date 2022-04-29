@@ -79,6 +79,7 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
+      show-arrows
       color="blue500"
       height="46"
       active-class="blue500--text"
@@ -87,8 +88,8 @@
         v-for="(item, index) in tabItems"
         :key="item.route.name"
         :class="[
-          'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
-          { 'ml-3 ml-md-13': index === 0 },
+          'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
+          { 'ml-md-13': index === 0 },
           { 'mr-3 mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"

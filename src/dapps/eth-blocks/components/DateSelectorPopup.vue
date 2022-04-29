@@ -1,7 +1,7 @@
 <template>
   <div>
     <mew-popup
-      max-width="615px"
+      max-width="690px"
       :show="showPopup"
       title="Search ETH Blocks by date and time"
       :has-buttons="false"
