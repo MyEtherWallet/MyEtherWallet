@@ -50,6 +50,10 @@ const goChain = {
   path: "m/44'/6060'/0'/0",
   label: 'GoChain'
 };
+const xdcnetwork = {
+  path: "m/44'/550'/0'/0",
+  label: 'XDC Network'
+};
 const eosClassic = {
   path: "m/44'/2018'/0'/0",
   label: 'EOS Classic'
@@ -172,6 +176,7 @@ export {
   ethereumSocial,
   musicoin,
   goChain,
+  xdcnetwork,
   eosClassic,
   akroma,
   etherSocialNetwork,
