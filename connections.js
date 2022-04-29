@@ -22,6 +22,7 @@ module.exports = [
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
+  'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
   // nodes
   'https://nodes.mewapi.io:443',

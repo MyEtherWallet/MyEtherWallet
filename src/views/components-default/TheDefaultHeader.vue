@@ -35,11 +35,7 @@
             :list-obj="menuObj"
             @goToPage="routeTo"
           />
-          <a
-            :href="swapLink"
-            target="_blank"
-            class="white--text text-decoration--none"
-          >
+          <a class="white--text text-decoration--none" @click="openMoonpay">
             {{ $t('header.buy-eth') }}
           </a>
         </v-col>
@@ -56,10 +52,12 @@ import mewTools from '@/components/mew-tools/MewTools';
 import TheDefaultMobileNavigation from './TheDefaultMobileNavigation';
 import { ROUTES_HOME, ROUTES_WALLET } from '@/core/configs/configRoutes';
 import { mapGetters } from 'vuex';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 
 export default {
   name: 'TheDefaultHeader',
   components: { mewTools, TheDefaultMobileNavigation },
+  mixins: [buyMore],
   data: () => ({
     menuObj: {
       name: 'Wallet actions',
