@@ -24,10 +24,22 @@
     />
     <div class="mb-4 mt-2">{{ nft.name }}</div>
     <module-address-book @setAddress="setAddress" />
+    <span
+      v-if="!enoughFunds && showBalanceError"
+      class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"
+      >You do not have enough ETH to send.
+      <a
+        href="https://ccswap.myetherwallet.com/#/"
+        target="_blank"
+        class="link"
+      >
+        <u>Buy More</u>
+      </a>
+    </span>
     <mew-button
       class="mt-1 mb-3"
       :has-full-width="false"
-      :disabled="disabled"
+      :disabled="disabled || !enoughFunds"
       title="Send"
       btn-size="large"
       color-theme="primary"
@@ -80,6 +92,14 @@ export default {
       type: String
     },
     disabled: {
+      default: false,
+      type: Boolean
+    },
+    enoughFunds: {
+      default: false,
+      type: Boolean
+    },
+    showBalanceError: {
       default: false,
       type: Boolean
     }

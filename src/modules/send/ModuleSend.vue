@@ -253,8 +253,7 @@ export default {
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink',
-      'gasPriceByType'
+      'swapLink'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -554,6 +553,10 @@ export default {
     },
     network() {
       this.clear();
+    },
+    address() {
+      this.clear();
+      this.debounceAmountError('0');
     }
   },
   mounted() {

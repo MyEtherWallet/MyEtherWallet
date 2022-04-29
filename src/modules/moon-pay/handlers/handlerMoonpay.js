@@ -1,18 +1,15 @@
 import { sha3 } from 'web3-utils';
 import axios from 'axios';
 const API = 'https://mainnet.mewwallet.dev';
-const MOONPAY = 'MOONPAY';
 
 export default class MoonPayHandler {
-  constructor(address) {
-    this.address = address;
-    const id = sha3(address);
-    this.id = `WEB|${id.substring(0, 42)}`;
-  }
+  constructor() {}
 
-  buy(tokenSymbol, fiatCurrency, amount) {
+  buy(tokenSymbol, fiatCurrency, amount, address) {
+    const hash = sha3(address);
+    const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
-      let link = `${API}/v3/purchase/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}`;
+      let link = `${API}/v3/purchase/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&fiatCurrency=${fiatCurrency}`;
       if (amount) {
         link += `${link}&requestedAmount=${amount}`;
       }
@@ -23,10 +20,12 @@ export default class MoonPayHandler {
     });
   }
 
-  sell(tokenSymbol, amount) {
+  sell(tokenSymbol, amount, address) {
+    const hash = sha3(address);
+    const id = `WEB|${hash.substring(0, 42)}`;
     return new Promise(resolve => {
       const parsedUrl = encodeURI(
-        `${API}/v3/sell/moonpay/order?address=${this.address}&id=${this.id}&cryptoCurrency=${tokenSymbol}&requestedAmount=${amount}`
+        `${API}/v3/sell/moonpay/order?address=${address}&id=${id}&cryptoCurrency=${tokenSymbol}&requestedAmount=${amount}`
       );
       // eslint-disable-next-line
       window.open(parsedUrl, '_blank');
@@ -39,8 +38,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/purchase/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.find(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const supportedFiat = res.data;
+          resolve(supportedFiat);
         })
         .catch(reject);
     });
@@ -62,8 +61,8 @@ export default class MoonPayHandler {
       axios
         .get(`${API}/v3/sell/providers/web?iso=us&cryptoCurrency=${symbol}`)
         .then(res => {
-          const moonpay = res.data.find(item => item.name === MOONPAY);
-          resolve(moonpay);
+          const supportedFiat = res.data;
+          resolve(supportedFiat);
         })
         .catch(reject);
     });

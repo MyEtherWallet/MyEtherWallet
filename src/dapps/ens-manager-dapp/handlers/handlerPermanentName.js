@@ -33,7 +33,7 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   transfer(toAddress) {
-    const transferMethod = this.registrarContract.methods.transferFrom(
+    const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,
       toAddress,
       this.labelHash
@@ -42,7 +42,6 @@ export default class PermanentNameModule extends ENSManagerInterface {
       to: this.registrarAddress,
       from: this.address
     };
-
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
     });
