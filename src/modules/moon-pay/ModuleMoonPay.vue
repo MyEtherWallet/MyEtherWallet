@@ -10,47 +10,46 @@
       scrollable
       has-body-content
     >
-      <mew-tabs
-        v-if="open"
-        :items="tabItems"
-        :active-tab="activeTab"
-        active-color="greenPrimary"
-        has-underline
-        class="pt-3"
-        @onTab="onTab"
-      >
-        <template #tabContent1>
+      <div>
+        <div v-if="inWallet">
+          <mew-tabs
+            v-if="open"
+            :items="tabItems"
+            :active-tab="activeTab"
+            active-color="greenPrimary"
+            has-underline
+            class="pt-3"
+            @onTab="onTab"
+          >
+            <template #tabContent1>
+              <buy-eth-component
+                :moonpay-handler="moonpayHandler"
+                :close="close"
+                :tab="activeTab"
+                :default-currency="defaltCurrency"
+                :in-wallet="inWallet"
+                @selectedCurrency="setSelectedCurrency"
+              />
+            </template>
+            <template #tabContent2>
+              <sell-eth-component
+                :moonpay-handler="moonpayHandler"
+                :close="close"
+                :tab="activeTab"
+                :default-currency="defaltCurrency"
+                @selectedCurrency="setSelectedCurrency"
+              />
+            </template>
+          </mew-tabs>
+        </div>
+        <div v-else>
           <buy-eth-component
             :moonpay-handler="moonpayHandler"
             :close="close"
             :tab="activeTab"
             :default-currency="defaltCurrency"
+            :in-wallet="inWallet"
             @selectedCurrency="setSelectedCurrency"
-          />
-        </template>
-        <template #tabContent2>
-          <sell-eth-component
-            :moonpay-handler="moonpayHandler"
-            :close="close"
-            :tab="activeTab"
-            :default-currency="defaltCurrency"
-            @selectedCurrency="setSelectedCurrency"
-          />
-        </template>
-      </mew-tabs>
-      <!-- ============================================================== -->
-      <!-- Powered by -->
-      <!-- ============================================================== -->
-      <div class="py-8">
-        <div class="text-center mb-3 textLight--text">
-          Moonpay.com will open on a new tab to continue
-        </div>
-        <div class="mew-body d-flex justify-center align-center textDark--text">
-          Powered By
-          <img
-            src="@/modules/moon-pay/assets/moonpay-logo.svg"
-            width="100px"
-            class="ml-1"
           />
         </div>
       </div>
@@ -90,16 +89,22 @@ export default {
     ...mapState('wallet', ['address', 'instance']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('global', ['network']),
+    inWallet() {
+      return (
+        this.$route.fullPath.includes('/wallet') && !this.$route.meta.noAuth
+      );
+    },
     defaltCurrency() {
-      if (isEmpty(this.selectedCurrency) && !this.network.type.isTestNetwork) {
+      if (
+        isEmpty(this.selectedCurrency) &&
+        this.supportedBuy &&
+        this.tokensList.length > 0
+      ) {
         return this.tokensList.filter(
           item =>
             item.contract.toLowerCase() === MAIN_TOKEN_ADDRESS.toLowerCase()
         )[0];
-      } else if (
-        isEmpty(this.selectedCurrency) &&
-        this.network.type.isTestNetwork
-      ) {
+      } else if (isEmpty(this.selectedCurrency) || !this.supportedBuy) {
         return {
           decimals: 18,
           img: 'https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg',
@@ -107,11 +112,18 @@ export default {
           subtext: 'Ethereum',
           value: 'Ethereum',
           symbol: 'ETH',
-          network: 1,
+          network: 'ETH',
           contract: MAIN_TOKEN_ADDRESS
         };
       }
       return this.selectedCurrency;
+    },
+    supportedBuy() {
+      return (
+        this.network.type === 'ETH' ||
+        this.network.type === 'BSC' ||
+        this.network.type === 'MATIC'
+      );
     },
     leftBtn() {
       return {
@@ -119,12 +131,19 @@ export default {
       };
     },
     tabItems() {
+      if (this.inWallet) {
+        return [
+          {
+            name: `Buy`
+          },
+          {
+            name: `Sell`
+          }
+        ];
+      }
       return [
         {
-          name: `Buy`
-        },
-        {
-          name: `Sell`
+          name: 'Buy'
         }
       ];
     }
@@ -133,12 +152,11 @@ export default {
     open(newVal) {
       this.isOpen = newVal;
       if (newVal) {
-        this.moonpayHandler = new handler(this.address);
+        this.moonpayHandler = new handler();
       }
       this.selectedCurrency = {};
     },
-    address(newVal) {
-      this.moonpayHandler = new handler(newVal);
+    address() {
       this.selectedCurrency = {};
     }
   },
