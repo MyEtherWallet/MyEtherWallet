@@ -294,7 +294,21 @@ export default {
       );
     },
     error() {
-      return this.alerts.filter(a => a.severity === 'error').length;
+      return this.alerts.filter(a => a.severity === 'error').length
+        ? true
+        : false;
+    },
+    getRawTransaction() {
+      let sig = this.signature;
+      try {
+        sig = JSON.parse(sig);
+        if (!isEmpty(sig)) {
+          if (sig.rawTransaction) sig = sanitizeHex(sig.rawTransaction);
+        }
+      } catch {
+        sig = sanitizeHex(sig);
+      }
+      return sig;
     }
   },
   methods: {
@@ -411,6 +425,7 @@ export default {
         this.signatureError = false;
         this.signatureMessage = [];
       }
+      if (this.alerts.length) this.alerts = [];
       this.setRawTransaction();
       this.setRawDetails();
     },
@@ -432,18 +447,7 @@ export default {
      ***********************************************************************************/
     rawData() {
       try {
-        let sig = this.signature;
-        try {
-          sig = JSON.parse(sig);
-        } catch {
-          sig = sanitizeHex(sig);
-        }
-        if (typeof sig === 'object') {
-          sig = {
-            to: sig.to
-          };
-        }
-        const tx = new Transaction(sig, {
+        const tx = new Transaction(this.getRawTransaction, {
           common: commonGenerator(this.network())
         });
         const txValues = tx.toJSON(true);
@@ -571,8 +575,10 @@ export default {
       reader.onloadend = function ({ target: { result } }) {
         try {
           self.file = JSON.parse(result);
-          if (!isEmpty(self.file))
-            return self.checkTx(JSON.stringify(self.file));
+          if (!isEmpty(self.file)) {
+            if (self.file.rawTransaction)
+              return self.checkTx(self.file.rawTransaction);
+          }
           throw Error();
         } catch {
           self.signatureError = true;
@@ -586,7 +592,7 @@ export default {
       this.dialog = true;
       this.txLoading = true;
       eth
-        .sendSignedTransaction(sanitizeHex(this.signature))
+        .sendSignedTransaction(this.getRawTransaction)
         .once('transactionHash', hash => {
           this.txHash = hash;
           this.clear();
