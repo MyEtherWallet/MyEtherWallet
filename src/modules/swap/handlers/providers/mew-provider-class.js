@@ -133,7 +133,16 @@ class MEWPClass {
   }
   async executeTrade(tradeObj, confirmInfo) {
     const from = await this.web3.eth.getCoinbase();
-    const gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
+    let gasPrice = tradeObj.gasPrice ? tradeObj.gasPrice : null;
+    let gweiPrice = this.web3.utils.fromWei(gasPrice, 'gwei');
+    /* eslint-disable no-console */
+    if (confirmInfo.gasPriceType == 'economy' && this.chain == 'MATIC') {
+      console.log(`economy gas: ${gweiPrice}`);
+      gasPrice = BigNumber(gasPrice).plus(100).toString();
+      gweiPrice = this.web3.utils.fromWei(gasPrice, 'gwei');
+      console.log(`new gas: ${gweiPrice}`);
+    }
+    /* eslint-enable no-console */
     if (tradeObj.transactions.length === 1) {
       return new Promise((resolve, reject) => {
         this.web3.eth
