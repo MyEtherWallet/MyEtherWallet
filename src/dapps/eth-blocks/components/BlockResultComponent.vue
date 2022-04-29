@@ -189,6 +189,10 @@ export default {
     hasBorder: {
       type: Boolean,
       default: true
+    },
+    removeMe: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -289,6 +293,7 @@ export default {
     },
     removeBlock() {
       const block = this.blockHandler.blockNumber.toString();
+      this.removeMe(this.blockHandler.blockNumber.toString());
       this.isTestNetwork
         ? this.removeTestBlockFromCart(block)
         : this.removeBlockFromCart(block);

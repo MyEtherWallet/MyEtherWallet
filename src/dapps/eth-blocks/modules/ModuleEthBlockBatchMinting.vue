@@ -12,7 +12,7 @@
             </div>
           </div>
         </div>
-        <div v-if="isLoading">
+        <div v-if="isLoading && !blocks.length">
           <block-result-component
             v-for="(block, idx) in 3"
             :key="`loadingBlockBatchResult` + block"
@@ -37,6 +37,7 @@
             :block-handler="block"
             :is-loading="false"
             :show-add="false"
+            :remove-me="removeMe"
             :has-border="idx != blocks.length - 1"
           />
         </div>
@@ -88,6 +89,7 @@
             :title="hasEnoughEth ? 'Proceed to Minting' : 'Not Enough Eth'"
             has-full-width
             :disabled="!hasEnoughEth || isLoading || isCartEmpty"
+            :loading="isLoading"
             @click.native="mintBlocks"
           />
         </div>
@@ -230,7 +232,6 @@ export default {
     async fetchBlocks() {
       this.isLoading = true;
       const newResultArray = [];
-      this.blocks = [];
       const cart = this.isTestNetwork ? this.cart.RIN : this.cart.ETH;
       this.totalResult = cart.filter(item => {
         if (!item.hasOwner) return item;
@@ -261,9 +262,15 @@ export default {
           this.setupMulticall();
         });
       } catch (e) {
+        ``;
         this.isLoading = false;
         Toast(e, {}, ERROR);
       }
+    },
+    removeMe(blockNumber) {
+      return (this.blocks = this.blocks.filter(block => {
+        if (block.blockNumber.toString() !== blockNumber) return block;
+      }));
     },
     openSettings() {
       EventBus.$emit('openSettings');
