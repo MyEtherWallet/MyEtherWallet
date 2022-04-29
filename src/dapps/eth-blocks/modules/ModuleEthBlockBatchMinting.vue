@@ -85,7 +85,7 @@
             </div>
           </div>
           <mew-button
-            title="Proceed to Minting"
+            :title="hasEnoughEth ? 'Proceed to Minting' : 'Not Enough Eth'"
             has-full-width
             :disabled="!hasEnoughEth || isLoading || isCartEmpty"
             @click.native="mintBlocks"
