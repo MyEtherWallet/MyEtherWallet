@@ -1,11 +1,12 @@
-import { ETC, ETH, ROP, GO } from '@/utils/networks/types';
+import { ETC, ETH, ROP, GO, XDC } from '@/utils/networks/types';
 import {
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
   ropsten,
-  goChain
+  goChain,
+  xdcnetwork
 } from '@/modules/access-wallet/hardware/handlers/configs/configPaths';
 const appList = [
   {
@@ -23,6 +24,10 @@ const appList = [
   {
     network: GO,
     paths: [goChain]
+  },
+  {
+    network: XDC,
+    paths: [xdcnetwork]
   }
 ];
 export default appList;
