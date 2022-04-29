@@ -108,7 +108,7 @@
     <div v-if="notEnoughFunds || noFundsForRegFees">
       <span class="balance-error d-flex mt-5 justify-center align-center">
         Not enough balance:
-        <a target="_blank" class="link" @click="buyMoreEth">
+        <a target="_blank" class="link" @click="openMoonpay">
           <u>Buy More Eth</u>
         </a>
       </span>
@@ -134,10 +134,10 @@
 </template>
 
 <script>
-import { EventBus } from '@/core/plugins/eventBus';
-import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 export default {
   name: 'EnsRegister',
+  mixins: [buyMore],
   props: {
     notEnoughFunds: {
       default: false,
@@ -243,11 +243,6 @@ export default {
   },
   destroyed() {
     clearInterval(this.timer);
-  },
-  methods: {
-    buyMoreEth() {
-      EventBus.$emit(MOONPAY_EVENT);
-    }
   }
 };
 </script>

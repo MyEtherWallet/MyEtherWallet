@@ -637,11 +637,6 @@ export default {
       } catch (e) {
         Toast(e, {}, ERROR);
       }
-      const int = setInterval(() => {
-        if (this.nameHandler.registrarControllerContract !== null) {
-          clearInterval(int);
-        }
-      }, 3000);
     },
     closeRegister() {
       this.onRegister = false;
