@@ -110,20 +110,23 @@ const setWeb3Instance = function (
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
+        const body = JSON.stringify({
+          jsonrpc: '2.0',
+          id: 0,
+          method: 'eth_estimateGasList',
+          params: [txs]
+        });
         const { result } = await fetch('https://estimategas.mewapi.io', {
           method: 'POST',
-          body: JSON.stringify({
-            jsonrpe: '2.0',
-            id: 0,
-            method: 'eth_estimateGasList',
-            params: txs
-          }),
+          body: body,
           headers: {
             'Content-Type': 'application/json'
           }
-        }).then(res => {
-          return res.json();
-        });
+        })
+          .then(res => {
+            return res.json();
+          })
+          .catch(reject);
         resolve(result);
       } catch (e) {
         reject(e);

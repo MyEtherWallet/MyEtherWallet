@@ -7,7 +7,7 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
-import { toBN } from 'web3-utils';
+import { toBN, toHex } from 'web3-utils';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -47,8 +47,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const baseTx = {
       to: this.registrarAddress,
       from: this.address,
-      value: 0,
-      gasPrice: this.gasPriceByType(this.gasPriceType)()
+      value: '0x0',
+      gasPrice: toHex(this.gasPriceByType(this.gasPriceType)())
     };
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
@@ -61,20 +61,24 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async estimateGas(toAddress) {
-    const txns = this.getTransactions(toAddress);
-    let gas = 0;
-    try {
-      gas = await this.web3.mew.estimateGasList(txns);
-    } catch (e) {
-      return new Promise(resolve => {
-        resolve(0);
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      const txns = this.getTransactions(toAddress).map(item => {
+        delete item['gasPrice'];
+        return item;
       });
-    }
-    const gasPrice = this.gasPriceByType(this.gasPriceType)();
-    const txFee = toBN(gasPrice).muln(gas);
-    const calculatedFee = toBN(txFee);
-    return new Promise(resolve => {
-      resolve(calculatedFee);
+      try {
+        const gas = await this.web3.mew.estimateGasList(txns);
+        const gasTotal = gas.reduce((previousVal, currentVal) => {
+          return toBN(previousVal).add(toBN(currentVal));
+        }, 0);
+        const gasPrice = this.gasPriceByType(this.gasPriceType)();
+        const txFee = toBN(gasPrice).mul(gasTotal);
+        const calculatedFee = toBN(txFee);
+        resolve(calculatedFee);
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 
