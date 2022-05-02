@@ -24,7 +24,7 @@
   "team": "Team",
   "feedback": "Feedback",
   "privacy": "Privacy",
-  "copyright": "© 2020 MyEtherWallet. All Rights reserved.",
+  "copyright": "© {year} MyEtherWallet. All Rights reserved.",
   "pricing-p": "Pricing taken from",
   "advanced": "Advanced",
   "send-offline": "Send Offline Helper",
@@ -37,6 +37,6 @@
     "ether": "Ethereum Donation",
     "bitcoin": "Bitcoin Donation"
   },
-  "coingecko": "Coingecko",
+  "coingecko": "CoinGecko",
   "view-wallet-info": "View Wallet Info"
 }
