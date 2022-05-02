@@ -469,7 +469,7 @@ export default {
         .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;
-          this.fetchedData = Object.assign({}, res);
+          this.fetchedData = Object.assign({}, ...res);
         })
         .catch(e => {
           this.loading = false;
