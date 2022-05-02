@@ -68,14 +68,19 @@ export default class PermanentNameModule extends ENSManagerInterface {
         return item;
       });
       try {
+        console.log(txns);
         const gas = await this.web3.mew.estimateGasList(txns);
-        const gasTotal = gas.reduce((previousVal, currentVal) => {
-          return toBN(previousVal).add(toBN(currentVal));
-        }, 0);
+        console.log(gas);
+        // const gasTotal = gas.reduce((previousVal, currentVal) => {
+        //   return toBN(previousVal).add(toBN(currentVal));
+        // }, 0);
+        let gasTotal = 0;
+        for (let i = 0; i < gas.length; i++) {
+          gasTotal += gas[i];
+        }
         const gasPrice = this.gasPriceByType(this.gasPriceType)();
         const txFee = toBN(gasPrice).mul(gasTotal);
-        const calculatedFee = toBN(txFee);
-        resolve(calculatedFee);
+        resolve(txFee);
       } catch (e) {
         reject(e);
       }
