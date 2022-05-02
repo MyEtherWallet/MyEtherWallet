@@ -243,7 +243,7 @@ export default {
           type: WALLET_TYPES.LEDGER
         },
         {
-          label: 'LedgerX',
+          label: 'Ledger Nano X',
           icon: require('@/assets/images/icons/hardware-wallets/icon-xwallet.svg'),
           ble: true,
           type: WALLET_TYPES.LEDGER
