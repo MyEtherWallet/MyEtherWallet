@@ -87,7 +87,7 @@
                 : 'py-2',
               'mew-body textMedium--text'
             ]"
-            >Enjoy 0.9% fee when you select ‘Bank account’ as payment
+            >Enjoy 0.7% fee when you select ‘Bank account’ as payment
             method.</span
           >
           <mew-button
@@ -142,7 +142,7 @@ export default {
       return eventDate.diff(todaysDate, 'days');
     },
     hoursLeft() {
-      const today = this.daysLeft === 0 ? moment(MOONPAY_OFFER_END) : moment();
+      const today = moment();
       const tomorrowsDate = moment().add(1, 'days').startOf('day');
       const duration = moment.duration(tomorrowsDate.diff(today));
       return Math.ceil(duration.asHours());

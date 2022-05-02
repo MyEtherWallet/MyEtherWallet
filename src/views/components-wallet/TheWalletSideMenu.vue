@@ -1,7 +1,5 @@
 <template>
   <div>
-    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
-
     <v-navigation-drawer
       v-model="navOpen"
       app
@@ -43,7 +41,7 @@
               dark
               depressed
               x-small
-              @click="openBuy"
+              @click="openMoonpay"
             >
               <div class="text-center" style="min-width: 50px">
                 <img
@@ -223,7 +221,12 @@
           </div>
           <div class="d-flex align-center justify-space-between">
             <!-- <theme-switch /> -->
-            <div class="greyPrimary--text">v{{ version }}</div>
+            <a
+              :href="`https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`"
+              target="_blank"
+              class="greyPrimary--text"
+              >v{{ version }}</a
+            >
           </div>
         </div>
       </v-list>
@@ -276,9 +279,7 @@ import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
-// import send from '@/assets/images/icons/icon-send-enable.png';
 import nft from '@/assets/images/icons/icon-nft.png';
-// import swap from '@/assets/images/icons/icon-swap-enable.png';
 import dapp from '@/assets/images/icons/icon-dapp-center-enable.png';
 import contract from '@/assets/images/icons/icon-contract-enable.png';
 import message from '@/assets/images/icons/icon-message-enable.png';
@@ -286,8 +287,6 @@ import settings from '@/assets/images/icons/icon-setting-enable.png';
 import logout from '@/assets/images/icons/icon-logout-enable.png';
 import BalanceCard from '@/modules/balance/ModuleBalanceCard';
 import ModuleSettings from '@/modules/settings/ModuleSettings';
-import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
-// import ThemeSwitch from '@/components/theme-switch/ThemeSwitch';
 import { EventBus } from '@/core/plugins/eventBus';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import { ETH, BSC, MATIC } from '@/utils/networks/types';
@@ -295,18 +294,19 @@ import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import dappsMeta from '@/dapps/metainfo-dapps';
 import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { STAKEWISE_EVENT } from '@/dapps/stakewise/helpers/index';
+import { STAKEWISE_ROUTES } from '@/dapps/stakewise/configsRoutes';
+
 export default {
   components: {
     AppBtnMenu,
     BalanceCard,
     ModuleSettings,
-    ModuleNotifications,
-    ModuleMoonPay
+    ModuleNotifications
   },
   mixins: [handlerAnalytics],
   data() {
     return {
-      moonPayOpen: false,
       navOpen: null,
       version: VERSION,
       background: background,
@@ -401,15 +401,12 @@ export default {
     EventBus.$on('openSettings', () => {
       this.openSettings();
     });
-    EventBus.$on(MOONPAY_EVENT, () => {
-      this.openBuy();
+    EventBus.$on(STAKEWISE_EVENT, () => {
+      this.$router.push({ name: STAKEWISE_ROUTES.CORE.NAME });
     });
   },
   methods: {
     ...mapActions('wallet', ['removeWallet']),
-    openBuy() {
-      this.moonPayOpen = true;
-    },
     shouldShow(route) {
       if (this.routeNetworks[route.name]) {
         for (const net of this.routeNetworks[route.name]) {
@@ -418,6 +415,9 @@ export default {
         return false;
       }
       return true;
+    },
+    openMoonpay() {
+      EventBus.$emit(MOONPAY_EVENT);
     },
     openNavigation() {
       this.navOpen = true;

@@ -247,14 +247,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'web3', 'address']),
+    ...mapState('wallet', ['address', 'instance']),
     ...mapState('global', ['preferredCurrency']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
       'isEthNetwork',
-      'swapLink',
-      'gasPriceByType'
+      'swapLink'
     ]),
     ...mapGetters('wallet', ['balanceInETH', 'tokensList']),
     ...mapGetters('custom', ['hasCustom', 'customTokens']),
@@ -334,6 +333,9 @@ export default {
       const imgs = tokensList.map(item => {
         item.totalBalance = this.currencyFormatter(item.usdBalance);
         item.tokenBalance = item.balancef;
+        item.subtext = item.name;
+        item.value = item.name;
+        item.name = item.symbol;
         return item.img;
       });
       BigNumber(this.balanceInETH).lte(0)
@@ -551,6 +553,10 @@ export default {
     },
     network() {
       this.clear();
+    },
+    address() {
+      this.clear();
+      this.debounceAmountError('0');
     }
   },
   mounted() {
@@ -579,7 +585,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(value);
     },
     /**
@@ -700,7 +706,7 @@ export default {
         })
         .catch(error => {
           this.clear();
-          this.gasEstimationError = error.message;
+          this.instance.errorHandler(error.message);
         });
     },
     prefillForm() {

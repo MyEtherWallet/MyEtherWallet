@@ -62,7 +62,7 @@ const parseABI = json => {
         return value;
       }
     }
-    return JSON.parse(json);
+    return false;
   } catch (e) {
     if (Array.isArray(json)) {
       if (json.length > 0) {

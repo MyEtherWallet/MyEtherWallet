@@ -175,7 +175,7 @@
                       collateral in DeFi apps, etc. There are multiple kinds of
                       wrapped Bitcoins, but they roughly do the same thing.
                       <a
-                        href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
+                        :href="getArticle('mv-btc-to-eth-mew-swap')"
                         target="_blank"
                       >
                         Learn more about Wrapped Bitcoin.
@@ -402,6 +402,7 @@ export default {
       'contractToToken',
       'getCoinGeckoTokenById'
     ]),
+    ...mapGetters('article', ['getArticle']),
     /**
      * @returns string
      * is used as a label for module-address-book
@@ -618,14 +619,14 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.name = token.symbol;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             foundToken.contract = token.contract;
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             foundToken.isEth = token.isEth;
             foundToken.name = token.symbol;
             return foundToken;
@@ -660,19 +661,24 @@ export default {
             return item;
         }
       });
-      let nonChainTokens = this.availableTokens.fromTokens.filter(item => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext
-        ) {
+      const nonChainTokens = this.availableTokens.fromTokens
+        .filter(item => {
+          if (
+            item.hasOwnProperty('isEth') &&
+            !item.isEth &&
+            item.name &&
+            item.symbol &&
+            item.subtext
+          ) {
+            return item;
+          }
+        })
+        .map(item => {
+          delete item['tokenBalance'];
+          delete item['totalBalance'];
           return item;
-        }
-      });
+        });
       tradebleWalletTokens = this.formatTokensForSelect(tradebleWalletTokens);
-      nonChainTokens = this.formatTokensForSelect(nonChainTokens);
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -715,6 +721,9 @@ export default {
           foundToken.contract = token.contract;
           foundToken.price = this.currencyFormatter(foundToken.pricef);
           foundToken.isEth = token.isEth;
+          foundToken.subtext = foundToken.name;
+          foundToken.value = foundToken.name;
+          foundToken.name = foundToken.symbol;
           return foundToken;
         }
         token.price = '';
@@ -737,16 +746,17 @@ export default {
         .map(token => {
           if (token.cgid) {
             const foundToken = this.getCoinGeckoTokenById(token.cgid);
-            foundToken.price = this.currencyFormatter(foundToken.pricef);
+            foundToken.price = `$${foundToken.pricef}`;
             return Object.assign(token, foundToken);
           }
           const foundToken = this.contractToToken(token.contract);
           if (foundToken) {
             token = Object.assign(token, foundToken);
-            token.price = this.currencyFormatter(token.pricef);
+            token.price = `$${token.pricef}`;
+          } else {
+            token.price = '0.00';
           }
           const name = token.name;
-          token.price = '0.00';
           token.subtext = name;
           token.value = name;
           token.name = token.symbol;
@@ -983,6 +993,7 @@ export default {
         if (this.$refs.toAddressInput) {
           this.$refs.toAddressInput.clear();
         }
+        this.selectedProvider = {};
       }
     );
   },
@@ -1080,21 +1091,20 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: this.preferredCurrency,
-        currencyDisplay: 'narrowSymbol'
+        currencyDisplay: 'symbol'
       }).format(val.replace(',', ''));
     },
     formatTokensForSelect(tokens) {
       if (!Array.isArray(tokens)) return [];
       return tokens.map(t => {
         t.totalBalance = t.hasOwnProperty('usdBalancef')
-          ? this.currencyFormatter(t.usdBalancef)
+          ? `$${t.usdBalancef}`
           : '0.00';
-        t.tokenBalance = t.hasOwnProperty('balancef')
-          ? this.currencyFormatter(t.balancef)
-          : '0.00';
+        t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
         t.price = t.hasOwnProperty('pricef')
           ? this.currencyFormatter(t.pricef)
           : '0.00';
+        t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
         return t;
       });
     },
@@ -1401,7 +1411,15 @@ export default {
       if (this.toTokenType.isEth) {
         return MultiCoinValidator.validate(address, 'Ethereum');
       }
-      return MultiCoinValidator.validate(address, this.toTokenType.name);
+      try {
+        return MultiCoinValidator.validate(address, this.toTokenType.name);
+      } catch (e) {
+        return this.swapper.isValidToAddress({
+          provider: 'changelly',
+          toT: this.toTokenType,
+          address
+        });
+      }
     },
     isValidRefundAddress(address) {
       try {

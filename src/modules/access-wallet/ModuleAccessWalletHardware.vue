@@ -521,6 +521,7 @@ export default {
           this.reset();
         } else if (this.step === 2) {
           this.step = 1;
+          this.walletType = '';
         } else {
           this.hwWalletInstance = {};
           if (this.onLedger) {
@@ -583,7 +584,7 @@ export default {
         ? this.selectedPath.hasOwnProperty('value')
           ? this.selectedPath.value
           : this.selectedPath
-        : this.paths[0];
+        : this.paths[0].value;
       this.wallets[this.walletType]
         .create(path)
         .then(_hwWallet => {

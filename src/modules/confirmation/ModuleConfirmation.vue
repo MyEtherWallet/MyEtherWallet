@@ -39,7 +39,7 @@
             reverse your transaction once its submitted. You will still be
             charged gas fee even if the transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5380674-my-transaction-failed-why-was-i-charged"
+              :href="getArticle('my-txn-failed-charged')"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -84,7 +84,7 @@
             reversing a transaction cannot be guaranteed. You will still be
             charged gas fee even if transaction fails.
             <a
-              href="https://help.myetherwallet.com/en/articles/5461501-my-transaction-failed-why-was-i-charged"
+              :href="getArticle('my-txn-failed-charged')"
               target="_blank"
               rel="noopener noreferrer"
               >Learn more.</a
@@ -326,6 +326,7 @@ export default {
     ]),
     ...mapGetters('external', ['fiatValue']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
     txTo() {
       if (!this.isBatch)
@@ -376,9 +377,8 @@ export default {
         const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
         return fromWei(hexToNumberString(gasPrice), 'gwei');
       }
-      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        return acc.plus(currentValue.gasPrice);
-      }, BigNumber(0));
+
+      const batchGasPrice = this.unsignedTxArr[0].gasPrice;
       return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {
