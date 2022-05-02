@@ -377,9 +377,8 @@ export default {
         const gasPrice = this.tx.gasPrice ? this.tx.gasPrice : '0x';
         return fromWei(hexToNumberString(gasPrice), 'gwei');
       }
-      const batchGasPrice = this.unsignedTxArr.reduce((acc, currentValue) => {
-        return acc.plus(currentValue.gasPrice);
-      }, BigNumber(0));
+
+      const batchGasPrice = this.unsignedTxArr[0].gasPrice;
       return fromWei(hexToNumberString(batchGasPrice), 'gwei');
     },
     gasLimit() {

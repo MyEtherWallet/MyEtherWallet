@@ -277,6 +277,7 @@
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
+      :manage-domain-handler="manageDomainHandler"
     />
   </div>
 </template>
@@ -445,9 +446,9 @@ export default {
         this.onRegister = true;
       }
     },
-    /* 
+    /*
     - watches for address state change
-    - updates ensManager with new address 
+    - updates ensManager with new address
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
