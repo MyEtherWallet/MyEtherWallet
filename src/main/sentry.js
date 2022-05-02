@@ -3,7 +3,7 @@ import { Integrations } from '@sentry/tracing';
 import Vue from 'vue';
 import { EventBus } from '@/core/plugins/eventBus';
 import store from '@/core/store';
-
+import errorHandler from '@/main/errorHandler';
 // Sentry
 Sentry.init({
   Vue,
@@ -29,6 +29,8 @@ Sentry.init({
       service: service,
       walletType: identifier
     };
+    const err = event.exception.values[0].value;
+    if (errorHandler(err)) return null;
     return new Promise(resolve => {
       EventBus.$emit('issueModal', event, resolve);
     }).then(res => {

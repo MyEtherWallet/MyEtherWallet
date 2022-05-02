@@ -5,8 +5,10 @@ const ERRORS = {
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
+  'GATT Server is disconnected': 'Connection Failed',
   'Max number of App paired. Delete one of the paired app.':
     'coolWalletError.max-app-instance',
+  'Connection failed': 'Connection Failed',
   'browser not supported': 'coolWalletError.no-bluetooth',
   'User cancelled the requestDevice() chooser': 'User cancelled action!',
   'NetworkError: GATT operation already in progress.':

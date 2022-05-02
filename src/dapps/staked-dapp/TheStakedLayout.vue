@@ -83,7 +83,7 @@
     <template #HeaderRight>
       <div class="text-right">
         <a
-          href="https://help.myetherwallet.com/en/articles/5449132-stake-on-eth2-using-mew-web"
+          :href="getArticle('stake-eth2-mew-web')"
           target="_blank"
           class="greenPrimary--text font-weight-medium text-right"
         >
@@ -195,6 +195,7 @@ export default {
   computed: {
     ...mapState('wallet', ['web3', 'address']),
     ...mapGetters('global', ['network']),
+    ...mapGetters('article', ['getArticle']),
     /**
      * Total staked by user
      * @returns string
@@ -276,7 +277,7 @@ export default {
         this.$refs.stakedStepper.reset();
       }
     },
-    /* 
+    /*
     - watches for address state change
     - updates handlerStaked with new address
     - if user is currently onStep within the stakeStepper component, it will run the reset function

@@ -25,11 +25,8 @@
           <div class="d-flex align-center">
             <img
               width="22"
-              :src="
-                require('@/assets/images/currencies/' +
-                  data.fromT.symbol.toLowerCase() +
-                  '.png')
-              "
+              height="22"
+              src="https://img.mewapi.io/?image=https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/icons/ETH-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.svg"
               alt="currency-icon"
             />
             <img
@@ -59,7 +56,7 @@
       <h3 class="ma-3">Loading swap pairs...</h3>
     </div>
     <div
-      v-if="error || !hasSwapRates"
+      v-if="showTokenIssue"
       class="pa-3 pb-4 d-flex flex-column align-center justify-space-around"
     >
       <v-progress-circular indeterminate />
@@ -179,6 +176,9 @@ export default {
   computed: {
     ...mapState('wallet', ['web3']),
     ...mapGetters('global', ['isEthNetwork', 'network']),
+    showTokenIssue() {
+      return (this.error || !this.hasSwapRates) && !this.loading;
+    },
     hasSwapRates() {
       if (this.swapData) {
         return this.swapData.some(item => {
@@ -199,7 +199,7 @@ export default {
   methods: {
     setSwapHandler(val) {
       if (!this.isEthNetwork) return;
-      this.swapHandler = new handlerSwap(val);
+      this.swapHandler = new handlerSwap(val, this.network.type.name);
       this.fetchRates();
     },
     fetchRates() {
@@ -209,7 +209,10 @@ export default {
         this.swapHandler.getQuotesForSet(STATIC_PAIRS).then(res => {
           this.swapData = STATIC_PAIRS.map((itm, idx) => {
             itm['rate'] =
-              res[idx].length !== 0 && res[idx][0] && res[idx][0]?.amount
+              res[idx] &&
+              res[idx].length !== 0 &&
+              res[idx][0] &&
+              res[idx][0]?.amount
                 ? formatFloatingPointValue(res[idx][0]?.amount).value
                 : false;
             return itm;

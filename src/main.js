@@ -61,9 +61,11 @@ new Vue({
   apolloProvider,
   vuetify,
   beforeCreate() {
-    this.$intercom.boot({
-      user_id: uuidv4()
-    });
+    const userId = this.$route.query.intercomid
+      ? this.$route.query.intercomid
+      : uuidv4();
+    this.$intercom.boot({ user_id: userId });
+
     if (locStore.get('mew-testing') === undefined) {
       locStore.set('mew-testing', false);
     }
@@ -71,6 +73,7 @@ new Vue({
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.commit('addressBook/INIT_STORE');
+    this.$store.commit('article/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('global/setTracking');
   },

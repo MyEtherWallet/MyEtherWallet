@@ -5,11 +5,16 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import { DNSRegistrar } from '@ensdomains/ens-contracts';
 import contentHash from 'content-hash';
 import EventEmitter from 'events';
+import vuexStore from '@/core/store';
+import { mapGetters, mapState } from 'vuex';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
   constructor(name, address, network, web3, ens, expiry) {
     super(name, address, network, web3, ens);
+    this.$store = vuexStore;
+    Object.assign(this, mapGetters('global', ['gasPriceByType']));
+    Object.assign(this, mapState('global', ['gasPriceType']));
     this.expiryTime = expiry;
     this.secretPhrase = '';
     this.expiration = null;
@@ -32,24 +37,51 @@ export default class PermanentNameModule extends ENSManagerInterface {
     return this._registerWithDuration(duration, balance);
   }
 
-  transfer(toAddress) {
-    const transferMethod = this.registrarContract.methods.transferFrom(
+  getTransactions(toAddress) {
+    const transferMethod = this.registrarContract?.methods.transferFrom(
       this.address,
       toAddress,
       this.labelHash
     );
     const baseTx = {
       to: this.registrarAddress,
-      from: this.address
+      from: this.address,
+      value: 0,
+      gasPrice: this.gasPriceByType(this.gasPriceType)()
     };
-
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
     });
     const tx2 = Object.assign({}, baseTx, {
       data: transferMethod.encodeABI()
     });
-    return this.web3.mew.sendBatchTransactions([tx1, tx2]);
+
+    return [tx1, tx2];
+  }
+
+  async estimateGas(toAddress) {
+    const txns = this.getTransactions(toAddress);
+    let gas1 = 0;
+    let gas2 = 0;
+    try {
+      gas1 = await this.web3.eth.estimateGas(txns[0]);
+      gas2 = await this.web3.eth.estimateGas(txns[1]);
+    } catch (e) {
+      return new Promise(resolve => {
+        resolve(0);
+      });
+    }
+    const gasPrice = this.gasPriceByType(this.gasPriceType)();
+    const txFee1 = BigNumber(gasPrice).times(gas1).toFixed();
+    const txFee2 = BigNumber(gasPrice).times(gas2).toFixed();
+    const calculatedFee = BigNumber(txFee1).plus(txFee2).toFixed();
+    return new Promise(resolve => {
+      resolve(calculatedFee);
+    });
+  }
+
+  transfer(toAddress) {
+    return this.web3.mew.sendBatchTransactions(this.getTransactions(toAddress));
   }
 
   getActualDuration(duration) {

@@ -280,6 +280,7 @@
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
+      :manage-domain-handler="manageDomainHandler"
     />
   </div>
 </template>
@@ -302,6 +303,8 @@ import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
 import { hasClaimed, submitClaim } from './handlers/handlerENSTokenClaim';
+import stripQuery from '@/core/helpers/stripQuery.js';
+
 export default {
   name: 'ENSManagerLayout',
   components: {
@@ -479,9 +482,9 @@ export default {
         this.onRegister = true;
       }
     },
-    /* 
+    /*
     - watches for address state change
-    - updates ensManager with new address 
+    - updates ensManager with new address
     - if user is onRegister it will reset and take them back
     - if user is onManage it will run getDomain to refresh domains
     */
@@ -495,6 +498,9 @@ export default {
     $route() {
       this.detactUrlChangeTab();
     }
+  },
+  beforeMount() {
+    this.setTokenFromURL();
   },
   mounted() {
     /**
@@ -533,6 +539,12 @@ export default {
     },
     tabChanged(tab) {
       this.activeTab = tab;
+    },
+    setTokenFromURL() {
+      if (Object.keys(this.$route.query).length > 0) {
+        const { active } = stripQuery(this.$route.query);
+        this.activeTab = BigNumber(active).toNumber();
+      }
     },
     claimTokens() {
       try {

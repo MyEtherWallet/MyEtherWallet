@@ -26,13 +26,27 @@ export default class NFT {
     } else {
       raw = this.safeTransferFrom(to, token);
     }
-
     raw.from = this.address;
     return this.web3.eth.sendTransaction(raw);
   }
+  /**
+   * Get Gas Fees
+   */
+
+  async getGasFees(to, token) {
+    let raw;
+    this.contract = new this.web3.eth.Contract(ABI);
+    if (token.contract.includes(configs.cryptoKittiesContract)) {
+      raw = this.cryptoKittiesTransfer(to, token);
+    } else {
+      raw = this.safeTransferFrom(to, token);
+    }
+    raw.from = this.address;
+    const gasEst = this.web3.eth.estimateGas(raw);
+    return gasEst;
+  }
 
   safeTransferFrom(to, token) {
-    this.contract.options.address = token.contract;
     return {
       to: token.contract,
       data: this.contract.methods
