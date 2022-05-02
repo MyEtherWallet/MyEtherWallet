@@ -717,7 +717,6 @@ export default {
     },
 
     async getTotalCost() {
-      console.log('getTotalCost has been triggered!');
       const registerFeesOnly = await this.nameHandler.getRegFees(
         this.durationPick,
         this.balance
