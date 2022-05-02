@@ -7,6 +7,7 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
+import { toBN } from 'web3-utils';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -72,9 +73,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
       });
     }
     const gasPrice = this.gasPriceByType(this.gasPriceType)();
-    const txFee1 = BigNumber(gasPrice).times(gas1).toFixed();
-    const txFee2 = BigNumber(gasPrice).times(gas2).toFixed();
-    const calculatedFee = BigNumber(txFee1).plus(txFee2).toFixed();
+    const txFee1 = toBN(gasPrice).muln(gas1);
+    const txFee2 = toBN(gasPrice).muln(gas2);
+    const calculatedFee = toBN(txFee1).add(txFee2);
     return new Promise(resolve => {
       resolve(calculatedFee);
     });
