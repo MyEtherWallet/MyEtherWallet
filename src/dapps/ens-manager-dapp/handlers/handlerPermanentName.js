@@ -62,20 +62,17 @@ export default class PermanentNameModule extends ENSManagerInterface {
 
   async estimateGas(toAddress) {
     const txns = this.getTransactions(toAddress);
-    let gas1 = 0;
-    let gas2 = 0;
+    let gas = 0;
     try {
-      gas1 = await this.web3.eth.estimateGas(txns[0]);
-      gas2 = await this.web3.eth.estimateGas(txns[1]);
+      gas = await this.web3.mew.estimateGasList(txns);
     } catch (e) {
       return new Promise(resolve => {
         resolve(0);
       });
     }
     const gasPrice = this.gasPriceByType(this.gasPriceType)();
-    const txFee1 = toBN(gasPrice).muln(gas1);
-    const txFee2 = toBN(gasPrice).muln(gas2);
-    const calculatedFee = toBN(txFee1).add(txFee2);
+    const txFee = toBN(gasPrice).muln(gas);
+    const calculatedFee = toBN(txFee);
     return new Promise(resolve => {
       resolve(calculatedFee);
     });
