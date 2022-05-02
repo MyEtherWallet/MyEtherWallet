@@ -717,6 +717,7 @@ export default {
     },
 
     async getTotalCost() {
+      console.log('getTotalCost has been triggered!');
       const registerFeesOnly = await this.nameHandler.getRegFees(
         this.durationPick,
         this.balance
@@ -725,7 +726,8 @@ export default {
         this.noFundsForRegFees = true;
       } else {
         this.regFee = registerFeesOnly;
-        const feesAdded = Number(this.regFee) + Number(this.commitFeeInEth);
+        const feesAdded =
+          BigNumber(this.regFee) + BigNumber(this.commitFeeInEth);
         this.totalCost = feesAdded.toString();
         this.totalCostUsd = new BigNumber(this.totalCost)
           .times(this.fiatValue)
