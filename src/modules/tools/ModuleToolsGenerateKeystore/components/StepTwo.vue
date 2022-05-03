@@ -175,6 +175,7 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
 export default {
   props: {
     skipped: {
@@ -291,8 +292,10 @@ export default {
         }
         self.uploaded = true;
       };
-      reader.readAsBinaryString(e.target.files[0]);
-      this.fileName = e.target.files[0].name;
+      if (e.target.files[0] instanceof Blob) {
+        reader.readAsBinaryString(e.target.files[0]);
+      }
+      this.fileName = !isEmpty(e.target.files) ? e.target.files[0].name : '';
       this.uploading = false;
     },
     /**
