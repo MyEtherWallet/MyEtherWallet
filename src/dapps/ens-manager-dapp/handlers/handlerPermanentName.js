@@ -74,9 +74,9 @@ export default class PermanentNameModule extends ENSManagerInterface {
         // const gasTotal = gas.reduce((previousVal, currentVal) => {
         //   return toBN(previousVal).add(toBN(currentVal));
         // }, 0);
-        let gasTotal = 0;
+        let gasTotal = toBN(0);
         for (let i = 0; i < gas.length; i++) {
-          gasTotal += gas[i];
+          gasTotal = gasTotal.add(toBN(gas[i]));
         }
         const gasPrice = this.gasPriceByType(this.gasPriceType)();
         const txFee = toBN(gasPrice).mul(gasTotal);
