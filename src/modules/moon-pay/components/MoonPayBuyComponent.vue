@@ -47,15 +47,6 @@
         />
       </div>
     </div>
-    <!-- <div v-if="!inWallet" class="mb-6">
-      <module-address-book
-        ref="toAddress"
-        label="To Address"
-        :is-valid-address-func="isValidToAddress"
-        :preselect-curr-wallet-adr="false"
-        @setAddress="setAddress"
-      />
-    </div> -->
     <div class="mb-3">
       <div class="mew-heading-3 textDark--text mb-5">Select Provider</div>
       <div
@@ -743,8 +734,8 @@ export default {
 .icon-holder {
   border: 2px solid var(--v-greyMedium-base);
   border-radius: 100px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 .section-block {
   height: 145px;
