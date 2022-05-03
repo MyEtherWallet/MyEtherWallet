@@ -220,7 +220,11 @@ export default {
       );
     },
     nonceErrors() {
-      if (BigNumber(this.nonce).lt(0)) {
+      if (
+        BigNumber(this.localNonce).lt(0) ||
+        this.localNonce === '' ||
+        this.localNonce === null
+      ) {
         return 'Nonce has to be greater than or equal to 0!';
       }
       return '';
