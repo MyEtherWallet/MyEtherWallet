@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
@@ -39,7 +39,9 @@ export default {
   },
   computed: {
     ...mapState('custom', ['addressBook']),
-    ...mapState('addressBook', ['isMigrated'])
+    ...mapState('addressBook', ['isMigrated']),
+    ...mapState('article', ['timestamp']),
+    ...mapGetters('article', ['articleList'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -64,6 +66,10 @@ export default {
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(currencyTypes.USD);
+      this.updateArticles({
+        timestamp: this.timestamp,
+        articleList: this.articleList
+      });
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
@@ -84,6 +90,7 @@ export default {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
+    ...mapActions('article', ['updateArticles']),
     openBuy() {
       this.moonPayOpen = true;
     },
