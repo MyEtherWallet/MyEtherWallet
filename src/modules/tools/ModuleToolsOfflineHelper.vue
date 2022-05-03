@@ -284,6 +284,8 @@ export default {
     ]
   }),
   computed: {
+    ...mapState('wallet', ['web3']),
+    ...mapGetters('global', ['network']),
     detailLength() {
       return this.details.length > 0;
     },
@@ -312,9 +314,6 @@ export default {
     }
   },
   methods: {
-    ...mapState('wallet', ['web3']),
-    ...mapGetters('global', ['network']),
-
     clear() {
       this.fromAddress = '';
       this.rawTransaction = '';
@@ -346,7 +345,7 @@ export default {
      * details - details to be displayed to the user
      **********************************************************/
     async data() {
-      const { eth } = this.web3();
+      const { eth } = this.web3;
       const chainID = await eth.getChainId();
       const gasPrice = fromWei(await eth.getGasPrice(), 'gwei');
       const nonce = await eth.getTransactionCount(this.fromAddress);
@@ -449,7 +448,7 @@ export default {
     rawData() {
       try {
         const tx = new Transaction(this.getRawTransaction, {
-          common: commonGenerator(this.network())
+          common: commonGenerator(this.network)
         });
         const txValues = tx.toJSON(true);
         const txChain = tx.getChainId();
@@ -500,7 +499,7 @@ export default {
       const { raw, fee } = this.rawData();
       if (raw) {
         this.rawTransaction = JSON.stringify(raw, null, 3);
-        const { eth } = this.web3();
+        const { eth } = this.web3;
         const addressMatch =
           toChecksumAddress(raw.from) === toChecksumAddress(this.fromAddress);
         const balance = await eth.getBalance(raw.from);
@@ -589,7 +588,7 @@ export default {
       if (files[0]) reader.readAsBinaryString(files[0]);
     },
     sendTx() {
-      const { eth } = this.web3();
+      const { eth } = this.web3;
       this.dialog = true;
       this.txLoading = true;
       eth
