@@ -318,6 +318,7 @@ export default {
     clear() {
       this.fromAddress = '';
       this.rawTransaction = '';
+      this.signature = '';
       this.currentStep = 1;
     },
     /*********************************************
