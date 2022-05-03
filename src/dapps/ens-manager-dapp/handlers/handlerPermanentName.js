@@ -70,15 +70,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
       });
       try {
         const gas = await estimateGasList(this.network.type.name, txns);
+        console.log(gas);
+        if (!gas) reject('Not enough gas');
         const gasTotal = gas.reduce((previousVal, currentVal) => {
           return toBN(previousVal).add(toBN(currentVal));
         }, 0);
         /* eslint-disable no-console */
-        console.log(gas);
-        // let gasTotal = toBN(0);
-        // for (let i = 0; i < gas.length; i++) {
-        //   gasTotal = gasTotal.add(toBN(gas[i]));
-        // }
         console.log(gasTotal.toString());
         const gasPrice = this.gasPriceByType(this.gasPriceType)();
         const txFee = toBN(gasPrice).mul(gasTotal);
