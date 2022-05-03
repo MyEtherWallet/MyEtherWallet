@@ -176,6 +176,7 @@
 
 <script>
 import { isEmpty } from 'lodash';
+import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 export default {
   props: {
     skipped: {
@@ -292,8 +293,10 @@ export default {
         }
         self.uploaded = true;
       };
-      if (e.target.files[0] instanceof Blob) {
+      try {
         reader.readAsBinaryString(e.target.files[0]);
+      } catch (e) {
+        Toast('Incorrect file type', {}, ERROR);
       }
       this.fileName = !isEmpty(e.target.files) ? e.target.files[0].name : '';
       this.uploading = false;
