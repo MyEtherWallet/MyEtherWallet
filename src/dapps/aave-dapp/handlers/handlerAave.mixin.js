@@ -8,20 +8,13 @@ import {
 } from '@/dapps/aave-dapp/apollo/graphql/subscriptions';
 import { Toast, SUCCESS, ERROR } from '@/modules/toast/handler/handlerToast';
 import configs from '@/dapps/aave-dapp/apollo/configs';
-import { v2, TxBuilderV2, Network, Market } from '@aave/protocol-js';
 import eth from '@/assets/images/currencies/eth.png';
-import {
-  // depositDetails,
-  // borrowDetails,
-  repayDetails,
-  swapBorrowRateDetails,
-  setUsageAsCollateralDetails,
-  withdrawDetails
-} from './graphQLHelpers.js';
+import { LendingPool } from '@aave/contract-helpers';
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
-import Web3 from 'web3';
+import { formatReserves, formatUserSummary } from '@aave/math-utils';
+// import { ethers } from 'ethers';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -54,19 +47,21 @@ export default {
       usdPriceEth: '',
       userSummary: {},
       isLoadingData: true,
-      lendingPoolPrototype: {}
+      lendingPool: {}
     };
   },
   mounted() {
-    const httpProvider = new Web3.providers.HttpProvider(
-      'https://nodes.mewapi.io/rpc/eth'
-    );
-    const txBuilder = new TxBuilderV2(Network.mainnet, httpProvider);
+    // const provider = new ethers.providers.StaticJsonRpcProvider(
+    //   'https://eth-mainnet.alchemyapi.io/v2/demo',
+    //   ChainId.mainnet
+    // );
     /**
-     * Object that contains all the necessary methods to create Aave lending pool transactions.
+     * get lending pool tx methods
      */
-    const lendingPool = txBuilder.getLendingPool(Market.Proto);
-    this.lendingPoolPrototype = Object.getPrototypeOf(lendingPool);
+    this.lendingPool = new LendingPool(this.web3.providers.IpcProvider, {
+      LENDING_POOL: '0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5',
+      WETH_GATEWAY: '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04'
+    });
   },
   apollo: {
     $subscribe: {
@@ -85,9 +80,26 @@ export default {
           this.rawReserveData = data.reserves.map(item => {
             item['icon'] =
               this.contractToToken(item.underlyingAsset)?.img || eth;
-            return item;
+            return {
+              ...item,
+              priceInMarketReferenceCurrency: item.price.priceInEth,
+              eModeCategoryId: 0,
+              borrowCap: '',
+              supplyCap: '',
+              debtCeiling: '',
+              debtCeilingDecimals: 0,
+              isolationModeTotalDebt: '',
+              eModeLtv: 0,
+              eModeLiquidationThreshold: 0,
+              eModeLiquidationBonus: 0
+            };
           });
-          this.reservesData = v2.formatReserves(this.rawReserveData).reverse();
+          this.reservesData = formatReserves({
+            reserves: this.rawReserveData,
+            currentTimestamp: Math.floor(Date.now() / 1000),
+            marketReferenceCurrencyDecimals: 18,
+            marketReferencePriceInUsd: 1 / (this.usdPriceEth / 10 ** 18)
+          }).reverse();
           this.setFormatUserSummaryData();
         },
         error(error) {
@@ -113,7 +125,10 @@ export default {
           this.userReserveData = data.userReserves.map(item => {
             item.reserve['icon'] =
               this.contractToToken(item.underlyingAsset)?.img || eth;
-            return item;
+            return {
+              ...item,
+              underlyingAsset: item.reserve.underlyingAsset
+            };
           });
           this.setFormatUserSummaryData();
         },
@@ -138,11 +153,11 @@ export default {
     }
   },
   computed: {
-    ...mapState('wallet', ['address']),
+    ...mapState('wallet', ['address', 'web3']),
     ...mapGetters('wallet', ['tokensList']),
     ...mapGetters('external', ['contractToToken']),
     userReservesData() {
-      return this.userSummary.reservesData;
+      return this.userSummary.userReservesData;
     },
     selectedTokenToUse() {
       return this.selectedToken || this.preSelectedToken;
@@ -179,7 +194,7 @@ export default {
      */
     async onDeposit(data) {
       try {
-        return await this.lendingPoolPrototype.deposit(data).then(res => {
+        return await this.lendingPool.deposit(data).then(res => {
           this.formatTxData(res, 'deposit');
         });
       } catch (e) {
@@ -191,8 +206,7 @@ export default {
      */
     async onBorrow(data) {
       try {
-        console.error('this', data);
-        return await this.lendingPoolPrototype.borrow(data).then(res => {
+        return await this.lendingPool.borrow(data).then(res => {
           this.formatTxData(res, 'borrow');
         });
       } catch (e) {
@@ -204,7 +218,7 @@ export default {
      */
     async onRepay(data) {
       try {
-        return await repayDetails(data).then(res => {
+        return await this.lendingPool.repay(data).then(res => {
           this.formatTxData(res, 'repay');
         });
       } catch (e) {
@@ -216,7 +230,7 @@ export default {
      */
     async setBorrowRate(data) {
       try {
-        return await swapBorrowRateDetails(data).then(res => {
+        return await this.lendingPool.swapBorrowRateMode(data).then(res => {
           this.formatTxData(res, 'swapBorrowRateMode');
         });
       } catch (e) {
@@ -228,7 +242,7 @@ export default {
      */
     async onWithdraw(data) {
       try {
-        return await withdrawDetails(data).then(res => {
+        return await this.lendingPool.withdraw(data).then(res => {
           this.formatTxData(res, 'redeem');
         });
       } catch (e) {
@@ -240,7 +254,7 @@ export default {
      */
     async setCollateral(data) {
       try {
-        return await setUsageAsCollateralDetails(data).then(res => {
+        return await this.lendingPool.setUsageAsCollateral(data).then(res => {
           this.formatTxData(res, 'setUsageAsCollateral');
         });
       } catch (e) {
@@ -293,17 +307,18 @@ export default {
      */
     setFormatUserSummaryData() {
       if (
-        this.rawReserveData?.length > 0 &&
+        this.reservesData?.length > 0 &&
         this.userReserveData &&
         this.usdPriceEth
       ) {
-        this.userSummary = v2.formatUserSummaryData(
-          this.rawReserveData,
-          this.userReserveData,
-          this.address.toLowerCase(),
-          this.usdPriceEth,
-          Math.floor(Date.now() / 1000)
-        );
+        this.userSummary = formatUserSummary({
+          currentTimestamp: Math.floor(Date.now() / 1000),
+          marketReferencePriceInUsd: 1 / (this.usdPriceEth / 10 ** 18),
+          marketReferenceCurrencyDecimals: 18,
+          userReserves: this.userReserveData,
+          formattedReserves: this.reservesData,
+          userEmodeCategoryId: 0
+        });
         this.mergeTheReserves();
       }
     },
@@ -311,8 +326,11 @@ export default {
      * Merges the user reserves data into this.reservesData
      */
     mergeTheReserves() {
-      if (this.userSummary.reservesData.length > 0) {
-        this.userSummary.reservesData.forEach(data => {
+      if (
+        this.userSummary.userReservesData &&
+        this.userSummary.userReservesData.length > 0
+      ) {
+        this.userSummary.userReservesData.forEach(data => {
           const foundReserve = this.reservesData.find(
             elem => elem.name === data.reserve.name
           );

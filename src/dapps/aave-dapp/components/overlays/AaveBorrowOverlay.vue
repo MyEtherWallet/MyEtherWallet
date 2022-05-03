@@ -169,13 +169,12 @@ export default {
       this.step = 3;
     },
     handleConfirm() {
-      console.error("this.selectedToken", this.selectedTokenDetails)
       const data = {
         user: this.address,
+        reserve: this.selectedTokenDetails.underlyingAsset,
         amount: this.amount,
-        referralCode: '14',
-        reserve: this.selectedTokenDetails.id,
-        interestRateMode: this.apr.type
+        interestRateMode: this.apr.type,
+        referralCode: '14'
       };
       this.onBorrow(data);
       this.callClose();

@@ -14,7 +14,7 @@
       v-if="step === 0"
       :is-loading-data="isLoadingData"
       :reserves-data="reservesData"
-      :user-reserves-data="userSummary.reservesData"
+      :user-reserves-data="userSummary.userReservesData"
       :title="depositTitle"
       @selectedDeposit="handleSelectedDeposit"
     />

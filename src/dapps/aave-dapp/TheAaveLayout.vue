@@ -395,7 +395,7 @@ export default {
     compositionPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         const total = this.userSummary.totalLiquidityETH;
-        return this.userSummary.reservesData
+        return this.userSummary.userReservesData
           .filter(item => {
             return item.currentUnderlyingBalance > 0.00001;
           })
@@ -417,7 +417,7 @@ export default {
     },
     collateralPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
-        return this.userSummary.reservesData
+        return this.userSummary.userReservesData
           .filter(item => {
             return (
               item.usageAsCollateralEnabledOnUser &&
@@ -443,7 +443,7 @@ export default {
     borrowingsPercentage() {
       if (this.userSummary && Object.keys(this.userSummary).length > 0) {
         let totalAvailablePercentage = 100;
-        const data = this.userSummary.reservesData
+        const data = this.userSummary.userReservesData
           .filter(item => {
             return item.currentBorrowsETH > 0.001;
           })

@@ -201,8 +201,7 @@ export default {
               .map(item => {
                 return {
                   token: item.symbol,
-                  available: formatFloatingPointValue(item.availableLiquidity)
-                    .value,
+                  available: formatFloatingPointValue(item.borrowCap).value, // need to double check this
                   stableApy: item.stableBorrowRateEnabled
                     ? formatPercentageValue(
                         new BigNumber(item.stableBorrowAPY).multipliedBy(100)
