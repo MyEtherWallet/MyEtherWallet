@@ -11,7 +11,9 @@ export const knownErrors = {
   'transaction underpriced': 'Transaction gas price too low',
   'invalid remainder': 'invalid remainder',
   'Internal JSON-RPC error. { "code": -32000, "message": "execution reverted" }':
-    'Execution Reverted'
+    'Execution Reverted',
+  'Transaction has been reverted by the EVM':
+    'Transaction has been reverted by the EVM'
 };
 
 const handleError = err => {
