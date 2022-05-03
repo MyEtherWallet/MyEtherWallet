@@ -9,7 +9,9 @@ export const knownErrors = {
     "Couldn't connect to WS node. Please refresh and try again.",
   'connection not open on send': mewApiError,
   'transaction underpriced': 'Transaction gas price too low',
-  'invalid remainder': 'invalid remainder'
+  'invalid remainder': 'invalid remainder',
+  'Internal JSON-RPC error. { "code": -32000, "message": "execution reverted" }':
+    'Execution Reverted'
 };
 
 const handleError = err => {
