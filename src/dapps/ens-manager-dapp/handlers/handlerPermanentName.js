@@ -7,7 +7,8 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
-import { toBN, toHex } from 'web3-utils';
+import { fromWei, toBN, toHex } from 'web3-utils';
+import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -64,22 +65,25 @@ export default class PermanentNameModule extends ENSManagerInterface {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       const txns = this.getTransactions(toAddress).map(item => {
-        delete item['gasPrice'];
+        //delete item['gasPrice'];
         return item;
       });
       try {
-        console.log(txns);
-        const gas = await this.web3.mew.estimateGasList(txns);
+        const gas = await estimateGasList(this.network.type.name, txns);
+        const gasTotal = gas.reduce((previousVal, currentVal) => {
+          return toBN(previousVal).add(toBN(currentVal));
+        }, 0);
+        /* eslint-disable no-console */
         console.log(gas);
-        // const gasTotal = gas.reduce((previousVal, currentVal) => {
-        //   return toBN(previousVal).add(toBN(currentVal));
-        // }, 0);
-        let gasTotal = toBN(0);
-        for (let i = 0; i < gas.length; i++) {
-          gasTotal = gasTotal.add(toBN(gas[i]));
-        }
+        // let gasTotal = toBN(0);
+        // for (let i = 0; i < gas.length; i++) {
+        //   gasTotal = gasTotal.add(toBN(gas[i]));
+        // }
+        console.log(gasTotal.toString());
         const gasPrice = this.gasPriceByType(this.gasPriceType)();
         const txFee = toBN(gasPrice).mul(gasTotal);
+        console.log(fromWei(txFee));
+        /* eslint-enable no-console */
         resolve(txFee);
       } catch (e) {
         reject(e);

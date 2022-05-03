@@ -111,6 +111,50 @@ const getBaseFeeBasedOnType = (baseFeeBN, gasPriceType) => {
       return baseFeeBN;
   }
 };
+
+/**
+ * Estimate the gas prices for an array of transactions
+ *
+ * @param  {Array} txs - Array of transaction objects
+ * @return {Array} - Array of gas prices (hex)
+ */
+const estimateGasList = (network, txs) => {
+  const supportedNetworks = {
+    ETH: 'https://estimategas.mewapi.io/eth',
+    GOERLI: 'https://estimategas.mewapi.io/goerli',
+    BSC: 'https://estimategas.mewapi.io/bsc',
+    MATIC: 'https://estimategas.mewapi.io/matic'
+  };
+  const url = supportedNetworks[network];
+  if (!url) {
+    throw new Error('Unsupported network');
+  }
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
+    try {
+      const body = JSON.stringify({
+        jsonrpc: '2.0',
+        id: 0,
+        method: 'eth_estimateGasList',
+        params: [txs]
+      });
+      const { result } = await fetch(url, {
+        method: 'POST',
+        body: body,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => {
+          return res.json();
+        })
+        .catch(reject);
+      resolve(result);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 export {
   getBaseFeeBasedOnType,
   getEconomy,
@@ -122,5 +166,6 @@ export {
   gasPriceTypes,
   getPriorityFeeBasedOnType,
   estimatedTime,
-  getMinPriorityFee
+  getMinPriorityFee,
+  estimateGasList
 };
