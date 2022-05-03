@@ -37,8 +37,13 @@ class WalletInterface {
       this.isPubOnly = false;
     } else {
       const _pubKey = Buffer.isBuffer(key) ? key : getBufferFromHex(key);
-      if (_pubKey.length !== 20 && !isValidPublic(_pubKey, true))
+      if (
+        !(_pubKey.length >= 33 && _pubKey.length <= 65) &&
+        !isValidPublic(_pubKey, true)
+      ) {
         throw new Error('Invalid public key');
+      }
+      // if (_pubKey.length !== 20 && !isValidPublic(_pubKey, true))
       if (_pubKey.length === 20) this.isAddress = true;
       this.publicKey = _pubKey;
       this.isPubOnly = true;
