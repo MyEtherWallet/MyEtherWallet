@@ -38,13 +38,13 @@ class Swap {
         })
       ).then(() => {
         const sorted = allTokens
-          .filter(t => isObject(t))
+          ?.filter(t => isObject(t))
           .sort((a, b) => {
             if (a.name > b.name) return 1;
             return -1;
           });
         return {
-          fromTokens: sorted.filter(t => {
+          fromTokens: sorted?.filter(t => {
             if (!t || !t.contract) return false;
             return t;
           }),
