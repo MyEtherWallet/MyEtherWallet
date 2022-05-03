@@ -7,7 +7,7 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
-import { fromWei, toBN, toHex } from 'web3-utils';
+import { toBN, toHex } from 'web3-utils';
 import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 const bip39 = require('bip39');
 
@@ -70,17 +70,12 @@ export default class PermanentNameModule extends ENSManagerInterface {
       });
       try {
         const gas = await estimateGasList(this.network.type.name, txns);
-        console.log(gas);
         if (!gas) reject('Not enough gas');
         const gasTotal = gas.reduce((previousVal, currentVal) => {
           return toBN(previousVal).add(toBN(currentVal));
         }, 0);
-        /* eslint-disable no-console */
-        console.log(gasTotal.toString());
         const gasPrice = this.gasPriceByType(this.gasPriceType)();
         const txFee = toBN(gasPrice).mul(gasTotal);
-        console.log(fromWei(txFee));
-        /* eslint-enable no-console */
         resolve(txFee);
       } catch (e) {
         reject(e);
