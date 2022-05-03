@@ -8,7 +8,8 @@ export const knownErrors = {
   "CONNECTION ERROR: Couldn't connect to node on WS":
     "Couldn't connect to WS node. Please refresh and try again.",
   'connection not open on send': mewApiError,
-  'transaction underpriced': 'Transaction gas price too low'
+  'transaction underpriced': 'Transaction gas price too low',
+  'invalid remainder': 'invalid remainder'
 };
 
 const handleError = err => {
