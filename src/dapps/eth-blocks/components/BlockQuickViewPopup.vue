@@ -46,6 +46,7 @@
 
 <script>
 import { isEmpty } from 'lodash';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
   props: {
@@ -70,7 +71,9 @@ export default {
       return this.isReady ? this.blockHandler.img : '';
     },
     blockNumber() {
-      return this.isReady ? this.blockHandler.blockNumber.toLocaleString() : '';
+      return this.isReady
+        ? formatIntegerToString(this.blockHandler.blockNumber)
+        : '';
     },
     description() {
       return this.isReady ? this.blockHandler.description.toString() : '';
