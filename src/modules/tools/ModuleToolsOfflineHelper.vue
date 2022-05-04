@@ -3,22 +3,18 @@
     <v-dialog v-model="dialog" persistent max-width="500">
       <v-sheet color="white" class="pa-5">
         <h3 class="mb-5 text-center">Transaction status</h3>
+        <div v-if="txLoading" class="pa-5">
+          <v-progress-linear indeterminate rounded height="6" />
+        </div>
+        <v-alert v-if="!txLoading" :type="status ? 'success' : 'error'">{{
+          status ? 'Success' : 'Failed'
+        }}</v-alert>
         <div v-if="txHash" class="greyLight pa-5 mb-2">
           <div class="font-weight-bold">Transaction Hash</div>
           <div class="d-flex">
             <mew-transform-hash :hash="txHash" />
             <mew-copy :copy-value="txHash" tooltip="Copy Me!" class="ml-2" />
           </div>
-        </div>
-        <div v-if="txReceipt" class="greyLight pa-5">
-          <div class="font-weight-bold">Transaction Receipt</div>
-          <div class="d-flex">
-            <mew-transform-hash :hash="txReceipt" />
-            <mew-copy :copy-value="txReceipt" tooltip="Copy Me!" class="ml-2" />
-          </div>
-        </div>
-        <div v-if="txLoading" class="pa-5">
-          <v-progress-linear indeterminate rounded height="6" />
         </div>
         <div class="pa-5">
           <mew-alert
@@ -219,7 +215,7 @@
 <script>
 import AppBlockTitle from '@/core/components/AppBlockTitle';
 import { mapGetters, mapState } from 'vuex';
-import { isAddress, fromWei } from 'web3-utils';
+import { isAddress, fromWei, toHex } from 'web3-utils';
 import { Transaction } from 'ethereumjs-tx';
 import commonGenerator from '@/core/helpers/commonGenerator';
 import sanitizeHex from '@/core/helpers/sanitizeHex';
@@ -248,6 +244,7 @@ export default {
     alerts: [],
     dialogAlert: '',
     txHash: '',
+    status: false,
     txReceipt: '',
     txLoading: false,
     title: {
@@ -319,6 +316,7 @@ export default {
       this.rawTransaction = '';
       this.signature = '';
       this.currentStep = 1;
+      this.dialogAlert = '';
     },
     /*********************************************
      * checks if address is valid on each change
@@ -347,7 +345,7 @@ export default {
     async data() {
       const { eth } = this.web3;
       const chainID = await eth.getChainId();
-      const gasPrice = fromWei(await eth.getGasPrice(), 'gwei');
+      const gasPrice = await eth.getGasPrice();
       const nonce = await eth.getTransactionCount(this.fromAddress);
       return {
         data: {
@@ -402,7 +400,11 @@ export default {
      * exports data to json
      ************************/
     async exportFile() {
-      const { data } = await this.data();
+      let { data } = await this.data();
+      data = {
+        nonce: toHex(data.nonce),
+        gasPrice: toHex(data.gasPrice)
+      };
       const blob = new Blob([JSON.stringify(data)], { type: 'mime' });
       this.fileLink = window.URL.createObjectURL(blob);
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
@@ -598,7 +600,9 @@ export default {
           this.clear();
         })
         .once('receipt', receipt => {
-          this.txReceipt = receipt;
+          const { status, transactionHash } = receipt;
+          this.txReceipt = transactionHash;
+          this.status = status;
           this.txLoading = false;
         })
         .catch(({ message }) => {

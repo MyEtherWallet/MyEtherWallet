@@ -73,7 +73,7 @@
           <v-col cols="12">
             <mew-input
               v-model="gasPrice"
-              label="Gas Price (in gwei)"
+              label="Gas Price (in wei)"
               :error-messages="gasPriceErrors"
               type="number"
             />
@@ -161,7 +161,7 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import { toBN, isHexStrict, toWei } from 'web3-utils';
+import { toBN, isHexStrict, toWei, hexToNumberString } from 'web3-utils';
 import { mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -170,6 +170,7 @@ import Web3 from 'web3';
 import { isValidAddress } from 'ethereumjs-util';
 import { isEmpty } from 'lodash';
 import { Toast } from '../toast/handler/handlerToast';
+import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 export default {
   components: {
     ModuleAddressBook
@@ -186,7 +187,6 @@ export default {
       selectedCurrency: {},
       data: '0x',
       userInputType: '',
-      localGasPrice: '0',
       defaultGasLimit: '21000',
       gasLimitError: '',
       amountError: '',
@@ -348,7 +348,8 @@ export default {
       this.amount = '0';
       this.data = '0x';
       this.userInputType = '';
-      this.localGasPrice = '0';
+      this.localNonce = '0';
+      this.gasPrice = '0';
       this.defaultGasLimit = '21000';
       this.gasLimitError = '';
       this.amountError = '';
@@ -365,8 +366,8 @@ export default {
         try {
           const file = JSON.parse(result);
           if (file.nonce) {
-            self.localNonce = file.nonce.toString();
-            self.gasPrice = file.gasPrice;
+            self.localNonce = hexToNumberString(file.nonce);
+            self.gasPrice = hexToNumberString(file.gasPrice);
             return;
           }
           Toast('Malformed File', '', 'error');
@@ -380,19 +381,16 @@ export default {
       const symbol = this.network.type.currencyName;
       const isToken = this.selectedCurrency.symbol !== symbol;
       const amtWei = toWei(this.amount, 'ether');
-
       const raw = {
-        nonce: sanitizeHex(new BigNumber(this.localNonce).toString(16)),
-        gasLimit: sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
-        gasPrice: sanitizeHex(
-          new BigNumber(toWei(this.localGasPrice, 'gwei')).toString(16)
-        ),
+        nonce: sanitizeHex(toBNSafe(this.localNonce).toString(16)),
+        gasLimit: sanitizeHex(toBNSafe(this.gasLimit).toString(16)),
+        gasPrice: sanitizeHex(toBNSafe(this.gasPrice).toString(16)),
         to: isToken
           ? this.selectedCurrency.address
           : this.address.toLowerCase().trim(),
         value: isToken
-          ? sanitizeHex(new BigNumber(0).toString(16))
-          : sanitizeHex(new BigNumber(amtWei).toString(16)),
+          ? sanitizeHex(toBNSafe(0).toString(16))
+          : sanitizeHex(toBNSafe(amtWei).toString(16)),
         data: this.data,
         chainId: this.network.type.chainID
       };
