@@ -15,7 +15,6 @@
       }"
       :has-buttons="false"
       :has-body-content="true"
-      hide-close-btn
     >
       <h2 class="black--text">{{ blockNumber }}</h2>
       <div class="d-flex flex-column align-center justify-end py-5">
@@ -71,7 +70,7 @@ export default {
       return this.isReady ? this.blockHandler.img : '';
     },
     blockNumber() {
-      return this.isReady ? this.blockHandler.blockNumber.toString() : '';
+      return this.isReady ? this.blockHandler.blockNumber.toLocaleString() : '';
     },
     description() {
       return this.isReady ? this.blockHandler.description.toString() : '';

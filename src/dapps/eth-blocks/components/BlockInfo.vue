@@ -220,8 +220,8 @@
               v-if="!isTestNetwork"
               rel="noopener noreferrer"
               target="_blank"
-              :href="swapLink"
               class="mew-label font-weight-medium buy-more-link"
+              @click="openMoonpay"
             >
               Buy more {{ network.type.name }}.
 
@@ -268,6 +268,7 @@ import {
 import BigNumber from 'bignumber.js';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { some } from 'lodash';
+import buyMore from '@/core/mixins/buyMore.mixin.js';
 const RARIBLE_CONTRACT = 'token/0x01234567bac6ff94d7e4f0ee23119cf848f93245:';
 const RARIBLE = 'https://rarible.com/';
 const RARIBLE_TOKEN = `${RARIBLE}${RARIBLE_CONTRACT}`;
@@ -279,7 +280,7 @@ const RARIBLE_TEST_OWNER = `${RARIBLE_TEST}user/`;
 
 export default {
   name: 'BlockInfoAlert',
-  mixins: [handlerAnalytics],
+  mixins: [handlerAnalytics, buyMore],
   props: {
     blockAlert: {
       default: BLOCK_ALERT.NOT_AVAILABLE,
@@ -562,6 +563,7 @@ export default {
       this.trackDapp('ethBlocksToRarible');
     },
     addToCart() {
+      console.log('addToCart in BlockInfo triggered!');
       if (this.isAvailable && !this.isAdded) {
         this.isTestNetwork
           ? this.addTestBlockToCart(this.blockNumber)
