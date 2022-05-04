@@ -119,18 +119,18 @@ const getBaseFeeBasedOnType = (baseFeeBN, gasPriceType) => {
  * @return {Array} - Array of gas prices (hex)
  */
 const estimateGasList = (network, txs) => {
-  const supportedNetworks = {
-    ETH: 'https://estimategas.mewapi.io/eth',
-    GOERLI: 'https://estimategas.mewapi.io/goerli',
-    BSC: 'https://estimategas.mewapi.io/bsc',
-    MATIC: 'https://estimategas.mewapi.io/matic'
-  };
-  const url = supportedNetworks[network];
-  if (!url) {
-    throw new Error('Unsupported network');
-  }
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
+    const supportedNetworks = {
+      ETH: 'https://estimategas.mewapi.io/eth',
+      GOERLI: 'https://estimategas.mewapi.io/goerli',
+      BSC: 'https://estimategas.mewapi.io/bsc',
+      MATIC: 'https://estimategas.mewapi.io/matic'
+    };
+    const url = supportedNetworks[network];
+    if (!url) {
+      reject('Unsupported network');
+    }
     try {
       const body = JSON.stringify({
         jsonrpc: '2.0',
