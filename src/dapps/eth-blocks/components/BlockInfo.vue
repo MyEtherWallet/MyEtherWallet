@@ -563,7 +563,6 @@ export default {
       this.trackDapp('ethBlocksToRarible');
     },
     addToCart() {
-      console.log('addToCart in BlockInfo triggered!');
       if (this.isAvailable && !this.isAdded) {
         this.isTestNetwork
           ? this.addTestBlockToCart(this.blockNumber)
