@@ -49,6 +49,7 @@
     "@myetherwallet/mew-components": "1.0.0",
     "@myetherwallet/mewconnect-web-client": "2.2.0-beta.16",
     "@sentry/browser": "6.19.7",
+    "protobufjs": "6.11.2",
     "@sentry/tracing": "6.19.7",
     "@sentry/vue": "6.19.7",
     "@shapeshiftoss/hdwallet-core": "1.21.1",
