@@ -262,7 +262,6 @@ export default {
           this.setupMulticall();
         });
       } catch (e) {
-        ``;
         this.isLoading = false;
         Toast(e, {}, ERROR);
       }
