@@ -7,7 +7,9 @@ export const knownErrors = {
   "Cannot create property 'request'": mewApiError,
   "CONNECTION ERROR: Couldn't connect to node on WS":
     "Couldn't connect to WS node. Please refresh and try again.",
-  'connection not open on send': mewApiError
+  'connection not open on send': mewApiError,
+  'nonce too low':
+    'You may have multiple transactions still pending, please reject them and try again'
 };
 
 const handleError = err => {
