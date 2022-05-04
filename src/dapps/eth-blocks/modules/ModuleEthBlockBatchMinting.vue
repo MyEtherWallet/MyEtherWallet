@@ -32,7 +32,7 @@
         </div>
         <div v-else>
           <block-result-component
-            v-for="(block, idx) in blocks"
+            v-for="(block, idx) in localBlocks"
             :key="block.blockNumber"
             :block-handler="block"
             :is-loading="false"
@@ -120,6 +120,7 @@ export default {
   data() {
     return {
       blocks: [],
+      localBlocks: [],
       isLoading: true,
       gasLimit: '21000',
       batchMintData: [],
@@ -238,6 +239,10 @@ export default {
       }).length;
       try {
         for (let index = 0; index < cart.length; index++) {
+          const found = this.localBlocks.find(
+            b => b.blockNumber.toString() === cart[index]
+          );
+          if (this.localBlocks.length !== 0 && !found) continue;
           const block = new handlerBlock(
             this.web3,
             this.network,
@@ -259,6 +264,12 @@ export default {
               ? 1
               : 0;
           });
+          if (
+            this.localBlocks.length === this.blocks.length ||
+            this.localBlocks.length === 0
+          ) {
+            this.localBlocks = this.blocks;
+          }
           this.setupMulticall();
         });
       } catch (e) {
@@ -268,7 +279,7 @@ export default {
       }
     },
     removeMe(blockNumber) {
-      return (this.blocks = this.blocks.filter(block => {
+      return (this.localBlocks = this.localBlocks.filter(block => {
         if (block.blockNumber.toString() !== blockNumber) return block;
       }));
     },

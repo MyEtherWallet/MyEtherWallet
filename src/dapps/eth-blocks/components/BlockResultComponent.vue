@@ -293,7 +293,7 @@ export default {
     },
     removeBlock() {
       const block = this.blockHandler.blockNumber.toString();
-      this.removeMe(this.blockHandler.blockNumber.toString());
+      this.removeMe(block);
       this.isTestNetwork
         ? this.removeTestBlockFromCart(block)
         : this.removeBlockFromCart(block);
