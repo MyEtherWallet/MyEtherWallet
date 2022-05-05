@@ -14,7 +14,7 @@
         <div class="pb-8 pt-15 pt-md-18">
           <v-img
             :src="
-              require('@/assets/images/icons/hardware-wallets/Ledger nano x.svg')
+              require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-image.svg')
             "
             alt="Ledger X Wallet"
             max-width="21em"
