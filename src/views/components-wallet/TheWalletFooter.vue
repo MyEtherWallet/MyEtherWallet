@@ -13,13 +13,13 @@
       <v-row class="align-center justify-space-between">
         <v-col cols="12" md="7">
           <div class="mb-0 text-center text-md-left">
-            ©2022 MyEtherWallet. All rights reserved. Pricing taken from
+            {{ $t('footer.copyright', { year: new Date().getFullYear() }) }}
             <a
               class="textDark--text text-decoration--none"
               href="https://www.coingecko.com/en"
               target="_blank"
             >
-              CoinGecko
+              {{ $t('footer.coingecko') }}
             </a>
           </div>
         </v-col>
