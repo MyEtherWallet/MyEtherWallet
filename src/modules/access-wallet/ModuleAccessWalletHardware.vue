@@ -294,12 +294,12 @@ export default {
       passwordError: false,
       transport: null,
       address: '',
-      ledgerBluetooth: true
+      ledgerBluetooth: false
     };
   },
   computed: {
     ...mapGetters('global', ['Networks', 'network']),
-    ...mapState('wallet', ['identifier']),
+    ...mapState('wallet', ['identifier', 'ledgerBLE']),
     walletInitialized() {
       return this.wallets[this.walletType]
         ? this.wallets[this.walletType]?.when
@@ -527,7 +527,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions('wallet', ['setWallet']),
+    ...mapActions('wallet', ['setWallet', 'setLedgerBluetooth']),
     /**
      * Resets the Data
      */
@@ -539,12 +539,16 @@ export default {
       this.password = '';
       this.walletType = '';
       this.ledgerConnected = false;
+      this.ledgerBluetooth = false;
     },
     /**
      * Sets up switch address
      */
     setupSwitchAddress() {
       this.walletType = this.identifier;
+      if (this.identifier === WALLET_TYPES.LEDGER) {
+        this.ledgerBluetooth = this.ledgerBLE;
+      }
       this.nextStep();
     },
     /**
@@ -723,6 +727,9 @@ export default {
           .then(() => {
             this.trackAccessWallet(wallet.identifier);
             if (!this.switchAddress) {
+              if (wallet.identifier === WALLET_TYPES.LEDGER) {
+                this.setLedgerBluetooth(this.ledgerBluetooth);
+              }
               this.$router.push({ name: ROUTES_WALLET.DASHBOARD.NAME });
             } else {
               this.reset();
