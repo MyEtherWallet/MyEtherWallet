@@ -32,7 +32,7 @@
         </div>
         <div v-else>
           <block-result-component
-            v-for="(block, idx) in localBlocks"
+            v-for="(block, idx) in blocks"
             :key="block.blockNumber"
             :block-handler="block"
             :is-loading="false"
@@ -121,6 +121,7 @@ export default {
     return {
       blocks: [],
       localBlocks: [],
+      blockCache: {},
       isLoading: true,
       gasLimit: '21000',
       batchMintData: [],
@@ -238,11 +239,13 @@ export default {
         if (!item.hasOwner) return item;
       }).length;
       try {
+        const foundBlocks = [];
         for (let index = 0; index < cart.length; index++) {
-          const found = this.localBlocks.find(
-            b => b.blockNumber.toString() === cart[index]
-          );
-          if (this.localBlocks.length !== 0 && !found) continue;
+          const found = this.blockCache[cart[index].blockNumber];
+          if (found) {
+            foundBlocks.push(found);
+            continue;
+          }
           const block = new handlerBlock(
             this.web3,
             this.network,
@@ -257,19 +260,16 @@ export default {
           );
         }
         Promise.all(newResultArray).then(values => {
-          this.blocks = values.sort((a, b) => {
+          this.blocks = [...values, ...foundBlocks].sort((a, b) => {
             return a.blockNumber < b.blockNumber
               ? -1
               : a.blockNumber > b.blockNumber
               ? 1
               : 0;
           });
-          if (
-            this.localBlocks.length === this.blocks.length ||
-            this.localBlocks.length === 0
-          ) {
-            this.localBlocks = this.blocks;
-          }
+          values.forEach(b => {
+            this.blockCache[b.blockNumber] = b;
+          });
           this.setupMulticall();
         });
       } catch (e) {
@@ -279,7 +279,7 @@ export default {
       }
     },
     removeMe(blockNumber) {
-      return (this.localBlocks = this.localBlocks.filter(block => {
+      return (this.blocks = this.blocks.filter(block => {
         if (block.blockNumber.toString() !== blockNumber) return block;
       }));
     },
