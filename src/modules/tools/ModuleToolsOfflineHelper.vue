@@ -31,7 +31,7 @@
             class="mt-6"
             title="Okay"
             btn-size="xlarge"
-            @click.native="dialog = false"
+            @click.native="dismiss"
           />
         </div>
       </v-sheet>
@@ -245,7 +245,6 @@ export default {
     dialogAlert: '',
     txHash: '',
     status: false,
-    txReceipt: '',
     txLoading: false,
     title: {
       title: 'Send Offline Helper',
@@ -317,6 +316,11 @@ export default {
       this.signature = '';
       this.currentStep = 1;
       this.dialogAlert = '';
+    },
+    dismiss() {
+      this.dialog = false;
+      this.dialogAlert = '';
+      this.txHash = '';
     },
     /*********************************************
      * checks if address is valid on each change
@@ -421,6 +425,7 @@ export default {
         this.signatureError = false;
         this.signatureMessage = [];
         this.alerts = [];
+        this.validTx = false;
         return;
       }
       if (this.signatureError) {
@@ -578,13 +583,17 @@ export default {
         try {
           self.file = JSON.parse(result);
           if (!isEmpty(self.file)) {
-            if (self.file.rawTransaction)
-              return self.checkTx(self.file.rawTransaction);
+            if (self.file.rawTransaction) {
+              self.checkTx(self.file.rawTransaction);
+              self.$refs.uploadSig.value = '';
+              return;
+            }
           }
           throw Error();
-        } catch {
+        } catch (er) {
           self.signatureError = true;
           self.signatureMessage = ['Bad signature upload'];
+          console.log(er);
         }
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
@@ -600,8 +609,7 @@ export default {
           this.clear();
         })
         .once('receipt', receipt => {
-          const { status, transactionHash } = receipt;
-          this.txReceipt = transactionHash;
+          const { status } = receipt;
           this.status = status;
           this.txLoading = false;
         })

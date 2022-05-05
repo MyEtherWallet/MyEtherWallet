@@ -368,6 +368,7 @@ export default {
           if (file.nonce) {
             self.localNonce = hexToNumberString(file.nonce);
             self.gasPrice = hexToNumberString(file.gasPrice);
+            self.$refs.upload.value = '';
             return;
           }
           Toast('Malformed File', '', 'error');
