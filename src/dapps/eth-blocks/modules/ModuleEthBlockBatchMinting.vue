@@ -120,7 +120,7 @@ export default {
   data() {
     return {
       blocks: [],
-      localBlocks: [],
+      //localBlocks: [],
       blockCache: {},
       isLoading: true,
       gasLimit: '21000',
