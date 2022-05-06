@@ -5,6 +5,7 @@ const ERRORS = {
   AlreadyRegistered: 'coolWalletError.already-registered',
   NoWalletInstance: 'coolWalletError.no-wallet-instance',
   'navigator.bluetooth is undefined': 'coolWalletError.no-bluetooth',
+  'Web Bluetooth API': 'Bluetooth must be enabled.',
   'GATT Server is disconnected': 'Connection Failed',
   'Max number of App paired. Delete one of the paired app.':
     'coolWalletError.max-app-instance',

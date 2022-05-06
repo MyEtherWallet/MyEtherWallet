@@ -42,6 +42,7 @@ const ROUTES_WALLET = {
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
   STAKED: { NAME: 'Staked', PATH: 'staked' },
+  STAKED_STATUS: { NAME: 'StakedStatus', PATH: 'status' },
   STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },
   STAKED_2: { NAME: 'Staked2', PATH: 'staked-2' },
   STAKED_3: { NAME: 'Staked3', PATH: 'staked-3' },
