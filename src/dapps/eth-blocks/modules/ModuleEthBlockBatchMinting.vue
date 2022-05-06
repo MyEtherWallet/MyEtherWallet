@@ -241,7 +241,7 @@ export default {
       try {
         const foundBlocks = [];
         for (let index = 0; index < cart.length; index++) {
-          const found = this.blockCache[cart[index].blockNumber];
+          const found = this.blockCache[cart[index]];
           if (found) {
             foundBlocks.push(found);
             continue;
@@ -252,7 +252,6 @@ export default {
             cart[index],
             this.address
           );
-
           newResultArray.push(
             block.getBlock().then(() => {
               return block;
@@ -260,7 +259,8 @@ export default {
           );
         }
         Promise.all(newResultArray).then(values => {
-          this.blocks = [...values, ...foundBlocks].sort((a, b) => {
+          const combinedArray = [...values, ...foundBlocks];
+          this.blocks = combinedArray.sort((a, b) => {
             return a.blockNumber < b.blockNumber
               ? -1
               : a.blockNumber > b.blockNumber
@@ -298,11 +298,19 @@ export default {
       if (this.blocks.length >= 1) {
         try {
           this.blocks.forEach(block => {
-            multicalls.push(
-              block.generateMintData().then(() => {
-                return block;
-              })
-            );
+            if (!this.blockCache[block.blockNumber]) {
+              multicalls.push(
+                block.generateMintData().then(() => {
+                  return block;
+                })
+              );
+            } else if (!this.blockCache[block.blockNumber].mintData) {
+              multicalls.push(
+                block.generateMintData().then(() => {
+                  return block;
+                })
+              );
+            }
           });
           Promise.all(multicalls)
             .then(values => {
