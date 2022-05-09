@@ -297,39 +297,42 @@ export default {
       if (this.blocks.length === 0) this.isLoading = false;
       if (this.blocks.length >= 1) {
         try {
+          const foundBlocks = [];
           this.blocks.forEach(block => {
-            if (!this.blockCache[block.blockNumber]) {
-              multicalls.push(
-                block.generateMintData().then(() => {
-                  return block;
-                })
-              );
-            } else if (!this.blockCache[block.blockNumber].mintData) {
+            const found = this.blockCache[block.blockNumber];
+            if (!found.mintData) {
               multicalls.push(
                 block.generateMintData().then(() => {
                   return block;
                 })
               );
             }
+            if (found) foundBlocks.push(found);
           });
           Promise.all(multicalls)
             .then(values => {
               // updates blocks with mintData now
-              this.blocks = values.sort((a, b) => {
+              const cached = foundBlocks.filter(
+                block => !values.find(b => b.blockNumber === block.blockNumber)
+              );
+              const combinedArray = [...cached, ...values].filter(block =>
+                this.blocks.find(b => b.blockNumber === block.blockNumber)
+              );
+              this.blocks = combinedArray.sort((a, b) => {
                 return a.blockNumber < b.blockNumber
                   ? -1
                   : a.blockNumber > b.blockNumber
                   ? 1
                   : 0;
               });
-              this.batchMintData = values.map(item => {
+              this.batchMintData = this.blocks.map(item => {
                 return item.mintData.data;
               });
               this.mintContract = new this.web3.eth.Contract(
                 abi,
-                values[0].mintData.to
+                this.blocks[0].mintData.to
               );
-              const totalValue = values.reduce((a, b) => {
+              const totalValue = this.blocks.reduce((a, b) => {
                 return a.add(toBN(b.mintData.value));
               }, toBN(0));
               this.totalMintValue = totalValue.toString();
