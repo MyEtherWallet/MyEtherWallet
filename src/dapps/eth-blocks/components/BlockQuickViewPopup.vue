@@ -15,7 +15,6 @@
       }"
       :has-buttons="false"
       :has-body-content="true"
-      hide-close-btn
     >
       <h2 class="black--text">{{ blockNumber }}</h2>
       <div class="d-flex flex-column align-center justify-end py-5">
@@ -47,6 +46,7 @@
 
 <script>
 import { isEmpty } from 'lodash';
+import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
 export default {
   name: 'DateSelectorPopup',
   props: {
@@ -71,7 +71,9 @@ export default {
       return this.isReady ? this.blockHandler.img : '';
     },
     blockNumber() {
-      return this.isReady ? this.blockHandler.blockNumber.toString() : '';
+      return this.isReady
+        ? formatIntegerToString(this.blockHandler.blockNumber)
+        : '';
     },
     description() {
       return this.isReady ? this.blockHandler.description.toString() : '';

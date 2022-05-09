@@ -34,7 +34,7 @@
 import { mapState } from 'vuex';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { validBlockNumber } from '../handlers/helpers/common';
+import { validBlockNumber, beginsWithZero } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
 import DateSelectorPopup from './DateSelectorPopup.vue';
 
@@ -75,6 +75,9 @@ export default {
         if (!validBlockNumber(this.searchBlock)) {
           return 'value must be a positive integer';
         }
+        if (beginsWithZero(this.searchBlock)) {
+          return 'value cannot begin with zero';
+        }
         const search = toBN(this.searchBlock);
         const RESERVED = toBN(10);
         if (!search.isZero() && search.lte(RESERVED)) {
@@ -101,6 +104,7 @@ export default {
       if (
         this.searchBlock &&
         this.searchBlock !== '' &&
+        !beginsWithZero(this.searchBlock) &&
         this.checkExistingBlock
       ) {
         try {

@@ -242,7 +242,7 @@ export default {
     networkAlertText() {
       const names = this.validNetworks.map(item => item.name_long).join(', ');
       const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
-      return `Please selelect ${names} ${netString} to use this Dapp.`;
+      return `Please select ${names} ${netString} to use this Dapp.`;
     }
   },
 
