@@ -590,10 +590,9 @@ export default {
             }
           }
           throw Error();
-        } catch (er) {
+        } catch {
           self.signatureError = true;
           self.signatureMessage = ['Bad signature upload'];
-          console.log(er);
         }
       };
       if (files[0]) reader.readAsBinaryString(files[0]);
