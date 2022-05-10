@@ -320,7 +320,6 @@ export default {
           this.sendHandler.setCurrency(newVal);
         }
         this.fetchSellInfo();
-        this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
@@ -469,7 +468,7 @@ export default {
         .getSupportedFiatToSell(this.name)
         .then(res => {
           this.loading = false;
-          this.fetchedData = Object.assign({}, res);
+          this.fetchedData = res[0];
         })
         .catch(e => {
           this.loading = false;
