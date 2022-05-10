@@ -22,12 +22,15 @@ module.exports = [
   'https://app.lokalise.com:443',
   'https://myetherwallet.matomo.cloud:443',
   'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/careers.json',
+  'https://raw.githubusercontent.com:443/MyEtherWallet/dynamic-data/main/articles.json',
   'https://formspree.io:443/f/mqjndkkx',
   // nodes
   'https://nodes.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
   'wss://rpc.gochain.io:443/ws',
+  'wss://mewws.blocksscan.io:443/ws',
   'wss://www.ethercluster.com:443',
+  'wss://node1.mintme.com:443/ws',
   // intercom stuff
   'api-iam.intercom.io:443',
   'https://api.zilliqa.com:443',

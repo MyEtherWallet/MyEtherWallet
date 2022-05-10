@@ -14,7 +14,8 @@ import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { formatFiatValue } from '@/core/helpers/numberFormatHelper';
 import { formatReserves, formatUserSummary } from '@aave/math-utils';
-// import { ethers } from 'ethers';
+import { ethers } from 'ethers';
+import { ChainId } from '@aave/contract-helpers';
 
 const STABLE_COINS = ['TUSD', 'DAI', 'USDT', 'USDC', 'sUSD'];
 
@@ -51,14 +52,14 @@ export default {
     };
   },
   mounted() {
-    // const provider = new ethers.providers.StaticJsonRpcProvider(
-    //   'https://eth-mainnet.alchemyapi.io/v2/demo',
-    //   ChainId.mainnet
-    // );
+    const provider = new ethers.providers.StaticJsonRpcProvider(
+      'https://nodes.mewapi.io/rpc/eth',
+      ChainId.mainnet
+    );
     /**
      * get lending pool tx methods
      */
-    this.lendingPool = new LendingPool(this.web3.providers.IpcProvider, {
+    this.lendingPool = new LendingPool(provider, {
       LENDING_POOL: '0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5',
       WETH_GATEWAY: '0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04'
     });
