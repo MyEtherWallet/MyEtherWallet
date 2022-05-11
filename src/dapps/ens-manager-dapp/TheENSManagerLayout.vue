@@ -6,11 +6,14 @@
     -->
   <div>
     <the-wrapper-dapp
-      :has-exit-btn="true"
-      :banner-img="ensBannerImg"
-      :banner-text="bannerText"
+      :is-new-header="true"
+      :dapp-img="headerImg"
+      :banner-text="header"
       :tab-items="tabs"
       :active-tab="activeTab"
+      external-contents
+      :on-tab="tabChanged"
+      :valid-networks="validNetworks"
     >
       <!--
     =====================================================================================
@@ -283,8 +286,8 @@
 </template>
 
 <script>
+import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 import TheWrapperDapp from '@/core/components/TheWrapperDapp';
-import ensBannerImg from '@/assets/images/backgrounds/bg-ens.png';
 import ModuleRegisterDomain from './modules/ModuleRegisterDomain';
 import ModuleManageDomain from './modules/ModuleManageDomain';
 import handlerEnsManager from './handlers/handlerEnsManager';
@@ -295,7 +298,7 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { fromWei, toBN } from 'web3-utils';
 import { formatIntegerToString } from '@/core/helpers/numberFormatHelper';
-import { ROUTES_WALLET } from '@/core/configs/configRoutes';
+import { ENS_MANAGER_ROUTE } from './configsRoutes';
 import normalise from '@/core/helpers/normalise';
 import { isAddress } from '@/core/helpers/addressUtils';
 import ModuleAddressBook from '@/modules/address-book/ModuleAddressBook';
@@ -313,6 +316,12 @@ export default {
   },
   data() {
     return {
+      validNetworks: SUPPORTED_NETWORKS,
+      headerImg: require('@/assets/images/icons/icon-ens-manager-white-bg.svg'),
+      header: {
+        title: this.$t('ens.title'),
+        subtext: this.$t('ens.dapp-desc')
+      },
       activeTab: 0,
       loadingCommit: false,
       minimumAge: '',
@@ -359,16 +368,43 @@ export default {
         }
       ],
       tabs: [
+        {
+          name: this.$t('ens.register-domain'),
+          route: { name: ENS_MANAGER_ROUTE.CORE.NAME },
+          id: 0
+        },
+        {
+          name: this.$t('ens.manage-domain'),
+          route: {
+            name: ENS_MANAGER_ROUTE.MANAGE.NAME,
+            path: ENS_MANAGER_ROUTE.MANAGE.PATH
+          },
+          id: 1
+        },
+        {
+          name: this.$t('ens.claim-tokens'),
+          route: {
+            name: ENS_MANAGER_ROUTE.CLAIM.NAME,
+            path: ENS_MANAGER_ROUTE.CLAIM.PATH
+          },
+          id: 2
+        }
+      ],
+      /*
+      tabs: [
         { name: this.$t('ens.register-domain') },
         { name: this.$t('ens.manage-domain') },
         { name: this.$t('ens.claim-tokens') }
       ],
+      */
       myDomains: [],
+      /*,
       ensBannerImg: ensBannerImg,
       bannerText: {
         title: this.$t('ens.title'),
         subtext: this.$t('ens.dapp-desc')
-      },
+      }
+      */
       delegatorAddress: ''
     };
   },
@@ -458,12 +494,20 @@ export default {
         this.closeRegister();
       }
       this.getDomains();
+    },
+    $route() {
+      this.detactUrlChangeTab();
     }
   },
   beforeMount() {
     this.setTokenFromURL();
   },
   mounted() {
+    /**
+     * Check url and change tab on load
+     */
+    this.detactUrlChangeTab();
+
     const ens = this.network.type.ens
       ? new ENS(this.web3.currentProvider, this.network.type.ens.registry)
       : null;
@@ -483,6 +527,19 @@ export default {
     });
   },
   methods: {
+    detactUrlChangeTab() {
+      const currentRoute = this.$route.name;
+      if (currentRoute === ENS_MANAGER_ROUTE.MANAGE.NAME) {
+        this.activeTab = this.tabs[1].id;
+      } else if (currentRoute === ENS_MANAGER_ROUTE.CLAIM.NAME) {
+        this.activeTab = this.tabs[2].id;
+      } else {
+        this.activeTab = this.tabs[0].id;
+      }
+    },
+    tabChanged(tab) {
+      this.activeTab = tab;
+    },
     setTokenFromURL() {
       if (Object.keys(this.$route.query).length > 0) {
         const { active } = stripQuery(this.$route.query);
@@ -627,7 +684,7 @@ export default {
       this.loadingCommit = false;
       this.name = '';
       this.nameHandler = {};
-      this.$router.push({ name: ROUTES_WALLET.ENS_MANAGER.NAME });
+      this.$router.push({ name: ENS_MANAGER_ROUTE.ENS_MANAGER.NAME });
     },
     setName(name) {
       this.searchError = '';
