@@ -11,7 +11,7 @@ class Currency {
   constructor({ name, value = name, img }) {
     this.name = name;
     this.value = value;
-    this.img = img;
+    this.img = img ? img : flags.usFlag;
   }
 }
 /**
