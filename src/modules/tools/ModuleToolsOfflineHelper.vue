@@ -73,6 +73,12 @@
       <v-sheet color="transparent" max-width="600px" class="mx-auto py-10">
         <mew-address-select
           label="From Address"
+          copy-tooltip="Copy"
+          save-tooltip="Save Address"
+          :show-save="false"
+          :items="addresses"
+          :enable-save-address="detailLength"
+          :is-valid-address="detailLength"
           :address-value="fromAddress"
           :error-messages="fromAddressMessage"
           @input="setAddress"
@@ -226,6 +232,12 @@ import { isEmpty } from 'lodash';
 export default {
   name: 'ModuleToolsOfflineHelper',
   components: { AppBlockTitle, NetworkSwitch },
+  props: {
+    isHomePage: {
+      type: Boolean,
+      default: true
+    }
+  },
   data: () => ({
     dialog: false,
     currentStep: 1,
@@ -281,7 +293,29 @@ export default {
   }),
   computed: {
     ...mapState('wallet', ['web3']),
+    ...mapState('addressBook', ['addressBookStore']),
+    ...mapState('wallet', ['address']),
     ...mapGetters('global', ['network']),
+    addresses() {
+      return this.isHomePage
+        ? [
+            {
+              address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+              currency: 'ETH',
+              nickname: 'MEW Donations',
+              resolverAddr: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+            }
+          ]
+        : this.address
+        ? [
+            {
+              address: toChecksumAddress(this.address),
+              nickname: 'My Address',
+              resolverAddr: ''
+            }
+          ]
+        : [].concat(this.addressBookStore);
+    },
     detailLength() {
       return this.details.length > 0;
     },
@@ -340,7 +374,6 @@ export default {
       }
       this.fromAddressMessage = ['Not a valid Address'];
     },
-
     /**********************************************************
      * Gets data from current network and web3 instance
      * @returns {object} data - used for exporting to json,

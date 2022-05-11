@@ -23,7 +23,7 @@
           <module-tools-generate-keystore />
         </template>
         <template #tabItemContent4>
-          <module-tools-offline-helper />
+          <module-tools-offline-helper :ishomepage="true" />
         </template>
         <template #tabItemContent5>
           <module-tools-watch-only />
