@@ -279,8 +279,8 @@ export default {
     },
     nonMainnetMetamask() {
       return (
-        this.instance.identifier === WALLET_TYPES.WEB3_WALLET &&
-        this.network.type.name !== 'ETH'
+        this.instance?.identifier === WALLET_TYPES.WEB3_WALLET &&
+        this.network?.type.name !== 'ETH'
       );
     },
     isValidAmount() {
@@ -431,7 +431,7 @@ export default {
     },
     sell() {
       this.moonpayHandler
-        .sell(this.name, this.amount)
+        .sell(this.name, this.amount, this.address)
         .then(() => {
           this.amount = '0';
           this.close();

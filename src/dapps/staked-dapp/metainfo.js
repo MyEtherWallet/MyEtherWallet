@@ -18,6 +18,11 @@ export default {
   },
   children: [
     {
+      path: ROUTES_WALLET.STAKED_STATUS.PATH,
+      name: ROUTES_WALLET.STAKED_STATUS.NAME,
+      beforeEnter: stakedRouterGuard
+    },
+    {
       path: ROUTES_WALLET.STAKED_1.PATH,
       name: ROUTES_WALLET.STAKED_1.NAME,
       beforeEnter: stakedRouterGuard
