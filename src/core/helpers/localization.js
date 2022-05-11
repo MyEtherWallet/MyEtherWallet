@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { isNull } from 'lodash';
 import { isBigNumber } from 'web3-utils';
 
 /**
@@ -12,6 +13,9 @@ export const localizeCurrency = ({
   small = false,
   verySmall = false
 }) => {
+  if (isNaN(number) || isNull(number)) {
+    return convertNumber({ currency, options: {}, convertedPrice: 0.0 });
+  }
   const options = number.tooltipText
     ? {
         notation: 'compact',
@@ -27,7 +31,6 @@ export const localizeCurrency = ({
     : {};
 
   rate = typeof rate === 'string' ? currencyToNumber(rate) : rate;
-
   number =
     typeof number === 'string'
       ? currencyToNumber(number)
@@ -39,15 +42,15 @@ export const localizeCurrency = ({
 
   //const locale = locales[currency] ? locales[currency] : 'en-US';
 
-  if (isNaN(number)) {
-    return convertNumber({ currency, options, convertedPrice: 0.0 });
-  }
-
   const convertedPrice = small
     ? new BigNumber(number).times(rate).toFixed(6)
     : verySmall
     ? new BigNumber(number).times(rate).toFixed(7)
     : new BigNumber(number).times(rate);
+  if (convertNumber({ currency, options, convertedPrice }) === null) {
+    console.log(convertedPrice);
+    console.log(number);
+  }
   return convertNumber({ currency, options, convertedPrice });
 };
 
