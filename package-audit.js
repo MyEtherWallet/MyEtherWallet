@@ -12,7 +12,13 @@ const AUDIT_EXCEPTIONS = [
   'minimist',
   'moment',
   'axios',
-  'async'
+  'async',
+  'ejs',
+  'engine.io',
+  'xmlhttprequest-ssl',
+  'socket.io-parser',
+  'node-forge',
+  'glob-parent'
 ];
 const execute = (command, callback) => {
   exec(
