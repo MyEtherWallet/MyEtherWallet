@@ -29,7 +29,7 @@
         <div class="text-center">
           <mew-button
             class="mt-6"
-            title="Okay"
+            title="Close"
             btn-size="xlarge"
             @click.native="dismiss"
           />
@@ -77,7 +77,7 @@
           save-tooltip="Save Address"
           :show-save="false"
           :items="addresses"
-          :enable-save-address="detailLength"
+          :enable-save-address="false"
           :is-valid-address="detailLength"
           :address-value="fromAddress"
           :error-messages="fromAddressMessage"
@@ -108,7 +108,7 @@
             title="Back"
             btn-size="xlarge"
             btn-style="outline"
-            @click.native="currentStep = 1"
+            @click.native="handleBack"
           />
           <mew-button
             class="mx-1 mb-3"
@@ -187,7 +187,7 @@
             title="Back"
             btn-size="xlarge"
             btn-style="outline"
-            @click.native="currentStep = 2"
+            @click.native="handleBack"
           />
           <mew-button
             title="Confirm & Send"
@@ -344,6 +344,12 @@ export default {
     }
   },
   methods: {
+    handleBack() {
+      if (this.currentStep === 3) {
+        this.checkTx('');
+      }
+      this.currentStep -= 1;
+    },
     clear() {
       this.fromAddress = '';
       this.rawTransaction = '';
@@ -515,15 +521,22 @@ export default {
           }
         };
       } catch ({ message }) {
-        const rlp = 'invalid rlp: total length is larger than the data';
+        const errors = {
+          'invalid rlp: total length is larger than the data':
+            'Malformed signature',
+          'chain id': 'Incorrect network selected'
+        };
         this.signatureError = true;
         this.validTx = false;
-        switch (message) {
-          case rlp:
-            this.signatureMessage = ['Malformed signature'];
-            break;
-          default:
-            this.signatureMessage = ['Must be a valid transaction'];
+        const errorMsgs = Object.keys(errors);
+        const foundError = errorMsgs.find(e => {
+          if (!message) return false;
+          return message.includes(e);
+        });
+        if (foundError) {
+          this.signatureMessage = [errors[foundError]];
+        } else {
+          this.signatureMessage = ['Must be a valid transaction'];
         }
         return {};
       }
