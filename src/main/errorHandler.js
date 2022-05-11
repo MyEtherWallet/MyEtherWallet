@@ -13,7 +13,8 @@ export const knownErrors = {
   'Internal JSON-RPC error. { "code": -32000, "message": "execution reverted" }':
     'Execution Reverted',
   'Transaction has been reverted by the EVM':
-    'Transaction has been reverted by the EVM'
+    'Transaction has been reverted by the EVM',
+  'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.'
 };
 
 const handleError = err => {
