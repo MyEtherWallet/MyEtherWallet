@@ -75,6 +75,7 @@ new Vue({
     this.$store.commit('global/INIT_STORE');
     this.$store.commit('notifications/INIT_STORE');
     this.$store.commit('addressBook/INIT_STORE');
+    this.$store.commit('article/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
     this.$store.dispatch('global/setTracking');
   },

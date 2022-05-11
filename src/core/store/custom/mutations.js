@@ -58,6 +58,7 @@ const SET_ADDRESS_BOOK = function (state, val) {
 const ADD_CUSTOM_PATH = function (state, path) {
   state.paths.push(path);
 };
+
 const DELETE_CUSTOM_PATH = function (state, paths) {
   const idx = state.paths.findIndex(item => {
     if (item.path === paths.path) {
