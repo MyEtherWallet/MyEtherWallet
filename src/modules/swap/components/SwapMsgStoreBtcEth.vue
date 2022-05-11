@@ -20,10 +20,7 @@
               any other Ethereum asset: you can swap it to other tokens, use it
               as collateral in DeFi apps, etc. There are multiple kinds of
               wrapped Bitcoins, but they roughly do the same thing.
-              <a
-                href="https://help.myetherwallet.com/en/articles/5461528-move-your-btc-to-the-ethereum-blockchain-with-mew-swap"
-                target="_blank"
-              >
+              <a :href="getArticle('mv-btc-to-eth-mew-swap')" target="_blank">
                 Learn more about Wrapped Bitcoin.
               </a>
             </div>
@@ -62,6 +59,7 @@
 
 <script>
 import AppUserMsgBlock from '@/core/components/AppUserMsgBlock';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -78,6 +76,9 @@ export default {
       type: String,
       default: ''
     }
+  },
+  computed: {
+    ...mapGetters('article', ['getArticle'])
   }
 };
 </script>

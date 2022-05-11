@@ -7,6 +7,8 @@ import ropmewws from './rop-mew-ws';
 import bscmewws from './bsc-mew-ws';
 import maticmewws from './matic-mew-ws';
 import gochain from './gochain-ws';
+import mintmemewws from './mintme-mew-ws';
+import xdcnetwork from './xdcnetwork-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -17,5 +19,7 @@ export {
   ropmewws,
   bscmewws,
   maticmewws,
-  gochain
+  gochain,
+  mintmemewws,
+  xdcnetwork
 };
