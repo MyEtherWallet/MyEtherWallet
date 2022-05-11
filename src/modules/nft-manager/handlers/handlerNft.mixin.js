@@ -96,11 +96,11 @@ export default {
       if (!this.loadingContracts) {
         return this.contractNames.map((name, idx) => {
           return {
-            contract: this.getOwnersERC721Balances[idx].tokenInfo.contract,
+            contract: this.getOwnersERC721Balances[idx]?.tokenInfo.contract,
             name: name,
-            count: BigNumber(this.getOwnersERC721Balances[idx].balance).toFixed(
-              0
-            )
+            count: BigNumber(
+              this.getOwnersERC721Balances[idx]?.balance
+            ).toFixed(0)
           };
         });
       }
