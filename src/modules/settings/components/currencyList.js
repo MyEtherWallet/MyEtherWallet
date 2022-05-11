@@ -44,7 +44,6 @@ export default [
     new Currency({ name: 'BOB', img: flags.boFlag }),
     new Currency({ name: 'BRL', img: flags.brFlag }),
     new Currency({ name: 'BSD', img: flags.bsFlag }),
-    //bitcoin?
     new Currency({ name: 'BTC', img: btcIcon }),
     new Currency({ name: 'BTN', img: flags.btFlag }),
     new Currency({ name: 'BWP', img: flags.bwFlag }),
@@ -180,12 +179,7 @@ export default [
     new Currency({ name: 'VUV', img: flags.vuFlag }),
     new Currency({ name: 'WST', img: flags.wsFlag }),
     new Currency({ name: 'XAF', img: flags.cfFlag }),
-    //silver
-    //new Currency({ name: 'XAG', img: flags }),
-    //gold
-    //new Currency({ name: 'XAU', img: flags }),
     new Currency({ name: 'XCD', img: flags.dmFlag }),
-    //exchange currency?
     new Currency({ name: 'XDR', img: flags.usFlag }),
     new Currency({ name: 'XOF', img: flags.ciFlag }),
     new Currency({ name: 'XPF', img: flags.wfFlag }),
