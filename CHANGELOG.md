@@ -1,3 +1,23 @@
+### Release v6.5.3
+
+### devop
+
+* update new moonpay ui [#3764](https://github.com/MyEtherWallet/MyEtherWallet/pull/3764)
+* sync develop [#3795](https://github.com/MyEtherWallet/MyEtherWallet/pull/3795)
+
+### Release v6.5.2-hotfix.2
+
+### fix
+
+* fix polygon websocket issue [#3790](https://github.com/MyEtherWallet/MyEtherWallet/pull/3790)
+
+### Release v6.5.2-hotfix.1
+
+### fix
+
+* websocket fix [#3778](https://github.com/MyEtherWallet/MyEtherWallet/pull/3778)
+* cleanup for stakewise [#3782](https://github.com/MyEtherWallet/MyEtherWallet/pull/3782)
+
 ### Release v6.5.2
 
 ### devop

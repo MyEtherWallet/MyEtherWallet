@@ -4,11 +4,12 @@
     <module-toast />
     <module-global-modals />
     <module-analytics />
+    <module-moon-pay :open="moonPayOpen" @close="moonPayOpen = false" />
   </v-app>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import ModuleToast from '@/modules/toast/ModuleToast.vue';
 import ModuleGlobalModals from '@/modules/global-modals/ModuleGlobalModals';
 import ModuleAnalytics from '@/modules/analytics-opt-in/ModuleAnalytics';
@@ -19,17 +20,28 @@ import {
   SUCCESS,
   INFO
 } from '@/modules/toast/handler/handlerToast';
+import ModuleMoonPay from '@/modules/moon-pay/ModuleMoonPay';
+import { MOONPAY_EVENT } from '@/modules/moon-pay/helpers';
+import { EventBus } from '@/core/plugins/eventBus';
 export default {
   name: 'App',
   components: {
     ModuleToast,
     ModuleGlobalModals,
-    ModuleAnalytics
+    ModuleAnalytics,
+    ModuleMoonPay
+  },
+  data() {
+    return {
+      moonPayOpen: false
+    };
   },
   computed: {
     ...mapState('custom', ['addressBook']),
     ...mapState('addressBook', ['isMigrated']),
-    ...mapState('global', ['preferredCurrency'])
+    ...mapState('global', ['preferredCurrency']),
+    ...mapState('article', ['timestamp']),
+    ...mapGetters('article', ['articleList'])
   },
   created() {
     const succMsg = this.$t('common.updates.new');
@@ -46,11 +58,18 @@ export default {
     });
   },
   mounted() {
+    EventBus.$on(MOONPAY_EVENT, () => {
+      this.openBuy();
+    });
     this.footerHideIntercom();
     this.logMessage();
     this.setOnlineStatus(window.navigator.onLine);
     if (window.navigator.onLine) {
       this.setCurrency(this.preferredCurrency);
+      this.updateArticles({
+        timestamp: this.timestamp,
+        articleList: this.articleList
+      });
     }
     // Window events to watch out if the online status changes
     window.addEventListener('offline', () => {
@@ -71,6 +90,10 @@ export default {
     ...mapActions('global', ['setOnlineStatus']),
     ...mapActions('external', ['setCurrency']),
     ...mapActions('addressBook', ['setMigrated', 'setAddressBook']),
+    ...mapActions('article', ['updateArticles']),
+    openBuy() {
+      this.moonPayOpen = true;
+    },
     logMessage() {
       /* eslint-disable no-console */
       console.log(

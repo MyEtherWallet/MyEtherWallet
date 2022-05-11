@@ -18,20 +18,14 @@
           />
         </div>
         <div class="text-center mew-body textMedium--text">
-          MEW has joined with
-          <a
-            class="textMedium--text"
-            href="https://www.moonpay.com/buy"
-            target="_blank"
-            ><u>Moonpay</u></a
-          >
+          MEW has joined with <u>Moonpay</u>
           to offer more crypto buying and selling options. Help us celebrate
           with zero fees when you buy and sell crypto this week.
         </div>
       </div>
       <div v-else>
         <div class="text-center mew-body textMedium--text">
-          Enjoy 0.9% fee when you select ‘Bank account’ as payment method.
+          Enjoy 0.7% fee when you select ‘Bank account’ as payment method.
         </div>
         <div class="d-flex justify-center align-center pa-5 mt-5">
           <div class="icon-container mr-2 d-flex align-center pa-2">
@@ -57,13 +51,19 @@
         btn-size="xlarge"
         @click.native="goToPromo()"
       />
-      <v-row class="mt-5 d-flex justify-center" no-gutters dense>
-        <v-col class="d-flex align-center" cols="4">
-          <img src="@/assets/images/icons/icon-visa.svg" class="mr-5" />
-          <img src="@/assets/images/icons/icon-mastercard.svg" class="mr-5" />
-          <img src="@/assets/images/icons/icon-bank.svg" />
-        </v-col>
-      </v-row>
+      <div class="mt-5 d-flex justify-center align-center">
+        <img
+          src="@/assets/images/icons/icon-visa.svg"
+          class="mr-5"
+          height="10"
+        />
+        <img
+          src="@/assets/images/icons/icon-mastercard.svg"
+          class="mr-5"
+          height="16"
+        />
+        <img src="@/assets/images/icons/icon-bank.svg" height="20" />
+      </div>
     </template>
   </app-modal>
 </template>
