@@ -237,13 +237,13 @@ export default {
     return {
       buttons: [
         {
-          label: 'Ledger',
+          label: 'Ledger USB',
           icon: require('@/assets/images/icons/hardware-wallets/icon-ledger.svg'),
           ble: false,
           type: WALLET_TYPES.LEDGER
         },
         {
-          label: 'Ledger Nano X',
+          label: 'Ledger Bluetooth',
           icon: require('@/assets/images/icons/hardware-wallets/Ledger-Nano-X-Label-Icon.svg'),
           ble: true,
           type: WALLET_TYPES.LEDGER
@@ -645,7 +645,8 @@ export default {
         .then(_hwWallet => {
           try {
             this.loaded = true;
-            if (this.onLedger || this.onLedgerX) this.ledgerConnected = true;
+            if (this.onLedger) this.ledgerConnected = true;
+            if (this.onLedgerX) this.nextStep();
             if ((this.onTrezor || this.onKeepkey) && this.step == 2)
               this.step++;
             if (this.onBitbox2) {
