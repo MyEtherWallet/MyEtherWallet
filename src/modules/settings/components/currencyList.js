@@ -1,4 +1,6 @@
 import flags from './flags';
+
+import btcIcon from '@/assets/images/currencies/btc.png';
 class Currency {
   /**
    * @param {Object} currency
@@ -42,11 +44,12 @@ export default [
     new Currency({ name: 'BOB', img: flags.boFlag }),
     new Currency({ name: 'BRL', img: flags.brFlag }),
     new Currency({ name: 'BSD', img: flags.bsFlag }),
-    //new Currency({ name: 'BTC', img: flags.btFlag }),
+    //bitcoin?
+    new Currency({ name: 'BTC', img: btcIcon }),
     new Currency({ name: 'BTN', img: flags.btFlag }),
     new Currency({ name: 'BWP', img: flags.bwFlag }),
     new Currency({ name: 'BYN', img: flags.byFlag }),
-    //new Currency({ name: 'BYR', img: flags }),
+    new Currency({ name: 'BYR', img: flags.byFlag }),
     new Currency({ name: 'BZD', img: flags.bzFlag }),
     new Currency({ name: 'CAD', img: flags.caFlag }),
     new Currency({ name: 'CDF', img: flags.cdFlag }),
@@ -72,7 +75,7 @@ export default [
     new Currency({ name: 'FKP', img: flags.fkFlag }),
     new Currency({ name: 'GBP', img: flags.gbFlag }),
     new Currency({ name: 'GEL', img: flags.geFlag }),
-    //new Currency({ name: 'GGP', img: flags }),
+    new Currency({ name: 'GGP', img: flags.gpFlag }),
     new Currency({ name: 'GHS', img: flags.ghFlag }),
     new Currency({ name: 'GIP', img: flags.giFlag }),
     new Currency({ name: 'GMD', img: flags.gmFlag }),
@@ -86,12 +89,12 @@ export default [
     new Currency({ name: 'HUF', img: flags.huFlag }),
     new Currency({ name: 'IDR', img: flags.idFlag }),
     new Currency({ name: 'ILS', img: flags.ilFlag }),
-    //new Currency({ name: 'IMP', img: flags }),
+    new Currency({ name: 'IMP', img: flags.imFlag }),
     new Currency({ name: 'INR', img: flags.btFlag }),
     new Currency({ name: 'IQD', img: flags.iqFlag }),
     new Currency({ name: 'IRR', img: flags.irFlag }),
     new Currency({ name: 'ISK', img: flags.isFlag }),
-    //new Currency({ name: 'JEP', img: flags }),
+    new Currency({ name: 'JEP', img: flags.jeFlag }),
     new Currency({ name: 'JMD', img: flags.jmFlag }),
     new Currency({ name: 'JOD', img: flags.joFlag }),
     new Currency({ name: 'JPY', img: flags.jpFlag }),
@@ -109,8 +112,8 @@ export default [
     new Currency({ name: 'LKR', img: flags.lkFlag }),
     new Currency({ name: 'LRD', img: flags.lrFlag }),
     new Currency({ name: 'LSL', img: flags.lsFlag }),
-    //new Currency({ name: 'LTL', img: flags }),
-    //new Currency({ name: 'LVL', img: flags }),
+    new Currency({ name: 'LTL', img: flags.ltFlag }),
+    new Currency({ name: 'LVL', img: flags.lvFlag }),
     new Currency({ name: 'LYD', img: flags.lyFlag }),
     new Currency({ name: 'MAD', img: flags.ehFlag }),
     new Currency({ name: 'MDL', img: flags.mdFlag }),
@@ -119,7 +122,7 @@ export default [
     new Currency({ name: 'MMK', img: flags.mmFlag }),
     new Currency({ name: 'MNT', img: flags.mnFlag }),
     new Currency({ name: 'MOP', img: flags.moFlag }),
-    //new Currency({ name: 'MRO', img: flags }),
+    new Currency({ name: 'MRO', img: flags.mrFlag }),
     new Currency({ name: 'MUR', img: flags.muFlag }),
     new Currency({ name: 'MVR', img: flags.mvFlag }),
     new Currency({ name: 'MWK', img: flags.mwFlag }),
@@ -155,7 +158,7 @@ export default [
     new Currency({ name: 'SLL', img: flags.slFlag }),
     new Currency({ name: 'SOS', img: flags.soFlag }),
     new Currency({ name: 'SRD', img: flags.srFlag }),
-    //new Currency({ name: 'STD', img: flags.st }),
+    new Currency({ name: 'STD', img: flags.stFlag }),
     new Currency({ name: 'SVC', img: flags.svFlag }),
     new Currency({ name: 'SYP', img: flags.syFlag }),
     new Currency({ name: 'SZL', img: flags.szFlag }),
@@ -172,20 +175,23 @@ export default [
     new Currency({ name: 'UGX', img: flags.ugFlag }),
     new Currency({ name: 'UYU', img: flags.uyFlag }),
     new Currency({ name: 'UZS', img: flags.uzFlag }),
-    //new Currency({ name: 'VEF', img: flags }),
+    new Currency({ name: 'VEF', img: flags.veFlag }),
     new Currency({ name: 'VND', img: flags.vnFlag }),
     new Currency({ name: 'VUV', img: flags.vuFlag }),
     new Currency({ name: 'WST', img: flags.wsFlag }),
     new Currency({ name: 'XAF', img: flags.cfFlag }),
+    //silver
     //new Currency({ name: 'XAG', img: flags }),
+    //gold
     //new Currency({ name: 'XAU', img: flags }),
     new Currency({ name: 'XCD', img: flags.dmFlag }),
-    //new Currency({ name: 'XDR', img: flags }),
+    //exchange currency?
+    new Currency({ name: 'XDR', img: flags.usFlag }),
     new Currency({ name: 'XOF', img: flags.ciFlag }),
     new Currency({ name: 'XPF', img: flags.wfFlag }),
     new Currency({ name: 'YER', img: flags.yeFlag }),
     new Currency({ name: 'ZAR', img: flags.zaFlag }),
-    //new Currency({ name: 'ZMK', img: flags }),
+    new Currency({ name: 'ZMK', img: flags.zmFlag }),
     new Currency({ name: 'ZMW', img: flags.zmFlag }),
     new Currency({ name: 'ZWL', img: flags.zwFlag })
   ].sort((a, b) => {
