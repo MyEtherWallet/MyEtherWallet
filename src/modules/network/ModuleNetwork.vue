@@ -11,7 +11,10 @@
       content-size="large"
       :close="closeNetworkOverlay"
     >
-      <network-switch :filter-types="filterNetworks" />
+      <network-switch
+        :filter-types="filterNetworks"
+        :is-swap-page="isSwapPage"
+      />
     </mew-overlay>
     <mew6-white-sheet
       :sideinfo="!mobile"
@@ -95,6 +98,13 @@ export default {
         return [];
       }
       return [];
+    },
+    /**
+     * Property returns whether or not you are on the swap page
+     * @returns {boolean}
+     */
+    isSwapPage() {
+      return this.$route.name === 'Swap';
     }
   },
   mounted() {

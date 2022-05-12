@@ -2,10 +2,16 @@ import Router from 'vue-router';
 import store from '@/core/store';
 import langShortCodes from '@/translations/getShortCodes';
 import routesDefault from './routes-default';
+import routesOfflineDefault from './routes-offline-default';
+import routesOfflineWallet from './routes-offline-wallet';
 import routesWallet from './routes-wallet';
 import routesNotFound from './routes-not-found';
 import { ROUTES_HOME } from '../configs/configRoutes';
-const routes = [routesDefault, routesWallet, routesNotFound];
+const routes =
+  // eslint-disable-next-line
+  BUILD === 'offline'
+    ? [routesOfflineDefault, routesOfflineWallet]
+    : [routesDefault, routesWallet, routesNotFound];
 
 const getLangBasePath = () => {
   if (ROUTER_MODE === 'hash') return undefined;
