@@ -5,6 +5,7 @@ const state = {
   blockNumber: 0,
   identifier: '',
   isHardware: false,
+  ledgerBLE: false,
   instance: null,
   isOfflineApp: false,
   web3: {},

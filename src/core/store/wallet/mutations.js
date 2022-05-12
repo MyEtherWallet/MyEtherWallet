@@ -26,6 +26,10 @@ const SET_BALANCE = function (state, balance) {
   state.balance = balance;
 };
 
+const SET_LEDGER_BLUETOOTH = function (state, ledgerBLE) {
+  state.ledgerBLE = ledgerBLE;
+};
+
 const SET_WEB3_INSTANCE = function (state, web3) {
   state.web3 = web3;
 };
@@ -49,6 +53,7 @@ const SET_OFFLINE_APP = function (state, isOfflineApp) {
 export default {
   REMOVE_WALLET,
   SET_WALLET,
+  SET_LEDGER_BLUETOOTH,
   SET_BALANCE,
   SET_WEB3_INSTANCE,
   SET_BLOCK_NUMBER,
