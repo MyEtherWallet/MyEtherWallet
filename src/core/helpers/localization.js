@@ -13,7 +13,9 @@ export const localizeCurrency = ({
   small = false,
   verySmall = false
 }) => {
-  if (isNaN(number) || isNull(number)) {
+  console.log('------------');
+  console.log('original Number: %s', number);
+  if (isNull(number)) {
     return convertNumber({ currency, options: {}, convertedPrice: 0.0 });
   }
   const options = number.tooltipText
@@ -39,18 +41,22 @@ export const localizeCurrency = ({
       : isBigNumber(number)
       ? currencyToNumber(number.toString())
       : number;
-
+  console.log('converted Number: %s', number);
   //const locale = locales[currency] ? locales[currency] : 'en-US';
-
+  if (isNaN(number)) {
+    return convertNumber({ currency, options: {}, convertedPrice: 0.0 });
+  }
   const convertedPrice = small
     ? new BigNumber(number).times(rate).toFixed(6)
     : verySmall
     ? new BigNumber(number).times(rate).toFixed(7)
     : new BigNumber(number).times(rate);
-  if (convertNumber({ currency, options, convertedPrice }) === null) {
-    console.log(convertedPrice);
-    console.log(number);
-  }
+  console.log('Price x rate: %s', convertedPrice);
+  console.log(
+    'Localized Price: %s',
+    convertNumber({ currency, options, convertedPrice })
+  );
+  console.log('--------------\n');
   return convertNumber({ currency, options, convertedPrice });
 };
 

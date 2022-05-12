@@ -205,6 +205,7 @@ export default {
      */
     formatValues(item) {
       const newObj = {};
+      console.log(item.usdBalancef);
       newObj.balance = [
         item.balancef
           ? item.balancef + ' ' + item.symbol
