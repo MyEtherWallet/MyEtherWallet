@@ -320,7 +320,6 @@ export default {
           this.sendHandler.setCurrency(newVal);
         }
         this.fetchSellInfo();
-        this.$emit('selectedCurrency', newVal);
       },
       deep: true
     },
