@@ -7,6 +7,8 @@ import contentHash from 'content-hash';
 import EventEmitter from 'events';
 import vuexStore from '@/core/store';
 import { mapGetters, mapState } from 'vuex';
+import { toBN, toHex } from 'web3-utils';
+import { estimateGasList } from '@/core/helpers/gasPriceHelper.js';
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -46,8 +48,8 @@ export default class PermanentNameModule extends ENSManagerInterface {
     const baseTx = {
       to: this.registrarAddress,
       from: this.address,
-      value: 0,
-      gasPrice: this.gasPriceByType(this.gasPriceType)()
+      value: '0x0',
+      gasPrice: toHex(this.gasPriceByType(this.gasPriceType)())
     };
     const tx1 = Object.assign({}, baseTx, {
       data: this.setController(toAddress, true).encodeABI()
@@ -60,23 +62,24 @@ export default class PermanentNameModule extends ENSManagerInterface {
   }
 
   async estimateGas(toAddress) {
-    const txns = this.getTransactions(toAddress);
-    let gas1 = 0;
-    let gas2 = 0;
-    try {
-      gas1 = await this.web3.eth.estimateGas(txns[0]);
-      gas2 = await this.web3.eth.estimateGas(txns[1]);
-    } catch (e) {
-      return new Promise(resolve => {
-        resolve(0);
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      const txns = this.getTransactions(toAddress).map(item => {
+        //delete item['gasPrice'];
+        return item;
       });
-    }
-    const gasPrice = this.gasPriceByType(this.gasPriceType)();
-    const txFee1 = BigNumber(gasPrice).times(gas1).toFixed();
-    const txFee2 = BigNumber(gasPrice).times(gas2).toFixed();
-    const calculatedFee = BigNumber(txFee1).plus(txFee2).toFixed();
-    return new Promise(resolve => {
-      resolve(calculatedFee);
+      try {
+        const gas = await estimateGasList(this.network.type.name, txns);
+        if (!gas) reject('Not enough gas');
+        const gasTotal = gas.reduce((previousVal, currentVal) => {
+          return toBN(previousVal).add(toBN(currentVal));
+        }, toBN(0));
+        const gasPrice = this.gasPriceByType(this.gasPriceType)();
+        const txFee = toBN(gasPrice).mul(gasTotal);
+        resolve(txFee);
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 

@@ -18,4 +18,12 @@ const validBlockNumber = _num => {
   }
 };
 
-export { numberIsInteger, validBlockNumber };
+const beginsWithZero = _num => {
+  try {
+    return _num.charAt(0) === '0';
+  } catch (e) {
+    return false;
+  }
+};
+
+export { numberIsInteger, validBlockNumber, beginsWithZero };
