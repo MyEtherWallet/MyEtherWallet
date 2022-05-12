@@ -6,6 +6,11 @@
     ===================================================
     -->
     <p class="primary--text mb-1 ml-2">Max block: {{ maxBlock }}</p>
+    <date-selector-popup
+      :show-popup="showDate"
+      :search-date="searchByDate"
+      :hide-popup="hidePopup"
+    />
     <!--
     ===================================================
       Search Field
@@ -16,6 +21,8 @@
       placeholder="Enter a block number"
       :value="searchBlock"
       :on-search="search"
+      can-search-date
+      :on-date-search="showDatePopup"
       :error-messages="searchErrorMessage"
       type="number"
       @input="setBlock"
@@ -27,15 +34,19 @@
 import { mapState } from 'vuex';
 import { ETH_BLOCKS_ROUTE } from '../configsRoutes';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
-import { validBlockNumber } from '../handlers/helpers/common';
+import { validBlockNumber, beginsWithZero } from '../handlers/helpers/common';
 import { toBN } from 'web3-utils';
+import DateSelectorPopup from './DateSelectorPopup.vue';
 
 export default {
   name: 'ModuleEthBlocksMint',
-
+  components: {
+    DateSelectorPopup
+  },
   data() {
     return {
-      searchBlock: ''
+      searchBlock: '',
+      showDate: false
     };
   },
   computed: {
@@ -64,6 +75,9 @@ export default {
         if (!validBlockNumber(this.searchBlock)) {
           return 'value must be a positive integer';
         }
+        if (beginsWithZero(this.searchBlock)) {
+          return 'value cannot begin with zero';
+        }
         const search = toBN(this.searchBlock);
         const RESERVED = toBN(10);
         if (!search.isZero() && search.lte(RESERVED)) {
@@ -71,10 +85,15 @@ export default {
         }
         const max = toBN(this.blockNumber).sub(toBN(50));
         if (search.gt(max)) {
-          return `block number must be smaller or equal to ${this.maxBlock}`;
+          return `Block number must be smaller or equal to ${this.maxBlock}`;
         }
       }
       return '';
+    },
+    checkExistingBlock() {
+      const search = toBN(this.searchBlock);
+      const max = toBN(this.blockNumber).sub(toBN(50));
+      return !search.gt(max);
     }
   },
   methods: {
@@ -82,7 +101,12 @@ export default {
      * Reroutes to Block Info page
      */
     search() {
-      if (this.searchBlock && this.searchBlock !== '') {
+      if (
+        this.searchBlock &&
+        this.searchBlock !== '' &&
+        !beginsWithZero(this.searchBlock) &&
+        this.checkExistingBlock
+      ) {
         try {
           this.$router.push({
             name: ETH_BLOCKS_ROUTE.BLOCK.NAME,
@@ -92,6 +116,29 @@ export default {
           Toast(e, {}, ERROR);
         }
       }
+    },
+    /**
+     * Search via date
+     */
+    searchByDate(timeString) {
+      if (timeString && timeString !== '') {
+        try {
+          this.$router
+            .push({
+              name: ETH_BLOCKS_ROUTE.DATE_SEARCH.NAME,
+              params: { dateString: timeString }
+            })
+            .then(this.hidePopup);
+        } catch (e) {
+          Toast(e, {}, ERROR);
+        }
+      }
+    },
+    showDatePopup() {
+      this.showDate = true;
+    },
+    hidePopup() {
+      this.showDate = false;
     },
     /**
      * Setts serach Block, invoked by MewSearch component

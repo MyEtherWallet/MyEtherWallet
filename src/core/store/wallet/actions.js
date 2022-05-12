@@ -31,6 +31,10 @@ const setAccountBalance = function ({ commit }, balance) {
   commit('SET_BALANCE', balance);
 };
 
+const setLedgerBluetooth = function ({ commit }, ledgerBLE) {
+  commit('SET_LEDGER_BLUETOOTH', ledgerBLE);
+};
+
 const setWeb3Instance = function (
   { commit, state, rootState, rootGetters },
   provider
@@ -114,6 +118,7 @@ const setBlockNumber = function ({ commit }, val) {
 export default {
   removeWallet,
   setWallet,
+  setLedgerBluetooth,
   setAccountBalance,
   setWeb3Instance,
   setBlockNumber,

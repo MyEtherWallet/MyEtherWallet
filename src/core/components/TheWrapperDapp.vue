@@ -79,6 +79,7 @@
       v-if="tabItems.length > 0 && isNewHeader"
       :value="activeTab"
       background-color="backgroundGrey"
+      show-arrows
       color="blue500"
       height="46"
       active-class="blue500--text"
@@ -88,13 +89,25 @@
         v-for="(item, index) in tabItems"
         :key="index"
         :class="[
-          'px-4 px-md-10 textMedium--text  menu-tab-text mew-body',
-          { 'ml-3 ml-md-13': index === 0 },
+          'px-4 px-md-10 textMedium--text menu-tab-text mew-body',
+          { 'ml-md-13': index === 0 },
           { 'mr-3 mr-md-13': index + 1 === tabItems.length }
         ]"
         @click="routeToTab(item.route)"
       >
-        {{ item.name }}
+        <v-badge
+          v-if="item.hasBadge"
+          color="red"
+          :content="item.badgeContent"
+          :dot="item.badgeContent === ''"
+          :inline="item.badgeContent !== ''"
+          right
+        >
+          {{ item.name }}
+        </v-badge>
+        <div v-else>
+          {{ item.name }}
+        </div>
       </v-tab>
     </v-tabs>
     <!--
@@ -254,7 +267,7 @@ export default {
     networkAlertText() {
       const names = this.validNetworks.map(item => item.name_long).join(', ');
       const netString = this.validNetworks.length > 1 ? 'networks' : 'network';
-      return `Please selelect ${names} ${netString} to use this Dapp.`;
+      return `Please select ${names} ${netString} to use this Dapp.`;
     }
   },
 
