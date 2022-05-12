@@ -408,6 +408,7 @@ export default {
       }
     }, 500),
     setCurrency(e) {
+      this.amount = '0';
       this.selectedCurrency = e;
     },
     setMax() {
