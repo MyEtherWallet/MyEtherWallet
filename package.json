@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.5.3",
+  "version": "6.5.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -13,6 +13,7 @@
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "juststart": "vue-cli-service serve --watch",
+    "juststart:offline": "ROUTER_MODE=hash BUILD=offline vue-cli-service serve --watch",
     "dev": "npm run update && npm run juststart",
     "lint:code": "vue-cli-service lint --fix",
     "lint:md": "remark . -o",

@@ -34,7 +34,10 @@
           <!-- ================================================================================== -->
           <!-- Buy Sell / Send / Swap buttons -->
           <!-- ================================================================================== -->
-          <div class="d-flex align-center justify-space-between pt-6 pb-4 mx-2">
+          <div
+            v-if="online"
+            class="d-flex align-center justify-space-between pt-6 pb-4 mx-2"
+          >
             <v-btn
               color="transparent"
               height="65px"
@@ -208,7 +211,7 @@
             />
           </v-list-item-content>
         </v-list-item>
-        <div class="mt-3 px-8">
+        <div v-if="online" class="mt-3 px-8">
           <div class="matomo-tracking-switch">
             <v-switch
               :input-value="consentToTrack"
@@ -277,6 +280,7 @@
 <script>
 import AppBtnMenu from '@/core/components/AppBtnMenu';
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications';
+import send from '@/assets/images/icons/icon-send-enable.png';
 import background from '@/assets/images/backgrounds/bg-light.jpg';
 import dashboard from '@/assets/images/icons/icon-dashboard-enable.png';
 import nft from '@/assets/images/icons/icon-nft.png';
@@ -312,19 +316,19 @@ export default {
       background: background,
       onSettings: false,
       showLogoutPopup: false,
-      sectionTwo: [
-        {
-          title: this.$t('common.settings'),
-          icon: settings,
-          fn: this.openSettings,
-          route: { name: ROUTES_WALLET.SETTINGS.NAME }
-        },
-        {
-          title: this.$t('common.logout'),
-          icon: logout,
-          fn: this.toggleLogout
-        }
-      ],
+      // sectionTwo: [
+      //   {
+      //     title: this.$t('common.settings'),
+      //     icon: settings,
+      //     fn: this.openSettings,
+      //     route: { name: ROUTES_WALLET.SETTINGS.NAME }
+      //   },
+      //   {
+      //     title: this.$t('common.logout'),
+      //     icon: logout,
+      //     fn: this.toggleLogout
+      //   }
+      // ],
       routeNetworks: {
         [ROUTES_WALLET.SWAP.NAME]: [ETH, BSC, MATIC],
         [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH]
@@ -335,61 +339,100 @@ export default {
   computed: {
     ...mapGetters('global', ['network', 'isEthNetwork', 'hasSwap']),
     ...mapState('wallet', ['instance']),
+    ...mapState('global', ['online']),
     sectionOne() {
-      const hasNew = Object.values(dappsMeta).filter(item => {
-        const dateToday = new Date();
-        const millisecondsInDay = 1000 * 60 * 60 * 24;
-        const releaseDate = new Date(item.release);
-        const daysFromRelease =
-          (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
-        if (Math.ceil(daysFromRelease) <= 21) {
-          return item;
-        }
-      });
+      if (this.online) {
+        const hasNew = Object.values(dappsMeta).filter(item => {
+          const dateToday = new Date();
+          const millisecondsInDay = 1000 * 60 * 60 * 24;
+          const releaseDate = new Date(item.release);
+          const daysFromRelease =
+            (dateToday.getTime() - releaseDate.getTime()) / millisecondsInDay;
+          if (Math.ceil(daysFromRelease) <= 21) {
+            return item;
+          }
+        });
+        return [
+          {
+            title: this.$t('interface.menu.dashboard'),
+            route: { name: ROUTES_WALLET.DASHBOARD.NAME },
+            icon: dashboard
+          },
+          {
+            title: this.$t('interface.menu.nft'),
+            route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
+            icon: nft
+          },
+          {
+            title: this.$t('interface.menu.dapps'),
+            route: { name: ROUTES_WALLET.DAPPS.NAME },
+            icon: dapp,
+            hasNew: hasNew.length > 0
+          },
+          {
+            title: this.$t('interface.menu.contract'),
+            icon: contract,
+            children: [
+              {
+                title: this.$t('interface.menu.deploy'),
+                route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
+              },
+              {
+                title: this.$t('interface.menu.interact-contract'),
+                route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
+              }
+            ]
+          },
+          {
+            title: this.$t('interface.menu.message'),
+            icon: message,
+            children: [
+              {
+                title: this.$t('interface.menu.sign-message'),
+                route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
+              },
+              {
+                title: this.$t('interface.menu.verify-message'),
+                route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
+              }
+            ]
+          }
+        ];
+      }
       return [
         {
-          title: this.$t('interface.menu.dashboard'),
-          route: { name: ROUTES_WALLET.DASHBOARD.NAME },
-          icon: dashboard
+          title: this.$t('sendTx.send-offline'),
+          route: { name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME },
+          icon: send
         },
         {
-          title: this.$t('interface.menu.nft'),
-          route: { name: ROUTES_WALLET.NFT_MANAGER.NAME },
-          icon: nft
-        },
+          title: this.$t('interface.menu.sign-message'),
+          route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME },
+          icon: message
+        }
+      ];
+    },
+    sectionTwo() {
+      if (this.online) {
+        return [
+          {
+            title: this.$t('common.settings'),
+            icon: settings,
+            fn: this.openSettings,
+            route: { name: ROUTES_WALLET.SETTINGS.NAME }
+          },
+          {
+            title: this.$t('common.logout'),
+            icon: logout,
+            fn: this.toggleLogout
+          }
+        ];
+      }
+      return [
         {
-          title: this.$t('interface.menu.dapps'),
-          route: { name: ROUTES_WALLET.DAPPS.NAME },
-          icon: dapp,
-          hasNew: hasNew.length > 0
-        },
-        {
-          title: this.$t('interface.menu.contract'),
-          icon: contract,
-          children: [
-            {
-              title: this.$t('interface.menu.deploy'),
-              route: { name: ROUTES_WALLET.DEPLOY_CONTRACT.NAME }
-            },
-            {
-              title: this.$t('interface.menu.interact-contract'),
-              route: { name: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME }
-            }
-          ]
-        },
-        {
-          title: this.$t('interface.menu.message'),
-          icon: message,
-          children: [
-            {
-              title: this.$t('interface.menu.sign-message'),
-              route: { name: ROUTES_WALLET.SIGN_MESSAGE.NAME }
-            },
-            {
-              title: this.$t('interface.menu.verify-message'),
-              route: { name: ROUTES_WALLET.VERIFY_MESSAGE.NAME }
-            }
-          ]
+          title: this.$t('common.logout'),
+          icon: logout,
+          fn: this.toggleLogout
         }
       ];
     }
@@ -471,17 +514,14 @@ export default {
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
-
 .v-system-bar .v-icon {
   font-size: 36px !important;
   color: white !important;
 }
-
 .wallet-sidemenu {
   .v-list-item--link {
     border-top: none;
   }
-
   .v-list-item--active {
     .v-list-item__content {
       .v-list-item__title {
@@ -489,79 +529,62 @@ export default {
       }
     }
   }
-
   .v-list-group__header__append-icon {
     .v-icon {
       color: var(--v-white-base) !important;
     }
   }
-
   .v-divider {
     border-color: rgba(255, 255, 255, 0.22) !important;
   }
-
   .v-list-item--link:hover {
     background-color: rgba(255, 255, 255, 0.2) !important;
   }
-
   .v-list-item:after {
     min-height: 40px !important;
   }
-
   .mew-body.font-weight-bold {
     font-weight: 400 !important;
   }
-
   .v-list-item--active.v-list-item:not(.v-list-group__header) {
     background-color: rgba(255, 255, 255, 0.1) !important;
   }
-
   .v-list-item--active::before {
     opacity: 0 !important;
   }
-
   .v-navigation-drawer__content {
     margin-right: 5px;
     margin-bottom: 10px;
-
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
     }
-
     &::-webkit-scrollbar-button {
       width: 0;
       height: 0;
     }
-
     &::-webkit-scrollbar-thumb {
       background: #7b91ac;
       border: 0 none #fff;
       border-radius: 50px;
     }
-
     &::-webkit-scrollbar-thumb:hover {
       background: #7b91ac;
     }
-
     &::-webkit-scrollbar-thumb:active {
       background: #4b4949;
     }
-
     &::-webkit-scrollbar-track {
       background: #e1dfdf;
       border: 0 none #fff;
       border-radius: 39px;
     }
-
     &::-webkit-scrollbar-track:hover {
       background: #ddd5d5;
     }
-
     &::-webkit-scrollbar-track:active {
       background: #dedede;
     }
-
     &::-webkit-scrollbar-corner {
       background: transparent;
     }

@@ -68,6 +68,7 @@
                 =====================================================================================
                 -->
           <v-img
+            :class="network.name === 'MINTME' ? 'mint-me-color' : ''"
             :src="network.icon"
             :lazy-src="require('@/assets/images/currencies/icon-eth-grey.svg')"
             contain
@@ -117,7 +118,11 @@ export default {
     /** Set this prop to pass specific networks to be displayed */
     filterTypes: { type: Array, default: () => [] },
     /** Set this prop to false if device does not support networks */
-    hasNetworks: { type: Boolean, default: true }
+    hasNetworks: { type: Boolean, default: true },
+    isSwapPage: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -219,13 +224,6 @@ export default {
           ? 'Select different feature to see all networks.'
           : 'We do not have a network with this name.'
       };
-    },
-    /**
-     * Property returns whether or not you are on the swap page
-     * @returns {boolean}
-     */
-    isSwapPage() {
-      return this.$route.name === 'Swap';
     }
   },
   watch: {
@@ -320,5 +318,9 @@ $borderNetwork: 1px solid #ececec;
 
 .network-border-last {
   border-radius: 0px 0px 4px 4px;
+}
+.mint-me-color {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(3%) saturate(5171%)
+    hue-rotate(348deg) brightness(92%) contrast(63%);
 }
 </style>

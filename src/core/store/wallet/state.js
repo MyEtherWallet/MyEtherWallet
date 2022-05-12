@@ -7,6 +7,7 @@ const state = {
   isHardware: false,
   ledgerBLE: false,
   instance: null,
+  isOfflineApp: false,
   web3: {},
   ensDomains: null,
   tokens: [],
