@@ -368,6 +368,7 @@ export default {
     totalWalletBalance() {
       if (!this.isTestNetwork) {
         const total = this.totalTokenBalance;
+        console.log('card: %s', total.toString());
         return formatFiatValue(total, this.currencyConfig).value;
       }
       return this.walletChainBalance;
