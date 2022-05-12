@@ -18,7 +18,9 @@ export const knownErrors = {
     'Execution Reverted',
   'Transaction has been reverted by the EVM':
     'Transaction has been reverted by the EVM',
-  'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.'
+  'TypeError: Failed to fetch': 'Request Failed. Please refresh and try again.',
+  "TypeError: Cannot read properties of null (reading 'errorHandler')":
+    'There was an error signing transaction with this wallet'
 };
 
 const handleError = err => {
