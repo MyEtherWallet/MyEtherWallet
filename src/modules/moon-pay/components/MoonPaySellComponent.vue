@@ -48,6 +48,7 @@
     <!-- Sell button -->
     <!-- ============================================================== -->
     <mew-button
+      class="mb-6"
       title="Sell now"
       btn-size="xlarge"
       has-full-width
