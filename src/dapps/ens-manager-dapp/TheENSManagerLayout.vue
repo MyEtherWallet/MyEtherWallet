@@ -277,6 +277,8 @@
       :type="manageType"
       :transfer="transfer"
       :renew="renew"
+      :no-funds-for-renewal-fees="noFundsForRenewalFees"
+      :loading-renew="loadingRenew"
       :upload-file="uploadFile"
       :uploaded-hash="manageDomainHandler.contentHash"
       :set-text-records="setTextRecords"
@@ -286,6 +288,7 @@
       :set-ipfs="setIpfs"
       :host-name="manageDomainHandler.parsedHostName"
       :get-rent-price="getRentPrice"
+      :get-total-renew-fee-only="getTotalRenewFeeOnly"
     />
   </div>
 </template>
@@ -324,6 +327,7 @@ export default {
     return {
       activeTab: 0,
       loadingCommit: false,
+      loadingRenew: false,
       minimumAge: '',
       committed: false,
       settingIpfs: false,
@@ -337,10 +341,14 @@ export default {
       searchError: '',
       notEnoughFunds: false,
       noFundsForRegFees: false,
+      noFundsForRenewalFees: false,
       durationPick: '',
       commitFeeInEth: '',
       commitFeeInWei: '0',
       commitFeeUsd: '0',
+      renewalInEth: '',
+      renewalInWei: '',
+      renewalInUsd: '0',
       regFee: '0',
       totalCost: '0',
       totalCostUsd: '0',
@@ -576,6 +584,30 @@ export default {
         });
       this.closeManage();
     },
+
+    async getTotalRenewFeeOnly(duration) {
+      this.loadingRenew = true;
+      const renewFeeOnly = await this.manageDomainHandler.totalRenewCost(
+        duration
+      ); // ETH
+      if (!renewFeeOnly) {
+        this.noFundsForRenewalFees = true;
+      } else {
+        this.renewalInEth = renewFeeOnly;
+        this.renewalInWei = toWei(renewFeeOnly);
+        this.renewalInUsd = new BigNumber(this.renewalInEth)
+          .times(this.fiatValue)
+          .toFixed(2);
+        if (toBN(this.renewalInWei).gte(this.balance)) {
+          // commit fee vs current user balance in wei
+          this.noFundsForRenewalFees = true;
+        } else {
+          this.noFundsForRenewalFees = false;
+        }
+      }
+      this.loadingRenew = false;
+    },
+
     renew(duration) {
       this.manageDomainHandler
         .renew(duration, this.balanceToWei)

@@ -8,6 +8,7 @@ import EventEmitter from 'events';
 import { fromWei, sha3, toBN } from 'web3-utils';
 import { mapState, mapGetters } from 'vuex';
 import vuexStore from '@/core/store';
+
 const bip39 = require('bip39');
 
 export default class PermanentNameModule extends ENSManagerInterface {
@@ -71,6 +72,29 @@ export default class PermanentNameModule extends ENSManagerInterface {
         .rentPrice(this.parsedHostName, this.getActualDuration(duration))
         .call();
       return rentPrice;
+    }
+  }
+  async totalRenewCost(duration) {
+    try {
+      const gasPrice = this.gasPriceByType()(this.gasPriceType());
+      const rentPrice = await this.getRentPrice(duration);
+      const withFivePercent = BigNumber(rentPrice)
+        .times(1.05)
+        .integerValue()
+        .toFixed();
+      const txObj = {
+        from: this.address,
+        value: withFivePercent
+      };
+      const extraFee = await this.registrarControllerContract.methods
+        .renew(this.parsedHostName, this.getActualDuration(duration))
+        .estimateGas(txObj);
+      if (!extraFee) {
+        return false;
+      }
+      return fromWei(toBN(gasPrice).add(toBN(extraFee)));
+    } catch (e) {
+      return false;
     }
   }
 
