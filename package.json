@@ -21,6 +21,7 @@
     "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true && bash ./scripts/checklockconflicts.sh && npx npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "start:history": "npm run update:mainlists && ROUTER_MODE=history npm run dev",
+    "start:offline": "npm run update:mainlists && ROUTER_MODE=hash BUILD=offline npm run dev",
     "update": "npm run update:packages && npm run update:lists",
     "update:lists": "node fetchLists/index.js",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
@@ -69,6 +70,7 @@
     "buffer": "6.0.3",
     "clipboard-copy": "4.0.1",
     "crypto": "1.0.1",
+    "ethereum-block-by-date": "1.4.5",
     "ethers": "5.6.5",
     "graphql": "16.4.0",
     "graphql-tag": "2.12.6",
@@ -91,6 +93,7 @@
     "vue": "2.6.14",
     "vue-apollo": "3.1.0",
     "vue-router": "3.5.3",
+    "vue-social-sharing": "3.0.9",
     "vuex": "3.6.2",
     "walletlink": "2.5.0"
   },
