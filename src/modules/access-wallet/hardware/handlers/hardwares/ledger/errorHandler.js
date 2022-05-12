@@ -53,10 +53,14 @@ const ERRORS = {
   'Access denied.': 'ledgerError.access-denied',
   'WebUsb not supported.  Please try a different browser.':
     'ledgerError.web-usb-not-supported',
+  'Web bluetooth is not supported.  Please try a different browser.':
+    'ledgerError.web-ble-not-supported',
   'Please enable Blind signing or Contract data in the Ethereum app Settings':
     'Please enable Blind signing or Contract data in the Ethereum app Settings',
   'Ledger device: Security not satisfied':
-    'Ledger device is locked or has invalid access rights'
+    'Ledger device is locked or has invalid access rights',
+  'GATT Server is disconnected. Cannot perform GATT operations.':
+    'Device has been disconnected, please reconnect.'
 };
 const WARNINGS = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
