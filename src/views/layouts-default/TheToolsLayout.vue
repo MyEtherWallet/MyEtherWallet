@@ -23,7 +23,7 @@
           <module-tools-generate-keystore />
         </template>
         <template #tabItemContent4>
-          <module-tools-offline-helper />
+          <module-tools-offline-helper :ishomepage="true" />
         </template>
         <template #tabItemContent5>
           <module-tools-watch-only />
@@ -59,20 +59,6 @@ export default {
     currentTool: '',
     activeTab: 0,
     items: [
-      /*
-      {
-        name: 'Watch only address',
-        val: 'watch'
-      },
-      {
-        name: 'Convert units',
-        val: 'convert'
-      },
-      {
-        name: 'Send offline helper',
-        val: 'offline'
-      },
-      */
       {
         name: 'Verify Message',
         val: 'verify'
@@ -84,7 +70,17 @@ export default {
       {
         name: 'Generate Keystore file',
         val: 'keystore'
+      },
+      {
+        name: 'Send Offline Helper',
+        val: 'offline'
       }
+      /*
+      {
+        name: 'Watch only address',
+        val: 'watch'
+      }
+      */
     ]
   }),
   watch: {
@@ -116,12 +112,14 @@ export default {
             this.activeTab = 1;
             this.currentTool = 'convert';
             break;
-
           case 'keystore':
             this.activeTab = 2;
             this.currentTool = 'keystore';
             break;
-
+          case 'offline':
+            this.activeTab = 3;
+            this.currentTool = 'offline';
+            break;
           default:
             this.activeTab = 0;
             this.currentTool = 'verify';
@@ -138,15 +136,15 @@ export default {
         case 0:
           this.currentTool = 'verify';
           break;
-
         case 1:
           this.currentTool = 'convert';
           break;
-
         case 2:
           this.currentTool = 'keystore';
           break;
-
+        case 3:
+          this.currentTool = 'offline';
+          break;
         default:
           this.currentTool = 'verify';
       }

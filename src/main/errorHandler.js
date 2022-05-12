@@ -11,6 +11,7 @@ export const knownErrors = {
   "CONNECTION ERROR: Couldn't connect to node on WS":
     "Couldn't connect to WS node. Please refresh and try again.",
   'connection not open on send': mewApiError,
+  'Provided address null is invalid': 'No address provided',
   'transaction underpriced': 'Transaction gas price too low',
   'invalid remainder': 'invalid remainder',
   'Internal JSON-RPC error. { "code": -32000, "message": "execution reverted" }':

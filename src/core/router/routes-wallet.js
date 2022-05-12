@@ -1,6 +1,7 @@
 import TheWalletView from '@/views/TheWalletView';
 import Dashboard from '@/views/layouts-wallet/TheDashboardLayout';
 import Send from '@/views/layouts-wallet/TheSendTransactionLayout';
+import SendOffline from '@/views/layouts-wallet/TheSendTransactionOfflineLayout';
 import NftManager from '@/views/layouts-wallet/TheNFTManagerLayout';
 import Swap from '@/views/layouts-wallet/TheSwapLayout';
 import InteractContract from '@/views/layouts-wallet/TheInteractContractLayout';
@@ -48,6 +49,15 @@ export default {
       path: ROUTES_WALLET.SEND_TX.PATH,
       name: ROUTES_WALLET.SEND_TX.NAME,
       component: Send,
+      props: true,
+      meta: {
+        noAuth: false
+      }
+    },
+    {
+      path: ROUTES_WALLET.SEND_TX_OFFLINE.PATH,
+      name: ROUTES_WALLET.SEND_TX_OFFLINE.NAME,
+      component: SendOffline,
       props: true,
       meta: {
         noAuth: false
