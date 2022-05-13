@@ -28,7 +28,6 @@ class WalletInterface {
       const _privKey = Buffer.isBuffer(key)
         ? key
         : getBufferFromHex(sanitizeHex(key));
-      console.log(_privKey);
       if (_privKey.length !== 32) {
         throw new Error(
           'Private key does not satisfy the curve requirements (ie. it is invalid)'
