@@ -207,7 +207,7 @@ export default {
     },
     min() {
       if (!isEmpty(this.fetchedData)) {
-        const found = this.fetchedData.limits.find(item => {
+        const found = this.fetchedData?.limits.find(item => {
           return item.crypto_currency === this.name && item.type === 'WEB';
         });
 
@@ -351,6 +351,7 @@ export default {
     this.sendHandler = new handlerSend();
     this.fetchSellInfo();
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    console.log('this.min()', this.min());
   },
   methods: {
     getEthBalance() {
